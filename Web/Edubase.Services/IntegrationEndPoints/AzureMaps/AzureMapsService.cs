@@ -1,26 +1,27 @@
 namespace Edubase.Services.IntegrationEndPoints.AzureMaps
 {
-    using Common;
     using System;
     using System.Configuration;
+    using System.IO;
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using Edubase.Services.Geo;
-    using Polly;
-    using System.Net;
-    using Newtonsoft.Json;
-    using Edubase.Services.IntegrationEndPoints.AzureMaps.Models;
-    using System.IO;
+    using Common;
     using Edubase.Common.Spatial;
+    using Edubase.Services.Geo;
+    using Edubase.Services.IntegrationEndPoints.AzureMaps.Models;
+    using Newtonsoft.Json;
+    using Polly;
 
     public class AzureMapsService : IAzureMapsService
     {
         private static readonly string _apiKey = ConfigurationManager.AppSettings["AzureMapsApiKey"];
+
         private static readonly HttpClient _azureMapsClient = new HttpClient
         {
             BaseAddress = new Uri("https://atlas.microsoft.com")
         };
+
         private static readonly Policy RetryPolicy = Policy
                 .Handle<HttpRequestException>()
                 .WaitAndRetryAsync(new[]
@@ -30,8 +31,8 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
                     TimeSpan.FromSeconds(2),
                     TimeSpan.FromSeconds(4)
                 });
-        
-        public async Task<PlaceDto[]> SearchAsync(string text)
+
+        public async Task<PlaceDto[]> SearchAsync(string text, bool isTypeahead)
         {
             text = text.Clean();
 
@@ -41,13 +42,10 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
             }
 
             var request = new HttpRequestMessage(
-                    HttpMethod.Get,
-                    $"/search/address/json?api-version=1.0&countrySet=GB&typeahead=true&limit=10&query={text}&subscription-key={_apiKey}");
+                HttpMethod.Get,
+                $"/search/address/json?api-version=1.0&countrySet=GB&typeahead={(isTypeahead ? "true" : "false")}&limit=10&query={text}&subscription-key={_apiKey}");
 
-            using (var response = await RetryPolicy.ExecuteAsync(async () =>
-                {
-                    return await _azureMapsClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
-                }))
+            using (var response = await RetryPolicy.ExecuteAsync(async () => await _azureMapsClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead)))
             {
                 var stream = await response.Content.ReadAsStreamAsync();
 
@@ -57,21 +55,29 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
                         $"The API returned an error with status code: {response.StatusCode}. (Request URI: {request.RequestUri.PathAndQuery})");
                 }
 
-                AzureMapsSearchResponseDto azureMapsResponse;
-
                 using (var sr = new StreamReader(stream))
                 using (JsonReader reader = new JsonTextReader(sr))
                 {
                     var serializer = new JsonSerializer();
+                    var azureMapsResponse = serializer.Deserialize<AzureMapsSearchResponseDto>(reader);
+                    var retVal = azureMapsResponse.results
+                        .Where(result => result.type != "Cross Street"
+                                         && !(result.entityType != null && result.entityType == "CountrySecondarySubdivision"))
+                        .Select(x => new PlaceDto(GetAddressDescription(x), new LatLon(x.position.lat, x.position.lon)))
+                        .ToArray();
 
-                    azureMapsResponse = serializer.Deserialize<AzureMapsSearchResponseDto>(reader);
+                    // If the search string is a postcode and none of the returned results contain the given post code, then return zero results, so that the search is deferred to OS places.
+                    if (text.IsUkPostCode())
+                    {
+                        var postCode = text.Remove(" ").ToLower();
+                        if (!retVal.Any(x => (x.Name ?? "").ToLower().Remove(" ").Contains(postCode)))
+                        {
+                            return new PlaceDto[0];
+                        }
+                    }
+
+                    return retVal;
                 }
-
-                return azureMapsResponse.results
-                    .Where(result => result.type != "Cross Street"
-                        && !(result.entityType != null && result.entityType == "CountrySecondarySubdivision"))
-                    .Select(x => new PlaceDto(GetAddressDescription(x), new LatLon(x.position.lat, x.position.lon)))
-                    .ToArray();
             }
         }
 
@@ -90,5 +96,6 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
 
             return $"{output}, {locationResult.address.countrySecondarySubdivision}";
         }
+
     }
 }

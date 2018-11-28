@@ -18,16 +18,19 @@ namespace Edubase.Services.Geo
             _osPlacesApiService = osPlacesApiService;
         }
 
-        public async Task<PlaceDto[]> SearchAsync(string text)
+        public async Task<PlaceDto[]> SearchAsync(string text, bool isTypeahead)
         {
-            var retVal = (await _azureMapsService.SearchAsync(text)).ToArray();
+            var retVal = (await _azureMapsService.SearchAsync(text, isTypeahead)).ToArray();
 
             if (retVal.Any())
             {
                 return retVal;
             }
 
-            retVal = (await _osPlacesApiService.SearchAsync(text)).ToArray();
+            if (!isTypeahead)
+            {
+                retVal = (await _osPlacesApiService.SearchAsync(text)).ToArray();
+            }
 
             return retVal;
         }

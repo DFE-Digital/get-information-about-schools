@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -232,6 +232,13 @@ namespace Edubase.Common
 
 
         public static bool IsInFuture(this DateTime? dt) => dt.HasValue ? dt.Value.Date > DateTime.UtcNow.Date : false;
+
+        public static bool IsUkPostCode(this string text)
+        {
+            return Regex.IsMatch(text,
+                @"([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})",
+                RegexOptions.IgnoreCase);
+        }
         
 
         public static string GetPart(this string data, string separator, int index = 0)

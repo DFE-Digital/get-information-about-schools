@@ -145,7 +145,7 @@ namespace Edubase.Web.UI.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            return Json(await _placesService.SearchAsync(text));
+            return Json(await _placesService.SearchAsync(text, true));
         }
 
         private async Task<ActionResult> ProcessLocalAuthorityDisambiguation(SearchViewModel model)
@@ -164,7 +164,7 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task<ActionResult> ProcessLocationDisambiguation(string query)
         {
-            var items = await _placesService.SearchAsync(query);
+            var items = await _placesService.SearchAsync(query, false);
 
             return View(
                 "LocationDisambiguation",

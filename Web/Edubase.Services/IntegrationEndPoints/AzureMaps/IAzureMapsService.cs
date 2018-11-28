@@ -5,6 +5,6 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
 {
     public interface IAzureMapsService
     {
-        Task<PlaceDto[]> SearchAsync(string text);
+        Task<PlaceDto[]> SearchAsync(string text, bool isTypeahead);
     }
 }
