@@ -1,4 +1,4 @@
-﻿@using System.Linq
+@using System.Linq
 @using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
 @model ViewModel
 @{
@@ -101,7 +101,7 @@
                     {
                         Html.RenderPartial("Partials/_EditAddresses");
                         <div class="form-group">
-                            @Html.RouteLink("Add new address", "AddOrReplaceEstablishmentAddress", new { urn = Model.Urn, target = $"alt-new" }, new { @class = "replace-address" })
+                            @Html.RouteLink("Add new address", "AddOrReplaceEstablishmentAddress", new { urn = Model.Urn, target = "alt-new" }, new { @class = "replace-address" })
                         </div>
                     }
 

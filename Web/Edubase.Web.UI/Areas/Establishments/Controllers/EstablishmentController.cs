@@ -971,65 +971,84 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
         }
 
-        private async Task<ActionResult> SaveEstablishment(ViewModel model)
+        private async Task<ActionResult> SaveEstablishment(ViewModel viewModel)
         {
-            var domainModel = (await _establishmentReadService.GetAsync(model.Urn.Value, User)).GetResult();
+            var domainModel = (await _establishmentReadService.GetAsync(viewModel.Urn.Value, User)).GetResult();
             var editPolicyEnvelope = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
-            model.EditPolicy = editPolicyEnvelope.EditPolicy;
+            viewModel.EditPolicy = editPolicyEnvelope.EditPolicy;
 
-            if ((!model.EditPolicy.AdditionalAddresses || model.AdditionalAddresses.Count == 0) && domainModel.AdditionalAddresses != null)
+            var canEditAdditionalAddresses = editPolicyEnvelope.EditPolicy.AdditionalAddresses;
+            if (!canEditAdditionalAddresses && domainModel.AdditionalAddresses != null)
             {
-                model.AdditionalAddresses = new List<AdditionalAddressModel>(domainModel.AdditionalAddresses);
+                viewModel.AdditionalAddresses = new List<AdditionalAddressModel>(domainModel.AdditionalAddresses);
             }
 
-            model.TabDisplayPolicy = new TabDisplayPolicy(domainModel, model.EditPolicy, User);
-            model.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
-            await PopulateSelectLists(model);
+            viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.EditPolicy, User);
+            viewModel.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
+            await PopulateSelectLists(viewModel);
 
-            if (model.ActionSpecifierCommand == ViewModel.ASSave)
+            if (viewModel.ActionSpecifierCommand == ViewModel.ASSave)
             {
                 var originalEstabTypeId = (ET) domainModel.TypeId;
-                await ValidateAsync(model, domainModel);
+                await ValidateAsync(viewModel, domainModel);
                 var newEstabTypeId = (ET?) domainModel.TypeId;
 
                 if (ModelState.IsValid)
                 {
-                    model.OriginalEstablishmentName = domainModel.Name;
+                    viewModel.OriginalEstablishmentName = domainModel.Name;
 
                     var changes = await _establishmentReadService.GetModelChangesAsync(domainModel, editPolicyEnvelope.ApprovalsPolicy, User);
 
-                    if (originalEstabTypeId == ET.ChildrensCentreLinkedSite && newEstabTypeId == ET.ChildrensCentre) model.CCIsPromoting = true;
-                    else if (originalEstabTypeId == ET.ChildrensCentre && newEstabTypeId == ET.ChildrensCentreLinkedSite) model.CCIsDemoting = true;
+                    if (originalEstabTypeId == ET.ChildrensCentreLinkedSite && newEstabTypeId == ET.ChildrensCentre) viewModel.CCIsPromoting = true;
+                    else if (originalEstabTypeId == ET.ChildrensCentre && newEstabTypeId == ET.ChildrensCentreLinkedSite) viewModel.CCIsDemoting = true;
 
                     if (changes.Any())
                     {
-                        model.ChangesSummary = changes;
-                        model.ChangesRequireApprovalCount = changes.Count(x => x.RequiresApproval);
-                        model.ChangesInstantCount = changes.Count(x => !x.RequiresApproval);
-                        ModelState.Remove(nameof(model.ChangesRequireApprovalCount));
-                        ModelState.Remove(nameof(model.ChangesInstantCount));
+                        viewModel.ChangesSummary = changes;
+                        viewModel.ChangesRequireApprovalCount = changes.Count(x => x.RequiresApproval);
+                        viewModel.ChangesInstantCount = changes.Count(x => !x.RequiresApproval);
+                        ModelState.Remove(nameof(viewModel.ChangesRequireApprovalCount));
+                        ModelState.Remove(nameof(viewModel.ChangesInstantCount));
                     }
-                    else return Redirect(Url.RouteUrl("EstabDetails", new { id = model.Urn.Value }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
+                    else return Redirect(Url.RouteUrl("EstabDetails", new { id = viewModel.Urn.Value }) + viewModel.SelectedTab2DetailPageTabNameMapping[viewModel.SelectedTab]);
                 }
             }
-            else if (model.ActionSpecifierCommand == ViewModel.ASAddAddress) model.AdditionalAddresses.Add(new AdditionalAddressModel());
-            else if (model.ActionSpecifierCommand == ViewModel.ASRemoveAddress) model.AdditionalAddresses.RemoveAt(int.Parse(model.ActionSpecifierParam));
-            else if (model.ActionSpecifierCommand == ViewModel.ASConfirm)
+            else if (viewModel.ActionSpecifierCommand == ViewModel.ASAddAddress)
+            {
+                viewModel.AdditionalAddresses.Add(new AdditionalAddressModel());
+            }
+            else if (viewModel.ActionSpecifierCommand == ViewModel.ASRemoveAddress)
+            {
+                RemoveAdditionalAddress(viewModel);
+            }
+            else if (viewModel.ActionSpecifierCommand == ViewModel.ASConfirm)
             {
                 if (ModelState.IsValid)
                 {
-                    await PrepareModels(model, domainModel);
-                    await _establishmentWriteService.SaveAsync(domainModel, model.OverrideCRProcess, model.ChangeEffectiveDate.ToDateTime(), User);
-                    return Redirect(Url.RouteUrl("EstabDetails", new
-                    {
-                        id = model.Urn.Value,
-                        approved = model.GetChangesNotRequiringApprovalCount(),
-                        pending = model.GetChangesRequiringApprovalCount()
-                    }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
+                    return await SaveEstablishment(viewModel, domainModel);
                 }
             }
 
-            return View(model);
+            return View(viewModel);
+        }
+
+        private async Task<ActionResult> SaveEstablishment(ViewModel model, EstablishmentModel domainModel)
+        {
+            await PrepareModels(model, domainModel);
+            await _establishmentWriteService.SaveAsync(domainModel, model.OverrideCRProcess,
+                model.ChangeEffectiveDate.ToDateTime(), User);
+            return Redirect(Url.RouteUrl("EstabDetails", new
+            {
+                id = model.Urn.Value,
+                approved = model.GetChangesNotRequiringApprovalCount(),
+                pending = model.GetChangesRequiringApprovalCount()
+            }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
+        }
+
+        private static void RemoveAdditionalAddress(EditEstablishmentModel model)
+        {
+            model.AdditionalAddresses.RemoveAt(int.Parse(model.ActionSpecifierParam));
+            model.IsDirty = true;
         }
 
         private void SetProperty<TProperty>(ViewModel oldModel, ViewModel newModel, Expression<Func<ViewModel, TProperty>> property)
