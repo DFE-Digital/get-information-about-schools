@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Approvals;
+using Edubase.Services.Approvals;
 using Edubase.Services.Approvals.Models;
 using System.Net;
 using System.Net.Http;
@@ -18,16 +18,20 @@ namespace Edubase.Web.UI.Controllers.Api
 
         [Route("api/approvals/change-requests"), HttpGet]
         public async Task<PendingApprovalsResult> GetAsync(int skip, int take, string sortBy)
-        {
-            return (await _approvalService.GetAsync(skip, take, sortBy, User)).GetResponse();
-        }
+            => await _approvalService.GetAsync(skip, take, sortBy, User);
 
         [Route("api/approvals/change-request"), HttpPost]
         public async Task<IHttpActionResult> ActionAsync(PendingChangeRequestAction model)
         {
             var result = await _approvalService.ActionAsync(model, User);
-            if (result.Success) return ResponseMessage(Request.CreateResponse(HttpStatusCode.NoContent));
-            else return Content(HttpStatusCode.BadRequest, result.Errors);
+            if (result.Success)
+            {
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.NoContent));
+            }
+            else
+            {
+                return Content(HttpStatusCode.BadRequest, result.Errors);
+            }
         }
     }
 }

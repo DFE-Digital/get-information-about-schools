@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "Review and approve changes";
     ViewBag.bodyClasses = "change-approvals";
 }
@@ -145,6 +145,10 @@
                                     <a href="#" v-on:click="setSort('originatorFullName')"
                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='originatorFullName' ? 'selected-sort': '' ]">Suggested<br/>by</a>
                                 </th>
+                                <th scope="col" class="cell-suggested multi-line">
+                                    <a href="#" v-on:click="setSort('approverFullName')"
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='approverFullName' ? 'selected-sort': '' ]">Approver<br/>name</a>
+                                </th>
                             </tr>
                             </thead>
                             <tbody v-if="changes.length > 0">
@@ -166,6 +170,7 @@
                                 <td aria-label="Effective date">{{formatDate(entry.effectiveDateUtc)}}</td>
                                 <td aria-label="Date requested">{{formatDate(entry.requestedDateUtc)}}</td>
                                 <td aria-label="Suggested by">{{entry.originatorFullName}}</td>
+                                <td aria-label="Suggested by">{{entry.approverFullName}}</td>
                             </tr>
                             </tbody>
                             <tbody v-else>
