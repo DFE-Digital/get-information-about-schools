@@ -8,6 +8,7 @@ DfE.searchMap = (function () {
         breachLimit: false,
         dataRefreshRequired: false,
         googleApiKey: DfE.mapConfig.apiKey,
+        azureApiKey: DfE.mapConfig.azureMapsApiKey,
         establishmentDetailBaseUrl: '/Establishments/Establishment/Details/',
 
         openIcon: L.icon({
@@ -25,11 +26,7 @@ DfE.searchMap = (function () {
             $('#map-container').removeClass('hidden');
 
             if (!DfE.searchMap.scriptsLoaded) {
-                var s = document.createElement('script');
-                s.src = 'https://maps.googleapis.com/maps/api/js?key=' +
-                DfE.searchMap.googleApiKey +
-                    '&callback=DfE.searchMap.initMap';
-                document.body.appendChild(s);
+                this.initMap();
                 DfE.searchMap.scriptsLoaded = true;
 
             } else {
@@ -39,7 +36,7 @@ DfE.searchMap = (function () {
         },
         getSearchData: function() {
             'use strict';
-            
+
             var self = this;
             var resultCount = 0;
             var startIndex = 0;
@@ -47,7 +44,7 @@ DfE.searchMap = (function () {
             this.clusterGroup = new L.MarkerClusterGroup();
             this.breachLimit = false;
             $('#map-count').text('0');
-           
+
 
             DfE.searchResults.disableFilters();
             getPoints();
@@ -101,7 +98,7 @@ DfE.searchMap = (function () {
 
                         if (pointCount === 0) {
                             $('#zero-results-message').removeClass('hidden');
-                            
+
                             $('.map-header').removeClass('loading');
                             DfE.searchResults.enableFilters();
                             return;
@@ -112,7 +109,7 @@ DfE.searchMap = (function () {
                                 pointsLoaded();
                                 $('#map-data-warning').removeClass('hidden');
                                 $('#map-count').text('1000');
-                                
+
                                 $('#show-all-map').one('click',
                                     function(e) {
                                         e.preventDefault();
@@ -199,23 +196,25 @@ DfE.searchMap = (function () {
 
                 });
 
+            searchMap.addControl(L.control.attribution({
+              prefix: ''
+            }));
+
             var zoomer = new L.control.zoom({
                 position: 'bottomright'
             }).addTo(searchMap);
 
-            var googleTiles = new L.Google('ROADMAP');
-            var satelliteTiles = new L.Google('SATELLITE');
-
-            L.control.layers({
-                    'Map': googleTiles,
-                    'Satellite': satelliteTiles
-                },
-                null,
-                { position: 'topleft', collapsed: false }
-            ).addTo(searchMap);
 
 
-            searchMap.addLayer(googleTiles);
+            L.tileLayer('https://atlas.microsoft.com/map/tile/png?api-version=1&layer=basic&style=main&zoom={z}&x={x}&y={y}&subscription-key='+azureMapsApiKey, {
+              attribution: '© ' + new Date().getFullYear() + ' Microsoft, © 1992 - ' + new Date().getFullYear() + ' TomTom',
+              maxZoom: 18,
+              minZoom: 4,
+              id: 'azuremaps.road',
+              crossOrigin: true,
+              subscriptionKey: azureMapsApiKey
+            }).addTo(searchMap);
+
 
             this.mapObj = searchMap;
             this.getSearchData(true);
@@ -227,9 +226,9 @@ DfE.searchMap = (function () {
                        window.setTimeout(function() {
                            $('#search-map').find('.marker-cluster').filter(':visible').click();
                        },750);
-                       
+
                    }
-                });            
+                });
 
         }
     };

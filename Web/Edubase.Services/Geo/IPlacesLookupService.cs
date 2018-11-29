@@ -1,11 +1,9 @@
-﻿using System.Threading.Tasks;
-using Edubase.Common.Spatial;
+using System.Threading.Tasks;
 
 namespace Edubase.Services.Geo
 {
     public interface IPlacesLookupService
     {
-        Task<LatLon> GetCoordinateAsync(string id);
-        Task<PlaceDto[]> SearchAsync(string text);
+        Task<PlaceDto[]> SearchAsync(string text, bool isTypeahead);
     }
 }

@@ -79,8 +79,9 @@
       <HintPath>..\packages\Castle.Core.3.0.0.4001\lib\net40-client\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DM.Common, Version=1.0.6687.28807, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DM.Common.1.0.6687.28807\lib\net461\DM.Common.dll</HintPath>
+    <Reference Include="DM.Common, Version=1.0.6899.28281, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\DM.Common.1.2.0.1\lib\net461\DM.Common.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -485,8 +486,7 @@
     <Content Include="Assets\Scripts\Elements\Forms\select-all-filters.js" />
     <Content Include="Assets\Scripts\libs\leaflet\leaflet-src.js" />
     <Content Include="Assets\Scripts\libs\leaflet\leaflet.js" />
-    <Content Include="Assets\Scripts\libs\leaflet\plugins\leaflet-google.js" />
-    <Content Include="Assets\Scripts\libs\leaflet\plugins\leaflet.markercluster.src.js" />
+    <Content Include="Assets\Scripts\libs\leaflet\plugins\leaflet.markercluster-src.js" />
     <Content Include="Assets\Scripts\standalone\indi-search.js" />
     <Content Include="Assets\Scripts\standalone\search-map.js" />
     <Content Include="Assets\Scripts\Views\group-details.js" />

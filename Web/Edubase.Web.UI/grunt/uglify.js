@@ -63,8 +63,7 @@
             },
             src: [
                 'Assets/Scripts/libs/leaflet/leaflet-src.js',
-                'Assets/Scripts/libs/leaflet/plugins/leaflet-google.js',
-                'Assets/Scripts/libs/leaflet/plugins/leaflet.markercluster.src.js'
+                'Assets/Scripts/libs/leaflet/plugins/leaflet.markercluster-src.js'
             ],
 
             dest: 'public/assets/scripts/leaflet-bundle.js'

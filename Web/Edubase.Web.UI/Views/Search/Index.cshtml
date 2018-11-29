@@ -2,7 +2,7 @@
 @using VM = Edubase.Web.UI.Models.Search.SearchViewModel;
 @using Edubase.Web.UI.Helpers;
 @model VM
-    
+
 @{
     ViewBag.bodyClasses = "schools-search-page search-page";
     ViewBag.hideLogo = true;
@@ -42,7 +42,7 @@
 
                 <div id="groups" class="tab-content @((Model.SelectedTab != SearchViewModel.Tab.Groups) ? "hidden-tab-content" : "")" aria-hidden="@(Model.SelectedTab != SearchViewModel.Tab.Groups)">
                     @{ Html.RenderPartial("Partials/_GroupSearch"); }
-                   
+
                 </div>
 
                 <div id="governors" class="tab-content @((Model.SelectedTab != SearchViewModel.Tab.Governors) ? "hidden-tab-content" : "")" aria-hidden="@(Model.SelectedTab != SearchViewModel.Tab.Governors)">
@@ -64,178 +64,178 @@
 
 @section ViewScripts{
     <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=@(System.Configuration.ConfigurationManager.AppSettings["GoogleApiKeyClientSide"])"></script>
+    @* <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=@(System.Configuration.ConfigurationManager.AppSettings["GoogleApiKeyClientSide"])"></script> *@
     <script type="text/javascript">
         var jScriptVersion;
         window.localAuthorities = @Html.Json(Model.LocalAuthorities);
 
-        (function($) {
-            var defaults = {
-                suggestionTemplate: function(suggestion) {
-                    return '<div><a href="#">' + suggestion + '</a></div>';
-                },
-                logoUrl: 'https://maps.gstatic.com/mapfiles/api-3/images/powered-by-google-on-white3.png',
-                locationInput: 'LocationSearchModel_AutoSuggestValue',
-                minChars: 2
-            };
-
-            function Gplaces(el, options) {
-                this.el = el;
-                this.opts = $.extend({}, defaults, options);
-                this.init();
-            }
-
-            var autocompleteService = new google.maps.places.AutocompleteService();
-            var placesService = new google.maps.places.PlacesService($('<div />')[0]);
-            var predictionsOld;
-            var locationSelected = false;
-
-            Gplaces.prototype = {
-                init: function() {
-                    var $el = $(this.el),
-                        opts = this.opts,
-                        self = this;
-
-
-                    $el.typeahead({
-                            hint: false,
-                            highlight: true,
-                            highlightAliases: [
-                                ["st. ", "st ", "saint "]
-                            ],
-                            minLength: opts.minChars,
-                            classNames: {
-                                menu: 'tt-menu',
-                                highlight: 'suggestion-highlight'
-                            },
-                            ariaOwnsId: "arialist_" + DfE.Util.randomNumber()
-                        },
-                        {
-                            limit: 10,
-                            source: this.places,
-                            templates: {
-                                suggestion: opts.suggestionTemplate,
-                                footer: '<div class="places-footer"><img src="' + opts.logoUrl + '"></div>'
-                            }
-                        });
-
-                    $el.on('typeahead:selected',
-                        function(e, address) {
-                            self.itemSelect(e, address);
-                        });
-
-                    $el.on('typeahead:open',
-                        function(e) {
-                            $el.nextAll('.tt-menu').find('.tt-suggestion').slice(0, 1).addClass('tt-cursor');
-                        });
-
-                    $el.on('typeahead:render',
-                        function() {
-                            $el.nextAll('.tt-menu').find('.tt-suggestion').slice(0, 1).addClass('tt-cursor');
-                        });
-
-                    $el.on('keydown',
-                        function(e) {
-                            var $field = $(this);
-                            if (e.which === 13) {
-                                e.preventDefault();
-                                e.stopPropagation();
-
-                                if ($(this).nextAll('.tt-menu').find('.tt-suggestion').length > 0) {
-                                    $(this).nextAll('.tt-menu').find('.tt-cursor').click();
-
-                                } else {
-                                    $field.parents('form').find('.search-button').click();
-                                }
-                            }
-                        });
-
-                    $('#location-search-submit').on('click', function (e) {
-                        if (!locationSelected) {
-                            e.preventDefault();
-                            var text = $('#LocationSearchModel_Text').val();
-                            if (text !== '') {
-                                var $elems = $el.nextAll('.tt-menu').find('.tt-suggestion');
-                                if ($elems.length > 0) {
-                                    $elems.slice(0, 1).click();
-                                    window.setTimeout(function () {
-                                        $('#location-search-submit').click();
-                                    }, 200);
-                                } else {
-                                    if (text.match(/\b[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][ABD-HJLNP-UW-Z]{2}\b/i)) { // only allow a server-side search when it's a uk postcode
-                                        locationSelected = true;
-                                        $('#location-search-submit').click();
-                                    }
-                                }
-                            }
-                        }
-                    });
-
-                },
-                places: function(q, cb, fc) {
-                    var c = new Array();
-                    var filteredPredictions;
-                    autocompleteService.getPlacePredictions(
-                        { input: q, types: ['geocode'], componentRestrictions: { country: 'GB' } },
-                        function(predictions, status) {
-                            if (status === google.maps.places.PlacesServiceStatus.OK) {
-                                filteredPredictions = predictions.filter(function(p) {
-                                    if ($.inArray('premise', p.types) === -1) {
-                                        return p;
-                                    }
-                                });
-                                predictionsOld = filteredPredictions;
-                            }
-                            if (!filteredPredictions) {
-                                $(window).trigger({
-                                    type: 'noLocationMatch',
-                                    q: q
-                                });
-                                return;
-                            } else {
-                                $('#searchby-location-ref').find('.warning-message').remove();
-                                $.map(filteredPredictions,
-                                    function(prediction) {
-                                        c.push(prediction.description);
-                                    });
-                                fc(c);
-                            }
-
-                        });
-                },
-                itemSelect: function (e, address) {
-                    locationSelected = true;
-                    var self = this;
-                    var ref = $.grep(predictionsOld,
-                        function(prediction) {
-                            return prediction.description === address;
-                        })[0].reference;
-
-                    placesService.getDetails({ reference: ref },
-                        function(result, status) {
-                            self.detailCallback(result, status);
-                        });
-                },
-                detailCallback: function(result, status) {
-                    document.getElementById(this.opts.locationInput).value = result.geometry.location.lat() +
-                        ',' +
-                        result.geometry.location.lng();
-
-                }
-
-            };
-
-            $.fn.gPlaces = function(options) {
-                return this.each(function() {
-                    if (!$.data(this, 'gplaces')) {
-                        $.data(this, 'gplaces', new Gplaces(this, options));
-                    }
-
-                });
-            }
-        }($));
+//        (function($) {
+//            var defaults = {
+//                suggestionTemplate: function(suggestion) {
+//                    return '<div><a href="#">' + suggestion + '</a></div>';
+//                },
+//                logoUrl: 'https://maps.gstatic.com/mapfiles/api-3/images/powered-by-google-on-white3.png',
+//                locationInput: 'LocationSearchModel_AutoSuggestValue',
+//                minChars: 2
+//            };
+//
+//            function Gplaces(el, options) {
+//                this.el = el;
+//                this.opts = $.extend({}, defaults, options);
+//                this.init();
+//            }
+//
+//            var autocompleteService = new google.maps.places.AutocompleteService();
+//            var placesService = new google.maps.places.PlacesService($('<div />')[0]);
+//            var predictionsOld;
+//            var locationSelected = false;
+//
+//            Gplaces.prototype = {
+//                init: function() {
+//                    var $el = $(this.el),
+//                        opts = this.opts,
+//                        self = this;
+//
+//
+//                    $el.typeahead({
+//                            hint: false,
+//                            highlight: true,
+//                            highlightAliases: [
+//                                ["st. ", "st ", "saint "]
+//                            ],
+//                            minLength: opts.minChars,
+//                            classNames: {
+//                                menu: 'tt-menu',
+//                                highlight: 'suggestion-highlight'
+//                            },
+//                            ariaOwnsId: "arialist_" + DfE.Util.randomNumber()
+//                        },
+//                        {
+//                            limit: 10,
+//                            source: this.places,
+//                            templates: {
+//                                suggestion: opts.suggestionTemplate,
+//                                footer: '<div class="places-footer"><img src="' + opts.logoUrl + '"></div>'
+//                            }
+//                        });
+//
+//                    $el.on('typeahead:selected',
+//                        function(e, address) {
+//                            self.itemSelect(e, address);
+//                        });
+//
+//                    $el.on('typeahead:open',
+//                        function(e) {
+//                            $el.nextAll('.tt-menu').find('.tt-suggestion').slice(0, 1).addClass('tt-cursor');
+//                        });
+//
+//                    $el.on('typeahead:render',
+//                        function() {
+//                            $el.nextAll('.tt-menu').find('.tt-suggestion').slice(0, 1).addClass('tt-cursor');
+//                        });
+//
+//                    $el.on('keydown',
+//                        function(e) {
+//                            var $field = $(this);
+//                            if (e.which === 13) {
+//                                e.preventDefault();
+//                                e.stopPropagation();
+//
+//                                if ($(this).nextAll('.tt-menu').find('.tt-suggestion').length > 0) {
+//                                    $(this).nextAll('.tt-menu').find('.tt-cursor').click();
+//
+//                                } else {
+//                                    $field.parents('form').find('.search-button').click();
+//                                }
+//                            }
+//                        });
+//
+//                    $('#location-search-submit').on('click', function (e) {
+//                        if (!locationSelected) {
+//                            e.preventDefault();
+//                            var text = $('#LocationSearchModel_Text').val();
+//                            if (text !== '') {
+//                                var $elems = $el.nextAll('.tt-menu').find('.tt-suggestion');
+//                                if ($elems.length > 0) {
+//                                    $elems.slice(0, 1).click();
+//                                    window.setTimeout(function () {
+//                                        $('#location-search-submit').click();
+//                                    }, 200);
+//                                } else {
+//                                    if (text.match(/\b[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][ABD-HJLNP-UW-Z]{2}\b/i)) { // only allow a server-side search when it's a uk postcode
+//                                        locationSelected = true;
+//                                        $('#location-search-submit').click();
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    });
+//
+//                },
+//                places: function(q, cb, fc) {
+//                    var c = new Array();
+//                    var filteredPredictions;
+//                    autocompleteService.getPlacePredictions(
+//                        { input: q, types: ['geocode'], componentRestrictions: { country: 'GB' } },
+//                        function(predictions, status) {
+//                            if (status === google.maps.places.PlacesServiceStatus.OK) {
+//                                filteredPredictions = predictions.filter(function(p) {
+//                                    if ($.inArray('premise', p.types) === -1) {
+//                                        return p;
+//                                    }
+//                                });
+//                                predictionsOld = filteredPredictions;
+//                            }
+//                            if (!filteredPredictions) {
+//                                $(window).trigger({
+//                                    type: 'noLocationMatch',
+//                                    q: q
+//                                });
+//                                return;
+//                            } else {
+//                                $('#searchby-location-ref').find('.warning-message').remove();
+//                                $.map(filteredPredictions,
+//                                    function(prediction) {
+//                                        c.push(prediction.description);
+//                                    });
+//                                fc(c);
+//                            }
+//
+//                        });
+//                },
+//                itemSelect: function (e, address) {
+//                    locationSelected = true;
+//                    var self = this;
+//                    var ref = $.grep(predictionsOld,
+//                        function(prediction) {
+//                            return prediction.description === address;
+//                        })[0].reference;
+//
+//                    placesService.getDetails({ reference: ref },
+//                        function(result, status) {
+//                            self.detailCallback(result, status);
+//                        });
+//                },
+//                detailCallback: function(result, status) {
+//                    document.getElementById(this.opts.locationInput).value = result.geometry.location.lat() +
+//                        ',' +
+//                        result.geometry.location.lng();
+//
+//                }
+//
+//            };
+//
+//            $.fn.gPlaces = function(options) {
+//                return this.each(function() {
+//                    if (!$.data(this, 'gplaces')) {
+//                        $.data(this, 'gplaces', new Gplaces(this, options));
+//                    }
+//
+//                });
+//            }
+//        }($));
         if (!$('html').hasClass('lt-ie9')) {
-            $('#LocationSearchModel_Text').gPlaces();
+           // $('#LocationSearchModel_Text').gPlaces();
             DfE.Views.schoolSearch.init();
         }
     </script>
