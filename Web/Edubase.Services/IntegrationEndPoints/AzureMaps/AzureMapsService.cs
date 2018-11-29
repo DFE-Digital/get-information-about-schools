@@ -51,8 +51,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception(
-                        $"The API returned an error with status code: {response.StatusCode}. (Request URI: {request.RequestUri.PathAndQuery})");
+                    return new PlaceDto[0];
                 }
 
                 using (var sr = new StreamReader(stream))

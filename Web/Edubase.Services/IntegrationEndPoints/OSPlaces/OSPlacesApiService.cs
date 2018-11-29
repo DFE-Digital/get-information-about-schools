@@ -44,6 +44,11 @@ namespace Edubase.Services.IntegrationEndPoints.OSPlaces
                             $"places/v1/addresses/postcode?postcode={text}&key={_apiKey}&output_srs=WGS84&dataset=DPA,LPI");
                     }))
                 {
+                    if (!message.IsSuccessStatusCode)
+                    {
+                        return new PlaceDto[0];
+                    }
+
                     var response = await ParseHttpResponseMessageAsync<OSPlacesResponse>(message);
 
                     var addresses = response.Results.Where(x => x.OSAddress != null
@@ -53,7 +58,7 @@ namespace Edubase.Services.IntegrationEndPoints.OSPlaces
                         .Select(x => x.FirstOrDefault(u => u.Address.Length == x.Max(y => y.Address.Length)))
                         .OrderBy(x => x.Address);
 
-                    return addresses.Select(x => new PlaceDto(x.Address, LatLon.Create(x.Lat, x.Lng))).ToArray() ?? new PlaceDto[0];
+                    return addresses.Select(x => new PlaceDto(x.Address, LatLon.Create(x.Lat, x.Lng))).ToArray();
                 }
             }
 
