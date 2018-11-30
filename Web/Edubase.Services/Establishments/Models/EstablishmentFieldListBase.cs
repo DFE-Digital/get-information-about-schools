@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Edubase.Services.Establishments.Models
@@ -157,6 +157,8 @@ namespace Edubase.Services.Establishments.Models
         public virtual bool CASWardId { get; set; }
         public virtual bool MSOAId { get; set; }
         public virtual bool LSOAId { get; set; }
+        public virtual bool MSOACode => MSOAId;
+        public virtual bool LSOACode => LSOAId;
         public virtual bool Easting { get; set; }
         public virtual bool Northing { get; set; }
 

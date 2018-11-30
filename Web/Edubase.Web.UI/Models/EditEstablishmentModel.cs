@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Services.Establishments.DisplayPolicies;
 using System;
 using System.Collections.Generic;
@@ -164,8 +164,8 @@ namespace Edubase.Web.UI.Models
         public int? UrbanRuralId { get; set; }
         public int? GSSLAId { get; set; }
         public int? CASWardId { get; set; }
-        public int? MSOAId { get; set; }
-        public int? LSOAId { get; set; }
+        //public int? MSOAId { get; set; }
+        //public int? LSOAId { get; set; }
 
         public string MSOACode { get; set; }
         public string LSOACode { get; set; }
