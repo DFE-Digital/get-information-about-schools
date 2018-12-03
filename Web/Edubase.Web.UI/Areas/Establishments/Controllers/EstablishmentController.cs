@@ -206,6 +206,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     StatusId = (int) eLookupEstablishmentStatus.ProposedToOpen
                 };
 
+                if (viewModel.EstablishmentTypeId == (int) ET.SixthFormCentres) // story: 25821
+                {
+                    apiModel.StatutoryLowAge = 0;
+                    apiModel.StatutoryHighAge = 0;
+                }
+
                 var validation = await _establishmentWriteService.ValidateCreateAsync(apiModel, true, User);
 
                 ApplyCreateEstabValidationErrors(validation);

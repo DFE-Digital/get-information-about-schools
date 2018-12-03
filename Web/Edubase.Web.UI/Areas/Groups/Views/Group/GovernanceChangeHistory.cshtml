@@ -1,0 +1,139 @@
+@using Edubase.Common
+@using Edubase.Services.Domain
+@model GroupDetailViewModel
+@{
+    ViewBag.Title = Model.Group.Name;
+    ViewBag.PageClass = "mat-details school-details";
+    
+    var sortDir = "desc";
+    var sortField = "requestedDateUtc";
+    if (Request.QueryString["sortby"] != null)
+    {
+        sortField = Request.QueryString["sortby"].Substring(0, Request.QueryString["sortby"].IndexOf("-"));
+        sortDir = (Request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
+    }
+
+}
+<div class="breadcrumbs">
+    <ul>
+        <li>@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
+        <li>@Html.RouteLink(Model.Group.Name, "GroupDetails", new {id = Model.Group.GroupUId })</li>
+    </ul>
+</div>
+
+<h1 class="heading-large">@Model.Group.Name</h1>
+
+    <p class="urn">UID: @Model.Group.GroupUId</p>
+    <p class="group-type">@Model.GroupTypeName</p>
+
+    <p class="group-data-download">
+        @Html.RouteLink("Download group data", "GroupDataDownload", new { uid = Model.Group.GroupUId, state = UriHelper.SerializeToUrlToken(new[] { new RouteDto("GroupDetails", new RouteValueDictionary(new { id = Model.Group.GroupUId }), Model.Group.Name) }) }, new { rel = "nofollow" })
+    </p>
+
+    <div class="grid-row horizontal-tabs-wrapper">
+        <div class="column-full">
+
+            <div class="tab-wrap">
+                <ul class="horizontal-tabs">
+                    @if (Model.IsUserLoggedOn)
+                    {
+                        <li><a href="#change-history" class="horizontal-tab">Governance Changes</a></li>
+                    }
+                </ul>
+            </div>
+
+            <div class="tab-content-wrapper horizontal-tabs-content">
+                
+                @if (Model.IsUserLoggedOn)
+                {
+                    <div id="change-history" class="tab-content">
+                        <h2 class="bold-small">Governance Change History</h2>
+                        @if (!Model.ChangeHistory.Items.Any())
+                        {
+                            <p>There are no change records available at the moment</p>
+                        }
+                        else
+                        {
+                            <p>
+                                @Html.RouteLink("Download data in CSV format", "DownloadGroupGovernanceChangeHistory", new { groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.csv }, new { style = "margin-bottom:10px; display:block;" })
+                                @Html.RouteLink("Download data in XLSX format", "DownloadGroupGovernanceChangeHistory", new { groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.xlsx }, null)
+                                <br />
+                            </p>
+
+                            if (Model.ChangeHistory.PageCount > 1)
+                            {
+                                <div class="top-pagination">
+                                    @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
+                                </div>
+                            }
+
+                            <table class="edubase-table approval-changes sortable-table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <a href="@Url.SortUrl("effectiveDateUtc", "#change-history")"
+                                               class="@Html.Conditional(sortField == "effectiveDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Date changed</a>
+                                        </th>
+                                        <th>
+                                            <a href="@Url.SortUrl("fieldName", "#change-history")"
+                                               class="@Html.Conditional(sortField == "fieldName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Updated field</a>
+                                        </th>
+                                        <th>
+                                            <a href="@Url.SortUrl("oldValue", "#change-history")"
+                                               class="@Html.Conditional(sortField == "oldValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Old value</a>
+                                        </th>
+                                        <th>
+                                            <a href="@Url.SortUrl("newValue", "#change-history")"
+                                               class="@Html.Conditional(sortField == "newValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">New value</a>
+                                        </th>
+                                        <th>
+                                            <a href="@Url.SortUrl("requestedDateUtc", "#change-history")"
+                                               class="@Html.Conditional(sortField == "requestedDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Date requested</a>
+                                        </th>
+                                        <th>
+                                            <a href="@Url.SortUrl("originatorUserName", "#change-history")"
+                                               class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Suggested from</a>
+                                        </th>
+                                        <th>
+                                            <a href="@Url.SortUrl("approverUserName", "#change-history")"
+                                               class="@Html.Conditional(sortField == "approverUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Approved by</a>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.ChangeHistory.Items)
+                                    {
+                                        <tr>
+                                            <td aria-label="Date changed">@(item.EffectiveDateUtc?.ToString("dd/MM/yyyy"))</td>
+                                            <td aria-label="Updated field">@item.Name</td>
+                                            <td aria-label="Old value">@item.OldValue</td>
+                                            <td aria-label="New value">@item.NewValue</td>
+                                            <td aria-label="Date requested">@(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))</td>
+                                            <td aria-label="Suggested from">@item.OriginatorUserName</td>
+                                            <td aria-label="Approved by">@(item.ApproverUserName ?? "--")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                            if (Model.ChangeHistory.PageCount > 1)
+                            {
+                                <div class="lower-pagination">
+                                    @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
+                                </div>
+                            }
+
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+@section ViewScripts
+{
+    <script>
+        $('#governance').find('.sortable-table').clientSort();
+    </script>
+    <script src="/public/assets/scripts/leaflet-bundle.js"></script>
+}

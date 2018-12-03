@@ -1,4 +1,4 @@
-﻿using System.Security.Principal;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using Edubase.Services.Domain;
 using System;
@@ -12,5 +12,6 @@ namespace Edubase.Services.Groups.Downloads
         Task<DownloadDto> DownloadGroupData(int groupUId, DownloadType downloadType, IPrincipal principal);
         Task<ProgressDto> GetDownloadGenerationProgressAsync(Guid taskId, IPrincipal principal);
         Task<Guid> SearchWithDownloadGenerationAsync(SearchDownloadDto<GroupSearchPayload> payload, IPrincipal principal);
+        Task<DownloadDto> GetGovernanceChangeHistoryDownloadAsync(int uid, DownloadType downloadType, IPrincipal user);
     }
 }

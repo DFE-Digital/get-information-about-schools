@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Groups.Downloads;
+using Edubase.Services.Groups.Downloads;
 using System.Threading.Tasks;
 using Edubase.Services.Domain;
 using System.Security.Principal;
@@ -31,5 +31,7 @@ namespace Edubase.Services.Texuna.Groups
         {
             return (await _httpClient.PostAsync<ApiResultDto<Guid>>("group/search/download/generate", payload, principal)).GetResponse().Value;
         }
+
+        public async Task<DownloadDto> GetGovernanceChangeHistoryDownloadAsync(int groupUId, DownloadType downloadType, IPrincipal principal) => (await _httpClient.GetAsync<DownloadDto>($"group/{groupUId}/governance/changes/download?format={downloadType}", principal)).GetResponse();
     }
 }

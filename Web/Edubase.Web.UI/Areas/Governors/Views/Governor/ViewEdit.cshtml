@@ -49,13 +49,22 @@ else
 {
     <div class="grid-row">
         <div class="column-two-thirds">
-            @ShowLegalDuty()
-
-            @if (User.Identity.IsAuthenticated && Model.EstablishmentUrn.HasValue && Model.DomainModel.HasGovernors)
+            @if (User.Identity.IsAuthenticated && Model.DomainModel.HasGovernors)
             {
-                @Html.RouteLink("View governance change history", "EstabDetailGovChangeHistory", new { id = Model.EstablishmentUrn })
-                <br /><br />
+                <br/>
+                if (Model.EstablishmentUrn.HasValue)
+                {
+                    @Html.RouteLink("View governance change history", "EstabDetailGovChangeHistory", new {id = Model.EstablishmentUrn})
+                    <br/><br/>
+                }
+                else
+                {
+                    @Html.RouteLink("View governance change history", "GroupDetailGovChangeHistory", new {id = Model.GroupUId})
+                    <br/><br/>
+                }
             }
+
+            @ShowLegalDuty()
 
             @if (Model.GovernanceMode.HasValue)
             {
@@ -64,16 +73,18 @@ else
             }
         </div>
     </div>
+
+    if (Model.ShowDelegationAndCorpContactInformation)
+    {
+        <div class="column-full governors-section">
+         @ShowDelegationInformation()
+         <br />
+         @ShowCorporateContactInformation()
+        </div>
+    }
 }
 
-@if (Model.ShowDelegationAndCorpContactInformation)
-{
-    <div class="column-full governors-section">
-        @ShowDelegationInformation()
-        <br />
-        @ShowCorporateContactInformation()
-    </div>
-}
+
 
 @if (Model.DomainModel.HasGovernors)
 {

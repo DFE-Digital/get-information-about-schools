@@ -44,7 +44,7 @@
         </div>
         <div class="tab-content-wrapper horizontal-tabs-content">
 
-            <div id="school-change-history" class="tab-content approval-data">
+            <div id="change-history" class="tab-content approval-data">
                 <h2 class="bold-small">Governance Change History</h2>
                 @if (!Model.ChangeHistory.Items.Any())
                 {
@@ -67,31 +67,31 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <a href="@Url.SortUrl("effectiveDateUtc", "#school-change-history")"
+                                    <a href="@Url.SortUrl("effectiveDateUtc", "#change-history")"
                                        class="@Html.Conditional(sortField == "effectiveDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Date changed</a>
                                 </th>
                                 <th>
-                                    <a href="@Url.SortUrl("fieldName", "#school-change-history")"
+                                    <a href="@Url.SortUrl("fieldName", "#change-history")"
                                        class="@Html.Conditional(sortField == "fieldName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Updated field</a>
                                 </th>
                                 <th>
-                                    <a href="@Url.SortUrl("oldValue", "#school-change-history")"
+                                    <a href="@Url.SortUrl("oldValue", "#change-history")"
                                        class="@Html.Conditional(sortField == "oldValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Old value</a>
                                 </th>
                                 <th>
-                                    <a href="@Url.SortUrl("newValue", "#school-change-history")"
+                                    <a href="@Url.SortUrl("newValue", "#change-history")"
                                        class="@Html.Conditional(sortField == "newValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">New value</a>
                                 </th>
                                 <th>
-                                    <a href="@Url.SortUrl("requestedDateUtc", "#school-change-history")"
+                                    <a href="@Url.SortUrl("requestedDateUtc", "#change-history")"
                                        class="@Html.Conditional(sortField == "requestedDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Date requested</a>
                                 </th>
                                 <th>
-                                    <a href="@Url.SortUrl("originatorUserName", "#school-change-history")"
+                                    <a href="@Url.SortUrl("originatorUserName", "#change-history")"
                                        class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Suggested from</a>
                                 </th>
                                 <th>
-                                    <a href="@Url.SortUrl("approverUserName", "#school-change-history")"
+                                    <a href="@Url.SortUrl("approverUserName", "#change-history")"
                                        class="@Html.Conditional(sortField == "approverUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Approved by</a>
                                 </th>
                             </tr>

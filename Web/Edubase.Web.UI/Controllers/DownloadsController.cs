@@ -118,6 +118,11 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> DownloadGovernanceChangeHistoryAsync(int id, DownloadType downloadType)
             => Redirect((await _establishmentReadService.GetGovernanceChangeHistoryDownloadAsync(id, downloadType, User)).Url);
 
+        [HttpGet, EdubaseAuthorize]
+        [Route("Download/Group/{id}/Governance/{downloadType}", Name = "DownloadGroupGovernanceChangeHistory")]
+        public async Task<ActionResult> DownloadGroupGovernanceChangeHistoryAsync(int id, DownloadType downloadType)
+            => Redirect((await _groupDownloadService.GetGovernanceChangeHistoryDownloadAsync(id, downloadType, User)).Url);
+
         [HttpGet]
         [Route("Download/File", Name = "DownloadFile")]
         public async Task<ActionResult> DownloadFileAsync(string id)

@@ -241,6 +241,30 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             
             return View(viewModel);
         }
+
+        [HttpGet, Route("Details/{id:int}/Governance/Changes", Name = "GroupDetailGovChangeHistory"), EdubaseAuthorize]
+        public async Task<ActionResult> GovernanceChangeHistoryAsync(int id, int skip = 0, string sortBy = null)
+        {
+            var model = (await _groupReadService.GetAsync(id, User)).GetResult();
+
+            var viewModel = new GroupDetailViewModel
+            {
+                Group = model,
+                GroupTypeName = model.GroupTypeId.HasValue ? await _lookup.GetNameAsync(() => model.GroupTypeId) : null,
+                LocalAuthorityName = await _lookup.GetNameAsync(() => model.LocalAuthorityId),
+                GroupStatusName =  await _lookup.GetNameAsync(() => model.StatusId, "Group"),
+                Address = model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup) ? model.Address.ToString() : null,
+                IsUserLoggedOn = User.Identity.IsAuthenticated,
+                GroupTypeId = model.GroupTypeId ?? -1,
+                IsClosed = model.StatusId == (int) GS.Closed || model.StatusId == (int) GS.CreatedInError,
+                IsClosedInError = model.StatusId == (int) GS.CreatedInError,
+                CloseDate = model.ClosedDate,
+                ChangeHistory = await _groupReadService.GetGovernanceChangeHistoryAsync(id, skip, 100, sortBy, User)
+            };
+    
+            return View("GovernanceChangeHistory", viewModel);
+        }
+
         [HttpGet]
         [Route("Edit/{id:int}/Details"), EdubaseAuthorize]
         public async Task<ActionResult> EditDetails(int id)
@@ -438,10 +462,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
 
-        private static void PopulateStatusSelectList(GroupEditorViewModel viewModel)
-        {
-            viewModel.Statuses = new[] { new SelectListItem { Value = ((int) GS.Open).ToString(), Text = "Open" }, new SelectListItem { Value = ((int) GS.Closed).ToString(), Text = "Closed" } };
-        }
+        private static void PopulateStatusSelectList(GroupEditorViewModel viewModel) => viewModel.Statuses = new[] { new SelectListItem { Value = ((int) GS.Open).ToString(), Text = "Open" }, new SelectListItem { Value = ((int) GS.Closed).ToString(), Text = "Closed" } };
+
         private async Task AddLinkedEstablishment(GroupEditorViewModel viewModel)
         {
             var model = (await _establishmentReadService.GetAsync(viewModel.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn.Value, User)).GetResult();
