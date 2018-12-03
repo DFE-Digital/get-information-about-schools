@@ -1,8 +1,4 @@
-﻿using Edubase.Web.UI.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using Edubase.Web.UI.Models;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {

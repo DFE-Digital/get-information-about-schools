@@ -1,4 +1,4 @@
-﻿@model ReplaceChairViewModel
+@model ReplaceChairViewModel
     
 @{
     ViewBag.hideLogo = true;
@@ -25,8 +25,19 @@
                 <h3 class="heading-small">@Model.GovernorFullName</h3>
 
                 @Html.EditorFor(m => m.DateTermEnds)
+
+
+
+                if (Model.AllowReinstatement)
+                {
+                    <span class="checkbox-wrap">
+                        @Html.CheckBoxFor(x => x.Reinstate, new { id = nameof(Model.Reinstate) })
+                        @Html.LabelFor(x => x.Reinstate, "Re-instate as local governor", new { @for = nameof(Model.Reinstate), @class = "edubase-button-checkbox" })
+                    </span>
+                }
+
                 <div class="form-group inline toggle-panels">
-                    @Html.GiasRadioFor(m =>m.NewChairType,
+                    @Html.GiasRadioFor(m => m.NewChairType,
                         ReplaceChairViewModel.ChairType.LocalChair,
                         "New Chair",
                         null,
@@ -44,7 +55,17 @@
                     <div class="column-two-thirds">
                         <div id="newChairDetails" class="panel-indent @(Model.NewChairType == ReplaceChairViewModel.ChairType.LocalChair ? "open-expander" : "")">
                             <div class="replacement-chair-option">
-                                @Html.EditorFor(m => m.NewLocalGovernor, new { disableStartDate = true })
+
+                                @if (Model.ExistingNonChairs.Any())
+                                {
+                                    <div class="form-group js-when-on">
+                                        @Html.LabelFor(x => x.SelectedPreviousExistingNonChairId, "Choose replacement")
+                                        @Html.DropDownListFor(x => x.SelectedPreviousExistingNonChairId, Model.ExistingNonChairs, "New", new { @class = "form-control choose-replacement" })
+                                    </div>
+                                    <br />
+                                }
+
+                                @Html.EditorFor(m => m.NewLocalGovernor, new {disableStartDate = true})
                             </div>
                         </div>
                         <div id="sharedChairDetails" class="panel-indent @(Model.NewChairType == ReplaceChairViewModel.ChairType.SharedChair ? "open-expander" : "")">
@@ -96,7 +117,27 @@
         $day.blur(checkAndUpdateDate);
         $month.blur(checkAndUpdateDate);
         $year.blur(checkAndUpdateDate);
+        
+        $(function () {
+            checkAndUpdateDate();
 
-        $(function() { checkAndUpdateDate(); });
+            $(".choose-replacement").on("change", function () {
+                var queryParameters = {}, queryString = location.search.substring(1),
+                    re = /([^&=]+)=([^&]*)/g, m;
+
+                while (m = re.exec(queryString)) {
+                    queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+                }
+
+                queryParameters['rgid'] = $(this).val();
+                queryParameters['d'] = $("#DateTermEnds_Day").val();
+                queryParameters['m'] = $("#DateTermEnds_Month").val();
+                queryParameters['y'] = $("#DateTermEnds_Year").val();
+                queryParameters['ri'] = $("#Reinstate").prop("checked");
+
+                location.search = $.param(queryParameters);
+
+            });
+        });
     </script>
 }

@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web.Mvc;
 using Edubase.Services.Enums;
+using Edubase.Services.Governors.Models;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Models;
 using Edubase.Services.Groups.Models;
@@ -32,5 +35,11 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public string TypeName { get; set; }
         GroupModel IEstablishmentPageViewModel.LegalParentGroup { get; set; }
         string IEstablishmentPageViewModel.LegalParentGroupToken { get; set; }
+
+        public bool AllowReinstatement => Urn.HasValue;
+        public bool Reinstate { get; set; }
+        public IEnumerable<SelectListItem> ExistingNonChairs { get; set; } = Enumerable.Empty<SelectListItem>();
+        public int? SelectedPreviousExistingNonChairId { get; set; }
+        public GovernorModel SelectedNonChair { get; set; }
     }
 }

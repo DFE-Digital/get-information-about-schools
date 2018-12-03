@@ -1,4 +1,4 @@
-﻿@using Edubase.Services.Enums
+@using Edubase.Services.Enums
 @using Edubase.Common;
 @using Edubase.Common.Text;
 @using VM = Edubase.Web.UI.Areas.Governors.Models.CreateEditGovernorViewModel;
@@ -51,8 +51,8 @@
             if (Model.AllowReinstateAsGovernor)
             {
                 <span class="checkbox-wrap">
-                    @Html.CheckBoxFor(x => x.ReinstateAsGovernor, new { @id = "ReinstateAsGovernor" })
-                    @Html.LabelFor(x => x.ReinstateAsGovernor, "Re-instate as governor", new { @for = "ReinstateAsGovernor", @class = "edubase-button-checkbox" })
+                    @Html.CheckBoxFor(x => x.ReinstateAsGovernor, new { id = nameof(Model.ReinstateAsGovernor) })
+                    @Html.LabelFor(x => x.ReinstateAsGovernor, Model.ReinstateAsGovernorCheckboxLabel, new { @for = nameof(Model.ReinstateAsGovernor), @class = "edubase-button-checkbox" })
                 </span>
             }
         }
@@ -62,7 +62,7 @@
         if (Model.ExistingGovernors.Any())
         {
             <div class="form-group js-when-on">
-                @Html.LabelFor(x => x.SelectedPreviousGovernorId, "Choose governor")
+                @Html.LabelFor(x => x.SelectedPreviousGovernorId, Model.SelectPreviousGovernorLabel)
                 @Html.DropDownListFor(x => x.SelectedPreviousGovernorId, Model.ExistingGovernors, "New", new { @class = "form-control choose-governor" })
             </div>
             <br />
@@ -129,6 +129,8 @@
             $month.blur(checkAndUpdateDate);
             $year.blur(checkAndUpdateDate);
 
+            checkAndUpdateDate();
+
             if (document.getElementById('IsHistoric') && document.getElementById('IsHistoric').value === 'True') {
                 $('.warning-message').addClass('hidden');
                 var $endDateFields = $('#AppointmentEndDate_Day, #AppointmentEndDate_Month, #AppointmentEndDate_Year');
@@ -168,6 +170,11 @@
                     queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
                 }
                 queryParameters['gid2'] = $(this).val();
+                queryParameters['d'] = $("#ReplaceGovernorViewModel_AppointmentEndDate_Day").val();
+                queryParameters['m'] = $("#ReplaceGovernorViewModel_AppointmentEndDate_Month").val();
+                queryParameters['y'] = $("#ReplaceGovernorViewModel_AppointmentEndDate_Year").val();
+                queryParameters['rag'] = $("#ReinstateAsGovernor").prop("checked");
+
                 location.search = $.param(queryParameters);
                 
             });
