@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents the list of fields within an Establishment.
     /// </summary>
-    public class EstablishmentFieldList : EstablishmentFieldListBase
+    public class EstablishmentFieldList : EstablishmentFieldListBase<bool>
     {
         public bool AgeRange
         {

@@ -545,17 +545,21 @@
                     @if (Model.EditPolicy.Contact_EmailAddress)
                     {
                         <div class="form-group">
-                            @Html.LabelFor(x => x.Contact_EmailAddress, "Email address")
-                            <a href="#help-text-email-address" class="icon-help"><span class="visuallyhidden">Help with this field</span></a>
-                            @Html.TextBoxFor(x => x.Contact_EmailAddress, new { @class = "form-control" })
+                            <label for="@nameof(Model.Contact_EmailAddress)">
+                                Email address
+                                <a href="#help-text-email-address" class="icon-help" style="top: 2px;"><span class="visuallyhidden">Help with this field</span></a>
+                            </label>
+                            @Html.TextBoxFor(x => x.Contact_EmailAddress, new {@class = "form-control"})
                         </div>
                     }
 
                     @if (Model.EditPolicy.ContactAlt_EmailAddress)
                     {
                         <div class="form-group">
-                            @Html.LabelFor(x => x.ContactAlt_EmailAddress, "Alternative email address")
-                            <a href="#help-text-email-address" class="icon-help"><span class="visuallyhidden">Help with this field</span></a>
+                            <label for="@nameof(Model.ContactAlt_EmailAddress)">
+                                Alternative email address
+                                <a href="#help-text-email-address" class="icon-help" style="top: 2px;"><span class="visuallyhidden">Help with this field</span></a>
+                            </label>
                             @Html.TextBoxFor(x => x.ContactAlt_EmailAddress, new { @class = "form-control" })
                         </div>
                     }

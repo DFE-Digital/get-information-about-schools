@@ -1,4 +1,4 @@
-﻿
+
 @using Edubase.Common;
 @model EstablishmentDetailViewModel
 
@@ -241,7 +241,7 @@
 
             @if (Model.DisplayPolicy.LastChangedDate)
             {
-                <dt>Last Change:</dt>
+                <dt>Date last changed / confirmed:</dt>
                 <dd>@(Model.Establishment.LastChangedDate?.ToString("dd/MM/yyyy"))</dd>
             }
 
