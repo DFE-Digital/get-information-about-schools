@@ -160,19 +160,19 @@ namespace Edubase.Services.Texuna.Establishments
         public async Task<IEnumerable<LinkedEstablishmentModel>> GetLinkedEstablishmentsAsync(int urn, IPrincipal principal)
                             => (await _httpClient.GetAsync<List<LinkedEstablishmentModel>>($"establishment/{urn}/linked-establishments", principal)).GetResponse();
 
-        public async Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model, EstablishmentDisplayEditPolicy approvalsPolicy, IPrincipal principal)
+        public async Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel model, EstablishmentApprovalsPolicy approvalsPolicy, IPrincipal principal)
         {
             var originalModel = (await GetAsync(model.Urn.Value, principal)).GetResult();
             return await GetModelChangesAsync(originalModel, model, approvalsPolicy);
         }
 
-        public async Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model, EstablishmentDisplayEditPolicy approvalsPolicy)
+        public async Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model, EstablishmentApprovalsPolicy approvalsPolicy)
         {
             var changes = ReflectionHelper.DetectChanges(model, original, typeof(IEBTModel));
-            changes.AddRange(await DetectAdditionalAddressChanges(original, model, approvalsPolicy));
+            changes.AddRange(await DetectAdditionalAddressChanges(original, model));
             var retVal = new List<ChangeDescriptorDto>();
 
-            var approvalFields = approvalsPolicy.GetTrueFieldNames();
+            var approvalFields = approvalsPolicy.GetFieldsRequiringApproval();
 
             foreach (var change in changes)
             {
@@ -194,7 +194,8 @@ namespace Edubase.Services.Texuna.Establishments
                     NewValue = change.NewValue.Clean(),
                     OldValue = change.OldValue.Clean(),
                     Tag = change.Tag,
-                    RequiresApproval = (change.Tag == "additionaladdress" && approvalsPolicy.AdditionalAddresses) || approvalFields.Contains(change.Name, StringComparer.OrdinalIgnoreCase)
+                    RequiresApproval = (change.Tag == "additionaladdress" && approvalsPolicy.AdditionalAddresses.RequiresApproval) || approvalFields.Contains(change.Name, StringComparer.OrdinalIgnoreCase),
+                    ApproverName = approvalsPolicy.GetApproverName(change.Name)
                 });
             }
 
@@ -221,7 +222,7 @@ namespace Edubase.Services.Texuna.Establishments
             return (await _httpClient.GetAsync<List<EstablishmentSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}", principal)).GetResponse();
         }
 
-        private async Task<IEnumerable<ChangeDescriptor>> DetectAdditionalAddressChanges(EstablishmentModel originalModel, EstablishmentModel newModel, EstablishmentDisplayEditPolicy approvalsPolicy)
+        private async Task<IEnumerable<ChangeDescriptor>> DetectAdditionalAddressChanges(EstablishmentModel originalModel, EstablishmentModel newModel)
         {
             var retVal = new List<ChangeDescriptor>();
             var newAddresses = newModel.AdditionalAddresses?.Where(x => !x.Id.HasValue).ToArray();

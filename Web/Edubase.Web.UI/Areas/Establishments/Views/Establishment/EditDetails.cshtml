@@ -1,4 +1,4 @@
-﻿@using System.Linq
+@using System.Linq
 @using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
 @model ViewModel
 @{
@@ -101,7 +101,7 @@
                     {
                         Html.RenderPartial("Partials/_EditAddresses");
                         <div class="form-group">
-                            @Html.RouteLink("Add new address", "AddOrReplaceEstablishmentAddress", new { urn = Model.Urn, target = $"alt-new" }, new { @class = "replace-address" })
+                            @Html.RouteLink("Add new address", "AddOrReplaceEstablishmentAddress", new { urn = Model.Urn, target = "alt-new" }, new { @class = "replace-address" })
                         </div>
                     }
 
@@ -159,7 +159,9 @@
                     {
                         <div class="form-group range-group @Html.ValidationCssClassFor(x=>x.StatutoryHighAge) @Html.ValidationCssClassFor(x=>x.StatutoryLowAge)">
                             <fieldset>
-                                <legend class="bold">Age range</legend>
+                                <legend class="bold">
+                                    Age range
+                                </legend>
                                 @Html.ValidationMessageFor(x=>x.StatutoryLowAge)
                                 @Html.ValidationMessageFor(x => x.StatutoryHighAge)
 
@@ -543,15 +545,21 @@
                     @if (Model.EditPolicy.Contact_EmailAddress)
                     {
                         <div class="form-group">
-                            @Html.LabelFor(x => x.Contact_EmailAddress, "Email address")
-                            @Html.TextBoxFor(x => x.Contact_EmailAddress, new { @class = "form-control" })
+                            <label for="@nameof(Model.Contact_EmailAddress)">
+                                Email address
+                                <a href="#help-text-email-address" class="icon-help" style="top: 2px;"><span class="visuallyhidden">Help with this field</span></a>
+                            </label>
+                            @Html.TextBoxFor(x => x.Contact_EmailAddress, new {@class = "form-control"})
                         </div>
                     }
 
                     @if (Model.EditPolicy.ContactAlt_EmailAddress)
                     {
                         <div class="form-group">
-                            @Html.LabelFor(x => x.ContactAlt_EmailAddress, "Alternative email address")
+                            <label for="@nameof(Model.ContactAlt_EmailAddress)">
+                                Alternative email address
+                                <a href="#help-text-email-address" class="icon-help" style="top: 2px;"><span class="visuallyhidden">Help with this field</span></a>
+                            </label>
                             @Html.TextBoxFor(x => x.ContactAlt_EmailAddress, new { @class = "form-control" })
                         </div>
                     }
@@ -845,3 +853,11 @@
         </div>
     }
 }
+
+
+<div class="column-full helptext-container">
+    <div id="help-text-email-address">
+        <h3 class="heading-small">Email address</h3>
+        <p>Please provide your official school email address. This is usually the email address that is displayed on your school website. You should not provide a personal email address in this field as this information may be released in certain circumstances.</p>
+    </div>
+</div>

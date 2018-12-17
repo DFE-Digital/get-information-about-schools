@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Edubase.Services.Approvals.Models
 {
@@ -16,6 +16,7 @@ namespace Edubase.Services.Approvals.Models
         public int EstablishmentUrn { get; set; }
         public string EstablishmentName { get; set; }
         public string EstablishmentLAESTAB { get; set; }
+        public string ApproverFullName { get; set; }
 
     }
 }

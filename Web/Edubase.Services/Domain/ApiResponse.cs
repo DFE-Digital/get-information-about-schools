@@ -30,21 +30,18 @@ namespace Edubase.Services.Domain
             {
                 return Response;
             }
-            else if (Success && Response == null)
+
+            if (Success && Response == null)
             {
                 throw new Exception("The response is empty but the API call was successful.");
             }
-            else
+
+            if ((Errors ?? new ApiError[0]).Any(x => (x.Code ?? "").IndexOf("accessDenied", StringComparison.OrdinalIgnoreCase) > -1))
             {
-                if ((Errors ?? new ApiError[0]).Any(x => (x.Code ?? "").IndexOf("accessDenied", StringComparison.OrdinalIgnoreCase) > -1))
-                {
-                    throw new PermissionDeniedException("Permission denied");
-                }
-                else
-                {
-                    throw new Exception($"The API was not successful. There were {Errors?.Length} errors; " + SerialiseErrors(Errors));
-                }
+                throw new PermissionDeniedException("Permission denied");
             }
+
+            throw new Exception($"The API was not successful. There were {Errors?.Length} errors; " + SerialiseErrors(Errors));
         }
 
         public ApiResponse<T> OK(T response)
@@ -90,9 +87,19 @@ namespace Edubase.Services.Domain
         public ApiResponse Fail(ApiError error, ApiError[] errors)
         {
             Guard.IsTrue(error != null || (errors != null && errors.Any()), () => new Exception("The supplied API error(s) parameter was null"));
-            if (error != null) Fail(error);
-            else if (errors != null && errors.Any()) Fail(errors);
-            else Success = false;
+            if (error != null)
+            {
+                Fail(error);
+            }
+            else if (errors != null && errors.Any())
+            {
+                Fail(errors);
+            }
+            else
+            {
+                Success = false;
+            }
+
             return this;
         }
 
@@ -106,7 +113,8 @@ namespace Edubase.Services.Domain
                 json = json.Ellipsis(1000);
                 return json;
             }
-            else return string.Empty;
+
+            return string.Empty;
         }
     }
 

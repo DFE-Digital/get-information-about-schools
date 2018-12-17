@@ -244,13 +244,15 @@ namespace Edubase.Common
         public static string GetPart(this string data, string separator, int index = 0)
         {
             data = data.Clean();
-            if (data != null)
+            if (data == null)
             {
-                var bits = data.Split(new string[] { separator }, StringSplitOptions.RemoveEmptyEntries);
-                if(index <= bits.GetUpperBound(0))
-                {
-                    return bits[index];
-                }
+                return null;
+            }
+
+            var bits = data.Split(new string[] { separator }, StringSplitOptions.RemoveEmptyEntries);
+            if(index <= bits.GetUpperBound(0))
+            {
+                return bits[index];
             }
 
             return null;

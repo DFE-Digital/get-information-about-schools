@@ -1,9 +1,8 @@
-﻿using Edubase.Common;
+using System.Collections.Generic;
+using System.Linq;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments.Models;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Edubase.Services.Establishments.DisplayPolicies
 {

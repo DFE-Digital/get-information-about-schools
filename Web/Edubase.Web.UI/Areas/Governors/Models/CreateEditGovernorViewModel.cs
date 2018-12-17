@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Edubase.Common;
 using Edubase.Services.Enums;
 using Edubase.Services.Governors.Models;
 using Edubase.Services.Groups.Models;
@@ -51,11 +52,20 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public IEnumerable<SelectListItem> ExistingGovernors { get; set; } = Enumerable.Empty<SelectListItem>();
 
-        public bool AllowReinstateAsGovernor => EstablishmentUrn.HasValue;
+        public bool AllowReinstateAsGovernor => EstablishmentUrn.HasValue && GovernorRole.OneOfThese(eLookupGovernorRole.ChairOfTrustees, eLookupGovernorRole.ChairOfGovernors);
 
         public GovernorModel SelectedGovernor { get; set; }
 
         public int? SelectedPreviousGovernorId { get; set; }
         public bool ReinstateAsGovernor{ get; set; }
+
+        public string ReinstateAsGovernorCheckboxLabel =>
+            "Re-instate as " + (GovernorRole == eLookupGovernorRole.ChairOfTrustees ? "trustee" : "governor");
+
+        public string SelectPreviousGovernorLabel => "Choose " +
+                                                     (GovernorRole == eLookupGovernorRole.ChairOfTrustees
+                                                         ? "trustee"
+                                                         : "governor");
+
     }
 }

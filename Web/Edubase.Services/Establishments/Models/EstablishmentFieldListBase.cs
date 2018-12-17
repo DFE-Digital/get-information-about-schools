@@ -1,209 +1,205 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Edubase.Services.Establishments.Models
 {
     /// <summary>
     /// Represents the list of fields within an Establishment.
     /// </summary>
-    public abstract class EstablishmentFieldListBase
+    public abstract class EstablishmentFieldListBase<T>
     {
-        public virtual bool Urn { get; set; }
+        public virtual T Urn { get; set; }
 
-        public virtual bool LocalAuthorityId { get; set; }
+        public virtual T LocalAuthorityId { get; set; }
 
-        public virtual bool EstablishmentNumber { get; set; }
+        public virtual T EstablishmentNumber { get; set; }
 
-        public virtual bool Name { get; set; }
+        public virtual T Name { get; set; }
 
-        public virtual bool StatusId { get; set; }
+        public virtual T StatusId { get; set; }
 
-        public virtual bool ReasonEstablishmentOpenedId { get; set; }
+        public virtual T ReasonEstablishmentOpenedId { get; set; }
 
-        public virtual bool ReasonEstablishmentClosedId { get; set; }
+        public virtual T ReasonEstablishmentClosedId { get; set; }
 
-        public virtual bool OpenDate { get; set; }
+        public virtual T OpenDate { get; set; }
 
-        public virtual bool CloseDate { get; set; }
+        public virtual T CloseDate { get; set; }
 
-        public virtual bool EducationPhaseId { get; set; }
+        public virtual T EducationPhaseId { get; set; }
 
-        public virtual bool StatutoryLowAge { get; set; }
+        public virtual T StatutoryLowAge { get; set; }
 
-        public virtual bool StatutoryHighAge { get; set; }
+        public virtual T StatutoryHighAge { get; set; }
 
-        public virtual bool ProvisionBoardingId { get; set; }
+        public virtual T ProvisionBoardingId { get; set; }
 
-        public virtual bool ProvisionNurseryId { get; set; }
+        public virtual T ProvisionNurseryId { get; set; }
 
-        public virtual bool ProvisionOfficialSixthFormId { get; set; }
+        public virtual T ProvisionOfficialSixthFormId { get; set; }
 
-        public virtual bool GenderId { get; set; }
+        public virtual T GenderId { get; set; }
 
-        public virtual bool ReligiousCharacterId { get; set; }
+        public virtual T ReligiousCharacterId { get; set; }
 
-        public virtual bool ReligiousEthosId { get; set; }
+        public virtual T ReligiousEthosId { get; set; }
 
-        public virtual bool DioceseId { get; set; }
+        public virtual T DioceseId { get; set; }
 
-        public virtual bool AdmissionsPolicyId { get; set; }
+        public virtual T AdmissionsPolicyId { get; set; }
 
-        public virtual bool Capacity { get; set; }
+        public virtual T Capacity { get; set; }
 
-        public virtual bool ProvisionSpecialClassesId { get; set; }
-        public virtual bool NumberOfPupilsOnRoll { get; set; }
+        public virtual T ProvisionSpecialClassesId { get; set; }
+        public virtual T NumberOfPupilsOnRoll { get; set; }
 
-        public virtual bool UKPRN { get; set; }
+        public virtual T UKPRN { get; set; }
 
-        public virtual bool LastChangedDate { get; set; }
+        public virtual T LastChangedDate { get; set; }
 
-        public virtual bool Address_Line1 { get; set; }
+        public virtual T Address_Line1 { get; set; }
 
-        public virtual bool Address_Line2 { get; set; }
+        public virtual T Address_Line2 { get; set; }
 
-        public virtual bool Address_Line3 { get; set; }
+        public virtual T Address_Line3 { get; set; }
 
-        public virtual bool Address_CityOrTown { get; set; }
+        public virtual T Address_CityOrTown { get; set; }
 
-        public virtual bool Address_CountyId { get; set; }
+        public virtual T Address_CountyId { get; set; }
 
-        public virtual bool Address_CountryId { get; set; }
-        public virtual bool Address_UPRN { get; set; }
+        public virtual T Address_CountryId { get; set; }
+        public virtual T Address_UPRN { get; set; }
 
-        public virtual bool Address_Locality { get; set; }
+        public virtual T Address_Locality { get; set; }
 
-        public virtual bool Address_PostCode { get; set; }
+        public virtual T Address_PostCode { get; set; }
 
-        public virtual bool HeadFirstName { get; set; }
+        public virtual T HeadFirstName { get; set; }
 
-        public virtual bool HeadLastName { get; set; }
+        public virtual T HeadLastName { get; set; }
 
-        public virtual bool HeadTitleId { get; set; }
+        public virtual T HeadTitleId { get; set; }
 
-        public virtual bool HeadEmailAddress { get; set; }
+        public virtual T HeadEmailAddress { get; set; }
 
-        public virtual bool HeadAppointmentDate { get; set; }
+        public virtual T HeadAppointmentDate { get; set; }
 
-        public virtual bool Contact_TelephoneNumber { get; set; }
+        public virtual T Contact_TelephoneNumber { get; set; }
 
-        public virtual bool Contact_EmailAddress { get; set; }
+        public virtual T Contact_EmailAddress { get; set; }
 
-        public virtual bool Contact_WebsiteAddress { get; set; }
+        public virtual T Contact_WebsiteAddress { get; set; }
 
-        public virtual bool Contact_FaxNumber { get; set; }
+        public virtual T Contact_FaxNumber { get; set; }
 
-        public virtual bool ContactAlt_TelephoneNumber { get; set; }
+        public virtual T ContactAlt_TelephoneNumber { get; set; }
 
-        public virtual bool ContactAlt_EmailAddress { get; set; }
+        public virtual T ContactAlt_EmailAddress { get; set; }
 
-        public virtual bool ContactAlt_WebsiteAddress { get; set; }
+        public virtual T ContactAlt_WebsiteAddress { get; set; }
 
-        public virtual bool ContactAlt_FaxNumber { get; set; }
+        public virtual T ContactAlt_FaxNumber { get; set; }
 
-        public virtual bool TypeId { get; set; }
+        public virtual T TypeId { get; set; }
 
-        
+        public virtual T EstablishmentTypeGroupId { get; set; }
 
+        public virtual T OfstedRatingId { get; set; }
 
-        public virtual bool EstablishmentTypeGroupId { get; set; }
+        public virtual T OfstedInspectionDate { get; set; }
 
-        public virtual bool OfstedRatingId { get; set; }
+        public virtual T InspectorateId { get; set; }
 
-        public virtual bool OfstedInspectionDate { get; set; }
+        public virtual T Section41ApprovedId { get; set; }
 
-        public virtual bool InspectorateId { get; set; }
+        public virtual T ProprietorName { get; set; }
 
-        public virtual bool Section41ApprovedId { get; set; }
+        public virtual T SENStat { get; set; }
 
-        public virtual bool ProprietorName { get; set; }
-
-        public virtual bool SENStat { get; set; }
-
-        public virtual bool SENNoStat { get; set; }
+        public virtual T SENNoStat { get; set; }
 
         [JsonProperty("SEN1Ids")]
-        public virtual bool SENIds { get; set; }
+        public virtual T SENIds { get; set; }
 
-        public virtual bool TeenageMothersProvisionId { get; set; }
+        public virtual T TeenageMothersProvisionId { get; set; }
 
-        public virtual bool TeenageMothersCapacity { get; set; }
+        public virtual T TeenageMothersCapacity { get; set; }
 
-        public virtual bool ChildcareFacilitiesId { get; set; }
+        public virtual T ChildcareFacilitiesId { get; set; }
 
-        public virtual bool PRUSENId { get; set; }
+        public virtual T PRUSENId { get; set; }
 
-        public virtual bool PRUEBDId { get; set; }
+        public virtual T PRUEBDId { get; set; }
 
-        public virtual bool PlacesPRU { get; set; }
+        public virtual T PlacesPRU { get; set; }
 
-        public virtual bool PruFulltimeProvisionId { get; set; }
+        public virtual T PruFulltimeProvisionId { get; set; }
 
-        public virtual bool PruEducatedByOthersId { get; set; }
+        public virtual T PruEducatedByOthersId { get; set; }
 
-        public virtual bool TypeOfResourcedProvisionId { get; set; }
+        public virtual T TypeOfResourcedProvisionId { get; set; }
 
-        public virtual bool ResourcedProvisionOnRoll { get; set; }
+        public virtual T ResourcedProvisionOnRoll { get; set; }
 
-        public virtual bool ResourcedProvisionCapacity { get; set; }
+        public virtual T ResourcedProvisionCapacity { get; set; }
 
+        public virtual T RSCRegionId { get; set; }
+        public virtual T GovernmentOfficeRegionId { get; set; }
+        public virtual T AdministrativeDistrictId { get; set; }
+        public virtual T AdministrativeWardId { get; set; }
+        public virtual T ParliamentaryConstituencyId { get; set; }
+        public virtual T UrbanRuralId { get; set; }
+        public virtual T GSSLAId { get; set; }
+        public virtual T CASWardId { get; set; }
+        public virtual T MSOAId { get; set; }
+        public virtual T LSOAId { get; set; }
+        public virtual T MSOACode => MSOAId;
+        public virtual T LSOACode => LSOAId;
+        public virtual T Easting { get; set; }
+        public virtual T Northing { get; set; }
 
-        public virtual bool RSCRegionId { get; set; }
-        public virtual bool GovernmentOfficeRegionId { get; set; }
-        public virtual bool AdministrativeDistrictId { get; set; }
-        public virtual bool AdministrativeWardId { get; set; }
-        public virtual bool ParliamentaryConstituencyId { get; set; }
-        public virtual bool UrbanRuralId { get; set; }
-        public virtual bool GSSLAId { get; set; }
-        public virtual bool CASWardId { get; set; }
-        public virtual bool MSOAId { get; set; }
-        public virtual bool LSOAId { get; set; }
-        public virtual bool Easting { get; set; }
-        public virtual bool Northing { get; set; }
+        public virtual T FurtherEducationTypeId { get; set; }
 
-        public virtual bool FurtherEducationTypeId { get; set; }
+        public virtual T CCGovernanceId { get; set; }
 
-        public virtual bool CCGovernanceId { get; set; }
+        public virtual T CCGovernanceDetail { get; set; }
 
-        public virtual bool CCGovernanceDetail { get; set; }
+        public virtual T CCOperationalHoursId { get; set; }
 
-        public virtual bool CCOperationalHoursId { get; set; }
+        public virtual T CCPhaseTypeId { get; set; }
 
-        public virtual bool CCPhaseTypeId { get; set; }
+        public virtual T CCGroupLeadId { get; set; }
 
-        public virtual bool CCGroupLeadId { get; set; }
+        public virtual T CCDisadvantagedAreaId { get; set; }
 
-        public virtual bool CCDisadvantagedAreaId { get; set; }
+        public virtual T CCDirectProvisionOfEarlyYearsId { get; set; }
 
-        public virtual bool CCDirectProvisionOfEarlyYearsId { get; set; }
+        public virtual T CCDeliveryModelId { get; set; }
 
-        public virtual bool CCDeliveryModelId { get; set; }
+        public virtual T CCUnder5YearsOfAgeCount { get; set; }
 
-        public virtual bool CCUnder5YearsOfAgeCount { get; set; }
+        public virtual T SenUnitOnRoll { get; set; }
 
-        public virtual bool SenUnitOnRoll { get; set; }
+        public virtual T SenUnitCapacity { get; set; }
 
-        public virtual bool SenUnitCapacity { get; set; }
-        
-        public virtual bool BSOInspectorateId { get; set; }
+        public virtual T BSOInspectorateId { get; set; }
 
-        public virtual bool BSOInspectorateReportUrl { get; set; }
+        public virtual T BSOInspectorateReportUrl { get; set; }
 
-        public virtual bool BSODateOfLastInspectionVisit { get; set; }
+        public virtual T BSODateOfLastInspectionVisit { get; set; }
 
-        public virtual bool BSODateOfNextInspectionVisit { get; set; }
+        public virtual T BSODateOfNextInspectionVisit { get; set; }
 
-        public virtual bool HeadPreferredJobTitle { get; set; }
+        public virtual T HeadPreferredJobTitle { get; set; }
 
-        public bool HelpdeskNotes { get; set; }
-        public bool HelpdeskLastUpdate { get; set; }
-        public bool HelpdeskTrigger1 { get; set; }
-        public bool HelpdeskPreviousLocalAuthorityId { get; set; }
-        public bool HelpdeskPreviousEstablishmentNumber { get; set; }
-        
-        public bool AdditionalAddresses { get; set; }
+        public T HelpdeskNotes { get; set; }
+        public T HelpdeskLastUpdate { get; set; }
+        public T HelpdeskTrigger1 { get; set; }
+        public T HelpdeskPreviousLocalAuthorityId { get; set; }
+        public T HelpdeskPreviousEstablishmentNumber { get; set; }
 
-        public bool FreeSchoolMealsNumber { get; set; }
-        public bool FreeSchoolMealsPercentage { get; set; }
+        public T AdditionalAddresses { get; set; }
 
+        public T FreeSchoolMealsNumber { get; set; }
+        public T FreeSchoolMealsPercentage { get; set; }
     }
 }

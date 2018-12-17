@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Security.Principal;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
@@ -48,7 +49,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private readonly IResourcesHelper _resourcesHelper;
 
         private readonly ISecurityService _securityService;
-
+        private readonly Lazy<string[]> _formKeys;
         private readonly Dictionary<string, string> validationFieldMapping = new Dictionary<string, string>
         {
             {"address_Line1", "Address.Line1"},
@@ -83,6 +84,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _mapper = mapper;
             _resourcesHelper = resourcesHelper;
             _securityService = securityService;
+
+            _formKeys = new Lazy<string[]>(
+                () => Request?.Form?.AllKeys.Select(x => x.GetPart(".")).Distinct().ToArray(),
+                LazyThreadSafetyMode.PublicationOnly);
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{urn:int}/Link/{linkid?}", Name = "EditEstabLink"),
@@ -200,6 +205,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     IEBTModel = new IEBTModel(),
                     StatusId = (int) eLookupEstablishmentStatus.ProposedToOpen
                 };
+
+                if (viewModel.EstablishmentTypeId == (int) ET.SixthFormCentres) // story: 25821
+                {
+                    apiModel.StatutoryLowAge = 0;
+                    apiModel.StatutoryHighAge = 0;
+                }
 
                 var validation = await _establishmentWriteService.ValidateCreateAsync(apiModel, true, User);
 
@@ -321,10 +332,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}")]
-        public async Task<ActionResult> EditDetails(ViewModel model)
-        {
-            return await SaveEstablishment(model);
-        }
+        public async Task<ActionResult> EditDetails(ViewModel model) => await SaveEstablishment(model);
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Helpdesk")]
         public async Task<ActionResult> EditHelpdesk(int? id)
@@ -337,10 +345,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/Helpdesk")]
-        public async Task<ActionResult> EditHelpdesk(ViewModel model)
-        {
-            return await SaveEstablishment(model);
-        }
+        public async Task<ActionResult> EditHelpdesk(ViewModel model) => await SaveEstablishment(model);
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/IEBT")]
         public async Task<ActionResult> EditIEBT(int? id)
@@ -353,10 +358,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/IEBT")]
-        public async Task<ActionResult> EditIEBT(ViewModel model)
-        {
-            return await SaveEstablishment(model);
-        }
+        public async Task<ActionResult> EditIEBT(ViewModel model) => await SaveEstablishment(model);
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Links", Name = "EditEstabLinks")]
         public async Task<ActionResult> EditLinks(int? id, bool saved = false)
@@ -386,27 +388,27 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/Location")]
         public async Task<ActionResult> EditLocation(ViewModel model)
         {
-            var oldModel = await CreateEditViewModel(model.Urn);
+            var targetViewModel = await CreateEditViewModel(model.Urn);
 
-            SetProperty(oldModel, model, m => m.RSCRegionId);
-            SetProperty(oldModel, model, m => m.GovernmentOfficeRegionId);
-            SetProperty(oldModel, model, m => m.AdministrativeDistrictId);
-            SetProperty(oldModel, model, m => m.AdministrativeWardId);
-            SetProperty(oldModel, model, m => m.ParliamentaryConstituencyId);
-            SetProperty(oldModel, model, m => m.UrbanRuralId);
-            SetProperty(oldModel, model, m => m.GSSLAId);
-            SetProperty(oldModel, model, m => m.Easting);
-            SetProperty(oldModel, model, m => m.Northing);
-            SetProperty(oldModel, model, m => m.CASWardId);
-            SetProperty(oldModel, model, m => m.MSOAId);
-            SetProperty(oldModel, model, m => m.LSOAId);
+            SetProperty(targetViewModel, model, m => m.RSCRegionId);
+            SetProperty(targetViewModel, model, m => m.GovernmentOfficeRegionId);
+            SetProperty(targetViewModel, model, m => m.AdministrativeDistrictId);
+            SetProperty(targetViewModel, model, m => m.AdministrativeWardId);
+            SetProperty(targetViewModel, model, m => m.ParliamentaryConstituencyId);
+            SetProperty(targetViewModel, model, m => m.UrbanRuralId);
+            SetProperty(targetViewModel, model, m => m.GSSLAId);
+            SetProperty(targetViewModel, model, m => m.Easting);
+            SetProperty(targetViewModel, model, m => m.Northing);
+            SetProperty(targetViewModel, model, m => m.CASWardId);
+            SetProperty(targetViewModel, model, m => m.MSOACode);
+            SetProperty(targetViewModel, model, m => m.LSOACode);
 
-            oldModel.ActionSpecifier = model.ActionSpecifier;
-            oldModel.SelectedTab = model.SelectedTab;
-            oldModel.OverrideCRProcess = model.OverrideCRProcess;
-            oldModel.ChangeEffectiveDate = model.ChangeEffectiveDate;
+            targetViewModel.ActionSpecifier = model.ActionSpecifier;
+            targetViewModel.SelectedTab = model.SelectedTab;
+            targetViewModel.OverrideCRProcess = model.OverrideCRProcess;
+            targetViewModel.ChangeEffectiveDate = model.ChangeEffectiveDate;
 
-            return await SaveEstablishment(oldModel);
+            return await SaveEstablishment(targetViewModel);
         }
 
         [HttpPost, EdubaseAuthorize, Route("Confirm/{urn:int}", Name = "EstablishmentConfirmUpToDate")]
@@ -596,6 +598,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.EditPolicy.AdditionalAddresses = CanUserDefineAdditionalAddresses(domainModel.TypeId.GetValueOrDefault());
 
             await PopulateSelectLists(viewModel);
+
+            if (domainModel.MSOAId.HasValue)
+            {
+                viewModel.MSOACode = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.MSOAId.Value)?.Code;
+            }
+
+            if (domainModel.LSOAId.HasValue)
+            {
+                viewModel.LSOACode = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.LSOAId.Value)?.Code;
+            }
+
             return viewModel;
         }
 
@@ -621,9 +634,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         /// <param name="viewModel"></param>
         /// <param name="domainModel"></param>
         /// <param name="form"></param>
-        private void MapToDomainModel(ViewModel viewModel, EstablishmentModel domainModel, NameValueCollection form)
+        private void MapToDomainModel(ViewModel viewModel, EstablishmentModel domainModel)
         {
-            var keys = form.AllKeys.Select(x => x.GetPart(".")).Distinct();
+            var keys = _formKeys.Value;
 
             var properties = ReflectionHelper.GetProperties(domainModel, writeableOnly: true);
             properties = properties.Where(x => keys.Contains(x)).ToList();
@@ -645,16 +658,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
             }
 
-            if (keys.Contains("SENList")) domainModel.SENIds = viewModel.SENIds ?? new int[0];
-            if (keys.Contains(nameof(viewModel.MSOACode))) domainModel.MSOAId = viewModel.MSOAId;
-            if (keys.Contains(nameof(viewModel.LSOACode))) domainModel.LSOAId = viewModel.LSOAId;
+            if (keys.Contains("SENList"))
+            {
+                domainModel.SENIds = viewModel.SENIds ?? new int[0];
+            }
 
             domainModel.AdditionalAddresses = viewModel.AdditionalAddresses.ToArray();
         }
 
-        private void MapToDomainModelIEBT(ViewModel viewModel, EstablishmentModel domainModel, NameValueCollection form)
+        private void MapToDomainModelIEBT(ViewModel viewModel, EstablishmentModel domainModel)
         {
-            var keys = form.AllKeys.Select(x => x.GetPart(".")).Distinct();
+            var keys = _formKeys.Value;
 
             var properties = ReflectionHelper.GetProperties(domainModel.IEBTModel, writeableOnly: true);
             properties = properties.Where(x => keys.Contains(x)).ToList();
@@ -897,9 +911,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.Countries = (await _cachedLookupService.NationalitiesGetAllAsync()).ToSelectList(viewModel.Address_CountryId);
             viewModel.OfstedRatings = (await _cachedLookupService.OfstedRatingsGetAllAsync()).ToSelectList(viewModel.OfstedRatingId);
 
-            if (viewModel.MSOAId.HasValue) viewModel.MSOACode = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Id == viewModel.MSOAId.Value)?.Code;
-            if (viewModel.LSOAId.HasValue) viewModel.LSOACode = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Id == viewModel.LSOAId.Value)?.Code;
-
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
             viewModel.TypeName = await _cachedLookupService.GetNameAsync(() => viewModel.TypeId);
             viewModel.LegalParentGroup = GetLegalParent(viewModel.Urn.Value, await _groupReadService.GetAllByEstablishmentUrnAsync(viewModel.Urn.Value, User), User);
@@ -920,13 +931,20 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.EducationPhases = (await _cachedLookupService.EducationPhasesGetAllAsync()).ToSelectList(viewModel.EducationPhaseId);
         }
 
-        private async Task PrepareModels(ViewModel model, EstablishmentModel domainModel)
+        private async Task MapFromViewModelToDomainModel(ViewModel viewModel, EstablishmentModel domainModel)
         {
-            model.LSOAId = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Code == model.LSOACode)?.Id;
-            model.MSOAId = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Code == model.MSOACode)?.Id;
+            if (_formKeys.Value.Contains(nameof(viewModel.MSOACode)))
+            {
+                domainModel.MSOAId = !viewModel.MSOACode.IsNullOrEmpty() ? (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Code == viewModel.MSOACode)?.Id : null;
+            }
 
-            MapToDomainModel(model, domainModel, Request.Form);
-            MapToDomainModelIEBT(model, domainModel, Request.Form);
+            if (_formKeys.Value.Contains(nameof(viewModel.LSOACode)))
+            {
+                domainModel.LSOAId = !viewModel.LSOACode.IsNullOrEmpty() ? (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Code == viewModel.LSOACode)?.Id : null;
+            }
+
+            MapToDomainModel(viewModel, domainModel);
+            MapToDomainModelIEBT(viewModel, domainModel);
         }
 
         private void AddOrReplaceAddressFromUrlToken(string addrtok, ViewModel viewModel)
@@ -971,65 +989,86 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
         }
 
-        private async Task<ActionResult> SaveEstablishment(ViewModel model)
+        private async Task<ActionResult> SaveEstablishment(ViewModel viewModel)
         {
-            var domainModel = (await _establishmentReadService.GetAsync(model.Urn.Value, User)).GetResult();
+            var domainModel = (await _establishmentReadService.GetAsync(viewModel.Urn.Value, User)).GetResult();
             var editPolicyEnvelope = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
-            model.EditPolicy = editPolicyEnvelope.EditPolicy;
+            viewModel.EditPolicy = editPolicyEnvelope.EditPolicy;
 
-            if ((!model.EditPolicy.AdditionalAddresses || model.AdditionalAddresses.Count == 0) && domainModel.AdditionalAddresses != null)
+            var canEditAdditionalAddresses = editPolicyEnvelope.EditPolicy.AdditionalAddresses;
+            if (!canEditAdditionalAddresses && domainModel.AdditionalAddresses != null)
             {
-                model.AdditionalAddresses = new List<AdditionalAddressModel>(domainModel.AdditionalAddresses);
+                viewModel.AdditionalAddresses = new List<AdditionalAddressModel>(domainModel.AdditionalAddresses);
             }
 
-            model.TabDisplayPolicy = new TabDisplayPolicy(domainModel, model.EditPolicy, User);
-            model.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
-            await PopulateSelectLists(model);
+            viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.EditPolicy, User);
+            viewModel.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
 
-            if (model.ActionSpecifierCommand == ViewModel.ASSave)
+            await PopulateSelectLists(viewModel);
+
+            if (viewModel.ActionSpecifierCommand == ViewModel.ASSave)
             {
                 var originalEstabTypeId = (ET) domainModel.TypeId;
-                await ValidateAsync(model, domainModel);
+                await ValidateAsync(viewModel, domainModel);
                 var newEstabTypeId = (ET?) domainModel.TypeId;
 
                 if (ModelState.IsValid)
                 {
-                    model.OriginalEstablishmentName = domainModel.Name;
+                    viewModel.OriginalEstablishmentName = domainModel.Name;
 
                     var changes = await _establishmentReadService.GetModelChangesAsync(domainModel, editPolicyEnvelope.ApprovalsPolicy, User);
 
-                    if (originalEstabTypeId == ET.ChildrensCentreLinkedSite && newEstabTypeId == ET.ChildrensCentre) model.CCIsPromoting = true;
-                    else if (originalEstabTypeId == ET.ChildrensCentre && newEstabTypeId == ET.ChildrensCentreLinkedSite) model.CCIsDemoting = true;
+                    if (originalEstabTypeId == ET.ChildrensCentreLinkedSite && newEstabTypeId == ET.ChildrensCentre) viewModel.CCIsPromoting = true;
+                    else if (originalEstabTypeId == ET.ChildrensCentre && newEstabTypeId == ET.ChildrensCentreLinkedSite) viewModel.CCIsDemoting = true;
 
                     if (changes.Any())
                     {
-                        model.ChangesSummary = changes;
-                        model.ChangesRequireApprovalCount = changes.Count(x => x.RequiresApproval);
-                        model.ChangesInstantCount = changes.Count(x => !x.RequiresApproval);
-                        ModelState.Remove(nameof(model.ChangesRequireApprovalCount));
-                        ModelState.Remove(nameof(model.ChangesInstantCount));
+                        viewModel.ChangesSummary = changes;
+                        viewModel.ChangesRequireApprovalCount = changes.Count(x => x.RequiresApproval);
+                        viewModel.ChangesInstantCount = changes.Count(x => !x.RequiresApproval);
+                        ModelState.Remove(nameof(viewModel.ChangesRequireApprovalCount));
+                        ModelState.Remove(nameof(viewModel.ChangesInstantCount));
                     }
-                    else return Redirect(Url.RouteUrl("EstabDetails", new { id = model.Urn.Value }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
+                    else return Redirect(Url.RouteUrl("EstabDetails", new { id = viewModel.Urn.Value }) + viewModel.SelectedTab2DetailPageTabNameMapping[viewModel.SelectedTab]);
                 }
             }
-            else if (model.ActionSpecifierCommand == ViewModel.ASAddAddress) model.AdditionalAddresses.Add(new AdditionalAddressModel());
-            else if (model.ActionSpecifierCommand == ViewModel.ASRemoveAddress) model.AdditionalAddresses.RemoveAt(int.Parse(model.ActionSpecifierParam));
-            else if (model.ActionSpecifierCommand == ViewModel.ASConfirm)
+            else if (viewModel.ActionSpecifierCommand == ViewModel.ASAddAddress)
+            {
+                viewModel.AdditionalAddresses.Add(new AdditionalAddressModel());
+            }
+            else if (viewModel.ActionSpecifierCommand == ViewModel.ASRemoveAddress)
+            {
+                RemoveAdditionalAddress(viewModel);
+            }
+            else if (viewModel.ActionSpecifierCommand == ViewModel.ASConfirm)
             {
                 if (ModelState.IsValid)
                 {
-                    await PrepareModels(model, domainModel);
-                    await _establishmentWriteService.SaveAsync(domainModel, model.OverrideCRProcess, model.ChangeEffectiveDate.ToDateTime(), User);
-                    return Redirect(Url.RouteUrl("EstabDetails", new
-                    {
-                        id = model.Urn.Value,
-                        approved = model.GetChangesNotRequiringApprovalCount(),
-                        pending = model.GetChangesRequiringApprovalCount()
-                    }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
+                    return await SaveEstablishment(viewModel, domainModel);
                 }
             }
 
-            return View(model);
+            return View(viewModel);
+        }
+
+        private async Task<ActionResult> SaveEstablishment(ViewModel model, EstablishmentModel domainModel)
+        {
+            await MapFromViewModelToDomainModel(model, domainModel);
+
+            await _establishmentWriteService.SaveAsync(domainModel, model.OverrideCRProcess,
+                model.ChangeEffectiveDate.ToDateTime(), User);
+            return Redirect(Url.RouteUrl("EstabDetails", new
+            {
+                id = model.Urn.Value,
+                approved = model.GetChangesNotRequiringApprovalCount(),
+                pending = model.GetChangesRequiringApprovalCount()
+            }) + model.SelectedTab2DetailPageTabNameMapping[model.SelectedTab]);
+        }
+
+        private static void RemoveAdditionalAddress(ViewModel model)
+        {
+            model.AdditionalAddresses.RemoveAt(int.Parse(model.ActionSpecifierParam));
+            model.IsDirty = true;
         }
 
         private void SetProperty<TProperty>(ViewModel oldModel, ViewModel newModel, Expression<Func<ViewModel, TProperty>> property)
@@ -1053,21 +1092,41 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         /// Does 2nd-level validation
         /// </summary>
         /// <param name="viewModel"></param>
+        /// <param name="existingDomainModel"></param>
         /// <returns></returns>
         private async Task ValidateAsync(ViewModel viewModel, EstablishmentModel existingDomainModel)
         {
             if (ModelState.IsValid)
             {
-                await PrepareModels(viewModel, existingDomainModel);
+                await MapFromViewModelToDomainModel(viewModel, existingDomainModel);
+
+                if (_formKeys.Value.Contains(viewModel.MSOACode) && !viewModel.MSOACode.IsNullOrEmpty() &&
+                    !existingDomainModel.MSOAId.HasValue) // if the value has been provided in the form, it's not empty, but the string value didn't map to a value in the domain model then show error.
+                {
+                    ModelState.AddModelError(nameof(viewModel.MSOACode), "MSOA code is invalid");
+                }
+
+                if (_formKeys.Value.Contains(viewModel.LSOACode) && !viewModel.LSOACode.IsNullOrEmpty() &&
+                    !existingDomainModel.LSOAId.HasValue) 
+                {
+                    ModelState.AddModelError(nameof(viewModel.LSOACode), "LSOA code is invalid");
+                }
+
+
                 var validationEnvelope = await _establishmentWriteService.ValidateAsync(existingDomainModel, User);
+
                 viewModel.ShowDuplicateRecordError = validationEnvelope.Errors.Any(x => x.Code == "establishment.edit.with.same.name.la.postcode.found");
+
                 if (viewModel.ShowDuplicateRecordError)
                 {
                     ModelState.AddModelError(nameof(viewModel.Name), "Please enter a different establishment name");
                     ModelState.AddModelError(nameof(viewModel.LocalAuthorityId), "Please enter a different local authority");
                     ModelState.AddModelError(nameof(viewModel.Address_PostCode), "Please enter a different postcode");
                 }
-                else validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.GetMessage()));
+                else
+                {
+                    validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.GetMessage()));
+                }
 
                 viewModel.ShowDuplicateRecordWarning = validationEnvelope.HasWarnings && validationEnvelope.Warnings.Any(x => x.Code == "establishment.with.same.name.la.found");
             }

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace Edubase.Services.Domain
 {
@@ -11,5 +11,6 @@ namespace Edubase.Services.Domain
         public string Id { get; set; }
         public string Tag { get; set; }
         public bool RequiresApproval { get; set; }
+        public string ApproverName { get; set; }
     }
 }

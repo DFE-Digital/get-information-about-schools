@@ -186,6 +186,7 @@
     <Compile Include="Enums\GroupChangeLinkType.cs" />
     <Compile Include="Enums\GroupChangeRequestType.cs" />
     <Compile Include="Establishments\DisplayPolicies\IEBTDetailDisplayEditPolicy.cs" />
+    <Compile Include="Establishments\DisplayPolicies\IEBTFieldList.cs" />
     <Compile Include="Establishments\Downloads\eDataSet.cs" />
     <Compile Include="Establishments\Downloads\EstablishmentSearchDownloadPayload.cs" />
     <Compile Include="Establishments\EditPolicies\EstablishmentEditPolicyEnvelope.cs" />

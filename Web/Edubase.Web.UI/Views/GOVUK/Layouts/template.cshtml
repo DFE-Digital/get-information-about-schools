@@ -1,10 +1,9 @@
-﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity
 @{
     ViewBag.assetsPath = "/public/govuk_template/assets";
 
     var title = !string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title : "Get information about schools";
     var documentTitle = string.Format("{0} - {1}", title, "GOV.UK");
-    var disableNewsBanner = System.Configuration.ConfigurationManager.AppSettings["DisableNewsBanner"] == "true";
     var gtmKey = System.Configuration.ConfigurationManager.AppSettings["GoogleTagManagerKey"];
 }
 <!DOCTYPE html>

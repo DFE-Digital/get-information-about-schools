@@ -1,4 +1,4 @@
-﻿@using System.Linq
+@using System.Linq
 @using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
 @model ViewModel
 
@@ -70,7 +70,7 @@
 
         <h1 class="heading-large">Confirm updates to establishment</h1>
 
-        <p class="font-xsmall">Please conﬁrm updates to the following items for the Establishment @Model.OriginalEstablishmentName. URN: @Model.Urn.</p>
+        <p class="font-xsmall">Please confirm updates to the following items for the Establishment @Model.OriginalEstablishmentName. URN: @Model.Urn.</p>
 
         <p class="table-caption">Showing 1 - @Model.ChangesSummary.Count of  @Model.ChangesSummary.Count</p>
         <table class="edubase-table changes-summary confirm-changes">            
@@ -80,6 +80,7 @@
                     <th>Old value</th>
                     <th>New value</th>
                     <th>This field requires approval</th>
+                    <th>Approver</th>
                 </tr>
             </thead>
             <tbody>
@@ -96,7 +97,17 @@
                             }
                             else
                             {
-                                <text>No</text>
+                                @: No
+                            }
+                        </td>
+                        <td aria-label="Approver name">
+                            @if (item.RequiresApproval)
+                            {
+                                @(item.ApproverName ?? "-")
+                            }
+                            else
+                            {
+                                @: &ndash;
                             }
                         </td>
                     </tr>
