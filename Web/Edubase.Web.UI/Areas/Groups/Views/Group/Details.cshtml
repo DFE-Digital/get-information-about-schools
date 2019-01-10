@@ -6,7 +6,7 @@
 @{
     ViewBag.Title = Model.Group.Name;
     ViewBag.PageClass = "mat-details school-details";
-    
+
     var request = HttpContext.Current.Request;
     var sortDir = "desc";
     var sortField = "requestedDateUtc";
@@ -25,7 +25,7 @@
                 @Html.ActionLink("Home", "Index", "Search", new {area = "", selectedTab = "Groups"}, null)
             </li>
         </ul>
-        
+
     }
     else
     {
@@ -38,7 +38,7 @@
             <a href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}")>Back to search results</a>
         }
     }
-    
+
     @if (Model.IsClosed)
     {
         if (Model.IsClosedInError)
@@ -104,7 +104,7 @@
                         <li><a href="#governance" class="horizontal-tab">Governance</a></li>
                     }
 
-                    
+
 
                     @if (Model.IsUserLoggedOn)
                     {
@@ -259,7 +259,7 @@
                     }
 
                 </div>
-                
+
                 @if (Model.Links.Any())
                 {
                     <div id="links" class="tab-content">
@@ -306,7 +306,7 @@
                         }
 
                         @{Html.RenderAction("View", "Governor", new { groupUId = Model.Group.GroupUId, viewModel = null as Edubase.Web.UI.Areas.Governors.Models.GovernorsGridViewModel, area = "Governors" });}
-                        
+
                         @if (Model.CanUserEditGovernance)
                         {
                             <div class="button-wrap">
@@ -316,7 +316,7 @@
                         }
                     </div>
                 }
-                
+
                 @if (Model.IsUserLoggedOn)
                 {
                     <div id="change-history" class="tab-content">
@@ -352,7 +352,7 @@
                                     <th>
                                         <a href="@Url.SortUrl("requestType", "#change-history")"
                                            class="@Html.Conditional(sortField == "requestType", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">
-                                            Request type    
+                                            Request type
                                         </a>
                                     </th>
                                     <th>
@@ -422,5 +422,4 @@
     <script>
         $('#governance').find('.sortable-table').clientSort();
     </script>
-    <script src="/public/assets/scripts/leaflet-bundle.js"></script>
 }
