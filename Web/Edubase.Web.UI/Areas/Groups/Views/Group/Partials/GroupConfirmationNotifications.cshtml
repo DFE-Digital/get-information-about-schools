@@ -10,7 +10,7 @@
         @using (Html.BeginRouteForm("GroupGovernanceConfirmUpToDate", new { uid = Model.Group.GroupUId.Value }, FormMethod.Post))
         {
             <label for="confirm-button">Confirm governance record is up to date</label>
-            <button class="button button-grey" id="confirm-button">Confirm</button>
+            <button class="button button-secondary" id="confirm-button">Confirm</button>
         }
     </div>
 }
@@ -29,7 +29,7 @@ else if (Model.Group.ConfirmationUpToDateGovernanceRequired)
                     <label class="confirmation-label" for="governance-data-confirm">
                         Confirm governance record is up to date:
                     </label>
-                    <button class="button button-grey confirmation-button" id="governance-data-confirm">Confirm</button>
+                    <button class="button button-secondary confirmation-button" id="governance-data-confirm">Confirm</button>
                 }
             </div>
         </div>

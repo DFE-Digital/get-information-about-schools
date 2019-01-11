@@ -69,7 +69,7 @@
                 <a href="#" class="button mobile-full-width" v-on:click.prevent="step0Continue">
                     Continue
                 </a>
-                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-grey mobile-full-width"})
+                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-secondary mobile-full-width"})
 
             </div>
         </div>
@@ -143,10 +143,10 @@
                 <a href="#" class="button mobile-full-width" v-on:click.prevent="allowStep1Continue() ? step1Continue() : null" :disabled="!allowStep1Continue()">
                     Continue
                 </a>
-                <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="step0Complete=false, appState = 'initial'" v-show="!detailEdit">
+                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="step0Complete=false, appState = 'initial'" v-show="!detailEdit">
                     Cancel
                 </a>
-                <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="step1Continue" v-show="detailEdit">
+                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="step1Continue" v-show="detailEdit">
                     Cancel
                 </a>
 
@@ -274,7 +274,7 @@
             </div>
             <div class="submit-cancel-panel">
 
-                <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="appState='groupDetail', apiErrors=[], detailEdit = true,tooFewCentresError=false">&laquo; Go back</a>
+                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="appState='groupDetail', apiErrors=[], detailEdit = true,tooFewCentresError=false">&laquo; Go back</a>
                 @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                 {
                     <input type="hidden" name="action" value="@GroupEditorViewModel.ActionSave"/>
@@ -283,8 +283,8 @@
                 }
 
                 @(Model.InEditMode
-                      ? Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "button button-grey cancel mobile-full-width"})
-                      : Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-grey cancel mobile-full-width"}))
+                      ? Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "button button-secondary cancel mobile-full-width"})
+                      : Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-secondary cancel mobile-full-width"}))
             </div>
         </div>
     </div>
@@ -336,8 +336,8 @@
                     <span v-show="!pendingEdit">Add</span>
                     <span v-show="pendingEdit">Update</span>
                 </a>
-                <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="appState='addCentre', searchUrn=''" v-show="!pendingEdit">Cancel</a>
-                <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="cancelEdit" v-show="pendingEdit">
+                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="appState='addCentre', searchUrn=''" v-show="!pendingEdit">Cancel</a>
+                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="cancelEdit" v-show="pendingEdit">
                     Cancel
                 </a>
             </div>

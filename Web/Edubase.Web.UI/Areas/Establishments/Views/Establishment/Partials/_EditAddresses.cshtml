@@ -55,7 +55,7 @@
         @Html.HiddenFor(x => x.AdditionalAddresses[i].Id)
 
         <div class="form-group">
-            <button type="submit" name="@nameof(EditEstablishmentModel.ActionSpecifier)" value="@EditEstablishmentModel.GetActionSpecifier(EditEstablishmentModel.ASRemoveAddress, i)" class="button button-grey">Remove address</button>
+            <button type="submit" name="@nameof(EditEstablishmentModel.ActionSpecifier)" value="@EditEstablishmentModel.GetActionSpecifier(EditEstablishmentModel.ASRemoveAddress, i)" class="button button-secondary">Remove address</button>
         </div>
     </div>
 }
