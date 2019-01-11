@@ -48,7 +48,7 @@
             <div class="column-full">
                 <div class="button-row">
                     <button type="submit" name="actionname" class="button mobile-full-width" value="find">Continue</button>
-                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" })
+                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-secondary cancel mobile-full-width" })
                 </div>
             </div>
         </div>
@@ -122,9 +122,9 @@ else
                     @Html.GiasCheckboxFor(x => x.CopyGovernanceInfo, "Copy SAT governance to MAT")
                 </div>
 
-                @Html.RouteLink("« Go back", "GroupConvertSAT2MAT", null, new { @class = "button button-grey cancel mobile-full-width" })
+                @Html.RouteLink("« Go back", "GroupConvertSAT2MAT", null, new { @class = "button button-secondary cancel mobile-full-width" })
                 <button type="submit" name="actionname" class="button mobile-full-width" value="confirm">Convert</button>
-                @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-grey cancel mobile-full-width" })
+                @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-secondary cancel mobile-full-width" })
             </div>
         </div>
     }

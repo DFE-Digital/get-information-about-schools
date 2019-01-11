@@ -90,7 +90,7 @@ else
                 @Html.ValidationMessageFor(x => x.BulkFile)  
                 <div class="upload-control-wrapper">
                     @Html.TextBoxFor(x => x.BulkFile, new { type = "file", @class = "file-input" });
-                    <button class="button button-grey file-selector">Choose file</button>
+                    <button class="button button-secondary file-selector">Choose file</button>
                     <div class="text-field-wrapper">
                         <input type="text" class="file-name" readonly="readonly" value="No file chosen" />
                     </div>
@@ -100,7 +100,7 @@ else
         </div>
         <div class="column-full">
             <input type="submit" class="button mobile-full-width" value="Submit"/>           
-            <a href="/Tools" class="button button-grey cancel mobile-full-width">Cancel</a>
+            <a href="/Tools" class="button button-secondary cancel mobile-full-width">Cancel</a>
         </div>
        
 </div>

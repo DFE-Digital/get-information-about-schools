@@ -205,7 +205,7 @@
                                             <dt>Predecessor name:</dt>
                                             <dd>{{ od.predecessorName }}</dd>
                                         </dl>
-                                        <a href="#" class="button button-grey" v-on:click.prevent="editEstab(od.urn)">Edit</a>
+                                        <a href="#" class="button button-secondary" v-on:click.prevent="editEstab(od.urn)">Edit</a>
                                     </div>
                                 </div>
                             </div>
@@ -221,7 +221,7 @@
             <div class="column-half">
                 <div class="button-row">
                     <input type="submit" class="button opening-save" value="Save" v-on:click.prevent="updateRecord" />
-                    <a href="#" class="button button-grey" v-on:click="cancelEditClick">Cancel</a>
+                    <a href="#" class="button button-secondary" v-on:click="cancelEditClick">Cancel</a>
                 </div>
                 <div class="form-group">
                     <label class="form-label">URN</label>
@@ -274,7 +274,7 @@
 
                 <div class="button-row lower">
                     <input type="submit" class="button opening-save" value="Save" v-on:click.prevent="updateRecord" />
-                    <a href="#" class="button button-grey" v-on:click="cancelEditClick">Cancel</a>
+                    <a href="#" class="button button-secondary" v-on:click="cancelEditClick">Cancel</a>
                 </div>
             </div>
         </div>
@@ -288,7 +288,7 @@
             </div>
             <div class="button-row">
                 <a href="#" class="button mobile-full-width" id="button-ok" v-on:click.prevent="presentExitWarning=false, editRecord=false, searchUrn='', presentDetail=false">OK</a>
-                <a href="#" class="button button-grey mobile-full-width" id="button-cancel" v-on:click.prevent="presentExitWarning = false">Cancel</a>
+                <a href="#" class="button button-secondary mobile-full-width" id="button-cancel" v-on:click.prevent="presentExitWarning = false">Cancel</a>
             </div>
         </div>
     </div>

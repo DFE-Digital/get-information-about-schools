@@ -16,13 +16,13 @@
                 {
                     <div class="button-row">
                         <input type="submit" value="Select" class="button mobile-full-width" />
-                        <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
+                        <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-secondary mobile-full-width">Cancel</a>
                     </div>
                 }
                 else
                 {
                     <div class="button-row">
-                        <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
+                        <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-secondary mobile-full-width">Cancel</a>
                     </div>
                 }
                 <div style="float:none; clear:both;"></div>
@@ -41,7 +41,7 @@
                         </ul>
                         <div class="button-row">
                             <input type="submit" value="Select" class="button mobile-full-width"/>
-                            <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
+                            <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-secondary mobile-full-width">Cancel</a>
                         </div>
                    
                     </div>
@@ -49,7 +49,7 @@
                 else
                 {
                     <p>There are no shared governors available for this establishment</p>
-                    <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-grey mobile-full-width">Cancel</a>
+                    <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-secondary mobile-full-width">Cancel</a>
                 }
             }
         </div>

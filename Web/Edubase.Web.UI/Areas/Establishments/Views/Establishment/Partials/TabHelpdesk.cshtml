@@ -4,7 +4,7 @@
 <div id="helpdesk" class="tab-content">
     @if (Model.UserCanEdit)
     {
-        @Html.ActionLink("Edit", "EditHelpdesk", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-grey mobile-full-width" })
+        @Html.ActionLink("Edit", "EditHelpdesk", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary mobile-full-width" })
     }
     
     <div class="detail-summary">
@@ -31,6 +31,6 @@
 
   @if (Model.UserCanEdit)
     {
-        @Html.ActionLink("Edit", "EditHelpdesk", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-grey  mobile-full-width" })
+        @Html.ActionLink("Edit", "EditHelpdesk", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary  mobile-full-width" })
     }
 </div>

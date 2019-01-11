@@ -19,7 +19,7 @@
                         <label class="confirmation-label" for="estab-data-confirm">
                             Confirm establishment record is up to date
                         </label>
-                        <button class="button button-grey confirmation-button" id="estab-data-confirm">Confirm</button>
+                        <button class="button button-secondary confirmation-button" id="estab-data-confirm">Confirm</button>
                     }
                 </div>
             }
@@ -37,7 +37,7 @@
                         <label class="confirmation-label" for="gov-data-confirm">
                             Confirm governance record is up to date
                         </label>
-                        <button class="button button-grey confirmation-button" id="gov-data-confirm">Confirm</button>
+                        <button class="button button-secondary confirmation-button" id="gov-data-confirm">Confirm</button>
                     }
                 </div>
             }
@@ -65,7 +65,7 @@
         @using (Html.BeginRouteForm(route, new { Model.Establishment.Urn }, FormMethod.Post))
         {
             <label for="estab-data-confirm">Confirm @type.ToLower() record is up to date</label>
-            <button class="button button-grey" id="estab-data-confirm">Confirm</button>
+            <button class="button button-secondary" id="estab-data-confirm">Confirm</button>
         }
     </div>
 }

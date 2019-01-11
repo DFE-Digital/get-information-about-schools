@@ -1,18 +1,18 @@
 ﻿
 /**
- * 
+ *
  * @param String message - shown in the system unload dialog
  * @param Array permitedExits - array of selectors of elements which are `valid exits`
- * @returns {} 
+ * @returns {}
  */
 DfE.Util.showUnload = function (message, permitedExits) {
     permitedExits = permitedExits || [];
     message = message || 'Are you sure you want to leave this page';
     permitedExits.push('input[type="submit"]', 'button[type="submit"]');
-    
+
     var exitUrl = '';
     var exitElem;
-    
+
     var $contentArea = $('#full-content'),
             youMayLeave = false,
             $permittedEscapes = $contentArea.find('input[type="submit"], button[type="submit"]').not('[value="cancel"]'),
@@ -20,7 +20,7 @@ DfE.Util.showUnload = function (message, permitedExits) {
             overlay = '<div id="modal-overlay" class="modal-overlay hidden"></div>' +
             	'<div id="modal-content" class="modal-content hidden" role="dialog"><a href="#" id="exit-overlay" class="modal-exit">Close</a><div id="modal-inner">' +
                 '<h3 class="heading-large">Are you sure you want to leave this page?</h3><p>Any unsaved changes will be lost.</p></div> ' +
-                '<div class="button-row"><a href="#" class="button mobile-full-width" id="button-ok">OK</a><a href="#" class="button button-grey mobile-full-width" id="button-cancel">Cancel</a></div>' +
+                '<div class="button-row"><a href="#" class="button mobile-full-width" id="button-ok">OK</a><a href="#" class="button button-secondary mobile-full-width" id="button-cancel">Cancel</a></div>' +
                 '</div>';
 
     $('body').append(overlay);
@@ -96,7 +96,7 @@ DfE.Util.showUnload = function (message, permitedExits) {
         }, 100);
     });
 
-    
+
 
     $contentArea.on('click', 'a, button', function (e) {
         if (!youMayLeave) {
@@ -105,7 +105,7 @@ DfE.Util.showUnload = function (message, permitedExits) {
             exitElem = $(this);
             showModal();
         }
-        
+
     });
 
     $('body').on('click', '#button-ok', function () {
@@ -115,7 +115,7 @@ DfE.Util.showUnload = function (message, permitedExits) {
         } else {
             exitElem.click();
         }
-        
+
     });
 
     $(window).on('beforeunload', function (e) {

@@ -38,7 +38,7 @@
         $(document).off('keypress');
     }
 
-    
+
 
     OkCancel.prototype = {
         pause: function (pausedState) {
@@ -57,24 +57,24 @@
                 '<div id="' + opts.idPrefix + 'modal-inner" class="modal-inner">' +
                 '<h3 class="heading-large" id="' + opts.idPrefix + 'modal-title">' + opts.title + '</h3><p id="' + opts.idPrefix + 'modal-content-area">' + opts.content + '</p></div> ' +
                 '<div class="button-row"><a href="#" class="button mobile-full-width allow-exit" id="' + opts.idPrefix + 'button-ok">' + (!opts.okLabel ? "OK" : opts.okLabel) + '</a>';
-            
+
             if ($.isFunction(opts.cancel)) {
-                overlay += '<a href="#" class="button button-grey mobile-full-width allow-exit" id="' + opts.idPrefix + 'button-cancel">Cancel</a>';
-            } 
+                overlay += '<a href="#" class="button button-secondary mobile-full-width allow-exit" id="' + opts.idPrefix + 'button-cancel">Cancel</a>';
+            }
             overlay += '</div></div>';
 
 
             if ($('#' + opts.idPrefix + 'modal-overlay').length === 0) {
                 $('#full-content').append(overlay);
             }
-            
+
             function displayModal(e) {
                 e.preventDefault();
                 if (!opts.onPause) {
                     self.showModal();
                 }
             }
-            
+
             $el.on(opts.triggerEvent, displayModal);
 
 
@@ -93,12 +93,12 @@
             unbindEscapeKey();
             $('#full-content').off('click', '#' + opts.idPrefix + 'button-ok');
             $('#full-content').off('click', '#' + opts.idPrefix + 'button-cancel');
-            
+
             $('#' + opts.idPrefix + 'modal-content , #' + opts.idPrefix + 'modal-overlay').addClass('hidden');
 
         },
         updateModalContent: function (title, content) {
-            
+
             if (title) {
                 $('#' + this.opts.idPrefix + 'modal-title').text(title);
             }
