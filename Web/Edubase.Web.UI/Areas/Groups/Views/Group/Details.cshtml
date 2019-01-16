@@ -77,7 +77,7 @@
 
 <h1 class="heading-large">@Model.Group.Name</h1>
 
-    <p class="urn">UID: @Model.Group.GroupUId</p>
+    <p class="urn"><abbr title="Unique Identifier">UID</abbr>: @Model.Group.GroupUId</p>
     <p class="group-type">@Model.GroupTypeName</p>
 
     <p class="group-data-download">
@@ -175,7 +175,7 @@
                             <dd>@(Model.Group.GroupId.Clean() ?? "Not recorded")</dd>
                             }
 
-                            <dt>UID:</dt>
+                            <dt><abbr title="Unique Identifier">UID</abbr>:</dt>
                             <dd>@Model.Group.GroupUId</dd>
                         </dl>
                     </div>
@@ -264,7 +264,7 @@
                 {
                     <div id="links" class="tab-content">
                         <p class="table-caption">
-                            This group is the @((Model.Links.First().LinkType?.Contains("Successor")).GetValueOrDefault() ? "predecessor" : "successor") to @Model.Links.First().GroupName, UID: @Model.Links.First().UId.
+                            This group is the @((Model.Links.First().LinkType?.Contains("Successor")).GetValueOrDefault() ? "predecessor" : "successor") to @Model.Links.First().GroupName, <abbr title="Unique Identifier">UID</abbr>: @Model.Links.First().UId.
                         </p>
                         <div class="table-count">
                             <p>Showing 1 - @Model.Links.Count() of @Model.Links.Count()</p>
@@ -272,7 +272,7 @@
                         <table class="edubase-table">
                             <thead>
                                 <tr>
-                                    <th class="links-urn">UID</th>
+                                    <th class="links-urn"><abbr title="Unique Identifier">UID</abbr></th>
                                     <th class="links-name">Group name</th>
                                     <th class="links-type">Type of link</th>
                                     <th class="links-date">Date linked</th>

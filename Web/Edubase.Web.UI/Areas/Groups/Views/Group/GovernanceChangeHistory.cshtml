@@ -4,7 +4,7 @@
 @{
     ViewBag.Title = Model.Group.Name;
     ViewBag.PageClass = "mat-details school-details";
-    
+
     var sortDir = "desc";
     var sortField = "requestedDateUtc";
     if (Request.QueryString["sortby"] != null)
@@ -23,7 +23,7 @@
 
 <h1 class="heading-large">@Model.Group.Name</h1>
 
-    <p class="urn">UID: @Model.Group.GroupUId</p>
+    <p class="urn"><abbr title="Unique Identifier">UID</abbr>: @Model.Group.GroupUId</p>
     <p class="group-type">@Model.GroupTypeName</p>
 
     <p class="group-data-download">
@@ -43,7 +43,7 @@
             </div>
 
             <div class="tab-content-wrapper horizontal-tabs-content">
-                
+
                 @if (Model.IsUserLoggedOn)
                 {
                     <div id="change-history" class="tab-content">

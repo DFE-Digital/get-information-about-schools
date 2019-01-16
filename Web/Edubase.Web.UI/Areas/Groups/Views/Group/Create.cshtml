@@ -139,7 +139,9 @@
                 @if (Model.GroupUId.HasValue)
                 {
                     <div class="form-group">
-                        <label class="form-label">UID</label>
+                        <label class="form-label">
+                            <abbr title="Unique Identifier">UID</abbr>
+                        </label>
                         <input value="@Model.GroupUId" disabled="disabled" class="form-control" />
                     </div>
                 }
