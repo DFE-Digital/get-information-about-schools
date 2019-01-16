@@ -18,7 +18,7 @@
                 <ul class="establishment-summary">
                     <li>@Model.ActiveRecord.EstablishmentName</li>
                     <li>@Model.ActiveRecord.Address</li>
-                    <li>URN: @Model.ActiveRecord.Urn</li>
+                    <li><abbr title="Unique Reference Number">URN</abbr>: @Model.ActiveRecord.Urn</li>
                 </ul>
                 @if (Model.IsNew)
                 {
@@ -31,9 +31,9 @@
                 <h3 class="heading-medium">Relationship</h3>
                 <h4 class="bold-small">Relationship of:</h4>
                 <p class="link-relationship">
-                    @Model.Name, URN: @Model.Urn
+                    @Model.Name, <abbr title="Unique Reference Number">URN</abbr>: @Model.Urn
                     <strong>to</strong>
-                    @Model.ActiveRecord.EstablishmentName, URN: @Model.ActiveRecord.Urn
+                    @Model.ActiveRecord.EstablishmentName, <abbr title="Unique Reference Number">URN</abbr>: @Model.ActiveRecord.Urn
                 </p>
             </div>
             <div class="column-half">
@@ -59,9 +59,9 @@
                     <div class="column-half">
                         <h4 class="bold-small">Relationship of:</h4>
                         <p class="link-relationship">
-                            @Model.ActiveRecord.EstablishmentName, URN: @Model.ActiveRecord.Urn
+                            @Model.ActiveRecord.EstablishmentName, <abbr title="Unique Reference Number">URN</abbr>: @Model.ActiveRecord.Urn
                             <strong>to</strong>
-                            @Model.Name, URN: @Model.Urn
+                            @Model.Name, <abbr title="Unique Reference Number">URN</abbr>: @Model.Urn
                         </p>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ActiveRecord.ReverseLinkTypeId)">
                             @Html.ValidationMessageFor(x => x.ActiveRecord.ReverseLinkTypeId)
@@ -94,7 +94,7 @@
 }
 
 @section ViewScripts{
-    
+
     <script type="text/javascript">
 
         $(function () {
@@ -143,5 +143,5 @@
         });
 
     </script>
-    
+
 }

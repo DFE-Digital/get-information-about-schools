@@ -89,7 +89,7 @@
 
 <h1 class="heading-large">@(Model.Establishment.Name.Clean() ?? "(name not recorded)")</h1>
 
-<p class="urn">URN: @Model.Establishment.Urn</p>
+<p class="urn"><abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn</p>
 <p class="establishment-type">@Model.TypeName</p>
 <p class="establishment-data-download">
     @Html.RouteLink("Download establishment data", "EstabDataDownload", new { Model.Establishment.Urn, state = UriHelper.SerializeToUrlToken(RouteDto.Create(Model.LegalParentGroupRouteDto.Value, Model.EstabDetailRouteDto)) }, new { rel = "nofollow" })

@@ -26,11 +26,11 @@
                     <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
                 </ul>
             </div>
-            
+
             <h1 class="heading-xlarge">@Model.PageTitle</h1>
             @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
         </div>
-        
+
         <div class="column-two-thirds">
             Use this tool to create a @Model.EntityName
         </div>
@@ -63,7 +63,7 @@
 
 
 
-               
+
                 @if (Model.InEditMode)
                 {
                     <div class="form-group">
@@ -139,7 +139,9 @@
                 @if (Model.GroupUId.HasValue)
                 {
                     <div class="form-group">
-                        <label class="form-label">UID</label>
+                        <label class="form-label">
+                            <abbr title="Unique Identifier">UID</abbr>
+                        </label>
                         <input value="@Model.GroupUId" disabled="disabled" class="form-control" />
                     </div>
                 }
@@ -153,9 +155,9 @@
                     </div>
                 }
 
-    </div>        
     </div>
-    
+    </div>
+
     if (Model.SaveEstabLinks)
     {
         <div class="grid-row">
@@ -168,7 +170,7 @@
                 {
                     <h3 class="bold-small">Add establishment to this @Model.FieldNamePrefix.ToLower()</h3>
                 }
-                
+
                 <div class="form-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn) add-establishment-link">
                     @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
                     <label class="form-label">
@@ -191,7 +193,7 @@
 
                     <p>@Model.LinkedEstablishments.LinkedEstablishmentSearch.Name</p>
                     @* TO DO childrens centre address*@
-                    <p>URN: @Model.LinkedEstablishments.LinkedEstablishmentSearch.Urn</p>
+                    <p><abbr title="Unique Reference Number">URN</abbr>: @Model.LinkedEstablishments.LinkedEstablishmentSearch.Urn</p>
 
                     @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new {title = "Joined date"})
 
@@ -229,7 +231,7 @@
                                 {
                                     <th>Lead centre</th>
                                 }
-                                <th>URN</th>
+                                <th><abbr title="Unique Reference Number">URN</abbr></th>
                                 <th>Name</th>
                                 <th>Join date</th>
                                 <td></td>
@@ -292,7 +294,7 @@
             {
                 <button type="submit" name="action" class="button mobile-full-width" id="create-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Submit" : "Create")</button>
             }
-            
+
 
             @if (Model.InEditMode)
             {
@@ -382,7 +384,7 @@
         });
     </script>
 
-    
+
 }
 
     @if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND))

@@ -5,7 +5,7 @@
     var request = HttpContext.Current.Request;
     var sortDir = "desc";
     var sortField = "requestedDateUtc";
-    if (!string.IsNullOrEmpty(request.QueryString["sortby"])) 
+    if (!string.IsNullOrEmpty(request.QueryString["sortby"]))
     {
         sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
         sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
@@ -28,7 +28,7 @@
                 {
                     <th scope="col" class="cell-requesttype multi-line">
                         <a href="@Url.SortUrl("uid")"
-                           class="@Html.Conditional(sortField == "uid", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Group<br/>UID</a>
+                           class="@Html.Conditional(sortField == "uid", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Group<br/><abbr title="Unique Identifier">UID</abbr></a>
                     </th>
                     <th scope="col" class="cell-estab single-line">
                         <a href="@Url.SortUrl("groupName")"
@@ -100,4 +100,3 @@
     {
         <p>There are no results, please widen your search with the filters.</p>
     }
- 

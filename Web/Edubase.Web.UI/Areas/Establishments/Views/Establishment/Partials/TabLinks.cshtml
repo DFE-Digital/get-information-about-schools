@@ -4,14 +4,14 @@
     @if (Model.UserCanEdit)
     {
         <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Establishment.Urn })" class="button button-secondary mobile-full-width">Edit</a>
-        
+
     }
-    
+
     @if (Model.LinkedEstablishments.Any())
     {
         <p class="table-caption">
             These establishments are linked with @Model.Establishment.Name,
-            URN: @Model.Establishment.Urn. For example, they may be predecessor or successor establishments.
+            <abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn. For example, they may be predecessor or successor establishments.
         </p>
 
         <div class="table-count">
@@ -39,20 +39,20 @@
             }
             </tbody>
         </table>
-        
+
 
     }
     else
     {
         <p>There are no linked establishments</p>
     }
-    
+
     @if (Model.UserCanEdit)
     {
         <div class="button-row">
             <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Establishment.Urn })" class="button button-secondary mobile-full-width">Edit</a>
         </div>
-        
+
     }
 
 </div>

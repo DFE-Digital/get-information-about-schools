@@ -4,13 +4,13 @@
     @if (Model.SelectedTab == SearchViewModel.Tab.Establishments)
     {
         <!-- establishment search help text -->
-        <div id="name-reference-help">
+        <div id="name-reference-help" role="tooltip">
             <h3 class="heading-small">Name, URN, LAESTAB, or UKPRN</h3>
             <p>
                 Enter the establishment's name or a reference
                 number: URN (Unique Reference Number),
                 LAESTAB (Local Authority Establishment Number),
-                UKPRN: (UK ProviderReference Number)
+                UKPRN: (UK Provider Reference Number)
             </p>
         </div>
 
@@ -26,17 +26,6 @@
                 House number or Unique ID (assigned by the
                 system).
             </p>
-        </div>
-    }
-
-
-
-    @if (Model.SelectedTab == SearchViewModel.Tab.Governors)
-    {
-        <!-- governor help text-->
-        <div id="gid-help">
-            <h3 class="heading-small">GID number</h3>
-            <p>Governor ID number</p>
         </div>
     }
 

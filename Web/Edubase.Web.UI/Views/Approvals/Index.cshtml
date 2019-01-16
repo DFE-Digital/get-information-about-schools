@@ -111,7 +111,7 @@
                                 <td class="cell-checkbox">&nbsp;</td>
                                 <th scope="col" class="cell-urn">
                                     <a href="#" v-on:click.prevent="setSort('establishmentUrn')"
-                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='establishmentUrn' ? 'selected-sort': '' ]">URN</a>
+                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='establishmentUrn' ? 'selected-sort': '' ]"><abbr title="Unique Reference Number">URN</abbr></a>
                                 </th>
                                 <th scope="col" class="cell-urn">
                                     <a href="#" v-on:click.prevent="setSort('establishmentLAESTAB')"
@@ -201,7 +201,7 @@
         <div class="button-row">
             <a href="#" class="button mobile-full-width" v-on:click.prevent="selectReason">OK</a>
             <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="showRejections = false; reasonIds =[]">Cancel</a>
-        </div>        
+        </div>
     </div>
 </div>
 

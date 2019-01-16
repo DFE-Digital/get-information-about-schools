@@ -17,13 +17,13 @@
     <ul>
         <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" })</li>
     </ul>
-    
+
 </div>
 
 
 <h1 class="heading-large">@Model.GroupName</h1>
 
-<p class="urn">UID: @Model.GroupUId</p>
+<p class="urn"><abbr title="Unique Identifier">UID</abbr>: @Model.GroupUId</p>
 <p class="establishment-type">@Model.GroupTypeName</p>
 @if (ViewData.ContainsKey("DuplicateGovernor"))
 {
@@ -83,7 +83,7 @@
                 {
                     @RenderBody()
                 }
-               
+
             </div>
         </div>
     </div>

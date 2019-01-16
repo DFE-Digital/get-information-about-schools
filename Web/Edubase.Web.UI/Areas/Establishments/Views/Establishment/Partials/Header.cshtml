@@ -16,7 +16,7 @@
         <text>(@Model.LocalAuthorityCode)</text>
     }
 </dd>
- 
+
 <dt>@(Model.DisplayPolicy.HeadteacherLabel):</dt>
 <dd>
     @if (Model.DisplayPolicy.HeadTitleId)
@@ -39,11 +39,11 @@
     <dd>
         @(Model.Establishment.HeadAppointmentDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
     </dd>
-        
+
     <dt>@(Model.DisplayPolicy.HeadEmailAddressLabel):</dt>
     <dd>
         @(Model.Establishment.HeadEmailAddress ?? "Not recorded")
-    </dd>       
+    </dd>
 }
 
 @if (Model.DisplayPolicy.AgeRange)
@@ -57,7 +57,7 @@
     </dd>
 }
 
-  
+
 <dt>Phase of education:</dt>
 <dd>
     @Model.EducationPhaseName
@@ -65,7 +65,7 @@
 
 @if (Model.DisplayPolicy.TypeId)
 {
-        
+
     <dt>@(Model.DisplayPolicy.EstablishmentTypeLabel):</dt>
     <dd>
         @Model.TypeName
@@ -80,14 +80,14 @@
     </dd>
 }
 
-@foreach (var group in Model.Groups.OrderByDescending(g => Model.GetGroupFieldLabel(g))) 
+@foreach (var group in Model.Groups.OrderByDescending(g => Model.GetGroupFieldLabel(g)))
 {
     <dt>@(Model.GetGroupFieldLabel(group)):</dt>
     <dd>
         @Html.ActionLink(group.Name, "Details", "Group", new { id = group.GroupUId, area = "Groups" }, null)
     </dd>
 }
-    
+
 @if (Model.DisplayPolicy.GenderId)
 {
     <dt>Gender of entry:</dt>
@@ -104,12 +104,12 @@
         <text>DfE number: @Model.Establishment.GetLAESTAB(Model.LocalAuthorityCode)<br /></text>
     }
     @if (Model.DisplayPolicy.UKPRN && Model.Establishment.UKPRN.HasValue)
-    { 
+    {
         <text><abbr title="UK Provider Reference Number">UKPRN</abbr>: @Model.Establishment.UKPRN</text>
     }
 </dd>
 
-    
+
 <dt>Establishment status:</dt>
 <dd>
     @if (Model.IsClosed)
@@ -206,7 +206,7 @@
     </dd>
 }
 
-@if (Model.Establishment.TypeId.OneOfThese(ET.OtherIndependentSchool, 
+@if (Model.Establishment.TypeId.OneOfThese(ET.OtherIndependentSchool,
     ET.NonmaintainedSpecialSchool, ET.OtherIndependentSpecialSchool))
 {
     @CSCPLink()
@@ -218,7 +218,7 @@
     <dd>@Model.Establishment.ProprietorName</dd>
 }
 
-@helper CSCPLink() { 
+@helper CSCPLink() {
     <dt class="cscp-link">School performance:</dt>
     <dd class="cscp-link"><a href="https://www.compare-school-performance.service.gov.uk/school/@Model.Establishment.Urn" target="_blank">Compare School and College Performance page</a></dd>
 }

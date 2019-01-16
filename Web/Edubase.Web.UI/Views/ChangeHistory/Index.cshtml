@@ -10,7 +10,7 @@
         </li>
         <li>
             @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
-        </li>        
+        </li>
     </ul>
 </div>
 
@@ -25,7 +25,7 @@
             made changes to their records and what was changed.
         </p>
     </div>
-        
+
     <div class="column-full">
         <div class="horizontal-tabs-wrapper">
             <div class="tab-wrap search-tabs">
@@ -53,8 +53,8 @@
                                 {
                                     @Html.HiddenFor(m => m.SelectedTab)
                                     <fieldset class="search-toggle-panel">
-                                        <legend class="visually-hidden">Search by name of reference number</legend>
-                                        <span class="radio-button-wrap">                        
+                                        <legend class="visually-hidden">Search by name or reference number</legend>
+                                        <span class="radio-button-wrap">
                                             @Html.RadioButtonFor(m => m.SearchType, eSearchType.Text, new { id = "searchtype-name", data_toggle_panel = "#searchby-name-ref" })
                                             <label class="edubase-button-radio" for="searchtype-name">
                                                 Name or reference number
@@ -67,14 +67,14 @@
                                                     <p>We couldn't find any establishments matching your search criteria</p>
                                                 </div>
                                             }
-                                            <span class="search-hint">
-                                                Name, URN, LAESTAB or UKPRN
+                                            <label class="form-label" for="TextSearchModel_Text">
+                                                Enter name, <abbr title="Unique Reference Number">URN</abbr>, LAESTAB or UKPRN
                                                 <a href="#name-reference-help" class="icon-help">
                                                     <span class="visuallyhidden">About reference numbers</span>
                                                 </a>
-                                            </span>
+                                            </label>
                                             <div class="form-group">
-                                                @Html.TextBoxFor(x => x.TextSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggest?text=" })
+                                                @Html.TextBoxFor(x => x.TextSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggest?text=", aria_describedby="name-reference-help" })
                                             </div>
                                             @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
                                             <div class="form-group">
@@ -130,7 +130,7 @@
                                                     </label>
                                                 </span>
                                             </fieldset>
-                                             
+
 
                                             <div class="column-two-thirds">
                                                 <div class="date-group-wrap">
@@ -138,7 +138,7 @@
                                                 </div>
                                                 <div class="date-group-wrap">
                                                     @Html.EditorFor(x => x.DateFilterTo, new { title = "To (optional)" })
-                                                </div>                                                
+                                                </div>
                                             </div>
                                             @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
                                             <div class="form-group">
@@ -175,14 +175,14 @@
                                                 </div>
                                             }
                                             <div class="edubase-search-element with-typeahead has-typeahead" id="group-search-container">
-                                                <label class="form-label">
-                                                    Name, Companies House number, Group UID or ID
+                                                <label class="form-label" for="GroupSearchModel_Text">
+                                                    Enter name, Companies House number, Group <abbr title="Unique Identifier">UID</abbr> or ID
                                                     <a href="#group-reference" class="icon-help">
                                                         <span class="visuallyhidden">About reference numbers</span>
                                                     </a>
                                                 </label>
                                                 <div class="form-group">
-                                                    @Html.TextBoxFor(x => x.GroupSearchModel.Text, new {@class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text="})
+                                                    @Html.TextBoxFor(x => x.GroupSearchModel.Text, new {@class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=", aria_describedby="group-reference"})
                                                 </div>
 
                                                 @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
@@ -241,7 +241,7 @@
 @section ViewScripts
 {
     <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
-    
+
     <script>
         (function() {
             $('.edubase-button-radio').on('click', function () {
@@ -249,8 +249,8 @@
             });
 
             DfE.Views.schoolSearch.init({ highlightFirstSuggestion: true });
-        }());        
+        }());
     </script>
-    
+
 }
 

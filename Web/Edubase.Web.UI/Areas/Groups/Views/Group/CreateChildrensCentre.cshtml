@@ -11,7 +11,7 @@
     <h1 class="heading-xlarge">Sorry, something went wrong</h1>
     <p>Please try again later.</p>
     <p>A report of the error has been sent to our technical team.</p>
-    
+
     <p class="api-error-code" v-show="apiError.hasOwnProperty('errorCode')">Error code: {{apiError.errorCode}}</p>
     <div v-show="apiError.hasOwnProperty('technicalDetails')">
         <code>
@@ -20,7 +20,7 @@
     </div>
 </div>
 <div v-show="Object.keys(apiError).length === 0">
-    
+
 
 <div aria-live="polite" class="wait-spinner" v-show="isProcessing">
     <p class="visually-hidden">Please wait</p>
@@ -173,9 +173,9 @@
                         {{err.field}} : {{err.message}}
                     </li>
                 </ul>
-            </div>            
+            </div>
             <div class="error-summary" v-show="urnApiErrors.length>0">
-                <h2 class="error-summary-heading heading-medium">Please check the URN</h2>
+                <h2 class="error-summary-heading heading-medium">Please check the <abbr title="Unique Reference Number">URN</abbr></h2>
                 <ul class="error-summary-list">
                     <li v-for="err in urnApiErrors" class="error-message">
                         {{err.field}} : {{err.message}}
@@ -191,10 +191,10 @@
                 </ul>
             </div>
             <div class="error-summary" v-show="duplicateUrnError">
-                <h2 class="error-summary-heading heading-medium">Please check the URN</h2>
+                <h2 class="error-summary-heading heading-medium">Please check the <abbr title="Unique Reference Number">URN</abbr></h2>
                 <ul class="error-summary=list">
                     <li class="error-message">
-                        The URN is a duplicate.
+                        The <abbr title="Unique Reference Number">URN</abbr> is a duplicate.
                     </li>
                 </ul>
             </div>
@@ -226,7 +226,7 @@
                 <label class="form-label">
                     Establishment <abbr title="Unique Reference Number">URN</abbr>
                 </label>
-                <span class="error-message" v-show="urnError || urnApiErrors.length > 0 || duplicateUrnError">Please enter a valid URN</span>
+                <span class="error-message" v-show="urnError || urnApiErrors.length > 0 || duplicateUrnError">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
                 @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new {@class = "form-control form-control-1-2 search-box", v_model = "searchUrn"})
                 <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" class="button inline-submit" v-on:click.prevent="lookupUrn" :disabled="$.trim(searchUrn).length < 5">Find</button>
             </div>
@@ -240,7 +240,7 @@
                     <thead>
                     <tr>
                         <th v-if="groupType === '8'">Lead centre</th>
-                        <th>URN</th>
+                        <th><abbr title="Unique Reference Number">URN</abbr></th>
                         <th>Name</th>
                         <th>Join date</th>
                         <td></td>
@@ -317,7 +317,7 @@
                 <br/>
                 {{pendingEstabAddress}}
                 <br/>
-                URN: {{pendingEstab.urn}}
+                <abbr title="Unique Reference Number">URN</abbr>: {{pendingEstab.urn}}
                 <br/>
                 <a href="#" v-on:click.prevent="appState='addCentre', searchUrn=''" v-show="!pendingEdit">Wrong establishment?</a>
             </p>

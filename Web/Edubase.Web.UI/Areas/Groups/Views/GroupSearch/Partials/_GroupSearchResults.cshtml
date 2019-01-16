@@ -13,7 +13,7 @@
 }
 else if (Model.Results.Count > 0)
 {
-          
+
         <div class="top-pagination">
             @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
             {
@@ -21,7 +21,7 @@ else if (Model.Results.Count > 0)
                 {"maxPages", 5 }
             })
         </div>
-     
+
         <ul class="school-results-listing">
             @foreach (var result in Model.Results)
             {
@@ -35,7 +35,7 @@ else if (Model.Results.Count > 0)
                             <dt>Companies House Number:</dt>
                             <dd><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.CompaniesHouseNumber">@result.CompaniesHouseNumber</a></dd>
                         }
-                        <dt>Group UID:</dt>
+                        <dt>Group <abbr title="Unique Identifier">UID</abbr>:</dt>
                         <dd>@result.GroupUId</dd>
                         <dt>Group ID:</dt>
                         <dd>@(result.GroupId ?? "Not recorded")</dd>
@@ -44,11 +44,11 @@ else if (Model.Results.Count > 0)
             }
         </ul>
 
-    
+
         <div class="lower-pagination">
             @Html.Partial("_GenericPagination", Model, new ViewDataDictionary { { "hideDescription", true } })
         </div>
-    
+
 }
 else
 {

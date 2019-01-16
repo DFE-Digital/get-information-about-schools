@@ -12,10 +12,10 @@
         <div class="form-group gov-radio-wrap">
             @if (Model.MultiSelect)
             {
-               
+
                 <span class="checkbox-wrap">
                     @Html.CheckBoxFor(x => x.Selected, GetCheckboxAttributes(Model.PreExisting, "panel-trigger", @Html.NameFor(x => x.Selected), "#expand-"+Model.Id))
-                    
+
                     <label class="edubase-button-checkbox" for="@Html.NameFor(x => x.Selected)">@Model.FullName</label>
                 </span>
             }
@@ -28,7 +28,7 @@
                 </span>
             }
         </div>
-                                        
+
 
         @Html.HiddenFor(x => x.Id)
         @Html.HiddenFor(x => x.PostCode)
@@ -48,7 +48,7 @@
                         @foreach (var establishment in Model.SharedWith)
                         {
                             <div>
-                                @establishment.EstablishmentName, URN: @establishment.Urn
+                                @establishment.EstablishmentName, <abbr title="Unique Reference Number">URN</abbr>: @establishment.Urn
                             </div>
                         }
                     </dd>
@@ -60,7 +60,7 @@
             {
                 <div id="expand-@Model.Id">
                     <dl class="key-value-list">
-                        <dt>GID:</dt>
+                        <dt><abbr title="Governor ID number">GID</abbr>:</dt>
                         <dd>@Model.Id</dd>
                         <dt>Appointed by:</dt>
                         <dd>@Model.AppointingBodyName</dd>
@@ -73,7 +73,7 @@
                 </div>
             }
 
-                
+
         </div>
     </div>
 </li>

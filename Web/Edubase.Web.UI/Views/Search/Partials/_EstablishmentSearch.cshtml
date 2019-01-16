@@ -11,8 +11,8 @@
             {
                 @Html.HiddenFor(m => m.SelectedTab)
                 <fieldset class="search-toggle-panel">
-                    <legend class="visually-hidden">Search by name of reference number</legend>
-                    <span class="radio-button-wrap">                        
+                    <legend class="visually-hidden">Search by name or reference number</legend>
+                    <span class="radio-button-wrap">
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.Text, new { id = "searchtype-name", data_toggle_panel = "#searchby-name-ref" })
                         <label class="edubase-button-radio" for="searchtype-name">
                             Name or reference number
@@ -25,14 +25,14 @@
                                 <p>We couldn't find any establishments matching your search criteria</p>
                             </div>
                         }
-                        <span class="search-hint">
-                            Name, URN, LAESTAB or UKPRN
+                        <label class="form-label" for="TextSearchModel_Text">
+                            Enter name, <abbr title="Unique Reference Number">URN</abbr>, LAESTAB or UKPRN
                             <a href="#name-reference-help" class="icon-help">
                                 <span class="visuallyhidden">About reference numbers</span>
                             </a>
-                        </span>
+                        </label>
                         <div class="form-group">
-                            @Html.TextBoxFor(x => x.TextSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggest?text=", maxlength="200" })
+                            @Html.TextBoxFor(x => x.TextSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggest?text=", maxlength="200", aria_describedby="name-reference-help" })
                         </div>
                         <div class="form-group">
                             <span class="checkbox-wrap">
@@ -71,7 +71,7 @@
                                 <p>We couldn't find any locations matching your search criteria</p>
                             </div>
                         }
-                        <span class="search-hint">Postcode, town or city</span>
+                        <label class="form-label" for="LocationSearchModel_Text">Enter postcode, town or city</label>
                         <div class="form-group">
                             @Html.TextBoxFor(x => x.LocationSearchModel.Text, new { @class = "form-control location-search", autocomplete = "off", maxlength = "200" })
                         </div>
@@ -101,7 +101,7 @@
                     <span class="radio-button-wrap">
                         @Html.HiddenFor(m => m.SelectedTab)
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.ByLocalAuthority, new { id = "searchtype-la", data_toggle_panel = "#searchby-la-ref" })
-                        
+
                         <label class="edubase-button-radio" for="searchtype-la">
                             Local authority
                         </label>
@@ -114,7 +114,7 @@
                             </div>
                         }
 
-                        <span class="search-hint">Enter one or more local authorities</span>
+                        <label class="form-label" for="LocalAuthorityToAdd">Enter one or more local authorities</label>
                         <div class="selected-las form-group">
                             <div id="la-id-target">
 

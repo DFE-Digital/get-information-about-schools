@@ -46,18 +46,18 @@
             </div>
             <div v-bind:class="['error-summary' , showGlobalError ? '' :' hidden']">
                 <h2 v-bind:class="['heading-medium error-summary-heading', (leadEstabError || linkedEstabError || amalgamateUrnError) ? '' : 'hidden']">
-                    Invalid <abbr title="Unique reference number">URN</abbr>
+                    Invalid <abbr title="Unique Reference Number"><a href="#" title="Unique Reference Number" class="glossary">URN</a></abbr>
                 </h2>
 
                 <ul class="error-summary-list">
                     <li v-bind:class="['error-message', (mergerTypeError) ? '' : 'hidden']"><a href="#radio-amalgamation">Please select 'Merge' or 'Amalgamate'</a></li>
-                    <li v-bind:class="['error-message', (leadEstabError) ? '' : 'hidden']"><a href="#lead-establishment">The lead establishment URN is invalid</a></li>
-                    <li v-bind:class="['error-message', (linkedEstabError) ? '' : 'hidden']"><a href="#linked-establishments">Please enter a valid URN</a></li>
-                    <li v-bind:class="['error-message', (amalgamateUrnError) ? '' : 'hidden']"><a href="#linked-establishments">Please enter a valid URN</a></li>
+                    <li v-bind:class="['error-message', (leadEstabError) ? '' : 'hidden']"><a href="#lead-establishment">The lead establishment <abbr title="Unique Reference Number">URN</abbr> is invalid</a></li>
+                    <li v-bind:class="['error-message', (linkedEstabError) ? '' : 'hidden']"><a href="#linked-establishments">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a></li>
+                    <li v-bind:class="['error-message', (amalgamateUrnError) ? '' : 'hidden']"><a href="#linked-establishments">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a></li>
                     <li v-bind:class="['error-message', (mergeDateError && mergerType==='merger') ? '' : 'hidden']"><a href="#merger-date">Merger date is invalid</a></li>
-                    <li v-bind:class="['error-message', (amalgamationLengthError || mergeLengthError)  ? '' : 'hidden']"><a href="#amalg-linked">Select between two and four schools. Please add another URN to continue</a></li>
+                    <li v-bind:class="['error-message', (amalgamationLengthError || mergeLengthError)  ? '' : 'hidden']"><a href="#amalg-linked">Select between two and four schools. Please add another <abbr title="Unique Reference Number">URN</abbr> to continue</a></li>
                     <li v-bind:class="['error-message', nameError ? '' : 'hidden']"><a href="#new-establishment-name">New school details must be completed before amalgamation. Please enter a new school name</a></li>
-                    <li v-bind:class="['error-message', duplicateUrnsError ? '' : 'hidden']"><a href="#">One or more URNs are duplicated. Please enter different URN(s)</a></li>
+                    <li v-bind:class="['error-message', duplicateUrnsError ? '' : 'hidden']"><a href="#">One or more <abbr title="Unique Reference Number">URNs</abbr> are duplicated. Please enter different <abbr title="Unique Reference Number">URN</abbr>(s)</a></li>
                     <li v-bind:class="['error-message', phaseError ? '' : 'hidden']"><a href="#new-establishment-phase">You haven't selected an establishment phase. Please select one to continue</a></li>
                     <li v-bind:class="['error-message', typeError ? '' : 'hidden']"><a href="#new-establishment-type">You haven't selected an establishment type. Please select one to continue</a></li>
                     <li v-bind:class="['error-message', laError ? '' : 'hidden']"><a href="#LocalAuthorityId">You haven't selected a local authority. Please select one to continue</a></li>
@@ -126,7 +126,7 @@
                                 <span class="form-hint">
                                     The lead establishment will remain open
                                 </span>
-                                <span v-bind:class="['error-message', leadEstabError ? '' : 'hidden' ]">Please enter a valid URN</span>
+                                <span v-bind:class="['error-message', leadEstabError ? '' : 'hidden' ]">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
                                 <label class="form-label" for="lead-establishment">
                                     Enter the lead establishment <abbr title="Unique Reference Number">URN</abbr>
 
@@ -142,9 +142,9 @@
                                     </p>
                                     <dl class="field-group">
                                         <dt>
-                                            <label class="form-label">Enter the establishment URN(s)</label>
-                                            <span v-bind:class="['error-message', linkedEstabError ? '' : 'hidden' ]">Please enter a valid URN.</span>
-                                            <span v-bind:class="['error-message', duplicateUrnsError ? '' : 'hidden' ]">Duplicate URN. Please correct the URN.</span>
+                                            <label class="form-label">Enter the establishment <abbr title="Unique Reference Number">URN</abbr>(s)</label>
+                                            <span v-bind:class="['error-message', linkedEstabError ? '' : 'hidden' ]">Please enter a valid <abbr title="Unique Reference Number">URN</abbr>.</span>
+                                            <span v-bind:class="['error-message', duplicateUrnsError ? '' : 'hidden' ]">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
                                         </dt>
                                         <dd>
                                             <ol class="linked-establishments" id="linked-establishments">
@@ -267,10 +267,10 @@
                         <div class="column-half">
                             <dl v-bind:class="['field-group form-group', amalgamateUrnError || amalgamationLengthError || duplicateUrnsError ? 'error' : '' ]">
                                 <dt>
-                                    <label class="form-label">Enter the establishment URN(s)</label>
-                                    <span v-bind:class="['error-message', amalgamateUrnError ? '' : 'hidden' ]">Please enter a valid URN</span>
+                                    <label class="form-label">Enter the establishment <abbr title="Unique Reference Number">URN</abbr>(s)</label>
+                                    <span v-bind:class="['error-message', amalgamateUrnError ? '' : 'hidden' ]">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
                                     <span v-bind:class="['error-message', amalgamationLengthError && !amalgamateUrnError  ? '' : 'hidden' ]">Select between 2 and 4 schools.</span>
-                                    <span v-bind:class="['error-message', duplicateUrnsError && !amalgamateUrnError && !amalgamationLengthError ? '' : 'hidden' ]">Duplicate URN. Please correct the URN.</span>
+                                    <span v-bind:class="['error-message', duplicateUrnsError && !amalgamateUrnError && !amalgamationLengthError ? '' : 'hidden' ]">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
                                 </dt>
                                 <dd>
                                     <ol class="linked-establishments" id="amalg-linked">
@@ -283,7 +283,7 @@
                                 </dd>
                             </dl>
                         </div>
-                        
+
                         <div class="column-full">
                             <div class="submit-cancel-panel">
                                 <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false"> &laquo; Go back</a>

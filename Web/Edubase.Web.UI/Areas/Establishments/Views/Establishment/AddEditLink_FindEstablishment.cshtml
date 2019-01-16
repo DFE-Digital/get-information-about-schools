@@ -16,11 +16,11 @@
             <div class="column-half">
                 <div class="form-group @Html.ValidationCssClassFor(x => x.SearchUrn)">
                     <label class="form-label">
-                        Other establishments URN
+                        Other establishments <abbr title="Unique Reference Number">URN</abbr>
                     </label>
                     @Html.ValidationMessageFor(x => x.SearchUrn)
                     @Html.TextBoxFor(x => x.SearchUrn, new { @class = "form-control urn-search" })
-                    <button id="search-urn-submit" class="button inline-button" name="@SearchForEstablishmentViewModel.BIND_ALIAS_DOSEARCH" value="true">Find URN</button>
+                    <button id="search-urn-submit" class="button inline-button" name="@SearchForEstablishmentViewModel.BIND_ALIAS_DOSEARCH" value="true">Find <abbr title="Unique Reference Number">URN</abbr></button>
                 </div>
             </div>
 
