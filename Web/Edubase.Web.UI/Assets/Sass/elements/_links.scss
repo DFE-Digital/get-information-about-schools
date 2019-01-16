@@ -43,9 +43,9 @@ $path: $images-path;
 .breadcrumbs {
     font-size: 16px;
     padding-top: 10px;
-    padding-bottom: 15px; 
+    padding-bottom: 15px;
 
-    > a { 
+    > a {
         position: relative;
         padding: 2px;
         margin: 6px 0 6px 10px;
@@ -64,7 +64,7 @@ $path: $images-path;
     }
 
     li {
-        display: inline-block;               
+        display: inline-block;
         color: $grey-1;
         position: relative;
         padding-left: 20px;
@@ -137,4 +137,15 @@ $path: $images-path;
 .baseline-inline {
     font-size: 16px;
     margin-left: 8px;
+}
+
+// Subduing the link style as the anchor is primarily
+// to force screen readers to read the definition.
+.glossary-link {
+  abbr &,
+  acronym & {
+    color: $text-colour;
+    text-decoration: none;
+    cursor: help;
+  }
 }
