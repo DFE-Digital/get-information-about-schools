@@ -138,14 +138,3 @@ $path: $images-path;
     font-size: 16px;
     margin-left: 8px;
 }
-
-// Subduing the link style as the anchor is primarily
-// to force screen readers to read the definition.
-.glossary-link {
-  abbr &,
-  acronym & {
-    color: $text-colour;
-    text-decoration: none;
-    cursor: help;
-  }
-}
