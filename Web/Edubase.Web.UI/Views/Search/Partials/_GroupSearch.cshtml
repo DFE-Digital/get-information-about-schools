@@ -27,14 +27,14 @@
 
                     <div class="expanding-search-field" id="searchby-group-ref">
                         <div class="edubase-search-element with-typeahead has-typeahead" id="group-search-container">
-                            <label class="form-label">
-                                Name, Companies House number, Group <abbr title="Unique Identifier">UID</abbr> or ID
+                            <label class="form-label" for="GroupSearchModel_Text">
+                                Enter name, Companies House number, Group <abbr title="Unique Identifier">UID</abbr> or ID
                                 <a href="#group-reference" class="icon-help">
                                     <span class="visuallyhidden">About reference numbers</span>
                                 </a>
                             </label>
                             <div class="form-group">
-                                @Html.TextBoxFor(x => x.GroupSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=", maxlength = "200" })
+                                @Html.TextBoxFor(x => x.GroupSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=", maxlength = "200", aria_describedby="group-reference" })
                             </div>
 
                             @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
