@@ -34,7 +34,7 @@
             <li class="error-message" v-for="(item, index) in recordUpdateErrors.errors">
                 {{item.message}}
             </li>
-            
+
         </ul>
     </div>
 
@@ -52,10 +52,10 @@
                 <div class="error-summary" v-show="searchError" v-cloak>
                     <h2 class="heading-medium error-summary-heading" v-show="searchError">No matching establishment</h2>
                     <div v-show="searchError">
-                        <p>You have entered an invalid URN</p>
+                        <p>You have entered an invalid <abbr title="Unique Reference Number">URN</abbr></p>
                         <ul>
                             <li class="error-message">
-                                <a href="#academy-search-field">Please enter a valid URN</a>
+                                <a href="#academy-search-field">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a>
                             </li>
                         </ul>
                     </div>
@@ -112,7 +112,7 @@
                                             </th>
                                             <th scope="col" class="cell-urn">
                                                 <a href="#" v-on:click.prevent="sortOpenings('urn')"
-                                                   v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='urn' ? 'selected-sort': '' ]">URN</a>
+                                                   v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='urn' ? 'selected-sort': '' ]"><abbr title="Unique Reference Number">URN</abbr></a>
                                             </th>
                                             <th scope="col" class="cell-estabname">
                                                 <a href="#" v-on:click.prevent="sortOpenings('name')"
@@ -124,7 +124,7 @@
                                             </th>
                                             <th scope="col" class="cell-predecessor-urn">
                                                 <a href="#" v-on:click.prevent="sortOpenings('predecessorUrn')"
-                                                   v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='predecessorUrn' ? 'selected-sort': '' ]">Predecessor URN</a>
+                                                   v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='predecessorUrn' ? 'selected-sort': '' ]">Predecessor <abbr title="Unique Reference Number">URN</abbr></a>
                                             </th>
                                             <th scope="col" class="cell-predecessor-name">
                                                 <a href="#" v-on:click.prevent="sortOpenings('predecessorName')"
@@ -179,9 +179,9 @@
                                 <form>
                                     <div v-bind:class="['form-group', searchError? 'error' : '']">
                                         <label class="form-label" for="academy-search-field">
-                                            Enter establishment URN
+                                            Enter establishment <abbr title="Unique Reference Number">URN</abbr>
                                         </label>
-                                        <span class="error-message" v-show="searchError">Please enter a valid URN</span>
+                                        <span class="error-message" v-show="searchError">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
                                         <input type="text" class="form-control  desktop-inline" id="academy-search-field" v-model.trim="searchUrn" />
 
                                         <input type="submit" class="button inline-submit" value="Find establishment" v-on:click.prevent="validateUrn" />
@@ -194,13 +194,13 @@
                                     <div class="urn-result">
                                         <h4 class="heading-small">Opening date: {{od.displayDate }}</h4>
                                         <dl>
-                                            <dt>URN:</dt>
+                                            <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
                                             <dd><a v-bind:href="detailUrl(od.urn )">{{ od.urn }}</a></dd>
                                             <dt>Establishment name:</dt>
                                             <dd>{{updateName}}</dd>
                                             <dt>Establishment type:</dt>
                                             <dd>{{ od.establishmentType }}</dd>
-                                            <dt>Predecessor URN:</dt>
+                                            <dt>Predecessor <abbr title="Unique Reference Number">URN</abbr>:</dt>
                                             <dd><a v-bind:href="detailUrl(od.predecessorUrn )">{{ od.predecessorUrn }}</a></dd>
                                             <dt>Predecessor name:</dt>
                                             <dd>{{ od.predecessorName }}</dd>
@@ -224,7 +224,7 @@
                     <a href="#" class="button button-secondary" v-on:click="cancelEditClick">Cancel</a>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">URN</label>
+                    <label class="form-label"><abbr title="Unique Reference Number">URN</abbr></label>
                     <input class="form-control" type="text" :value="od.urn" disabled="disabled" />
                 </div>
 
@@ -263,7 +263,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Predecessor URN</label>
+                    <label class="form-label">Predecessor <abbr title="Unique Reference Number">URN</abbr></label>
                     <input type="text" class="form-control" disabled="disabled" :value="od.predecessorUrn" />
                 </div>
 

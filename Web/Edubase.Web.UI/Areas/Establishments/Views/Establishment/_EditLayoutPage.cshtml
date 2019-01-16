@@ -28,7 +28,7 @@
 }
 
 <h1 class="heading-large">@Model.Name</h1>
-<p class="urn">URN: @Model.Urn</p>
+<p class="urn"><abbr title="Unique Reference Number">URN</abbr>: @Model.Urn</p>
 <p class="establishment-type">@Model.TypeName</p>
 
 @if (!IsSectionDefined("validation"))
@@ -55,9 +55,9 @@ else
                         {
                             <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#school-dashboard")" class="horizontal-tab">Details</a>
                         }
-                        
+
                     </li>
-                    
+
                     @if (Model.TabDisplayPolicy.Governance)
                     {
                         <li>
@@ -85,7 +85,7 @@ else
                             }
                         </li>
                     }
-                    
+
                     <li>
                         @if (string.Equals(Model.SelectedTab, "links"))
                         {
@@ -96,7 +96,7 @@ else
                             <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#school-links")" class="horizontal-tab">Links</a>
                         }
                     </li>
-                    
+
 
                     @if (Model.TabDisplayPolicy.Location)
                     {

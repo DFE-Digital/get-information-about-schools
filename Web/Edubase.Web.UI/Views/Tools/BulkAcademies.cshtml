@@ -17,7 +17,7 @@
         <h1 class="heading-xlarge">Sorry, something went wrong</h1>
         <p>Please try again later.</p>
         <p>A report of the error has been sent to our technical team.</p>
-    
+
         <p class="api-error-code" v-show="apiError.hasOwnProperty('errorCode')">Error code: {{apiError.errorCode}}</p>
         <div v-show="apiError.hasOwnProperty('technicalDetails')">
             <code>
@@ -54,8 +54,8 @@
                          <p class="invalid-urn error-sub-heading hidden">Predecessor school not recognised</p>
                          <p class="missing-date error-sub-heading hidden">Please specify an opening date</p>
                          <ul class="error-summary-list">
-                             <li class="error-message" v-show="invalidUrn"><a href="#establishment-urn">Please enter a valid URN</a></li>
-                             <li class="error-message" v-show="duplicateUrn"><a href="#establishment-urn">URN is a duplicate</a></li>
+                             <li class="error-message" v-show="invalidUrn"><a href="#establishment-urn">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a></li>
+                             <li class="error-message" v-show="duplicateUrn"><a href="#establishment-urn"><abbr title="Unique Reference Number">URN</abbr> is a duplicate</a></li>
                              <li class="error-message" v-show="urnLookUpError!==''"><a href="#establishment-urn">{{urnLookUpError}}</a></li>
                              <li class="error-message" v-show="apiValidationError!==''"><a href="#establishment-urn">{{apiValidationError}}</a></li>
                              <li class="error-message" v-show="dateError"><a href="#academy-open-date">Opening date not specified</a></li>
@@ -70,8 +70,8 @@
                          <h2 class="heading-small">Predecessor school</h2>
                          <div v-bind:class="['form-group', 'inline-with-button', (invalidUrn || duplicateUrn ||urnLookUpError!=='') ? 'error' : '']">
                              <label for="establishment-urn" class="form-label">
-                                 Establishment URN
-                                 <span class="error-message" v-show="invalidUrn">Please enter a valid URN</span>
+                                 Establishment <abbr title="Unique Reference Number">URN</abbr>
+                                 <span class="error-message" v-show="invalidUrn">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
                                  <span class="error-message" v-show="duplicateUrn">This establishment has already been added.</span>
                                  <span class="error-message" v-show="estabTypeError">This establishment is already an academy.</span>
                                  <span class="error-message" v-show="urnLookUpError !== ''">{{urnLookUpError}}</span>
@@ -88,7 +88,7 @@
                          <p class="establishment-details">
                              {{pendingEstab.name}} <br />
                              {{pendingEstabAddress}} <br />
-                             URN: {{pendingEstab.urn}} <br />
+                             <abbr title="Unique Reference Number">URN</abbr>: {{pendingEstab.urn}} <br />
                              <span v-show="!pendingEdit">
                                  <a href="#" class="change-link" v-on:click.prevent="pendingEstab={}">Wrong establishment?</a>
                              </span>
@@ -136,7 +136,7 @@
                      <table class="edubase-table">
                          <thead>
                              <tr>
-                                 <th>URN</th>
+                                 <th><abbr title="Unique Reference Number">URN</abbr></th>
                                  <th>Name</th>
                                  <th>Establishment type</th>
                                  <th>Opening date</th>
@@ -179,7 +179,7 @@
                  <table class="edubase-table">
                      <thead>
                          <tr>
-                             <th>URN</th>
+                             <th><abbr title="Unique Reference Number">URN</abbr></th>
                              <th>Name</th>
                              <th>Establishment type</th>
                              <th>Opening date</th>
