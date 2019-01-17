@@ -4,11 +4,11 @@
 <div id="helpdesk" class="tab-content">
     @if (Model.UserCanEdit)
     {
-        @Html.ActionLink("Edit", "EditHelpdesk", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary mobile-full-width" })
+        @Html.ActionLink("Edit helpdesk notes", "EditHelpdesk", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary mobile-full-width" })
     }
-    
+
     <div class="detail-summary">
-        
+
         <h2 class="heading-small">Helpdesk notes:</h2>
         <div>@(Model.Establishment.HelpdeskNotes.Clean() ?? "Not recorded")</div>
 
@@ -31,6 +31,6 @@
 
   @if (Model.UserCanEdit)
     {
-        @Html.ActionLink("Edit", "EditHelpdesk", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary  mobile-full-width" })
+        @Html.ActionLink("Edit helpdesk notes", "EditHelpdesk", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary  mobile-full-width" })
     }
 </div>
