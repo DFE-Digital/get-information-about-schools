@@ -4,7 +4,7 @@
 
     @if (Model.UserCanEdit)
     {
-        @Html.ActionLink("Edit", "EditLocation", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary mobile-full-width" })
+        @Html.ActionLink("Edit location", "EditLocation", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary mobile-full-width" })
     }
 
     <div class="detail-summary">
@@ -69,6 +69,6 @@
 
     @if (Model.UserCanEdit)
     {
-        @Html.ActionLink("Edit", "EditLocation", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary mobile-full-width" })
+        @Html.ActionLink("Edit location", "EditLocation", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary mobile-full-width" })
     }
 </div>

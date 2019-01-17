@@ -153,7 +153,7 @@
                             @Html.TextBoxFor(x => x.HeadEmailAddress, new { maxlength = 120, @class = "form-control", placeholder = "email address" })
                         </div>
                     }
-                        
+
 
                     @if (Model.EditPolicy.AgeRange)
                     {
@@ -180,7 +180,7 @@
                         </div>
                     }
 
-                   
+
                     @if (Model.EditPolicy.TypeId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.TypeId)">
@@ -312,7 +312,7 @@
                             @Html.TextBoxFor(x => x.ProprietorName, new { maxlength = 120, id = "proprietor", @class = "form-control" })
                         </div>
                     }
-                
+
 
                     @if (Model.EditPolicy.ReligiousCharacterId)
                     {
@@ -391,7 +391,7 @@
                     {
                         @Html.EditorFor(x => x.OpenDate, new { title = "Open date" })
                     }
-                    
+
                     @if (Model.EditPolicy.ReasonEstablishmentOpenedId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentOpenedId)">
@@ -477,7 +477,7 @@
                             @Html.DropDownListFor(x => x.CCPhaseTypeId, Model.CCPhaseTypes, "", new { @class = "form-control" })
                         </div>
                     }
-                    
+
                     @if (Model.EditPolicy.CCDisadvantagedAreaId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.CCDisadvantagedAreaId)">
@@ -547,9 +547,9 @@
                         <div class="form-group">
                             <label for="@nameof(Model.Contact_EmailAddress)">
                                 Email address
-                                <a href="#help-text-email-address" class="icon-help" style="top: 2px;"><span class="visuallyhidden">Help with this field</span></a>
+                                <a href="#help-text-email-address" class="icon-help"><span class="visuallyhidden">Help with this field</span></a>
                             </label>
-                            @Html.TextBoxFor(x => x.Contact_EmailAddress, new {@class = "form-control"})
+                            @Html.TextBoxFor(x => x.Contact_EmailAddress, new {@class = "form-control", aria_describedby="help-text-email-address"})
                         </div>
                     }
 
@@ -558,9 +558,9 @@
                         <div class="form-group">
                             <label for="@nameof(Model.ContactAlt_EmailAddress)">
                                 Alternative email address
-                                <a href="#help-text-email-address" class="icon-help" style="top: 2px;"><span class="visuallyhidden">Help with this field</span></a>
+                                <a href="#help-text-email-address" class="icon-help"><span class="visuallyhidden">Help with this field</span></a>
                             </label>
-                            @Html.TextBoxFor(x => x.ContactAlt_EmailAddress, new { @class = "form-control" })
+                            @Html.TextBoxFor(x => x.ContactAlt_EmailAddress, new { @class = "form-control", aria_describedby="help-text-email-address"})
                         </div>
                     }
 
@@ -576,7 +576,7 @@
                                     <input id="@nameof(Model.SENProvisions)_@item.Id" type="checkbox" name="@nameof(Model.SENIds)"
                                                 value="@item.Id" @Html.Conditional(Model.SENIds != null && Model.SENIds.Contains(item.Id), "checked")/>
                                     <label class="edubase-button-checkbox" for="@nameof(Model.SENProvisions)_@item.Id">@item.Name</label>
-                                </span>                                
+                                </span>
                             }
                             </fieldset>
                         </div>
@@ -826,7 +826,7 @@
                             })();
                         </text>
                     }
-                    
+
 
                 </script>
             }
