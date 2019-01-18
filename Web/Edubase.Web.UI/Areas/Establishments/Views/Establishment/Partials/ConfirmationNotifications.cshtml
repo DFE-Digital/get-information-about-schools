@@ -61,7 +61,7 @@
 @helper RenderHighPriorityBox(string type, string date, string route)
 {
     <div class="up-to-date-confirmations high-priority">
-        <h3>@type record last confirmed: <span>@date</span></h3>
+        <h2>@type record last confirmed: <span>@date</span></h2>
         @using (Html.BeginRouteForm(route, new { Model.Establishment.Urn }, FormMethod.Post))
         {
             <label for="estab-data-confirm">Confirm @type.ToLower() record is up to date</label>

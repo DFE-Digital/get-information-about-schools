@@ -12,7 +12,9 @@
     }
 }
 <fieldset>
-    <legend>Search by:</legend>
+    <legend>
+        <h2 class="heading-small flush--top">Search by:</h2>
+    </legend>
     <ul>
         <li class="search-type-wrapper">
             @using (Html.BeginRouteForm("SearchResults", FormMethod.Get, new { id = "governor-search-by-name-or-role" }))
