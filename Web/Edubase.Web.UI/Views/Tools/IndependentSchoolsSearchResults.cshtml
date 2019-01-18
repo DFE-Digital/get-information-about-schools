@@ -22,8 +22,8 @@
             @Html.Conditional(Model.IsGeneralMode, "Next general action required")
             @Html.Conditional(Model.IsWelfareMode, "Next action required by welfare")
         </h1>
-       
-         <a class="download-link @Html.Conditional(Model.Results.Count < 1, "hidden")" href="@Url.RouteUrl("IndSchSearchResultsRequestDownload")?@Request.QueryString">Download these results</a>       
+
+         <a class="download-link @Html.Conditional(Model.Results.Count < 1, "hidden")" href="@Url.RouteUrl("IndSchSearchResultsRequestDownload")?@Request.QueryString">Download these results</a>
     </div>
 </div>
 
@@ -31,12 +31,12 @@
 <div class="column-third" id="indi-filter-form">
     @using (Html.BeginRouteForm("IndSchSearch", FormMethod.Get, new {id="filter-form-ind"}))
     {
-        
+
 
         @Html.HiddenFor(m=>m.Mode)
 
         @Html.HiddenFor(m=>Model.ActionName)
-        
+
         @Selector("Local authority", "d", Model.LocalAuthorities.OrderBy(x => x.Name).ToList(), Model.SelectedLocalAuthorityIds, "has-save-set")
 
         <p>
@@ -49,7 +49,7 @@
                     <span class="js-selected-counter-text">Date applied</span>
                 </div>
             </div>
-            
+
             <a href="#" class="clear-selections filter-clear">Clear</a>
             <div class="options-container" id="">
                 <div class="js-auto-height-inner">
@@ -57,7 +57,7 @@
                     @Html.EditorFor(x => x.MaxDate, new {title = "To", inFilters = true, disableHint = true, fieldsetClassName = "search-to-date" })
 
                     <div class="form-group">
-                        <a href="#" class="button button-grey filter-button">Apply</a>
+                        <a href="#" class="button button-secondary filter-button">Apply</a>
                     </div>
                 </div>
             </div>
@@ -71,8 +71,8 @@
 @{Html.RenderPartial("_IndSchSearchResults");}
 
 </div>
-    
-    
+
+
 </div>
 
 
@@ -108,7 +108,7 @@
         </div>
     </div>
 }
-    
+
 
 @section ViewScripts
 {

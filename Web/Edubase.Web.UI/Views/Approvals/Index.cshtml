@@ -75,7 +75,7 @@
                             </div>
                             <div class="button-row">
                                 <button type="submit" name="action" class="button mobile-full-width" v-on:click.prevent="confirmRejection" :disabled="$.trim(reason).length == 0">Submit</button>
-                                <button type="submit" name="action" class="button button-grey cancel mobile-full-width"
+                                <button type="submit" name="action" class="button button-secondary cancel mobile-full-width"
                                         v-on:click.prevent="pendingRejection = false, approvalError = false, noneSelectedError = false, apiError = false">Cancel</button>
                             </div>
                         </div>
@@ -200,7 +200,7 @@
         </div>
         <div class="button-row">
             <a href="#" class="button mobile-full-width" v-on:click.prevent="selectReason">OK</a>
-            <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="showRejections = false; reasonIds =[]">Cancel</a>
+            <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="showRejections = false; reasonIds =[]">Cancel</a>
         </div>
     </div>
 </div>

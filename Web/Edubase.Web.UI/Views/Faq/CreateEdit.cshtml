@@ -58,9 +58,9 @@
             <button type="submit" class="button edubase-button">Save</button>
             if (Model.Id != null)
             {
-                <button type="submit" class="button button-grey edubase-button" name="@nameof(Model.IsDeleting)" id="delete-button" value="true">Delete</button>
+                <button type="submit" class="button button-secondary edubase-button" name="@nameof(Model.IsDeleting)" id="delete-button" value="true">Delete</button>
             }
-            @Html.RouteLink("Cancel", "Faq", null, new { @class = "button button-grey edubase-button" })
+            @Html.RouteLink("Cancel", "Faq", null, new { @class = "button button-secondary edubase-button" })
         }
 
     </div>
@@ -77,7 +77,7 @@
             $('#delete-button').okCancel({
                 ok: function () {
                     $('#delete-button').data().okCancel.unbind();
-                    $('#delete-button').click();                    
+                    $('#delete-button').click();
                 },
                 cancel: function() {
                     this.closeModal();
@@ -87,6 +87,6 @@
                 triggerEvent: 'click'
             });
         }());
-        
+
     </script>
 }

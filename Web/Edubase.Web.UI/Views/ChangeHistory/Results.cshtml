@@ -5,7 +5,7 @@
     ViewBag.Title = "";
     ViewBag.PageClass = "search-history-results search-results";
 
-    
+
 }
 
 <div class="grid-row">
@@ -71,7 +71,7 @@
                             <div class="option-select-label">Date changes</div>
                             <div class="js-selected-counter">
                                 <span class="js-selected-counter-text" id="date-filter-type-label">Date applied</span>
-                            </div>                            
+                            </div>
                         </div>
                         <a href="#" class="clear-selections filter-clear">Clear</a>
                         <div class="options-container" id="">
@@ -84,7 +84,7 @@
                                     @Html.EditorFor(m => m.DateFilterFrom, new {disableHint = true, labelClass = "form-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date"})
                                     @Html.EditorFor(m => m.DateFilterTo, new {disableHint = true, labelClass = "form-label", title = "To", inFilters = true, fieldsetClassName = "search-to-date"})
                                     <div class="form-group">
-                                        <a href="#" class="button button-grey filter-button">Apply</a>
+                                        <a href="#" class="button button-secondary filter-button">Apply</a>
                                     </div>
                                 </fieldset>
                             </div>
@@ -226,7 +226,7 @@
         var isEstabSearch = @Model.IsEstablishmentSearch.ToString().ToLower()
     </script>
     <script src="/public/assets/scripts/standalone/search-change-history.js"></script>
-    
+
 }
 
 

@@ -21,7 +21,7 @@
     </div>
 </div>
 <div class="grid-row">
-    
+
 
         @using (Html.BeginRouteForm((Model.IsNewEntity ? "CreatePredefinedLASetPost" : "EditPredefinedLASetPost"), new { Model.Id }, FormMethod.Post, new { @class = "has-typeahead" }))
         {
@@ -41,7 +41,7 @@
                     </div>
                     <div class="button-row">
                         <a href="#" class="button mobile-full-width" id="overlay-proceed-0">Ok</a>
-                        <a href="#" class="button button-grey mobile-full-width allow-exit" id="overlay-cancel-0">Cancel</a>
+                        <a href="#" class="button button-secondary mobile-full-width allow-exit" id="overlay-cancel-0">Cancel</a>
                     </div>
                 </div>
 
@@ -78,14 +78,14 @@
                 <div class="column-full">
                     <div class="button-row">
                         <button id="edit-submit" class="button mobile-full-width" type="submit">Save</button>
-                        @Html.ActionLink("Cancel", "IndependentSchoolsSearch", "Tools", new { @class = "button button-grey mobile-full-width" })
+                        @Html.ActionLink("Cancel", "IndependentSchoolsSearch", "Tools", new { @class = "button button-secondary mobile-full-width" })
                     </div>
                 </div>
-                
-            
+
+
         }
 
-    
+
 
 </div>
 
@@ -115,10 +115,10 @@
                     $('#edit-submit').click();
                 });
 
-            
+
         }());
 
         DfE.Views.schoolSearch.init();
     </script>
-    
+
 }

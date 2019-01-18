@@ -22,23 +22,23 @@
         </div>
         <h1 class="heading-intro">Change history</h1>
     </div>
-    <div class="horizontal-tabs-wrapper">        
+    <div class="horizontal-tabs-wrapper">
         <div class="column-full">
-            
+
             <h2 class="heading-small">Download change history</h2>
             <p>Your requested file is ready to download.</p>
-            
+
             <ul>
                 <li class="download-list-item">
                     <span class="icon-link-copy">
-                        <a href="@Model.Item1.FileLocationUri" target="_blank" rel="nofollow">Establishment change history in @Model.Item2.DownloadFormat format</a> 
+                        <a href="@Model.Item1.FileLocationUri" target="_blank" rel="nofollow">Establishment change history in @Model.Item2.DownloadFormat format</a>
                         <br /> (Will download as a ZIP file. Open the ZIP to access its contents)
                     </span>
                 </li>
             </ul>
 
-            <p><a class="button button-grey" href="@Url.RouteUrl("ChangeHistorySearch")?@Request.QueryString.RemoveKeys(nameof(Model.Item2.DownloadFormat))">« Go back</a></p>
-            
+            <p><a class="button button-secondary" href="@Url.RouteUrl("ChangeHistorySearch")?@Request.QueryString.RemoveKeys(nameof(Model.Item2.DownloadFormat))">« Go back</a></p>
+
         </div>
     </div>
 </div>

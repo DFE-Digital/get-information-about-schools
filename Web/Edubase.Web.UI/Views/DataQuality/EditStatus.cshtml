@@ -42,7 +42,7 @@
         <div class="column-full">
             <div class="button-row">
                 <button type="submit" class="button mobile-full-width" value="Save" id="save-data-status">Save</button>
-                <a href="@Url.Action("ViewStatus", "DataQuality")" class="button button-grey mobile-full-width">Cancel</a>
+                <a href="@Url.Action("ViewStatus", "DataQuality")" class="button button-secondary mobile-full-width">Cancel</a>
             </div>
         </div>
     }
@@ -54,7 +54,7 @@
     <script>
         var $fields = $('#content').find('.form-control');
         var exitAttached = false;
-       
+
         $fields.on('change', function () {
             if (!exitAttached) {
                 DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');

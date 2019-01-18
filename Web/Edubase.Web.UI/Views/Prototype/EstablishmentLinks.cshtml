@@ -31,7 +31,7 @@
                         <div class="button-row">
                             <button class="button mobile-full-width" v-on:click.prevent="saveLinkedEstablishment" v-show="editMode || addMode">Save</button>
                             
-                            <a href="#" class="button button-grey  mobile-full-width" v-on:click.prevent="reset">Cancel</a>
+                            <a href="#" class="button button-secondary  mobile-full-width" v-on:click.prevent="reset">Cancel</a>
                         </div>
 
                         <p class="table-caption">
@@ -66,13 +66,13 @@
                             <a href="#" class="plus-link" v-on:click.prevent="addNewLink">Add another link</a>
                         </p>
                         <div class="button-row">
-                            <a href="#" class="button button-grey  mobile-full-width" v-on:click.prevent="reset">Cancel</a>
+                            <a href="#" class="button button-secondary  mobile-full-width" v-on:click.prevent="reset">Cancel</a>
                         </div>
 
                     </div>
                     <div class="links-search" v-show="addMode && linkingEstab ===''">
                         <div class="button-row">
-                            <a class="button button-grey" href="#" v-on:click.prevent="reset">Cancel</a>
+                            <a class="button button-secondary" href="#" v-on:click.prevent="reset">Cancel</a>
                         </div>
 
                         <h2 class="bold-medium custom-margin" v-show="addMode">Link to other establishment</h2>
@@ -99,15 +99,15 @@
                         </form>
 
                         <div class="button-row">
-                            <a class="button button-grey" href="#" v-on:click.prevent="reset">Cancel</a>
+                            <a class="button button-secondary" href="#" v-on:click.prevent="reset">Cancel</a>
                         </div>
                     </div>
 
                     <div class="attach-link" v-show="(addMode && linkingEstab !=='') || editMode">
                         <div class="button-row">
                             <button class="button mobile-full-width">Save</button>
-                            <button class="button button-grey mobile-full-width estab-link-delete" v-show="editMode">Delete</button>
-                            <a href="#" class="button button-grey mobile-full-width" v-on:click="reset">Cancel</a>
+                            <button class="button button-secondary mobile-full-width estab-link-delete" v-show="editMode">Delete</button>
+                            <a href="#" class="button button-secondary mobile-full-width" v-on:click="reset">Cancel</a>
                         </div>
                         <div class="column-two-thirds">
                             <h2 class="bold-medium">Link to other establishment</h2>
@@ -222,8 +222,8 @@
 
                         <div class="button-row">
                             <button class="button mobile-full-width" v-on:click.prevent="validateEstablishmentLink">Save</button>
-                            <button class="button button-grey mobile-full-width estab-link-delete" v-show="editMode">Delete</button>
-                            <a href="#" class="button button-grey  mobile-full-width" v-on:click.prevent="reset">Cancel</a>
+                            <button class="button button-secondary mobile-full-width estab-link-delete" v-show="editMode">Delete</button>
+                            <a href="#" class="button button-secondary  mobile-full-width" v-on:click.prevent="reset">Cancel</a>
                         </div>
                     </div>
                 </div>

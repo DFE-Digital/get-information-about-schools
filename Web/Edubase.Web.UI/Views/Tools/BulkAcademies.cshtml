@@ -125,7 +125,7 @@
                          <div class="button-row">
                              <button class="button mobile-full-width" id="add-item-to-list" v-on:click.prevent="addEstablishment" v-show="!pendingEdit">Add</button>
                              <button class="button mobile-full-width" id="save-item-to-list" v-on:click.prevent="addEstablishment" v-show="pendingEdit">Save</button>
-                             <a class="button mobile-full-width button-grey" id="cancel-add-item-to-list" v-on:click.prevent="cancelAddEdit">Cancel</a>
+                             <a class="button mobile-full-width button-secondary" id="cancel-add-item-to-list" v-on:click.prevent="cancelAddEdit">Cancel</a>
                          </div>
 
                      </div>
@@ -161,7 +161,7 @@
                      <p class="table-caption" v-show="establishments.length > 1">Showing 1 - {{establishments.length}} of {{establishments.length}}</p>
                      <div class="submit-cancel-panel" v-show="!isSearching || !pendingEdit">
                          <button type="submit" name="action" value="" class="button mobile-full-width" id="go-create" v-on:click.prevent="commitChanges" v-show="establishments.length > 0">Create</button>
-                         @Html.ActionLink("Cancel", "Index", "Tools", new {}, new {@class = "button button-grey cancel mobile-full-width", v_show = "(Object.keys(pendingEstab).length < 1 || establishments.length > 0) && !isProcessing"})
+                         @Html.ActionLink("Cancel", "Index", "Tools", new {}, new {@class = "button button-secondary cancel mobile-full-width", v_show = "(Object.keys(pendingEstab).length < 1 || establishments.length > 0) && !isProcessing"})
                      </div>
                  </div>
 
@@ -207,7 +207,7 @@
              </div>
              <div class="button-row">
                  <a href="#" id="button-ok" class="button mobile-full-width" v-on:click.prevent="confirmDelete">OK</a>
-                 <a href="#" id="button-cancel" class="button button-grey mobile-full-width" v-on:click.prevent="pendingDelete=false, pendingDeleteItem=''">Cancel</a>
+                 <a href="#" id="button-cancel" class="button button-secondary mobile-full-width" v-on:click.prevent="pendingDelete=false, pendingDeleteItem=''">Cancel</a>
              </div>
          </div>
 
@@ -219,7 +219,7 @@
              </div>
              <div class="button-row">
                  <a href="#" id="button-ok" class="button mobile-full-width modal-button" v-on:click.prevent="confirmedExit">OK</a>
-                 <a href="#" id="button-cancel" class="button button-grey mobile-full-width modal-button" v-on:click.prevent="displayExitWarning=false">Cancel</a>
+                 <a href="#" id="button-cancel" class="button button-secondary mobile-full-width modal-button" v-on:click.prevent="displayExitWarning=false">Cancel</a>
              </div>
          </div>
      </div>
