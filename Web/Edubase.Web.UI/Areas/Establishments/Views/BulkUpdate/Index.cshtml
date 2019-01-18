@@ -25,18 +25,16 @@
                 </div>
             }
             <h1 class="heading-xlarge">Establishment bulk update</h1>
-            
-            <p>
-                Update establishment records by uploading a CSV or XLSX file.<br>
-                Multiple column must be XLSX.<br>
-                Edubase Bulk Upload can be XLSX or Tab delimited text file (not Comma Separated Value files).
+
+            <p class="text">
+                Update establishment records by uploading a CSV or XLSX file. Multiple column updates must be in XLSX format.
             </p>
         </div>
         <div class="column-full">
 
             <div class="expanding-content-wrapper" data-update-text="false">
                 <a href="#" class="expanding-content-trigger">
-                    Help with preparing files                    
+                    Help with preparing files
                 </a>
                 <div class="expanding-content panel-indent">
                     <p>For a step by step guide to prepare documents for bulk update please download this file.</p>
@@ -112,8 +110,8 @@
         </div>
         <div class="column-half">
             <div class="form-group upload-control @Html.ValidationCssClassFor(x => x.BulkFile)">
-                <label for="bulkfile" class="form-label">Upload a file</label>      
-                @Html.ValidationMessageFor(x => x.BulkFile)  
+                <label for="bulkfile" class="form-label">Upload a file</label>
+                @Html.ValidationMessageFor(x => x.BulkFile)
                 <div class="upload-control-wrapper">
                     @Html.TextBoxFor(x => x.BulkFile, new { type = "file", @class = "file-input" });
                     <button class="button button-secondary file-selector">Choose file</button>
@@ -127,7 +125,7 @@
                 <label class="form-label" for="upload-file-type">
                     Select file type
                 </label>
-                @Html.ValidationMessageFor(x => x.BulkUpdateType)  
+                @Html.ValidationMessageFor(x => x.BulkUpdateType)
                 @Html.EnumDropDownListFor(x => x.BulkUpdateType, "Select...", new { @class = "form-control" })
             </div>
 
@@ -144,10 +142,10 @@
 
         </div>
         <div class="column-full">
-            <button type="submit" class="button mobile-full-width" value="Submit">Submit</button>           
+            <button type="submit" class="button mobile-full-width" value="Submit">Submit</button>
             <a href="/Tools" class="button button-secondary cancel mobile-full-width">Cancel</a>
         </div>
-       
+
 </div>
 }
 
