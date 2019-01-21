@@ -87,7 +87,10 @@
     </div>
 }
 
-<h1 class="heading-large">@(Model.Establishment.Name.Clean() ?? "(name not recorded)")</h1>
+<h1 class="heading-large">
+    <span class="heading-secondary">Establishment</span>
+    @(Model.Establishment.Name.Clean() ?? "(name not recorded)")
+</h1>
 
 <p class="urn"><abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn</p>
 <p class="establishment-type">@Model.TypeName</p>
