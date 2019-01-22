@@ -128,7 +128,7 @@ table tbody .url {
 
 
             &:before {
-                content: attr(aria-label);
+                content: attr(data-label);
                 float: left;
                 font-weight: bold;
                 padding-right: 0.5em;
@@ -193,7 +193,7 @@ table tbody .url {
 
         @media(max-width: 940px) {
             &:after {
-                content: attr(aria-label);
+                content: attr(data-label);
                 position: relative;
                 top: 14px;
                 left: 44px;
@@ -291,7 +291,7 @@ table tbody .url {
 
 
             &:before {
-                content: attr(aria-label);
+                content: attr(data-label);
                 float: left;
                 font-weight: bold;
                 padding-right: 0.5em;

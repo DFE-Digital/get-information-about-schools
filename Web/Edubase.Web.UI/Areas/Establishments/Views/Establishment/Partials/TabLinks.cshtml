@@ -32,10 +32,10 @@
             @foreach (var l in Model.LinkedEstablishments)
             {
                 <tr>
-                    <td>@Html.ActionLink(l.Urn.ToString(), "Details", new {id = l.Urn})</td>
-                    <td>@Html.ActionLink((l.EstablishmentName ?? "-"), "Details", new {id = l.Urn})</td>
-                    <td>@l.LinkTypeName</td>
-                    <td>@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
+                    <td data-label="URN">@Html.ActionLink(l.Urn.ToString(), "Details", new {id = l.Urn})</td>
+                    <td data-label="Establishment name">@Html.ActionLink((l.EstablishmentName ?? "-"), "Details", new {id = l.Urn})</td>
+                    <td data-label="Type of link">@l.LinkTypeName</td>
+                    <td data-label="Date linked">@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
                 </tr>
             }
             </tbody>

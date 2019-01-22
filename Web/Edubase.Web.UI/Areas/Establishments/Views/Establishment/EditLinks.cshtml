@@ -34,10 +34,10 @@
                     @foreach (var item in Model.Links)
                     {
                         <tr>
-                            <td>@item.Urn</td>
-                            <td>@item.EstablishmentName</td>
-                            <td>@item.LinkTypeName</td>
-                            <td>@(item.LinkDate?.ToString("dd/MM/yyyy"))</td>
+                            <td data-label="URN">@item.Urn</td>
+                            <td data-label="Establishment name">@item.EstablishmentName</td>
+                            <td data-label="Type of link">@item.LinkTypeName</td>
+                            <td data-label="Date linked">@(item.LinkDate?.ToString("dd/MM/yyyy"))</td>
                             <td><a href="@Url.RouteUrl("EditEstabLink", new { urn = Model.Urn, linkid = item.Id })">Edit</a></td>
                         </tr>
                     }
