@@ -18,24 +18,27 @@
                 <abbr title="Unique Reference Number">URN</abbr>: @Model.Urn For example, they may be predecessor or successor establishments.
             </p>
             <table class="edubase-table no-pagination">
+                <caption class="visuallyhidden">Edit establishment links</caption>
                 <thead>
                     <tr>
-                        <th class="links-urn"><abbr title="Unique Reference Number">URN</abbr></th>
-                        <th class="links-name">Establishment name</th>
-                        <th class="links-type">Type of link</th>
-                        <th class="links-date">Date linked</th>
-                        <td></td>
+                        <th scope="col"><abbr title="Unique Reference Number">URN</abbr></th>
+                        <th scope="col">Establishment name</th>
+                        <th scope="col">Type of link</th>
+                        <th scope="col">Date linked</th>
+                        <th scope="col">
+                            <span class="visuallyhidden">Action links</span>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model.Links)
                     {
                         <tr>
-                            <td aria-label="URN">@item.Urn</td>
-                            <td aria-label="Establishment name">@item.EstablishmentName</td>
-                            <td aria-label="Type of link">@item.LinkTypeName</td>
-                            <td aria-label="Date linked">@(item.LinkDate?.ToString("dd/MM/yyyy"))</td>
-                            <td class="edit-cell"><a href="@Url.RouteUrl("EditEstabLink", new { urn = Model.Urn, linkid = item.Id })">Edit</a></td>
+                            <td>@item.Urn</td>
+                            <td>@item.EstablishmentName</td>
+                            <td>@item.LinkTypeName</td>
+                            <td>@(item.LinkDate?.ToString("dd/MM/yyyy"))</td>
+                            <td><a href="@Url.RouteUrl("EditEstabLink", new { urn = Model.Urn, linkid = item.Id })">Edit</a></td>
                         </tr>
                     }
                 </tbody>
