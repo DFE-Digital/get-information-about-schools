@@ -5,7 +5,7 @@
 <div id="school-dashboard" class="tab-content">
     @if (Model.UserCanEdit)
     {
-        @Html.ActionLink("Edit establishment", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary mobile-full-width" })
+        @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary mobile-full-width" })
     }
 
     @if (Model.Establishment.Location != null)
@@ -365,6 +365,6 @@
 
     @if (Model.UserCanEdit)
     {
-        @Html.ActionLink("Edit establishment", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary mobile-full-width" })
+        @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary mobile-full-width" })
     }
 </div>
