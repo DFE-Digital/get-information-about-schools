@@ -23,13 +23,14 @@
             if (!User.Identity.IsAuthenticated)
             {
                 <table class="edubase-table list-table sortable-table governors">
+                    <caption class="visuallyhidden">@Model.Title</caption>
                     <thead>
                     <tr>
                         @foreach (var column in Model.HeaderCells)
                         {
                             if (!String.IsNullOrEmpty(column.SortKey))
                             {
-                                <th>
+                                <th scope="col">
                                     <a href="#" class="sort-header" data-sort-key="@column.SortKey" data-sort-type="@column.SortType">@(column.Text ?? "Not recorded")</a>
                                 </th>
                             }
@@ -51,7 +52,7 @@
                             @foreach (var cell in row.Cells)
                             {
 
-                                <td aria-label="@Model.HeaderCells[cellCount].Text">@(cell.Text ?? "Not recorded")</td>
+                                <td data-label="@Model.HeaderCells[cellCount].Text">@(cell.Text ?? "Not recorded")</td>
                                 cellCount++;
                             }
                         </tr>

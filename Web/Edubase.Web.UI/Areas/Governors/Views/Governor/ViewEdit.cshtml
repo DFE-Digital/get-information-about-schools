@@ -26,7 +26,7 @@
 
             @DisplayGovernanceMode()
         </div>
-        
+
         <div class="column-half">
             <h2 class="heading-small">Add person</h2>
 
@@ -36,7 +36,7 @@
                 <div class="form-group inline-select-button">
                     <label class="form-label">Select role</label>
                     @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem { Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = ((eLookupGovernorRole)x.Id).ToString() }), new { id = "roleid", @class = "form-control" })
-                
+
                     <input type="submit" value="Add " class="button" />
                 </div>
 
@@ -154,22 +154,10 @@ else
             </a>
             <div class="expanding-content panel-indent">
                 <p>
-                    All maintained school governing bodies and academy trusts have
-                    a legal duty to provide all of the governance information requested
-                    on this page in so far as it is available to them.
-                    This will increase the transparency of governance arrangements.
-                    It will enable schools and the department to identify more quickly and
-                    accurately individuals who are involved in governance, and who govern
-                    in more than one context. The information requested says nothing in itself
-                    about a person’s suitability to govern. However, it is essential information
-                    for the department to be able to uniquely identify an individual and in a
-                    small number of cases conduct checks to confirm their suitability for this
-                    important and influential role. You should provide all of the information
-                    requested insofar as it is available to you.
-                    A minimum set of information needs to be provided before a record can be saved.
+                    All maintained school governing bodies and academy trusts have a legal duty to provide all of the governance information requested on this page in so far as it is available to them. This will increase the transparency of governance arrangements. It will enable schools and the department to identify more quickly and accurately individuals who are involved in governance, and who govern in more than one context. The information requested says nothing in itself about a person's suitability to govern. However, it is essential information for the department to be able to uniquely identify an individual and in a small number of cases conduct checks to confirm their suitability for this important and influential role. You should provide all of the information requested insofar as it is available to you. A minimum set of information needs to be provided before a record can be saved.
                 </p>
                 <p>
-                    A suggested privacy notice for schools is available for download: 
+                    A suggested privacy notice for schools is available for download:
                     <a target="_blank" href="https://www.gov.uk/government/publications/data-protection-and-privacy-privacy-notices">
                         https://www.gov.uk/government/publications/data-protection-and-privacy-privacy-notices
                     </a>
@@ -202,7 +190,7 @@ else
                     </a>
                     <div class="expanding-content panel-indent">
                         @foreach (var grid in Model.HistoricGrids)
-                        { 
+                        {
                             if (grid.Rows.Any())
                             {
                                     <text>
@@ -252,24 +240,35 @@ else
                         </a>
                         <div class="expanding-content panel-indent">
                             <table class="edubase-table list-table sortable-table historical governors">
+                                <caption class="visuallyhidden">Historical governance</caption>
                                 <thead>
-                                <tr>
-                                    <th><a href="#" class="sort-header" data-sort-key="name" data-sort-type="sortText">Name</a></th>
-                                    <th><a href="#" class="sort-header" data-sort-key="role" data-sort-type="sortText">Role</a></th>
-                                    <th><a href="#" class="sort-header" data-sort-key="appointed" data-sort-type="sortText">Appointed by</a></th>
-                                    <th><a href="#" class="sort-header" data-sort-key="from" data-sort-type="sortDate">From</a></th>
-                                    <th><a href="#" class="sort-header" data-sort-key="to" data-sort-type="sortDate">To</a></th>
-                                </tr>
+                                    <tr>
+                                        <th scope="col">
+                                            <a href="#" class="sort-header" data-sort-key="name" data-sort-type="sortText">Name</a>
+                                        </th>
+                                        <th scope="col">
+                                            <a href="#" class="sort-header" data-sort-key="role" data-sort-type="sortText">Role</a>
+                                        </th>
+                                        <th scope="col">
+                                            <a href="#" class="sort-header" data-sort-key="appointed" data-sort-type="sortText">Appointed by</a>
+                                        </th>
+                                        <th scope="col">
+                                            <a href="#" class="sort-header" data-sort-key="from" data-sort-type="sortDate">From</a>
+                                        </th>
+                                        <th scope="col">
+                                            <a href="#" class="sort-header" data-sort-key="to" data-sort-type="sortDate">To</a>
+                                        </th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                 @foreach (var governor in Model.HistoricGovernors)
                                 {
                                     <tr>
-                                        <td>@governor.FullName</td>
-                                        <td>@governor.RoleName</td>
-                                        <td>@governor.AppointingBody</td>
-                                        <td>@( governor.AppointmentStartDate.ToDateTime()?.ToString("dd/MM/yyyy"))</td>
-                                        <td>@( governor.AppointmentEndDate.ToDateTime()?.ToString("dd/MM/yyyy"))</td>
+                                        <td data-label="Name">@governor.FullName</td>
+                                        <td data-label="Role">@governor.RoleName</td>
+                                        <td data-label="Appointed by">@governor.AppointingBody</td>
+                                        <td data-label="From">@( governor.AppointmentStartDate.ToDateTime()?.ToString("dd/MM/yyyy"))</td>
+                                        <td data-label="To">@( governor.AppointmentEndDate.ToDateTime()?.ToString("dd/MM/yyyy"))</td>
                                     </tr>
                                 }
                                 </tbody>
@@ -441,7 +440,7 @@ else
             <div class="governors-section">
                 <p>This establishment has local governors, not shared governors.</p>
             </div>
-        }   
+        }
         else if (Model.GovernanceMode == eGovernanceMode.LocalAndSharedGovernors)
         {
             <div class="governors-section">
@@ -469,7 +468,7 @@ else
 }
 
 @section ViewScripts{
-    
+
     <script>
         $(function () {
             var dismissed = false;
