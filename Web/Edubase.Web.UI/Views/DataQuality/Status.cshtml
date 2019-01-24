@@ -22,25 +22,21 @@
                 <p>Please update your data status</p>
             </div>
         }
-        else
-        {
-            <p class="table-caption">These dates show when each of our teams last updated their data.</p>
-        }
-
 
         <table class="edubase-table retain-columns">
+            <caption class="table-caption">These dates show when each of our teams last updated their data.</caption>
             <thead>
                 <tr>
-                    <th>Establishment type</th>
-                    <th>Last updated</th>
+                    <th scope="col">Establishment type</th>
+                    <th scope="col">Last updated</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var data in Model.Items)
                 {
                     <tr>
-                        <td aria-label="Establishment type">@data.EstablishmentType.GetEnumMember()</td>
-                        <td aria-label="Last updated">@data.LastUpdated.ToString()</td>
+                        <td>@data.EstablishmentType.GetEnumMember()</td>
+                        <td>@data.LastUpdated.ToString()</td>
                     </tr>
                 }
             </tbody>
