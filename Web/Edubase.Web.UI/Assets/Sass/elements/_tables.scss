@@ -363,10 +363,11 @@ table tbody .url {
 }
 
 
-p.table-caption {
+.table-caption {
     width: 66%;
     margin: 20px 0;
     font-size: 16px;
+    text-align: left;
     @include media(mobile) {
         width: 100%;
     }
