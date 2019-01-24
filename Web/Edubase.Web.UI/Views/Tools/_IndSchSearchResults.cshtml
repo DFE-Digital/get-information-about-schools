@@ -1,37 +1,38 @@
 ﻿@using Edubase.Services.Domain
 @model IndSchoolsSearchViewModel
 
-   
+
         @if (Model.HasResults)
             {
 
-                
+
             <div class="top-pagination">
                 @Html.Partial("_GenericPaginationV2", Model.Results)
             </div>
-            
+
 
             <table class="edubase-table">
+                <caption class="visuallyhidden">Independent schools search results</caption>
                 <thead>
                     <tr>
-                        <th>Establishment name</th>
-                        <th>Local authority</th>
-                        <th>Town</th>
-                        <th>Establishment status</th>
-                        <th>Establishment type</th>
-                        <th>Date of action</th>
+                        <th scope="col">Establishment name</th>
+                        <th scope="col">Local authority</th>
+                        <th scope="col">Town</th>
+                        <th scope="col">Establishment status</th>
+                        <th scope="col">Establishment type</th>
+                        <th scope="col">Date of action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model.Results.Items)
-                {
+                    {
                         <tr>
-                            <td>@(Html.Field(item.Name))</td>
-                            <td>@(Html.Field(Model.LocalAuthorities.FirstOrDefault(x => x.Id == item.LocalAuthorityId)))</td>
-                            <td>@(Html.Field(item.Address_CityOrTown))</td>
-                            <td>@(Html.Field(Model.EstablishmentStatuses.FirstOrDefault(x => x.Id == item.StatusId)))</td>
-                            <td>@(Html.Field(Model.EstablishmentTypes.FirstOrDefault(x => x.Id == item.TypeId)))</td>
-                            <td>
+                            <td data-label="Establishment name">@(Html.Field(item.Name))</td>
+                            <td data-label="Local authority">@(Html.Field(Model.LocalAuthorities.FirstOrDefault(x => x.Id == item.LocalAuthorityId)))</td>
+                            <td data-label="Town">@(Html.Field(item.Address_CityOrTown))</td>
+                            <td data-label="Establishment status">@(Html.Field(Model.EstablishmentStatuses.FirstOrDefault(x => x.Id == item.StatusId)))</td>
+                            <td data-label="Establishment type">@(Html.Field(Model.EstablishmentTypes.FirstOrDefault(x => x.Id == item.TypeId)))</td>
+                            <td data-label="Date of action">
                                 @Html.Conditional(Model.IsGeneralMode, Html.Field(item.NextGeneralActionRequired))
                                 @Html.Conditional(Model.IsWelfareMode, Html.Field(item.NextActionRequiredByWEL))
                             </td>
@@ -39,11 +40,11 @@
                     }
                 </tbody>
             </table>
-            
+
             <div class="lower-pagination">
                 @Html.Partial("_GenericPaginationV2", Model.Results)
             </div>
-            
+
         }
         else
         {
