@@ -33,26 +33,26 @@
         </div>
     }
     <table class="edubase-table">
+        <caption class="visuallyhidden">Predefined local authority sets</caption>
         <thead>
             <tr>
-                <th>Set name</th>
-                <th>Local authorities</th>
-                <th></th>
+                <th scope="col">Set name</th>
+                <th scope="col">Local authorities</th>
+                <th scope="col"><span class="visuallyhidden">Action links</span></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model.Results.Items)
             {
                 <tr>
-                    <td>@Html.Field(item.Title)</td>
-                    <td>@Html.Field(Model.GetLANames(item.Ids))</td>
+                    <td data-label="Set name">@Html.Field(item.Title)</td>
+                    <td data-label="Local authorities">@Html.Field(Model.GetLANames(item.Ids))</td>
                     <td nowrap="">
                         @using (Html.BeginRouteForm("DeletePredefinedLASet", new { id = item.RowKey }, FormMethod.Post))
                         {
-                            <a href="@Url.RouteUrl("IndSchSearch")?@QueryStringHelper.ToQueryString("d", item.Ids)&SelectedLocalAuthoritySetId=@item.RowKey">Select</a>
-                            <text>&nbsp;</text>
-                            @Html.RouteLink("Edit", "EditPredefinedLASet", new { id = item.RowKey })
-                            <button class="button-as-link" style="font-size:14px;" type="submit" id="delete">Remove</button>
+                            <a href="@Url.RouteUrl("IndSchSearch")?@QueryStringHelper.ToQueryString("d", item.Ids)&SelectedLocalAuthoritySetId=@item.RowKey" class="action-link">Select</a>
+                            @Html.RouteLink("Edit", "EditPredefinedLASet", new { id = item.RowKey }, new { @class = "action-link" })
+                            <button class="button-as-link action-link" style="font-size:14px;" type="submit" id="delete">Remove</button>
                         }
                     </td>
                 </tr>
