@@ -73,105 +73,104 @@
 
                     <div class="tab-content-wrapper horizontal-tabs-content" v-cloak>
                         <div id="calendar" class="tab-content">
-                            <div id="academy-listing-app">
-                                <div class="form-group month-selector">
-                                    <label class="form-label">
-                                        Opening date
-                                    </label>
-                                    <select class="form-control" v-model="selectedDate" v-on:change="buildDatePages" id="opening-date-filter"></select>
-                                </div>
 
-                                <div>
-                                    <div class="pagination">
-                                        <p class="pagination-info">
-                                            Showing
-                                            <span class="pagination-range">
-                                                {{ paginationDescription }}
-                                            </span>
-                                            of
-                                            <span class="result-count">{{currentCount}}</span>
-                                        </p>
-                                        <ul class="pagination-links">
-                                            <li v-if="currentPage > 0"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
-                                            <li v-if="pages.length > 1" v-for="(page, index) in pages">
-                                                <span v-if="index === currentPage" class="numeric-pagination go-nowhere">{{ index + 1 }}</span>
-                                                <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index)">{{ index + 1 }}</a>
-                                            </li>
-                                            <li v-if="currentPage < pages.length -1"><a href="javascript:" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
-                                            <li v-if="pages.length > 1"><a href="javascript:" class="pagination-next" style="margin-left:5px;" v-on:click.prevent="showAll()">Show all</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <table class="academy-openings sortable-table" id="openings-table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" class="cell-openingdate">
-                                                <a href="#" v-on:click.prevent="sortOpenings('openingDate')"
-                                                   v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='openingDate' ? 'selected-sort': '' ]">Opening date</a>
-                                            </th>
-                                            <th scope="col" class="cell-urn">
-                                                <a href="#" v-on:click.prevent="sortOpenings('urn')"
-                                                   v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='urn' ? 'selected-sort': '' ]"><abbr title="Unique Reference Number">URN</abbr></a>
-                                            </th>
-                                            <th scope="col" class="cell-estabname">
-                                                <a href="#" v-on:click.prevent="sortOpenings('name')"
-                                                   v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='name' ? 'selected-sort': '' ]">Establishment name</a>
-                                            </th>
-                                            <th scope="col" class="cell-estabtype">
-                                                <a href="#" v-on:click.prevent="sortOpenings('establishmentType')"
-                                                   v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='establishmentType' ? 'selected-sort': '' ]">Establishment type</a>
-                                            </th>
-                                            <th scope="col" class="cell-predecessor-urn">
-                                                <a href="#" v-on:click.prevent="sortOpenings('predecessorUrn')"
-                                                   v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='predecessorUrn' ? 'selected-sort': '' ]">Predecessor <abbr title="Unique Reference Number">URN</abbr></a>
-                                            </th>
-                                            <th scope="col" class="cell-predecessor-name">
-                                                <a href="#" v-on:click.prevent="sortOpenings('predecessorName')"
-                                                   v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='predecessorName' ? 'selected-sort': '' ]">Predecessor name</a>
-                                            </th>
-                                            <td scope="col" class="cell-edit">&nbsp;</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody v-if="pages.length > 0">
-                                        <tr v-for="(entry, index) in page">
-                                            <td aria-label="Opening date:" class="cell-openingdate"> {{entry.displayDate}} </td>
-                                            <td aria-label="URN:"><a v-bind:href="detailUrl(entry.urn)">{{entry.urn}}</a></td>
-                                            <td aria-label="Establishment name:">{{entry.name}}</td>
-                                            <td aria-label="Establishment type:">{{entry.establishmentType}}</td>
-                                            <td aria-label="Predecessor URN:"><a v-bind:href="detailUrl(entry.predecessorUrn)">{{entry.predecessorUrn}}</a></td>
-                                            <td aria-label="Predecessor name:">{{entry.predecessorName}}</td>
-                                            <td class="cell-edit"><a href="#" v-on:click.prevent="editEstab(entry.urn)">Edit</a></td>
-                                        </tr>
-                                    </tbody>
-                                    <tbody v-else>
-                                        <tr>
-                                            <td colspan="7">
-                                                <p> [ NO RESULTS MESSAGE ] </p>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div class="pagination">
-                                    <p class="pagination-info">
-                                        Showing
-                                        <span class="pagination-range">
-                                            {{ paginationDescription }}
-                                        </span>
-                                        of
-                                        <span class="result-count">{{currentCount}}</span>
-                                    </p>
-                                    <ul class="pagination-links">
-                                        <li v-if="currentPage > 0"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
-                                        <li v-if="pages.length > 1" v-for="(page, index) in pages">
-                                            <span v-if="index === currentPage" class="numeric-pagination go-nowhere">{{ index + 1 }}</span>
-                                            <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index)">{{ index + 1 }}</a>
-                                        </li>
-                                        <li v-if="currentPage < pages.length -1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
-                                    </ul>
-                                </div>
-
+                            <div class="form-group month-selector">
+                                <label class="form-label">
+                                    Opening date
+                                </label>
+                                <select class="form-control" v-model="selectedDate" v-on:change="buildDatePages" id="opening-date-filter"></select>
                             </div>
+
+                            <div class="pagination">
+                                <p class="pagination-info">
+                                    Showing
+                                    <span class="pagination-range">
+                                        {{ paginationDescription }}
+                                    </span>
+                                    of
+                                    <span class="result-count">{{currentCount}}</span>
+                                </p>
+                                <ul class="pagination-links">
+                                    <li v-if="currentPage > 0"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
+                                    <li v-if="pages.length > 1" v-for="(page, index) in pages">
+                                        <span v-if="index === currentPage" class="numeric-pagination go-nowhere">{{ index + 1 }}</span>
+                                        <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index)">{{ index + 1 }}</a>
+                                    </li>
+                                    <li v-if="currentPage < pages.length -1"><a href="javascript:" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
+                                    <li v-if="pages.length > 1"><a href="javascript:" class="pagination-next" style="margin-left:5px;" v-on:click.prevent="showAll()">Show all</a></li>
+                                </ul>
+                            </div>
+
+                            <table class="academy-openings sortable-table" id="openings-table">
+                                <caption class="visuallyhidden">Academy openings</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="cell-openingdate">
+                                            <a href="#" v-on:click.prevent="sortOpenings('openingDate')"
+                                                v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='openingDate' ? 'selected-sort': '' ]">Opening date</a>
+                                        </th>
+                                        <th scope="col" class="cell-urn">
+                                            <a href="#" v-on:click.prevent="sortOpenings('urn')"
+                                                v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='urn' ? 'selected-sort': '' ]"><abbr title="Unique Reference Number">URN</abbr></a>
+                                        </th>
+                                        <th scope="col" class="cell-estabname">
+                                            <a href="#" v-on:click.prevent="sortOpenings('name')"
+                                                v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='name' ? 'selected-sort': '' ]">Establishment name</a>
+                                        </th>
+                                        <th scope="col" class="cell-estabtype">
+                                            <a href="#" v-on:click.prevent="sortOpenings('establishmentType')"
+                                                v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='establishmentType' ? 'selected-sort': '' ]">Establishment type</a>
+                                        </th>
+                                        <th scope="col" class="cell-predecessor-urn">
+                                            <a href="#" v-on:click.prevent="sortOpenings('predecessorUrn')"
+                                                v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='predecessorUrn' ? 'selected-sort': '' ]">Predecessor <abbr title="Unique Reference Number">URN</abbr></a>
+                                        </th>
+                                        <th scope="col" class="cell-predecessor-name">
+                                            <a href="#" v-on:click.prevent="sortOpenings('predecessorName')"
+                                                v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='predecessorName' ? 'selected-sort': '' ]">Predecessor name</a>
+                                        </th>
+                                        <th scope="col" class="cell-edit"><span class="visuallyhidden">Action links</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody v-if="pages.length > 0">
+                                    <tr v-for="(entry, index) in page">
+                                        <td data-label="Opening date" class="cell-openingdate"> {{entry.displayDate}} </td>
+                                        <td data-label="URN"><a v-bind:href="detailUrl(entry.urn)">{{entry.urn}}</a></td>
+                                        <td data-label="Establishment name">{{entry.name}}</td>
+                                        <td data-label="Establishment type">{{entry.establishmentType}}</td>
+                                        <td data-label="Predecessor URN"><a v-bind:href="detailUrl(entry.predecessorUrn)"  v-if="entry.predecessorUrn">{{entry.predecessorUrn}}</a></td>
+                                        <td data-label="Predecessor name">{{entry.predecessorName}}</td>
+                                        <td class="cell-edit"><a href="#" v-on:click.prevent="editEstab(entry.urn)" aria-label="Edit opening details">Edit</a></td>
+                                    </tr>
+                                </tbody>
+                                <tbody v-else>
+                                    <tr>
+                                        <td colspan="7">
+                                            <p> [ NO RESULTS MESSAGE ] </p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="pagination">
+                                <p class="pagination-info">
+                                    Showing
+                                    <span class="pagination-range">
+                                        {{ paginationDescription }}
+                                    </span>
+                                    of
+                                    <span class="result-count">{{currentCount}}</span>
+                                </p>
+                                <ul class="pagination-links">
+                                    <li v-if="currentPage > 0"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
+                                    <li v-if="pages.length > 1" v-for="(page, index) in pages">
+                                        <span v-if="index === currentPage" class="numeric-pagination go-nowhere">{{ index + 1 }}</span>
+                                        <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index)">{{ index + 1 }}</a>
+                                    </li>
+                                    <li v-if="currentPage < pages.length -1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
+                                </ul>
+                            </div>
+
                         </div>
                         <div id="academy-search" class="tab-content">
                             <!-- search app -->

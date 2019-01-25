@@ -8,8 +8,8 @@
     }
 
     a.download-link {
-        
-        display:block; 
+
+        display:block;
         margin-top:10px;
         margin-right:10px;
         outline: none;
@@ -40,8 +40,8 @@
 
     .top-pagination .pagination {
         border-bottom-width: 1px;
-    } 
-    
+    }
+
     .form-group {
         width: 90%;
 
@@ -158,14 +158,14 @@
 }
 
 .school-results-listing.establishment-list {
-    
+
     dl {
         margin-bottom: 0px;
     }
-    
-    .cc-lead-centre { 
+
+    .cc-lead-centre {
         margin-top:0;
-        label {  
+        label {
             font-size:14px;
         }
     }
@@ -183,7 +183,7 @@
     }
     .lower-pagination & {
         border-top: $black 3px solid;
-        
+
         p {
             margin-top: em(20, 16);
         }
@@ -214,7 +214,7 @@
             .numeric-pagination {
                 display: none;
             }
-            
+
         }
 
         @media (max-width: 740px) {
@@ -323,7 +323,7 @@ table.approval-items {
             border-bottom: 1px solid #eee;
 
             &:before {
-                content: attr(aria-label);
+                content: attr(data-label);
                 float: left;
                 font-weight: bold;
                 padding-right: 0.5em
@@ -356,7 +356,7 @@ table.approval-items {
         padding: 12px 36px 12px 44px;
         position:relative;
         margin-bottom:10px;
-        
+
         p {
             margin: 0;
         }
@@ -406,7 +406,7 @@ table.approval-items {
 }
 
 .clear-selections {
-    display: none;        
+    display: none;
     position: absolute;
     top: 28px;
     left: 90px;
@@ -426,7 +426,7 @@ table.approval-items {
         text-decoration: none;
     }
 
-    .age-filter & , 
+    .age-filter & ,
     .date-filters & {
         left: 94px;
     }
@@ -460,7 +460,7 @@ table.approval-items {
 
     .js-enabled & {
         display: block;
-       
+
     }
 
     &.hidden {

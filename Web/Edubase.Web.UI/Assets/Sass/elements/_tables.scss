@@ -59,18 +59,18 @@ table tbody .url {
 
 .borderless {
     width: 100%;
-       
-    th, td { 
+
+    th, td {
         border : none;
         font-size: 14px;
     }
     @media(min-width: 640px) {
-        width: 60%;        
+        width: 60%;
     }
 }
 
 .borderless.no-padding {
-    th, td { 
+    th, td {
         padding:0;
     }
 }
@@ -103,22 +103,6 @@ table tbody .url {
             padding: 8px 0 8px 6px;
         }
     }
-    // links table
-    .links-urn {
-        width: 16%;
-    }
-
-    .links-name {
-        width: 35%;
-    }
-
-    .links-type {
-        width: 23%;
-    }
-
-    .links-date {
-        width: 16%;
-    }
 
     @include media(mobile) {
         thead {
@@ -144,7 +128,7 @@ table tbody .url {
 
 
             &:before {
-                content: attr(aria-label);
+                content: attr(data-label);
                 float: left;
                 font-weight: bold;
                 padding-right: 0.5em;
@@ -209,7 +193,7 @@ table tbody .url {
 
         @media(max-width: 940px) {
             &:after {
-                content: attr(aria-label);
+                content: attr(data-label);
                 position: relative;
                 top: 14px;
                 left: 44px;
@@ -273,7 +257,7 @@ table tbody .url {
 
 .list-table {
     border-top: 0;
-    
+
     tr:last-child {
         td {
             border-bottom: 0;
@@ -282,7 +266,7 @@ table tbody .url {
 }
 @media(max-width: 940px) {
     .changes-list-wrapper {
-        border-top: 2px $black solid;    
+        border-top: 2px $black solid;
     }
     .approval-changes {
         thead {
@@ -307,7 +291,7 @@ table tbody .url {
 
 
             &:before {
-                content: attr(aria-label);
+                content: attr(data-label);
                 float: left;
                 font-weight: bold;
                 padding-right: 0.5em;
@@ -320,7 +304,7 @@ table tbody .url {
     }
 }
 
-.retain-columns { 
+.retain-columns {
     // only suitable for tables with 2 columns as the header does not hide at mobile
     // used on data status
      @include media(mobile) {
@@ -343,11 +327,11 @@ table tbody .url {
             float: none;
             padding-left: 6px;
             width: auto !important;
-           
+
             &:before {
                 content: "";
                 display: none;
-                
+
             }
 
             &:last-child {
@@ -368,7 +352,7 @@ table tbody .url {
 
 
 .table-count {
-    
+
     margin-bottom: 12px;
 
     p {
@@ -379,10 +363,11 @@ table tbody .url {
 }
 
 
-p.table-caption {
+.table-caption {
     width: 66%;
     margin: 20px 0;
     font-size: 16px;
+    text-align: left;
     @include media(mobile) {
         width: 100%;
     }
@@ -689,7 +674,7 @@ table.expanded-table {
         .selected-sort:after {
             right: 2px;
         }
-        
+
         .sorted-desc.selected-sort:after {
             margin-top: 0;
         }

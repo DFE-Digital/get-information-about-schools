@@ -17,6 +17,7 @@
         @Html.Partial("_GenericPaginationV2", Model)
     </div>
     <table class="edubase-table change-history establishment-changes sortable-table expanding-table @Html.Conditional(!Model.SingleEstablishment, "multi-estab-changes")" id="changes-table">
+        <caption class="visuallyhidden">Establishment change history search results</caption>
         <thead>
             <tr>
                 <th scope="col" class="cell-edate multi-line">
@@ -60,17 +61,17 @@
             @foreach (var item in Model.Items)
             {
                 <tr>
-                    <td aria-label="Date changed">@(item.EffectiveDate?.ToString("dd/MM/yyyy"))</td>
+                    <td data-label="Date changed">@(item.EffectiveDate?.ToString("dd/MM/yyyy"))</td>
                     @if (!Model.SingleEstablishment)
                     {
-                        <td aria-label="URN">@Html.RouteLink(item.EstablishmentUrn?.ToString() ?? "Unknown", "EstabDetails", new { id = item.EstablishmentUrn })</td>
-                        <td aria-label="Establishment">@Html.RouteLink(item.EstablishmentName ?? "Unknown", "EstabDetails", new { id = item.EstablishmentUrn })</td>
+                        <td data-label="URN">@Html.RouteLink(item.EstablishmentUrn?.ToString() ?? "Unknown", "EstabDetails", new { id = item.EstablishmentUrn })</td>
+                        <td data-label="Establishment">@Html.RouteLink(item.EstablishmentName ?? "Unknown", "EstabDetails", new { id = item.EstablishmentUrn })</td>
                     }
-                    <td aria-label="Updated field">@item.FieldName</td>
-                    <td aria-label="Old value">@item.OldValue</td>
-                    <td aria-label="New value">@item.NewValue</td>
-                    <td aria-label="Suggested by">@item.SuggesterName</td>
-                    <td aria-label="Approved by">@item.ApproverName</td>
+                    <td data-label="Updated field">@item.FieldName</td>
+                    <td data-label="Old value">@item.OldValue</td>
+                    <td data-label="New value">@item.NewValue</td>
+                    <td data-label="Suggested by">@item.SuggesterName</td>
+                    <td data-label="Approved by">@item.ApproverName</td>
                 </tr>
             }
         </tbody>
