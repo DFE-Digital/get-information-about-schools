@@ -74,39 +74,33 @@
 
         <p class="table-caption">Showing 1 - @Model.ChangesSummary.Count of  @Model.ChangesSummary.Count</p>
         <table class="edubase-table changes-summary confirm-changes">
+            <caption class="visuallyhidden">Establishment updates summary</caption>
             <thead>
                 <tr>
-                    <th>Field</th>
-                    <th>Old value</th>
-                    <th>New value</th>
-                    <th>This field requires approval</th>
-                    <th>Approver</th>
+                    <th scope="col">Field</th>
+                    <th scope="col">Old value</th>
+                    <th scope="col">New value</th>
+                    <th scope="col">This field requires approval</th>
+                    <th scope="col">Approver</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.ChangesSummary)
-                {
+                @foreach (var item in Model.ChangesSummary) {
                     <tr>
-                        <td aria-label="Field">@item.Name</td>
-                        <td aria-label="Old value">@(item.OldValue ?? "<empty>")</td>
-                        <td aria-label="New value">@(item.NewValue ?? "<empty>")</td>
-                        <td aria-label="This field requires approval">
-                            @if (item.RequiresApproval)
-                            {
+                        <td data-label="Field">@item.Name</td>
+                        <td data-label="Old value">@(item.OldValue ?? "<empty>")</td>
+                        <td data-label="New value">@(item.NewValue ?? "<empty>")</td>
+                        <td data-label="This field requires approval">
+                            @if (item.RequiresApproval) {
                                 <div class="requires-approval">Yes</div>
-                            }
-                            else
-                            {
+                            } else {
                                 @: No
                             }
                         </td>
-                        <td aria-label="Approver name">
-                            @if (item.RequiresApproval)
-                            {
+                        <td data-label="Approver name">
+                            @if (item.RequiresApproval) {
                                 @(item.ApproverName ?? "-")
-                            }
-                            else
-                            {
+                            } else {
                                 @: &ndash;
                             }
                         </td>

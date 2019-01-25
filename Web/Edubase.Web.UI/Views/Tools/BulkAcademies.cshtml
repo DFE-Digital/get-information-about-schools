@@ -134,21 +134,24 @@
                      <h2 class="heading-medium">Academies to create</h2>
                      <p class="table-caption" v-show="establishments.length > 1">Showing 1 - {{establishments.length}} of {{establishments.length}}</p>
                      <table class="edubase-table">
+                         <caption class="visuallyhidden">Academies to create</caption>
                          <thead>
                              <tr>
-                                 <th><abbr title="Unique Reference Number">URN</abbr></th>
-                                 <th>Name</th>
-                                 <th>Establishment type</th>
-                                 <th>Opening date</th>
-                                 <td colspan="2"></td>
+                                 <th scope="col"><abbr title="Unique Reference Number">URN</abbr></th>
+                                 <th scope="col">Name</th>
+                                 <th scope="col">Establishment type</th>
+                                 <th scope="col">Opening date</th>
+                                 <th scope="col" colspan="2">
+                                    <span class="visuallyhidden">Action links</span>
+                                </th>
                              </tr>
                          </thead>
                          <tbody>
                              <tr v-for="estab in establishments">
-                                 <td aria-label="URN">{{estab.urn}}</td>
-                                 <td aria-label="Name">{{estab.name}}</td>
-                                 <td aria-label="Establishment type">{{estab.typeName}}</td>
-                                 <td aria-label="Opening date">{{estab.displayDate}}</td>
+                                 <td data-label="URN">{{estab.urn}}</td>
+                                 <td data-label="Name">{{estab.name}}</td>
+                                 <td data-label="Establishment type">{{estab.typeName}}</td>
+                                 <td data-label="Opening date">{{estab.displayDate}}</td>
                                  <td>
                                      <a href="#" v-on:click.prevent="editRecord(estab.urn)">Edit</a>
                                  </td>
@@ -177,20 +180,21 @@
                  <p>The following new academies have been created. All predecessor record and links have been updated automatically</p>
                  <p class="table-caption">Showing 1 - {{createdAcademies.length}} of {{createdAcademies.length}}</p>
                  <table class="edubase-table">
+                     <caption class="visuallyhidden">Academies created</caption>
                      <thead>
                          <tr>
-                             <th><abbr title="Unique Reference Number">URN</abbr></th>
-                             <th>Name</th>
-                             <th>Establishment type</th>
-                             <th>Opening date</th>
+                             <th scope="col"><abbr title="Unique Reference Number">URN</abbr></th>
+                             <th scope="col">Name</th>
+                             <th scope="col">Establishment type</th>
+                             <th scope="col">Opening date</th>
                          </tr>
                      </thead>
                      <tbody>
                          <tr v-for="estab in createdAcademies">
-                             <td aria-label="URN"><a v-bind:href='detailUrl(estab.urn)'>{{estab.urn}}</a></td>
-                             <td aria-label="Name"><a v-bind:href='detailUrl(estab.urn)'>{{estab.name}}</a></td>
-                             <td aria-label="Establishment type" v-html="lookUpType(estab.typeId)"></td>
-                             <td aria-label="Opening date" v-html="formatDisplayDate(estab.openingDate)"></td>
+                             <td data-label="URN"><a v-bind:href='detailUrl(estab.urn)'>{{estab.urn}}</a></td>
+                             <td data-label="Name"><a v-bind:href='detailUrl(estab.urn)'>{{estab.name}}</a></td>
+                             <td data-label="Establishment type" v-html="lookUpType(estab.typeId)"></td>
+                             <td data-label="Opening date" v-html="formatDisplayDate(estab.openingDate)"></td>
                          </tr>
                      </tbody>
                  </table>

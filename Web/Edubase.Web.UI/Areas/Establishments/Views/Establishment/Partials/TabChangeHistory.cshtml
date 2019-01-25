@@ -32,47 +32,50 @@
             </div>
         }
         <table class="approval-changes edubase-table sortable-table">
+            <caption class="visuallyhidden">Change history</caption>
             <thead>
-            <tr>
-                <th>
-                    <a href="@Url.SortUrl("effectiveDateUtc", "#school-change-history")"
-                            class="@Html.Conditional(sortField == "effectiveDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Date changed</a>
-                </th>
-                <th>
-                    <a href="@Url.SortUrl("fieldName", "#school-change-history")"
-                       class="@Html.Conditional(sortField == "fieldName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Updated field</a>
-                </th>
-                <th>
-                    <a href="@Url.SortUrl("oldValue", "#school-change-history")"
-                       class="@Html.Conditional(sortField == "oldValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Old value</a>
-                </th>
-                <th>
-                    <a href="@Url.SortUrl("newValue", "#school-change-history")"
-                       class="@Html.Conditional(sortField == "newValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">New value</a>
-                </th>
-                <th>
-                    <a href="@Url.SortUrl("requestedDateUtc", "#school-change-history")"
-                       class="@Html.Conditional(sortField == "requestedDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Date requested</a>
-                </th>
-                <th>
-                    <a href="@Url.SortUrl("originatorUserName", "#school-change-history")"
-                       class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Suggested from</a>
-                </th>
-                <th><a href="@Url.SortUrl("approverUserName", "#school-change-history")"
-                       class="@Html.Conditional(sortField == "approverUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Approved by</a></th>
-            </tr>
+                <tr>
+                    <th scope="col">
+                        <a href="@Url.SortUrl("effectiveDateUtc", "#school-change-history")"
+                        class="@Html.Conditional(sortField == "effectiveDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Date changed</a>
+                    </th>
+                    <th scope="col">
+                        <a href="@Url.SortUrl("fieldName", "#school-change-history")"
+                        class="@Html.Conditional(sortField == "fieldName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Updated field</a>
+                    </th>
+                    <th scope="col">
+                        <a href="@Url.SortUrl("oldValue", "#school-change-history")"
+                        class="@Html.Conditional(sortField == "oldValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Old value</a>
+                    </th>
+                    <th scope="col">
+                        <a href="@Url.SortUrl("newValue", "#school-change-history")"
+                        class="@Html.Conditional(sortField == "newValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">New value</a>
+                    </th>
+                    <th scope="col">
+                        <a href="@Url.SortUrl("requestedDateUtc", "#school-change-history")"
+                        class="@Html.Conditional(sortField == "requestedDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Date requested</a>
+                    </th>
+                    <th scope="col">
+                        <a href="@Url.SortUrl("originatorUserName", "#school-change-history")"
+                        class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Suggested from</a>
+                    </th>
+                    <th scope="col">
+                        <a href="@Url.SortUrl("approverUserName", "#school-change-history")"
+                        class="@Html.Conditional(sortField == "approverUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Approved by</a>
+                    </th>
+                </tr>
             </thead>
             <tbody>
             @foreach (var item in Model.ChangeHistory.Items)
             {
                 <tr>
-                    <td aria-label="Date changed">@(item.EffectiveDateUtc?.ToString("dd/MM/yyyy"))</td>
-                    <td aria-label="Updated field">@item.Name</td>
-                    <td aria-label="Old value">@item.OldValue</td>
-                    <td aria-label="New value">@item.NewValue</td>
-                    <td aria-label="Date requested">@(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))</td>
-                    <td aria-label="Suggested from">@item.OriginatorUserName</td>
-                    <td aria-label="Approved by">@(item.ApproverUserName ?? "--")</td>
+                    <td data-label="Date changed">@(item.EffectiveDateUtc?.ToString("dd/MM/yyyy"))</td>
+                    <td data-label="Updated field">@item.Name</td>
+                    <td data-label="Old value">@item.OldValue</td>
+                    <td data-label="New value">@item.NewValue</td>
+                    <td data-label="Date requested">@(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))</td>
+                    <td data-label="Suggested from">@item.OriginatorUserName</td>
+                    <td data-label="Approved by">@(item.ApproverUserName ?? "--")</td>
                 </tr>
             }
             </tbody>
@@ -83,6 +86,6 @@
                 @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
             </div>
         }
-        
+
     }
 </div>

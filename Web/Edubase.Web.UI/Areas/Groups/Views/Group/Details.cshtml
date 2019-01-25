@@ -55,10 +55,6 @@
             <div class="grey-warning dismissable-message">
                 <p>
                     This @Model.GroupTypeNameForClosureLabel closed on @(Model.CloseDate?.ToString("dd/MM/yyyy")).
-                    @if (Model.Links.Any())
-                    {
-                        <text>View details of <a href="#links" class="tab-manipulator">linked groups</a></text>
-                    }
                 </p>
                 <a class="cross" href="#"><span class="visuallyhidden">Dismiss this message</span></a>
             </div>
@@ -94,17 +90,10 @@
                     <li><a href="#details" class="horizontal-tab">Details</a></li>
                     <li><a href="#list" class="horizontal-tab">@Model.EstablishmentsPluralName (@Model.Establishments.Count)</a></li>
 
-                    @if (Model.Links.Any())
-                    {
-                        <li><a href="#links" class="horizontal-tab">Links</a></li>
-                    }
-
                     @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
                     {
                         <li><a href="#governance" class="horizontal-tab">Governance</a></li>
                     }
-
-
 
                     @if (Model.IsUserLoggedOn)
                     {
@@ -119,7 +108,7 @@
 
                     @if (Model.CanUserEdit)
                     {
-                        @Html.ActionLink("Edit", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-secondary mobile-full-width" })
+                        @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-secondary mobile-full-width" })
                     }
                     <div class="detail-summary">
                         <dl>
@@ -182,7 +171,7 @@
 
                     @if (Model.CanUserEdit)
                     {
-                        @Html.ActionLink("Edit", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-secondary mobile-full-width" })
+                        @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-secondary mobile-full-width" })
                     }
 
                 </div>
@@ -191,7 +180,7 @@
 
                     @if (Model.CanUserEdit)
                     {
-                        @Html.ActionLink("Edit", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-secondary mobile-full-width" })
+                        @Html.ActionLink("Edit academies", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-secondary mobile-full-width" })
                     }
 
                     <div class="column-full">
@@ -255,43 +244,10 @@
 
                     @if (Model.CanUserEdit && Model.Establishments.Count > 0)
                     {
-                        @Html.ActionLink("Edit", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-secondary mobile-full-width lower" })
+                        @Html.ActionLink("Edit academies", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-secondary mobile-full-width lower" })
                     }
 
                 </div>
-
-                @if (Model.Links.Any())
-                {
-                    <div id="links" class="tab-content">
-                        <p class="table-caption">
-                            This group is the @((Model.Links.First().LinkType?.Contains("Successor")).GetValueOrDefault() ? "predecessor" : "successor") to @Model.Links.First().GroupName, <abbr title="Unique Identifier">UID</abbr>: @Model.Links.First().UId.
-                        </p>
-                        <div class="table-count">
-                            <p>Showing 1 - @Model.Links.Count() of @Model.Links.Count()</p>
-                        </div>
-                        <table class="edubase-table">
-                            <thead>
-                                <tr>
-                                    <th class="links-urn"><abbr title="Unique Identifier">UID</abbr></th>
-                                    <th class="links-name">Group name</th>
-                                    <th class="links-type">Type of link</th>
-                                    <th class="links-date">Date linked</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var l in Model.Links)
-                                {
-                                    <tr>
-                                        <td aria-label="UID">@Html.RouteLink(l.UId.ToString(), "GroupDetails", new { id = l.UId })</td>
-                                        <td aria-label="Group name">@Html.RouteLink(l.GroupName, "GroupDetails", new { id = l.UId })</td>
-                                        <td aria-label="Type of link">@l.LinkType</td>
-                                        <td aria-label="Date linked">@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                }
 
                 @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
                 {
@@ -300,7 +256,7 @@
                         @if (Model.CanUserEditGovernance)
                         {
                             <div class="button-wrap">
-                                @Html.ActionLink("Edit", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "button button-secondary mobile-full-width" })
+                                @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "button button-secondary mobile-full-width" })
                             </div>
 
                         }
@@ -310,7 +266,7 @@
                         @if (Model.CanUserEditGovernance)
                         {
                             <div class="button-wrap">
-                                @Html.ActionLink("Edit", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "button button-secondary mobile-full-width" })
+                                @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "button button-secondary mobile-full-width" })
                             </div>
 
                         }
@@ -341,45 +297,46 @@
                             }
 
                             <table class="edubase-table approval-changes sortable-table">
+                                <caption class="visuallyhidden">Change history</caption>
                                 <thead>
-                                <tr>
-                                    <th>
-                                        <a href="@Url.SortUrl("requestedDateUtc", "#change-history")"
-                                           class="@Html.Conditional(sortField == "requestedDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">
-                                            Date changed
-                                        </a>
-                                    </th>
-                                    <th>
-                                        <a href="@Url.SortUrl("requestType", "#change-history")"
-                                           class="@Html.Conditional(sortField == "requestType", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">
-                                            Request type
-                                        </a>
-                                    </th>
-                                    <th>
-                                        <a href="@Url.SortUrl("changes", "#change-history")"
-                                           class="@Html.Conditional(sortField == "changes", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">
-                                            Changes
-                                        </a>
-                                    </th>
-                                    <th>
-                                        <a href="@Url.SortUrl("originatorUserName", "#change-history")"
-                                           class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">
-                                            Suggested by
-                                        </a>
-                                    </th>
-                                </tr>
+                                    <tr>
+                                        <th scope="col">
+                                            <a href="@Url.SortUrl("requestedDateUtc", "#change-history")"
+                                            class="@Html.Conditional(sortField == "requestedDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">
+                                                Date changed
+                                            </a>
+                                        </th>
+                                        <th scope="col">
+                                            <a href="@Url.SortUrl("requestType", "#change-history")"
+                                            class="@Html.Conditional(sortField == "requestType", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">
+                                                Request type
+                                            </a>
+                                        </th>
+                                        <th scope="col">
+                                            <a href="@Url.SortUrl("changes", "#change-history")"
+                                            class="@Html.Conditional(sortField == "changes", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">
+                                                Changes
+                                            </a>
+                                        </th>
+                                        <th scope="col">
+                                            <a href="@Url.SortUrl("originatorUserName", "#change-history")"
+                                            class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">
+                                                Suggested by
+                                            </a>
+                                        </th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in Model.ChangeHistory.Items.Where(x=>x.RequestType != GroupChangeRequestType.NewGroupLink))
                                     {
                                         <tr>
-                                            <td aria-label="Date changed">
+                                            <td data-label="Date changed">
                                                 @(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))
                                             </td>
-                                            <td aria-label="Request type">
+                                            <td data-label="Request type">
                                                 @item.RequestType.GetEnumMember()
                                             </td>
-                                            <td aria-label="Change">
+                                            <td data-label="Change">
                                                 <dl>
                                                     @if (item.RequestType == GroupChangeRequestType.GroupChange)
                                                     {
@@ -395,7 +352,7 @@
                                                     }
                                                 </dl>
                                             </td>
-                                            <td aria-label="Suggested by">
+                                            <td data-label="Suggested by">
                                                 @item.OriginatorUserName
                                             </td>
                                         </tr>

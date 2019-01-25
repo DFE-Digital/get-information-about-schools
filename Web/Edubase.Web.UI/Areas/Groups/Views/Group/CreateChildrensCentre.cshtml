@@ -237,37 +237,38 @@
                 <h2 class="heading-medium">Children’s centres to add to the {{groupTypeName}}</h2>
                 <p class="table-caption">{{ tableCount }}</p>
                 <table class="edubase-table childrens-centre-listing">
+                    <caption class="visuallyhidden">Children's centres added</caption>
                     <thead>
-                    <tr>
-                        <th v-if="groupType === '8'">Lead centre</th>
-                        <th><abbr title="Unique Reference Number">URN</abbr></th>
-                        <th>Name</th>
-                        <th>Join date</th>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                        <tr>
+                            <th scope="col" v-if="groupType === '8'">Lead centre</th>
+                            <th scope="col"><abbr title="Unique Reference Number">URN</abbr></th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Join date</th>
+                            <td></td>
+                            <td></td>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(estab, index) in centresInGroup">
-                        <td aria-label="Lead centre" v-bind:class="['radio-cell',(estab.urn == groupLead)? 'highlight': '']" v-if="groupType === '8'">
-                            <span class="radio-button-wrap">
-                                <input type="radio" name="lead-centre" :value="estab.urn" v-bind:id="generateRadioId(estab.urn)" :checked="estab.urn == groupLead" v-model="groupLead"/>
-                                <label class="edubase-button-radio" v-bind:for="generateRadioId(estab.urn)">
-                                    <span class="visuallyhidden">Set as lead establishment</span>
-                                </label>
-                            </span>
-                        </td>
+                        <tr v-for="(estab, index) in centresInGroup">
+                            <td data-label="Lead centre" v-bind:class="['radio-cell',(estab.urn == groupLead)? 'highlight': '']" v-if="groupType === '8'">
+                                <span class="radio-button-wrap">
+                                    <input type="radio" name="lead-centre" :value="estab.urn" v-bind:id="generateRadioId(estab.urn)" :checked="estab.urn == groupLead" v-model="groupLead"/>
+                                    <label class="edubase-button-radio" v-bind:for="generateRadioId(estab.urn)">
+                                        <span class="visuallyhidden">Set as lead establishment</span>
+                                    </label>
+                                </span>
+                            </td>
 
-                        <td aria-label="URN" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">
-                            <input type="hidden" :value="estab.urn" name="estab-in-group"/> <!-- :value is deliberate - vue js attribute bind. visual studio likes to remove : when reformatting!!! -->
-                            {{estab.urn}}
-                        </td>
+                            <td data-label="URN" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">
+                                <input type="hidden" :value="estab.urn" name="estab-in-group"/> <!-- :value is deliberate - vue js attribute bind. visual studio likes to remove : when reformatting!!! -->
+                                {{estab.urn}}
+                            </td>
 
-                        <td aria-label="Name" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">{{estab.name}}</td>
-                        <td aria-label="Join date" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">{{ estab.joinDate }}</td>
-                        <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="editJoiningEstab(estab.urn)">Edit</a></td>
-                        <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="removeJoiningEstab(estab.urn)">Remove</a></td>
-                    </tr>
+                            <td data-label="Name" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">{{estab.name}}</td>
+                            <td data-label="Join date" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">{{ estab.joinDate }}</td>
+                            <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="editJoiningEstab(estab.urn)">Edit</a></td>
+                            <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="removeJoiningEstab(estab.urn)">Remove</a></td>
+                        </tr>
                     </tbody>
                 </table>
                 <p class="table-caption">{{tableCount}}</p>

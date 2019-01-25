@@ -18,6 +18,7 @@
         @Html.Partial("_GenericPaginationV2", Model)
     </div>
     <table class="edubase-table change-history sortable-table expanding-table group-change-history" id="changes-table">
+        <caption class="visuallyhidden">Group change history search results</caption>
         <thead>
             <tr>
                 <th scope="col" class="cell-edate multi-line">
@@ -57,14 +58,14 @@
             @foreach (var item in Model.Items)
             {
                 <tr>
-                    <td aria-label="Date changed">@(item.RequestedDate?.ToString("dd/MM/yyyy"))</td>
+                    <td data-label="Date changed">@(item.RequestedDate?.ToString("dd/MM/yyyy"))</td>
                     @if (!Model.SingleGroup)
                     {
-                        <td aria-label="Group UID">@Html.RouteLink(item.GroupUId.ToString(), "GroupDetails", new { id = item.GroupUId })</td>
-                        <td aria-label="Group">@Html.RouteLink(item.GroupName, "GroupDetails", new { id = item.GroupUId })</td>
+                        <td data-label="Group UID">@Html.RouteLink(item.GroupUId.ToString(), "GroupDetails", new { id = item.GroupUId })</td>
+                        <td data-label="Group">@Html.RouteLink(item.GroupName, "GroupDetails", new { id = item.GroupUId })</td>
                     }
-                    <td aria-label="Request type">@item.RequestType</td>
-                    <td aria-label="Change">
+                    <td data-label="Request type">@item.RequestType</td>
+                    <td data-label="Change">
                         <dl class="key-value-list">
                             @if (item.RequestType == GroupChangeRequestType.GroupChange)
                             {
@@ -87,7 +88,7 @@
 
                         </dl>
                     </td>
-                    <td aria-label="Suggested by">@item.SuggesterName</td>
+                    <td data-label="Suggested by">@item.SuggesterName</td>
                 </tr>
             }
         </tbody>

@@ -12,7 +12,7 @@
             <ul>
                 <li>
                     @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-                </li>                
+                </li>
             </ul>
 
         </div>
@@ -20,11 +20,11 @@
     </div>
     <div class="column-two-thirds">
         <p class="@(Model.AreScheduledExtractsAvailable ? "": "no-bottom-margin")">
-            This data is updated daily. The data fields and the order of the data fields can change in these downloads. 
-            If you need data in a prescribed format you should consider signing up for WebServices by submitting a 
+            This data is updated daily. The data fields and the order of the data fields can change in these downloads.
+            If you need data in a prescribed format you should consider signing up for WebServices by submitting a
             <a href="https://form.education.gov.uk/en/AchieveForms/?form_uri=sandbox-publish://AF-Process-2b61dfcd-9296-4f6a-8a26-4671265cae67/AF-Stage-f3f5200e-e605-4a1b-ae6b-3536bc77305c/definition.json&redirectlink=/en&cancelRedirectLink=/en">Service Request</a>.
         </p>
-    </div>   
+    </div>
 </div>
 
 <div class="grid-row">
@@ -38,12 +38,12 @@
                             <a href="#group-data" class="horizontal-tab">
                                 Establishment &amp; group data
                             </a>
-                        </li>                   
+                        </li>
                         <li>
                             <a href="#scheduled-extracts" class="horizontal-tab">
                                 Scheduled extracts
                             </a>
-                        </li>                                        
+                        </li>
                     </ul>
                 </div>
             }
@@ -73,16 +73,16 @@
                             </ul>
                         }
                     </div>
-                    
+
                 </div>
                 @if (Model.AreScheduledExtractsAvailable)
                 {
                     <div id="scheduled-extracts" class="tab-content">
-                        
+
                         <p>
-                            This is full data that can be found on Get information about schools. Not all files are date stamped, so it's a good idea to make a note of when you download the file. 
+                            This is full data that can be found on Get information about schools. Not all files are date stamped, so it's a good idea to make a note of when you download the file.
                         </p>
-                        
+
                         @if (Model.ScheduledExtracts.PageCount > 1)
                         {
                             <div class="top-pagination">
@@ -91,10 +91,11 @@
                         }
 
                         <table class="edubase-table retain-columns @(Model.ScheduledExtracts.PageCount > 1 ? "" : "no-pagination")">
+                            <caption class="visuallyhidden">Scheduled extracts files</caption>
                             <thead>
                                 <tr>
-                                    <th>File</th>
-                                    <th class="download-id">ID</th>
+                                    <th scope="col">File</th>
+                                    <th scope="col" class="download-id">ID</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -119,7 +120,7 @@
                         }
                     </div>
                 }
-                
+
             </div>
         </div>
     </div>

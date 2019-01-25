@@ -85,21 +85,22 @@
             <div class="grid-row">
                 <div class="column-full">
                     <table class="edubase-table company-details">
+                        <caption class="visuallyhidden">Company search results</caption>
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Companies House no.</th>
-                                <th>Incorporated</th>
-                                <th>Address</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Companies House no.</th>
+                                <th scope="col">Incorporated</th>
+                                <th scope="col">Address</th>
                             </tr>
                         </thead>
                         @foreach (var result in Model.Results.Items)
                         {
                             <tr class="company-result">
-                                <td aria-label="Name">@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups" }, null)</td>
-                                <td aria-label="Companies House no."><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number">@result.Number</a></td>
-                                <td aria-label="Incorporated">@(result.IncorporationDate?.ToString("dd/MM/yyyy"))</td>
-                                <td aria-label="Address">@(result.Address.ToString() ?? "Not recorded")</td>
+                                <td data-label="Name">@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups" }, null)</td>
+                                <td data-label="Companies House no."><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number">@result.Number</a></td>
+                                <td data-label="Incorporated">@(result.IncorporationDate?.ToString("dd/MM/yyyy"))</td>
+                                <td data-label="Address">@(result.Address.ToString() ?? "Not recorded")</td>
                             </tr>
                         }
                     </table>

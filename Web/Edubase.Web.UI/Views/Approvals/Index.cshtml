@@ -31,7 +31,7 @@
         </div>
         <div class="grid-row">
             <div class="column-full">
-                <div class="wait-spinner" v-show="isProcessing" aria-live="polite">
+                <div class="wait-spinner" v-show="isProcessing" data-live="polite">
                     <p class="visually-hidden">Please wait</p>
                 </div>
                 <h1 class="heading-xlarge" v-show="!isProcessing">Items for approval</h1>
@@ -106,74 +106,75 @@
                     </div>
                     <div class="changes-list-wrapper" v-show="!isProcessing">
                         <table class="edubase-table approval-changes sortable-table" id="changes-table">
+                            <caption class="visuallyhidden">Items for approval</caption>
                             <thead>
-                            <tr>
-                                <td class="cell-checkbox">&nbsp;</td>
-                                <th scope="col" class="cell-urn">
-                                    <a href="#" v-on:click.prevent="setSort('establishmentUrn')"
-                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='establishmentUrn' ? 'selected-sort': '' ]"><abbr title="Unique Reference Number">URN</abbr></a>
-                                </th>
-                                <th scope="col" class="cell-urn">
-                                    <a href="#" v-on:click.prevent="setSort('establishmentLAESTAB')"
-                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='establishmentLAESTAB' ? 'selected-sort': '' ]">DfE Number</a>
-                                </th>
-                                <th scope="col" class="cell-estab">
-                                    <a href="#" v-on:click.prevent="setSort('establishmentName')"
-                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='establishmentName' ? 'selected-sort': '' ]">Establishment</a>
-                                </th>
-                                <th scope="col" class="cell-updatedfield">
-                                    <a href="#" v-on:click.prevent="setSort('fieldName')"
-                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='fieldName' ? 'selected-sort': '' ]">Updated field</a>
-                                </th>
-                                <th scope="col" class="cell-oldvalue">
-                                    <a href="#" v-on:click.prevent="setSort('oldValue')"
-                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='oldValue' ? 'selected-sort': '' ]">Old value</a>
-                                </th>
-                                <th scope="col" class="cell-newvalue">
-                                    <a href="#" v-on:click.prevent="setSort('newValue')"
-                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='newValue' ? 'selected-sort': '' ]">New value</a>
-                                </th>
-                                <th scope="col" class="cell-edate multi-line">
-                                    <a href="#" v-on:click="setSort('effectiveDateUtc')"
-                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='effectiveDateUtc' ? 'selected-sort': '' ]">Effective<br/>date</a>
-                                </th>
-                                <th scope="col" class="cell-rdate multi-line">
-                                    <a href="#" v-on:click.prevent="setSort('requestedDateUtc')"
-                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='requestedDateUtc' ? 'selected-sort': '' ]">Date<br/>requested</a>
-                                </th>
-                                <th scope="col" class="cell-suggested multi-line">
-                                    <a href="#" v-on:click="setSort('originatorFullName')"
-                                       v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='originatorFullName' ? 'selected-sort': '' ]">Suggested<br/>by</a>
-                                </th>
-                            </tr>
+                                <tr>
+                                    <th class="cell-checkbox"><span class="visuallyhidden">Checkbox</span></th>
+                                    <th scope="col" class="cell-urn">
+                                        <a href="#" v-on:click.prevent="setSort('establishmentUrn')"
+                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='establishmentUrn' ? 'selected-sort': '' ]"><abbr title="Unique Reference Number">URN</abbr></a>
+                                    </th>
+                                    <th scope="col" class="cell-urn">
+                                        <a href="#" v-on:click.prevent="setSort('establishmentLAESTAB')"
+                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='establishmentLAESTAB' ? 'selected-sort': '' ]">DfE Number</a>
+                                    </th>
+                                    <th scope="col" class="cell-estab">
+                                        <a href="#" v-on:click.prevent="setSort('establishmentName')"
+                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='establishmentName' ? 'selected-sort': '' ]">Establishment</a>
+                                    </th>
+                                    <th scope="col" class="cell-updatedfield">
+                                        <a href="#" v-on:click.prevent="setSort('fieldName')"
+                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='fieldName' ? 'selected-sort': '' ]">Updated field</a>
+                                    </th>
+                                    <th scope="col" class="cell-oldvalue">
+                                        <a href="#" v-on:click.prevent="setSort('oldValue')"
+                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='oldValue' ? 'selected-sort': '' ]">Old value</a>
+                                    </th>
+                                    <th scope="col" class="cell-newvalue">
+                                        <a href="#" v-on:click.prevent="setSort('newValue')"
+                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='newValue' ? 'selected-sort': '' ]">New value</a>
+                                    </th>
+                                    <th scope="col" class="cell-edate multi-line">
+                                        <a href="#" v-on:click="setSort('effectiveDateUtc')"
+                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='effectiveDateUtc' ? 'selected-sort': '' ]">Effective<br/>date</a>
+                                    </th>
+                                    <th scope="col" class="cell-rdate multi-line">
+                                        <a href="#" v-on:click.prevent="setSort('requestedDateUtc')"
+                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='requestedDateUtc' ? 'selected-sort': '' ]">Date<br/>requested</a>
+                                    </th>
+                                    <th scope="col" class="cell-suggested multi-line">
+                                        <a href="#" v-on:click="setSort('originatorFullName')"
+                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='originatorFullName' ? 'selected-sort': '' ]">Suggested<br/>by</a>
+                                    </th>
+                                </tr>
                             </thead>
                             <tbody v-if="changes.length > 0">
-                            <tr v-for="(entry, index) in changes">
-                                <td class="cell-checkbox" aria-label="Select item">
-                                    <input :id="'change-'+entry.id" name="pending-change" :value="entry.id" type="checkbox" class="boldened-checkbox" v-on:click="selectItem">
-                                    <label class="edubase-label edubase-button-checkbox" :for="'change-'+entry.id">
-                                        <span class="visuallyhidden">Select this change for approval or rejection</span>
-                                    </label>
-                                </td>
-                                <td aria-label="URN">
-                                    <a v-bind:href="detailUrl(entry.establishmentUrn)">{{entry.establishmentUrn}}</a>
-                                </td>
-                                <td aria-label="DfE Number">{{entry.establishmentLAESTAB}}</td>
-                                <td aria-label="Establishment"><a v-bind:href="detailUrl(entry.establishmentUrn)">{{entry.establishmentName}}</a></td>
-                                <td aria-label="Updated field">{{entry.fieldName}}</td>
-                                <td aria-label="Old value">{{entry.oldValue}}</td>
-                                <td aria-label="New value">{{entry.newValue}}</td>
-                                <td aria-label="Effective date">{{formatDate(entry.effectiveDateUtc)}}</td>
-                                <td aria-label="Date requested">{{formatDate(entry.requestedDateUtc)}}</td>
-                                <td aria-label="Suggested by">{{entry.originatorFullName}}</td>
-                            </tr>
+                                <tr v-for="(entry, index) in changes">
+                                    <td class="cell-checkbox" data-label="Select item">
+                                        <input :id="'change-'+entry.id" name="pending-change" :value="entry.id" type="checkbox" class="boldened-checkbox" v-on:click="selectItem">
+                                        <label class="edubase-label edubase-button-checkbox" :for="'change-'+entry.id">
+                                            <span class="visuallyhidden">Select this change for approval or rejection</span>
+                                        </label>
+                                    </td>
+                                    <td data-label="URN">
+                                        <a v-bind:href="detailUrl(entry.establishmentUrn)">{{entry.establishmentUrn}}</a>
+                                    </td>
+                                    <td data-label="DfE Number">{{entry.establishmentLAESTAB}}</td>
+                                    <td data-label="Establishment"><a v-bind:href="detailUrl(entry.establishmentUrn)">{{entry.establishmentName}}</a></td>
+                                    <td data-label="Updated field">{{entry.fieldName}}</td>
+                                    <td data-label="Old value">{{entry.oldValue}}</td>
+                                    <td data-label="New value">{{entry.newValue}}</td>
+                                    <td data-label="Effective date">{{formatDate(entry.effectiveDateUtc)}}</td>
+                                    <td data-label="Date requested">{{formatDate(entry.requestedDateUtc)}}</td>
+                                    <td data-label="Suggested by">{{entry.originatorFullName}}</td>
+                                </tr>
                             </tbody>
                             <tbody v-else>
-                            <tr>
-                                <td colspan="9">
-                                    <p> You have no items requiring approval.</p>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td colspan="9">
+                                        <p> You have no items requiring approval.</p>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
