@@ -1,12 +1,12 @@
 ﻿@model GroupDetailViewModel
-@{ 
+@{
     var date = Model.Group.ConfirmationUpToDateGovernance_LastConfirmationDate?.ToString("dd/MM/yyyy") ?? "Not recorded";
 }
 
 @if (Model.Group.UrgentConfirmationUpToDateGovernanceRequired)
 {
     <div class="up-to-date-confirmations high-priority">
-        <h3>Governance record last confirmed: <span>@date</span></h3>
+        <h2>Governance record last confirmed: <span>@date</span></h2>
         @using (Html.BeginRouteForm("GroupGovernanceConfirmUpToDate", new { uid = Model.Group.GroupUId.Value }, FormMethod.Post))
         {
             <label for="confirm-button">Confirm governance record is up to date</label>
