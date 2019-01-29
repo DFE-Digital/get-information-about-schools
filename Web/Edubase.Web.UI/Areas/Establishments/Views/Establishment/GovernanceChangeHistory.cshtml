@@ -72,11 +72,11 @@
                             <tr>
                                 <th scope="col">
                                     <a href="@Url.SortUrl("effectiveDateUtc", "#change-history")"
-                                       class="@Html.Conditional(sortField == "effectiveDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Date changed</a>
+                                    class="@Html.Conditional(sortField == "effectiveDateUtc" && sortDir == "asc", "selected-sort sorted-asc") @Html.Conditional(sortField == "effectiveDateUtc" && sortDir == "desc", "selected-sort sorted-desc")" aria-label="@(sortField == "effectiveDateUtc" ? "Date changed is sorted in an [ascending/descending] order. Click to change order. All other columns are sortable." : "Date changed. Click to sort data by this column.")">Date changed</a>
                                 </th>
                                 <th scope="col">
                                     <a href="@Url.SortUrl("fieldName", "#change-history")"
-                                       class="@Html.Conditional(sortField == "fieldName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Updated field</a>
+                                    class="@Html.Conditional(sortField == "fieldName" && sortDir == "asc", "selected-sort sorted-asc") @Html.Conditional(sortField == "fieldName" && sortDir == "desc", "selected-sort sorted-desc")" aria-label="@(sortField == "fieldName" ? "Updated field is sorted in an [ascending/descending] order. Click to change order. All other columns are sortable." : "Updated field. Click to sort data by this column.")">Updated field</a>
                                 </th>
                                 <th scope="col">
                                     <a href="@Url.SortUrl("oldValue", "#change-history")"
