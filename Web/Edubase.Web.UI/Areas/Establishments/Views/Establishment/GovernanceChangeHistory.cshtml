@@ -9,14 +9,16 @@
     ViewBag.HideLogo = true;
 
     var request = HttpContext.Current.Request;
-    var sortDir = "desc";
+    var sortDir = "descending";
     var sortField = "effectiveDateUtc";
     if (request.QueryString["sortby"] != null)
     {
         sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
-        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
+        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "ascending" : "descending";
     }
 
+    var sortedDescription = " is sorted in an " + sortDir + " order. Click to change order. All other columns are sortable.";
+    var unsortedDescription = ". Click to sort data by this column.";
 }
 
 <div class="breadcrumbs">
@@ -72,31 +74,38 @@
                             <tr>
                                 <th scope="col">
                                     <a href="@Url.SortUrl("effectiveDateUtc", "#change-history")"
-                                    class="@Html.Conditional(sortField == "effectiveDateUtc" && sortDir == "asc", "selected-sort sorted-asc") @Html.Conditional(sortField == "effectiveDateUtc" && sortDir == "desc", "selected-sort sorted-desc")" aria-label="@(sortField == "effectiveDateUtc" ? "Date changed is sorted in an [ascending/descending] order. Click to change order. All other columns are sortable." : "Date changed. Click to sort data by this column.")">Date changed</a>
+                                       class="@Html.Conditional(sortField == "effectiveDateUtc", "selected-sort") @(sortDir.Contains("asc") ? "sorted-asc" : "sorted-desc")"
+                                       aria-label="Date changed@(sortField == "effectiveDateUtc" ? sortedDescription : unsortedDescription)">Date changed</a>
                                 </th>
                                 <th scope="col">
                                     <a href="@Url.SortUrl("fieldName", "#change-history")"
-                                    class="@Html.Conditional(sortField == "fieldName" && sortDir == "asc", "selected-sort sorted-asc") @Html.Conditional(sortField == "fieldName" && sortDir == "desc", "selected-sort sorted-desc")" aria-label="@(sortField == "fieldName" ? "Updated field is sorted in an [ascending/descending] order. Click to change order. All other columns are sortable." : "Updated field. Click to sort data by this column.")">Updated field</a>
+                                       class="@Html.Conditional(sortField == "fieldName", "selected-sort") @(sortDir.Contains("asc") ? "sorted-asc" : "sorted-desc")"
+                                       aria-label="Updated field@(sortField == "fieldName" ? sortedDescription : unsortedDescription)">Updated field</a>
                                 </th>
                                 <th scope="col">
                                     <a href="@Url.SortUrl("oldValue", "#change-history")"
-                                       class="@Html.Conditional(sortField == "oldValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Old value</a>
+                                       class="@Html.Conditional(sortField == "oldValue", "selected-sort") @(sortDir.Contains("asc") ? "sorted-asc" : "sorted-desc")"
+                                       aria-label="Old value@(sortField == "oldValue" ? sortedDescription : unsortedDescription)">Old value</a>
                                 </th>
                                 <th scope="col">
                                     <a href="@Url.SortUrl("newValue", "#change-history")"
-                                       class="@Html.Conditional(sortField == "newValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">New value</a>
+                                       class="@Html.Conditional(sortField == "newValue", "selected-sort") @(sortDir.Contains("asc") ? "sorted-asc" : "sorted-desc")"
+                                       aria-label="New value@(sortField == "newValue" ? sortedDescription : unsortedDescription)">New value</a>
                                 </th>
                                 <th scope="col">
                                     <a href="@Url.SortUrl("requestedDateUtc", "#change-history")"
-                                       class="@Html.Conditional(sortField == "requestedDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Date requested</a>
+                                       class="@Html.Conditional(sortField == "requestedDateUtc", "selected-sort") @(sortDir.Contains("asc") ? "sorted-asc" : "sorted-desc")"
+                                       aria-label="Date requested@(sortField == "requestedDateUtc" ? sortedDescription : unsortedDescription)">Date requested</a>
                                 </th>
                                 <th scope="col">
                                     <a href="@Url.SortUrl("originatorUserName", "#change-history")"
-                                       class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Suggested from</a>
+                                       class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir.Contains("asc") ? "sorted-asc" : "sorted-desc")"
+                                       aria-label="Suggested from@(sortField == "originatorUserName" ? sortedDescription : unsortedDescription)">Suggested from</a>
                                 </th>
                                 <th scope="col">
                                     <a href="@Url.SortUrl("approverUserName", "#change-history")"
-                                       class="@Html.Conditional(sortField == "approverUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Approved by</a>
+                                       class="@Html.Conditional(sortField == "approverUserName", "selected-sort") @(sortDir.Contains("asc") ? "sorted-asc" : "sorted-desc")"
+                                       aria-label="Approved by@(sortField == "approverUserName" ? sortedDescription : unsortedDescription)">Approved by</a>
                                 </th>
                             </tr>
                         </thead>
