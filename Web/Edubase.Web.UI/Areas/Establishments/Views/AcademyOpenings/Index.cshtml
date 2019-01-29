@@ -107,11 +107,11 @@
                                     <tr>
                                         <th scope="col" class="cell-openingdate">
                                             <a href="#" v-on:click.prevent="sortOpenings('openingDate')"
-                                                v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='openingDate' ? 'selected-sort': '' ]">Opening date</a>
+                                            v-bind:class="[ sortKey==='openingDate' && sortAscending ? 'selected-sort sorted-asc' : '', sortKey==='openingDate' && !sortAscending ? 'selected-sort sorted-desc' : '' ]" :aria-label="[ sortKey==='openingDate' && sortAscending ? 'Opening date is sorted in an ascending order. Click to change order. All other columns are sortable.' : '', sortKey==='openingDate' && !sortAscending ? 'Opening date is sorted in a descending order. Click to change order. All other columns are sortable.' : '', sortKey==='openingDate' ? '' : 'Opening date. Click to sort data by this column.' ]">Opening date</a>
                                         </th>
                                         <th scope="col" class="cell-urn">
                                             <a href="#" v-on:click.prevent="sortOpenings('urn')"
-                                                v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='urn' ? 'selected-sort': '' ]"><abbr title="Unique Reference Number">URN</abbr></a>
+                                            v-bind:class="[ sortKey==='urn' && sortAscending ? 'selected-sort sorted-asc' : '', sortKey==='urn' && !sortAscending ? 'selected-sort sorted-desc' : '' ]" :aria-label="[ sortKey==='urn' && sortAscending ? 'Opening date is sorted in an ascending order. Click to change order. All other columns are sortable.' : '', sortKey==='urn' && !sortAscending ? 'Opening date is sorted in a descending order. Click to change order. All other columns are sortable.' : '', sortKey==='urn' ? '' : 'Opening date. Click to sort data by this column.' ]"><abbr title="Unique Reference Number">URN</abbr></a>
                                         </th>
                                         <th scope="col" class="cell-estabname">
                                             <a href="#" v-on:click.prevent="sortOpenings('name')"
