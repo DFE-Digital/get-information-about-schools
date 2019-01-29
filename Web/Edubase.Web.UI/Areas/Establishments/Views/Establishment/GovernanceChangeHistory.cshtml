@@ -9,16 +9,30 @@
     ViewBag.HideLogo = true;
 
     var request = HttpContext.Current.Request;
-    var sortDir = "descending";
+    var sortDir = "desc";
+    var sortDirText = "a descending order";
     var sortField = "effectiveDateUtc";
+
     if (request.QueryString["sortby"] != null)
     {
         sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
-        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "ascending" : "descending";
+        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
+        sortDirText = (request.QueryString["sortby"] ?? "").Contains("asc") ? "an ascending order" : "a descending order";
     }
 
-    var sortedDescription = " is sorted in an " + sortDir + " order. Click to change order. All other columns are sortable.";
+    var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";
     var unsortedDescription = ". Click to sort data by this column.";
+
+    var tableColumns = new List<Tuple<string, string>>
+    {
+        Tuple.Create("effectiveDateUtc", "Date changed"),
+        Tuple.Create("fieldName", "Updated field"),
+        Tuple.Create("oldValue", "Old value"),
+        Tuple.Create("newValue", "New value"),
+        Tuple.Create("requestedDateUtc", "Date requested"),
+        Tuple.Create("originatorUserName", "Suggested from"),
+        Tuple.Create("approverUserName", "Approved by"),
+    };
 }
 
 <div class="breadcrumbs">
@@ -71,43 +85,18 @@
                     <table class="approval-changes edubase-table sortable-table">
                         <caption class="visuallyhidden">Governance change history</caption>
                         <thead>
-                            <tr>
+                        <tr>
+                            @foreach (var tableColumn in tableColumns)
+                            {
                                 <th scope="col">
-                                    <a href="@Url.SortUrl("effectiveDateUtc", "#change-history")"
-                                       class="@Html.Conditional(sortField == "effectiveDateUtc", "selected-sort") @(sortDir.Contains("asc") ? "sorted-asc" : "sorted-desc")"
-                                       aria-label="Date changed@(sortField == "effectiveDateUtc" ? sortedDescription : unsortedDescription)">Date changed</a>
+                                    <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
+                                       class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort")
+                                              @Html.Conditional(sortDir.Contains("asc"), "sorted-asc")
+                                              @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                                       aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
                                 </th>
-                                <th scope="col">
-                                    <a href="@Url.SortUrl("fieldName", "#change-history")"
-                                       class="@Html.Conditional(sortField == "fieldName", "selected-sort") @(sortDir.Contains("asc") ? "sorted-asc" : "sorted-desc")"
-                                       aria-label="Updated field@(sortField == "fieldName" ? sortedDescription : unsortedDescription)">Updated field</a>
-                                </th>
-                                <th scope="col">
-                                    <a href="@Url.SortUrl("oldValue", "#change-history")"
-                                       class="@Html.Conditional(sortField == "oldValue", "selected-sort") @(sortDir.Contains("asc") ? "sorted-asc" : "sorted-desc")"
-                                       aria-label="Old value@(sortField == "oldValue" ? sortedDescription : unsortedDescription)">Old value</a>
-                                </th>
-                                <th scope="col">
-                                    <a href="@Url.SortUrl("newValue", "#change-history")"
-                                       class="@Html.Conditional(sortField == "newValue", "selected-sort") @(sortDir.Contains("asc") ? "sorted-asc" : "sorted-desc")"
-                                       aria-label="New value@(sortField == "newValue" ? sortedDescription : unsortedDescription)">New value</a>
-                                </th>
-                                <th scope="col">
-                                    <a href="@Url.SortUrl("requestedDateUtc", "#change-history")"
-                                       class="@Html.Conditional(sortField == "requestedDateUtc", "selected-sort") @(sortDir.Contains("asc") ? "sorted-asc" : "sorted-desc")"
-                                       aria-label="Date requested@(sortField == "requestedDateUtc" ? sortedDescription : unsortedDescription)">Date requested</a>
-                                </th>
-                                <th scope="col">
-                                    <a href="@Url.SortUrl("originatorUserName", "#change-history")"
-                                       class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir.Contains("asc") ? "sorted-asc" : "sorted-desc")"
-                                       aria-label="Suggested from@(sortField == "originatorUserName" ? sortedDescription : unsortedDescription)">Suggested from</a>
-                                </th>
-                                <th scope="col">
-                                    <a href="@Url.SortUrl("approverUserName", "#change-history")"
-                                       class="@Html.Conditional(sortField == "approverUserName", "selected-sort") @(sortDir.Contains("asc") ? "sorted-asc" : "sorted-desc")"
-                                       aria-label="Approved by@(sortField == "approverUserName" ? sortedDescription : unsortedDescription)">Approved by</a>
-                                </th>
-                            </tr>
+                            }
+                        </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model.ChangeHistory.Items)
