@@ -4,12 +4,28 @@
 @{
     var request = HttpContext.Current.Request;
     var sortDir = "desc";
+    var sortDirText = "a descending order";
     var sortField = "requestedDateUtc";
-    if (!string.IsNullOrEmpty(request.QueryString["sortby"]))
+
+    if (request.QueryString["sortby"] != null)
     {
         sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
         sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
+        sortDirText = (request.QueryString["sortby"] ?? "").Contains("asc") ? "an ascending order" : "a descending order";
     }
+
+    var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";
+    var unsortedDescription = ". Click to sort data by this column.";
+
+     var tableColumns = new List<Tuple<string, string, bool>>
+   {
+       Tuple.Create("requestedDateUtc", "Date changed", true),
+       Tuple.Create("uid", "Group UID", false),
+       Tuple.Create("groupName", "Group", false),
+       Tuple.Create("requestType", "Request type", true),
+       Tuple.Create("change", "Change", true),
+       Tuple.Create("originatorUserName", "Suggested by", true),
+   };
 }
 
    @if (Model.Items.Any())
@@ -17,41 +33,21 @@
     <div>
         @Html.Partial("_GenericPaginationV2", Model)
     </div>
-    <table class="edubase-table change-history sortable-table expanding-table group-change-history" id="changes-table">
+    <table class="edubase-table sortable-table change-history table-tight" id="changes-table">
         <caption class="visuallyhidden">Group change history search results</caption>
         <thead>
             <tr>
-                <th scope="col" class="cell-edate multi-line">
-                    <a href="@Url.SortUrl("requestedDateUtc")"
-                       class="@Html.Conditional(sortField == "requestedDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Date<br/>changed</a>
-                </th>
-                @if (!Model.SingleGroup)
+            @foreach (var tableColumn in tableColumns)
+            {
+                if (tableColumn.Item3 || !Model.SingleGroup)
                 {
-                    <th scope="col" class="cell-requesttype multi-line">
-                        <a href="@Url.SortUrl("uid")"
-                           class="@Html.Conditional(sortField == "uid", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Group<br/><abbr title="Unique Identifier">UID</abbr></a>
-                    </th>
-                    <th scope="col" class="cell-estab single-line">
-                        <a href="@Url.SortUrl("groupName")"
-                           class="@Html.Conditional(sortField == "groupName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Group</a>
+                    <th scope="col" class="cell-@tableColumn.Item1.ToLower()">
+                        <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
+                        class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                        aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
                     </th>
                 }
-                <th scope="col" class="cell-requesttype multi-line">
-                    <a href="@Url.SortUrl("requestType")"
-                       class="@Html.Conditional(sortField == "requestType", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Request<br/>type</a>
-                </th>
-                @*<th scope="col" class="cell-change"><span class="not-a-link">Change</span></th>*@
-
-                <th scope="col" class="cell-change multi-line">
-                    <a href="@Url.SortUrl("changes")"
-                       class="@Html.Conditional(sortField == "changes", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Change</a>
-                </th>
-
-
-                <th scope="col" class="cell-suggested multi-line">
-                    <a href="@Url.SortUrl("originatorUserName")"
-                       class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Suggested<br/> by</a>
-                </th>
+            }
             </tr>
         </thead>
         <tbody>
@@ -88,7 +84,7 @@
 
                         </dl>
                     </td>
-                    <td data-label="Suggested by">@item.SuggesterName</td>
+                    <td data-label="Suggested by" class="table-tight--break-word">@item.SuggesterName</td>
                 </tr>
             }
         </tbody>

@@ -56,6 +56,11 @@ table tbody .url {
   word-break: break-all;
 }
 
+.table-tight {
+  .table-tight--break-word {
+    word-break: break-word;
+  }
+}
 
 .borderless {
     width: 100%;
@@ -166,10 +171,6 @@ table tbody .url {
 
         &.multi-line {
             padding-top: 8px;
-        }
-
-        a {
-            padding-bottom: 8px;
         }
     }
 
@@ -413,12 +414,6 @@ table tbody .url {
     }
 }
 
-.establishment-changes {
-    thead th {
-        padding-top: 0;
-    }
-}
-
 .change-history {
     table-layout: fixed;
 
@@ -447,11 +442,14 @@ table tbody .url {
 
     .cell-requesttype {
         width: 11%;
-        padding-top: $changeTableThPadding;
     }
 
     .cell-urn {
         width: 7%;
+    }
+
+    .cell-groupname {
+      width: 15%;
     }
 
     .cell-estab {
@@ -460,8 +458,7 @@ table tbody .url {
     }
 
     .cell-change {
-        width: 44%;
-        padding-top: $changeTableThPadding;
+        width: 35%;
     }
 
     .cell-suggested {
@@ -493,6 +490,11 @@ table tbody .url {
 
 
 .sortable-table {
+    thead th {
+      padding-bottom: 8px;
+      vertical-align: middle;
+    }
+
     thead a {
         text-decoration: none;
         font-weight: normal;
@@ -526,8 +528,6 @@ table tbody .url {
         font-weight: bold;
         position: relative;
         padding-right: 14px;
-        padding-bottom: 8px;
-
 
         &.sorted-asc:after {
             width: 0;
@@ -536,7 +536,7 @@ table tbody .url {
             content: '';
             right: 0;
             top: 50%;
-            margin-top: -8px;
+            margin-top: -4px;
             border-left: 4px solid transparent;
             border-right: 4px solid transparent;
             border-bottom: 7px solid $govuk-blue;
@@ -549,7 +549,7 @@ table tbody .url {
             content: '';
             right: 0;
             top: 50%;
-            margin-top: -8px;
+            margin-top: -4px;
             border-left: 4px solid transparent;
             border-right: 4px solid transparent;
             border-top: 7px solid $govuk-blue;
@@ -595,113 +595,11 @@ table.change-history {
     margin-bottom: 20px;
 }
 
-.expanding-table {
-    .not-a-link {
-        display: block;
-        padding-top: 12px;
-    }
-
-    thead th {
-        padding-top: 8px;
-
-        a {
-            padding-top: 12px;
-
-            &:after {
-                //top: 65% !important;
-            }
-        }
-
-        &.cell-edate {
-            width: 13%;
-        }
-    }
-
-    .multi-line {
-        a {
-            padding-top: 0;
-        }
-
-        .selected-sort {
-            &:after {
-                //top: 76%;
-            }
-        }
-    }
-
-    .cell-suggested {
-        width:14%;
-        a {
-            display: block;
-            max-width: 77%;
-        }
-    }
-}
-
-table.expanded-table {
-    thead th {
-        a.selected-sort.sorted-asc::after,
-        a.selected-sort.sorted-desc::after {
-            margin-top: 0;
-        }
-    }
-
-    thead th.cell-estab {
-        a.sorted-asc.selected-sort:after {
-            margin-top: -8px;
-        }
-    }
-}
-
-.multi-estab-changes {
-    .cell-oldvalue, .cell-newvalue {
-        width: 9.5%;
-    }
-
-    .cell-suggested {
-        width: 13%;
-    }
-
-    .cell-urn {
-        width: 8%;
-
-        .selected-sort:after {
-            right: 1px;
-        }
-    }
-
-    .cell-estab {
-        .selected-sort:after {
-            right: 2px;
-        }
-
-        .sorted-desc.selected-sort:after {
-            margin-top: 0;
-        }
-    }
-
-    thead th {
-        padding-right: 3px;
-
-        a {
-            max-width: 95%;
-            display: block;
-        }
-    }
-}
-
 .group-change-history {
     .cell-edate {
         padding-right: 4px;
     }
     .cell-suggested {
         width: 16%;
-    }
-}
-
-.establishment-changes {
-    thead .cell-updatedfield a {
-        display: block;
-        max-width: 75%;
     }
 }

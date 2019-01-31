@@ -2,12 +2,30 @@
 @{
     var request = HttpContext.Current.Request;
     var sortDir = "desc";
+    var sortDirText = "a descending order";
     var sortField = "effectiveDateUtc";
-    if (!string.IsNullOrEmpty(request.QueryString["sortby"]))
+
+    if (request.QueryString["sortby"] != null)
     {
         sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
         sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
+        sortDirText = (request.QueryString["sortby"] ?? "").Contains("asc") ? "an ascending order" : "a descending order";
     }
+
+    var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";
+    var unsortedDescription = ". Click to sort data by this column.";
+
+     var tableColumns = new List<Tuple<string, string, bool>>
+   {
+       Tuple.Create("effectiveDateUtc", "Date changed", true),
+       Tuple.Create("establishmentUrn", "URN", false),
+       Tuple.Create("establishmentName", "Establishment", false),
+       Tuple.Create("fieldName", "Updated field", true),
+       Tuple.Create("oldValue", "Old value", true),
+       Tuple.Create("newValue", "New value", true),
+       Tuple.Create("originatorUserName", "Suggested from", true),
+       Tuple.Create("approverUserName", "Approved by", true),
+   };
 }
 
 
@@ -16,45 +34,21 @@
     <div>
         @Html.Partial("_GenericPaginationV2", Model)
     </div>
-    <table class="edubase-table change-history establishment-changes sortable-table expanding-table @Html.Conditional(!Model.SingleEstablishment, "multi-estab-changes")" id="changes-table">
+    <table class="edubase-table sortable-table table-tight" id="changes-table">
         <caption class="visuallyhidden">Establishment change history search results</caption>
         <thead>
             <tr>
-                <th scope="col" class="cell-edate multi-line">
-                    <a href="@Url.SortUrl("effectiveDateUtc")"
-                       class="@Html.Conditional(sortField == "effectiveDateUtc", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Date<br>changed</a>
-                </th>
-                @if (!Model.SingleEstablishment)
+            @foreach (var tableColumn in tableColumns)
+            {
+                if (tableColumn.Item3 || !Model.SingleEstablishment)
                 {
-                    <th scope="col" class="cell-urn  single-line">
-                        <a href="@Url.SortUrl("establishmentUrn")"
-                           class="@Html.Conditional(sortField == "establishmentUrn", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")"><abbr title="Unique Reference Number">URN</abbr></a>
-                    </th>
-                    <th scope="col" class="cell-estab  single-line">
-                        <a href="@Url.SortUrl("establishmentName")"
-                           class="@Html.Conditional(sortField == "establishmentName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Establishment</a>
+                    <th scope="col">
+                        <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
+                        class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                        aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
                     </th>
                 }
-                <th scope="col" class="cell-updatedfield multi-line">
-                    <a href="@Url.SortUrl("fieldName")"
-                       class="@Html.Conditional(sortField == "fieldName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Updated<br>field</a>
-                </th>
-                <th scope="col" class="cell-oldvalue multi-line">
-                    <a href="@Url.SortUrl("oldValue")"
-                       class="@Html.Conditional(sortField == "oldValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Old<br>value</a>
-                </th>
-                <th scope="col" class="cell-newvalue multi-line">
-                    <a href="@Url.SortUrl("newValue")"
-                       class="@Html.Conditional(sortField == "newValue", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">New<br/>value</a>
-                </th>
-                <th scope="col" class="cell-suggested multi-line">
-                    <a href="@Url.SortUrl("originatorUserName")"
-                       class="@Html.Conditional(sortField == "originatorUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Suggested<br />by</a>
-                </th>
-                <th scope="col" class="cell-suggested cell-approvedby multi-line">
-                    <a href="@Url.SortUrl("approverUserName")"
-                       class="@Html.Conditional(sortField == "approverUserName", "selected-sort") @(sortDir == "asc"? "sorted-asc": "sorted-desc")">Approved<br>by</a>
-                </th>
+            }
             </tr>
         </thead>
         <tbody>
@@ -65,13 +59,13 @@
                     @if (!Model.SingleEstablishment)
                     {
                         <td data-label="URN">@Html.RouteLink(item.EstablishmentUrn?.ToString() ?? "Unknown", "EstabDetails", new { id = item.EstablishmentUrn })</td>
-                        <td data-label="Establishment">@Html.RouteLink(item.EstablishmentName ?? "Unknown", "EstabDetails", new { id = item.EstablishmentUrn })</td>
+                        <td data-label="Establishment" class="table-tight--break-word">@Html.RouteLink(item.EstablishmentName ?? "Unknown", "EstabDetails", new { id = item.EstablishmentUrn })</td>
                     }
-                    <td data-label="Updated field">@item.FieldName</td>
-                    <td data-label="Old value">@item.OldValue</td>
-                    <td data-label="New value">@item.NewValue</td>
-                    <td data-label="Suggested by">@item.SuggesterName</td>
-                    <td data-label="Approved by">@item.ApproverName</td>
+                    <td data-label="Updated field" class="table-tight--break-word">@item.FieldName</td>
+                    <td data-label="Old value" class="table-tight--break-word">@item.OldValue</td>
+                    <td data-label="New value" class="table-tight--break-word">@item.NewValue</td>
+                    <td data-label="Suggested by" class="table-tight--break-word">@item.SuggesterName</td>
+                    <td data-label="Approved by" class="table-tight--break-word">@item.ApproverName</td>
                 </tr>
             }
         </tbody>
