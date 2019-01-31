@@ -110,41 +110,13 @@
                             <thead>
                                 <tr>
                                     <th class="cell-checkbox"><span class="visuallyhidden">Checkbox</span></th>
-                                    <th scope="col" class="cell-urn">
-                                        <a href="#" v-on:click.prevent="setSort('establishmentUrn')"
-                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='establishmentUrn' ? 'selected-sort': '' ]"><abbr title="Unique Reference Number">URN</abbr></a>
-                                    </th>
-                                    <th scope="col" class="cell-urn">
-                                        <a href="#" v-on:click.prevent="setSort('establishmentLAESTAB')"
-                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='establishmentLAESTAB' ? 'selected-sort': '' ]">DfE Number</a>
-                                    </th>
-                                    <th scope="col" class="cell-estab">
-                                        <a href="#" v-on:click.prevent="setSort('establishmentName')"
-                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='establishmentName' ? 'selected-sort': '' ]">Establishment</a>
-                                    </th>
-                                    <th scope="col" class="cell-updatedfield">
-                                        <a href="#" v-on:click.prevent="setSort('fieldName')"
-                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='fieldName' ? 'selected-sort': '' ]">Updated field</a>
-                                    </th>
-                                    <th scope="col" class="cell-oldvalue">
-                                        <a href="#" v-on:click.prevent="setSort('oldValue')"
-                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='oldValue' ? 'selected-sort': '' ]">Old value</a>
-                                    </th>
-                                    <th scope="col" class="cell-newvalue">
-                                        <a href="#" v-on:click.prevent="setSort('newValue')"
-                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='newValue' ? 'selected-sort': '' ]">New value</a>
-                                    </th>
-                                    <th scope="col" class="cell-edate multi-line">
-                                        <a href="#" v-on:click="setSort('effectiveDateUtc')"
-                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='effectiveDateUtc' ? 'selected-sort': '' ]">Effective<br/>date</a>
-                                    </th>
-                                    <th scope="col" class="cell-rdate multi-line">
-                                        <a href="#" v-on:click.prevent="setSort('requestedDateUtc')"
-                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='requestedDateUtc' ? 'selected-sort': '' ]">Date<br/>requested</a>
-                                    </th>
-                                    <th scope="col" class="cell-suggested multi-line">
-                                        <a href="#" v-on:click="setSort('originatorFullName')"
-                                        v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortType==='originatorFullName' ? 'selected-sort': '' ]">Suggested<br/>by</a>
+                                    <th v-for="(value, key) in tableColumns" :class="'cell-' + key.toLowerCase()">
+                                        <a
+                                            href="#"
+                                            v-on:click.prevent="setSort(key)"
+                                            v-bind:class="[ sortType===key && sortAscending ? 'selected-sort sorted-asc' : '', sortType===key && !sortAscending ? 'selected-sort sorted-desc' : '']"
+                                            :aria-label="[ sortType===key && sortAscending ? value + ' is sorted in an ascending order. Click to change order. All other columns are sortable.' : '', sortType===key && !sortAscending ? value + ' is sorted in a descending order. Click to change order. All other columns are sortable.' : '', sortType===key ? '' : value + '. Click to sort data by this column.' ]"
+                                        >{{ value }}</a>
                                     </th>
                                 </tr>
                             </thead>

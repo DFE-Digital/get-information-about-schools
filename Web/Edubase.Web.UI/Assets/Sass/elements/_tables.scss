@@ -165,15 +165,6 @@ table tbody .url {
         padding-top: 12px;
     }
 
-    thead th {
-        padding-bottom: 0;
-        padding-top: 18px;
-
-        &.multi-line {
-            padding-top: 8px;
-        }
-    }
-
     thead .cell-checkbox {
         height: auto;
     }
@@ -206,19 +197,20 @@ table tbody .url {
         }
     }
 
-    .cell-urn {
+    .cell-establishmenturn,
+    .cell-establishmentlaestab {
         @include media(desktop) {
             width: 40px;
         }
     }
 
-    .cell-estab {
+    .cell-establishmentname {
         @include media(desktop) {
             width: 80px;
         }
     }
 
-    .cell-updatedfield {
+    .cell-fieldname {
         @include media(desktop) {
             width: 80px;
         }
@@ -236,19 +228,19 @@ table tbody .url {
         }
     }
 
-    .cell-edate {
+    .cell-effectivedateutc {
         @include media(desktop) {
             width: 58px;
         }
     }
 
-    .cell-rdate {
+    .cell-requesteddateutc {
         @include media(desktop) {
             width: 58px;
         }
     }
 
-    .cell-suggested {
+    .cell-originatorfullname {
         @include media(desktop) {
             width: 63px;
         }
@@ -435,45 +427,24 @@ table tbody .url {
         }
     }
 
-    .cell-edate {
-        width: 11%;
-        padding-top: $changeTableThPadding;
-    }
-
     .cell-requesttype {
         width: 11%;
-    }
-
-    .cell-urn {
-        width: 7%;
     }
 
     .cell-groupname {
       width: 15%;
     }
 
-    .cell-estab {
-        width: 17%;
-        padding-top: $changeTableThPadding;
-    }
-
     .cell-change {
         width: 35%;
-    }
-
-    .cell-suggested {
-        width: 12%;
-        padding-top: $changeTableThPadding;
     }
 
     &.establishment-changes .cell-urn {
         padding-top: $changeTableThPadding;
     }
 
-    .cell-updatedfield,
     .cell-oldvalue,
-    .cell-newvalue,
-    .cell-suggested {
+    .cell-newvalue {
         padding-top: $changeTableThPadding;
     }
 

@@ -3,9 +3,9 @@
         pageSize: 100,
         apiUrl: '/api/approvals/change-requests',
         confirmUrl: '/api/approvals/change-request'
-        
+
     };
-    
+
     var approvalApp = new Vue({
             el: '#change-approvals',
             data: {
@@ -33,7 +33,18 @@
                 showRejections: false,
                 noReasonSelectedError: false,
                 reasonIds: [],
-                noItemsSelected: true
+                noItemsSelected: true,
+                tableColumns: {
+                  establishmentUrn: 'URN',
+                  establishmentLAESTAB: 'DfE Number',
+                  establishmentName: 'Establishment',
+                  fieldName: 'Updated field',
+                  oldValue: 'Old value',
+                  newValue: 'New value',
+                  effectiveDateUtc: 'Effective date',
+                  requestedDateUtc: 'Date requested',
+                  originatorFullName: 'Suggested by',
+                }
             },
             created: function() {
                 this.getChangesData();
@@ -82,7 +93,7 @@
                         })[0];
 
                         reasonText += reason.title + '\n' + reason.content + '\n\n';
-                       
+
                     }
                     this.reason = reasonText;
                     this.reasonIds = [];
@@ -113,7 +124,7 @@
                     this.isProcessing = true;
                     var sortDir = this.sortAscending ? '-asc' : '-desc';
                     $('#changes-table').find(':checkbox').prop('checked', false);
-                    
+
                     $.ajax({
                         url: defaults.apiUrl,
                         data: {
@@ -126,7 +137,7 @@
                             self.changes =  data.items;
                             self.isProcessing = false;
                             if (callback) {
-                                callback.call(self);                                
+                                callback.call(self);
                             }
                         },
                         error: function (jqxhr) {
@@ -146,7 +157,7 @@
                     window.setTimeout(function() {
                         $("#reason").data().textCount.setCount();
                     },0);
-                    
+
                 },
                 updateCount: function (removedCount) {
                     this.currentCount = this.currentCount - removedCount;
@@ -179,7 +190,7 @@
                             return Number(item.value);
                         });
                         removedIds = $.makeArray(removedIds);
-                       
+
                         $.ajax({
                             url: defaults.confirmUrl,
                             contentType: 'application/json; charset=utf-8',
@@ -206,7 +217,7 @@
                                     self.apiBork = jqXHR.responseJSON;
                                 }
                             }
-                        });                       
+                        });
                     }
                 },
                 approveSelection: function () {
@@ -236,11 +247,11 @@
                             method: 'post',
                             data: JSON.stringify({
                                 action: 'approve',
-                                'ids': removedIds                                
+                                'ids': removedIds
                             }),
                             success: function (data) {
                                 self.getChangesData(0, self.approveSuccessCallback);
-                                
+
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
                                 var responses = JSON.parse(jqXHR.responseText);
@@ -255,7 +266,7 @@
                                     self.apiBork = jqXHR.responseJSON;
                                 }
                             }
-                        });                      
+                        });
                     }
                 }
             }
