@@ -105,29 +105,13 @@
                                 <caption class="visuallyhidden">Academy openings</caption>
                                 <thead>
                                     <tr>
-                                        <th scope="col" class="cell-openingdate">
-                                            <a href="#" v-on:click.prevent="sortOpenings('openingDate')"
-                                                v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='openingDate' ? 'selected-sort': '' ]">Opening date</a>
-                                        </th>
-                                        <th scope="col" class="cell-urn">
-                                            <a href="#" v-on:click.prevent="sortOpenings('urn')"
-                                                v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='urn' ? 'selected-sort': '' ]"><abbr title="Unique Reference Number">URN</abbr></a>
-                                        </th>
-                                        <th scope="col" class="cell-estabname">
-                                            <a href="#" v-on:click.prevent="sortOpenings('name')"
-                                                v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='name' ? 'selected-sort': '' ]">Establishment name</a>
-                                        </th>
-                                        <th scope="col" class="cell-estabtype">
-                                            <a href="#" v-on:click.prevent="sortOpenings('establishmentType')"
-                                                v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='establishmentType' ? 'selected-sort': '' ]">Establishment type</a>
-                                        </th>
-                                        <th scope="col" class="cell-predecessor-urn">
-                                            <a href="#" v-on:click.prevent="sortOpenings('predecessorUrn')"
-                                                v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='predecessorUrn' ? 'selected-sort': '' ]">Predecessor <abbr title="Unique Reference Number">URN</abbr></a>
-                                        </th>
-                                        <th scope="col" class="cell-predecessor-name">
-                                            <a href="#" v-on:click.prevent="sortOpenings('predecessorName')"
-                                                v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='predecessorName' ? 'selected-sort': '' ]">Predecessor name</a>
+                                        <th v-for="(value, key) in tableColumns" :class="'cell-' + key.toLowerCase()">
+                                            <a
+                                                href="#"
+                                                v-on:click.prevent="sortOpenings(key)"
+                                                v-bind:class="[ sortKey===key && sortAscending ? 'selected-sort sorted-asc' : '', sortKey===key && !sortAscending ? 'selected-sort sorted-desc' : '']"
+                                                :aria-label="[ sortKey===key && sortAscending ? value + ' is sorted in an ascending order. Click to change order. All other columns are sortable.' : '', sortKey===key && !sortAscending ? value + ' is sorted in a descending order. Click to change order. All other columns are sortable.' : '', sortKey===key ? '' : value + '. Click to sort data by this column.' ]"
+                                            >{{ value }}</a>
                                         </th>
                                         <th scope="col" class="cell-edit"><span class="visuallyhidden">Action links</span></th>
                                     </tr>

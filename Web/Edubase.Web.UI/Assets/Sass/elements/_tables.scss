@@ -56,6 +56,11 @@ table tbody .url {
   word-break: break-all;
 }
 
+.table-tight {
+  .table-tight--break-word {
+    word-break: break-word;
+  }
+}
 
 .borderless {
     width: 100%;
@@ -160,19 +165,6 @@ table tbody .url {
         padding-top: 12px;
     }
 
-    thead th {
-        padding-bottom: 0;
-        padding-top: 18px;
-
-        &.multi-line {
-            padding-top: 8px;
-        }
-
-        a {
-            padding-bottom: 8px;
-        }
-    }
-
     thead .cell-checkbox {
         height: auto;
     }
@@ -205,19 +197,20 @@ table tbody .url {
         }
     }
 
-    .cell-urn {
+    .cell-establishmenturn,
+    .cell-establishmentlaestab {
         @include media(desktop) {
             width: 40px;
         }
     }
 
-    .cell-estab {
+    .cell-establishmentname {
         @include media(desktop) {
             width: 80px;
         }
     }
 
-    .cell-updatedfield {
+    .cell-fieldname {
         @include media(desktop) {
             width: 80px;
         }
@@ -235,19 +228,19 @@ table tbody .url {
         }
     }
 
-    .cell-edate {
+    .cell-effectivedateutc {
         @include media(desktop) {
             width: 58px;
         }
     }
 
-    .cell-rdate {
+    .cell-requesteddateutc {
         @include media(desktop) {
             width: 58px;
         }
     }
 
-    .cell-suggested {
+    .cell-originatorfullname {
         @include media(desktop) {
             width: 63px;
         }
@@ -413,12 +406,6 @@ table tbody .url {
     }
 }
 
-.establishment-changes {
-    thead th {
-        padding-top: 0;
-    }
-}
-
 .change-history {
     table-layout: fixed;
 
@@ -440,43 +427,24 @@ table tbody .url {
         }
     }
 
-    .cell-edate {
-        width: 11%;
-        padding-top: $changeTableThPadding;
-    }
-
     .cell-requesttype {
         width: 11%;
-        padding-top: $changeTableThPadding;
     }
 
-    .cell-urn {
-        width: 7%;
-    }
-
-    .cell-estab {
-        width: 17%;
-        padding-top: $changeTableThPadding;
+    .cell-groupname {
+      width: 15%;
     }
 
     .cell-change {
-        width: 44%;
-        padding-top: $changeTableThPadding;
-    }
-
-    .cell-suggested {
-        width: 12%;
-        padding-top: $changeTableThPadding;
+        width: 35%;
     }
 
     &.establishment-changes .cell-urn {
         padding-top: $changeTableThPadding;
     }
 
-    .cell-updatedfield,
     .cell-oldvalue,
-    .cell-newvalue,
-    .cell-suggested {
+    .cell-newvalue {
         padding-top: $changeTableThPadding;
     }
 
@@ -493,6 +461,11 @@ table tbody .url {
 
 
 .sortable-table {
+    thead th {
+      padding-bottom: 8px;
+      vertical-align: middle;
+    }
+
     thead a {
         text-decoration: none;
         font-weight: normal;
@@ -526,8 +499,6 @@ table tbody .url {
         font-weight: bold;
         position: relative;
         padding-right: 14px;
-        padding-bottom: 8px;
-
 
         &.sorted-asc:after {
             width: 0;
@@ -536,7 +507,7 @@ table tbody .url {
             content: '';
             right: 0;
             top: 50%;
-            margin-top: -8px;
+            margin-top: -4px;
             border-left: 4px solid transparent;
             border-right: 4px solid transparent;
             border-bottom: 7px solid $govuk-blue;
@@ -549,7 +520,7 @@ table tbody .url {
             content: '';
             right: 0;
             top: 50%;
-            margin-top: -8px;
+            margin-top: -4px;
             border-left: 4px solid transparent;
             border-right: 4px solid transparent;
             border-top: 7px solid $govuk-blue;
@@ -593,115 +564,4 @@ table tbody .url {
 
 table.change-history {
     margin-bottom: 20px;
-}
-
-.expanding-table {
-    .not-a-link {
-        display: block;
-        padding-top: 12px;
-    }
-
-    thead th {
-        padding-top: 8px;
-
-        a {
-            padding-top: 12px;
-
-            &:after {
-                //top: 65% !important;
-            }
-        }
-
-        &.cell-edate {
-            width: 13%;
-        }
-    }
-
-    .multi-line {
-        a {
-            padding-top: 0;
-        }
-
-        .selected-sort {
-            &:after {
-                //top: 76%;
-            }
-        }
-    }
-
-    .cell-suggested {
-        width:14%;
-        a {
-            display: block;
-            max-width: 77%;
-        }
-    }
-}
-
-table.expanded-table {
-    thead th {
-        a.selected-sort.sorted-asc::after,
-        a.selected-sort.sorted-desc::after {
-            margin-top: 0;
-        }
-    }
-
-    thead th.cell-estab {
-        a.sorted-asc.selected-sort:after {
-            margin-top: -8px;
-        }
-    }
-}
-
-.multi-estab-changes {
-    .cell-oldvalue, .cell-newvalue {
-        width: 9.5%;
-    }
-
-    .cell-suggested {
-        width: 13%;
-    }
-
-    .cell-urn {
-        width: 8%;
-
-        .selected-sort:after {
-            right: 1px;
-        }
-    }
-
-    .cell-estab {
-        .selected-sort:after {
-            right: 2px;
-        }
-
-        .sorted-desc.selected-sort:after {
-            margin-top: 0;
-        }
-    }
-
-    thead th {
-        padding-right: 3px;
-
-        a {
-            max-width: 95%;
-            display: block;
-        }
-    }
-}
-
-.group-change-history {
-    .cell-edate {
-        padding-right: 4px;
-    }
-    .cell-suggested {
-        width: 16%;
-    }
-}
-
-.establishment-changes {
-    thead .cell-updatedfield a {
-        display: block;
-        max-width: 75%;
-    }
 }
