@@ -85,18 +85,16 @@
                     <table class="approval-changes edubase-table sortable-table">
                         <caption class="visuallyhidden">Governance change history</caption>
                         <thead>
-                        <tr>
+                            <tr>
                             @foreach (var tableColumn in tableColumns)
                             {
                                 <th scope="col">
                                     <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
-                                       class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort")
-                                              @Html.Conditional(sortDir.Contains("asc"), "sorted-asc")
-                                              @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
-                                       aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
+                                    class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                                    aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
                                 </th>
                             }
-                        </tr>
+                            </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model.ChangeHistory.Items)
