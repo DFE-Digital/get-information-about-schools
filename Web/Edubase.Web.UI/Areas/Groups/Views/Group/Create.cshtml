@@ -38,7 +38,7 @@
         <div class="column-half">
             <h2 class="heading-medium">@Model.EntityName.ToSentenceCase() details</h2>
             <div class="form-group @Html.ValidationCssClassFor(x=>x.GroupName)">
-                <label for="name" class="form-label">@Model.FieldNamePrefix name</label>
+                <label for="GroupName" class="form-label">@Model.FieldNamePrefix name</label>
                 @Html.ValidationMessageFor(x => x.GroupName)
                 @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
                 {
