@@ -53,10 +53,7 @@
 
         </div>
 
-        @if (User.Identity.IsAuthenticated || Model.SelectedTab != SearchViewModel.Tab.Governors)
-        {
-            Html.RenderPartial("Partials/_HelpText");
-        }
+        @{ Html.RenderPartial("Partials/_HelpText");}
 
     </div>
 
