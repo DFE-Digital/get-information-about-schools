@@ -302,10 +302,8 @@
                         <dl class="nested-items">
                             <dt>
                                 <input id="@(name)_@item.Id" class="filter-group-title  filter-input" type="checkbox" @Html.Conditional(item.ChildItems.Any(x=> selectedItems.Contains(x.Id)), "checked")/>
-                                <label for="@(name)_@item.Id" class="filter-radio">
-                                    @item
-                                    <a href="#" class="child-option-toggle"></a>
-                                </label>
+                                <label for="@(name)_@item.Id" class="filter-radio">@item</label>
+                                <a href="#" class="child-option-toggle"><span class="visually-hidden">Show types within @item</span></a>
                             </dt>
                             <dd class="filter-group">
                                 @foreach (var child in item.ChildItems)
@@ -405,8 +403,10 @@
             <div class="js-auto-height-inner">
                 <div class="form-group">
                     <fieldset class="range-group">
+                        <legend class="visuallyhidden">Enter the radius in miles</legend>
                         <span class="error-message hidden">Please check the radius you have entered</span>
                         <span class="inline-form-control">
+                            <label for="RadiusInMiles" class="visuallyhidden">Radius in miles</label>
                             <input type="text" id="RadiusInMiles" name="@M.BIND_ALIAS_RADIUS" value="@Model.GetRadiusOption()" class="form-control" maxlength="5" />
                             &nbsp;miles
                         </span>

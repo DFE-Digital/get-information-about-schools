@@ -25,7 +25,7 @@ else if (Model.Results.Count > 0)
                 {"maxPages", 5 }
             })
         </div>
-      
+
         <div class="form-group">
             @SortBySelector("Sort by")
         </div>
@@ -42,7 +42,7 @@ else if (Model.Results.Count > 0)
                 {
                     <p class="additional-closed">Closed</p>
                 }
-                
+
                 <dl>
                     <dt>Address:</dt>
                     <dd>@Model.Addresses[result]</dd>
@@ -87,8 +87,8 @@ else
 
 @helper SortBySelector(string label)
 {
-        <label class="form-label">@label:</label>
-        <select class="form-control trigger-result-update sortby-selector" name="@M.BIND_ALIAS_SORT_BY">
+        <label class="form-label" for="sortby-selector">@label:</label>
+        <select class="form-control trigger-result-update sortby-selector" name="@M.BIND_ALIAS_SORT_BY" id="sortby-selector">
             @if (Model.SearchType == eSearchType.Location)
             {
                 <option id="distance" value="d" @Html.Conditional(Model.GetSortOption() == eSortBy.Distance, "selected")>Distance</option>

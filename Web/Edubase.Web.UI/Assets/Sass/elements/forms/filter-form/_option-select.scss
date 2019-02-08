@@ -277,14 +277,9 @@ category: Forms
 
 .govuk-option-select {
     .child-option-toggle {
-        display: block;
-        width: 20px;
-        height: 20px;
-        position: relative;
-        float: right;
+        position: absolute;
         right: 5px;
-        top: 0;
-
+        top: 6px;
 
         &:after {
             content: "";
@@ -303,13 +298,19 @@ category: Forms
     }
 
     .nested-items {
+        .filter-radio {
+          @include box-sizing(border-box);
+          width: 100%;
+          padding-right: 20px;
+        }
+
         .open-children.child-option-toggle::after {
             background-position: 50% top;
         }
 
         dd {
             label {
-                width: calc(100% - 40px);
+                width: calc(100% - 20px);
                 margin-left: 20px;
             }
         }
@@ -333,7 +334,7 @@ category: Forms
     }
 
     .child-option-toggle,
-    .filter-group-title, 
+    .filter-group-title,
     .map-container {
         display: none;
     }
@@ -345,7 +346,7 @@ category: Forms
     .container-head {
         padding-left: 0;
     }
-    
+
     .option-select-label {
         padding-left: 0;
     }
