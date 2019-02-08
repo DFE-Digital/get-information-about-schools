@@ -37,17 +37,22 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Role</label>
-                            <span class="form-hint">For example, trustee</span>
-                            <div class="scroll-wrapper">
-                                <div class="scroll-content" id="governor-roles">
+                            <div class="govuk-option-select form-control-1-2">
+                                <div class="container-head">
+                                    <div class="option-select-label hard--left">Role</div>
+                                    <span class="font-xsmall">For example, trustee</span>
+                                </div>
+                                <div class="options-container" id="governor-roles">
+                                    <fieldset>
                                     @foreach (var governorRole in Model.GovernorRoles)
                                     {
-                                        <label>
-                                            <input name="GovernorSearchModel.RoleId" value="@governorRole.Id.ToString()" type="checkbox" />
+                                        <input name="GovernorSearchModel.RoleId"
+                                        id="govrole-@governorRole.Id.ToString()" value="@governorRole.Id.ToString()" type="checkbox" class="filter-input" />
+                                        <label for="govrole-@governorRole.Id.ToString()" class="filter-radio">
                                             @FormatHelpers.FirstCharToUpper(@governorRole.Name.ToLower())
                                         </label>
                                     }
+                                    </fieldset>
                                 </div>
                             </div>
                         </div>

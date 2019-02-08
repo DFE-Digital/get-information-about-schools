@@ -63,7 +63,7 @@
 }
 
 .remove-suggest-la {
-    background-color: $grey-3;       
+    background-color: $grey-3;
     color: $black;
     padding: 5px 32px 4px 5px;
     text-decoration: none;
@@ -97,7 +97,7 @@
      @include media(mobile) {
         width: 100%;
     }
-      
+
 }
 
 
@@ -116,7 +116,7 @@
     float: left;
     width: 100%;
     min-width: 200px;
-   
+
 
     .twitter-typeahead {
         width: 100%;
@@ -139,23 +139,6 @@
     width: 50%;
      @include media(mobile) {
         width: 100%;
-    }
-}
-
-
-.scroll-wrapper {
-    overflow-y: scroll;
-    width: 50%;
-    border: $black 2px solid;
-    max-height: 200px;
-
-    @include media(mobile) {
-        width: 100%;
-    }
-    label {
-        display: block;
-        padding: 8px;
-        border-bottom: $grey-2 1px solid;
     }
 }
 

@@ -168,7 +168,7 @@ legend {
 }
 
 .form-control-1-2 {
-    width: 50%;
+    width: 100%;
 
     @include media(tablet) {
         width: 50%;
@@ -442,6 +442,6 @@ input[type=number] {
         width: 50%;
         clear: none;
         }
-        
+
     }
 }

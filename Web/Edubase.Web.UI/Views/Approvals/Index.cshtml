@@ -160,14 +160,19 @@
         <div class="modal-inner">
             <h2 class="heading-medium">Add reason(s) for rejection</h2>
             <p class="error-message" v-show="noReasonSelectedError">Please select at least one reason to add.</p>
-            <div class="reasons-wrapper scroll-wrapper">
-                <div class="scroll-content">
-                    <div class="filter-wrapper" v-for="(reason, index) in cannedRejections">
-                        <input :id="'reason-' + reason.id" class="filter-input" :value="reason.id" type="checkbox" v-model="reasonIds">
-                        <label :for="'reason-'+ reason.id" class="filter-radio">
-                            {{reason.title}}
-                        </label>
-                    </div>
+            <div class="govuk-option-select">
+                <div class="container-head">
+                    <div class="option-select-label hard--left">Reasons</div>
+                </div>
+                <div class="options-container">
+                    <fieldset>
+                        <div class="filter-wrapper" v-for="(reason, index) in cannedRejections">
+                            <input :id="'reason-' + reason.id" class="filter-input" :value="reason.id" type="checkbox" v-model="reasonIds">
+                            <label :for="'reason-'+ reason.id" class="filter-radio">
+                                {{reason.title}}
+                            </label>
+                        </div>
+                    </fieldset>
                 </div>
             </div>
         </div>
