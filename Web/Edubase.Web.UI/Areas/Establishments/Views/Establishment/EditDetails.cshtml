@@ -39,11 +39,11 @@
                             School / College name
                         </label>
                         @Html.ValidationMessageFor(x => x.Name)
-                        @Html.TextBoxFor(x => x.Name, new { maxlength = 120, id = "school-name", @class = "form-control", aria_describedby = "help-school-name" })
+                        @Html.TextBoxFor(x => x.Name, new { maxlength = 120, id = "school-name", @class = "form-control" })
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Unique Reference Number (URN)</label>
+                        <label class="form-label" for="urn">Unique Reference Number (URN)</label>
                         @Html.TextBoxFor(x => x.Urn, new { id = "urn", @class = "form-control", placeholder = "auto-generated", @readonly = true, disabled = "disabled" })
                     </div>
 
@@ -108,7 +108,7 @@
                     @if (Model.EditPolicy.HeadTitleId)
                     {
                         <div class="form-group">
-                            <label class="form-label">
+                            <label class="form-label" for="HeadTitleId">
                                 @(Model.EditPolicy.HeadteacherLabel) title
                             </label>
                             @Html.DropDownListFor(x => x.HeadTitleId, Model.HeadTitles, "", new { @class = "form-control" })
@@ -130,7 +130,7 @@
                     @if (Model.EditPolicy.HeadLastName)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.HeadFirstName)">
-                            <label class="form-label">
+                            <label class="form-label" for="headlastname">
                                 @(Model.EditPolicy.HeadteacherLabel) last name
                             </label>
                             @Html.ValidationMessageFor(x => x.HeadLastName)
@@ -147,7 +147,7 @@
                     @if (Model.EditPolicy.HeadEmailAddress)
                     {
                         <div class="form-group">
-                            <label class="form-label">
+                            <label class="form-label" for="HeadEmailAddress">
                                 @(Model.EditPolicy.HeadteacherLabel) email address
                             </label>
                             @Html.TextBoxFor(x => x.HeadEmailAddress, new { maxlength = 120, @class = "form-control", placeholder = "email address" })
@@ -235,7 +235,7 @@
                                 <p class="form-hint">LA code and Establishment number</p>
                                 <label class="form-label visually-hidden" for="lacode"> LA code</label>
                                 <input type="text" id="lacode" class="form-control" size="5" disabled="disabled" value="@Model.LocalAuthorityId" />
-                                <label class="form-label visually-hidden" for="establishmentnumber">Establishment number</label>
+                                <label class="form-label visually-hidden" for="EstablishmentNumber">Establishment number</label>
                                 @Html.TextBoxFor(x => x.EstablishmentNumber, new { @class = "form-control" })
                             </fieldset>
                         </div>
@@ -253,7 +253,7 @@
                     @if (Model.EditPolicy.StatusId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.StatusId)">
-                            <label for="status">Establishment status</label>
+                            <label class="form-label" for="StatusId">Establishment status</label>
                             @Html.DropDownListFor(x => x.StatusId, Model.Statuses, "", new { @class = "form-control" })
                         </div>
                     }
@@ -261,7 +261,7 @@
                     @if (Model.EditPolicy.AdmissionsPolicyId)
                     {
                         <div class="form-group">
-                            <label for="admissionspolicyid" class="form-label">Admissions policy</label>
+                            <label for="AdmissionsPolicyId" class="form-label">Admissions policy</label>
                             @Html.DropDownListFor(x => x.AdmissionsPolicyId, Model.AdmissionsPolicies, "", new { @class = "form-control" })
                         </div>
                     }
@@ -300,7 +300,7 @@
                     @if (Model.EditPolicy.InspectorateId)
                     {
                         <div class="form-group">
-                            <label for="InspectorateId">Inspectorate</label>
+                            <label class="form-label" for="InspectorateId">Inspectorate</label>
                             @Html.DropDownListFor(x => x.InspectorateId, Model.Inspectorates, "", new { @class = "form-control" })
                         </div>
                     }
@@ -317,7 +317,7 @@
                     @if (Model.EditPolicy.ReligiousCharacterId)
                     {
                         <div class="form-group">
-                            <label for="religious-character">Religious character</label>
+                            <label class="form-label" for="religious-character">Religious character</label>
                             @Html.DropDownListFor(x => x.ReligiousCharacterId, Model.ReligiousCharacters, "", new { @class = "form-control", id = "religious-character" })
                         </div>
                     }
@@ -325,7 +325,7 @@
                     @if (Model.EditPolicy.DioceseId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.DioceseId)">
-                            <label for="diocese">Diocese</label>
+                            <label class="form-label" for="diocese">Diocese</label>
                             @Html.DropDownListFor(x => x.DioceseId, Model.Dioceses, "", new { id = "diocese", @class = "form-control" })
                         </div>
                     }
@@ -333,7 +333,7 @@
                     @if (Model.EditPolicy.ReligiousEthosId)
                     {
                         <div class="form-group">
-                            <label for="religious-ethos">Religious ethos</label>
+                            <label class="form-label" for="religious-ethos">Religious ethos</label>
                             @Html.DropDownListFor(x => x.ReligiousEthosId, Model.ReligiousEthoses, "", new { @class = "form-control", id = "religious-ethos" })
                         </div>
                     }
@@ -341,7 +341,7 @@
                     @if (Model.EditPolicy.ProvisionBoardingId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionBoardingId)">
-                            <label for="boarders">Boarders</label>
+                            <label class="form-label" for="boarders">Boarders</label>
                             @Html.DropDownListFor(x => x.ProvisionBoardingId, Model.BoardingProvisions, "", new { @class = "form-control", id = "boarders" })
                         </div>
 
@@ -350,7 +350,7 @@
                     @if (Model.EditPolicy.ProvisionNurseryId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionNurseryId)">
-                            <label for="nursery">Nursery provision</label>
+                            <label class="form-label" for="nursery">Nursery provision</label>
                             @Html.DropDownListFor(x => x.ProvisionNurseryId, Model.NurseryProvisions, "", new { @class = "form-control", id = "nursery" })
                         </div>
                     }
@@ -358,7 +358,7 @@
                     @if (Model.EditPolicy.ProvisionOfficialSixthFormId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ProvisionOfficialSixthFormId)">
-                            <label for="sixthform">Official sixth form</label>
+                            <label class="form-label" for="sixthform">Official sixth form</label>
                             @Html.DropDownListFor(x => x.ProvisionOfficialSixthFormId, Model.OfficialSixthFormProvisions, "", new { @class = "form-control", id = "sixthform" })
                         </div>
                     }
@@ -366,7 +366,7 @@
                     @if (Model.EditPolicy.Capacity)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.Capacity)">
-                            <label for="school-capacity">School capacity</label>
+                            <label class="form-label" for="school-capacity">School capacity</label>
                             @Html.TextBoxFor(x => x.Capacity, new { id = "school-capacity", @class = "form-control", type = "number" })
                         </div>
                     }
@@ -374,7 +374,7 @@
                     @if (Model.EditPolicy.NumberOfPupilsOnRoll)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.NumberOfPupilsOnRoll)">
-                            <label for="NumberOfPupilsOnRoll">Number of pupils</label>
+                            <label class="form-label" for="NumberOfPupilsOnRoll">Number of pupils</label>
                             @Html.TextBoxFor(x => x.NumberOfPupilsOnRoll, new { id = "NumberOfPupilsOnRoll", @class = "form-control", type = "number" })
                         </div>
                     }
@@ -382,7 +382,7 @@
                     @if (Model.EditPolicy.Section41ApprovedId)
                     {
                         <div class="form-group">
-                            <label for="section-41">Section 41 approved</label>
+                            <label class="form-label" for="section-41">Section 41 approved</label>
                             @Html.DropDownListFor(x => x.Section41ApprovedId, Model.Section41ApprovedItems, "", new { @class = "form-control", id = "section-41" })
                         </div>
                     }
@@ -395,7 +395,7 @@
                     @if (Model.EditPolicy.ReasonEstablishmentOpenedId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentOpenedId)">
-                            <label for="reason-establishment-opened">Reason establishment opened</label>
+                            <label class="form-label" for="reason-establishment-opened">Reason establishment opened</label>
                             @Html.ValidationMessageFor(x => x.ReasonEstablishmentOpenedId)
                             @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, Model.ReasonsEstablishmentOpened, "", new { @class = "form-control", id = "reason-establishment-opened" })
                         </div>
@@ -409,7 +409,7 @@
                     @if (Model.EditPolicy.ReasonEstablishmentClosedId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentClosedId)">
-                            <label for="reason-establishment-closed">Reason establishment closed</label>
+                            <label class="form-label" for="reason-establishment-closed">Reason establishment closed</label>
                             @Html.DropDownListFor(x => x.ReasonEstablishmentClosedId, Model.ReasonsEstablishmentClosed, "", new { @class = "form-control", id = "reason-establishment-closed" })
                         </div>
                     }
@@ -545,7 +545,7 @@
                     @if (Model.EditPolicy.Contact_EmailAddress)
                     {
                         <div class="form-group">
-                            <label for="@nameof(Model.Contact_EmailAddress)">
+                            <label class="form-label" for="@nameof(Model.Contact_EmailAddress)">
                                 Email address
                                 <a href="#help-text-email-address" class="icon-help"><span class="visuallyhidden">Help with this field</span></a>
                             </label>
@@ -556,7 +556,7 @@
                     @if (Model.EditPolicy.ContactAlt_EmailAddress)
                     {
                         <div class="form-group">
-                            <label for="@nameof(Model.ContactAlt_EmailAddress)">
+                            <label class="form-label" for="@nameof(Model.ContactAlt_EmailAddress)">
                                 Alternative email address
                                 <a href="#help-text-email-address" class="icon-help"><span class="visuallyhidden">Help with this field</span></a>
                             </label>
@@ -652,7 +652,7 @@
                     @if (Model.EditPolicy.TypeOfResourcedProvisionId)
                     {
                         <div class="form-group">
-                            <label for="resourced-provision-type">
+                            <label class="form-label" for="resourced-provision-type">
                                 Type of resourced provision
                             </label>
                             @Html.DropDownListFor(x => x.TypeOfResourcedProvisionId, Model.TypeOfResourcedProvisions, "", new { @class = "form-control", id = "resourced-provision-type" })
@@ -662,7 +662,7 @@
                     @if (Model.EditPolicy.ResourcedProvisionOnRoll)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ResourcedProvisionOnRoll)">
-                            <label for="@nameof(Model.ResourcedProvisionOnRoll)">Resourced provision number on roll</label>
+                            <label class="form-label" for="resourced-provision-headcount">Resourced provision number on roll</label>
                             @Html.ValidationMessageFor(x => x.ResourcedProvisionOnRoll)
                             @Html.TextBoxFor(x => x.ResourcedProvisionOnRoll, new { @class = "form-control", id = "resourced-provision-headcount", type = "number" })
                         </div>
@@ -680,7 +680,7 @@
                     @if (Model.EditPolicy.SenUnitOnRoll)
                     {
                         <div class="form-group">
-                            <label for="sen-unit-number">SEN unit number on roll</label>
+                            <label class="form-label" for="sen-unit-number">SEN unit number on roll</label>
                             @Html.TextBoxFor(x => x.SenUnitOnRoll, new { @class = "form-control", id = "sen-unit-number", type = "number" })
                         </div>
                     }
@@ -688,7 +688,7 @@
                     @if (Model.EditPolicy.SenUnitCapacity)
                     {
                         <div class="form-group">
-                            <label for="sen-unit-capacity">SEN unit capacity</label>
+                            <label class="form-label" for="sen-unit-capacity">SEN unit capacity</label>
                             @Html.TextBoxFor(x => x.SenUnitCapacity, new { @class = "form-control", id = "sen-unit-capacity", type = "number" })
                         </div>
                     }
@@ -696,7 +696,7 @@
                     @if (Model.EditPolicy.BSOInspectorateId)
                     {
                         <div class="form-group">
-                            <label for="bso-inspectorate">BSO: Inspectorate name</label>
+                            <label class="form-label" for="bso-inspectorate">BSO: Inspectorate name</label>
                             @Html.DropDownListFor(x => x.BSOInspectorateId, Model.BSOInspectorates, "", new { @class = "form-control", id = "bso-inspectorate" })
                         </div>
                     }
