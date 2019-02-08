@@ -28,23 +28,23 @@
         @Html.HiddenFor(x => x.ChangesRequireApprovalCount)
 
         <div class="@Html.Conditional(Model.ChangesSummary != null, "hidden")">
-        
+
             <div class="column-half">
 
                 <button type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveIEBT)">Save</button>
                 @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel mobile-full-width" })
 
                 <div class="form-group first">
-                    <label for="notes">Notes</label>
+                    <label class="form-label" for="Notes">Notes</label>
                     @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "10" })
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(x => x.Associations)
-                
+
                     @Html.TextAreaFor(x => x.Associations, new { @class = "form-control", rows = "10" })
                 </div>
 
-                
+
                 @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Date of last Bridge visit" })
                 @Html.EditorFor(x => x.DateOfLastOfstedVisit, new { title = "Date of last Ofsted visit" })
                 @Html.EditorFor(x => x.DateOfTheLastISIVisit, new { title = "Date of last ISI visit" })
@@ -57,12 +57,12 @@
                 @Html.EditorFor(x => x.NextActionRequiredByFP, new { title = "Next action required by FP"})
 
                 <div class="form-group">
-                    <label for="InspectorateId">Inspectorate</label>
+                    <label class="form-label" for="InspectorateId">Inspectorate</label>
                     @Html.DropDownListFor(x => x.InspectorateId, Model.Inspectorates, "", new { @class = "form-control" })
                 </div>
 
                 <div class="form-group">
-                    <label for="InspectorateId">Independent school type</label>
+                    <label class="form-label" for="IndependentSchoolTypeId">Independent school type</label>
                     @Html.DropDownListFor(x => x.IndependentSchoolTypeId, Model.IndependentSchoolTypes, "", new { @class = "form-control" })
                 </div>
 
@@ -74,7 +74,7 @@
                 @RenderNumericTextBox("Total number of special pupils under a SEN statement/ECHP", x => x.SENStat)
                 @RenderNumericTextBox("Number of special pupils not under a SEN statement/EHCP", x => x.SENNoStat)
                 @RenderNumericTextBox("Total number of pupils in public care", x => x.TotalNumberOfPupilsInPublicCare)
-                
+
                 @RenderNumericTextBox("PT boys (aged 2 and under)", x => x.PTBoysAged2AndUnder)
                 @RenderNumericTextBox("PT boys (aged 3)", x => x.PTBoysAged3)
                 @RenderNumericTextBox("PT boys (aged 4a)", x => x.PTBoysAged4A)
@@ -103,7 +103,7 @@
                     @Html.LabelFor(x => x.BoardingEstablishmentId, "Boarding establishment")
                     @Html.DropDownListFor(x => x.BoardingEstablishmentId, Model.BoardingEstablishment, "", new { @class = "form-control" })
                 </div>
-                
+
                 <fieldset class="toggle-panels" id="proprietor-radios">
                     <legend class="bold-legend">Proprietor</legend>
                     <span class="radio-button-wrap">
@@ -128,7 +128,7 @@
                         @RenderTextBox("Locality", x => x.ProprietorsLocality, "cloneable")
                         @RenderTextBox("Address 3", x => x.ProprietorsAddress3, "cloneable")
                         @RenderTextBox("Town", x => x.ProprietorsTown, "cloneable")
-                        
+
                         <div class="form-group cloneable">
                             <label for="ProprietorsCountyId" class="form-label">County</label>
                             @Html.DropDownListFor(x => x.ProprietorsCountyId, Model.Counties, "", new { @class = "form-control" })
@@ -139,7 +139,7 @@
                         @RenderTextBox("Fax number", x => x.ProprietorsFaxNumber, "cloneable")
                         @RenderTextBox("Email", x => x.ProprietorsEmail, "cloneable")
                     </div>
-                   
+
 
                 </div>
                 <div id="proprietor-body" class="panel-indent edu-edit-panel">
@@ -147,7 +147,7 @@
                     <div id="field-clone-target">
 
                     </div>
-                    
+
                     <h4 class="heading-small edu-section-break">Chair of the proprietary body details</h4>
 
                     @RenderTextBox("Preferred job title", x => x.ChairOfProprietorsBodyPreferredJobTitle)
@@ -156,7 +156,7 @@
                     @RenderTextBox("Locality", x => x.ChairOfProprietorsBodyLocality)
                     @RenderTextBox("Address 3", x => x.ChairOfProprietorsBodyAddress3)
                     @RenderTextBox("Town", x => x.ChairOfProprietorsBodyTown)
-                    
+
                     <div class="form-group cloneable">
                         <label for="@nameof(Model.ChairOfProprietorsBodyCountyId)" class="form-label">County</label>
                         @Html.DropDownListFor(x => x.ChairOfProprietorsBodyCountyId, Model.Counties, "", new { @class = "form-control" })
@@ -168,8 +168,8 @@
                     @RenderTextBox("Email", x => x.ChairOfProprietorsBodyEmail)
 
                 </div>
-                
-                
+
+
 
                 <div class="form-group">
                     @Html.LabelFor(x => x.AccommodationChangedId, "Accommodation changes")
@@ -180,7 +180,7 @@
                     <button type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveIEBT)">Save</button>
                     @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel mobile-full-width" })
                 </div>
-                
+
 
             </div>
 
@@ -238,7 +238,7 @@
                         });
                     })();
                 </script>
-                
+
             }
         }
 
