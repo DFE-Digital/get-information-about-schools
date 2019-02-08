@@ -10,11 +10,11 @@
 
 <div class="grid-row">
     <div class="column-full results-heading">
-        <div class="breadcrumbs">            
-            @Html.ActionLink("Back to find a governor", "Index", "Search", new { area = "", SelectedTab = "Governors", gsearch = gSearch }, null)                        
+        <div class="breadcrumbs">
+            @Html.ActionLink("Back to find a governor", "Index", "Search", new { area = "", SelectedTab = "Governors", gsearch = gSearch }, null)
         </div>
         <h1 class="heading-xlarge">Search results</h1>
-        <a class="download-link @(Model.Count > 5000 ? "prevent-download": "")" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()">Download these search results</a>        
+        <a class="download-link @(Model.Count > 5000 ? "prevent-download": "")" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()">Download these search results</a>
     </div>
     <div class="column-full">
         <div class="warning-message @Html.Conditional(!Model.SelectedLocalAuthorityIds.Any(), "hidden")" id="gov-la-warning">
@@ -79,7 +79,8 @@
                             <div class="option-select-label">Sort by</div>
                             <div class="js-selected-counter"></div>
                         </div>
-                        <select class="form-control trigger-result-update" name="SortBy">
+                        <label for="sortBy" class="visuallyhidden">Sort by</label>
+                        <select class="form-control trigger-result-update" name="SortBy" id="sortBy">
                             <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalAZ, "selected")>alphabetical a-z</option>
                             <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
                         </select>
@@ -148,7 +149,7 @@
                         </div>
 
                     </div>
-                    
+
                     @Selector("Local authority", GovernorSearchViewModel.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds, filterRefine: true, isExtraFilter: true)
 
                     <div id="filter-addtional-controls">
@@ -177,7 +178,7 @@
 {
     <script language="javascript">
         DfE.searchResults.init();
-        $('#filter-form').find('.searchable-filters').searchWithinFilters(); 
+        $('#filter-form').find('.searchable-filters').searchWithinFilters();
     </script>
 }
 
@@ -189,7 +190,7 @@
             <span class="visually-hidden">Search within this filter</span>
             <input type="text" class="filter-search" />
             <button class="field-clear hidden"><span class="visually-hidden">Clear</span></button>
-        </label>        
+        </label>
     </div>
 }
 
@@ -205,7 +206,7 @@
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter">
                 <span class="js-selected-counter-text"></span>
-                
+
             </div>
         </div>
         @if (filterRefine)
