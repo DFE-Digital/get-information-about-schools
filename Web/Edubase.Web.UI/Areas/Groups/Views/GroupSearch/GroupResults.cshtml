@@ -29,7 +29,7 @@
     <div class="column-third">
         <div class="filter-form" id="filter-form">
 
-            <div id="EditSearchCollapse" aria-expanded="true" class="blanket-container">                
+            <div id="EditSearchCollapse" aria-expanded="true" class="blanket-container">
                 <form method="get" action="@Url.Action("Index", "GroupSearch", new { area = "Groups" })">
 
                     <div class="govuk-option-select js-collapsible"
@@ -37,7 +37,8 @@
                         <div class="container-head js-container-head">
                             <div class="option-select-label">Sort by</div>
                         </div>
-                        <select class="form-control trigger-result-update" name="SortBy">
+                        <label for="sortBy" class="visuallyhidden">Sort by</label>
+                        <select class="form-control trigger-result-update" name="SortBy" id="sortBy">
                             <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalAZ , "selected")>Alphabetical A-Z</option>
                             <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
                         </select>
@@ -48,7 +49,7 @@
                         <div class="container-head js-container-head">
                             <div class="option-select-label">Group type</div>
                             <div class="js-selected-counter">
-                                <span class="js-selected-counter-text"></span>                
+                                <span class="js-selected-counter-text"></span>
                             </div>
                         </div>
                         @*<a href="#" class="clear-selections filter-clear">Clear</a>*@
@@ -69,7 +70,7 @@
                                             <label for="group-type_@item.Id" class="filter-radio">
                                                 @item
                                             </label>
-                                        </div>                                        
+                                        </div>
                                     }
                                 </fieldset>
                             </div>
@@ -82,7 +83,7 @@
                             <div class="container-head js-container-head">
                                 <div class="option-select-label">Group status</div>
                                 <div class="js-selected-counter">
-                                    <span class="js-selected-counter-text"></span>                
+                                    <span class="js-selected-counter-text"></span>
                                 </div>
                             </div>
                             @*<a href="#" class="clear-selections filter-clear">Clear</a>*@
@@ -104,14 +105,14 @@
                                                     @item
                                                 </label>
                                             </div>
-                                        }                                            
+                                        }
                                     </fieldset>
                                 </div>
                             </div>
                         </div>
                     }
                     <div id="filter-addtional-controls">
-                        <a href="#" class="add-clear-filters" id="clear-filters">Clear all filters</a>                        
+                        <a href="#" class="add-clear-filters" id="clear-filters">Clear all filters</a>
                     </div>
                     <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
                     @Html.HiddenFor(!Model.GroupSearchModel.Text.IsEmpty(), x => x.GroupSearchModel.Text)
@@ -141,9 +142,9 @@
                 $openClosedSelector.prop('checked', true);
             }
         });
-        
+
         DfE.searchResults.init();
-    
-    
+
+
     </script>
 }
