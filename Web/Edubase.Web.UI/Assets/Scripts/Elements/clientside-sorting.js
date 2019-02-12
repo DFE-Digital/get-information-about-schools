@@ -1,4 +1,4 @@
-﻿// get the table data from the page and sort  
+﻿// get the table data from the page and sort
 // when the table header is clicked upon
 // table headers require `data-sort-key`
 // assume all fields are sortable
@@ -8,12 +8,12 @@
     window.DfE = window.DfE || {};
 
     var defaults = {
-        triggerClassName: '.sort-header',
-        sortDirection: 'asc', 
-        initialSortKey: 'name' 
+        triggerClassName: '.js-sort-header',
+        sortDirection: 'asc',
+        initialSortKey: 'name'
     };
 
-   
+
     function ClientSort(el, opts) {
         this.el = el;
         this.opts = $.extend({}, defaults, opts);
@@ -21,9 +21,9 @@
         this.init();
 
     }
-    
 
-    ClientSort.prototype = {        
+
+    ClientSort.prototype = {
         init: function() {
             var $el = $(this.el);
             var opts = this.opts;
@@ -46,7 +46,7 @@
                 return $(ele).data().sortKey === opts.initialSortKey;
             });
 
-           
+
 
             $tbody.find('tr').each(function () {
                 var $row = $(this);
@@ -125,7 +125,7 @@
                             td.appendChild(text);
                             tr.appendChild(td);
                         }
-                        
+
                     }
                     frag.appendChild(tr);
                 });
@@ -140,11 +140,11 @@
                 var sortClass;
 
                 if ($(this).hasClass('selected-sort')) {
-                    asc = !asc;                    
+                    asc = !asc;
                 }
 
                 asc ? sortClass = 'sorted-asc' : sortClass = 'sorted-desc';
-                $triggers.removeClass('sorted-asc sorted-desc');
+                $triggers.removeClass('selected-sort sorted-asc sorted-desc');
 
                 $(this).addClass('selected-sort');
 
@@ -153,11 +153,11 @@
                 sortKey = $.data(this, 'sortKey');
 
                 if (sort === 'sortText') {
-                   sorted = self.sortData.sort(sortText); 
+                   sorted = self.sortData.sort(sortText);
                 } else if (sort === 'sortDate') {
-                    sorted = self.sortData.sort(sortDate); 
+                    sorted = self.sortData.sort(sortDate);
                 } else {
-                    sorted = self.sortData.sort(sortNumeric); 
+                    sorted = self.sortData.sort(sortNumeric);
                 }
 
                 self.sortData = sorted;
