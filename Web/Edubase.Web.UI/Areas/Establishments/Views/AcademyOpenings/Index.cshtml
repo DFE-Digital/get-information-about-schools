@@ -15,6 +15,7 @@
 </div>
 
 <div id="academy-opening-app" v-cloak>
+    <!-- Error message -->
     <div v-show="Object.keys(apiError).length>0">
         <h1 class="heading-xlarge">Sorry, something went wrong</h1>
         <p>Please try again later.</p>
@@ -28,18 +29,21 @@
         </div>
     </div>
 
+    <!-- Error summary -->
     <div class="error-summary" v-show="recordUpdateErrors.errors">
         <h2 class="error-summary-heading heading-medium">Error updating record</h2>
         <ul class="error-summary-list">
             <li class="error-message" v-for="(item, index) in recordUpdateErrors.errors">
                 {{item.message}}
             </li>
-
         </ul>
     </div>
 
+    <!-- Show when no API errors -->
     <div v-show="Object.keys(apiError).length === 0">
+        <!-- When not editing record -->
         <div class="grid-row" v-show="!editRecord">
+            <!-- Error message -->
             <div class="column-full">
                 <div v-show="loadDataError" class="error-summary">
                     <h2 class="error-summary-heading heading-medium">Something went wrong</h2>
@@ -62,8 +66,10 @@
 
                 </div>
             </div>
+
             <div class="column-full" v-show="!isProcessing">
                 <div class="horizontal-tabs-wrapper">
+                    <!-- Tabs -->
                     <div class="tab-wrap">
                         <ul class="horizontal-tabs">
                             <li><a href="#calendar" class="horizontal-tab">Opening calendar</a></li>
@@ -71,11 +77,13 @@
                         </ul>
                     </div>
 
+                    <!-- Tabs content -->
                     <div class="tab-content-wrapper horizontal-tabs-content" v-cloak>
+                        <!-- Opening calendar -->
                         <div id="calendar" class="tab-content">
 
                             <div class="form-group month-selector">
-                                <label class="form-label">
+                                <label class="form-label" for="opening-date-filter">
                                     Opening date
                                 </label>
                                 <select class="form-control" v-model="selectedDate" v-on:change="buildDatePages" id="opening-date-filter"></select>
@@ -156,6 +164,8 @@
                             </div>
 
                         </div>
+
+                        <!-- Academy search -->
                         <div id="academy-search" class="tab-content">
                             <!-- search app -->
                             <div id="academy-search-app">
@@ -172,7 +182,8 @@
 
                                 </form>
 
-                                <div v-show="presentDetail" class="openings-single-result">
+                                <!-- Search results -->
+                                <div v-show="presentDetail" v-if="od.urn" class="openings-single-result">
                                     <h2 class="heading-small">Establishment Found</h2>
                                     <div class="urn-result">
                                         <h4 class="heading-small">Opening date: {{od.displayDate }}</h4>
@@ -184,7 +195,7 @@
                                             <dt>Establishment type:</dt>
                                             <dd>{{ od.establishmentType }}</dd>
                                             <dt>Predecessor <abbr title="Unique Reference Number">URN</abbr>:</dt>
-                                            <dd><a v-bind:href="detailUrl(od.predecessorUrn )">{{ od.predecessorUrn }}</a></dd>
+                                            <dd><a v-bind:href="detailUrl(od.predecessorUrn )" v-if="od.predecessorUrn">{{ od.predecessorUrn }}</a></dd>
                                             <dt>Predecessor name:</dt>
                                             <dd>{{ od.predecessorName }}</dd>
                                         </dl>
@@ -197,6 +208,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- Record editing -->
         <div class="grid-row" v-show="editRecord" v-cloak>
             <div class="column-full">
                 <h1 class="heading-large">Edit opening detail</h1>
@@ -207,19 +220,19 @@
                     <a href="#" class="button button-secondary" v-on:click="cancelEditClick">Cancel</a>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Unique Reference Number (URN)</label>
-                    <input class="form-control" type="text" :value="od.urn" disabled="disabled" />
+                    <label class="form-label" for="est-urn">Unique Reference Number (URN)</label>
+                    <input class="form-control" type="text" :value="od.urn" disabled="disabled" id="est-urn" />
                 </div>
 
                 <div v-bind:class="['form-group',  updateNameError ? 'error' : '' ]">
-                    <label class="form-label">Establishment name </label>
+                    <label class="form-label" for="est-name">Establishment name </label>
                     <span class="error-message" v-show="updateNameError">Please enter the establishment name</span>
-                    <input class="form-control" type="text" v-model="updateName" v-on:change="attachUnload" />
+                    <input class="form-control" type="text" v-model="updateName" v-on:change="attachUnload" id="est-name" />
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Establishment type</label>
-                    <input class="form-control" type="text" :value="od.establishmentType" disabled="disabled" />
+                    <label class="form-label" for="est-type">Establishment type</label>
+                    <input class="form-control" type="text" :value="od.establishmentType" disabled="disabled" id="est-type" />
                 </div>
 
                 <div v-bind:class="['form-group range-group', openDateError ? 'error' : '' ]">
@@ -246,13 +259,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Predecessor <abbr title="Unique Reference Number">URN</abbr></label>
-                    <input type="text" class="form-control" disabled="disabled" :value="od.predecessorUrn" />
+                    <label class="form-label" for="est-pred-urn">Predecessor <abbr title="Unique Reference Number">URN</abbr></label>
+                    <input type="text" class="form-control" disabled="disabled" :value="od.predecessorUrn" id="est-pred-urn" />
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Predecessor name</label>
-                    <input type="text" class="form-control" disabled="disabled" :value="od.predecessorName" />
+                    <label class="form-label" for="est-pred-name">Predecessor name</label>
+                    <input type="text" class="form-control" disabled="disabled" :value="od.predecessorName" id="est-pred-name" />
                 </div>
 
                 <div class="button-row lower">
