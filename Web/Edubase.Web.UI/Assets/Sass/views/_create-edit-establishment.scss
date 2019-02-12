@@ -42,7 +42,7 @@ select#headtitleid {
 
 .link-establishment-form {
     .form-control {
-        width: 150px; 
+        width: 150px;
         padding: 5px;
     }
 
@@ -75,9 +75,9 @@ select#headtitleid {
     legend {
         margin-bottom: 0;
     }
-    
+
     label {
-        display: block;        
+        display: block;
     }
     .inline-form-control {
         display: block;
@@ -103,7 +103,7 @@ legend {
 
 .date-group {
     .form-control {
-        width: 60px;        
+        width: 60px;
     }
     legend {
         margin-bottom: 8px;
@@ -123,7 +123,7 @@ legend {
         margin-bottom: 0;
         max-width: 100%;
     }
-    
+
 }
 
 .sen-provision {
@@ -260,23 +260,10 @@ legend {
 }
 
 
-div.governor-list, div.governor-grid {
+.governor-list, .governor-grid {
     margin-bottom: 30px;
 
-    table {
-        th, td {
-            text-align: left;
-            font-size: 14px;
-            padding: 15px 8px 15px 0px;
-        }
-
-        th {
-            font-weight: bold;
-            padding-bottom: 8px;
-        }
-    }
-
-    p.none {
+    .none {
         font-size: 14px;
     }
 
@@ -289,25 +276,27 @@ div.governor-list, div.governor-grid {
     }
 }
 
+// Governor tables have a horizontal alignment without
+// the need for empty columns
+// Name | (Appointed by) | From | (To)
 table.governors {
-    td:nth-child(1), th:nth-child(1) {
+    .col-name.has-appointed {
         width: 20%;
     }
 
-    td:nth-child(2), th:nth-child(2) {
-        width: 25%;
+    .col-appointed {
+        width: 50%;
     }
 
-    td:nth-child(3), th:nth-child(3) {
-        width: 30%;
+    .col-fromDate,
+    .col-toDate {
+        width: 15%
     }
 
-    td:nth-child(4), th:nth-child(4) {
-        width: 12.5%;
-    }
-
-    td:nth-child(5), th:nth-child(5) {
-        width: 12.5%;
+    th:last-child {
+        &.col-fromDate {
+            width: 30%;
+        }
     }
 }
 
@@ -316,8 +305,6 @@ table.governors.historical {
         width:17.5%;
     }
 }
-
-
 
 .governors-section {
     margin-bottom: 30px;
@@ -423,7 +410,7 @@ div.shared-governor-list {
 
 
 .exapanding-list-wrap {
-    .shared-governor {        
+    .shared-governor {
         padding-left: 26px;
         padding-top: 0;
         margin: 0 15px 20px 16px;
@@ -539,12 +526,12 @@ div.shared-governor-list {
         width: 66%;
         display: inline-block;
         margin-right: 12px;
-        
+
         .is-mac & {
             font-size: 19px;
         }
     }
-    
+
     .button {
         display: inline-block;
         font-size: 16px;

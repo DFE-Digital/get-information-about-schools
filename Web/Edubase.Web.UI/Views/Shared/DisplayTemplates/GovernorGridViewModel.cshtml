@@ -30,8 +30,10 @@
                         {
                             if (!String.IsNullOrEmpty(column.SortKey))
                             {
-                                <th scope="col">
-                                    <a href="#" class="sort-header" data-sort-key="@column.SortKey" data-sort-type="@column.SortType">@(column.Text ?? "Not recorded")</a>
+                                <th scope="col" class="col-@column.SortKey @(@Model.HeaderCells[1].SortKey == "appointed" ? "has-appointed" : "")">
+                                    <a href="#" class="js-sort-header" data-sort-key="@column.SortKey" data-sort-type="@column.SortType">
+                                        @(column.Text ?? "Not recorded")
+                                    </a>
                                 </th>
                             }
                             else
@@ -51,7 +53,7 @@
                         <tr>
                             @foreach (var cell in row.Cells)
                             {
-
+                                // TODO: These data labels are being stripped off, probably via JS
                                 <td data-label="@Model.HeaderCells[cellCount].Text">@(cell.Text ?? "Not recorded")</td>
                                 cellCount++;
                             }
