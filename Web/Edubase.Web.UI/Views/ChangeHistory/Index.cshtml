@@ -42,7 +42,8 @@
             </div>
 
             <div class="tab-content-wrapper horizontal-tabs-content">
-                <div id="establishments" class="tab-content @((Model.SelectedTab != ChangeHistoryViewModel.Tab.Establishments) ? "hidden-tab-content" : "")" aria-hidden="@(Model.SelectedTab != ChangeHistoryViewModel.Tab.Establishments)">
+                @if (Model.SelectedTab == ChangeHistoryViewModel.Tab.Establishments) {
+                <div id="establishments" class="tab-content">
 
                     <fieldset class="search-types-accordion">
                         <legend>Search by:</legend>
@@ -152,7 +153,10 @@
                         </ul>
                     </fieldset>
                 </div>
-                <div id="groups" class="tab-content @((Model.SelectedTab != ChangeHistoryViewModel.Tab.Groups) ? "hidden-tab-content" : "")" aria-hidden="@(Model.SelectedTab != ChangeHistoryViewModel.Tab.Groups)">
+                }
+                @if (Model.SelectedTab == ChangeHistoryViewModel.Tab.Groups)
+                {
+                <div id="groups" class="tab-content">
                     <fieldset>
                         <legend>Search by:</legend>
                         <ul>
@@ -228,6 +232,7 @@
                         </ul>
                     </fieldset>
                 </div>
+                }
             </div>
         </div>
     </div>
