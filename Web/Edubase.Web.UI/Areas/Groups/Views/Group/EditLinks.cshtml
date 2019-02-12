@@ -10,7 +10,7 @@
     Layout = "_EditLayoutPage.cshtml";
 }
 <div class="tab-content">
-    
+
 @using (Html.BeginForm("EditLinks", "Group", new { area = "Groups" }, FormMethod.Post))
 {
     @Html.HiddenFor(x => x.GroupUId)
@@ -38,6 +38,7 @@
             <span class="bold-xsmall">Add establishment</span>
             <p class="font-xsmall">Enter the establishment <abbr title="Unique Reference Number">URN</abbr></p>
             <div class="form-group add-establishment-link @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)">
+                <label for="LinkedEstablishments_LinkedEstablishmentSearch_Urn" class="visuallyhidden">Search for an establishment</label>
                 @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
                 @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "form-control form-control-1-2 search-box" })
                 <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" class="button inline-submit">Find</button>
@@ -156,7 +157,7 @@
             }
             @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-secondary cancel mobile-full-width" })
 
-           
+
         </div>
 }
 </div>
