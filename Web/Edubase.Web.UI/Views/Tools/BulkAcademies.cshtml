@@ -1,18 +1,22 @@
 ﻿@{
     ViewBag.Title = "Bulk create new academies";
     ViewBag.bodyClasses = "bulk-academy-create";
+}
 
-    <div class="breadcrumbs">
-        <ul>
-            <li>
-                @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-            </li>
-            <li>
-                @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
-            </li>
-        </ul>
-    </div>
-}<div id="bulk-academies" v-cloak>
+<div class="breadcrumbs">
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+        <li>
+            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+        </li>
+    </ul>
+</div>
+
+<div id="bulk-academies" v-cloak>
+
+    <!-- API Errors -->
     <div v-show="Object.keys(apiError).length> 0">
         <h1 class="heading-xlarge">Sorry, something went wrong</h1>
         <p>Please try again later.</p>
@@ -25,7 +29,11 @@
             </code>
         </div>
     </div>
+
+    <!-- No API errors -->
      <div v-show="Object.keys(apiError).length === 0">
+
+         <!-- Heading and intro paragraph -->
          <div class="grid-row">
              <div class="column-full">
                  <h1 class="heading-xlarge">{{pageHeading}}</h1>
@@ -35,8 +43,10 @@
              </div>
          </div>
 
-         <form id="bulk-acamedmy-create">
+         <form id="bulk-academy-create">
              <div class="grid-row" v-show="!isComplete && !isProcessing">
+
+                 <!-- Errors -->
                  <div class="column-full">
                      <div class="error-summary" v-show="showGlobalError">
                          <h2 class="heading-medium error-summary-heading invalid-urn" v-show="duplicateUrn || invalidUrn">
@@ -56,15 +66,15 @@
                          <ul class="error-summary-list">
                              <li class="error-message" v-show="invalidUrn"><a href="#establishment-urn">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a></li>
                              <li class="error-message" v-show="duplicateUrn"><a href="#establishment-urn"><abbr title="Unique Reference Number">URN</abbr> is a duplicate</a></li>
-                             <li class="error-message" v-show="urnLookUpError!==''"><a href="#establishment-urn">{{urnLookUpError}}</a></li>
-                             <li class="error-message" v-show="apiValidationError!==''"><a href="#establishment-urn">{{apiValidationError}}</a></li>
+                             <li class="error-message" v-show="urnLookUpError!==''"><a href="#establishment-urn" v-if="urnLookUpError">{{urnLookUpError}}</a></li>
+                             <li class="error-message" v-show="apiValidationError!==''"><a href="#establishment-urn" v-if="apiValidationError">{{apiValidationError}}</a></li>
                              <li class="error-message" v-show="dateError"><a href="#academy-open-date">Opening date not specified</a></li>
                              <li class="error-message" v-show="noAcademyError"><a href="#academy-type">Please add an academy</a></li>
                              <li class="error-message" v-show="academyUnselectedError"><a href="#academy-type">Please select an establishment type</a></li>
                          </ul>
                      </div>
-
                  </div>
+
                  <div class="column-two-thirds">
                      <div v-show="Object.keys(pendingEstab).length < 2">
                          <h2 class="heading-small">Predecessor school</h2>
@@ -96,7 +106,7 @@
 
                          <h2 class="heading-small">Establishment details</h2>
                          <div v-bind:class="['form-group', academyUnselectedError? 'error' : '']" id="searched-establishment-details">
-                             <label class="form-label">
+                             <label class="form-label" for="academy-type">
                                  New establishment type
                              </label>
                              <span class="error-message" v-show="academyUnselectedError">Please select establishment type</span>
@@ -174,6 +184,7 @@
          <div class="progress-indicator" v-show="isProcessing">
              <p v-show="isCommiting">Please wait. Creating academies ({{createdCount}} of {{establishments.length}})</p>
          </div>
+
          <div class="grid-row">
              <div class="bulk-create-result column-full" v-show="isComplete">
 
