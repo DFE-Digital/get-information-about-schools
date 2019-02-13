@@ -49,7 +49,7 @@ else
                 </div>
             }
             <h1 class="heading-xlarge">Governance bulk update</h1>
-            
+
             <p>Follow these steps to bulk update governance data.</p>
         </div>
         <div class="column-full">
@@ -86,22 +86,18 @@ else
         <div class="column-full">
             <h2 class="heading-medium">Submit completed template</h2>
             <div class="form-group upload-control @Html.ValidationCssClassFor(x => x.BulkFile)">
-                <label for="bulkfile" class="form-label">Upload a file</label>      
-                @Html.ValidationMessageFor(x => x.BulkFile)  
+                <label for="BulkFile" class="form-label">Upload a file</label>
+                @Html.ValidationMessageFor(x => x.BulkFile)
                 <div class="upload-control-wrapper">
-                    @Html.TextBoxFor(x => x.BulkFile, new { type = "file", @class = "file-input" });
-                    <button class="button button-secondary file-selector">Choose file</button>
-                    <div class="text-field-wrapper">
-                        <input type="text" class="file-name" readonly="readonly" value="No file chosen" />
-                    </div>
+                    @Html.TextBoxFor(x => x.BulkFile, new { type = "file" })
                 </div>
             </div>
 
         </div>
         <div class="column-full">
-            <input type="submit" class="button mobile-full-width" value="Submit"/>           
+            <input type="submit" class="button mobile-full-width" value="Submit"/>
             <a href="/Tools" class="button button-secondary cancel mobile-full-width">Cancel</a>
         </div>
-       
+
 </div>
 }
