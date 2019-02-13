@@ -14,7 +14,7 @@
 
 @using (Html.BeginRouteForm("ProcessBulkUpdate", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    <div class="grid-row spaced-groups">
+    <div class="grid-row">
         <div class="column-full">
             @if (Model.Result != null && Model.Result.IsCompleted() && !Model.Result.IsFailure() && !Model.Result.CompletedWithErrors())
             {
@@ -109,15 +109,13 @@
 
         </div>
         <div class="column-half">
-            <div class="form-group upload-control @Html.ValidationCssClassFor(x => x.BulkFile)">
+            <div class="form-group push--bottom @Html.ValidationCssClassFor(x => x.BulkFile)">
                 <label for="BulkFile" class="form-label">Upload a file</label>
                 @Html.ValidationMessageFor(x => x.BulkFile)
-                <div class="upload-control-wrapper">
-                    @Html.TextBoxFor(x => x.BulkFile, new { type = "file" })
-                </div>
+                @Html.TextBoxFor(x => x.BulkFile, new { type = "file" })
             </div>
 
-            <div class="form-group @Html.ValidationCssClassFor(x => x.BulkUpdateType)">
+            <div class="form-group push--bottom @Html.ValidationCssClassFor(x => x.BulkUpdateType)">
                 <label class="form-label" for="BulkUpdateType">
                     Select file type
                 </label>
@@ -129,7 +127,7 @@
 
             @if (Model.CanOverrideCRProcess)
             {
-                <span class="checkbox-wrap">
+                <span class="form-group checkbox-wrap push--top">
                     @Html.CheckBoxFor(x => x.OverrideCRProcess, new { @id = "override-cr" })
                     @Html.LabelFor(x => x.OverrideCRProcess, "Override CR", new { @for = "override-cr", @class = "edubase-button-checkbox" })
                 </span>

@@ -38,7 +38,7 @@ else
 @using (Html.BeginRouteForm("GovernorsProcessBulkUpdate", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.HiddenFor(x => x.TemplateUri)
-    <div class="grid-row spaced-groups">
+    <div class="grid-row">
         <div class="column-full">
             @if (Model.WasSuccessful)
             {
@@ -53,7 +53,7 @@ else
             <p>Follow these steps to bulk update governance data.</p>
         </div>
         <div class="column-full">
-            <div class="expanding-content-wrapper no-bottom-margin" data-update-text="false">
+            <div class="expanding-content-wrapper flush--bottom" data-update-text="false">
                 <a href="#" class="expanding-content-trigger">
                     Help with preparing files
                 </a>
@@ -85,19 +85,15 @@ else
 
         <div class="column-full">
             <h2 class="heading-medium">Submit completed template</h2>
-            <div class="form-group upload-control @Html.ValidationCssClassFor(x => x.BulkFile)">
+            <div class="form-group push--bottom @Html.ValidationCssClassFor(x => x.BulkFile)">
                 <label for="BulkFile" class="form-label">Upload a file</label>
                 @Html.ValidationMessageFor(x => x.BulkFile)
-                <div class="upload-control-wrapper">
-                    @Html.TextBoxFor(x => x.BulkFile, new { type = "file" })
-                </div>
+                @Html.TextBoxFor(x => x.BulkFile, new { type = "file" })
             </div>
-
+            <div class="form-group">
+                <input type="submit" class="button mobile-full-width" value="Submit"/>
+                <a href="/Tools" class="button button-secondary cancel mobile-full-width">Cancel</a>
+            </div>
         </div>
-        <div class="column-full">
-            <input type="submit" class="button mobile-full-width" value="Submit"/>
-            <a href="/Tools" class="button button-secondary cancel mobile-full-width">Cancel</a>
-        </div>
-
-</div>
+    </div>
 }
