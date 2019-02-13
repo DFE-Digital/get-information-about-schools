@@ -110,7 +110,7 @@
 
             <h2 class="heading-medium">Children's centre {{groupTypeName}} details</h2>
             <div v-bind:class="['form-group', (groupNameError || groupNameApiError.length>0)? 'error' : '']">
-                <label for="name" class="form-label">{{capitalise(groupTypeName)}} name</label>
+                <label for="GroupName" class="form-label">{{capitalise(groupTypeName)}} name</label>
                 @Html.ValidationMessageFor(x => x.GroupName)
                 <span class="error-message" v-show="groupNameError">Please check the {{groupTypeName}} name</span>
                 <span class="error-message" v-show="groupNameApiError.length>0">{{groupNameApiError}}</span>
@@ -122,7 +122,7 @@
             @Html.EditorFor(x => x.OpenDate, new {title = Model.OpenDateLabel, vueModel = "openDate"})
 
             <div v-bind:class="['form-group', laError? 'error' : '']">
-                <label for="name" class="form-label">Local authority</label>
+                <label for="LocalAuthorityId" class="form-label">Local authority</label>
                 @Html.ValidationMessageFor(x => x.LocalAuthorityId)
                 <span class="error-message" v-show="laError">Please select a local authority</span>
                 @if (Model.IsLocalAuthorityEditable)
@@ -223,7 +223,7 @@
             <h2 class="heading-medium">Add children's centres</h2>
             <div v-bind:class="['form-group inline-with-button', (urnError || urnApiErrors.length > 0 || duplicateUrnError)? 'error' : '']">
                 @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
-                <label class="form-label">
+                <label class="form-label" for="LinkedEstablishments_LinkedEstablishmentSearch_Urn">
                     Establishment <abbr title="Unique Reference Number">URN</abbr>
                 </label>
                 <span class="error-message" v-show="urnError || urnApiErrors.length > 0 || duplicateUrnError">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
