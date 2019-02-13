@@ -148,9 +148,18 @@
                                         </dt>
                                         <dd>
                                             <ol class="linked-establishments" id="linked-establishments">
-                                                <li><input class="form-control" id="establishment-0" type="text" v-model="linkedEstab0" /></li>
-                                                <li><input class="form-control" id="establishment-1" type="text" v-model="linkedEstab1" /></li>
-                                                <li><input class="form-control" id="establishment-2" type="text" v-model="linkedEstab2" /></li>
+                                                <li>
+                                                    <label for="establishment-0" class="visuallyhidden">First additional establishment</label>
+                                                    <input class="form-control" id="establishment-0" type="text" v-model="linkedEstab0" />
+                                                </li>
+                                                <li>
+                                                    <label for="establishment-1" class="visuallyhidden">Second additional establishment</label>
+                                                    <input class="form-control" id="establishment-1" type="text" v-model="linkedEstab1" />
+                                                </li>
+                                                <li>
+                                                    <label for="establishment-2" class="visuallyhidden">Third additional establishment</label>
+                                                    <input class="form-control" id="establishment-2" type="text" v-model="linkedEstab2" />
+                                                </li>
                                             </ol>
                                         </dd>
                                     </dl>
@@ -274,11 +283,22 @@
                                 </dt>
                                 <dd>
                                     <ol class="linked-establishments" id="amalg-linked">
-                                        <li><input class="form-control" type="text" v-model="amalgamatedEstab0" id="amalgamate-estab0" /></li>
-                                        <li><input class="form-control" type="text" v-model="amalgamatedEstab1" id="amalgamate-estab1" /></li>
-                                        <li><input class="form-control" type="text" v-model="amalgamatedEstab2" id="amalgamate-estab2" /></li>
-                                        <li><input class="form-control" type="text" v-model="amalgamatedEstab3" id="amalgamate-estab3" /></li>
-
+                                        <li>
+                                            <label for="amalgamate-estab0" class="visuallyhidden">First establishment</label>
+                                            <input class="form-control" type="text" v-model="amalgamatedEstab0" id="amalgamate-estab0" />
+                                        </li>
+                                        <li>
+                                            <label for="amalgamate-estab1" class="visuallyhidden">Second establishment</label>
+                                            <input class="form-control" type="text" v-model="amalgamatedEstab1" id="amalgamate-estab1" />
+                                        </li>
+                                        <li>
+                                            <label for="amalgamate-estab2" class="visuallyhidden">Third establishment</label>
+                                            <input class="form-control" type="text" v-model="amalgamatedEstab2" id="amalgamate-estab2" />
+                                        </li>
+                                        <li>
+                                            <label for="amalgamate-estab3" class="visuallyhidden">Fourth establishment</label>
+                                            <input class="form-control" type="text" v-model="amalgamatedEstab3" id="amalgamate-estab3" />
+                                        </li>
                                     </ol>
                                 </dd>
                             </dl>
@@ -312,13 +332,13 @@
                             <fieldset>
                                 <legend class="bold">New School details</legend>
                                 <div v-bind:class="['form-group', nameError ? 'error' : '' ]">
-                                    <label class="form-label">Establishment name</label>
+                                    <label class="form-label" for="new-establishment-name">Establishment name</label>
                                     <span v-bind:class="['error-message', nameError ? '' : 'hidden' ]">Please enter the establishment name</span>
                                     <input type="text" id="new-establishment-name" class="form-control" v-model="newName" />
                                 </div>
 
                                 <div v-bind:class="['form-group', typeError ? 'error' : '' ]">
-                                    <label class="form-label">Establishment type</label>
+                                    <label class="form-label" for="new-establishment-type">Establishment type</label>
                                     <span v-bind:class="['error-message', typeError ? '' : 'hidden' ]">
                                         Please select the establishment type.
                                     </span>
@@ -327,7 +347,7 @@
 
 
                                 <div v-bind:class="['form-group', phaseError ? 'error' : '' ]">
-                                    <label class="form-label">Establishment phase</label>
+                                    <label class="form-label" for="new-establishment-phase">Establishment phase</label>
                                     <span v-bind:class="['error-message', phaseError ? '' : 'hidden' ]">Please select an establishment phase</span>
                                     <select id="new-establishment-phase" class="form-control" v-model="phaseId"></select>
                                 </div>
@@ -347,17 +367,17 @@
 
                                         <span class="inline-form-control">
                                             <label for="amalgamationdate-day">Day</label>
-                                            <input class="form-control date-text-day" type="text" v-model="mergeDateDay">
+                                            <input class="form-control date-text-day" type="text" v-model="mergeDateDay" id="amalgamationdate-day">
 
                                         </span>
                                         <span class="inline-form-control">
                                             <label for="amalgamationdate-month">Month</label>
-                                            <input class="form-control date-text-month" type="text" v-model="mergeDateMonth">
+                                            <input class="form-control date-text-month" type="text" v-model="mergeDateMonth" id="amalgamationdate-month">
 
                                         </span>
                                         <span class="inline-form-contol">
                                             <label for="amalgamationdate-year">Year</label>
-                                            <input class="form-control date-text-year" type="text" v-model="mergeDateYear">
+                                            <input class="form-control date-text-year" type="text" v-model="mergeDateYear" id="amalgamationdate-year">
                                         </span>
                                     </fieldset>
                                 </div>
