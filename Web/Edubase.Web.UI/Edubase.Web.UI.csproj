@@ -535,7 +535,6 @@
     <Content Include="Areas\Establishments\Views\BulkUpdate\Index.cshtml" />
     <Content Include="Areas\Establishments\Views\AcademyOpenings\Index.cshtml" />
     <Content Include="Areas\Governors\Views\GovernorsBulkUpdate\Index.cshtml" />
-    <Content Include="Areas\Establishments\Views\BulkUpdate\Complete.cshtml" />
     <Content Include="Areas\Establishments\Views\BulkUpdate\InProgress.cshtml" />
     <Content Include="Areas\Groups\Views\Group\CreateChildrensCentre.cshtml" />
     <Content Include="Assets\Sass\views\_cookies.scss" />
@@ -559,7 +558,6 @@
     <Content Include="Assets\Scripts\Views\ajax-search-results-form.js" />
     <Content Include="Assets\Scripts\Elements\Forms\attach-unload.js" />
     <Content Include="Assets\Scripts\Elements\Forms\clear-text-fields.js" />
-    <Content Include="Assets\Scripts\Elements\Forms\file-uploaders.js" />
     <Content Include="Assets\Scripts\Elements\Forms\ok-cancel.js" />
     <Content Include="Assets\Scripts\Elements\radio-toggles.js" />
     <Content Include="Assets\Scripts\JSON\addressResult.js" />
