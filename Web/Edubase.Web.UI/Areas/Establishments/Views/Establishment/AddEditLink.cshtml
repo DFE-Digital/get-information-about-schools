@@ -38,6 +38,7 @@
             </div>
             <div class="column-half">
                 <div class="form-group @Html.ValidationCssClassFor(x => x.ActiveRecord.LinkTypeId)">
+                    <label for="ActiveRecord_LinkTypeId" class="visuallyhidden">Type of link</label>
                     @Html.ValidationMessageFor(x => x.ActiveRecord.LinkTypeId)
                     @Html.DropDownListFor(x => x.ActiveRecord.LinkTypeId, Model.LinkTypes, "", new { @class = "form-control" })
                 </div>
@@ -64,6 +65,7 @@
                             @Model.Name, <abbr title="Unique Reference Number">URN</abbr>: @Model.Urn
                         </p>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ActiveRecord.ReverseLinkTypeId)">
+                            <label for="ActiveRecord_ReverseLinkTypeId" class="visuallyhidden">Type of link</label>
                             @Html.ValidationMessageFor(x => x.ActiveRecord.ReverseLinkTypeId)
                             @Html.DropDownListFor(x => x.ActiveRecord.ReverseLinkTypeId, Model.ReverseLinkTypes, "", new { @class = "form-control" })
                         </div>
