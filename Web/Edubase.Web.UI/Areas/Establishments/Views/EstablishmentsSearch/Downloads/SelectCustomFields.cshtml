@@ -46,7 +46,7 @@
                             <label for="search">Search by field name</label>
                             <br />
                             <input id="search" v-model="search" class="form-control search" placeholder="Search..." @@keydown.enter.prevent="doSearch" />
-                            <button class="button button-search icon-only" @@click="doSearch" type="button"></button>
+                            <button class="button button-search icon-only" @@click="doSearch" type="button"><span class="visuallyhidden">Search</span></button>
 
                             <div class="switch" v-show="!isFiltered">
                                 <a href="javascript:" @@click="showAlphabeticalView" v-show="!alphabeticalView">View in alphabetical order</a>

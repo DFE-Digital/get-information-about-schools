@@ -95,7 +95,7 @@
                                 @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
                                 {
                                     <fieldset class="search-toggle-panel">
-                                        <legend class="visually-hidden">Search by name of reference number</legend>
+                                        <legend class="visually-hidden">Search all establishments</legend>
                                         <span class="radio-button-wrap">
                                             @Html.HiddenFor(m => m.SelectedTab)
                                             @Html.RadioButtonFor(m => m.SearchType, eSearchType.EstablishmentAll, new { id = "searchtype-all", data_toggle_panel = "#searchby-all-ref" })
@@ -111,7 +111,7 @@
                                                 </div>
                                             }
                                             <fieldset class="inline-date-type-radios">
-                                                <legend class="visually-hidden">Select a date type</legend>
+                                                <legend class="visually-hidden">Select the change type</legend>
                                                 <span class="radio-button-wrap">
                                                     @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED, new {id = "datefiltermode-applied"})
                                                     <label class="edubase-button-radio" for="datefiltermode-applied">
