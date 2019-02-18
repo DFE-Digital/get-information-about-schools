@@ -62,7 +62,7 @@
 
     <div class="column-two-thirds">
 
-            <ul class="school-results-listing establishment-list">
+            <ul class="school-results-listing">
                 @for (int i = 0; i < Model.LinkedEstablishments.Establishments.Count; i++)
                 {
                     var e = Model.LinkedEstablishments.Establishments[i];
@@ -108,13 +108,12 @@
 
                         @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
                         {
-                            <div class="form-radio cc-lead-centre">
-                                <label>
-                                    @Html.RadioButtonFor(x => x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new { @class = "" })
+                            <span class="radio-button-wrap">
+                                @Html.RadioButtonFor(x => x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new { id = "CCLeadCentreUrn" + i })
+                                <label class="edubase-button-radio" for="CCLeadCentreUrn@(i)">
                                     Make this children's centre a lead centre
                                 </label>
-                            </div>
-
+                            </span>
                         }
 
                         @if (Model.LinkedEstablishments.Establishments[i].EditMode)

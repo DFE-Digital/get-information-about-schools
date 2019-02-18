@@ -153,17 +153,17 @@
                 }
 
             </fieldset>
-
         </li>
 
-    </ul>
-    <p>or</p>
-    <ul>
+        <li aria-hidden="true">
+            <p>or</p>
+        </li>
+
         <li class="search-type-wrapper">
             @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
             {
                 <fieldset class="search-toggle-panel">
-                    <legend class="visually-hidden">Search by name of reference number</legend>
+                    <legend class="visually-hidden">Search all establishments</legend>
                     <span class="radio-button-wrap">
                         @Html.HiddenFor(m => m.SelectedTab)
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.EstablishmentAll, new { id = "searchtype-all", data_toggle_panel = "#searchby-all-ref" })
