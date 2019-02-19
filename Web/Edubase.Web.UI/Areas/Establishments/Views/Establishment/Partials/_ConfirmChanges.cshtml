@@ -24,16 +24,19 @@
             <div class="warning-message">
                 @if (Model.IsAcademy)
                 {
-                    <p>
-                        I confirm that in making these changes the academy has followed the
-                        <a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" rel="external" target="_blank">statutory guidance</a>
-                        and has submitted a deed of variation to the funding agreement where required.
+                    <p class="flush--bottom hard--bottom">
+                        Please confirm that in making these changes the academy has:
                     </p>
+                    <ul class="list list-bullet warning-list">
+                        <li>followed the <a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" rel="external" target="_blank">statutory guidance</a>
+                        </li>
+                        <li>submitted a deed of variation to the funding agreement where required</li>
+                    </ul>
                 }
                 else if (Model.IsLAMaintained)
                 {
                     <p>
-                        I confirm that in making prescribed alterations the governing body or local authority has followed and completed the
+                        Please confirm that in making prescribed alterations the governing body or local authority has followed and completed the
                         <a href="https://www.gov.uk/government/publications/school-organisation-maintained-schools" rel="external" target="_blank">statutory process</a>.
                     </p>
                 }
