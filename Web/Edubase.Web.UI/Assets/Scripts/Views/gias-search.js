@@ -5,8 +5,10 @@ DfE.searchResults = (function () {
     var $filters = $filterForm.find(':checkbox, select');
     var $clearLinks = $filterForm.find('.filter-clear');
     var $resultsContainer = $('#results-container');
+    var $resultsNotification = $('#results-notification');
     var $downloadLink = $('.download-link');
     var searchType = null;
+    var searchCategory = null;
     var filterIntent = null;
     var seenOpenDateWarning = false;
     var downloadBaseUrl;
@@ -228,9 +230,9 @@ DfE.searchResults = (function () {
                     }
                 });
 
-            
+
         },
-        
+
         enableFilters: function () {
             $filters.prop('disabled', false);
             $filterForm.find('.filter-clone').prop('disabled', false);
@@ -251,6 +253,7 @@ DfE.searchResults = (function () {
             $('.date-filter-warning').addClass('hidden');
 
             $resultsContainer.html(plsWait);
+            $resultsNotification.html('Please wait, loading search results');
 
             $.ajax({
                 type: "POST",
@@ -273,12 +276,16 @@ DfE.searchResults = (function () {
                                 count = xhr.getResponseHeader("x-count");
                             }
                             $resultsContainer.html(results);
+                            if (count > 0) {
+                              $resultsNotification.html('Search results loaded. ' + count + ' ' + searchCategory + ' found.');
+                            }
                             $downloadLink.attr('href', downloadBaseUrl + '?tok=' + token);
                             $downloadLink.removeClass('hidden');
                             $resultsContainer.removeClass('pending-results-update');
 
                             if (Number(xhr.getResponseHeader("x-count")) === 0) {
                                 $downloadLink.addClass('hidden');
+                                $resultsNotification.html('Search results loaded. No ' + searchCategory + ' found.');
                             }
                             $(window).trigger({
                                 type: 'ajaxResultLoad',
@@ -356,7 +363,7 @@ DfE.searchResults = (function () {
                     if (searchType === 'ByLocalAuthority') {
                         DfE.searchUtils.updateSearchedLas();
                     }
-                    if (searchType === 'Governors') {
+                    if (searchType === 'GovernorsAll') {
                         DfE.searchUtils.updateGovernorRoles();
 
                         $('#gov-la-warning').addClass('hidden');
@@ -381,7 +388,7 @@ DfE.searchResults = (function () {
                     DfE.searchUtils.validateAgeFilters();
                 });
 
-            
+
 
             $('#clear-filters').on('click', function (e) {
                 e.preventDefault();
@@ -407,7 +414,7 @@ DfE.searchResults = (function () {
                 DfE.searchUtils.validateDateFilters();
             });
 
-            
+
         },
 
         init: function () {
@@ -415,8 +422,15 @@ DfE.searchResults = (function () {
             downloadBaseUrl = $downloadLink.attr('href').split('?')[0];
             self.setupGovUkSelects();
             self.setupAdditionalFilters();
-            if (document.getElementById('client-only-searchtype')) {
-                searchType = document.getElementById('client-only-searchtype').value;
+            if ($('#client-only-searchtype')) {
+                searchType = $('#client-only-searchtype').val();
+                if (searchType == 'Location' || searchType == 'ByLocalAuthority' || searchType == 'EstablishmentAll') {
+                  searchCategory = 'establishments';
+                } else if (searchType == 'EstablishmentGroupsAll') {
+                  searchCategory = 'establishment groups';
+                } else if (searchType == 'GovernorsAll') {
+                  searchCategory = 'governors';
+                }
             }
 
             if (searchType === 'ByLocalAuthority') {
