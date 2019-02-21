@@ -555,7 +555,6 @@
     <Content Include="Assets\Scripts\standalone\create-childrens-centre.js" />
     <Content Include="Assets\Scripts\standalone\data-status.js" />
     <Content Include="Assets\Scripts\standalone\merge-amalgamate.js" />
-    <Content Include="Assets\Scripts\Views\ajax-search-results-form.js" />
     <Content Include="Assets\Scripts\Elements\Forms\attach-unload.js" />
     <Content Include="Assets\Scripts\Elements\Forms\clear-text-fields.js" />
     <Content Include="Assets\Scripts\Elements\Forms\ok-cancel.js" />
