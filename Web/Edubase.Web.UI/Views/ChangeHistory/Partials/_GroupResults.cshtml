@@ -9,9 +9,11 @@
 
     if (request.QueryString["sortby"] != null)
     {
-        sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
-        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
-        sortDirText = (request.QueryString["sortby"] ?? "").Contains("asc") ? "an ascending order" : "a descending order";
+        var sortByQuery = (request.QueryString["sortby"] ?? "");
+
+        sortField = sortByQuery.Contains("-") ? sortByQuery.Substring(0, sortByQuery.IndexOf("-")) : sortByQuery;
+        sortDir = sortByQuery.Contains("asc") ? "asc" : "desc";
+        sortDirText = sortByQuery.Contains("asc") ? "an ascending order" : "a descending order";
     }
 
     var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";
