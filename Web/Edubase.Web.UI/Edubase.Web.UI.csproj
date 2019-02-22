@@ -529,7 +529,6 @@
     <Content Include="Areas\Governors\Views\SharedGovernor\EditSharedGovernor.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\ReplaceChair.cshtml" />
     <Content Include="Areas\Governors\Views\GovernanceDelegation\GroupEditDelegation.cshtml" />
-    <Content Include="Assets\Sass\elements\forms\_fileupload.scss" />
     <Content Include="Assets\Sass\elements\_autosuggest.scss" />
     <Content Include="App_Data\wildcard-dfe.pfx" />
     <Content Include="Areas\Establishments\Views\BulkUpdate\Index.cshtml" />
@@ -623,7 +622,6 @@
     <Content Include="public\assets\images\icons\suggest-remove.png" />
     <Content Include="public\assets\images\icons\tick.png" />
     <Content Include="public\assets\images\icons\tooltip-close.gif" />
-    <Content Include="public\assets\images\icons\white-cross-transparent.png" />
     <Content Include="public\assets\images\ofsted-logo-sm.jpeg" />
     <Content Include="public\assets\images\ofsted-logo-x-small.jpeg" />
     <Content Include="public\assets\images\ofsted-logo.jpg" />

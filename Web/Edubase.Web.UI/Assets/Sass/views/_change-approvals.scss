@@ -22,31 +22,6 @@
     min-height: 5em;
 }
 
-.change-approvals {
-    .pending-updates-message {
-        padding-left: 50px;
-    }
-
-    .tick {
-        left: 10px;
-        top: 6px;
-    }
-
-    .cross {
-        position: absolute;
-        background-image: url('/public/assets/images/icons/icon-white-cross-transparent.png');
-        background-size: 100%;
-        top: 12px;
-        right: 12px;
-        width: 18px;
-        height: 18px;
-        background-repeat: no-repeat;
-        background-size: contain;
-        cursor: pointer
-    }
-
-}
-
 // styles lifted from _block-labels
 // - but these work just fine without the JS overhead
 // + gov uk checkbox/ radio js doesn't work with vue.js loaded
