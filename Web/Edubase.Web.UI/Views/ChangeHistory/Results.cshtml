@@ -116,16 +116,19 @@
             </div>
         </div>
     </form>
-<div class="column-two-thirds" id="results-panel">
-    @if (Model.Count == 0)
-    {
-        <p>There are no results, please widen your search with the filters.</p>
-    }
-    else
-    {
-        Html.RenderPartial(Model.IsEstablishmentSearch ? "Partials/_EstablishmentResults" : "Partials/_GroupResults", Model);
-    }
-</div>
+
+    <div role="alert" aria-live="assertive" id="results-notification" class="visuallyhidden"></div>
+
+    <div class="column-two-thirds" id="results-container">
+        @if (Model.Count == 0)
+        {
+            <p>There are no results, please widen your search with the filters.</p>
+        }
+        else
+        {
+            Html.RenderPartial(Model.IsEstablishmentSearch ? "Partials/_EstablishmentResults" : "Partials/_GroupResults", Model);
+        }
+    </div>
 
 </div>
 
