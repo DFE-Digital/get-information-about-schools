@@ -72,7 +72,7 @@
         <div class="filter-form" id="filter-form">
             <div id="EditSearchCollapse" aria-expanded="true" class="blanket-container">
                 <form method="get" action="@Url.Action("Index", "GovernorSearch", new {area = "Governors"})">
-                    <input type="hidden" id="client-only-searchtype" value="Governors" />
+                    <input type="hidden" id="client-only-searchtype" value="GovernorsAll" />
                     <div class="govuk-option-select js-collapsible"
                          id="option-select-sort-by">
                         <div class="container-head js-container-head">
@@ -166,6 +166,7 @@
         </div>
     </div>
 
+    <div role="alert" aria-live="assertive" id="results-notification" class="visuallyhidden"></div>
     <div class="column-two-thirds" id="results-container">
 
         @{Html.RenderPartial("Partials/_GovernorSearchResults");}

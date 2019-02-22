@@ -31,6 +31,7 @@
 
             <div id="EditSearchCollapse" aria-expanded="true" class="blanket-container">
                 <form method="get" action="@Url.Action("Index", "GroupSearch", new { area = "Groups" })">
+                    <input type="hidden" id="client-only-searchtype" value="EstablishmentGroupsAll" />
 
                     <div class="govuk-option-select js-collapsible"
                          id="option-select-sort-by">
@@ -123,6 +124,7 @@
         </div>
     </div>
 
+    <div role="alert" aria-live="assertive" id="results-notification" class="visuallyhidden"></div>
     <div class="column-two-thirds" id="results-container">
 
         @{Html.RenderPartial("Partials/_GroupSearchResults");}

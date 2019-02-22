@@ -1,6 +1,7 @@
 ﻿(function () {
     var openState = true;
-    var resultsPanel = $('#results-panel');
+    var resultsContainer = $('#results-container');
+    var resultsNotification = $('#results-notification');
     var filterPanel = $('#filter-container');
     var filterError = false;
     var downloadLink = $('.download-link');
@@ -119,17 +120,28 @@
             url: resultsUrl,
             data: searchParams,
             success: function (data, status, xhr) {
-                resultsPanel.html(data);
+                resultsContainer.html(data);
                 downloadLink.removeClass('hidden');
 
                 downloadLink.attr('href', downloadBaseUrl + searchParams);
-                resultsPanel.removeClass('pending-results-update');
+                resultsContainer.removeClass('pending-results-update');
                 filterPanel.find(':input').removeAttr('disabled');
                 filterPanel.find('.filter-clear').removeClass('clear-disabled');
-                if (Number(xhr.getResponseHeader("x-count")) === 0) {
-                    downloadLink.addClass('hidden');
+
+                var count;
+                if (xhr.getResponseHeader("x-count")) {
+                    count = Number(xhr.getResponseHeader("x-count"));
                 }
-                if (Number(xhr.getResponseHeader('x-count')) > 19999) {
+
+                // Notifications
+                if (count > 0) {
+                    resultsNotification.html('Search results loaded. ' + count + ' records found.');
+                } else {
+                    downloadLink.addClass('hidden');
+                    resultsNotification.html('Search results loaded. No records found.');
+                }
+
+                if (count > 19999) {
                     attachOkCancel();
                 } else if ($('#content').find('.download-link').data().hasOwnProperty('okCancel')) {
                     $('#content').find('.download-link').data().okCancel.unbind();
@@ -137,7 +149,7 @@
             },
             error: function () {
                 $('#ajax-error-message').removeClass('hidden');
-                resultsPanel.removeClass('pending-results-update').html('');
+                resultsContainer.removeClass('pending-results-update').html('');
                 filterPanel.find(':input').removeAttr('disabled');
                 downloadLink.addClass('hidden');
             }
@@ -166,7 +178,7 @@
         });
         $('#filter-toggle').toggleClass('filters-closed');
         filterPanel.toggleClass('hidden');
-        resultsPanel.toggleClass('column-full column-two-thirds');
+        resultsContainer.toggleClass('column-full column-two-thirds');
     }
 
 
@@ -194,9 +206,10 @@
             validateFilters();
 
             if (filterError) {
-                resultsPanel.addClass('pending-results-update');
+                resultsContainer.addClass('pending-results-update');
                 filterIntent = window.setTimeout(function () {
-                    resultsPanel.html(plsWait);
+                    resultsContainer.html(plsWait);
+                    resultsNotification.html('Please wait, loading search results');
                     searchParams = $('#change-history-filters').serialize();
 
                     getResults();
@@ -215,13 +228,13 @@
             validateFilters();
 
             if (filterError) {
-                resultsPanel.html(plsWait);
+                resultsContainer.html(plsWait);
                 searchParams = $('#change-history-filters').serialize();
                 getResults();
             }
         });
 
-        var resultCount = Number($('#results-panel').find('.pagination p').slice(0,1).text().split(' ').slice(-1));
+        var resultCount = Number(resultsContainer.find('.pagination p').slice(0,1).text().split(' ').slice(-1));
         if (resultCount > 19999) {
             attachOkCancel();
         }
