@@ -35,13 +35,13 @@
                     <p class="visually-hidden">Please wait</p>
                 </div>
                 <h1 class="heading-xlarge" v-show="!isProcessing">Items for approval</h1>
-                <div class="pending-updates-message dismissable-message" v-show="itemsConfirmedRemoved">
+                <div class="pending-updates-message js-dismiss-message" v-show="itemsConfirmedRemoved">
                     <div class="tick"></div>
                     <p>Items approved. The editor has been notified by email.</p>
                     <a class="cross" href="#" v-on:click="itemsConfirmedRemoved = false"><span class="visually-hidden">Dismiss notification</span></a>
                 </div>
 
-                <div class="pending-updates-message dismissable-message" v-show="itemsConfirmedRejected">
+                <div class="pending-updates-message js-dismiss-message" v-show="itemsConfirmedRejected">
                     <div class="tick"></div>
                     <p>Items rejected. The editor has been notified by email.</p>
                     <a class="cross" href="#" v-on:click="itemsConfirmedRejected = false"><span class="visually-hidden">Dismiss notification</span></a>

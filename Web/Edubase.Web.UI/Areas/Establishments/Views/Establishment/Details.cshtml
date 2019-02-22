@@ -38,7 +38,7 @@
 {
     if (Model.Establishment.CloseDate != null)
     {
-        <div class="grey-warning dismissable-message">
+        <div class="grey-warning js-dismiss-message">
             <p>
                 This establishment closed on @(Model.Establishment.CloseDate?.ToString("dd/MM/yyyy")).
                 View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
@@ -48,7 +48,7 @@
     }
     else
     {
-        <div class="grey-warning dismissable-message">
+        <div class="grey-warning js-dismiss-message">
             <p>
                 This establishment is closed.
                 View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
@@ -60,7 +60,7 @@
 
 @if (ViewBag.ShowSaved != null && ViewBag.ShowSaved)
 {
-    <div class="pending-updates-message dismissable-message">
+    <div class="pending-updates-message js-dismiss-message">
         <div class="tick"></div>
         Your changes have been saved
         <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
@@ -70,7 +70,7 @@
 @if (ViewBag.ApprovedCount != null && ViewBag.ApprovedCount > 0)
 {
     var c = (int)ViewBag.ApprovedCount;
-    <div class="pending-updates-message dismissable-message">
+    <div class="pending-updates-message js-dismiss-message">
         <div class="tick"></div>
         @c change@(Html.Conditional(c > 1, "s")) to establishment details @(c > 1 ? "have" : "has") been instantly updated
         <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
@@ -80,7 +80,7 @@
 @if (ViewBag.PendingApprovalCount != null && ViewBag.PendingApprovalCount > 0)
 {
     var c = (int)ViewBag.PendingApprovalCount;
-    <div class="pending-updates-message dismissable-message">
+    <div class="pending-updates-message js-dismiss-message">
         <div class="tick"></div>
         @c change@(Html.Conditional(c > 1, "s")) to establishment details require DfE approval. You do not need to take any action now and changes will be made soon. If the DfE need more information they will contact you.
         <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
