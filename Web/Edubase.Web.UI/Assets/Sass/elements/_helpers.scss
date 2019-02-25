@@ -102,6 +102,10 @@ $path: "/public/images/";
     }
 }
 
+.break-word {
+    word-break: break-all;
+}
+
 // Negating spacing
 // Remove margins
 .flush          { margin:       0 !important; }

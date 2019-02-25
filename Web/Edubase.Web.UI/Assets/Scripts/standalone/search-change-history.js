@@ -107,9 +107,13 @@
     }
 
     function getResults() {
+        resultsContainer.html(plsWait);
+        resultsNotification.html('Please wait, loading search results');
         $('#ajax-error-message').addClass('hidden');
         filterPanel.find(':input').prop('disabled', 'disabled');
         filterPanel.find('.filter-clear').addClass('clear-disabled');
+
+
         var resultsUrl = isEstabSearch
             ? '/ChangeHistory/Search/Establishments/results-js'
             : '/ChangeHistory/Search/Groups/results-js';
@@ -208,10 +212,7 @@
             if (filterError) {
                 resultsContainer.addClass('pending-results-update');
                 filterIntent = window.setTimeout(function () {
-                    resultsContainer.html(plsWait);
-                    resultsNotification.html('Please wait, loading search results');
                     searchParams = $('#change-history-filters').serialize();
-
                     getResults();
                 }, 1200);
             }

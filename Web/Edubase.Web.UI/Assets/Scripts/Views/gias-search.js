@@ -249,11 +249,11 @@ DfE.searchResults = (function () {
         },
 
         getResults: function () {
+            $resultsContainer.html(plsWait);
+            $resultsNotification.html('Please wait, loading search results');
             DfE.searchResults.disableFilters();
             $('.date-filter-warning').addClass('hidden');
 
-            $resultsContainer.html(plsWait);
-            $resultsNotification.html('Please wait, loading search results');
 
             $.ajax({
                 type: "POST",
