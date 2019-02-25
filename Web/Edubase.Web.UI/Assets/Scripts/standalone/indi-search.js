@@ -96,6 +96,8 @@
     }
 
     var getResults = function () {
+        $resultsContainer.html(plsWait);
+        $resultsNotification.html('Please wait, loading search results');
         filterForm.find('input').prop('disabled', 'disabled');
         clearLinks.addClass('clear-disabled');
         if (GOVUK.support.history()) {
@@ -155,10 +157,7 @@
          if (filterError){
             $resultsContainer.addClass('pending-results-update');
             filterIntent = window.setTimeout(function () {
-                $resultsContainer.html(plsWait);
-                $resultsNotification.html('Please wait, loading search results');
                 searchParams = $('#filter-form-ind').serialize();
-
                 getResults();
             }, 1200);
         }
