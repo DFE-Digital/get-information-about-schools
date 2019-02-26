@@ -1,181 +1,181 @@
 ﻿(function () {
     var today = new Date();
-        var bulkAcademies = new Vue({
-            el: '#bulk-academies',
-            data: {
-                establishments: [],
-                addedUrns: [],
-                searchUrn: '',
-                establishmentType: '',
-                invalidUrn: false,
-                duplicateUrn: false,
-                urnLookUpError: '',
-                apiValidationError: '',
+    var bulkAcademies = new Vue({
+        el: '#bulk-academies',
+        data: {
+            establishments: [],
+            addedUrns: [],
+            searchUrn: '',
+            establishmentType: '',
+            invalidUrn: false,
+            duplicateUrn: false,
+            urnLookUpError: '',
+            apiValidationError: '',
 
-                estabTypeError: false,
+            estabTypeError: false,
 
-                pendingEstab: { },
-                pendingEdit: false,
-                establishmentFound: false,
-                openDateDay: today.getDate(),
-                openDateMonth: today.getMonth() + 1,
-                openDateYear: today.getFullYear(),
-                openDateError: false,
-                academyType: '',
-                academyUnselectedError: false,
-                dateError: false,
-                noAcademyError: false,
-                commitError: false,
-                commitErrorMessage: '',
-                displayExitWarning: false,
-                exitUrl: '',
-                urnApiUrl: '/api/establishment/{0}',
-                validationUrl: '/api/bulk-create-academies/validate',
-                commitUrl: '/api/bulk-create-academies',
-                progressUrl: '/api/bulk-create-academies/progress/{0}',
-                commitErrors: '',
+            pendingEstab: { },
+            pendingEdit: false,
+            establishmentFound: false,
+            openDateDay: today.getDate(),
+            openDateMonth: today.getMonth() + 1,
+            openDateYear: today.getFullYear(),
+            openDateError: false,
+            academyType: '',
+            academyUnselectedError: false,
+            dateError: false,
+            noAcademyError: false,
+            commitError: false,
+            commitErrorMessage: '',
+            displayExitWarning: false,
+            exitUrl: '',
+            urnApiUrl: '/api/establishment/{0}',
+            validationUrl: '/api/bulk-create-academies/validate',
+            commitUrl: '/api/bulk-create-academies',
+            progressUrl: '/api/bulk-create-academies/progress/{0}',
+            commitErrors: '',
 
-                isProcessing: false,
-                isCommiting: false,
-                isSearching: false,
-                createdCount: 0,
-                isComplete: false,
-                createdAcademies: [],
-                pendingDelete: false,
-                pendingDeleteItem: '',
-                validTypes: [],
-                apiError: {}
+            isProcessing: false,
+            isCommiting: false,
+            isSearching: false,
+            createdCount: 0,
+            isComplete: false,
+            createdAcademies: [],
+            pendingDelete: false,
+            pendingDeleteItem: '',
+            validTypes: [],
+            apiError: {}
 
 
+        },
+        created: function() {
+            this.blockExits();
+        },
+        computed: {
+            showGlobalError: function() {
+                return (
+                    this.estabTypeError ||
+                        this.duplicateUrn ||
+                        this.noAcademyTypeError ||
+                        this.academyUnselectedError ||
+                        this.openDateError ||
+                        this.invalidUrn ||
+                        this.commitError ||
+                        this.urnLookUpError !== '' ||
+                        this.apiValidationError !== ''
+                );
             },
-            created: function() {
-                this.blockExits();
-            },
-            computed: {
-                showGlobalError: function() {
-                    return (
-                        this.estabTypeError ||
-                            this.duplicateUrn ||
-                            this.noAcademyTypeError ||
-                            this.academyUnselectedError ||
-                            this.openDateError ||
-                            this.invalidUrn ||
-                            this.commitError ||
-                            this.urnLookUpError !== '' ||
-                            this.apiValidationError !== ''
-                    );
-                },
-                
-                validationParams: function() {
-                    return {
-                        PredecessorEstablishmentUrn: self.searchUrn,
-                        OpeningDate: [today.getFullYear(), today.getMonth(), today.getDate()].join('-'),
-                        TypeId: 28
-                    }
 
-                },
-                pageHeading: function() {
-                    if (this.pendingEdit) {
-                        return 'Edit details';
-                    }
-                    if (Object.keys(this.pendingEstab).length > 0) {
-                        return 'Enter new academy details';
-                    }
-                    if (this.isComplete) {
-                        return 'Academies created';
-                    }
-                    if (this.isCommiting) {
-                        return 'Creating academies';
-                    }
-
-                    if (this.isProcessing) {
-                        return '';
-                    }
-                    return 'Bulk create new academies';
-
-                },
-
-                displayDate: function() {
-
-                    return [this.pad(this.openDateDay), this.pad(this.openDateMonth), this.openDateYear].join('/');
-                },
-
-                pendingEstabAddress: function() {
-                    var self = this;
-                    if (Object.keys(self.pendingEstab).length > 1) {
-                        var address = [];
-                        if (self.pendingEstab.address_Line1) {
-                            address.push(self.pendingEstab.address_Line1);
-                        }
-
-                        if (self.pendingEstab.address_Line2) {
-                            address.push(self.pendingEstab.address_Line2);
-                        }
-
-                        if (self.pendingEstab.address_Line3) {
-                            address.push(self.pendingEstab.address_Line3);
-                        }
-
-                        if (self.pendingEstab.address_Locality) {
-                            address.push(self.pendingEstab.address_Locality);
-                        }
-
-                        if (self.pendingEstab.address_CityOrTown) {
-                            address.push(self.pendingEstab.address_CityOrTown);
-                        }
-
-                        if (self.pendingEstab.addresaddress_PostCodes_Locality) {
-                            address.push(self.pendingEstab.address_PostCode);
-                        }
-
-                        return address.join(", ");
-                    } else {
-                        return '';
-                    }
+            validationParams: function() {
+                return {
+                    PredecessorEstablishmentUrn: self.searchUrn,
+                    OpeningDate: [today.getFullYear(), today.getMonth(), today.getDate()].join('-'),
+                    TypeId: 28
                 }
-            },
-            methods: {
-                pad: function(num) {
-                    if (num < 10 && num.toString().length < 2) {
-                        return '0' + num;
-                    }
-                    return num;
-                },
-                buildTypesDropDown: function () {
-                    var self = this;
-                    var frag = document.createDocumentFragment();
-                    var select = document.getElementById('academy-type');
-                    select.innerHTML = '';
-                    var ps = document.createElement('option');
-                    ps.appendChild(document.createTextNode('Please select'));
-                   
-                    frag.appendChild(ps);
-                    for (var i = 0, len = this.validTypes.length; i < len; i++) {
-                        var opt = document.createElement('option');
-                        var t = this.validTypes[i];
-                       
-                        opt.value = t.id;
-                        opt.innerHTML = t.name;
-                        frag.appendChild(opt);
-                    }
-                    select.appendChild(frag);
 
-                    window.setTimeout(function() {
-                        select.options[0].selected = true;
-                        self.pendingEstab.academyType = 'Please select';
-                    },100);
-                    
-                },
-                detailUrl: function (urn) {
-                    return '/Establishments/Establishment/Details/' + urn;
-                },
-                lookUpType: function(typeId){
-                    var definition = academyTypes.filter(function (item) {
-                        if (item.id == typeId) {
-                            return item;
-                        }
-                    });
-                    return definition[0].name;
+            },
+            pageHeading: function() {
+                if (this.pendingEdit) {
+                    return 'Edit details';
+                }
+                if (Object.keys(this.pendingEstab).length > 0) {
+                    return 'Enter new academy details';
+                }
+                if (this.isComplete) {
+                    return 'Academies created';
+                }
+                if (this.isCommiting) {
+                    return 'Creating academies';
+                }
+
+                if (this.isProcessing) {
+                    return '';
+                }
+                return 'Bulk create new academies';
+
+            },
+
+            displayDate: function() {
+
+                return [this.pad(this.openDateDay), this.pad(this.openDateMonth), this.openDateYear].join('/');
+            },
+
+            pendingEstabAddress: function() {
+                var self = this;
+                if (Object.keys(self.pendingEstab).length > 1) {
+                    var address = [];
+                    if (self.pendingEstab.address_Line1) {
+                        address.push(self.pendingEstab.address_Line1);
+                    }
+
+                    if (self.pendingEstab.address_Line2) {
+                        address.push(self.pendingEstab.address_Line2);
+                    }
+
+                    if (self.pendingEstab.address_Line3) {
+                        address.push(self.pendingEstab.address_Line3);
+                    }
+
+                    if (self.pendingEstab.address_Locality) {
+                        address.push(self.pendingEstab.address_Locality);
+                    }
+
+                    if (self.pendingEstab.address_CityOrTown) {
+                        address.push(self.pendingEstab.address_CityOrTown);
+                    }
+
+                    if (self.pendingEstab.addresaddress_PostCodes_Locality) {
+                        address.push(self.pendingEstab.address_PostCode);
+                    }
+
+                    return address.join(", ");
+                } else {
+                    return '';
+                }
+            }
+        },
+        methods: {
+            pad: function(num) {
+                if (num < 10 && num.toString().length < 2) {
+                    return '0' + num;
+                }
+                return num;
+            },
+            buildTypesDropDown: function () {
+                var self = this;
+                var frag = document.createDocumentFragment();
+                var select = document.getElementById('academy-type');
+                select.innerHTML = '';
+                var ps = document.createElement('option');
+                ps.appendChild(document.createTextNode('Please select'));
+
+                frag.appendChild(ps);
+                for (var i = 0, len = this.validTypes.length; i < len; i++) {
+                    var opt = document.createElement('option');
+                    var t = this.validTypes[i];
+
+                    opt.value = t.id;
+                    opt.innerHTML = t.name;
+                    frag.appendChild(opt);
+                }
+                select.appendChild(frag);
+
+                window.setTimeout(function() {
+                    select.options[0].selected = true;
+                    self.pendingEstab.academyType = 'Please select';
+                },100);
+
+            },
+            detailUrl: function (urn) {
+                return '/Establishments/Establishment/Details/' + urn;
+            },
+            lookUpType: function(typeId){
+                var definition = academyTypes.filter(function (item) {
+                    if (item.id == typeId) {
+                        return item;
+                    }
+                });
+                return definition[0].name;
             },
             lookupEstabName: function (urn) {
                 var self = this;
@@ -201,11 +201,10 @@
                 }
 
             },
-            formatDisplayDate: function (d) {                               
+            formatDisplayDate: function (d) {
                 var date = new Date(d);
                 return [this.pad(date.getDate()), this.pad(date.getMonth()+1) , date.getFullYear()].join('/');
             },
-
             estabLookUp: function () {
                 var self = this;
                 var estabValidationReqs = [];
@@ -234,7 +233,7 @@
                             } else {
                                 self.invalidUrn = true;
                             }
-                            
+
                             self.isProcessing = false;
                             self.isSearching = false;
                         }
@@ -265,7 +264,7 @@
                                 } else {
                                     self.urnLookUpError = "The URN in is invalid";
                                 }
-                                
+
                                 self.isProcessing = false;
                             }
                         });
@@ -382,7 +381,7 @@
                                             return estab;
                                         }
                                     });
-                                    self.establishments = estabs;                                    
+                                    self.establishments = estabs;
 
                                 } else {
                                     self.addedUrns.push(self.searchUrn);
@@ -398,7 +397,7 @@
                                 self.openDateMonth = today.getMonth() + 1;
                                 self.openDateYear = today.getFullYear();
                                 self.pendingEdit = false;
-                                
+
 
                             } else {
                                 var messages = data[0].errors.map(function(elem) { return elem.message });
@@ -413,14 +412,14 @@
                             } else {
                                 self.apiValidationError = "Something went wrong checking the establishment.";
                             }
-                            
+
                             self.isProcessing = false;
                             self.isSearching = false;
                         }
                     });
                 }
 
-               
+
             },
             editRecord: function (urn) {
                 this.pendingEdit = true;
@@ -435,7 +434,7 @@
                 this.openDateMonth = openingDate[1];
                 this.openDateYear = openingDate[2];
             },
-            cancelAddEdit: function () {               
+            cancelAddEdit: function () {
                 this.pendingEdit = false;
                 this.pendingEstab = {};
                 this.searchUrn = '';
@@ -465,10 +464,10 @@
                 this.pendingDeleteItem = '';
             },
             blockExits: function () {
-                var self = this;                
+                var self = this;
                 $('a, [value="cancel"]').not('.modal-button').on('click', function (e) {
                     self.exitUrl = $(this).attr('href');
-                    
+
                     if (self.establishments.length > 0 && !self.isComplete)  {
                         e.preventDefault();
                         self.displayExitWarning = true;
@@ -506,7 +505,7 @@
                         var doneYet = window.setInterval(function() { // poll state of conversions
                             $.ajax({
                                 url: self.progressUrl.replace('{0}', responseId),
-                                method: 'get',                                
+                                method: 'get',
                                 dataType: 'json',
                                 success: function(data) {
                                     self.createdCount = data.result.length;
@@ -536,9 +535,9 @@
                                                     self.createdAcademies[0].name = d1.returnValue.name;
                                                     self.isComplete = true;
                                                     self.isProcessing = false;
-                                                });                                            
-                                        }                                        
-                                    }                                    
+                                                });
+                                        }
+                                    }
                                 },
                                 error: function(jqXHR, textStatus, errorThrown) {
                                     window.clearInterval(doneYet);
@@ -568,10 +567,10 @@
                                 });
                             } else {
                                 errMessage.push('No specific error message suplied');
-                            }                            
+                            }
                         }
                         self.isProcessing = false;
-                       // console.log(errMessage.join('\n'));
+                    // console.log(errMessage.join('\n'));
                     }
                 });
             }
