@@ -1,15 +1,21 @@
 ﻿DfE.Views.schoolSearch = {
     showWarning: function ($panel, message) {
-        var warningTemplate = '<div class="warning-message"><p>{0}</p></div>';
-        if ($panel.find('.warning-message').length > 0) {
-            $panel.find('.warning-message p').html(message);
+        console.log('showWarning');
+        $('.warning-message').addClass('visuallyhidden');
+        $panel.find('.warning-message').first().removeClass('visuallyhidden');
+        $panel.find('.warning-message-text').first().html(message);
 
-        } else {
-            $panel.prepend(warningTemplate.replace('{0}', message));
-        }
+        // var warningTemplate = '<div class="warning-message"><p>{0}</p></div>';
+        // if ($panel.find('.warning-message').length > 0) {
+        //     $panel.find('.warning-message p').html(message);
+
+        // } else {
+        //     $panel.prepend(warningTemplate.replace('{0}', message));
+        // }
 
     },
     init: function (options) {
+        console.log('schoolSearch.init');
         'use strict';
 
         var defaults = {
@@ -61,6 +67,7 @@
             }
         });
 
+        // Name or reference number search
         $('#name-search-submit').on('click', function (e) {
             var suggestionCount = $('#TextSearchModel_Text').nextAll('.tt-menu').find('.tt-suggestion').length;
             var numericValue = !isNaN ($('#TextSearchModel_Text').val().replace('/', ''));
@@ -74,6 +81,7 @@
         });
 
         $('#la-search-submit').on('click', function (e) {
+
             var suggestionCount = $('#LocalAuthorityToAdd').nextAll('.tt-menu').find('.tt-suggestion').length;
             if (self.addedLaCount === 0) {
                 e.preventDefault();
@@ -141,19 +149,19 @@
             $(textbox).on("keyup change", condition);
         };
 
-        buttonEnabler("#name-search-submit", "#TextSearchModel_Text");
-        buttonEnabler("#location-search-submit", "#LocationSearchModel_Text");
-        buttonEnabler("#group-search-submit", "#GroupSearchModel_Text");
-        buttonEnabler("#governor-search-submit-1", "#GovernorSearchModel_Gid");
+        // buttonEnabler("#name-search-submit", "#TextSearchModel_Text");
+        // buttonEnabler("#location-search-submit", "#LocationSearchModel_Text");
+        // buttonEnabler("#group-search-submit", "#GroupSearchModel_Text");
+        // buttonEnabler("#governor-search-submit-1", "#GovernorSearchModel_Gid");
 
-        (function (button, textbox) {
-            var b = false;
-            var toggle = function (disabled) { $(button).prop("disabled", disabled); };
-            toggle($.trim($(textbox).val()).length === 0);
-            $(document).on("keyup change click", textbox + ",.remove-suggest-la", function () {
-                toggle(($.trim($(textbox).val())).length === 0 && $(".selected-las .remove-suggest-la").length == 0);
-            });
-        })("#la-search-submit","#LocalAuthorityToAdd");
+        // (function (button, textbox) {
+        //     var b = false;
+        //     var toggle = function (disabled) { $(button).prop("disabled", disabled); };
+        //     toggle($.trim($(textbox).val()).length === 0);
+        //     $(document).on("keyup change click", textbox + ",.remove-suggest-la", function () {
+        //         toggle(($.trim($(textbox).val())).length === 0 && $(".selected-las .remove-suggest-la").length == 0);
+        //     });
+        // })("#la-search-submit","#LocalAuthorityToAdd");
 
         (function () {
             var $button = $("#governor-search-submit");
@@ -173,6 +181,7 @@
     },
 
     getSchoolsSuggestionHandler: function (keywords, callback) {
+        console.log('schoolSearch.getSchoolsSuggestionHandler');
         var dataSuggestionUrl = $("#TextSearchModel_Text").attr("data-suggestion-url");
         return $.get(encodeURI(dataSuggestionUrl + keywords), function (response) {
             if (document.getElementById('include-open-establishments-name')) {
@@ -191,27 +200,29 @@
     },
 
     getPlacesSuggestionHandler: function(keyword, callback) {
-      $.ajax({
-        url: '/Search/SuggestPlace',
-        data: {text: keyword},
-        dataType: 'json',
-        success: function(data) {
-          var suggestions = data.map(function(location){
-            var obj = {};
-            obj.text = location.name;
-            obj.value = location.coords.latitude + ', '+ location.coords.longitude;
+        console.log('schoolSearch.getPlacesSuggestionHandler');
+        $.ajax({
+            url: '/Search/SuggestPlace',
+            data: {text: keyword},
+            dataType: 'json',
+            success: function(data) {
+                var suggestions = data.map(function(location){
+                    var obj = {};
+                    obj.text = location.name;
+                    obj.value = location.coords.latitude + ', '+ location.coords.longitude;
 
-            return obj;
-          });
-          return callback(suggestions);
-        },
-        error: function(){
-          console.log('Problem retrieving location suggestions!');
-        }
-      });
+                    return obj;
+                });
+                return callback(suggestions);
+            },
+            error: function(){
+                console.log('Problem retrieving location suggestions!');
+            }
+        });
     },
 
     getTrustSuggestionHandler: function (keywords, callback) {
+        console.log('schoolSearch.getTrustSuggestionHandler');
         var dataSuggestionUrl = $("#GroupSearchModel_Text").attr("data-suggestion-url");
         return $.get(encodeURI(dataSuggestionUrl + keywords), function (response) {
             return callback(response);
@@ -219,6 +230,8 @@
     },
 
     bindAutosuggest: function (targetInputElementName, targetResolvedInputElementName, suggestionSource) {
+
+        console.log('schoolSearch.bindAutosuggest');
 
         if ($(targetInputElementName).length === 0) {
             console.log("The input field '" + targetInputElementName + "' does not exist.");
@@ -241,6 +254,7 @@
 
 
         function includeLa(la) {
+            console.log('bindAutosuggest: includeLa');
             var idString = "la-" + la.id;
             var hiddenField = selectedLaHiddenTemplate.replace(re, la.id).replace(reId, idString);
             var rmButton = selectedLaButtonTemplate.replace(re, la.name).replace(reId, idString);
@@ -266,6 +280,7 @@
         }
 
         $('#la-id-target').on('click', '.remove-suggest-la', function (e) {
+            console.log('bindAutosuggest: click on #la-id-target');
             e.preventDefault();
             $('#' + $(this).data().remove).remove();
             $(this).remove();
@@ -277,6 +292,7 @@
         });
 
         $('#LocalAuthorityToAdd').on('focus', function () {
+            console.log('bindAutosuggest: focus on #LocalAuthorityToAdd');
             $('#la-id-target').addClass('focused');
 
         }).on('blur', function () {
@@ -285,11 +301,13 @@
         });
 
         if (typeof (suggestionSource) === "function") { // remote source
+            console.log('bindAutosuggestion: suggestionSource is function');
             minChars = 3;
             source = function (query, syncResultsFn, asyncResultsFn) {
                 return suggestionSource.call(self, query, asyncResultsFn);
             };
         } else if (typeof (suggestionSource) === "object") { // local data source
+            console.log('bindAutosuggestion: suggestionSource is object');
 
             if (!suggestionSource.data) { console.log("suggestionSource.data is null"); return; }
             if (!suggestionSource.name) { console.log("suggestionSource.name is null"); return; }
@@ -311,6 +329,7 @@
         }
 
         var templateHandler = function (suggestion) {
+            console.log('bindAutosuggestion: templateHandler');
             var tmpl = '<div><a href="javascript:">' + suggestion[field] + '</a></div>';
 
             if (suggestion.hasOwnProperty('closed') && suggestion.closed) {
@@ -355,6 +374,7 @@
         // custom suggestion highlights for name based searches
         $('#TextSearchModel_Text, #GroupSearchModel_Text').on('typeahead:render',
             function () {
+                console.log('typeahead');
                 var q = this.value.split(' ');
                 var suggestions = $(this).nextAll('.tt-menu').find('.tt-suggestion');
                 var re = new RegExp(q.join('|'), 'gi');

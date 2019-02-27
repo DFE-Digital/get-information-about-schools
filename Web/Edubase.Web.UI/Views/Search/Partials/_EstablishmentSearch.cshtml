@@ -21,9 +21,14 @@
                         </label>
                     </span>
                     <div class="expanding-search-field" id="searchby-name-ref">
+                        @* This alert gets dynamically populated *@
+                        <div class="warning-message visuallyhidden" role="alert">
+                            <p class="warning-message-text" aria-live="polite"></p>
+                        </div>
                         @if (Model.NoResultsForName)
                         {
-                            <div class="warning-message js-trigger-aria-live">
+                            @* Static alert for no search results *@
+                            <div role="alert" class="warning-message js-trigger-aria-live">
                                 <p class="warning-message-text" aria-live="polite">We couldn't find any establishments matching your search criteria</p>
                             </div>
                         }
@@ -67,9 +72,14 @@
                         </label>
                     </span>
                     <div class="expanding-search-field" id="searchby-location-ref">
+                        @* This alert gets dynamically populated *@
+                        <div class="warning-message visuallyhidden" role="alert">
+                            <p class="warning-message-text" aria-live="polite"></p>
+                        </div>
                         @if (Model.NoResultsForLocation)
                         {
-                            <div class="warning-message js-trigger-aria-live">
+                            @* Currently not displaying. Redirecting instead *@
+                            <div class="warning-message js-trigger-aria-live" role="alert">
                                 <p class="warning-message-text" aria-live="polite">We couldn't find any locations matching your search criteria</p>
                             </div>
                         }
@@ -109,9 +119,12 @@
                         </label>
                     </span>
                     <div class="expanding-search-field" id="searchby-la-ref">
+                        <div class="warning-message visuallyhidden" role="alert">
+                            <p class="warning-message-text" aria-live="polite"></p>
+                        </div>
                         @if (Model.NoResultsForLA)
                         {
-                            <div class="warning-message js-trigger-aria-live">
+                            <div class="warning-message js-trigger-aria-live" role="alert">
                                 <p class="warning-message-text" aria-live="polite">We couldn't find any local authorities matching your search criteria</p>
                             </div>
                         }
