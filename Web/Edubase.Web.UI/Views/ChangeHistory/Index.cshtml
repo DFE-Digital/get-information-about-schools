@@ -66,13 +66,13 @@
                                         <div class="expanding-search-field" id="searchby-name-ref">
                                             @* This alert gets dynamically populated *@
                                             <div class="warning-message visuallyhidden" role="alert">
-                                                <p class="warning-message-text" aria-live="polite"></p>
+                                                <p class="message-text" aria-live="polite"></p>
                                             </div>
                                             @if (Model.NoResultsForName)
                                             {
                                                 @* Static alert for no search results *@
                                                 <div role="alert" class="warning-message js-trigger-aria-live">
-                                                    <p class="warning-message-text" aria-live="polite">We couldn't find any establishments matching your search criteria</p>
+                                                    <p class="message-text" aria-live="polite">We couldn't find any establishments matching your search criteria</p>
                                                 </div>
                                             }
                                             <label class="form-label" for="TextSearchModel_Text">
@@ -185,13 +185,13 @@
                                         <div class="expanding-search-field" id="searchby-group-ref">
                                             @* This alert gets dynamically populated *@
                                             <div class="warning-message visuallyhidden" role="alert">
-                                                <p class="warning-message-text" aria-live="polite"></p>
+                                                <p class="message-text" aria-live="polite"></p>
                                             </div>
                                             @if (Model.GroupSearchError)
                                             {
                                                 @* Static alert for no search results *@
                                                 <div role="alert" class="warning-message js-trigger-aria-live">
-                                                    <p class="warning-message-text" aria-live="polite">We couldn't find any establishments matching your search criteria</p>
+                                                    <p class="message-text" aria-live="polite">We couldn't find any establishments matching your search criteria</p>
                                                 </div>
                                             }
                                             <div class="edubase-search-element with-typeahead has-typeahead" id="group-search-container">

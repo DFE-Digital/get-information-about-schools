@@ -35,16 +35,16 @@
                     <p class="visually-hidden">Please wait</p>
                 </div>
                 <h1 class="heading-xlarge" v-show="!isProcessing">Items for approval</h1>
-                <div class="pending-updates-message js-dismiss-message" v-show="itemsConfirmedRemoved">
+                <div class="pending-updates-message js-dismiss-message" v-bind:class="[itemsConfirmedRemoved ? '' : 'visually-hidden']" role="alert">
                     <div class="tick"></div>
-                    <p>Items approved. The editor has been notified by email.</p>
-                    <a class="cross" href="#" v-on:click="itemsConfirmedRemoved = false"><span class="visually-hidden">Dismiss notification</span></a>
+                    <p aria-live="polite">{{ approvalMessage }}</p>
+                    <a class="cross" href="#" v-on:click="itemsConfirmedRemoved = false" v-show="itemsConfirmedRemoved"><span class="visually-hidden">Dismiss notification</span></a>
                 </div>
 
-                <div class="pending-updates-message js-dismiss-message" v-show="itemsConfirmedRejected">
+                <div class="pending-updates-message js-dismiss-message" v-bind:class="[itemsConfirmedRejected ? '' : 'visually-hidden']" role="alert">
                     <div class="tick"></div>
-                    <p>Items rejected. The editor has been notified by email.</p>
-                    <a class="cross" href="#" v-on:click="itemsConfirmedRejected = false"><span class="visually-hidden">Dismiss notification</span></a>
+                    <p>{{ rejectionMessage }}</p>
+                    <a class="cross" href="#" v-on:click="itemsConfirmedRejected = false" v-show="itemsConfirmedRejected"><span class="visually-hidden">Dismiss notification</span></a>
                 </div>
                 <p v-show="!isProcessing">
                     You have <span class="heading-xlarge count">{{currentCount}}</span> items that require your approval.

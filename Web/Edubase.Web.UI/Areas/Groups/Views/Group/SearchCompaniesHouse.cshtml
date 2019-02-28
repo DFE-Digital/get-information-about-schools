@@ -36,14 +36,14 @@
             {
                 @* Static alert for empty search *@
                 <div role="alert" class="warning-message js-trigger-aria-live">
-                    <p class="warning-message-text" aria-live="polite">Please enter a Companies House name or number to start a search</p>
+                    <p class="message-text" aria-live="polite">Please enter a Companies House name or number to start a search</p>
                 </div>
             }
             else if (Model.NotFound)
             {
                 @* Static alert for no search results *@
                 <div role="alert" class="warning-message js-trigger-aria-live">
-                    <p class="warning-message-text" aria-live="polite">We couldn't find any companies matching your search criteria</p>
+                    <p class="message-text" aria-live="polite">We couldn't find any companies matching your search criteria</p>
                 </div>
             }
 
