@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Governors;
@@ -14,6 +14,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.Routing;
+using Edubase.Web.UI.Models.Search;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -123,8 +125,25 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             model.Results = results.Items;
 
             if (model.StartIndex == 0) model.Count = results.Count;
-            
+            if (model.Count == 0) { return RedirectToSearchPage(model); }
+
             return View("Index", model);
+        }
+
+        private ActionResult RedirectToSearchPage(GovernorSearchViewModel model)
+        {
+            var routeDictionary = new RouteValueDictionary
+            {
+                {"action", "Index"},
+                {"controller", "Search"},
+                {"area", string.Empty},
+                {"SelectedTab", SearchViewModel.Tab.Governors},
+                {"SearchType", eSearchType.Governor},
+                {"GovernorSearchModel.Forename", model.GovernorSearchModel.Forename},
+                {"GovernorSearchModel.Surname", model.GovernorSearchModel.Surname},
+                {"NoResults", "True"}
+            };
+            return new RedirectResult(Url.RouteUrl(routeDictionary));
         }
 
         private GovernorSearchPayload CreateSearchPayload(GovernorSearchViewModel model) => new GovernorSearchPayload(model.StartIndex, model.PageSize)

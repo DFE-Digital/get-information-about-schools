@@ -11,6 +11,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http.Results;
 using System.Web.Mvc;
+using Antlr.Runtime;
 using DM.Common.Validators;
 
 namespace Edubase.Web.UI.Controllers
@@ -40,7 +41,7 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route(Name = "Homepage")]
         public async Task<ActionResult> Index(SearchViewModel viewModel)
         {
-            if (!viewModel.NoResultsForLocation && !viewModel.NoResultsForName && !viewModel.NoResultsForLA)
+            if (!viewModel.NoResults)
             {
 
                 if (viewModel.LocalAuthorityToRemove.HasValue)
@@ -61,7 +62,7 @@ namespace Edubase.Web.UI.Controllers
                     {
                         if (viewModel.SearchType == eSearchType.Location && LatLon.Parse(viewModel.LocationSearchModel.AutoSuggestValue) == null && !viewModel.LocationSearchModel.Text.IsNullOrEmpty())
                         {
-                            return await ProcessLocationDisambiguation(viewModel.LocationSearchModel.Text);
+                            await ProcessLocationDisambiguation(viewModel.LocationSearchModel.Text);
                         }
                     }
                 }
@@ -76,7 +77,7 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route("Search/Results", Name = "SearchResults")]
         public async Task<ActionResult> IndexResults(SearchViewModel viewModel)
         {
-            if (!viewModel.NoResultsForLocation && !viewModel.NoResultsForName && !viewModel.NoResultsForLA)
+            if (!viewModel.NoResults)
             {
 
                 if (viewModel.LocalAuthorityToRemove.HasValue)
@@ -99,7 +100,7 @@ namespace Edubase.Web.UI.Controllers
                             && LatLon.Parse(viewModel.LocationSearchModel.AutoSuggestValue) == null
                             && !viewModel.LocationSearchModel.Text.IsNullOrEmpty())
                         {
-                            return await ProcessLocationDisambiguation(viewModel.LocationSearchModel.Text);
+                            await ProcessLocationDisambiguation(viewModel.LocationSearchModel.Text);
                         }
 
                         if (viewModel.SearchType.OneOfThese(eSearchType.ByLocalAuthority, eSearchType.Location, eSearchType.Text, eSearchType.EstablishmentAll))
@@ -165,14 +166,15 @@ namespace Edubase.Web.UI.Controllers
         private async Task<ActionResult> ProcessLocationDisambiguation(string query)
         {
             var items = await _placesService.SearchAsync(query, false);
-
-            return View(
-                "LocationDisambiguation",
-                new LocationDisambiguationViewModel
-                {
-                    SearchText = query,
-                    MatchingLocations = items.ToList()
-                });
+            return items.Any()
+                ? View(
+                    "LocationDisambiguation",
+                    new LocationDisambiguationViewModel
+                    {
+                        SearchText = query,
+                        MatchingLocations = items.ToList()
+                    })
+                : null;
         }
     }
 }

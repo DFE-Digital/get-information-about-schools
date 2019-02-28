@@ -1,4 +1,4 @@
-﻿@using Edubase.Web.UI.Models.Search;
+@using Edubase.Web.UI.Models.Search;
 @using eStatus = Edubase.Services.Enums.eLookupEstablishmentStatus;
 @using VM = Edubase.Web.UI.Models.Search.SearchViewModel;
 @using Edubase.Web.UI.Helpers;
@@ -21,7 +21,7 @@
             <li class="search-type-wrapper">
                 <fieldset class="search-toggle-panel">
                     <span class="radio-button-wrap">
-                        <input id="searchtype-name-group" name="search-by" value="all" type="radio" data-toggle-panel="#searchby-group-ref">
+                        @Html.RadioButtonFor(m => m.SearchType, eSearchType.Group, new { id = "searchtype-name-group", name="search-by", value="all", data_toggle_panel = "#searchby-group-ref" })
                         <label class="edubase-button-radio" for="searchtype-name-group">
                             Name or reference number
                         </label>
@@ -33,6 +33,13 @@
                             <div class="warning-message visuallyhidden" role="alert">
                                 <p class="warning-message-text" aria-live="polite"></p>
                             </div>
+                            @if (Model.SearchType == eSearchType.Group && Model.NoResults)
+                            {
+                            @* Static alert for no search results *@
+                                <div role="alert" class="warning-message js-trigger-aria-live">
+                                    <p class="warning-message-text" aria-live="polite">We couldn't find any establishments matching your search criteria</p>
+                                </div>
+                            }
                             <label class="form-label" for="GroupSearchModel_Text">
                                 Enter name, Companies House number, Group <abbr title="Unique Identifier">UID</abbr> or ID
                                 <a href="#group-reference" class="icon-help">

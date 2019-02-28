@@ -1,4 +1,4 @@
-﻿using Edubase.Web.UI.Helpers.ModelBinding;
+using Edubase.Web.UI.Helpers.ModelBinding;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -69,9 +69,7 @@ namespace Edubase.Web.UI.Models.Search
             return this;
         }
 
-        public bool NoResultsForName { get; set; }
-        public bool NoResultsForLocation { get; set; }
-        public bool NoResultsForLA { get; set; }
+        public bool NoResults { get; set; }
     }
 
     public class LocalAuthorityIdList : List<int>
