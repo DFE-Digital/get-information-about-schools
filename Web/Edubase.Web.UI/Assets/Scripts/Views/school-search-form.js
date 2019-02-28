@@ -3,7 +3,7 @@
         console.log('showWarning');
         $('.warning-message').addClass('visuallyhidden');
         $panel.find('.warning-message').first().removeClass('visuallyhidden');
-        $panel.find('.warning-message-text').first().html(message);
+        $panel.find('.message-text').first().html(message);
 
         // var warningTemplate = '<div class="warning-message"><p>{0}</p></div>';
         // if ($panel.find('.warning-message').length > 0) {
