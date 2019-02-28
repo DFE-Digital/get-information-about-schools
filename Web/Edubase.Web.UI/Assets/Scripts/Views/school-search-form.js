@@ -58,15 +58,6 @@
             });
         }
 
-
-        $('#location-search-submit').on('click', function (e) {
-            if ($.trim($('#LocationSearchModel_Text').val()) === '') {
-                e.preventDefault();
-                self.showWarning($('#searchby-location-ref'),
-                    'Please enter a postcode, town or city to start a search');
-            }
-        });
-
         // Name or reference number search
         $('#name-search-submit').on('click', function (e) {
             var suggestionCount = $('#TextSearchModel_Text').nextAll('.tt-menu').find('.tt-suggestion').length;
@@ -76,13 +67,24 @@
                 e.preventDefault();
                 self.showWarning($('#searchby-name-ref'),
                     'Please enter an establishment name, URN, LAESTAB or UKPRN to start a search');
-
             }
         });
 
-        $('#la-search-submit').on('click', function (e) {
+        // Location search
+        $('#location-search-submit').on('click', function (e) {
+            if ($.trim($('#LocationSearchModel_Text').val()) === '') {
+                e.preventDefault();
+                self.showWarning($('#searchby-location-ref'),
+                    'Please enter a postcode, town or city to start a search');
+            }
+        });
 
+
+        // Local Authority search
+        $('#la-search-submit').on('click', function (e) {
+            console.log('LA click');
             var suggestionCount = $('#LocalAuthorityToAdd').nextAll('.tt-menu').find('.tt-suggestion').length;
+            console.log(suggestionCount);
             if (self.addedLaCount === 0) {
                 e.preventDefault();
 
@@ -101,9 +103,9 @@
                         'We don’t recognise this local authority. Amend it or clear it to continue searching.');
                 }
             }
-
         });
 
+        // Group search
         $('#group-search-submit').on('click', function (e) {
             var suggestionCount = $('#GroupSearchModel_Text').nextAll('.tt-menu').find('.tt-suggestion').length;
             var numericValue = !isNaN($('#TextSearchModel_Text').val().replace(/\D/g, ""));
@@ -120,6 +122,7 @@
             }
         });
 
+        // Governor search
         $('#governor-search-submit').on('click', function (e) {
             var fName = $.trim($('#forename').val());
             var sName = $.trim($('#surname').val());
@@ -133,6 +136,7 @@
                 }
         });
 
+        // Governor reference search
         $('#governor-search-submit-1').on('click', function (e) {
             var gId = $.trim($('#GovernorSearchModel_Gid').val());
 
@@ -163,20 +167,20 @@
         //     });
         // })("#la-search-submit","#LocalAuthorityToAdd");
 
-        (function () {
-            var $button = $("#governor-search-submit");
-            var disable = function (b) { $button.prop("disabled", b); };
-            $("form#governor-search-by-name-or-role").dirrty({ preventLeaving: false })
-                .on("dirty", function () { disable(false); })
-                .on("clean", function () { disable(true); });
-            disable(true);
+        // (function () {
+        //     var $button = $("#governor-search-submit");
+        //     var disable = function (b) { $button.prop("disabled", b); };
+        //     $("form#governor-search-by-name-or-role").dirrty({ preventLeaving: false })
+        //         .on("dirty", function () { disable(false); })
+        //         .on("clean", function () { disable(true); });
+        //     disable(true);
 
-            $("input#searchtype-gov-namerole").on("change", function (e, flag) { // hack jQuery Dirrty plugin so that it doesn't count the radio input in whether the form is 'dirty' or not.
-                var $el = $(this);
-                $el.attr("data-dirrty-initial-value", ($el.is(":checked") ? "checked" : "unchecked"));
-                if (!flag) $el.trigger("change", true);
-            });
-        })();
+        //     $("input#searchtype-gov-namerole").on("change", function (e, flag) { // hack jQuery Dirrty plugin so that it doesn't count the radio input in whether the form is 'dirty' or not.
+        //         var $el = $(this);
+        //         $el.attr("data-dirrty-initial-value", ($el.is(":checked") ? "checked" : "unchecked"));
+        //         if (!flag) $el.trigger("change", true);
+        //     });
+        // })();
 
     },
 
