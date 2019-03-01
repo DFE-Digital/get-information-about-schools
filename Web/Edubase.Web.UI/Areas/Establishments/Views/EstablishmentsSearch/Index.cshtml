@@ -1,4 +1,4 @@
-﻿@using Edubase.Web.UI.Models.Search
+@using Edubase.Web.UI.Models.Search
 @using Edubase.Web.UI.Helpers
 @using Edubase.Common
 @using Edubase.Services.Enums
@@ -154,7 +154,8 @@
                     @Selector("Urban/Rural description", M.BIND_ALIAS_URBRUR, Model.UrbanRuralDesignations.OrderBy(x => x.Name), Model.SelectedUrbanRuralIds, "additional-search-critera hidden", true)
 
                     <div id="additional-filter-wrap">
-                        <div class="govuk-option-select js-closed searchable-filters" data-closed-on-load="false" id="option-select-additional-filters">
+                        <div class="govuk-option-select js-closed searchable-filters" data-closed-on-load="false" id="option-select-additional-filters"
+                             role="search">
                             <div class="container-head js-container-head">
                                 <div class="option-select-label">More filters</div>
                                 <div class="js-selected-counter">
@@ -173,7 +174,7 @@
                     </div>
 
                     <div id="filter-addtional-controls">
-                        <a href="#" class="add-clear-filters" id="clear-filters">Clear all filters</a>
+                        <a href="#" class="add-clear-filters" id="clear-filters"  role="search">Clear all filters</a>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <a href="javascript:" class="save-filter-set-link js-save-set hidden">Save filter set</a>
@@ -200,7 +201,7 @@
             </div>
 
             <div role="alert" aria-live="assertive" id="results-notification" class="visuallyhidden"></div>
-            <div class="column-two-thirds" id="results-container">
+            <div class="column-two-thirds" id="results-container" role="main" aria-labelledby="searchResults">
                 @{Html.RenderPartial("Partials/_EstablishmentSearchResults");}
             </div>
 
@@ -228,8 +229,9 @@
         additionalClassName = additionalClassName.RemoveSubstring("hidden");
     }
     <div class="govuk-option-select js-collapsible @additionalClassName @Html.Conditional(filterRefine, "searchable-filters")" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
-         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
-        <div class="container-head js-container-head">
+         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name"
+         role="search">
+        <div class="container-head js-container-head" aria-label="@label">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter">
                 <span class="js-selected-counter-text"></span>
@@ -276,8 +278,10 @@
         additionalClassName = additionalClassName.RemoveSubstring("hidden");
     }
     <div class="govuk-option-select js-collapsible nested-filter-options js-selectable @additionalClassName @Html.Conditional(filterRefine, "searchable-filters")" data-closed-on-load="false" @*@(isExtraFilter ? "false" : "true")*@
-         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
-        <div class="container-head js-container-head">
+         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name"
+         role="search"
+         >
+        <div class="container-head js-container-head" aria-label="@label">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter">
                 <span class="js-selected-counter-text"></span>
@@ -291,7 +295,7 @@
             <div class="suggestion-target"></div>
             <div class="js-auto-height-inner">
                 <fieldset>
-                    <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
+                    <legend class="visuallyhidden" aria-expanded="true">Select an option below to filter the results- changing the selection will refresh the results</legend>
                     <div class="filter-wrapper select-all-wrap">
                         <input id="@(name)_all" class="filter-input select-all" type="checkbox" />
                         <label for="@(name)_all" class="filter-radio">
@@ -327,7 +331,8 @@
 
 @helper CloseDateFilter()
 {
-    <div class="govuk-option-select js-collapsible date-filters no-scroll additional-search-critera hidden" data-closed-on-load="false" id="close-date-filter" data-bind-alias="@M.BIND_ALIAS_CLOSE_DATE_FROM">
+    <div class="govuk-option-select js-collapsible date-filters no-scroll additional-search-critera hidden" data-closed-on-load="false" id="close-date-filter" data-bind-alias="@M.BIND_ALIAS_CLOSE_DATE_FROM"
+         role="search">
         <div class="container-head js-container-head">
             <div class="option-select-label">Close date</div>
             <div class="js-selected-counter">
@@ -350,7 +355,8 @@
 
 @helper OpenDateFilter()
 {
-    <div class="govuk-option-select js-collapsible date-filters no-scroll additional-search-critera hidden" data-closed-on-load="false" id="open-date-filter" data-bind-alias="@M.BIND_ALIAS_OPEN_DATE_FROM">
+    <div class="govuk-option-select js-collapsible date-filters no-scroll additional-search-critera hidden" data-closed-on-load="false" id="open-date-filter" data-bind-alias="@M.BIND_ALIAS_OPEN_DATE_FROM"
+         role="search">
         <div class="container-head js-container-head">
             <div class="option-select-label">Open date</div>
             <div class="js-selected-counter">
@@ -377,7 +383,8 @@
 @helper RadiusSelector(string label)
 {
     <div class="govuk-option-select js-collapsible"
-            id="option-select-@label.ToLower().Replace(" ", "-")">
+         id="option-select-@label.ToLower().Replace(" ", "-")"
+         role="search">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter"></div>
@@ -394,7 +401,8 @@
 
 @helper RadiusFilter() {
 
-    <div class="govuk-option-select radius-filter js-collapsible no-scroll" data-closed-on-load="false" id="option-select-radius" data-bind-alias="@M.BIND_ALIAS_RADIUS">
+    <div class="govuk-option-select radius-filter js-collapsible no-scroll" data-closed-on-load="false" id="option-select-radius" data-bind-alias="@M.BIND_ALIAS_RADIUS"
+         role="search">
 
         <div class="container-head js-container-head">
             <div class="option-select-label">Within radius of</div>
@@ -404,11 +412,11 @@
             <div class="js-auto-height-inner">
                 <div class="form-group">
                     <fieldset class="range-group">
-                        <legend class="visuallyhidden">Enter the radius in miles</legend>
+                        <legend class="visuallyhidden" aria-expanded="true">Enter the radius in miles</legend>
                         <span class="error-message hidden">Please check the radius you have entered</span>
                         <span class="inline-form-control">
                             <label for="RadiusInMiles" class="visuallyhidden">Radius in miles</label>
-                            <input type="text" id="RadiusInMiles" name="@M.BIND_ALIAS_RADIUS" value="@Model.GetRadiusOption()" class="form-control" maxlength="5" />
+                            <input type="text" id="RadiusInMiles" name="@M.BIND_ALIAS_RADIUS" value="@Model.GetRadiusOption()" class="form-control" maxlength="5" aria-labelledby="radiusInMiles" />
                             &nbsp;miles
                         </span>
                         <a href="#" class="button button-secondary filter-button">Apply</a>
