@@ -267,7 +267,7 @@
             var $inputField = $('.floating-text-field-wrap');
             var previouslySelected = $.inArray(la.id, selectedLocalAuthorities) > -1;
 
-            $('#searchby-la-ref').find('.warning-message').remove();
+            $('#searchby-la-ref').find('.warning-message').addClass('visuallyhidden');
 
             if (!previouslySelected) {
                 selectedLocalAuthorities.push(la.id);
@@ -476,14 +476,14 @@
                         'We don’t recognise this local authority. Amend it or clear it to continue searching.');
                 }
             }
-            window.setTimeout(function () {
-                if ($input.nextAll('.tt-menu').find('.tt-suggestion').length === 0 && $input.val().length > 3) {
-                    return self.showWarning($('#searchby-la-ref'),
-                        'We don’t recognise this local authority. Amend it or clear it to continue searching.');
-                } else {
-                    $('#searchby-la-ref').find('.warning-message').remove();
-                }
-            }, 0);
+            // window.setTimeout(function () {
+            //     if ($input.nextAll('.tt-menu').find('.tt-suggestion').length === 0 && $input.val().length > 3) {
+            //         return self.showWarning($('#searchby-la-ref'),
+            //             'We don’t recognise this local authority. Amend it or clear it to continue searching.');
+            //     } else {
+            //         $('#searchby-la-ref').find('.warning-message').addClass('visuallyhidden');
+            //     }
+            // }, 0);
 
 
         });
