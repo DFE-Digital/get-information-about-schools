@@ -60,6 +60,7 @@
 
         // Name or reference number search
         $('#name-search-submit').on('click', function (e) {
+            console.log('#name-search-submit click');
             var suggestionCount = $('#TextSearchModel_Text').nextAll('.tt-menu').find('.tt-suggestion').length;
             var numericValue = !isNaN ($('#TextSearchModel_Text').val().replace('/', ''));
 
@@ -107,6 +108,7 @@
 
         // Group search
         $('#group-search-submit').on('click', function (e) {
+            console.log('#group-search-submit click');
             var suggestionCount = $('#GroupSearchModel_Text').nextAll('.tt-menu').find('.tt-suggestion').length;
             var numericValue = !isNaN($('#TextSearchModel_Text').val().replace(/\D/g, ""));
 
