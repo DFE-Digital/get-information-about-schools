@@ -62,7 +62,11 @@ namespace Edubase.Web.UI.Controllers
                     {
                         if (viewModel.SearchType == eSearchType.Location && LatLon.Parse(viewModel.LocationSearchModel.AutoSuggestValue) == null && !viewModel.LocationSearchModel.Text.IsNullOrEmpty())
                         {
-                            await ProcessLocationDisambiguation(viewModel.LocationSearchModel.Text);
+                            var disambiguationResult = await ProcessLocationDisambiguation(viewModel.LocationSearchModel.Text);
+                            if (disambiguationResult != null)
+                            {
+                                return disambiguationResult;
+                            }
                         }
                     }
                 }
@@ -100,7 +104,11 @@ namespace Edubase.Web.UI.Controllers
                             && LatLon.Parse(viewModel.LocationSearchModel.AutoSuggestValue) == null
                             && !viewModel.LocationSearchModel.Text.IsNullOrEmpty())
                         {
-                            await ProcessLocationDisambiguation(viewModel.LocationSearchModel.Text);
+                            var disambiguationResult = await ProcessLocationDisambiguation(viewModel.LocationSearchModel.Text);
+                            if (disambiguationResult != null)
+                            {
+                                return disambiguationResult;
+                            }
                         }
 
                         if (viewModel.SearchType.OneOfThese(eSearchType.ByLocalAuthority, eSearchType.Location, eSearchType.Text, eSearchType.EstablishmentAll))
@@ -118,7 +126,7 @@ namespace Edubase.Web.UI.Controllers
                             return Redirect(Url.Action("Index", "GroupSearch", new { area = "Groups" }) + "?" + Request.QueryString);
                         }
 
-                        if (viewModel.SearchType == eSearchType.Governor)
+                        if (viewModel.SearchType.OneOfThese(eSearchType.Governor, eSearchType.GovernorReference))
                         {
                             return Redirect(
                                 $"{Url.Action("Index", "GovernorSearch", new { area = "Governors" })}?{Request.QueryString}&{string.Join("&", viewModel.GovernorSearchModel.RoleId.Select(r => $"&{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}={r}"))}");

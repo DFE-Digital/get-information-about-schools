@@ -138,11 +138,22 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 {"controller", "Search"},
                 {"area", string.Empty},
                 {"SelectedTab", SearchViewModel.Tab.Governors},
-                {"SearchType", eSearchType.Governor},
-                {"GovernorSearchModel.Forename", model.GovernorSearchModel.Forename},
-                {"GovernorSearchModel.Surname", model.GovernorSearchModel.Surname},
-                {"NoResults", "True"}
+                {"SearchType", model.SearchType}
             };
+
+            switch (model.SearchType)
+            {
+                case eSearchType.Governor:
+                    routeDictionary.Add("GovernorSearchModel.Forename", model.GovernorSearchModel.Forename);
+                    routeDictionary.Add("GovernorSearchModel.Surname", model.GovernorSearchModel.Surname);
+                    routeDictionary.Add("NoResults", true);
+                    break;
+                case eSearchType.GovernorReference:
+                    routeDictionary.Add("GovernorSearchModel.Gid", model.GovernorSearchModel.Gid);
+                    routeDictionary.Add("NoResults", true);
+                    break;
+            }
+
             return new RedirectResult(Url.RouteUrl(routeDictionary));
         }
 
