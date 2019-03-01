@@ -118,39 +118,6 @@
     }
 }
 
-
-.grey-warning {
-    background-color: $grey-3;
-    border-left: $black 4px solid;
-    position: relative;
-
-    p {
-        padding: 1em 12px 1em;
-    }
-
-    .cross {
-        position: absolute;
-        background-image: url('/public/assets/images/icons/grey-cross-transparent.png');
-        top: 50%;
-        margin-top: -8px;
-        right: 16px;
-        width: 16px;
-        height: 16px;
-        background-repeat: no-repeat;
-        background-size: contain;
-        cursor: pointer;
-
-        &:active {
-            border: 0;
-            outline: none;
-        }
-
-        &:focus {
-            background-color: transparent;
-        }
-    }
-}
-
 .section-break {
     border-top: $grey-3 2px solid;
     margin-top: 20px;

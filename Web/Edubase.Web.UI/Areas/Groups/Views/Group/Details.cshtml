@@ -52,28 +52,6 @@
             <a href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}")>Back to search results</a>
         }
     }
-
-    @if (Model.IsClosed)
-    {
-        if (Model.IsClosedInError)
-        {
-            <div class="grey-warning js-dismiss-message">
-                <p>
-                    This @Model.GroupTypeNameForClosureLabel was created in error and subsequently closed on @(Model.CloseDate?.ToString("dd/MM/yyyy")).
-                </p>
-                <a class="cross" href="#"><span class="visuallyhidden">Dismiss this message</span></a>
-            </div>
-        }
-        else
-        {
-            <div class="grey-warning js-dismiss-message">
-                <p>
-                    This @Model.GroupTypeNameForClosureLabel closed on @(Model.CloseDate?.ToString("dd/MM/yyyy")).
-                </p>
-                <a class="cross" href="#"><span class="visuallyhidden">Dismiss this message</span></a>
-            </div>
-        }
-    }
 </div>
 
 @if (ViewBag.ShowSaved)
@@ -93,6 +71,26 @@
     <p class="group-data-download">
         @Html.RouteLink("Download group data", "GroupDataDownload", new { uid = Model.Group.GroupUId, state = UriHelper.SerializeToUrlToken(new[] { new RouteDto("GroupDetails", new RouteValueDictionary(new { id = Model.Group.GroupUId }), Model.Group.Name) }) }, new { rel = "nofollow" })
     </p>
+
+    @if (Model.IsClosed)
+    {
+        if (Model.IsClosedInError)
+        {
+            <div class="panel-indent flush--top push-half--bottom">
+                <p>
+                    This @Model.GroupTypeNameForClosureLabel was created in error and subsequently closed on @(Model.CloseDate?.ToString("dd/MM/yyyy")).
+                </p>
+            </div>
+        }
+        else
+        {
+            <div class="panel-indent flush--top push-half--bottom">
+                <p>
+                    This @Model.GroupTypeNameForClosureLabel closed on @(Model.CloseDate?.ToString("dd/MM/yyyy")).
+                </p>
+            </div>
+        }
+    }
 
     @{Html.RenderPartial(@"Partials\GroupConfirmationNotifications");}
 
