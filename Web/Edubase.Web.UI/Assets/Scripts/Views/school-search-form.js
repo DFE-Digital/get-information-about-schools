@@ -110,7 +110,7 @@
         $('#group-search-submit').on('click', function (e) {
             console.log('#group-search-submit click');
             var suggestionCount = $('#GroupSearchModel_Text').nextAll('.tt-menu').find('.tt-suggestion').length;
-            var numericValue = !isNaN($('#TextSearchModel_Text').val().replace(/\D/g, ""));
+            var numericValue = !isNaN($('#GroupSearchModel_Text').val().replace(/\D/g, ""));
 
             if ($.trim($('#GroupSearchModel_Text').val()) === '') {
                 e.preventDefault();

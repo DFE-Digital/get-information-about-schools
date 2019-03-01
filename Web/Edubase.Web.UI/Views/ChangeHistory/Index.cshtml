@@ -183,18 +183,18 @@
                                             </label>
                                         </span>
                                         <div class="expanding-search-field" id="searchby-group-ref">
-                                            @* This alert gets dynamically populated *@
-                                            <div class="warning-message visuallyhidden" role="alert">
-                                                <p class="message-text" aria-live="polite"></p>
-                                            </div>
-                                            @if (Model.GroupSearchError)
-                                            {
-                                                @* Static alert for no search results *@
-                                                <div role="alert" class="warning-message js-trigger-aria-live">
-                                                    <p class="message-text" aria-live="polite">We couldn't find any establishments matching your search criteria</p>
+                                            <div class="" id="group-search-container">
+                                                @* This alert gets dynamically populated *@
+                                                <div class="warning-message visuallyhidden" role="alert">
+                                                    <p class="message-text" aria-live="polite"></p>
                                                 </div>
-                                            }
-                                            <div class="edubase-search-element with-typeahead has-typeahead" id="group-search-container">
+                                                @if (Model.GroupSearchError)
+                                                {
+                                                    @* Static alert for no search results *@
+                                                    <div role="alert" class="warning-message js-trigger-aria-live">
+                                                        <p class="message-text" aria-live="polite">We couldn't find any establishment groups matching your search criteria</p>
+                                                    </div>
+                                                }
                                                 <label class="form-label" for="GroupSearchModel_Text">
                                                     Enter name, Companies House number, Group <abbr title="Unique Identifier">UID</abbr> or ID
                                                     <a href="#group-reference" class="icon-help">
