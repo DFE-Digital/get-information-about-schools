@@ -15,7 +15,9 @@
     }
     // Remove bottom margin on last paragraph
     p:only-child,
-    p:last-child {
+    p:last-child,
+    ul:only-child,
+    ul:last-child {
         margin-bottom: 0;
     }
 
