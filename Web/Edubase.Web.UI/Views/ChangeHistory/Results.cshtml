@@ -1,4 +1,4 @@
-﻿@using System.Linq.Expressions
+@using System.Linq.Expressions
 @using Edubase.Common
 @model ChangeHistoryViewModel
 @{
@@ -66,7 +66,7 @@
             <div class="filter-form" id="filter-form">
                 <div id="EditSearchCollapse" class="blanket-container">
 
-                    <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="false" id="date-filter">
+                    <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="false" id="date-filter" role="search">
                         <div class="container-head js-container-head">
                             <div class="option-select-label">Date changes</div>
                             <div class="js-selected-counter">
@@ -119,7 +119,7 @@
 
     <div role="alert" aria-live="assertive" id="results-notification" class="visuallyhidden"></div>
 
-    <div class="column-two-thirds" id="results-container">
+    <div class="column-two-thirds" id="results-container" role="main" aria-labelledby="searchResults">
         @if (Model.Count == 0)
         {
             <p>There are no results, please widen your search with the filters.</p>
@@ -134,7 +134,7 @@
 
 @helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "")
 {
-    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false" id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
+    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false" id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name" role="search">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter">
@@ -170,7 +170,7 @@
 
 @helper Selector(string label, string name, IEnumerable<StringLookupItemViewModel> items, List<string> selectedItems, string additionalClassName = "")
 {
-    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false" id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
+    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false" id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name" role="search">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter">
