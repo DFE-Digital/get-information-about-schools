@@ -5,7 +5,7 @@
         margin-bottom: 0;
     }
 
-    
+
 
     p.establishment-type {
         font-size: 14px;
@@ -36,7 +36,7 @@
         padding-top: 16px;
     }
 
-    table.estab-links, 
+    table.estab-links,
     table.edit-estab-links {
 
         th {
@@ -96,8 +96,6 @@
 
         margin-top: 45px;
     }
-
-
 
     .content-column {
         padding-left: 0 !important;
@@ -210,66 +208,6 @@
     background: $govuk-blue;
     color: #fff;
     padding: 0.1em 0.5em 0;
-}
-
-.pending-updates-message {
-    background-color: $turquoise;
-    font-size: 15px;
-    color: white;
-    padding: 6px 36px 6px 44px;
-    position: relative;
-    margin-bottom: 10px;
-
-    .tick {
-        position: absolute;
-        left: 10px;
-        top: 0;
-        width: 35px;
-        height: 35px;
-        background-image: url('/public/assets/images/icons/tick.png');
-        background-repeat: no-repeat;
-        background-size: contain;
-    }
-
-    .exclaim {
-        position: absolute;
-        left: 10px;
-        top: 4px;
-        width: 24px;
-        height: 24px;
-        background-image: url('/public/assets/images/icons/exclaim.png');
-        background-repeat: no-repeat;
-        background-size: contain;
-    }
-
-    .cross {
-        position: absolute;
-        background-image: url('/public/assets/images/icons/white-cross-transparent.png');
-        top: 0;
-        right: 0;
-        width: 31px;
-        height: 31px;
-        background-repeat: no-repeat;
-        background-size: contain;
-        cursor: pointer;
-
-        &:active {
-            border: 0;
-            outline: none;
-        }
-
-        &:focus {
-            background-color: transparent;
-        }
-    }
-
-    a {
-        color: white;
-    }
-
-    p {
-        margin-bottom: 0.5em;
-    }
 }
 
 .pending-updates {

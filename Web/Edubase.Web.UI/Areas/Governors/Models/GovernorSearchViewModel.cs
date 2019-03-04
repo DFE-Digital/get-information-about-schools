@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Services.Enums;
 using Edubase.Services.Governors.Models;
 using Edubase.Services.Governors.Search;
@@ -65,5 +65,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public string RoleNames => StringUtil.Sentenceify(SelectedRoleIds.Select(x => GovernorRoles.First(r => r.Id == x).Name).ToArray(), StringUtil.SentenceifyOptions.AND);
 
+        public eSearchType SearchType { get; set; }
     }
 }

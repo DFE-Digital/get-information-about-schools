@@ -18,9 +18,9 @@
 
         @if (Model.DataUpdated)
         {
-            <div class="pending-updates-message dismissable-message">
+            <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
                 <div class="tick"></div>
-                <p>Data status has been updated.</p>
+                <p class="message-text" aria-live="polite">Data status has been updated.</p>
                 <a href="#" class="cross"><span class="visually-hidden">Dismiss notification</span></a>
             </div>
         }
@@ -69,3 +69,7 @@
         </div>
     </div>
 </div>
+
+@section ViewScripts {
+    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
+}

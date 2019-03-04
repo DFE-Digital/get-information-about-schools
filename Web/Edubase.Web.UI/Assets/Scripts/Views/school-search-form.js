@@ -1,13 +1,8 @@
 ﻿DfE.Views.schoolSearch = {
     showWarning: function ($panel, message) {
-        var warningTemplate = '<div class="warning-message"><p>{0}</p></div>';
-        if ($panel.find('.warning-message').length > 0) {
-            $panel.find('.warning-message p').html(message);
-
-        } else {
-            $panel.prepend(warningTemplate.replace('{0}', message));
-        }
-
+        $('.warning-message').addClass('visuallyhidden');
+        $panel.find('.warning-message').first().removeClass('visuallyhidden');
+        $panel.find('.message-text').first().html(message);
     },
     init: function (options) {
         'use strict';
@@ -52,15 +47,7 @@
             });
         }
 
-
-        $('#location-search-submit').on('click', function (e) {
-            if ($.trim($('#LocationSearchModel_Text').val()) === '') {
-                e.preventDefault();
-                self.showWarning($('#searchby-location-ref'),
-                    'Please enter a postcode, town or city to start a search');
-            }
-        });
-
+        // Name or reference number search
         $('#name-search-submit').on('click', function (e) {
             var suggestionCount = $('#TextSearchModel_Text').nextAll('.tt-menu').find('.tt-suggestion').length;
             var numericValue = !isNaN ($('#TextSearchModel_Text').val().replace('/', ''));
@@ -69,12 +56,23 @@
                 e.preventDefault();
                 self.showWarning($('#searchby-name-ref'),
                     'Please enter an establishment name, URN, LAESTAB or UKPRN to start a search');
-
             }
         });
 
+        // Location search
+        $('#location-search-submit').on('click', function (e) {
+            if ($.trim($('#LocationSearchModel_Text').val()) === '') {
+                e.preventDefault();
+                self.showWarning($('#searchby-location-ref'),
+                    'Please enter a postcode, town or city to start a search');
+            }
+        });
+
+
+        // Local Authority search
         $('#la-search-submit').on('click', function (e) {
             var suggestionCount = $('#LocalAuthorityToAdd').nextAll('.tt-menu').find('.tt-suggestion').length;
+
             if (self.addedLaCount === 0) {
                 e.preventDefault();
 
@@ -93,12 +91,12 @@
                         'We don’t recognise this local authority. Amend it or clear it to continue searching.');
                 }
             }
-
         });
 
+        // Group search
         $('#group-search-submit').on('click', function (e) {
             var suggestionCount = $('#GroupSearchModel_Text').nextAll('.tt-menu').find('.tt-suggestion').length;
-            var numericValue = !isNaN($('#TextSearchModel_Text').val().replace(/\D/g, ""));
+            var numericValue = !isNaN($('#GroupSearchModel_Text').val().replace(/\D/g, ""));
 
             if ($.trim($('#GroupSearchModel_Text').val()) === '') {
                 e.preventDefault();
@@ -112,6 +110,7 @@
             }
         });
 
+        // Governor search
         $('#governor-search-submit').on('click', function (e) {
             var fName = $.trim($('#forename').val());
             var sName = $.trim($('#surname').val());
@@ -125,6 +124,7 @@
                 }
         });
 
+        // Governor reference search
         $('#governor-search-submit-1').on('click', function (e) {
             var gId = $.trim($('#GovernorSearchModel_Gid').val());
 
@@ -134,42 +134,6 @@
                     'Please enter a governor ID to start a search');
             }
         });
-
-        var buttonEnabler = function (button, textbox) {
-            var condition = function () { $(button).prop("disabled", ($.trim($(textbox).val())).length === 0); };
-            condition();
-            $(textbox).on("keyup change", condition);
-        };
-
-        buttonEnabler("#name-search-submit", "#TextSearchModel_Text");
-        buttonEnabler("#location-search-submit", "#LocationSearchModel_Text");
-        buttonEnabler("#group-search-submit", "#GroupSearchModel_Text");
-        buttonEnabler("#governor-search-submit-1", "#GovernorSearchModel_Gid");
-
-        (function (button, textbox) {
-            var b = false;
-            var toggle = function (disabled) { $(button).prop("disabled", disabled); };
-            toggle($.trim($(textbox).val()).length === 0);
-            $(document).on("keyup change click", textbox + ",.remove-suggest-la", function () {
-                toggle(($.trim($(textbox).val())).length === 0 && $(".selected-las .remove-suggest-la").length == 0);
-            });
-        })("#la-search-submit","#LocalAuthorityToAdd");
-
-        (function () {
-            var $button = $("#governor-search-submit");
-            var disable = function (b) { $button.prop("disabled", b); };
-            $("form#governor-search-by-name-or-role").dirrty({ preventLeaving: false })
-                .on("dirty", function () { disable(false); })
-                .on("clean", function () { disable(true); });
-            disable(true);
-
-            $("input#searchtype-gov-namerole").on("change", function (e, flag) { // hack jQuery Dirrty plugin so that it doesn't count the radio input in whether the form is 'dirty' or not.
-                var $el = $(this);
-                $el.attr("data-dirrty-initial-value", ($el.is(":checked") ? "checked" : "unchecked"));
-                if (!flag) $el.trigger("change", true);
-            });
-        })();
-
     },
 
     getSchoolsSuggestionHandler: function (keywords, callback) {
@@ -191,24 +155,24 @@
     },
 
     getPlacesSuggestionHandler: function(keyword, callback) {
-      $.ajax({
-        url: '/Search/SuggestPlace',
-        data: {text: keyword},
-        dataType: 'json',
-        success: function(data) {
-          var suggestions = data.map(function(location){
-            var obj = {};
-            obj.text = location.name;
-            obj.value = location.coords.latitude + ', '+ location.coords.longitude;
+        $.ajax({
+            url: '/Search/SuggestPlace',
+            data: {text: keyword},
+            dataType: 'json',
+            success: function(data) {
+                var suggestions = data.map(function(location){
+                    var obj = {};
+                    obj.text = location.name;
+                    obj.value = location.coords.latitude + ', '+ location.coords.longitude;
 
-            return obj;
-          });
-          return callback(suggestions);
-        },
-        error: function(){
-          console.log('Problem retrieving location suggestions!');
-        }
-      });
+                    return obj;
+                });
+                return callback(suggestions);
+            },
+            error: function(){
+                console.log('Problem retrieving location suggestions!');
+            }
+        });
     },
 
     getTrustSuggestionHandler: function (keywords, callback) {
@@ -247,7 +211,7 @@
             var $inputField = $('.floating-text-field-wrap');
             var previouslySelected = $.inArray(la.id, selectedLocalAuthorities) > -1;
 
-            $('#searchby-la-ref').find('.warning-message').remove();
+            $('#searchby-la-ref').find('.warning-message').addClass('visuallyhidden');
 
             if (!previouslySelected) {
                 selectedLocalAuthorities.push(la.id);
@@ -278,10 +242,8 @@
 
         $('#LocalAuthorityToAdd').on('focus', function () {
             $('#la-id-target').addClass('focused');
-
         }).on('blur', function () {
             $('#la-id-target').removeClass('focused');
-
         });
 
         if (typeof (suggestionSource) === "function") { // remote source
@@ -420,18 +382,15 @@
         if (self.opts.highlightFirstSuggestion) {
             $('#TextSearchModel_Text, #GroupSearchModel_Text').on('typeahead:render', function (e) {
                 highLightFirstSuggestion.call(this);
-                //$(this).nextAll('.tt-menu').find('.tt-suggestion').slice(0, 1).addClass('tt-cursor');
             });
         }
 
         $('#LocalAuthorityToAdd').on('typeahead:render', function (e) {
-           // $(this).nextAll('.tt-menu').find('.tt-suggestion').slice(0, 1).addClass('tt-cursor');
             highLightFirstSuggestion.call(this);
         });
 
         $('#LocalAuthorityToAdd, #TextSearchModel_Text').on('typeahead:open', function (e) {
             highLightFirstSuggestion.call(this);
-            //$(this).nextAll('.tt-menu').find('.tt-suggestion').slice(0,1).addClass('tt-cursor');
         });
 
         $('#LocalAuthorityToAdd').on('keydown', function (e) {
@@ -450,16 +409,6 @@
                         'We don’t recognise this local authority. Amend it or clear it to continue searching.');
                 }
             }
-            window.setTimeout(function () {
-                if ($input.nextAll('.tt-menu').find('.tt-suggestion').length === 0 && $input.val().length > 3) {
-                    return self.showWarning($('#searchby-la-ref'),
-                        'We don’t recognise this local authority. Amend it or clear it to continue searching.');
-                } else {
-                    $('#searchby-la-ref').find('.warning-message').remove();
-                }
-            }, 0);
-
-
         });
 
         $(window).on('noLocationMatch', function (e) {

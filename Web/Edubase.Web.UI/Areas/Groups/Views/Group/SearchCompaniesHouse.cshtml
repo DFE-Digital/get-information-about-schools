@@ -16,19 +16,7 @@
 </div>
 
 @section ViewScripts{
-
-    <script>
-        $(function () {
-            (function () {
-                var $btn = $("button[type='submit']");
-                var $field = $("input#SearchText");
-                var toggle = function () { $btn.prop("disabled", $.trim($field.val()) == ""); };
-                $field.on("keyup change", toggle);
-                toggle();
-            })();
-        });
-    </script>
-
+    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
 }
 
 
@@ -46,14 +34,16 @@
         <div class="column-two-thirds">
             @if (string.IsNullOrWhiteSpace(Model.SearchText) && Request.Url.PathAndQuery.Contains("SearchText"))
             {
-                <div class="warning-message">
-                    <p>Please enter a Companies House name or number to start a search</p>
+                @* Static alert for empty search *@
+                <div role="alert" class="warning-message js-trigger-aria-live">
+                    <p class="message-text" aria-live="polite">Please enter a Companies House name or number to start a search</p>
                 </div>
             }
             else if (Model.NotFound)
             {
-                <div class="warning-message">
-                    <p>We couldn't find any companies matching your search criteria</p>
+                @* Static alert for no search results *@
+                <div role="alert" class="warning-message js-trigger-aria-live">
+                    <p class="message-text" aria-live="polite">We couldn't find any companies matching your search criteria</p>
                 </div>
             }
 

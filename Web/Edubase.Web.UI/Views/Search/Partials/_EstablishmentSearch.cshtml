@@ -1,4 +1,4 @@
-﻿@using VM = Edubase.Web.UI.Models.Search.SearchViewModel;
+@using VM = Edubase.Web.UI.Models.Search.SearchViewModel;
 @using Edubase.Web.UI.Helpers;
 @model VM
 
@@ -21,10 +21,15 @@
                         </label>
                     </span>
                     <div class="expanding-search-field" id="searchby-name-ref">
-                        @if (Model.NoResultsForName)
+                        @* This alert gets dynamically populated *@
+                        <div class="warning-message visuallyhidden" role="alert">
+                            <p class="message-text" aria-live="polite"></p>
+                        </div>
+                        @if (Model.SearchType == eSearchType.Text && Model.NoResults)
                         {
-                            <div class="warning-message">
-                                <p>We couldn't find any establishments matching your search criteria</p>
+                            @* Static alert for no search results *@
+                            <div role="alert" class="warning-message js-trigger-aria-live">
+                                <p class="message-text" aria-live="polite">We couldn't find any establishments matching your search criteria</p>
                             </div>
                         }
                         <label class="form-label" for="TextSearchModel_Text">
@@ -67,10 +72,15 @@
                         </label>
                     </span>
                     <div class="expanding-search-field" id="searchby-location-ref">
-                        @if (Model.NoResultsForLocation)
+                        @* This alert gets dynamically populated *@
+                        <div class="warning-message visuallyhidden" role="alert">
+                            <p class="message-text" aria-live="polite"></p>
+                        </div>
+                        @if (Model.SearchType == eSearchType.Location && Model.NoResults)
                         {
-                            <div class="warning-message">
-                                <p>We couldn't find any locations matching your search criteria</p>
+                            @* Currently not displaying. Redirecting instead *@
+                            <div class="warning-message js-trigger-aria-live" role="alert">
+                                <p class="message-text" aria-live="polite">We couldn't find any locations matching your search criteria</p>
                             </div>
                         }
                         <label class="form-label" for="LocationSearchModel_Text">Enter postcode, town or city</label>
@@ -109,10 +119,13 @@
                         </label>
                     </span>
                     <div class="expanding-search-field" id="searchby-la-ref">
-                        @if (Model.NoResultsForLA)
+                        <div class="warning-message visuallyhidden" role="alert">
+                            <p class="message-text" aria-live="polite"></p>
+                        </div>
+                        @if (Model.SearchType == eSearchType.ByLocalAuthority && Model.NoResults)
                         {
-                            <div class="warning-message">
-                                <p class="panel-text">We couldn't find any local authorities matching your search criteria</p>
+                            <div class="warning-message js-trigger-aria-live" role="alert">
+                                <p class="message-text" aria-live="polite">We couldn't find any local authorities matching your search criteria</p>
                             </div>
                         }
 
@@ -145,7 +158,7 @@
                         </div>
 
 
-                        @Html.HiddenFieldsFromQueryString(new[] { "NoResultsForName", "NoResultsForLocation", "NoResultsForLA" })
+                        @Html.HiddenFieldsFromQueryString(new[] { "NoResults" })
                         <div class="form-group">
                             <button type="submit" class="button mobile-full-width button-below search-button" id="la-search-submit">Search</button>
                         </div>

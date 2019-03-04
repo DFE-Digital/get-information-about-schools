@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Groups;
@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Edubase.Web.UI.Models.Search;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
@@ -112,10 +113,26 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     if (model.StartIndex == 0) model.Count = results.Count;
                 }
                 
-                if (model.Count == 1) return RedirectToDetailPage(model.Results.Single().GroupUId);
+                if (model.Count == 1) {return RedirectToDetailPage(model.Results.Single().GroupUId);}
+                if (model.Count == 0) {return RedirectToSearchPage(model);}
 
                 return View("GroupResults", model);
             }
+        }
+
+        private ActionResult RedirectToSearchPage(GroupSearchViewModel model)
+        {
+            var routeDictionary = new RouteValueDictionary
+            {
+                {"action", "Index"},
+                {"controller", "Search"},
+                {"area", string.Empty},
+                {"SelectedTab", SearchViewModel.Tab.Groups},
+                {"SearchType", eSearchType.Group},
+                {"GroupSearchModel.Text", model.GroupSearchModel.Text},
+                { "NoResults", "True"}
+            };
+            return new RedirectResult(Url.RouteUrl(routeDictionary));
         }
 
         private ActionResult RedirectToDetailPage(int id)
