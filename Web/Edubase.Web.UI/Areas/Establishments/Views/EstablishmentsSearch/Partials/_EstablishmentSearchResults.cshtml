@@ -38,9 +38,8 @@ else if (Model.Results.Count > 0)
     <ul class="school-results-listing">
         @{
             var resultId = startResult;
-        }
-        @foreach (var result in Model.Results)
-        {
+            foreach (var result in Model.Results)
+            {
             <li>
                 <h2 role="region" aria-label='result @resultId of @endResult'>@Html.ActionLink(result.Name.Clean() ?? "(name not recorded)", "Details", "Establishment", new {id = result.Urn, area = "Establishments", searchQueryString = Model.SearchQueryString}, new {@class = "bold-small"})</h2>
                 @if (Model.EstablishmentStatuses.FirstOrDefault(x => x.Id == result.StatusId).Name == "Closed")
@@ -76,6 +75,7 @@ else if (Model.Results.Count > 0)
                 </dl>
             </li>
             resultId += 1;
+            }
         }
     </ul>
     if (Model.PageCount > 1)
