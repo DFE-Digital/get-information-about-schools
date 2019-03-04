@@ -92,9 +92,10 @@
                     @Html.HiddenFor(m => m.SelectedTab)
                     <fieldset class="search-toggle-panel">
                         <span class="radio-button-wrap">
-                            <input type="radio" id="searchtype-gov-refno" data-toggle-panel="#searchtype-gov-refno-ref" name="gsearch" value="gid"
-                                   @Html.Conditional(gSearch == "gid", "checked=checked") />
-                            <label class="edubase-button-radio" for="searchtype-gov-refno">Reference number</label>
+                            @Html.RadioButtonFor(m => m.SearchType, eSearchType.GovernorReference, new { id = "searchtype-gov-refno", name = "gsearch", value = "gid", data_toggle_panel = "#searchtype-gov-refno-ref" })
+                            <label class="edubase-button-radio" for="searchtype-gov-refno">
+                                Reference number
+                            </label>
                         </span>
                         <div class="expanding-search-field" id="searchtype-gov-refno-ref">
                             @* This alert gets dynamically populated *@
