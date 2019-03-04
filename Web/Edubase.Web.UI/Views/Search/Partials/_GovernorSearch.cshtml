@@ -102,6 +102,13 @@
                             <div class="warning-message visuallyhidden" role="alert">
                                 <p class="message-text" aria-live="polite"></p>
                             </div>
+                            @if (Model.SearchType == eSearchType.GovernorReference && Model.NoResults)
+                            {
+                            @* Static alert for no search results *@
+                                <div role="alert" class="warning-message js-trigger-aria-live">
+                                    <p class="warning-message-text" aria-live="polite">We couldn't find any governors matching your search criteria</p>
+                                </div>
+                            }
                             <div class="edubase-search-element">
                                 <label for="GovernorSearchModel_Gid" class="form-label">
                                     Enter governor ID number (GID number)
