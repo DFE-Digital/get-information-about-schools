@@ -243,7 +243,7 @@ namespace Edubase.UnitTest.Controllers
 
             var result = (RedirectResult) await subject.Index(vm);
 
-            Assert.That(result.Url, Is.EqualTo("action=Index|controller=Search|area=|SearchType=Text|TextSearchModel.Text=|NoResultsForName=True"));
+            Assert.That(result.Url, Is.EqualTo("action=Index|controller=Search|area=|SearchType=Text|TextSearchModel.Text=|NoResults=True"));
         }
 
         [Test]

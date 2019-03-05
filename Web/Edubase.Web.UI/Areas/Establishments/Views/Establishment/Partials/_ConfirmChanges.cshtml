@@ -19,9 +19,12 @@
 
 <div class="grid-row">
     <div class="column-full edit-changes-summary">
+
+        <h1 class="heading-large">Confirm updates to establishment</h1>
+
         @if (Model.IsAcademy || Model.IsLAMaintained || Model.CCIsDemoting || Model.CCIsPromoting)
         {
-            <div class="warning-message">
+            <div class="panel-indent push-half--ends text">
                 @if (Model.IsAcademy)
                 {
                     <p class="flush--bottom hard--bottom">
@@ -64,16 +67,14 @@
 
         @if (Model.ShowDuplicateRecordWarning)
         {
-            <div class="warning-message">
+            <div class="panel-indent push-half--ends text">
                 <p>
                     There is already an establishment with the same name and local authority recorded. By confirming this change you acknowledge you may be duplicating the record.
                 </p>
             </div>
         }
 
-        <h1 class="heading-large">Confirm updates to establishment</h1>
-
-        <p class="font-xsmall">Please confirm updates to the following items for the Establishment @Model.OriginalEstablishmentName. <abbr title="Unique Reference Number">URN</abbr>: @Model.Urn.</p>
+        <p class="text">Please confirm updates to the following items for the Establishment @Model.OriginalEstablishmentName. <abbr title="Unique Reference Number">URN</abbr>: @Model.Urn.</p>
 
         <p class="table-caption">Showing 1 - @Model.ChangesSummary.Count of  @Model.ChangesSummary.Count</p>
         <table class="edubase-table changes-summary confirm-changes">

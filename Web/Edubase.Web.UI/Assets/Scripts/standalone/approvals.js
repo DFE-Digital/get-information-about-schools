@@ -24,6 +24,8 @@
                 pendingRejection: false,
                 itemsConfirmedRemoved: false,
                 itemsConfirmedRejected: false,
+                approvalMessage: '',
+                rejectionMessage: '',
                 isProcessing: true,
                 apiError: '',
                 apiBork: {},
@@ -149,10 +151,12 @@
                 },
                 approveSuccessCallback: function () {
                     this.itemsConfirmedRemoved = true;
+                    this.approvalMessage = 'Items approved. The editor has been notified by email.'
                 },
                 rejectSuccessCallBack: function() {
                     this.pendingRejection = false;
                     this.itemsConfirmedRejected = true;
+                    this.rejectionMessage = 'Items rejected. The editor has been notified by email.';
                     this.reason = '';
                     window.setTimeout(function() {
                         $("#reason").data().textCount.setCount();

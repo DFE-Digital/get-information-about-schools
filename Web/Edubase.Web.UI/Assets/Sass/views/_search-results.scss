@@ -322,8 +322,6 @@ table.approval-items {
     }
 }
 
-
-
 .link-button {
     padding:0;
     background-color:transparent;
@@ -331,64 +329,6 @@ table.approval-items {
     border:none;
     cursor:pointer;
     text-decoration:underline;
-}
-
-
-
-.pending-updates-message {
-        background-color:$turquoise;
-        font-size:15px;
-        color:white;
-        padding: 12px 36px 12px 44px;
-        position:relative;
-        margin-bottom:10px;
-
-        p {
-            margin: 0;
-        }
-
-        .tick {
-            position:absolute;
-            left:0;
-            top:5px;
-            width:35px;
-            height:35px;
-            background-image: url('/public/assets/images/icons/tick.png');
-            background-repeat:no-repeat;
-            background-size:contain;
-        }
-        .cross {
-            position:absolute;
-            background-image: url('/public/assets/images/icons/white-cross-transparent.png');
-            top:13px;
-            right:12px;
-            width:16px;
-            height:16px;
-            background-repeat:no-repeat;
-            background-size:contain;
-            cursor:pointer;
-        }
-
-        a { color:white; }
-    }
-
-.dismissable-warning {
-    background-color: $red;
-
-    .exclaim {
-        background-image: url('/public/assets/images/icons/exclaim-transparent.PNG');
-        width: 35px;
-        height: 35px;
-        display: inline-block;
-        position: absolute;
-        top: 0;
-        left: 0;
-
-         @include device-pixel-ratio() {
-            background-image: url('/public/assets/images/icons/exclaim-transparentx2.PNG');
-            background-size: 100%;
-          }
-    }
 }
 
 .clear-selections {

@@ -64,10 +64,15 @@
                                             </label>
                                         </span>
                                         <div class="expanding-search-field" id="searchby-name-ref">
+                                            @* This alert gets dynamically populated *@
+                                            <div class="warning-message visuallyhidden" role="alert">
+                                                <p class="message-text" aria-live="polite"></p>
+                                            </div>
                                             @if (Model.NoResultsForName)
                                             {
-                                                <div class="warning-message">
-                                                    <p>We couldn't find any establishments matching your search criteria</p>
+                                                @* Static alert for no search results *@
+                                                <div role="alert" class="warning-message js-trigger-aria-live">
+                                                    <p class="message-text" aria-live="polite">We couldn't find any establishments matching your search criteria</p>
                                                 </div>
                                             }
                                             <label class="form-label" for="TextSearchModel_Text">
@@ -178,13 +183,18 @@
                                             </label>
                                         </span>
                                         <div class="expanding-search-field" id="searchby-group-ref">
-                                            @if (Model.GroupSearchError)
-                                            {
-                                                <div class="warning-message">
-                                                    <p>We couldn't find any establishments matching your search criteria</p>
-                                                </div>
-                                            }
                                             <div class="edubase-search-element with-typeahead has-typeahead" id="group-search-container">
+                                                @* This alert gets dynamically populated *@
+                                                <div class="warning-message visuallyhidden" role="alert">
+                                                    <p class="message-text" aria-live="polite"></p>
+                                                </div>
+                                                @if (Model.GroupSearchError)
+                                                {
+                                                    @* Static alert for no search results *@
+                                                    <div role="alert" class="warning-message js-trigger-aria-live">
+                                                        <p class="message-text" aria-live="polite">We couldn't find any establishment groups matching your search criteria</p>
+                                                    </div>
+                                                }
                                                 <label class="form-label" for="GroupSearchModel_Text">
                                                     Enter name, Companies House number, Group <abbr title="Unique Identifier">UID</abbr> or ID
                                                     <a href="#group-reference" class="icon-help">
@@ -196,9 +206,9 @@
                                                 </div>
 
                                                 @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
-                                            </div>
-                                            <div class="form-group">
-                                                <button type="submit" id="group-search-submit" class="button mobile-full-width search-button">Search</button>
+                                                <div class="form-group">
+                                                    <button type="submit" id="group-search-submit" class="button mobile-full-width search-button">Search</button>
+                                                </div>
                                             </div>
 
                                         </div>
@@ -254,13 +264,10 @@
 @section ViewScripts
 {
     <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
+    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
 
     <script>
         (function() {
-            $('.edubase-button-radio').on('click', function () {
-                $('.warning-message').addClass('hidden');
-            });
-
             DfE.Views.schoolSearch.init({ highlightFirstSuggestion: true });
         }());
     </script>
