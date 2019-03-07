@@ -303,7 +303,7 @@
                             <dt>
                                 <input id="@(name)_@item.Id" class="filter-group-title  filter-input" type="checkbox" @Html.Conditional(item.ChildItems.Any(x=> selectedItems.Contains(x.Id)), "checked")/>
                                 <label for="@(name)_@item.Id" class="filter-radio">@item</label>
-                                <a href="#" class="child-option-toggle"><span class="visually-hidden">Show types within @item</span></a>
+                                <a href="#" class="child-option-toggle js-child-option-toggle" aria-expanded="false"><span class="visually-hidden">Types within @item</span></a>
                             </dt>
                             <dd class="filter-group">
                                 @foreach (var child in item.ChildItems)

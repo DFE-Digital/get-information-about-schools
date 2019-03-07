@@ -2,7 +2,7 @@
 
     var defaults = {
         parentControl: '.filter-group-title',
-        expander: '.child-option-toggle',
+        expander: '.js-child-option-toggle',
         childItems: '.filter-group'
     };
 
@@ -38,6 +38,7 @@
                 e.preventDefault();
                 $(this).toggleClass('open-children');
                 optionsPanel.toggleClass('hidden');
+                $(this).attr('aria-expanded', $(this).hasClass('open-children'));
             });
 
             parent.on('change', function (e) {
@@ -64,7 +65,7 @@
 
                 var count = buf.length;
 
-   
+
                 var checkedString = '';
                 if (count > 0) {
                     checkedString = count + ' selected';
@@ -95,7 +96,7 @@
 
         },
         //Set visual state of nested filters without triggering a result update
-        setPartialState: function() { 
+        setPartialState: function() {
             var $el = $(this.el), opts = this.opts;
             var childControls = $el.find('.filter-group input');
             var parent = $el.find(opts.parentControl);
@@ -104,7 +105,7 @@
             });
 
             parent.next('label').removeClass('partial-selection');
-           
+
             if (checkedChildren.length === 0) {
                 parent.prop('checked', false);
             } else if (checkedChildren.length < childControls.length) {
