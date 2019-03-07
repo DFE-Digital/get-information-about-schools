@@ -69,6 +69,7 @@
     <div class="column-third">
         <div class="filter-form" id="filter-form">
             <div id="EditSearchCollapse" aria-expanded="true" class="blanket-container">
+                <h2 class="visuallyhidden">Search results filters</h2>
                 <form method="get" action="@Url.Action("Index", "GovernorSearch", new {area = "Governors"})">
                     <input type="hidden" id="client-only-searchtype" value="GovernorsAll" />
 
@@ -77,7 +78,7 @@
                         <div class="container-head js-container-head">
                             <div class="option-select-label">Sort by</div>
                         </div>
-                        <div class="options-container container-retain-background">
+                        <div class="options-container">
                             <div class="suggestion-target"></div>
                             <div class="js-auto-height-inner">
                                 <label for="sortBy" class="visuallyhidden">Sort by</label>
@@ -170,7 +171,8 @@
     </div>
 
     <div role="alert" aria-live="assertive" id="results-notification" class="visuallyhidden"></div>
-    <div class="column-two-thirds" id="results-container" role="main" aria-labelledby="searchResults">
+    <h2 class="visuallyhidden">Search results listing</h2>
+    <div class="column-two-thirds" id="results-container">
 
         @{Html.RenderPartial("Partials/_GovernorSearchResults");}
 

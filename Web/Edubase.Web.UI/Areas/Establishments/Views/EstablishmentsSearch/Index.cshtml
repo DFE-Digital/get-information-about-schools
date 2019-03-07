@@ -85,15 +85,13 @@
         <div class="filter-form" id="filter-form">
             <div class="column-third">
 
-
                 <div id="EditSearchCollapse" class="blanket-container">
+                    <h2 class="visuallyhidden">Search results filters</h2>
 
                     @if (Model.SearchType == eSearchType.Location)
                     {
                         @RadiusFilter()
                     }
-
-
 
                     @SelectorNested("Establishment type", M.BIND_ALIAS_TYPEIDS, Model.EstablishmentTypes.OrderBy(e => e.Name), Model.SelectedEstablishmentTypeIds)
 
@@ -103,10 +101,7 @@
 
                     @Selector("Local authority", M.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds, filterRefine: true)
 
-
-
                     @Selector("Religious character", M.BIND_ALIAS_RELICHARIDS, Model.ReligiousCharacters.OrderBy(x => x.Name), Model.SelectedReligiousCharacterIds, filterRefine: true)
-
 
                     <!-- begin opted in filters -->
                     @OpenDateFilter()
@@ -201,7 +196,8 @@
             </div>
 
             <div role="alert" aria-live="assertive" id="results-notification" class="visuallyhidden"></div>
-            <div class="column-two-thirds" id="results-container" role="main" aria-labelledby="searchResults">
+            <h2 class="visuallyhidden">Search results listing</h2>
+            <div class="column-two-thirds" id="results-container">
                 @{Html.RenderPartial("Partials/_EstablishmentSearchResults");}
             </div>
 
@@ -231,11 +227,10 @@
     <div class="govuk-option-select js-collapsible @additionalClassName @Html.Conditional(filterRefine, "searchable-filters")" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
          id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name"
          role="search">
-        <div class="container-head js-container-head" aria-label="@label">
+        <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter">
                 <span class="js-selected-counter-text"></span>
-
             </div>
         </div>
         @if (filterRefine)
@@ -281,7 +276,7 @@
          id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name"
          role="search"
          >
-        <div class="container-head js-container-head" aria-label="@label">
+        <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter">
                 <span class="js-selected-counter-text"></span>
@@ -416,7 +411,7 @@
                         <span class="error-message hidden">Please check the radius you have entered</span>
                         <span class="inline-form-control">
                             <label for="RadiusInMiles" class="visuallyhidden">Radius in miles</label>
-                            <input type="text" id="RadiusInMiles" name="@M.BIND_ALIAS_RADIUS" value="@Model.GetRadiusOption()" class="form-control" maxlength="5" aria-labelledby="radiusInMiles" />
+                            <input type="text" id="RadiusInMiles" name="@M.BIND_ALIAS_RADIUS" value="@Model.GetRadiusOption()" class="form-control" maxlength="5" />
                             &nbsp;miles
                         </span>
                         <a href="#" class="button button-secondary filter-button">Apply</a>

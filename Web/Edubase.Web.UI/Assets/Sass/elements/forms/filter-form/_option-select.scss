@@ -204,10 +204,6 @@ category: Forms
       border-top: 10px;
     }
 
-    .container-retain-background {
-      border: none;
-      background-color: $grey-3;
-    }
     /* styles for collapsibleness. .js-collapsible is added by the javascript if the browser is not ie6/7 in which case these don't collapse */
     &.js-collapsible {
       .js-container-head {
