@@ -189,11 +189,11 @@
 }
 
 
-@helper SearchWithin()
+@helper SearchWithin(string label)
 {
     <div class="search-field-wrap">
         <label class="filter-searchwithin-label">
-            <span class="visually-hidden">Search within this filter</span>
+            <span class="visually-hidden">Search within @label filter</span>
             <input type="text" class="filter-search" />
             <button class="field-clear hidden"><span class="visually-hidden">Clear</span></button>
         </label>
@@ -218,7 +218,7 @@
         </div>
         @if (filterRefine)
         {
-            @SearchWithin()
+            @SearchWithin(@label)
         }
         <div class="options-container" id="">
             <div class="suggestion-target"></div>
