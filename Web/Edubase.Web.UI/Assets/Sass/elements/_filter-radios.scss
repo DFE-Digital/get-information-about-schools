@@ -71,6 +71,11 @@ input:checked + .filter-radio:after,
     @include opacity(1);
 }
 
+input:focus + .filter-radio:before,
+input:focus + input + .filter-radio:before {
+  box-shadow: 0 0 3px 3px $focus-colour;
+}
+
 .select-all-wrap {
     background-color: $grey-4;
 

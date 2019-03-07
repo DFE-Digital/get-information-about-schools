@@ -98,170 +98,168 @@ category: Forms
 */
 
 .govuk-option-select {
-    background-color: $grey-3;
-    padding: 5px;
-    position: relative;
-    margin-bottom: 1em;
+  background-color: $grey-3;
+  padding: 5px;
+  position: relative;
+  margin-bottom: 1em;
 
-    .error {
-        padding-left: 0;
-        border-left: 0;
+  .error {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .error-message {
+    font-size: 16px;
+  }
+
+  &.date-filters .error-message {
+    padding-left: 15px;
+  }
+
+  @include media(desktop) {
+    /* Redefine scrollbars on desktop where these lists are scrollable
+    so they are always visible in option lists */
+    ::-webkit-scrollbar {
+      -webkit-appearance: none;
+      width: 7px;
     }
 
-    .error-message {
-        font-size: 16px;
+    ::-webkit-scrollbar-thumb {
+      border-radius: 4px;
+      background-color: rgba(0,0,0,.5);
+      -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
     }
+  }
 
-    &.date-filters .error-message {
-        padding-left: 15px;
-    }
+  &:focus {
+    outline: 3px solid $yellow;
+  }
+
+  .container-head {
+    padding: 5px 8px;
+  }
+
+  .option-select-label {
+    @include core-19;
+    margin-right: 20px;
+    font-weight: bold;
+    padding-top: 5px;
+    padding-left: 10px;
+  }
+
+
+  .filter-radio {
+    @include inline-block;
+    padding: 7px 0 7px 30px;
+    border-bottom: 1px solid $border-colour;
+    width: 95%;
+    cursor: pointer;
+    font-size: 16px;
 
     @include media(desktop) {
-        /* Redefine scrollbars on desktop where these lists are scrollable
-    so they are always visible in option lists */
-        ::-webkit-scrollbar {
-            -webkit-appearance: none;
-            width: 7px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            border-radius: 4px;
-            background-color: rgba(0,0,0,.5);
-            -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
-        }
+      /* leave room for the scroll bars on desktop*/
+      width: 90%;
     }
 
-    &:focus {
-        outline: 3px solid $yellow;
+    &:hover {
+      background-color: $highlight-colour;
     }
 
-    .container-head {
-        padding: 5px 8px;
+    &[disabled] {
+      color: $grey-2;
     }
+  }
 
-    .option-select-label {
-        @include core-19;
-        margin-right: 20px;
-        font-weight: bold;
-        padding-top: 5px;
-        padding-left: 10px;
+  .filter-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    @include opacity(0);
+  }
+
+  .options-container {
+    position: relative;
+    background-color: $page-colour;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 200px;
+
+    .error-message.hidden {
+      display: none;
     }
+  }
 
 
-    .filter-radio {
-        @include inline-block;
-        padding: 7px 0 7px 30px;
-        border-bottom: 1px solid $border-colour;
-        width: 95%;
-        cursor: pointer;
-        font-size: 16px;
+  .js-enabled & {
+    padding: 0 0 1px 0;
 
-        @include media(desktop) {
-            /* leave room for the scroll bars on desktop*/
-            width: 90%;
-        }
-
-        &:hover {
-            background-color: $highlight-colour;
-        }
-
-        &[disabled] {
-            color: $grey-2;
-        }
-    }
-
-    .filter-input {
-        position: absolute;
-        top: 0;
-        left: 0;
-        @include opacity(0);
+    .js-selected-counter {
+      @include core-14;
+      padding-left: 10px;
+      float: left;
     }
 
     .options-container {
+      border: 5px solid $grey-3;
+      border-top: 10px;
+    }
+
+    /* styles for collapsibleness. .js-collapsible is added by the javascript if the browser is not ie6/7 in which case these don't collapse */
+    &.js-collapsible {
+      .js-container-head {
+        z-index: 97;
         position: relative;
-        background-color: $page-colour;
-        overflow-y: scroll;
-        overflow-x: hidden;
-        max-height: 200px;
+        border: none;
+        display: block;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+        margin-bottom: -1px;
+        padding: 5px 0;
+        background-color: $grey-3;
 
-
-
-        .error-message.hidden {
-            display: none;
+        &:after {
+          position: absolute;
+          background: file-url('option-select-toggle-sprite.png') no-repeat right 5px;
+          width: 24px;
+          height: 25px;
+          content: "";
+          right: 0;
+          top: 0;
         }
-    }
 
+        &:hover {
+          background-color: $grey-2;
+        }
 
+        &:hover + .options-container {
+          border-color: $grey-2;
+        }
 
-    .js-enabled & {
-        padding: 0 0 1px 0;
+        &[disabled] {
+          background-image: none;
+          color: inherit;
+        }
+      }
 
-        .js-selected-counter {
-            @include core-14;
-            padding-left: 10px;
-            float: left;
+      &.js-closed {
+        button:after {
+          background-position: right -75px;
         }
 
         .options-container {
-            border: 5px solid $grey-3;
-            border-top: 10px;
+          display: none;
         }
-        /* styles for collapsibleness. .js-collapsible is added by the javascript if the browser is not ie6/7 in which case these don't collapse */
-        &.js-collapsible {
-            .js-container-head {
-                z-index: 97;
-                position: relative;
-                border: none;
-                display: block;
-                width: 100%;
-                text-align: left;
-                cursor: pointer;
-                margin-bottom: -1px;
-                padding: 5px 0;
-                background-color: $grey-3;
-
-                &:after {
-                    position: absolute;
-                    background: file-url('option-select-toggle-sprite.png') no-repeat right 5px;
-                    width: 24px;
-                    height: 25px;
-                    content: "";
-                    right: 0;
-                    top: 0;
-                }
-
-                &:hover {
-                    background-color: $grey-2;
-                }
-
-                &:hover + .options-container {
-                    border-color: $grey-2;
-                }
-
-                &[disabled] {
-                    background-image: none;
-                    color: inherit;
-                }
-            }
-
-            &.js-closed {
-                button:after {
-                    background-position: right -75px;
-                }
-
-                .options-container {
-                    display: none;
-                }
-            }
-        }
+      }
     }
+  }
 
-    &.no-scroll {
-        .options-container {
-            overflow-y: auto;
-            max-height: none;
-        }
+  &.no-scroll {
+    .options-container {
+      overflow-y: auto;
+      max-height: none;
     }
+  }
 }
 
 
@@ -341,36 +339,36 @@ category: Forms
 }
 
 .additional-filters {
+  background-color: $white;
+
+  .container-head {
+    padding-left: 0;
+  }
+
+  .option-select-label {
+    padding-left: 0;
+  }
+
+  .search-field-wrap {
     background-color: $white;
+    border: 1px solid $black;
 
-    .container-head {
-        padding-left: 0;
+    .filter-searchwithin-label {
+      width: 88%;
     }
+  }
 
-    .option-select-label {
-        padding-left: 0;
-    }
+  .filter-search {
+    border-bottom: 0;
+    padding-top: 8px;
+  }
 
-    .search-field-wrap {
-        background-color: $white;
-        border: 1px solid $black;
+  .field-clear {
+    top: 6px;
+  }
 
-        .filter-searchwithin-label {
-            width: 88%;
-        }
-    }
-
-    .filter-search {
-        border-bottom: 0;
-        padding-top: 8px;
-    }
-
-    .field-clear {
-        top: 6px;
-    }
-
-    &.govuk-option-select .options-container {
-        border-width: 1px;
-        border-color: $black;
-    }
+  &.govuk-option-select .options-container {
+    border-width: 1px;
+    border-color: $black;
+  }
 }

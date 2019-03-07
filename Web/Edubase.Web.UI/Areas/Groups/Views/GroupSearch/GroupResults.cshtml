@@ -1,4 +1,4 @@
-﻿@using Edubase.Common;
+@using Edubase.Common;
 @using Edubase.Services.Groups.Search;
 @model GroupSearchViewModel
 @{
@@ -29,24 +29,27 @@
     <div class="column-third">
         <div class="filter-form" id="filter-form">
 
-            <div id="EditSearchCollapse" aria-expanded="true" class="blanket-container">
+            <div id="EditSearchCollapse" class="blanket-container">
+                <h2 class="visuallyhidden">Search results filters</h2>
                 <form method="get" action="@Url.Action("Index", "GroupSearch", new { area = "Groups" })">
                     <input type="hidden" id="client-only-searchtype" value="EstablishmentGroupsAll" />
 
                     <div class="govuk-option-select js-collapsible"
-                         id="option-select-sort-by">
+                         id="option-select-sort-by" role="search">
                         <div class="container-head js-container-head">
                             <div class="option-select-label">Sort by</div>
                         </div>
-                        <label for="sortBy" class="visuallyhidden">Sort by</label>
-                        <select class="form-control trigger-result-update" name="SortBy" id="sortBy">
-                            <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalAZ , "selected")>Alphabetical A-Z</option>
-                            <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
-                        </select>
+                        <div class="options-container">
+                            <label for="sortBy" class="visuallyhidden">Sort by</label>
+                            <select class="form-control trigger-result-update push-half--top" name="SortBy" id="sortBy">
+                                <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
+                                <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="govuk-option-select js-collapsible"
-                         id="option-select-group-type">
+                         id="option-select-group-type" role="search">
                         <div class="container-head js-container-head">
                             <div class="option-select-label">Group type</div>
                             <div class="js-selected-counter">
@@ -80,7 +83,7 @@
 
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <div class="govuk-option-select js-collapsible" id="option-select-group-status">
+                        <div class="govuk-option-select js-collapsible" id="option-select-group-status" role="search">
                             <div class="container-head js-container-head">
                                 <div class="option-select-label">Group status</div>
                                 <div class="js-selected-counter">
@@ -113,7 +116,7 @@
                         </div>
                     }
                     <div id="filter-addtional-controls">
-                        <a href="#" class="add-clear-filters" id="clear-filters">Clear all filters</a>
+                        <a href="#" class="add-clear-filters" id="clear-filters" role="search">Clear all filters</a>
                     </div>
                     <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
                     @Html.HiddenFor(!Model.GroupSearchModel.Text.IsEmpty(), x => x.GroupSearchModel.Text)
@@ -125,6 +128,7 @@
     </div>
 
     <div role="alert" aria-live="assertive" id="results-notification" class="visuallyhidden"></div>
+    <h2 class="visuallyhidden">Search results listing</h2>
     <div class="column-two-thirds" id="results-container">
 
         @{Html.RenderPartial("Partials/_GroupSearchResults");}
