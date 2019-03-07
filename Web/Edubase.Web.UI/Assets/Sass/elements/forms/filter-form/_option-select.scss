@@ -180,7 +180,7 @@ category: Forms
   .options-container {
     position: relative;
     background-color: $page-colour;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
     max-height: 200px;
 

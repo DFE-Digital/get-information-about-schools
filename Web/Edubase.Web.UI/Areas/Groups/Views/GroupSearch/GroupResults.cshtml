@@ -40,14 +40,11 @@
                             <div class="option-select-label">Sort by</div>
                         </div>
                         <div class="options-container">
-                            <div class="suggestion-target"></div>
-                            <div class="js-auto-height-inner">
-                                <label for="sortBy" class="visuallyhidden">Sort by</label>
-                                <select class="form-control trigger-result-update" name="SortBy" id="sortBy">
-                                    <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
-                                    <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
-                                </select>
-                            </div>
+                            <label for="sortBy" class="visuallyhidden">Sort by</label>
+                            <select class="form-control trigger-result-update push-half--top" name="SortBy" id="sortBy">
+                                <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
+                                <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
+                            </select>
                         </div>
                     </div>
 
