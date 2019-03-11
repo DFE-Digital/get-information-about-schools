@@ -1,4 +1,4 @@
-﻿@using Edubase.Web.UI.Models
+@using Edubase.Web.UI.Models
 @using System.Linq
 @using ViewModel = Edubase.Web.UI.Areas.Establishments.Models.IEstablishmentPageViewModel
 @model ViewModel
@@ -30,7 +30,7 @@
 
 @if (!IsSectionDefined("validation"))
 {
-    @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+    @Html.Partial("_ValidationSummary", ViewData.ModelState);
 }
 else
 {
@@ -132,23 +132,23 @@ else
                 </ul>
             </div>
             <div class="tab-content-wrapper horizontal-tabs-content">
-            @if (Model.SelectedTab == "governance")
-            {
-                <div class="tab-content">
+                @if (Model.SelectedTab == "governance")
+                {
+                    <div class="tab-content">
+                        @RenderBody()
+                    </div>
+                }
+                else
+                {
                     @RenderBody()
-                </div>
-            }
-            else
-            {
-                @RenderBody()
-            }
+                }
 
             </div>
         </div>
     </div>
 </div>
 
- @section ViewScripts
+@section ViewScripts
  {
-     @(RenderSection("ViewScripts", required: false))
- }
+    @(RenderSection("ViewScripts", required: false))
+}
