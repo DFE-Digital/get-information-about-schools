@@ -5,7 +5,7 @@
 @{
     ViewBag.bodyClasses = "create-edit-school school-details";
     ViewBag.hideLogo = true;
-    ViewBag.Title = "Edit establishment";
+    ViewBag.Title = !IsSectionDefined("validation") ? "Error: Edit establishment" : "Edit establishment";
     Layout = "~/Views/Dfe/Layouts/template.cshtml";
 }
 <div class="breadcrumbs">
@@ -28,13 +28,6 @@
     </div>
 }
 
-<h1 class="heading-large">
-    <span class="heading-secondary">Edit establishment</span>
-    @Model.Name
-</h1>
-<p class="urn"><abbr title="Unique Reference Number">URN</abbr>: @Model.Urn</p>
-<p class="establishment-type">@Model.TypeName</p>
-
 @if (!IsSectionDefined("validation"))
 {
     @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
@@ -43,6 +36,13 @@ else
 {
     @RenderSection("validation", false)
 }
+
+<h1 class="heading-large">
+    <span class="heading-secondary">Edit establishment</span>
+    @Model.Name
+</h1>
+<p class="urn"><abbr title="Unique Reference Number">URN</abbr>: @Model.Urn</p>
+<p class="establishment-type">@Model.TypeName</p>
 
 <div class="grid-row">
     <div class="column-full">
