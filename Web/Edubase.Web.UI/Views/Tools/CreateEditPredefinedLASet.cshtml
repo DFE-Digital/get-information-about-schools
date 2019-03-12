@@ -33,11 +33,11 @@
                 @if (Model.WarningNameClash)
                 {
                 <div class="modal-overlay" id="warning-modal-overlay-0"></div>
-                <div class="modal-content" id="warning-modal-content-0">
+                <div class="modal-content" id="warning-modal-content-0" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
+                    <a href="#" id="warning-exit-overlay-0" class="modal-exit js-allow-exit">Close</a>
                     <div class="modal-inner">
-                        <a href="#" id="warning-exit-overlay-0" class="modal-exit js-allow-exit">Close</a>
-                        <h3 class="heading-large">A set already exists with this name.</h3>
-                        <p>Saving with this name will overwrite the existing set.</p>
+                        <h3 class="heading-large" tabindex="0" id="modal-label">A set already exists with this name.</h3>
+                        <p tabindex="0" id="model-desc">Saving with this name will overwrite the existing set.</p>
                     </div>
                     <div class="button-row">
                         <a href="#" class="button mobile-full-width" id="overlay-proceed-0">Ok</a>
@@ -115,6 +115,13 @@
         }());
 
         DfE.Views.schoolSearch.init();
+
+        $(document).ready(function() {
+            // Focus on modal when available
+            if ($('#modal-label').length > 0) {
+                $('#modal-label').focus();
+            }
+        });
     </script>
 
 }
