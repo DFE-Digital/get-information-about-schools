@@ -6,11 +6,11 @@
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND);
 
     <div class="modal-overlay" id="warning-modal-overlay-0"></div>
-    <div class="modal-content" id="warning-modal-content-0">
+    <div class="modal-content" id="warning-modal-content-0" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
+        <a href="#" id="warning-exit-overlay-0" class="modal-exit js-allow-exit">Close</a>
         <div class="modal-inner">
-            <a href="#" id="warning-exit-overlay-0" class="modal-exit js-allow-exit">Close</a>
-            <h3 class="heading-large">Similar name</h3>
-            <p>There's already a group with a similar name:<br /><strong>@warning.MessageParameters[0]</strong>, <abbr title="Unique Identifier">UID</abbr>: @warning.MessageParameters[1]</p>
+            <h3 class="heading-large" tabindex="0" id="modal-label">Similar name</h3>
+            <p tabindex="0" id="model-desc">There's already a group with a similar name:<br /><strong>@warning.MessageParameters[0]</strong>, <abbr title="Unique Identifier">UID</abbr>: @warning.MessageParameters[1]</p>
         </div>
         <div class="button-row">
             <a href="#" class="button mobile-full-width" id="overlay-proceed-0">Proceed</a>
@@ -24,11 +24,11 @@
 {
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.CONFIRMATION_CC_CLOSE);
     <div class="modal-overlay" id="warning-modal-overlay-1"></div>
-    <div class="modal-content" id="warning-modal-content-1">
+    <div class="modal-content" id="warning-modal-content-1" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
+        <a href="#" id="warning-exit-overlay-1" class="modal-exit">Close</a>
         <div class="modal-inner">
-            <a href="#" id="warning-exit-overlay-1" class="modal-exit">Close</a>
-            <h3 class="heading-large">Confirmation</h3>
-            <p>I confirm that:</p>
+            <h3 class="heading-large" tabindex="0" id="modal-label">Confirmation</h3>
+            <p tabindex="0" id="model-desc">I confirm that:</p>
             <ul class="font-small list list-bullet">
                 <li>I have read the DfE's short guide for LAs document, and</li>
                 <li>by closing this children's centres group all linked children's centre establishments will have their links removed from this group.</li>
@@ -46,11 +46,11 @@
 {
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.CONFIRMATION_FEDERATION_BECOMES_CLOSED_LINKS_REMOVED);
     <div class="modal-overlay" id="warning-modal-overlay-2"></div>
-    <div class="modal-content" id="warning-modal-content-2">
+    <div class="modal-content" id="warning-modal-content-2" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
+        <a href="#" id="warning-exit-overlay-2" class="modal-exit">Close</a>
         <div class="modal-inner">
-            <a href="#" id="warning-exit-overlay-2" class="modal-exit">Close</a>
-            <h3 class="heading-medium">Establishment removal</h3>
-            <p>All establishments will be removed from this federation.</p>
+            <h3 class="heading-medium" tabindex="0" id="modal-label">Establishment removal</h3>
+            <p tabindex="0" id="model-desc">All establishments will be removed from this federation.</p>
         </div>
         <div class="button-row">
             <a href="#" class="button mobile-full-width" id="overlay-proceed-2">Proceed</a>
@@ -63,11 +63,11 @@
 {
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.CONFIRMATION_FEDERATION_NO_LINKS_CLOSE);
     <div class="modal-overlay" id="warning-modal-overlay-3"></div>
-    <div class="modal-content" id="warning-modal-content-3">
+    <div class="modal-content" id="warning-modal-content-3" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
+        <a href="#" id="warning-exit-overlay-3" class="modal-exit">Close</a>
         <div class="modal-inner">
-            <a href="#" id="warning-exit-overlay-3" class="modal-exit">Close</a>
-            <h3 class="heading-medium">Federation closure</h3>
-            <p>This federation has no linked establishments, so it will be set as closed once you save the record.</p>
+            <h3 class="heading-medium" tabindex="0" id="modal-label">Federation closure</h3>
+            <p tabindex="0" id="model-desc">This federation has no linked establishments, so it will be set as closed once you save the record.</p>
         </div>
         <div class="button-row">
             <a href="#" class="button mobile-full-width" id="overlay-proceed-3">Proceed</a>
@@ -82,11 +82,11 @@
 {
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.GROUP_OPEN_DATE_ALIGNMENT);
     <div class="modal-overlay" id="warning-modal-overlay-4"></div>
-    <div class="modal-content" id="warning-modal-content-4">
+    <div class="modal-content" id="warning-modal-content-4" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
+        <a href="#" id="warning-exit-overlay-4" class="modal-exit">Close</a>
         <div class="modal-inner">
-            <a href="#" id="warning-exit-overlay-4" class="modal-exit">Close</a>
-            <h3 class="heading-medium">Are you sure you want to change the open date?</h3>
-            <p>This open date is later than some of the @Model.ListOfEstablishmentsPluralName.ToLower()’ joined dates. These joined dates will be automatically aligned to the new open date.</p>
+            <h3 class="heading-medium" tabindex="0" id="modal-label">Are you sure you want to change the open date?</h3>
+            <p tabindex="0" id="model-desc">This open date is later than some of the @Model.ListOfEstablishmentsPluralName.ToLower()’ joined dates. These joined dates will be automatically aligned to the new open date.</p>
         </div>
         <div class="button-row">
             <a href="#" class="button mobile-full-width" id="overlay-proceed-4">Proceed</a>
@@ -101,11 +101,11 @@
 {
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.CONFIRMATION_MAT_CLOSE_LINKS);
     <div class="modal-overlay" id="warning-modal-overlay-5"></div>
-    <div class="modal-content" id="warning-modal-content-5">
+    <div class="modal-content" id="warning-modal-content-5" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
+        <a href="#" id="warning-exit-overlay-5" class="modal-exit">Close</a>
         <div class="modal-inner">
-            <a href="#" id="warning-exit-overlay-5" class="modal-exit">Close</a>
-            <h3 class="heading-medium">Are you sure you wish to continue?</h3>
-            <p>@warning.Message</p>
+            <h3 class="heading-medium" tabindex="0" id="modal-label">Are you sure you wish to continue?</h3>
+            <p tabindex="0" id="model-desc">@warning.Message</p>
         </div>
         <div class="button-row">
             <a href="#" class="button mobile-full-width" id="overlay-proceed-5">Proceed</a>
@@ -117,11 +117,11 @@ else if (Model.WarningsToProcess.SingleOrDefault(x => x.Code == GroupEditorViewM
 {
     var warning = Model.WarningsToProcess.Single(x => x.Code == GroupEditorViewModel.UIWarningCodeMatClosureAreYouSure);
     <div class="modal-overlay" id="warning-modal-overlay-6"></div>
-    <div class="modal-content" id="warning-modal-content-6">
+    <div class="modal-content" id="warning-modal-content-6" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
+        <a href="#" id="warning-exit-overlay-6" class="modal-exit">Close</a>
         <div class="modal-inner">
-            <a href="#" id="warning-exit-overlay-6" class="modal-exit">Close</a>
-            <h3 class="heading-medium">Are you sure you wish to continue?</h3>
-            <p>@warning.Message</p>
+            <h3 class="heading-medium" tabindex="0" id="modal-label">Are you sure you wish to continue?</h3>
+            <p tabindex="0" id="model-desc">@warning.Message</p>
         </div>
         <div class="button-row">
             <a href="#" class="button mobile-full-width" id="overlay-proceed-6">Proceed</a>
@@ -129,4 +129,3 @@ else if (Model.WarningsToProcess.SingleOrDefault(x => x.Code == GroupEditorViewM
         </div>
     </div>
 }
-
