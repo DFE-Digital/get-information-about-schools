@@ -1,11 +1,14 @@
 (function () {
 
-    var $errorSummary = $('.error-summary');
-
     $(document).ready(function() {
         // Focusing on error summary
-        if ($errorSummary.length > 0) {
-            $errorSummary.focus();
+        if ($('.error-summary').length) {
+            $('.error-summary').focus();
+            $('.error-summary a').click(function (e) {
+                e.preventDefault()
+                var href = $(this).attr('href');
+                $(href).focus();
+            })
         }
     });
 
