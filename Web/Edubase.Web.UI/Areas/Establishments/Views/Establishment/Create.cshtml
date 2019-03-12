@@ -202,15 +202,15 @@
 {
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND);
     <div class="modal-overlay" id="warning-modal-overlay-0"></div>
-    <div class="modal-content" id="warning-modal-content-0">
+    <div class="modal-content" id="warning-modal-content-0" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
+        <a href="#" id="warning-exit-overlay-0" class="modal-exit js-allow-exit">Close</a>
         <div class="modal-inner">
-            <a href="#" id="warning-exit-overlay-0" class="modal-exit allow-exit">Close</a>
-            <h3 class="heading-large">Duplicate record</h3>
-            <p>The record you are creating for <strong>@(warning.MessageParameters[0])</strong> in <strong>@(warning.MessageParameters[1])</strong> may duplicate existing record(s): <strong>@(warning.MessageParameters[2])</strong>
+            <h3 class="heading-large" tabindex="0" id="modal-label">Duplicate record</h3>
+            <p tabindex="0" id="model-desc">The record you are creating for <strong>@(warning.MessageParameters[0])</strong> in <strong>@(warning.MessageParameters[1])</strong> may duplicate existing record(s): <strong>@(warning.MessageParameters[2])</strong>
         </div>
         <div class="button-row">
             <a href="#" class="button mobile-full-width" id="overlay-proceed-0">Proceed</a>
-            <a href="#" class="button button-secondary mobile-full-width allow-exit" id="overlay-cancel-0">Cancel</a>
+            <a href="#" class="button button-secondary mobile-full-width js-allow-exit" id="overlay-cancel-0">Cancel</a>
         </div>
     </div>
 }
@@ -313,8 +313,11 @@
                 $("#number-gen-options").hide();
                 $("#establishment-phase-form-group").hide();
                 $("#enter-number").hide();
-            }   
-        });       
+            }
+            if ($('#modal-label').length > 0) {
+                $('#modal-label').focus();
+            }
+        });
 
 
         (function () {
