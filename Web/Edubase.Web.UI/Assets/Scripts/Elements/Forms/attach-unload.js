@@ -87,9 +87,9 @@ DfE.Util.showUnload = function (message, permitedExits) {
 
 
 
-    $permittedEscapes.addClass('allow-exit');
+    $permittedEscapes.addClass('js-allow-exit');
 
-    $contentArea.on('click', '.allow-exit', function () {
+    $contentArea.on('click', '.js-allow-exit', function () {
         youMayLeave = true;
         window.setTimeout(function () {
             youMayLeave = false;

@@ -125,19 +125,23 @@
                     description.attr('id', 'modal-label');
 
                 } else {
-                    descId = description.attr('id');
+                    labelId = description.attr('id');
                 }
 
                 if (!description.next()[0].hasAttribute('id')) {
                     description.next().attr('id', 'model-desc');
                 } else {
-                    labelId = description.next().attr('id');
+                    descId = description.next().attr('id');
                 }
 
                 $('#' + opts.idPrefix + 'modal-content').attr({ 'aria-labelledby': labelId, 'aria-describedby': descId });
             }
 
-            $('#' + opts.idPrefix + 'modal-label').focus();
+            if ($('#' + opts.idPrefix + 'modal-label').length) {
+              $('#' + opts.idPrefix + 'modal-label').focus();
+            } else {
+              $('#' + opts.idPrefix + 'modal-title').focus();
+            }
 
             $('#full-content').on('click', '#' + opts.idPrefix + 'button-ok', function (e) {
                 e.preventDefault();
