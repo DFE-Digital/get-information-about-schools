@@ -5,7 +5,7 @@
 @{
     ViewBag.bodyClasses = "create-edit-school school-details";
     ViewBag.hideLogo = true;
-    ViewBag.Title = !IsSectionDefined("validation") ? "Error: Edit establishment" : "Edit establishment";
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Edit establishment");
     Layout = "~/Views/Dfe/Layouts/template.cshtml";
 }
 <div class="breadcrumbs">

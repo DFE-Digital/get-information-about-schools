@@ -1,4 +1,4 @@
-﻿@using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
+@using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
 @model ViewModel
 @{
     if (Model.ChangesSummary == null)
@@ -31,19 +31,19 @@
                 @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel mobile-full-width" })
 
                 <div class="form-group first">
-                    @Html.LabelFor(x => x.HelpdeskNotes, "Helpdesk notes" , new { @class="form-label"})
+                    @Html.LabelFor(x => x.HelpdeskNotes, new { @class="form-label"})
                     @Html.TextAreaFor(x => x.HelpdeskNotes, new { @class = "form-control", rows = "10", maxlength = "1000" })
                 </div>
 
-                @Html.EditorFor(x => x.HelpdeskLastUpdate, new { title = "Edubase last update" })
+                @Html.EditorFor(x => x.HelpdeskLastUpdate)
 
                 <div class="form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousLocalAuthorityId)">
-                    @Html.LabelFor(x => x.HelpdeskPreviousLocalAuthorityId, "Previous local authority")
+                    @Html.LabelFor(x => x.HelpdeskPreviousLocalAuthorityId)
                     @Html.DropDownListFor(x => x.HelpdeskPreviousLocalAuthorityId, Model.LocalAuthorities, "Please select a local authority", new { @class = "form-control" })
                 </div>
 
                 <div class="form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousEstablishmentNumber)">
-                    @Html.LabelFor(x => x.HelpdeskPreviousEstablishmentNumber, "Previous establishment number")
+                    @Html.LabelFor(x => x.HelpdeskPreviousEstablishmentNumber)
                     @Html.ValidationMessageFor(x => x.HelpdeskPreviousEstablishmentNumber)
                     @Html.TextBoxFor(x => x.HelpdeskPreviousEstablishmentNumber, new { @class = "form-control" })
                 </div>

@@ -2,12 +2,13 @@
 
 @if (!Model.IsValid)
 {
+
     <div class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
         <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
         <ul class="error-summary-list">
 
             @{
-                var validationResult = (FluentValidation.Results.ValidationResult) ViewBag.FVErrors;
+                var validationResult = (FluentValidation.Results.ValidationResult)ViewBag.FVErrors;
                 if (validationResult != null)
                 {
                     // fluentValidation errors
@@ -21,7 +22,7 @@
                     // traditional model validation
                     foreach (var modelError in Model.Keys.SelectMany(key => this.Model[key].Errors.Select(x => Tuple.Create(key, x.ErrorMessage))))
                     {
-                        <li><a href="#@modelError.Item1">@modelError.Item2</a></li>
+                        <li><a href='#@modelError.Item1.Replace(".","_")'>@modelError.Item2</a></li>
                     }
                 }
             }
