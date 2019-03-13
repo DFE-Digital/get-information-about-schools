@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Common.Reflection;
 using Edubase.Common.Spatial;
 using Edubase.Services.Domain;
@@ -274,10 +274,20 @@ namespace Edubase.Services.Establishments.Models
         public DateTime? LastUpdatedUtc { get; set; }
         public async Task<string> GetAddressAsync(ICachedLookupService lookup) => StringUtil.ConcatNonEmpties(", ", Address_Line1, Address_Locality, Address_Line3, Address_CityOrTown, await lookup.GetNameAsync("CountyId", Address_CountyId), Address_PostCode);
         public string GetLAESTAB(string laCode) => string.Concat(laCode, "/", EstablishmentNumber.GetValueOrDefault().ToString("D4"));
+
+        [DisplayName("Helpdesk notes")]
         public string HelpdeskNotes { get; set; }
+
+        [DisplayName("EduBase last update")]
         public DateTime? HelpdeskLastUpdate { get; set; }
+
+        [DisplayName("EduBase trigger 1")]
         public string HelpdeskTrigger1 { get; set; }
+
+        [DisplayName("Previous local authority")]
         public int? HelpdeskPreviousLocalAuthorityId { get; set; }
+
+        [DisplayName("Previous establishment number")]
         public int? HelpdeskPreviousEstablishmentNumber { get; set; }
         
         [DisplayName("Number of pupils eligible for free school meals")]

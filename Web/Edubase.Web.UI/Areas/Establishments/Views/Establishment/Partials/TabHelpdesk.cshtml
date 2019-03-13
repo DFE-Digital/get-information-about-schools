@@ -1,4 +1,4 @@
-﻿@using Edubase.Common
+@using Edubase.Common
 @model EstablishmentDetailViewModel
 
 <div id="helpdesk" class="tab-content">
@@ -9,21 +9,20 @@
 
     <div class="detail-summary">
 
-        <h2 class="heading-small">Helpdesk notes:</h2>
+        <h2 class="heading-small">@Html.DisplayNameFor(m => m.Establishment.HelpdeskNotes):</h2>
         <div>@(Model.Establishment.HelpdeskNotes.Clean() ?? "Not recorded")</div>
 
         <dl>
-            <dt>EduBase last update:</dt>
+            <dt>@Html.DisplayNameFor(m => m.Establishment.HelpdeskLastUpdate):</dt>
             <dd>@(Model.Establishment.HelpdeskLastUpdate?.ToString("dd/MM/yyyy"))</dd>
 
-
-            <dt>EduBase trigger 1:</dt>
+            <dt>@Html.DisplayNameFor(m => m.Establishment.HelpdeskTrigger1):</dt>
             <dd>@Model.Establishment.HelpdeskTrigger1</dd>
 
             <dt>Previous local authority:</dt>
             <dd>@Model.HelpdeskPreviousLocalAuthorityName</dd>
 
-            <dt>Previous establishment number:</dt>
+            <dt>@Html.DisplayNameFor(m => m.Establishment.HelpdeskPreviousEstablishmentNumber):</dt>
             <dd>@Model.Establishment.HelpdeskPreviousEstablishmentNumber</dd>
 
         </dl>
