@@ -5,9 +5,12 @@
         if ($('.error-summary').length) {
             $('.error-summary').focus();
             $('.error-summary a').click(function (e) {
-                e.preventDefault()
                 var href = $(this).attr('href');
-                $(href).focus();
+                var targetEl = $(href);
+                if (targetEl.is('input') || targetEl.is('textarea') || targetEl.is('select')) {
+                    e.preventDefault()
+                    targetEl.focus();
+                }
             })
         }
     });
