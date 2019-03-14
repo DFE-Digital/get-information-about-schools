@@ -5,8 +5,16 @@
         'Assets/Scripts/libs/vue/vue.min.js',
         'Assets/Scripts/*.js',
         'Assets/Scripts/Elements/**/*.js',
-        'Assets/Scripts/Views/**/*.js'
-    ];
+        // Views
+        'Assets/Scripts/Views/create-edit-school.js',
+        'Assets/Scripts/Views/edit-governors.js',
+        'Assets/Scripts/Views/edit-iebt.js',
+        'Assets/Scripts/Views/establishment-details.js',
+        'Assets/Scripts/Views/gias-search.js',
+        'Assets/Scripts/Views/governor-search.js',
+        'Assets/Scripts/Views/group-details.js',
+        'Assets/Scripts/Views/school-search-form.js'
+      ];
     var isLocal = grunt.option('target') === "local";
     var localBundle = (function () {
         if (isLocal) {

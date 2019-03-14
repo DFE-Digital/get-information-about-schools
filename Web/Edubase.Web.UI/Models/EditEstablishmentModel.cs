@@ -381,9 +381,16 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> OfstedRatings { get; internal set; }
         public List<LookupDto> SENProvisions { get; internal set; }
 
+        [DisplayName("Helpdesk notes")]
         public string HelpdeskNotes { get; set; }
+
+        [DisplayName("Edubase last update")]
         public DateTimeViewModel HelpdeskLastUpdate { get; set; } = new DateTimeViewModel();
+
+        [DisplayName("Previous local authority")]
         public int? HelpdeskPreviousLocalAuthorityId { get; set; }
+
+        [DisplayName("Previous establishment number")]
         public int? HelpdeskPreviousEstablishmentNumber { get; set; }
 
 
