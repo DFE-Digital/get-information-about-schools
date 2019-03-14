@@ -12,10 +12,10 @@
     <title>Prototype page</title>
 </head>
 <body>
-<div id="data-status-summary" class="data-status-summary" role="dialog" aria-labelledby="modal-label">
+<div id="data-status-summary" class="data-status-summary" role="dialog" aria-labelledby="modal-label" tabindex="0">
     <a href="#" id="data-status-close" class="modal-exit">Close</a>
     <div class="overlay-padder">
-        <h1 class="heading-large" id="modal-label" tabindex="0">@((Model.Urgent) ? "Update your data status" : "Data status")</h1>
+        <h1 class="heading-large" id="modal-label">@((Model.Urgent) ? "Update your data status" : "Data status")</h1>
         <table class="edubase-table retain-columns">
             <caption class="table-caption">These dates show when each of our teams last updated their data.</caption>
             <thead>
