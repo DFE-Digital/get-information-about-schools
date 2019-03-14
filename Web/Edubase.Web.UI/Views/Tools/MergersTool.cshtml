@@ -423,11 +423,11 @@
         </div>
 
         <div id="modal-overlay" class="modal-overlay" v-show="presentExitWarning"></div>
-        <div id="modal-content" class="modal-content" role="dialog" v-show="presentExitWarning">
+        <div id="modal-content" class="modal-content" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc" tabindex="0" v-show="presentExitWarning">
             <a href="#" id="exit-overlay" class="modal-exit" v-on:click.prevent="presentExitWarning = false">Close</a>
             <div id="modal-inner">
-                <h3 class="heading-large">Are you sure you want to leave this page?</h3>
-                <p>Any unsaved changes will be lost.</p>
+                <h3 class="heading-large" id="modal-label">Are you sure you want to leave this page?</h3>
+                <p id="modal-desc">Any unsaved changes will be lost.</p>
             </div>
             <div class="button-row">
                 <a href="#" class="button mobile-full-width" id="button-ok" v-on:click.prevent="exitConfirmed">OK</a>

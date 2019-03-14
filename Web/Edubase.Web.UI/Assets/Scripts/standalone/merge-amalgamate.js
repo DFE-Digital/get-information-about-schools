@@ -573,6 +573,11 @@
                     (self.mergerType == 'merger' && !self.mergerComplete)) {
                     e.preventDefault();
                     self.presentExitWarning = true;
+                    $(document).ready(function() {
+                        if ($('#modal-content').length > 0) {
+                            $('#modal-content').focus();
+                        }
+                  });
                 }
             });
         },

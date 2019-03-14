@@ -213,11 +213,11 @@
         </div>
 
         <div id="modal-overlay" class="modal-overlay" v-show="pendingDelete || displayExitWarning"></div>
-        <div id="modal-content" role="dialog" class="modal-content" v-show="pendingDelete">
+        <div id="modal-content" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc" tabindex="0" class="modal-content" v-show="pendingDelete" >
             <a href="#" id="exit-overlay" class="modal-exit" v-on:click.prevent="pendingDelete=false, pendingDeleteItem=''">Close</a>
             <div id="modal-inner">
-                <h3 class="heading-large">Are you sure you want to remove this establishment?</h3>
-                <p>This will permanently remove it from the list.</p>
+                <h3 class="heading-large" id="modal-label">Are you sure you want to remove this establishment?</h3>
+                <p id="modal-desc">This will permanently remove it from the list.</p>
             </div>
             <div class="button-row">
                 <a href="#" id="button-ok" class="button mobile-full-width" v-on:click.prevent="confirmDelete">OK</a>
@@ -225,11 +225,11 @@
             </div>
         </div>
 
-        <div role="dialog" class="modal-content" v-show="displayExitWarning">
+        <div role="dialog" class="modal-content" id="modal-content-2" aria-labelledby="modal-label-2" aria-describedby="modal-desc-2" tabindex="0" v-show="displayExitWarning">
             <a href="#" id="exit-overlay" class="modal-exit" v-on:click.prevent="displayExitWarning=false">Close</a>
             <div id="modal-inner">
-                <h3 class="heading-large">Are you sure you want to leave?</h3>
-                <p>All changes will be lost.</p>
+                <h3 class="heading-large" id="modal-label-2">Are you sure you want to leave?</h3>
+                <p id="modal-desc-2">All changes will be lost.</p>
             </div>
             <div class="button-row">
                 <a href="#" id="button-ok" class="button mobile-full-width modal-button" v-on:click.prevent="confirmedExit">OK</a>

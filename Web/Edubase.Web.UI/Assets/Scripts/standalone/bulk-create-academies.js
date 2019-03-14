@@ -443,6 +443,11 @@
             couldDelete: function (urn) {
                 this.pendingDelete = true;
                 this.pendingDeleteItem = urn;
+                $(document).ready(function() {
+                    if ($('#modal-content').length > 0) {
+                        $('#modal-content').focus();
+                    }
+                });
 
             },
             confirmDelete: function() {
@@ -471,6 +476,11 @@
                     if (self.establishments.length > 0 && !self.isComplete)  {
                         e.preventDefault();
                         self.displayExitWarning = true;
+                        $(document).ready(function() {
+                            if ($('#modal-content-2').length > 0) {
+                                $('#modal-content-2').focus();
+                            }
+                        });
                     }
                 });
             },

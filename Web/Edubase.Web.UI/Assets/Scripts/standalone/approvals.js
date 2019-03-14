@@ -72,6 +72,14 @@
                 }
             },
             methods: {
+                showRejectionsModal: function () {
+                    this.showRejections = true;
+                    $(document).ready(function() {
+                        if ($('#modal-label').length > 0) {
+                            $('#modal-label').focus();
+                        }
+                    });
+                },
                 selectItem: function () {
                     this.noItemsSelected = ($('#changes-table').find('.boldened-checkbox').filter(':checked').length == 0);
                 },
