@@ -137,10 +137,9 @@
                 $('#' + opts.idPrefix + 'modal-content').attr({ 'aria-labelledby': labelId, 'aria-describedby': descId });
             }
 
-            if ($('#' + opts.idPrefix + 'modal-label').length) {
-              $('#' + opts.idPrefix + 'modal-label').focus();
-            } else {
-              $('#' + opts.idPrefix + 'modal-title').focus();
+            // Focus on main CTA when modal available
+            if ($('#' + opts.idPrefix + 'modal-content').length) {
+              $('#' + opts.idPrefix + 'button-ok').focus();
             }
 
             $('#full-content').on('click', '#' + opts.idPrefix + 'button-ok', function (e) {

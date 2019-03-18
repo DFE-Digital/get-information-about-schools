@@ -573,9 +573,10 @@
                     (self.mergerType == 'merger' && !self.mergerComplete)) {
                     e.preventDefault();
                     self.presentExitWarning = true;
+                    // Focus on main CTA when modal available
                     $(document).ready(function() {
                         if ($('#modal-content').length > 0) {
-                            $('#modal-content').focus();
+                            $('#button-ok').focus();
                         }
                   });
                 }
