@@ -29,7 +29,7 @@
         $(document).on('click', '#data-status-update', function () {
             window.location = self.options.editStatusUrl;
         });
-        
+
     },
     checkPromptRequired: function () {
         var self = this;
@@ -45,7 +45,7 @@
                 console.log('Error retrieving users data prompt status');
             }
         });
-        
+
     },
     init: function() {
         var self = this;
@@ -65,6 +65,11 @@
                 var content = $(data).filter('#data-status-summary');
                 $(document.body).append(content);
                 GOVUK.setCookie('dataStatusViewed', 'true', { days: self.options.cookieExpiresIn });
+                $(document).ready(function() {
+                  if ($('#data-status-summary').length > 0) {
+                      $('#data-status-summary').focus();
+                  }
+              });
             },
             error: function () {
                 console.error('Error retrieving data status panel');

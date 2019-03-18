@@ -370,6 +370,11 @@
             cancelEditClick: function () {
                 this.recordUpdateErrors = {};
                 if (this.userHasEdited) {
+                    $(document).ready(function() {
+                        if ($('#modal-content').length > 0) {
+                            $('#button-ok').focus();
+                        }
+                    });
                     return this.presentExitWarning = true;
                 }
                 this.editRecord = false;
@@ -413,8 +418,13 @@
          $('a').on('click', function (e) {
 
             if (academyOpenings.isUserEditing()) {
-               e.preventDefault();
-               academyOpenings.presentExitWarning = true;
+                e.preventDefault();
+                academyOpenings.presentExitWarning = true;
+                $(document).ready(function() {
+                    if ($('#modal-content').length > 0) {
+                        $('#button-ok').focus();
+                    }
+                });
             }
         });
     }

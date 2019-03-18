@@ -56,21 +56,21 @@ DfE.Util.showUnload = function (message, permitedExits) {
             var labelId = 'modal-label';
             if (!description[0].hasAttribute('id')) {
                 description.attr('id', 'modal-label');
-
             } else {
-                descId = description.attr('id');
+                labelId = description.attr('id');
             }
 
             if (!description.next()[0].hasAttribute('id')) {
                 description.next().attr('id', 'model-desc');
             } else {
-                labelId = description.next().attr('id');
+                descId = description.next().attr('id');
             }
 
             $('#modal-content').attr({ 'aria-labelledby': labelId, 'aria-describedby': descId });
         }
 
-        $('#modal-label').focus();
+        // Focus on main CTA
+        $('#button-ok').focus();
     }
 
     function closeModal() {
@@ -87,9 +87,9 @@ DfE.Util.showUnload = function (message, permitedExits) {
 
 
 
-    $permittedEscapes.addClass('allow-exit');
+    $permittedEscapes.addClass('js-allow-exit');
 
-    $contentArea.on('click', '.allow-exit', function () {
+    $contentArea.on('click', '.js-allow-exit', function () {
         youMayLeave = true;
         window.setTimeout(function () {
             youMayLeave = false;

@@ -277,6 +277,13 @@
                         $('#create-submit').click();
                     });
             }());
+
+            $(document).ready(function() {
+                // Focus on main CTA when modal available
+                if ($('#warning-modal-content-0').length > 0) {
+                    $('#overlay-proceed-0').focus();
+                }
+            });
         </script>
     }
 }

@@ -56,10 +56,10 @@
                 '<div id="' + opts.idPrefix + 'modal-content" class="modal-content hidden" role="dialog"><a href="#" id="' + opts.idPrefix + 'exit-overlay" class="modal-exit">Close</a>' +
                 '<div id="' + opts.idPrefix + 'modal-inner" class="modal-inner">' +
                 '<h3 class="heading-large" id="' + opts.idPrefix + 'modal-title">' + opts.title + '</h3><p id="' + opts.idPrefix + 'modal-content-area">' + opts.content + '</p></div> ' +
-                '<div class="button-row"><a href="#" class="button mobile-full-width allow-exit" id="' + opts.idPrefix + 'button-ok">' + (!opts.okLabel ? "OK" : opts.okLabel) + '</a>';
+                '<div class="button-row"><a href="#" class="button mobile-full-width js-allow-exit" id="' + opts.idPrefix + 'button-ok">' + (!opts.okLabel ? "OK" : opts.okLabel) + '</a>';
 
             if ($.isFunction(opts.cancel)) {
-                overlay += '<a href="#" class="button button-secondary mobile-full-width allow-exit" id="' + opts.idPrefix + 'button-cancel">Cancel</a>';
+                overlay += '<a href="#" class="button button-secondary mobile-full-width js-allow-exit" id="' + opts.idPrefix + 'button-cancel">Cancel</a>';
             }
             overlay += '</div></div>';
 
@@ -125,19 +125,22 @@
                     description.attr('id', 'modal-label');
 
                 } else {
-                    descId = description.attr('id');
+                    labelId = description.attr('id');
                 }
 
                 if (!description.next()[0].hasAttribute('id')) {
                     description.next().attr('id', 'model-desc');
                 } else {
-                    labelId = description.next().attr('id');
+                    descId = description.next().attr('id');
                 }
 
                 $('#' + opts.idPrefix + 'modal-content').attr({ 'aria-labelledby': labelId, 'aria-describedby': descId });
             }
 
-            $('#' + opts.idPrefix + 'modal-label').focus();
+            // Focus on main CTA when modal available
+            if ($('#' + opts.idPrefix + 'modal-content').length) {
+              $('#' + opts.idPrefix + 'button-ok').focus();
+            }
 
             $('#full-content').on('click', '#' + opts.idPrefix + 'button-ok', function (e) {
                 e.preventDefault();

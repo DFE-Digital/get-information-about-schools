@@ -70,7 +70,7 @@
                                 <span class="error-message" v-show="reasonLength">Please enter a reason less than 1024 characters</span>
                                 <textarea id="reason" rows="7" class="form-control-3-4" v-model="reason"></textarea>
                                 <div class="approvals-canned">
-                                    <a href="#" v-on:click.prevent="showRejections=true" class="plus-link">Add a preset reason</a>
+                                    <a href="#" v-on:click.prevent="showRejectionsModal" class="plus-link">Add a preset reason</a>
                                 </div>
                             </div>
                             <div class="button-row">
@@ -155,11 +155,11 @@
         </div>
     </div>
     <div class="modal-overlay" v-show="showRejections"></div>
-    <div class="modal-content" v-show="showRejections">
+    <div class="modal-content" id="modal-content" v-show="showRejections" role="dialog" aria-describedby="modal-desc">
         <a class="modal-exit" href="#" v-on:click.prevent="showRejections=false; reasonIds=[]">Close</a>
         <div class="modal-inner">
-            <h2 class="heading-medium">Add reason(s) for rejection</h2>
-            <p class="error-message" v-show="noReasonSelectedError">Please select at least one reason to add.</p>
+            <h2 class="heading-medium" tabindex="0" id="modal-label">Add one or more reasons for rejection</h2>
+            <p class="error-message" v-show="noReasonSelectedError" tabindex="0" id="model-desc">Please select at least one reason to add.</p>
             <div class="govuk-option-select">
                 <div class="container-head">
                     <div class="option-select-label hard--left">Reasons</div>

@@ -443,6 +443,12 @@
             couldDelete: function (urn) {
                 this.pendingDelete = true;
                 this.pendingDeleteItem = urn;
+                // Focus on main CTA when modal available
+                $(document).ready(function() {
+                    if ($('#modal-content').length > 0) {
+                        $('#button-ok').focus();
+                    }
+                });
 
             },
             confirmDelete: function() {
@@ -471,6 +477,12 @@
                     if (self.establishments.length > 0 && !self.isComplete)  {
                         e.preventDefault();
                         self.displayExitWarning = true;
+                        // Focus on main CTA when modal available
+                        $(document).ready(function() {
+                            if ($('#modal-content-2').length > 0) {
+                                $('#button-ok').focus();
+                            }
+                        });
                     }
                 });
             },
