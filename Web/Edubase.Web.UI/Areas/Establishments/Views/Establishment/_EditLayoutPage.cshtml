@@ -1,11 +1,11 @@
-﻿@using Edubase.Web.UI.Models
+@using Edubase.Web.UI.Models
 @using System.Linq
 @using ViewModel = Edubase.Web.UI.Areas.Establishments.Models.IEstablishmentPageViewModel
 @model ViewModel
 @{
     ViewBag.bodyClasses = "create-edit-school school-details";
     ViewBag.hideLogo = true;
-    ViewBag.Title = "Edit establishment";
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Edit establishment");
     Layout = "~/Views/Dfe/Layouts/template.cshtml";
 }
 <div class="breadcrumbs">
@@ -28,21 +28,21 @@
     </div>
 }
 
+@if (!IsSectionDefined("validation"))
+{
+    @Html.Partial("_ValidationSummary", ViewData.ModelState);
+}
+else
+{
+    @RenderSection("validation", false)
+}
+
 <h1 class="heading-large">
     <span class="heading-secondary">Edit establishment</span>
     @Model.Name
 </h1>
 <p class="urn"><abbr title="Unique Reference Number">URN</abbr>: @Model.Urn</p>
 <p class="establishment-type">@Model.TypeName</p>
-
-@if (!IsSectionDefined("validation"))
-{
-    @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
-}
-else
-{
-    @RenderSection("validation", false)
-}
 
 <div class="grid-row">
     <div class="column-full">
@@ -132,23 +132,23 @@ else
                 </ul>
             </div>
             <div class="tab-content-wrapper horizontal-tabs-content">
-            @if (Model.SelectedTab == "governance")
-            {
-                <div class="tab-content">
+                @if (Model.SelectedTab == "governance")
+                {
+                    <div class="tab-content">
+                        @RenderBody()
+                    </div>
+                }
+                else
+                {
                     @RenderBody()
-                </div>
-            }
-            else
-            {
-                @RenderBody()
-            }
+                }
 
             </div>
         </div>
     </div>
 </div>
 
- @section ViewScripts
- {
-     @(RenderSection("ViewScripts", required: false))
- }
+@section ViewScripts
+{
+    @(RenderSection("ViewScripts", required: false))
+}

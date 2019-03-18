@@ -1,4 +1,4 @@
-﻿@using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
+@using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
 @model ViewModel
 @{
     if (Model.ChangesSummary == null)
@@ -24,35 +24,35 @@
         @Html.HiddenFor(x => x.ChangesRequireApprovalCount)
 
         <div style="display:@Html.Conditional(Model.ChangesSummary != null, "none");">
-        
+
             <div class="column-half">
 
                 <button type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveHelpdesk)">Save</button>
                 @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel mobile-full-width" })
 
                 <div class="form-group first">
-                    @Html.LabelFor(x => x.HelpdeskNotes, "Helpdesk notes" , new { @class="form-label"})
+                    @Html.LabelFor(x => x.HelpdeskNotes, new { @class="form-label"})
                     @Html.TextAreaFor(x => x.HelpdeskNotes, new { @class = "form-control", rows = "10", maxlength = "1000" })
                 </div>
 
-                @Html.EditorFor(x => x.HelpdeskLastUpdate, new { title = "Edubase last update" })
+                @Html.EditorFor(x => x.HelpdeskLastUpdate)
 
                 <div class="form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousLocalAuthorityId)">
-                    @Html.LabelFor(x => x.HelpdeskPreviousLocalAuthorityId, "Previous local authority")
+                    @Html.LabelFor(x => x.HelpdeskPreviousLocalAuthorityId)
                     @Html.DropDownListFor(x => x.HelpdeskPreviousLocalAuthorityId, Model.LocalAuthorities, "Please select a local authority", new { @class = "form-control" })
                 </div>
 
                 <div class="form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousEstablishmentNumber)">
-                    @Html.LabelFor(x => x.HelpdeskPreviousEstablishmentNumber, "Previous establishment number")
+                    @Html.LabelFor(x => x.HelpdeskPreviousEstablishmentNumber)
                     @Html.ValidationMessageFor(x => x.HelpdeskPreviousEstablishmentNumber)
                     @Html.TextBoxFor(x => x.HelpdeskPreviousEstablishmentNumber, new { @class = "form-control" })
                 </div>
-                
-                <div class="button-row lower">
+
+                <div class="button-row push--top">
                     <button type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveHelpdesk)">Save</button>
                     @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel mobile-full-width" })
                 </div>
-                
+
             </div>
         </div>
 
@@ -65,10 +65,10 @@
                 <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="button mobile-full-width js-confirm">Confirm</button>
 
                 @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "button button-secondary mobile-full-width", id = "cancel-edit"})
-            </div> 
-            
+            </div>
+
             @section ViewScripts {
-    
+
                 <script>
                     $('#cancel-edit, .requires-conf-to-leave').okCancel({
                         ok: function() {
@@ -82,26 +82,16 @@
                     $('#HelpdeskNotes').textCount({ maxLength: 255 });
                 </script>
 
-            }           
+            }
         }
         else
         {
             @section ViewScripts {
                 <script>
 
-                    (function () {
-                        var $buttons = $("button[type='submit']");
-                        $buttons.prop("disabled", true);
-                        $(document.forms[0]).dirrty({ preventLeaving: false }).on("dirty", function () {
-                            $buttons.prop("disabled", false);
-                        }).on("clean", function () {
-                            $buttons.prop("disabled", true);
-                        });
-                    })();
-                    
                     var $fields = $('#content').find('.form-control');
                     var exitAttached = false;
-       
+
                     $fields.on('change keyup', function () {
                         if (!exitAttached) {
                             DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
@@ -114,6 +104,6 @@
                 </script>
             }
         }
-    
+
     </div>
 }
