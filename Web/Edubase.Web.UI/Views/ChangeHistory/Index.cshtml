@@ -117,26 +117,26 @@
                                                     <p>We couldn't find any establishments matching your search criteria</p>
                                                 </div>
                                             }
-                                            <fieldset class="inline-date-type-radios">
+                                            <fieldset class="stacked-date-type-radios">
                                                 <legend class="visually-hidden">Select the change type</legend>
                                                 <span class="radio-button-wrap">
                                                     @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED, new {id = "datefiltermode-applied"})
                                                     <label class="edubase-button-radio" for="datefiltermode-applied">
-                                                        Applied
+                                                        Applied: The date the change appeared on GIAS
                                                     </label>
                                                 </span>
 
                                                 <span class="radio-button-wrap">
                                                     @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_APPROVED, new {id = "datefiltermode-approved"})
                                                     <label class="edubase-button-radio" for="datefiltermode-approved">
-                                                        Approved
+                                                        Approved: The date the change  was approved
                                                     </label>
                                                 </span>
 
                                                 <span class="radio-button-wrap">
                                                     @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE, new {id = "datefiltermode-effective"})
                                                     <label class="edubase-button-radio" for="datefiltermode-effective">
-                                                        Effective
+                                                        Effective: The date the change occurred
                                                     </label>
                                                 </span>
                                             </fieldset>
