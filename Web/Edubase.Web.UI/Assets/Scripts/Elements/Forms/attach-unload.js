@@ -30,7 +30,7 @@ DfE.Util.showUnload = function (message, permitedExits) {
     }
 
     function bindEscapeKey() {
-        $(document).on('keypress', function (e) {
+        $(document).on('keyup', function (e) {
             e = e || window.event;
             if (e.keyCode === 27) {
                 closeModal();
@@ -39,7 +39,7 @@ DfE.Util.showUnload = function (message, permitedExits) {
     }
 
     function unbindEscapeKey() {
-        $(document).off('keypress');
+        $(document).off('keyup');
     }
 
     function showModal() {

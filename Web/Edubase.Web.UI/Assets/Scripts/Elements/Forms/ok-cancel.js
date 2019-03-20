@@ -26,7 +26,7 @@
 
     function bindEscapeKey() {
         var self = this;
-        $(document).on('keypress', function (e) {
+        $(document).on('keyup', function (e) {
             e = e || window.event;
             if (e.keyCode === 27) {
                 self.closeModal();
@@ -35,7 +35,7 @@
     }
 
     function unbindEscapeKey() {
-        $(document).off('keypress');
+        $(document).off('keyup');
     }
 
 
