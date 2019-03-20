@@ -15,7 +15,7 @@ DfE.Util.showUnload = function (message, permitedExits) {
 
     var $contentArea = $('#full-content'),
             youMayLeave = false,
-            $permittedEscapes = $contentArea.find('input[type="submit"], button[type="submit"]').not('[value="cancel"]'),
+            $permittedEscapes = $contentArea.find('input[type="submit"], button[type="submit"], .error-summary-list a').not('[value="cancel"]'),
 
             overlay = '<div id="modal-overlay" class="modal-overlay hidden"></div>' +
             	'<div id="modal-content" class="modal-content hidden" role="dialog"><a href="#" id="exit-overlay" class="modal-exit">Close</a><div id="modal-inner">' +
