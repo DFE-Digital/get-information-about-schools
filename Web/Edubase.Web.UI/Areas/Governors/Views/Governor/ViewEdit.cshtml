@@ -492,15 +492,6 @@ else
                     }
                 });
             }
-
-            (function () { // only enable the save button when the retirement date is populated
-                var $retireGovernor = $("button#retire-governor");
-                var $dateFields = $(".retirement-date input");
-                var dateFieldsArray = $.makeArray($dateFields);
-                var toggle = function () { $retireGovernor.prop("disabled", dateFieldsArray.some(function (x) { return $.trim($(x).val()) == "" })); };
-                toggle();
-                $dateFields.on("keyup change", toggle);
-            })();
         });
 
     </script>
