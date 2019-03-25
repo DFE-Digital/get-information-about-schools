@@ -50,7 +50,7 @@
             <span class="error-message hidden">Please check the date(s) you have entered</span>
             <span class="error-message hidden date-range-error">Please use a valid date range</span>
         }
-        <legend class="bold" tabindex="0" id="@ViewData.ModelMetadata.PropertyName" style="@ViewData["style"]">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
+        <legend class="bold" id="@ViewData.ModelMetadata.PropertyName" style="@ViewData["style"]">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
 
         @if (!disableHint)
         {
