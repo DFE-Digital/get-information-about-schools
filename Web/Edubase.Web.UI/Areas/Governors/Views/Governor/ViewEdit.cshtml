@@ -28,8 +28,7 @@
         </div>
 
         <div class="column-half">
-            <h2 class="heading-small">Add person</h2>
-
+            <h2 id="role" class="heading-small">Add person</h2>
 
             @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabAddGovernor" : "GroupAddGovernor", new { groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, FormMethod.Get))
             {
