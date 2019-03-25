@@ -21,10 +21,11 @@ namespace Edubase.Web.UI.Validation
                 {
                     // default the fieldname to TitleCase
                     var fieldName = error.Fields.ToTextCase(eTextCase.TitleCase);
-                    // ensure the field name casing is not changed if it already exists within the model
+
+                    // as we're adding this - we want to use the same casing as the other properties follow. Because of that - look to see if there are any others which extend the original name
                     if (controllerContext.Controller.ViewData.ModelState.Keys.Any(x => x.StartsWith(fieldName, StringComparison.InvariantCultureIgnoreCase)))
                     {
-                        fieldName = controllerContext.Controller.ViewData.ModelState.Keys.Contains(fieldName, StringComparer.InvariantCultureIgnoreCase) ?
+                        fieldName = controllerContext.Controller.ViewData.ModelState.ContainsKey(fieldName) ?
                             controllerContext.Controller.ViewData.ModelState.Keys.First(x => x.Equals(fieldName, StringComparison.InvariantCultureIgnoreCase)) :
                             controllerContext.Controller.ViewData.ModelState.Keys.First(x => x.StartsWith(fieldName, StringComparison.InvariantCultureIgnoreCase)).Substring(0, fieldName.Length);
                     }
