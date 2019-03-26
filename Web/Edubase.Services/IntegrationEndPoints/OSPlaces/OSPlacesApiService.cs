@@ -51,14 +51,17 @@ namespace Edubase.Services.IntegrationEndPoints.OSPlaces
 
                     var response = await ParseHttpResponseMessageAsync<OSPlacesResponse>(message);
 
-                    var addresses = response.Results.Where(x => x.OSAddress != null
+                    var addresses = response.Results?.Where(x => x.OSAddress != null
                         && (x.OSAddress.PostalAddressCode == "D" || x.OSAddress.PostalAddressCode == "L")) // POSTAL_ADDRESS_CODE_DESCRIPTION: D = "A record which is linked to PAF", L="A record which is identified as postal based on Local Authority information"
                         .Select(x => x.OSAddress)
                         .GroupBy(x => x.Uprn)
                         .Select(x => x.FirstOrDefault(u => u.Address.Length == x.Max(y => y.Address.Length)))
                         .OrderBy(x => x.Address);
 
-                    return addresses.Select(x => new PlaceDto(x.Address, LatLon.Create(x.Lat, x.Lng))).ToArray();
+                    if (addresses != null)
+                    {
+                        return addresses.Select(x => new PlaceDto(x.Address, LatLon.Create(x.Lat, x.Lng))).ToArray();
+                    }
                 }
             }
 
