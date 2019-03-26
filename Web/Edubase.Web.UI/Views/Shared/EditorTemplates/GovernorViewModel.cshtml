@@ -1,4 +1,4 @@
-﻿@using Edubase.Services.Enums
+@using Edubase.Services.Enums
 @model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
 
 @{
@@ -13,6 +13,8 @@
     {
         showReactivationWarning = false;
     }
+
+    string editorPrefix = ViewData["editorPrefix"]?.ToString();
 }
     
 <div class="form-group @Html.ValidationCssClassFor(x => x.GovernorTitleId)">
@@ -61,7 +63,7 @@
     var detail = disableStartDate ? @"based on current governor's end date" : @"required to save record";
     var title = $"Date of appointment ({detail})";
 
-    @Html.EditorFor(x => x.AppointmentStartDate, new { title, @readonly = disableStartDate, ClassPrefix = "start-date" })
+    @Html.EditorFor(x => x.AppointmentStartDate, new { title, @readonly = disableStartDate, ClassPrefix = "start-date", editorPrefix })
 }
 
 @if (Model.DisplayPolicy.AppointmentEndDate)
