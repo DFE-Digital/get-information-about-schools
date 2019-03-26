@@ -204,14 +204,6 @@
 
     <script>
         (function () {
-            var $urnSearchField = $("#LinkedEstablishments_LinkedEstablishmentSearch_Urn");
-            var $urnSearchButton = $(".add-establishment-link").find("button");
-            var toggle = function () { $urnSearchButton.prop("disabled", $.trim($urnSearchField.val()).length < 5 || Math.floor($urnSearchField.val()) != $urnSearchField.val() || !$.isNumeric($urnSearchField.val()) ); };
-            toggle();
-            $urnSearchField.on("change keyup", toggle);
-        })();
-
-        (function () {
             var $addButton = $("#add-estab-submit");
             var fields = ["#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Day", "#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Month", "#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Year"];
             var toggle = function () {
