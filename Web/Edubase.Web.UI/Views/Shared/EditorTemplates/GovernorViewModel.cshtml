@@ -66,7 +66,7 @@
 
 @if (Model.DisplayPolicy.AppointmentEndDate)
 {
-    @Html.EditorFor(x => x.AppointmentEndDate, new {title = Model.GovernorRole == eLookupGovernorRole.Member ? "Date stepped down" : "Date term ends (required to save record)", showReactivationWarning })
+    @Html.EditorFor(x => x.AppointmentEndDate, new {title = Model.GovernorRole == eLookupGovernorRole.Member ? "Date stepped down" : "Date term ends", showReactivationWarning })
 }
 
 @if (Model.DisplayPolicy.EmailAddress)
