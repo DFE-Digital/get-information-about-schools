@@ -12,10 +12,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
 
             When(x => x.ActiveRecord.CreateReverseLink, () =>
             {
-                RuleFor(x => x.ActiveRecord.ReverseLinkTypeId).NotNull().WithMessage("Please select the relationship");
+                RuleFor(x => x.ActiveRecord.ReverseLinkTypeId).NotNull().WithMessage("Please select the reverse link relationship");
 
                 RuleFor(x => x.ActiveRecord.ReverseLinkDateEditable).Must(x => x.IsNotEmpty())
-                    .WithMessage("Please provide a valid date for the link")
+                    .WithMessage("Please provide a valid date for the reverse link")
                     .When(x => !x.ActiveRecord.ReverseLinkSameDate);
             });
         }
