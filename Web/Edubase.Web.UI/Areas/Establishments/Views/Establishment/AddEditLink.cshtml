@@ -124,24 +124,6 @@
                     exitAttached = true;
                 }
             });
-
-            (function () {
-                var $saveButton = $("#save-submit");
-                var fields = ["#ActiveRecord_LinkDateEditable_Day", "#ActiveRecord_LinkDateEditable_Month", "#ActiveRecord_LinkDateEditable_Year", "#ActiveRecord_LinkTypeId"];
-                var dependentFields = ["#ActiveRecord_ReverseLinkDateEditable_Day", "#ActiveRecord_ReverseLinkDateEditable_Month", "#ActiveRecord_ReverseLinkDateEditable_Year"];
-                var toggle = function () {
-                    $saveButton.prop("disabled",
-                        fields.some(function (x) {return $.trim($(x).val()) == ""})
-                        ||
-                        ($("#ActiveRecord_CreateReverseLink").is(":checked") && $("ActiveRecord_ReverseLinkTypeId").val() == "")
-                        ||
-                        ($("#ActiveRecord_CreateReverseLink").is(":checked")
-                            && !$("#ActiveRecord_ReverseLinkSameDate").is(":checked")
-                            && dependentFields.some(function (x) { return $.trim($(x).val()) == "" })));
-                };
-                $("input,select").on("change keyup", toggle);
-                toggle();
-            })();
         });
 
     </script>
