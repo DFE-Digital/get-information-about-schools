@@ -82,7 +82,17 @@
                                     }
                                     else
                                     {
-                                        <p>There are no shared governors available for this establishment</p>
+                                        <div class="form-group @Html.ValidationCssClass("SharedGovernors")">
+                                            @if (Html.ValidationCssClass("SharedGovernors").ToString() == "error")
+                                            {
+                                                @Html.ValidationMessage("SharedGovernors")
+                                            }
+                                            else
+                                            {
+                                                <p>There are no shared governors available for this establishment</p>
+
+                                            }
+                                        </div>
                                     }
                                 </div>
                             </div>
