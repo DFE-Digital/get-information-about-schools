@@ -1,5 +1,5 @@
 @model ReplaceChairViewModel
-    
+
 @{
     ViewBag.hideLogo = true;
     ViewBag.SelectedTab = "EditGovernance";
@@ -43,12 +43,12 @@
                         null,
                         new { id = "newChair", @class = "panel-trigger", data_toggle_panel = "#newChairDetails" })
 
-                    
+
                     @Html.GiasRadioFor(m => m.NewChairType,
                         ReplaceChairViewModel.ChairType.SharedChair,
                         "Shared Chair",
                         null,
-                        new { id = "sharedChair", @class = "panel-trigger", data_toggle_panel = "#sharedChairDetails" })
+                        new { id = "sharedChair", @class = "panel-trigger", data_toggle_panel = "#SharedGovernors" })
 
                 </div>
                 <div id="replacement-chair-details" class="exapanding-list-wrap chair-replace governor-toggles">
@@ -117,7 +117,7 @@
         $day.blur(checkAndUpdateDate);
         $month.blur(checkAndUpdateDate);
         $year.blur(checkAndUpdateDate);
-        
+
         $(function () {
             checkAndUpdateDate();
 
