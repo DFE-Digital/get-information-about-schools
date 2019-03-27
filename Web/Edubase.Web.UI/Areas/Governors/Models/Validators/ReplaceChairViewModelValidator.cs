@@ -15,8 +15,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models.Validators
 
             RuleFor(x => x.SharedGovernors)
                 .NotEmpty()
-                .WithMessage("No shared governors are selected")
-                .WithSummaryMessage("No shared governors are selected")
+                .WithMessage("There are no shared governors available for this establishment")
+                .WithSummaryMessage("There are no shared governors available for this establishment")
                 .When(x => x.NewChairType == ReplaceChairViewModel.ChairType.SharedChair, ApplyConditionTo.CurrentValidator);
 
             RuleFor(x => x.SharedGovernors.Single(s => s.Id == x.SelectedGovernorId).AppointmentEndDate)
