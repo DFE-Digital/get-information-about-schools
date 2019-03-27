@@ -65,10 +65,10 @@
                                     <br />
                                 }
 
-                                @Html.EditorFor(m => m.NewLocalGovernor, new {disableStartDate = true})
+                                @Html.EditorFor(m => m.NewLocalGovernor, new {disableStartDate = true, editorPrefix = nameof(Model.NewLocalGovernor)})
                             </div>
                         </div>
-                        <div id="sharedChairDetails" class="panel-indent @(Model.NewChairType == ReplaceChairViewModel.ChairType.SharedChair ? "open-expander" : "")">
+                        <div id="SharedGovernors" class="panel-indent @(Model.NewChairType == ReplaceChairViewModel.ChairType.SharedChair ? "open-expander" : "")">
                             <div class="replacement-chair-option">
                                 <div class="shared-governor-list">
                                     @if (Model.SharedGovernors.Any())

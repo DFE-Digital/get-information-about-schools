@@ -692,7 +692,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         return Redirect(url);
                     }
 
-                    validation.ApplyToModelState(ControllerContext, nameof(model.NewLocalGovernor));
+                    validation.ApplyToModelState(ControllerContext, nameof(model.NewLocalGovernor), true);
                 }
             }
 
