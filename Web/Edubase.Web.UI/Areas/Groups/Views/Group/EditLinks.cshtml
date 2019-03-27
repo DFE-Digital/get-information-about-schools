@@ -201,25 +201,4 @@
             });
         </script>
     }
-
-    <script>
-        (function () {
-            var $addButton = $("#add-estab-submit");
-            var fields = ["#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Day", "#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Month", "#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Year"];
-            var toggle = function () {
-                $addButton.prop("disabled", fields.some(function (x) { return $.trim($(x).val()) == "" }));
-            };
-            $(fields.join(",")).on("change keyup", toggle);
-            toggle();
-        })();
-
-        (function () {
-            var $button = $("#save-joined-date-submit");
-            var inputs = $.makeArray($(".joined-date-editor").find("input"));
-            var toggle = function () { $button.prop("disabled", inputs.some(function (x) { return $.trim($(x).val()) == "" })); };
-            $(inputs).on("change keyup", toggle);
-            toggle();
-        })();
-
-    </script>
 }
