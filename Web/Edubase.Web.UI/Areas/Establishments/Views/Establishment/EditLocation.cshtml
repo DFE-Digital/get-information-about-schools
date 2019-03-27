@@ -125,23 +125,21 @@
                     </div>
                 }
 
-                @if (Model.EditPolicy.MSOACode)
+                @if (Model.EditPolicy.MSOAId)
                 {
-                    <div class="form-group @Html.ValidationCssClass(nameof(Model.MSOACode)) @Html.ValidationCssClass("MSOAId")">
-                        <label for="@nameof(Model.MSOACode)">Middle Super Output Area (MSOA)</label>
-                        @Html.ValidationMessage(nameof(Model.MSOACode))
-                        @Html.ValidationMessage("MSOAId")
-                        @Html.TextBoxFor(x => x.MSOACode, new { @class = "form-control" })
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.MSOAId)">
+                        <label for="@nameof(Model.MSOAId)">Middle Super Output Area (MSOA)</label>
+                        @Html.ValidationMessageFor(x => x.MSOAId)
+                        @Html.TextBoxFor(x => x.MSOAId, new { @class = "form-control" })
                     </div>
                 }
 
-                @if (Model.EditPolicy.LSOACode)
+                @if (Model.EditPolicy.LSOAId)
                 {
-                    <div class="form-group @Html.ValidationCssClass(nameof(Model.LSOACode)) @Html.ValidationCssClass("LSOAId")">
-                        <label for="@nameof(Model.LSOACode)">Lower Super Output Area (LSOA)</label>
-                        @Html.ValidationMessage(nameof(Model.LSOACode))
-                        @Html.ValidationMessage("LSOAId")
-                        @Html.TextBoxFor(x => x.LSOACode, new { @class = "form-control" })
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.LSOAId)">
+                        <label for="@nameof(Model.LSOAId)">Lower Super Output Area (LSOA)</label>
+                        @Html.ValidationMessageFor(x => x.LSOAId)
+                        @Html.TextBoxFor(x => x.LSOAId, new { @class = "form-control" })
                     </div>
                 }
 

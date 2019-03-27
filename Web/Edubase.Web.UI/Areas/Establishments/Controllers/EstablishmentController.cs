@@ -401,8 +401,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             SetProperty(targetViewModel, model, m => m.Easting);
             SetProperty(targetViewModel, model, m => m.Northing);
             SetProperty(targetViewModel, model, m => m.CASWardId);
-            SetProperty(targetViewModel, model, m => m.MSOACode);
-            SetProperty(targetViewModel, model, m => m.LSOACode);
+            SetProperty(targetViewModel, model, m => m.MSOAId);
+            SetProperty(targetViewModel, model, m => m.LSOAId);
 
             targetViewModel.ActionSpecifier = model.ActionSpecifier;
             targetViewModel.SelectedTab = model.SelectedTab;
@@ -602,12 +602,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (domainModel.MSOAId.HasValue)
             {
-                viewModel.MSOACode = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.MSOAId.Value)?.Code;
+                viewModel.MSOAId = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.MSOAId.Value)?.Code;
             }
 
             if (domainModel.LSOAId.HasValue)
             {
-                viewModel.LSOACode = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.LSOAId.Value)?.Code;
+                viewModel.LSOAId = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.LSOAId.Value)?.Code;
             }
 
             return viewModel;
@@ -934,14 +934,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
         private async Task MapFromViewModelToDomainModel(ViewModel viewModel, EstablishmentModel domainModel)
         {
-            if (_formKeys.Value.Contains(nameof(viewModel.MSOACode)))
+            if (_formKeys.Value.Contains(nameof(viewModel.MSOAId)))
             {
-                domainModel.MSOAId = !viewModel.MSOACode.IsNullOrEmpty() ? (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Code == viewModel.MSOACode)?.Id : null;
+                domainModel.MSOAId = !viewModel.MSOAId.IsNullOrEmpty() ? (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Code == viewModel.MSOAId)?.Id : null;
             }
 
-            if (_formKeys.Value.Contains(nameof(viewModel.LSOACode)))
+            if (_formKeys.Value.Contains(nameof(viewModel.LSOAId)))
             {
-                domainModel.LSOAId = !viewModel.LSOACode.IsNullOrEmpty() ? (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Code == viewModel.LSOACode)?.Id : null;
+                domainModel.LSOAId = !viewModel.LSOAId.IsNullOrEmpty() ? (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Code == viewModel.LSOAId)?.Id : null;
             }
 
             MapToDomainModel(viewModel, domainModel);
@@ -1101,16 +1101,16 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 await MapFromViewModelToDomainModel(viewModel, existingDomainModel);
 
-                if (_formKeys.Value.Contains(viewModel.MSOACode) && !viewModel.MSOACode.IsNullOrEmpty() &&
+                if (_formKeys.Value.Contains(viewModel.MSOAId) && !viewModel.MSOAId.IsNullOrEmpty() &&
                     !existingDomainModel.MSOAId.HasValue) // if the value has been provided in the form, it's not empty, but the string value didn't map to a value in the domain model then show error.
                 {
-                    ModelState.AddModelError(nameof(viewModel.MSOACode), "MSOA code is invalid");
+                    ModelState.AddModelError(nameof(viewModel.MSOAId), "MSOA code is invalid");
                 }
 
-                if (_formKeys.Value.Contains(viewModel.LSOACode) && !viewModel.LSOACode.IsNullOrEmpty() &&
+                if (_formKeys.Value.Contains(viewModel.LSOAId) && !viewModel.LSOAId.IsNullOrEmpty() &&
                     !existingDomainModel.LSOAId.HasValue) 
                 {
-                    ModelState.AddModelError(nameof(viewModel.LSOACode), "LSOA code is invalid");
+                    ModelState.AddModelError(nameof(viewModel.LSOAId), "LSOA code is invalid");
                 }
 
 

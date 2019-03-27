@@ -152,8 +152,6 @@ namespace Edubase.Services.Establishments.Models
         public virtual T CASWardId { get; set; }
         public virtual T MSOAId { get; set; }
         public virtual T LSOAId { get; set; }
-        public virtual T MSOACode => MSOAId;
-        public virtual T LSOACode => LSOAId;
         public virtual T Easting { get; set; }
         public virtual T Northing { get; set; }
 
