@@ -1,4 +1,4 @@
-﻿@using System.Linq
+@using System.Linq
 @model EditEstablishmentLinksViewModel
 @{
     Layout = "_EditLayoutPage.cshtml";
@@ -42,7 +42,7 @@
                     @Html.ValidationMessageFor(x => x.ActiveRecord.LinkTypeId)
                     @Html.DropDownListFor(x => x.ActiveRecord.LinkTypeId, Model.LinkTypes, "", new { @class = "form-control" })
                 </div>
-                @Html.EditorFor(x => x.ActiveRecord.LinkDateEditable, new { title = "Date of link", style = "font-weight:bold;" })
+                @Html.EditorFor(x => x.ActiveRecord.LinkDateEditable, new { title = "Date of link", style = "font-weight:bold;", editorPrefix = nameof(Model.ActiveRecord) })
             </div>
 
 
@@ -70,7 +70,7 @@
                             @Html.DropDownListFor(x => x.ActiveRecord.ReverseLinkTypeId, Model.ReverseLinkTypes, "", new { @class = "form-control" })
                         </div>
 
-                        @Html.EditorFor(x => x.ActiveRecord.ReverseLinkDateEditable, new { title = "Date of link", style = "font-weight:bold;", @readonly = Model.ActiveRecord.ReverseLinkSameDate })
+                        @Html.EditorFor(x => x.ActiveRecord.ReverseLinkDateEditable, new { title = "Date of link", style = "font-weight:bold;", editorPrefix = nameof(Model.ActiveRecord), @readonly = Model.ActiveRecord.ReverseLinkSameDate })
                     </div>
                     <div class="column-two-thirds">
                         <div class="form-group">
