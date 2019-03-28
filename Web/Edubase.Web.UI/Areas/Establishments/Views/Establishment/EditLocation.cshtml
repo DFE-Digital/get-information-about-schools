@@ -25,7 +25,7 @@
         @Html.HiddenFor(x => x.ChangesRequireApprovalCount)
 
         <div class="" style="display:@Html.Conditional(Model.ChangesSummary != null, "none");">
-        
+
             <div class="column-half">
 
                 <button type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveLocation)">Save</button>
@@ -159,10 +159,10 @@
                 <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="button mobile-full-width js-confirm">Confirm</button>
 
                 @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "button button-secondary mobile-full-width", id = "cancel-edit"})
-            </div> 
-            
+            </div>
+
             @section ViewScripts {
-    
+
                 <script>
                     $('#cancel-edit, .requires-conf-to-leave').okCancel({
                         ok: function() {
@@ -174,7 +174,7 @@
                     });
                 </script>
 
-            }           
+            }
         }
         else
         {
@@ -189,20 +189,9 @@
                             exitAttached = true;
                         }
                     });
-
-                    (function () {
-                        var $buttons = $("button[type='submit']");
-                        $buttons.prop("disabled", true);
-                        $(document.forms[0]).dirrty({ preventLeaving: false }).on("dirty", function () {
-                            $buttons.prop("disabled", false);
-                        }).on("clean", function () {
-                            $buttons.prop("disabled", true);
-                        });
-                    })();        
-
                 </script>
             }
         }
-    
+
     </div>
 }
