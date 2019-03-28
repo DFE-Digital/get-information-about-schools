@@ -44,10 +44,13 @@
         </div>
         @if (Model.LinkedEstablishments.LinkedEstablishmentSearch.HasResult)
         {
+            var prefix = string.Concat(nameof(Model.LinkedEstablishments), "_", nameof(Model.LinkedEstablishments.LinkedEstablishmentSearch));
+            
+
         <p class="bold-xsmall">Establishment found</p>
         <p>@Model.LinkedEstablishments.LinkedEstablishmentSearch.Name</p>
 
-        @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date"})
+        @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date", editorPrefix = prefix})
 
         <button id="add-estab-submit" type="submit" name="action" value="@VM.ActionLinkedEstablishmentAdd" class="button">Add</button>
         @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
