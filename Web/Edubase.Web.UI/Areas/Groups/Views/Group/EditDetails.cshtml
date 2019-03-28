@@ -38,12 +38,12 @@
                     @Html.ValidationMessageFor(x => x.GroupName)
                     @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
                     {
-                        <input value="@Model.GroupName" disabled="disabled" class="form-control" id="name" />
+                        <input value="@Model.GroupName" disabled="disabled" class="form-control" id="@nameof(Model.GroupName)" />
                         @Html.HiddenFor(x => x.GroupName)
                     }
                     else
                     {
-                        @Html.TextBoxFor(x => x.GroupName, new { @class = "form-control", id="name" })
+                        @Html.TextBoxFor(x => x.GroupName, new { @class = "form-control" })
                     }
                 </div>
 
