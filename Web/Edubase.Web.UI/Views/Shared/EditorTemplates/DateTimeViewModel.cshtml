@@ -34,7 +34,9 @@
     else
     {
         classBinding = "class=\"form-group create-edit-form-group date-group "
-            + Html.ValidationCssClassFor(x => x) + " " + Html.ValidationCssClassFor(x => x.Day) + " "
+            + Html.ValidationCssClass(ViewData.ModelMetadata.PropertyName) + " "
+            + Html.ValidationCssClassFor(x => x) + " "
+            + Html.ValidationCssClassFor(x => x.Day) + " "
             + Html.ValidationCssClassFor(x => x.Month) + " "
             + Html.ValidationCssClassFor(x => x.Year) + "\"";
     }
@@ -70,6 +72,7 @@
                 <p>Changing this date may reactivate the record</p>
             </div>
         }
+
 
         @Html.ValidationMessageFor(x => x)
         @Html.ValidationMessageFor(x => x.Day)
