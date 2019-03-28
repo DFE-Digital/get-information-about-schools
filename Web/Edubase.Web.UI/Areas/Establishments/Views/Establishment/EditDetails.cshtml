@@ -812,22 +812,6 @@
                         }
                         $phaseSelector.html(optionList);
                     }
-
-                    @if(!Model.IsDirty)
-                    {
-                        <text>
-                            (function () {
-                                var $buttons = $("#save-submit-bottom,#save-submit-top");
-                                var disable = function (b) { $buttons.prop("disabled", b); };
-                                disable(true);
-                                $(document.forms[0]).dirrty({ preventLeaving: false })
-                                    .on("dirty", function () { disable(false); })
-                                    .on("clean", function () { disable(true); });
-                            })();
-                        </text>
-                    }
-
-
                 </script>
             }
         }
