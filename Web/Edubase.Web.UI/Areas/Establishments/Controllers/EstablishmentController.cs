@@ -1129,10 +1129,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     foreach (var validationEnvelopeError in validationEnvelope.Errors)
                     {
                         var fieldName = validationEnvelopeError.Fields;
-                        if (fieldName.Contains(".") &&
-                            ModelState.ContainsKey(fieldName.Split('.')[1]))
+                        if (fieldName != null)
                         {
-                            fieldName = fieldName.Split('.')[1];
+                            if (fieldName.Contains(".") &&
+                                ModelState.ContainsKey(fieldName.Split('.')[1]))
+                            {
+                                fieldName = fieldName.Split('.')[1];
+                            }
                         }
 
                         ModelState.AddModelError(fieldName ?? string.Empty, validationEnvelopeError.GetMessage());
