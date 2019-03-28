@@ -172,8 +172,8 @@ namespace Edubase.Web.UI.Models
         //public int? MSOAId { get; set; }
         //public int? LSOAId { get; set; }
 
-        public string MSOAId { get; set; }
-        public string LSOAId { get; set; }
+        public string MSOACode { get; set; }
+        public string LSOACode { get; set; }
 
         [Display(Name = "BSO: Date of last inspection")]
         public DateTimeViewModel BSODateOfLastInspectionVisit { get; set; } = new DateTimeViewModel();
