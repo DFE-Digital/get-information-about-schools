@@ -59,6 +59,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public string LocalAuthorityName { get; set; }
         public string OpenDateLabel => GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust) ? "Incorporated on" : "Open date";
         public GT? GroupType => GroupTypeId.HasValue ? (GT)GroupTypeId.Value : null as GT?;
+
+        [Display(Name = "Group ID")]
         public string GroupId { get; set; }
         public string CompaniesHouseNumber { get; set; }
         public string Address { get; set; }
