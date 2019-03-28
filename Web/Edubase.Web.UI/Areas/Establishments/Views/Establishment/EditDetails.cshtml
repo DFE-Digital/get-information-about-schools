@@ -118,7 +118,7 @@
                     @if (Model.EditPolicy.HeadFirstName)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.HeadFirstName)">
-                            <label class="form-label" for="headfirstname">
+                            <label class="form-label" for="HeadFirstName">
                                 @(Model.EditPolicy.HeadteacherLabel) first name
                             </label>
                             @Html.ValidationMessageFor(x => x.HeadFirstName)
@@ -130,7 +130,7 @@
                     @if (Model.EditPolicy.HeadLastName)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.HeadLastName)">
-                            <label class="form-label" for="headlastname">
+                            <label class="form-label" for="HeadLastName">
                                 @(Model.EditPolicy.HeadteacherLabel) last name
                             </label>
                             @Html.ValidationMessageFor(x => x.HeadLastName)
@@ -333,7 +333,7 @@
                     @if (Model.EditPolicy.ReligiousEthosId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ReligiousEthosId)">
-                            <label class="form-label" for="religious-ethos">Religious ethos</label>
+                            <label class="form-label" for="ReligiousEthosId">Religious ethos</label>
                             @Html.DropDownListFor(x => x.ReligiousEthosId, Model.ReligiousEthoses, "", new { @class = "form-control" })
                         </div>
                     }
@@ -382,7 +382,7 @@
                     @if (Model.EditPolicy.Section41ApprovedId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.Section41ApprovedId)">
-                            <label class="form-label" for="section-41">Section 41 approved</label>
+                            <label class="form-label" for="Section41ApprovedId">Section 41 approved</label>
                             @Html.DropDownListFor(x => x.Section41ApprovedId, Model.Section41ApprovedItems, "", new { @class = "form-control" })
                         </div>
                     }
