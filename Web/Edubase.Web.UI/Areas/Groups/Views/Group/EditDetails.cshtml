@@ -263,13 +263,6 @@
         }());
 
         (function () {
-            if ("@Request.HttpMethod" == "GET") {
-                $("button[type=submit]").prop("disabled", true);
-                $("select:enabled,input:enabled,textarea:enabled").on("change keyup", function () {
-                    $("button[type=submit]").prop("disabled", false);
-                });
-            }
-
             var $closedDateInputs = $(".closed-date input[type='text']");
             var $statusSelector = $("select#StatusId");
 
@@ -280,7 +273,6 @@
                 f();
                 $statusSelector.on("change", f);
             }
-
         })();
 
     </script>
