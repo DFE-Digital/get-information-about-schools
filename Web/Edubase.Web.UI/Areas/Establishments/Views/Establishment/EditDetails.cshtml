@@ -170,12 +170,12 @@
                                     <label for="StatutoryLowAge" class="form-label">
                                         Low
                                     </label>
-                                    @Html.TextBoxFor(x => x.StatutoryLowAge, new { maxlength = 120, @class = "form-control age-field", placeholder = "From" })
+                                    @Html.TextBoxFor(x => x.StatutoryLowAge, new { maxlength = 2, @class = "form-control age-field", placeholder = "From" })
 
                                 </span>
                                 <span class="inline-form-control">
                                     <label for="StatutoryHighAge" class="form-label">High</label>
-                                    @Html.TextBoxFor(x => x.StatutoryHighAge, new { maxlength = 120, @class = "form-control age-field", placeholder = "To" })
+                                    @Html.TextBoxFor(x => x.StatutoryHighAge, new { maxlength = 2, @class = "form-control age-field", placeholder = "To" })
                                 </span>
                             </fieldset>
                         </div>
@@ -186,6 +186,7 @@
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.TypeId)">
                             <label class="form-label" for="TypeId">Establishment type</label>
+                            @Html.ValidationMessageFor(x=>x.TypeId)
                             @Html.DropDownListFor(x => x.TypeId, Model.EstablishmentTypes, "", new { @class = "form-control" })
                         </div>
                     }
@@ -205,8 +206,9 @@
 
                     @if (Model.EditPolicy.FurtherEducationTypeId)
                     {
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.FurtherEducationTypeId)">
                             <label class="form-label" for="FurtherEducationTypeId">Further education type</label>
+                            @Html.ValidationMessageFor(x => x.FurtherEducationTypeId)
                             @Html.DropDownListFor(x => x.FurtherEducationTypeId, Model.FurtherEducationTypes, "", new { @class = "form-control" })
                         </div>
                     }
@@ -256,6 +258,7 @@
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.StatusId)">
                             <label class="form-label" for="StatusId">Establishment status</label>
+                            @Html.ValidationMessageFor(x => x.StatusId)
                             @Html.DropDownListFor(x => x.StatusId, Model.Statuses, "", new { @class = "form-control" })
                         </div>
                     }
@@ -293,18 +296,19 @@
                             @Html.DropDownListFor(x => x.OfstedRatingId, Model.OfstedRatings, "", new { @class = "form-control" })
                         </div>
 
-                            @Html.EditorFor(x => x.OfstedInspectionDate, new { title = "Ofsted last inspection" })
+                        @Html.EditorFor(x => x.OfstedInspectionDate, new { title = "Ofsted last inspection" })
 
-                            <div class="form-group">
-                                <label for="ofsted-report" class="form-label">Ofsted report link</label>
-                                <input type="text" class="form-control" id="ofsted-report" disabled="disabled" value="http://reports.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/@Model.Urn" />
-                            </div>
+                        <div class="form-group">
+                            <label for="ofsted-report" class="form-label">Ofsted report link</label>
+                            <input type="text" class="form-control" id="ofsted-report" disabled="disabled" value="http://reports.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/@Model.Urn" />
+                        </div>
                     }
 
                     @if (Model.EditPolicy.InspectorateId)
                     {
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.InspectorateId)">
                             <label class="form-label" for="InspectorateId">Inspectorate</label>
+                            @Html.ValidationMessageFor(x => x.InspectorateId)
                             @Html.DropDownListFor(x => x.InspectorateId, Model.Inspectorates, "", new { @class = "form-control" })
                         </div>
                     }
@@ -316,7 +320,6 @@
                             @Html.TextBoxFor(x => x.ProprietorName, new { maxlength = 120, id = "proprietor", @class = "form-control" })
                         </div>
                     }
-
 
                     @if (Model.EditPolicy.ReligiousCharacterId)
                     {
@@ -338,6 +341,7 @@
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ReligiousEthosId)">
                             <label class="form-label" for="ReligiousEthosId">Religious ethos</label>
+                            @Html.ValidationMessageFor(x => x.ReligiousEthosId)
                             @Html.DropDownListFor(x => x.ReligiousEthosId, Model.ReligiousEthoses, "", new { @class = "form-control" })
                         </div>
                     }
@@ -389,6 +393,7 @@
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.Section41ApprovedId)">
                             <label class="form-label" for="Section41ApprovedId">Section 41 approved</label>
+                            @Html.ValidationMessageFor(x => x.Section41ApprovedId)
                             @Html.DropDownListFor(x => x.Section41ApprovedId, Model.Section41ApprovedItems, "", new { @class = "form-control" })
                         </div>
                     }
@@ -415,8 +420,9 @@
                     @if (Model.EditPolicy.ReasonEstablishmentClosedId)
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentClosedId)">
-                            <label class="form-label" for="reason-establishment-closed">Reason establishment closed</label>
-                            @Html.DropDownListFor(x => x.ReasonEstablishmentClosedId, Model.ReasonsEstablishmentClosed, "", new { @class = "form-control", id = "reason-establishment-closed" })
+                            <label class="form-label" for="ReasonEstablishmentClosedId">Reason establishment closed</label>
+                            @Html.ValidationMessageFor(x => x.ReasonEstablishmentClosedId)
+                            @Html.DropDownListFor(x => x.ReasonEstablishmentClosedId, Model.ReasonsEstablishmentClosed, "", new { @class = "form-control" })
                         </div>
                     }
 
@@ -534,16 +540,18 @@
 
                     @if (Model.EditPolicy.SENStat)
                     {
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.SENStat)">
                             @Html.LabelFor(x => x.SENStat)
+                            @Html.ValidationMessageFor(x => x.SENStat)
                             @Html.TextBoxFor(x => x.SENStat, new { @class = "form-control" })
                         </div>
                     }
 
                     @if (Model.EditPolicy.SENNoStat)
                     {
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.SENNoStat)">
                             @Html.LabelFor(x => x.SENNoStat)
+                            @Html.ValidationMessageFor(x => x.SENNoStat)
                             @Html.TextBoxFor(x => x.SENNoStat, new { @class = "form-control" })
                         </div>
                     }
