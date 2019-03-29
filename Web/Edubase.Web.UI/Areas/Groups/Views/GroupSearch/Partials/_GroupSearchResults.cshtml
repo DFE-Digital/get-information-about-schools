@@ -9,7 +9,7 @@
 @if (Model.Error != null)
 {
     <div class="column-two-thirds">
-        <p class="no-school-results">No search results. Please try @Html.ActionLink("searching again", "Index", "Search", new { area = "" }, null) using different spelling or words.</p>
+        <p class="no-school-results">There are no results for your search. Please @Html.ActionLink("try again", "Index", "Search", new { area = "" }, null) using different spelling or words.</p>
     </div>
 }
 else if (Model.Results.Count > 0)
@@ -61,11 +61,11 @@ else
     <div class="column-two-thirds">
         @if (Model.GroupSearchModel.Text.IsInteger())
         {
-            <p class="no-school-results">No search results. Please check the number entered or try @Html.ActionLink("searching again", "Index", "Search", new { area = "" }, null) using the group name.</p>
+            <p class="no-school-results">There are no results for your search. Please check the number entered or @Html.ActionLink("try again", "Index", "Search", new { area = "" }, null) using the group name.</p>
         }
         else
         {
-            <p class="no-school-results">No search results. Please try @Html.ActionLink("searching again", "Index", "Search", new { area = "" }, null) using different spelling or words.</p>
+            <p class="no-school-results">There are no results for your search. Please @Html.ActionLink("try again", "Index", "Search", new { area = "" }, null) using different spelling or words.</p>
         }
     </div>
 }
