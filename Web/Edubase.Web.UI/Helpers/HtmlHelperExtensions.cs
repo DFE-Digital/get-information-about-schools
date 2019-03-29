@@ -34,7 +34,7 @@ namespace Edubase.Web.UI.Helpers
             return state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("error");
         }
 
-        public static MvcHtmlString ValidationMessage(this HtmlHelper htmlHelper, string modelName)
+        public static MvcHtmlString ValidationMessageNested(this HtmlHelper htmlHelper, string modelName)
         {
             var fullFieldName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(modelName);
             if (!htmlHelper.ViewData.ModelState.ContainsKey(fullFieldName))

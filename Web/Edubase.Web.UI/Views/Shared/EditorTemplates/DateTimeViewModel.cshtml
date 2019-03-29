@@ -85,7 +85,7 @@
             </div>
         }
 
-        @HtmlHelperExtensions.ValidationMessage(Html, ViewData.ModelMetadata.PropertyName)
+        @Html.ValidationMessageNested(ViewData.ModelMetadata.PropertyName)
         @Html.ValidationMessageFor(x => x)
         @Html.ValidationMessageFor(x => x.Day)
         @Html.ValidationMessageFor(x => x.Month)
