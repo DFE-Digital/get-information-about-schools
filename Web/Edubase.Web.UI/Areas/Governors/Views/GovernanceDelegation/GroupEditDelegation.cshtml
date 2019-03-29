@@ -1,4 +1,4 @@
-﻿@model EditGroupDelegationInformationViewModel
+@model EditGroupDelegationInformationViewModel
 
 @{
     ViewBag.hideLogo = true;
@@ -16,7 +16,7 @@
             <div class="edit-governor">
                 <div class="form-group @Html.ValidationCssClassFor(x => x.DelegationInformation)">
                     @Html.LabelFor(x => x.DelegationInformation, new {@class = "form-label"})
-                    @Html.ValidationMessageFor(x => x.DelegationInformation)
+                    @Html.ValidationMessageFor(x => x.DelegationInformation, "Details must be 1000 characters or less")
                     @Html.TextAreaFor(x => x.DelegationInformation, new {rows = "6", cols = "60", @class="form-control"})
                 </div>
 
