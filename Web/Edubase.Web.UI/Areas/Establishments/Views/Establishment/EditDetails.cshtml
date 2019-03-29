@@ -610,8 +610,9 @@
 
                     @if (Model.EditPolicy.TeenageMothersCapacity)
                     {
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.TeenageMothersCapacity)">
                             @Html.LabelFor(x => x.TeenageMothersCapacity)
+                            @Html.ValidationMessageFor(x => x.TeenageMothersCapacity)
                             @Html.TextBoxFor(x => x.TeenageMothersCapacity, new { @class = "form-control" })
                         </div>
                     }
@@ -626,24 +627,27 @@
 
                     @if (Model.EditPolicy.PRUSENId)
                     {
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.PRUSENId)">
                             @Html.LabelFor(x => x.PRUSENId)
+                            @Html.ValidationMessageFor(x => x.PRUSENId)
                             @Html.DropDownListFor(x => x.PRUSENId, Model.PRUSENOptions, "", new { @class = "form-control" })
                         </div>
                     }
 
                     @if (Model.EditPolicy.PRUEBDId)
                     {
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.PRUEBDId)">
                             @Html.LabelFor(x => x.PRUEBDId)
+                            @Html.ValidationMessageFor(x => x.PRUEBDId)
                             @Html.DropDownListFor(x => x.PRUEBDId, Model.PRUEBDOptions, "", new { @class = "form-control" })
                         </div>
                     }
 
                     @if (Model.EditPolicy.PlacesPRU)
                     {
-                        <div class="form-group">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.PlacesPRU)">
                             @Html.LabelFor(x => x.PlacesPRU)
+                            @Html.ValidationMessageFor(x => x.PlacesPRU)
                             @Html.TextBoxFor(x => x.PlacesPRU, new { @class = "form-control" })
                         </div>
                     }
