@@ -94,7 +94,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
             }
 
             // if a location shares multiple postcodes, azure does not include it within the normal freeformaddress. So we need to build the appropriate address.
-            if (!output.Contains(locationResult.address.postalCode.Split(',')[0]))
+            if (locationResult.address.postalCode != null && !output.Contains(locationResult.address.postalCode.Split(',')[0]))
             {
                 if (text.IsUkPostCode())
                 {
