@@ -61,6 +61,18 @@
         }
         <legend class="bold" id="@legendPrefix@ViewData.ModelMetadata.PropertyName" style="@ViewData["style"]">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
 
+        @{
+            var fullFieldId = ViewData.TemplateInfo.GetFullHtmlFieldName(Model.Label)
+                .Replace(".", "_")
+                .Replace("[", "_")
+                .Replace("]", "_");
+
+            if (!string.Concat(legendPrefix, ViewData.ModelMetadata.PropertyName).Equals(fullFieldId))
+            {
+                <div id="@fullFieldId"></div>
+            }
+        }
+        
         @if (!disableHint)
         {
             <div class="form-hint">For example, 20 03 2003</div>
@@ -73,7 +85,7 @@
             </div>
         }
 
-
+        @HtmlHelperExtensions.ValidationMessage(Html, ViewData.ModelMetadata.PropertyName)
         @Html.ValidationMessageFor(x => x)
         @Html.ValidationMessageFor(x => x.Day)
         @Html.ValidationMessageFor(x => x.Month)

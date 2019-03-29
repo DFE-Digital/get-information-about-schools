@@ -72,7 +72,7 @@
                         <h2>@Html.ActionLink( Model.LinkedEstablishments.Establishments[i].Name, "Details", "Establishment", new { id = Model.LinkedEstablishments.Establishments[i].Urn, area = "Establishments" }, new { @class = "bold-small" })</h2>
                         @if (ViewData.ModelState["linkedEstablishments[" + i + "].id"] != null)
                         {
-                            <div class="error">@Html.ValidationMessage("linkedEstablishments[" + i + "].id")</div>
+                            <div class="error">@HtmlHelperExtensions.ValidationMessage(Html, "linkedEstablishments[" + i + "].id")</div>
                         }
                         <dl>
                             <dt>Address:</dt>
