@@ -62,12 +62,12 @@
         <legend class="bold" id="@legendPrefix@ViewData.ModelMetadata.PropertyName" style="@ViewData["style"]">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
 
         @{
-            var fullFieldId = ViewData.TemplateInfo.GetFullHtmlFieldName(Model.Label)
+            var fullFieldId = ViewData.TemplateInfo.GetFullHtmlFieldName(Model?.Label)
                 .Replace(".", "_")
                 .Replace("[", "_")
                 .Replace("]", "_");
 
-            if (!string.Concat(legendPrefix, ViewData.ModelMetadata.PropertyName).Equals(fullFieldId))
+            if (fullFieldId != string.Empty && !string.Concat(legendPrefix, ViewData.ModelMetadata.PropertyName).Equals(fullFieldId))
             {
                 <div id="@fullFieldId"></div>
             }
