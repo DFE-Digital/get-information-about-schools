@@ -27,19 +27,3 @@
         }
     </div>
 </div>
-
-@section ViewScripts
-{
-    <script>
-        (function () {
-            if ("@Request.HttpMethod" == "GET") {
-                var $corporateContact = $("#CorporateContact");
-                var initialValue = $.trim($corporateContact.val());
-                $("button[type=submit]").prop("disabled", true);
-                $corporateContact.on("change keyup", function () {
-                    $("button[type=submit]").prop("disabled", initialValue == $.trim($corporateContact.val()));
-                });
-            }
-        })();
-    </script>
-}
