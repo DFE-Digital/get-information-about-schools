@@ -85,11 +85,21 @@
             </div>
         }
 
-        @Html.ValidationMessageNested(ViewData.ModelMetadata.PropertyName)
-        @Html.ValidationMessageFor(x => x)
-        @Html.ValidationMessageFor(x => x.Day)
-        @Html.ValidationMessageFor(x => x.Month)
-        @Html.ValidationMessageFor(x => x.Year)
+        @{
+            var errContent = new List<MvcHtmlString>()
+            {
+                Html.ValidationMessageNested(ViewData.ModelMetadata.PropertyName),
+                Html.ValidationMessageFor(x => x),
+                Html.ValidationMessageFor(x => x.Day),
+                Html.ValidationMessageFor(x => x.Month),
+                Html.ValidationMessageFor(x => x.Year)
+            };
+
+            foreach (var mvcHtmlString in errContent.Select(x => x?.ToHtmlString()).Distinct())
+            {
+                @Html.Raw(mvcHtmlString)
+            }
+        }
 
         @if (ViewData["vueModel"] != null)
         {
