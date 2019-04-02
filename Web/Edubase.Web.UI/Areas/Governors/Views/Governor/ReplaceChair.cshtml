@@ -1,5 +1,5 @@
 @model ReplaceChairViewModel
-    
+
 @{
     ViewBag.hideLogo = true;
     ViewBag.SelectedTab = "EditGovernance";
@@ -43,12 +43,12 @@
                         null,
                         new { id = "newChair", @class = "panel-trigger", data_toggle_panel = "#newChairDetails" })
 
-                    
+
                     @Html.GiasRadioFor(m => m.NewChairType,
                         ReplaceChairViewModel.ChairType.SharedChair,
                         "Shared Chair",
                         null,
-                        new { id = "sharedChair", @class = "panel-trigger", data_toggle_panel = "#sharedChairDetails" })
+                        new { id = "sharedChair", @class = "panel-trigger", data_toggle_panel = "#SharedGovernors" })
 
                 </div>
                 <div id="replacement-chair-details" class="exapanding-list-wrap chair-replace governor-toggles">
@@ -65,10 +65,10 @@
                                     <br />
                                 }
 
-                                @Html.EditorFor(m => m.NewLocalGovernor, new {disableStartDate = true})
+                                @Html.EditorFor(m => m.NewLocalGovernor, new {disableStartDate = true, editorPrefix = nameof(Model.NewLocalGovernor)})
                             </div>
                         </div>
-                        <div id="sharedChairDetails" class="panel-indent @(Model.NewChairType == ReplaceChairViewModel.ChairType.SharedChair ? "open-expander" : "")">
+                        <div id="SharedGovernors" class="panel-indent @(Model.NewChairType == ReplaceChairViewModel.ChairType.SharedChair ? "open-expander" : "")">
                             <div class="replacement-chair-option">
                                 <div class="shared-governor-list">
                                     @if (Model.SharedGovernors.Any())
@@ -82,7 +82,17 @@
                                     }
                                     else
                                     {
-                                        <p>There are no shared governors available for this establishment</p>
+                                        <div class="form-group @Html.ValidationCssClass("SharedGovernors")">
+                                            @if (Html.ValidationCssClass("SharedGovernors").ToString() == "error")
+                                            {
+                                                @Html.ValidationMessage("SharedGovernors")
+                                            }
+                                            else
+                                            {
+                                                <p>There are no shared governors available for this establishment</p>
+
+                                            }
+                                        </div>
                                     }
                                 </div>
                             </div>
@@ -117,7 +127,7 @@
         $day.blur(checkAndUpdateDate);
         $month.blur(checkAndUpdateDate);
         $year.blur(checkAndUpdateDate);
-        
+
         $(function () {
             checkAndUpdateDate();
 

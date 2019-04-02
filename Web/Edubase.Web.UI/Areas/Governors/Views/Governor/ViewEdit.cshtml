@@ -28,17 +28,16 @@
         </div>
 
         <div class="column-half">
-            <h2 class="heading-small">Add person</h2>
-
+            <h2 id="role" class="heading-small">Add person</h2>
 
             @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabAddGovernor" : "GroupAddGovernor", new { groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, FormMethod.Get))
             {
-                <div class="form-group inline-select-button">
-                    <label class="form-label" for="roleid">Select role</label>
-                    @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem { Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = ((eLookupGovernorRole)x.Id).ToString() }), new { id = "roleid", @class = "form-control" })
-
-                    <input type="submit" value="Add " class="button" />
-                </div>
+            <div class="form-group inline-select-button push--bottom @Html.ValidationCssClass("role")">
+                <label class="form-label" for="roleid">Select role</label>
+                @Html.ValidationMessage("role")
+                @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem { Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = ((eLookupGovernorRole)x.Id).ToString() }), new { id = "roleid", @class = "form-control" })
+                <input type="submit" value="Add person" class="button" />
+            </div>
 
             }
 
@@ -492,15 +491,6 @@ else
                     }
                 });
             }
-
-            (function () { // only enable the save button when the retirement date is populated
-                var $retireGovernor = $("button#retire-governor");
-                var $dateFields = $(".retirement-date input");
-                var dateFieldsArray = $.makeArray($dateFields);
-                var toggle = function () { $retireGovernor.prop("disabled", dateFieldsArray.some(function (x) { return $.trim($(x).val()) == "" })); };
-                toggle();
-                $dateFields.on("keyup change", toggle);
-            })();
         });
 
     </script>

@@ -113,7 +113,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                 RuleFor(x => x.GroupId)
                     .Cascade(CascadeMode.StopOnFirstFailure)
                     .NotEmpty()
-                    .WithMessage("This field is mandatory")
+                    .WithMessage("Please enter a Group ID")
                     .WithSummaryMessage("Please enter a Group ID")
                     .MustAsync(async (model, groupId, ct) => !(await _groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), groupId: groupId, existingGroupUId: model.GroupUId)))
                     .WithMessage("Group ID already exists. Enter a different group ID.")

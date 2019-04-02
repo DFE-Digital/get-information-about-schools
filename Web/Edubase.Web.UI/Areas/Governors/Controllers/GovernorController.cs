@@ -453,7 +453,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             };
 
             var validationResults = await _governorsWriteService.ValidateAsync(governorModel, User);
-            validationResults.ApplyToModelState(ControllerContext);
+            validationResults.ApplyToModelState(ControllerContext, true);
 
             if (ModelState.IsValid)
             {
@@ -692,7 +692,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         return Redirect(url);
                     }
 
-                    validation.ApplyToModelState(ControllerContext, nameof(model.NewLocalGovernor));
+                    validation.ApplyToModelState(ControllerContext, nameof(model.NewLocalGovernor), true);
                 }
             }
 

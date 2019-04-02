@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1126,7 +1127,24 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
                 else
                 {
-                    validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.GetMessage()));
+                    foreach (var validationEnvelopeError in validationEnvelope.Errors)
+                    {
+                        var fieldName = validationEnvelopeError.Fields;
+                        if (fieldName != null)
+                        {
+                            if (fieldName.Contains(".") &&
+                                ModelState.ContainsKey(fieldName.Split('.')[1]))
+                            {
+                                fieldName = fieldName.Split('.')[1];
+                            }
+                        }
+
+                        if (!ModelState.ContainsKey(fieldName) || !ModelState[fieldName].Errors.Any())
+                        {
+                            ModelState.AddModelError(fieldName ?? string.Empty, validationEnvelopeError.GetMessage()); 
+                        }
+                        
+                    }
                 }
 
                 viewModel.ShowDuplicateRecordWarning = validationEnvelope.HasWarnings && validationEnvelope.Warnings.Any(x => x.Code == "establishment.with.same.name.la.found");

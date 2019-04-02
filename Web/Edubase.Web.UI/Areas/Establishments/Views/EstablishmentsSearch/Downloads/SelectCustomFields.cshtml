@@ -19,14 +19,14 @@
     }
 </div>
 
+
 <div class="grid-row">
     <div class="column-full">
         <h1 class="heading-xlarge">Download data</h1>
     </div>
     <div class="horizontal-tabs-wrapper">
         <div class="column-full">
-            <h2 class="bold-medium">Download establishment search results</h2>
-            <br />
+            <h2 class="bold-medium push-half--bottom">Download establishment search results</h2>
             <h2 class="bold-medium js-when-on">Select the data you are interested in</h2>
             <p class="js-when-off">Sorry, you need to have JavaScript enabled to view this page.</p>
 
@@ -42,9 +42,8 @@
                     <fieldset class="stacked-controls">
                         <legend class="visually-hidden">Select fields to download</legend>
 
-                        <div class="form-group">
-                            <label for="search">Search by field name</label>
-                            <br />
+                        <div class="form-group push--bottom">
+                            <label class="form-label" for="search">Search by field name</label>
                             <input id="search" v-model="search" class="form-control search" placeholder="Search..." @@keydown.enter.prevent="doSearch" />
                             <button class="button button-search icon-only" @@click="doSearch" type="button"><span class="visuallyhidden">Search</span></button>
 
@@ -53,8 +52,6 @@
                                 <a href="javascript:" @@click="showCategorisedView" v-show="!categorisedView">View in sections</a>
                             </div>
                         </div>
-
-                        <br />
 
                         <div>
                             <input class="button" type="submit" value="Next" />

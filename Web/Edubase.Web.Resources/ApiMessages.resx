@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="error.code.required_statusId" xml:space="preserve">
-    <value>Please select a establishment status</value>
+    <value>Please select an establishment status</value>
   </data>
   <data name="error.code.required_typeId" xml:space="preserve">
     <value>Please select an establishment type</value>

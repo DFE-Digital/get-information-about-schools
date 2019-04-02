@@ -22,7 +22,7 @@
                     // traditional model validation
                     foreach (var modelError in Model.Keys.SelectMany(key => this.Model[key].Errors.Select(x => Tuple.Create(key, x.ErrorMessage))))
                     {
-                        <li><a href='#@modelError.Item1.Replace(".","_")'>@modelError.Item2</a></li>
+                        <li><a href='#@modelError.Item1.Replace(".","_").Replace("[","_").Replace("]","_")'>@modelError.Item2</a></li>
                     }
                 }
             }

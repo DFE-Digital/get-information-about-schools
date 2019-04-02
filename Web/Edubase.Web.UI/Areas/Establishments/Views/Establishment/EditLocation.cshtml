@@ -25,7 +25,7 @@
         @Html.HiddenFor(x => x.ChangesRequireApprovalCount)
 
         <div class="" style="display:@Html.Conditional(Model.ChangesSummary != null, "none");">
-        
+
             <div class="column-half">
 
                 <button type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveLocation)">Save</button>
@@ -130,8 +130,8 @@
                     <div class="form-group @Html.ValidationCssClass(nameof(Model.MSOACode)) @Html.ValidationCssClass("MSOAId")">
                         <label for="@nameof(Model.MSOACode)">Middle Super Output Area (MSOA)</label>
                         @Html.ValidationMessage(nameof(Model.MSOACode))
-                        @Html.ValidationMessage("MSOAId")
-                        @Html.TextBoxFor(x => x.MSOACode, new { @class = "form-control" })
+                        @Html.ValidationMessage("MSOAId")<div id="MSOAId"></div>
+                        @Html.TextBoxFor(x => x.MSOACode, new {@class = "form-control"})
                     </div>
                 }
 
@@ -140,7 +140,7 @@
                     <div class="form-group @Html.ValidationCssClass(nameof(Model.LSOACode)) @Html.ValidationCssClass("LSOAId")">
                         <label for="@nameof(Model.LSOACode)">Lower Super Output Area (LSOA)</label>
                         @Html.ValidationMessage(nameof(Model.LSOACode))
-                        @Html.ValidationMessage("LSOAId")
+                        @Html.ValidationMessage("LSOAId")<div id="LSOAId"></div>
                         @Html.TextBoxFor(x => x.LSOACode, new { @class = "form-control" })
                     </div>
                 }
@@ -161,10 +161,10 @@
                 <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="button mobile-full-width js-confirm">Confirm</button>
 
                 @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "button button-secondary mobile-full-width", id = "cancel-edit"})
-            </div> 
-            
+            </div>
+
             @section ViewScripts {
-    
+
                 <script>
                     $('#cancel-edit, .requires-conf-to-leave').okCancel({
                         ok: function() {
@@ -176,7 +176,7 @@
                     });
                 </script>
 
-            }           
+            }
         }
         else
         {
@@ -191,20 +191,9 @@
                             exitAttached = true;
                         }
                     });
-
-                    (function () {
-                        var $buttons = $("button[type='submit']");
-                        $buttons.prop("disabled", true);
-                        $(document.forms[0]).dirrty({ preventLeaving: false }).on("dirty", function () {
-                            $buttons.prop("disabled", false);
-                        }).on("clean", function () {
-                            $buttons.prop("disabled", true);
-                        });
-                    })();        
-
                 </script>
             }
         }
-    
+
     </div>
 }

@@ -8,6 +8,7 @@
     string fieldsetClassName = "";
     bool disableHint = false;
     bool.TryParse(ViewData["disableHint"]?.ToString(), out disableHint);
+    string legendPrefix = "";
 
     if (ViewData["labelClass"] != null)
     {
@@ -33,7 +34,9 @@
     else
     {
         classBinding = "class=\"form-group create-edit-form-group date-group "
-            + Html.ValidationCssClassFor(x => x) + " " + Html.ValidationCssClassFor(x => x.Day) + " "
+            + Html.ValidationCssClass(ViewData.ModelMetadata.PropertyName) + " "
+            + Html.ValidationCssClassFor(x => x) + " "
+            + Html.ValidationCssClassFor(x => x.Day) + " "
             + Html.ValidationCssClassFor(x => x.Month) + " "
             + Html.ValidationCssClassFor(x => x.Year) + "\"";
     }
@@ -42,6 +45,12 @@
     {
         cssClassPrefix = ViewData["ClassPrefix"].ToString();
     }
+
+    if (ViewData["editorPrefix"] != null)
+    {
+        legendPrefix = ViewData["editorPrefix"].ToString() + "_";
+    }
+
 }
 <div @Html.Raw(classBinding)>
     <fieldset class="range-group @fieldsetClassName">
@@ -50,7 +59,28 @@
             <span class="error-message hidden">Please check the date(s) you have entered</span>
             <span class="error-message hidden date-range-error">Please use a valid date range</span>
         }
-        <legend class="bold" tabindex="0" id="@ViewData.ModelMetadata.PropertyName" style="@ViewData["style"]">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
+        <legend class="bold" id="@legendPrefix@ViewData.ModelMetadata.PropertyName" style="@ViewData["style"]">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
+
+        @{
+            var fullFieldId = ViewData.TemplateInfo.GetFullHtmlFieldName(Model?.Label)
+                .Replace(".", "_")
+                .Replace("[", "_")
+                .Replace("]", "_");
+
+            if (fullFieldId != string.Empty && !string.Concat(legendPrefix, ViewData.ModelMetadata.PropertyName).Equals(fullFieldId))
+            {
+                <div id="@fullFieldId"></div>
+            }
+
+            foreach (var modelStateKey in ViewData.ModelState.Keys)
+            {
+                if (modelStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCultureIgnoreCase) &&
+                    !modelStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCulture))
+                {
+                    <div id="@modelStateKey"></div>
+                }
+            }
+        }
 
         @if (!disableHint)
         {
@@ -64,10 +94,21 @@
             </div>
         }
 
-        @Html.ValidationMessageFor(x => x)
-        @Html.ValidationMessageFor(x => x.Day)
-        @Html.ValidationMessageFor(x => x.Month)
-        @Html.ValidationMessageFor(x => x.Year)
+        @{
+            var errContent = new List<MvcHtmlString>()
+            {
+                Html.ValidationMessageNested(ViewData.ModelMetadata.PropertyName),
+                Html.ValidationMessageFor(x => x),
+                Html.ValidationMessageFor(x => x.Day),
+                Html.ValidationMessageFor(x => x.Month),
+                Html.ValidationMessageFor(x => x.Year)
+            };
+
+            foreach (var mvcHtmlString in errContent.Select(x => x?.ToHtmlString()).Distinct())
+            {
+                @Html.Raw(mvcHtmlString)
+            }
+        }
 
         @if (ViewData["vueModel"] != null)
         {
