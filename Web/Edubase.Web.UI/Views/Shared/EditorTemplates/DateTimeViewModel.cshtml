@@ -71,8 +71,17 @@
             {
                 <div id="@fullFieldId"></div>
             }
+
+            foreach (var modelStateKey in ViewData.ModelState.Keys)
+            {
+                if (modelStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCultureIgnoreCase) &&
+                    !modelStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCulture))
+                {
+                    <div id="@modelStateKey"></div>
+                }
+            }
         }
-        
+
         @if (!disableHint)
         {
             <div class="form-hint">For example, 20 03 2003</div>
