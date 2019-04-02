@@ -19,10 +19,6 @@
     }
 </div>
 
-<div v-if="showValidationError" class="validation-summary-errors error-summary">
-    <span>Information missing or incorrect</span>
-    <p>Please select at least one field</p>
-</div>
 
 <div class="grid-row">
     <div class="column-full">
@@ -37,6 +33,10 @@
             <p><!-- nothing specified in the prototype --></p>
             @using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get, new Dictionary<string, object> { ["@submit"] = "validateForm", ["id"] = "app", ["class"] = "hidden" }))
             {
+                <div v-if="showValidationError" class="validation-summary-errors error-summary">
+                    <span>Information missing or incorrect</span>
+                    <p>Please select at least one field</p>
+                </div>
 
                 <div class="download-step">
                     <fieldset class="stacked-controls">
