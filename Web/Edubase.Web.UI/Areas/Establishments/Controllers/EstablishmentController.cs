@@ -1140,7 +1140,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                             }
                         }
 
-                        if (!ModelState.ContainsKey(fieldName) || !ModelState[fieldName].Errors.Any())
+                        if (fieldName == null || !ModelState.ContainsKey(fieldName) || !ModelState[fieldName].Errors.Any())
                         {
                             ModelState.AddModelError(fieldName ?? string.Empty, validationEnvelopeError.GetMessage()); 
                         }
