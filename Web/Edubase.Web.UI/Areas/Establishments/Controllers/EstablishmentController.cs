@@ -997,7 +997,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.EditPolicy = editPolicyEnvelope.EditPolicy;
 
             var canEditAdditionalAddresses = editPolicyEnvelope.EditPolicy.AdditionalAddresses;
-            if (viewModel.SelectedTab != "details" || (!canEditAdditionalAddresses && domainModel.AdditionalAddresses != null))
+            if (domainModel.AdditionalAddresses != null &&
+                (viewModel.SelectedTab != "details" || !canEditAdditionalAddresses))
             {
                 // the additional addresses can only be edited from within the details tab, so default copy from domain for any other tab edits
                 viewModel.AdditionalAddresses = new List<AdditionalAddressModel>(domainModel.AdditionalAddresses);
