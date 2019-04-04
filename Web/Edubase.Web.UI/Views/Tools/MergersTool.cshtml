@@ -46,18 +46,18 @@
             </div>
             <div v-bind:class="['error-summary' , showGlobalError ? '' :' hidden']">
                 <h2 v-bind:class="['heading-medium error-summary-heading', (leadEstabError || linkedEstabError || amalgamateUrnError) ? '' : 'hidden']">
-                    Invalid <abbr title="Unique reference number">URN</abbr>
+                    Invalid <abbr title="Unique Reference Number"><a href="#" title="Unique Reference Number" class="glossary">URN</a></abbr>
                 </h2>
 
                 <ul class="error-summary-list">
                     <li v-bind:class="['error-message', (mergerTypeError) ? '' : 'hidden']"><a href="#radio-amalgamation">Please select 'Merge' or 'Amalgamate'</a></li>
-                    <li v-bind:class="['error-message', (leadEstabError) ? '' : 'hidden']"><a href="#lead-establishment">The lead establishment URN is invalid</a></li>
-                    <li v-bind:class="['error-message', (linkedEstabError) ? '' : 'hidden']"><a href="#linked-establishments">Please enter a valid URN</a></li>
-                    <li v-bind:class="['error-message', (amalgamateUrnError) ? '' : 'hidden']"><a href="#linked-establishments">Please enter a valid URN</a></li>
+                    <li v-bind:class="['error-message', (leadEstabError) ? '' : 'hidden']"><a href="#lead-establishment">The lead establishment <abbr title="Unique Reference Number">URN</abbr> is invalid</a></li>
+                    <li v-bind:class="['error-message', (linkedEstabError) ? '' : 'hidden']"><a href="#linked-establishments">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a></li>
+                    <li v-bind:class="['error-message', (amalgamateUrnError) ? '' : 'hidden']"><a href="#linked-establishments">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a></li>
                     <li v-bind:class="['error-message', (mergeDateError && mergerType==='merger') ? '' : 'hidden']"><a href="#merger-date">Merger date is invalid</a></li>
-                    <li v-bind:class="['error-message', (amalgamationLengthError || mergeLengthError)  ? '' : 'hidden']"><a href="#amalg-linked">Select between two and four schools. Please add another URN to continue</a></li>
+                    <li v-bind:class="['error-message', (amalgamationLengthError || mergeLengthError)  ? '' : 'hidden']"><a href="#amalg-linked">Select between two and four schools. Please add another <abbr title="Unique Reference Number">URN</abbr> to continue</a></li>
                     <li v-bind:class="['error-message', nameError ? '' : 'hidden']"><a href="#new-establishment-name">New school details must be completed before amalgamation. Please enter a new school name</a></li>
-                    <li v-bind:class="['error-message', duplicateUrnsError ? '' : 'hidden']"><a href="#">One or more URNs are duplicated. Please enter different URN(s)</a></li>
+                    <li v-bind:class="['error-message', duplicateUrnsError ? '' : 'hidden']"><a href="#">One or more <abbr title="Unique Reference Number">URNs</abbr> are duplicated. Please enter different <abbr title="Unique Reference Number">URN</abbr>(s)</a></li>
                     <li v-bind:class="['error-message', phaseError ? '' : 'hidden']"><a href="#new-establishment-phase">You haven't selected an establishment phase. Please select one to continue</a></li>
                     <li v-bind:class="['error-message', typeError ? '' : 'hidden']"><a href="#new-establishment-type">You haven't selected an establishment type. Please select one to continue</a></li>
                     <li v-bind:class="['error-message', laError ? '' : 'hidden']"><a href="#LocalAuthorityId">You haven't selected a local authority. Please select one to continue</a></li>
@@ -70,7 +70,7 @@
                     <div class="column-full top-button-panel">
                         <div class="submit-cancel-panel">
                             <button type="submit" name="action" value="" class="button" id="go-create" v-on:click.prevent="checkMergeType">Continue</button>
-                            @Html.ActionLink("Cancel", "Index", "Tools", new { }, new { @class = "button button-grey cancel mobile-full-width" })
+                            @Html.ActionLink("Cancel", "Index", "Tools", new { }, new { @class = "button button-secondary cancel mobile-full-width" })
                         </div>
                     </div>
                     <div class="column-two-thirds">
@@ -111,7 +111,7 @@
                     <div class="column-full">
                         <div class="button-row">
                             <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="checkMergeType" :disabled="mergerType==''">Continue</button>
-                            <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                            <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
                         </div>
                     </div>
 
@@ -126,7 +126,7 @@
                                 <span class="form-hint">
                                     The lead establishment will remain open
                                 </span>
-                                <span v-bind:class="['error-message', leadEstabError ? '' : 'hidden' ]">Please enter a valid URN</span>
+                                <span v-bind:class="['error-message', leadEstabError ? '' : 'hidden' ]">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
                                 <label class="form-label" for="lead-establishment">
                                     Enter the lead establishment <abbr title="Unique Reference Number">URN</abbr>
 
@@ -142,15 +142,24 @@
                                     </p>
                                     <dl class="field-group">
                                         <dt>
-                                            <label class="form-label">Enter the establishment URN(s)</label>
-                                            <span v-bind:class="['error-message', linkedEstabError ? '' : 'hidden' ]">Please enter a valid URN.</span>
-                                            <span v-bind:class="['error-message', duplicateUrnsError ? '' : 'hidden' ]">Duplicate URN. Please correct the URN.</span>
+                                            <label class="form-label">Enter the establishment <abbr title="Unique Reference Number">URN</abbr>(s)</label>
+                                            <span v-bind:class="['error-message', linkedEstabError ? '' : 'hidden' ]">Please enter a valid <abbr title="Unique Reference Number">URN</abbr>.</span>
+                                            <span v-bind:class="['error-message', duplicateUrnsError ? '' : 'hidden' ]">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
                                         </dt>
                                         <dd>
                                             <ol class="linked-establishments" id="linked-establishments">
-                                                <li><input class="form-control" id="establishment-0" type="text" v-model="linkedEstab0" /></li>
-                                                <li><input class="form-control" id="establishment-1" type="text" v-model="linkedEstab1" /></li>
-                                                <li><input class="form-control" id="establishment-2" type="text" v-model="linkedEstab2" /></li>
+                                                <li>
+                                                    <label for="establishment-0" class="visuallyhidden">First additional establishment</label>
+                                                    <input class="form-control" id="establishment-0" type="text" v-model="linkedEstab0" />
+                                                </li>
+                                                <li>
+                                                    <label for="establishment-1" class="visuallyhidden">Second additional establishment</label>
+                                                    <input class="form-control" id="establishment-1" type="text" v-model="linkedEstab1" />
+                                                </li>
+                                                <li>
+                                                    <label for="establishment-2" class="visuallyhidden">Third additional establishment</label>
+                                                    <input class="form-control" id="establishment-2" type="text" v-model="linkedEstab2" />
+                                                </li>
                                             </ol>
                                         </dd>
                                     </dl>
@@ -159,9 +168,9 @@
                         </div>
                         <div class="column-full">
                             <div class="submit-cancel-panel">
-                                <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false"> &laquo; Go back</a>
+                                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false"> &laquo; Go back</a>
                                 <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="validateMergeSelection" :disabled="disallowMerge()">Continue</button>
-                                <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                                <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -209,9 +218,9 @@
                         </div>
                         <div class="column-full">
                             <div class="submit-cancel-panel">
-                                <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="validMergeUrns=false">&laquo; Go back</a>
+                                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="validMergeUrns=false">&laquo; Go back</a>
                                 <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="processMerger" :disabled="$.trim(mergeDateDay).length == 0 || $.trim(mergeDateMonth).length == 0 || $.trim(mergeDateYear).length == 0">Process</button>
-                                <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                                <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
                             </div>
                         </div>
 
@@ -252,9 +261,9 @@
                     <div v-show="!validMergeUrns">
                         <div class="column-full top-button-panel">
                             <div class="submit-cancel-panel">
-                                <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false"> &laquo; Go back</a>
+                                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false"> &laquo; Go back</a>
                                 <button type="submit" name="action" value="" class="button" v-on:click.prevent="validateAmalgamationSelection">Continue</button>
-                                <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                                <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
                             </div>
                         </div>
                         <div class="column-two-thirds">
@@ -267,37 +276,48 @@
                         <div class="column-half">
                             <dl v-bind:class="['field-group form-group', amalgamateUrnError || amalgamationLengthError || duplicateUrnsError ? 'error' : '' ]">
                                 <dt>
-                                    <label class="form-label">Enter the establishment URN(s)</label>
-                                    <span v-bind:class="['error-message', amalgamateUrnError ? '' : 'hidden' ]">Please enter a valid URN</span>
+                                    <label class="form-label">Enter the establishment <abbr title="Unique Reference Number">URN</abbr>(s)</label>
+                                    <span v-bind:class="['error-message', amalgamateUrnError ? '' : 'hidden' ]">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
                                     <span v-bind:class="['error-message', amalgamationLengthError && !amalgamateUrnError  ? '' : 'hidden' ]">Select between 2 and 4 schools.</span>
-                                    <span v-bind:class="['error-message', duplicateUrnsError && !amalgamateUrnError && !amalgamationLengthError ? '' : 'hidden' ]">Duplicate URN. Please correct the URN.</span>
+                                    <span v-bind:class="['error-message', duplicateUrnsError && !amalgamateUrnError && !amalgamationLengthError ? '' : 'hidden' ]">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
                                 </dt>
                                 <dd>
                                     <ol class="linked-establishments" id="amalg-linked">
-                                        <li><input class="form-control" type="text" v-model="amalgamatedEstab0" id="amalgamate-estab0" /></li>
-                                        <li><input class="form-control" type="text" v-model="amalgamatedEstab1" id="amalgamate-estab1" /></li>
-                                        <li><input class="form-control" type="text" v-model="amalgamatedEstab2" id="amalgamate-estab2" /></li>
-                                        <li><input class="form-control" type="text" v-model="amalgamatedEstab3" id="amalgamate-estab3" /></li>
-
+                                        <li>
+                                            <label for="amalgamate-estab0" class="visuallyhidden">First establishment</label>
+                                            <input class="form-control" type="text" v-model="amalgamatedEstab0" id="amalgamate-estab0" />
+                                        </li>
+                                        <li>
+                                            <label for="amalgamate-estab1" class="visuallyhidden">Second establishment</label>
+                                            <input class="form-control" type="text" v-model="amalgamatedEstab1" id="amalgamate-estab1" />
+                                        </li>
+                                        <li>
+                                            <label for="amalgamate-estab2" class="visuallyhidden">Third establishment</label>
+                                            <input class="form-control" type="text" v-model="amalgamatedEstab2" id="amalgamate-estab2" />
+                                        </li>
+                                        <li>
+                                            <label for="amalgamate-estab3" class="visuallyhidden">Fourth establishment</label>
+                                            <input class="form-control" type="text" v-model="amalgamatedEstab3" id="amalgamate-estab3" />
+                                        </li>
                                     </ol>
                                 </dd>
                             </dl>
                         </div>
-                        
+
                         <div class="column-full">
                             <div class="submit-cancel-panel">
-                                <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false"> &laquo; Go back</a>
+                                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false"> &laquo; Go back</a>
                                 <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="validateAmalgamationSelection" :disabled="disallowAmalgamate()">Continue</button>
-                                <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                                <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
                             </div>
                         </div>
                     </div>
                     <div v-show="mergerType==='amalgamation' && validMergeUrns && !completeAmalgamation">
                         <div class="column-full top-button-panel">
                             <div class="submit-cancel-panel">
-                                <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="validMergeUrns=false">&laquo; Go back</a>
+                                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="validMergeUrns=false">&laquo; Go back</a>
                                 <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="processAmalgamation">Process</button>
-                                <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                                <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
                             </div>
                         </div>
                         <div class="column-two-thirds">
@@ -312,13 +332,13 @@
                             <fieldset>
                                 <legend class="bold">New School details</legend>
                                 <div v-bind:class="['form-group', nameError ? 'error' : '' ]">
-                                    <label class="form-label">Establishment name</label>
+                                    <label class="form-label" for="new-establishment-name">Establishment name</label>
                                     <span v-bind:class="['error-message', nameError ? '' : 'hidden' ]">Please enter the establishment name</span>
                                     <input type="text" id="new-establishment-name" class="form-control" v-model="newName" />
                                 </div>
 
                                 <div v-bind:class="['form-group', typeError ? 'error' : '' ]">
-                                    <label class="form-label">Establishment type</label>
+                                    <label class="form-label" for="new-establishment-type">Establishment type</label>
                                     <span v-bind:class="['error-message', typeError ? '' : 'hidden' ]">
                                         Please select the establishment type.
                                     </span>
@@ -327,7 +347,7 @@
 
 
                                 <div v-bind:class="['form-group', phaseError ? 'error' : '' ]">
-                                    <label class="form-label">Establishment phase</label>
+                                    <label class="form-label" for="new-establishment-phase">Establishment phase</label>
                                     <span v-bind:class="['error-message', phaseError ? '' : 'hidden' ]">Please select an establishment phase</span>
                                     <select id="new-establishment-phase" class="form-control" v-model="phaseId"></select>
                                 </div>
@@ -347,17 +367,17 @@
 
                                         <span class="inline-form-control">
                                             <label for="amalgamationdate-day">Day</label>
-                                            <input class="form-control date-text-day" type="text" v-model="mergeDateDay">
+                                            <input class="form-control date-text-day" type="text" v-model="mergeDateDay" id="amalgamationdate-day">
 
                                         </span>
                                         <span class="inline-form-control">
                                             <label for="amalgamationdate-month">Month</label>
-                                            <input class="form-control date-text-month" type="text" v-model="mergeDateMonth">
+                                            <input class="form-control date-text-month" type="text" v-model="mergeDateMonth" id="amalgamationdate-month">
 
                                         </span>
                                         <span class="inline-form-contol">
                                             <label for="amalgamationdate-year">Year</label>
-                                            <input class="form-control date-text-year" type="text" v-model="mergeDateYear">
+                                            <input class="form-control date-text-year" type="text" v-model="mergeDateYear" id="amalgamationdate-year">
                                         </span>
                                     </fieldset>
                                 </div>
@@ -365,9 +385,9 @@
                         </div>
                         <div class="column-full">
                             <div class="submit-cancel-panel">
-                                <a href="#" class="button button-grey mobile-full-width" v-on:click.prevent="validMergeUrns=false">&laquo; Go back</a>
+                                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="validMergeUrns=false">&laquo; Go back</a>
                                 <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="processAmalgamation" :disabled="!mergeDateDay || !mergeDateMonth || !mergeDateYear || !phaseId || !typeId || !newName || !laId">Process</button>
-                                <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                                <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -403,15 +423,15 @@
         </div>
 
         <div id="modal-overlay" class="modal-overlay" v-show="presentExitWarning"></div>
-        <div id="modal-content" class="modal-content" role="dialog" v-show="presentExitWarning">
+        <div id="modal-content" class="modal-content" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc" v-show="presentExitWarning">
             <a href="#" id="exit-overlay" class="modal-exit" v-on:click.prevent="presentExitWarning = false">Close</a>
             <div id="modal-inner">
-                <h3 class="heading-large">Are you sure you want to leave this page?</h3>
-                <p>Any unsaved changes will be lost.</p>
+                <h3 class="heading-large" id="modal-label" tabindex="0">Are you sure you want to leave this page?</h3>
+                <p id="modal-desc" tabindex="0">Any unsaved changes will be lost.</p>
             </div>
             <div class="button-row">
                 <a href="#" class="button mobile-full-width" id="button-ok" v-on:click.prevent="exitConfirmed">OK</a>
-                <a href="#" class="button button-grey mobile-full-width" id="button-cancel" v-on:click.prevent="presentExitWarning = false">Cancel</a>
+                <a href="#" class="button button-secondary mobile-full-width" id="button-cancel" v-on:click.prevent="presentExitWarning = false">Cancel</a>
             </div>
         </div>
     </div>

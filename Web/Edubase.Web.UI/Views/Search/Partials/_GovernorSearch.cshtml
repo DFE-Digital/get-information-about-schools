@@ -1,4 +1,4 @@
-﻿@using Edubase.Web.UI.Models.Search;
+@using Edubase.Web.UI.Models.Search;
 @using eStatus = Edubase.Services.Enums.eLookupEstablishmentStatus;
 @using VM = Edubase.Web.UI.Models.Search.SearchViewModel;
 @using Edubase.Web.UI.Helpers;
@@ -12,7 +12,9 @@
     }
 }
 <fieldset>
-    <legend>Search by:</legend>
+    <legend>
+        <h2 class="heading-small flush--top">Search by:</h2>
+    </legend>
     <ul>
         <li class="search-type-wrapper">
             @using (Html.BeginRouteForm("SearchResults", FormMethod.Get, new { id = "governor-search-by-name-or-role" }))
@@ -20,11 +22,23 @@
                 @Html.HiddenFor(m => m.SelectedTab)
                 <fieldset class="search-toggle-panel">
                     <span class="radio-button-wrap">
-                        <input type="radio" id="searchtype-gov-namerole" data-toggle-panel="#searchtype-gov-namerole-ref" name="gsearch" value="name-role"
-                               @Html.Conditional(gSearch == "name-role", "checked=checked") />
-                        <label class="edubase-button-radio" for="searchtype-gov-namerole">Name or role</label>
+                        @Html.RadioButtonFor(m => m.SearchType, eSearchType.Governor, new { id = "searchtype-gov-namerole", name = "gsearch", value = "name-role", data_toggle_panel = "#searchtype-gov-namerole-ref" })
+                        <label class="edubase-button-radio" for="searchtype-gov-namerole">
+                            Name or role
+                        </label>
                     </span>
                     <div class="expanding-search-field" id="searchtype-gov-namerole-ref">
+                        @* This alert gets dynamically populated *@
+                        <div class="warning-message visuallyhidden" role="alert">
+                            <p class="message-text" aria-live="polite"></p>
+                        </div>
+                        @if (Model.SearchType == eSearchType.Governor && Model.NoResults)
+                        {
+                            @* Static alert for no search results *@
+                            <div role="alert" class="warning-message js-trigger-aria-live">
+                                <p class="warning-message-text" aria-live="polite">We couldn't find any governors matching your search criteria</p>
+                            </div>
+                        }
                         <div class="edubase-search-element">
                             <label for="forename" class="form-label">First name</label>
                             @Html.TextBoxFor(x => x.GovernorSearchModel.Forename, new {maxlength = 120, id = "forename", @class = "form-control"})
@@ -35,17 +49,22 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Role</label>
-                            <span class="form-hint">For example, trustee</span>
-                            <div class="scroll-wrapper">
-                                <div class="scroll-content" id="governor-roles">
+                            <div class="govuk-option-select form-control-1-2">
+                                <div class="container-head">
+                                    <div class="option-select-label hard--left">Role</div>
+                                    <span class="font-xsmall">For example, trustee</span>
+                                </div>
+                                <div class="options-container" id="governor-roles">
+                                    <fieldset>
                                     @foreach (var governorRole in Model.GovernorRoles)
                                     {
-                                        <label>
-                                            <input name="GovernorSearchModel.RoleId" value="@governorRole.Id.ToString()" type="checkbox" />
+                                        <input name="GovernorSearchModel.RoleId"
+                                        id="govrole-@governorRole.Id.ToString()" value="@governorRole.Id.ToString()" type="checkbox" class="filter-input" />
+                                        <label for="govrole-@governorRole.Id.ToString()" class="filter-radio">
                                             @FormatHelpers.FirstCharToUpper(@governorRole.Name.ToLower())
                                         </label>
                                     }
+                                    </fieldset>
                                 </div>
                             </div>
                         </div>
@@ -73,17 +92,26 @@
                     @Html.HiddenFor(m => m.SelectedTab)
                     <fieldset class="search-toggle-panel">
                         <span class="radio-button-wrap">
-                            <input type="radio" id="searchtype-gov-refno" data-toggle-panel="#searchtype-gov-refno-ref" name="gsearch" value="gid"
-                                   @Html.Conditional(gSearch == "gid", "checked=checked") />
-                            <label class="edubase-button-radio" for="searchtype-gov-refno">Reference number</label>
+                            @Html.RadioButtonFor(m => m.SearchType, eSearchType.GovernorReference, new { id = "searchtype-gov-refno", name = "gsearch", value = "gid", data_toggle_panel = "#searchtype-gov-refno-ref" })
+                            <label class="edubase-button-radio" for="searchtype-gov-refno">
+                                Reference number
+                            </label>
                         </span>
                         <div class="expanding-search-field" id="searchtype-gov-refno-ref">
+                            @* This alert gets dynamically populated *@
+                            <div class="warning-message visuallyhidden" role="alert">
+                                <p class="message-text" aria-live="polite"></p>
+                            </div>
+                            @if (Model.SearchType == eSearchType.GovernorReference && Model.NoResults)
+                            {
+                            @* Static alert for no search results *@
+                                <div role="alert" class="warning-message js-trigger-aria-live">
+                                    <p class="warning-message-text" aria-live="polite">We couldn't find any governors matching your search criteria</p>
+                                </div>
+                            }
                             <div class="edubase-search-element">
                                 <label for="GovernorSearchModel_Gid" class="form-label">
-                                    GID number
-                                    <a href="#gid-help" class="icon-help">
-                                        <span class="visuallyhidden">What does GID mean?</span>
-                                    </a>
+                                    Enter governor ID number (GID number)
                                 </label>
                                 @Html.TextBoxFor(x => x.GovernorSearchModel.Gid, new { maxlength = 10, @class = "form-control" })
                             </div>
@@ -105,9 +133,11 @@
                 }
             </li>
         }
-    </ul>
-    <p>or</p>
-    <ul>
+
+        <li aria-hidden="true">
+            <p>or</p>
+        </li>
+
         <li>
             @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
             {

@@ -6,7 +6,7 @@
 }
 
 
- 
+
 .wait-spinner {
     background: #fff url('/public/assets/images/icons/icon-loading.gif') no-repeat 50%;
     width: 100%;
@@ -22,38 +22,13 @@
     min-height: 5em;
 }
 
-.change-approvals {
-    .pending-updates-message {
-        padding-left: 50px;
-    }
-
-    .tick {
-        left: 10px;
-        top: 6px;
-    }
-
-    .cross {
-        position: absolute;
-        background-image: url('/public/assets/images/icons/icon-white-cross-transparent.png');
-        background-size: 100%;
-        top: 12px;
-        right: 12px;
-        width: 18px;
-        height: 18px;
-        background-repeat: no-repeat;
-        background-size: contain;
-        cursor: pointer
-    }
-
-}
-
-// styles lifted from _block-labels 
+// styles lifted from _block-labels
 // - but these work just fine without the JS overhead
-// + gov uk checkbox/ radio js doesn't work with vue.js loaded 
+// + gov uk checkbox/ radio js doesn't work with vue.js loaded
 .edubase-button-checkbox {
     position: relative;
     display: block;
-    float: left;   
+    float: left;
     cursor: pointer;
     padding-left: 44px;
     padding-top: 10px;
@@ -87,7 +62,7 @@
       @include opacity(0);
     }
 
-    
+
 }
 
 .radio-button-wrap,
@@ -96,7 +71,7 @@
     position: relative;
     margin: 0 8px 20px 0;
 
-   
+
     input {
         position: absolute;
         @include opacity(0);
@@ -186,12 +161,12 @@
     }
 }
 
-.boldened-checkbox {   
+.boldened-checkbox {
     @include opacity(0);
     position: absolute;
     left: 0;
     top: 0;
-   
+
 }
 input:checked + .edubase-button-checkbox:after {
     @include opacity(1);
@@ -284,7 +259,7 @@ input:focus + .edubase-button-radio:before {
         padding: 5px;
         padding-left: 0;
     }
-        
+
     .checkbox-wrap {
         margin-bottom: 4px;
         margin-left: 0;
@@ -294,26 +269,6 @@ input:focus + .edubase-button-radio:before {
 
         .edubase-button-checkbox {
             font-size: 19px;
-        }
-    }
-}
-
-.modal-content {
-    .scroll-wrapper {
-        width: 100%;
-    }
-
-    .filter-wrapper {
-        .filter-input {
-            @include opacity(0);
-            position: absolute;
-        }
-
-        .filter-radio {
-            display: block;
-            float: none;
-            font-size: 16px;
-            padding: 8px 0 8px 32px;
         }
     }
 }

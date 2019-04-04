@@ -40,7 +40,7 @@
                         Data in CSV format
                     </label>
                 </span>
-            
+
                 <span class="radio-button-wrap">
                     @Html.RadioButtonFor(m => m.DownloadFormat, eFileFormat.XLSX, new { id = "download-xslx" })
                     <label class="edubase-button-radio" for="download-xslx">
@@ -52,20 +52,20 @@
             @Html.HiddenFieldsFromQueryString()
             <div class="button-row">
                 <button type="submit" class="button" value="Continue">Continue</button>
-                <a href=@($"{Url.RouteUrl("ChangeHistorySearch")}?{Request.QueryString}") class="button button-grey">Cancel</a>  
+                <a href=@($"{Url.RouteUrl("ChangeHistorySearch")}?{Request.QueryString}") class="button button-secondary">Cancel</a>
             </div>
-            
+
         }
     </div>
 </div>
 
 @section ViewScripts{
-    
+
     <script>
         $(function () {
             $("button").prop("disabled", true);
             $("input").on("change", function () { $("button").prop("disabled", false); });
         });
     </script>
-    
+
 }

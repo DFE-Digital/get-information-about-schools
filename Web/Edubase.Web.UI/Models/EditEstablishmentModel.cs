@@ -16,7 +16,7 @@ namespace Edubase.Web.UI.Models
     using ET = Services.Enums.eLookupEstablishmentType;
 
     public class EditEstablishmentModel : IEstablishmentPageViewModel
-    { 
+    {
         /// <summary>
         /// Action Specifiers (AS)
         /// </summary>
@@ -36,7 +36,7 @@ namespace Edubase.Web.UI.Models
             Successor,
             Predecessor
         }
-        
+
         public EstablishmentDisplayEditPolicy EditPolicy { get; set; }
 
         public Dictionary<string, string> SelectedTab2DetailPageTabNameMapping { get; private set; } = new Dictionary<string, string>
@@ -57,6 +57,8 @@ namespace Edubase.Web.UI.Models
         public int? StatutoryLowAge { get; set; }
         public int? StatutoryHighAge { get; set; }
         public int? ProvisionBoardingId { get; set; }
+
+        [Display(Name = "Boarding establishment")]
         public int? BoardingEstablishmentId { get; set; }
         public int? ProvisionNurseryId { get; set; }
         public int? ProvisionOfficialSixthFormId { get; set; }
@@ -123,7 +125,7 @@ namespace Edubase.Web.UI.Models
 
         [Display(Name = "Close date")]
         public DateTimeViewModel CloseDate { get; set; } = new DateTimeViewModel();
-        
+
         public string ActionSpecifier { get; set; }
         public string ActionSpecifierCommand => ActionSpecifier.GetPart("-", 0);
         public string ActionSpecifierParam => ActionSpecifier.GetPart("-", 1);
@@ -132,18 +134,21 @@ namespace Edubase.Web.UI.Models
 
 
         public bool ScrollToLinksSection { get; set; }
-        
+
         public string GetAddress() => StringUtil.ConcatNonEmpties(", ", Address_Line1, Address_Line2, Address_Line3, Address_Locality, Address_CityOrTown, Counties.FirstOrDefault(x=>x.Value == Address_CountyId?.ToString())?.Text, Address_PostCode);
-        
+
         public int? FurtherEducationTypeId { get; set; }
         public string Contact_WebsiteAddress { get; set; }
         public string Contact_TelephoneNumber { get; set; }
         public int? OfstedRatingId { get; set; }
-        
+
         [Display(Name = "Ofsted last inspection")]
         public DateTimeViewModel OfstedInspectionDate { get; set; } = new DateTimeViewModel();
 
+        [Display(Name = "Inspectorate")]
         public int? InspectorateId { get; set; }
+
+        [Display(Name = "Name")]
         public string ProprietorName { get; set; }
         public int? Section41ApprovedId { get; set; }
         public int[] SENIds { get; set; } = new int[0];
@@ -199,7 +204,7 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> ReasonsEstablishmentOpened { get; set; }
         public IEnumerable<SelectListItem> ReasonsEstablishmentClosed { get; set; }
         public IEnumerable<SelectListItem> SpecialClassesProvisions { get; set; }
-        
+
         public IEnumerable<SelectListItem> TypeOfResourcedProvisions { get; set; }
         public IEnumerable<SelectListItem> TeenageMothersProvisions { get; set; }
         public IEnumerable<SelectListItem> ChildcareFacilitiesProvisions { get; set; }
@@ -216,8 +221,8 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> PRUEBDOptions { get; internal set; }
 
         public TabDisplayPolicy TabDisplayPolicy { get; set; }
-        
-        
+
+
         public List<ChangeDescriptorDto> ChangesSummary { get; set; }
 
         /// <summary>
@@ -301,51 +306,143 @@ namespace Edubase.Web.UI.Models
         public DateTimeViewModel NextGeneralActionRequired { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel NextActionRequiredByWEL { get; set; } = new DateTimeViewModel();
         public DateTimeViewModel NextActionRequiredByFP { get; set; } = new DateTimeViewModel();
+
+        [DisplayName("Independent school type")]
         public int? IndependentSchoolTypeId { get; set; }
+
+        [DisplayName("Charity organisation")]
         public string CharityOrganisation { get; set; }
+
+        [DisplayName("Charity registration number")]
         public int? CharityRegistrationNumber { get; set; }
+
+        [DisplayName("Total number of full time pupils")]
         public int? TotalNumberOfFullTimePupils { get; set; }
+
+        [DisplayName("Total number of part time pupils")]
         public int? TotalNumberOfPartTimePupils { get; set; }
+
+        [DisplayName("Total number of pupils of compulsory school age")]
         public int? TotalNumberOfPupilsOfCompulsorySchoolAge { get; set; }
+
+        [DisplayName("Total number of pupils in public care")]
         public int? TotalNumberOfPupilsInPublicCare { get; set; }
+
+        [DisplayName("PT boys (aged 2 and under)")]
         public int? PTBoysAged2AndUnder { get; set; }
+
+        [DisplayName("PT boys (aged 3)")]
         public int? PTBoysAged3 { get; set; }
+
+        [DisplayName("PT boys (aged 4a)")]
         public int? PTBoysAged4A { get; set; }
+
+        [DisplayName("PT boys (aged 4b)")]
         public int? PTBoysAged4B { get; set; }
+
+        [DisplayName("PT boys (aged 4c)")]
         public int? PTBoysAged4C { get; set; }
+
+        [DisplayName("Total number of boys in boarding schools")]
         public int? TotalNumberOfBoysInBoardingSchools { get; set; }
+
+        [DisplayName("PT girls (aged 2 and under) ")]
         public int? PTGirlsAged2AndUnder { get; set; }
+
+        [DisplayName("PT girls (aged 3)")]
         public int? PTGirlsAged3 { get; set; }
+
+        [DisplayName("PT girls (aged 4a)")]
         public int? PTGirlsAged4A { get; set; }
+
+        [DisplayName("PT girls (aged 4b)")]
         public int? PTGirlsAged4B { get; set; }
+
+        [DisplayName("PT girls (aged 4c)")]
         public int? PTGirlsAged4C { get; set; }
+
+        [DisplayName("Total number of girls in boarding schools ")]
         public int? TotalNumberOfGirlsInBoardingSchools { get; set; }
+
+        [DisplayName("Total number of full time staff")]
         public int? TotalNumberOfFullTimeStaff { get; set; }
+
+        [DisplayName("Total number of part time staff")]
         public int? TotalNumberOfPartTimeStaff { get; set; }
+
+        [DisplayName("Lowest annual rate for day pupils")]
         public int? LowestAnnualRateForDayPupils { get; set; }
+
+        [DisplayName("Highest annual rate for day pupils")]
         public int? HighestAnnualRateForDayPupils { get; set; }
+
+        [DisplayName("Lowest annual rate for boarding pupils")]
         public int? LowestAnnualRateForBoardingPupils { get; set; }
+
+        [DisplayName("Highest annual rate for boarding pupils")]
         public int? HighestAnnualRateForBoardingPupils { get; set; }
+
+        [DisplayName("Street")]
         public string ProprietorsStreet { get; set; }
+
+        [DisplayName("Locality")]
         public string ProprietorsLocality { get; set; }
+
+        [DisplayName("Address 3")]
         public string ProprietorsAddress3 { get; set; }
+
+        [DisplayName("Town")]
         public string ProprietorsTown { get; set; }
+
+        [DisplayName("County")]
         public int? ProprietorsCountyId { get; set; }
+
+        [DisplayName("Postcode")]
         public string ProprietorsPostcode { get; set; }
+
+        [DisplayName("Telephone number")]
         public string ProprietorsTelephoneNumber { get; set; }
+
+        [DisplayName("Fax number")]
         public string ProprietorsFaxNumber { get; set; }
+
+        [DisplayName("Email")]
         public string ProprietorsEmail { get; set; }
+
+        [DisplayName("Preferred job title")]
         public string ProprietorsPreferredJobTitle { get; set; }
+
+        [DisplayName("Name")]
         public string ChairOfProprietorsBodyName { get; set; }
+
+        [DisplayName("Street")]
         public string ChairOfProprietorsBodyStreet { get; set; }
+
+        [DisplayName("Locality")]
         public string ChairOfProprietorsBodyLocality { get; set; }
+
+        [DisplayName("Address 3")]
         public string ChairOfProprietorsBodyAddress3 { get; set; }
+
+        [DisplayName("Town")]
         public string ChairOfProprietorsBodyTown { get; set; }
+
+        [DisplayName("County")]
         public int? ChairOfProprietorsBodyCountyId { get; set; }
+
+        [DisplayName("Postcode")]
         public string ChairOfProprietorsBodyPostcode { get; set; }
+
+        [DisplayName("Telephone number")]
         public string ChairOfProprietorsBodyTelephoneNumber { get; set; }
+
+        [DisplayName("Fax number")]
         public string ChairOfProprietorsBodyFaxNumber { get; set; }
+
+        [DisplayName("Email")]
         public string ChairOfProprietorsBodyEmail { get; set; }
+
+        [DisplayName("Preferred job title")]
         public string ChairOfProprietorsBodyPreferredJobTitle { get; set; }
 
         public bool AnyChairOfProprietorsFieldsSet => new[]
@@ -362,7 +459,9 @@ namespace Edubase.Web.UI.Models
             ChairOfProprietorsBodyPreferredJobTitle
         }.Any(x => x.Clean() != null);
 
+        [DisplayName("Accommodation changes")]
         public int? AccommodationChangedId { get; set; }
+
         public IEnumerable<SelectListItem> PruFulltimeProvisionOptions { get; internal set; }
         public IEnumerable<SelectListItem> PruEducatedByOthersOptions { get; internal set; }
 
@@ -381,9 +480,16 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> OfstedRatings { get; internal set; }
         public List<LookupDto> SENProvisions { get; internal set; }
 
+        [DisplayName("Helpdesk notes")]
         public string HelpdeskNotes { get; set; }
+
+        [DisplayName("Edubase last update")]
         public DateTimeViewModel HelpdeskLastUpdate { get; set; } = new DateTimeViewModel();
+
+        [DisplayName("Previous local authority")]
         public int? HelpdeskPreviousLocalAuthorityId { get; set; }
+
+        [DisplayName("Previous establishment number")]
         public int? HelpdeskPreviousEstablishmentNumber { get; set; }
 
 

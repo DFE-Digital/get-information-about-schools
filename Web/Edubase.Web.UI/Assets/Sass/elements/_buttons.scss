@@ -137,19 +137,9 @@ $path: $images-path;
 }
 
 .button-secondary {
-  @include button-variant($btn-secondary-color, $btn-secondary-bg, $btn-secondary-border);
+  @include button($grey-3);
 }
 
-.button-grey {
-  @include button-variant($grey-1, $btn-secondary-bg , $btn-default-border);
-}
-input.button-grey,button.button-grey, a.button-grey {
-    background-color:#e6e6e6;
-}
-
-a.button.button-grey:focus {
-  color: $grey-1;
-}
 .button-comparison {
   @include core-19;
   color: black;
@@ -232,12 +222,12 @@ input[type="button"] {
     }
 
     @include media(mobile) {
-        
+
         .button {
             width: 100%;
             display: block;
         }
-        
+
     }
 }
 

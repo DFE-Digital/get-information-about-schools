@@ -8,8 +8,8 @@
     }
 
     a.download-link {
-        
-        display:block; 
+
+        display:block;
         margin-top:10px;
         margin-right:10px;
         outline: none;
@@ -40,8 +40,8 @@
 
     .top-pagination .pagination {
         border-bottom-width: 1px;
-    } 
-    
+    }
+
     .form-group {
         width: 90%;
 
@@ -157,20 +157,6 @@
     }
 }
 
-.school-results-listing.establishment-list {
-    
-    dl {
-        margin-bottom: 0px;
-    }
-    
-    .cc-lead-centre { 
-        margin-top:0;
-        label {  
-            font-size:14px;
-        }
-    }
-}
-
 .pagination {
     overflow: hidden;
     position: relative;
@@ -183,7 +169,7 @@
     }
     .lower-pagination & {
         border-top: $black 3px solid;
-        
+
         p {
             margin-top: em(20, 16);
         }
@@ -214,7 +200,7 @@
             .numeric-pagination {
                 display: none;
             }
-            
+
         }
 
         @media (max-width: 740px) {
@@ -323,7 +309,7 @@ table.approval-items {
             border-bottom: 1px solid #eee;
 
             &:before {
-                content: attr(aria-label);
+                content: attr(data-label);
                 float: left;
                 font-weight: bold;
                 padding-right: 0.5em
@@ -336,8 +322,6 @@ table.approval-items {
     }
 }
 
-
-
 .link-button {
     padding:0;
     background-color:transparent;
@@ -347,66 +331,8 @@ table.approval-items {
     text-decoration:underline;
 }
 
-
-
-.pending-updates-message {
-        background-color:$turquoise;
-        font-size:15px;
-        color:white;
-        padding: 12px 36px 12px 44px;
-        position:relative;
-        margin-bottom:10px;
-        
-        p {
-            margin: 0;
-        }
-
-        .tick {
-            position:absolute;
-            left:0;
-            top:5px;
-            width:35px;
-            height:35px;
-            background-image: url('/public/assets/images/icons/tick.png');
-            background-repeat:no-repeat;
-            background-size:contain;
-        }
-        .cross {
-            position:absolute;
-            background-image: url('/public/assets/images/icons/white-cross-transparent.png');
-            top:13px;
-            right:12px;
-            width:16px;
-            height:16px;
-            background-repeat:no-repeat;
-            background-size:contain;
-            cursor:pointer;
-        }
-
-        a { color:white; }
-    }
-
-.dismissable-warning {
-    background-color: $red;
-
-    .exclaim {
-        background-image: url('/public/assets/images/icons/exclaim-transparent.PNG');
-        width: 35px;
-        height: 35px;
-        display: inline-block;
-        position: absolute;
-        top: 0;
-        left: 0;
-
-         @include device-pixel-ratio() {
-            background-image: url('/public/assets/images/icons/exclaim-transparentx2.PNG');
-            background-size: 100%;
-          }
-    }
-}
-
 .clear-selections {
-    display: none;        
+    display: none;
     position: absolute;
     top: 28px;
     left: 90px;
@@ -426,7 +352,7 @@ table.approval-items {
         text-decoration: none;
     }
 
-    .age-filter & , 
+    .age-filter & ,
     .date-filters & {
         left: 94px;
     }
@@ -460,7 +386,7 @@ table.approval-items {
 
     .js-enabled & {
         display: block;
-       
+
     }
 
     &.hidden {

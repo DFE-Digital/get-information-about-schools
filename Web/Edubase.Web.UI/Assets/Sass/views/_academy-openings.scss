@@ -29,7 +29,7 @@
 
     .academy-openings + .pagination {
         border-bottom: 0;
-        
+
     }
 
 
@@ -56,19 +56,19 @@
             width: 8%;
         }
 
-        .cell-estabname {
+        .cell-name {
             width: 19%;
         }
 
-        .cell-estabtype {
+        .cell-establishmenttype {
             width: 17%;
         }
 
-        .cell-predecessor-urn {
+        .cell-predecessorurn {
             width: 16%;
         }
 
-        .cell-predecessor-name {
+        .cell-predecessorname {
             width: 19%;
         }
 
@@ -101,10 +101,12 @@
                 font-size: 16px;
                 padding: 4px;
 
-                &:before {
-                    content: attr(aria-label);
+                &[data-label] {
+                  &:before {
+                    content: attr(data-label) ":";
                     float: left;
                     padding-right: 0.5em;
+                  }
                 }
             }
 

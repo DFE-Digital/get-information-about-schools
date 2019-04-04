@@ -8,41 +8,25 @@
     <div class="tab-content">
         <div class="links-search">
             <div>
-                <a class="button button-grey" href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Urn })">Cancel</a>
+                <a class="button button-secondary" href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Urn })">Cancel</a>
             </div>
 
             <h2 class="bold-medium">Link to other establishment</h2>
             <br />
             <div class="column-half">
                 <div class="form-group @Html.ValidationCssClassFor(x => x.SearchUrn)">
-                    <label class="form-label">
-                        Other establishments URN
+                    <label class="form-label" for="SearchUrn">
+                        Other establishment's Unique Reference Number (URN)
                     </label>
                     @Html.ValidationMessageFor(x => x.SearchUrn)
                     @Html.TextBoxFor(x => x.SearchUrn, new { @class = "form-control urn-search" })
-                    <button id="search-urn-submit" class="button inline-button" name="@SearchForEstablishmentViewModel.BIND_ALIAS_DOSEARCH" value="true">Find URN</button>
+                    <button id="search-urn-submit" class="button inline-button" name="@SearchForEstablishmentViewModel.BIND_ALIAS_DOSEARCH" value="true">Search URN</button>
                 </div>
             </div>
 
             <div class="button-row">
-                <a class="button button-grey" href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Urn })">Cancel</a>
+                <a class="button button-secondary" href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Urn })">Cancel</a>
             </div>
         </div>
     </div>
-}
-
-
-@section ViewScripts{
-
-    <script>
-        $(function () {
-            (function (button, textbox) {
-                var toggle = function () { $(button).prop("disabled", ($.trim($(textbox).val())).length < 5); };
-                toggle();
-                $(textbox).on("keyup change", toggle);
-            })("#search-urn-submit", "#SearchUrn");
-        });
-
-    </script>
-
 }

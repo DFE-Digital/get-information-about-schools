@@ -1,11 +1,11 @@
-﻿@using Edubase.Web.UI.Models
+@using Edubase.Web.UI.Models
 @using System.Linq
 @using ViewModel = Edubase.Web.UI.Areas.Establishments.Models.IEstablishmentPageViewModel
 @model ViewModel
 @{
     ViewBag.bodyClasses = "create-edit-school school-details";
     ViewBag.hideLogo = true;
-    ViewBag.Title = "Edit establishment";
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Edit establishment");
     Layout = "~/Views/Dfe/Layouts/template.cshtml";
 }
 <div class="breadcrumbs">
@@ -20,25 +20,29 @@
 
 @if (ViewBag.ShowSaved != null && ViewBag.ShowSaved)
 {
-    <div class="pending-updates-message dismissable-message">
+    <!-- TODO: check if this ever displays -->
+    <div class="pending-updates-message js-dismiss-message">
         <div class="tick"></div>
         Your changes have been saved
         <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
     </div>
 }
 
-<h1 class="heading-large">@Model.Name</h1>
-<p class="urn">URN: @Model.Urn</p>
-<p class="establishment-type">@Model.TypeName</p>
-
 @if (!IsSectionDefined("validation"))
 {
-    @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+    @Html.Partial("_ValidationSummary", ViewData.ModelState);
 }
 else
 {
     @RenderSection("validation", false)
 }
+
+<h1 class="heading-large">
+    <span class="heading-secondary">Edit establishment</span>
+    @Model.Name
+</h1>
+<p class="urn"><abbr title="Unique Reference Number">URN</abbr>: @Model.Urn</p>
+<p class="establishment-type">@Model.TypeName</p>
 
 <div class="grid-row">
     <div class="column-full">
@@ -55,9 +59,9 @@ else
                         {
                             <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#school-dashboard")" class="horizontal-tab">Details</a>
                         }
-                        
+
                     </li>
-                    
+
                     @if (Model.TabDisplayPolicy.Governance)
                     {
                         <li>
@@ -85,7 +89,7 @@ else
                             }
                         </li>
                     }
-                    
+
                     <li>
                         @if (string.Equals(Model.SelectedTab, "links"))
                         {
@@ -96,7 +100,7 @@ else
                             <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#school-links")" class="horizontal-tab">Links</a>
                         }
                     </li>
-                    
+
 
                     @if (Model.TabDisplayPolicy.Location)
                     {
@@ -128,23 +132,23 @@ else
                 </ul>
             </div>
             <div class="tab-content-wrapper horizontal-tabs-content">
-            @if (Model.SelectedTab == "governance")
-            {
-                <div class="tab-content">
+                @if (Model.SelectedTab == "governance")
+                {
+                    <div class="tab-content">
+                        @RenderBody()
+                    </div>
+                }
+                else
+                {
                     @RenderBody()
-                </div>
-            }
-            else
-            {
-                @RenderBody()
-            }
+                }
 
             </div>
         </div>
     </div>
 </div>
 
- @section ViewScripts
- {
-     @(RenderSection("ViewScripts", required: false))
- }
+@section ViewScripts
+{
+    @(RenderSection("ViewScripts", required: false))
+}

@@ -3,9 +3,9 @@
         pageSize: 100,
         apiUrl: '/api/approvals/change-requests',
         confirmUrl: '/api/approvals/change-request'
-        
+
     };
-    
+
     var approvalApp = new Vue({
             el: '#change-approvals',
             data: {
@@ -24,6 +24,8 @@
                 pendingRejection: false,
                 itemsConfirmedRemoved: false,
                 itemsConfirmedRejected: false,
+                approvalMessage: '',
+                rejectionMessage: '',
                 isProcessing: true,
                 apiError: '',
                 apiBork: {},
@@ -33,7 +35,18 @@
                 showRejections: false,
                 noReasonSelectedError: false,
                 reasonIds: [],
-                noItemsSelected: true
+                noItemsSelected: true,
+                tableColumns: {
+                  establishmentUrn: 'URN',
+                  establishmentLAESTAB: 'DfE Number',
+                  establishmentName: 'Establishment',
+                  fieldName: 'Updated field',
+                  oldValue: 'Old value',
+                  newValue: 'New value',
+                  effectiveDateUtc: 'Effective date',
+                  requestedDateUtc: 'Date requested',
+                  originatorFullName: 'Suggested by',
+                }
             },
             created: function() {
                 this.getChangesData();
@@ -59,6 +72,15 @@
                 }
             },
             methods: {
+                showRejectionsModal: function () {
+                    this.showRejections = true;
+                    // Focus on main CTA when modal available
+                    $(document).ready(function() {
+                        if ($('#modal-content').length > 0) {
+                            $('#modal-label').focus();
+                        }
+                    });
+                },
                 selectItem: function () {
                     this.noItemsSelected = ($('#changes-table').find('.boldened-checkbox').filter(':checked').length == 0);
                 },
@@ -82,7 +104,7 @@
                         })[0];
 
                         reasonText += reason.title + '\n' + reason.content + '\n\n';
-                       
+
                     }
                     this.reason = reasonText;
                     this.reasonIds = [];
@@ -113,7 +135,7 @@
                     this.isProcessing = true;
                     var sortDir = this.sortAscending ? '-asc' : '-desc';
                     $('#changes-table').find(':checkbox').prop('checked', false);
-                    
+
                     $.ajax({
                         url: defaults.apiUrl,
                         data: {
@@ -126,7 +148,7 @@
                             self.changes =  data.items;
                             self.isProcessing = false;
                             if (callback) {
-                                callback.call(self);                                
+                                callback.call(self);
                             }
                         },
                         error: function (jqxhr) {
@@ -138,15 +160,17 @@
                 },
                 approveSuccessCallback: function () {
                     this.itemsConfirmedRemoved = true;
+                    this.approvalMessage = 'Items approved. The editor has been notified by email.'
                 },
                 rejectSuccessCallBack: function() {
                     this.pendingRejection = false;
                     this.itemsConfirmedRejected = true;
+                    this.rejectionMessage = 'Items rejected. The editor has been notified by email.';
                     this.reason = '';
                     window.setTimeout(function() {
                         $("#reason").data().textCount.setCount();
                     },0);
-                    
+
                 },
                 updateCount: function (removedCount) {
                     this.currentCount = this.currentCount - removedCount;
@@ -179,7 +203,7 @@
                             return Number(item.value);
                         });
                         removedIds = $.makeArray(removedIds);
-                       
+
                         $.ajax({
                             url: defaults.confirmUrl,
                             contentType: 'application/json; charset=utf-8',
@@ -206,7 +230,7 @@
                                     self.apiBork = jqXHR.responseJSON;
                                 }
                             }
-                        });                       
+                        });
                     }
                 },
                 approveSelection: function () {
@@ -236,11 +260,11 @@
                             method: 'post',
                             data: JSON.stringify({
                                 action: 'approve',
-                                'ids': removedIds                                
+                                'ids': removedIds
                             }),
                             success: function (data) {
                                 self.getChangesData(0, self.approveSuccessCallback);
-                                
+
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
                                 var responses = JSON.parse(jqXHR.responseText);
@@ -255,7 +279,7 @@
                                     self.apiBork = jqXHR.responseJSON;
                                 }
                             }
-                        });                      
+                        });
                     }
                 }
             }

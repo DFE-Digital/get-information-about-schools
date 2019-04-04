@@ -1,9 +1,11 @@
-﻿@using VM = Edubase.Web.UI.Models.Search.SearchViewModel;
+@using VM = Edubase.Web.UI.Models.Search.SearchViewModel;
 @using Edubase.Web.UI.Helpers;
 @model VM
 
 <fieldset class="search-types-accordion">
-    <legend>Search by:</legend>
+    <legend>
+        <h2 class="heading-small flush--top">Search by:</h2>
+    </legend>
 
     <ul class="search-type-list has-typeahead">
         <li class="search-type-wrapper">
@@ -11,28 +13,33 @@
             {
                 @Html.HiddenFor(m => m.SelectedTab)
                 <fieldset class="search-toggle-panel">
-                    <legend class="visually-hidden">Search by name of reference number</legend>
-                    <span class="radio-button-wrap">                        
+                    <legend class="visually-hidden">Search by name or reference number</legend>
+                    <span class="radio-button-wrap">
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.Text, new { id = "searchtype-name", data_toggle_panel = "#searchby-name-ref" })
                         <label class="edubase-button-radio" for="searchtype-name">
                             Name or reference number
                         </label>
                     </span>
                     <div class="expanding-search-field" id="searchby-name-ref">
-                        @if (Model.NoResultsForName)
+                        @* This alert gets dynamically populated *@
+                        <div class="warning-message visuallyhidden" role="alert">
+                            <p class="message-text" aria-live="polite"></p>
+                        </div>
+                        @if (Model.SearchType == eSearchType.Text && Model.NoResults)
                         {
-                            <div class="warning-message">
-                                <p>We couldn't find any establishments matching your search criteria</p>
+                            @* Static alert for no search results *@
+                            <div role="alert" class="warning-message js-trigger-aria-live">
+                                <p class="message-text" aria-live="polite">We couldn't find any establishments matching your search criteria</p>
                             </div>
                         }
-                        <span class="search-hint">
-                            Name, URN, LAESTAB or UKPRN
+                        <label class="form-label" for="TextSearchModel_Text">
+                            Enter name, <abbr title="Unique Reference Number">URN</abbr>, LAESTAB or UKPRN
                             <a href="#name-reference-help" class="icon-help">
                                 <span class="visuallyhidden">About reference numbers</span>
                             </a>
-                        </span>
+                        </label>
                         <div class="form-group">
-                            @Html.TextBoxFor(x => x.TextSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggest?text=", maxlength="200" })
+                            @Html.TextBoxFor(x => x.TextSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggest?text=", maxlength="200", aria_describedby="name-reference-help" })
                         </div>
                         <div class="form-group">
                             <span class="checkbox-wrap">
@@ -65,13 +72,18 @@
                         </label>
                     </span>
                     <div class="expanding-search-field" id="searchby-location-ref">
-                        @if (Model.NoResultsForLocation)
+                        @* This alert gets dynamically populated *@
+                        <div class="warning-message visuallyhidden" role="alert">
+                            <p class="message-text" aria-live="polite"></p>
+                        </div>
+                        @if (Model.SearchType == eSearchType.Location && Model.NoResults)
                         {
-                            <div class="warning-message">
-                                <p>We couldn't find any locations matching your search criteria</p>
+                            @* Currently not displaying. Redirecting instead *@
+                            <div class="warning-message js-trigger-aria-live" role="alert">
+                                <p class="message-text" aria-live="polite">We couldn't find any locations matching your search criteria</p>
                             </div>
                         }
-                        <span class="search-hint">Postcode, town or city</span>
+                        <label class="form-label" for="LocationSearchModel_Text">Enter postcode, town or city</label>
                         <div class="form-group">
                             @Html.TextBoxFor(x => x.LocationSearchModel.Text, new { @class = "form-control location-search", autocomplete = "off", maxlength = "200" })
                         </div>
@@ -101,20 +113,23 @@
                     <span class="radio-button-wrap">
                         @Html.HiddenFor(m => m.SelectedTab)
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.ByLocalAuthority, new { id = "searchtype-la", data_toggle_panel = "#searchby-la-ref" })
-                        
+
                         <label class="edubase-button-radio" for="searchtype-la">
                             Local authority
                         </label>
                     </span>
                     <div class="expanding-search-field" id="searchby-la-ref">
-                        @if (Model.NoResultsForLA)
+                        <div class="warning-message visuallyhidden" role="alert">
+                            <p class="message-text" aria-live="polite"></p>
+                        </div>
+                        @if (Model.SearchType == eSearchType.ByLocalAuthority && Model.NoResults)
                         {
-                            <div class="warning-message">
-                                <p class="panel-text">We couldn't find any local authorities matching your search criteria</p>
+                            <div class="warning-message js-trigger-aria-live" role="alert">
+                                <p class="message-text" aria-live="polite">We couldn't find any local authorities matching your search criteria</p>
                             </div>
                         }
 
-                        <span class="search-hint">Enter one or more local authorities</span>
+                        <label class="form-label" for="LocalAuthorityToAdd">Enter one or more local authorities</label>
                         <div class="selected-las form-group">
                             <div id="la-id-target">
 
@@ -129,7 +144,7 @@
                                 </div>
                             </div>
                             <button type="submit"
-                                    class="button-grey button mobile-full-width no-js-remove"
+                                    class="button-secondary button mobile-full-width no-js-remove"
                                     name="searchtype" value="@eSearchType.LocalAuthorityDisambiguation">
                                 Find
                             </button>
@@ -143,7 +158,7 @@
                         </div>
 
 
-                        @Html.HiddenFieldsFromQueryString(new[] { "NoResultsForName", "NoResultsForLocation", "NoResultsForLA" })
+                        @Html.HiddenFieldsFromQueryString(new[] { "NoResults" })
                         <div class="form-group">
                             <button type="submit" class="button mobile-full-width button-below search-button" id="la-search-submit">Search</button>
                         </div>
@@ -151,17 +166,17 @@
                 }
 
             </fieldset>
-
         </li>
 
-    </ul>
-    <p>or</p>
-    <ul>
+        <li aria-hidden="true">
+            <p>or</p>
+        </li>
+
         <li class="search-type-wrapper">
             @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
             {
                 <fieldset class="search-toggle-panel">
-                    <legend class="visually-hidden">Search by name of reference number</legend>
+                    <legend class="visually-hidden">Search all establishments</legend>
                     <span class="radio-button-wrap">
                         @Html.HiddenFor(m => m.SelectedTab)
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.EstablishmentAll, new { id = "searchtype-all", data_toggle_panel = "#searchby-all-ref" })

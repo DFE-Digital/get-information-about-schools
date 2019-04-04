@@ -19,21 +19,27 @@
 
 <div class="grid-row">
     <div class="column-full edit-changes-summary">
+
+        <h1 class="heading-large">Confirm updates to establishment</h1>
+
         @if (Model.IsAcademy || Model.IsLAMaintained || Model.CCIsDemoting || Model.CCIsPromoting)
         {
-            <div class="warning-message">
+            <div class="panel-indent push-half--ends text">
                 @if (Model.IsAcademy)
                 {
-                    <p>
-                        I confirm that in making these changes the academy has followed the
-                        <a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" rel="external" target="_blank">statutory guidance</a>
-                        and has submitted a deed of variation to the funding agreement where required.
+                    <p class="flush--bottom hard--bottom">
+                        Please confirm that in making these changes the academy has:
                     </p>
+                    <ul class="list list-bullet warning-list">
+                        <li>followed the <a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" rel="external" target="_blank">statutory guidance</a>
+                        </li>
+                        <li>submitted a deed of variation to the funding agreement where required</li>
+                    </ul>
                 }
                 else if (Model.IsLAMaintained)
                 {
                     <p>
-                        I confirm that in making prescribed alterations the governing body or local authority has followed and completed the
+                        Please confirm that in making prescribed alterations the governing body or local authority has followed and completed the
                         <a href="https://www.gov.uk/government/publications/school-organisation-maintained-schools" rel="external" target="_blank">statutory process</a>.
                     </p>
                 }
@@ -45,7 +51,7 @@
                         <li>I have read the <a href="https://edubasepr.blob.core.windows.net/guidance/DfE%20Short%20Guide%20for%20LAs.docx" rel="external" target="_blank">DfE's short guide for LAs</a> document, and</li>
                         <li>I have demoted this children's centre record because it's no longer a children's centre in its own right but continues to contribute to our children's centre provision.</li>
                     </ul>
-                    
+
                     <p>Before you save this record, please link this linked site centre to a children's centre using the links tab. If you don't make this link, the children's centre linked site will be automatically deleted.</p>
                 }
                 else if (Model.CCIsPromoting)
@@ -61,52 +67,44 @@
 
         @if (Model.ShowDuplicateRecordWarning)
         {
-            <div class="warning-message">
+            <div class="panel-indent push-half--ends text">
                 <p>
                     There is already an establishment with the same name and local authority recorded. By confirming this change you acknowledge you may be duplicating the record.
                 </p>
             </div>
         }
 
-        <h1 class="heading-large">Confirm updates to establishment</h1>
-
-        <p class="font-xsmall">Please confirm updates to the following items for the Establishment @Model.OriginalEstablishmentName. URN: @Model.Urn.</p>
+        <p class="text">Please confirm updates to the following items for the Establishment @Model.OriginalEstablishmentName. <abbr title="Unique Reference Number">URN</abbr>: @Model.Urn.</p>
 
         <p class="table-caption">Showing 1 - @Model.ChangesSummary.Count of  @Model.ChangesSummary.Count</p>
-        <table class="edubase-table changes-summary confirm-changes">            
+        <table class="edubase-table changes-summary confirm-changes">
+            <caption class="visuallyhidden">Establishment updates summary</caption>
             <thead>
                 <tr>
-                    <th>Field</th>
-                    <th>Old value</th>
-                    <th>New value</th>
-                    <th>This field requires approval</th>
-                    <th>Approver</th>
+                    <th scope="col">Field</th>
+                    <th scope="col">Old value</th>
+                    <th scope="col">New value</th>
+                    <th scope="col">This field requires approval</th>
+                    <th scope="col">Approver</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.ChangesSummary)
-                {
+                @foreach (var item in Model.ChangesSummary) {
                     <tr>
-                        <td aria-label="Field">@item.Name</td>
-                        <td aria-label="Old value">@(item.OldValue ?? "<empty>")</td>
-                        <td aria-label="New value">@(item.NewValue ?? "<empty>")</td>
-                        <td aria-label="This field requires approval">
-                            @if (item.RequiresApproval)
-                            {
+                        <td data-label="Field">@item.Name</td>
+                        <td data-label="Old value">@(item.OldValue ?? "<empty>")</td>
+                        <td data-label="New value">@(item.NewValue ?? "<empty>")</td>
+                        <td data-label="This field requires approval">
+                            @if (item.RequiresApproval) {
                                 <div class="requires-approval">Yes</div>
-                            }
-                            else
-                            {
+                            } else {
                                 @: No
                             }
                         </td>
-                        <td aria-label="Approver name">
-                            @if (item.RequiresApproval)
-                            {
+                        <td data-label="Approver name">
+                            @if (item.RequiresApproval) {
                                 @(item.ApproverName ?? "-")
-                            }
-                            else
-                            {
+                            } else {
                                 @: &ndash;
                             }
                         </td>

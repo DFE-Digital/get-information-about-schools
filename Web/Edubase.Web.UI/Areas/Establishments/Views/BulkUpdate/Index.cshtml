@@ -14,29 +14,27 @@
 
 @using (Html.BeginRouteForm("ProcessBulkUpdate", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    <div class="grid-row spaced-groups">
+    <div class="grid-row">
         <div class="column-full">
             @if (Model.Result != null && Model.Result.IsCompleted() && !Model.Result.IsFailure() && !Model.Result.CompletedWithErrors())
             {
-                <div class="pending-updates-message dismissable-message bulk-update-success">
+                <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
                     <div class="tick"></div>
-                    <p>Your bulk update was successful.</p>
+                    <p class="message-text" aria-live="polite">Your bulk update was successful.</p>
                     <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
                 </div>
             }
             <h1 class="heading-xlarge">Establishment bulk update</h1>
-            
-            <p>
-                Update establishment records by uploading a CSV or XLSX file.<br>
-                Multiple column must be XLSX.<br>
-                Edubase Bulk Upload can be XLSX or Tab delimited text file (not Comma Separated Value files).
+
+            <p class="text">
+                Update establishment records by uploading a CSV or XLSX file. Multiple column updates must be in XLSX format.
             </p>
         </div>
         <div class="column-full">
 
             <div class="expanding-content-wrapper" data-update-text="false">
                 <a href="#" class="expanding-content-trigger">
-                    Help with preparing files                    
+                    Help with preparing files
                 </a>
                 <div class="expanding-content panel-indent">
                     <p>For a step by step guide to prepare documents for bulk update please download this file.</p>
@@ -111,23 +109,17 @@
 
         </div>
         <div class="column-half">
-            <div class="form-group upload-control @Html.ValidationCssClassFor(x => x.BulkFile)">
-                <label for="bulkfile" class="form-label">Upload a file</label>      
-                @Html.ValidationMessageFor(x => x.BulkFile)  
-                <div class="upload-control-wrapper">
-                    @Html.TextBoxFor(x => x.BulkFile, new { type = "file", @class = "file-input" });
-                    <button class="button button-grey file-selector">Choose file</button>
-                    <div class="text-field-wrapper">
-                        <input type="text" class="file-name" readonly="readonly" value="No file chosen" />
-                    </div>
-                </div>
+            <div class="form-group push--bottom @Html.ValidationCssClassFor(x => x.BulkFile)">
+                <label for="BulkFile" class="form-label">Upload a file</label>
+                @Html.ValidationMessageFor(x => x.BulkFile)
+                @Html.TextBoxFor(x => x.BulkFile, new { type = "file" })
             </div>
 
-            <div class="form-group @Html.ValidationCssClassFor(x => x.BulkUpdateType)">
-                <label class="form-label" for="upload-file-type">
+            <div class="form-group push--bottom @Html.ValidationCssClassFor(x => x.BulkUpdateType)">
+                <label class="form-label" for="BulkUpdateType">
                     Select file type
                 </label>
-                @Html.ValidationMessageFor(x => x.BulkUpdateType)  
+                @Html.ValidationMessageFor(x => x.BulkUpdateType)
                 @Html.EnumDropDownListFor(x => x.BulkUpdateType, "Select...", new { @class = "form-control" })
             </div>
 
@@ -135,7 +127,7 @@
 
             @if (Model.CanOverrideCRProcess)
             {
-                <span class="checkbox-wrap">
+                <span class="form-group checkbox-wrap push--top">
                     @Html.CheckBoxFor(x => x.OverrideCRProcess, new { @id = "override-cr" })
                     @Html.LabelFor(x => x.OverrideCRProcess, "Override CR", new { @for = "override-cr", @class = "edubase-button-checkbox" })
                 </span>
@@ -144,15 +136,16 @@
 
         </div>
         <div class="column-full">
-            <button type="submit" class="button mobile-full-width" value="Submit">Submit</button>           
-            <a href="/Tools" class="button button-grey cancel mobile-full-width">Cancel</a>
+            <button type="submit" class="button mobile-full-width" value="Submit">Submit</button>
+            <a href="/Tools" class="button button-secondary cancel mobile-full-width">Cancel</a>
         </div>
-       
+
 </div>
 }
 
 
 @section ViewScripts{
+    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
     <script>
         $(function () {
             var toggle = function () { $("button[type='submit']").prop("disabled", $("#BulkUpdateType").val() == "") };

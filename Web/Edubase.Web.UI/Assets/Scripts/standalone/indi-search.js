@@ -2,7 +2,8 @@
 
     var filterForm = $('#indi-filter-form');
     var clearLinks = filterForm.find('.filter-clear');
-    var resultsContainer = $('#results-container');
+    var $resultsContainer = $('#results-container');
+    var $resultsNotification = $('#results-notification');
     var filterIntent;
     var downloadLink = $('.download-link');
     var downloadBaseUrl = '/independent-schools/download?';
@@ -70,20 +71,20 @@
                 var fromDate = new Date(fromDateValues[2], fromDateValues[1], fromDateValues[0]);
                 var toDate = new Date(toDateValues[2],toDateValues[1], toDateValues[0]);
                 if (toDate < fromDate) {
-                    canSubmit = false;                    
+                    canSubmit = false;
                     rangeError = true;
                 }
             }
 
-           
+
 
             if (n + 1 === filters.length ) {
                 if (!canSubmit) {
-                    $('#date-filter').find('.form-group').addClass('error');               
+                    $('#date-filter').find('.form-group').addClass('error');
                     if (rangeError) {
                         $('#date-filter').find('.date-range-error').slice(0,1).removeClass('hidden');
                     } else {
-                        $('#date-filter').find('.error-message').slice(0, 1).removeClass('hidden'); 
+                        $('#date-filter').find('.error-message').slice(0, 1).removeClass('hidden');
                     }
                     //
                 }
@@ -91,10 +92,12 @@
 
             }
         });
-        
+
     }
 
     var getResults = function () {
+        $resultsContainer.html(plsWait);
+        $resultsNotification.html('Please wait, loading search results');
         filterForm.find('input').prop('disabled', 'disabled');
         clearLinks.addClass('clear-disabled');
         if (GOVUK.support.history()) {
@@ -104,15 +107,22 @@
             url: '/independent-schools/results-js',
             data: searchParams,
             success: function (data, status, xhr) {
-                resultsContainer.html(data);
+                $resultsContainer.html(data);
                 downloadLink.removeClass('hidden');
 
                 downloadLink.attr('href', downloadBaseUrl + searchParams);
-                resultsContainer.removeClass('pending-results-update');
+                $resultsContainer.removeClass('pending-results-update');
                 filterForm.find('input').removeAttr('disabled');
                 clearLinks.removeClass('clear-disabled');
-                if (Number(xhr.getResponseHeader("x-count")) === 0) {
+                var count;
+                if (xhr.getResponseHeader("x-count")) {
+                    count = xhr.getResponseHeader("x-count");
+                }
+                if (count > 0) {
+                    $resultsNotification.html('Search results loaded. ' + count + ' establishments found.');
+                } else {
                     downloadLink.addClass('hidden');
+                    $resultsNotification.html('Search results loaded. No establishments found.');
                 }
             }
         });
@@ -135,7 +145,7 @@
 
                     selectedFilters.click();
                     $(this).removeClass('active-clear');
-                   
+
                 }
             }
         });
@@ -145,17 +155,15 @@
          validateFilters();
 
          if (filterError){
-            resultsContainer.addClass('pending-results-update');
+            $resultsContainer.addClass('pending-results-update');
             filterIntent = window.setTimeout(function () {
-                resultsContainer.html(plsWait);
                 searchParams = $('#filter-form-ind').serialize();
-            
                 getResults();
             }, 1200);
         }
 
-        
-        
+
+
     });
 
     filterForm.find('.form-control').on('focus', function() {
@@ -167,8 +175,8 @@
         window.clearTimeout(filterIntent);
         validateFilters();
 
-        if (filterError) {            
-            resultsContainer.html(plsWait);
+        if (filterError) {
+            $resultsContainer.html(plsWait);
             searchParams = $('#filter-form-ind').serialize();
             getResults();
         }

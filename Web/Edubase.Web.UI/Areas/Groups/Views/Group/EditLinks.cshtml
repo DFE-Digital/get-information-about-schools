@@ -10,7 +10,7 @@
     Layout = "_EditLayoutPage.cshtml";
 }
 <div class="tab-content">
-    
+
 @using (Html.BeginForm("EditLinks", "Group", new { area = "Groups" }, FormMethod.Post))
 {
     @Html.HiddenFor(x => x.GroupUId)
@@ -26,42 +26,45 @@
         {
             <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">Save</button>
         }
-        @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
+        @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-secondary cancel mobile-full-width" })
     </div>
 
     <div class="column-two-thirds">
         <h2 class="bold-large">List of @Model.ListOfEstablishmentsPluralName (@Model.LinkedEstablishments.Establishments.Count)</h2>
     </div>
 
-
     <div class="column-half">
-            <span class="bold-xsmall">Add establishment</span>
-            <p class="font-xsmall">Enter the establishment <abbr title="Unique Reference Number">URN</abbr></p>
-            <div class="form-group add-establishment-link @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)">
-                @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
-                @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "form-control form-control-1-2 search-box" })
-                <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" class="button inline-submit">Find</button>
-            </div>
-            @if (Model.LinkedEstablishments.LinkedEstablishmentSearch.HasResult)
-            {
-            <p class="bold-xsmall">Establishment found</p>
-            <p>@Model.LinkedEstablishments.LinkedEstablishmentSearch.Name</p>
-
-            @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date"})
-
-            <button id="add-estab-submit" type="submit" name="action" value="@VM.ActionLinkedEstablishmentAdd" class="button">Add</button>
-            @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
-
-            }
-
-            @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Name)
-            @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn)
-
+        <span class="bold-xsmall">Add establishment</span>
+        <p class="font-xsmall">Enter the establishment's Unique Reference Number (URN)</p>
+        <div class="form-group add-establishment-link @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)">
+            <label for="LinkedEstablishments_LinkedEstablishmentSearch_Urn" class="visuallyhidden">Search for an establishment</label>
+            @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
+            @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "form-control form-control-1-2 search-box" })
+            <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" class="button push-half--left">Search URN</button>
         </div>
+        @if (Model.LinkedEstablishments.LinkedEstablishmentSearch.HasResult)
+        {
+            var prefix = string.Concat(nameof(Model.LinkedEstablishments), "_", nameof(Model.LinkedEstablishments.LinkedEstablishmentSearch));
+            
+
+        <p class="bold-xsmall">Establishment found</p>
+        <p>@Model.LinkedEstablishments.LinkedEstablishmentSearch.Name</p>
+
+        @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date", editorPrefix = prefix})
+
+        <button id="add-estab-submit" type="submit" name="action" value="@VM.ActionLinkedEstablishmentAdd" class="button">Add</button>
+        @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
+
+        }
+
+        @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Name)
+        @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn)
+
+    </div>
 
     <div class="column-two-thirds">
 
-            <ul class="school-results-listing establishment-list">
+            <ul class="school-results-listing">
                 @for (int i = 0; i < Model.LinkedEstablishments.Establishments.Count; i++)
                 {
                     var e = Model.LinkedEstablishments.Establishments[i];
@@ -69,7 +72,7 @@
                         <h2>@Html.ActionLink( Model.LinkedEstablishments.Establishments[i].Name, "Details", "Establishment", new { id = Model.LinkedEstablishments.Establishments[i].Urn, area = "Establishments" }, new { @class = "bold-small" })</h2>
                         @if (ViewData.ModelState["linkedEstablishments[" + i + "].id"] != null)
                         {
-                            <div class="error">@Html.ValidationMessage("linkedEstablishments[" + i + "].id")</div>
+                            <div class="error">@Html.ValidationMessageNested("linkedEstablishments[" + i + "].id")</div>
                         }
                         <dl>
                             <dt>Address:</dt>
@@ -107,13 +110,12 @@
 
                         @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
                         {
-                            <div class="form-radio cc-lead-centre">
-                                <label>
-                                    @Html.RadioButtonFor(x => x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new { @class = "" })
+                            <span class="radio-button-wrap">
+                                @Html.RadioButtonFor(x => x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new { id = "CCLeadCentreUrn" + i })
+                                <label class="edubase-button-radio" for="CCLeadCentreUrn@(i)">
                                     Make this children's centre a lead centre
                                 </label>
-                            </div>
-
+                            </span>
                         }
 
                         @if (Model.LinkedEstablishments.Establishments[i].EditMode)
@@ -124,15 +126,15 @@
                         @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                         {
                             <div class="button-row">
-                                <button type="submit" class="button button-grey button-remove" name="action" value="@VM.ActionLinkedEstablishmentRemove@Model.LinkedEstablishments.Establishments[i].Urn">Remove</button>
-                                <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentEdit@Model.LinkedEstablishments.Establishments[i].Urn" class="button button-grey">Edit</button>
+                                <button type="submit" class="button button-secondary button-remove" name="action" value="@VM.ActionLinkedEstablishmentRemove@Model.LinkedEstablishments.Establishments[i].Urn">Remove</button>
+                                <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentEdit@Model.LinkedEstablishments.Establishments[i].Urn" class="button button-secondary">Edit</button>
                             </div>
                         }
                         else if (Model.LinkedEstablishments.Establishments[i].EditMode)
                         {
                             <div class="form-group">
                                 <button id="save-joined-date-submit" type="submit" class="button" name="action" value="@VM.ActionLinkedEstablishmentSave">Save</button>
-                                @Html.ActionLink("Cancel", "EditLinks", "Group", new { area = "Groups" }, new { @class = "button button-grey allow-exit" })
+                                @Html.ActionLink("Cancel", "EditLinks", "Group", new { area = "Groups" }, new { @class = "button button-secondary js-allow-exit" })
                             </div>
                         }
 
@@ -154,9 +156,9 @@
             {
                 <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">Save</button>
             }
-            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
+            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-secondary cancel mobile-full-width" })
 
-           
+
         </div>
 }
 </div>
@@ -202,33 +204,4 @@
             });
         </script>
     }
-
-    <script>
-        (function () {
-            var $urnSearchField = $("#LinkedEstablishments_LinkedEstablishmentSearch_Urn");
-            var $urnSearchButton = $(".add-establishment-link").find("button");
-            var toggle = function () { $urnSearchButton.prop("disabled", $.trim($urnSearchField.val()).length < 5 || Math.floor($urnSearchField.val()) != $urnSearchField.val() || !$.isNumeric($urnSearchField.val()) ); };
-            toggle();
-            $urnSearchField.on("change keyup", toggle);
-        })();
-
-        (function () {
-            var $addButton = $("#add-estab-submit");
-            var fields = ["#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Day", "#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Month", "#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Year"];
-            var toggle = function () {
-                $addButton.prop("disabled", fields.some(function (x) { return $.trim($(x).val()) == "" }));
-            };
-            $(fields.join(",")).on("change keyup", toggle);
-            toggle();
-        })();
-
-        (function () {
-            var $button = $("#save-joined-date-submit");
-            var inputs = $.makeArray($(".joined-date-editor").find("input"));
-            var toggle = function () { $button.prop("disabled", inputs.some(function (x) { return $.trim($(x).val()) == "" })); };
-            $(inputs).on("change keyup", toggle);
-            toggle();
-        })();
-
-    </script>
 }

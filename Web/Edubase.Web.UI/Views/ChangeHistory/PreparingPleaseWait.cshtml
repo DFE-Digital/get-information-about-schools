@@ -27,18 +27,18 @@
 
         <h1 class="heading-intro">Download change history</h1>
     </div>
-    <div class="download-step">        
+    <div class="download-step">
         <div class="column-full">
             <h2 class="heading-small">Download change history data</h2>
             <p>Preparing your requested data. Large files may take some time to generate.</p>
-        
+
             <div class="progress-indicator padded-indicator">
                 <span class="visually-hidden">Please wait. Your file is being prepared</span>
             </div>
         </div>
     </div>
     <div class="column-full">
-        <a href=@($"{Url.RouteUrl("ChangeHistorySearch")}?{Request.QueryString.RemoveKey("DownloadFormat")}") class="button button-grey">Cancel</a>
+        <a href=@($"{Url.RouteUrl("ChangeHistorySearch")}?{Request.QueryString.RemoveKey("DownloadFormat")}") class="button button-secondary">Cancel</a>
     </div>
 </div>
 

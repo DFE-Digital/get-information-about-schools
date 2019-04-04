@@ -63,19 +63,18 @@ $path: "/public/images/";
   text-align: right;
 }
 
-.mb-30
-{
+.mb-30 {
     margin-bottom:30px;
 }
 
 .blanket {
-    position:absolute; 
+    position:absolute;
     top:0;
     left:0;
     right:0;
     bottom:0;
     background-color:#fff;
-    opacity:0.5; 
+    opacity:0.5;
     z-index:1000;
     display:none;
 }
@@ -102,3 +101,35 @@ $path: "/public/images/";
         display: block;
     }
 }
+
+.break-word {
+    word-break: break-all;
+}
+
+// Negating spacing
+// Remove margins
+.flush          { margin:       0 !important; }
+.flush--top     { margin-top:   0 !important; }
+.flush--right   { margin-right: 0 !important; }
+.flush--bottom  { margin-bottom:0 !important; }
+.flush--left    { margin-left:  0 !important; }
+.flush--ends    { margin-top:   0 !important; margin-bottom: 0 !important; }
+.flush--sides   { margin-right: 0 !important; margin-left:  0 !important; }
+
+// Remove paddings
+.hard           { padding:       0 !important; }
+.hard--top      { padding-top:   0 !important; }
+.hard--right    { padding-right: 0 !important; }
+.hard--bottom   { padding-bottom:0 !important; }
+.hard--left     { padding-left:  0 !important; }
+.hard--ends     { padding-top:   0 !important; padding-bottom:0 !important; }
+.hard--sides    { padding-right: 0 !important; padding-left:  0 !important; }
+
+// Spacing
+.push--top          { margin-top:     $gutter !important; }
+.push--bottom       { margin-bottom:  $gutter !important; }
+.push-half--top     { margin-top:     $gutter-half !important; }
+.push-half--right   { margin-right:   $gutter-half !important; }
+.push-half--bottom  { margin-bottom:  $gutter-half !important; }
+.push-half--left    { margin-left:    $gutter-half !important; }
+.push-half--ends    { margin-bottom:  $gutter-half !important; margin-top: $gutter-half !important; }

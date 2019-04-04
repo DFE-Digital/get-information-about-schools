@@ -10,27 +10,27 @@
 
     }
     ViewBag.hideLogo = true;
-        Layout = "~/Views/Dfe/Layouts/template.cshtml";
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Edit establishment group");
+    Layout = "~/Views/Dfe/Layouts/template.cshtml";
 }
 
 <div class="breadcrumbs">
     <ul>
         <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" })</li>
     </ul>
-    
+
 </div>
 
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
 
 <h1 class="heading-large">@Model.GroupName</h1>
 
-<p class="urn">UID: @Model.GroupUId</p>
+<p class="urn"><abbr title="Unique Identifier">UID</abbr>: @Model.GroupUId</p>
 <p class="establishment-type">@Model.GroupTypeName</p>
 @if (ViewData.ContainsKey("DuplicateGovernor"))
 {
     @Html.Partial("~/Areas/Governors/Views/Governor/_DuplicateGovernor.cshtml", ViewData["DuplicateGovernor"])
 }
-
-@Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
 
 <div class="grid-row">
     <div class="column-full">
@@ -83,7 +83,7 @@
                 {
                     @RenderBody()
                 }
-               
+
             </div>
         </div>
     </div>

@@ -15,6 +15,7 @@
 </div>
 
 <div id="academy-opening-app" v-cloak>
+    <!-- Error message -->
     <div v-show="Object.keys(apiError).length>0">
         <h1 class="heading-xlarge">Sorry, something went wrong</h1>
         <p>Please try again later.</p>
@@ -28,18 +29,21 @@
         </div>
     </div>
 
+    <!-- Error summary -->
     <div class="error-summary" v-show="recordUpdateErrors.errors">
         <h2 class="error-summary-heading heading-medium">Error updating record</h2>
         <ul class="error-summary-list">
             <li class="error-message" v-for="(item, index) in recordUpdateErrors.errors">
                 {{item.message}}
             </li>
-            
         </ul>
     </div>
 
+    <!-- Show when no API errors -->
     <div v-show="Object.keys(apiError).length === 0">
+        <!-- When not editing record -->
         <div class="grid-row" v-show="!editRecord">
+            <!-- Error message -->
             <div class="column-full">
                 <div v-show="loadDataError" class="error-summary">
                     <h2 class="error-summary-heading heading-medium">Something went wrong</h2>
@@ -52,18 +56,20 @@
                 <div class="error-summary" v-show="searchError" v-cloak>
                     <h2 class="heading-medium error-summary-heading" v-show="searchError">No matching establishment</h2>
                     <div v-show="searchError">
-                        <p>You have entered an invalid URN</p>
+                        <p>You have entered an invalid <abbr title="Unique Reference Number">URN</abbr></p>
                         <ul>
                             <li class="error-message">
-                                <a href="#academy-search-field">Please enter a valid URN</a>
+                                <a href="#academy-search-field">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a>
                             </li>
                         </ul>
                     </div>
 
                 </div>
             </div>
+
             <div class="column-full" v-show="!isProcessing">
                 <div class="horizontal-tabs-wrapper">
+                    <!-- Tabs -->
                     <div class="tab-wrap">
                         <ul class="horizontal-tabs">
                             <li><a href="#calendar" class="horizontal-tab">Opening calendar</a></li>
@@ -71,117 +77,104 @@
                         </ul>
                     </div>
 
+                    <!-- Tabs content -->
                     <div class="tab-content-wrapper horizontal-tabs-content" v-cloak>
+                        <!-- Opening calendar -->
                         <div id="calendar" class="tab-content">
-                            <div id="academy-listing-app">
-                                <div class="form-group month-selector">
-                                    <label class="form-label">
-                                        Opening date
-                                    </label>
-                                    <select class="form-control" v-model="selectedDate" v-on:change="buildDatePages" id="opening-date-filter"></select>
-                                </div>
 
-                                <div>
-                                    <div class="pagination">
-                                        <p class="pagination-info">
-                                            Showing
-                                            <span class="pagination-range">
-                                                {{ paginationDescription }}
-                                            </span>
-                                            of
-                                            <span class="result-count">{{currentCount}}</span>
-                                        </p>
-                                        <ul class="pagination-links">
-                                            <li v-if="currentPage > 0"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
-                                            <li v-if="pages.length > 1" v-for="(page, index) in pages">
-                                                <span v-if="index === currentPage" class="numeric-pagination go-nowhere">{{ index + 1 }}</span>
-                                                <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index)">{{ index + 1 }}</a>
-                                            </li>
-                                            <li v-if="currentPage < pages.length -1"><a href="javascript:" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
-                                            <li v-if="pages.length > 1"><a href="javascript:" class="pagination-next" style="margin-left:5px;" v-on:click.prevent="showAll()">Show all</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <table class="academy-openings sortable-table" id="openings-table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" class="cell-openingdate">
-                                                <a href="#" v-on:click.prevent="sortOpenings('openingDate')"
-                                                   v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='openingDate' ? 'selected-sort': '' ]">Opening date</a>
-                                            </th>
-                                            <th scope="col" class="cell-urn">
-                                                <a href="#" v-on:click.prevent="sortOpenings('urn')"
-                                                   v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='urn' ? 'selected-sort': '' ]">URN</a>
-                                            </th>
-                                            <th scope="col" class="cell-estabname">
-                                                <a href="#" v-on:click.prevent="sortOpenings('name')"
-                                                   v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='name' ? 'selected-sort': '' ]">Establishment name</a>
-                                            </th>
-                                            <th scope="col" class="cell-estabtype">
-                                                <a href="#" v-on:click.prevent="sortOpenings('establishmentType')"
-                                                   v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='establishmentType' ? 'selected-sort': '' ]">Establishment type</a>
-                                            </th>
-                                            <th scope="col" class="cell-predecessor-urn">
-                                                <a href="#" v-on:click.prevent="sortOpenings('predecessorUrn')"
-                                                   v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='predecessorUrn' ? 'selected-sort': '' ]">Predecessor URN</a>
-                                            </th>
-                                            <th scope="col" class="cell-predecessor-name">
-                                                <a href="#" v-on:click.prevent="sortOpenings('predecessorName')"
-                                                   v-bind:class="[ sortAscending? 'sorted-asc' : 'sorted-desc', sortKey==='predecessorName' ? 'selected-sort': '' ]">Predecessor name</a>
-                                            </th>
-                                            <td scope="col" class="cell-edit">&nbsp;</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody v-if="pages.length > 0">
-                                        <tr v-for="(entry, index) in page">
-                                            <td aria-label="Opening date:" class="cell-openingdate"> {{entry.displayDate}} </td>
-                                            <td aria-label="URN:"><a v-bind:href="detailUrl(entry.urn)">{{entry.urn}}</a></td>
-                                            <td aria-label="Establishment name:">{{entry.name}}</td>
-                                            <td aria-label="Establishment type:">{{entry.establishmentType}}</td>
-                                            <td aria-label="Predecessor URN:"><a v-bind:href="detailUrl(entry.predecessorUrn)">{{entry.predecessorUrn}}</a></td>
-                                            <td aria-label="Predecessor name:">{{entry.predecessorName}}</td>
-                                            <td class="cell-edit"><a href="#" v-on:click.prevent="editEstab(entry.urn)">Edit</a></td>
-                                        </tr>
-                                    </tbody>
-                                    <tbody v-else>
-                                        <tr>
-                                            <td colspan="7">
-                                                <p> [ NO RESULTS MESSAGE ] </p>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div class="pagination">
-                                    <p class="pagination-info">
-                                        Showing
-                                        <span class="pagination-range">
-                                            {{ paginationDescription }}
-                                        </span>
-                                        of
-                                        <span class="result-count">{{currentCount}}</span>
-                                    </p>
-                                    <ul class="pagination-links">
-                                        <li v-if="currentPage > 0"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
-                                        <li v-if="pages.length > 1" v-for="(page, index) in pages">
-                                            <span v-if="index === currentPage" class="numeric-pagination go-nowhere">{{ index + 1 }}</span>
-                                            <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index)">{{ index + 1 }}</a>
-                                        </li>
-                                        <li v-if="currentPage < pages.length -1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
-                                    </ul>
-                                </div>
-
+                            <div class="form-group month-selector">
+                                <label class="form-label" for="opening-date-filter">
+                                    Opening date
+                                </label>
+                                <select class="form-control" v-model="selectedDate" v-on:change="buildDatePages" id="opening-date-filter"></select>
                             </div>
+
+                            <div class="pagination">
+                                <p class="pagination-info">
+                                    Showing
+                                    <span class="pagination-range">
+                                        {{ paginationDescription }}
+                                    </span>
+                                    of
+                                    <span class="result-count">{{currentCount}}</span>
+                                </p>
+                                <ul class="pagination-links">
+                                    <li v-if="currentPage > 0"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
+                                    <li v-if="pages.length > 1" v-for="(page, index) in pages">
+                                        <span v-if="index === currentPage" class="numeric-pagination go-nowhere">{{ index + 1 }}</span>
+                                        <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index)">{{ index + 1 }}</a>
+                                    </li>
+                                    <li v-if="currentPage < pages.length -1"><a href="javascript:" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
+                                    <li v-if="pages.length > 1"><a href="javascript:" class="pagination-next" style="margin-left:5px;" v-on:click.prevent="showAll()">Show all</a></li>
+                                </ul>
+                            </div>
+
+                            <table class="academy-openings sortable-table" id="openings-table">
+                                <caption class="visuallyhidden">Academy openings</caption>
+                                <thead>
+                                    <tr>
+                                        <th v-for="(value, key) in tableColumns" :class="'cell-' + key.toLowerCase()">
+                                            <a
+                                                href="#"
+                                                v-on:click.prevent="sortOpenings(key)"
+                                                v-bind:class="[ sortKey===key && sortAscending ? 'selected-sort sorted-asc' : '', sortKey===key && !sortAscending ? 'selected-sort sorted-desc' : '']"
+                                                :aria-label="[ sortKey===key && sortAscending ? value + ' is sorted in an ascending order. Click to change order. All other columns are sortable.' : '', sortKey===key && !sortAscending ? value + ' is sorted in a descending order. Click to change order. All other columns are sortable.' : '', sortKey===key ? '' : value + '. Click to sort data by this column.' ]"
+                                            >{{ value }}</a>
+                                        </th>
+                                        <th scope="col" class="cell-edit"><span class="visuallyhidden">Action links</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody v-if="pages.length > 0">
+                                    <tr v-for="(entry, index) in page">
+                                        <td data-label="Opening date" class="cell-openingdate"> {{entry.displayDate}} </td>
+                                        <td data-label="URN"><a v-bind:href="detailUrl(entry.urn)">{{entry.urn}}</a></td>
+                                        <td data-label="Establishment name">{{entry.name}}</td>
+                                        <td data-label="Establishment type">{{entry.establishmentType}}</td>
+                                        <td data-label="Predecessor URN"><a v-bind:href="detailUrl(entry.predecessorUrn)"  v-if="entry.predecessorUrn">{{entry.predecessorUrn}}</a></td>
+                                        <td data-label="Predecessor name">{{entry.predecessorName}}</td>
+                                        <td class="cell-edit"><a href="#" v-on:click.prevent="editEstab(entry.urn)" aria-label="Edit opening details">Edit</a></td>
+                                    </tr>
+                                </tbody>
+                                <tbody v-else>
+                                    <tr>
+                                        <td colspan="7">
+                                            <p> [ NO RESULTS MESSAGE ] </p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="pagination">
+                                <p class="pagination-info">
+                                    Showing
+                                    <span class="pagination-range">
+                                        {{ paginationDescription }}
+                                    </span>
+                                    of
+                                    <span class="result-count">{{currentCount}}</span>
+                                </p>
+                                <ul class="pagination-links">
+                                    <li v-if="currentPage > 0"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
+                                    <li v-if="pages.length > 1" v-for="(page, index) in pages">
+                                        <span v-if="index === currentPage" class="numeric-pagination go-nowhere">{{ index + 1 }}</span>
+                                        <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index)">{{ index + 1 }}</a>
+                                    </li>
+                                    <li v-if="currentPage < pages.length -1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
+                                </ul>
+                            </div>
+
                         </div>
+
+                        <!-- Academy search -->
                         <div id="academy-search" class="tab-content">
                             <!-- search app -->
                             <div id="academy-search-app">
                                 <form>
                                     <div v-bind:class="['form-group', searchError? 'error' : '']">
                                         <label class="form-label" for="academy-search-field">
-                                            Enter establishment URN
+                                            Enter establishment <abbr title="Unique Reference Number">URN</abbr>
                                         </label>
-                                        <span class="error-message" v-show="searchError">Please enter a valid URN</span>
+                                        <span class="error-message" v-show="searchError">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
                                         <input type="text" class="form-control  desktop-inline" id="academy-search-field" v-model.trim="searchUrn" />
 
                                         <input type="submit" class="button inline-submit" value="Find establishment" v-on:click.prevent="validateUrn" />
@@ -189,23 +182,24 @@
 
                                 </form>
 
-                                <div v-show="presentDetail" class="openings-single-result">
+                                <!-- Search results -->
+                                <div v-show="presentDetail" v-if="od.urn" class="openings-single-result">
                                     <h2 class="heading-small">Establishment Found</h2>
                                     <div class="urn-result">
                                         <h4 class="heading-small">Opening date: {{od.displayDate }}</h4>
                                         <dl>
-                                            <dt>URN:</dt>
+                                            <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
                                             <dd><a v-bind:href="detailUrl(od.urn )">{{ od.urn }}</a></dd>
                                             <dt>Establishment name:</dt>
                                             <dd>{{updateName}}</dd>
                                             <dt>Establishment type:</dt>
                                             <dd>{{ od.establishmentType }}</dd>
-                                            <dt>Predecessor URN:</dt>
-                                            <dd><a v-bind:href="detailUrl(od.predecessorUrn )">{{ od.predecessorUrn }}</a></dd>
+                                            <dt>Predecessor <abbr title="Unique Reference Number">URN</abbr>:</dt>
+                                            <dd><a v-bind:href="detailUrl(od.predecessorUrn )" v-if="od.predecessorUrn">{{ od.predecessorUrn }}</a></dd>
                                             <dt>Predecessor name:</dt>
                                             <dd>{{ od.predecessorName }}</dd>
                                         </dl>
-                                        <a href="#" class="button button-grey" v-on:click.prevent="editEstab(od.urn)">Edit</a>
+                                        <a href="#" class="button button-secondary" v-on:click.prevent="editEstab(od.urn)">Edit</a>
                                     </div>
                                 </div>
                             </div>
@@ -214,6 +208,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- Record editing -->
         <div class="grid-row" v-show="editRecord" v-cloak>
             <div class="column-full">
                 <h1 class="heading-large">Edit opening detail</h1>
@@ -221,22 +217,22 @@
             <div class="column-half">
                 <div class="button-row">
                     <input type="submit" class="button opening-save" value="Save" v-on:click.prevent="updateRecord" />
-                    <a href="#" class="button button-grey" v-on:click="cancelEditClick">Cancel</a>
+                    <a href="#" class="button button-secondary" v-on:click="cancelEditClick">Cancel</a>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">URN</label>
-                    <input class="form-control" type="text" :value="od.urn" disabled="disabled" />
+                    <label class="form-label" for="est-urn">Unique Reference Number (URN)</label>
+                    <input class="form-control" type="text" :value="od.urn" disabled="disabled" id="est-urn" />
                 </div>
 
                 <div v-bind:class="['form-group',  updateNameError ? 'error' : '' ]">
-                    <label class="form-label">Establishment name </label>
+                    <label class="form-label" for="est-name">Establishment name </label>
                     <span class="error-message" v-show="updateNameError">Please enter the establishment name</span>
-                    <input class="form-control" type="text" v-model="updateName" v-on:change="attachUnload" />
+                    <input class="form-control" type="text" v-model="updateName" v-on:change="attachUnload" id="est-name" />
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Establishment type</label>
-                    <input class="form-control" type="text" :value="od.establishmentType" disabled="disabled" />
+                    <label class="form-label" for="est-type">Establishment type</label>
+                    <input class="form-control" type="text" :value="od.establishmentType" disabled="disabled" id="est-type" />
                 </div>
 
                 <div v-bind:class="['form-group range-group', openDateError ? 'error' : '' ]">
@@ -263,32 +259,32 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Predecessor URN</label>
-                    <input type="text" class="form-control" disabled="disabled" :value="od.predecessorUrn" />
+                    <label class="form-label" for="est-pred-urn">Predecessor <abbr title="Unique Reference Number">URN</abbr></label>
+                    <input type="text" class="form-control" disabled="disabled" :value="od.predecessorUrn" id="est-pred-urn" />
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Predecessor name</label>
-                    <input type="text" class="form-control" disabled="disabled" :value="od.predecessorName" />
+                    <label class="form-label" for="est-pred-name">Predecessor name</label>
+                    <input type="text" class="form-control" disabled="disabled" :value="od.predecessorName" id="est-pred-name" />
                 </div>
 
-                <div class="button-row lower">
+                <div class="button-row push--top">
                     <input type="submit" class="button opening-save" value="Save" v-on:click.prevent="updateRecord" />
-                    <a href="#" class="button button-grey" v-on:click="cancelEditClick">Cancel</a>
+                    <a href="#" class="button button-secondary" v-on:click="cancelEditClick">Cancel</a>
                 </div>
             </div>
         </div>
 
         <div id="modal-overlay" class="modal-overlay" v-show="presentExitWarning"></div>
-        <div id="modal-content" class="modal-content" role="dialog" v-show="presentExitWarning">
+        <div id="modal-content" class="modal-content" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc" v-show="presentExitWarning">
             <a href="#" id="exit-overlay" class="modal-exit" v-on:click.prevent="presentExitWarning = false">Close</a>
             <div id="modal-inner">
-                <h3 class="heading-large">Are you sure you want to leave this page?</h3>
-                <p>Any unsaved changes will be lost.</p>
+                <h3 class="heading-large" id="modal-label" tabindex="0">Are you sure you want to leave this page?</h3>
+                <p id="modal-desc" tabindex="0">Any unsaved changes will be lost.</p>
             </div>
             <div class="button-row">
                 <a href="#" class="button mobile-full-width" id="button-ok" v-on:click.prevent="presentExitWarning=false, editRecord=false, searchUrn='', presentDetail=false">OK</a>
-                <a href="#" class="button button-grey mobile-full-width" id="button-cancel" v-on:click.prevent="presentExitWarning = false">Cancel</a>
+                <a href="#" class="button button-secondary mobile-full-width" id="button-cancel" v-on:click.prevent="presentExitWarning = false">Cancel</a>
             </div>
         </div>
     </div>

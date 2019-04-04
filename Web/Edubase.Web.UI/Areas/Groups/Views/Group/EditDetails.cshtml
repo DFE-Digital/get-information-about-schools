@@ -28,17 +28,17 @@
         <div class="grid-row">
             <div class="column-full">
                 <button type="submit" name="action" class="button mobile-full-width" id="edit-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Save" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
-                @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
+                @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-secondary cancel mobile-full-width" })
             </div>
         </div>
         <div class="grid-row">
             <div class="column-half">
                 <div class="form-group @Html.ValidationCssClassFor(x => x.GroupName)">
-                    <label for="name">@Model.FieldNamePrefix name</label>
+                    <label for="name" class="form-label">@Model.FieldNamePrefix name</label>
                     @Html.ValidationMessageFor(x => x.GroupName)
                     @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
                     {
-                        <input value="@Model.GroupName" disabled="disabled" class="form-control" />
+                        <input value="@Model.GroupName" disabled="disabled" class="form-control" id="@nameof(Model.GroupName)" />
                         @Html.HiddenFor(x => x.GroupName)
                     }
                     else
@@ -51,15 +51,15 @@
                 @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
                 {
                     <div class="form-group">
-                        <label>Companies house number</label>
-                        <input type="text" value="@Model.CompaniesHouseNumber" class="form-control" disabled="disabled" />
+                        <label class="form-label" for="companiesHouseNumber">Companies house number</label>
+                        <input type="text" value="@Model.CompaniesHouseNumber" class="form-control" disabled="disabled" id="companiesHouseNumber" />
                         @Html.HiddenFor(x => x.CompaniesHouseNumber)
                     </div>
                 }
 
                 <div class="form-group">
-                    <label>@Model.FieldNamePrefix type</label>
-                    <input type="text" value="@Model.GroupTypeName" class="form-control" disabled="disabled" />
+                    <label class="form-label" for="groupTypeName">@Model.FieldNamePrefix type</label>
+                    <input type="text" value="@Model.GroupTypeName" class="form-control" disabled="disabled" id="groupTypeName" />
                     @Html.HiddenFor(x => x.GroupTypeId)
                 </div>
 
@@ -67,8 +67,8 @@
                 @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
                 {
                     <div class="form-group">
-                        <label for="name">@Model.OpenDateLabel</label>
-                        <input value="@(Model.OpenDate.ToDateTime()?.ToString("dd/MM/yyyy") ?? "Not recorded")" disabled="disabled" class="form-control" />
+                        <label for="openDate" class="form-label">@Model.OpenDateLabel</label>
+                        <input value="@(Model.OpenDate.ToDateTime()?.ToString("dd/MM/yyyy") ?? "Not recorded")" disabled="disabled" class="form-control" id="openDate" />
                         @Html.HiddenFor(x => x.OpenDate.Day)
                         @Html.HiddenFor(x => x.OpenDate.Month)
                         @Html.HiddenFor(x => x.OpenDate.Year)
@@ -83,7 +83,7 @@
                 @if (Model.CanUserEditStatus)
                 {
                     <div class="form-group @Html.ValidationCssClassFor(x => x.StatusId)">
-                        <label for="status">Status</label>
+                        <label for="StatusId" class="form-label">Status</label>
                         @Html.DropDownListFor(x => x.StatusId, Model.Statuses, "", new { @class = "form-control" })
                     </div>
                 }
@@ -107,8 +107,8 @@
                 @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.ChildrensCentresGroup))
                 {
                     <div class="form-group">
-                        <label>Address</label>
-                        <input type="text" value="@Model.Address" class="form-control" disabled="disabled" />
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" value="@Model.Address" class="form-control" disabled="disabled" id="address" />
                         @Html.HiddenFor(x => x.Address)
                     </div>
                 }
@@ -116,7 +116,7 @@
                 @if (Model.GroupType == L.ChildrensCentresGroup)
                 {
                     <div class="form-group @Html.ValidationCssClassFor(x => x.ManagerEmailAddress)">
-                        <label for="name">Group manager email</label>
+                        <label for="ManagerEmailAddress" class="form-label">Group manager email</label>
                         @Html.ValidationMessageFor(x => x.ManagerEmailAddress)
                         @Html.TextBoxFor(x => x.ManagerEmailAddress, new { @class = "form-control" })
                     </div>
@@ -125,15 +125,15 @@
                 @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
                 {
                     <div class="form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
-                        <label for="name">Local authority</label>
+                        <label for="localAuthorityId" class="form-label">Local authority</label>
                         @Html.ValidationMessageFor(x => x.LocalAuthorityId)
                         @if (Model.IsLocalAuthorityEditable)
                         {
-                            @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new { @class = "form-control" })
+                            @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new { @class = "form-control", id="localAuthorityId" })
                         }
                         else
                         {
-                            <input value="@(Model.LocalAuthorityName)" disabled="disabled" class="form-control" />
+                            <input value="@(Model.LocalAuthorityName)" disabled="disabled" class="form-control" id="localAuthorityId" />
                             @Html.HiddenFor(x => x.LocalAuthorityName)
                             @Html.HiddenFor(x => x.LocalAuthorityId)
                         }
@@ -144,17 +144,17 @@
                 @if (Model.GroupUId.HasValue)
                 {
                     <div class="form-group">
-                        <label>UID</label>
-                        <input value="@Model.GroupUId" disabled="disabled" class="form-control" />
+                        <label for="groupUID" class="form-label"><abbr title="Unique Identifier">UID</abbr></label>
+                        <input value="@Model.GroupUId" disabled="disabled" class="form-control" id="groupUID" />
                     </div>
                 }
 
                 @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.SchoolSponsor))
                 {
                     <div class="form-group @Html.ValidationCssClassFor(x => x.GroupId)">
-                        <label for="groupid">Group ID</label>
+                        @Html.LabelFor(x => x.GroupId)
                         @Html.ValidationMessageFor(x => x.GroupId)
-                        @Html.TextBoxFor(x => x.GroupId, new { @class = "form-control", maxlength = 120, id = "groupid" })
+                        @Html.TextBoxFor(x => x.GroupId, new {@class = "form-control", maxlength = 120})
                     </div>
                 }
 
@@ -177,7 +177,7 @@
                 <br />
 
                 <button type="submit" name="action" class="button mobile-full-width" id="edit-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Save" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
-                @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-grey cancel mobile-full-width" })
+                @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-secondary cancel mobile-full-width" })
             </div>
         </div>
 
@@ -205,7 +205,7 @@
         });
 
         (function () {
-           var canProceed = false;
+            var canProceed = false;
             var $modalCancels = $("[id|='warning-exit-overlay'], [id|='overlay-cancel']");
             var $modalProceeds = $("[id|='overlay-proceed']");
 
@@ -263,13 +263,6 @@
         }());
 
         (function () {
-            if ("@Request.HttpMethod" == "GET") {
-                $("button[type=submit]").prop("disabled", true);
-                $("select:enabled,input:enabled,textarea:enabled").on("change keyup", function () {
-                    $("button[type=submit]").prop("disabled", false);
-                });
-            }
-
             var $closedDateInputs = $(".closed-date input[type='text']");
             var $statusSelector = $("select#StatusId");
 
@@ -280,8 +273,15 @@
                 f();
                 $statusSelector.on("change", f);
             }
-
         })();
+
+        $(document).ready(function() {
+            // Focus on main CTA when modal is available
+            if ($("[id|='warning-modal-content']").length > 0) {
+                var idInt = $("[id|='warning-modal-content']").attr('id').split('-').slice(-1);
+                $('#overlay-proceed-'+idInt).focus();
+            }
+        });
 
     </script>
 }

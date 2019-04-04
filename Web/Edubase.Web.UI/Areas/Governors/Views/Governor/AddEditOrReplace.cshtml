@@ -92,7 +92,7 @@
             <text>Add</text>
         }
     </button>
-    @Html.ActionLink("Cancel", "Edit", "Governor", new { area = "Governors", groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, new { @class = "button button-grey" })
+    @Html.ActionLink("Cancel", "Edit", "Governor", new { area = "Governors", groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, new { @class = "button button-secondary" })
 }
 
 @section ViewScripts
@@ -143,21 +143,6 @@
                     }
                 });
             }
-
-            (function () { // disable the save button when the mandatory fields aren't populated
-                var $saveButton = $("#save-button");
-                var fields = ["#FirstName", "#LastName", "#AppointingBodyId", "#EmailAddress", "#TelephoneNumber"];
-                var validate = function () {
-                    return fields.some(function (x) {
-                        var $el = $(x);
-                        return $el.length == 1 && $.trim($el.val()) == "";
-                    });
-                };
-                var toggle = function () { $saveButton.prop("disabled", validate()); };
-                $saveButton.prop("disabled", true);
-                $("input,select").on("keyup change", toggle);
-            })();
-
 
             $(".choose-governor").on("change", function () {
 

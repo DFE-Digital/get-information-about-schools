@@ -56,21 +56,26 @@ table tbody .url {
   word-break: break-all;
 }
 
+.table-tight {
+  .table-tight--break-word {
+    word-break: break-all;
+  }
+}
 
 .borderless {
     width: 100%;
-       
-    th, td { 
+
+    th, td {
         border : none;
         font-size: 14px;
     }
     @media(min-width: 640px) {
-        width: 60%;        
+        width: 60%;
     }
 }
 
 .borderless.no-padding {
-    th, td { 
+    th, td {
         padding:0;
     }
 }
@@ -103,22 +108,6 @@ table tbody .url {
             padding: 8px 0 8px 6px;
         }
     }
-    // links table
-    .links-urn {
-        width: 16%;
-    }
-
-    .links-name {
-        width: 35%;
-    }
-
-    .links-type {
-        width: 23%;
-    }
-
-    .links-date {
-        width: 16%;
-    }
 
     @include media(mobile) {
         thead {
@@ -144,7 +133,7 @@ table tbody .url {
 
 
             &:before {
-                content: attr(aria-label);
+                content: attr(data-label);
                 float: left;
                 font-weight: bold;
                 padding-right: 0.5em;
@@ -176,19 +165,6 @@ table tbody .url {
         padding-top: 12px;
     }
 
-    thead th {
-        padding-bottom: 0;
-        padding-top: 18px;
-
-        &.multi-line {
-            padding-top: 8px;
-        }
-
-        a {
-            padding-bottom: 8px;
-        }
-    }
-
     thead .cell-checkbox {
         height: auto;
     }
@@ -209,7 +185,7 @@ table tbody .url {
 
         @media(max-width: 940px) {
             &:after {
-                content: attr(aria-label);
+                content: attr(data-label);
                 position: relative;
                 top: 14px;
                 left: 44px;
@@ -221,19 +197,20 @@ table tbody .url {
         }
     }
 
-    .cell-urn {
+    .cell-establishmenturn,
+    .cell-establishmentlaestab {
         @include media(desktop) {
             width: 40px;
         }
     }
 
-    .cell-estab {
+    .cell-establishmentname {
         @include media(desktop) {
             width: 80px;
         }
     }
 
-    .cell-updatedfield {
+    .cell-fieldname {
         @include media(desktop) {
             width: 80px;
         }
@@ -251,19 +228,19 @@ table tbody .url {
         }
     }
 
-    .cell-edate {
+    .cell-effectivedateutc {
         @include media(desktop) {
             width: 58px;
         }
     }
 
-    .cell-rdate {
+    .cell-requesteddateutc {
         @include media(desktop) {
             width: 58px;
         }
     }
 
-    .cell-suggested {
+    .cell-originatorfullname {
         @include media(desktop) {
             width: 63px;
         }
@@ -273,7 +250,7 @@ table tbody .url {
 
 .list-table {
     border-top: 0;
-    
+
     tr:last-child {
         td {
             border-bottom: 0;
@@ -282,7 +259,7 @@ table tbody .url {
 }
 @media(max-width: 940px) {
     .changes-list-wrapper {
-        border-top: 2px $black solid;    
+        border-top: 2px $black solid;
     }
     .approval-changes {
         thead {
@@ -307,7 +284,7 @@ table tbody .url {
 
 
             &:before {
-                content: attr(aria-label);
+                content: attr(data-label);
                 float: left;
                 font-weight: bold;
                 padding-right: 0.5em;
@@ -320,7 +297,7 @@ table tbody .url {
     }
 }
 
-.retain-columns { 
+.retain-columns {
     // only suitable for tables with 2 columns as the header does not hide at mobile
     // used on data status
      @include media(mobile) {
@@ -343,11 +320,11 @@ table tbody .url {
             float: none;
             padding-left: 6px;
             width: auto !important;
-           
+
             &:before {
                 content: "";
                 display: none;
-                
+
             }
 
             &:last-child {
@@ -368,7 +345,7 @@ table tbody .url {
 
 
 .table-count {
-    
+
     margin-bottom: 12px;
 
     p {
@@ -379,10 +356,11 @@ table tbody .url {
 }
 
 
-p.table-caption {
+.table-caption {
     width: 66%;
     margin: 20px 0;
     font-size: 16px;
+    text-align: left;
     @include media(mobile) {
         width: 100%;
     }
@@ -413,11 +391,6 @@ p.table-caption {
     }
 }
 
-
-.no-bottom-margin {
-    margin-bottom: 0;
-}
-
 .helpdesk-table {
     thead th {
         font-weight: bold;
@@ -425,12 +398,6 @@ p.table-caption {
 
     .row-header {
         width: 36%;
-    }
-}
-
-.establishment-changes {
-    thead th {
-        padding-top: 0;
     }
 }
 
@@ -455,43 +422,24 @@ p.table-caption {
         }
     }
 
-    .cell-edate {
-        width: 11%;
-        padding-top: $changeTableThPadding;
-    }
-
     .cell-requesttype {
         width: 11%;
-        padding-top: $changeTableThPadding;
     }
 
-    .cell-urn {
-        width: 7%;
-    }
-
-    .cell-estab {
-        width: 17%;
-        padding-top: $changeTableThPadding;
+    .cell-groupname {
+      width: 15%;
     }
 
     .cell-change {
-        width: 44%;
-        padding-top: $changeTableThPadding;
-    }
-
-    .cell-suggested {
-        width: 12%;
-        padding-top: $changeTableThPadding;
+        width: 35%;
     }
 
     &.establishment-changes .cell-urn {
         padding-top: $changeTableThPadding;
     }
 
-    .cell-updatedfield,
     .cell-oldvalue,
-    .cell-newvalue,
-    .cell-suggested {
+    .cell-newvalue {
         padding-top: $changeTableThPadding;
     }
 
@@ -508,6 +456,11 @@ p.table-caption {
 
 
 .sortable-table {
+    thead th {
+      padding-bottom: 8px;
+      vertical-align: middle;
+    }
+
     thead a {
         text-decoration: none;
         font-weight: normal;
@@ -541,8 +494,6 @@ p.table-caption {
         font-weight: bold;
         position: relative;
         padding-right: 14px;
-        padding-bottom: 8px;
-
 
         &.sorted-asc:after {
             width: 0;
@@ -551,7 +502,7 @@ p.table-caption {
             content: '';
             right: 0;
             top: 50%;
-            margin-top: -8px;
+            margin-top: -4px;
             border-left: 4px solid transparent;
             border-right: 4px solid transparent;
             border-bottom: 7px solid $govuk-blue;
@@ -564,14 +515,10 @@ p.table-caption {
             content: '';
             right: 0;
             top: 50%;
-            margin-top: -8px;
+            margin-top: -4px;
             border-left: 4px solid transparent;
             border-right: 4px solid transparent;
             border-top: 7px solid $govuk-blue;
-        }
-
-        .multi-line & {
-            padding-right: 6px;
         }
     }
 }
@@ -608,115 +555,4 @@ p.table-caption {
 
 table.change-history {
     margin-bottom: 20px;
-}
-
-.expanding-table {
-    .not-a-link {
-        display: block;
-        padding-top: 12px;
-    }
-
-    thead th {
-        padding-top: 8px;
-
-        a {
-            padding-top: 12px;
-
-            &:after {
-                //top: 65% !important;
-            }
-        }
-
-        &.cell-edate {
-            width: 13%;
-        }
-    }
-
-    .multi-line {
-        a {
-            padding-top: 0;
-        }
-
-        .selected-sort {
-            &:after {
-                //top: 76%;
-            }
-        }
-    }
-
-    .cell-suggested {
-        width:14%;
-        a {
-            display: block;
-            max-width: 77%;
-        }
-    }
-}
-
-table.expanded-table {
-    thead th {
-        a.selected-sort.sorted-asc::after,
-        a.selected-sort.sorted-desc::after {
-            margin-top: 0;
-        }
-    }
-
-    thead th.cell-estab {
-        a.sorted-asc.selected-sort:after {
-            margin-top: -8px;
-        }
-    }
-}
-
-.multi-estab-changes {
-    .cell-oldvalue, .cell-newvalue {
-        width: 9.5%;
-    }
-
-    .cell-suggested {
-        width: 13%;
-    }
-
-    .cell-urn {
-        width: 8%;
-
-        .selected-sort:after {
-            right: 1px;
-        }
-    }
-
-    .cell-estab {
-        .selected-sort:after {
-            right: 2px;
-        }
-        
-        .sorted-desc.selected-sort:after {
-            margin-top: 0;
-        }
-    }
-
-    thead th {
-        padding-right: 3px;
-
-        a {
-            max-width: 95%;
-            display: block;
-        }
-    }
-}
-
-.group-change-history {
-    .cell-edate {
-        padding-right: 4px;
-    }
-    .cell-suggested {
-        width: 16%;
-    }
-}
-
-.establishment-changes {
-    thead .cell-updatedfield a {
-        display: block;
-        max-width: 75%;
-    }
 }

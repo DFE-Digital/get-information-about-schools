@@ -9,7 +9,7 @@
             'November', 'December'
         ];
 
-  
+
     academyOpenings = new Vue({
         el: '#academy-opening-app',
         data: {
@@ -38,7 +38,15 @@
             apiError: {},
             sortKey: 'openingDate',
             sortAscending: true,
-            recordUpdateErrors: {}
+            recordUpdateErrors: {},
+            tableColumns: {
+              openingDate: 'Opening date',
+              urn: 'URN',
+              name: 'Establishment name',
+              establishmentType: 'Establishment type',
+              predecessorUrn: 'Predecessor URN',
+              predecessorName: 'Predecessor name'
+            }
         },
         created: function () {
             this.loadData();
@@ -169,7 +177,7 @@
                     frag.appendChild(option);
                 }
 
-                
+
                 document.getElementById('opening-date-filter').appendChild(frag);
                 this.selectedDate = 0;
             },
@@ -184,7 +192,7 @@
                 }
 
                 this.pages = changesPages;
-                
+
                 this.isProcessing = false;
                 $('#content').find('.horizontal-tab').slice(0, 1).click();
             },
@@ -223,7 +231,7 @@
                         });
                     }
                 ).fail(function(jqxhr) {
-                    
+
                     if (jqxhr.hasOwnProperty('responseJSON')) {
                         self.apiError = jqxhr.responseJSON;
                     } else {
@@ -295,7 +303,7 @@
                             name: this.updateName
                         }),
                         success: function (data) {
-                            
+
                             self.loadData();
                         },
                         error: function (jqxhr) {
@@ -362,6 +370,11 @@
             cancelEditClick: function () {
                 this.recordUpdateErrors = {};
                 if (this.userHasEdited) {
+                    $(document).ready(function() {
+                        if ($('#modal-content').length > 0) {
+                            $('#button-ok').focus();
+                        }
+                    });
                     return this.presentExitWarning = true;
                 }
                 this.editRecord = false;
@@ -379,7 +392,7 @@
                 });
             }
         },
-        
+
         computed: {
             paginationDescription: function () {
                 var starting = this.currentPage * this.pageSize + 1,
@@ -405,11 +418,16 @@
          $('a').on('click', function (e) {
 
             if (academyOpenings.isUserEditing()) {
-               e.preventDefault();
-               academyOpenings.presentExitWarning = true;
+                e.preventDefault();
+                academyOpenings.presentExitWarning = true;
+                $(document).ready(function() {
+                    if ($('#modal-content').length > 0) {
+                        $('#button-ok').focus();
+                    }
+                });
             }
         });
     }
-   
+
 
 }());

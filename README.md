@@ -113,6 +113,14 @@ Olive Jar wrote the API specification and Texuna conformed to it. Should a chang
 
 Running the project for the first time is straightforward provided you have installed all the tools listed in the first page. Remember to compile the SASS/JS before running the project.
 
+- Install NodeJS
+- Install Grunt and run the following commands from within the Web.UI folder
+```
+npm install -g grunt-cli
+npm install -D load-grunt-config
+grunt compile-dev-assets
+```
+
 - The basic auth password can be found in app settings under &#39;Credentials&#39;
 - The setting &#39;win:appStartup&#39; is set to &#39;SASimulatorConfiguration&#39; for dev; this configures the  app to use the SA Simulator for authentication.  It&#39;s set to &#39;SecureAccessConfiguration&#39; for non-dev environments, so it&#39;ll use the real SA.  See C# classes &#39;StartupSASimulator&#39; and &#39;StartupSecureAccess&#39; for more details.
 - When attempting to login with the simulator, use the &#39;Edubase backoffice&#39; user, as this is the admin/root user so you&#39;ll have full permissions

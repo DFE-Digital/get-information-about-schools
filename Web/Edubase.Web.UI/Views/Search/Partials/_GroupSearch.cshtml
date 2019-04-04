@@ -1,4 +1,4 @@
-﻿@using Edubase.Web.UI.Models.Search;
+@using Edubase.Web.UI.Models.Search;
 @using eStatus = Edubase.Services.Enums.eLookupEstablishmentStatus;
 @using VM = Edubase.Web.UI.Models.Search.SearchViewModel;
 @using Edubase.Web.UI.Helpers;
@@ -14,12 +14,14 @@
 {
     @Html.HiddenFor(m => m.SelectedTab)
     <fieldset>
-        <legend>Search by:</legend>
+        <legend>
+            <h2 class="heading-small flush--top">Search by:</h2>
+        </legend>
         <ul>
             <li class="search-type-wrapper">
                 <fieldset class="search-toggle-panel">
                     <span class="radio-button-wrap">
-                        <input id="searchtype-name-group" name="search-by" value="all" type="radio" data-toggle-panel="#searchby-group-ref">
+                        @Html.RadioButtonFor(m => m.SearchType, eSearchType.Group, new { id = "searchtype-name-group", name="search-by", value="all", data_toggle_panel = "#searchby-group-ref" })
                         <label class="edubase-button-radio" for="searchtype-name-group">
                             Name or reference number
                         </label>
@@ -27,14 +29,25 @@
 
                     <div class="expanding-search-field" id="searchby-group-ref">
                         <div class="edubase-search-element with-typeahead has-typeahead" id="group-search-container">
-                            <label class="form-label">
-                                Name, Companies House number, Group UID or ID
+                            @* This alert gets dynamically populated *@
+                            <div class="warning-message visuallyhidden" role="alert">
+                                <p class="message-text" aria-live="polite"></p>
+                            </div>
+                            @if (Model.SearchType == eSearchType.Group && Model.NoResults)
+                            {
+                            @* Static alert for no search results *@
+                                <div role="alert" class="warning-message js-trigger-aria-live">
+                                    <p class="warning-message-text" aria-live="polite">We couldn't find any establishment groups matching your search criteria</p>
+                                </div>
+                            }
+                            <label class="form-label" for="GroupSearchModel_Text">
+                                Enter name, Companies House number, Group <abbr title="Unique Identifier">UID</abbr> or ID
                                 <a href="#group-reference" class="icon-help">
                                     <span class="visuallyhidden">About reference numbers</span>
                                 </a>
                             </label>
                             <div class="form-group">
-                                @Html.TextBoxFor(x => x.GroupSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=", maxlength = "200" })
+                                @Html.TextBoxFor(x => x.GroupSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=", maxlength = "200", aria_describedby="group-reference" })
                             </div>
 
                             @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
@@ -48,12 +61,13 @@
                     </div>
                 </fieldset>
             </li>
-        </ul>
 
-        <p>or</p>
-        <ul>
+            <li aria-hidden="true">
+                <p>or</p>
+            </li>
+
             <li class="search-type-wrapper">
-                
+
                     <fieldset class="search-toggle-panel">
                         <span class="radio-button-wrap">
                             <input id="searchtype-all-groups" name="search-by" value="all" type="radio" data-toggle-panel="#searchby-allgroups-ref">

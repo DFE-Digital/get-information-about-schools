@@ -1,4 +1,4 @@
-﻿@using Edubase.Common;
+@using Edubase.Common;
 @model GovernorSearchViewModel
 @{
     ViewBag.Title = string.Format("Governor search results");
@@ -10,11 +10,11 @@
 
 <div class="grid-row">
     <div class="column-full results-heading">
-        <div class="breadcrumbs">            
-            @Html.ActionLink("Back to find a governor", "Index", "Search", new { area = "", SelectedTab = "Governors", gsearch = gSearch }, null)                        
+        <div class="breadcrumbs">
+            @Html.ActionLink("Back to find a governor", "Index", "Search", new { area = "", SelectedTab = "Governors", gsearch = gSearch }, null)
         </div>
         <h1 class="heading-xlarge">Search results</h1>
-        <a class="download-link @(Model.Count > 5000 ? "prevent-download": "")" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()">Download these search results</a>        
+        <a class="download-link @(Model.Count > 5000 ? "prevent-download": "")" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()">Download these search results</a>
     </div>
     <div class="column-full">
         <div class="warning-message @Html.Conditional(!Model.SelectedLocalAuthorityIds.Any(), "hidden")" id="gov-la-warning">
@@ -59,10 +59,8 @@
                 }
                 <text>roles <span class="governor-roles">@Html.Raw(Model.RoleNames)</span></text>
                 }
-
-
-        </p>
-    </div>
+            </p>
+        </div>
     </div>
 }
 
@@ -70,22 +68,26 @@
 
     <div class="column-third">
         <div class="filter-form" id="filter-form">
-            <div id="EditSearchCollapse" aria-expanded="true" class="blanket-container">
+            <div id="EditSearchCollapse" class="blanket-container">
+                <h2 class="visuallyhidden">Search results filters</h2>
                 <form method="get" action="@Url.Action("Index", "GovernorSearch", new {area = "Governors"})">
-                    <input type="hidden" id="client-only-searchtype" value="Governors" />
+                    <input type="hidden" id="client-only-searchtype" value="GovernorsAll" />
+
                     <div class="govuk-option-select js-collapsible"
-                         id="option-select-sort-by">
+                         id="option-select-sort-by" role="search">
                         <div class="container-head js-container-head">
                             <div class="option-select-label">Sort by</div>
-                            <div class="js-selected-counter"></div>
                         </div>
-                        <select class="form-control trigger-result-update" name="SortBy">
-                            <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalAZ, "selected")>alphabetical a-z</option>
-                            <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>alphabetical z-a</option>
-                        </select>
+                        <div class="options-container">
+                            <label for="sortBy" class="visuallyhidden">Sort by</label>
+                            <select class="form-control trigger-result-update push-half--top" name="SortBy" id="sortBy">
+                                <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
+                                <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="govuk-option-select js-collapsible" id="option-select-role-type">
+                    <div class="govuk-option-select js-collapsible" id="option-select-role-type" role="search">
                         <div class="container-head js-container-head">
                             <div class="option-select-label">Role</div>
                             <div class="js-selected-counter">
@@ -97,7 +99,7 @@
                                 <fieldset>
                                     <legend class="visuallyhidden">Select an option below to filter the results</legend>
                                     <div class="filter-wrapper select-all-wrap">
-                                        <input id="govrole_all" class="filter-input select-all" type="checkbox"/>
+                                        <input id="govrole_all" class="filter-input select-all" type="checkbox" />
                                         <label for="govrole_all" class="filter-radio">
                                             All
                                         </label>
@@ -105,7 +107,7 @@
                                     @foreach (var item in Model.GovernorRoles.OrderBy(x => x.Name))
                                     {
                                         <div class="filter-wrapper">
-                                            <input name="@GovernorSearchViewModel.BIND_ALIAS_ROLE_ID" class="trigger-result-update filter-input" value="@item.Id" id="role_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedRoleIds.Contains(item.Id), "checked")/>
+                                            <input name="@GovernorSearchViewModel.BIND_ALIAS_ROLE_ID" class="trigger-result-update filter-input" value="@item.Id" id="role_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedRoleIds.Contains(item.Id), "checked") />
                                             <label for="role_@item.Id" class="filter-radio">
                                                 @item
                                             </label>
@@ -117,7 +119,7 @@
                         </div>
                     </div>
 
-                    <div class="govuk-option-select js-collapsible" id="option-select-group-type">
+                    <div class="govuk-option-select js-collapsible" id="option-select-group-type" role="search">
                         <div class="container-head js-container-head">
                             <div class="option-select-label">Establishment/group type</div>
                             <div class="js-selected-counter">
@@ -129,7 +131,7 @@
                                 <fieldset>
                                     <legend class="visuallyhidden">Select an option below to filter the results</legend>
                                     <div class="filter-wrapper select-all-wrap">
-                                        <input id="grouptype_all" class="filter-input select-all" type="checkbox"/>
+                                        <input id="grouptype_all" class="filter-input select-all" type="checkbox" />
                                         <label for="grouptype_all" class="filter-radio">
                                             All
                                         </label>
@@ -137,7 +139,7 @@
                                     @foreach (var item in Model.GovernorTypeFlags.OrderBy(x => x.Name))
                                     {
                                         <div class="filter-wrapper">
-                                            <input name="g" class="trigger-result-update filter-input" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGovernorTypeFlagIds.Contains(item.Id), "checked")/>
+                                            <input name="g" class="trigger-result-update filter-input" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGovernorTypeFlagIds.Contains(item.Id), "checked") />
                                             <label for="group-type_@item.Id" class="filter-radio">
                                                 @item
                                             </label>
@@ -148,14 +150,14 @@
                         </div>
 
                     </div>
-                    
+
                     @Selector("Local authority", GovernorSearchViewModel.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds, filterRefine: true, isExtraFilter: true)
 
                     <div id="filter-addtional-controls">
-                        <a href="#" class="add-clear-filters" id="clear-filters">Clear all filters</a>
+                        <a href="#" class="add-clear-filters" id="clear-filters" role="search">Clear all filters</a>
                     </div>
 
-                    <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit"/>
+                    <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
                     @Html.HiddenFor(!Model.GovernorSearchModel.Forename.IsEmpty(), x => x.GovernorSearchModel.Forename)
                     @Html.HiddenFor(!Model.GovernorSearchModel.Surname.IsEmpty(), x => x.GovernorSearchModel.Surname)
                     @Html.HiddenFor(Model.GovernorSearchModel.IncludeHistoric, x => x.GovernorSearchModel.IncludeHistoric)
@@ -165,6 +167,8 @@
         </div>
     </div>
 
+    <div role="alert" aria-live="assertive" id="results-notification" class="visuallyhidden"></div>
+    <h2 class="visuallyhidden">Search results listing</h2>
     <div class="column-two-thirds" id="results-container">
 
         @{Html.RenderPartial("Partials/_GovernorSearchResults");}
@@ -177,19 +181,19 @@
 {
     <script language="javascript">
         DfE.searchResults.init();
-        $('#filter-form').find('.searchable-filters').searchWithinFilters(); 
+        $('#filter-form').find('.searchable-filters').searchWithinFilters();
     </script>
 }
 
 
-@helper SearchWithin()
+@helper SearchWithin(string label)
 {
     <div class="search-field-wrap">
         <label class="filter-searchwithin-label">
-            <span class="visually-hidden">Search within this filter</span>
+            <span class="visually-hidden">Search within @label filter</span>
             <input type="text" class="filter-search" />
             <button class="field-clear hidden"><span class="visually-hidden">Clear</span></button>
-        </label>        
+        </label>
     </div>
 }
 
@@ -200,17 +204,18 @@
         additionalClassName = additionalClassName.RemoveSubstring("hidden");
     }
     <div class="govuk-option-select js-collapsible @additionalClassName @Html.Conditional(filterRefine, "searchable-filters")" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
-         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
+         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name"
+         role="search">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter">
                 <span class="js-selected-counter-text"></span>
-                
+
             </div>
         </div>
         @if (filterRefine)
         {
-            @SearchWithin()
+            @SearchWithin(@label)
         }
         <div class="options-container" id="">
             <div class="suggestion-target"></div>

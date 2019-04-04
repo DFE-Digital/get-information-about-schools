@@ -10,7 +10,7 @@
         </li>
         <li>
             @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
-        </li>        
+        </li>
     </ul>
 </div>
 
@@ -25,7 +25,7 @@
             made changes to their records and what was changed.
         </p>
     </div>
-        
+
     <div class="column-full">
         <div class="horizontal-tabs-wrapper">
             <div class="tab-wrap search-tabs">
@@ -42,10 +42,13 @@
             </div>
 
             <div class="tab-content-wrapper horizontal-tabs-content">
-                <div id="establishments" class="tab-content @((Model.SelectedTab != ChangeHistoryViewModel.Tab.Establishments) ? "hidden-tab-content" : "")" aria-hidden="@(Model.SelectedTab != ChangeHistoryViewModel.Tab.Establishments)">
+                @if (Model.SelectedTab == ChangeHistoryViewModel.Tab.Establishments) {
+                <div id="establishments" class="tab-content">
 
                     <fieldset class="search-types-accordion">
-                        <legend>Search by:</legend>
+                        <legend>
+                            <h2 class="heading-small flush--top">Search by:</h2>
+                        </legend>
 
                         <ul class="search-type-list has-typeahead">
                             <li class="search-type-wrapper">
@@ -53,28 +56,33 @@
                                 {
                                     @Html.HiddenFor(m => m.SelectedTab)
                                     <fieldset class="search-toggle-panel">
-                                        <legend class="visually-hidden">Search by name of reference number</legend>
-                                        <span class="radio-button-wrap">                        
+                                        <legend class="visually-hidden">Search by name or reference number</legend>
+                                        <span class="radio-button-wrap">
                                             @Html.RadioButtonFor(m => m.SearchType, eSearchType.Text, new { id = "searchtype-name", data_toggle_panel = "#searchby-name-ref" })
                                             <label class="edubase-button-radio" for="searchtype-name">
                                                 Name or reference number
                                             </label>
                                         </span>
                                         <div class="expanding-search-field" id="searchby-name-ref">
+                                            @* This alert gets dynamically populated *@
+                                            <div class="warning-message visuallyhidden" role="alert">
+                                                <p class="message-text" aria-live="polite"></p>
+                                            </div>
                                             @if (Model.NoResultsForName)
                                             {
-                                                <div class="warning-message">
-                                                    <p>We couldn't find any establishments matching your search criteria</p>
+                                                @* Static alert for no search results *@
+                                                <div role="alert" class="warning-message js-trigger-aria-live">
+                                                    <p class="message-text" aria-live="polite">We couldn't find any establishments matching your search criteria</p>
                                                 </div>
                                             }
-                                            <span class="search-hint">
-                                                Name, URN, LAESTAB or UKPRN
+                                            <label class="form-label" for="TextSearchModel_Text">
+                                                Enter name, <abbr title="Unique Reference Number">URN</abbr>, LAESTAB or UKPRN
                                                 <a href="#name-reference-help" class="icon-help">
                                                     <span class="visuallyhidden">About reference numbers</span>
                                                 </a>
-                                            </span>
+                                            </label>
                                             <div class="form-group">
-                                                @Html.TextBoxFor(x => x.TextSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggest?text=" })
+                                                @Html.TextBoxFor(x => x.TextSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggest?text=", aria_describedby="name-reference-help" })
                                             </div>
                                             @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
                                             <div class="form-group">
@@ -85,14 +93,16 @@
 
                                 }
                             </li>
-                        </ul>
-                        <p>or</p>
-                        <ul>
+
+                            <li aria-hidden="true">
+                                <p>or</p>
+                            </li>
+
                             <li class="search-type-wrapper">
                                 @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
                                 {
                                     <fieldset class="search-toggle-panel">
-                                        <legend class="visually-hidden">Search by name of reference number</legend>
+                                        <legend class="visually-hidden">Search all establishments</legend>
                                         <span class="radio-button-wrap">
                                             @Html.HiddenFor(m => m.SelectedTab)
                                             @Html.RadioButtonFor(m => m.SearchType, eSearchType.EstablishmentAll, new { id = "searchtype-all", data_toggle_panel = "#searchby-all-ref" })
@@ -107,30 +117,30 @@
                                                     <p>We couldn't find any establishments matching your search criteria</p>
                                                 </div>
                                             }
-                                            <fieldset class="inline-date-type-radios">
-                                                <legend class="visually-hidden">Select a date type</legend>
+                                            <fieldset class="stacked-date-type-radios">
+                                                <legend class="visually-hidden">Select the change type</legend>
                                                 <span class="radio-button-wrap">
                                                     @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED, new {id = "datefiltermode-applied"})
                                                     <label class="edubase-button-radio" for="datefiltermode-applied">
-                                                        Applied
+                                                        Applied: The date the change was proposed in GIAS
                                                     </label>
                                                 </span>
 
                                                 <span class="radio-button-wrap">
                                                     @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_APPROVED, new {id = "datefiltermode-approved"})
                                                     <label class="edubase-button-radio" for="datefiltermode-approved">
-                                                        Approved
+                                                        Approved: The date the change  was approved
                                                     </label>
                                                 </span>
 
                                                 <span class="radio-button-wrap">
                                                     @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE, new {id = "datefiltermode-effective"})
                                                     <label class="edubase-button-radio" for="datefiltermode-effective">
-                                                        Effective
+                                                        Effective: The date the change occurred
                                                     </label>
                                                 </span>
                                             </fieldset>
-                                             
+
 
                                             <div class="column-two-thirds">
                                                 <div class="date-group-wrap">
@@ -138,7 +148,7 @@
                                                 </div>
                                                 <div class="date-group-wrap">
                                                     @Html.EditorFor(x => x.DateFilterTo, new { title = "To (optional)" })
-                                                </div>                                                
+                                                </div>
                                             </div>
                                             @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
                                             <div class="form-group">
@@ -152,9 +162,14 @@
                         </ul>
                     </fieldset>
                 </div>
-                <div id="groups" class="tab-content @((Model.SelectedTab != ChangeHistoryViewModel.Tab.Groups) ? "hidden-tab-content" : "")" aria-hidden="@(Model.SelectedTab != ChangeHistoryViewModel.Tab.Groups)">
+                }
+                @if (Model.SelectedTab == ChangeHistoryViewModel.Tab.Groups)
+                {
+                <div id="groups" class="tab-content">
                     <fieldset>
-                        <legend>Search by:</legend>
+                        <legend>
+                            <h2 class="heading-small flush--top">Search by:</h2>
+                        </legend>
                         <ul>
                             <li class="search-type-wrapper">
                                 @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
@@ -168,36 +183,43 @@
                                             </label>
                                         </span>
                                         <div class="expanding-search-field" id="searchby-group-ref">
-                                            @if (Model.GroupSearchError)
-                                            {
-                                                <div class="warning-message">
-                                                    <p>We couldn't find any establishments matching your search criteria</p>
-                                                </div>
-                                            }
                                             <div class="edubase-search-element with-typeahead has-typeahead" id="group-search-container">
-                                                <label class="form-label">
-                                                    Name, Companies House number, Group UID or ID
+                                                @* This alert gets dynamically populated *@
+                                                <div class="warning-message visuallyhidden" role="alert">
+                                                    <p class="message-text" aria-live="polite"></p>
+                                                </div>
+                                                @if (Model.GroupSearchError)
+                                                {
+                                                    @* Static alert for no search results *@
+                                                    <div role="alert" class="warning-message js-trigger-aria-live">
+                                                        <p class="message-text" aria-live="polite">We couldn't find any establishment groups matching your search criteria</p>
+                                                    </div>
+                                                }
+                                                <label class="form-label" for="GroupSearchModel_Text">
+                                                    Enter name, Companies House number, Group <abbr title="Unique Identifier">UID</abbr> or ID
                                                     <a href="#group-reference" class="icon-help">
                                                         <span class="visuallyhidden">About reference numbers</span>
                                                     </a>
                                                 </label>
                                                 <div class="form-group">
-                                                    @Html.TextBoxFor(x => x.GroupSearchModel.Text, new {@class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text="})
+                                                    @Html.TextBoxFor(x => x.GroupSearchModel.Text, new {@class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=", aria_describedby="group-reference"})
                                                 </div>
 
                                                 @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
-                                            </div>
-                                            <div class="form-group">
-                                                <button type="submit" id="group-search-submit" class="button mobile-full-width search-button">Search</button>
+                                                <div class="form-group">
+                                                    <button type="submit" id="group-search-submit" class="button mobile-full-width search-button">Search</button>
+                                                </div>
                                             </div>
 
                                         </div>
                                     </fieldset>
                                 }
                             </li>
-                        </ul>
-                        <p>or</p>
-                        <ul>
+
+                            <li aria-hidden="true">
+                                <p>or</p>
+                            </li>
+
                             <li class="search-type-wrapper">
                                 @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
                                 {
@@ -228,6 +250,7 @@
                         </ul>
                     </fieldset>
                 </div>
+                }
             </div>
         </div>
     </div>
@@ -241,16 +264,13 @@
 @section ViewScripts
 {
     <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
-    
+    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
+
     <script>
         (function() {
-            $('.edubase-button-radio').on('click', function () {
-                $('.warning-message').addClass('hidden');
-            });
-
             DfE.Views.schoolSearch.init({ highlightFirstSuggestion: true });
-        }());        
+        }());
     </script>
-    
+
 }
 

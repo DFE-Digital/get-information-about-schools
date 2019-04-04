@@ -1,5 +1,5 @@
-﻿@model EditGroupDelegationInformationViewModel
-    
+@model EditGroupDelegationInformationViewModel
+
 @{
     ViewBag.hideLogo = true;
     ViewBag.SelectedTab = "EditGovernance";
@@ -13,16 +13,16 @@
         {
             @Html.HiddenFor(m => m.GroupUId)
             <h2 class="heading-small">Delegated authority of local governing body</h2>
-            <div class="edit-governor">                
-                <div class="form-group">
+            <div class="edit-governor">
+                <div class="form-group @Html.ValidationCssClassFor(x => x.DelegationInformation)">
                     @Html.LabelFor(x => x.DelegationInformation, new {@class = "form-label"})
-
+                    @Html.ValidationMessageFor(x => x.DelegationInformation, "Details must be 1000 characters or less")
                     @Html.TextAreaFor(x => x.DelegationInformation, new {rows = "6", cols = "60", @class="form-control"})
                 </div>
 
                 <div class="button-row">
                     <button type="submit" value="Save" class="button mobile-full-width">Save</button>
-                    <a href="@Url.RouteUrl("GroupEditGovernance", new {GroupUId = Model.GroupUId})" class="button button-grey mobile-full-width">Cancel</a>
+                    <a href="@Url.RouteUrl("GroupEditGovernance", new {GroupUId = Model.GroupUId})" class="button button-secondary mobile-full-width">Cancel</a>
                 </div>
             </div>
         }
@@ -33,15 +33,5 @@
 {
     <script>
         $('#DelegationInformation').textCount();
-
-        (function () {
-            if ("@Request.HttpMethod" == "GET") {
-                var initialValue = $.trim($("textarea").val());
-                $("button[type=submit]").prop("disabled", true);
-                $("textarea").on("change keyup", function () {
-                    $("button[type=submit]").prop("disabled", initialValue == $.trim($("textarea").val()));
-                });
-            }
-        })();
     </script>
 }

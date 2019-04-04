@@ -1,21 +1,21 @@
 ﻿@model EstablishmentDetailViewModel
-@{ 
+@{
     var p = Model.DisplayPolicy.IEBTDetail;
 }
 
 <div id="school-iebt" class="tab-content">
     @if (Model.UserCanEdit)
     {
-            @Html.ActionLink("Edit", "EditIEBT", "Establishment", null,new { @class = "button button-grey mobile-full-width" })
+            @Html.ActionLink("Edit IEBT", "EditIEBT", "Establishment", null,new { @class = "button button-secondary mobile-full-width" })
     }
-    
-    <div class="detail-summary">              
+
+    <div class="detail-summary">
         @if (p.Notes)
         {
             <h2 class="heading-small">Notes</h2>
             <div>@(Model.Establishment.IEBTModel.Notes ?? "Not recorded")</div>
         }
-        
+
         @if (p.Associations)
         {
             <h2 class="heading-small">Associations</h2>
@@ -109,7 +109,7 @@
                 <dd>@(Model.Establishment.IEBTModel.CharityRegistrationNumber?.ToString() ?? "Not recorded")</dd>
             }
         </dl>
-            
+
         <dl>
             @if (p.TotalNumberOfFullTimePupils)
             {
@@ -270,7 +270,7 @@
         <dl>
             <dt>Boarding establishment:</dt>
             <dd>@(Model.BoardingEstabName ?? "Not recorded")</dd>
-            
+
 
             @if (Model.DisplayPolicy.ProprietorName)
             {
@@ -358,11 +358,11 @@
         </dl>
 
     </div>
-    
+
 @if (Model.UserCanEdit)
 {
     <div class="button-row">
-        @Html.ActionLink("Edit", "EditIEBT", "Establishment", null,new { @class = "button button-grey mobile-full-width" })
+        @Html.ActionLink("Edit IEBT", "EditIEBT", "Establishment", null,new { @class = "button button-secondary mobile-full-width" })
     </div>
 }
 

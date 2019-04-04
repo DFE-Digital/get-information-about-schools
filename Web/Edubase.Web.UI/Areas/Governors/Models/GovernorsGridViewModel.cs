@@ -80,7 +80,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public IEnumerable<LookupDto> Nationalities { get; private set; }
         public IEnumerable<LookupDto> AppointingBodies { get; private set; }
-        
+
         public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groupUId, int? establishmentUrn, NomenclatureService nomenclatureService, IEnumerable<LookupDto> nationalities, IEnumerable<LookupDto> appointingBodies)
         {
             _nomenclatureService = nomenclatureService;
@@ -92,7 +92,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             EstablishmentUrn = establishmentUrn;
             CreateGrids(dto, dto.CurrentGovernors, false, groupUId, establishmentUrn);
             CreateGrids(dto, dto.HistoricalGovernors, true, groupUId, establishmentUrn);
-            AlignGrids();
         }
 
         public GovernorsGridViewModel()
@@ -125,7 +124,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
                 var displayPolicy = dto.RoleDisplayPolicies.Get(role);
                 Guard.IsNotNull(displayPolicy, () => new Exception($"The display policy should not be null for the role '{role}'"));
-                bool includeEndDate = ((isHistoric && role == GR.Member || role != GR.Member) && displayPolicy.AppointmentEndDate) || 
+                bool includeEndDate = ((isHistoric && role == GR.Member || role != GR.Member) && displayPolicy.AppointmentEndDate) ||
                                        (role.OneOfThese(GR.ChiefFinancialOfficer, GR.AccountingOfficer) && isHistoric);
 
                 SetupHeader(role, grid, displayPolicy, includeEndDate);
@@ -202,7 +201,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="viewModel">Target grid</param>
         /// <param name="maxAmount">Hard max of how many to add</param>
@@ -235,28 +234,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                         foreach (var row in grid.Rows) row.Cells.Insert(index.Value, new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = "sortText" });
                     }
                     addedCount++;
-                }
-            }
-        }
-
-        private void AlignGrids()
-        {
-            int maxCols = 5;
-
-            foreach (var grid in Grids)
-            {
-                if (grid.Rows.Any())
-                {
-                    var lastIndex = grid.HeaderCells.Count - 1;
-                    if(grid.HeaderCells[lastIndex].Text == "From")
-                    {
-                        AddEmptyCells(grid, maxCols, 1); // adds one to the end
-                        AddEmptyCells(grid, maxCols, null, lastIndex); // add * before 'from'
-                    }
-                    else if (grid.HeaderCells[lastIndex].Text == "To")
-                    {
-                        AddEmptyCells(grid, maxCols, null, lastIndex - 1);  // add * before 'from'
-                    }
                 }
             }
         }

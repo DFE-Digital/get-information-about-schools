@@ -62,14 +62,14 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
                     var retVal = azureMapsResponse.results
                         .Where(result => result.type != "Cross Street"
                                          && !(result.entityType != null && result.entityType == "CountrySecondarySubdivision"))
-                        .Select(x => new PlaceDto(GetAddressDescription(x), new LatLon(x.position.lat, x.position.lon)))
+                        .Select(x => new PlaceDto(GetAddressDescription(x, text), new LatLon(x.position.lat, x.position.lon)))
                         .ToArray();
 
                     // If the search string is a postcode and none of the returned results contain the given post code, then return zero results, so that the search is deferred to OS places.
                     if (text.IsUkPostCode())
                     {
                         var postCode = text.Remove(" ").ToLower();
-                        if (!retVal.Any(x => (x.Name ?? "").ToLower().Remove(" ").Contains(postCode)))
+                        if (!retVal.Any(x => (x.Name ?? "").ToLower().Remove(" ").Contains("," + postCode.Remove(" "))))
                         {
                             return new PlaceDto[0];
                         }
@@ -80,7 +80,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
             }
         }
 
-        private static string GetAddressDescription(Result locationResult)
+        private static string GetAddressDescription(Result locationResult, string text)
         {
             var output = "";
 
@@ -91,6 +91,22 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
             else
             {
                 output = locationResult.address.freeformAddress;
+            }
+
+            // if a location shares multiple postcodes, azure does not include it within the normal freeformaddress. So we need to build the appropriate address.
+            if (locationResult.address.postalCode != null && !output.Contains(locationResult.address.postalCode.Split(',')[0]))
+            {
+                if (text.IsUkPostCode())
+                {
+                    if (locationResult.address.extendedPostalCode.ToLower().Remove(" ").Contains(text.ToLower().Remove(" ")))
+                    {
+                        output += $", {text.ToUpper()}";
+                    }
+                    else
+                    {
+                        output += $", {locationResult.address.postalCode.Split(',')[0]}";
+                    }
+                }
             }
 
             return $"{output}, {locationResult.address.countrySecondarySubdivision}";

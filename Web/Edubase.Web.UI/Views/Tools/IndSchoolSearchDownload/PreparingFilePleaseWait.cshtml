@@ -20,11 +20,11 @@
     <div class="column-full">
         <h1 class="heading-xlarge">Download</h1>
     </div>
-    <div class="download-step">        
+    <div class="download-step">
         <div class="column-two-thirds">
             <h2 class="bold-medium">@ViewBag.Subtitle</h2>
             <p class="font-small">Preparing your requested data. Large files may take some time to download.</p>
-                      
+
         </div>
         <div class="column-full">
             <div class="progress-indicator">
@@ -34,20 +34,20 @@
         <div class="column-full">
             <div class="button-row">
                 <br/>
-                @Html.RouteLink("« Go back", "IndSchSearch", null, new {@class = "button button-grey mobile-full-width back-to-indi" })
-            </div>        
+                @Html.RouteLink("« Go back", "IndSchSearch", null, new {@class = "button button-secondary mobile-full-width back-to-indi" })
+            </div>
         </div>
-    </div>    
+    </div>
 </div>
 
-@section ViewScripts 
+@section ViewScripts
 {
     <script>
         $('.back-to-indi').on('click', function(e) {
             e.preventDefault();
             window.history.go(-1);
         })
-    </script>    
+    </script>
 }
 
 

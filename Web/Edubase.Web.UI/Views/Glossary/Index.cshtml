@@ -1,4 +1,4 @@
-﻿@model GlossaryViewModel
+@model GlossaryViewModel
 @{
     ViewBag.Title = "GIAS: Glossary";
 }
@@ -23,9 +23,9 @@
     <div class="column-full">
         @if (Model.UserCanEdit)
         {
-            @Html.RouteLink("New Entry", "CreateGlossaryItem",null,  new {@class ="plus-link"})
+            @Html.RouteLink("New Entry", "CreateGlossaryItem", null, new { @class = "plus-link" })
         }
-        
+
         <ul class="chevron-accordion">
             <li class="controls">
                 <button href="#" class="button-as-link open-all-panels">Open all</button>
@@ -42,17 +42,17 @@
                             <p>@Html.Raw(item.Content)</p>
                             if (Model.UserCanEdit)
                             {
-                                @Html.RouteLink("Edit", "EditGlossaryItem", new { id = item.RowKey }, new { @class = "button button-grey glossary-edit-button" })
+                                @Html.RouteLink("Edit", "EditGlossaryItem", new { id = item.RowKey }, new { @class = "button button-secondary glossary-edit-button" })
                             }
                         }
-                    </div>                    
+                    </div>
                 </li>
             }
             <li class="controls">
                 <button href="#" class="button-as-link open-all-panels">Open all</button>
                 <button href="#" class="button-as-link close-all-panels">Close all</button>
             </li>
-                
+
         </ul>
     </div>
 </div>
@@ -61,7 +61,7 @@
 @section ViewScripts
 {
     <script>
-        (function() {
+        (function () {
             var panels = document.querySelectorAll('.expander-panel');
             var openAll = document.querySelectorAll('.open-all-panels');
             var closeAll = document.querySelectorAll('.close-all-panels');
@@ -82,21 +82,21 @@
                 }
             }
 
-            
+
             function hasClass(el, className) {
                 if (el.classList) {
-                   return el.classList.contains(className);
+                    return el.classList.contains(className);
                 } else {
                     return new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className);
                 }
             }
 
             [].forEach.call(panels,
-                function(el) {
+                function (el) {
                     var trigger = el.querySelectorAll('.panel-trigger')[0];
 
                     trigger.addEventListener('click',
-                        function(e) {
+                        function (e) {
                             e.preventDefault();
                             if (hasClass(el, 'open-expander')) {
                                 removeClass(el, 'open-expander');
@@ -109,9 +109,9 @@
                 });
 
             [].forEach.call(openAll,
-                function(el) {
+                function (el) {
                     el.addEventListener('click',
-                        function(e) {
+                        function (e) {
                             e.preventDefault();
                             [].forEach.call(panels,
                                 function (panel) {
@@ -123,9 +123,9 @@
                 });
 
             [].forEach.call(closeAll,
-                function(el) {
+                function (el) {
                     el.addEventListener('click',
-                        function(e) {
+                        function (e) {
                             e.preventDefault();
                             [].forEach.call(panels,
                                 function (panel) {

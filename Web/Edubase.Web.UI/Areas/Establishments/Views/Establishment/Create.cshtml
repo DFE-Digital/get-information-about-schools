@@ -52,7 +52,7 @@
             <div class="column-full top-button-panel">
                 <div class="submit-cancel-panel">
                     <button type="submit" name="action" value="" class="button mobile-full-width">Create</button>
-                    <button type="submit" name="action" value="" class="button button-grey cancel mobile-full-width">Cancel</button>
+                    <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width">Cancel</button>
                 </div>
             </div>
 
@@ -70,13 +70,13 @@
                     @Html.ValidationMessageFor(x => x.LocalAuthorityId)
                     @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "Please select", new { @class = "form-control" })
                 </div>
-                
+
                 <div id="establishment-type-form-group" class="form-group @Html.ValidationCssClassFor(x => x.EstablishmentTypeId)">
                     @Html.LabelFor(x => x.EstablishmentTypeId, "Establishment type", new { @class = "form-label" })
                     @Html.ValidationMessageFor(x => x.EstablishmentTypeId)
                     @Html.DropDownListFor(x => x.EstablishmentTypeId, Model.EstablishmentTypes, "Please select", new { @class = "form-control" })
                 </div>
-                
+
                 <div id="establishment-phase-form-group" class="form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
                     @Html.LabelFor(x => x.EducationPhaseId, "Phase of education", new { @class = "form-label" })
                     @Html.ValidationMessageFor(x => x.EducationPhaseId)
@@ -85,41 +85,41 @@
 
                 <div class="childrens-centre-fields" style="display:none">
                     @Html.EditorFor(m => m.OpenDate, new { title = "Open date (required to save record)"})
-                
+
                     @Html.EditorFor(m => m.Address)
-                
+
                     <h2 class="heading-medium">Contact details</h2>
                     <div class="form-group @Html.ValidationCssClassFor(x => x.ManagerFirstName)">
                         @Html.LabelFor(x => x.ManagerFirstName)
                         @Html.ValidationMessageFor(x => x.ManagerFirstName)
                         @Html.TextBoxFor(x => x.ManagerFirstName, new { @class = "form-control" })
                     </div>
-                
+
                     <div class="form-group @Html.ValidationCssClassFor(x => x.ManagerLastName)">
                         @Html.LabelFor(x => x.ManagerLastName)
                         @Html.ValidationMessageFor(x => x.ManagerLastName)
                         @Html.TextBoxFor(x => x.ManagerLastName, new { @class = "form-control" })
                     </div>
-                
+
                     <div class="form-group @Html.ValidationCssClassFor(x => x.CentreEmail)">
                         @Html.LabelFor(x => x.CentreEmail)
                         @Html.ValidationMessageFor(x => x.CentreEmail)
                         @Html.TextBoxFor(x => x.CentreEmail, new { @class = "form-control" })
                     </div>
-                
+
                     <div class="form-group @Html.ValidationCssClassFor(x => x.Telephone)">
                         @Html.LabelFor(x => x.Telephone)
                         @Html.ValidationMessageFor(x => x.Telephone)
                         @Html.TextBoxFor(x => x.Telephone, new { @class = "form-control" })
                     </div>
-                
+
                     <h2 class="heading-medium">Further details</h2>
                     <div class="form-group @Html.ValidationCssClassFor(x => x.OperationalHoursId)">
                         @Html.LabelFor(x => x.OperationalHoursId, new { @class = "form-label" })
                         @Html.ValidationMessageFor(x => x.OperationalHoursId)
                         @Html.DropDownListFor(x => x.OperationalHoursId, Model.OperationalHoursOptions, "Please select", new { @class = "form-control" })
                     </div>
-                
+
                     <div class="form-group @Html.ValidationCssClassFor(x => x.NumberOfUnderFives)">
                         @Html.LabelFor(x => x.NumberOfUnderFives)
                         @Html.ValidationMessageFor(x => x.NumberOfUnderFives)
@@ -131,7 +131,7 @@
                         @Html.ValidationMessageFor(x => x.GovernanceId)
                         @Html.DropDownListFor(x => x.GovernanceId, Model.GovernanceOptions, "Please select", new { @class = "form-control" })
                     </div>
-                
+
                     <div class="form-group @Html.ValidationCssClassFor(x => x.GovernanceDetail)">
                         @Html.LabelFor(x => x.GovernanceDetail)
                         @Html.ValidationMessageFor(x => x.GovernanceDetail)
@@ -149,13 +149,13 @@
                         @Html.ValidationMessageFor(x => x.DisadvantagedAreaId)
                         @Html.DropDownListFor(x => x.DisadvantagedAreaId, Model.DisadvantagedAreaOptions, "Please select", new { @class = "form-control" })
                     </div>
-                
+
                     <div class="form-group @Html.ValidationCssClassFor(x => x.DirectProvisionOfEarlyYears)">
                         @Html.LabelFor(x => x.DirectProvisionOfEarlyYears, new { @class = "form-label" })
                         @Html.ValidationMessageFor(x => x.DirectProvisionOfEarlyYears)
                         @Html.DropDownListFor(x => x.DirectProvisionOfEarlyYears, Model.DirectProvisionOfEarlyYearsOptions, "Please select", new { @class = "form-control" })
                     </div>
-                
+
                     <div class="form-group @Html.ValidationCssClassFor(x => x.EstablishmentStatusId)">
                         @Html.LabelFor(x => x.EstablishmentStatusId, new { @class = "form-label" })
                         @Html.ValidationMessageFor(x => x.EstablishmentStatusId)
@@ -169,11 +169,11 @@
                     <legend class="bold-small">Establishment number</legend>
                     <div class="form-group @Html.ValidationCssClassFor(x => x.GenerateEstabNumber)">
                         @Html.ValidationMessageFor(x => x.GenerateEstabNumber)
-                        
+
                         @Html.GiasRadioFor(x => x.GenerateEstabNumber, true, "Generate number",null,  new { id="generate-number-radio"})
-                        
+
                         @Html.GiasRadioFor(x => x.GenerateEstabNumber, false, "Enter number", null, new { id = "enter-number-radio" })
-                        
+
                     </div>
                     <div id="enter-number">
                         <div id="enter-number-form-group" class="form-group panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
@@ -185,12 +185,12 @@
                 </fieldset>
             </div>
 
-            
+
 
             <div class="column-full">
                 <div class="submit-cancel-panel">
                     <button type="submit" name="action" value="" class="button mobile-full-width" id="create-submit">Create</button>
-                    @Html.ActionLink("Cancel", "Index", "Tools", new { }, new { @class = "button button-grey cancel mobile-full-width" })
+                    @Html.ActionLink("Cancel", "Index", "Tools", new { }, new { @class = "button button-secondary cancel mobile-full-width" })
                 </div>
             </div>
         }
@@ -202,15 +202,15 @@
 {
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND);
     <div class="modal-overlay" id="warning-modal-overlay-0"></div>
-    <div class="modal-content" id="warning-modal-content-0">
+    <div class="modal-content" id="warning-modal-content-0" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
+        <a href="#" id="warning-exit-overlay-0" class="modal-exit js-allow-exit">Close</a>
         <div class="modal-inner">
-            <a href="#" id="warning-exit-overlay-0" class="modal-exit allow-exit">Close</a>
-            <h3 class="heading-large">Duplicate record</h3>
-            <p>The record you are creating for <strong>@(warning.MessageParameters[0])</strong> in <strong>@(warning.MessageParameters[1])</strong> may duplicate existing record(s): <strong>@(warning.MessageParameters[2])</strong>
+            <h3 class="heading-large" tabindex="0" id="modal-label">Duplicate record</h3>
+            <p tabindex="0" id="model-desc">The record you are creating for <strong>@(warning.MessageParameters[0])</strong> in <strong>@(warning.MessageParameters[1])</strong> may duplicate existing record(s): <strong>@(warning.MessageParameters[2])</strong>
         </div>
         <div class="button-row">
             <a href="#" class="button mobile-full-width" id="overlay-proceed-0">Proceed</a>
-            <a href="#" class="button button-grey mobile-full-width allow-exit" id="overlay-cancel-0">Cancel</a>
+            <a href="#" class="button button-secondary mobile-full-width js-allow-exit" id="overlay-cancel-0">Cancel</a>
         </div>
     </div>
 }
@@ -313,8 +313,11 @@
                 $("#number-gen-options").hide();
                 $("#establishment-phase-form-group").hide();
                 $("#enter-number").hide();
-            }   
-        });       
+            }
+            if ($('#warning-modal-content-0').length > 0) {
+                $('#overlay-proceed-0').focus();
+            }
+        });
 
 
         (function () {
@@ -345,7 +348,7 @@
                     toggle();
                 }
             })();
-            
+
         }());
 
     </script>

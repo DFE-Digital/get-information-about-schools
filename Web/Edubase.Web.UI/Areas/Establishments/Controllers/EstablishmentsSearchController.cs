@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IdentityModel.Protocols.WSTrust;
 using Edubase.Common;
 using Edubase.Web.UI.Models;
@@ -313,15 +313,15 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 case eSearchType.Text:
                     routeDictionary.Add("TextSearchModel.Text", model.TextSearchModel.Text);
-                    routeDictionary.Add("NoResultsForName", true);
+                    routeDictionary.Add("NoResults", true);
                     break;
                 case eSearchType.Location:
                     routeDictionary.Add("LocationSearchModel.Text", model.LocationSearchModel.Text);
-                    routeDictionary.Add("NoResultsForLocation", true);
+                    routeDictionary.Add("NoResults", true);
                     break;
                 case eSearchType.ByLocalAuthority:
                     queryStringToAppend = string.Concat("&", QueryStringHelper.ToQueryString(EstablishmentSearchViewModel.BIND_ALIAS_LAIDS, model.SelectedLocalAuthorityIds.ToArray()));
-                    routeDictionary.Add("NoResultsForLA", true);
+                    routeDictionary.Add("NoResults", true);
                     break;
             }
 

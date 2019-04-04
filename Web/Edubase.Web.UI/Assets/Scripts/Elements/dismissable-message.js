@@ -1,6 +1,6 @@
 ﻿(function () {
 
-    var $messages = $('#content').find('.dismissable-message');
+    var $messages = $('#content').find('.js-dismiss-message');
 
     $messages.each(function () {
         var msg = $(this);

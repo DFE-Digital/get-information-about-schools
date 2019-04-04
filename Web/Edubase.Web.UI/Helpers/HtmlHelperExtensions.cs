@@ -1,8 +1,9 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Services.Governors.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -31,6 +32,27 @@ namespace Edubase.Web.UI.Helpers
             var state = htmlHelper.ViewData.ModelState[modelName];
             if (state == null) return MvcHtmlString.Empty;
             return state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("error");
+        }
+
+        public static MvcHtmlString ValidationMessageNested(this HtmlHelper htmlHelper, string modelName)
+        {
+            var fullFieldName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(modelName);
+            if (!htmlHelper.ViewData.ModelState.ContainsKey(fullFieldName))
+            {
+                if (htmlHelper.ViewData.ModelState.ContainsKey(htmlHelper.ViewData.ModelMetadata.PropertyName))
+                {
+                    // add the errors from the modelName to the parent FullHtmlFieldName
+                    if (htmlHelper.ViewData.ModelState[modelName].Errors.Any())
+                    {
+                        foreach (var error in htmlHelper.ViewData.ModelState[modelName].Errors)
+                        {
+                            htmlHelper.ViewData.ModelState.AddModelError(fullFieldName, error.ErrorMessage);
+                        }
+                    }
+                }
+            }
+
+            return htmlHelper.ValidationMessage(modelName, (string) null);
         }
 
         public static MvcHtmlString DuplicateCssClassFor(this HtmlHelper htmlHelper, int? governorId)

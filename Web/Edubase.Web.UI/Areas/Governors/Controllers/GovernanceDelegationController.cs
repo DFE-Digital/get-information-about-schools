@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
@@ -70,7 +70,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 return Redirect($"{url}#governance");
             }
 
-            result.EduBaseAddToModelState(ModelState, null);
+            result.EduBaseAddToModelState(ModelState, null, true);
             await _layoutHelper.PopulateLayoutProperties(model, null, model.GroupUId, User);
             return View(model);
         }

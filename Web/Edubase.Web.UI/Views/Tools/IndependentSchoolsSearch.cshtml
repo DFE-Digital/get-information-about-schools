@@ -20,7 +20,7 @@
         <div class="column-full">
             <h1 class="heading-xlarge">View independent schools' significant dates</h1>
             @Html.ValidationSummary("Information missing or incorrect or missing details. To complete the record:", new { @class = "error-summary" })
-            <p class="intro-para">
+            <p>
                 Use this tool to view independent schools' &lsquo;Next general action
                 required&rsquo; or &lsquo;Next action required by welfare&rsquo; date.
                 Local authorities can be added manually or with custom predefined sets.
@@ -32,9 +32,9 @@
     {
         <div class="grid-row">
             <div class="column-full">
-                <h3 class="heading-medium sn-1">Select the action you're interested in</h3>
+                <h3 class="heading-medium">Select the action you're interested in</h3>
                 <div class="form-group @Html.ValidationCssClassFor(x => x.Mode)">
-                    <fieldset class="action">
+                    <fieldset>
                         <legend class="visually-hidden">Select the action you're interested in</legend>
                         @Html.ValidationMessageFor(x => x.Mode)
                     @Html.GiasRadioFor(x => x.Mode, VM.SpecifierDateOfActionGeneral, "Next general action required")
@@ -43,14 +43,15 @@
             </div>
         </div>
         <div class="column-two-thirds">
-            <h2 class="heading-medium sn-2">Select local authorities</h2>
+            <h2 class="heading-medium">Select local authorities</h2>
             <div class="form-group @Html.ValidationCssClassFor(x => x.SelectedLocalAuthorityIds)">
-                @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Select a predefined set or individually add local authorities", new { @class = "form-label" })
+                @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Select a predefined set or individually add local authorities", new { @class = "form-label", @for = "SelectedLocalAuthoritySetId" })
                 @Html.DropDownListFor(x => x.SelectedLocalAuthoritySetId, Model.LocalAuthoritySetSelectList, "Custom", new { @class = "form-control form-control-3-4" })
                 @Html.RouteLink("View predefined sets", "PredefinedLASets", null, new { @class = "baseline-inline" })
             </div>
 
             <div class="form-group form-control-3-4 ">
+                @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Add local authorities", new { @class = "visuallyhidden", @for = "LocalAuthorityToAdd" })
                 <div id="la-id-target">
                     @foreach (var id in Model.SelectedLocalAuthorityIds)
                     {
@@ -69,10 +70,8 @@
                 <button class="link-button font-xsmall hidden" name="@VM.BindAliasForActionName" value="@VM.ActionSaveSet" id="set-saver">Save as set</button>
             </div>
         </div>
-        <div class="column-full">
-            <h2 class="heading-medium sn-3">Date range</h2>
-        </div>
         <div class="column-two-thirds @Html.ValidationCssClass("date-range")">
+            <h2 class="heading-medium">Date range</h2>
             @Html.ValidationMessage("date-range")
             <div class="form-group date-group-wrap">
                 @Html.EditorFor(x => x.MinDate, new { title = "From (optional)" })
@@ -81,15 +80,12 @@
             <div class="form-group date-group-wrap">
                 @Html.EditorFor(x => x.MaxDate, new { title = "To (optional)" })
             </div>
-        </div>
 
-
-            <div class="column-full">
-                <div class="button-row">                    
-                    <button type="submit" name="@VM.BindAliasForActionName" class="button mobile-full-width" value="@VM.ActionSearch">Continue</button>
-                    @Html.ActionLink("Cancel", "Index", "Tools", null, new { @class = "button button-grey mobile-full-width" })
-                </div>                
+            <div class="form-group push--top">
+                <button type="submit" name="@VM.BindAliasForActionName" class="button mobile-full-width" value="@VM.ActionSearch">Continue</button>
+                @Html.ActionLink("Cancel", "Index", "Tools", null, new { @class = "button button-secondary mobile-full-width" })
             </div>
+        </div>
     </div>
     }
 

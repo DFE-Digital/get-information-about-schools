@@ -16,19 +16,7 @@
 </div>
 
 @section ViewScripts{
-
-    <script>
-        $(function () {
-            (function () {
-                var $btn = $("button[type='submit']");
-                var $field = $("input#SearchText");
-                var toggle = function () { $btn.prop("disabled", $.trim($field.val()) == ""); };
-                $field.on("keyup change", toggle);
-                toggle();
-            })();
-        });
-    </script>
-
+    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
 }
 
 
@@ -46,14 +34,16 @@
         <div class="column-two-thirds">
             @if (string.IsNullOrWhiteSpace(Model.SearchText) && Request.Url.PathAndQuery.Contains("SearchText"))
             {
-                <div class="warning-message">
-                    <p>Please enter a Companies House name or number to start a search</p>
+                @* Static alert for empty search *@
+                <div role="alert" class="warning-message js-trigger-aria-live">
+                    <p class="message-text" aria-live="polite">Please enter a Companies House name or number to start a search</p>
                 </div>
             }
             else if (Model.NotFound)
             {
-                <div class="warning-message">
-                    <p>We couldn't find any companies matching your search criteria</p>
+                @* Static alert for no search results *@
+                <div role="alert" class="warning-message js-trigger-aria-live">
+                    <p class="message-text" aria-live="polite">We couldn't find any companies matching your search criteria</p>
                 </div>
             }
 
@@ -85,21 +75,22 @@
             <div class="grid-row">
                 <div class="column-full">
                     <table class="edubase-table company-details">
+                        <caption class="visuallyhidden">Company search results</caption>
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Companies House no.</th>
-                                <th>Incorporated</th>
-                                <th>Address</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Companies House no.</th>
+                                <th scope="col">Incorporated</th>
+                                <th scope="col">Address</th>
                             </tr>
                         </thead>
                         @foreach (var result in Model.Results.Items)
                         {
                             <tr class="company-result">
-                                <td aria-label="Name">@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups" }, null)</td>
-                                <td aria-label="Companies House no."><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number">@result.Number</a></td>
-                                <td aria-label="Incorporated">@(result.IncorporationDate?.ToString("dd/MM/yyyy"))</td>
-                                <td aria-label="Address">@(result.Address.ToString() ?? "Not recorded")</td>
+                                <td data-label="Name">@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups" }, null)</td>
+                                <td data-label="Companies House no."><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number">@result.Number</a></td>
+                                <td data-label="Incorporated">@(result.IncorporationDate?.ToString("dd/MM/yyyy"))</td>
+                                <td data-label="Address">@(result.Address.ToString() ?? "Not recorded")</td>
                             </tr>
                         }
                     </table>

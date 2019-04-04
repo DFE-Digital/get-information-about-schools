@@ -1,43 +1,25 @@
 ﻿<div class="helptext-container">
     <h3 class="heading-small">Further information</h3>
 
-    @if (Model.SelectedTab == SearchViewModel.Tab.Establishments)
-    {
-        <!-- establishment search help text -->
-        <div id="name-reference-help">
-            <h3 class="heading-small">Name, URN, LAESTAB, or UKPRN</h3>
-            <p>
-                Enter the establishment's name or a reference
-                number: URN (Unique Reference Number),
-                LAESTAB (Local Authority Establishment Number),
-                UKPRN: (UK ProviderReference Number)
-            </p>
-        </div>
+    <!-- establishment search help text -->
+    <div id="name-reference-help" role="tooltip" aria-hidden="@(Model.SelectedTab != SearchViewModel.Tab.Establishments)">
+        <h3 class="heading-small">Name, URN, LAESTAB, or UKPRN</h3>
+        <p>
+            Enter the establishment's name or a reference
+            number: URN (Unique Reference Number),
+            LAESTAB (Local Authority Establishment Number),
+            UKPRN: (UK Provider Reference Number)
+        </p>
+    </div>
 
-    }
-
-    @if (Model.SelectedTab == SearchViewModel.Tab.Groups)
-    {
-        <!-- group search help text -->
-        <div id="group-reference">
-            <h3 class="heading-small">Name or reference number</h3>
-            <p>
-                Enter the name or a reference number: Companies
-                House number or Unique ID (assigned by the
-                system).
-            </p>
-        </div>
-    }
-
-
-
-    @if (Model.SelectedTab == SearchViewModel.Tab.Governors)
-    {
-        <!-- governor help text-->
-        <div id="gid-help">
-            <h3 class="heading-small">GID number</h3>
-            <p>Governor ID number</p>
-        </div>
-    }
+    <!-- group search help text -->
+    <div id="group-reference" aria-hidden="@(Model.SelectedTab != SearchViewModel.Tab.Groups)">
+        <h3 class="heading-small">Name or reference number</h3>
+        <p>
+            Enter the name or a reference number: Companies
+            House number or Unique ID (assigned by the
+            system).
+        </p>
+    </div>
 
 </div>

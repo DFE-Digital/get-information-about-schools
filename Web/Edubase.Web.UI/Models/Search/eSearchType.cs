@@ -1,4 +1,4 @@
-﻿namespace Edubase.Web.UI.Models.Search
+namespace Edubase.Web.UI.Models.Search
 {
     public enum eSearchType
     {
@@ -8,6 +8,7 @@
         ByLocalAuthority,
         Group,
         Governor,
+        GovernorReference,
         LocalAuthorityDisambiguation,
         GroupAll
     }

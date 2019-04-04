@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
@@ -996,8 +997,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.EditPolicy = editPolicyEnvelope.EditPolicy;
 
             var canEditAdditionalAddresses = editPolicyEnvelope.EditPolicy.AdditionalAddresses;
-            if (!canEditAdditionalAddresses && domainModel.AdditionalAddresses != null)
+            if (domainModel.AdditionalAddresses != null &&
+                (viewModel.SelectedTab != "details" || !canEditAdditionalAddresses))
             {
+                // the additional addresses can only be edited from within the details tab, so default copy from domain for any other tab edits
                 viewModel.AdditionalAddresses = new List<AdditionalAddressModel>(domainModel.AdditionalAddresses);
             }
 
@@ -1006,13 +1009,24 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             await PopulateSelectLists(viewModel);
 
-            if (viewModel.ActionSpecifierCommand == ViewModel.ASSave)
+            if (viewModel.ActionSpecifierCommand == ViewModel.ASConfirm)
             {
+                if (ModelState.IsValid)
+                {
+                    return await SaveEstablishment(viewModel, domainModel);
+                }
+            }
+
+            if (viewModel.ActionSpecifierCommand == ViewModel.ASSave || viewModel.ActionSpecifierCommand == ViewModel.ASConfirm)
+            {
+                // whether we're wanting to perform an initial save, or the confirm is invalid, we want to display this content back
+                var validateAsSaveOrConfirm = ModelState.IsValid || viewModel.ActionSpecifierCommand == ViewModel.ASConfirm;
+
                 var originalEstabTypeId = (ET) domainModel.TypeId;
-                await ValidateAsync(viewModel, domainModel);
+                await ValidateAsync(viewModel, domainModel, validateAsSaveOrConfirm);
                 var newEstabTypeId = (ET?) domainModel.TypeId;
 
-                if (ModelState.IsValid)
+                if (validateAsSaveOrConfirm)
                 {
                     viewModel.OriginalEstablishmentName = domainModel.Name;
 
@@ -1039,13 +1053,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             else if (viewModel.ActionSpecifierCommand == ViewModel.ASRemoveAddress)
             {
                 RemoveAdditionalAddress(viewModel);
-            }
-            else if (viewModel.ActionSpecifierCommand == ViewModel.ASConfirm)
-            {
-                if (ModelState.IsValid)
-                {
-                    return await SaveEstablishment(viewModel, domainModel);
-                }
             }
 
             return View(viewModel);
@@ -1093,10 +1100,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         /// </summary>
         /// <param name="viewModel"></param>
         /// <param name="existingDomainModel"></param>
+        /// <param name="validate"></param>
         /// <returns></returns>
-        private async Task ValidateAsync(ViewModel viewModel, EstablishmentModel existingDomainModel)
+        private async Task ValidateAsync(ViewModel viewModel, EstablishmentModel existingDomainModel, bool validate)
         {
-            if (ModelState.IsValid)
+            if (validate)
             {
                 await MapFromViewModelToDomainModel(viewModel, existingDomainModel);
 
@@ -1125,7 +1133,24 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
                 else
                 {
-                    validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.GetMessage()));
+                    foreach (var validationEnvelopeError in validationEnvelope.Errors)
+                    {
+                        var fieldName = validationEnvelopeError.Fields;
+                        if (fieldName != null)
+                        {
+                            if (fieldName.Contains(".") &&
+                                ModelState.ContainsKey(fieldName.Split('.')[1]))
+                            {
+                                fieldName = fieldName.Split('.')[1];
+                            }
+                        }
+
+                        if (fieldName == null || !ModelState.ContainsKey(fieldName) || !ModelState[fieldName].Errors.Any())
+                        {
+                            ModelState.AddModelError(fieldName ?? string.Empty, validationEnvelopeError.GetMessage()); 
+                        }
+                        
+                    }
                 }
 
                 viewModel.ShowDuplicateRecordWarning = validationEnvelope.HasWarnings && validationEnvelope.Warnings.Any(x => x.Code == "establishment.with.same.name.la.found");

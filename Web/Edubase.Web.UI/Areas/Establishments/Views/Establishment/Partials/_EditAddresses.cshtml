@@ -7,23 +7,23 @@
         <div class="grey-bar"></div>
         <div class="form-group">
             @Html.LabelFor(x => x.AdditionalAddresses[i].SiteName, $"Site name " + (i+1))
-            @Html.TextBoxFor(x => x.AdditionalAddresses[i].SiteName, new { @class = "form-control alt-address" })
+            @Html.TextBoxFor(x => x.AdditionalAddresses[i].SiteName, new { maxlength = 120, @class = "form-control alt-address" })
         </div>
         <div class="form-group">
             @Html.LabelFor(x => x.AdditionalAddresses[i].Street, "Street")
-            @Html.TextBoxFor(x => x.AdditionalAddresses[i].Street, new { @class = "form-control alt-address" })
+            @Html.TextBoxFor(x => x.AdditionalAddresses[i].Street, new { maxlength = 120, @class = "form-control alt-address" })
         </div>
         <div class="form-group">
             @Html.LabelFor(x => x.AdditionalAddresses[i].Locality, "Locality")
-            @Html.TextBoxFor(x => x.AdditionalAddresses[i].Locality, new { @class = "form-control alt-address" })
+            @Html.TextBoxFor(x => x.AdditionalAddresses[i].Locality, new { maxlength = 120, @class = "form-control alt-address" })
         </div>
         <div class="form-group">
             @Html.LabelFor(x => x.AdditionalAddresses[i].Address3, "Address 3")
-            @Html.TextBoxFor(x => x.AdditionalAddresses[i].Address3, new { @class = "form-control alt-address" })
+            @Html.TextBoxFor(x => x.AdditionalAddresses[i].Address3, new { maxlength = 120, @class = "form-control alt-address" })
         </div>
         <div class="form-group">
             @Html.LabelFor(x => x.AdditionalAddresses[i].Town, "Town")
-            @Html.TextBoxFor(x => x.AdditionalAddresses[i].Town, new { @class = "form-control alt-address" })
+            @Html.TextBoxFor(x => x.AdditionalAddresses[i].Town, new { maxlength = 120, @class = "form-control alt-address" })
         </div>
 
         @if (Model.AdditionalAddresses[i].CountryId == Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
@@ -55,7 +55,7 @@
         @Html.HiddenFor(x => x.AdditionalAddresses[i].Id)
 
         <div class="form-group">
-            <button type="submit" name="@nameof(EditEstablishmentModel.ActionSpecifier)" value="@EditEstablishmentModel.GetActionSpecifier(EditEstablishmentModel.ASRemoveAddress, i)" class="button button-grey">Remove address</button>
+            <button type="submit" name="@nameof(EditEstablishmentModel.ActionSpecifier)" value="@EditEstablishmentModel.GetActionSpecifier(EditEstablishmentModel.ASRemoveAddress, i)" class="button button-secondary">Remove address</button>
         </div>
     </div>
 }

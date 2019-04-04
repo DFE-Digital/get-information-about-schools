@@ -482,6 +482,7 @@
     <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Downloads\SelectDataset.cshtml" />
     <Content Include="Areas\Groups\Views\Group\Warnings.cshtml" />
     <Content Include="Assets\Scripts\Elements\clientside-sorting.js" />
+    <Content Include="Assets\Scripts\Elements\errors.js" />
     <Content Include="Assets\Scripts\Elements\Forms\search-within-filters.js" />
     <Content Include="Assets\Scripts\Elements\Forms\select-all-filters.js" />
     <Content Include="Assets\Scripts\libs\leaflet\leaflet-src.js" />
@@ -529,13 +530,11 @@
     <Content Include="Areas\Governors\Views\SharedGovernor\EditSharedGovernor.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\ReplaceChair.cshtml" />
     <Content Include="Areas\Governors\Views\GovernanceDelegation\GroupEditDelegation.cshtml" />
-    <Content Include="Assets\Sass\elements\forms\_fileupload.scss" />
     <Content Include="Assets\Sass\elements\_autosuggest.scss" />
     <Content Include="App_Data\wildcard-dfe.pfx" />
     <Content Include="Areas\Establishments\Views\BulkUpdate\Index.cshtml" />
     <Content Include="Areas\Establishments\Views\AcademyOpenings\Index.cshtml" />
     <Content Include="Areas\Governors\Views\GovernorsBulkUpdate\Index.cshtml" />
-    <Content Include="Areas\Establishments\Views\BulkUpdate\Complete.cshtml" />
     <Content Include="Areas\Establishments\Views\BulkUpdate\InProgress.cshtml" />
     <Content Include="Areas\Groups\Views\Group\CreateChildrensCentre.cshtml" />
     <Content Include="Assets\Sass\views\_cookies.scss" />
@@ -556,10 +555,8 @@
     <Content Include="Assets\Scripts\standalone\create-childrens-centre.js" />
     <Content Include="Assets\Scripts\standalone\data-status.js" />
     <Content Include="Assets\Scripts\standalone\merge-amalgamate.js" />
-    <Content Include="Assets\Scripts\Views\ajax-search-results-form.js" />
     <Content Include="Assets\Scripts\Elements\Forms\attach-unload.js" />
     <Content Include="Assets\Scripts\Elements\Forms\clear-text-fields.js" />
-    <Content Include="Assets\Scripts\Elements\Forms\file-uploaders.js" />
     <Content Include="Assets\Scripts\Elements\Forms\ok-cancel.js" />
     <Content Include="Assets\Scripts\Elements\radio-toggles.js" />
     <Content Include="Assets\Scripts\JSON\addressResult.js" />
@@ -568,7 +565,7 @@
     <Content Include="Assets\Scripts\libs\vue\vue.js" />
     <Content Include="Assets\Scripts\libs\vue\vue.min.js" />
     <Content Include="Assets\Scripts\standalone\address-lookup.js" />
-    <Content Include="Assets\Scripts\standalone\establishmentLinks.js" />
+    <Content Include="Assets\Scripts\standalone\establishment-links.js" />
     <Content Include="Assets\Scripts\standalone\manage-academy-openings.js" />
     <Content Include="Assets\Scripts\standalone\search-change-history.js" />
     <Content Include="Assets\Scripts\tooltips.js" />
@@ -576,7 +573,6 @@
     <Content Include="Assets\Scripts\Views\edit-governors.js" />
     <Content Include="Assets\Scripts\Views\edit-iebt.js" />
     <Content Include="Assets\Scripts\Views\governor-search.js" />
-    <Content Include="Assets\Scripts\Views\search-results.js" />
     <Content Include="Assets\Scripts\_application.js" />
     <Content Include="Assets\Scripts\Elements\Forms\option-select.js" />
     <Content Include="Assets\Scripts\map-interactions.js" />
@@ -625,7 +621,6 @@
     <Content Include="public\assets\images\icons\suggest-remove.png" />
     <Content Include="public\assets\images\icons\tick.png" />
     <Content Include="public\assets\images\icons\tooltip-close.gif" />
-    <Content Include="public\assets\images\icons\white-cross-transparent.png" />
     <Content Include="public\assets\images\ofsted-logo-sm.jpeg" />
     <Content Include="public\assets\images\ofsted-logo-x-small.jpeg" />
     <Content Include="public\assets\images\ofsted-logo.jpg" />

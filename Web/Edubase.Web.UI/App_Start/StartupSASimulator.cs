@@ -47,16 +47,16 @@ namespace Edubase.Web.UI
                 SPOptions = spOptions
             };
 
-            var idp = new IdentityProvider(new EntityId("http://secure-access-simulator.azurewebsites.net/Metadata"), spOptions)
+            var idp = new IdentityProvider(new EntityId("http://dfe-sign-in-simulator.azurewebsites.net/Metadata"), spOptions)
             {
                 AllowUnsolicitedAuthnResponse = true,
                 Binding = Saml2BindingType.HttpRedirect,
-                SingleSignOnServiceUrl = new Uri("http://secure-access-simulator.azurewebsites.net/")
+                SingleSignOnServiceUrl = new Uri("http://dfe-sign-in-simulator.azurewebsites.net/")
             };
 
             //idp.SigningKeys.AddConfiguredKey(new X509Certificate2(HostingEnvironment.MapPath("~/App_Data/Kentor.AuthServices.StubIdp.cer")));
             authServicesOptions.IdentityProviders.Add(idp);
-            new Federation("http://secure-access-simulator.azurewebsites.net/Federation", true, authServicesOptions);
+            new Federation("http://dfe-sign-in-simulator.azurewebsites.net/Federation", true, authServicesOptions);
             return authServicesOptions;
         }
 

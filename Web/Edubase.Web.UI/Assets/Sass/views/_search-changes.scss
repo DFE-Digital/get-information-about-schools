@@ -9,7 +9,7 @@
     border-bottom: $grey-2 2px solid;
 
     &:link,
-    &:visited, 
+    &:visited,
     &:hover {
         color: $black;
     }
@@ -60,14 +60,14 @@
         top: 20px;
     }
 }
-.expander-panel-content {   
+.expander-panel-content {
     display: none;
     padding-bottom: 20px;
     border-bottom: $grey-2 2px solid;
     overflow: hidden;
 
     .open-expander & {
-        display: block;        
+        display: block;
     }
 
     .last-panel & {
@@ -82,7 +82,7 @@
             }
         }
     }
-   
+
 }
 
 .search-changes {
@@ -123,10 +123,11 @@
         font-weight: bold;
     }
 
-    .inline-date-type-radios {
+    .stacked-date-type-radios {
         padding-top: 20px;
         .radio-button-wrap {
-            margin-right: 34px;
+            display: block;
+            margin-bottom: 30px;
         }
     }
 }
@@ -169,7 +170,7 @@
         border-bottom: 0;
         border-left: 6px solid transparent;
         border-right: 6px solid transparent;
-        border-top: 9px solid #005ea5;        
+        border-top: 9px solid #005ea5;
     }
 
     &.filters-closed:before {

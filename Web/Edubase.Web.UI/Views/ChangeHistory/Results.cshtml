@@ -1,11 +1,9 @@
-﻿@using System.Linq.Expressions
+@using System.Linq.Expressions
 @using Edubase.Common
 @model ChangeHistoryViewModel
 @{
     ViewBag.Title = "";
     ViewBag.PageClass = "search-history-results search-results";
-
-    
 }
 
 <div class="grid-row">
@@ -65,18 +63,21 @@
         <div class="column-third" id="filter-container">
             <div class="filter-form" id="filter-form">
                 <div id="EditSearchCollapse" class="blanket-container">
+                    <h2 class="visuallyhidden">Search results filters</h2>
 
-                    <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="false" id="date-filter">
+                    <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="false" id="date-filter" role="search">
                         <div class="container-head js-container-head">
                             <div class="option-select-label">Date changes</div>
                             <div class="js-selected-counter">
                                 <span class="js-selected-counter-text" id="date-filter-type-label">Date applied</span>
-                            </div>                            
+                            </div>
                         </div>
                         <a href="#" class="clear-selections filter-clear">Clear</a>
                         <div class="options-container" id="">
                             <div class="js-auto-height-inner">
                                 <fieldset>
+                                    <legend class="visuallyhidden">Change history date range and type</legend>
+                                    <label for="date-type-filter" class="visuallyhidden">Change type</label>
                                     @if (Model.IsEstablishmentSearch)
                                     {
                                         @Html.DropDownListFor(m => m.DateFilterMode, Model.DateFilterOptions, new {@class = "form-control in-filters", id = "date-type-filter"})
@@ -84,7 +85,7 @@
                                     @Html.EditorFor(m => m.DateFilterFrom, new {disableHint = true, labelClass = "form-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date"})
                                     @Html.EditorFor(m => m.DateFilterTo, new {disableHint = true, labelClass = "form-label", title = "To", inFilters = true, fieldsetClassName = "search-to-date"})
                                     <div class="form-group">
-                                        <a href="#" class="button button-grey filter-button">Apply</a>
+                                        <a href="#" class="button button-secondary filter-button">Apply</a>
                                     </div>
                                 </fieldset>
                             </div>
@@ -114,22 +115,25 @@
             </div>
         </div>
     </form>
-<div class="column-two-thirds" id="results-panel">
-    @if (Model.Count == 0)
-    {
-        <p>There are no results, please widen your search with the filters.</p>
-    }
-    else
-    {
-        Html.RenderPartial(Model.IsEstablishmentSearch ? "Partials/_EstablishmentResults" : "Partials/_GroupResults", Model);
-    }
-</div>
+
+    <div role="alert" aria-live="assertive" id="results-notification" class="visuallyhidden"></div>
+    <h2 class="visuallyhidden">Search results listing</h2>
+    <div class="column-two-thirds" id="results-container">
+        @if (Model.Count == 0)
+        {
+            <p>There are no results, please widen your search with the filters.</p>
+        }
+        else
+        {
+            Html.RenderPartial(Model.IsEstablishmentSearch ? "Partials/_EstablishmentResults" : "Partials/_GroupResults", Model);
+        }
+    </div>
 
 </div>
 
 @helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "")
 {
-    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false" id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
+    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false" id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name" role="search">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter">
@@ -165,7 +169,7 @@
 
 @helper Selector(string label, string name, IEnumerable<StringLookupItemViewModel> items, List<string> selectedItems, string additionalClassName = "")
 {
-    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false" id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name">
+    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false" id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name" role="search">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter">
@@ -226,7 +230,7 @@
         var isEstabSearch = @Model.IsEstablishmentSearch.ToString().ToLower()
     </script>
     <script src="/public/assets/scripts/standalone/search-change-history.js"></script>
-    
+
 }
 
 
