@@ -1009,13 +1009,24 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             await PopulateSelectLists(viewModel);
 
-            if (viewModel.ActionSpecifierCommand == ViewModel.ASSave)
+            if (viewModel.ActionSpecifierCommand == ViewModel.ASConfirm)
             {
+                if (ModelState.IsValid)
+                {
+                    return await SaveEstablishment(viewModel, domainModel);
+                }
+            }
+
+            if (viewModel.ActionSpecifierCommand == ViewModel.ASSave || viewModel.ActionSpecifierCommand == ViewModel.ASConfirm)
+            {
+                // whether we're wanting to perform an initial save, or the confirm is invalid, we want to display this content back
+                var validateAsSaveOrConfirm = ModelState.IsValid || viewModel.ActionSpecifierCommand == ViewModel.ASConfirm;
+
                 var originalEstabTypeId = (ET) domainModel.TypeId;
-                await ValidateAsync(viewModel, domainModel);
+                await ValidateAsync(viewModel, domainModel, validateAsSaveOrConfirm);
                 var newEstabTypeId = (ET?) domainModel.TypeId;
 
-                if (ModelState.IsValid)
+                if (validateAsSaveOrConfirm)
                 {
                     viewModel.OriginalEstablishmentName = domainModel.Name;
 
@@ -1042,13 +1053,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             else if (viewModel.ActionSpecifierCommand == ViewModel.ASRemoveAddress)
             {
                 RemoveAdditionalAddress(viewModel);
-            }
-            else if (viewModel.ActionSpecifierCommand == ViewModel.ASConfirm)
-            {
-                if (ModelState.IsValid)
-                {
-                    return await SaveEstablishment(viewModel, domainModel);
-                }
             }
 
             return View(viewModel);
@@ -1096,10 +1100,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         /// </summary>
         /// <param name="viewModel"></param>
         /// <param name="existingDomainModel"></param>
+        /// <param name="validate"></param>
         /// <returns></returns>
-        private async Task ValidateAsync(ViewModel viewModel, EstablishmentModel existingDomainModel)
+        private async Task ValidateAsync(ViewModel viewModel, EstablishmentModel existingDomainModel, bool validate)
         {
-            if (ModelState.IsValid)
+            if (validate)
             {
                 await MapFromViewModelToDomainModel(viewModel, existingDomainModel);
 
