@@ -127,11 +127,10 @@
 
                 @if (Model.EditPolicy.MSOACode)
                 {
-                    <div class="form-group @Html.ValidationCssClass(nameof(Model.MSOACode)) @Html.ValidationCssClass("MSOAId")">
-                        <label for="@nameof(Model.MSOACode)">Middle Super Output Area (MSOA)</label>
-                        @Html.ValidationMessage(nameof(Model.MSOACode))
-                        @Html.ValidationMessage("MSOAId")<div id="MSOAId"></div>
-                        @Html.TextBoxFor(x => x.MSOACode, new {@class = "form-control"})
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.MSOAId)">
+                        <label for="@nameof(Model.MSOAId)">Middle Super Output Area (MSOA)</label>
+                        @Html.ValidationMessageFor(x => x.MSOAId)
+                        @Html.DropDownListFor(x => x.MSOAId, Model.MSOALookup, "", new { @class = "form-control" })
                     </div>
                 }
 

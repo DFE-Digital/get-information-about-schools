@@ -169,10 +169,10 @@ namespace Edubase.Web.UI.Models
         public int? UrbanRuralId { get; set; }
         public int? GSSLAId { get; set; }
         public int? CASWardId { get; set; }
-        //public int? MSOAId { get; set; }
-        //public int? LSOAId { get; set; }
+        public int? MSOAId { get; set; }
+        public int? LSOAId { get; set; }
 
-        public string MSOACode { get; set; }
+        //public string MSOACode { get; set; }
         public string LSOACode { get; set; }
 
         [Display(Name = "BSO: Date of last inspection")]
@@ -216,6 +216,7 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> UrbanRuralLookup { get; internal set; }
         public IEnumerable<SelectListItem> GSSLALookup { get; internal set; }
         public IEnumerable<SelectListItem> CASWards { get; internal set; }
+        public IEnumerable<SelectListItem> MSOALookup { get; set; }
 
         public IEnumerable<SelectListItem> PRUSENOptions { get; internal set; }
         public IEnumerable<SelectListItem> PRUEBDOptions { get; internal set; }

@@ -401,7 +401,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             SetProperty(targetViewModel, model, m => m.Easting);
             SetProperty(targetViewModel, model, m => m.Northing);
             SetProperty(targetViewModel, model, m => m.CASWardId);
-            SetProperty(targetViewModel, model, m => m.MSOACode);
+            SetProperty(targetViewModel, model, m => m.MSOAId);
             SetProperty(targetViewModel, model, m => m.LSOACode);
 
             targetViewModel.ActionSpecifier = model.ActionSpecifier;
@@ -600,10 +600,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             await PopulateSelectLists(viewModel);
 
-            if (domainModel.MSOAId.HasValue)
-            {
-                viewModel.MSOACode = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.MSOAId.Value)?.Code;
-            }
+            //if (domainModel.MSOAId.HasValue)
+            //{
+            //    viewModel.MSOACode = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.MSOAId.Value)?.Code;
+            //}
 
             if (domainModel.LSOAId.HasValue)
             {
@@ -890,6 +890,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.ReasonsEstablishmentClosed = (await _cachedLookupService.ReasonEstablishmentClosedGetAllAsync()).ToSelectList(viewModel.ReasonEstablishmentClosedId);
             viewModel.SpecialClassesProvisions = (await _cachedLookupService.ProvisionSpecialClassesGetAllAsync()).ToSelectList(viewModel.ProvisionSpecialClassesId);
 
+            viewModel.MSOAList = (await _cachedLookupService.MSOAsGetAllAsync()).ToSelectList();
+
+
             viewModel.SENProvisions = (await _cachedLookupService.SpecialEducationNeedsGetAllAsync()).ToList();
 
             viewModel.TypeOfResourcedProvisions = (await _cachedLookupService.TypeOfResourcedProvisionsGetAllAsync()).ToSelectList(viewModel.TypeOfResourcedProvisionId);
@@ -934,10 +937,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
         private async Task MapFromViewModelToDomainModel(ViewModel viewModel, EstablishmentModel domainModel)
         {
-            if (_formKeys.Value.Contains(nameof(viewModel.MSOACode)))
-            {
-                domainModel.MSOAId = !viewModel.MSOACode.IsNullOrEmpty() ? (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Code == viewModel.MSOACode)?.Id : null;
-            }
+            //if (_formKeys.Value.Contains(nameof(viewModel.MSOACode)))
+            //{
+            //    domainModel.MSOAId = !viewModel.MSOACode.IsNullOrEmpty() ? (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Code == viewModel.MSOACode)?.Id : null;
+            //}
 
             if (_formKeys.Value.Contains(nameof(viewModel.LSOACode)))
             {
@@ -1103,11 +1106,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 await MapFromViewModelToDomainModel(viewModel, existingDomainModel);
 
-                if (_formKeys.Value.Contains(viewModel.MSOACode) && !viewModel.MSOACode.IsNullOrEmpty() &&
-                    !existingDomainModel.MSOAId.HasValue) // if the value has been provided in the form, it's not empty, but the string value didn't map to a value in the domain model then show error.
-                {
-                    ModelState.AddModelError(nameof(viewModel.MSOACode), "MSOA code is invalid");
-                }
+                //if (_formKeys.Value.Contains(viewModel.MSOACode) && !viewModel.MSOACode.IsNullOrEmpty() &&
+                //    !existingDomainModel.MSOAId.HasValue) // if the value has been provided in the form, it's not empty, but the string value didn't map to a value in the domain model then show error.
+                //{
+                //    ModelState.AddModelError(nameof(viewModel.MSOACode), "MSOA code is invalid");
+                //}
 
                 if (_formKeys.Value.Contains(viewModel.LSOACode) && !viewModel.LSOACode.IsNullOrEmpty() &&
                     !existingDomainModel.LSOAId.HasValue) 
