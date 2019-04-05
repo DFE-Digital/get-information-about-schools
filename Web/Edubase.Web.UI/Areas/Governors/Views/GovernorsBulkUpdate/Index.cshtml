@@ -1,5 +1,9 @@
 @model GovernorsBulkUpdateViewModel
 
+@{
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Governance bulk update");
+}
+
 <div class="breadcrumbs">
     <ul>
         <li>
