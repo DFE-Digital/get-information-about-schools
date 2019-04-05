@@ -881,6 +881,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             viewModel.MSOALookup = (await _cachedLookupService.MSOAsGetAllAsync()).ToSelectList();
             viewModel.LSOALookup = (await _cachedLookupService.LSOAsGetAllAsync()).ToSelectList();
+            viewModel.LSOAs = (await _cachedLookupService.LSOAsGetAllAsync()).OrderBy(x => x.DisplayOrder).Select(x => new LookupItemViewModel(x));
 
             viewModel.SENProvisions = (await _cachedLookupService.SpecialEducationNeedsGetAllAsync()).ToList();
 

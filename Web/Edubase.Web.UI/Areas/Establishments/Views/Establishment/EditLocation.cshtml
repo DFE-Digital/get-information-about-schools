@@ -141,6 +141,26 @@
                         @Html.ValidationMessageFor(x => x.LSOAId)
                         @Html.DropDownListFor(x => x.LSOAId, Model.LSOALookup, "", new { @class = "form-control" })
                     </div>
+
+                    <div class="expanding-search-field" id="searchby-lsoa-ref">
+                        <div class="warning-message visuallyhidden" role="alert">
+                            <p class="message-text" aria-live="polite"></p>
+                        </div>
+                        @{
+                            // need to have some sort of test here whether to show the error or not.
+                        }
+                        <div class="warning-message js-trigger-aria-live" role="alert">
+                            <p class="message-text" aria-live="polite">We couldn't find any LSOAs matching your search criteria</p>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="selected-las form-group">
+                                <div id="LSOAToAddTarget">
+                                    @Html.TextBoxFor(x => x.LSOAToAdd, new {@class = "floating-text-field", autocomplete = "off"})
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 }
 
                 <button type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveLocation)">Save</button>
@@ -179,7 +199,16 @@
         else
         {
             @section ViewScripts {
-                <script>
+                <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
+                <script type="text/javascript">
+                    var jScriptVersion;
+                    window.lsoas = @Html.Json(Model.LSOAs);
+
+                    if (!$('html').hasClass('lt-ie9')) {
+                        DfE.Views.editLocation.init();
+                        alert("initialised");
+                    }
+
                     var $fields = $('#content').find('.form-control');
                     var exitAttached = false;
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Edubase.Web.UI.Areas.Establishments.Models;
+using Edubase.Web.UI.Models.Search;
 
 namespace Edubase.Web.UI.Models
 {
@@ -171,6 +172,7 @@ namespace Edubase.Web.UI.Models
         public int? CASWardId { get; set; }
         public int? MSOAId { get; set; }
         public int? LSOAId { get; set; }
+        public string LSOAToAdd { get; set; }
 
         [Display(Name = "BSO: Date of last inspection")]
         public DateTimeViewModel BSODateOfLastInspectionVisit { get; set; } = new DateTimeViewModel();
@@ -215,6 +217,7 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> CASWards { get; internal set; }
         public IEnumerable<SelectListItem> MSOALookup { get; set; }
         public IEnumerable<SelectListItem> LSOALookup { get; set; }
+        public IEnumerable<LookupItemViewModel> LSOAs { get; set; }
 
         public IEnumerable<SelectListItem> PRUSENOptions { get; internal set; }
         public IEnumerable<SelectListItem> PRUEBDOptions { get; internal set; }
