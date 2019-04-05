@@ -121,6 +121,26 @@
         <div class="column-half">
             <div class="form-group push--bottom @Html.ValidationCssClassFor(x => x.BulkFile)">
                 <label for="BulkFile" class="form-label">Upload a file</label>
+                <div class="expanding-content-wrapper flush--bottom" data-update-text="false">
+                    <a href="#" class="expanding-content-trigger">
+                        Max file size and other limits
+                    </a>
+                    <div class="expanding-content panel-indent">
+                        <p>Max file size is 1MB. There are also limits of:
+                            <ul class="list-bullet inside flush--bottom">
+                                <li>
+                                    5,000 rows per file for back office users
+                                </li>
+                                <li>
+                                    1,000 rows per file for EFADO, SFC and DDCE users
+                                </li>
+                                <li>
+                                    200 rows per file for establishment and MAT users
+                                </li>
+                            </ul>
+                        </p>
+                    </div>
+                </div>
                 @Html.ValidationMessageFor(x => x.BulkFile)
                 @Html.TextBoxFor(x => x.BulkFile, new { type = "file" })
             </div>
@@ -156,11 +176,4 @@
 
 @section ViewScripts{
     <script src="/public/assets/scripts/standalone/accessibility.js"></script>
-    <script>
-        $(function () {
-            var toggle = function () { $("button[type='submit']").prop("disabled", $("#BulkUpdateType").val() == "") };
-            $("#BulkUpdateType").on("change", toggle);
-            toggle();
-        });
-    </script>
 }
