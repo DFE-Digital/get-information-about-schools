@@ -136,11 +136,10 @@
 
                 @if (Model.EditPolicy.LSOACode)
                 {
-                    <div class="form-group @Html.ValidationCssClass(nameof(Model.LSOACode)) @Html.ValidationCssClass("LSOAId")">
-                        <label for="@nameof(Model.LSOACode)">Lower Super Output Area (LSOA)</label>
-                        @Html.ValidationMessage(nameof(Model.LSOACode))
-                        @Html.ValidationMessage("LSOAId")<div id="LSOAId"></div>
-                        @Html.TextBoxFor(x => x.LSOACode, new { @class = "form-control" })
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.LSOAId)">
+                        <label for="@nameof(Model.LSOAId)">Lower Super Output Area (LSOA)</label>
+                        @Html.ValidationMessageFor(x => x.LSOAId)
+                        @Html.DropDownListFor(x => x.LSOAId, Model.LSOALookup, "", new { @class = "form-control" })
                     </div>
                 }
 

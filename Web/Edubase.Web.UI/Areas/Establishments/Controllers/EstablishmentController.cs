@@ -402,7 +402,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             SetProperty(targetViewModel, model, m => m.Northing);
             SetProperty(targetViewModel, model, m => m.CASWardId);
             SetProperty(targetViewModel, model, m => m.MSOAId);
-            SetProperty(targetViewModel, model, m => m.LSOACode);
+            SetProperty(targetViewModel, model, m => m.LSOAId);
 
             targetViewModel.ActionSpecifier = model.ActionSpecifier;
             targetViewModel.SelectedTab = model.SelectedTab;
@@ -599,17 +599,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.EditPolicy.AdditionalAddresses = CanUserDefineAdditionalAddresses(domainModel.TypeId.GetValueOrDefault());
 
             await PopulateSelectLists(viewModel);
-
-            //if (domainModel.MSOAId.HasValue)
-            //{
-            //    viewModel.MSOACode = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.MSOAId.Value)?.Code;
-            //}
-
-            if (domainModel.LSOAId.HasValue)
-            {
-                viewModel.LSOACode = (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.LSOAId.Value)?.Code;
-            }
-
             return viewModel;
         }
 
@@ -890,8 +879,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.ReasonsEstablishmentClosed = (await _cachedLookupService.ReasonEstablishmentClosedGetAllAsync()).ToSelectList(viewModel.ReasonEstablishmentClosedId);
             viewModel.SpecialClassesProvisions = (await _cachedLookupService.ProvisionSpecialClassesGetAllAsync()).ToSelectList(viewModel.ProvisionSpecialClassesId);
 
-            viewModel.MSOAList = (await _cachedLookupService.MSOAsGetAllAsync()).ToSelectList();
-
+            viewModel.MSOALookup = (await _cachedLookupService.MSOAsGetAllAsync()).ToSelectList();
+            viewModel.LSOALookup = (await _cachedLookupService.LSOAsGetAllAsync()).ToSelectList();
 
             viewModel.SENProvisions = (await _cachedLookupService.SpecialEducationNeedsGetAllAsync()).ToList();
 
@@ -937,16 +926,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
         private async Task MapFromViewModelToDomainModel(ViewModel viewModel, EstablishmentModel domainModel)
         {
-            //if (_formKeys.Value.Contains(nameof(viewModel.MSOACode)))
-            //{
-            //    domainModel.MSOAId = !viewModel.MSOACode.IsNullOrEmpty() ? (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Code == viewModel.MSOACode)?.Id : null;
-            //}
-
-            if (_formKeys.Value.Contains(nameof(viewModel.LSOACode)))
-            {
-                domainModel.LSOAId = !viewModel.LSOACode.IsNullOrEmpty() ? (await _cachedLookupService.LSOAsGetAllAsync()).FirstOrDefault(x => x.Code == viewModel.LSOACode)?.Id : null;
-            }
-
             MapToDomainModel(viewModel, domainModel);
             MapToDomainModelIEBT(viewModel, domainModel);
         }
@@ -1105,19 +1084,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             if (ModelState.IsValid)
             {
                 await MapFromViewModelToDomainModel(viewModel, existingDomainModel);
-
-                //if (_formKeys.Value.Contains(viewModel.MSOACode) && !viewModel.MSOACode.IsNullOrEmpty() &&
-                //    !existingDomainModel.MSOAId.HasValue) // if the value has been provided in the form, it's not empty, but the string value didn't map to a value in the domain model then show error.
-                //{
-                //    ModelState.AddModelError(nameof(viewModel.MSOACode), "MSOA code is invalid");
-                //}
-
-                if (_formKeys.Value.Contains(viewModel.LSOACode) && !viewModel.LSOACode.IsNullOrEmpty() &&
-                    !existingDomainModel.LSOAId.HasValue) 
-                {
-                    ModelState.AddModelError(nameof(viewModel.LSOACode), "LSOA code is invalid");
-                }
-
 
                 var validationEnvelope = await _establishmentWriteService.ValidateAsync(existingDomainModel, User);
 

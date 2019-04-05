@@ -172,9 +172,6 @@ namespace Edubase.Web.UI.Models
         public int? MSOAId { get; set; }
         public int? LSOAId { get; set; }
 
-        //public string MSOACode { get; set; }
-        public string LSOACode { get; set; }
-
         [Display(Name = "BSO: Date of last inspection")]
         public DateTimeViewModel BSODateOfLastInspectionVisit { get; set; } = new DateTimeViewModel();
 
@@ -217,6 +214,7 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> GSSLALookup { get; internal set; }
         public IEnumerable<SelectListItem> CASWards { get; internal set; }
         public IEnumerable<SelectListItem> MSOALookup { get; set; }
+        public IEnumerable<SelectListItem> LSOALookup { get; set; }
 
         public IEnumerable<SelectListItem> PRUSENOptions { get; internal set; }
         public IEnumerable<SelectListItem> PRUEBDOptions { get; internal set; }
