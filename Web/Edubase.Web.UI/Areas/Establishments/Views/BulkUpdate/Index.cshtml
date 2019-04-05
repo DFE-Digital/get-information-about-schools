@@ -1,6 +1,10 @@
 ﻿@using Microsoft.Ajax.Utilities
 @model BulkUpdateViewModel
 
+@{
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Establishment bulk update");
+}
+
 <div class="breadcrumbs">
     <ul>
         <li>
