@@ -15,14 +15,11 @@
     </ul>
 </div>
 
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
+
 @if (Model.BadFileType)
 {
-    <div class="validation-summary-errors">
-        <span>Incorrect file type</span>
-        <ul>
-            <li>You have uploaded an incorrect file type. Please upload an XLSX file.</li>
-        </ul>
-    </div>
+
 }
 else if (Model.ErrorLogDownload != null)
 {
