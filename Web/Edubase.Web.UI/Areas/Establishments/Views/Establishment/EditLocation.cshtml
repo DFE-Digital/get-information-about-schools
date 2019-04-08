@@ -136,30 +136,16 @@
 
                 @if (Model.EditPolicy.LSOACode)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.LSOAId)">
-                        <label for="@nameof(Model.LSOAId)">Lower Super Output Area (LSOA)</label>
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.LSOAId) @Html.ValidationCssClassFor(x => x.LSOAName)" id="searchby-lsoa-ref">
+                        <label for="@nameof(Model.LSOAName)">Lower Super Output Area (LSOA)</label>
                         @Html.ValidationMessageFor(x => x.LSOAId)
-                        @Html.DropDownListFor(x => x.LSOAId, Model.LSOALookup, "", new { @class = "form-control" })
-                    </div>
+                        @Html.ValidationMessageFor(x => x.LSOAName)
 
-                    <div class="expanding-search-field" id="searchby-lsoa-ref">
-                        <div class="warning-message visuallyhidden" role="alert">
-                            <p class="message-text" aria-live="polite"></p>
-                        </div>
-                        @{
-                            // need to have some sort of test here whether to show the error or not.
-                        }
-                        <div class="warning-message js-trigger-aria-live" role="alert">
-                            <p class="message-text" aria-live="polite">We couldn't find any LSOAs matching your search criteria</p>
+                        <div id="LSOAId" class="floating-text-field-wrap form-control">
+                            @Html.TextBoxFor(x => x.LSOAName, new { @class = "floating-text-field", autocomplete = "off" })
                         </div>
 
-                        <div class="form-group">
-                            <div class="selected-las form-group">
-                                <div id="LSOAToAddTarget">
-                                    @Html.TextBoxFor(x => x.LSOAToAdd, new {@class = "floating-text-field", autocomplete = "off"})
-                                </div>
-                            </div>
-                        </div>
+                        @Html.HiddenFor(x => x.LSOAId, new {id = "LSOAIdHidden"})
                     </div>
                 }
 
@@ -206,7 +192,6 @@
 
                     if (!$('html').hasClass('lt-ie9')) {
                         DfE.Views.editLocation.init();
-                        alert("initialised");
                     }
 
                     var $fields = $('#content').find('.form-control');

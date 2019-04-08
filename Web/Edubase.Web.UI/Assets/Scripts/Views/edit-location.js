@@ -1,6 +1,5 @@
 DfE.Views.editLocation = {
   init: function (options) {
-    debugger;
     'use strict';
 
     var defaults = {
@@ -23,14 +22,15 @@ DfE.Views.editLocation = {
     if (typeof (jScriptVersion) === 'undefined' || jScriptVersion >= 9) {
       $(function () {
         setTimeout(function () {
-          self.bindAutosuggest('#LSOAToAdd',
+          self.bindAutosuggest('#LSOAName',
+            '#LSOAIdHidden',
             { data: window.lsoas, name: "name", value: "id" });
         }, 500);
       });
     }
   },
   
-  bindAutosuggest: function (targetInputElementName, suggestionSource) {
+  bindAutosuggest: function (targetInputElementName, targetResolvedInputElementName, suggestionSource) {
 
     if ($(targetInputElementName).length === 0) {
       console.log("The input field '" + targetInputElementName + "' does not exist.");
@@ -42,20 +42,6 @@ DfE.Views.editLocation = {
     var value = "id";
     var source = null;
     var minChars = 0;
-    var suggestionsOpen = false;
-    var selectedLocalAuthorities = [];
-    var selectedLaButtonTemplate =
-      '<a id="button-{1}" class="link-button font-small remove-suggest-la" data-remove="{1}">{0}</a>',
-      selectedLaHiddenTemplate = '<input type="hidden" name="d" value="{0}" id="{1}" />',
-      re = /\{0\}/g,
-      reId = /\{1}/g;
-
-
-    $('#LSOAToAdd').on('focus', function () {
-      $('#LSOAToAddTarget').addClass('focused');
-    }).on('blur', function () {
-      $('#LSOAToAddTarget').removeClass('focused');
-    });
 
     if (typeof (suggestionSource) === "function") { // remote source
       minChars = 3;
@@ -113,16 +99,6 @@ DfE.Views.editLocation = {
     $(targetInputElementName).bind("typeahead:select", function (src, suggestion) {
       $(targetResolvedInputElementName).val(suggestion[value]);
       currentSuggestionName = suggestion[field];
-
-      if (targetInputElementName === '#LSOAToAdd') {
-        includeLa(suggestion);
-        $(targetInputElementName).typeahead('val', '');
-
-        if ($(this).nextAll('.tt-menu').find('.tt-suggestion').length > 0) {
-          $(this).nextAll('.tt-menu').find('.tt-cursor').click();
-
-        }
-      }
     });
 
     $(targetInputElementName).bind("typeahead:autocomplete", function (src, suggestion) {
@@ -158,15 +134,15 @@ DfE.Views.editLocation = {
       });
     }
 
-    $('#LSOAToAdd').on('typeahead:render', function (e) {
+    $('#LSOAName').on('typeahead:render', function (e) {
       highLightFirstSuggestion.call(this);
     });
 
-    $('#LSOAToAdd, #TextSearchModel_Text').on('typeahead:open', function (e) {
+    $('#LSOAName, #TextSearchModel_Text').on('typeahead:open', function (e) {
       highLightFirstSuggestion.call(this);
     });
 
-    $('#LSOAToAdd').on('keydown', function (e) {
+    $('#LSOAName').on('keydown', function (e) {
       var $input = $(this);
       if (e.which === 13) {
         e.preventDefault();
@@ -181,15 +157,6 @@ DfE.Views.editLocation = {
           return self.showWarning($('#searchby-lsoa-ref'),
             'We don’t recognise this LSOA. Amend it or clear it to continue searching.');
         }
-      }
-    });
-
-    $(window).on('noLocationMatch', function (e) {
-      var text = $('#LocationSearchModel_Text').val();
-      var match = text.match(/\b[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][ABD-HJLNP-UW-Z]{2}\b/i);
-      if (!match) { // only show message when not a postcode
-        self.showWarning($('#searchby-location-ref'),
-          'We couldn’t find any locations matching your search criteria');
       }
     });
   }
