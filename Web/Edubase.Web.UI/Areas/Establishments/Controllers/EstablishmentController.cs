@@ -401,6 +401,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             SetProperty(targetViewModel, model, m => m.Easting);
             SetProperty(targetViewModel, model, m => m.Northing);
             SetProperty(targetViewModel, model, m => m.CASWardId);
+            SetProperty(targetViewModel, model, m => m.MSOAName);
             SetProperty(targetViewModel, model, m => m.MSOAId);
             SetProperty(targetViewModel, model, m => m.LSOAName);
             SetProperty(targetViewModel, model, m => m.LSOAId);
@@ -601,10 +602,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             await PopulateSelectLists(viewModel);
 
-            //if (domainModel.MSOAId.HasValue)
-            //{
-            //    viewModel.MSOACode = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.MSOAId.Value)?.Code;
-            //}
+            if (domainModel.MSOAId.HasValue)
+            {
+                var MSOA = (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.MSOAId.Value);
+                viewModel.MSOAName = $"{MSOA?.Name} [{MSOA?.Code}]";
+                viewModel.MSOAId = domainModel.MSOAId;
+            }
 
             if (domainModel.LSOAId.HasValue)
             {
@@ -891,8 +894,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.ReasonsEstablishmentOpened = (await _cachedLookupService.ReasonEstablishmentOpenedGetAllAsync()).ToSelectList(viewModel.ReasonEstablishmentOpenedId);
             viewModel.ReasonsEstablishmentClosed = (await _cachedLookupService.ReasonEstablishmentClosedGetAllAsync()).ToSelectList(viewModel.ReasonEstablishmentClosedId);
             viewModel.SpecialClassesProvisions = (await _cachedLookupService.ProvisionSpecialClassesGetAllAsync()).ToSelectList(viewModel.ProvisionSpecialClassesId);
-
-            viewModel.MSOALookup = (await _cachedLookupService.MSOAsGetAllAsync()).ToSelectList();
+            
+            viewModel.MSOAs = (await _cachedLookupService.MSOAsGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, $"{x.Name} [{x.Code}]")).ToList();
             viewModel.LSOAs = (await _cachedLookupService.LSOAsGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, $"{x.Name} [{x.Code}]")).ToList();
 
             viewModel.SENProvisions = (await _cachedLookupService.SpecialEducationNeedsGetAllAsync()).ToList();
@@ -941,6 +944,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             MapToDomainModel(viewModel, domainModel);
             MapToDomainModelIEBT(viewModel, domainModel);
+
+            if (_formKeys.Value.Contains(nameof(viewModel.MSOAName)) && _formKeys.Value.Contains(nameof(viewModel.MSOAId)))
+            {
+                // in case js is disabled and the ID field is empty, we still want to try to find the id from the lookup if possible.
+                domainModel.MSOAId = viewModel.MSOAId ?? (await _cachedLookupService.MSOAsGetAllAsync()).FirstOrDefault(x => x.Name.Equals(viewModel.MSOAName, StringComparison.InvariantCultureIgnoreCase))?.Id;
+            }
 
             if (_formKeys.Value.Contains(nameof(viewModel.LSOAName)) && _formKeys.Value.Contains(nameof(viewModel.LSOAId)))
             {

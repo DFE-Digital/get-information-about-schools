@@ -25,6 +25,9 @@ DfE.Views.editLocation = {
           self.bindAutosuggest('#LSOAName',
             '#LSOAIdHidden',
             { data: window.lsoas, name: "name", value: "id" });
+          self.bindAutosuggest('#MSOAName',
+            '#MSOAIdHidden',
+            { data: window.msoas, name: "name", value: "id" });
         }, 500);
       });
     }
@@ -133,7 +136,7 @@ DfE.Views.editLocation = {
         highLightFirstSuggestion.call(this);
       });
     }
-
+    
     $('#LSOAName').on('typeahead:render', function (e) {
       highLightFirstSuggestion.call(this);
     });
@@ -156,6 +159,32 @@ DfE.Views.editLocation = {
         } else {
           return self.showWarning($('#searchby-lsoa-ref'),
             'We don’t recognise this LSOA. Amend it or clear it to continue searching.');
+        }
+      }
+    });
+
+    $('#MSOAName').on('typeahead:render', function (e) {
+      highLightFirstSuggestion.call(this);
+    });
+
+    $('#MSOAName, #TextSearchModel_Text').on('typeahead:open', function (e) {
+      highLightFirstSuggestion.call(this);
+    });
+
+    $('#MSOAName').on('keydown', function (e) {
+      var $input = $(this);
+      if (e.which === 13) {
+        e.preventDefault();
+        e.stopPropagation();
+        if ($.trim($(this).val()).length === 0) {
+          return self.showWarning($('#searchby-MSOA-ref'), 'Please enter a MSOA to start a search');
+
+        }
+        if (!$(this).nextAll('.tt-menu').hasClass('tt-empty')) {
+          $(this).nextAll('.tt-menu').find('.tt-cursor').click();
+        } else {
+          return self.showWarning($('#searchby-msoa-ref'),
+            'We don’t recognise this MSOA. Amend it or clear it to continue searching.');
         }
       }
     });

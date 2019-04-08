@@ -127,10 +127,16 @@
 
                 @if (Model.EditPolicy.MSOACode)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.MSOAId)">
-                        <label for="@nameof(Model.MSOAId)">Middle Super Output Area (MSOA)</label>
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.MSOAId) @Html.ValidationCssClassFor(x => x.MSOAName)" id="searchby-msoa-ref">
+                        <label for="@nameof(Model.MSOAName)">Middle Super Output Area (MSOA)</label>
                         @Html.ValidationMessageFor(x => x.MSOAId)
-                        @Html.DropDownListFor(x => x.MSOAId, Model.MSOALookup, "", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.MSOAName)
+
+                        <div id="MSOAId" class="floating-text-field-wrap form-control">
+                            @Html.TextBoxFor(x => x.MSOAName, new { @class = "floating-text-field", autocomplete = "off" })
+                        </div>
+
+                        @Html.HiddenFor(x => x.MSOAId, new { id = "MSOAIdHidden" })
                     </div>
                 }
 
@@ -145,7 +151,7 @@
                             @Html.TextBoxFor(x => x.LSOAName, new { @class = "floating-text-field", autocomplete = "off" })
                         </div>
 
-                        @Html.HiddenFor(x => x.LSOAId, new {id = "LSOAIdHidden"})
+                        @Html.HiddenFor(x => x.LSOAId, new { id = "LSOAIdHidden" })
                     </div>
                 }
 
@@ -189,6 +195,7 @@
                 <script type="text/javascript">
                     var jScriptVersion;
                     window.lsoas = @Html.Json(Model.LSOAs);
+                    window.msoas = @Html.Json(Model.MSOAs);
 
                     if (!$('html').hasClass('lt-ie9')) {
                         DfE.Views.editLocation.init();

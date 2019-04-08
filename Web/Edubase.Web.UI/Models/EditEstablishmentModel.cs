@@ -170,6 +170,7 @@ namespace Edubase.Web.UI.Models
         public int? UrbanRuralId { get; set; }
         public int? GSSLAId { get; set; }
         public int? CASWardId { get; set; }
+        public string MSOAName { get; set; }
         public int? MSOAId { get; set; }
         public string LSOAName { get; set; }
         public int? LSOAId { get; set; }
@@ -215,7 +216,7 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> UrbanRuralLookup { get; internal set; }
         public IEnumerable<SelectListItem> GSSLALookup { get; internal set; }
         public IEnumerable<SelectListItem> CASWards { get; internal set; }
-        public IEnumerable<SelectListItem> MSOALookup { get; set; }
+        public IEnumerable<LookupItemViewModel> MSOAs { get; set; }
         public IEnumerable<LookupItemViewModel> LSOAs { get; set; }
 
         public IEnumerable<SelectListItem> PRUSENOptions { get; internal set; }
