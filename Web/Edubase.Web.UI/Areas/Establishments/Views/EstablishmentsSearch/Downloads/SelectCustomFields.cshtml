@@ -4,6 +4,7 @@
 @model EstablishmentSearchDownloadViewModel
 @using Edubase.Web.UI.Helpers
 @{
+    ViewBag.Title = string.Format("Download establishment search results");
     ViewBag.bodyClasses = " search-page custom-fields-download";
     ViewBag.hideLogo = true;
 }
@@ -126,6 +127,7 @@
                         $(window).scrollTop(0);
                         this.showValidationError = true;
                         e.preventDefault();
+                        window.document.title = "Error: Download establishment search results - GOV.UK";
                     }
                 },
                 showAlphabeticalView: function(){
