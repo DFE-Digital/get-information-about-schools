@@ -24,8 +24,8 @@
     <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
     <ul class="error-summary-list">
         <li>
-            <p v-if="errorOneFieldReq">Select at least one field</p>
-            <p v-if="errorEmptySearch">Enter a field name to search</p>
+            <a href="#errorOneFieldReq" v-if="errorOneFieldReq">Select at least one field</a>
+            <a href="#errorEmptySearch" v-if="errorEmptySearch">Enter a field name to search</a>
         </li>
     </ul>
 </div>
@@ -43,7 +43,7 @@
             {
                 <div class="download-step">
                     <fieldset class="stacked-controls">
-                        <legend class="visually-hidden">Select fields to download</legend>
+                        <legend id="errorEmptySearch" class="visually-hidden">Select fields to download</legend>
 
                         <div class="form-group push--bottom" :class="[errorEmptySearch ? 'error' : '']">
                             <label class="form-label" for="search">Search by field name</label>
@@ -65,7 +65,7 @@
                             </div>
                         </div>
 
-                        <ul :class="['categorised-list', 'chevron-accordion', categorisedView ? '' : 'hidden', errorOneFieldReq ? 'error' : '']">
+                        <ul :id="[categorisedView ? 'errorOneFieldReq' : '']" :class="['categorised-list', 'chevron-accordion', categorisedView ? '' : 'hidden', errorOneFieldReq ? 'error' : '']">
                             <li v-if="errorOneFieldReq">
                                 <span class="field-validation-error">Select at least one field</span>
                             </li>
@@ -82,7 +82,7 @@
                             </li>
                         </ul>
 
-                        <div :class="['alphabetical-list', alphabeticalView ? '' : 'hidden', errorOneFieldReq ? 'error' : '']">
+                        <div :id="[alphabeticalView ? 'errorOneFieldReq' : '']" :class="['alphabetical-list', alphabeticalView ? '' : 'hidden', errorOneFieldReq ? 'error' : '']">
                             <span v-if="errorOneFieldReq" class="field-validation-error">Select at least one field</span>
                             <span v-for="(item, index) in filteredList" class="checkbox-wrap">
                                 <input :id="'chk-'+index" type="checkbox" name="@EstablishmentSearchDownloadViewModel.SelectedCustomFieldsBindAlias" :value="item.id" v-model="selections" />
