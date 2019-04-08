@@ -24,7 +24,8 @@
     <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
     <ul class="error-summary-list">
         <li>
-            <p>Please select at least one field</p>
+            <p v-if="errorOneFieldReq">Select at least one field</p>
+            <p v-if="errorEmptySearch">Enter a field name to search</p>
         </li>
     </ul>
 </div>
@@ -44,8 +45,9 @@
                     <fieldset class="stacked-controls">
                         <legend class="visually-hidden">Select fields to download</legend>
 
-                        <div class="form-group push--bottom">
+                        <div class="form-group push--bottom" :class="[errorEmptySearch ? 'error' : '']">
                             <label class="form-label" for="search">Search by field name</label>
+                            <span v-if="errorEmptySearch" class="field-validation-error">Enter a field name to search</span>
                             <input id="search" v-model="search" class="form-control search" placeholder="Search..." @@keydown.enter.prevent="doSearch" />
                             <button class="button button-search icon-only" @@click="doSearch" type="button"><span class="visuallyhidden">Search</span></button>
 
@@ -63,7 +65,10 @@
                             </div>
                         </div>
 
-                        <ul :class="['categorised-list', 'chevron-accordion', categorisedView ? '' : 'hidden']">
+                        <ul :class="['categorised-list', 'chevron-accordion', categorisedView ? '' : 'hidden', errorOneFieldReq ? 'error' : '']">
+                            <li v-if="errorOneFieldReq">
+                                <span class="field-validation-error">Select at least one field</span>
+                            </li>
                             <li class="expander-panel" v-for="(item, index) in fieldsByCategory">
                                 <a class="panel-trigger" :href="'#target-'+index" aria-expanded="false" :aria-controls="'target-'+index">{{item.category}}</a>
                                 <div class="expander-panel-content" id="'target-'+index">
@@ -77,7 +82,8 @@
                             </li>
                         </ul>
 
-                        <div :class="['alphabetical-list', alphabeticalView ? '' : 'hidden']">
+                        <div :class="['alphabetical-list', alphabeticalView ? '' : 'hidden', errorOneFieldReq ? 'error' : '']">
+                            <span v-if="errorOneFieldReq" class="field-validation-error">Select at least one field</span>
                             <span v-for="(item, index) in filteredList" class="checkbox-wrap">
                                 <input :id="'chk-'+index" type="checkbox" name="@EstablishmentSearchDownloadViewModel.SelectedCustomFieldsBindAlias" :value="item.id" v-model="selections" />
                                 <label :for="'chk-'+index" class="edubase-button-checkbox">{{ item.name }}</label>
@@ -110,6 +116,8 @@
                 filteredList: fieldList,
                 selections: selections,
                 showValidationError: false,
+                errorOneFieldReq: false,
+                errorEmptySearch: false,
                 uiMode: "c",
                 search: null,
                 isFiltered: false
@@ -127,6 +135,8 @@
                     else {
                         $(window).scrollTop(0);
                         this.showValidationError = true;
+                        this.errorOneFieldReq = true;
+                        this.errorEmptySearch = false;
                         e.preventDefault();
                         window.document.title = "Error: Download establishment search results - GOV.UK";
                     }
@@ -142,20 +152,20 @@
                         this.showAlphabeticalView();
                         this.filteredList = this.fields.filter(function (f) { return f.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1; }.bind(this));
                         this.isFiltered = true;
+                        this.showValidationError = false;
+                        this.errorEmptySearch = false;
                     } else {
                         this.filteredList = this.fields;
                         this.isFiltered = false;
+                        this.showValidationError = true;
+                        this.errorEmptySearch = true;
+                        this.errorOneFieldReq = false;
                     }
                 }
             },
             computed: {
                 alphabeticalView: function () { return this.uiMode == "a"; },
                 categorisedView: function () { return this.uiMode == "c"; }
-            },
-            watch: {
-                search: function (val) {
-                    if (!val) this.doSearch();
-                }
             }
         });
 
