@@ -139,6 +139,7 @@
                         this.errorEmptySearch = false;
                         e.preventDefault();
                         window.document.title = "Error: Download establishment search results - GOV.UK";
+                        $('.error-summary').focus();
                     }
                 },
                 showAlphabeticalView: function(){
@@ -160,6 +161,7 @@
                         this.showValidationError = true;
                         this.errorEmptySearch = true;
                         this.errorOneFieldReq = false;
+                        $('.error-summary').focus();
                     }
                 }
             },
