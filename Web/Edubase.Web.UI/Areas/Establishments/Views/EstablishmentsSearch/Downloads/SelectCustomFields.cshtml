@@ -25,7 +25,7 @@
     <ul class="error-summary-list">
         <li>
             <a href="#errorOneFieldReq" v-if="errorOneFieldReq">Select at least one field</a>
-            <a href="#errorEmptySearch" v-if="errorEmptySearch">Enter a field name to search</a>
+            <a href="#search" v-if="errorEmptySearch">Enter a field name to search</a>
         </li>
     </ul>
 </div>
@@ -43,7 +43,7 @@
             {
                 <div class="download-step">
                     <fieldset class="stacked-controls">
-                        <legend id="errorEmptySearch" class="visually-hidden">Select fields to download</legend>
+                        <legend class="visually-hidden">Search by field name</legend>
 
                         <div class="form-group push--bottom" :class="[errorEmptySearch ? 'error' : '']">
                             <label class="form-label" for="search">Search by field name</label>
@@ -56,7 +56,10 @@
                                 <a href="javascript:" @@click="showCategorisedView" v-show="!categorisedView">View in sections</a>
                             </div>
                         </div>
+                    </fieldset>
 
+                    <fieldset class="stacked-controls">
+                        <legend class="visually-hidden">Select fields to download</legend>
                         <div>
                             <input class="button" type="submit" value="Next" />
                             <div class="switch" v-show="!isFiltered">
@@ -155,6 +158,7 @@
                         this.isFiltered = true;
                         this.showValidationError = false;
                         this.errorEmptySearch = false;
+                        this.errorOneFieldReq = false;
                     } else {
                         this.filteredList = this.fields;
                         this.isFiltered = false;
