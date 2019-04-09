@@ -1019,14 +1019,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (viewModel.ActionSpecifierCommand == ViewModel.ASSave || viewModel.ActionSpecifierCommand == ViewModel.ASConfirm)
             {
-                // whether we're wanting to perform an initial save, or the confirm is invalid, we want to display this content back
-                var validateAsSaveOrConfirm = ModelState.IsValid || viewModel.ActionSpecifierCommand == ViewModel.ASConfirm;
-
                 var originalEstabTypeId = (ET) domainModel.TypeId;
-                await ValidateAsync(viewModel, domainModel, validateAsSaveOrConfirm);
+                await ValidateAsync(viewModel, domainModel, (ModelState.IsValid || viewModel.ActionSpecifierCommand == ViewModel.ASConfirm));
                 var newEstabTypeId = (ET?) domainModel.TypeId;
 
-                if (validateAsSaveOrConfirm)
+                if (ModelState.IsValid || viewModel.ActionSpecifierCommand == ViewModel.ASConfirm)
                 {
                     viewModel.OriginalEstablishmentName = domainModel.Name;
 
