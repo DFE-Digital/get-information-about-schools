@@ -1,6 +1,10 @@
 ﻿@using Microsoft.Ajax.Utilities
 @model BulkUpdateViewModel
 
+@{
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Establishment bulk update");
+}
+
 <div class="breadcrumbs">
     <ul>
         <li>
@@ -11,6 +15,44 @@
         </li>
     </ul>
 </div>
+
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
+
+@if (Model.Result?.RowErrors > 0)
+{
+    <div class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+        <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
+        <ul class="error-summary-list">
+            @if (Model.Result.Errors.Any(x => x.Code == "error.mismatchType.EduBaseBulkUpload-MultipleColumnsfile.type.bulkUpload"))
+            {
+                <li>
+                    <a href="#BulkFile">Multiple column files must be XLSX and bulk upload files can be XLSX or tab delimited text files. For more information, see the Establishment bulk update guidance document below within 'Help with preparing files'</a>
+                </li>
+            } else if (Model.Result.Errors.Any())
+            {
+                <li>
+                    <a href="#BulkFile">@Model.Result.Errors.First().Message</a>
+                </li>
+            } else
+            {
+                if (Model.Result.IsFailure())
+                {
+                    <li>
+                        <a href="#error-log">Errors were found with your data. Correct your data before resubmitting.</a>
+                    </li>
+                }
+
+                if (Model.Result.CompletedWithErrors())
+                {
+                    <li>
+                        <a href="#import-errors">@Model.Result.RowErrors rows encountered errors during import. Correct your data before resubmitting.</a>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+}
+
 
 @using (Html.BeginRouteForm("ProcessBulkUpdate", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
@@ -46,44 +88,7 @@
 
             @if (Model.Result != null)
             {
-                if (Model.Result.Errors.Any(x => x.Code == "error.maxRowsLimitReached.payload.bulkUpload"))
-                {
-                    <div class="validation-summary-errors error-summary">
-                        <span>Information missing or incorrect</span>
-                        <p>The file size is too large. Please use a file size smaller than 1MB. There are also limits of:
-                            <ul class="list-bullet inside">
-                                <li>
-                                    5,000 rows per file for back office users
-                                </li>
-                                <li>
-                                    1,000 rows per file for EFADO, SFC and DDCE users
-                                </li>
-                                <li>
-                                    200 rows per file for establishment and MAT users
-                                </li>
-                            </ul>
-                        </p>
-                    </div>
-                }
-                else if (Model.Result.Errors.Any(x => x.Code == "error.mismatchType.EduBaseBulkUpload-MultipleColumnsfile.type.bulkUpload"))
-                {
-                    <div class="validation-summary-errors error-summary">
-                        <span>Information missing or incorrect</span>
-                        <p>
-                            Multiple column files must be XLSX and bulk upload files can be XLSX or tab delimited text files. For more information, see <a href="/guidance">the Establishment bulk update guidance document</a>
-                        </p>
-                    </div>
-                }
-                else if (Model.Result.Errors.Any())
-                {
-                    <div class="validation-summary-errors error-summary">
-                        <span>Information missing or incorrect</span>
-                        <p>
-                            @Model.Result.Errors.First().Message
-                        </p>
-                    </div>
-                }
-                else
+                if (!Model.Result.Errors.Any())
                 {
                     if (Model.Result.IsFailure())
                     {
@@ -97,7 +102,7 @@
 
                     if (Model.Result.CompletedWithErrors())
                     {
-                        <div class="form-group error" id="error-log">
+                        <div class="form-group error" id="import-errors">
                             <p class="error-message">@Model.Result.RowErrors rows encountered errors during import. Please download the error log to correct your data before resubmitting</p>
                             <p class="download-list-item">
                                 <a href="@Model.Result.ErrorLogFile.Url">@Model.Result.ErrorLogFile.Name</a>
@@ -111,6 +116,26 @@
         <div class="column-half">
             <div class="form-group push--bottom @Html.ValidationCssClassFor(x => x.BulkFile)">
                 <label for="BulkFile" class="form-label">Upload a file</label>
+                <div class="expanding-content-wrapper flush--bottom" data-update-text="false">
+                    <a href="#" class="expanding-content-trigger">
+                        Max file size and other limits
+                    </a>
+                    <div class="expanding-content panel-indent">
+                        <p>Max file size is 1MB. There are also limits of:
+                            <ul class="list-bullet inside flush--bottom">
+                                <li>
+                                    5,000 rows per file for back office users
+                                </li>
+                                <li>
+                                    1,000 rows per file for EFADO, SFC and DDCE users
+                                </li>
+                                <li>
+                                    200 rows per file for establishment and MAT users
+                                </li>
+                            </ul>
+                        </p>
+                    </div>
+                </div>
                 @Html.ValidationMessageFor(x => x.BulkFile)
                 @Html.TextBoxFor(x => x.BulkFile, new { type = "file" })
             </div>
@@ -146,11 +171,4 @@
 
 @section ViewScripts{
     <script src="/public/assets/scripts/standalone/accessibility.js"></script>
-    <script>
-        $(function () {
-            var toggle = function () { $("button[type='submit']").prop("disabled", $("#BulkUpdateType").val() == "") };
-            $("#BulkUpdateType").on("change", toggle);
-            toggle();
-        });
-    </script>
 }
