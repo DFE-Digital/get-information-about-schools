@@ -68,7 +68,7 @@ else
 
             @if (Model.ErrorLogDownload != null)
             {
-                <div class="form-group error" id="error-log">
+                <div class="form-group error push--top" id="error-log">
                     <p class="error-message">Please download the error log to correct your data before resubmitting</p>
                     <p class="download-list-item">
                         <a href="@Model.ErrorLogDownload.Url">@Model.ErrorLogDownload.Name</a>
