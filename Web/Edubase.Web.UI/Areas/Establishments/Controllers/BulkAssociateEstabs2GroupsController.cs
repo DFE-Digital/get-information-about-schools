@@ -21,8 +21,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private const string ViewName = "BulkAssociateEstabs2Groups";
         private readonly IEstablishmentWriteService _establishmentWriteService;
         private const string BaseUri = "bulk-associate-estabs-to-groups";
-        private const string ErrorLinkFile = "BulkFile";
-        private const string ErrorLinkLog = "error-log";
 
         public BulkAssociateEstabs2GroupsController(IEstablishmentWriteService establishmentWriteService) => _establishmentWriteService = establishmentWriteService;
 
@@ -80,7 +78,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                         }
                         else if (viewModel.Result.RowErrors > 0)
                         {
-                            ModelState.AddModelError(ErrorLinkLog, "Please download the error log to correct your data before resubmitting");
+                            ModelState.AddModelError(string.Empty, "Please download the error log to correct your data before resubmitting");
                         }
                         else
                         {
@@ -90,16 +88,16 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                                 var lines = errorLogFileContent.Split('\n').Take(3);
                                 if (lines.Any())
                                 {
-                                    lines.ForEach(x => ModelState.AddModelError(ErrorLinkFile, x));
+                                    lines.ForEach(x => ModelState.AddModelError(string.Empty, x));
                                 }
                                 else
                                 {
-                                    ModelState.AddModelError(ErrorLinkFile, "The request failed, but the API did not provide any details as to why.");
+                                    ModelState.AddModelError(string.Empty, "The request failed, but the API did not provide any details as to why.");
                                 }
                             }
                             catch (Exception)
                             {
-                                ModelState.AddModelError(ErrorLinkFile, "The request failed, but the API did not provide any details as to why");
+                                ModelState.AddModelError(string.Empty, "The request failed, but the API did not provide any details as to why");
                             }
                         }
                         return View(ViewName, viewModel);
@@ -112,7 +110,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
             else if (apiResponse.HasErrors)
             {
-                AddApiErrorsToModelState(apiResponse.Errors, ErrorLinkFile);
+                AddApiErrorsToModelState(apiResponse.Errors);
                 return View(ViewName, viewModel);
             }
             else
