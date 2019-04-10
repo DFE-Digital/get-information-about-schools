@@ -1,6 +1,6 @@
 ﻿@model GlossaryItemViewModel
 @{
-    ViewBag.Title = "GIAS: Glossary";
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "GIAS: Glossary");
 }
 
 <div class="breadcrumbs">
@@ -14,13 +14,9 @@
     </ul>
 </div>
 
-<div class="grid-row">
-    <div class="column-full">
-        <h1 class="heading-intro">@(Model.Id == null ? "Create" : "Edit") glossary entry</h1>
-    </div>
-</div>
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-@Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+<h1 class="heading-xlarge">@(Model.Id == null ? "Create" : "Edit") glossary entry</h1>
 
 <div class="grid-row">
     <div class="column-two-thirds">
@@ -40,12 +36,12 @@
                 @Html.TextAreaFor(x => x.Content, 10, 40, new { @class = "form-control entry-content" })
             </div>
 
-            <button type="submit" class="button edubase-button">Save</button>
+            <button type="submit" class="button">Save</button>
             if (Model.Id != null)
             {
-                <button type="submit" class="button button-secondary edubase-button" name="@nameof(Model.IsDeleting)"  id="delete-button" value="true">Delete</button>
+                <button type="submit" class="button button-secondary" name="@nameof(Model.IsDeleting)"  id="delete-button" value="true">Delete</button>
             }
-            @Html.RouteLink("Cancel", "Glossary", null, new { @class = "button button-secondary edubase-button" })
+            @Html.RouteLink("Cancel", "Glossary", null, new { @class = "button button-secondary" })
         }
 
     </div>
