@@ -39,11 +39,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
                 if (new FileInfo(fileName).Length > 1000000)
                 {
-                    viewModel.Result = new Services.Domain.BulkUpdateProgressModel
-                    {
-                        Errors = new[] { new Services.Domain.ApiError { Code = "error.maxRowsLimitReached.payload.bulkUpload" } }
-                    };
-
                     ModelState.AddModelError("BulkFile", "The file size is too large. Please use a file size smaller than 1MB");
                 }
                 else
