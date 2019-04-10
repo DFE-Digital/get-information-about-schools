@@ -10,7 +10,7 @@
     </ul>
 </div>
 
-@Html.ValidationSummary("Incorrect or missing details")
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
 
 @using (Html.BeginRouteForm("BulkAssociateEstabs2GroupsPost", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
