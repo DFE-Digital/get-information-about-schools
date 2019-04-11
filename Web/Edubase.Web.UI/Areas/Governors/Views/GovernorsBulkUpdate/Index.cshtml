@@ -30,10 +30,6 @@ else if (Model.ErrorLogDownload != null)
         </ul>
     </div>
 }
-else
-{
-    @Html.ValidationSummary("Incorrect or missing details")
-}
 
 
 @using (Html.BeginRouteForm("GovernorsProcessBulkUpdate", FormMethod.Post, new { enctype = "multipart/form-data" }))

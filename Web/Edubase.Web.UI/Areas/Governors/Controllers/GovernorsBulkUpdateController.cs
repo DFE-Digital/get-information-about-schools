@@ -47,12 +47,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 {
                     var apiResponse = await _governorsWriteService.BulkUpdateProcessRequestAsync(result.Id, User);
                     viewModel.WasSuccessful = apiResponse.Success;
-                    if(apiResponse.HasErrors) ModelState.AddModelError("", apiResponse.Errors[0].Message);
+                    if(apiResponse.HasErrors) ModelState.AddModelError("BulkFile", apiResponse.Errors[0].Message);
                 }
                 else
                 {
-                    if (result.Errors != null && result.Errors.Any()) ModelState.AddModelError("", result.Errors[0].Message);
-                    else ModelState.AddModelError("", "Please download the error log to correct your data before resubmitting");
+                    if (result.Errors != null && result.Errors.Any()) ModelState.AddModelError("BulkFile", result.Errors[0].Message);
+                    else ModelState.AddModelError("error-log", "Please download the error log to correct your data before resubmitting");
                     viewModel.ErrorLogDownload = result.ErrorLogFile;
                 }
 
