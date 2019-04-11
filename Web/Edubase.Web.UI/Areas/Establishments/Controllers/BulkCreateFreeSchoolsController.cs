@@ -61,7 +61,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 viewModel.Result = apiResponse.GetResponse();
                 if (viewModel.Result.IsProgressing()) return View("InProgress");
                 else if (viewModel.Result.IsCompleted())
-                { 
+                {
                     if (viewModel.Result.HasCreatedEstablishments) // NOTE: You _ONLY_ ever get HasCreatedEstablishments==true, when the ENTIRE operation has succeeded.
                     {
                         return View("Completed", viewModel);
@@ -69,7 +69,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     else // no establishments have been created. Show the main upload page with the error detail.
                     {
                         if (viewModel.Result.HasErrors) AddApiErrorsToModelState(viewModel.Result.Errors);
-                        else if (viewModel.Result.RowErrors > 0) ModelState.AddModelError(string.Empty, "Please download the error log to correct your data before resubmitting");
+                        else if (viewModel.Result.RowErrors > 0) ModelState.AddModelError("error-log", "Please download the error log to correct your data before resubmitting");
                         else
                         {
                             try

@@ -1,7 +1,7 @@
 ﻿@model BulkCreateFreeSchoolsViewModel
 
 @{
-    ViewBag.Title = "Bulk create new free schools";
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Bulk create new free schools");
 }
 <div class="breadcrumbs">
     <ul>
@@ -10,7 +10,7 @@
     </ul>
 </div>
 
-@Html.ValidationSummary("Incorrect or missing details")
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
 
 @using (Html.BeginRouteForm("BulkCreateFreeSchoolsPost", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
