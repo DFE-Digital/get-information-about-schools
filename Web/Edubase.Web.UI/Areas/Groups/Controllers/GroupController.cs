@@ -344,6 +344,15 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 var actionResult = await ProcessCreateEditGroup(viewModel);
                 if (actionResult != null) return actionResult;
             }
+            else
+            {
+                if (viewModel.GroupUId.HasValue)
+                {
+                    var domainModel = (await _groupReadService.GetAsync((int)viewModel.GroupUId, User)).GetResult();
+                    viewModel.OriginalGroupName = domainModel.Name;
+                    viewModel.OriginalGroupTypeName = await _lookup.GetNameAsync(() => domainModel.GroupTypeId);
+                }
+            }
 
             viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT) viewModel.GroupTypeId.Value);
 
@@ -584,6 +593,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
             else if (viewModel.Action == ActionLinkedEstablishmentCancelEdit)
             {
+
                 viewModel.LinkedEstablishments.Establishments.ForEach(x => x.EditMode = false);
             }
             else if (viewModel.Action.StartsWith(ActionLinkedEstablishmentEdit, StringComparison.OrdinalIgnoreCase))

@@ -4,6 +4,8 @@
 @{
     if (Model.ChangesSummary == null)
     {
+        ViewBag.OriginalEstablishmentName = Model.OriginalEstablishmentName;
+        ViewBag.OriginalTypeName = Model.OriginalTypeName;
         Layout = "_EditLayoutPage.cshtml";
     }
     else

@@ -1,4 +1,4 @@
-﻿@using Edubase.Common
+@using Edubase.Common
 @using Edubase.Services.Enums
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.IGroupPageViewModel;
 @model VM
@@ -23,10 +23,10 @@
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-<h1 class="heading-large">@Model.GroupName</h1>
+<h1 class="heading-large">@(ViewBag.OriginalGroupName ?? Model.GroupName)</h1>
 
 <p class="urn"><abbr title="Unique Identifier">UID</abbr>: @Model.GroupUId</p>
-<p class="establishment-type">@Model.GroupTypeName</p>
+<p class="establishment-type">@(ViewBag.OriginalGroupTypeName ?? Model.GroupTypeName)</p>
 @if (ViewData.ContainsKey("DuplicateGovernor"))
 {
     @Html.Partial("~/Areas/Governors/Views/Governor/_DuplicateGovernor.cshtml", ViewData["DuplicateGovernor"])

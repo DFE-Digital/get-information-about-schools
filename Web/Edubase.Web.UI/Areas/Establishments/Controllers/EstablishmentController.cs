@@ -1019,13 +1019,23 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             await PopulateSelectLists(viewModel);
 
-            if (viewModel.ActionSpecifierCommand == ViewModel.ASSave)
+            if (viewModel.ActionSpecifierCommand == ViewModel.ASConfirm)
+            {
+                if (ModelState.IsValid)
+                {
+                    return await SaveEstablishment(viewModel, domainModel);
+                }
+            }
+
+            if (viewModel.ActionSpecifierCommand == ViewModel.ASSave || viewModel.ActionSpecifierCommand == ViewModel.ASConfirm)
             {
                 var originalEstabTypeId = (ET) domainModel.TypeId;
-                await ValidateAsync(viewModel, domainModel);
+                var originalName = domainModel.Name;
+
+                await ValidateAsync(viewModel, domainModel, (ModelState.IsValid || viewModel.ActionSpecifierCommand == ViewModel.ASConfirm));
                 var newEstabTypeId = (ET?) domainModel.TypeId;
 
-                if (ModelState.IsValid)
+                if (ModelState.IsValid || viewModel.ActionSpecifierCommand == ViewModel.ASConfirm)
                 {
                     viewModel.OriginalEstablishmentName = domainModel.Name;
 
@@ -1044,6 +1054,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     }
                     else return Redirect(Url.RouteUrl("EstabDetails", new { id = viewModel.Urn.Value }) + viewModel.SelectedTab2DetailPageTabNameMapping[viewModel.SelectedTab]);
                 }
+                else
+                {
+                    viewModel.OriginalEstablishmentName = originalName;
+                    viewModel.OriginalTypeName = (await _cachedLookupService.EstablishmentTypesGetAllAsync()).Where(x => x.Id == (int)originalEstabTypeId).Select(x => x.Name).FirstOrDefault();
+                }
             }
             else if (viewModel.ActionSpecifierCommand == ViewModel.ASAddAddress)
             {
@@ -1053,12 +1068,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 RemoveAdditionalAddress(viewModel);
             }
-            else if (viewModel.ActionSpecifierCommand == ViewModel.ASConfirm)
-            {
-                if (ModelState.IsValid)
-                {
-                    return await SaveEstablishment(viewModel, domainModel);
-                }
+            else if (viewModel.ActionSpecifierCommand == ViewModel.ASCancel)
+            {   
+                viewModel.OriginalEstablishmentName = domainModel.Name;
+                viewModel.OriginalTypeName = (await _cachedLookupService.EstablishmentTypesGetAllAsync()).Where(x => x.Id == domainModel.TypeId).Select(x => x.Name).FirstOrDefault();
             }
 
             return View(viewModel);
@@ -1106,10 +1119,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         /// </summary>
         /// <param name="viewModel"></param>
         /// <param name="existingDomainModel"></param>
+        /// <param name="validate"></param>
         /// <returns></returns>
-        private async Task ValidateAsync(ViewModel viewModel, EstablishmentModel existingDomainModel)
+        private async Task ValidateAsync(ViewModel viewModel, EstablishmentModel existingDomainModel, bool validate)
         {
-            if (ModelState.IsValid)
+            if (validate)
             {
                 await MapFromViewModelToDomainModel(viewModel, existingDomainModel);
 

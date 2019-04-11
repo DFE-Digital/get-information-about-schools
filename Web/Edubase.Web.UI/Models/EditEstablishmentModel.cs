@@ -251,6 +251,7 @@ namespace Edubase.Web.UI.Models
         public DateTimeViewModel ChangeEffectiveDate { get; set; } = new DateTimeViewModel();
 
         public string OriginalEstablishmentName { get; set; }
+        public string OriginalTypeName { get; set; }
 
         public string Contact_EmailAddress { get; set; }
         public string ContactAlt_EmailAddress { get; set; }
