@@ -1027,7 +1027,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
                 if (ModelState.IsValid || viewModel.ActionSpecifierCommand == ViewModel.ASConfirm)
                 {
-                    viewModel.OriginalEstablishmentName = domainModel.Name;
+                    viewModel.OriginalEstablishmentName = originalName;
 
                     var changes = await _establishmentReadService.GetModelChangesAsync(domainModel, editPolicyEnvelope.ApprovalsPolicy, User);
 
