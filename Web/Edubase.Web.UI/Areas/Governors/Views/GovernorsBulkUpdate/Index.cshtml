@@ -17,21 +17,6 @@
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-@if (Model.BadFileType)
-{
-
-}
-else if (Model.ErrorLogDownload != null)
-{
-    <div class="validation-summary-errors">
-        <span>Validation fail</span>
-        <ul>
-            <li>The data contained in the XLSX was invalid. Please download the error log to correct your data before resubmitting.</li>
-        </ul>
-    </div>
-}
-
-
 @using (Html.BeginRouteForm("GovernorsProcessBulkUpdate", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.HiddenFor(x => x.TemplateUri)
