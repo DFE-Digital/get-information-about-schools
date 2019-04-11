@@ -320,7 +320,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
         [HttpPost]
         [Route("Edit/{id:int}/Details"), EdubaseAuthorize]
-        public async Task<ActionResult> EditDetails(GroupEditorViewModel viewModel)
+        public async Task<ActionResult> EditDetails(int id, GroupEditorViewModel viewModel)
         {
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);
@@ -343,6 +343,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 var actionResult = await ProcessCreateEditGroup(viewModel);
                 if (actionResult != null) return actionResult;
+            }
+            else
+            {
+                var domainModel = (await _groupReadService.GetAsync(id, User)).GetResult();
+                viewModel.OriginalGroupName = domainModel.Name;
+                viewModel.OriginalGroupTypeName = (await _lookup.GetNameAsync(() => domainModel.GroupTypeId));
             }
 
             viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT) viewModel.GroupTypeId.Value);
@@ -584,6 +590,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
             else if (viewModel.Action == ActionLinkedEstablishmentCancelEdit)
             {
+
                 viewModel.LinkedEstablishments.Establishments.ForEach(x => x.EditMode = false);
             }
             else if (viewModel.Action.StartsWith(ActionLinkedEstablishmentEdit, StringComparison.OrdinalIgnoreCase))
