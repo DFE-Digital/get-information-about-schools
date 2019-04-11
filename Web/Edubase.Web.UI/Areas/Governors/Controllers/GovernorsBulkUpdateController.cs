@@ -1,4 +1,4 @@
-﻿using Edubase.Common.IO;
+using Edubase.Common.IO;
 using Edubase.Services.Governors;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Helpers;
@@ -11,7 +11,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
     using R = Services.Security.EdubaseRoles;
 
-    [RouteArea("Governors"), RoutePrefix("BulkUpdate"), Route("{action=index}"), MvcAuthorizeRoles(R.EDUBASE_GROUP_MAT, R.ESTABLISHMENT, R.EFADO, R.ROLE_BACKOFFICE)]
+    [RouteArea("Governors"), RoutePrefix("BulkUpdate"), MvcAuthorizeRoles(R.EDUBASE_GROUP_MAT, R.ESTABLISHMENT, R.EFADO, R.ROLE_BACKOFFICE)]
     public class GovernorsBulkUpdateController : Controller
     {
         readonly IGovernorsWriteService _governorsWriteService;
@@ -34,7 +34,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         }
 
 
-        [HttpPost, Route("Index", Name = "GovernorsProcessBulkUpdate")]
+        [HttpPost, Route(Name = "GovernorsProcessBulkUpdate")]
         public async Task<ActionResult> ProcessBulkUpdate(GovernorsBulkUpdateViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -47,12 +47,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 {
                     var apiResponse = await _governorsWriteService.BulkUpdateProcessRequestAsync(result.Id, User);
                     viewModel.WasSuccessful = apiResponse.Success;
-                    if(apiResponse.HasErrors) ModelState.AddModelError("", apiResponse.Errors[0].Message);
+                    if(apiResponse.HasErrors) ModelState.AddModelError("BulkFile", apiResponse.Errors[0].Message);
                 }
                 else
                 {
-                    if (result.Errors != null && result.Errors.Any()) ModelState.AddModelError("", result.Errors[0].Message);
-                    else ModelState.AddModelError("", "Please download the error log to correct your data before resubmitting");
+                    if (result.Errors != null && result.Errors.Any()) ModelState.AddModelError("BulkFile", result.Errors[0].Message);
+                    else ModelState.AddModelError("error-log", "Please download the error log to correct your data before resubmitting");
                     viewModel.ErrorLogDownload = result.ErrorLogFile;
                 }
 
