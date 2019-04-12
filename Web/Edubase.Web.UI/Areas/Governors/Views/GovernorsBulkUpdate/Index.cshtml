@@ -1,5 +1,9 @@
 @model GovernorsBulkUpdateViewModel
 
+@{
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Governance bulk update");
+}
+
 <div class="breadcrumbs">
     <ul>
         <li>
@@ -11,29 +15,7 @@
     </ul>
 </div>
 
-@if (Model.BadFileType)
-{
-    <div class="validation-summary-errors">
-        <span>Incorrect file type</span>
-        <ul>
-            <li>You have uploaded an incorrect file type. Please upload an XLSX file.</li>
-        </ul>
-    </div>
-}
-else if (Model.ErrorLogDownload != null)
-{
-    <div class="validation-summary-errors">
-        <span>Validation fail</span>
-        <ul>
-            <li>The data contained in the XLSX was invalid. Please download the error log to correct your data before resubmitting.</li>
-        </ul>
-    </div>
-}
-else
-{
-    @Html.ValidationSummary("Incorrect or missing details")
-}
-
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
 
 @using (Html.BeginRouteForm("GovernorsProcessBulkUpdate", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
@@ -67,7 +49,7 @@ else
 
             @if (Model.ErrorLogDownload != null)
             {
-                <div class="form-group error" id="error-log">
+                <div class="form-group error push--top" id="error-log">
                     <p class="error-message">Please download the error log to correct your data before resubmitting</p>
                     <p class="download-list-item">
                         <a href="@Model.ErrorLogDownload.Url">@Model.ErrorLogDownload.Name</a>

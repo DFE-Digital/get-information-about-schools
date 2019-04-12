@@ -1,4 +1,4 @@
-﻿using Autofac;
+using Autofac;
 using Edubase.Services.Domain;
 using Edubase.Web.UI.Helpers;
 using FluentValidation.Mvc;
@@ -12,6 +12,6 @@ namespace Edubase.Web.UI.Controllers
     {
         protected new JsonCamelCaseResult Json(object data) => new JsonCamelCaseResult(data, JsonRequestBehavior.AllowGet);
 
-        protected void AddApiErrorsToModelState(ApiError[] errors) => (errors ?? Enumerable.Empty<ApiError>()).ForEach(x => ModelState.AddModelError(string.Empty, x.GetMessage()));
+        protected void AddApiErrorsToModelState(ApiError[] errors, string keyName = "") => (errors ?? Enumerable.Empty<ApiError>()).ForEach(x => ModelState.AddModelError(keyName, x.GetMessage()));
     }
 }
