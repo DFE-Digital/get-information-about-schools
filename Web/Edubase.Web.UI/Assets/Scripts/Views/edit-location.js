@@ -73,7 +73,7 @@ DfE.Views.editLocation = {
     }
 
     var templateHandler = function (suggestion) {
-      return '<div><a href="javascript:">' + suggestion[field] + '</a></div>';
+      return '<div><a class="js-allow-exit" href="javascript:">' + suggestion[field] + '</a></div>';
     };
     
     $(targetInputElementName).typeahead({
