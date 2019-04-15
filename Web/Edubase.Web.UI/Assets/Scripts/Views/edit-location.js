@@ -112,7 +112,7 @@ DfE.Views.editLocation = {
     $(targetInputElementName).bind("input propertychange", function (event) {
       // When the user changes the value in the search having already selected an item, ensure the selection resets
       var currentValue = $(event.target).val();
-      if (currentValue !== currentSuggestionName) {
+      if (currentValue === "" || currentValue !== currentSuggestionName) {
         $(targetResolvedInputElementName).val('');
       }
     });
