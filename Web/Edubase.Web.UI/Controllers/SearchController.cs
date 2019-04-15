@@ -13,6 +13,7 @@ using System.Web.Http.Results;
 using System.Web.Mvc;
 using Antlr.Runtime;
 using DM.Common.Validators;
+using Edubase.Services.Establishments.Search;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -141,7 +142,24 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [Route("Search/Suggest"), HttpGet]
-        public async Task<ActionResult> Suggest(string text) => Json(await _establishmentReadService.SuggestAsync(StringUtil.DistillEstablishmentName(text), User));
+        public async Task<ActionResult> Suggest(string text)
+        {
+            var suggestions = (await _establishmentReadService.SuggestAsync(StringUtil.DistillEstablishmentName(text), User)).ToArray();
+
+            // we only want to show the city/postcode on the duplicates, so we can remove that content from the unique items
+            var duplicates = suggestions.GroupBy(x => x.Name).SelectMany(grp => grp.Skip(1)).ToArray();
+            foreach (var establishmentSuggestionItem in suggestions)
+            {
+                if (duplicates.Any(x => x.Name == establishmentSuggestionItem.Name))
+                {
+                    continue;
+                }
+                establishmentSuggestionItem.Address_CityOrTown = string.Empty;
+                establishmentSuggestionItem.Address_PostCode = string.Empty;
+            }
+
+            return Json(suggestions);
+        }
 
         [Route("Search/SuggestGroup"), HttpGet]
         public async Task<ActionResult> SuggestGroup(string text) => Json(await _groupReadService.SuggestAsync(text.Distill(), User));
