@@ -1,7 +1,7 @@
 ﻿(function () {
     var today = new Date();
     var bulkAcademies = new Vue({
-        el: '#bulk-academies',
+        el: '#content',
         data: {
             establishments: [],
             addedUrns: [],
@@ -212,6 +212,7 @@
                 this.invalidUrn = this.searchUrn === '' || isNaN(this.searchUrn);
                 this.duplicateUrn = this.addedUrns.indexOf(self.searchUrn) > -1;
                 this.urnLookUpError = '';
+                this.errorFocus();
 
                 if (this.invalidUrn || this.duplicateUrn) {
                     return true;
@@ -232,6 +233,7 @@
                                 self.apiError = jqxhr.responseJSON;
                             } else {
                                 self.invalidUrn = true;
+                                self.errorFocus();
                             }
 
                             self.isProcessing = false;
@@ -347,6 +349,28 @@
                     }
                 }
                 return dateError;
+            },
+            errorFocus: function(){
+                window.document.title = "Error: Bulk create new academies - GOV.UK";
+                if ($('.error-summary').length) {
+                    $('.error-summary').focus();
+                } else {
+                    window.setTimeout(function(){
+                        $('.error-summary').focus();
+                    },500);
+                }
+            },
+            clearErrors: function(){
+                window.document.title = "Bulk create new academies - GOV.UK";
+                this.estabTypeError = false;
+                this.duplicateUrn = false;
+                this.noAcademyTypeError = false;
+                this.academyUnselectedError = false;
+                this.openDateError = false;
+                this.invalidUrn = false;
+                this.commitError = false;
+                this.urnLookUpError = '';
+                this.apiValidationError = '';
             },
             addEstablishment: function () {
                 var self = this;
