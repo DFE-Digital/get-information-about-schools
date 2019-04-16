@@ -25,7 +25,7 @@
     <ul class="error-summary-list">
         <li>
             <a href="#errorOneFieldReq" v-if="errorOneFieldReq">Select at least one field</a>
-            <a href="#search" v-if="errorEmptySearch">Enter a field name to search</a>
+            <a href="#search" v-if="errorEmptySearch" @@click="focusOnSearch">Enter a field name to search</a>
         </li>
     </ul>
 </div>
@@ -141,8 +141,7 @@
                         this.errorOneFieldReq = true;
                         this.errorEmptySearch = false;
                         e.preventDefault();
-                        window.document.title = "Error: Download establishment search results - GOV.UK";
-                        $('.error-summary').focus();
+                        this.errorFocus();
                     }
                 },
                 showAlphabeticalView: function(){
@@ -165,8 +164,22 @@
                         this.showValidationError = true;
                         this.errorEmptySearch = true;
                         this.errorOneFieldReq = false;
-                        $('.error-summary').focus();
+                        this.errorFocus();
                     }
+                },
+                errorFocus: function(){
+                    window.document.title = "Error: Download establishment search results - GOV.UK";
+                    if ($('.error-summary').length) {
+                        $('.error-summary').focus();
+                    } else {
+                        window.setTimeout(function(){
+                            $('.error-summary').focus();
+                        },500);
+                    }
+                },
+                focusOnSearch: function(e){
+                    e.preventDefault();
+                    $('#search').focus();
                 }
             },
             computed: {
