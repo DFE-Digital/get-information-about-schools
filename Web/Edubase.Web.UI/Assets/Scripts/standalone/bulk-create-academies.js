@@ -166,6 +166,28 @@
                 },100);
 
             },
+            errorFocus: function(){
+                window.document.title = "Error: Bulk create new academies - GOV.UK";
+                if ($('.error-summary').length) {
+                    $('.error-summary').focus();
+                } else {
+                    window.setTimeout(function(){
+                        $('.error-summary').focus();
+                    },500);
+                }
+            },
+            clearErrors: function(){
+                window.document.title = "Bulk create new academies - GOV.UK";
+                this.estabTypeError = false;
+                this.duplicateUrn = false;
+                this.noAcademyTypeError = false;
+                this.academyUnselectedError = false;
+                this.openDateError = false;
+                this.invalidUrn = false;
+                this.commitError = false;
+                this.urnLookUpError = '';
+                this.apiValidationError = '';
+            },
             detailUrl: function (urn) {
                 return '/Establishments/Establishment/Details/' + urn;
             },
@@ -198,6 +220,7 @@
                 });
                 if (typeIds.indexOf(estabType) > -1) {
                     self.estabTypeError = true;
+                    this.errorFocus();
                 }
 
             },
@@ -348,34 +371,16 @@
                         dateError = true;
                     }
                 }
-                return dateError;
-            },
-            errorFocus: function(){
-                window.document.title = "Error: Bulk create new academies - GOV.UK";
-                if ($('.error-summary').length) {
-                    $('.error-summary').focus();
-                } else {
-                    window.setTimeout(function(){
-                        $('.error-summary').focus();
-                    },500);
+                if (dateError) {
+                  this.errorFocus();
                 }
-            },
-            clearErrors: function(){
-                window.document.title = "Bulk create new academies - GOV.UK";
-                this.estabTypeError = false;
-                this.duplicateUrn = false;
-                this.noAcademyTypeError = false;
-                this.academyUnselectedError = false;
-                this.openDateError = false;
-                this.invalidUrn = false;
-                this.commitError = false;
-                this.urnLookUpError = '';
-                this.apiValidationError = '';
+                return dateError;
             },
             addEstablishment: function () {
                 var self = this;
                 this.openDateError = this.validateOpenDate();
                 this.academyUnselectedError = this.pendingEstab.academyType === 'Please select';
+                this.errorFocus();
                 this.urnLookUpError = '';
                 this.apiValidationError = '';
                 var dateArray = [this.pad(this.openDateDay), this.pad(this.openDateMonth), this.openDateYear];
@@ -463,6 +468,7 @@
                 this.pendingEstab = {};
                 this.searchUrn = '';
                 this.apiValidationError = '';
+                this.clearErrors();
             },
             couldDelete: function (urn) {
                 this.pendingDelete = true;

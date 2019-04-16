@@ -101,7 +101,7 @@
                             {{pendingEstabAddress}} <br />
                             <abbr title="Unique Reference Number">URN</abbr>: {{pendingEstab.urn}} <br />
                             <span v-show="!pendingEdit">
-                                <a href="#" class="change-link" v-on:click.prevent="pendingEstab={}">Wrong establishment?</a>
+                                <a href="#" class="change-link" v-on:click.prevent="pendingEstab={}; clearErrors()">Wrong establishment?</a>
                             </span>
                         </p>
 
@@ -134,7 +134,7 @@
                             </fieldset>
                         </div>
                         <div class="button-row">
-                            <button class="button mobile-full-width" id="add-item-to-list" v-on:click.prevent="addEstablishment" v-show="!pendingEdit">Add</button>
+                            <button class="button mobile-full-width" id="add-item-to-list" v-on:click.prevent="addEstablishment" v-show="!pendingEdit">Add establishment</button>
                             <button class="button mobile-full-width" id="save-item-to-list" v-on:click.prevent="addEstablishment" v-show="pendingEdit">Save</button>
                             <a class="button mobile-full-width button-secondary" id="cancel-add-item-to-list" v-on:click.prevent="cancelAddEdit">Cancel</a>
                         </div>
