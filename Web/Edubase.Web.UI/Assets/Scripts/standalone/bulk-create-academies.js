@@ -167,12 +167,15 @@
 
             },
             errorFocus: function(){
-                window.document.title = "Error: Bulk create new academies - GOV.UK";
                 if ($('.error-summary').length) {
+                    window.document.title = "Error: Bulk create new academies - GOV.UK";
                     $('.error-summary').focus();
                 } else {
                     window.setTimeout(function(){
-                        $('.error-summary').focus();
+                        if ($('.error-summary').length) {
+                            window.document.title = "Error: Bulk create new academies - GOV.UK";
+                            $('.error-summary').focus();
+                        }
                     },500);
                 }
             },
@@ -316,6 +319,7 @@
                                         var estab = d1.returnValue;
                                         self.buildTypesDropDown();
                                         self.pendingEstab = estab;
+                                        self.clearErrors();
                                     } else {
                                         self.urnLookUpError = "The URN in is invalid";
                                         self.isSearching = false;
@@ -376,13 +380,18 @@
                 }
                 return dateError;
             },
+            wrongEstablishment: function(){
+                this.pendingEstab = {};
+                this.isSearching = false;
+                this.clearErrors();
+            },
             addEstablishment: function () {
                 var self = this;
                 this.openDateError = this.validateOpenDate();
                 this.academyUnselectedError = this.pendingEstab.academyType === 'Please select';
-                this.errorFocus();
                 this.urnLookUpError = '';
                 this.apiValidationError = '';
+                this.errorFocus();
                 var dateArray = [this.pad(this.openDateDay), this.pad(this.openDateMonth), this.openDateYear];
 
                 if (!this.openDateError && !this.academyUnselectedError) {
@@ -413,12 +422,12 @@
                                     self.establishments = estabs;
 
                                 } else {
-                                    self.addedUrns.push(self.searchUrn);
+                                    self.addedUrns.push(self.pendingEstab.urn);
 
                                 }
 
                                 self.establishments.push(self.pendingEstab);
-                                self.addedUrns.push(self.searchUrn);
+                                self.addedUrns.push(self.pendingEstab.urn);
 
                                 self.pendingEstab = {};
                                 self.searchUrn = '';
@@ -426,8 +435,7 @@
                                 self.openDateMonth = today.getMonth() + 1;
                                 self.openDateYear = today.getFullYear();
                                 self.pendingEdit = false;
-
-
+                                self.clearErrors();
                             } else {
                                 var messages = data[0].errors.map(function(elem) { return elem.message });
                                 self.apiValidationError = messages.join('<br>');
@@ -462,6 +470,7 @@
                 this.openDateDay = openingDate[0];
                 this.openDateMonth = openingDate[1];
                 this.openDateYear = openingDate[2];
+                this.clearErrors();
             },
             cancelAddEdit: function () {
                 this.pendingEdit = false;
@@ -621,4 +630,3 @@
     });
 
 }());
-

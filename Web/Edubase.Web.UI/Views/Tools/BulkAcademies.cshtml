@@ -101,7 +101,7 @@
                             {{pendingEstabAddress}} <br />
                             <abbr title="Unique Reference Number">URN</abbr>: {{pendingEstab.urn}} <br />
                             <span v-show="!pendingEdit">
-                                <a href="#" class="change-link" v-on:click.prevent="pendingEstab={}; clearErrors()">Wrong establishment?</a>
+                                <a href="#" class="change-link" v-on:click.prevent="wrongEstablishment">Wrong establishment?</a>
                             </span>
                         </p>
 
@@ -141,6 +141,7 @@
 
                     </div>
                 </div>
+
                 <div class="academies-list-wrapper column-full" v-show="establishments.length > 0 && !pendingEdit && !isSearching">
                     <h2 class="heading-medium">Academies to create</h2>
                     <p class="table-caption" v-show="establishments.length > 1">Showing 1 - {{establishments.length}} of {{establishments.length}}</p>
@@ -299,5 +300,3 @@
     <script src="/Assets/Scripts/standalone/bulk-create-academies.js"></script>
     @*<script src="/public/assets/scripts/standalone/bulk-create-academies.js"></script>*@
 }
-
-
