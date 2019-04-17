@@ -6,348 +6,352 @@
     ViewBag.BodyClasses = "create-childrens-centre";
 }
 
+<div class="breadcrumbs">
+    <ul>
+        <li>@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
+        <li>@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, null)</li>
+        <li v-show="appState==='groupDetail' && !isProcessing">@Html.ActionLink("Create children's centre group or collaboration", "CreateNewGroup", "Group", new {area = "Groups", type = "ChildrensCentre"}, null)</li>
+    </ul>
+</div>
+
+ <!-- <div v-if="showValidationError" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+    <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
+    <ul class="error-summary-list">
+        <li>
+            <a href="#errorOneFieldReq" v-if="errorOneFieldReq">Select at least one field</a>
+            <a href="#search" v-if="errorEmptySearch" @@click="focusOnSearch">Enter a field name to search</a>
+        </li>
+    </ul>
+</div> -->
+
+@Html.ValidationSummary("Incorrect or missing details", new {@class = "error-summary"})
+
 <div id="create-childrens-centre" v-cloak>
-<div v-show="Object.keys(apiError).length> 0">
-    <h1 class="heading-xlarge">Sorry, something went wrong</h1>
-    <p>Please try again later.</p>
-    <p>A report of the error has been sent to our technical team.</p>
+    <div v-show="Object.keys(apiError).length> 0">
+        <h1 class="heading-xlarge">Sorry, something went wrong</h1>
+        <p>Please try again later.</p>
+        <p>A report of the error has been sent to our technical team.</p>
 
-    <p class="api-error-code" v-show="apiError.hasOwnProperty('errorCode')">Error code: {{apiError.errorCode}}</p>
-    <div v-show="apiError.hasOwnProperty('technicalDetails')">
-        <code>
-            {{apiError.technicalDetails}}
-        </code>
-    </div>
-</div>
-<div v-show="Object.keys(apiError).length === 0">
-
-
-<div aria-live="polite" class="wait-spinner" v-show="isProcessing">
-    <p class="visually-hidden">Please wait</p>
-</div>
-@using (Html.BeginForm("Create", "Group", new {area = "Groups"}, FormMethod.Post, new {@id = "create-childrens-centres"}))
-{
-    @Html.HiddenFor(x => x.GroupUId)
-    @Html.HiddenFor(x => x.GroupTypeMode)
-    @Html.HiddenFor(x => x.SaveMode)
-
-    <div class="grid-row">
-    <div id="step1" v-show="appState === 'initial'">
-        <div class="column-full">
-            <div class="breadcrumbs">
-                <ul>
-                    <li>@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
-                    <li>@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, null)</li>
-                </ul>
-            </div>
-
-            <h1 class="heading-xlarge">@Model.PageTitle</h1>
-            @Html.ValidationSummary("Incorrect or missing details", new {@class = "error-summary"})
+        <p class="api-error-code" v-show="apiError.hasOwnProperty('errorCode')">Error code: {{apiError.errorCode}}</p>
+        <div v-show="apiError.hasOwnProperty('technicalDetails')">
+            <code>
+                {{apiError.technicalDetails}}
+            </code>
         </div>
+    </div>
+    <div v-show="Object.keys(apiError).length === 0">
 
-        <div class="column-two-thirds">
-            <p>You can use this to create children's centre groups or collaborations of existing establishments.</p>
-            <fieldset class="radio-wrap stacked-controls">
-                <legend class="heading-medium">Select the process that you are interested in</legend>
-                <div class="form-group">
-                    @foreach (var groupType in Model.CCGroupTypes)
-                    {
-                        var inputId = "grouptypeid-" + groupType.Value;
-                        <span class="radio-button-wrap">
-                            @Html.RadioButtonFor(x => x.GroupTypeId, groupType.Value, new {id = inputId, v_model = "groupType"})
-                            <label class="edubase-button-radio" for="@inputId">
-                                @groupType.Text
-                            </label>
-                        </span>
-                    }
+        <div aria-live="polite" class="wait-spinner" v-show="isProcessing">
+            <p class="visually-hidden">Please wait</p>
+        </div>
+        @using (Html.BeginForm("Create", "Group", new {area = "Groups"}, FormMethod.Post, new {@id = "create-childrens-centres"}))
+        {
+            @Html.HiddenFor(x => x.GroupUId)
+            @Html.HiddenFor(x => x.GroupTypeMode)
+            @Html.HiddenFor(x => x.SaveMode)
+
+            <div class="grid-row">
+                <div id="step1" v-show="appState === 'initial'">
+                <div class="column-full">
+                    <h1 class="heading-xlarge">@Model.PageTitle</h1>
                 </div>
-            </fieldset>
-
-        </div>
-        <div class="column-full">
-            <div class="submit-cancel-panel">
-                <a href="#" class="button mobile-full-width" v-on:click.prevent="step0Continue">
-                    Continue
-                </a>
-                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-secondary mobile-full-width"})
-
-            </div>
-        </div>
-    </div>
-    <div id="step2"v-show="appState==='groupDetail' && !isProcessing">
-        <div class="column-full">
-            <div class="breadcrumbs">
-                <ul>
-                    <li>@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
-                    <li>@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, null)</li>
-                    <li>@Html.ActionLink("Create children's centre group or collaboration", "CreateNewGroup", "Group", new {area = "Groups", type = "ChildrensCentre"}, null)</li>
-                </ul>
-            </div>
-
-            <h1 class="heading-intro">Enter the children's centre {{groupTypeName}} details</h1>
-
-            @Html.ValidationSummary("Incorrect or missing details", new {@class = "error-summary"})
-            <div class="error-summary" v-show="groupNameApiError.length>0 || groupNameError || laError || openDateError">
-                <h2 class="error-summary-heading heading-medium">Incorrect or missing details</h2>
-                <ul class="error-summary-list">
-                    <li class="error-message" v-show="groupNameApiError.length>0">
-                        {{groupNameApiError}}
-                    </li>
-                    <li class="error-message" v-show="groupNameError">
-                        Please enter the {{groupTypeName}} name
-                    </li>
-                    <li class="error-message" v-show="openDateError">
-                        Please check the opening date you have entered
-                    </li>
-                    <li class="error-message" v-show="laError">
-                        Please select a local authority
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="column-half">
-            <p>Add the details of the children's centre {{groupTypeName}} you'd like to create.</p>
-
-            <h2 class="heading-medium">Children's centre {{groupTypeName}} details</h2>
-            <div v-bind:class="['form-group', (groupNameError || groupNameApiError.length>0)? 'error' : '']">
-                <label for="GroupName" class="form-label">{{capitalise(groupTypeName)}} name</label>
-                @Html.ValidationMessageFor(x => x.GroupName)
-                <span class="error-message" v-show="groupNameError">Please check the {{groupTypeName}} name</span>
-                <span class="error-message" v-show="groupNameApiError.length>0">{{groupNameApiError}}</span>
-                @Html.TextBoxFor(x => x.GroupName, new {@class = "form-control", v_model = "groupName"})
-            </div>
-
-            @Html.HiddenFor(x => x.GroupTypeId)
-
-            @Html.EditorFor(x => x.OpenDate, new {title = Model.OpenDateLabel, vueModel = "openDate"})
-
-            <div v-bind:class="['form-group', laError? 'error' : '']">
-                <label for="LocalAuthorityId" class="form-label">Local authority</label>
-                @Html.ValidationMessageFor(x => x.LocalAuthorityId)
-                <span class="error-message" v-show="laError">Please select a local authority</span>
-                @if (Model.IsLocalAuthorityEditable)
-                {
-                    @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new {@class = "form-control", v_model = "la"})
-                }
-                else
-                {
-                    <input type="text" value="@(Model.LocalAuthorityName)" disabled="disabled" class="form-control" v-model="laName" id="uneditable-la"/>
-                    @Html.HiddenFor(x => x.LocalAuthorityName, new {id = "uneditable-la-name"})
-                    @Html.HiddenFor(x => x.LocalAuthorityId, new {id = "la-code"})
-                }
-                @Html.HiddenFor(x => x.IsLocalAuthorityEditable)
-            </div>
-        </div>
-        <div class="column-full">
-            <div class="submit-cancel-panel">
-                <a href="#" class="button mobile-full-width" v-on:click.prevent="allowStep1Continue() ? step1Continue() : null" :disabled="!allowStep1Continue()">
-                    Continue
-                </a>
-                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="step0Complete=false, appState = 'initial'" v-show="!detailEdit">
-                    Cancel
-                </a>
-                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="step1Continue" v-show="detailEdit">
-                    Cancel
-                </a>
-
-            </div>
-        </div>
-    </div>
-    <div id="step3" v-show="appState==='addCentre' && !isProcessing">
-        <div class="column-full">
-            <div class="breadcrumbs">
-                <ul>
-                    <li>@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
-                    <li>@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, null)</li>
-                    <li>@Html.ActionLink("Create children's centre group or collaboration", "CreateNewGroup", "Group", new {area = "Groups", type = "ChildrensCentre"}, null)</li>
-                </ul>
-            </div>
-
-            <h1 class="heading-intro">Add children's centres</h1>
-            @Html.ValidationSummary("Incorrect or missing details", new {@class = "error-summary"})
-            <div class="error-summary" v-show="apiErrors.length>0">
-                <h2 class="error-summary-heading heading-medium">There <span v-html="wasWere"></span> error<span v-show="apiErrors.length > 1">s</span> creating the {{groupTypeName}}
-                </h2>
-                <ul class="error-summary-list">
-                    <li v-for="err in apiErrors" class="error-message">
-                        {{err.field}} : {{err.message}}
-                    </li>
-                </ul>
-            </div>
-            <div class="error-summary" v-show="urnApiErrors.length>0">
-                <h2 class="error-summary-heading heading-medium">Please check the <abbr title="Unique Reference Number">URN</abbr></h2>
-                <ul class="error-summary-list">
-                    <li v-for="err in urnApiErrors" class="error-message">
-                        {{err.field}} : {{err.message}}
-                    </li>
-                </ul>
-            </div>
-            <div class="error-summary" v-show="tooFewCentresError">
-                <h2 class="error-summary-heading heading-medium">Please add more centres to the {{groupTypeName}}</h2>
-                <ul class="error-summary=list">
-                    <li class="error-message">
-                        You need to add at least two centres
-                    </li>
-                </ul>
-            </div>
-            <div class="error-summary" v-show="duplicateUrnError">
-                <h2 class="error-summary-heading heading-medium">Please check the <abbr title="Unique Reference Number">URN</abbr></h2>
-                <ul class="error-summary=list">
-                    <li class="error-message">
-                        The <abbr title="Unique Reference Number">URN</abbr> is a duplicate.
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="column-two-thirds">
-            <p>
-                Add two or more children's centres to create a children's centre {{groupTypeName}}
-                <span v-if="groupType==8">and choose which one you would like as the lead centre</span>.
-            </p>
-
-            <h2 class="heading-medium">New children's centre {{groupTypeName}} details</h2>
-            <div class="warning-message" v-show="groupNameWarningMessage.length >0">
-                <p v-html="groupNameWarningMessage"></p>
-            </div>
-            <dl class="key-value-list fixed-label">
-                <dt>Group Name:</dt>
-                <dd id="group-name">{{groupName}}</dd>
-                <dt>Open date:</dt>
-                <dd id="group-open-date">{{openDate}}</dd>
-                <dt>Group status:</dt>
-                <dd id="group-status">{{groupStatus}}</dd>
-                <dt>Local authority:</dt>
-                <dd id="group-la">{{laName}}</dd>
-            </dl>
-
-            <h2 class="heading-medium">Add children's centres</h2>
-            <div v-bind:class="['form-group inline-with-button', (urnError || urnApiErrors.length > 0 || duplicateUrnError)? 'error' : '']">
-                @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
-                <label class="form-label" for="LinkedEstablishments_LinkedEstablishmentSearch_Urn">
-                    Establishment <abbr title="Unique Reference Number">URN</abbr>
-                </label>
-                <span class="error-message" v-show="urnError || urnApiErrors.length > 0 || duplicateUrnError">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
-                @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new {@class = "form-control form-control-1-2 search-box", v_model = "searchUrn"})
-                <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" class="button inline-submit" v-on:click.prevent="lookupUrn" :disabled="$.trim(searchUrn).length < 5">Find</button>
-            </div>
-        </div>
-        <div class="column-full">
-            <!-- JB: list of "added" centres here -->
-            <div v-show="centresInGroup.length > 0">
-                <h2 class="heading-medium">Children’s centres to add to the {{groupTypeName}}</h2>
-                <p class="table-caption">{{ tableCount }}</p>
-                <table class="edubase-table childrens-centre-listing">
-                    <caption class="visuallyhidden">Children's centres added</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col" v-if="groupType === '8'">Lead centre</th>
-                            <th scope="col"><abbr title="Unique Reference Number">URN</abbr></th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Join date</th>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(estab, index) in centresInGroup">
-                            <td data-label="Lead centre" v-bind:class="['radio-cell',(estab.urn == groupLead)? 'highlight': '']" v-if="groupType === '8'">
+                <div class="column-two-thirds">
+                    <p>You can use this to create children's centre groups or collaborations of existing establishments.</p>
+                    <fieldset class="radio-wrap stacked-controls">
+                        <legend class="heading-medium">Select the process that you are interested in</legend>
+                        <div class="form-group">
+                            @foreach (var groupType in Model.CCGroupTypes)
+                            {
+                                var inputId = "grouptypeid-" + groupType.Value;
                                 <span class="radio-button-wrap">
-                                    <input type="radio" name="lead-centre" :value="estab.urn" v-bind:id="generateRadioId(estab.urn)" :checked="estab.urn == groupLead" v-model="groupLead"/>
-                                    <label class="edubase-button-radio" v-bind:for="generateRadioId(estab.urn)">
-                                        <span class="visuallyhidden">Set as lead establishment</span>
+                                    @Html.RadioButtonFor(x => x.GroupTypeId, groupType.Value, new {id = inputId, v_model = "groupType"})
+                                    <label class="edubase-button-radio" for="@inputId">
+                                        @groupType.Text
                                     </label>
                                 </span>
-                            </td>
-
-                            <td data-label="URN" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">
-                                <input type="hidden" :value="estab.urn" name="estab-in-group"/> <!-- :value is deliberate - vue js attribute bind. visual studio likes to remove : when reformatting!!! -->
-                                {{estab.urn}}
-                            </td>
-
-                            <td data-label="Name" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">{{estab.name}}</td>
-                            <td data-label="Join date" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">{{ estab.joinDate }}</td>
-                            <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="editJoiningEstab(estab.urn)">Edit</a></td>
-                            <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="removeJoiningEstab(estab.urn)">Remove</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p class="table-caption">{{tableCount}}</p>
+                            }
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="column-full">
+                    <div class="submit-cancel-panel">
+                        <a href="#" class="button mobile-full-width" v-on:click.prevent="step0Continue">Continue</a>
+                        @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-secondary mobile-full-width"})
+                    </div>
+                </div>
             </div>
-            <div class="submit-cancel-panel">
 
-                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="appState='groupDetail', apiErrors=[], detailEdit = true,tooFewCentresError=false">&laquo; Go back</a>
-                @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
-                {
-                    <input type="hidden" name="action" value="@GroupEditorViewModel.ActionSave"/>
-                    <!--JB: until final step, go to next step and show "continue", then final step submit with text "create" -->
-                    <button type="submit" name="action" class="button mobile-full-width" value="@GroupEditorViewModel.ActionSave" v-on:click.prevent="submitCentres" :disabled="centresInGroup.length<2">Create</button>
-                }
 
-                @(Model.InEditMode
-                      ? Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "button button-secondary cancel mobile-full-width"})
-                      : Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-secondary cancel mobile-full-width"}))
+                <div id="step2" v-show="appState==='groupDetail' && !isProcessing">
+                <div class="column-full">
+                    <h1 class="heading-xlarge">Enter the children's centre {{groupTypeName}} details</h1>
+
+                    @Html.ValidationSummary("Incorrect or missing details", new {@class = "error-summary"})
+                    <div class="error-summary" v-show="groupNameApiError.length>0 || groupNameError || laError || openDateError">
+                        <h2 class="error-summary-heading heading-medium">Incorrect or missing details</h2>
+                        <ul class="error-summary-list">
+                            <li class="error-message" v-show="groupNameApiError.length>0">
+                                {{groupNameApiError}}
+                            </li>
+                            <li class="error-message" v-show="groupNameError">
+                                Please enter the {{groupTypeName}} name
+                            </li>
+                            <li class="error-message" v-show="openDateError">
+                                Please check the opening date you have entered
+                            </li>
+                            <li class="error-message" v-show="laError">
+                                Please select a local authority
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="column-half">
+                    <p>Add the details of the children's centre {{groupTypeName}} you'd like to create.</p>
+
+                    <h2 class="heading-medium">Children's centre {{groupTypeName}} details</h2>
+                    <div v-bind:class="['form-group', (groupNameError || groupNameApiError.length>0)? 'error' : '']">
+                        <label for="GroupName" class="form-label">{{capitalise(groupTypeName)}} name</label>
+                        @Html.ValidationMessageFor(x => x.GroupName)
+                        <span class="error-message" v-show="groupNameError">Please check the {{groupTypeName}} name</span>
+                        <span class="error-message" v-show="groupNameApiError.length>0">{{groupNameApiError}}</span>
+                        @Html.TextBoxFor(x => x.GroupName, new {@class = "form-control", v_model = "groupName"})
+                    </div>
+
+                    @Html.HiddenFor(x => x.GroupTypeId)
+
+                    @Html.EditorFor(x => x.OpenDate, new {title = Model.OpenDateLabel, vueModel = "openDate"})
+
+                    <div v-bind:class="['form-group', laError? 'error' : '']">
+                        <label for="LocalAuthorityId" class="form-label">Local authority</label>
+                        @Html.ValidationMessageFor(x => x.LocalAuthorityId)
+                        <span class="error-message" v-show="laError">Please select a local authority</span>
+                        @if (Model.IsLocalAuthorityEditable)
+                        {
+                            @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new {@class = "form-control", v_model = "la"})
+                        }
+                        else
+                        {
+                            <input type="text" value="@(Model.LocalAuthorityName)" disabled="disabled" class="form-control" v-model="laName" id="uneditable-la"/>
+                            @Html.HiddenFor(x => x.LocalAuthorityName, new {id = "uneditable-la-name"})
+                            @Html.HiddenFor(x => x.LocalAuthorityId, new {id = "la-code"})
+                        }
+                        @Html.HiddenFor(x => x.IsLocalAuthorityEditable)
+                    </div>
+                </div>
+                <div class="column-full">
+                    <div class="submit-cancel-panel">
+                        <a href="#" class="button mobile-full-width" v-on:click.prevent="step1Continue()">
+                            Continue
+                        </a>
+                        <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="step0Complete=false, appState = 'initial'" v-show="!detailEdit">
+                            Cancel
+                        </a>
+                        <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="step1Continue" v-show="detailEdit">
+                            Cancel
+                        </a>
+
+                    </div>
+                </div>
             </div>
-        </div>
+
+
+                <div id="step3" v-show="appState==='addCentre' && !isProcessing">
+                <div class="column-full">
+                    <div class="breadcrumbs">
+                        <ul>
+                            <li>@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
+                            <li>@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, null)</li>
+                            <li>@Html.ActionLink("Create children's centre group or collaboration", "CreateNewGroup", "Group", new {area = "Groups", type = "ChildrensCentre"}, null)</li>
+                        </ul>
+                    </div>
+
+                    <h1 class="heading-intro">Add children's centres</h1>
+                    @Html.ValidationSummary("Incorrect or missing details", new {@class = "error-summary"})
+                    <div class="error-summary" v-show="apiErrors.length>0">
+                        <h2 class="error-summary-heading heading-medium">There <span v-html="wasWere"></span> error<span v-show="apiErrors.length > 1">s</span> creating the {{groupTypeName}}
+                        </h2>
+                        <ul class="error-summary-list">
+                            <li v-for="err in apiErrors" class="error-message">
+                                {{err.field}} : {{err.message}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="error-summary" v-show="urnApiErrors.length>0">
+                        <h2 class="error-summary-heading heading-medium">Please check the <abbr title="Unique Reference Number">URN</abbr></h2>
+                        <ul class="error-summary-list">
+                            <li v-for="err in urnApiErrors" class="error-message">
+                                {{err.field}} : {{err.message}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="error-summary" v-show="tooFewCentresError">
+                        <h2 class="error-summary-heading heading-medium">Please add more centres to the {{groupTypeName}}</h2>
+                        <ul class="error-summary=list">
+                            <li class="error-message">
+                                You need to add at least two centres
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="error-summary" v-show="duplicateUrnError">
+                        <h2 class="error-summary-heading heading-medium">Please check the <abbr title="Unique Reference Number">URN</abbr></h2>
+                        <ul class="error-summary=list">
+                            <li class="error-message">
+                                The <abbr title="Unique Reference Number">URN</abbr> is a duplicate.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="column-two-thirds">
+                    <p>
+                        Add two or more children's centres to create a children's centre {{groupTypeName}}
+                        <span v-if="groupType==8">and choose which one you would like as the lead centre</span>.
+                    </p>
+
+                    <h2 class="heading-medium">New children's centre {{groupTypeName}} details</h2>
+                    <div class="warning-message" v-show="groupNameWarningMessage.length >0">
+                        <p v-html="groupNameWarningMessage"></p>
+                    </div>
+                    <dl class="key-value-list fixed-label">
+                        <dt>Group Name:</dt>
+                        <dd id="group-name">{{groupName}}</dd>
+                        <dt>Open date:</dt>
+                        <dd id="group-open-date">{{openDate}}</dd>
+                        <dt>Group status:</dt>
+                        <dd id="group-status">{{groupStatus}}</dd>
+                        <dt>Local authority:</dt>
+                        <dd id="group-la">{{laName}}</dd>
+                    </dl>
+
+                    <h2 class="heading-medium">Add children's centres</h2>
+                    <div v-bind:class="['form-group inline-with-button', (urnError || urnApiErrors.length > 0 || duplicateUrnError)? 'error' : '']">
+                        @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
+                        <label class="form-label" for="LinkedEstablishments_LinkedEstablishmentSearch_Urn">
+                            Establishment <abbr title="Unique Reference Number">URN</abbr>
+                        </label>
+                        <span class="error-message" v-show="urnError || urnApiErrors.length > 0 || duplicateUrnError">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
+                        @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new {@class = "form-control form-control-1-2 search-box", v_model = "searchUrn"})
+                        <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" class="button inline-submit" v-on:click.prevent="lookupUrn" :disabled="$.trim(searchUrn).length < 5">Find</button>
+                    </div>
+                </div>
+                <div class="column-full">
+                    <!-- JB: list of "added" centres here -->
+                    <div v-show="centresInGroup.length > 0">
+                        <h2 class="heading-medium">Children’s centres to add to the {{groupTypeName}}</h2>
+                        <p class="table-caption">{{ tableCount }}</p>
+                        <table class="edubase-table childrens-centre-listing">
+                            <caption class="visuallyhidden">Children's centres added</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col" v-if="groupType === '8'">Lead centre</th>
+                                    <th scope="col"><abbr title="Unique Reference Number">URN</abbr></th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Join date</th>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(estab, index) in centresInGroup">
+                                    <td data-label="Lead centre" v-bind:class="['radio-cell',(estab.urn == groupLead)? 'highlight': '']" v-if="groupType === '8'">
+                                        <span class="radio-button-wrap">
+                                            <input type="radio" name="lead-centre" :value="estab.urn" v-bind:id="generateRadioId(estab.urn)" :checked="estab.urn == groupLead" v-model="groupLead"/>
+                                            <label class="edubase-button-radio" v-bind:for="generateRadioId(estab.urn)">
+                                                <span class="visuallyhidden">Set as lead establishment</span>
+                                            </label>
+                                        </span>
+                                    </td>
+
+                                    <td data-label="URN" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">
+                                        <input type="hidden" :value="estab.urn" name="estab-in-group"/> <!-- :value is deliberate - vue js attribute bind. visual studio likes to remove : when reformatting!!! -->
+                                        {{estab.urn}}
+                                    </td>
+
+                                    <td data-label="Name" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">{{estab.name}}</td>
+                                    <td data-label="Join date" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">{{ estab.joinDate }}</td>
+                                    <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="editJoiningEstab(estab.urn)">Edit</a></td>
+                                    <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="removeJoiningEstab(estab.urn)">Remove</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="table-caption">{{tableCount}}</p>
+                    </div>
+                    <div class="submit-cancel-panel">
+
+                        <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="appState='groupDetail', apiErrors=[], detailEdit = true,tooFewCentresError=false">&laquo; Go back</a>
+                        @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
+                        {
+                            <input type="hidden" name="action" value="@GroupEditorViewModel.ActionSave"/>
+                            <!--JB: until final step, go to next step and show "continue", then final step submit with text "create" -->
+                            <button type="submit" name="action" class="button mobile-full-width" value="@GroupEditorViewModel.ActionSave" v-on:click.prevent="submitCentres" :disabled="centresInGroup.length<2">Create</button>
+                        }
+
+                        @(Model.InEditMode
+                            ? Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "button button-secondary cancel mobile-full-width"})
+                            : Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-secondary cancel mobile-full-width"}))
+                    </div>
+                </div>
+            </div>
+
+
+                <div id="children-centre-details" v-show="appState==='detail'">
+                <div class="column-full">
+                    <div class="breadcrumbs">
+                        <ul>
+                            <li>@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
+                            <li>@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, null)</li>
+                            <li>@Html.ActionLink("Create children's centre group or collaboration", "CreateNewGroup", "Group", new {area = "Groups", type = "ChildrensCentre"}, null)</li>
+                        </ul>
+                    </div>
+
+                    <h1 class="heading-intro" v-show="!pendingEdit">Enter the children's centre details</h1>
+                    <h1 class="heading-intro" v-show="pendingEdit">Edit the children's centre group details</h1>
+                    @Html.ValidationSummary("Incorrect or missing details", new {@class = "error-summary"})
+                    <div class="error-summary" v-show="joinDateError">
+                        <h2 class="error-summary-heading heading-medium">Incorrect or missing details</h2>
+                        <ul class="error-summary-list">
+                            <li class="error-message">{{joinDateErrorMessage}}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="column-full">
+                    <p>Ensure this is the right children's centre and add a joined date.</p>
+                    <h2 class="heading-medium">Childrens centre</h2>
+                    <p>
+                        {{pendingEstab.name}}
+                        <br/>
+                        {{pendingEstabAddress}}
+                        <br/>
+                        <abbr title="Unique Reference Number">URN</abbr>: {{pendingEstab.urn}}
+                        <br/>
+                        <a href="#" v-on:click.prevent="appState='addCentre', searchUrn=''" v-show="!pendingEdit">Wrong establishment?</a>
+                    </p>
+                </div>
+                <div class="column-half">
+                    @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date", vueModel = "joinDate" })
+
+
+                    @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
+
+                    <input type="hidden" name="@(nameof(GroupEditorViewModel.ProcessedWarnings))" id="processed-warnings" />
+                </div>
+                <div class="column-full">
+                    <div class="submit-cancel-panel">
+                        <a href="#" class="button mobile-full-width" v-on:click.prevent="allowAddToGroup() ? addToGroup() : null" :disabled="!allowAddToGroup()">
+                            <span v-show="!pendingEdit">Add</span>
+                            <span v-show="pendingEdit">Update</span>
+                        </a>
+                        <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="appState='addCentre', searchUrn=''" v-show="!pendingEdit">Cancel</a>
+                        <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="cancelEdit" v-show="pendingEdit">
+                            Cancel
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+            </div>
+        }
     </div>
-
-    <div id="children-centre-details" v-show="appState==='detail'">
-        <div class="column-full">
-            <div class="breadcrumbs">
-                <ul>
-                    <li>@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
-                    <li>@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, null)</li>
-                    <li>@Html.ActionLink("Create children's centre group or collaboration", "CreateNewGroup", "Group", new {area = "Groups", type = "ChildrensCentre"}, null)</li>
-                </ul>
-            </div>
-
-            <h1 class="heading-intro" v-show="!pendingEdit">Enter the children's centre details</h1>
-            <h1 class="heading-intro" v-show="pendingEdit">Edit the children's centre group details</h1>
-            @Html.ValidationSummary("Incorrect or missing details", new {@class = "error-summary"})
-            <div class="error-summary" v-show="joinDateError">
-                <h2 class="error-summary-heading heading-medium">Incorrect or missing details</h2>
-                <ul class="error-summary-list">
-                    <li class="error-message">{{joinDateErrorMessage}}</li>
-                </ul>
-            </div>
-        </div>
-        <div class="column-full">
-            <p>Ensure this is the right children's centre and add a joined date.</p>
-            <h2 class="heading-medium">Childrens centre</h2>
-            <p>
-                {{pendingEstab.name}}
-                <br/>
-                {{pendingEstabAddress}}
-                <br/>
-                <abbr title="Unique Reference Number">URN</abbr>: {{pendingEstab.urn}}
-                <br/>
-                <a href="#" v-on:click.prevent="appState='addCentre', searchUrn=''" v-show="!pendingEdit">Wrong establishment?</a>
-            </p>
-        </div>
-        <div class="column-half">
-            @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date", vueModel = "joinDate" })
-
-
-            @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
-
-            <input type="hidden" name="@(nameof(GroupEditorViewModel.ProcessedWarnings))" id="processed-warnings" />
-        </div>
-        <div class="column-full">
-            <div class="submit-cancel-panel">
-                <a href="#" class="button mobile-full-width" v-on:click.prevent="allowAddToGroup() ? addToGroup() : null" :disabled="!allowAddToGroup()">
-                    <span v-show="!pendingEdit">Add</span>
-                    <span v-show="pendingEdit">Update</span>
-                </a>
-                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="appState='addCentre', searchUrn=''" v-show="!pendingEdit">Cancel</a>
-                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="cancelEdit" v-show="pendingEdit">
-                    Cancel
-                </a>
-            </div>
-
-        </div>
-    </div>
-
-    </div>
-}</div>
 </div>
 @section ViewScripts
 {

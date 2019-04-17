@@ -1,5 +1,5 @@
 ﻿var ccGroup = new Vue({
-    el: '#create-childrens-centre',
+    el: '#content',
     data: {
         groupType: '8',
         groupName: '',
