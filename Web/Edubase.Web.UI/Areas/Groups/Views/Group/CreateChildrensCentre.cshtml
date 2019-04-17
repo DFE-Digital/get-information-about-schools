@@ -14,17 +14,25 @@
     </ul>
 </div>
 
- <!-- <div v-if="showValidationError" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+ <div v-if="groupNameApiError.length>0 || groupNameError || laError || openDateError" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
     <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
     <ul class="error-summary-list">
-        <li>
-            <a href="#errorOneFieldReq" v-if="errorOneFieldReq">Select at least one field</a>
-            <a href="#search" v-if="errorEmptySearch" @@click="focusOnSearch">Enter a field name to search</a>
+        <li v-show="groupNameApiError.length>0">
+            {{groupNameApiError}}
+        </li>
+        <li v-show="groupNameError">
+            <a href="#GroupName">Please enter the {{groupTypeName}} name</a>
+        </li>
+        <li v-show="openDateError">
+            <a href="#OpenDate">Please check the opening date you have entered</a>
+        </li>
+        <li v-show="laError">
+            <a href="#LocalAuthorityId">Please select a local authority</a>
         </li>
     </ul>
-</div> -->
+</div>
 
-@Html.ValidationSummary("Incorrect or missing details", new {@class = "error-summary"})
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
 
 <div id="create-childrens-centre" v-cloak>
     <div v-show="Object.keys(apiError).length> 0">
@@ -86,25 +94,6 @@
                 <div id="step2" v-show="appState==='groupDetail' && !isProcessing">
                     <div class="column-full">
                         <h1 class="heading-xlarge">Enter the children's centre {{groupTypeName}} details</h1>
-
-                        @Html.ValidationSummary("Incorrect or missing details", new {@class = "error-summary"})
-                        <div class="error-summary" v-show="groupNameApiError.length>0 || groupNameError || laError || openDateError">
-                            <h2 class="error-summary-heading heading-medium">Incorrect or missing details</h2>
-                            <ul class="error-summary-list">
-                                <li class="error-message" v-show="groupNameApiError.length>0">
-                                    {{groupNameApiError}}
-                                </li>
-                                <li class="error-message" v-show="groupNameError">
-                                    Please enter the {{groupTypeName}} name
-                                </li>
-                                <li class="error-message" v-show="openDateError">
-                                    Please check the opening date you have entered
-                                </li>
-                                <li class="error-message" v-show="laError">
-                                    Please select a local authority
-                                </li>
-                            </ul>
-                        </div>
                     </div>
                     <div class="column-half">
                         <p>Add the details of the children's centre {{groupTypeName}} you'd like to create.</p>
