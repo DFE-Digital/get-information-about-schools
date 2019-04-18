@@ -1,4 +1,4 @@
-﻿@model SearchCompaniesHouseModel
+@model SearchCompaniesHouseModel
 @{
     ViewBag.bodyClasses = "create-edit-school create-academy-trust";
     ViewBag.hideLogo = true;
@@ -18,33 +18,18 @@
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-@using (Html.BeginForm("SearchCompaniesHouse", "Group", FormMethod.Get))
+@using (Html.BeginForm("SearchCompaniesHouse", "Group", FormMethod.Post))
 {
     <div class="grid-row">
         <div class="column-full">
             <h1 class="heading-xlarge">Create an academy trust</h1>
             <p>To create an academy trust record select the company record from Companies House.</p>
 
-            @Html.ValidationSummary(null, new { @class = "error-summary" })
+            @Html.Partial("_ValidationSummary", ViewData.ModelState)
         </div>
     </div>
     <div class="grid-row">
         <div class="column-two-thirds">
-            @if (string.IsNullOrWhiteSpace(Model.SearchText) && Request.Url.PathAndQuery.Contains("SearchText"))
-            {
-                @* Static alert for empty search *@
-                <div role="alert" class="warning-message js-trigger-aria-live">
-                    <p class="message-text" aria-live="polite">Please enter a Companies House name or number to start a search</p>
-                </div>
-            }
-            else if (Model.NotFound)
-            {
-                @* Static alert for no search results *@
-                <div role="alert" class="warning-message js-trigger-aria-live">
-                    <p class="message-text" aria-live="polite">We couldn't find any companies matching your search criteria</p>
-                </div>
-            }
-
             <h2 class="heading-small">Add company</h2>
             <div class="form-group inline-with-button @Html.ValidationCssClassFor(x => x.SearchText)">
                 @Html.LabelFor(x => x.SearchText, "Enter the Companies House name or number", new { @class = "form-label" })
@@ -56,7 +41,7 @@
         </div>
     </div>
 
-    if (Model.Results != null && !Model.NotFound)
+    if (Model.Results != null)
     {
 
         if (Model.Results.PageCount > 1)

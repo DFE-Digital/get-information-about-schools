@@ -447,7 +447,13 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View("CreateAcademyTrust", viewModel);
         }
 
-        [EdubaseAuthorize, Route(nameof(SearchCompaniesHouse)), EdubaseAuthorize]
+        [HttpGet, EdubaseAuthorize, Route(nameof(SearchCompaniesHouse)), EdubaseAuthorize]
+        public async Task<ActionResult> SearchCompaniesHouse()
+        {
+            return View(new SearchCompaniesHouseModel());
+        }
+
+        [HttpPost, EdubaseAuthorize, Route(nameof(SearchCompaniesHouse)), EdubaseAuthorize]
         public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel)
         {
             if (!viewModel.SearchText.IsNullOrEmpty())
@@ -461,7 +467,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     viewModel.Results = await _companiesHouseService.SearchByName(viewModel.SearchText, viewModel.StartIndex, viewModel.PageSize);
                 }
 
-                viewModel.NotFound = !viewModel.Results.Items.Any();
+                ModelState.AddModelError(nameof(viewModel.SearchText), "We couldn't find any companies matching your search criteria");
 
                 if (viewModel.Results.Count == 1)
                 {
