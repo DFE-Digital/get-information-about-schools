@@ -467,9 +467,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     viewModel.Results = await _companiesHouseService.SearchByName(viewModel.SearchText, viewModel.StartIndex, viewModel.PageSize);
                 }
 
-                ModelState.AddModelError(nameof(viewModel.SearchText), "We couldn't find any companies matching your search criteria");
-
-                if (viewModel.Results.Count == 1)
+                if (viewModel.Results.Count == 0)
+                {
+                    ModelState.AddModelError(nameof(viewModel.SearchText), "We couldn't find any companies matching your search criteria");
+                }
+                else if (viewModel.Results.Count == 1)
                 {
                     return RedirectToAction("CreateAcademyTrust", "Group", new { companiesHouseNumber = viewModel.Results.Items.First().Number, area = "Groups" });
                 }
