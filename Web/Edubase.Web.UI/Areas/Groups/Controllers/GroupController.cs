@@ -70,6 +70,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 var result = (await _groupReadService.SearchByIdsAsync(viewModel.Text, viewModel.Text.ToInteger(), viewModel.Text, User)).Items.FirstOrDefault();
                 if (result == null) ModelState.AddModelError(nameof(viewModel.Text), "We were unable to find a single academy trust matching those details");
+                else if (result.StatusId == ((int) GS.Closed)) ModelState.AddModelError(nameof(viewModel.Text), "Closed single academy trusts can not be converted");
                 else if (result.GroupTypeId != (int) GT.SingleacademyTrust) ModelState.AddModelError(nameof(viewModel.Text), "That's an invalid group because it's of the wrong type.");
                 else
                 {
