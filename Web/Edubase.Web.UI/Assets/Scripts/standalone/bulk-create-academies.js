@@ -290,7 +290,7 @@
                                 if (jqXHR.hasOwnProperty('responseJSON')) {
                                     self.apiError = jqXHR.responseJSON;
                                 } else {
-                                    self.urnLookUpError = "The URN in is invalid";
+                                    self.urnLookUpError = "The URN is invalid";
                                 }
 
                                 self.isProcessing = false;
@@ -321,8 +321,9 @@
                                         self.pendingEstab = estab;
                                         self.clearErrors();
                                     } else {
-                                        self.urnLookUpError = "The URN in is invalid";
+                                        self.urnLookUpError = "The URN is invalid";
                                         self.isSearching = false;
+                                        self.errorFocus();
                                     }
                                 }, 0);
                             });
