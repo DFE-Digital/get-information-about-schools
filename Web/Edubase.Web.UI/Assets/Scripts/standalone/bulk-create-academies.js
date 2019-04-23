@@ -1,7 +1,7 @@
 ﻿(function () {
     var today = new Date();
     var bulkAcademies = new Vue({
-        el: '#bulk-academies',
+        el: '#content',
         data: {
             establishments: [],
             addedUrns: [],
@@ -166,6 +166,31 @@
                 },100);
 
             },
+            errorFocus: function(){
+                if ($('.error-summary').length) {
+                    window.document.title = "Error: Bulk create new academies - GOV.UK";
+                    $('.error-summary').focus();
+                } else {
+                    window.setTimeout(function(){
+                        if ($('.error-summary').length) {
+                            window.document.title = "Error: Bulk create new academies - GOV.UK";
+                            $('.error-summary').focus();
+                        }
+                    },500);
+                }
+            },
+            clearErrors: function(){
+                window.document.title = "Bulk create new academies - GOV.UK";
+                this.estabTypeError = false;
+                this.duplicateUrn = false;
+                this.noAcademyTypeError = false;
+                this.academyUnselectedError = false;
+                this.openDateError = false;
+                this.invalidUrn = false;
+                this.commitError = false;
+                this.urnLookUpError = '';
+                this.apiValidationError = '';
+            },
             detailUrl: function (urn) {
                 return '/Establishments/Establishment/Details/' + urn;
             },
@@ -198,6 +223,7 @@
                 });
                 if (typeIds.indexOf(estabType) > -1) {
                     self.estabTypeError = true;
+                    this.errorFocus();
                 }
 
             },
@@ -212,6 +238,7 @@
                 this.invalidUrn = this.searchUrn === '' || isNaN(this.searchUrn);
                 this.duplicateUrn = this.addedUrns.indexOf(self.searchUrn) > -1;
                 this.urnLookUpError = '';
+                this.errorFocus();
 
                 if (this.invalidUrn || this.duplicateUrn) {
                     return true;
@@ -232,6 +259,7 @@
                                 self.apiError = jqxhr.responseJSON;
                             } else {
                                 self.invalidUrn = true;
+                                self.errorFocus();
                             }
 
                             self.isProcessing = false;
@@ -262,7 +290,7 @@
                                 if (jqXHR.hasOwnProperty('responseJSON')) {
                                     self.apiError = jqXHR.responseJSON;
                                 } else {
-                                    self.urnLookUpError = "The URN in is invalid";
+                                    self.urnLookUpError = "The URN is invalid";
                                 }
 
                                 self.isProcessing = false;
@@ -291,9 +319,11 @@
                                         var estab = d1.returnValue;
                                         self.buildTypesDropDown();
                                         self.pendingEstab = estab;
+                                        self.clearErrors();
                                     } else {
-                                        self.urnLookUpError = "The URN in is invalid";
+                                        self.urnLookUpError = "The URN is invalid";
                                         self.isSearching = false;
+                                        self.errorFocus();
                                     }
                                 }, 0);
                             });
@@ -346,7 +376,15 @@
                         dateError = true;
                     }
                 }
+                if (dateError) {
+                  this.errorFocus();
+                }
                 return dateError;
+            },
+            wrongEstablishment: function(){
+                this.pendingEstab = {};
+                this.isSearching = false;
+                this.clearErrors();
             },
             addEstablishment: function () {
                 var self = this;
@@ -354,6 +392,7 @@
                 this.academyUnselectedError = this.pendingEstab.academyType === 'Please select';
                 this.urnLookUpError = '';
                 this.apiValidationError = '';
+                this.errorFocus();
                 var dateArray = [this.pad(this.openDateDay), this.pad(this.openDateMonth), this.openDateYear];
 
                 if (!this.openDateError && !this.academyUnselectedError) {
@@ -384,12 +423,12 @@
                                     self.establishments = estabs;
 
                                 } else {
-                                    self.addedUrns.push(self.searchUrn);
+                                    self.addedUrns.push(self.pendingEstab.urn);
 
                                 }
 
                                 self.establishments.push(self.pendingEstab);
-                                self.addedUrns.push(self.searchUrn);
+                                self.addedUrns.push(self.pendingEstab.urn);
 
                                 self.pendingEstab = {};
                                 self.searchUrn = '';
@@ -397,8 +436,7 @@
                                 self.openDateMonth = today.getMonth() + 1;
                                 self.openDateYear = today.getFullYear();
                                 self.pendingEdit = false;
-
-
+                                self.clearErrors();
                             } else {
                                 var messages = data[0].errors.map(function(elem) { return elem.message });
                                 self.apiValidationError = messages.join('<br>');
@@ -433,12 +471,14 @@
                 this.openDateDay = openingDate[0];
                 this.openDateMonth = openingDate[1];
                 this.openDateYear = openingDate[2];
+                this.clearErrors();
             },
             cancelAddEdit: function () {
                 this.pendingEdit = false;
                 this.pendingEstab = {};
                 this.searchUrn = '';
                 this.apiValidationError = '';
+                this.clearErrors();
             },
             couldDelete: function (urn) {
                 this.pendingDelete = true;
@@ -591,4 +631,3 @@
     });
 
 }());
-
