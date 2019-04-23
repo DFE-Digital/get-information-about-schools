@@ -133,8 +133,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (existingTrust != null && existingTrust.Items.Any())
             {
                 vm.TrustExists = true;
+                vm.TrustName = existingTrust.Items.First().Name;
                 vm.TypeId = existingTrust.Items.First().GroupTypeId;
                 vm.GroupId = existingTrust.Items.First().GroupId;
+                vm.GroupUid = existingTrust.Items.First().GroupUId;
             }
 
             if (vm.Address == null)
@@ -448,7 +450,13 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View("CreateAcademyTrust", viewModel);
         }
 
-        [EdubaseAuthorize, Route(nameof(SearchCompaniesHouse)), EdubaseAuthorize]
+        [HttpGet, EdubaseAuthorize, Route(nameof(SearchCompaniesHouse)), EdubaseAuthorize]
+        public async Task<ActionResult> SearchCompaniesHouse()
+        {
+            return View(new SearchCompaniesHouseModel());
+        }
+
+        [HttpPost, EdubaseAuthorize, Route(nameof(SearchCompaniesHouse)), EdubaseAuthorize]
         public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel)
         {
             if (!viewModel.SearchText.IsNullOrEmpty())
@@ -462,9 +470,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     viewModel.Results = await _companiesHouseService.SearchByName(viewModel.SearchText, viewModel.StartIndex, viewModel.PageSize);
                 }
 
-                viewModel.NotFound = !viewModel.Results.Items.Any();
-
-                if (viewModel.Results.Count == 1)
+                if (viewModel.Results.Count == 0)
+                {
+                    ModelState.AddModelError(nameof(viewModel.SearchText), "We couldn't find any companies matching your search criteria");
+                }
+                else if (viewModel.Results.Count == 1)
                 {
                     return RedirectToAction("CreateAcademyTrust", "Group", new { companiesHouseNumber = viewModel.Results.Items.First().Number, area = "Groups" });
                 }
