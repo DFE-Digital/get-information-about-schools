@@ -491,6 +491,11 @@
             });
 
         },
+        clearErrors: function(){
+            this.groupNameError = false;
+            this.laError = false;
+            this.openDateError = false;
+        },
         cancelEdit : function() {
             this.addToGroup();
             this.pendingEdit = false;

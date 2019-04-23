@@ -10,7 +10,7 @@
     <ul>
         <li>@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
         <li>@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, null)</li>
-        <li v-show="appState==='groupDetail' && !isProcessing">@Html.ActionLink("Create children's centre group or collaboration", "CreateNewGroup", "Group", new {area = "Groups", type = "ChildrensCentre"}, null)</li>
+        <li v-show="appState != 'initial' && !isProcessing">@Html.ActionLink("Create children's centre group or collaboration", "CreateNewGroup", "Group", new {area = "Groups", type = "ChildrensCentre"}, null)</li>
     </ul>
 </div>
 
@@ -133,7 +133,7 @@
                             <a href="#" class="button mobile-full-width" v-on:click.prevent="step1Continue()">
                                 Continue
                             </a>
-                            <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="step0Complete=false, appState = 'initial'" v-show="!detailEdit">
+                            <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="step0Complete=false, appState = 'initial'; clearErrors()" v-show="!detailEdit">
                                 Cancel
                             </a>
                             <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="step1Continue" v-show="detailEdit">
