@@ -86,7 +86,9 @@
                         <caption class="visuallyhidden">Trust details</caption>
                         <tr>
                             <th scope="row" class="new-trust-details">Trust name:</th>
-                            <td class="new-trust-details"><a href="">@Model.TrustName</a></td>
+                            <td class="new-trust-details">
+                                @Html.ActionLink(Model.TrustName, "Details", "Group", new {id = Model.GroupUid, area = "groups" }, new {@class = "bold-small"})
+                            </td>
                         </tr>
                         <tr>
                             <th scope="row" class="new-trust-details">Trust type:</th>

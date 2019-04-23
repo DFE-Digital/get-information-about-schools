@@ -42,6 +42,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         [Required(ErrorMessage = "Please enter a group ID"), DisplayName("Group ID")]
         public string GroupId { get; set; }
 
+        public int GroupUid { get; set; }
+
         public DateTime? OpenDate { get; set; }
         public string CompaniesHouseNumber { get; set; }
         public string Address { get; set; }
