@@ -7,9 +7,19 @@
 @{
     ViewBag.bodyClasses = "create-edit-school";
     ViewBag.hideLogo = true;
-    ViewBag.Title = Model.PageTitle;
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, Model.PageTitle);
 }
 
+<div class="breadcrumbs">
+    <ul>
+        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
+        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
+    </ul>
+</div>
+
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
+
+<h1 class="heading-xlarge">@Model.PageTitle</h1>
 
 @using (Html.BeginForm("Create", "Group", new { area = "Groups" }, FormMethod.Post))
 {
@@ -19,18 +29,6 @@
     @Html.HiddenFor(x => x.ProcessedWarnings)
 
     <div class="grid-row">
-        <div class="column-full">
-            <div class="breadcrumbs">
-                <ul>
-                    <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-                </ul>
-            </div>
-
-            <h1 class="heading-xlarge">@Model.PageTitle</h1>
-            @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
-        </div>
-
         <div class="column-two-thirds">
             Use this tool to create a @Model.EntityName
         </div>
@@ -149,9 +147,9 @@
                 @if (Model.GroupType.Equals(L.SchoolSponsor) || (Model.InEditMode && Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust)))
                 {
                     <div class="form-group  @Html.ValidationCssClassFor(x=>x.GroupId)">
-                        <label for="groupid" class="form-label">Group ID</label>
+                        <label for="GroupId" class="form-label">Group ID</label>
                         @Html.ValidationMessageFor(x => x.GroupId)
-                        @Html.TextBoxFor(x => x.GroupId, new { @class = "form-control", maxlength = 120, id = "groupid" })
+                        @Html.TextBoxFor(x => x.GroupId, new { @class = "form-control", maxlength = 120 })
                     </div>
                 }
 
@@ -207,36 +205,6 @@
             highlightRow(initialRow);
 
         }());
-
-        (function () {
-            if ("@Request.HttpMethod" == "GET") {
-                var $button = $("#create-submit");
-                var fields = ["#GroupName", "#OpenDate_Day", "#OpenDate_Month", "#OpenDate_Year", "#groupid"];
-                var toggle = function () {
-                    $button.prop("disabled", fields.some(function (x) { return $(x).length == 1 && $.trim($(x).val()) == "" }));
-                };
-                $(fields.join(",")).on("change keyup", toggle);
-                toggle();
-            }
-        })();
-
-        (function () {
-            var $urnSearchField = $("#LinkedEstablishments_LinkedEstablishmentSearch_Urn");
-            var $urnSearchButton = $(".add-establishment-link").find("button");
-            var toggle = function () { $urnSearchButton.prop("disabled", $.trim($urnSearchField.val()).length < 5 || Math.floor($urnSearchField.val()) != $urnSearchField.val() || !$.isNumeric($urnSearchField.val())); };
-            toggle();
-            $urnSearchField.on("change keyup", toggle);
-        })();
-
-        (function () {
-            var $addButton = $("#add-estab-submit");
-            var fields = ["#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Day", "#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Month", "#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Year"];
-            var toggle = function () {
-                $addButton.prop("disabled", fields.some(function (x) { return $.trim($(x).val()) == "" }));
-            };
-            $(fields.join(",")).on("change keyup", toggle);
-            toggle();
-        })();
 
     </script>
 @if (!Model.InEditMode)
