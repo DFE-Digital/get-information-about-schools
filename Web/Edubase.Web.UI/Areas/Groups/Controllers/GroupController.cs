@@ -98,8 +98,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         }
 
         [HttpPost]
-        [Route("Create"), EdubaseAuthorize]
-        public async Task<ActionResult> Create(GroupEditorViewModel viewModel)
+        [Route("Create/{type}"), EdubaseAuthorize]
+        public async Task<ActionResult> Create(GroupEditorViewModel viewModel, string type)
         {
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);

@@ -21,7 +21,7 @@
 
 <h1 class="heading-xlarge">@Model.PageTitle</h1>
 
-@using (Html.BeginForm("Create", "Group", new { area = "Groups" }, FormMethod.Post))
+@using (Html.BeginForm("Create", "Group", new { area = "Groups", type = Model.GroupTypeMode }, FormMethod.Post))
 {
     @Html.HiddenFor(x => x.GroupUId)
     @Html.HiddenFor(x => x.GroupTypeMode)
