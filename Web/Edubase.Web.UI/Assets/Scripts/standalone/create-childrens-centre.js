@@ -495,6 +495,8 @@
             this.groupNameError = false;
             this.laError = false;
             this.openDateError = false;
+            this.tooFewCentresError = false;
+            this.urnError = false;
         },
         cancelEdit : function() {
             this.addToGroup();
