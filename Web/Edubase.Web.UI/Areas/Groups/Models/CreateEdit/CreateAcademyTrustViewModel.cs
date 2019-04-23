@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Services.Domain;
 using Edubase.Services.IntegrationEndPoints.CompaniesHouse.Models;
 using System;
@@ -46,6 +46,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public string CompaniesHouseNumber { get; set; }
         public string Address { get; set; }
         public bool TrustExists { get; internal set; }
+        public string TrustName { get; internal set; }
         public bool AllowSave { get; set; } = true;
         public IEnumerable<SelectListItem> GroupTypes { get; set; }
 

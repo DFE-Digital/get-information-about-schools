@@ -132,6 +132,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (existingTrust != null && existingTrust.Items.Any())
             {
                 vm.TrustExists = true;
+                vm.TrustName = existingTrust.Items.First().Name;
                 vm.TypeId = existingTrust.Items.First().GroupTypeId;
                 vm.GroupId = existingTrust.Items.First().GroupId;
             }

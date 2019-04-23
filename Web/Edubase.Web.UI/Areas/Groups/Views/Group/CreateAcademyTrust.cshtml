@@ -1,4 +1,4 @@
-﻿@using Edubase.Services.Enums;
+@using Edubase.Services.Enums;
 @model CreateAcademyTrustViewModel
 @{
     ViewBag.bodyClasses = "create-edit-school create-academy-trust";
@@ -86,11 +86,11 @@
                         <caption class="visuallyhidden">Trust details</caption>
                         <tr>
                             <th scope="row" class="new-trust-details">Trust name:</th>
-                            <td class="new-trust-details"><a href="">ACADEMY TRUST ADVISORY CONSULTING LTD.</a></td>
+                            <td class="new-trust-details"><a href="">@Model.TrustName</a></td>
                         </tr>
                         <tr>
                             <th scope="row" class="new-trust-details">Trust type:</th>
-                            <td class="new-trust-details">Single-academy trust</td>
+                            <td class="new-trust-details">@Model.GroupTypes.First(x => x.Value.Equals(Model.TypeId?.ToString(), StringComparison.InvariantCultureIgnoreCase)).Text</td>
                         </tr>
                         <tr>
                             <th scope="row" class="new-trust-details">Group ID:</th>
