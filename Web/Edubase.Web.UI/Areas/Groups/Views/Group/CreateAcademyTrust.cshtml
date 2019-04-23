@@ -1,4 +1,4 @@
-@using Edubase.Services.Enums;
+﻿@using Edubase.Services.Enums;
 @model CreateAcademyTrustViewModel
 @{
     ViewBag.bodyClasses = "create-edit-school create-academy-trust";
@@ -76,12 +76,13 @@
             @Html.HiddenFor(x => x.CompaniesHouseNumber)
         </div>
 
-        <div class="column-half">
-            <div class="single-group">
-                <h2 class="bold-small trust-details-header">Trust details</h2>
 
-                @if (Model.TrustExists == true)
-                {
+
+        @if (Model.TrustExists == true)
+        {
+            <div class="column-two-thirds">
+                <div class="single-group">
+                    <h2 class="bold-small trust-details-header">Trust details</h2>
                     <table class="borderless company-result">
                         <caption class="visuallyhidden">Trust details</caption>
                         <tr>
@@ -99,9 +100,14 @@
                             <td class="new-trust-details">@Model.GroupId</td>
                         </tr>
                     </table>
-                }
-                else
-                {
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="column-half">
+                <div class="single-group">
+                    <h2 class="bold-small trust-details-header">Trust details</h2>
                     <div class="form-group @Html.ValidationCssClassFor(x => x.TypeId)">
                         <label for="TypeId" class="form-label bold-small">Trust type</label>
                         @Html.ValidationMessageFor(x => x.TypeId)
@@ -112,9 +118,9 @@
                         @Html.ValidationMessageFor(x => x.GroupId)
                         @Html.TextBoxFor(x => x.GroupId, GetAttributes("form-control", Model.TrustExists, 120))
                     </div>
-                }
+                </div>
             </div>
-        </div>
+        }
 
     </div>
     <div class="grid-row">
