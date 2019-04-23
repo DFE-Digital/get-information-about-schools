@@ -379,7 +379,7 @@ namespace Edubase.UnitTest.Controllers
                 Text = "1000"
             });
 
-            Assert.That(ObjectUnderTest.ModelState["Text"].Errors[0].ErrorMessage, Is.EqualTo("We were unable to find a SAT matching those details"));
+            Assert.That(ObjectUnderTest.ModelState["Text"].Errors[0].ErrorMessage, Is.EqualTo("We were unable to find a single academy trust matching those details"));
             Assert.That(response.ViewName, Is.EqualTo(string.Empty));
         }
 
