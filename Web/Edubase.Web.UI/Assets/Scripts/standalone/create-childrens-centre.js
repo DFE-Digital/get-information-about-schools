@@ -450,6 +450,7 @@
                 self.groupNameError = $.trim(self.groupName) === '';
                 self.laError = self.la === '';
                 self.groupNameApiError = '';
+                self.groupNameWarningMessage = '';
                 if (!self.groupNameError && !self.laError && !self.openDateError) {
                     self.isProcessing = true;
                     var validationObj = {

@@ -108,7 +108,9 @@
 
                 @* STEP 2 *@
                 <div id="step2" v-show="appState==='groupDetail' && !isProcessing">
-                    <h1 class="heading-xlarge">Enter the children's centre {{groupTypeName}} details</h1>
+                    <div class="column-full">
+                        <h1 class="heading-xlarge">Enter the children's centre {{groupTypeName}} details</h1>
+                    </div>
                     <div class="column-half">
                         <p>Add the details of the children's centre {{groupTypeName}} you'd like to create.</p>
 
@@ -160,7 +162,9 @@
 
                 @* STEP 3 *@
                 <div id="step3" v-show="appState==='addCentre' && !isProcessing">
-                    <h1 class="heading-intro">Add children's centres</h1>
+                    <div class="column-full">
+                        <h1 class="heading-intro">Add children's centres</h1>
+                    </div>
                     <div class="column-two-thirds">
                         <p>
                             Add two or more children's centres to create a children's centre {{groupTypeName}}
