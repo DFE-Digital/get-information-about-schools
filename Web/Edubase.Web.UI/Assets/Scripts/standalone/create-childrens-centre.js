@@ -136,6 +136,7 @@
             this.tooFewCentresError = this.centresInGroup.length < 2;
 
             if (this.tooFewCentresError) {
+                self.errorFocus();
                 return;
             }
 
@@ -184,6 +185,7 @@
                                 }
                                 o.message = error.Message;
                                 self.apiErrors.push(o);
+                                self.errorFocus();
                             });
                         }
                     },
@@ -298,13 +300,18 @@
             this.apiErrors = [];
             this.urnApiErrors = [];
             this.tooFewCentresError = false;
+            this.pendingEdit = false;
 
             this.duplicateUrnError = this.addedUrns.indexOf(Number(this.searchUrn)) > -1;
 
-            if (this.duplicateUrnError) {  return; }
+            if (this.duplicateUrnError) {
+                self.errorFocus();
+                return;
+            }
 
             if (isNaN(this.searchUrn) || this.searchUrn === '') {
                 this.urnError = true;
+                self.errorFocus();
                 return;
             }
             this.isProcessing = true;
@@ -325,6 +332,7 @@
                     }
                     self.urnError = true;
                     self.isProcessing = false;
+                    self.errorFocus();
                 }
             });
         },
@@ -364,6 +372,7 @@
                             }
                         });
                         self.isProcessing = false;
+                        self.errorFocus();
                     } else {
                         self.isProcessing = false;
                     }
@@ -383,6 +392,7 @@
             var self = this;
             $.when(self.validateDate('joinDate')).done(function () {
                 self.isProcessing = false;
+                self.errorFocus();
                 if (!self.joinDateError) {
 
                     self.pendingEstab.joinDate = self.joinDate;
@@ -451,6 +461,7 @@
                 self.laError = self.la === '';
                 self.groupNameApiError = '';
                 self.groupNameWarningMessage = '';
+                self.errorFocus();
                 if (!self.groupNameError && !self.laError && !self.openDateError) {
                     self.isProcessing = true;
                     var validationObj = {
@@ -481,16 +492,31 @@
                                 self.appState = 'addCentre';
                             }
                             self.isProcessing = false;
+                            self.errorFocus();
                         },
                         error: function(jqxhr) {
                             if (jqxhr.hasOwnProperty('responseJSON')) {
                                 self.apiError = jqxhr.responseJSON;
+                                self.errorFocus();
                             }
                         }
                     });
                 }
             });
 
+        },
+        errorFocus: function(){
+            if ($('.error-summary').length) {
+                //window.document.title = "Error: Bulk create new academies - GOV.UK";
+                $('.error-summary').focus();
+            } else {
+                window.setTimeout(function(){
+                    if ($('.error-summary').length) {
+                        //window.document.title = "Error: Bulk create new academies - GOV.UK";
+                        $('.error-summary').focus();
+                    }
+                },500);
+            }
         },
         clearErrors: function(){
             this.groupNameError = false;
@@ -504,6 +530,7 @@
         cancelEdit : function() {
             this.addToGroup();
             this.pendingEdit = false;
+            this.clearErrors();
         }
     }
 });

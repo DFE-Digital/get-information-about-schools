@@ -18,7 +18,7 @@
     <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
     <ul class="error-summary-list">
         <li v-show="groupNameApiError.length>0">
-            {{groupNameApiError}}
+            <a href="#GroupName">{{groupNameApiError}}</a>
         </li>
         <li v-show="groupNameError">
             <a href="#GroupName">Please enter the {{groupTypeName}} name</a>
