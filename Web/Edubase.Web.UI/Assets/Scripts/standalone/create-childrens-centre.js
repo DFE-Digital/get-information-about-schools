@@ -499,6 +499,7 @@
             this.tooFewCentresError = false;
             this.urnError = false;
             this.duplicateUrnError = false;
+            this.joinDateError = false;
         },
         cancelEdit : function() {
             this.addToGroup();
