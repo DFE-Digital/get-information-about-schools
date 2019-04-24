@@ -14,7 +14,7 @@
     </ul>
 </div>
 
- <div v-if="groupNameApiError.length>0 || groupNameError || laError || openDateError || tooFewCentresError || urnError || urnApiErrors.length>0 || duplicateUrnError" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+ <div v-if="groupNameApiError.length>0 || groupNameError || laError || openDateError || tooFewCentresError || urnError || urnApiErrors.length>0 || duplicateUrnError || apiErrors.length>0" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
     <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
     <ul class="error-summary-list">
         <li v-show="groupNameApiError.length>0">
@@ -40,6 +40,9 @@
         </li>
         <li v-show="duplicateUrnError">
             <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">The <abbr title="Unique Reference Number">URN</abbr> is a duplicate</a>
+        </li>
+        <li v-show="apiErrors.length>0" v-for="err in apiErrors">
+            <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">{{err.field}} : {{err.message}}</a>
         </li>
 
     </ul>
@@ -105,9 +108,7 @@
 
                 @* STEP 2 *@
                 <div id="step2" v-show="appState==='groupDetail' && !isProcessing">
-                    <div class="column-full">
-                        <h1 class="heading-xlarge">Enter the children's centre {{groupTypeName}} details</h1>
-                    </div>
+                    <h1 class="heading-xlarge">Enter the children's centre {{groupTypeName}} details</h1>
                     <div class="column-half">
                         <p>Add the details of the children's centre {{groupTypeName}} you'd like to create.</p>
 
@@ -159,19 +160,7 @@
 
                 @* STEP 3 *@
                 <div id="step3" v-show="appState==='addCentre' && !isProcessing">
-                    <div class="column-full">
-                        <h1 class="heading-intro">Add children's centres</h1>
-                        @Html.ValidationSummary("Incorrect or missing details", new {@class = "error-summary"})
-                        <div class="error-summary" v-show="apiErrors.length>0">
-                            <h2 class="error-summary-heading heading-medium">There <span v-html="wasWere"></span> error<span v-show="apiErrors.length > 1">s</span> creating the {{groupTypeName}}
-                            </h2>
-                            <ul class="error-summary-list">
-                                <li v-for="err in apiErrors" class="error-message">
-                                    {{err.field}} : {{err.message}}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                    <h1 class="heading-intro">Add children's centres</h1>
                     <div class="column-two-thirds">
                         <p>
                             Add two or more children's centres to create a children's centre {{groupTypeName}}
@@ -267,13 +256,6 @@
 
                 <div id="children-centre-details" v-show="appState==='detail'">
                     <div class="column-full">
-                        <div class="breadcrumbs">
-                            <ul>
-                                <li>@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
-                                <li>@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, null)</li>
-                                <li>@Html.ActionLink("Create children's centre group or collaboration", "CreateNewGroup", "Group", new {area = "Groups", type = "ChildrensCentre"}, null)</li>
-                            </ul>
-                        </div>
 
                         <h1 class="heading-intro" v-show="!pendingEdit">Enter the children's centre details</h1>
                         <h1 class="heading-intro" v-show="pendingEdit">Edit the children's centre group details</h1>
