@@ -295,6 +295,7 @@
             });
         },
         lookupUrn: function () {
+            this.clearErrors();
             var self = this;
             this.urnError = false;
             this.apiErrors = [];
@@ -389,6 +390,7 @@
             });
         },
         addToGroup: function () {
+            this.clearErrors();
             var self = this;
             $.when(self.validateDate('joinDate')).done(function () {
                 self.isProcessing = false;
@@ -455,6 +457,7 @@
             return $.trim(this.la) !== '' && $.trim(this.joinDateDay) !== '' && $.trim(this.joinDateMonth) !== '' && $.trim(this.joinDateYear) !== '';
         },
         step1Continue: function () {
+            this.clearErrors();
             var self = this;
             $.when(this.validateDate('openDate')).done(function () {
                 self.groupNameError = $.trim(self.groupName) === '';
@@ -503,22 +506,22 @@
                     });
                 }
             });
-
         },
         errorFocus: function(){
             if ($('.error-summary').length) {
-                //window.document.title = "Error: Bulk create new academies - GOV.UK";
+                window.document.title = "Error: Create children's centre group or collaboration - GOV.UK";
                 $('.error-summary').focus();
             } else {
                 window.setTimeout(function(){
                     if ($('.error-summary').length) {
-                        //window.document.title = "Error: Bulk create new academies - GOV.UK";
+                        window.document.title = "Error: Create children's centre group or collaboration - GOV.UK";
                         $('.error-summary').focus();
                     }
                 },500);
             }
         },
         clearErrors: function(){
+            window.document.title = "Create children's centre group or collaboration - GOV.UK";
             this.groupNameError = false;
             this.laError = false;
             this.openDateError = false;
