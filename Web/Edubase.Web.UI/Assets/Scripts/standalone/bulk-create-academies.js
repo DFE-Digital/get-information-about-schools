@@ -423,12 +423,12 @@
                                     self.establishments = estabs;
 
                                 } else {
-                                    self.addedUrns.push(self.pendingEstab.urn);
+                                    self.addedUrns.push(self.searchUrn);
 
                                 }
 
                                 self.establishments.push(self.pendingEstab);
-                                self.addedUrns.push(self.pendingEstab.urn);
+                                self.addedUrns.push(self.searchUrn);
 
                                 self.pendingEstab = {};
                                 self.searchUrn = '';
