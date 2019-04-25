@@ -562,6 +562,22 @@
                 });
             }
         },
+        clearErrors: function(){
+            window.document.title = "Amalgamations and mergers tool - GOV.UK";
+            this.mergerTypeError = false;
+            this.amalgamateUrnError = false;
+            this.leadEstabError = false;
+            this.linkedEstabError = false;
+            this.amalgamationLengthError = false;
+            this.nameError = false;
+            this.phaseError = false;
+            this.typeError = false;
+            this.laError = false;
+            this.mergeDateError = false;
+            this.mergeLengthError = false;
+            this.duplicateUrnsError = false;
+            this.commitErrors = false;
+        },
         exitConfirmed: function() {
             window.location = this.exitUrl;
         },

@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Get information about schools: Amalgamations and mergers tool";
+    ViewBag.Title = "Amalgamations and mergers tool";
     ViewBag.bodyClasses = "amalgamate";
 }
 
@@ -40,11 +40,17 @@
                 </li>
                 <li v-bind:class="['error-message', (leadEstabError) ? '' : 'hidden']"><a href="#lead-establishment">The lead establishment <abbr title="Unique Reference Number">URN</abbr> is invalid</a></li>
                 <li v-bind:class="['error-message', (linkedEstabError) ? '' : 'hidden']"><a href="#linked-establishments">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a></li>
-                <li v-bind:class="['error-message', (amalgamateUrnError) ? '' : 'hidden']"><a href="#linked-establishments">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a></li>
+                <li v-show="amalgamateUrnError">
+                    <a href="#amalg-linked">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a>
+                </li>
                 <li v-bind:class="['error-message', (mergeDateError && mergerType==='merger') ? '' : 'hidden']"><a href="#merger-date">Merger date is invalid</a></li>
-                <li v-bind:class="['error-message', (amalgamationLengthError || mergeLengthError)  ? '' : 'hidden']"><a href="#amalg-linked">Select between two and four schools. Please add another <abbr title="Unique Reference Number">URN</abbr> to continue</a></li>
+                <li v-show="amalgamationLengthError || mergeLengthError">
+                    <a href="#amalg-linked">Select between two and four schools. Please add another <abbr title="Unique Reference Number">URN</abbr> to continue</a>
+                </li>
                 <li v-bind:class="['error-message', nameError ? '' : 'hidden']"><a href="#new-establishment-name">New school details must be completed before amalgamation. Please enter a new school name</a></li>
-                <li v-bind:class="['error-message', duplicateUrnsError ? '' : 'hidden']"><a href="#">One or more <abbr title="Unique Reference Number">URNs</abbr> are duplicated. Please enter different <abbr title="Unique Reference Number">URN</abbr>(s)</a></li>
+                <li v-show="duplicateUrnsError">
+                    <a href="#amalg-linked">One or more <abbr title="Unique Reference Number">URNs</abbr> are duplicated. Please enter different URN(s)</a>
+                </li>
                 <li v-bind:class="['error-message', phaseError ? '' : 'hidden']"><a href="#new-establishment-phase">You haven't selected an establishment phase. Please select one to continue</a></li>
                 <li v-bind:class="['error-message', typeError ? '' : 'hidden']"><a href="#new-establishment-type">You haven't selected an establishment type. Please select one to continue</a></li>
                 <li v-bind:class="['error-message', laError ? '' : 'hidden']"><a href="#LocalAuthorityId">You haven't selected a local authority. Please select one to continue</a></li>
@@ -66,13 +72,8 @@
                 <p class="visually-hidden">Please wait</p>
             </div>
             <form>
+                @* Step 1 - Choosing Amalgamation or Merger *@
                 <div v-show="!mergerTypeConfirmed && !validMergeUrns">
-                    <div class="column-full top-button-panel">
-                        <div class="submit-cancel-panel">
-                            <button type="submit" name="action" value="" class="button" id="go-create" v-on:click.prevent="checkMergeType">Continue</button>
-                            @Html.ActionLink("Cancel", "Index", "Tools", new { }, new { @class = "button button-secondary cancel mobile-full-width" })
-                        </div>
-                    </div>
                     <div class="column-two-thirds">
                         <p>
                             You can use this to amalgamate or merge establishments. This
@@ -114,8 +115,9 @@
                             <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
                         </div>
                     </div>
-
                 </div>
+
+                @* Step 2b - Merger *@
                 <div v-show="(mergerType ==='merger' && mergerTypeConfirmed) && !isProcessing">
                     <div v-show="!validMergeUrns">
                         <div class="column-two-thirds" id="merger-details">
@@ -257,6 +259,7 @@
                     </div>
                 </div>
 
+                @* Step 2a - Amalgamation  *@
                 <div v-show="mergerType ==='amalgamation' && mergerTypeConfirmed && !isProcessing">
                     <div v-show="!validMergeUrns">
                         <div class="column-full top-button-panel">
@@ -306,7 +309,7 @@
 
                         <div class="column-full">
                             <div class="submit-cancel-panel">
-                                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false"> &laquo; Go back</a>
+                                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false; clearErrors();"> &laquo; Go back</a>
                                 <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="validateAmalgamationSelection">Continue</button>
                                 <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
                             </div>
@@ -315,7 +318,7 @@
                     <div v-show="mergerType==='amalgamation' && validMergeUrns && !completeAmalgamation">
                         <div class="column-full top-button-panel">
                             <div class="submit-cancel-panel">
-                                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="validMergeUrns=false">&laquo; Go back</a>
+                                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="validMergeUrns=false; clearErrors();">&laquo; Go back</a>
                                 <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="processAmalgamation">Process</button>
                                 <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
                             </div>
