@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -36,6 +36,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (openDate == null || openDate.IsEmpty())
             {
                 ModelState.AddModelError("openDate", "Date cannot be empty");
+            } else if (openDate.IsValid() == false)
+            {
+                ModelState.AddModelError("openDate", "The date specified is not valid");
             }
 
             if (!ModelState.IsValid)
@@ -53,10 +56,18 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 ModelState.AddModelError("joinDate", "Join date cannot be empty");
             }
+            else if (model.JoinDate.IsValid() == false)
+            {
+                ModelState.AddModelError("joinDate", "The date specified is not valid");
+            }
 
             if (model.GroupOpenDate == null || model.GroupOpenDate.IsEmpty())
             {
                 ModelState.AddModelError("groupOpenDate", "Group open date cannot be empty");
+            }
+            else if (model.GroupOpenDate.IsValid() == false)
+            {
+                ModelState.AddModelError("groupOpenDate", "The date specified is not valid");
             }
 
             if (model.JoinDate.IsValid() && model.GroupOpenDate.IsValid() &&
