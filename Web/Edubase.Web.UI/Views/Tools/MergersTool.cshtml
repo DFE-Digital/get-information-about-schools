@@ -32,7 +32,7 @@
         </div>
 
         @* ERROR SUMMARY *@
-        <div v-bind:class="['error-summary' , showGlobalError ? '' :' hidden']" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+        <div v-show="showGlobalError" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
             <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
             <ul class="error-summary-list">
                 @* CHOOSE *@
@@ -43,6 +43,9 @@
                 @* BOTH *@
                 <li v-show="duplicateUrnsError">
                     <a href="#linked-establishments">One or more <abbr title="Unique Reference Number">URNs</abbr> are duplicated. Please enter different URN(s)</a>
+                </li>
+                <li v-show="commitErrors != ''">
+                    <a href="#" v-html="commitErrors"></a>
                 </li>
 
                 @* AMALGAMATION *@
@@ -78,10 +81,9 @@
                 <li v-show="mergeLengthError">
                     <a href="#lead-establishment">Enter the lead establishments' URN and at least 1 additional establishments' URN</a>
                 </li>
-
-
-                <li v-bind:class="['error-message', (mergeDateError && mergerType==='merger') ? '' : 'hidden']"><a href="#merger-date">Merger date is invalid</a></li>
-                <li v-bind:class="['error-message', commitErrors != '' ? '' : 'hidden']" v-html="commitErrors"></li>
+                <li v-show="mergeDateError && mergerType==='merger'">
+                    <a href="#merger-date">Merger date is invalid</a>
+                </li>
             </ul>
         </div>
 
@@ -120,7 +122,7 @@
                                 school to be altered.
                             </p>
                             <div v-bind:class="['form-group special-snowflake-radios', mergerTypeError ? 'error' : '']">
-                                <span v-bind:class="['error-message', mergerTypeError ? '' : 'hidden' ]">Please select almalgamation or merger.</span>
+                                <span v-show="mergerTypeError" class="error-message">Please select almalgamation or merger.</span>
                                 <span class="radio-button-wrap">
                                     <input id="radio-amalgamation" type="radio" name="radio-group" value="amalgamation" aria-describedby="almagamation-desc" v-model="mergerType">
                                     <label class="edubase-button-radio" for="radio-amalgamation">
@@ -314,9 +316,9 @@
                                     <label class="form-label">Enter the establishment <abbr title="Unique Reference Number">URN</abbr>(s)</label>
 
                                     @* FORM ERROR MESSAGES - ESTABLISHMENTS *@
-                                    <span v-bind:class="['error-message', amalgamateUrnError ? '' : 'hidden' ]">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
-                                    <span v-bind:class="['error-message', amalgamationLengthError && !amalgamateUrnError  ? '' : 'hidden' ]">Select between 2 and 4 schools.</span>
-                                    <span v-bind:class="['error-message', duplicateUrnsError && !amalgamateUrnError && !amalgamationLengthError ? '' : 'hidden' ]">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
+                                    <span v-show="amalgamateUrnError" class="error-message">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
+                                    <span v-show="amalgamationLengthError && !amalgamateUrnError" class="error-message">Select between 2 and 4 schools.</span>
+                                    <span v-show="duplicateUrnsError && !amalgamateUrnError && !amalgamationLengthError" class="error-message">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
                                 </dt>
                                 <dd>
                                     <ol class="linked-establishments" id="linked-establishments">
