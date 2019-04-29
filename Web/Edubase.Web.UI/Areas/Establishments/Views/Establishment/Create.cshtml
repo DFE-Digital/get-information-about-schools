@@ -39,6 +39,7 @@
             <div class="column-half">
                 <h2 class="heading-medium create-estab-label">New establishment</h2>
 
+                @* NAME, LA and TYPE  *@
                 <div class="form-group @Html.ValidationCssClassFor(x => x.Name)">
                     @Html.LabelFor(x => x.Name, "Establishment name")
                     @Html.ValidationMessageFor(x => x.Name)
@@ -57,13 +58,15 @@
                     @Html.DropDownListFor(x => x.EstablishmentTypeId, Model.EstablishmentTypes, "Please select", new { @class = "form-control" })
                 </div>
 
-                <div id="establishment-phase-form-group" class="form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
+                @* PHASE *@
+                <div id="establishment-phase-form-group" class="form-group hidden @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
                     @Html.LabelFor(x => x.EducationPhaseId, "Phase of education", new { @class = "form-label" })
                     @Html.ValidationMessageFor(x => x.EducationPhaseId)
                     @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "Please select", new { @class = "form-control" })
                 </div>
 
-                <div class="childrens-centre-fields" style="display:none">
+                @* CHILDRENS CENTRE *@
+                <div class="childrens-centre-fields hidden">
                     @Html.EditorFor(m => m.OpenDate, new { title = "Open date (required to save record)"})
 
                     @Html.EditorFor(m => m.Address)
