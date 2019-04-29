@@ -557,8 +557,8 @@
                             if (item === 'validationEnvelope' && errObj.validationEnvelope) {
                                 var env = errObj[item][0].errors;
                                 env.forEach(function (er) {
-                                    console.log(errObj[item][0].errors);
-                                    console.log(er);
+                                    //console.log(errObj[item][0].errors);
+                                    //console.log(er);
                                     errMessage += er.message + '<br>';
                                 });
                             } else if (!errObj.validationEnvelope && item === 'errors') {
@@ -574,7 +574,6 @@
             }
         },
         errorFocus: function(){
-            console.log('errorFocus');
             if ($('.error-summary').length) {
                 window.document.title = "Error: Amalgamations and mergers tool - GOV.UK";
                 $('.error-summary').focus();
