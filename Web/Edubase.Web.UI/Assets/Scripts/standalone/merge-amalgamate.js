@@ -108,7 +108,6 @@
         amalgUrl: function () {
             return '/Establishments/Establishment/Details/' + this.amalgUrn;
         },
-
         leadEstablishmentName: function () {
             var self = this;
             if (self.validMergeUrns && self.mergerType === 'merger') {
@@ -186,6 +185,9 @@
             this.mergerTypeError = this.mergerType === '';
             if (!this.mergerTypeError) {
                 this.mergerTypeConfirmed = true;
+                this.clearErrors();
+            } else {
+                this.errorFocus();
             }
         },
         disallowMerge: function () {
@@ -212,12 +214,15 @@
             var presentValidation = function () {
                 if (!self.leadEstabValid) {
                     self.leadEstabError = true;
+                    self.errorFocus();
                 }
                 if (!self.linkedEstab0Valid || !self.linkedEstab1Valid || !self.linkedEstab2Valid) {
                     self.linkedEstabError = true;
+                    self.errorFocus();
                 }
                 if (self.linkedEstab0Valid && self.linkedEstab1Valid && self.linkedEstab2Valid && self.leadEstabValid) {
                     self.validMergeUrns = true;
+                    self.clearErrors();
                 }
                 self.isProcessing = false;
             }
@@ -230,6 +235,7 @@
             this.mergeLengthError = false;
             this.commitErrors = '';
             this.duplicateUrnsError = this.hasDuplicateUrn();
+            this.errorFocus();
             if (this.duplicateUrnsError) {
                 return true;
             }
@@ -240,7 +246,6 @@
                 this.leadEstabValid = false;
                 this.fieldCount++;
                 promise.push(this.validateUrn(this.leadEstab, 'leadEstab'));
-
             }
 
             if (this.linkedEstab0 !== '') {
@@ -271,7 +276,6 @@
                                     if (self.fieldCount === 0) {
                                         presentValidation();
                                         window.clearInterval(tt);
-
                                     }
                                 },
                                 100);
@@ -281,8 +285,8 @@
                     });
             } else {
                 self.mergeLengthError = true;
+                self.errorFocus();
             }
-
         },
         validateUrn: function (urn, component) {
             var self = this;
@@ -362,12 +366,14 @@
             var presentValidation = function () {
                 if (!self.amalgamatedEstab0Valid || !self.amalgamatedEstab1Valid || !self.amalgamatedEstab2Valid || !self.amalgamatedEstab3Valid) {
                     self.amalgamateUrnError = true;
+                    self.errorFocus();
                 }
                 if (self.amalgamatedEstab0Valid &&
                     self.amalgamatedEstab1Valid &&
                     self.amalgamatedEstab2Valid &&
                     self.amalgamatedEstab3Valid) {
                         self.validMergeUrns = true;
+                        self.clearErrors();
                 }
                 self.isProcessing = false;
             }
@@ -431,8 +437,8 @@
                     });
             } else {
                 self.amalgamationLengthError = true;
-            }
-
+                self.errorFocus();
+            };
         },
         processMerger: function () {
             var self = this;
@@ -449,9 +455,8 @@
                 return item != self.leadEstab;
             });
 
-
             this.mergeDateError = this.validateMergerDate();
-
+            this.errorFocus();
 
             if (!this.mergeDateError) {
                 this.validLinkDate = true;
@@ -466,6 +471,7 @@
                         if (data.hasOwnProperty('successful') && data.successful) {
                             self.mergerComplete = true;
                             self.isProcessing = false;
+                            self.clearErrors();
                         }
                     },
                     error: function (jqXHR) {
@@ -489,6 +495,7 @@
                         }
                         self.commitErrors = errMessage;
                         self.isProcessing = false;
+                        self.errorFocus();
                     }
                 });
             }
@@ -502,6 +509,8 @@
             this.laError = (this.laId === '');
             this.phaseError = (this.phaseId === '');
             this.mergeDateError = this.validateMergerDate();
+
+            this.errorFocus();
 
             if (!this.nameError &&
                 !this.typeError &&
@@ -533,6 +542,7 @@
                             self.completeAmalgamation = true;
                             self.amalgUrn = data.response.amalgamateNewEstablishmentUrn;
                             self.isProcessing = false;
+                            self.clearErrors();
                         }
                     },
                     error: function (jqXHR) {
@@ -558,8 +568,23 @@
                         }
                         self.commitErrors = errMessage;
                         self.isProcessing = false;
+                        self.errorFocus();
                     }
                 });
+            }
+        },
+        errorFocus: function(){
+            console.log('errorFocus');
+            if ($('.error-summary').length) {
+                window.document.title = "Error: Amalgamations and mergers tool - GOV.UK";
+                $('.error-summary').focus();
+            } else {
+                window.setTimeout(function(){
+                    if ($('.error-summary').length) {
+                        window.document.title = "Error: Amalgamations and mergers tool - GOV.UK";
+                        $('.error-summary').focus();
+                    }
+                },500);
             }
         },
         clearErrors: function(){
