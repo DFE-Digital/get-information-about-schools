@@ -197,57 +197,52 @@
 }
 
 @section ViewScripts {
+
     <script type="text/javascript">
 
+        // Setting up variables
         var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);
         var phases = @Html.Json(Model.EducationPhases);
         var $typeSelector = $("#EstablishmentTypeId");
         var $phaseSelector = $("#EducationPhaseId");
+        var $radios = $('#number-gen-options').find(':radio');
+        var $enterNumber = $("#enter-number");
+
+        // show/hide enter establishment number text area
+        func = function(){
+            if ($radios.filter(':checked').val() === 'False') {
+                $enterNumber.removeClass('hidden');
+            } else {
+                $enterNumber.addClass('hidden');
+            }
+        }
 
         $(function() {
-            var $radios = $('#number-gen-options').find(':radio');
-            var $enterNumber = $("#enter-number");
-
-            var func = function() {
-                if ($radios.filter(':checked').val() === 'False') {
-                    $enterNumber.show();
+            // only display subsequent fields if it has a type
+            if ($typeSelector.val() != "") {
+                var typeId = $typeSelector.val();
+                if (typeId === "41") {
+                    // show the children's centre fields
+                    createChildrensCentre();
                 } else {
-                    $enterNumber.hide();
+                    // show phase and establishment number fields
+                    createOther();
+                    // show/hide enter establishment number text area
+                    func();
                 }
-            };
+            }
 
+            // setup bindings on establishment number radios and
+            // establishment type selection.
             $radios.on('change', func);
-
-            func();
-
-            filterEstablishmentPhaseList();
             $("select#EstablishmentTypeId").on("change keyup", filterEstablishmentPhaseList);
         });
 
-
-        var $fields = $('#content').find('.form-control');
-        var exitAttached = false;
-
-        $fields.on('change',
-            function() {
-                if (!exitAttached) {
-                    DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
-                    exitAttached = true;
-                }
-            });
-
-        if ($typeSelector.val() == "") $phaseSelector.prop('disabled', 'disabled');
-        $typeSelector.on('change',
-            function() {
-                $phaseSelector.removeAttr('disabled');
-            });
-
         function filterEstablishmentPhaseList() {
-
             var optionList = '<option value="">Please select</option>';
             var typeId = $typeSelector.val();
             var previousSelValue = (typeId === "41" ? "1" : $phaseSelector.val());
-            if (!isNaN(typeId)) {
+            if (typeId != "") {
                 var applicablePhases = type2PhaseMap[typeId];
                 if (applicablePhases && applicablePhases.length > 0) {
                     for (var i = 0; i < applicablePhases.length; i++) {
@@ -269,42 +264,50 @@
                     createChildrensCentre();
                 } else {
                     createOther();
+                    func();
                 }
+            } else {
+                $("#establishment-phase-form-group").addClass('hidden');
+                $("#number-gen-options").addClass('hidden');
+                $(".childrens-centre-fields").addClass('hidden');
             }
             $phaseSelector.html(optionList);
         }
 
         function createOther() {
-            $("#establishment-phase-form-group").show();
-            $("#number-gen-options").show();
-            $phaseSelector.removeAttr('disabled');
-            $(".childrens-centre-fields").hide();
+            $("#establishment-phase-form-group").removeClass('hidden');
+            $("#number-gen-options").removeClass('hidden');
+            $(".childrens-centre-fields").addClass('hidden');
         }
 
         function createChildrensCentre() {
-            $("#establishment-phase-form-group").hide();
-            $("#number-gen-options").hide();
-            $("#enter-number").hide();
-            $phaseSelector.prop('disabled', 'disabled');
-            $(".childrens-centre-fields").show();
+            $("#establishment-phase-form-group").addClass('hidden');
+            $("#number-gen-options").addClass('hidden');
+            $("#enter-number").addClass('hidden');
+            $(".childrens-centre-fields").removeClass('hidden');
         }
 
+        // You sure you want to leave popup
+        var $fields = $('#content').find('.form-control');
+        var exitAttached = false;
+
+        $fields.on('change',
+            function() {
+                if (!exitAttached) {
+                    DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
+                    exitAttached = true;
+                }
+            });
+
         $(document).ready(function() {
-            if ($('.validation-summary-errors').length === 0) {
-                $("#number-gen-options").hide();
-                $("#establishment-phase-form-group").hide();
-                $("#enter-number").hide();
-            }
             if ($('#warning-modal-content-0').length > 0) {
                 $('#overlay-proceed-0').focus();
             }
         });
 
-
         (function () {
             var mask = $('#warning-modal-overlay-0');
             var modal = $('#warning-modal-content-0');
-
 
             $('#warning-exit-overlay-0, #overlay-cancel-0').on('click',
                 function (e) {
