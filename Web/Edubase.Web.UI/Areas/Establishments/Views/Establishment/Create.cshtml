@@ -147,7 +147,7 @@
                 </div>
 
             </div>
-            <div class="column-full" id="number-gen-options">
+            <div class="column-full hidden" id="number-gen-options">
                 <fieldset class="inline create-estab-number-gen">
                     <legend id="GenerateEstabNumber" class="bold-small">Establishment number</legend>
                     <div class="form-group @Html.ValidationCssClassFor(x => x.GenerateEstabNumber)">
@@ -158,7 +158,7 @@
                         @Html.GiasRadioFor(x => x.GenerateEstabNumber, false, "Enter number", null, new { id = "enter-number-radio" })
 
                     </div>
-                    <div id="enter-number">
+                    <div id="enter-number" class="hidden">
                         <div id="enter-number-form-group" class="form-group panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
                             @Html.LabelFor(x => x.EstablishmentNumber, "Enter the establishment number", new {@class="form-label"})
                             @Html.ValidationMessageFor(x => x.EstablishmentNumber)
@@ -167,8 +167,6 @@
                     </div>
                 </fieldset>
             </div>
-
-
 
             <div class="column-full">
                 <div class="submit-cancel-panel">
