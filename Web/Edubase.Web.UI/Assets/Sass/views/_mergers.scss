@@ -89,7 +89,7 @@
 .top-button-panel {
     display: none;
     @include media(mobile) {
-    display: block;
+        display: block;
     }
     .submit-cancel-panel {
         padding-top: 20px;
@@ -97,11 +97,10 @@
 }
 
 
-.date-text-day, 
+.date-text-day,
 .date-text-month {
     width: 3em;
 }
 .date-text-year {
     width: 6em;
 }
-
