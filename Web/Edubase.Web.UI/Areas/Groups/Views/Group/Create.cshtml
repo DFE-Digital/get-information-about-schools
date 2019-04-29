@@ -7,11 +7,21 @@
 @{
     ViewBag.bodyClasses = "create-edit-school";
     ViewBag.hideLogo = true;
-    ViewBag.Title = Model.PageTitle;
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, Model.PageTitle);
 }
 
+<div class="breadcrumbs">
+    <ul>
+        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
+        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
+    </ul>
+</div>
 
-@using (Html.BeginForm("Create", "Group", new { area = "Groups" }, FormMethod.Post))
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
+
+<h1 class="heading-xlarge">@Model.PageTitle</h1>
+
+@using (Html.BeginForm("Create", "Group", new { area = "Groups", type = Model.GroupTypeMode }, FormMethod.Post))
 {
     @Html.HiddenFor(x => x.GroupUId)
     @Html.HiddenFor(x => x.GroupTypeMode)
@@ -19,18 +29,6 @@
     @Html.HiddenFor(x => x.ProcessedWarnings)
 
     <div class="grid-row">
-        <div class="column-full">
-            <div class="breadcrumbs">
-                <ul>
-                    <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-                </ul>
-            </div>
-
-            <h1 class="heading-xlarge">@Model.PageTitle</h1>
-            @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
-        </div>
-
         <div class="column-two-thirds">
             Use this tool to create a @Model.EntityName
         </div>
@@ -40,140 +38,36 @@
             <div class="form-group @Html.ValidationCssClassFor(x=>x.GroupName)">
                 <label for="GroupName" class="form-label">@Model.FieldNamePrefix name</label>
                 @Html.ValidationMessageFor(x => x.GroupName)
-                @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
-                {
-                    <input value="@Model.GroupName" disabled="disabled" class="form-control" />
-                    @Html.HiddenFor(x => x.GroupName)
-                }
-                else
-                {
-                    @Html.TextBoxFor(x => x.GroupName, new { @class = "form-control" })
-                }
+                @Html.TextBoxFor(x => x.GroupName, new { @class = "form-control" })
             </div>
+            @Html.HiddenFor(x => x.GroupTypeId)
+            @Html.EditorFor(x => x.OpenDate, new { title = Model.OpenDateLabel })
 
+            @if (Model.GroupUId.HasValue)
+            {
+                <div class="form-group">
+                    <label class="form-label">
+                        <abbr title="Unique Identifier">UID</abbr>
+                    </label>
+                    <input value="@Model.GroupUId" disabled="disabled" class="form-control" />
+                </div>
+            }
 
-                @if (Model.InEditMode && Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
-                {
-                    <div class="form-group">
-                        <label class="form-label">Companies house number</label>
-                        <input type="text" value="@Model.CompaniesHouseNumber" class="form-control" disabled="disabled" />
-                        @Html.HiddenFor(x => x.CompaniesHouseNumber)
-                    </div>
-                }
-
-
-
-
-                @if (Model.InEditMode)
-                {
-                    <div class="form-group">
-                        <label class="form-label">@Model.FieldNamePrefix type</label>
-                        <input type="text" value="@Model.GroupTypeName" class="form-control" disabled="disabled" />
-                        @Html.HiddenFor(x => x.GroupTypeId)
-                    </div>
-                }
-                else
-                {
-                @Html.HiddenFor(x => x.GroupTypeId)
-                }
-
-                @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
-                {
-                    <div class="form-group">
-                        <label for="name">@Model.OpenDateLabel</label>
-                        <input value="@(Model.OpenDate.ToDateTime()?.ToString("dd/MM/yyyy") ?? "Not recorded")" disabled="disabled" class="form-control" />
-                        @Html.HiddenFor(x => x.OpenDate.Day)
-                        @Html.HiddenFor(x => x.OpenDate.Month)
-                        @Html.HiddenFor(x => x.OpenDate.Year)
-                    </div>
-                }
-                else
-                {
-                    @Html.EditorFor(x => x.OpenDate, new { title = Model.OpenDateLabel })
-                }
-
-
-                @if (!Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust) && Model.InEditMode)
-                {
-                    @Html.EditorFor(x => x.ClosedDate, new { title = "Closed date" })
-                }
-
-
-                @if (Model.InEditMode && Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.ChildrensCentresGroup))
-                {
-                    <div class="form-group">
-                        <label class="form-label">Address</label>
-                        <input type="text" value="@Model.Address" class="form-control" disabled="disabled" />
-                        @Html.HiddenFor(x => x.Address)
-                    </div>
-                }
-
-                @if (Model.InEditMode && Model.GroupType == L.ChildrensCentresGroup)
-                {
-                    <div class="form-group  @Html.ValidationCssClassFor(x => x.ManagerEmailAddress)">
-                        <label for="name" class="form-label">Group manager email</label>
-                        @Html.ValidationMessageFor(x => x.ManagerEmailAddress)
-                        @Html.TextBoxFor(x => x.ManagerEmailAddress, new { @class = "form-control" })
-                    </div>
-                }
-
-                @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
-                {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
-                        <label for="name" class="form-label">Local authority</label>
-                        @Html.ValidationMessageFor(x => x.LocalAuthorityId)
-                        @if (Model.IsLocalAuthorityEditable)
-                        {
-                            @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new { @class = "form-control" })
-                        }
-                        else
-                        {
-                            <input value="@(Model.LocalAuthorityName)" disabled="disabled" class="form-control" />
-                            @Html.HiddenFor(x => x.LocalAuthorityName)
-                            @Html.HiddenFor(x => x.LocalAuthorityId)
-                        }
-                        @Html.HiddenFor(x => x.IsLocalAuthorityEditable)
-                    </div>
-                }
-
-                @if (Model.GroupUId.HasValue)
-                {
-                    <div class="form-group">
-                        <label class="form-label">
-                            <abbr title="Unique Identifier">UID</abbr>
-                        </label>
-                        <input value="@Model.GroupUId" disabled="disabled" class="form-control" />
-                    </div>
-                }
-
-                @if (Model.GroupType.Equals(L.SchoolSponsor) || (Model.InEditMode && Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust)))
-                {
-                    <div class="form-group  @Html.ValidationCssClassFor(x=>x.GroupId)">
-                        <label for="groupid" class="form-label">Group ID</label>
-                        @Html.ValidationMessageFor(x => x.GroupId)
-                        @Html.TextBoxFor(x => x.GroupId, new { @class = "form-control", maxlength = 120, id = "groupid" })
-                    </div>
-                }
-
-    </div>
+            @if (Model.GroupType.Equals(L.SchoolSponsor))
+            {
+                <div class="form-group  @Html.ValidationCssClassFor(x=>x.GroupId)">
+                    <label for="GroupId" class="form-label">Group ID</label>
+                    @Html.ValidationMessageFor(x => x.GroupId)
+                    @Html.TextBoxFor(x => x.GroupId, new { @class = "form-control", maxlength = 120 })
+                </div>
+            }
+        </div>
     </div>
 
     <div class="grid-row">
         <div class="column-full submit-cancel-panel">
-            @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
-            {
-                <button type="submit" name="action" class="button mobile-full-width" id="create-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Submit" : "Create")</button>
-            }
-
-
-            @if (Model.InEditMode)
-            {
-                @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-secondary cancel mobile-full-width" })
-            }
-            else
-            {
-                @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-secondary cancel mobile-full-width" })
-            }
+            <button type="submit" name="action" class="button mobile-full-width" id="create-submit" value="@VM.ActionSave">Create</button>
+            @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-secondary cancel mobile-full-width" })
         </div>
     </div>
 
@@ -182,64 +76,9 @@
             @Html.Partial("Warnings")
         </div>
     </div>
-
 }
 
-
 @section ViewScripts
-{
-    <script>
-        (function() {
-            var $radios = $('.childrens-centre-listing').find(':radio');
-            var initialRow = $radios.filter(':checked').parents('tr');
-            function highlightRow($row) {
-                var $cells = $('.childrens-centre-listing').find('tbody td');
-
-                $cells.removeClass('highlight');
-                $row.find('td').addClass('highlight');
-            }
-
-            $radios.on('change', function() {
-                var $row = $(this).parents('tr');
-                highlightRow($row);
-            });
-
-            highlightRow(initialRow);
-
-        }());
-
-        (function () {
-            if ("@Request.HttpMethod" == "GET") {
-                var $button = $("#create-submit");
-                var fields = ["#GroupName", "#OpenDate_Day", "#OpenDate_Month", "#OpenDate_Year", "#groupid"];
-                var toggle = function () {
-                    $button.prop("disabled", fields.some(function (x) { return $(x).length == 1 && $.trim($(x).val()) == "" }));
-                };
-                $(fields.join(",")).on("change keyup", toggle);
-                toggle();
-            }
-        })();
-
-        (function () {
-            var $urnSearchField = $("#LinkedEstablishments_LinkedEstablishmentSearch_Urn");
-            var $urnSearchButton = $(".add-establishment-link").find("button");
-            var toggle = function () { $urnSearchButton.prop("disabled", $.trim($urnSearchField.val()).length < 5 || Math.floor($urnSearchField.val()) != $urnSearchField.val() || !$.isNumeric($urnSearchField.val())); };
-            toggle();
-            $urnSearchField.on("change keyup", toggle);
-        })();
-
-        (function () {
-            var $addButton = $("#add-estab-submit");
-            var fields = ["#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Day", "#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Month", "#LinkedEstablishments_LinkedEstablishmentSearch_JoinedDate_Year"];
-            var toggle = function () {
-                $addButton.prop("disabled", fields.some(function (x) { return $.trim($(x).val()) == "" }));
-            };
-            $(fields.join(",")).on("change keyup", toggle);
-            toggle();
-        })();
-
-    </script>
-@if (!Model.InEditMode)
 {
     <script>
         var $fields = $('#content').find('.form-control');
@@ -253,9 +92,6 @@
 
         });
     </script>
-
-
-}
 
     @if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND))
     {

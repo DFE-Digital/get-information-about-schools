@@ -1,25 +1,22 @@
 ﻿@model ConvertSATViewModel
 @{
-    ViewBag.Title = "Convert";
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Convert single academy trusts to multi academy trusts");
 }
-<div class="grid-row">
-    <div class="column-full">
-        <div class="breadcrumbs">
-            <ul>
-                <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
-                <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-                @if (Model.Details != null)
-                {
-                    <li>@Html.ActionLink("Convert to multi-academy trust", "Convert", "Group", new { area = "Groups" })</li>
-                }
-            </ul>
-        </div>
-    </div>
-    <div class="column-full">
-        <h1 class="heading-xlarge">Convert to multi academy trust</h1>
-    </div>
+
+<div class="breadcrumbs">
+    <ul>
+        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
+        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
+        @if (Model.Details != null)
+        {
+            <li>@Html.ActionLink("Convert to multi-academy trust", "Convert", "Group", new { area = "Groups" })</li>
+        }
+    </ul>
 </div>
-@Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
+
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
+
+<h1 class="heading-xlarge">Convert to multi academy trust</h1>
 
 @if (Model.Details == null)
 {
@@ -53,33 +50,14 @@
             </div>
         </div>
     }
-
-    @section ViewScripts{
-
-        <script>
-            $(function () {
-                (function () {
-                    var $btn = $("button[type='submit']");
-                    var $field = $("input#Text");
-                    var toggle = function () { $btn.prop("disabled", $.trim($field.val()).length < 4); };
-                    $field.on("keyup change", toggle);
-                    toggle();
-                })();
-            });
-        </script>
-
-    }
 }
 else
 {
     <div class="grid-row">
         <div class="column-two-thirds">
             <p>Check this is the correct single academy trust before converting. A new <abbr title="Unique Identifier">UID</abbr> will be created on conversion.</p>
-
         </div>
     </div>
-
-    @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
 
     using (Html.BeginRouteForm("PostGroupConvertSAT2MAT", FormMethod.Post))
     {
@@ -129,4 +107,3 @@ else
         </div>
     }
 }
-

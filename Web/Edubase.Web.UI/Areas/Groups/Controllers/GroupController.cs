@@ -42,7 +42,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         private readonly NomenclatureService _nomenclatureService;
         private readonly ISecurityService _securityService;
         public GroupController(
-            ICachedLookupService cachedLookupService, 
+            ICachedLookupService cachedLookupService,
             ISecurityService securityService,
             IGroupReadService groupReadService,
             IEstablishmentReadService establishmentReadService,
@@ -69,7 +69,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (viewModel.ActionName == "find" && ModelState.IsValid)
             {
                 var result = (await _groupReadService.SearchByIdsAsync(viewModel.Text, viewModel.Text.ToInteger(), viewModel.Text, User)).Items.FirstOrDefault();
-                if (result == null) ModelState.AddModelError(nameof(viewModel.Text), "We were unable to find a SAT matching those details");
+                if (result == null) ModelState.AddModelError(nameof(viewModel.Text), "We were unable to find a single academy trust matching those details");
+                else if (result.StatusId == ((int) GS.Closed)) ModelState.AddModelError(nameof(viewModel.Text), "Closed single academy trusts can not be converted");
                 else if (result.GroupTypeId != (int) GT.SingleacademyTrust) ModelState.AddModelError(nameof(viewModel.Text), "That's an invalid group because it's of the wrong type.");
                 else
                 {
@@ -97,8 +98,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         }
 
         [HttpPost]
-        [Route("Create"), EdubaseAuthorize]
-        public async Task<ActionResult> Create(GroupEditorViewModel viewModel)
+        [Route("Create/{type}"), EdubaseAuthorize]
+        public async Task<ActionResult> Create(GroupEditorViewModel viewModel, string type)
         {
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);
@@ -132,8 +133,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (existingTrust != null && existingTrust.Items.Any())
             {
                 vm.TrustExists = true;
+                vm.TrustName = existingTrust.Items.First().Name;
                 vm.TypeId = existingTrust.Items.First().GroupTypeId;
                 vm.GroupId = existingTrust.Items.First().GroupId;
+                vm.GroupUid = existingTrust.Items.First().GroupUId;
             }
 
             if (vm.Address == null)
@@ -238,7 +241,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.Links = await _groupReadService.GetLinksAsync(id, User);
 
             await PopulateEstablishmentList(viewModel.Establishments, model.GroupUId.Value, true);
-            
+
             return View(viewModel);
         }
 
@@ -261,7 +264,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 CloseDate = model.ClosedDate,
                 ChangeHistory = await _groupReadService.GetGovernanceChangeHistoryAsync(id, skip, 100, sortBy, User)
             };
-    
+
             return View("GovernanceChangeHistory", viewModel);
         }
 
@@ -300,11 +303,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 viewModel.GroupTypeName = await _lookup.GetNameAsync(() => viewModel.GroupTypeId);
             }
 
-            viewModel.CanUserCloseMATAndMarkAsCreatedInError = viewModel.GroupType.OneOfThese(GT.MultiacademyTrust) 
-                && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed) 
+            viewModel.CanUserCloseMATAndMarkAsCreatedInError = viewModel.GroupType.OneOfThese(GT.MultiacademyTrust)
+                && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed)
                 && User.InRole(R.ROLE_BACKOFFICE);
 
-            viewModel.IsLocalAuthorityEditable = viewModel.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup) 
+            viewModel.IsLocalAuthorityEditable = viewModel.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)
                 && viewModel.LinkedEstablishments.Establishments.Count == 0 && User.InRole(R.ROLE_BACKOFFICE);
 
 
@@ -447,7 +450,13 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View("CreateAcademyTrust", viewModel);
         }
 
-        [EdubaseAuthorize, Route(nameof(SearchCompaniesHouse)), EdubaseAuthorize]
+        [HttpGet, EdubaseAuthorize, Route(nameof(SearchCompaniesHouse)), EdubaseAuthorize]
+        public async Task<ActionResult> SearchCompaniesHouse()
+        {
+            return View(new SearchCompaniesHouseModel());
+        }
+
+        [HttpPost, EdubaseAuthorize, Route(nameof(SearchCompaniesHouse)), EdubaseAuthorize]
         public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel)
         {
             if (!viewModel.SearchText.IsNullOrEmpty())
@@ -461,9 +470,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     viewModel.Results = await _companiesHouseService.SearchByName(viewModel.SearchText, viewModel.StartIndex, viewModel.PageSize);
                 }
 
-                viewModel.NotFound = !viewModel.Results.Items.Any();
-
-                if (viewModel.Results.Count == 1)
+                if (viewModel.Results.Count == 0)
+                {
+                    ModelState.AddModelError(nameof(viewModel.SearchText), "We couldn't find any companies matching your search criteria");
+                }
+                else if (viewModel.Results.Count == 1)
                 {
                     return RedirectToAction("CreateAcademyTrust", "Group", new { companiesHouseNumber = viewModel.Results.Items.First().Number, area = "Groups" });
                 }

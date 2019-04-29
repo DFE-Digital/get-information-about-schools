@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Services.Domain;
 using Edubase.Services.IntegrationEndPoints.CompaniesHouse.Models;
 using System;
@@ -42,10 +42,13 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         [Required(ErrorMessage = "Please enter a group ID"), DisplayName("Group ID")]
         public string GroupId { get; set; }
 
+        public int GroupUid { get; set; }
+
         public DateTime? OpenDate { get; set; }
         public string CompaniesHouseNumber { get; set; }
         public string Address { get; set; }
         public bool TrustExists { get; internal set; }
+        public string TrustName { get; internal set; }
         public bool AllowSave { get; set; } = true;
         public IEnumerable<SelectListItem> GroupTypes { get; set; }
 
