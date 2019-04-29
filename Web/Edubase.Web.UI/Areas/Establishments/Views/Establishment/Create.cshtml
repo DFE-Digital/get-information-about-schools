@@ -23,24 +23,6 @@
 
 <div id="create-establishment">
     <div class="grid-row">
-        <div class="column-full">
-            @if (Model.CCDuplicate)
-            {
-                <div class="validation-summary-errors error-summary">
-                    <span>Duplicate record found</span>
-                    <ul>
-                        <li>A children’s centre is already registered with this name, local authority and postcode. To complete the record:</li>
-                        <li>
-                            <a href="#Name">Please enter a different establishment name</a>
-                            or
-                            <a href="#LocalAuthorityId">Please enter a different local authority </a>
-                            or
-                            <a href="#Address_PostCode">Please enter a different postcode</a>
-                        </li>
-                    </ul>
-                </div>
-            }
-        </div>
 
         @using (Html.BeginForm())
         {
