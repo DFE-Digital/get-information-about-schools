@@ -32,7 +32,7 @@
         </div>
 
         @* ERROR SUMMARY *@
-        <div v-show="showGlobalError" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+        <div v-if="showGlobalError" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
             <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
             <ul class="error-summary-list">
                 @* CHOOSE *@
