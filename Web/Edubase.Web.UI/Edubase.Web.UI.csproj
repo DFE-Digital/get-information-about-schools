@@ -570,7 +570,6 @@
     <Content Include="Assets\Scripts\standalone\manage-academy-openings.js" />
     <Content Include="Assets\Scripts\standalone\search-change-history.js" />
     <Content Include="Assets\Scripts\tooltips.js" />
-    <Content Include="Assets\Scripts\standalone\bulk-academies.js" />
     <Content Include="Assets\Scripts\Views\edit-governors.js" />
     <Content Include="Assets\Scripts\Views\edit-iebt.js" />
     <Content Include="Assets\Scripts\Views\governor-search.js" />
