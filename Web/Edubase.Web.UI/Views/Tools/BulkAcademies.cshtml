@@ -14,37 +14,36 @@
     </ul>
 </div>
 
-<div v-if="showGlobalError" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
-    <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
-    <h2 class="heading-medium error-summary-heading no-academies hidden">No academies have been specified</h2>
-    <p class="invalid-urn error-sub-heading hidden">Predecessor school not recognised</p>
-    <p class="missing-date error-sub-heading hidden">Please specify an opening date</p>
-    <ul class="error-summary-list">
-        <li v-show="invalidUrn">
-            <a href="#establishment-urn">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a>
-        </li>
-        <li v-show="duplicateUrn">
-            <a href="#establishment-urn"><abbr title="Unique Reference Number">URN</abbr> is a duplicate</a>
-        </li>
-        <li v-show="urnLookUpError!==''">
-            <a href="#establishment-urn" v-if="urnLookUpError">{{urnLookUpError}}</a>
-        </li>
-        <li v-show="apiValidationError!==''">
-            <a href="#establishment-urn" v-if="apiValidationError">{{apiValidationError}}</a>
-        </li>
-        <li v-show="noAcademyError">
-            <a href="#academy-type">Please add an academy</a>
-        </li>
-        <li v-show="academyUnselectedError">
-            <a href="#academy-type">Please select an establishment type</a>
-        </li>
-        <li v-show="openDateError">
-            <a href="#academy-open-date">Opening date not specified</a>
-        </li>
-    </ul>
-</div>
-
 <div id="bulk-academies" v-cloak>
+    <div v-if="showGlobalError" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+        <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
+        <h2 class="heading-medium error-summary-heading no-academies hidden">No academies have been specified</h2>
+        <p class="invalid-urn error-sub-heading hidden">Predecessor school not recognised</p>
+        <p class="missing-date error-sub-heading hidden">Please specify an opening date</p>
+        <ul class="error-summary-list">
+            <li v-show="invalidUrn">
+                <a href="#establishment-urn">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a>
+            </li>
+            <li v-show="duplicateUrn">
+                <a href="#establishment-urn"><abbr title="Unique Reference Number">URN</abbr> is a duplicate</a>
+            </li>
+            <li v-show="urnLookUpError!==''">
+                <a href="#establishment-urn" v-if="urnLookUpError">{{urnLookUpError}}</a>
+            </li>
+            <li v-show="apiValidationError!==''">
+                <a href="#establishment-urn" v-if="apiValidationError">{{apiValidationError}}</a>
+            </li>
+            <li v-show="noAcademyError">
+                <a href="#academy-type">Please add an academy</a>
+            </li>
+            <li v-show="academyUnselectedError">
+                <a href="#academy-type">Please select an establishment type</a>
+            </li>
+            <li v-show="openDateError">
+                <a href="#academy-open-date">Opening date not specified</a>
+            </li>
+        </ul>
+    </div>
 
     <!-- API Errors -->
     <div v-show="Object.keys(apiError).length> 0">

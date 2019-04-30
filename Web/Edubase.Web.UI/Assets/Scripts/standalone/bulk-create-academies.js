@@ -1,7 +1,7 @@
 ﻿(function () {
     var today = new Date();
     var bulkAcademies = new Vue({
-        el: '#content',
+        el: '#bulk-academies',
         data: {
             establishments: [],
             addedUrns: [],
