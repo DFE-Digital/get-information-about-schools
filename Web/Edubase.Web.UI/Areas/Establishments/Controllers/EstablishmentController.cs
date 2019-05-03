@@ -573,7 +573,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
                 else if (response.Errors.Any(x => x.Code == "establishment.with.same.name.la.postcode.found"))
                 {
-                    model.CCDuplicate = true;
                     ModelState.AddModelError(nameof(model.Name), "Please enter a different establishment name");
                     ModelState.AddModelError(nameof(model.LocalAuthorityId), "Please enter a different local authority");
                     ModelState.AddModelError("Address.PostCode", "Please enter a different postcode");

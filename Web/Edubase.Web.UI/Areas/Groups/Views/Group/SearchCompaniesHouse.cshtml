@@ -1,9 +1,10 @@
-﻿@model SearchCompaniesHouseModel
+@model SearchCompaniesHouseModel
 @{
     ViewBag.bodyClasses = "create-edit-school create-academy-trust";
     ViewBag.hideLogo = true;
     ViewBag.Title = "Create academy trust";
 }
+
 <div class="breadcrumbs">
     <ul>
         <li>
@@ -15,49 +16,30 @@
     </ul>
 </div>
 
-@section ViewScripts{
-    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
-}
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-
-@using (Html.BeginForm("SearchCompaniesHouse", "Group", FormMethod.Get))
+@using (Html.BeginForm("SearchCompaniesHouse", "Group", FormMethod.Post))
 {
     <div class="grid-row">
         <div class="column-full">
             <h1 class="heading-xlarge">Create an academy trust</h1>
             <p>To create an academy trust record select the company record from Companies House.</p>
-
-            @Html.ValidationSummary(null, new { @class = "error-summary" })
         </div>
     </div>
     <div class="grid-row">
         <div class="column-two-thirds">
-            @if (string.IsNullOrWhiteSpace(Model.SearchText) && Request.Url.PathAndQuery.Contains("SearchText"))
-            {
-                @* Static alert for empty search *@
-                <div role="alert" class="warning-message js-trigger-aria-live">
-                    <p class="message-text" aria-live="polite">Please enter a Companies House name or number to start a search</p>
-                </div>
-            }
-            else if (Model.NotFound)
-            {
-                @* Static alert for no search results *@
-                <div role="alert" class="warning-message js-trigger-aria-live">
-                    <p class="message-text" aria-live="polite">We couldn't find any companies matching your search criteria</p>
-                </div>
-            }
-
             <h2 class="heading-small">Add company</h2>
-            <div class="form-group inline-with-button">
+            <div class="form-group inline-with-button @Html.ValidationCssClassFor(x => x.SearchText)">
                 @Html.LabelFor(x => x.SearchText, "Enter the Companies House name or number", new { @class = "form-label" })
+                @Html.ValidationMessageFor(x => x.SearchText)
                 @Html.TextBoxFor(x => x.SearchText, new { maxlength = 120, @class = "form-control " })
-                <button type="submit" class="button inline-submit">Find</button>
+                <button type="submit" class="button inline-submit">Search</button>
             </div>
 
         </div>
     </div>
 
-    if (Model.Results != null && !Model.NotFound)
+    if (Model.Results != null)
     {
 
         if (Model.Results.PageCount > 1)
@@ -88,7 +70,7 @@
                         {
                             <tr class="company-result">
                                 <td data-label="Name">@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups" }, null)</td>
-                                <td data-label="Companies House no."><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number">@result.Number</a></td>
+                                <td data-label="Companies House no."><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number" target="_blank">@result.Number</a></td>
                                 <td data-label="Incorporated">@(result.IncorporationDate?.ToString("dd/MM/yyyy"))</td>
                                 <td data-label="Address">@(result.Address.ToString() ?? "Not recorded")</td>
                             </tr>
@@ -107,6 +89,8 @@
             </div>
         }
     }
+}
 
-
+@section ViewScripts{
+    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
 }

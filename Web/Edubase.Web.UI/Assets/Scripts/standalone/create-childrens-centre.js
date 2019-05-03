@@ -136,6 +136,7 @@
             this.tooFewCentresError = this.centresInGroup.length < 2;
 
             if (this.tooFewCentresError) {
+                self.errorFocus();
                 return;
             }
 
@@ -184,6 +185,7 @@
                                 }
                                 o.message = error.Message;
                                 self.apiErrors.push(o);
+                                self.errorFocus();
                             });
                         }
                     },
@@ -293,18 +295,24 @@
             });
         },
         lookupUrn: function () {
+            this.clearErrors();
             var self = this;
             this.urnError = false;
             this.apiErrors = [];
             this.urnApiErrors = [];
             this.tooFewCentresError = false;
+            this.pendingEdit = false;
 
             this.duplicateUrnError = this.addedUrns.indexOf(Number(this.searchUrn)) > -1;
 
-            if (this.duplicateUrnError) {  return; }
+            if (this.duplicateUrnError) {
+                self.errorFocus();
+                return;
+            }
 
             if (isNaN(this.searchUrn) || this.searchUrn === '') {
                 this.urnError = true;
+                self.errorFocus();
                 return;
             }
             this.isProcessing = true;
@@ -325,6 +333,7 @@
                     }
                     self.urnError = true;
                     self.isProcessing = false;
+                    self.errorFocus();
                 }
             });
         },
@@ -364,6 +373,7 @@
                             }
                         });
                         self.isProcessing = false;
+                        self.errorFocus();
                     } else {
                         self.isProcessing = false;
                     }
@@ -380,9 +390,11 @@
             });
         },
         addToGroup: function () {
+            this.clearErrors();
             var self = this;
             $.when(self.validateDate('joinDate')).done(function () {
                 self.isProcessing = false;
+                self.errorFocus();
                 if (!self.joinDateError) {
 
                     self.pendingEstab.joinDate = self.joinDate;
@@ -445,11 +457,14 @@
             return $.trim(this.la) !== '' && $.trim(this.joinDateDay) !== '' && $.trim(this.joinDateMonth) !== '' && $.trim(this.joinDateYear) !== '';
         },
         step1Continue: function () {
+            this.clearErrors();
             var self = this;
             $.when(this.validateDate('openDate')).done(function () {
                 self.groupNameError = $.trim(self.groupName) === '';
                 self.laError = self.la === '';
                 self.groupNameApiError = '';
+                self.groupNameWarningMessage = '';
+                self.errorFocus();
                 if (!self.groupNameError && !self.laError && !self.openDateError) {
                     self.isProcessing = true;
                     var validationObj = {
@@ -480,20 +495,45 @@
                                 self.appState = 'addCentre';
                             }
                             self.isProcessing = false;
+                            self.errorFocus();
                         },
                         error: function(jqxhr) {
                             if (jqxhr.hasOwnProperty('responseJSON')) {
                                 self.apiError = jqxhr.responseJSON;
+                                self.errorFocus();
                             }
                         }
                     });
                 }
             });
-
+        },
+        errorFocus: function(){
+            if ($('.error-summary').length) {
+                window.document.title = "Error: Create children's centre group or collaboration - GOV.UK";
+                $('.error-summary').focus();
+            } else {
+                window.setTimeout(function(){
+                    if ($('.error-summary').length) {
+                        window.document.title = "Error: Create children's centre group or collaboration - GOV.UK";
+                        $('.error-summary').focus();
+                    }
+                },500);
+            }
+        },
+        clearErrors: function(){
+            window.document.title = "Create children's centre group or collaboration - GOV.UK";
+            this.groupNameError = false;
+            this.laError = false;
+            this.openDateError = false;
+            this.tooFewCentresError = false;
+            this.urnError = false;
+            this.duplicateUrnError = false;
+            this.joinDateError = false;
         },
         cancelEdit : function() {
             this.addToGroup();
             this.pendingEdit = false;
+            this.clearErrors();
         }
     }
 });
