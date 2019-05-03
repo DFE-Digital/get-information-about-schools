@@ -36,6 +36,8 @@
         mergerComplete: false,
 
         leadEstabError: false,
+        leadEstabLengthError: false,
+        leadEstabUrnCheckDone: false,
         leadEstabValid: false,
         leadEstabErrorMessage: '',
 
@@ -43,6 +45,7 @@
         linkedEstab1Error: false,
         linkedEstab2Error: false,
         linkedEstabError: false,
+        linkedEstabUrnCheckDone: false,
 
         linkedEstab0Valid: false,
         linkedEstab1Valid: false,
@@ -74,7 +77,12 @@
         amalgUrn: '',
         exitUrl: '',
         isProcessing: false,
-        apiError: {}
+        apiError: {},
+
+        leadEstabEmpty: false,
+        leadEstabInvalid: false,
+        leadEstabUrnChecked: false,
+        leadEstabNoMatch: false
     },
     created: function () {
         this.populateSelect('new-establishment-type', this.types);
@@ -99,7 +107,10 @@
                     this.mergeDateError ||
                     this.mergeLengthError ||
                     this.duplicateUrnsError ||
-                    this.commitErrors
+                    this.commitErrors ||
+                    this.leadEstabEmpty ||
+                    this.leadEstabInvalid ||
+                    this.leadEstabNoMatch
             );
         },
         schoolDetailUrl: function () {
@@ -206,28 +217,73 @@
 
             return urns.length < 2;
         },
+        clearMergeFields: function(){
+            this.leadEstabEmpty = false;
+            this.leadEstabInvalid = false;
+            this.leadEstabUrnChecked = false;
+            this.leadEstabValid = false;
+            this.leadEstabNoMatch = false;
+        },
+        validateMergeFields: function(){
+            var self = this;
+            this.clearMergeFields();
+
+            if (this.leadEstab == '') {              //is lead field empty?
+                this.leadEstabEmpty = true;
+            } else if (this.leadEstab.length < 5 || isNaN(this.leadEstab)) {         //is lead values not allowed?
+                this.leadEstabInvalid = true;
+            } else {
+                this.urnCheck(this.leadEstab, 'leadEstab');
+                var loopUntilChecked;
+                loopUntilChecked = window.setInterval(function () {
+                    if (self.leadEstabUrnChecked) {
+                        if (!self.leadEstabValid) {
+                            self.leadEstabNoMatch = true;
+                        }
+                        window.clearInterval(loopUntilChecked);
+                        }
+                    },
+                    100);
+            }
+        },
         validateMergeSelection: function () {
             this.fieldCount = 0;
             var self = this;
             this.mergerEstabs = [];
 
-            var presentValidation = function () {
-                if (!self.leadEstabValid) {
-                    self.leadEstabError = true;
-                    self.errorFocus();
-                }
-                if (!self.linkedEstab0Valid || !self.linkedEstab1Valid || !self.linkedEstab2Valid) {
-                    self.linkedEstabError = true;
-                    self.errorFocus();
-                }
-                if (self.linkedEstab0Valid && self.linkedEstab1Valid && self.linkedEstab2Valid && self.leadEstabValid) {
-                    self.validMergeUrns = true;
-                    self.clearErrors();
-                }
-                self.isProcessing = false;
+            var presentValidation = function(){
+                var urnChecksDone;
+                urnChecksDone = window.setInterval(function () {
+                    if (self.leadEstabUrnCheckDone && self.linkedEstabUrnCheckDone) {
+                        console.log('checks done - leadEstabValid: ' + self.leadEstabValid);
+                        console.log('checks done - linkedEstab0Valid: ' + self.linkedEstab0Valid);
+                        console.log('checks done - linkedEstab1Valid: ' + self.linkedEstab1Valid);
+                        console.log('checks done - linkedEstab2Valid: ' + self.linkedEstab2Valid);
+                        if (!self.leadEstabValid) {
+                            console.log('present validation: leadEstab is not valid');
+                            self.leadEstabError = true;
+                            self.errorFocus();
+                        }
+                        if (!self.linkedEstab0Valid || !self.linkedEstab1Valid || !self.linkedEstab2Valid) {
+                            console.log('present validation - some additional est invalid');
+                            self.linkedEstabError = true;
+                            self.errorFocus();
+                        }
+                        if (self.linkedEstab0Valid && self.linkedEstab1Valid && self.linkedEstab2Valid && self.leadEstabValid) {
+                            console.log('present validation - all additional est valid :)');
+                            self.validMergeUrns = true;
+                            self.clearErrors();
+                        }
+                        self.isProcessing = false;
+                        window.clearInterval(urnChecksDone);
+                        }
+                    },
+                    100);
+
             }
 
             this.linkedEstabError = false;
+            this.leadEstabLengthError = false;
             this.leadEstabError = false;
             this.linkedEstab0Valid = true;
             this.linkedEstab1Valid = true;
@@ -243,30 +299,47 @@
             var promise = [];
 
             if (this.leadEstab !== '') {
+                //console.log('leadEstab not empty');
                 this.leadEstabValid = false;
-                this.fieldCount++;
-                promise.push(this.validateUrn(this.leadEstab, 'leadEstab'));
+                this.leadEstabUrnCheckDone = false;
+                this.validateUrn(this.leadEstab, 'leadEstab');
+                var leadEstCheck;
+                leadEstCheck = window.setInterval(function () {
+                    if (self.leadEstabUrnCheckDone) {
+                        presentValidation();
+                        window.clearInterval(leadEstCheck);
+                        }
+                    },
+                    100);
+            } else {
+                //console.log('leadEstab empty');
+                //this.leadEstabError = false;
+                this.leadEstabLengthError = true;
             }
 
             if (this.linkedEstab0 !== '') {
+                console.log('linkedEstab0 is not empty');
                 this.linkedEstab0Valid = false;
+                this.linkedEstabUrnCheckDone = false;
                 this.fieldCount++;
                 promise.push(this.validateUrn(this.linkedEstab0, 'linkedEstab0'));
             }
 
             if (this.linkedEstab1 !== '') {
                 this.linkedEstab1Valid = false;
+                this.linkedEstabUrnCheckDone = false;
                 this.fieldCount++;
                 promise.push(this.validateUrn(this.linkedEstab1, 'linkedEstab1'));
             }
 
             if (this.linkedEstab2 !== '') {
                 this.linkedEstab2Valid = false;
+                this.linkedEstabUrnCheckDone = false;
                 this.fieldCount++;
                 promise.push(this.validateUrn(this.linkedEstab2, 'linkedEstab2'));
             }
 
-            if (promise.length > 1) {
+            if (promise.length > 0) {
                 this.isProcessing = true;
                 $.when(promise.join(',')).done(
                     function () {
@@ -274,21 +347,25 @@
                         if (self.fieldCount > 0) {
                             tt = window.setInterval(function () {
                                     if (self.fieldCount === 0) {
+                                        console.log('inside promise: linkedEstab0:' + self.linkedEstab0Valid);
                                         presentValidation();
                                         window.clearInterval(tt);
                                     }
                                 },
                                 100);
                         } else {
+                            console.log('inside promise: linkedEstab0:' + self.linkedEstab0Valid);
                             presentValidation();
                         }
                     });
             } else {
                 self.mergeLengthError = true;
+                self.linkedEstabUrnCheckDone = true;
                 self.errorFocus();
             }
         },
-        validateUrn: function (urn, component) {
+        urnCheck: function(urn, component){
+            console.log('Doing the URN check');
             var self = this;
 
             $.ajax({
@@ -296,6 +373,7 @@
                 dataType: 'json',
                 method: 'get',
                 success: function (data) {
+                    console.log('success');
                     self[component + 'Valid'] = !data.notFound;
                     if (self[component + 'Valid']) {
                         if (self.mergerType === 'merger') {
@@ -306,6 +384,38 @@
                     }
                 },
                 error: function (jqxhr) {
+                    console.log('error');
+                    if (jqxhr.hasOwnProperty('responseJSON')) {
+                        self.apiError = jqxhr.responseJSON;
+                    }
+                    self[component + 'Valid'] = false;
+                },
+                complete: function () {
+                    console.log('complete');
+                    self[component + 'UrnChecked'] = true;
+                }
+            });
+        },
+        validateUrn: function (urn, component) {
+            var self = this;
+
+            $.ajax({
+                url: self.estabLookup.replace('{0}', urn),
+                dataType: 'json',
+                method: 'get',
+                success: function (data) {
+                    console.log('validate ' + component + ' URN: success');
+                    self[component + 'Valid'] = !data.notFound;
+                    if (self[component + 'Valid']) {
+                        if (self.mergerType === 'merger') {
+                            self.mergerEstabs.push(data.returnValue);
+                        } else {
+                            self.amalgamationEstabs.push(data.returnValue);
+                        }
+                    }
+                },
+                error: function (jqxhr) {
+                    console.log('validate ' + component + ' URN: error');
                     if (jqxhr.hasOwnProperty('responseJSON')) {
                         self.apiError = jqxhr.responseJSON;
                     }
@@ -313,6 +423,11 @@
                 },
                 complete: function () {
                     self.fieldCount--;
+                    if (component == 'leadEstab') {
+                        self.leadEstabUrnCheckDone = true;
+                    } else {
+                        self.linkedEstabUrnCheckDone = true;
+                    }
                 }
             });
         },
@@ -591,6 +706,7 @@
             this.mergerTypeError = false;
             this.amalgamateUrnError = false;
             this.leadEstabError = false;
+            this.leadEstabLengthError = false;
             this.linkedEstabError = false;
             this.amalgamationLengthError = false;
             this.nameError = false;

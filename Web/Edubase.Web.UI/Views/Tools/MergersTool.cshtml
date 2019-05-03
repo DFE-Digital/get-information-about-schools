@@ -72,14 +72,20 @@
                 </li>
 
                 @* MERGER *@
-                <li v-show="leadEstabError">
-                    <a href="#lead-establishment">The lead establishment <abbr title="Unique Reference Number">URN</abbr> is invalid</a>
+                <li v-show="leadEstabEmpty">
+                    <a href="#lead-establishment">Please enter the lead establishment URN</a>
+                </li>
+                <li v-show="leadEstabInvalid">
+                    <a href="#lead-establishment">The lead establishment URN is invalid</a>
+                </li>
+                <li v-show="leadEstabNoMatch">
+                    <a href="#lead-establishment">The lead establishment URN was not found</a>
                 </li>
                 <li v-show="linkedEstabError">
                     <a href="#linked-establishments">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a>
                 </li>
                 <li v-show="mergeLengthError">
-                    <a href="#lead-establishment">Enter the lead establishments' URN and at least 1 additional establishments' URN</a>
+                    <a href="#linked-establishments">Enter at least 1 additional establishments' URN</a>
                 </li>
                 <li v-show="mergeDateError && mergerType==='merger'">
                     <a href="#merger-date">Merger date is invalid</a>
@@ -153,7 +159,7 @@
                         <div class="column-two-thirds" id="merger-details">
                             <p>You can propose closing one or more schools and altering the remaining school.</p>
 
-                            <div v-bind:class="['form-group', (leadEstabError || mergeLengthError || duplicateUrnsError) ? 'error' : '' ]">
+                            <div v-bind:class="['form-group', (leadEstabEmpty || leadEstabInvalid || leadEstabNoMatch || duplicateUrnsError) ? 'error' : '' ]">
                                 <h2 class="heading-small">Select the lead establishment</h2>
                                 <span class="form-hint">
                                     The lead establishment will remain open
@@ -163,9 +169,10 @@
                                 </label>
 
                                 @* FORM ERROR MESSAGES - LEAD ESTABLISHMENT *@
-                                <span v-show="leadEstabError" class="error-message">The lead establishment <abbr title="Unique Reference Number">URN</abbr> is invalid</span>
-                                <span v-show="mergeLengthError" class="error-message">Please enter a lead establishment URN</span>
-                                <span v-show="duplicateUrnsError" class="error-message">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
+                                <span v-show="leadEstabEmpty" class="error-message">Please enter a lead establishment URN</span>
+                                <span v-show="leadEstabInvalid" class="error-message">The lead establishment URN is invalid</span>
+                                <span v-show="leadEstabNoMatch" class="error-message">The lead establishment was not found</span>
+                                <span v-show="duplicateUrnsError" class="error-message">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the URN.</span>
                                 <input class="form-control" id="lead-establishment" type="text" v-model="leadEstab" />
                             </div>
 
@@ -207,7 +214,7 @@
                         <div class="column-full">
                             <div class="submit-cancel-panel">
                                 <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false; clearErrors();"> &laquo; Go back</a>
-                                <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="validateMergeSelection">Continue</button>
+                                <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="validateMergeFields">Continue</button>
                                 <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
                             </div>
                         </div>
