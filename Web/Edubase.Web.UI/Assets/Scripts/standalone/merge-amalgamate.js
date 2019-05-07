@@ -82,7 +82,12 @@
         leadEstabEmpty: false,
         leadEstabInvalid: false,
         leadEstabUrnChecked: false,
-        leadEstabNoMatch: false
+        leadEstabNoMatch: false,
+
+        linkedEstab0Empty: false,
+        linkedEstab0Invalid: false,
+        linkedEstab0UrnChecked: false,
+        linkedEstab0NoMatch: false
     },
     created: function () {
         this.populateSelect('new-establishment-type', this.types);
@@ -110,7 +115,10 @@
                     this.commitErrors ||
                     this.leadEstabEmpty ||
                     this.leadEstabInvalid ||
-                    this.leadEstabNoMatch
+                    this.leadEstabNoMatch ||
+                    this.linkedEstab0Empty ||
+                    this.linkedEstab0Invalid ||
+                    this.linkedEstab0NoMatch
             );
         },
         schoolDetailUrl: function () {
@@ -223,24 +231,52 @@
             this.leadEstabUrnChecked = false;
             this.leadEstabValid = false;
             this.leadEstabNoMatch = false;
+            this.linkedEstab0Empty = false;
+            this.linkedEstab0Invalid = false;
+            this.linkedEstab0bUrnChecked = false;
+            this.linkedEstab0Valid = false;
+            this.linkedEstab0NoMatch = false;
+            console.log('all fields cleared');
         },
         validateMergeFields: function(){
             var self = this;
             this.clearMergeFields();
 
-            if (this.leadEstab == '') {              //is lead field empty?
+            if (this.leadEstab == '') {
                 this.leadEstabEmpty = true;
-            } else if (this.leadEstab.length < 5 || isNaN(this.leadEstab)) {         //is lead values not allowed?
+            } else if (this.leadEstab.length < 5 || isNaN(this.leadEstab)) {
                 this.leadEstabInvalid = true;
             } else {
                 this.urnCheck(this.leadEstab, 'leadEstab');
-                var loopUntilChecked;
-                loopUntilChecked = window.setInterval(function () {
+                var loopUntilChecked0;
+                loopUntilChecked0 = window.setInterval(function () {
                     if (self.leadEstabUrnChecked) {
                         if (!self.leadEstabValid) {
                             self.leadEstabNoMatch = true;
                         }
-                        window.clearInterval(loopUntilChecked);
+                        window.clearInterval(loopUntilChecked0);
+                        }
+                    },
+                    100);
+            }
+
+            if (this.linkedEstab0 == '') {
+                this.linkedEstab0Empty = true;
+            } else if (this.linkedEstab0.length < 5 || isNaN(this.linkedEstab0)) {
+                this.linkedEstab0Invalid = true;
+            } else {
+                console.log('linkedEstab0UrnChecked: ' + self.linkedEstab0UrnChecked);
+                this.urnCheck(this.linkedEstab0, 'linkedEstab0');
+                var loopUntilChecked1;
+                loopUntilChecked1 = window.setInterval(function () {
+                    if (self.linkedEstab0UrnChecked) {
+                        console.log('linkedEstab0UrnChecked: ' + self.linkedEstab0UrnChecked);
+                        console.log('linkedEstab0Valid: ' + self.linkedEstab0Valid);
+                        console.log('linkedEstab0NoMatch: ' + self.linkedEstab0NoMatch);
+                        if (!self.linkedEstab0Valid) {
+                            self.linkedEstab0NoMatch = true;
+                        }
+                        window.clearInterval(loopUntilChecked1);
                         }
                     },
                     100);
@@ -382,6 +418,7 @@
                             self.amalgamationEstabs.push(data.returnValue);
                         }
                     }
+                    //self[component + 'UrnChecked'] = true;
                 },
                 error: function (jqxhr) {
                     console.log('error');
@@ -389,6 +426,7 @@
                         self.apiError = jqxhr.responseJSON;
                     }
                     self[component + 'Valid'] = false;
+                    //self[component + 'UrnChecked'] = true;
                 },
                 complete: function () {
                     console.log('complete');
