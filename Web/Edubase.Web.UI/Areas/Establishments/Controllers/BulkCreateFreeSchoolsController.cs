@@ -1,4 +1,4 @@
-﻿using Edubase.Common.IO;
+using Edubase.Common.IO;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
 using Edubase.Web.UI.Areas.Establishments.Models;
@@ -91,7 +91,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
             else if (apiResponse.HasErrors)
             {
-                AddApiErrorsToModelState(apiResponse.Errors);
+                AddApiErrorsToModelState(apiResponse.Errors, nameof(viewModel.BulkFile));
                 return View(ViewName, viewModel);
             }
             else throw new Exception("ApiResponse indicated failure, but no errors were supplied");
