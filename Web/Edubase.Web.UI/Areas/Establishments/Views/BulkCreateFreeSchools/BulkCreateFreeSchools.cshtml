@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Bulk create new free schools");
 }
+
 <div class="breadcrumbs">
     <ul>
         <li>@Html.RouteLink("Home", "Homepage")</li>
@@ -54,4 +55,8 @@
             </div>
         </div>
     </div>
+}
+
+@section ViewScripts {
+    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
 }
