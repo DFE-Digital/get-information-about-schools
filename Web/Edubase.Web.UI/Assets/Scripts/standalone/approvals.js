@@ -185,6 +185,7 @@
                     this.getChangesData();
                 },
                 confirmRejection: function () {
+                    this.clearErrors();
                     var self = this;
                     this.apiError = '';
                     this.invalidReason = $('#reason').val().length < 1;
@@ -194,6 +195,8 @@
                         .filter(':checked');
 
                     this.noneSelectedError = selectedItems.length === 0;
+
+                    this.errorFocus();
 
                     if (this.invalidReason || this.noneSelectedError || this.reasonLength) {
                         return;
@@ -243,6 +246,8 @@
                     this.itemsConfirmedRejected = false;
                     this.itemsConfirmedRemoved = false;
 
+                    this.errorFocus();
+
                     if (this.approvalError) {
                         return;
                     } else {
@@ -281,6 +286,27 @@
                             }
                         });
                     }
+                },
+                errorFocus: function(){
+                    if ($('.error-summary').length) {
+                        window.document.title = "Error: Review and approve changes - GOV.UK";
+                        $('.error-summary').focus();
+                    } else {
+                        window.setTimeout(function(){
+                            if ($('.error-summary').length) {
+                                window.document.title = "Error: Review and approve changes - GOV.UK";
+                                $('.error-summary').focus();
+                            }
+                        },500);
+                    }
+                },
+                clearErrors: function(){
+                    window.document.title = "Review and approve changes - GOV.UK";
+                    this.approvalError = false;
+                    this.noneSelectedError = false;
+                    this.invalidReason = false;
+                    this.reasonLength = false;
+                    this.apiError = false;
                 }
             }
         });

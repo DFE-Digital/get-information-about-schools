@@ -3,21 +3,8 @@
     ViewBag.bodyClasses = "change-approvals";
 }
 
-
-
 <div id="change-approvals" v-cloak>
-<div v-show="Object.keys(apiBork).length> 0">
-    <h1 class="heading-xlarge">Sorry, something went wrong</h1>
-    <p>Please try again later.</p>
-    <p>A report of the error has been sent to our technical team.</p>
 
-    <p class="api-error-code" v-show="apiBork.hasOwnProperty('errorCode')">Error code: {{apiBork.errorCode}}</p>
-    <div v-show="apiBork.hasOwnProperty('technicalDetails')">
-        <code>
-            {{apiBork.technicalDetails}}
-        </code>
-    </div>
-</div>
     <div v-show="Object.keys(apiBork).length === 0">
         <div class="breadcrumbs">
             <ul>
@@ -29,37 +16,62 @@
                 </li>
             </ul>
         </div>
+
+        <div v-if="approvalError || noneSelectedError || apiError.length > 0" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+            <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
+            <ul class="error-summary-list">
+                <li v-if="approvalError">
+                    <a href="#">Please select some changes to approve</a>
+                </li>
+                <li v-if="noneSelectedError">
+                    <a href="#">Please select some changes to reject</a>
+                </li>
+                <li v-if="apiError.length > 0">
+                    <a href="#" v-html="apiError"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div v-show="Object.keys(apiBork).length> 0">
+        <h1 class="heading-xlarge">Sorry, something went wrong</h1>
+        <p>Please try again later.</p>
+        <p>A report of the error has been sent to our technical team.</p>
+
+        <p class="api-error-code" v-show="apiBork.hasOwnProperty('errorCode')">Error code: {{apiBork.errorCode}}</p>
+        <div v-show="apiBork.hasOwnProperty('technicalDetails')">
+            <code>
+                {{apiBork.technicalDetails}}
+            </code>
+        </div>
+    </div>
+
+    <div v-show="Object.keys(apiBork).length === 0">
         <div class="grid-row">
             <div class="column-full">
-                <div class="wait-spinner" v-show="isProcessing" data-live="polite">
-                    <p class="visually-hidden">Please wait</p>
-                </div>
-                <h1 class="heading-xlarge" v-show="!isProcessing">Items for approval</h1>
-                <div class="pending-updates-message js-dismiss-message" v-bind:class="[itemsConfirmedRemoved ? '' : 'visually-hidden']" role="alert">
+                <div v-if="itemsConfirmedRemoved" class="pending-updates-message js-dismiss-message" role="alert">
                     <div class="tick"></div>
                     <p aria-live="polite">{{ approvalMessage }}</p>
-                    <a class="cross" href="#" v-on:click="itemsConfirmedRemoved = false" v-show="itemsConfirmedRemoved"><span class="visually-hidden">Dismiss notification</span></a>
+                    <a class="cross" href="#" v-on:click="itemsConfirmedRemoved = false" v-show="itemsConfirmedRemoved"><span class="hidden">Dismiss notification</span></a>
                 </div>
-
-                <div class="pending-updates-message js-dismiss-message" v-bind:class="[itemsConfirmedRejected ? '' : 'visually-hidden']" role="alert">
+                <div v-if="itemsConfirmedRejected" class="pending-updates-message js-dismiss-message" role="alert">
                     <div class="tick"></div>
                     <p>{{ rejectionMessage }}</p>
                     <a class="cross" href="#" v-on:click="itemsConfirmedRejected = false" v-show="itemsConfirmedRejected"><span class="visually-hidden">Dismiss notification</span></a>
                 </div>
+                <div class="wait-spinner" v-show="isProcessing" data-live="polite">
+                    <p class="visually-hidden">Please wait</p>
+                </div>
+                <h1 class="heading-xlarge" v-show="!isProcessing">Items for approval</h1>
                 <p v-show="!isProcessing">
                     You have <span class="heading-xlarge count">{{currentCount}}</span> items that require your approval.
                 </p>
 
                 <div class="approve-reject" v-show="!isProcessing">
                     <form>
-                        <div class="error-summary" v-show="approvalError || noneSelectedError || apiError.length > 0">
-                            <p class="error-message" v-show="approvalError">Please select some changes to approve</p>
-                            <p class="error-message" v-show="noneSelectedError">Please select some changes to reject</p>
-                            <p class="error-message" v-show="apiError.length > 0" v-html="apiError"></p>
-                        </div>
                         <div class="submit-cancel-panel approve-reject" v-show="!pendingRejection">
-                            <button type="submit" name="action" value="" class="button" v-on:click.prevent="approveSelection" :disabled="noItemsSelected">Approve</button>
-                            <button type="submit" name="action" value="" class="button" :disabled="noItemsSelected"
+                            <button type="submit" name="action" value="" class="button" v-on:click.prevent="approveSelection">Approve</button>
+                            <button type="submit" name="action" value="" class="button"
                                     v-on:click.prevent="pendingRejection = true, approvalError = false, itemsConfirmedRejected = false,itemsConfirmedRemoved = false, reason=''">Reject</button>
                         </div>
 
@@ -74,9 +86,8 @@
                                 </div>
                             </div>
                             <div class="button-row">
-                                <button type="submit" name="action" class="button mobile-full-width" v-on:click.prevent="confirmRejection" :disabled="$.trim(reason).length == 0">Submit</button>
-                                <button type="submit" name="action" class="button button-secondary cancel mobile-full-width"
-                                        v-on:click.prevent="pendingRejection = false, approvalError = false, noneSelectedError = false, apiError = false">Cancel</button>
+                                <button type="submit" name="action" class="button mobile-full-width" v-on:click.prevent="confirmRejection">Submit</button>
+                                <button type="submit" name="action" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="pendingRejection = false; clearErrors()">Cancel</button>
                             </div>
                         </div>
 
