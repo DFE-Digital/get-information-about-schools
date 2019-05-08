@@ -17,7 +17,7 @@
             </ul>
         </div>
 
-        <div v-if="approvalError || rejectionError || noneSelectedError || invalidReason || apiError.length > 0" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+        <div v-if="approvalError || rejectionError || noneSelectedError || invalidReason || reasonLength || apiError.length > 0" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
             <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
             <ul class="error-summary-list">
                 <li v-if="approvalError">
@@ -31,6 +31,9 @@
                 </li>
                 <li v-if="invalidReason">
                     <a href="#rejection-reason">Please enter a reason for the rejection</a>
+                </li>
+                <li v-if="reasonLength">
+                    <a href="#rejection-reason">Please enter a reason less than 1024 characters</a>
                 </li>
                 <li v-if="apiError.length > 0">
                     <a href="#" v-html="apiError"></a>
@@ -92,7 +95,7 @@
                             </div>
                             <div class="button-row">
                                 <button type="submit" name="action" class="button mobile-full-width" v-on:click.prevent="confirmRejection">Submit</button>
-                                <button type="submit" name="action" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="pendingRejection = false; clearErrors()">Cancel</button>
+                                <button type="submit" name="action" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="pendingRejection = false; reason=''; clearErrors()">Cancel</button>
                             </div>
                         </div>
                     </form>
