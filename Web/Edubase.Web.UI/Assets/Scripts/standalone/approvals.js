@@ -19,6 +19,7 @@
                 pageSize: defaults.pageSize,
                 invalidReason: false,
                 approvalError: false,
+                rejectionError: false,
                 reasonLength: false,
                 noneSelectedError: false,
                 pendingRejection: false,
@@ -237,6 +238,7 @@
                     }
                 },
                 approveSelection: function () {
+                    this.clearErrors();
                     var self = this;
                     this.apiError = '';
                     var selectedItems = $('#changes-table').find('.boldened-checkbox')
@@ -287,6 +289,22 @@
                         });
                     }
                 },
+                rejectSelection: function(){
+                    this.clearErrors();
+
+                    var selectedItems = $('#changes-table').find('.boldened-checkbox')
+                        .filter(':checked');
+                    this.rejectionError = (selectedItems.length === 0);
+
+                    this.errorFocus();
+
+                    if (this.rejectionError) {
+                        return;
+                    } else {
+                        this.pendingRejection = true;
+                    }
+
+                },
                 errorFocus: function(){
                     if ($('.error-summary').length) {
                         window.document.title = "Error: Review and approve changes - GOV.UK";
@@ -303,10 +321,13 @@
                 clearErrors: function(){
                     window.document.title = "Review and approve changes - GOV.UK";
                     this.approvalError = false;
+                    this.rejectionError = false;
                     this.noneSelectedError = false;
                     this.invalidReason = false;
                     this.reasonLength = false;
                     this.apiError = false;
+                    this.itemsConfirmedRejected = false;
+                    this.itemsConfirmedRemoved = false;
                 }
             }
         });

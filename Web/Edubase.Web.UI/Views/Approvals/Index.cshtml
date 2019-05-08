@@ -17,11 +17,14 @@
             </ul>
         </div>
 
-        <div v-if="approvalError || noneSelectedError || apiError.length > 0" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+        <div v-if="approvalError || rejectionError || noneSelectedError || apiError.length > 0" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
             <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
             <ul class="error-summary-list">
                 <li v-if="approvalError">
                     <a href="#">Please select some changes to approve</a>
+                </li>
+                <li v-if="rejectionError">
+                    <a href="#">Please select some changes to reject</a>
                 </li>
                 <li v-if="noneSelectedError">
                     <a href="#">Please select some changes to reject</a>
@@ -71,8 +74,7 @@
                     <form>
                         <div class="submit-cancel-panel approve-reject" v-show="!pendingRejection">
                             <button type="submit" name="action" value="" class="button" v-on:click.prevent="approveSelection">Approve</button>
-                            <button type="submit" name="action" value="" class="button"
-                                    v-on:click.prevent="pendingRejection = true, approvalError = false, itemsConfirmedRejected = false,itemsConfirmedRemoved = false, reason=''">Reject</button>
+                            <button type="submit" name="action" value="" class="button" v-on:click.prevent="rejectSelection">Reject</button>
                         </div>
 
                         <div v-show="pendingRejection">
