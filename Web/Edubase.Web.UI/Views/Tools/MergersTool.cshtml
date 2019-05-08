@@ -81,13 +81,13 @@
                 <li v-show="leadEstabNoMatch">
                     <a href="#lead-establishment">The lead establishment URN was not found</a>
                 </li>
-                <li v-show="linkedEstab0Empty">
+                <li v-show="linkedEstab1Empty">
                     <a href="#linked-establishment">Please enter the first additional establishment URN</a>
                 </li>
-                <li v-show="linkedEstab0Invalid">
+                <li v-show="linkedEstab1Invalid">
                     <a href="#linked-establishment">The first additional establishment URN is invalid</a>
                 </li>
-                <li v-show="linkedEstab0NoMatch">
+                <li v-show="linkedEstab1NoMatch">
                     <a href="#linked-establishment">The first additional establishment URN was not found</a>
                 </li>
 
@@ -187,7 +187,7 @@
                                 <input class="form-control" id="lead-establishment" type="text" v-model="leadEstab" />
                             </div>
 
-                            <div v-bind:class="['form-group', linkedEstab0Empty || linkedEstab0Invalid || linkedEstab0NoMatch || linkedEstabError || duplicateUrnsError || mergeLengthError ? 'error' : '' ]">
+                            <div v-bind:class="['form-group', linkedEstab1Empty || linkedEstab1Invalid || linkedEstab1NoMatch || linkedEstabError || duplicateUrnsError || mergeLengthError ? 'error' : '' ]">
                                 <fieldset>
                                     <legend class="bold">Select additional establishments to be merged</legend>
                                     <p class="form-hint">
@@ -198,9 +198,9 @@
                                             <label class="form-label">Enter the establishment <abbr title="Unique Reference Number">URN</abbr>(s)</label>
 
                                             @* FORM ERROR MESSAGES - ADDITIONAL ESTABLISHMENTS *@
-                                            <span v-show="linkedEstab0Empty" class="error-message">Please enter the first additional establishment URN</span>
-                                            <span v-show="linkedEstab0Invalid" class="error-message">The first additional establishment URN is invalid</span>
-                                            <span v-show="linkedEstab0NoMatch" class="error-message">The first additional establishment was not found</span>
+                                            <span v-show="linkedEstab1Empty" class="error-message">Please enter the first additional establishment URN</span>
+                                            <span v-show="linkedEstab1Invalid" class="error-message">The first additional establishment URN is invalid</span>
+                                            <span v-show="linkedEstab1NoMatch" class="error-message">The first additional establishment was not found</span>
                                             <span v-show="linkedEstabError" class="error-message">Please enter a valid <abbr title="Unique Reference Number">URN</abbr>.</span>
                                             <span v-show="duplicateUrnsError" class="error-message">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
                                             <span v-show="mergeLengthError" class="error-message">Please enter the additional establishments' URN</span>
@@ -208,16 +208,16 @@
                                         <dd>
                                             <ol class="linked-establishments" id="linked-establishments">
                                                 <li>
-                                                    <label for="establishment-0" class="visuallyhidden">First additional establishment</label>
-                                                    <input class="form-control" id="establishment-0" type="text" v-model="linkedEstab0" />
-                                                </li>
-                                                <li>
-                                                    <label for="establishment-1" class="visuallyhidden">Second additional establishment</label>
+                                                    <label for="establishment-1" class="visuallyhidden">First additional establishment</label>
                                                     <input class="form-control" id="establishment-1" type="text" v-model="linkedEstab1" />
                                                 </li>
                                                 <li>
-                                                    <label for="establishment-2" class="visuallyhidden">Third additional establishment</label>
+                                                    <label for="establishment-2" class="visuallyhidden">Second additional establishment</label>
                                                     <input class="form-control" id="establishment-2" type="text" v-model="linkedEstab2" />
+                                                </li>
+                                                <li>
+                                                    <label for="establishment-3" class="visuallyhidden">Third additional establishment</label>
+                                                    <input class="form-control" id="establishment-3" type="text" v-model="linkedEstab3" />
                                                 </li>
                                             </ol>
                                         </dd>
@@ -344,20 +344,20 @@
                                 <dd>
                                     <ol class="linked-establishments" id="linked-establishments">
                                         <li>
-                                            <label for="amalgamate-estab0" class="visuallyhidden">First establishment</label>
-                                            <input class="form-control" type="text" v-model="amalgamatedEstab0" id="amalgamate-estab0" />
-                                        </li>
-                                        <li>
-                                            <label for="amalgamate-estab1" class="visuallyhidden">Second establishment</label>
+                                            <label for="amalgamate-estab1" class="visuallyhidden">First establishment</label>
                                             <input class="form-control" type="text" v-model="amalgamatedEstab1" id="amalgamate-estab1" />
                                         </li>
                                         <li>
-                                            <label for="amalgamate-estab2" class="visuallyhidden">Third establishment</label>
+                                            <label for="amalgamate-estab2" class="visuallyhidden">Second establishment</label>
                                             <input class="form-control" type="text" v-model="amalgamatedEstab2" id="amalgamate-estab2" />
                                         </li>
                                         <li>
-                                            <label for="amalgamate-estab3" class="visuallyhidden">Fourth establishment</label>
+                                            <label for="amalgamate-estab3" class="visuallyhidden">Third establishment</label>
                                             <input class="form-control" type="text" v-model="amalgamatedEstab3" id="amalgamate-estab3" />
+                                        </li>
+                                        <li>
+                                            <label for="amalgamate-estab4" class="visuallyhidden">Fourth establishment</label>
+                                            <input class="form-control" type="text" v-model="amalgamatedEstab4" id="amalgamate-estab4" />
                                         </li>
                                     </ol>
                                 </dd>
