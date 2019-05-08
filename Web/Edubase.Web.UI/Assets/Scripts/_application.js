@@ -37,4 +37,6 @@
         $(document).on("click", "a,.js-track", window.DfE.Util.Analytics.TrackClick);
     });
 
+    //Vue.config.devtools = true;
+
 }());
