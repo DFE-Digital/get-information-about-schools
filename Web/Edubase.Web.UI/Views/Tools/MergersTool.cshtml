@@ -102,14 +102,6 @@
                 <li v-show="linkedEstab3NoMatch">
                     <a href="#establishment-3">The establishment 3 URN was not found</a>
                 </li>
-
-
-                <li v-show="linkedEstabError">
-                    <a href="#linked-establishments">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a>
-                </li>
-                <li v-show="mergeLengthError">
-                    <a href="#linked-establishments">Enter at least 1 additional establishments' URN</a>
-                </li>
                 <li v-show="mergeDateError && mergerType==='merger'">
                     <a href="#merger-date">Merger date is invalid</a>
                 </li>
@@ -185,7 +177,7 @@
                             <h2 class="heading-small">Select the lead establishment</h2>
                             <p>The lead establishment will remain open</p>
 
-                            <div class="form-group" v-bind:class="['form-group', (leadEstabEmpty || leadEstabInvalid || leadEstabNoMatch || duplicateUrnsError) ? 'error' : '' ]">
+                            <div class="form-group" v-bind:class="['form-group', leadEstabEmpty || leadEstabInvalid || leadEstabNoMatch || !leadEstabEmpty && duplicateUrnsError ? 'error' : '' ]">
                                 <label class="form-label" for="lead-establishment">
                                     Lead establishment <abbr title="Unique Reference Number">URN</abbr>
                                 </label>
@@ -194,7 +186,7 @@
                                 <span v-if="leadEstabEmpty" class="error-message">Enter the lead establishment URN</span>
                                 <span v-if="leadEstabInvalid" class="error-message">The lead establishment URN is invalid</span>
                                 <span v-if="leadEstabNoMatch" class="error-message">The lead establishment URN was not found</span>
-                                <span v-if="duplicateUrnsError" class="error-message">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the URN.</span>
+                                <span v-if="!leadEstabEmpty && duplicateUrnsError" class="error-message">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the URN.</span>
                                 <input class="form-control form-control-3-4" id="lead-establishment" type="text" v-model="leadEstab" />
                             </div>
 
@@ -202,30 +194,28 @@
                                 <legend class="bold"><h2 class="heading-small">Select establishments to be merged with the lead establishment</h2></legend>
                                 <p>Up to 3 establishments can be merged (minimum of 1 establishment)</p>
 
-                                @* FORM ERROR MESSAGES - ADDITIONAL ESTABLISHMENTS *@
-                                <span v-if="linkedEstabError" class="error-message">Please enter a valid <abbr title="Unique Reference Number">URN</abbr>.</span>
-                                <span v-if="duplicateUrnsError" class="error-message">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
-                                <span v-if="mergeLengthError" class="error-message">Please enter the additional establishments' URN</span>
-
-                                <div class="form-group"  v-bind:class="['form-group', linkedEstab1Empty || linkedEstab1Invalid || linkedEstab1NoMatch || linkedEstabError || duplicateUrnsError || mergeLengthError ? 'error' : '' ]">
+                                <div class="form-group"  v-bind:class="['form-group', linkedEstab1Empty || linkedEstab1Invalid || linkedEstab1NoMatch || !linkedEstab1Empty && duplicateUrnsError ? 'error' : '' ]">
                                     <label for="establishment-1" class="form-label">Establishment 1 URN</label>
                                     <span v-if="linkedEstab1Empty" class="error-message">Enter the establishment 1 URN</span>
                                     <span v-if="linkedEstab1Invalid" class="error-message">The establishment 1 URN is invalid</span>
                                     <span v-if="linkedEstab1NoMatch" class="error-message">The establishment 1 URN was not found</span>
+                                    <span v-if="!linkedEstab1Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
                                     <input class="form-control form-control-3-4" id="establishment-1" type="text" v-model="linkedEstab1" />
                                 </div>
 
-                                <div class="form-group" v-bind:class="['form-group', linkedEstab2Invalid || linkedEstab2NoMatch ? 'error' : '' ]">
+                                <div class="form-group" v-bind:class="['form-group', linkedEstab2Invalid || linkedEstab2NoMatch || !linkedEstab2Empty && duplicateUrnsError ? 'error' : '' ]">
                                     <label for="establishment-2" class="form-label">Establishment 2 URN</label>
                                     <span v-if="linkedEstab2Invalid" class="error-message">The establishment 2 URN is invalid</span>
                                     <span v-if="linkedEstab2NoMatch" class="error-message">The establishment 2 URN was not found</span>
+                                    <span v-if="!linkedEstab2Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
                                     <input class="form-control form-control-3-4" id="establishment-2" type="text" v-model="linkedEstab2" />
                                 </div>
 
-                                <div class="form-group" v-bind:class="[linkedEstab3Invalid || linkedEstab3NoMatch ? 'error' : '' ]">
+                                <div class="form-group" v-bind:class="[linkedEstab3Invalid || linkedEstab3NoMatch || !linkedEstab3Empty && duplicateUrnsError ? 'error' : '' ]">
                                     <label for="establishment-3" class="form-label">Establishment 3 URN</label>
                                     <span v-if="linkedEstab3Invalid" class="error-message">The establishment 3 URN is invalid</span>
                                     <span v-if="linkedEstab3NoMatch" class="error-message">The establishment 3 URN was not found</span>
+                                    <span v-if="!linkedEstab3Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
                                     <input class="form-control form-control-3-4" id="establishment-3" type="text" v-model="linkedEstab3" />
                                 </div>
                             </fieldset>

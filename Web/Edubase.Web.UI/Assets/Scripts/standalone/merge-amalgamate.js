@@ -269,6 +269,16 @@
             var self = this;
             this.clearMergeFields();
 
+            this.duplicateUrnsError = this.hasDuplicateUrn();
+            //this.errorFocus();
+            if (this.duplicateUrnsError) {
+                if (this.leadEstab == '') { this.leadEstabEmpty = true; }
+                if (this.linkedEstab1 == '') { this.linkedEstab1Empty = true; }
+                if (this.linkedEstab2 == '') { this.linkedEstab2Empty = true; }
+                if (this.linkedEstab3 == '') { this.linkedEstab3Empty = true; }
+                return true;
+            }
+
             if (this.leadEstab == '') {
                 this.leadEstabEmpty = true;
             } else if (this.leadEstab.length < 5 || isNaN(this.leadEstab)) {
