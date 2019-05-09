@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
     var uniqueDates = [],
         academyOpenings,
         i,
@@ -39,6 +39,7 @@
             sortKey: 'openingDate',
             sortAscending: true,
             recordUpdateErrors: {},
+            anchorTarget: '',
             tableColumns: {
               openingDate: 'Opening date',
               urn: 'URN',
@@ -383,7 +384,16 @@
             },
             isUserEditing: function() {
                 return this.userHasEdited;
-
+            },
+            exitWarningOkClick: function () {
+              this.presentExitWarning = false;
+              this.userHasEdited = false;
+              this.editRecord = false;
+              this.searchUrn = '';
+              this.presentDetail = false;
+              if (this.anchorTarget !== '') {
+                window.location.href = this.anchorTarget;
+              }
             },
             attachUnload: function() {
                 this.userHasEdited = true;
@@ -415,11 +425,11 @@
     });
     $('.horizontal-tabs-wrapper').tabs();
     function blockExits() {
-         $('a').on('click', function (e) {
-
+      $('a').on('click', function (e) {
             if (academyOpenings.isUserEditing()) {
                 e.preventDefault();
                 academyOpenings.presentExitWarning = true;
+                academyOpenings.anchorTarget = $(this).attr('href');
                 $(document).ready(function() {
                     if ($('#modal-content').length > 0) {
                         $('#button-ok').focus();
