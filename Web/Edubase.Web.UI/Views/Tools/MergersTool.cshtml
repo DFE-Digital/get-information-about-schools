@@ -207,35 +207,33 @@
                             <p>Up to 4 establishments can be amalgamated (minimum of 2 establishments)</p>
                         </div>
                         <div class="column-half">
-
-                            @* FORM ERROR MESSAGES - ESTABLISHMENTS *@
-                            <span v-if="amalgamateUrnError" class="error-message">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
-                            <span v-if="amalgamationLengthError && !amalgamateUrnError" class="error-message">Select between 2 and 4 schools.</span>
-                            <span v-if="duplicateUrnsError && !amalgamateUrnError && !amalgamationLengthError" class="error-message">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
-
-                            <div class="form-group" v-bind:class="['field-group form-group', amalEstab1Empty || amalEstab1Invalid || duplicateUrnsError ? 'error' : '' ]">
+                            <div class="form-group" v-bind:class="['field-group form-group', amalEstab1Empty || amalEstab1Invalid || !amalEstab1Empty && duplicateUrnsError ? 'error' : '' ]">
                                 <label for="amalgamate-estab1" class="form-label">Establishment 1 URN</label>
                                 <span v-if="amalEstab1Empty" class="error-message">Enter the establishment 1 URN</span>
                                 <span v-if="amalEstab1Invalid" class="error-message">The establishment 1 URN is invalid</span>
+                                <span v-if="!amalEstab1Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
                                 <input class="form-control form-control-3-4" type="text" v-model="amalgamatedEstab1" id="amalgamate-estab1" />
                             </div>
 
-                            <div class="form-group" v-bind:class="['field-group form-group', amalEstab2Empty || amalEstab2Invalid || duplicateUrnsError ? 'error' : '' ]">
+                            <div class="form-group" v-bind:class="['field-group form-group', amalEstab2Empty || amalEstab2Invalid || !amalEstab2Empty && duplicateUrnsError ? 'error' : '' ]">
                                 <label for="amalgamate-estab2" class="form-label">Establishment 2 URN</label>
                                 <span v-if="amalEstab2Empty" class="error-message">Enter the establishment 2 URN</span>
                                 <span v-if="amalEstab2Invalid" class="error-message">The establishment 2 URN is invalid</span>
+                                <span v-if="!amalEstab2Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
                                 <input class="form-control form-control-3-4" type="text" v-model="amalgamatedEstab2" id="amalgamate-estab2" />
                             </div>
 
-                            <div class="form-group" v-bind:class="['field-group form-group', amalEstab3Invalid || duplicateUrnsError ? 'error' : '' ]">
+                            <div class="form-group" v-bind:class="['field-group form-group', amalEstab3Invalid || !amalEstab3Empty && duplicateUrnsError ? 'error' : '' ]">
                                 <label for="amalgamate-estab3" class="form-label">Establishment 3 URN</label>
                                 <span v-if="amalEstab3Invalid" class="error-message">The establishment 3 URN is invalid</span>
+                                <span v-if="!amalEstab3Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
                                 <input class="form-control form-control-3-4" type="text" v-model="amalgamatedEstab3" id="amalgamate-estab3" />
                             </div>
 
-                            <div class="form-group" v-bind:class="['field-group form-group', amalEstab4Invalid || duplicateUrnsError ? 'error' : '' ]">
+                            <div class="form-group" v-bind:class="['field-group form-group', amalEstab4Invalid || !amalEstab4Empty && duplicateUrnsError ? 'error' : '' ]">
                                 <label for="amalgamate-estab4" class="form-label">Establishment 4 URN</label>
                                 <span v-if="amalEstab4Invalid" class="error-message">The establishment 4 URN is invalid</span>
+                                <span v-if="!amalEstab4Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
                                 <input class="form-control form-control-3-4" type="text" v-model="amalgamatedEstab4" id="amalgamate-estab4" />
                             </div>
                         </div>
