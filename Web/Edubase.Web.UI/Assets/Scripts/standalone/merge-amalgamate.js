@@ -128,7 +128,11 @@
                     this.leadEstabNoMatch ||
                     this.linkedEstab1Empty ||
                     this.linkedEstab1Invalid ||
-                    this.linkedEstab1NoMatch
+                    this.linkedEstab1NoMatch ||
+                    this.linkedEstab2Invalid ||
+                    this.linkedEstab2NoMatch ||
+                    this.linkedEstab3Invalid ||
+                    this.linkedEstab3NoMatch
             );
         },
         schoolDetailUrl: function () {
@@ -308,6 +312,8 @@
                     }
                 },
                 100);
+
+            this.errorFocus();
         },
         validateMergeSelection: function () {
             this.fieldCount = 0;

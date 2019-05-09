@@ -73,7 +73,7 @@
 
                 @* MERGER *@
                 <li v-show="leadEstabEmpty">
-                    <a href="#lead-establishment">Please enter the lead establishment URN</a>
+                    <a href="#lead-establishment">Enter the lead establishment URN</a>
                 </li>
                 <li v-show="leadEstabInvalid">
                     <a href="#lead-establishment">The lead establishment URN is invalid</a>
@@ -82,13 +82,25 @@
                     <a href="#lead-establishment">The lead establishment URN was not found</a>
                 </li>
                 <li v-show="linkedEstab1Empty">
-                    <a href="#linked-establishment">Please enter the first additional establishment URN</a>
+                    <a href="#establishment-1">Enter the establishment 1 URN</a>
                 </li>
                 <li v-show="linkedEstab1Invalid">
-                    <a href="#linked-establishment">The first additional establishment URN is invalid</a>
+                    <a href="#establishment-1">The establishment 1 URN is invalid</a>
                 </li>
                 <li v-show="linkedEstab1NoMatch">
-                    <a href="#linked-establishment">The first additional establishment URN was not found</a>
+                    <a href="#establishment-1">The establishment 1 URN was not found</a>
+                </li>
+                <li v-show="linkedEstab2Invalid">
+                    <a href="#establishment-2">The establishment 2 URN is invalid</a>
+                </li>
+                <li v-show="linkedEstab2NoMatch">
+                    <a href="#establishment-2">The establishment 2 URN was not found</a>
+                </li>
+                <li v-show="linkedEstab3Invalid">
+                    <a href="#establishment-3">The establishment 3 URN is invalid</a>
+                </li>
+                <li v-show="linkedEstab3NoMatch">
+                    <a href="#establishment-3">The establishment 3 URN was not found</a>
                 </li>
 
 
@@ -170,18 +182,19 @@
                         <div class="column-two-thirds" id="merger-details">
                             <p>You can propose closing one or more schools and altering the remaining school.</p>
 
-                            <div v-bind:class="['form-group', (leadEstabEmpty || leadEstabInvalid || leadEstabNoMatch || duplicateUrnsError) ? 'error' : '' ]">
-                                <h2 class="heading-small">Select the lead establishment</h2>
-                                <p>The lead establishment will remain open</p>
+                            <h2 class="heading-small">Select the lead establishment</h2>
+                            <p>The lead establishment will remain open</p>
+
+                            <div class="form-group" v-bind:class="['form-group', (leadEstabEmpty || leadEstabInvalid || leadEstabNoMatch || duplicateUrnsError) ? 'error' : '' ]">
                                 <label class="form-label" for="lead-establishment">
-                                    Enter the lead establishment <abbr title="Unique Reference Number">URN</abbr>
+                                    Lead establishment <abbr title="Unique Reference Number">URN</abbr>
                                 </label>
 
                                 @* FORM ERROR MESSAGES - LEAD ESTABLISHMENT *@
-                                <span v-show="leadEstabEmpty" class="error-message">Please enter a lead establishment URN</span>
-                                <span v-show="leadEstabInvalid" class="error-message">The lead establishment URN is invalid</span>
-                                <span v-show="leadEstabNoMatch" class="error-message">The lead establishment was not found</span>
-                                <span v-show="duplicateUrnsError" class="error-message">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the URN.</span>
+                                <span v-if="leadEstabEmpty" class="error-message">Enter the lead establishment URN</span>
+                                <span v-if="leadEstabInvalid" class="error-message">The lead establishment URN is invalid</span>
+                                <span v-if="leadEstabNoMatch" class="error-message">The lead establishment URN was not found</span>
+                                <span v-if="duplicateUrnsError" class="error-message">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the URN.</span>
                                 <input class="form-control form-control-3-4" id="lead-establishment" type="text" v-model="leadEstab" />
                             </div>
 
@@ -190,25 +203,29 @@
                                 <p>Up to 3 establishments can be merged (minimum of 1 establishment)</p>
 
                                 @* FORM ERROR MESSAGES - ADDITIONAL ESTABLISHMENTS *@
-                                <span v-if="linkedEstab1Empty" class="error-message">Please enter the first additional establishment URN</span>
-                                <span v-if="linkedEstab1Invalid" class="error-message">The first additional establishment URN is invalid</span>
-                                <span v-if="linkedEstab1NoMatch" class="error-message">The first additional establishment was not found</span>
                                 <span v-if="linkedEstabError" class="error-message">Please enter a valid <abbr title="Unique Reference Number">URN</abbr>.</span>
                                 <span v-if="duplicateUrnsError" class="error-message">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
                                 <span v-if="mergeLengthError" class="error-message">Please enter the additional establishments' URN</span>
 
                                 <div class="form-group"  v-bind:class="['form-group', linkedEstab1Empty || linkedEstab1Invalid || linkedEstab1NoMatch || linkedEstabError || duplicateUrnsError || mergeLengthError ? 'error' : '' ]">
                                     <label for="establishment-1" class="form-label">Establishment 1 URN</label>
+                                    <span v-if="linkedEstab1Empty" class="error-message">Enter the establishment 1 URN</span>
+                                    <span v-if="linkedEstab1Invalid" class="error-message">The establishment 1 URN is invalid</span>
+                                    <span v-if="linkedEstab1NoMatch" class="error-message">The establishment 1 URN was not found</span>
                                     <input class="form-control form-control-3-4" id="establishment-1" type="text" v-model="linkedEstab1" />
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group" v-bind:class="['form-group', linkedEstab2Invalid || linkedEstab2NoMatch ? 'error' : '' ]">
                                     <label for="establishment-2" class="form-label">Establishment 2 URN</label>
+                                    <span v-if="linkedEstab2Invalid" class="error-message">The establishment 2 URN is invalid</span>
+                                    <span v-if="linkedEstab2NoMatch" class="error-message">The establishment 2 URN was not found</span>
                                     <input class="form-control form-control-3-4" id="establishment-2" type="text" v-model="linkedEstab2" />
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group" v-bind:class="[linkedEstab3Invalid || linkedEstab3NoMatch ? 'error' : '' ]">
                                     <label for="establishment-3" class="form-label">Establishment 3 URN</label>
+                                    <span v-if="linkedEstab3Invalid" class="error-message">The establishment 3 URN is invalid</span>
+                                    <span v-if="linkedEstab3NoMatch" class="error-message">The establishment 3 URN was not found</span>
                                     <input class="form-control form-control-3-4" id="establishment-3" type="text" v-model="linkedEstab3" />
                                 </div>
                             </fieldset>
