@@ -79,6 +79,18 @@
         isProcessing: false,
         apiError: {},
 
+        amalEstab1Empty: false,
+        amalEstab1Invalid: false,
+
+        amalEstab2Empty: false,
+        amalEstab2Invalid: false,
+
+        amalEstab3Empty: false,
+        amalEstab3Invalid: false,
+
+        amalEstab4Empty: false,
+        amalEstab4Invalid: false,
+
         leadEstabEmpty: false,
         leadEstabInvalid: false,
         leadEstabUrnChecked: false,
@@ -132,7 +144,13 @@
                     this.linkedEstab2Invalid ||
                     this.linkedEstab2NoMatch ||
                     this.linkedEstab3Invalid ||
-                    this.linkedEstab3NoMatch
+                    this.linkedEstab3NoMatch ||
+                    this.amalEstab1Empty ||
+                    this.amalEstab1Invalid ||
+                    this.amalEstab2Empty ||
+                    this.amalEstab2Invalid ||
+                    this.amalEstab3Invalid ||
+                    this.amalEstab4Invalid
             );
         },
         schoolDetailUrl: function () {
@@ -326,130 +344,8 @@
 
             this.errorFocus();
         },
-        validateMergeSelection: function () {
-            this.fieldCount = 0;
-            var self = this;
-            this.mergerEstabs = [];
-
-            var presentValidation = function(){
-                var urnChecksDone;
-                urnChecksDone = window.setInterval(function () {
-                    if (self.leadEstabUrnCheckDone && self.linkedEstabUrnCheckDone) {
-                        console.log('checks done - leadEstabValid: ' + self.leadEstabValid);
-                        console.log('checks done - linkedEstab1Valid: ' + self.linkedEstab1Valid);
-                        console.log('checks done - linkedEstab2Valid: ' + self.linkedEstab2Valid);
-                        console.log('checks done - linkedEstab3Valid: ' + self.linkedEstab3Valid);
-                        if (!self.leadEstabValid) {
-                            console.log('present validation: leadEstab is not valid');
-                            self.leadEstabError = true;
-                            self.errorFocus();
-                        }
-                        if (!self.linkedEstab1Valid || !self.linkedEstab2Valid || !self.linkedEstab3Valid) {
-                            console.log('present validation - some additional est invalid');
-                            self.linkedEstabError = true;
-                            self.errorFocus();
-                        }
-                        if (self.linkedEstab1Valid && self.linkedEstab2Valid && self.linkedEstab3Valid && self.leadEstabValid) {
-                            console.log('present validation - all additional est valid :)');
-                            self.validMergeUrns = true;
-                            self.clearErrors();
-                        }
-                        self.isProcessing = false;
-                        window.clearInterval(urnChecksDone);
-                        }
-                    },
-                    100);
-
-            }
-
-            this.linkedEstabError = false;
-            this.leadEstabLengthError = false;
-            this.leadEstabError = false;
-            this.linkedEstab1Valid = true;
-            this.linkedEstab2Valid = true;
-            this.linkedEstab3Valid = true;
-            this.mergeLengthError = false;
-            this.commitErrors = '';
-            this.duplicateUrnsError = this.hasDuplicateUrn();
-            this.errorFocus();
-            if (this.duplicateUrnsError) {
-                return true;
-            }
-
-            var promise = [];
-
-            if (this.leadEstab !== '') {
-                //console.log('leadEstab not empty');
-                this.leadEstabValid = false;
-                this.leadEstabUrnCheckDone = false;
-                this.validateUrn(this.leadEstab, 'leadEstab');
-                var leadEstCheck;
-                leadEstCheck = window.setInterval(function () {
-                    if (self.leadEstabUrnCheckDone) {
-                        presentValidation();
-                        window.clearInterval(leadEstCheck);
-                        }
-                    },
-                    100);
-            } else {
-                //console.log('leadEstab empty');
-                //this.leadEstabError = false;
-                this.leadEstabLengthError = true;
-            }
-
-            if (this.linkedEstab1 !== '') {
-                console.log('linkedEstab1 is not empty');
-                this.linkedEstab1Valid = false;
-                this.linkedEstabUrnCheckDone = false;
-                this.fieldCount++;
-                promise.push(this.validateUrn(this.linkedEstab1, 'linkedEstab1'));
-            }
-
-            if (this.linkedEstab2 !== '') {
-                this.linkedEstab2Valid = false;
-                this.linkedEstabUrnCheckDone = false;
-                this.fieldCount++;
-                promise.push(this.validateUrn(this.linkedEstab2, 'linkedEstab2'));
-            }
-
-            if (this.linkedEstab3 !== '') {
-                this.linkedEstab3Valid = false;
-                this.linkedEstabUrnCheckDone = false;
-                this.fieldCount++;
-                promise.push(this.validateUrn(this.linkedEstab3, 'linkedEstab3'));
-            }
-
-            if (promise.length > 0) {
-                this.isProcessing = true;
-                $.when(promise.join(',')).done(
-                    function () {
-                        var tt;
-                        if (self.fieldCount > 0) {
-                            tt = window.setInterval(function () {
-                                    if (self.fieldCount === 0) {
-                                        console.log('inside promise: linkedEstab1:' + self.linkedEstab1Valid);
-                                        presentValidation();
-                                        window.clearInterval(tt);
-                                    }
-                                },
-                                100);
-                        } else {
-                            console.log('inside promise: linkedEstab1:' + self.linkedEstab1Valid);
-                            presentValidation();
-                        }
-                    });
-            } else {
-                self.mergeLengthError = true;
-                self.linkedEstabUrnCheckDone = true;
-                self.errorFocus();
-            }
-        },
         urnCheck: function(urn, component){
             console.log('Doing the URN check');
-            console.log('urnCheck - this.linkedEstab1UrnChecked: ' + this.linkedEstab1UrnChecked);
-            console.log('urnCheck - this.leadEstabUrnChecked: ' + this.leadEstabUrnChecked);
-            //this.linkedEstab1UrnChecked = false;
-            //this.leadEstabUrnChecked = false;
             var self = this;
 
             $.ajax({
@@ -561,6 +457,95 @@
             }
 
             return dateError;
+        },
+
+        clearAmalgamationFields: function(){
+            this.amalEstab1Empty = false;
+            this.amalEstab1Invalid = false;
+            this.leadEstabUrnChecked = false;
+            this.leadEstabValid = false;
+            this.leadEstabNoMatch = false;
+
+            this.amalEstab2Empty = false;
+            this.amalEstab2Invalid = false;
+            this.linkedEstab1bUrnChecked = false;
+            this.linkedEstab1Valid = false;
+            this.linkedEstab1NoMatch = false;
+
+            this.amalEstab3Empty = false;
+            this.amalEstab3Invalid = false;
+            this.linkedEstab2bUrnChecked = false;
+            this.linkedEstab2Valid = false;
+            this.linkedEstab2NoMatch = false;
+
+            this.amalEstab4Empty = false;
+            this.amalEstab4Invalid = false;
+            this.linkedEstab3bUrnChecked = false;
+            this.linkedEstab3Valid = false;
+            this.linkedEstab3NoMatch = false;
+        },
+
+        validateAmalgamationFields: function(){
+            var self = this;
+            this.clearErrors();
+            this.clearAmalgamationFields();
+            this.amalgamationEstabs = [];
+
+            this.duplicateUrnsError = this.hasDuplicateUrn();
+            //this.errorFocus();
+            if (this.duplicateUrnsError) {
+                if (this.amalgamatedEstab1 == '') { this.amalEstab1Empty = true; }
+                if (this.amalgamatedEstab2 == '') { this.amalEstab2Empty = true; }
+                if (this.amalgamatedEstab3 == '') { this.amalEstab3Empty = true; }
+                if (this.amalgamatedEstab4 == '') { this.amalEstab4Empty = true; }
+                return true;
+            }
+
+            if (this.amalgamatedEstab1 == '') {
+                this.amalEstab1Empty = true;
+            } else if (this.amalgamatedEstab1.length < 5 || isNaN(this.amalgamatedEstab1)) {
+                this.amalEstab1Invalid = true;
+            } else {
+                //this.urnCheck(this.leadEstab, 'leadEstab');
+            }
+
+            if (this.amalgamatedEstab2 == '') {
+                this.amalEstab2Empty = true;
+            } else if (this.amalgamatedEstab2.length < 5 || isNaN(this.amalgamatedEstab2)) {
+                this.amalEstab2Invalid = true;
+            } else {
+                //this.urnCheck(this.linkedEstab1, 'linkedEstab1');
+            }
+
+            if (this.amalgamatedEstab3 == '') {
+                this.amalEstab3Empty = true;
+            } else if (this.amalgamatedEstab3.length < 5 || isNaN(this.amalgamatedEstab3)) {
+                this.amalEstab3Invalid = true;
+            } else {
+                //this.urnCheck(this.linkedEstab2, 'linkedEstab2');
+            }
+
+            if (this.amalgamatedEstab4 == '') {
+                this.amalEstab4Empty = true;
+            } else if (this.amalgamatedEstab4.length < 5 || isNaN(this.amalgamatedEstab4)) {
+                this.amalEstab4Invalid = true;
+            } else {
+                //this.urnCheck(this.linkedEstab3, 'linkedEstab3');
+            }
+
+            // var bothChecked;
+            // bothChecked = window.setInterval(function () {
+            //     if (self.leadEstabUrnChecked && self.linkedEstab1UrnChecked) {
+            //         if (self.leadEstabValid && self.linkedEstab1Valid && !self.showGlobalError) {
+            //             self.clearErrors();
+            //             self.validMergeUrns = true;
+            //         }
+            //         window.clearInterval(bothChecked);
+            //         }
+            //     },
+            //     100);
+
+            this.errorFocus();
         },
 
         validateAmalgamationSelection: function () {
