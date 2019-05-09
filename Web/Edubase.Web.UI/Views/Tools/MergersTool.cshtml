@@ -49,34 +49,34 @@
                 </li>
 
                 @* AMALGAMATION *@
-                <li v-show="amalEstab1Empty">
+                <li v-show="amalgamatedEstab1Empty">
                     <a href="#amalgamate-estab1">Enter the establishment 1 URN</a>
                 </li>
-                <li v-show="amalEstab1Invalid">
+                <li v-show="amalgamatedEstab1Invalid">
                     <a href="#amalgamate-estab1">The establishment 1 URN is invalid</a>
                 </li>
-                <li v-show="amalEstab1NoMatch">
+                <li v-show="amalgamatedEstab1NoMatch">
                     <a href="#amalgamate-estab1">The establishment 1 URN was not found</a>
                 </li>
-                <li v-show="amalEstab2Empty">
+                <li v-show="amalgamatedEstab2Empty">
                     <a href="#amalgamate-estab2">Enter the establishment 2 URN</a>
                 </li>
-                <li v-show="amalEstab2Invalid">
+                <li v-show="amalgamatedEstab2Invalid">
                     <a href="#amalgamate-estab2">The establishment 2 URN is invalid</a>
                 </li>
-                <li v-show="amalEstab2NoMatch">
+                <li v-show="amalgamatedEstab2NoMatch">
                     <a href="#amalgamate-estab2">The establishment 2 URN was not found</a>
                 </li>
-                <li v-show="amalEstab3Invalid">
+                <li v-show="amalgamatedEstab3Invalid">
                     <a href="#amalgamate-estab3">The establishment 3 URN is invalid</a>
                 </li>
-                <li v-show="amalEstab3NoMatch">
+                <li v-show="amalgamatedEstab3NoMatch">
                     <a href="#amalgamate-estab3">The establishment 3 URN was not found</a>
                 </li>
-                <li v-show="amalEstab4Invalid">
+                <li v-show="amalgamatedEstab4Invalid">
                     <a href="#amalgamate-estab4">The establishment 4 URN is invalid</a>
                 </li>
-                <li v-show="amalEstab4NoMatch">
+                <li v-show="amalgamatedEstab4NoMatch">
                     <a href="#amalgamate-estab4">The establishment 4 URN was not found</a>
                 </li>
 
@@ -209,37 +209,37 @@
                             <p>Up to 4 establishments can be amalgamated (minimum of 2 establishments)</p>
                         </div>
                         <div class="column-half">
-                            <div class="form-group" v-bind:class="['field-group form-group', amalEstab1Empty || amalEstab1Invalid || amalEstab1NoMatch || !amalEstab1Empty && duplicateUrnsError ? 'error' : '' ]">
+                            <div class="form-group" v-bind:class="['field-group form-group', amalgamatedEstab1Empty || amalgamatedEstab1Invalid || amalgamatedEstab1NoMatch || !amalgamatedEstab1Empty && duplicateUrnsError ? 'error' : '' ]">
                                 <label for="amalgamate-estab1" class="form-label">Establishment 1 URN</label>
-                                <span v-if="amalEstab1Empty" class="error-message">Enter the establishment 1 URN</span>
-                                <span v-if="amalEstab1Invalid" class="error-message">The establishment 1 URN is invalid</span>
-                                <span v-if="amalEstab1NoMatch" class="error-message">The establishment 1 URN was not found</span>
-                                <span v-if="!amalEstab1Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
+                                <span v-if="amalgamatedEstab1Empty" class="error-message">Enter the establishment 1 URN</span>
+                                <span v-if="amalgamatedEstab1Invalid" class="error-message">The establishment 1 URN is invalid</span>
+                                <span v-if="amalgamatedEstab1NoMatch" class="error-message">The establishment 1 URN was not found</span>
+                                <span v-if="!amalgamatedEstab1Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
                                 <input class="form-control form-control-3-4" type="text" v-model="amalgamatedEstab1" id="amalgamate-estab1" />
                             </div>
 
-                            <div class="form-group" v-bind:class="['field-group form-group', amalEstab2Empty || amalEstab2Invalid || amalEstab2NoMatch || !amalEstab2Empty && duplicateUrnsError ? 'error' : '' ]">
+                            <div class="form-group" v-bind:class="['field-group form-group', amalgamatedEstab2Empty || amalgamatedEstab2Invalid || amalgamatedEstab2NoMatch || !amalgamatedEstab2Empty && duplicateUrnsError ? 'error' : '' ]">
                                 <label for="amalgamate-estab2" class="form-label">Establishment 2 URN</label>
-                                <span v-if="amalEstab2Empty" class="error-message">Enter the establishment 2 URN</span>
-                                <span v-if="amalEstab2Invalid" class="error-message">The establishment 2 URN is invalid</span>
-                                <span v-if="amalEstab2NoMatch" class="error-message">The establishment 2 URN was not found</span>
-                                <span v-if="!amalEstab2Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
+                                <span v-if="amalgamatedEstab2Empty" class="error-message">Enter the establishment 2 URN</span>
+                                <span v-if="amalgamatedEstab2Invalid" class="error-message">The establishment 2 URN is invalid</span>
+                                <span v-if="amalgamatedEstab2NoMatch" class="error-message">The establishment 2 URN was not found</span>
+                                <span v-if="!amalgamatedEstab2Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
                                 <input class="form-control form-control-3-4" type="text" v-model="amalgamatedEstab2" id="amalgamate-estab2" />
                             </div>
 
-                            <div class="form-group" v-bind:class="['field-group form-group', amalEstab3Invalid || amalEstab3NoMatch || !amalEstab3Empty && duplicateUrnsError ? 'error' : '' ]">
+                            <div class="form-group" v-bind:class="['field-group form-group', amalgamatedEstab3Invalid || amalgamatedEstab3NoMatch || !amalgamatedEstab3Empty && duplicateUrnsError ? 'error' : '' ]">
                                 <label for="amalgamate-estab3" class="form-label">Establishment 3 URN</label>
-                                <span v-if="amalEstab3Invalid" class="error-message">The establishment 3 URN is invalid</span>
-                                <span v-if="amalEstab3NoMatch" class="error-message">The establishment 3 URN was not found</span>
-                                <span v-if="!amalEstab3Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
+                                <span v-if="amalgamatedEstab3Invalid" class="error-message">The establishment 3 URN is invalid</span>
+                                <span v-if="amalgamatedEstab3NoMatch" class="error-message">The establishment 3 URN was not found</span>
+                                <span v-if="!amalgamatedEstab3Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
                                 <input class="form-control form-control-3-4" type="text" v-model="amalgamatedEstab3" id="amalgamate-estab3" />
                             </div>
 
-                            <div class="form-group" v-bind:class="['field-group form-group', amalEstab4Invalid || amalEstab4NoMatch || !amalEstab4Empty && duplicateUrnsError ? 'error' : '' ]">
+                            <div class="form-group" v-bind:class="['field-group form-group', amalgamatedEstab4Invalid || amalgamatedEstab4NoMatch || !amalgamatedEstab4Empty && duplicateUrnsError ? 'error' : '' ]">
                                 <label for="amalgamate-estab4" class="form-label">Establishment 4 URN</label>
-                                <span v-if="amalEstab4Invalid" class="error-message">The establishment 4 URN is invalid</span>
-                                <span v-if="amalEstab4NoMatch" class="error-message">The establishment 4 URN was not found</span>
-                                <span v-if="!amalEstab4Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
+                                <span v-if="amalgamatedEstab4Invalid" class="error-message">The establishment 4 URN is invalid</span>
+                                <span v-if="amalgamatedEstab4NoMatch" class="error-message">The establishment 4 URN was not found</span>
+                                <span v-if="!amalgamatedEstab4Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
                                 <input class="form-control form-control-3-4" type="text" v-model="amalgamatedEstab4" id="amalgamate-estab4" />
                             </div>
                         </div>
