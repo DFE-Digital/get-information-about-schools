@@ -263,11 +263,12 @@
             this.linkedEstab3bUrnChecked = false;
             this.linkedEstab3Valid = false;
             this.linkedEstab3NoMatch = false;
-            console.log('all fields cleared');
         },
         validateMergeFields: function(){
             var self = this;
+            this.clearErrors();
             this.clearMergeFields();
+            this.mergerEstabs = [];
 
             this.duplicateUrnsError = this.hasDuplicateUrn();
             //this.errorFocus();
@@ -314,9 +315,9 @@
             var bothChecked;
             bothChecked = window.setInterval(function () {
                 if (self.leadEstabUrnChecked && self.linkedEstab1UrnChecked) {
-                    console.log('both urns checked');
-                    if (self.leadEstabValid && self.linkedEstab1Valid) {
-                        console.log('...and both valid');
+                    if (self.leadEstabValid && self.linkedEstab1Valid && !self.showGlobalError) {
+                        self.clearErrors();
+                        self.validMergeUrns = true;
                     }
                     window.clearInterval(bothChecked);
                     }
