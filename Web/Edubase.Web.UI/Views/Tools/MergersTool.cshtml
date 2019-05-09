@@ -172,9 +172,7 @@
 
                             <div v-bind:class="['form-group', (leadEstabEmpty || leadEstabInvalid || leadEstabNoMatch || duplicateUrnsError) ? 'error' : '' ]">
                                 <h2 class="heading-small">Select the lead establishment</h2>
-                                <span class="form-hint">
-                                    The lead establishment will remain open
-                                </span>
+                                <p>The lead establishment will remain open</p>
                                 <label class="form-label" for="lead-establishment">
                                     Enter the lead establishment <abbr title="Unique Reference Number">URN</abbr>
                                 </label>
@@ -184,46 +182,36 @@
                                 <span v-show="leadEstabInvalid" class="error-message">The lead establishment URN is invalid</span>
                                 <span v-show="leadEstabNoMatch" class="error-message">The lead establishment was not found</span>
                                 <span v-show="duplicateUrnsError" class="error-message">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the URN.</span>
-                                <input class="form-control" id="lead-establishment" type="text" v-model="leadEstab" />
+                                <input class="form-control form-control-3-4" id="lead-establishment" type="text" v-model="leadEstab" />
                             </div>
 
-                            <div v-bind:class="['form-group', linkedEstab1Empty || linkedEstab1Invalid || linkedEstab1NoMatch || linkedEstabError || duplicateUrnsError || mergeLengthError ? 'error' : '' ]">
-                                <fieldset>
-                                    <legend class="bold">Select additional establishments to be merged</legend>
-                                    <p class="form-hint">
-                                        Up to 3 additional establishments can be merged (minimum of 1 establishment).
-                                    </p>
-                                    <dl class="field-group">
-                                        <dt>
-                                            <label class="form-label">Enter the establishment <abbr title="Unique Reference Number">URN</abbr>(s)</label>
+                            <fieldset>
+                                <legend class="bold"><h2 class="heading-small">Select establishments to be merged with the lead establishment</h2></legend>
+                                <p>Up to 3 establishments can be merged (minimum of 1 establishment)</p>
 
-                                            @* FORM ERROR MESSAGES - ADDITIONAL ESTABLISHMENTS *@
-                                            <span v-show="linkedEstab1Empty" class="error-message">Please enter the first additional establishment URN</span>
-                                            <span v-show="linkedEstab1Invalid" class="error-message">The first additional establishment URN is invalid</span>
-                                            <span v-show="linkedEstab1NoMatch" class="error-message">The first additional establishment was not found</span>
-                                            <span v-show="linkedEstabError" class="error-message">Please enter a valid <abbr title="Unique Reference Number">URN</abbr>.</span>
-                                            <span v-show="duplicateUrnsError" class="error-message">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
-                                            <span v-show="mergeLengthError" class="error-message">Please enter the additional establishments' URN</span>
-                                        </dt>
-                                        <dd>
-                                            <ol class="linked-establishments" id="linked-establishments">
-                                                <li>
-                                                    <label for="establishment-1" class="visuallyhidden">First additional establishment</label>
-                                                    <input class="form-control" id="establishment-1" type="text" v-model="linkedEstab1" />
-                                                </li>
-                                                <li>
-                                                    <label for="establishment-2" class="visuallyhidden">Second additional establishment</label>
-                                                    <input class="form-control" id="establishment-2" type="text" v-model="linkedEstab2" />
-                                                </li>
-                                                <li>
-                                                    <label for="establishment-3" class="visuallyhidden">Third additional establishment</label>
-                                                    <input class="form-control" id="establishment-3" type="text" v-model="linkedEstab3" />
-                                                </li>
-                                            </ol>
-                                        </dd>
-                                    </dl>
-                                </fieldset>
-                            </div>
+                                @* FORM ERROR MESSAGES - ADDITIONAL ESTABLISHMENTS *@
+                                <span v-if="linkedEstab1Empty" class="error-message">Please enter the first additional establishment URN</span>
+                                <span v-if="linkedEstab1Invalid" class="error-message">The first additional establishment URN is invalid</span>
+                                <span v-if="linkedEstab1NoMatch" class="error-message">The first additional establishment was not found</span>
+                                <span v-if="linkedEstabError" class="error-message">Please enter a valid <abbr title="Unique Reference Number">URN</abbr>.</span>
+                                <span v-if="duplicateUrnsError" class="error-message">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
+                                <span v-if="mergeLengthError" class="error-message">Please enter the additional establishments' URN</span>
+
+                                <div class="form-group"  v-bind:class="['form-group', linkedEstab1Empty || linkedEstab1Invalid || linkedEstab1NoMatch || linkedEstabError || duplicateUrnsError || mergeLengthError ? 'error' : '' ]">
+                                    <label for="establishment-1" class="form-label">Establishment 1 URN</label>
+                                    <input class="form-control form-control-3-4" id="establishment-1" type="text" v-model="linkedEstab1" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="establishment-2" class="form-label">Establishment 2 URN</label>
+                                    <input class="form-control form-control-3-4" id="establishment-2" type="text" v-model="linkedEstab2" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="establishment-3" class="form-label">Establishment 3 URN</label>
+                                    <input class="form-control form-control-3-4" id="establishment-3" type="text" v-model="linkedEstab3" />
+                                </div>
+                            </fieldset>
                         </div>
                         <div class="column-full">
                             <div class="submit-cancel-panel">
@@ -326,42 +314,35 @@
                         </div>
                         <div class="column-two-thirds">
                             <p>You can propose closing two or more schools and establishing a new school</p>
-                            <h2 class="bold">Select establishments to be amalgamated</h2>
-                            <span class="form-hint">
-                                Up to 4 establishments can be amalgamated (minimum of 2 establishments)
-                            </span>
+                            <h2 class="heading-small">Select establishments to be amalgamated</h2>
+                            <p>Up to 4 establishments can be amalgamated (minimum of 2 establishments)</p>
                         </div>
                         <div class="column-half">
-                            <dl v-bind:class="['field-group form-group', amalgamateUrnError || amalgamationLengthError || duplicateUrnsError ? 'error' : '' ]">
-                                <dt>
-                                    <label class="form-label">Enter the establishment <abbr title="Unique Reference Number">URN</abbr>(s)</label>
 
-                                    @* FORM ERROR MESSAGES - ESTABLISHMENTS *@
-                                    <span v-show="amalgamateUrnError" class="error-message">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
-                                    <span v-show="amalgamationLengthError && !amalgamateUrnError" class="error-message">Select between 2 and 4 schools.</span>
-                                    <span v-show="duplicateUrnsError && !amalgamateUrnError && !amalgamationLengthError" class="error-message">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
-                                </dt>
-                                <dd>
-                                    <ol class="linked-establishments" id="linked-establishments">
-                                        <li>
-                                            <label for="amalgamate-estab1" class="visuallyhidden">First establishment</label>
-                                            <input class="form-control" type="text" v-model="amalgamatedEstab1" id="amalgamate-estab1" />
-                                        </li>
-                                        <li>
-                                            <label for="amalgamate-estab2" class="visuallyhidden">Second establishment</label>
-                                            <input class="form-control" type="text" v-model="amalgamatedEstab2" id="amalgamate-estab2" />
-                                        </li>
-                                        <li>
-                                            <label for="amalgamate-estab3" class="visuallyhidden">Third establishment</label>
-                                            <input class="form-control" type="text" v-model="amalgamatedEstab3" id="amalgamate-estab3" />
-                                        </li>
-                                        <li>
-                                            <label for="amalgamate-estab4" class="visuallyhidden">Fourth establishment</label>
-                                            <input class="form-control" type="text" v-model="amalgamatedEstab4" id="amalgamate-estab4" />
-                                        </li>
-                                    </ol>
-                                </dd>
-                            </dl>
+                            @* FORM ERROR MESSAGES - ESTABLISHMENTS *@
+                            <span v-if="amalgamateUrnError" class="error-message">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
+                            <span v-if="amalgamationLengthError && !amalgamateUrnError" class="error-message">Select between 2 and 4 schools.</span>
+                            <span v-if="duplicateUrnsError && !amalgamateUrnError && !amalgamationLengthError" class="error-message">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
+
+                            <div class="form-group" v-bind:class="['field-group form-group', amalgamateUrnError || amalgamationLengthError || duplicateUrnsError ? 'error' : '' ]">
+                                <label for="amalgamate-estab1" class="form-label">Establishment 1 URN</label>
+                                <input class="form-control form-control-3-4" type="text" v-model="amalgamatedEstab1" id="amalgamate-estab1" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="amalgamate-estab2" class="form-label">Establishment 2 URN</label>
+                                <input class="form-control form-control-3-4" type="text" v-model="amalgamatedEstab2" id="amalgamate-estab2" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="amalgamate-estab3" class="form-label">Establishment 3 URN</label>
+                                <input class="form-control form-control-3-4" type="text" v-model="amalgamatedEstab3" id="amalgamate-estab3" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="amalgamate-estab4" class="form-label">Establishment 4 URN</label>
+                                <input class="form-control form-control-3-4" type="text" v-model="amalgamatedEstab4" id="amalgamate-estab4" />
+                            </div>
                         </div>
 
                         <div class="column-full">
