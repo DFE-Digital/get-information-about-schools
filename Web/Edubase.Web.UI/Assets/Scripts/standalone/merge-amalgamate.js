@@ -4,7 +4,6 @@
         localAuthorities: localAuthorities,
         types: types,
         phases: phases,
-        typeMap: type2PhaseMap,
 
         mergerType: '',
         mergerTypeConfirmed: false,
@@ -29,39 +28,14 @@
         laId: '',
         phaseId: '',
 
-
         mergerTypeError: false,
         mergeDateError: false,
-        mergeLengthError: false,
         mergerComplete: false,
 
-        leadEstabError: false,
-        leadEstabLengthError: false,
-        leadEstabUrnCheckDone: false,
         leadEstabValid: false,
-        leadEstabErrorMessage: '',
-
-        linkedEstab1Error: false,
-        linkedEstab2Error: false,
-        linkedEstab3Error: false,
-        linkedEstabError: false,
-        linkedEstabUrnCheckDone: false,
-
         linkedEstab1Valid: false,
         linkedEstab2Valid: false,
         linkedEstab3Valid: false,
-
-        amalgamatedEstab1Error: false,
-        amalgamatedEstab2Error: false,
-        amalgamatedEstab3Error: false,
-        amalgamatedEstab4Error: false,
-        amalgamateUrnError: false,
-        amalgamationLengthError: false,
-
-        amalgamatedEstab1Valid: false,
-        amalgamatedEstab2Valid: false,
-        amalgamatedEstab3Valid: false,
-        amalgamatedEstab4Valid: false,
 
         nameError: false,
         typeError: false,
@@ -131,16 +105,11 @@
         showGlobalError: function () {
             return (
                 this.mergerTypeError ||
-                    this.amalgamateUrnError ||
-                    this.leadEstabError ||
-                    this.linkedEstabError ||
-                    this.amalgamationLengthError ||
                     this.nameError ||
                     this.phaseError ||
                     this.typeError ||
                     this.laError ||
                     this.mergeDateError ||
-                    this.mergeLengthError ||
                     this.duplicateUrnsError ||
                     this.commitErrors ||
                     this.leadEstabEmpty ||
@@ -509,41 +478,6 @@
                 }
             });
         },
-        validateUrn: function (urn, component) {
-            var self = this;
-
-            $.ajax({
-                url: self.estabLookup.replace('{0}', urn),
-                dataType: 'json',
-                method: 'get',
-                success: function (data) {
-                    console.log('validate ' + component + ' URN: success');
-                    self[component + 'Valid'] = !data.notFound;
-                    if (self[component + 'Valid']) {
-                        if (self.mergerType === 'merger') {
-                            self.mergerEstabs.push(data.returnValue);
-                        } else {
-                            self.amalgamationEstabs.push(data.returnValue);
-                        }
-                    }
-                },
-                error: function (jqxhr) {
-                    console.log('validate ' + component + ' URN: error');
-                    if (jqxhr.hasOwnProperty('responseJSON')) {
-                        self.apiError = jqxhr.responseJSON;
-                    }
-                    self[component + 'Valid'] = false;
-                },
-                complete: function () {
-                    self.fieldCount--;
-                    if (component == 'leadEstab') {
-                        self.leadEstabUrnCheckDone = true;
-                    } else {
-                        self.linkedEstabUrnCheckDone = true;
-                    }
-                }
-            });
-        },
         processMerger: function () {
             var self = this;
             var postData = {};
@@ -693,17 +627,11 @@
         clearErrors: function(){
             window.document.title = "Amalgamations and mergers tool - GOV.UK";
             this.mergerTypeError = false;
-            this.amalgamateUrnError = false;
-            this.leadEstabError = false;
-            this.leadEstabLengthError = false;
-            this.linkedEstabError = false;
-            this.amalgamationLengthError = false;
             this.nameError = false;
             this.phaseError = false;
             this.typeError = false;
             this.laError = false;
             this.mergeDateError = false;
-            this.mergeLengthError = false;
             this.duplicateUrnsError = false;
             this.commitErrors = false;
         },
