@@ -253,21 +253,8 @@
                 this.errorFocus();
             }
         },
-        disallowMerge: function () {
-            return this.leadEstab.length < 5 || isNaN(this.leadEstab)
-                || (($.trim(this.linkedEstab1).length < 5 || isNaN(this.linkedEstab1))
-                    && ($.trim(this.linkedEstab2).length < 5 || isNaN(this.linkedEstab2))
-                    && ($.trim(this.linkedEstab3).length < 5 || isNaN(this.linkedEstab3)));
-        },
-        disallowAmalgamate: function () {
-
-            var urns = [];
-            if (($.trim(this.amalgamatedEstab1).length >= 5 && !isNaN(this.amalgamatedEstab1))) urns.push(this.amalgamatedEstab1);
-            if (($.trim(this.amalgamatedEstab2).length >= 5 && !isNaN(this.amalgamatedEstab2))) urns.push(this.amalgamatedEstab2);
-            if (($.trim(this.amalgamatedEstab3).length >= 5 && !isNaN(this.amalgamatedEstab3))) urns.push(this.amalgamatedEstab3);
-            if (($.trim(this.amalgamatedEstab4).length >= 5 && !isNaN(this.amalgamatedEstab4))) urns.push(this.amalgamatedEstab4);
-
-            return urns.length < 2;
+        checkIfInvalid: function(component){
+            return this[component].length < 5 || isNaN(this[component])
         },
         clearMergeFields: function(){
             this.leadEstabEmpty = false;
@@ -312,7 +299,7 @@
 
             if (this.leadEstab == '') {
                 this.leadEstabEmpty = true;
-            } else if (this.leadEstab.length < 5 || isNaN(this.leadEstab)) {
+            } else if (this.checkIfInvalid('leadEstab')) {
                 this.leadEstabInvalid = true;
             } else {
                 this.urnCheck(this.leadEstab, 'leadEstab');
@@ -320,7 +307,7 @@
 
             if (this.linkedEstab1 == '') {
                 this.linkedEstab1Empty = true;
-            } else if (this.linkedEstab1.length < 5 || isNaN(this.linkedEstab1)) {
+            } else if (this.checkIfInvalid('linkedEstab1')) {
                 this.linkedEstab1Invalid = true;
             } else {
                 this.urnCheck(this.linkedEstab1, 'linkedEstab1');
@@ -328,7 +315,7 @@
 
             if (this.linkedEstab2 == '') {
                 this.linkedEstab2Empty = true;
-            } else if (this.linkedEstab2.length < 5 || isNaN(this.linkedEstab2)) {
+            } else if (this.checkIfInvalid('linkedEstab2')) {
                 this.linkedEstab2Invalid = true;
             } else {
                 this.urnCheck(this.linkedEstab2, 'linkedEstab2');
@@ -336,7 +323,7 @@
 
             if (this.linkedEstab3 == '') {
                 this.linkedEstab3Empty = true;
-            } else if (this.linkedEstab3.length < 5 || isNaN(this.linkedEstab3)) {
+            } else if (this.checkIfInvalid('linkedEstab3')) {
                 this.linkedEstab3Invalid = true;
             } else {
                 this.urnCheck(this.linkedEstab3, 'linkedEstab3');
@@ -348,6 +335,134 @@
                     if (self.leadEstabValid && self.linkedEstab1Valid && !self.showGlobalError) {
                         self.clearErrors();
                         self.validMergeUrns = true;
+                    }
+                    window.clearInterval(bothChecked);
+                    }
+                },
+                100);
+
+            this.errorFocus();
+        },
+        validateMergerDate: function () {
+            var day = parseInt(this.mergeDateDay, 10),
+                month = parseInt(this.mergeDateMonth -1, 10),
+                year = parseInt(this.mergeDateYear, 10),
+
+                dateError = false,
+                months31 = [0, 2, 4, 6, 7, 9, 11],
+                currentYear = new Date().getFullYear();
+
+            if (!day || !month || !year || isNaN(day) || isNaN(month) || isNaN(year)) {
+                dateError = true;
+            }
+
+            var isLeap = new Date(year, 1, 29).getMonth() === 1; // will return march for non leap years
+
+            if (isLeap && month === 1) {
+                if (day > 29) {
+                    dateError = true;
+                }
+            } else if (month === 1) {
+                if (day > 28) {
+                    dateError = true;
+                }
+            }
+
+            if (months31.indexOf(month - 1)) {
+                if (day < 1 || day > 31) {
+                    dateError = true;
+                }
+            } else {
+                if (day < 1 || day > 30) {
+                    dateError = true;
+                }
+            }
+
+            if (month < 1 || month > 12) {
+                dateError = true;
+            }
+
+            return dateError;
+        },
+        clearAmalgamationFields: function(){
+            this.amalEstab1Empty = false;
+            this.amalEstab1Invalid = false;
+            this.amalEstab1UrnChecked = false;
+            this.amalEstab1Valid = false;
+            this.amalEstab1NoMatch = false;
+
+            this.amalEstab2Empty = false;
+            this.amalEstab2Invalid = false;
+            this.amalEstab2bUrnChecked = false;
+            this.amalEstab2Valid = false;
+            this.amalEstab2NoMatch = false;
+
+            this.amalEstab3Empty = false;
+            this.amalEstab3Invalid = false;
+            this.amalEstab3bUrnChecked = false;
+            this.amalEstab3Valid = false;
+            this.amalEstab3NoMatch = false;
+
+            this.amalEstab4Empty = false;
+            this.amalEstab4Invalid = false;
+            this.amalEstab4bUrnChecked = false;
+            this.amalEstab4Valid = false;
+            this.amalEstab4NoMatch = false;
+        },
+        validateAmalgamationFields: function(){
+            var self = this;
+            this.clearErrors();
+            this.clearAmalgamationFields();
+            this.amalgamationEstabs = [];
+
+            this.duplicateUrnsError = this.hasDuplicateUrn();
+            //this.errorFocus();
+            if (this.duplicateUrnsError) {
+                if (this.amalgamatedEstab1 == '') { this.amalEstab1Empty = true; }
+                if (this.amalgamatedEstab2 == '') { this.amalEstab2Empty = true; }
+                if (this.amalgamatedEstab3 == '') { this.amalEstab3Empty = true; }
+                if (this.amalgamatedEstab4 == '') { this.amalEstab4Empty = true; }
+                return true;
+            }
+
+            if (this.amalgamatedEstab1 == '') {
+                this.amalEstab1Empty = true;
+            } else if (this.checkIfInvalid('amalgamatedEstab1')) {
+                this.amalEstab1Invalid = true;
+            } else {
+                this.urnCheck(this.amalgamatedEstab1, 'amalEstab1');
+            }
+
+            if (this.amalgamatedEstab2 == '') {
+                this.amalEstab2Empty = true;
+            } else if (this.checkIfInvalid('amalgamatedEstab2')) {
+                this.amalEstab2Invalid = true;
+            } else {
+                this.urnCheck(this.amalgamatedEstab2, 'amalEstab2');
+            }
+
+            if (this.amalgamatedEstab3 == '') {
+                this.amalEstab3Empty = true;
+            } else if (this.checkIfInvalid('amalgamatedEstab3')) {
+                this.amalEstab3Invalid = true;
+            } else {
+                this.urnCheck(this.amalgamatedEstab3, 'amalEstab3');
+            }
+
+            if (this.amalgamatedEstab4 == '') {
+                this.amalEstab4Empty = true;
+            } else if (this.checkIfInvalid('amalgamatedEstab4')) {
+                this.amalEstab4Invalid = true;
+            } else {
+                this.urnCheck(this.amalgamatedEstab4, 'amalEstab4');
+            }
+
+            var bothChecked;
+            bothChecked = window.setInterval(function () {
+                if (self.amalEstab1UrnChecked && self.amalEstab2UrnChecked) {
+                    if (self.amalEstab1Valid && self.amalEstab2Valid && !self.showGlobalError) {
+                        self.validMergeUrns = true;
+                        self.clearErrors();
                     }
                     window.clearInterval(bothChecked);
                     }
@@ -428,219 +543,6 @@
                     }
                 }
             });
-        },
-        validateMergerDate: function () {
-            var day = parseInt(this.mergeDateDay, 10),
-                month = parseInt(this.mergeDateMonth -1, 10),
-                year = parseInt(this.mergeDateYear, 10),
-
-                dateError = false,
-                months31 = [0, 2, 4, 6, 7, 9, 11],
-                currentYear = new Date().getFullYear();
-
-            if (!day || !month || !year || isNaN(day) || isNaN(month) || isNaN(year)) {
-                dateError = true;
-            }
-
-            var isLeap = new Date(year, 1, 29).getMonth() === 1; // will return march for non leap years
-
-            if (isLeap && month === 1) {
-                if (day > 29) {
-                    dateError = true;
-                }
-            } else if (month === 1) {
-                if (day > 28) {
-                    dateError = true;
-                }
-            }
-
-            if (months31.indexOf(month - 1)) {
-                if (day < 1 || day > 31) {
-                    dateError = true;
-                }
-            } else {
-                if (day < 1 || day > 30) {
-                    dateError = true;
-                }
-            }
-
-            if (month < 1 || month > 12) {
-                dateError = true;
-            }
-
-            return dateError;
-        },
-
-        clearAmalgamationFields: function(){
-            this.amalEstab1Empty = false;
-            this.amalEstab1Invalid = false;
-            this.amalEstab1UrnChecked = false;
-            this.amalEstab1Valid = false;
-            this.amalEstab1NoMatch = false;
-
-            this.amalEstab2Empty = false;
-            this.amalEstab2Invalid = false;
-            this.amalEstab2bUrnChecked = false;
-            this.amalEstab2Valid = false;
-            this.amalEstab2NoMatch = false;
-
-            this.amalEstab3Empty = false;
-            this.amalEstab3Invalid = false;
-            this.amalEstab3bUrnChecked = false;
-            this.amalEstab3Valid = false;
-            this.amalEstab3NoMatch = false;
-
-            this.amalEstab4Empty = false;
-            this.amalEstab4Invalid = false;
-            this.amalEstab4bUrnChecked = false;
-            this.amalEstab4Valid = false;
-            this.amalEstab4NoMatch = false;
-        },
-
-        validateAmalgamationFields: function(){
-            var self = this;
-            this.clearErrors();
-            this.clearAmalgamationFields();
-            this.amalgamationEstabs = [];
-
-            this.duplicateUrnsError = this.hasDuplicateUrn();
-            //this.errorFocus();
-            if (this.duplicateUrnsError) {
-                if (this.amalgamatedEstab1 == '') { this.amalEstab1Empty = true; }
-                if (this.amalgamatedEstab2 == '') { this.amalEstab2Empty = true; }
-                if (this.amalgamatedEstab3 == '') { this.amalEstab3Empty = true; }
-                if (this.amalgamatedEstab4 == '') { this.amalEstab4Empty = true; }
-                return true;
-            }
-
-            if (this.amalgamatedEstab1 == '') {
-                this.amalEstab1Empty = true;
-            } else if (this.amalgamatedEstab1.length < 5 || isNaN(this.amalgamatedEstab1)) {
-                this.amalEstab1Invalid = true;
-            } else {
-                this.urnCheck(this.amalgamatedEstab1, 'amalEstab1');
-            }
-
-            if (this.amalgamatedEstab2 == '') {
-                this.amalEstab2Empty = true;
-            } else if (this.amalgamatedEstab2.length < 5 || isNaN(this.amalgamatedEstab2)) {
-                this.amalEstab2Invalid = true;
-            } else {
-                this.urnCheck(this.amalgamatedEstab2, 'amalEstab2');
-            }
-
-            if (this.amalgamatedEstab3 == '') {
-                this.amalEstab3Empty = true;
-            } else if (this.amalgamatedEstab3.length < 5 || isNaN(this.amalgamatedEstab3)) {
-                this.amalEstab3Invalid = true;
-            } else {
-                this.urnCheck(this.amalgamatedEstab3, 'amalEstab3');
-            }
-
-            if (this.amalgamatedEstab4 == '') {
-                this.amalEstab4Empty = true;
-            } else if (this.amalgamatedEstab4.length < 5 || isNaN(this.amalgamatedEstab4)) {
-                this.amalEstab4Invalid = true;
-            } else {
-                this.urnCheck(this.amalgamatedEstab4, 'amalEstab4');
-            }
-
-            // var bothChecked;
-            // bothChecked = window.setInterval(function () {
-            //     if (self.leadEstabUrnChecked && self.linkedEstab1UrnChecked) {
-            //         if (self.leadEstabValid && self.linkedEstab1Valid && !self.showGlobalError) {
-            //             self.clearErrors();
-            //             self.validMergeUrns = true;
-            //         }
-            //         window.clearInterval(bothChecked);
-            //         }
-            //     },
-            //     100);
-
-            this.errorFocus();
-        },
-
-        validateAmalgamationSelection: function () {
-            this.fieldCount = 0;
-            var self = this;
-            this.amalgamationEstabs = [];
-
-            var presentValidation = function () {
-                if (!self.amalgamatedEstab1Valid || !self.amalgamatedEstab2Valid || !self.amalgamatedEstab3Valid || !self.amalgamatedEstab4Valid) {
-                    self.amalgamateUrnError = true;
-                    self.errorFocus();
-                }
-                if (self.amalgamatedEstab1Valid &&
-                    self.amalgamatedEstab2Valid &&
-                    self.amalgamatedEstab3Valid &&
-                    self.amalgamatedEstab4Valid) {
-                        self.validMergeUrns = true;
-                        self.clearErrors();
-                }
-                self.isProcessing = false;
-            }
-
-            this.linkedEstabError = false;
-            this.amalgamatedEstab1Valid = true;
-            this.amalgamatedEstab2Valid = true;
-            this.amalgamatedEstab3Valid = true;
-            this.amalgamatedEstab4Valid = true;
-            this.amalgamationLengthError = false;
-            this.amalgamateUrnError = false;
-            this.commitErrors = '';
-            this.duplicateUrnsError = this.hasDuplicateUrn();
-            if (this.duplicateUrnsError) {
-                return true;
-            }
-
-            var promise = [];
-
-            if (this.amalgamatedEstab1 !== '') {
-                this.amalgamatedEstab1Valid = false;
-                this.fieldCount++;
-                promise.push(this.validateUrn(this.amalgamatedEstab1, 'amalgamatedEstab1'));
-
-            }
-
-            if (this.amalgamatedEstab2 !== '') {
-                this.amalgamatedEstab2Valid = false;
-                this.fieldCount++;
-                promise.push(this.validateUrn(this.amalgamatedEstab2, 'amalgamatedEstab2'));
-            }
-
-            if (this.amalgamatedEstab3 !== '') {
-                this.amalgamatedEstab3Valid = false;
-                this.fieldCount++;
-                promise.push(this.validateUrn(this.amalgamatedEstab3, 'amalgamatedEstab3'));
-            }
-
-            if (this.amalgamatedEstab4 !== '') {
-                this.amalgamatedEstab4Valid = false;
-                this.fieldCount++;
-                promise.push(this.validateUrn(this.amalgamatedEstab4, 'amalgamatedEstab4'));
-            }
-
-            if (promise.length >= 2) {
-                this.isProcessing = true;
-                $.when(promise.join(',')).done(
-                    function () {
-                        var tt;
-                        if (self.fieldCount > 0) {
-                            tt = window.setInterval(function () {
-                                    if (self.fieldCount === 0) {
-                                        presentValidation();
-                                        window.clearInterval(tt);
-                                    }
-                                },
-                                100);
-                        } else {
-                            presentValidation();
-                        }
-                    });
-            } else {
-                self.amalgamationLengthError = true;
-                self.errorFocus();
-            };
         },
         processMerger: function () {
             var self = this;
