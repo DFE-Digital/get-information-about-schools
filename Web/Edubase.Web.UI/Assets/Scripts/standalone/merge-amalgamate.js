@@ -81,15 +81,23 @@
 
         amalEstab1Empty: false,
         amalEstab1Invalid: false,
+        amalEstab1UrnChecked: false,
+        amalEstab1NoMatch: false,
 
         amalEstab2Empty: false,
         amalEstab2Invalid: false,
+        amalEstab2UrnChecked: false,
+        amalEstab2NoMatch: false,
 
         amalEstab3Empty: false,
         amalEstab3Invalid: false,
+        amalEstab3UrnChecked: false,
+        amalEstab3NoMatch: false,
 
         amalEstab4Empty: false,
         amalEstab4Invalid: false,
+        amalEstab4UrnChecked: false,
+        amalEstab4NoMatch: false,
 
         leadEstabEmpty: false,
         leadEstabInvalid: false,
@@ -147,10 +155,14 @@
                     this.linkedEstab3NoMatch ||
                     this.amalEstab1Empty ||
                     this.amalEstab1Invalid ||
+                    this.amalEstab1NoMatch ||
                     this.amalEstab2Empty ||
                     this.amalEstab2Invalid ||
+                    this.amalEstab2NoMatch ||
                     this.amalEstab3Invalid ||
-                    this.amalEstab4Invalid
+                    this.amalEstab3NoMatch ||
+                    this.amalEstab4Invalid ||
+                    this.amalEstab4NoMatch
             );
         },
         schoolDetailUrl: function () {
@@ -462,27 +474,27 @@
         clearAmalgamationFields: function(){
             this.amalEstab1Empty = false;
             this.amalEstab1Invalid = false;
-            this.leadEstabUrnChecked = false;
-            this.leadEstabValid = false;
-            this.leadEstabNoMatch = false;
+            this.amalEstab1UrnChecked = false;
+            this.amalEstab1Valid = false;
+            this.amalEstab1NoMatch = false;
 
             this.amalEstab2Empty = false;
             this.amalEstab2Invalid = false;
-            this.linkedEstab1bUrnChecked = false;
-            this.linkedEstab1Valid = false;
-            this.linkedEstab1NoMatch = false;
+            this.amalEstab2bUrnChecked = false;
+            this.amalEstab2Valid = false;
+            this.amalEstab2NoMatch = false;
 
             this.amalEstab3Empty = false;
             this.amalEstab3Invalid = false;
-            this.linkedEstab2bUrnChecked = false;
-            this.linkedEstab2Valid = false;
-            this.linkedEstab2NoMatch = false;
+            this.amalEstab3bUrnChecked = false;
+            this.amalEstab3Valid = false;
+            this.amalEstab3NoMatch = false;
 
             this.amalEstab4Empty = false;
             this.amalEstab4Invalid = false;
-            this.linkedEstab3bUrnChecked = false;
-            this.linkedEstab3Valid = false;
-            this.linkedEstab3NoMatch = false;
+            this.amalEstab4bUrnChecked = false;
+            this.amalEstab4Valid = false;
+            this.amalEstab4NoMatch = false;
         },
 
         validateAmalgamationFields: function(){
@@ -506,7 +518,7 @@
             } else if (this.amalgamatedEstab1.length < 5 || isNaN(this.amalgamatedEstab1)) {
                 this.amalEstab1Invalid = true;
             } else {
-                //this.urnCheck(this.leadEstab, 'leadEstab');
+                this.urnCheck(this.amalgamatedEstab1, 'amalEstab1');
             }
 
             if (this.amalgamatedEstab2 == '') {
@@ -514,7 +526,7 @@
             } else if (this.amalgamatedEstab2.length < 5 || isNaN(this.amalgamatedEstab2)) {
                 this.amalEstab2Invalid = true;
             } else {
-                //this.urnCheck(this.linkedEstab1, 'linkedEstab1');
+                this.urnCheck(this.amalgamatedEstab2, 'amalEstab2');
             }
 
             if (this.amalgamatedEstab3 == '') {
@@ -522,7 +534,7 @@
             } else if (this.amalgamatedEstab3.length < 5 || isNaN(this.amalgamatedEstab3)) {
                 this.amalEstab3Invalid = true;
             } else {
-                //this.urnCheck(this.linkedEstab2, 'linkedEstab2');
+                this.urnCheck(this.amalgamatedEstab3, 'amalEstab3');
             }
 
             if (this.amalgamatedEstab4 == '') {
@@ -530,7 +542,7 @@
             } else if (this.amalgamatedEstab4.length < 5 || isNaN(this.amalgamatedEstab4)) {
                 this.amalEstab4Invalid = true;
             } else {
-                //this.urnCheck(this.linkedEstab3, 'linkedEstab3');
+                this.urnCheck(this.amalgamatedEstab4, 'amalEstab4');
             }
 
             // var bothChecked;
