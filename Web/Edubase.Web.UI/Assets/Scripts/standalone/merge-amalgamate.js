@@ -441,7 +441,6 @@
             this.errorFocus();
         },
         urnCheck: function(urn, component){
-            console.log('Doing the URN check');
             var self = this;
 
             $.ajax({
@@ -450,11 +449,8 @@
                 method: 'get',
                 async: false,
                 success: function (data) {
-                    console.log('urnCheck - success');
                     self[component + 'Valid'] = !data.notFound;
-                    console.log('urnCheck - ' + component + 'Valid: ' + !data.notFound);
                     if (self[component + 'Valid']) {
-                        console.log('urnCheck - Valid URN');
                         if (self.mergerType === 'merger') {
                             self.mergerEstabs.push(data.returnValue);
                         } else {
@@ -464,7 +460,6 @@
                     self[component + 'UrnChecked'] = true;
                 },
                 error: function (jqxhr) {
-                    console.log('urnCheck - error');
                     if (jqxhr.hasOwnProperty('responseJSON')) {
                         self.apiError = jqxhr.responseJSON;
                     }
@@ -472,10 +467,7 @@
                     self[component + 'NoMatch'] = true;
                     self[component + 'UrnChecked'] = true;
                 },
-                complete: function () {
-                    console.log('urnCheck - complete');
-                    //self[component + 'UrnChecked'] = true;
-                }
+                complete: function () {}
             });
         },
         processMerger: function () {
