@@ -392,6 +392,7 @@
               this.searchUrn = '';
               this.presentDetail = false;
               if (this.anchorTarget !== '') {
+                $(window).off('beforeunload');
                 window.location.href = this.anchorTarget;
               }
             },
