@@ -1,8 +1,5 @@
 ﻿
 .amalgamate {
-    .error-message.hidden {
-        display: none;
-    }
 
     .linked-establishments {
         counter-reset: estab-counter;
@@ -57,28 +54,8 @@
         margin: 20px 0;
     }
 
-    .field-group {
-        margin-top: 12px;
-    }
-
     .special-snowflake-radios {
         margin-bottom: 50px;
-    }
-
-    .form-label {
-        margin-bottom: 2px;
-    }
-
-    @include media(tablet) {
-        #establishment-0,
-        #establishment-1,
-        #establishment-2 {
-            width: 70%;
-        }
-
-        #lead-establishment {
-            width: 66%;
-        }
     }
 
     .amalg-summary {
