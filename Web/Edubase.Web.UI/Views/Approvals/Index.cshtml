@@ -172,29 +172,32 @@
     </div>
     <div class="modal-overlay" v-show="showRejections"></div>
     <div class="modal-content" id="modal-content" v-show="showRejections" role="dialog" aria-describedby="modal-desc">
-        <a class="modal-exit" href="#" v-on:click.prevent="showRejections=false; reasonIds=[]">Close</a>
+        <a class="modal-exit" href="#" v-on:click.prevent="noReasonSelectedError=false; showRejections=false; reasonIds=[]">Close</a>
         <div class="modal-inner">
             <h2 class="heading-medium" tabindex="0" id="modal-label">Add one or more reasons for rejection</h2>
-            <p class="error-message" v-show="noReasonSelectedError" tabindex="0" id="model-desc">Please select at least one reason to add.</p>
-            <div class="govuk-option-select">
-                <div class="container-head">
-                    <div class="option-select-label hard--left">Reasons</div>
+            <div v-bind:class="{ error: noReasonSelectedError }">
+                <p class="error-message" v-show="noReasonSelectedError" tabindex="0" id="model-desc">Please select at least one reason to add.</p>
+                <div class="govuk-option-select">
+                    <div class="container-head">
+                        <div class="option-select-label hard--left">Reasons</div>
+                    </div>
+                    <div class="options-container">
+                        <fieldset>
+                            <div class="filter-wrapper" v-for="(reason, index) in cannedRejections">
+                                <input :id="'reason-' + reason.id" class="filter-input" :value="reason.id" type="checkbox" v-model="reasonIds">
+                                <label :for="'reason-'+ reason.id" class="filter-radio">
+                                    {{reason.title}}
+                                </label>
+                            </div>
+                        </fieldset>
+                    </div>
                 </div>
-                <div class="options-container">
-                    <fieldset>
-                        <div class="filter-wrapper" v-for="(reason, index) in cannedRejections">
-                            <input :id="'reason-' + reason.id" class="filter-input" :value="reason.id" type="checkbox" v-model="reasonIds">
-                            <label :for="'reason-'+ reason.id" class="filter-radio">
-                                {{reason.title}}
-                            </label>
-                        </div>
-                    </fieldset>
-                </div>
+
             </div>
         </div>
         <div class="button-row">
             <a href="#" class="button mobile-full-width" v-on:click.prevent="selectReason">OK</a>
-            <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="showRejections = false; reasonIds =[]">Cancel</a>
+            <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="noReasonSelectedError=false; showRejections = false; reasonIds =[]">Cancel</a>
         </div>
     </div>
 </div>
