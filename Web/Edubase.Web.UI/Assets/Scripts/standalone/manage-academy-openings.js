@@ -386,13 +386,14 @@
                 return this.userHasEdited;
             },
             exitWarningOkClick: function () {
-              this.presentExitWarning = false;
-              this.userHasEdited = false;
-              this.editRecord = false;
-              this.searchUrn = '';
-              this.presentDetail = false;
-              if (this.anchorTarget !== '') {
-                $(window).off('beforeunload');
+              $(window).off('beforeunload');
+              if (this.anchorTarget === '') {
+                this.presentExitWarning = false;
+                this.userHasEdited = false;
+                this.editRecord = false;
+                this.searchUrn = '';
+                this.presentDetail = false;
+              } else {
                 window.location.href = this.anchorTarget;
               }
             },
