@@ -74,6 +74,7 @@
             },
             methods: {
                 showRejectionsModal: function () {
+                    this.clearErrors();
                     this.showRejections = true;
                     // Focus on main CTA when modal available
                     $(document).ready(function() {
@@ -302,6 +303,7 @@
                         return;
                     } else {
                         this.pendingRejection = true;
+                        this.clearErrors();
                     }
 
                 },
