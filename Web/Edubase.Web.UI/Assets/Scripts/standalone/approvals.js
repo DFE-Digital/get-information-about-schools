@@ -19,6 +19,7 @@
                 pageSize: defaults.pageSize,
                 invalidReason: false,
                 approvalError: false,
+                rejectionError: false,
                 reasonLength: false,
                 noneSelectedError: false,
                 pendingRejection: false,
@@ -73,6 +74,7 @@
             },
             methods: {
                 showRejectionsModal: function () {
+                    this.clearErrors();
                     this.showRejections = true;
                     // Focus on main CTA when modal available
                     $(document).ready(function() {
@@ -185,6 +187,7 @@
                     this.getChangesData();
                 },
                 confirmRejection: function () {
+                    this.clearErrors();
                     var self = this;
                     this.apiError = '';
                     this.invalidReason = $('#reason').val().length < 1;
@@ -194,6 +197,8 @@
                         .filter(':checked');
 
                     this.noneSelectedError = selectedItems.length === 0;
+
+                    this.errorFocus();
 
                     if (this.invalidReason || this.noneSelectedError || this.reasonLength) {
                         return;
@@ -234,6 +239,7 @@
                     }
                 },
                 approveSelection: function () {
+                    this.clearErrors();
                     var self = this;
                     this.apiError = '';
                     var selectedItems = $('#changes-table').find('.boldened-checkbox')
@@ -242,6 +248,8 @@
                     this.approvalError = (selectedItems.length === 0);
                     this.itemsConfirmedRejected = false;
                     this.itemsConfirmedRemoved = false;
+
+                    this.errorFocus();
 
                     if (this.approvalError) {
                         return;
@@ -281,6 +289,47 @@
                             }
                         });
                     }
+                },
+                rejectSelection: function(){
+                    this.clearErrors();
+
+                    var selectedItems = $('#changes-table').find('.boldened-checkbox')
+                        .filter(':checked');
+                    this.rejectionError = (selectedItems.length === 0);
+
+                    this.errorFocus();
+
+                    if (this.rejectionError) {
+                        return;
+                    } else {
+                        this.pendingRejection = true;
+                        this.clearErrors();
+                    }
+
+                },
+                errorFocus: function(){
+                    if ($('.error-summary').length) {
+                        window.document.title = "Error: Review and approve changes - GOV.UK";
+                        $('.error-summary').focus();
+                    } else {
+                        window.setTimeout(function(){
+                            if ($('.error-summary').length) {
+                                window.document.title = "Error: Review and approve changes - GOV.UK";
+                                $('.error-summary').focus();
+                            }
+                        },500);
+                    }
+                },
+                clearErrors: function(){
+                    window.document.title = "Review and approve changes - GOV.UK";
+                    this.approvalError = false;
+                    this.rejectionError = false;
+                    this.noneSelectedError = false;
+                    this.invalidReason = false;
+                    this.reasonLength = false;
+                    this.apiError = false;
+                    this.itemsConfirmedRejected = false;
+                    this.itemsConfirmedRemoved = false;
                 }
             }
         });

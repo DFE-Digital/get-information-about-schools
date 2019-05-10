@@ -3,21 +3,8 @@
     ViewBag.bodyClasses = "change-approvals";
 }
 
-
-
 <div id="change-approvals" v-cloak>
-<div v-show="Object.keys(apiBork).length> 0">
-    <h1 class="heading-xlarge">Sorry, something went wrong</h1>
-    <p>Please try again later.</p>
-    <p>A report of the error has been sent to our technical team.</p>
 
-    <p class="api-error-code" v-show="apiBork.hasOwnProperty('errorCode')">Error code: {{apiBork.errorCode}}</p>
-    <div v-show="apiBork.hasOwnProperty('technicalDetails')">
-        <code>
-            {{apiBork.technicalDetails}}
-        </code>
-    </div>
-</div>
     <div v-show="Object.keys(apiBork).length === 0">
         <div class="breadcrumbs">
             <ul>
@@ -29,80 +16,109 @@
                 </li>
             </ul>
         </div>
+
+        <div v-if="approvalError || rejectionError || noneSelectedError || invalidReason || reasonLength || apiError.length > 0" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+            <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
+            <ul class="error-summary-list">
+                <li v-if="approvalError">
+                    <a href="#">Please select some changes to approve</a>
+                </li>
+                <li v-if="rejectionError">
+                    <a href="#">Please select some changes to reject</a>
+                </li>
+                <li v-if="noneSelectedError">
+                    <a href="#">Please select some changes to reject</a>
+                </li>
+                <li v-if="invalidReason">
+                    <a href="#rejection-reason">Please enter a reason for the rejection</a>
+                </li>
+                <li v-if="reasonLength">
+                    <a href="#rejection-reason">Please enter a reason less than 1024 characters</a>
+                </li>
+                <li v-if="apiError.length > 0">
+                    <a href="#" v-html="apiError"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div v-show="Object.keys(apiBork).length> 0">
+        <h1 class="heading-xlarge">Sorry, something went wrong</h1>
+        <p>Please try again later.</p>
+        <p>A report of the error has been sent to our technical team.</p>
+
+        <p class="api-error-code" v-show="apiBork.hasOwnProperty('errorCode')">Error code: {{apiBork.errorCode}}</p>
+        <div v-show="apiBork.hasOwnProperty('technicalDetails')">
+            <code>
+                {{apiBork.technicalDetails}}
+            </code>
+        </div>
+    </div>
+
+    <div v-show="Object.keys(apiBork).length === 0">
         <div class="grid-row">
             <div class="column-full">
-                <div class="wait-spinner" v-show="isProcessing" data-live="polite">
-                    <p class="visually-hidden">Please wait</p>
-                </div>
-                <h1 class="heading-xlarge" v-show="!isProcessing">Items for approval</h1>
-                <div class="pending-updates-message js-dismiss-message" v-bind:class="[itemsConfirmedRemoved ? '' : 'visually-hidden']" role="alert">
+                <div v-if="itemsConfirmedRemoved" class="pending-updates-message js-dismiss-message" role="alert">
                     <div class="tick"></div>
                     <p aria-live="polite">{{ approvalMessage }}</p>
-                    <a class="cross" href="#" v-on:click="itemsConfirmedRemoved = false" v-show="itemsConfirmedRemoved"><span class="visually-hidden">Dismiss notification</span></a>
+                    <a class="cross" href="#" v-on:click="itemsConfirmedRemoved = false" v-show="itemsConfirmedRemoved"><span class="hidden">Dismiss notification</span></a>
                 </div>
-
-                <div class="pending-updates-message js-dismiss-message" v-bind:class="[itemsConfirmedRejected ? '' : 'visually-hidden']" role="alert">
+                <div v-if="itemsConfirmedRejected" class="pending-updates-message js-dismiss-message" role="alert">
                     <div class="tick"></div>
                     <p>{{ rejectionMessage }}</p>
                     <a class="cross" href="#" v-on:click="itemsConfirmedRejected = false" v-show="itemsConfirmedRejected"><span class="visually-hidden">Dismiss notification</span></a>
                 </div>
+                <div class="wait-spinner" v-show="isProcessing" data-live="polite">
+                    <p class="visually-hidden">Please wait</p>
+                </div>
+                <h1 class="heading-xlarge" v-show="!isProcessing">Items for approval</h1>
                 <p v-show="!isProcessing">
                     You have <span class="heading-xlarge count">{{currentCount}}</span> items that require your approval.
                 </p>
 
                 <div class="approve-reject" v-show="!isProcessing">
                     <form>
-                        <div class="error-summary" v-show="approvalError || noneSelectedError || apiError.length > 0">
-                            <p class="error-message" v-show="approvalError">Please select some changes to approve</p>
-                            <p class="error-message" v-show="noneSelectedError">Please select some changes to reject</p>
-                            <p class="error-message" v-show="apiError.length > 0" v-html="apiError"></p>
-                        </div>
                         <div class="submit-cancel-panel approve-reject" v-show="!pendingRejection">
-                            <button type="submit" name="action" value="" class="button" v-on:click.prevent="approveSelection" :disabled="noItemsSelected">Approve</button>
-                            <button type="submit" name="action" value="" class="button" :disabled="noItemsSelected"
-                                    v-on:click.prevent="pendingRejection = true, approvalError = false, itemsConfirmedRejected = false,itemsConfirmedRemoved = false, reason=''">Reject</button>
+                            <button type="submit" name="action" value="" class="button" v-on:click.prevent="approveSelection">Approve</button>
+                            <button type="submit" name="action" value="" class="button" v-on:click.prevent="rejectSelection">Reject</button>
                         </div>
 
                         <div v-show="pendingRejection">
-                            <div v-bind:class="['form-group', (invalidReason || reasonLength) ? 'error' : '']">
+                            <div v-bind:class="['form-group', (invalidReason || reasonLength) ? 'error' : '']" id="rejection-reason">
                                 <label for="reason">Reason for rejecting updates</label>
-                                <span class="error-message" v-show="invalidReason">Please enter a reason for the rejection.</span>
+                                <span class="error-message" v-show="invalidReason">Please enter a reason for the rejection</span>
                                 <span class="error-message" v-show="reasonLength">Please enter a reason less than 1024 characters</span>
-                                <textarea id="reason" rows="7" class="form-control-3-4" v-model="reason"></textarea>
+                                <textarea id="reason" rows="7" class="form-control form-control-3-4" v-model="reason"></textarea>
                                 <div class="approvals-canned">
                                     <a href="#" v-on:click.prevent="showRejectionsModal" class="plus-link">Add a preset reason</a>
                                 </div>
                             </div>
                             <div class="button-row">
-                                <button type="submit" name="action" class="button mobile-full-width" v-on:click.prevent="confirmRejection" :disabled="$.trim(reason).length == 0">Submit</button>
-                                <button type="submit" name="action" class="button button-secondary cancel mobile-full-width"
-                                        v-on:click.prevent="pendingRejection = false, approvalError = false, noneSelectedError = false, apiError = false">Cancel</button>
+                                <button type="submit" name="action" class="button mobile-full-width" v-on:click.prevent="confirmRejection">Submit</button>
+                                <button type="submit" name="action" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="pendingRejection = false; reason=''; clearErrors()">Cancel</button>
                             </div>
                         </div>
-
-
                     </form>
-                    <div>
-                        <div class="pagination" v-show="!isProcessing">
-                            <p class="pagination-info">
-                                Showing
-                                <span class="pagination-range">
-                                    {{ paginationDescription }}
-                                </span>
-                                of
-                                <span class="result-count">{{currentCount}}</span>
-                            </p>
-                            <ul class="pagination-links">
-                                <li v-if="currentPage > 0  && totalPages > 1"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
-                                <li v-if="totalPages > 1" v-for="item in totalPages">
-                                    <span v-if="item === currentPage + 1" class="numeric-pagination go-nowhere">{{ item }}</span>
-                                    <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(item -1)">{{ item }}</a>
-                                </li>
-                                <li v-if="currentPage +1 < totalPages && totalPages > 1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
 
-                                <li v-if="totalPages > 1"><a href="#" class="pagination-next" style="margin-left:5px;" v-on:click.prevent="showAll()">Show all</a></li>
-                            </ul>
-                        </div>
+                    <div class="pagination" v-show="!isProcessing">
+                        <p class="pagination-info">
+                            Showing
+                            <span class="pagination-range">
+                                {{ paginationDescription }}
+                            </span>
+                            of
+                            <span class="result-count">{{currentCount}}</span>
+                        </p>
+                        <ul class="pagination-links">
+                            <li v-if="currentPage > 0  && totalPages > 1"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
+                            <li v-if="totalPages > 1" v-for="item in totalPages">
+                                <span v-if="item === currentPage + 1" class="numeric-pagination go-nowhere">{{ item }}</span>
+                                <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(item -1)">{{ item }}</a>
+                            </li>
+                            <li v-if="currentPage +1 < totalPages && totalPages > 1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
+
+                            <li v-if="totalPages > 1"><a href="#" class="pagination-next" style="margin-left:5px;" v-on:click.prevent="showAll()">Show all</a></li>
+                        </ul>
                     </div>
                     <div class="changes-list-wrapper" v-show="!isProcessing">
                         <table class="edubase-table approval-changes sortable-table" id="changes-table">
@@ -156,29 +172,31 @@
     </div>
     <div class="modal-overlay" v-show="showRejections"></div>
     <div class="modal-content" id="modal-content" v-show="showRejections" role="dialog" aria-describedby="modal-desc">
-        <a class="modal-exit" href="#" v-on:click.prevent="showRejections=false; reasonIds=[]">Close</a>
+        <a class="modal-exit" href="#" v-on:click.prevent="noReasonSelectedError=false; showRejections=false; reasonIds=[]">Close</a>
         <div class="modal-inner">
             <h2 class="heading-medium" tabindex="0" id="modal-label">Add one or more reasons for rejection</h2>
-            <p class="error-message" v-show="noReasonSelectedError" tabindex="0" id="model-desc">Please select at least one reason to add.</p>
-            <div class="govuk-option-select">
-                <div class="container-head">
-                    <div class="option-select-label hard--left">Reasons</div>
-                </div>
-                <div class="options-container">
-                    <fieldset>
-                        <div class="filter-wrapper" v-for="(reason, index) in cannedRejections">
-                            <input :id="'reason-' + reason.id" class="filter-input" :value="reason.id" type="checkbox" v-model="reasonIds">
-                            <label :for="'reason-'+ reason.id" class="filter-radio">
-                                {{reason.title}}
-                            </label>
-                        </div>
-                    </fieldset>
+            <div v-bind:class="{ error: noReasonSelectedError }">
+                <p class="error-message" v-show="noReasonSelectedError" tabindex="0" id="model-desc">Please select at least one reason to add.</p>
+                <div class="govuk-option-select">
+                    <div class="container-head">
+                        <div class="option-select-label hard--left">Reasons</div>
+                    </div>
+                    <div class="options-container">
+                        <fieldset>
+                            <div class="filter-wrapper" v-for="(reason, index) in cannedRejections">
+                                <input :id="'reason-' + reason.id" class="filter-input" :value="reason.id" type="checkbox" v-model="reasonIds">
+                                <label :for="'reason-'+ reason.id" class="filter-radio">
+                                    {{reason.title}}
+                                </label>
+                            </div>
+                        </fieldset>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="button-row">
             <a href="#" class="button mobile-full-width" v-on:click.prevent="selectReason">OK</a>
-            <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="showRejections = false; reasonIds =[]">Cancel</a>
+            <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="noReasonSelectedError=false; showRejections = false; reasonIds =[]">Cancel</a>
         </div>
     </div>
 </div>
