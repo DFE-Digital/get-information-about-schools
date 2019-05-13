@@ -3,6 +3,7 @@
     ViewBag.Title = "Manage academy openings";
     ViewBag.bodyClasses = "manage-academy-openings";
 }
+
 <div class="breadcrumbs">
     <ul>
         <li>
@@ -15,6 +16,22 @@
 </div>
 
 <div id="academy-opening-app" v-cloak>
+
+    <!-- Error summary -->
+    <div v-show="Object.keys(apiError).length === 0">
+        <div v-if="recordUpdateErrors.errors || searchError" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+            <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
+            <ul class="error-summary-list">
+                <li class="error-message" v-for="(item, index) in recordUpdateErrors.errors">
+                    {{item.message}}
+                </li>
+                <li v-if="searchError">
+                    <a href="#academy-search-field">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
     <!-- Error message -->
     <div v-show="Object.keys(apiError).length>0">
         <h1 class="heading-xlarge">Sorry, something went wrong</h1>
@@ -27,16 +44,6 @@
                 {{apiError.technicalDetails}}
             </code>
         </div>
-    </div>
-
-    <!-- Error summary -->
-    <div class="error-summary" v-show="recordUpdateErrors.errors">
-        <h2 class="error-summary-heading heading-medium">Error updating record</h2>
-        <ul class="error-summary-list">
-            <li class="error-message" v-for="(item, index) in recordUpdateErrors.errors">
-                {{item.message}}
-            </li>
-        </ul>
     </div>
 
     <!-- Show when no API errors -->
@@ -52,18 +59,6 @@
                 <h1 class="heading-xlarge">Manage academy openings</h1>
                 <div aria-live="polite" class="wait-spinner" v-show="isProcessing">
                     <p class="visually-hidden">Please wait</p>
-                </div>
-                <div class="error-summary" v-show="searchError" v-cloak>
-                    <h2 class="heading-medium error-summary-heading" v-show="searchError">No matching establishment</h2>
-                    <div v-show="searchError">
-                        <p>You have entered an invalid <abbr title="Unique Reference Number">URN</abbr></p>
-                        <ul>
-                            <li class="error-message">
-                                <a href="#academy-search-field">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a>
-                            </li>
-                        </ul>
-                    </div>
-
                 </div>
             </div>
 
@@ -177,7 +172,7 @@
                                         <span class="error-message" v-show="searchError">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
                                         <input type="text" class="form-control  desktop-inline" id="academy-search-field" v-model.trim="searchUrn" />
 
-                                        <input type="submit" class="button inline-submit" value="Find establishment" v-on:click.prevent="validateUrn" />
+                                        <input type="submit" class="button inline-submit" value="Search for establishment" v-on:click.prevent="validateUrn" />
                                     </div>
 
                                 </form>
