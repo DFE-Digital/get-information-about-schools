@@ -273,6 +273,7 @@
                 }
             },
             updateRecord: function () {
+                this.clearErrors();
                 var d = parseInt(this.updateDateDay, 10),
                     m = parseInt(this.updateDateMonth, 10),
                     y = parseInt(this.updateDateYear, 10),
@@ -285,6 +286,8 @@
                     isNaN(d)|| d < 1 || d > 31 || this.updateDateDay === '' ||
                     isNaN(m) || m < 1 || m > 12 || this.updateDateMonth === '' ||
                     isNaN(y) || y < 2000 || y > 2100 || this.updateDateYear === '');
+
+                this.errorFocus();
 
                 if (!this.updateNameError && !this.openDateError) {
                     var urn = this.searchUrn;
@@ -389,16 +392,17 @@
                 return this.userHasEdited;
             },
             exitWarningOkClick: function () {
-              $(window).off('beforeunload');
-              if (this.anchorTarget === '') {
-                this.presentExitWarning = false;
-                this.userHasEdited = false;
-                this.editRecord = false;
-                this.searchUrn = '';
-                this.presentDetail = false;
-              } else {
-                window.location.href = this.anchorTarget;
-              }
+                this.clearErrors();
+                $(window).off('beforeunload');
+                if (this.anchorTarget === '') {
+                    this.presentExitWarning = false;
+                    this.userHasEdited = false;
+                    this.editRecord = false;
+                    this.searchUrn = '';
+                    this.presentDetail = false;
+                } else {
+                    window.location.href = this.anchorTarget;
+                }
             },
             errorFocus: function(){
                 if ($('.error-summary').length) {
@@ -416,6 +420,8 @@
             clearErrors: function(){
                 window.document.title = "Manage academy openings - GOV.UK";
                 this.searchError = false;
+                this.updateNameError = false;
+                this.openDateError = false;
             },
             attachUnload: function() {
                 this.userHasEdited = true;

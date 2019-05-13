@@ -19,7 +19,7 @@
 
     <!-- Error summary -->
     <div v-show="Object.keys(apiError).length === 0">
-        <div v-if="recordUpdateErrors.errors || searchError" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+        <div v-if="recordUpdateErrors.errors || searchError || updateNameError || openDateError" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
             <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
             <ul class="error-summary-list">
                 <li class="error-message" v-for="(item, index) in recordUpdateErrors.errors">
@@ -27,6 +27,12 @@
                 </li>
                 <li v-if="searchError">
                     <a href="#academy-search-field">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a>
+                </li>
+                <li v-if="updateNameError">
+                    <a href="#est-name">Please enter the establishment name</a>
+                </li>
+                <li v-if="openDateError">
+                    <a href="#opening-date">Please enter the establishment opening date</a>
                 </li>
             </ul>
         </div>
@@ -179,7 +185,7 @@
 
                                 <!-- Search results -->
                                 <div v-show="presentDetail" v-if="od.urn" class="openings-single-result">
-                                    <h2 class="heading-small">Establishment Found</h2>
+                                    <h2 class="heading-small">Establishment found</h2>
                                     <div class="urn-result">
                                         <h4 class="heading-small">Opening date: {{od.displayDate }}</h4>
                                         <dl>
@@ -194,7 +200,7 @@
                                             <dt>Predecessor name:</dt>
                                             <dd>{{ od.predecessorName }}</dd>
                                         </dl>
-                                        <a href="#" class="button button-secondary" v-on:click.prevent="editEstab(od.urn)">Edit</a>
+                                        <a href="#" class="button" v-on:click.prevent="editEstab(od.urn)">Edit opening detail</a>
                                     </div>
                                 </div>
                             </div>
@@ -210,10 +216,6 @@
                 <h1 class="heading-large">Edit opening detail</h1>
             </div>
             <div class="column-half">
-                <div class="button-row">
-                    <input type="submit" class="button opening-save" value="Save" v-on:click.prevent="updateRecord" />
-                    <a href="#" class="button button-secondary" v-on:click="cancelEditClick">Cancel</a>
-                </div>
                 <div class="form-group">
                     <label class="form-label" for="est-urn">Unique Reference Number (URN)</label>
                     <input class="form-control" type="text" :value="od.urn" disabled="disabled" id="est-urn" />
@@ -221,7 +223,7 @@
 
                 <div v-bind:class="['form-group',  updateNameError ? 'error' : '' ]">
                     <label class="form-label" for="est-name">Establishment name </label>
-                    <span class="error-message" v-show="updateNameError">Please enter the establishment name</span>
+                    <span class="error-message" v-if="updateNameError">Please enter the establishment name</span>
                     <input class="form-control" type="text" v-model="updateName" v-on:change="attachUnload" id="est-name" />
                 </div>
 
@@ -231,8 +233,8 @@
                 </div>
 
                 <div v-bind:class="['form-group range-group', openDateError ? 'error' : '' ]">
-                    <fieldset id="merger-date">
-                        <span v-bind:class="['error-message']" v-show="openDateError">Please enter the establishment opening date</span>
+                    <fieldset id="opening-date">
+                        <span v-bind:class="['error-message']" v-if="openDateError">Please enter the establishment opening date</span>
                         <legend>Opening date</legend>
                         <div class="form-hint">For example, 20 03 2003</div>
 
