@@ -1,7 +1,7 @@
 ﻿@using VM = Edubase.Web.UI.Models.Tools.IndSchoolsSearchViewModel;
 @model VM
 @{
-    ViewBag.Title = "View independent schools’ significant dates";
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "View independent schools’ significant dates");
     ViewBag.bodyClasses = "";
 }
 

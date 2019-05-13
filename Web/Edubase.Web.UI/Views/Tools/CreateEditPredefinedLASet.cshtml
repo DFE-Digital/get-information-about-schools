@@ -1,6 +1,6 @@
 ﻿@model PredefinedLASetViewModel
 @{
-    ViewBag.Title = Model.PageTitle;
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, Model.PageTitle);
     ViewBag.bodyClasses = "independent-sigdates-edit";
 }
 
