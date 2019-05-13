@@ -1,30 +1,28 @@
 ﻿@model Edubase.Web.UI.Models.DataQuality.EditDataQualityStatusViewModel
 @{
-    ViewBag.Title = "Update data status";
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Update data status");
     ViewBag.bodyClasses = "data-quality";
 }
 
-<div class="grid-row">
-    <div class="column-full">
-        <div class="breadcrumbs">
-            <ul>
-                <li>
-                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-                </li>
-                <li>
-                    @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
-                </li>
-                <li>
-                    @Html.ActionLink("Data status", "ViewStatus", "DataQuality", new { area = "" }, null)
-                </li>
-            </ul>
-        </div>
-        @Html.ValidationSummary("Invalid date", new {@class = "error-summary"})
-        <h1 class="heading-intro">
-            Update data status
-        </h1>
+<div class="breadcrumbs">
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+        <li>
+            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+        </li>
+        <li>
+            @Html.ActionLink("Data status", "ViewStatus", "DataQuality", new { area = "" }, null)
+        </li>
+    </ul>
+</div>
 
-    </div>
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
+
+<h1 class="heading-intro">Update data status</h1>
+
+<div class="grid-row">
     @using (Html.BeginForm())
     {
         <div class="column-half">
@@ -48,7 +46,6 @@
     }
 </div>
 
-
 @section ViewScripts
 {
     <script>
@@ -61,15 +58,6 @@
                 exitAttached = true;
             }
         });
-
-        (function () {
-            var $btn = $("button");
-            var $inputs = $("input");
-            var inputs = $.makeArray($inputs);
-            var toggle = function () { $btn.prop("disabled", inputs.some(function (x) { return $(x).val() == ""; })); };
-            toggle();
-            $inputs.on("keyup change", toggle);
-        })();
 
     </script>
 }
