@@ -13,6 +13,8 @@
     </ul>
 </div>
 
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
+
 <div class="grid-row">
     <div class="column-full results-heading">
         <h1 class="heading-xlarge">
@@ -60,7 +62,7 @@
                     @Html.ValidationMessageFor(x => x.SelectedLocalAuthorityIds)
 
 
-                    <div id="la-id-target">
+                    <div id="la-id-target" class="la-id-target form-control">
 
                         @foreach (var id in Model.SelectedLocalAuthorityIds)
                         {
@@ -86,6 +88,7 @@
 </div>
 
 @section ViewScripts{
+    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
     <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
     <script>
         window.localAuthorities = @Html.Json(Model.LocalAuthorities);
