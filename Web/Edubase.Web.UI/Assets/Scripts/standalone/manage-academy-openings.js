@@ -267,6 +267,8 @@
                 if (!this.searchError) {
                     this.openingDetail();
                     this.presentDetail = true;
+                } else {
+                    this.errorFocus();
                 }
             },
             updateRecord: function () {
@@ -396,6 +398,19 @@
               } else {
                 window.location.href = this.anchorTarget;
               }
+            },
+            errorFocus: function(){
+                if ($('.error-summary').length) {
+                    window.document.title = "Error: Manage academy openings - GOV.UK";
+                    $('.error-summary').focus();
+                } else {
+                    window.setTimeout(function(){
+                        if ($('.error-summary').length) {
+                            window.document.title = "Error: Manage academy openings - GOV.UK";
+                            $('.error-summary').focus();
+                        }
+                    },500);
+                }
             },
             attachUnload: function() {
                 this.userHasEdited = true;
