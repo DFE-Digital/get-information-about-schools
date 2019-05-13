@@ -261,6 +261,7 @@
                 return urns;
             },
             validateUrn: function () {
+                this.clearErrors();
                 var validUrns = this.validUrns();
                 this.presentDetail = false;
                 this.searchError = validUrns.indexOf(Number(this.searchUrn)) === -1;
@@ -412,6 +413,10 @@
                     },500);
                 }
             },
+            clearErrors: function(){
+                window.document.title = "Manage academy openings - GOV.UK";
+                this.searchError = false;
+            },
             attachUnload: function() {
                 this.userHasEdited = true;
                 $(window).on('beforeunload', function (e) {
@@ -438,7 +443,7 @@
 
 
     $(window).on('tabChange', function () {
-        academyOpenings.searchError = false;
+        academyOpenings.clearErrors();
     });
     $('.horizontal-tabs-wrapper').tabs();
     function blockExits() {
