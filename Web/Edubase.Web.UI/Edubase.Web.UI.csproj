@@ -917,11 +917,7 @@
     <Content Include="Views\GOVUK\Partials\phase\beta.cshtml" />
     <Content Include="Views\GOVUK\Views\ga\google-analytics.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Prototype\TestView.cshtml" />
-    <Content Include="Views\Prototype\4778-school-search.cshtml" />
-    <Content Include="Views\Prototype\4720-create-school.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\EditDetails.cshtml" />
-    <Content Include="Views\Prototype\Placeholder.cshtml" />
     <Content Include="Views\Downloads\Index.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\Create.cshtml" />
     <Content Include="Views\Downloads\PreparingScheduledExtractPleaseWait.cshtml" />
@@ -959,13 +955,9 @@
     <Content Include="Areas\Establishments\Views\Establishment\EditIEBT.cshtml" />
     <Content Include="Views\Tools\BulkAcademies.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\EditLocation.cshtml" />
-    <Content Include="Views\Prototype\mergeSchools.cshtml" />
     <Content Include="Views\Tools\MergersTool.cshtml" />
     <Content Include="Views\Approvals\Index.cshtml" />
-    <Content Include="Views\Prototype\AddressLookup.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DateTimeViewModel.cshtml" />
-    <Content Include="Views\Prototype\HelpIcon.cshtml" />
-    <Content Include="Views\Prototype\dont-leave.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SharedGovernorViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\GovernorViewModel.cshtml" />
     <Content Include="Views\Search\Partials\_EstablishmentSearch.cshtml" />
@@ -974,9 +966,7 @@
     <Content Include="Views\Search\Partials\_HelpText.cshtml" />
     <Content Include="Views\Search\Partials\_SearchHeader.cshtml" />
     <Content Include="Views\Search\LocationDisambiguation.cshtml" />
-    <Content Include="Views\Prototype\EstablishmentLinks.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\GovernorGridViewModel.cshtml" />
-    <Content Include="Views\Prototype\location-demo.cshtml" />
     <Content Include="Views\DataQuality\EditStatus.cshtml" />
     <Content Include="Views\DataQuality\ViewStatus.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\Partials\TabHelpdesk.cshtml" />
@@ -990,7 +980,6 @@
     <Content Include="Views\Shared\FullErrorDetail.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AgeRangeFilterViewModel.cshtml" />
     <Content Include="Views\Shared\_GenericPaginationV2.cshtml" />
-    <Content Include="Views\Prototype\TabsTestPage.cshtml" />
     <Content Include="Views\Tools\ApiSessionRecorder.cshtml" />
     <Content Include="Views\Glossary\Index.cshtml" />
     <Content Include="Views\Glossary\CreateEdit.cshtml" />

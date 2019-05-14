@@ -9,7 +9,6 @@ namespace Edubase.Web.UI
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.MapMvcAttributeRoutes();
-            routes.MapRoute("prototype", "prototype/{viewName}", new { controller = "Prototype", action = "Index", area = "" });
         }
     }
 
