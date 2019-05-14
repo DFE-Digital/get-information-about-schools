@@ -1,7 +1,7 @@
 ﻿@using VM = Edubase.Web.UI.Models.Tools.IndSchoolsSearchViewModel;
 @model VM
 @{
-    ViewBag.Title = "View independent schools’ significant dates";
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "View independent schools’ significant dates");
     ViewBag.bodyClasses = "";
 }
 
@@ -14,12 +14,13 @@
     </ul>
 </div>
 
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
+
 <div class="independent-sigdates-search">
 
     <div class="grid-row">
         <div class="column-full">
             <h1 class="heading-xlarge">View independent schools' significant dates</h1>
-            @Html.ValidationSummary("Information missing or incorrect or missing details. To complete the record:", new { @class = "error-summary" })
             <p>
                 Use this tool to view independent schools' &lsquo;Next general action
                 required&rsquo; or &lsquo;Next action required by welfare&rsquo; date.
@@ -52,7 +53,7 @@
 
             <div class="form-group form-control-3-4 ">
                 @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Add local authorities", new { @class = "visuallyhidden", @for = "LocalAuthorityToAdd" })
-                <div id="la-id-target">
+                <div id="la-id-target" class="la-id-target form-control">
                     @foreach (var id in Model.SelectedLocalAuthorityIds)
                     {
                         var la = Model.LocalAuthorities.SingleOrDefault(x => x.Id == id);
@@ -92,6 +93,7 @@
 </div>
 
 @section ViewScripts{
+    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
     <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
     <script>
         window.localAuthorities = @Html.Json(Model.LocalAuthorities);
