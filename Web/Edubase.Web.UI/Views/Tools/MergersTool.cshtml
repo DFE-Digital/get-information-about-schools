@@ -4,7 +4,7 @@
 }
 
 <div id="mergers-app" v-cloak>
-    <div v-show="Object.keys(apiError).length> 0">
+    <div v-show="commitErrors == '' && Object.keys(apiError).length> 0">
         <h1 class="heading-xlarge">Sorry, something went wrong</h1>
         <p>Please try again later.</p>
         <p>A report of the error has been sent to our technical team.</p>
@@ -16,7 +16,7 @@
             </code>
         </div>
     </div>
-    <div v-show="Object.keys(apiError).length === 0">
+    <div v-show="commitErrors != '' || Object.keys(apiError).length === 0">
         <div class="breadcrumbs">
             <ul>
                 <li>
