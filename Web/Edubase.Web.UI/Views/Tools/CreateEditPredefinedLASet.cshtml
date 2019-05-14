@@ -1,4 +1,4 @@
-﻿@model PredefinedLASetViewModel
+@model PredefinedLASetViewModel
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, Model.PageTitle);
     ViewBag.bodyClasses = "independent-sigdates-edit";
@@ -58,7 +58,7 @@
                 </div>
 
                 <div class="form-group push--bottom @Html.ValidationCssClassFor(x => x.SelectedLocalAuthorityIds)">
-                    @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Local authorities", new { @class = "form-label", @for="LocalAuthorityToAdd" })
+                    @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Local authorities", new { @id=nameof(Model.SelectedLocalAuthorityIds), @class = "form-label", @for="LocalAuthorityToAdd" })
                     @Html.ValidationMessageFor(x => x.SelectedLocalAuthorityIds)
 
 
