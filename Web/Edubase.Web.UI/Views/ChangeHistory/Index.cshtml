@@ -1,6 +1,6 @@
 ﻿@model ChangeHistoryViewModel
 @{
-    ViewBag.Title = "Search change history";
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Search change history");
     ViewBag.bodyClasses = "search-changes schools-search-page";
 }
 <div class="breadcrumbs">
@@ -14,8 +14,9 @@
     </ul>
 </div>
 
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
+
 <h1 class="heading-xlarge">Change history</h1>
-@Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
 
 <div class="grid-row" id="change-history-app">
     <div class="column-full">
@@ -273,4 +274,3 @@
     </script>
 
 }
-
