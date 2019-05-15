@@ -39,7 +39,7 @@ namespace Edubase.Web.UI.Models
         public List<LinkAction> GetCreateActions(HtmlHelper htmlHelper)
         {
             var retVal = new List<LinkAction>();
-            if (UserCanConvertAcademyTrusts) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Convert academy trusts", "GroupConvertSAT2MAT"), Description = "Convert a single academy trust into a multi academy trust." });
+            if (UserCanConvertAcademyTrusts) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Convert academy trusts", "GroupConvertSAT2MAT"), Description = "Convert a single-academy trust into a multi-academy trust." });
             if (UserCanBulkCreateAcademies) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Bulk create new academies", "BulkAcademies", "Tools"), Description = "Create records for multi-academy and single-academy trusts using information from companies house." });
             if (UserCanCreateAcademyTrustGroup) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new academy trust", "SearchCompaniesHouse", "Group", new { area = "Groups" }, null), Description = "Set up a new record for your school trust." });
             if (UserCanCreateChildrensCentreGroup) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new children's centre group or collaboration", "CreateNewGroup", "Group", new { area = "Groups", type = "ChildrensCentre" }, null), Description = "Create records for children's centre groups and children's centre collaborations for your local authority." });
@@ -69,11 +69,11 @@ namespace Edubase.Web.UI.Models
             if (UserCanManageAcademyOpenings) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Manage academy openings", "ManageAcademyOpenings"), Description = "View details of proposed-to-open academies. Edit academy names and opening dates." });
             if (UserCanViewIndependentSchoolsSignificantDates) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View independent schools' significant dates", "IndSchSearch"), Description = "View independent schools' &lsquo;Next general action required&rsquo; or &lsquo;Next action required by welfare&rsquo; dates." });
             retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("View data status", "ViewStatus", "DataQuality"), Description = "See when each team’s data was last updated. You can also confirm that your team's data is up to date." });
-            if (UserCanDownloadMATClosureReport) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View closed MAT details", "DownloadMATClosureReport"), Description = "This is a list of MATs that are currently open on GIAS but reported closed by Companies House." });
+            if (UserCanDownloadMATClosureReport) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View closed multi-academy trust details", "DownloadMATClosureReport"), Description = "This is a list of multi-academy trusts that are currently open on GIAS but reported closed by Companies House." });
             return retVal;
         }
 
-        
+
 
 
     }

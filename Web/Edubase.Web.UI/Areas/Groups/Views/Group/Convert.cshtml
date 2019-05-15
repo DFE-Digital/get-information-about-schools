@@ -1,6 +1,6 @@
 ﻿@model ConvertSATViewModel
 @{
-    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Convert single academy trusts to multi academy trusts");
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Convert single-academy trusts to multi-academy trusts");
 }
 
 <div class="breadcrumbs">
@@ -16,14 +16,14 @@
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-<h1 class="heading-xlarge">Convert to multi academy trust</h1>
+<h1 class="heading-xlarge">Convert to multi-academy trust</h1>
 
 @if (Model.Details == null)
 {
     <div class="grid-row">
         <div class="column-two-thirds">
-            <p>Convert single academy trusts into multi-academy trusts using either the current company record or a new one from companies house</p>
-            <h2 class="heading-medium">Current single academy trust</h2>
+            <p>Convert single-academy trusts into multi-academy trusts using either the current company record or a new one from companies house</p>
+            <h2 class="heading-medium">Current single-academy trust</h2>
         </div>
     </div>
 
@@ -55,7 +55,7 @@ else
 {
     <div class="grid-row">
         <div class="column-two-thirds">
-            <p>Check this is the correct single academy trust before converting. A new <abbr title="Unique Identifier">UID</abbr> will be created on conversion.</p>
+            <p>Check this is the correct single-academy trust before converting. A new <abbr title="Unique Identifier">UID</abbr> will be created on conversion.</p>
         </div>
     </div>
 
@@ -97,7 +97,7 @@ else
         <div class="grid-row">
             <div class="column-full">
                 <div class="form-group">
-                    @Html.GiasCheckboxFor(x => x.CopyGovernanceInfo, "Copy SAT governance to MAT")
+                    @Html.GiasCheckboxFor(x => x.CopyGovernanceInfo, "Copy single-academy trust governance to multi-academy trust")
                 </div>
 
                 @Html.RouteLink("« Go back", "GroupConvertSAT2MAT", null, new { @class = "button button-secondary cancel mobile-full-width" })
