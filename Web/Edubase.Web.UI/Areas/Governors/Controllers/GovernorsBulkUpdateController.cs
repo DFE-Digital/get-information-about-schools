@@ -42,23 +42,38 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 var fileName = FileHelper.GetTempFileName(Path.GetExtension(viewModel.BulkFile.FileName));
                 viewModel.BulkFile.SaveAs(fileName);
 
-                var result = await _governorsWriteService.BulkUpdateValidateAsync(fileName, User);
-                if (result.Success.GetValueOrDefault())
+                if (new FileInfo(fileName).Length > 1000000)
                 {
-                    var apiResponse = await _governorsWriteService.BulkUpdateProcessRequestAsync(result.Id, User);
-                    viewModel.WasSuccessful = apiResponse.Success;
-                    if(apiResponse.HasErrors) ModelState.AddModelError("BulkFile", apiResponse.Errors[0].Message);
+                    ModelState.AddModelError("BulkFile", "The file size is too large. Please use a file size smaller than 1MB");
                 }
                 else
                 {
-                    if (result.Errors != null && result.Errors.Any()) ModelState.AddModelError("BulkFile", result.Errors[0].Message);
-                    else ModelState.AddModelError("error-log", "Please download the error log to correct your data before resubmitting");
-                    viewModel.ErrorLogDownload = result.ErrorLogFile;
+                    var result = await _governorsWriteService.BulkUpdateValidateAsync(fileName, User);
+                    if (result.Success.GetValueOrDefault())
+                    {
+                        var apiResponse = await _governorsWriteService.BulkUpdateProcessRequestAsync(result.Id, User);
+                        viewModel.WasSuccessful = apiResponse.Success;
+                        if (apiResponse.HasErrors) ModelState.AddModelError("BulkFile", apiResponse.Errors[0].Message);
+                    }
+                    else
+                    {
+                        if (result.Errors != null && result.Errors.Any())
+                        {
+                            ModelState.AddModelError("BulkFile", result.Errors[0].Message);
+                        }
+                        else 
+                        {
+                            ModelState.AddModelError("error-log", "Please download the error log to correct your data before resubmitting");
+                            viewModel.ErrorLogDownload = result.ErrorLogFile;
+                        }
+                    }
+                    System.IO.File.Delete(fileName);
                 }
-
-                System.IO.File.Delete(fileName);
             }
-            else viewModel.BadFileType = true;
+            else
+            {
+                viewModel.BadFileType = true;
+            }
 
             return View("Index", viewModel);
         }
