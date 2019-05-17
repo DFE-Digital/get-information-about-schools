@@ -73,16 +73,6 @@
     .last-panel & {
         border-bottom: 0;
     }
-
-    .inline {
-        @media(max-width: 600px) {
-            .radio-button-wrap {
-                display: block;
-                margin-bottom: 32px;
-            }
-        }
-    }
-
 }
 
 .search-changes {
@@ -121,14 +111,6 @@
         float: none;
         margin: 20px 0;
         font-weight: bold;
-    }
-
-    .stacked-date-type-radios {
-        padding-top: 20px;
-        .radio-button-wrap {
-            display: block;
-            margin-bottom: 30px;
-        }
     }
 }
 

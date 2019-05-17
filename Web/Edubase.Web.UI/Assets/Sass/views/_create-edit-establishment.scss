@@ -143,11 +143,6 @@ legend {
         margin-bottom: 2px;
     }
 
-    .edubase-button-radio {
-        font-size: 19px;
-    }
-
-
     .hint-text, .form-hint {
         font-size: 19px;
     }
@@ -427,10 +422,6 @@ div.shared-governor-list {
      }
 }
 
-.chair-replace {
-
-}
-
 .establishment-links {
     .form-label,
     .edubase-button-checkbox {
@@ -471,25 +462,6 @@ div.shared-governor-list {
      @include media(mobile) {
         .radio-cell:before {
             padding-top: 8px;
-        }
-    }
-
-    .radio-button-wrap {
-        margin: 4px 0;
-    }
-    .edubase-button-radio {
-        position: relative;
-        top: 4px;
-        margin: 0;
-        &:before {
-            width: 24px;
-            height: 24px;
-            background-color: #fff;
-        }
-        &:after {
-            top: 6px;
-            left: 6px;
-            border-width: 8px;
         }
     }
 }
