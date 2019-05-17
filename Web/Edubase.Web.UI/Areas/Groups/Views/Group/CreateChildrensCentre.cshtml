@@ -222,7 +222,7 @@
                                 <tbody>
                                     <tr v-for="(estab, index) in centresInGroup">
                                         <td data-label="Lead centre" v-bind:class="['radio-cell',(estab.urn == groupLead)? 'highlight': '']" v-if="groupType === '8'">
-                                            <div class="multiple-choice">
+                                            <div class="multiple-choice multiple-choice--smaller">
                                                 <input type="radio" name="lead-centre" :value="estab.urn" v-bind:id="generateRadioId(estab.urn)" :checked="estab.urn == groupLead" v-model="groupLead"/>
                                                 <label v-bind:for="generateRadioId(estab.urn)">
                                                     <span class="visuallyhidden">Set as lead establishment</span>
