@@ -159,7 +159,7 @@
 
                     </div>
                     <div id="enter-number" class="hidden">
-                        <div id="enter-number-form-group" class="form-group panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
+                        <div id="enter-number-form-group" class="form-group panel panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
                             @Html.LabelFor(x => x.EstablishmentNumber, "Enter the establishment number", new {@class="form-label"})
                             @Html.ValidationMessageFor(x => x.EstablishmentNumber)
                             @Html.TextBoxFor(x => x.EstablishmentNumber, new { @class = "form-control form-control-1-2" })

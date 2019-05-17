@@ -21,11 +21,11 @@
             }
             else
             {
-                <span class="radio-button-wrap">
+                <div class="multiple-choice">
                     @Html.RadioButton(Model.Id.ToString(), Model.Id, Model.Selected,
-                        new {Name = "SelectedGovernorId", @class = "panel-trigger", @id = "gov-"+Model.Id, data_toggle_panel = "#expand-"+Model.Id })
-                    <label class="edubase-button-radio" for="gov-@Model.Id">@Model.FullName</label>
-                </span>
+                    new {Name = "SelectedGovernorId", @class = "panel-trigger", @id = "gov-"+Model.Id, data_toggle_panel = "#expand-"+Model.Id })
+                    <label for="gov-@Model.Id">@Model.FullName</label>
+                </div>
             }
         </div>
 

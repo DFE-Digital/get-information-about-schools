@@ -169,19 +169,18 @@
                             </p>
                             <div v-bind:class="['form-group special-snowflake-radios', mergerTypeError ? 'error' : '']">
                                 <span v-show="mergerTypeError" class="error-message">Please select almalgamation or merger.</span>
-                                <span class="radio-button-wrap">
+                                <div class="multiple-choice">
                                     <input id="radio-amalgamation" type="radio" name="radio-group" value="amalgamation" aria-describedby="almagamation-desc" v-model="mergerType">
-                                    <label class="edubase-button-radio" for="radio-amalgamation">
+                                    <label for="radio-amalgamation">
                                         Amalgamation
                                     </label>
-                                </span>
-                                <span class="radio-button-wrap">
+                                </div>
+                                <div class="multiple-choice">
                                     <input id="radio-merger" type="radio" name="radio-group" value="merger" aria-describedby="merger-desc" v-model="mergerType">
-                                    <label class="edubase-button-radio" for="radio-merger">
+                                    <label for="radio-merger">
                                         Merger
                                     </label>
-                                </span>
-
+                                </div>
                             </div>
                         </fieldset>
                     </div>

@@ -45,7 +45,7 @@
         @if (Model.LinkedEstablishments.LinkedEstablishmentSearch.HasResult)
         {
             var prefix = string.Concat(nameof(Model.LinkedEstablishments), "_", nameof(Model.LinkedEstablishments.LinkedEstablishmentSearch));
-            
+
 
         <p class="bold-xsmall">Establishment found</p>
         <p>@Model.LinkedEstablishments.LinkedEstablishmentSearch.Name</p>
@@ -110,12 +110,12 @@
 
                         @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
                         {
-                            <span class="radio-button-wrap">
+                            <div class="multiple-choice">
                                 @Html.RadioButtonFor(x => x.CCLeadCentreUrn, Model.LinkedEstablishments.Establishments[i].Urn, new { id = "CCLeadCentreUrn" + i })
-                                <label class="edubase-button-radio" for="CCLeadCentreUrn@(i)">
+                                <label for="CCLeadCentreUrn@(i)">
                                     Make this children's centre a lead centre
                                 </label>
-                            </span>
+                            </div>
                         }
 
                         @if (Model.LinkedEstablishments.Establishments[i].EditMode)

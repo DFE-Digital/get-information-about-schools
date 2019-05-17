@@ -24,7 +24,7 @@ namespace Edubase.Web.UI.Helpers
         /// <returns></returns>
         public static MvcHtmlString GiasRadioFor<TModel, TProperty>(
             this HtmlHelper<TModel> helper,
-            Expression<Func<TModel, TProperty>> expression, 
+            Expression<Func<TModel, TProperty>> expression,
             object value,
             string labelText = "",
             string additionalLabelClasses = "",
@@ -53,10 +53,10 @@ namespace Edubase.Web.UI.Helpers
 
             var tagBuilder = new TagBuilder("label");
             tagBuilder.MergeAttribute("for", id);
-            tagBuilder.MergeAttribute("class", string.Concat("edubase-button-radio ", additionalLabelClasses));
+            tagBuilder.MergeAttribute("class", string.Concat(additionalLabelClasses));
             tagBuilder.InnerHtml = labelText;
 
-            return new MvcHtmlString("<span class=\"radio-button-wrap\">" + radioButton.ToHtmlString() + tagBuilder + "</span>");
+            return new MvcHtmlString("<div class=\"multiple-choice\">" + radioButton.ToHtmlString() + tagBuilder + "</div>");
         }
 
 
@@ -83,11 +83,11 @@ namespace Edubase.Web.UI.Helpers
             {
                 id = attributes["id"].ToString();
             }
-            
+
             var labelBuilder = new TagBuilder("label");
 
             labelBuilder.MergeAttribute("for", id);
-            labelBuilder.MergeAttribute("class", string.Concat("edubase-button-radio ", additionalLabelClasses));
+            labelBuilder.MergeAttribute("class", string.Concat(additionalLabelClasses));
             labelBuilder.InnerHtml = labelText;
 
             var checkbox = new TagBuilder("input");
@@ -105,7 +105,7 @@ namespace Edubase.Web.UI.Helpers
                 }
             }
 
-            return new MvcHtmlString("<span class=\"radio-button-wrap\">" + checkbox + labelBuilder + "</span>");
+            return new MvcHtmlString("<div class=\"multiple-choice\">" + checkbox + labelBuilder + "</div>");
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace Edubase.Web.UI.Helpers
             var attributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
             var id = helper.ViewData.TemplateInfo.GetFullHtmlFieldId(name);
             if (attributes.ContainsKey("id"))
-            { 
+            {
                 id = attributes["id"].ToString();
             }
 
@@ -155,7 +155,7 @@ namespace Edubase.Web.UI.Helpers
         }
 
         /// <summary>
-        ///  Checkbox helper 
+        ///  Checkbox helper
         /// </summary>
         /// <param name="inputValue"></param>
         /// <param name="inputName"></param>
@@ -173,7 +173,7 @@ namespace Edubase.Web.UI.Helpers
         {
             var attributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
             var id = attributes["id"].ToString();
-      
+
             var labelBuilder = new TagBuilder("label");
 
             labelBuilder.MergeAttribute("for", id);
@@ -197,5 +197,3 @@ namespace Edubase.Web.UI.Helpers
         }
     }
 }
-
-
