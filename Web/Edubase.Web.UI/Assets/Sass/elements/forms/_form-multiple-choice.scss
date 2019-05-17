@@ -72,7 +72,8 @@
     @include opacity(0);
   }
 
-  [type=checkbox] + label::before {
+  [type=checkbox] + label::before,
+  [type=checkbox] + [type=hidden] + label::before {
     content: "";
     border: 2px solid;
     background: transparent;
@@ -83,7 +84,8 @@
     left: 0;
   }
 
-  [type=checkbox] + label::after {
+  [type=checkbox] + label::after,
+  [type=checkbox] + [type=hidden] + label::after {
     content: "";
     border: solid;
     border-width: 0 0 5px 5px;
@@ -107,12 +109,14 @@
     @include box-shadow(0 0 0 4px $focus-colour);
   }
 
-  [type=checkbox]:focus + label::before {
+  [type=checkbox]:focus + label::before,
+  [type=checkbox]:focus + [type=hidden] + label::before {
     @include box-shadow(0 0 0 3px $focus-colour);
   }
 
   // Selected state
-  input:checked + label::after {
+  input:checked + label::after,
+  input:checked + [type=hidden] + label::after {
     @include opacity(1);
   }
 

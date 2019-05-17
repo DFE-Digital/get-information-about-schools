@@ -82,26 +82,6 @@
         padding-top: 0;
     }
 
-    .expander-panel {
-        .checkbox-wrap {
-            width: 31%;
-            margin-right: 12px;
-            margin-left: 0;
-            padding-left: 3px;
-            float: left;
-            min-height: 48px;
-            padding-top: 11px;
-
-            &:nth-child(3n+1) {
-                clear: left;
-            }
-
-            @media(max-width: 980px) {
-                width: 49%;
-            }
-        }
-    }
-
     .long-label label {
         padding-top: 0px;
     }
