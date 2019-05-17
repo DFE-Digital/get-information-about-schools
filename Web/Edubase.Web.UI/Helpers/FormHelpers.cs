@@ -148,10 +148,10 @@ namespace Edubase.Web.UI.Helpers
 
             var tagBuilder = new TagBuilder("label");
             tagBuilder.MergeAttribute("for", id);
-            tagBuilder.MergeAttribute("class", string.Concat("edubase-button-checkbox ", additionalLabelClasses));
+            tagBuilder.MergeAttribute("class", string.Concat(additionalLabelClasses));
             tagBuilder.InnerHtml = labelText;
 
-            return new MvcHtmlString("<span class=\"checkbox-wrap\">" + checkbox.ToHtmlString() + tagBuilder + "</span>");
+            return new MvcHtmlString("<div class=\"multiple-choice\">" + checkbox.ToHtmlString() + tagBuilder + "</div>");
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace Edubase.Web.UI.Helpers
             var labelBuilder = new TagBuilder("label");
 
             labelBuilder.MergeAttribute("for", id);
-            labelBuilder.MergeAttribute("class", string.Concat("edubase-button-checkbox ", additionalLabelClasses));
+            labelBuilder.MergeAttribute("class", string.Concat(additionalLabelClasses));
             labelBuilder.InnerHtml = labelText;
 
             var checkbox = new TagBuilder("input");
@@ -192,7 +192,7 @@ namespace Edubase.Web.UI.Helpers
                 }
             }
 
-            return new MvcHtmlString("<span class=\"checkbox-wrap\">" + checkbox + labelBuilder + "</span>");
+            return new MvcHtmlString("<div class=\"multiple-choice\">" + checkbox + labelBuilder + "</div>");
 
         }
     }

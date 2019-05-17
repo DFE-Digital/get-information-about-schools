@@ -71,11 +71,10 @@
                         </div>
 
                         <div class="form-group">
-                            <span class="checkbox-wrap">
+                            <div class="multiple-choice">
                                 @Html.CheckBoxFor(x => x.GovernorSearchModel.IncludeHistoric, new {id = "IncludeHistoricRole0"})
-
-                                <label for="IncludeHistoricRole0" class="edubase-button-checkbox">Include historic records (governors who stepped down in the last 12 months)</label>
-                            </span>
+                                <label for="IncludeHistoricRole0">Include historic records (governors who stepped down in the last 12 months)</label>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -119,10 +118,10 @@
                             </div>
 
                             <div class="form-group">
-                                <span class="checkbox-wrap">
+                                <div class="multiple-choice">
                                     @Html.CheckBoxFor(x => x.GovernorSearchModel.IncludeHistoric, new { id = "IncludeHistoricRole1" })
-                                    <label for="IncludeHistoricRole1" class="edubase-button-checkbox">Include historic records (governors who stepped down in the last 12 months)</label>
-                                </span>
+                                    <label for="IncludeHistoricRole1">Include historic records (governors who stepped down in the last 12 months)</label>
+                                </div>
                             </div>
 
                             <div class="form-group">
@@ -153,10 +152,10 @@
                     </div>
                     <div class="panel panel-border-narrow" id="searchtype-gov-all-ref">
                         <div class="form-group">
-                            <span class="checkbox-wrap">
+                            <div class="multiple-choice">
                                 @Html.CheckBoxFor(x => x.GovernorSearchModel.IncludeHistoric, new {id = "IncludeHistoricRole2"})
-                                <label for="IncludeHistoricRole2" class="edubase-button-checkbox">Include historic records (governors who stepped down in the last 12 months)</label>
-                            </span>
+                                <label for="IncludeHistoricRole2">Include historic records (governors who stepped down in the last 12 months)</label>
+                            </div>
                         </div>
 
                         <div class="form-group">

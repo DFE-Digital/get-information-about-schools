@@ -30,10 +30,10 @@
 
                 if (Model.AllowReinstatement)
                 {
-                    <span class="checkbox-wrap">
+                    <div class="multiple-choice">
                         @Html.CheckBoxFor(x => x.Reinstate, new { id = nameof(Model.Reinstate) })
-                        @Html.LabelFor(x => x.Reinstate, "Re-instate as local governor", new { @for = nameof(Model.Reinstate), @class = "edubase-button-checkbox" })
-                    </span>
+                        @Html.LabelFor(x => x.Reinstate, "Re-instate as local governor", new { @for = nameof(Model.Reinstate) })
+                    </div>
                 }
 
                 <div class="form-group inline toggle-panels">
