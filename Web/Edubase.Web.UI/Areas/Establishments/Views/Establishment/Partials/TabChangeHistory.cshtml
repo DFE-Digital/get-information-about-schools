@@ -1,4 +1,4 @@
-﻿@using Edubase.Services.Domain
+@using Edubase.Services.Domain
 @model EstablishmentDetailViewModel
 
 @{
@@ -55,7 +55,7 @@
                 @foreach (var tableColumn in tableColumns)
                 {
                     <th scope="col">
-                        <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
+                        <a href="@Url.SortUrl(tableColumn.Item1, "#school-change-history")"
                         class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
                         aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
                     </th>
