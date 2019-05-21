@@ -59,11 +59,13 @@
                                     <fieldset>
                                     @foreach (var governorRole in Model.GovernorRoles)
                                     {
-                                        <input name="GovernorSearchModel.RoleId"
-                                        id="govrole-@governorRole.Id.ToString()" value="@governorRole.Id.ToString()" type="checkbox" class="filter-input" />
-                                        <label for="govrole-@governorRole.Id.ToString()" class="filter-radio">
-                                            @FormatHelpers.FirstCharToUpper(@governorRole.Name.ToLower())
-                                        </label>
+                                        <div class="multiple-choice multiple-choice--smaller multiple-choice--list">
+                                            <input name="GovernorSearchModel.RoleId"
+                                            id="govrole-@governorRole.Id.ToString()" value="@governorRole.Id.ToString()" type="checkbox" />
+                                            <label for="govrole-@governorRole.Id.ToString()">
+                                                @FormatHelpers.FirstCharToUpper(@governorRole.Name.ToLower())
+                                            </label>
+                                        </div>
                                     }
                                     </fieldset>
                                 </div>
