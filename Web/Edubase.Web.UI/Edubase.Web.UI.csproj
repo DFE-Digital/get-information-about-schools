@@ -543,7 +543,6 @@
     <Content Include="Assets\Sass\elements\_news-message.scss" />
     <Content Include="Assets\Sass\views\_create-academy-trust.scss" />
     <Content Include="Assets\Sass\elements\_filter-form-controls.scss" />
-    <Content Include="Assets\Sass\elements\_filter-radios.scss" />
     <Content Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />

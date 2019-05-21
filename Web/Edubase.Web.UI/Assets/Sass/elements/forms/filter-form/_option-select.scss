@@ -147,36 +147,6 @@ category: Forms
     padding-left: 10px;
   }
 
-
-  .filter-radio {
-    @include inline-block;
-    padding: 7px 0 7px 30px;
-    border-bottom: 1px solid $border-colour;
-    width: 95%;
-    cursor: pointer;
-    font-size: 16px;
-
-    @include media(desktop) {
-      /* leave room for the scroll bars on desktop*/
-      width: 90%;
-    }
-
-    &:hover {
-      background-color: $highlight-colour;
-    }
-
-    &[disabled] {
-      color: $grey-2;
-    }
-  }
-
-  .filter-input {
-    position: absolute;
-    top: 0;
-    left: 0;
-    @include opacity(0);
-  }
-
   .options-container {
     position: relative;
     background-color: $page-colour;
@@ -296,18 +266,13 @@ category: Forms
     }
 
     .nested-items {
-        .filter-radio {
-          @include box-sizing(border-box);
-          width: 100%;
-          padding-right: 20px;
-        }
-
         .open-children.child-option-toggle::after {
             background-position: 50% top;
         }
 
         dd {
             label {
+                position: relative;
                 width: calc(100% - 20px);
                 margin-left: 20px;
             }
@@ -321,16 +286,6 @@ category: Forms
 
 
 .lt-ie9 {
-    .options-container .filter-input {
-        @include opacity(1);
-        top: 8px;
-        left: 12px;
-    }
-
-    .filter-wrapper {
-        position: relative;
-    }
-
     .child-option-toggle,
     .filter-group-title,
     .map-container {

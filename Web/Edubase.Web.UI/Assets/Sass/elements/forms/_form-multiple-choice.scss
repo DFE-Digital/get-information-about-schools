@@ -147,6 +147,9 @@
 }
 
 .multiple-choice--smaller {
+    padding-left: 16px;
+    margin-bottom: 0px;
+
     [type=radio] + label::before {
         width: 26px;
         height: 26px;
@@ -156,5 +159,67 @@
         border: 7px solid;
         top: 8px;
         left: 8px;
+    }
+
+    [type=checkbox] + label::before,
+    [type=checkbox] + [type=hidden] + label::before {
+        width: 16px;
+        height: 16px;
+        top: 7px;
+        left: 0;
+    }
+
+    [type=checkbox] + label::after,
+    [type=checkbox] + [type=hidden] + label::after {
+        border-width: 0 0 3px 3px;
+        width: 9px;
+        height: 4px;
+        top: 12px;
+        left: 4px;
+    }
+}
+
+.multiple-choice--list {
+    float: none;
+    padding-left: 0;
+
+    label {
+        padding: 9px 0 7px 36px;
+        width: 90%;
+        border-bottom: 1px solid $border-colour;
+        font-size: 16px;
+        &:hover {
+            background-color: $grey-4;
+        }
+        &.partial-selection::after {
+            -moz-transform: none; // Firefox 15 compatibility
+            -o-transform: none; // Opera 12.0 compatibility
+            -webkit-transform: none; // Safari 8 compatibility
+            -ms-transform: none; // IE9 compatibility
+            transform: none;
+            border-left: 0;
+            @include opacity(1);
+        }
+    }
+
+    [type=checkbox] + label::before,
+    [type=checkbox] + [type=hidden] + label::before {
+        top: 9px;
+        left: 7px;
+    }
+
+    [type=checkbox] + label::after,
+    [type=checkbox] + [type=hidden] + label::after {
+        top: 14px;
+        left: 11px;
+    }
+
+    [type=checkbox] + .partial-selection::after {
+        left: 12px;
+    }
+
+    .select-all + label {
+        background-color: $grey-4;
+        overflow: hidden;
     }
 }
