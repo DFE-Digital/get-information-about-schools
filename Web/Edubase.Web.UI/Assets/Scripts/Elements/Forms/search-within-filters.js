@@ -3,8 +3,8 @@
     'use strict';
 
     var suggestionTemplate =
-        "<div class='filter-suggestion'><input type='checkbox' class='filter-input filter-clone' id='clone-{0}' {2}/>" +
-        "<label for='clone-{0}' class='filter-radio'>{1}</label></div>";
+        "<div class='filter-suggestion multiple-choice multiple-choice--smaller multiple-choice--list'><input type='checkbox' class='js-filter-input filter-clone' id='clone-{0}' {2}/>" +
+        "<label for='clone-{0}' class='js-filter-label'>{1}</label></div>";
 
     var defaults = {
         suggestionTemplate: suggestionTemplate
@@ -32,10 +32,10 @@
     SearchWithin.prototype = {
         regenerateItems: function() {
             var filterData = [];
-            $(this.el).find('.filter-wrapper').each(function (n, elem) {
+            $(this.el).find('.multiple-choice--list').each(function (n, elem) {
                 var temp = {};
-                temp.id = $(elem).find('.filter-input').prop('id');
-                temp.text = $.trim($(elem).find('.filter-radio').text());
+                temp.id = $(elem).find('.js-filter-input').prop('id');
+                temp.text = $.trim($(elem).find('.js-filter-label').text());
                 temp.checked = $(elem).find('.trigger-result-update').is(':checked');
 
                 filterData.push(temp);
@@ -49,7 +49,7 @@
             var opts = this.opts;
             var searchField = $el.find('.filter-search');
             var clearButton = $el.find('.field-clear');
-            var originalFilters = $el.find('.filter-input');
+            var originalFilters = $el.find('.js-filter-input');
 
             $el.find('.options-container').css({ minHeight: '200px' });
 
@@ -84,7 +84,7 @@
             }
 
             this.regenerateItems();
-            
+
 
             //attach events
             searchField.on('keyup', function () {
@@ -112,7 +112,7 @@
                 var listId = this.id.replace('clone-', '');
                 var realInput = $('#' + listId);
                 var radioChecked = realInput.is(':checked');
-                
+
                 realInput.click();
 
                 self.dataList.filter(function (item) {

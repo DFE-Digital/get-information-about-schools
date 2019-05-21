@@ -21,9 +21,9 @@
                 if (this.checked) {
                     if ($el.parents('.govuk-option-select').hasClass('nested-filter-options')) {
                         $el.parents('fieldset').find('.filter-group-title').prop('checked', true);
-                    } 
+                    }
                     $childOptions.prop('checked', true);
-                    
+
                 } else {
                     if ($el.parents('.govuk-option-select').hasClass('nested-filter-options')) {
                         $el.parents('fieldset').find('.filter-group-title').prop('checked', false);
@@ -39,9 +39,9 @@
                 }).length;
 
                 if (count === self.childOptionCount || count === 0) {
-                    $el.next('.filter-radio').removeClass('partial-selection');
+                    $el.next('.js-filter-label').removeClass('partial-selection');
                 } else {
-                    $el.next('.filter-radio').addClass('partial-selection');
+                    $el.next('.js-filter-label').addClass('partial-selection');
                 }
             });
         }
