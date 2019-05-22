@@ -34,19 +34,15 @@
         {
             <fieldset class="stacked-controls">
                 <legend class="visually-hidden">Download data options</legend>
-                <span class="radio-button-wrap">
+                <div class="multiple-choice">
                     @Html.RadioButtonFor(m => m.DownloadFormat, eFileFormat.CSV, new { id = "download-csv"})
-                    <label class="edubase-button-radio" for="download-csv">
-                        Data in CSV format
-                    </label>
-                </span>
+                    <label for="download-csv">Data in CSV format</label>
+                </div>
 
-                <span class="radio-button-wrap">
+                <div class="multiple-choice">
                     @Html.RadioButtonFor(m => m.DownloadFormat, eFileFormat.XLSX, new { id = "download-xslx" })
-                    <label class="edubase-button-radio" for="download-xslx">
-                        Data in XLSX (Excel) format
-                    </label>
-                </span>
+                    <label for="download-xslx">Data in XLSX (Excel) format</label>
+                </div>
             </fieldset>
 
             @Html.HiddenFieldsFromQueryString()

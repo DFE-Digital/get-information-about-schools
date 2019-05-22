@@ -10,10 +10,10 @@
         } else {
             $($(radioButton).data()[this.opts.panelDataKey]).parent('.shared-governor').removeClass('panel-indent');
         }
-        
+
     },
     init: function() {
-        $('#content').find('.governor-toggles')
+        $('#content').find('.js-governor-toggles')
             .radioToggle({
                 toggleCallBack: DfE.Views.governors.radioToggleCallback
             });

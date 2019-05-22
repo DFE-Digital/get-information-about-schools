@@ -99,9 +99,9 @@
                     <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
                     @foreach (var item in items)
                     {
-                        <div class="filter-wrapper">
-                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
-                            <label for="@(name)_@item.Id" class="filter-radio">
+                        <div class="multiple-choice multiple-choice--smaller multiple-choice--list">
+                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
+                            <label for="@(name)_@item.Id">
                                 @item
                             </label>
                         </div>

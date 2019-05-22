@@ -120,12 +120,13 @@
 
         @if (Model.CanOverrideCRProcess)
         {
-            <span class="checkbox-wrap">
-                @Html.CheckBoxFor(x => x.OverrideCRProcess, new { @id="override-cr"})
-                @Html.LabelFor(x => x.OverrideCRProcess, "Override CR", new {@for="override-cr", @class="edubase-button-checkbox"})
-            </span>
+            <div class="form-group push--bottom">
+                <div class="multiple-choice">
+                    @Html.CheckBoxFor(x => x.OverrideCRProcess, new { @id="override-cr"})
+                    @Html.LabelFor(x => x.OverrideCRProcess, "Override CR", new { @for="override-cr" })
+                </div>
+            </div>
         }
 
     </div>
 </div>
-

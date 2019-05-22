@@ -72,6 +72,7 @@ $ie-version: 9;
 // Forms
 @import "elements/forms";
 @import "elements/forms/form-validation";
+@import "elements/forms/form-multiple-choice";
 
 @import "elements/forms/filter-form/option-select";
 @import "elements/forms/filter-form/_search-within-filters.scss";
@@ -96,7 +97,6 @@ $ie-version: 9;
 @import "elements/modal";
 @import"elements/alerts";
 @import"elements/news-message";
-@import "elements/filter-radios";
 @import "elements/filter-form-controls";
 
 // Views

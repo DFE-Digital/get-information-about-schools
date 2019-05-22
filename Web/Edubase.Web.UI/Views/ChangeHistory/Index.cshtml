@@ -58,13 +58,13 @@
                                     @Html.HiddenFor(m => m.SelectedTab)
                                     <fieldset class="search-toggle-panel">
                                         <legend class="visually-hidden">Search by name or reference number</legend>
-                                        <span class="radio-button-wrap">
+                                        <div class="multiple-choice">
                                             @Html.RadioButtonFor(m => m.SearchType, eSearchType.Text, new { id = "searchtype-name", data_toggle_panel = "#searchby-name-ref" })
-                                            <label class="edubase-button-radio" for="searchtype-name">
+                                            <label for="searchtype-name">
                                                 Name or reference number
                                             </label>
-                                        </span>
-                                        <div class="expanding-search-field" id="searchby-name-ref">
+                                        </div>
+                                        <div class="panel panel-border-narrow" id="searchby-name-ref">
                                             @* This alert gets dynamically populated *@
                                             <div class="warning-message visuallyhidden" role="alert">
                                                 <p class="message-text" aria-live="polite"></p>
@@ -104,46 +104,46 @@
                                 {
                                     <fieldset class="search-toggle-panel">
                                         <legend class="visually-hidden">Search all establishments</legend>
-                                        <span class="radio-button-wrap">
+                                        <div class="multiple-choice">
                                             @Html.HiddenFor(m => m.SelectedTab)
                                             @Html.RadioButtonFor(m => m.SearchType, eSearchType.EstablishmentAll, new { id = "searchtype-all", data_toggle_panel = "#searchby-all-ref" })
-                                            <label class="edubase-button-radio" for="searchtype-all">
+                                            <label for="searchtype-all">
                                                 All establishments
                                             </label>
-                                        </span>
-                                        <div class="expanding-search-field" id="searchby-all-ref">
+                                        </div>
+                                        <div class="panel panel-border-narrow" id="searchby-all-ref">
                                             @if (Model.NoResultsForName)
                                             {
                                                 <div class="warning-message">
                                                     <p>We couldn't find any establishments matching your search criteria</p>
                                                 </div>
                                             }
-                                            <fieldset class="stacked-date-type-radios">
+                                            <fieldset class="push--bottom">
                                                 <legend class="visually-hidden">Select the change type</legend>
-                                                <span class="radio-button-wrap">
+
+                                                <div class="multiple-choice">
                                                     @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED, new {id = "datefiltermode-applied"})
-                                                    <label class="edubase-button-radio" for="datefiltermode-applied">
+                                                    <label for="datefiltermode-applied">
                                                         Applied: The date the change was proposed in GIAS
                                                     </label>
-                                                </span>
+                                                </div>
 
-                                                <span class="radio-button-wrap">
+                                                <div class="multiple-choice">
                                                     @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_APPROVED, new {id = "datefiltermode-approved"})
-                                                    <label class="edubase-button-radio" for="datefiltermode-approved">
+                                                    <label for="datefiltermode-approved">
                                                         Approved: The date the change  was approved
                                                     </label>
-                                                </span>
+                                                </div>
 
-                                                <span class="radio-button-wrap">
+                                                <div class="multiple-choice">
                                                     @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE, new {id = "datefiltermode-effective"})
-                                                    <label class="edubase-button-radio" for="datefiltermode-effective">
+                                                    <label for="datefiltermode-effective">
                                                         Effective: The date the change occurred
                                                     </label>
-                                                </span>
+                                                </div>
                                             </fieldset>
 
-
-                                            <div class="column-two-thirds">
+                                            <div class="column-two-thirds push--bottom">
                                                 <div class="date-group-wrap">
                                                     @Html.EditorFor(x => x.DateFilterFrom, new { title = "From (optional)" })
                                                 </div>
@@ -177,13 +177,14 @@
                                 {
                                     @Html.HiddenFor(m => m.SelectedTab)
                                     <fieldset class="search-toggle-panel">
-                                        <span class="radio-button-wrap">
+                                        <div class="multiple-choice">
                                             @Html.RadioButtonFor(m => m.SearchType, eSearchType.Group, new {id = "searchtype-name-group", data_toggle_panel = "#searchby-group-ref"})
-                                            <label class="edubase-button-radio" for="searchtype-name-group">
+                                            <label for="searchtype-name-group">
                                                 Name or reference number
                                             </label>
-                                        </span>
-                                        <div class="expanding-search-field" id="searchby-group-ref">
+
+                                        </div>
+                                        <div class="panel panel-border-narrow" id="searchby-group-ref">
                                             <div class="edubase-search-element with-typeahead has-typeahead" id="group-search-container">
                                                 @* This alert gets dynamically populated *@
                                                 <div class="warning-message visuallyhidden" role="alert">
@@ -226,13 +227,13 @@
                                 {
                                     @Html.HiddenFor(m => m.SelectedTab)
                                     <fieldset class="search-toggle-panel">
-                                        <span class="radio-button-wrap">
+                                        <div class="multiple-choice">
                                             @Html.RadioButtonFor(m => m.SearchType, eSearchType.GroupAll, new {id = "searchtype-all-groups", data_toggle_panel = "#searchby-allgroups-ref"})
-                                            <label class="edubase-button-radio" for="searchtype-all-groups">
+                                            <label for="searchtype-all-groups">
                                                 All groups
                                             </label>
-                                        </span>
-                                        <div class="expanding-search-field" id="searchby-allgroups-ref">
+                                        </div>
+                                        <div class="panel panel-border-narrow" id="searchby-allgroups-ref">
                                             <div class="column-two-thirds">
                                                 <div class="date-group-wrap">
                                                     @Html.EditorFor(x => x.DateFilterFrom, new {title = "From (optional)"})

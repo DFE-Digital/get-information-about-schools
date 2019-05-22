@@ -92,12 +92,12 @@
                                 @foreach (var groupType in Model.CCGroupTypes)
                                 {
                                     var inputId = "grouptypeid-" + groupType.Value;
-                                    <span class="radio-button-wrap">
+                                    <div class="multiple-choice">
                                         @Html.RadioButtonFor(x => x.GroupTypeId, groupType.Value, new {id = inputId, v_model = "groupType"})
-                                        <label class="edubase-button-radio" for="@inputId">
+                                        <label for="@inputId">
                                             @groupType.Text
                                         </label>
-                                    </span>
+                                    </div>
                                 }
                             </div>
                         </fieldset>
@@ -222,12 +222,12 @@
                                 <tbody>
                                     <tr v-for="(estab, index) in centresInGroup">
                                         <td data-label="Lead centre" v-bind:class="['radio-cell',(estab.urn == groupLead)? 'highlight': '']" v-if="groupType === '8'">
-                                            <span class="radio-button-wrap">
+                                            <div class="multiple-choice multiple-choice--smaller">
                                                 <input type="radio" name="lead-centre" :value="estab.urn" v-bind:id="generateRadioId(estab.urn)" :checked="estab.urn == groupLead" v-model="groupLead"/>
-                                                <label class="edubase-button-radio" v-bind:for="generateRadioId(estab.urn)">
+                                                <label v-bind:for="generateRadioId(estab.urn)">
                                                     <span class="visuallyhidden">Set as lead establishment</span>
                                                 </label>
-                                            </span>
+                                            </div>
                                         </td>
 
                                         <td data-label="URN" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">
