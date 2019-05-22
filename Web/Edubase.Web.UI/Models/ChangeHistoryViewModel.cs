@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Enums;
+using Edubase.Services.Enums;
 
 namespace Edubase.Web.UI.Models
 {
@@ -88,6 +88,7 @@ namespace Edubase.Web.UI.Models
         public eFileFormat? DownloadFormat { get; set; }
 
         public string Sortby { get; set; }
+        public bool DisplayErrors { get; set; }
 
         public IEnumerable<SelectListItem> DateFilterOptions => new List<SelectListItem>
         {
