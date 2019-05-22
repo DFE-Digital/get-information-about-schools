@@ -73,16 +73,6 @@
     .last-panel & {
         border-bottom: 0;
     }
-
-    .inline {
-        @media(max-width: 600px) {
-            .radio-button-wrap {
-                display: block;
-                margin-bottom: 32px;
-            }
-        }
-    }
-
 }
 
 .search-changes {
@@ -90,26 +80,6 @@
         margin-top: 0;
         margin-left: 8px;
         padding-top: 0;
-    }
-
-    .expander-panel {
-        .checkbox-wrap {
-            width: 31%;
-            margin-right: 12px;
-            margin-left: 0;
-            padding-left: 3px;
-            float: left;
-            min-height: 48px;
-            padding-top: 11px;
-
-            &:nth-child(3n+1) {
-                clear: left;
-            }
-
-            @media(max-width: 980px) {
-                width: 49%;
-            }
-        }
     }
 
     .long-label label {
@@ -121,14 +91,6 @@
         float: none;
         margin: 20px 0;
         font-weight: bold;
-    }
-
-    .stacked-date-type-radios {
-        padding-top: 20px;
-        .radio-button-wrap {
-            display: block;
-            margin-bottom: 30px;
-        }
     }
 }
 

@@ -34,12 +34,12 @@
         <div class="grid-row">
             <div class="column-full">
                 <h3 class="heading-medium">Select the action you're interested in</h3>
-                <div class="form-group @Html.ValidationCssClassFor(x => x.Mode)">
+                <div class="form-group inline @Html.ValidationCssClassFor(x => x.Mode)">
                     <fieldset>
                         <legend class="visually-hidden">Select the action you're interested in</legend>
                         @Html.ValidationMessageFor(x => x.Mode)
-                    @Html.GiasRadioFor(x => x.Mode, VM.SpecifierDateOfActionGeneral, "Next general action required")
-                    @Html.GiasRadioFor(x => x.Mode, VM.SpecifierDateOfActionWelfare, "Next action required by welfare")
+                        @Html.GiasRadioFor(x => x.Mode, VM.SpecifierDateOfActionGeneral, "Next general action required")
+                        @Html.GiasRadioFor(x => x.Mode, VM.SpecifierDateOfActionWelfare, "Next action required by welfare")
                 </fieldset>
             </div>
         </div>

@@ -16,7 +16,7 @@ DfE.searchResults = (function () {
     var $additionalFilterClear = $('#additional-filter-wrap').find('.additional-filter-clear');
     var $textFieldFilters = $('#EditSearchCollapse').find('input[type="text"]');
     var $extraFiltersLink = $('#EditSearchCollapse').find('.add-filters-link');
-    var optionTemplate = '<div class="filter-wrapper"><input type="checkbox" value="#{0}" data-alias="{2}" id="ctrl-{0}" class="additional-filter-type filter-input" /><label  for="ctrl-{0}" class="filter-radio">{1}</label></div>';
+    var optionTemplate = '<div class="multiple-choice multiple-choice--smaller multiple-choice--list"><input type="checkbox" value="#{0}" data-alias="{2}" id="ctrl-{0}" class="additional-filter-type js-filter-input" /><label  for="ctrl-{0}" class="js-filter-label">{1}</label></div>';
     var searchParams = deDupeParams($filterForm.find(':input').filter(function (n, ele) {
         return ele.value !== '';
     }).serialize());
@@ -448,4 +448,3 @@ DfE.searchResults = (function () {
         }
     }
 })();
-

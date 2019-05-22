@@ -40,7 +40,7 @@
                 @Html.ValidationMessageFor(x => x.DownloadFormat)
 
                 <div class="multiple-choice">
-                    @Html.RadioButtonFor(m => m.DownloadFormat, eFileFormat.CSV, new { id = "download-csv" })
+                    @Html.RadioButtonFor(m => m.DownloadFormat, eFileFormat.CSV, new { @checked = "checked", id = "download-csv" })
                     <label for="download-csv">Data in CSV format</label>
                 </div>
 

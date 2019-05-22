@@ -77,21 +77,20 @@
                                     <a class="panel-trigger" :href="'#target-'+index" aria-expanded="false" :aria-controls="'target-'+index">{{item.category}}</a>
                                     <div class="expander-panel-content" id="'target-'+index">
 
-                                        <span v-for="(field, i) in item.customFields" class="checkbox-wrap">
+                                        <div  v-for="(field, i) in item.customFields" class="multiple-choice">
                                             <input :id="'chk2-'+(index+'_'+i)" type="checkbox" :value="field.id" v-model="selections" />
-                                            <label :for="'chk2-'+(index+'_'+i)" class="edubase-button-checkbox">{{ field.name }}</label>
-                                        </span>
-
+                                            <label :for="'chk2-'+(index+'_'+i)">{{ field.name }}</label>
+                                        </div>
                                     </div>
                                 </li>
                             </ul>
 
                             <div :id="[alphabeticalView ? 'errorOneFieldReq' : '']" :class="['alphabetical-list', alphabeticalView ? '' : 'hidden', errorOneFieldReq ? 'error' : '']">
                                 <span v-if="errorOneFieldReq" class="field-validation-error">Select at least one field</span>
-                                <span v-for="(item, index) in filteredList" class="checkbox-wrap">
+                                <div v-for="(item, index) in filteredList" class="multiple-choice">
                                     <input :id="'chk-'+index" type="checkbox" name="@EstablishmentSearchDownloadViewModel.SelectedCustomFieldsBindAlias" :value="item.id" v-model="selections" />
-                                    <label :for="'chk-'+index" class="edubase-button-checkbox">{{ item.name }}</label>
-                                </span>
+                                    <label :for="'chk-'+index">{{ item.name }}</label>
+                                </div>
                             </div>
 
                             <p v-show="filteredList.length == 0">No results</p>

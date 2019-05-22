@@ -32,8 +32,8 @@
                     <div class="exapanding-list-wrap">
                         @Html.HiddenFor(x => x.Urn)
                         @Html.HiddenFor(x => x.Role)
-                    
-                        <ul class="governor-toggles">
+
+                        <ul class="js-governor-toggles">
                             @for (var index = 0; index < Model.Governors.Count; index++)
                             {
                                 @Html.EditorFor(x => x.Governors[index])
@@ -43,7 +43,7 @@
                             <input type="submit" value="Select" class="button mobile-full-width"/>
                             <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-secondary mobile-full-width">Cancel</a>
                         </div>
-                   
+
                     </div>
                 }
                 else
@@ -55,5 +55,3 @@
         </div>
     </div>
 </div>
-
-

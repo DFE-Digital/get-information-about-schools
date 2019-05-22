@@ -139,10 +139,12 @@
                             <tbody v-if="changes.length > 0">
                                 <tr v-for="(entry, index) in changes">
                                     <td class="cell-checkbox" data-label="Select item">
-                                        <input :id="'change-'+entry.id" name="pending-change" :value="entry.id" type="checkbox" class="boldened-checkbox" v-on:click="selectItem">
-                                        <label class="edubase-label edubase-button-checkbox" :for="'change-'+entry.id">
-                                            <span class="visuallyhidden">Select this change for approval or rejection</span>
-                                        </label>
+                                        <div class="multiple-choice">
+                                            <input :id="'change-'+entry.id" name="pending-change" :value="entry.id" type="checkbox" class="boldened-checkbox" v-on:click="selectItem">
+                                            <label class="edubase-label" :for="'change-'+entry.id">
+                                                <span class="visuallyhidden">Select this change for approval or rejection</span>
+                                            </label>
+                                        </div>
                                     </td>
                                     <td data-label="URN">
                                         <a v-bind:href="detailUrl(entry.establishmentUrn)">{{entry.establishmentUrn}}</a>
@@ -183,9 +185,9 @@
                     </div>
                     <div class="options-container">
                         <fieldset>
-                            <div class="filter-wrapper" v-for="(reason, index) in cannedRejections">
-                                <input :id="'reason-' + reason.id" class="filter-input" :value="reason.id" type="checkbox" v-model="reasonIds">
-                                <label :for="'reason-'+ reason.id" class="filter-radio">
+                            <div class="multiple-choice multiple-choice--smaller multiple-choice--list" v-for="(reason, index) in cannedRejections">
+                                <input :id="'reason-' + reason.id" :value="reason.id" type="checkbox" v-model="reasonIds">
+                                <label :for="'reason-'+ reason.id">
                                     {{reason.title}}
                                 </label>
                             </div>

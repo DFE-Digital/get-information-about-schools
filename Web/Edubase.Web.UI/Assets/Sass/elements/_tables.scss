@@ -173,27 +173,27 @@ table tbody .url {
         height: 52px;
         position: relative;
 
-
-
-        .edubase-button-checkbox {
-            padding: 0;
-        }
-
         @include media(desktop) {
             width: 28px;
         }
 
-        @media(max-width: 940px) {
-            &:after {
-                content: attr(data-label);
+        &:after {
+            @media(max-width: 940px) {
                 position: relative;
-                top: 14px;
-                left: 44px;
+                content: attr(data-label);
             }
+            @include media(mobile) {
+                top: -5px;
+                left: 50px;
+            }
+            @include media(tablet) {
+                top: 11px;
+                left: 0;
+            }
+        }
 
-            &:before {
-                content: "";
-            }
+        &:before {
+            content: "";
         }
     }
 

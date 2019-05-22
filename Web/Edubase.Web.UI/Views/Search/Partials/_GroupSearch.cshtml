@@ -20,14 +20,14 @@
         <ul>
             <li class="search-type-wrapper">
                 <fieldset class="search-toggle-panel">
-                    <span class="radio-button-wrap">
+                    <div class="multiple-choice">
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.Group, new { id = "searchtype-name-group", name="search-by", value="all", data_toggle_panel = "#searchby-group-ref" })
-                        <label class="edubase-button-radio" for="searchtype-name-group">
+                        <label for="searchtype-name-group">
                             Name or reference number
                         </label>
-                    </span>
 
-                    <div class="expanding-search-field" id="searchby-group-ref">
+                    </div>
+                    <div class="panel panel-border-narrow" id="searchby-group-ref">
                         <div class="edubase-search-element with-typeahead has-typeahead" id="group-search-container">
                             @* This alert gets dynamically populated *@
                             <div class="warning-message visuallyhidden" role="alert">
@@ -69,13 +69,13 @@
             <li class="search-type-wrapper">
 
                     <fieldset class="search-toggle-panel">
-                        <span class="radio-button-wrap">
+                        <div class="multiple-choice">
                             <input id="searchtype-all-groups" name="search-by" value="all" type="radio" data-toggle-panel="#searchby-allgroups-ref">
-                            <label class="edubase-button-radio" for="searchtype-all-groups">
+                            <label for="searchtype-all-groups">
                                 All establishment groups
                             </label>
-                        </span>
-                        <div class="expanding-search-field" id="searchby-allgroups-ref">
+                        </div>
+                        <div class="panel panel-border-narrow" id="searchby-allgroups-ref">
                             <div class="form-group">
                                 <a href="@Url.Action("Index", "GroupSearch", new { area = "Groups" })?@(QueryStringHelper.ToQueryString(VM.BIND_ALIAS_STATUSIDS, (int) eStatus.Open, (int) eStatus.OpenButProposedToClose))" class="button mobile-full-width search-button">Search</a>
                             </div>
