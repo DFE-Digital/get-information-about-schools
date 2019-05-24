@@ -6,21 +6,31 @@
     ViewBag.PageClass = "search-history-results search-results";
 }
 
+<div class="breadcrumbs">
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+        <li>
+            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+        </li>
+        <li>
+            @Html.ActionLink("Change history", "Index", "ChangeHistory", new { area = ""}, null)
+        </li>
+    </ul>
+</div>
+
+<div class="error-summary hidden" aria-labelledby="error-summary-title" role="alert" tabindex="-1" id="js-filter-error-summary">
+    <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
+    <ul class="error-summary-list">
+        <li class="date-filter-error hidden">
+            <a href="#date-filter">Please enter the date in the format DD/MM/YYYY</a>
+        </li>
+    </ul>
+</div>
+
 <div class="grid-row">
     <div class="column-full results-heading change-history-results-heading">
-        <div class="breadcrumbs">
-            <ul>
-                <li>
-                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-                </li>
-                <li>
-                    @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
-                </li>
-                <li>
-                    @Html.ActionLink("Change history", "Index", "ChangeHistory", new { area = ""}, null)
-                </li>
-            </ul>
-        </div>
         @{
             var heading = (Model.SearchType.OneOfThese(eSearchType.Group, eSearchType.GroupAll)) ? "Group change history" : "Establishment change history";
             if (Model.SingleEstablishment && !string.IsNullOrWhiteSpace(Model.EstablishmentName))
