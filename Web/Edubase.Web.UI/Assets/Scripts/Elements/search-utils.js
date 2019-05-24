@@ -112,15 +112,6 @@ DfE.searchUtils = (function () {
                 window.document.title = "Error: Search results - GOV.UK";
             }
 
-            if (canSubmit) {
-                if (DfE.searchMap.currentView === 'map') {
-                    DfE.searchMap.getSearchData();
-                } else {
-                    DfE.searchMap.dataRefreshRequired = true;
-
-                    DfE.searchResults.setSearchParams();
-                    DfE.searchResults.getResults();
-                }
             if (!validFromDate) {
                 $('#' + dateFilterId + ' .search-from-date').closest('.form-group').slice(0, 2).addClass('error');
                 $('#' + dateFilterId + ' .search-from-date').find('.error-message').not('.date-range-error').removeClass('hidden');
@@ -130,6 +121,8 @@ DfE.searchUtils = (function () {
                 $('#' + dateFilterId + ' .search-to-date').closest('.form-group').slice(0, 2).addClass('error');
                 $('#' + dateFilterId + ' .search-to-date').find('.error-message').not('.date-range-error').removeClass('hidden');
             }
+
+            return canSubmit;
         },
         clearDateFilterErrors: function(dateFilterId){
             errorSummary.addClass('hidden');
@@ -204,20 +197,9 @@ DfE.searchUtils = (function () {
                 errorSummary.find('.' + ageFilterId + '-error').removeClass('hidden');
                 errorSummary.focus();
                 window.document.title = "Error: Search results - GOV.UK";
-                return;
             }
 
-            if (canSubmit) {
-
-                if (DfE.searchMap.currentView === 'map') {
-                    DfE.searchMap.getSearchData();
-                } else {
-                    DfE.searchMap.dataRefreshRequired = true;
-                    DfE.searchResults.setSearchParams();
-                    DfE.searchResults.getResults();
-                }
-
-            }
+            return canSubmit;
         },
         clearAgeFilterErrors: function(ageFilterId){
             errorSummary.addClass('hidden');

@@ -404,7 +404,16 @@ DfE.searchResults = (function () {
                 function (e) {
                     e.preventDefault();
                     var ageFilterId = $(this).closest('.age-filter').attr('id');
-                    DfE.searchUtils.validateAgeFilters(ageFilterId);
+                    var canSubmit = DfE.searchUtils.validateAgeFilters(ageFilterId);
+                    if (canSubmit) {
+                        if (DfE.searchMap.currentView === 'map') {
+                            DfE.searchMap.getSearchData();
+                        } else {
+                            DfE.searchMap.dataRefreshRequired = true;
+                            DfE.searchResults.setSearchParams();
+                            DfE.searchResults.getResults();
+                        }
+                    }
                 });
 
 
@@ -430,10 +439,18 @@ DfE.searchResults = (function () {
             function (e) {
                 e.preventDefault();
                 var dateFilterId = $(this).closest('.date-filters').attr('id');
-                DfE.searchUtils.validateDateFilters(dateFilterId);
+                var canSubmit = DfE.searchUtils.validateDateFilters(dateFilterId);
+                if (canSubmit) {
+                    if (DfE.searchMap.currentView === 'map') {
+                        DfE.searchMap.getSearchData();
+                    } else {
+                        DfE.searchMap.dataRefreshRequired = true;
+
+                        DfE.searchResults.setSearchParams();
+                        DfE.searchResults.getResults();
+                    }
+                }
             });
-
-
         },
 
         init: function () {
