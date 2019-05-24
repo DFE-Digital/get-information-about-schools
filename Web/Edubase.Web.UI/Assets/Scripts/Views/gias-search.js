@@ -80,7 +80,8 @@ DfE.searchResults = (function () {
                     var specifier = $ele.val() + bindAlias;
                     $ele.val(specifier);
                 });
-                $('#filter-addtional-controls').removeClass('hidden');
+
+                $('#filter-additional-controls').removeClass('hidden');
             });
 
             $(".js-save-set").on("click", function () {
@@ -238,7 +239,7 @@ DfE.searchResults = (function () {
             $filterForm.find('.filter-clone').prop('disabled', false);
             $('#filter-form').find('.active-clear').removeClass('clear-disabled');
             $('#filter-form').find('input[type="text"]').prop('disabled', false);
-            $('#filter-addtional-controls a').removeClass('hidden');
+            $('#filter-additional-controls a').removeClass('hidden');
         },
 
         disableFilters: function () {
