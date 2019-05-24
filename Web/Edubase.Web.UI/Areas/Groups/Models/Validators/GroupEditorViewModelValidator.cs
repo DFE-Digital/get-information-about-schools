@@ -99,11 +99,11 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                 {
                     RuleFor(x => x.ClosedDate)
                     .Must(x => !x.IsEmpty())
-                    .WithMessage("Please enter a date for the closure of this MAT")
+                    .WithMessage("Please enter a date for the closure of this multi-academy trust")
                     .Must(x => x.IsValid() || x.IsEmpty())
                     .WithMessage("Closed date is invalid. Please enter a valid date.");
                 });
-                
+
                 RuleFor(x => x.GroupName)
                     .Cascade(CascadeMode.StopOnFirstFailure)
                     .NotEmpty()
@@ -134,7 +134,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
 
         private bool VerifyJoinedDate(DateTime? joinedDate, GroupEditorViewModel model)
         {
-            return model.OpenDate.IsValid() && 
+            return model.OpenDate.IsValid() &&
                    model.OpenDate.ToDateTime().HasValue &&
                    joinedDate.HasValue &&
                    joinedDate.Value.Date >= model.OpenDate.ToDateTime().Value.Date;

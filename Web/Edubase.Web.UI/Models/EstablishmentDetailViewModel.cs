@@ -18,7 +18,7 @@ namespace Edubase.Web.UI.Models
     {
         private static Dictionary<int, string> _groupType2FieldLabelMappings = new Dictionary<int, string>
         {
-            [(int)eLookupGroupType.SingleacademyTrust] = "Single academy trust",
+            [(int)eLookupGroupType.SingleacademyTrust] = "Single-academy trust",
             [(int)eLookupGroupType.MultiacademyTrust] = "Academy trust",
             [(int)eLookupGroupType.SchoolSponsor] = "Academy sponsor",
             [(int)eLookupGroupType.Trust] = "Trust",
@@ -45,7 +45,7 @@ namespace Edubase.Web.UI.Models
             Member,
             Trustee
         }
-        
+
 
         public EstablishmentModel Establishment { get; set; }
 
@@ -64,7 +64,7 @@ namespace Edubase.Web.UI.Models
         public bool IsUserLoggedOn { get; set; }
 
         public bool UserCanEdit { get; set; }
-        
+
         public bool IsClosed => Establishment.StatusId == (int)eLookupEstablishmentStatus.Closed;
 
         public string SearchQueryString { get; set; }
@@ -76,7 +76,7 @@ namespace Edubase.Web.UI.Models
             LegalParentGroupRouteDto = new Lazy<RouteDto>(() => LegalParentGroup != null ? new RouteDto("GroupDetails", new System.Web.Routing.RouteValueDictionary(new { id = LegalParentGroup.GroupUId }), LegalParentGroup.Name) : null);
         }
 
-        public string OfstedRatingReportUrl => (Establishment.OfstedRatingId.HasValue 
+        public string OfstedRatingReportUrl => (Establishment.OfstedRatingId.HasValue
             ? new OfstedRatingUrl(Establishment.Urn).ToString() : null as string);
 
         public string GetGroupFieldLabel(GroupModel model) => _groupType2FieldLabelMappings[model.GroupTypeId.Value];
@@ -141,19 +141,19 @@ namespace Edubase.Web.UI.Models
         public string AddressCountyName { get; set; }
         public string OfstedRatingName { get; set; }
         public string HelpdeskPreviousLocalAuthorityName { get; set; }
-        
+
         public string IEBTProprietorsAddressCountyName { get; set; }
         public string IEBTChairOfProprietorsBodyAddressCountyName { get; set; }
         #endregion
 
-        public string GetAddress() => StringUtil.ConcatNonEmpties(", ", 
+        public string GetAddress() => StringUtil.ConcatNonEmpties(", ",
             Establishment.Address_Line1,
-            Establishment.Address_Locality, 
+            Establishment.Address_Locality,
             Establishment.Address_Line3,
-            Establishment.Address_CityOrTown, 
-            AddressCountyName?.Replace("Not recorded", string.Empty), 
+            Establishment.Address_CityOrTown,
+            AddressCountyName?.Replace("Not recorded", string.Empty),
             Establishment.Address_PostCode);
-        
+
         public IEnumerable<AdditionalAddressViewModel> AdditionalAddressList { get; set; } = Enumerable.Empty<AdditionalAddressViewModel>();
 
         public string GetProprietorsAddress() => StringUtil.ConcatNonEmpties(", ",

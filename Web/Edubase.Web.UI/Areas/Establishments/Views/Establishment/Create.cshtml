@@ -1,6 +1,7 @@
 ﻿@using Edubase.Services.Domain
 @model CreateChildrensCentreViewModel
 @{
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Create a new establishment");
     ViewBag.Title = "Create a new establishment";
     ViewBag.bodyClasses = "create-establishment school-details";
 }
@@ -16,33 +17,12 @@
     </ul>
 </div>
 
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
+
+<h1 class="heading-xlarge" id="title">Create an establishment</h1>
+
 <div id="create-establishment">
     <div class="grid-row">
-        <div class="column-full">
-            <h1 class="heading-xlarge" id="title">
-                Create an establishment
-            </h1>
-            @if (Model.CCDuplicate)
-            {
-                <div class="validation-summary-errors error-summary">
-                    <span>Duplicate record found</span>
-                    <ul>
-                        <li>A children’s centre is already registered with this name, local authority and postcode. To complete the record:</li>
-                        <li>
-                            <a href="#Name">Please enter a different establishment name</a>
-                            or
-                            <a href="#LocalAuthorityId">Please enter a different local authority </a>
-                            or
-                            <a href="#Address_PostCode">Please enter a different postcode</a>
-                        </li>
-                    </ul>
-                </div>
-            }
-            else
-            {
-                @Html.ValidationSummary("Incorrect or missing details", new { @class = "error-summary" })
-            }
-        </div>
 
         @using (Html.BeginForm())
         {
@@ -51,14 +31,15 @@
 
             <div class="column-full top-button-panel">
                 <div class="submit-cancel-panel">
-                    <button type="submit" name="action" value="" class="button mobile-full-width">Create</button>
-                    <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width">Cancel</button>
+                    <button type="submit" name="action" value="" class="button mobile-full-width">Create establishment</button>
+                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-secondary cancel mobile-full-width" })
                 </div>
             </div>
 
             <div class="column-half">
                 <h2 class="heading-medium create-estab-label">New establishment</h2>
 
+                @* NAME, LA and TYPE  *@
                 <div class="form-group @Html.ValidationCssClassFor(x => x.Name)">
                     @Html.LabelFor(x => x.Name, "Establishment name")
                     @Html.ValidationMessageFor(x => x.Name)
@@ -77,13 +58,15 @@
                     @Html.DropDownListFor(x => x.EstablishmentTypeId, Model.EstablishmentTypes, "Please select", new { @class = "form-control" })
                 </div>
 
-                <div id="establishment-phase-form-group" class="form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
+                @* PHASE *@
+                <div id="establishment-phase-form-group" class="form-group hidden @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
                     @Html.LabelFor(x => x.EducationPhaseId, "Phase of education", new { @class = "form-label" })
                     @Html.ValidationMessageFor(x => x.EducationPhaseId)
                     @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "Please select", new { @class = "form-control" })
                 </div>
 
-                <div class="childrens-centre-fields" style="display:none">
+                @* CHILDRENS CENTRE *@
+                <div class="childrens-centre-fields hidden">
                     @Html.EditorFor(m => m.OpenDate, new { title = "Open date (required to save record)"})
 
                     @Html.EditorFor(m => m.Address)
@@ -164,9 +147,9 @@
                 </div>
 
             </div>
-            <div class="column-full" id="number-gen-options">
+            <div class="column-full hidden" id="number-gen-options">
                 <fieldset class="inline create-estab-number-gen">
-                    <legend class="bold-small">Establishment number</legend>
+                    <legend id="GenerateEstabNumber" class="bold-small">Establishment number</legend>
                     <div class="form-group @Html.ValidationCssClassFor(x => x.GenerateEstabNumber)">
                         @Html.ValidationMessageFor(x => x.GenerateEstabNumber)
 
@@ -175,8 +158,8 @@
                         @Html.GiasRadioFor(x => x.GenerateEstabNumber, false, "Enter number", null, new { id = "enter-number-radio" })
 
                     </div>
-                    <div id="enter-number">
-                        <div id="enter-number-form-group" class="form-group panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
+                    <div id="enter-number" class="hidden">
+                        <div id="enter-number-form-group" class="form-group panel panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
                             @Html.LabelFor(x => x.EstablishmentNumber, "Enter the establishment number", new {@class="form-label"})
                             @Html.ValidationMessageFor(x => x.EstablishmentNumber)
                             @Html.TextBoxFor(x => x.EstablishmentNumber, new { @class = "form-control form-control-1-2" })
@@ -185,12 +168,10 @@
                 </fieldset>
             </div>
 
-
-
             <div class="column-full">
                 <div class="submit-cancel-panel">
-                    <button type="submit" name="action" value="" class="button mobile-full-width" id="create-submit">Create</button>
-                    @Html.ActionLink("Cancel", "Index", "Tools", new { }, new { @class = "button button-secondary cancel mobile-full-width" })
+                    <button type="submit" name="action" value="" class="button mobile-full-width" id="create-submit">Create establishment</button>
+                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-secondary cancel mobile-full-width" })
                 </div>
             </div>
         }
@@ -216,57 +197,52 @@
 }
 
 @section ViewScripts {
+
     <script type="text/javascript">
 
+        // Setting up variables
         var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);
         var phases = @Html.Json(Model.EducationPhases);
         var $typeSelector = $("#EstablishmentTypeId");
         var $phaseSelector = $("#EducationPhaseId");
+        var $radios = $('#number-gen-options').find(':radio');
+        var $enterNumber = $("#enter-number");
+
+        // show/hide enter establishment number text area
+        func = function(){
+            if ($radios.filter(':checked').val() === 'False') {
+                $enterNumber.removeClass('hidden');
+            } else {
+                $enterNumber.addClass('hidden');
+            }
+        }
 
         $(function() {
-            var $radios = $('#number-gen-options').find(':radio');
-            var $enterNumber = $("#enter-number");
-
-            var func = function() {
-                if ($radios.filter(':checked').val() === 'False') {
-                    $enterNumber.show();
+            // only display subsequent fields if it has a type
+            if ($typeSelector.val() != "") {
+                var typeId = $typeSelector.val();
+                if (typeId === "41") {
+                    // show the children's centre fields
+                    createChildrensCentre();
                 } else {
-                    $enterNumber.hide();
+                    // show phase and establishment number fields
+                    createOther();
+                    // show/hide enter establishment number text area
+                    func();
                 }
-            };
+            }
 
+            // setup bindings on establishment number radios and
+            // establishment type selection.
             $radios.on('change', func);
-
-            func();
-
-            filterEstablishmentPhaseList();
             $("select#EstablishmentTypeId").on("change keyup", filterEstablishmentPhaseList);
         });
 
-
-        var $fields = $('#content').find('.form-control');
-        var exitAttached = false;
-
-        $fields.on('change',
-            function() {
-                if (!exitAttached) {
-                    DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
-                    exitAttached = true;
-                }
-            });
-
-        if ($typeSelector.val() == "") $phaseSelector.prop('disabled', 'disabled');
-        $typeSelector.on('change',
-            function() {
-                $phaseSelector.removeAttr('disabled');
-            });
-
         function filterEstablishmentPhaseList() {
-
             var optionList = '<option value="">Please select</option>';
             var typeId = $typeSelector.val();
             var previousSelValue = (typeId === "41" ? "1" : $phaseSelector.val());
-            if (!isNaN(typeId)) {
+            if (typeId != "") {
                 var applicablePhases = type2PhaseMap[typeId];
                 if (applicablePhases && applicablePhases.length > 0) {
                     for (var i = 0; i < applicablePhases.length; i++) {
@@ -288,42 +264,50 @@
                     createChildrensCentre();
                 } else {
                     createOther();
+                    func();
                 }
+            } else {
+                $("#establishment-phase-form-group").addClass('hidden');
+                $("#number-gen-options").addClass('hidden');
+                $(".childrens-centre-fields").addClass('hidden');
             }
             $phaseSelector.html(optionList);
         }
 
         function createOther() {
-            $("#establishment-phase-form-group").show();
-            $("#number-gen-options").show();
-            $phaseSelector.removeAttr('disabled');
-            $(".childrens-centre-fields").hide();
+            $("#establishment-phase-form-group").removeClass('hidden');
+            $("#number-gen-options").removeClass('hidden');
+            $(".childrens-centre-fields").addClass('hidden');
         }
 
         function createChildrensCentre() {
-            $("#establishment-phase-form-group").hide();
-            $("#number-gen-options").hide();
-            $("#enter-number").hide();
-            $phaseSelector.prop('disabled', 'disabled');
-            $(".childrens-centre-fields").show();
+            $("#establishment-phase-form-group").addClass('hidden');
+            $("#number-gen-options").addClass('hidden');
+            $("#enter-number").addClass('hidden');
+            $(".childrens-centre-fields").removeClass('hidden');
         }
 
+        // You sure you want to leave popup
+        var $fields = $('#content').find('.form-control');
+        var exitAttached = false;
+
+        $fields.on('change',
+            function() {
+                if (!exitAttached) {
+                    DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
+                    exitAttached = true;
+                }
+            });
+
         $(document).ready(function() {
-            if ($('.validation-summary-errors').length === 0) {
-                $("#number-gen-options").hide();
-                $("#establishment-phase-form-group").hide();
-                $("#enter-number").hide();
-            }
             if ($('#warning-modal-content-0').length > 0) {
                 $('#overlay-proceed-0').focus();
             }
         });
 
-
         (function () {
             var mask = $('#warning-modal-overlay-0');
             var modal = $('#warning-modal-content-0');
-
 
             $('#warning-exit-overlay-0, #overlay-cancel-0').on('click',
                 function (e) {
@@ -336,19 +320,6 @@
                 function (e) {
                     $('#create-submit').click();
                 });
-
-            (function () {
-                if ("@Request.HttpMethod" == "GET") {
-                    var $button = $("#create-submit");
-                    var fields = ["#Name", "#LocalAuthorityId", "#EstablishmentTypeId", "#EducationPhaseId"];
-                    var toggle = function () {
-                        $button.prop("disabled", fields.some(function (x) { return $.trim($(x).val()) == "" }) || ($typeSelector.val()!="41" && (!$("#generate-number-radio").is(":checked") && !$("#enter-number-radio").is(":checked"))));
-                    };
-                    $("input,select").on("change keyup click", toggle);
-                    toggle();
-                }
-            })();
-
         }());
 
     </script>

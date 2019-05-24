@@ -1,4 +1,4 @@
-﻿module.exports = function (grunt) {
+module.exports = function (grunt) {
     var pathUtil = require('path');
     var scriptBundle = [
         'node_modules/govuk_frontend_toolkit/javascripts/govuk/analytics/*.js',
@@ -13,7 +13,8 @@
         'Assets/Scripts/Views/gias-search.js',
         'Assets/Scripts/Views/governor-search.js',
         'Assets/Scripts/Views/group-details.js',
-        'Assets/Scripts/Views/school-search-form.js'
+        'Assets/Scripts/Views/school-search-form.js',
+        'Assets/Scripts/Views/edit-location.js'
       ];
     var isLocal = grunt.option('target') === "local";
     var localBundle = (function () {

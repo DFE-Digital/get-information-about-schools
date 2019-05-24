@@ -6,10 +6,6 @@
     padding-left: 16px;
     margin-left: 12px;
     margin-bottom: 28px;
-
-    .checkbox-wrap {
-        margin-left: 0;
-    }
 }
 
 .schools-search-page {
@@ -101,7 +97,7 @@
 }
 
 
-#la-id-target {
+.la-id-target {
     border: $black 2px solid;
     padding: 4px;
     @include clearfix-me(micro);
@@ -143,12 +139,6 @@
 }
 
 .no-js {
-    .search-toggle-panel {
-        .radio-button-wrap {
-            margin-left: 0;
-        }
-    }
-
     .selected-las {
         width: 100%;
     }
@@ -164,7 +154,7 @@
         }
     }
 
-    .search-type-wrapper .edubase-button-radio {
+    .search-type-wrapper .multiple-choice label {
         padding-left: 0;
         font-weight: bold;
 

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Edubase.Common;
 using Edubase.Services.Core;
@@ -127,7 +127,10 @@ namespace Edubase.Web.UI.Controllers
         {
             if (!viewModel.DownloadFormat.HasValue)
             {
-
+                if (viewModel.DisplayErrors)
+                {
+                    ModelState.AddModelError(nameof(viewModel.DownloadFormat), "A file format must be selected");
+                }
                 return View("Download", viewModel);
             }
 

@@ -488,8 +488,10 @@
     <Content Include="Assets\Scripts\libs\leaflet\leaflet-src.js" />
     <Content Include="Assets\Scripts\libs\leaflet\leaflet.js" />
     <Content Include="Assets\Scripts\libs\leaflet\plugins\leaflet.markercluster-src.js" />
+    <Content Include="Assets\Scripts\standalone\accessibility.js" />
     <Content Include="Assets\Scripts\standalone\indi-search.js" />
     <Content Include="Assets\Scripts\standalone\search-map.js" />
+    <Content Include="Assets\Scripts\Views\edit-location.js" />
     <Content Include="Assets\Scripts\Views\group-details.js" />
     <Content Include="Assets\Scripts\Views\gias-search.js" />
     <Content Include="Assets\Scripts\Elements\search-utils.js" />
@@ -541,7 +543,6 @@
     <Content Include="Assets\Sass\elements\_news-message.scss" />
     <Content Include="Assets\Sass\views\_create-academy-trust.scss" />
     <Content Include="Assets\Sass\elements\_filter-form-controls.scss" />
-    <Content Include="Assets\Sass\elements\_filter-radios.scss" />
     <Content Include="Assets\Sass\views\_create-edit-establishment.scss" />
     <Content Include="Assets\Scripts\analytics.js" />
     <Content Include="Assets\Scripts\Elements\dismissable-message.js" />
@@ -565,11 +566,9 @@
     <Content Include="Assets\Scripts\libs\vue\vue.js" />
     <Content Include="Assets\Scripts\libs\vue\vue.min.js" />
     <Content Include="Assets\Scripts\standalone\address-lookup.js" />
-    <Content Include="Assets\Scripts\standalone\establishment-links.js" />
     <Content Include="Assets\Scripts\standalone\manage-academy-openings.js" />
     <Content Include="Assets\Scripts\standalone\search-change-history.js" />
     <Content Include="Assets\Scripts\tooltips.js" />
-    <Content Include="Assets\Scripts\standalone\bulk-academies.js" />
     <Content Include="Assets\Scripts\Views\edit-governors.js" />
     <Content Include="Assets\Scripts\Views\edit-iebt.js" />
     <Content Include="Assets\Scripts\Views\governor-search.js" />
@@ -917,11 +916,7 @@
     <Content Include="Views\GOVUK\Partials\phase\beta.cshtml" />
     <Content Include="Views\GOVUK\Views\ga\google-analytics.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Prototype\TestView.cshtml" />
-    <Content Include="Views\Prototype\4778-school-search.cshtml" />
-    <Content Include="Views\Prototype\4720-create-school.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\EditDetails.cshtml" />
-    <Content Include="Views\Prototype\Placeholder.cshtml" />
     <Content Include="Views\Downloads\Index.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\Create.cshtml" />
     <Content Include="Views\Downloads\PreparingScheduledExtractPleaseWait.cshtml" />
@@ -959,13 +954,9 @@
     <Content Include="Areas\Establishments\Views\Establishment\EditIEBT.cshtml" />
     <Content Include="Views\Tools\BulkAcademies.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\EditLocation.cshtml" />
-    <Content Include="Views\Prototype\mergeSchools.cshtml" />
     <Content Include="Views\Tools\MergersTool.cshtml" />
     <Content Include="Views\Approvals\Index.cshtml" />
-    <Content Include="Views\Prototype\AddressLookup.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\DateTimeViewModel.cshtml" />
-    <Content Include="Views\Prototype\HelpIcon.cshtml" />
-    <Content Include="Views\Prototype\dont-leave.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SharedGovernorViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\GovernorViewModel.cshtml" />
     <Content Include="Views\Search\Partials\_EstablishmentSearch.cshtml" />
@@ -974,9 +965,7 @@
     <Content Include="Views\Search\Partials\_HelpText.cshtml" />
     <Content Include="Views\Search\Partials\_SearchHeader.cshtml" />
     <Content Include="Views\Search\LocationDisambiguation.cshtml" />
-    <Content Include="Views\Prototype\EstablishmentLinks.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\GovernorGridViewModel.cshtml" />
-    <Content Include="Views\Prototype\location-demo.cshtml" />
     <Content Include="Views\DataQuality\EditStatus.cshtml" />
     <Content Include="Views\DataQuality\ViewStatus.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\Partials\TabHelpdesk.cshtml" />
@@ -990,7 +979,6 @@
     <Content Include="Views\Shared\FullErrorDetail.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AgeRangeFilterViewModel.cshtml" />
     <Content Include="Views\Shared\_GenericPaginationV2.cshtml" />
-    <Content Include="Views\Prototype\TabsTestPage.cshtml" />
     <Content Include="Views\Tools\ApiSessionRecorder.cshtml" />
     <Content Include="Views\Glossary\Index.cshtml" />
     <Content Include="Views\Glossary\CreateEdit.cshtml" />
@@ -1015,15 +1003,6 @@
     <Content Include="Views\Faq\Index.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
-    <None Include="Web.Debug %28QA%29.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Debug-TexunaAPI.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.ReleaseTexunaAPI.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Governors\Views\Search\" />

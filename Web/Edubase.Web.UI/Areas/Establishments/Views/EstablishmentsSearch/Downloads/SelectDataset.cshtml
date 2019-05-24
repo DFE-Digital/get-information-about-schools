@@ -58,7 +58,7 @@
 
                             @Html.GiasRadioFor(m => m.Dataset, "custom", "Choose a specific set of data", null, new { @class = "custom-fields" })
 
-                            <div class="panel-indent shift-panel stacked-controls" id="data-download-options">
+                            <div class="panel panel-border-narrow" id="data-download-options">
                                 <fieldset>
                                     <legend class="bold">Include additional data:</legend>
 
@@ -111,13 +111,13 @@
             var $panel = $('#data-download-options');
             if ($panel.length > 0) {
                 $radios.on('change', function () {
-                    $panel.detach().insertAfter($(this).parents('.radio-button-wrap'));
+                    $panel.detach().insertAfter($(this).parents('.multiple-choice'));
                 });
 
                 $panel.detach().insertAfter(
                     $radios.filter(function(n, rad) {
                         return rad.checked;
-                    }).parents('.radio-button-wrap'));
+                    }).parents('.multiple-choice'));
             }
 
             $(".custom-fields").on("change", function () {
@@ -126,4 +126,3 @@
         }());
     </script>
 }
-

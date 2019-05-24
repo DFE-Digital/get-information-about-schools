@@ -1,4 +1,5 @@
-﻿using Edubase.Common;
+using Edubase.Common;
+using Newtonsoft.Json;
 
 namespace Edubase.Services.Establishments.Search
 {
@@ -7,7 +8,11 @@ namespace Edubase.Services.Establishments.Search
         public int Id => Urn;
         public int Urn { get; set; }
         public string Name { get; set; }
+
+        [JsonProperty("addressCityOrTown")]
         public string Address_CityOrTown { get; set; }
+
+        [JsonProperty("addressPostCode")]
         public string Address_PostCode { get; set; }
 
         public bool Closed { get; set; }

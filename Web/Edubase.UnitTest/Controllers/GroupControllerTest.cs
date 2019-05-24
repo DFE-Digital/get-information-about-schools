@@ -167,7 +167,7 @@ namespace Edubase.UnitTest.Controllers
                 Action = ActionSave,
                 GroupTypeId = (int) eLookupGroupType.Federation,
                 OpenDate = new Web.UI.Models.DateTimeViewModel(DateTime.Now)
-            });
+            }, ActionSave);
 
             Assert.That(result.RouteValues["action"], Is.EqualTo("Details"));
             Assert.That(result.RouteValues["id"], Is.EqualTo(123));
@@ -188,7 +188,7 @@ namespace Edubase.UnitTest.Controllers
                 Action = ActionSave,
                 GroupTypeId = (int)eLookupGroupType.Federation,
                 OpenDate = new Web.UI.Models.DateTimeViewModel(DateTime.Now)
-            });
+            }, ActionSave);
             var model = (GroupEditorViewModel) result.Model;
             Assert.That(model.WarningsToProcess.Any(), Is.EqualTo(true));
             
@@ -200,7 +200,7 @@ namespace Edubase.UnitTest.Controllers
                 GroupTypeId = (int)eLookupGroupType.Federation,
                 OpenDate = new Web.UI.Models.DateTimeViewModel(DateTime.Now),
                 ProcessedWarnings = true
-            });
+            }, ActionSave);
 
             Assert.That(result2.RouteValues["action"], Is.EqualTo("Details"));
             Assert.That(result2.RouteValues["id"], Is.EqualTo(123));
@@ -223,7 +223,7 @@ namespace Edubase.UnitTest.Controllers
                 GroupTypeId = (int)eLookupGroupType.Federation,
                 OpenDate = new Web.UI.Models.DateTimeViewModel(DateTime.Now),
                 ProcessedWarnings = true
-            });
+            }, ActionSave);
 
             Assert.That(result.RouteValues["action"], Is.EqualTo("Details"));
             Assert.That(result.RouteValues["id"], Is.EqualTo(123));
@@ -379,7 +379,7 @@ namespace Edubase.UnitTest.Controllers
                 Text = "1000"
             });
 
-            Assert.That(ObjectUnderTest.ModelState["Text"].Errors[0].ErrorMessage, Is.EqualTo("We were unable to find a SAT matching those details"));
+            Assert.That(ObjectUnderTest.ModelState["Text"].Errors[0].ErrorMessage, Is.EqualTo("We were unable to find a single-academy trust matching those details"));
             Assert.That(response.ViewName, Is.EqualTo(string.Empty));
         }
 

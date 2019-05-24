@@ -60,6 +60,10 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public string OpenDateLabel => GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust) ? "Incorporated on" : "Open date";
         public GT? GroupType => GroupTypeId.HasValue ? (GT)GroupTypeId.Value : null as GT?;
 
+        public string OriginalGroupName { get; set; }
+        public string OriginalGroupTypeName { get; set; }
+
+
         [Display(Name = "Group ID")]
         public string GroupId { get; set; }
         public string CompaniesHouseNumber { get; set; }

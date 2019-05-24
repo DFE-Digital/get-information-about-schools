@@ -127,21 +127,31 @@
 
                 @if (Model.EditPolicy.MSOACode)
                 {
-                    <div class="form-group @Html.ValidationCssClass(nameof(Model.MSOACode)) @Html.ValidationCssClass("MSOAId")">
-                        <label for="@nameof(Model.MSOACode)">Middle Super Output Area (MSOA)</label>
-                        @Html.ValidationMessage(nameof(Model.MSOACode))
-                        @Html.ValidationMessage("MSOAId")<div id="MSOAId"></div>
-                        @Html.TextBoxFor(x => x.MSOACode, new {@class = "form-control"})
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.MSOAId) @Html.ValidationCssClassFor(x => x.MSOAName)" id="searchby-msoa-ref">
+                        <label for="@nameof(Model.MSOAName)">Middle Super Output Area (MSOA)</label>
+                        @Html.ValidationMessageFor(x => x.MSOAId)
+                        @Html.ValidationMessageFor(x => x.MSOAName)
+
+                        <div id="MSOAId" class="floating-text-field-wrap form-control">
+                            @Html.TextBoxFor(x => x.MSOAName, new { @class = "floating-text-field", autocomplete = "off" })
+                        </div>
+
+                        @Html.HiddenFor(x => x.MSOAId, new { id = "MSOAIdHidden" })
                     </div>
                 }
 
                 @if (Model.EditPolicy.LSOACode)
                 {
-                    <div class="form-group @Html.ValidationCssClass(nameof(Model.LSOACode)) @Html.ValidationCssClass("LSOAId")">
-                        <label for="@nameof(Model.LSOACode)">Lower Super Output Area (LSOA)</label>
-                        @Html.ValidationMessage(nameof(Model.LSOACode))
-                        @Html.ValidationMessage("LSOAId")<div id="LSOAId"></div>
-                        @Html.TextBoxFor(x => x.LSOACode, new { @class = "form-control" })
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.LSOAId) @Html.ValidationCssClassFor(x => x.LSOAName)" id="searchby-lsoa-ref">
+                        <label for="@nameof(Model.LSOAName)">Lower Super Output Area (LSOA)</label>
+                        @Html.ValidationMessageFor(x => x.LSOAId)
+                        @Html.ValidationMessageFor(x => x.LSOAName)
+
+                        <div id="LSOAId" class="floating-text-field-wrap form-control">
+                            @Html.TextBoxFor(x => x.LSOAName, new { @class = "floating-text-field", autocomplete = "off" })
+                        </div>
+
+                        @Html.HiddenFor(x => x.LSOAId, new { id = "LSOAIdHidden" })
                     </div>
                 }
 
@@ -181,7 +191,16 @@
         else
         {
             @section ViewScripts {
-                <script>
+                <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
+                <script type="text/javascript">
+                    var jScriptVersion;
+                    window.lsoas = @Html.Json(Model.LSOAs);
+                    window.msoas = @Html.Json(Model.MSOAs);
+
+                    if (!$('html').hasClass('lt-ie9')) {
+                        DfE.Views.editLocation.init();
+                    }
+
                     var $fields = $('#content').find('.form-control');
                     var exitAttached = false;
 

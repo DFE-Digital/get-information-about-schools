@@ -23,9 +23,9 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public List<LookupItemViewModel> GovernorRoles { get; internal set; }
         public List<LookupItemViewModel> GovernorTypeFlags => new List<LookupItemViewModel>
         {
-            new LookupItemViewModel((int)eGovernorTypesFlag.MultiAcademyTrusts, "Multi academy trusts"),
-            new LookupItemViewModel((int)eGovernorTypesFlag.AcademiesWithinMAT, "Academies in a multi academy trust"),
-            new LookupItemViewModel((int)eGovernorTypesFlag.AcademiesWithinSAT, "Academies in a single academy trust"),
+            new LookupItemViewModel((int)eGovernorTypesFlag.MultiAcademyTrusts, "Multi-academy trusts"),
+            new LookupItemViewModel((int)eGovernorTypesFlag.AcademiesWithinMAT, "Academies in a multi-academy trust"),
+            new LookupItemViewModel((int)eGovernorTypesFlag.AcademiesWithinSAT, "Academies in a single-academy trust"),
             new LookupItemViewModel((int)eGovernorTypesFlag.GovsOfLAMaintained, "Local authority maintained schools"),
             new LookupItemViewModel((int)eGovernorTypesFlag.CTC, "City technology colleges"),
             new LookupItemViewModel((int)eGovernorTypesFlag.FreeSchools, "Free schools"),

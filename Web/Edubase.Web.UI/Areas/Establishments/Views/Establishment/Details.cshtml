@@ -43,22 +43,28 @@
     </div>
 }
 
-@if (ViewBag.ApprovedCount != null && ViewBag.ApprovedCount > 0)
+@if ((ViewBag.ApprovedCount != null && ViewBag.ApprovedCount > 0) || (ViewBag.PendingApprovalCount != null && ViewBag.PendingApprovalCount > 0))
 {
-    var c = (int)ViewBag.ApprovedCount;
+    var approvedCount = (int) ViewBag.ApprovedCount;
+    var pendingCount = (int) ViewBag.PendingApprovalCount;
+    var pendingTickClass = approvedCount > 0 ? "tickNotTop" : "tick";
     <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
-        <div class="tick"></div>
-        <p class="message-text" aria-live="polite">@c change@(Html.Conditional(c > 1, "s")) to establishment details @(c > 1 ? "have" : "has") been instantly updated</p>
-        <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
-    </div>
-}
-
-@if (ViewBag.PendingApprovalCount != null && ViewBag.PendingApprovalCount > 0)
-{
-    var c = (int)ViewBag.PendingApprovalCount;
-    <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
-        <div class="tick"></div>
-        <p class="message-text" aria-live="polite">@c change@(Html.Conditional(c > 1, "s")) to establishment details require DfE approval. You do not need to take any action now and changes will be made soon. If the DfE need more information they will contact you.</p>
+        <p class="message-text" aria-live="polite">
+            @if (approvedCount > 0)
+            {
+                <div class="tick"></div>
+                <p>@approvedCount change@(Html.Conditional(approvedCount > 1, "s")) to establishment details @(approvedCount > 1 ? "have" : "has") been instantly updated.</p>
+            }
+            @if (approvedCount > 0 && pendingCount > 0)
+            {
+                <p><br /></p>
+            }
+            @if (pendingCount > 0)
+            {
+                <div class="@pendingTickClass"></div>
+                <p>@pendingCount change@(Html.Conditional(pendingCount > 1, "s")) to establishment details require DfE approval. You do not need to take any action now and changes will be made soon. If the DfE need more information they will contact you.</p>
+            }
+        </p>
         <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
     </div>
 }

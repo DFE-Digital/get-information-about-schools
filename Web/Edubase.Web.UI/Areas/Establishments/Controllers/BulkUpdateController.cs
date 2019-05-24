@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Common.IO;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
@@ -13,7 +13,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
     using R = Services.Security.EdubaseRoles;
 
-    [RouteArea("Establishments"), RoutePrefix("BulkUpdate"), Route("{action=index}"), MvcAuthorizeRoles(R.ROLE_PRISM, R.ROLE_STAKEHOLDER, R.ROLE_BACKOFFICE)]
+    [RouteArea("Establishments"), RoutePrefix("BulkUpdate"), MvcAuthorizeRoles(R.ROLE_PRISM, R.ROLE_STAKEHOLDER, R.ROLE_BACKOFFICE)]
     public class BulkUpdateController : Controller
     {
         readonly IEstablishmentWriteService _establishmentWriteService;
@@ -27,7 +27,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         public ActionResult Index() => View(new BulkUpdateViewModel(User.IsInRole(R.ROLE_BACKOFFICE)));
 
 
-        [HttpPost, Route("Index", Name = "ProcessBulkUpdate")]
+        [HttpPost, Route(Name = "ProcessBulkUpdate")]
         public async Task<ActionResult> ProcessBulkUpdate(BulkUpdateViewModel viewModel)
         {
             viewModel.CanOverrideCRProcess = User.IsInRole(R.ROLE_BACKOFFICE);
@@ -39,10 +39,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
                 if (new FileInfo(fileName).Length > 1000000)
                 {
-                    viewModel.Result = new Services.Domain.BulkUpdateProgressModel
-                    {
-                        Errors = new[] { new Services.Domain.ApiError { Code = "error.maxRowsLimitReached.payload.bulkUpload" } }
-                    };
+                    ModelState.AddModelError("BulkFile", "The file size is too large. Please use a file size smaller than 1MB");
                 }
                 else
                 {

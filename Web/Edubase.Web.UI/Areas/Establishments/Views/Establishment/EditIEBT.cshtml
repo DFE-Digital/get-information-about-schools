@@ -113,22 +113,22 @@
                     @Html.DropDownListFor(x => x.BoardingEstablishmentId, Model.BoardingEstablishment, "", new { @class = "form-control" })
                 </div>
 
-                <fieldset class="toggle-panels" id="proprietor-radios">
+                <fieldset class="toggle-panels inline" id="proprietor-radios">
                     <legend class="bold-legend">Proprietor</legend>
-                    <span class="radio-button-wrap">
+                    <div class="multiple-choice">
                         <input type="radio" name="proprietor-type" value="single" id="proprietor-type-single" data-toggle-panel="#proprietor-single"  @Html.Conditional(!Model.AnyChairOfProprietorsFieldsSet, "checked") />
-                        <label class="edubase-button-radio" for="proprietor-type-single">
+                        <label for="proprietor-type-single">
                             Single proprietor
                         </label>
-                    </span>
-                    <span class="radio-button-wrap">
+                    </div>
+                    <div class="multiple-choice">
                         <input type="radio" name="proprietor-type" value="body" id="proprietor-type-body" data-toggle-panel="#proprietor-body" @Html.Conditional(Model.AnyChairOfProprietorsFieldsSet, "checked") />
-                        <label class="edubase-button-radio" for="proprietor-type-body">
+                        <label for="proprietor-type-body">
                             Proprietory body
                         </label>
-                    </span>
+                    </div>
                 </fieldset>
-                <div id="proprietor-single" class="panel-indent edu-edit-panel">
+                <div id="proprietor-single" class="panel panel-border-narrow push-half--top">
                     <h4 class="heading-small">Proprietor details</h4>
                     <div id="cloneable-fields-container">
                         @RenderTextBox(x => x.ProprietorsPreferredJobTitle)
@@ -152,7 +152,7 @@
 
 
                 </div>
-                <div id="proprietor-body" class="panel-indent edu-edit-panel">
+                <div id="proprietor-body" class="panel panel-border-narrow push-half--top">
                     <h4 class="heading-small">Proprietor body details</h4>
                     <div id="field-clone-target">
 

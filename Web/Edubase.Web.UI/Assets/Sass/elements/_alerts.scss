@@ -1,7 +1,7 @@
 .pending-updates-message {
     background-color: $turquoise;
     font-size: 15px;
-    color:white;
+    color: white;
     padding: 12px 36px 12px 44px;
     position: relative;
     margin-bottom: 10px;
@@ -10,6 +10,16 @@
         position: absolute;
         left: 10px;
         top: 6px;
+        width: 35px;
+        height: 35px;
+        background-image: url('/public/assets/images/icons/tick.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+
+    .tickNotTop {
+        position: absolute;
+        left: 10px;
         width: 35px;
         height: 35px;
         background-image: url('/public/assets/images/icons/tick.png');
@@ -45,6 +55,71 @@
     }
 
     a {
-        color:white;
+        color: white;
+    }
+}
+
+.warning-message {
+    background-color: $yellow-25;
+    background-image: file-url('icons/icon-important-2x.png');
+    background-repeat: no-repeat;
+    background-position: 10px 50%;
+    background-size: 36px;
+    margin-bottom: 1em;
+    border-left: $black 4px solid;
+    min-height: 60px;
+
+    h3 {
+        padding: 12px 0 12px 58px;
+        font-weight: bold;
+    }
+
+    p {
+        font-weight: bold;
+        padding: 1em 12px 1em 58px;
+    }
+
+    ul {
+        padding-left: 58px;
+        margin-left: 32px;
+        margin-right: 12px;
+        font-weight: bold;
+
+        & + p {
+            padding-top: 0;
+        }
+
+        &.warning-list {
+            padding-bottom: 20px;
+        }
+    }
+
+    @include media(mobile) {
+        background-size: 24px;
+
+        p {
+            padding-left: 40px;
+        }
+
+        ul {
+            padding-left: 40px;
+        }
+    }
+
+    .search-toggle-panel & {
+        max-width: 50%;
+
+        @include media(mobile) {
+            max-width: 100%;
+        }
+    }
+
+    #group-search-container &,
+    #governor-search-wrapper & {
+        max-width: 50%;
+
+        @include media(mobile) {
+            max-width: 100%;
+        }
     }
 }

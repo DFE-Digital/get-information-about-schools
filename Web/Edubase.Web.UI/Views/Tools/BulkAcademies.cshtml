@@ -15,6 +15,35 @@
 </div>
 
 <div id="bulk-academies" v-cloak>
+    <div v-if="showGlobalError" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+        <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
+        <h2 class="heading-medium error-summary-heading no-academies hidden">No academies have been specified</h2>
+        <p class="invalid-urn error-sub-heading hidden">Predecessor school not recognised</p>
+        <p class="missing-date error-sub-heading hidden">Please specify an opening date</p>
+        <ul class="error-summary-list">
+            <li v-show="invalidUrn">
+                <a href="#establishment-urn">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a>
+            </li>
+            <li v-show="duplicateUrn">
+                <a href="#establishment-urn"><abbr title="Unique Reference Number">URN</abbr> is a duplicate</a>
+            </li>
+            <li v-show="urnLookUpError!==''">
+                <a href="#establishment-urn" v-if="urnLookUpError">{{urnLookUpError}}</a>
+            </li>
+            <li v-show="apiValidationError!==''">
+                <a href="#establishment-urn" v-if="apiValidationError">{{apiValidationError}}</a>
+            </li>
+            <li v-show="noAcademyError">
+                <a href="#academy-type">Please add an academy</a>
+            </li>
+            <li v-show="academyUnselectedError">
+                <a href="#academy-type">Please select an establishment type</a>
+            </li>
+            <li v-show="openDateError">
+                <a href="#academy-open-date">Opening date not specified</a>
+            </li>
+        </ul>
+    </div>
 
     <!-- API Errors -->
     <div v-show="Object.keys(apiError).length> 0">
@@ -46,35 +75,6 @@
         <form id="bulk-academy-create">
             <div class="grid-row" v-show="!isComplete && !isProcessing">
 
-                <!-- Errors -->
-                <div class="column-full">
-                    <div class="error-summary" v-show="showGlobalError">
-                        <h2 class="heading-medium error-summary-heading invalid-urn" v-show="duplicateUrn || invalidUrn">
-                            Information missing or incorrect
-                        </h2>
-                        <h2 class="heading-medium error-summary-heading missing-date" v-show="openDateError">
-                            Information missing or incorrect
-                        </h2>
-                        <h2 class="heading-medium error-summary-heading missing-date" v-show="urnLookUpError!=='' || apiValidationError!==''">
-                            Information missing or incorrect
-                        </h2>
-                        <h2 class="heading-medium error-summary-heading no-academies hidden">
-                            No academies have been specified
-                        </h2>
-                        <p class="invalid-urn error-sub-heading hidden">Predecessor school not recognised</p>
-                        <p class="missing-date error-sub-heading hidden">Please specify an opening date</p>
-                        <ul class="error-summary-list">
-                            <li class="error-message" v-show="invalidUrn"><a href="#establishment-urn">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a></li>
-                            <li class="error-message" v-show="duplicateUrn"><a href="#establishment-urn"><abbr title="Unique Reference Number">URN</abbr> is a duplicate</a></li>
-                            <li class="error-message" v-show="urnLookUpError!==''"><a href="#establishment-urn" v-if="urnLookUpError">{{urnLookUpError}}</a></li>
-                            <li class="error-message" v-show="apiValidationError!==''"><a href="#establishment-urn" v-if="apiValidationError">{{apiValidationError}}</a></li>
-                            <li class="error-message" v-show="dateError"><a href="#academy-open-date">Opening date not specified</a></li>
-                            <li class="error-message" v-show="noAcademyError"><a href="#academy-type">Please add an academy</a></li>
-                            <li class="error-message" v-show="academyUnselectedError"><a href="#academy-type">Please select an establishment type</a></li>
-                        </ul>
-                    </div>
-                </div>
-
                 <div class="column-two-thirds">
                     <div v-show="Object.keys(pendingEstab).length < 2">
                         <h2 class="heading-small">Predecessor school</h2>
@@ -87,7 +87,7 @@
                                 <span class="error-message" v-show="urnLookUpError !== ''">{{urnLookUpError}}</span>
                             </label>
                             <input id="establishment-urn" class="form-control" type="text" v-model="searchUrn" />
-                            <button class="button inline-submit" id="find-urn" v-on:click.prevent="estabLookUp" :disabled="$.trim(searchUrn).length < 5 || isNaN(searchUrn)">Find</button>
+                            <button class="button inline-submit" id="find-urn" v-on:click.prevent="estabLookUp">Search</button>
 
                         </div>
                     </div>
@@ -100,7 +100,7 @@
                             {{pendingEstabAddress}} <br />
                             <abbr title="Unique Reference Number">URN</abbr>: {{pendingEstab.urn}} <br />
                             <span v-show="!pendingEdit">
-                                <a href="#" class="change-link" v-on:click.prevent="pendingEstab={}">Wrong establishment?</a>
+                                <a href="#" class="change-link" v-on:click.prevent="wrongEstablishment">Wrong establishment?</a>
                             </span>
                         </p>
 
@@ -133,13 +133,14 @@
                             </fieldset>
                         </div>
                         <div class="button-row">
-                            <button class="button mobile-full-width" id="add-item-to-list" v-on:click.prevent="addEstablishment" v-show="!pendingEdit">Add</button>
+                            <button class="button mobile-full-width" id="add-item-to-list" v-on:click.prevent="addEstablishment" v-show="!pendingEdit">Add establishment</button>
                             <button class="button mobile-full-width" id="save-item-to-list" v-on:click.prevent="addEstablishment" v-show="pendingEdit">Save</button>
                             <a class="button mobile-full-width button-secondary" id="cancel-add-item-to-list" v-on:click.prevent="cancelAddEdit">Cancel</a>
                         </div>
 
                     </div>
                 </div>
+
                 <div class="academies-list-wrapper column-full" v-show="establishments.length > 0 && !pendingEdit && !isSearching">
                     <h2 class="heading-medium">Academies to create</h2>
                     <p class="table-caption" v-show="establishments.length > 1">Showing 1 - {{establishments.length}} of {{establishments.length}}</p>
@@ -298,5 +299,3 @@
     <script src="/Assets/Scripts/standalone/bulk-create-academies.js"></script>
     @*<script src="/public/assets/scripts/standalone/bulk-create-academies.js"></script>*@
 }
-
-

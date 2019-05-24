@@ -6,21 +6,31 @@
     ViewBag.PageClass = "search-history-results search-results";
 }
 
+<div class="breadcrumbs">
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+        <li>
+            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+        </li>
+        <li>
+            @Html.ActionLink("Change history", "Index", "ChangeHistory", new { area = ""}, null)
+        </li>
+    </ul>
+</div>
+
+<div class="error-summary hidden" aria-labelledby="error-summary-title" role="alert" tabindex="-1" id="js-filter-error-summary">
+    <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
+    <ul class="error-summary-list">
+        <li class="date-filter-error hidden">
+            <a href="#date-filter">Please enter the date in the format DD/MM/YYYY</a>
+        </li>
+    </ul>
+</div>
+
 <div class="grid-row">
     <div class="column-full results-heading change-history-results-heading">
-        <div class="breadcrumbs">
-            <ul>
-                <li>
-                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-                </li>
-                <li>
-                    @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
-                </li>
-                <li>
-                    @Html.ActionLink("Change history", "Index", "ChangeHistory", new { area = ""}, null)
-                </li>
-            </ul>
-        </div>
         @{
             var heading = (Model.SearchType.OneOfThese(eSearchType.Group, eSearchType.GroupAll)) ? "Group change history" : "Establishment change history";
             if (Model.SingleEstablishment && !string.IsNullOrWhiteSpace(Model.EstablishmentName))
@@ -146,17 +156,17 @@
             <div class="js-auto-height-inner">
                 <fieldset>
                     <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
-                    <div class="filter-wrapper select-all-wrap">
-                        <input id="@(name)_all" class="filter-input select-all" type="checkbox" />
-                        <label for="@(name)_all" class="filter-radio">
+                    <div class="select-all-wrap multiple-choice multiple-choice--smaller multiple-choice--list">
+                        <input id="@(name)_all" class="select-all" type="checkbox" />
+                        <label for="@(name)_all">
                             All
                         </label>
                     </div>
                     @foreach (var item in items)
                     {
-                        <div class="filter-wrapper">
-                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
-                            <label for="@(name)_@item.Id" class="filter-radio">
+                        <div class="multiple-choice multiple-choice--smaller multiple-choice--list">
+                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
+                            <label for="@(name)_@item.Id">
                                 @item
                             </label>
                         </div>
@@ -182,17 +192,17 @@
             <div class="js-auto-height-inner">
                 <fieldset>
                     <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
-                    <div class="filter-wrapper select-all-wrap">
-                        <input id="@(name)_all" class="filter-input select-all" type="checkbox" />
-                        <label for="@(name)_all" class="filter-radio">
+                    <div class="select-all-wrap multiple-choice multiple-choice--smaller multiple-choice--list">
+                        <input id="@(name)_all" class="select-all" type="checkbox" />
+                        <label for="@(name)_all">
                             All
                         </label>
                     </div>
                     @foreach (var item in items)
                     {
-                        <div class="filter-wrapper">
-                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
-                            <label for="@(name)_@item.Id" class="filter-radio">
+                        <div class="multiple-choice multiple-choice--smaller multiple-choice--list">
+                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
+                            <label for="@(name)_@item.Id">
                                 @item
                             </label>
                         </div>
@@ -232,5 +242,3 @@
     <script src="/public/assets/scripts/standalone/search-change-history.js"></script>
 
 }
-
-

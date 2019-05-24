@@ -61,17 +61,17 @@
                             <div class="js-auto-height-inner">
                                 <fieldset>
                                     <legend class="visuallyhidden">Select an option below to filter the results</legend>
-                                    <div class="filter-wrapper select-all-wrap">
-                                        <input id="grouptype_all" class="filter-input select-all" type="checkbox" />
-                                        <label for="grouptype_all" class="filter-radio">
+                                    <div class="select-all-wrap multiple-choice multiple-choice--smaller multiple-choice--list">
+                                        <input id="grouptype_all" class="select-all" type="checkbox" />
+                                        <label for="grouptype_all">
                                             All
                                         </label>
                                     </div>
                                     @foreach (var item in Model.GroupTypes)
                                     {
-                                        <div class="filter-wrapper">
-                                            <input name="t" value="@item.Id" class="trigger-result-update filter-input" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupTypeIds.Contains(item.Id), "checked") />
-                                            <label for="group-type_@item.Id" class="filter-radio">
+                                        <div class="multiple-choice multiple-choice--smaller multiple-choice--list">
+                                            <input name="t" value="@item.Id" class="trigger-result-update" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupTypeIds.Contains(item.Id), "checked") />
+                                            <label for="group-type_@item.Id">
                                                 @item
                                             </label>
                                         </div>
@@ -95,17 +95,17 @@
                                 <div class="js-auto-height-inner">
                                     <fieldset><span class="visuallyhidden">- changing the selection will refresh the results</span>
                                         <legend class="visuallyhidden">Select an option below to filter the results</legend>
-                                    <div class="filter-wrapper select-all-wrap">
-                                        <input id="groupstatus_all" class="filter-input select-all" type="checkbox" />
-                                        <label for="groupstatus_all" class="filter-radio">
+                                    <div class="select-all-wrap multiple-choice multiple-choice--smaller multiple-choice--list">
+                                        <input id="groupstatus_all" class="select-all" type="checkbox" />
+                                        <label for="groupstatus_all">
                                             All
                                         </label>
                                     </div>
                                         @foreach (var item in Model.GroupStatuses)
                                         {
-                                            <div class="filter-wrapper">
-                                                <input name="s" value="@item.Id" class="trigger-result-update filter-input" id="group-status_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupStatusIds.Contains(item.Id), "checked") />
-                                                <label for="group-status_@item.Id" class="filter-radio">
+                                            <div class="multiple-choice multiple-choice--smaller multiple-choice--list">
+                                                <input name="s" value="@item.Id" class="trigger-result-update" id="group-status_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupStatusIds.Contains(item.Id), "checked") />
+                                                <label for="group-status_@item.Id">
                                                     @item
                                                 </label>
                                             </div>
@@ -115,7 +115,7 @@
                             </div>
                         </div>
                     }
-                    <div id="filter-addtional-controls">
+                    <div id="filter-additional-controls">
                         <a href="#" class="add-clear-filters" id="clear-filters" role="search">Clear all filters</a>
                     </div>
                     <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />

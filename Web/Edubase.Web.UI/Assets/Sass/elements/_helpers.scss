@@ -128,6 +128,8 @@ $path: "/public/images/";
 // Spacing
 .push--top          { margin-top:     $gutter !important; }
 .push--bottom       { margin-bottom:  $gutter !important; }
+.push--ends         { margin-top:     $gutter !important; margin-bottom: $gutter !important; }
+.push--sides        { margin-right:   $gutter !important; margin-left:   $gutter !important; }
 .push-half--top     { margin-top:     $gutter-half !important; }
 .push-half--right   { margin-right:   $gutter-half !important; }
 .push-half--bottom  { margin-bottom:  $gutter-half !important; }

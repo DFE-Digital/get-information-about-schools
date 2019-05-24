@@ -5,19 +5,29 @@
     ViewBag.bodyClasses = "search-results";
 }
 
+<div class="breadcrumbs">
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
+        <li>
+            @Html.ActionLink("View independent schools' significant dates","IndependentSchoolsSearch","Tools")
+        </li>
+    </ul>
+</div>
+
+<div class="error-summary hidden" aria-labelledby="error-summary-title" role="alert" tabindex="-1" id="js-filter-error-summary">
+    <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
+    <ul class="error-summary-list">
+        <li class="date-filter-error hidden">
+            <a href="#date-filter">Please enter the date in the format DD/MM/YYYY</a>
+        </li>
+    </ul>
+</div>
+
 <div class="grid-row">
     <div class="column-full results-heading">
-        <div class="breadcrumbs">
-            <ul>
-                <li>
-                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-                </li>
-                <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-                <li>
-                    @Html.ActionLink("View independent schools' significant dates","IndependentSchoolsSearch","Tools")
-                </li>
-            </ul>
-        </div>
         <h1 class="heading-xlarge">
             @Html.Conditional(Model.IsGeneralMode, "Next general action required")
             @Html.Conditional(Model.IsWelfareMode, "Next action required by welfare")
@@ -27,57 +37,52 @@
     </div>
 </div>
 
+
 <div class="grid-row">
-<div class="column-third" id="indi-filter-form">
-    <h2 class="visuallyhidden">Search results filters</h2>
-    @using (Html.BeginRouteForm("IndSchSearch", FormMethod.Get, new {id="filter-form-ind"}))
-    {
+    <div class="column-third" id="indi-filter-form">
+        <h2 class="visuallyhidden">Search results filters</h2>
+        @using (Html.BeginRouteForm("IndSchSearch", FormMethod.Get, new {id="filter-form-ind"}))
+        {
+            @Html.HiddenFor(m=>m.Mode)
 
+            @Html.HiddenFor(m=>Model.ActionName)
 
-        @Html.HiddenFor(m=>m.Mode)
+            @Selector("Local authority", "d", Model.LocalAuthorities.OrderBy(x => x.Name).ToList(), Model.SelectedLocalAuthorityIds, "has-save-set")
 
-        @Html.HiddenFor(m=>Model.ActionName)
-
-        @Selector("Local authority", "d", Model.LocalAuthorities.OrderBy(x => x.Name).ToList(), Model.SelectedLocalAuthorityIds, "has-save-set")
-
-        <p>
-            <a class="font-xsmall" href="#" id="set-saver">Save as set</a>
-        </p>
-        <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="false" id="date-filter">
-            <div class="container-head js-container-head">
-                <div class="option-select-label">Date range</div>
-                <div class="js-selected-counter">
-                    <span class="js-selected-counter-text">Date applied</span>
+            <p>
+                <a class="font-xsmall" href="#" id="set-saver">Save as set</a>
+            </p>
+            <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="false" id="date-filter">
+                <div class="container-head js-container-head">
+                    <div class="option-select-label">Date range</div>
+                    <div class="js-selected-counter">
+                        <span class="js-selected-counter-text">Date applied</span>
+                    </div>
                 </div>
-            </div>
 
-            <a href="#" class="clear-selections filter-clear">Clear</a>
-            <div class="options-container" id="">
-                <div class="js-auto-height-inner">
-                    @Html.EditorFor(x => x.MinDate, new {title = "From", inFilters = true, disableHint = true, fieldsetClassName = "search-from-date" })
-                    @Html.EditorFor(x => x.MaxDate, new {title = "To", inFilters = true, disableHint = true, fieldsetClassName = "search-to-date" })
+                <a href="#" class="clear-selections filter-clear">Clear</a>
+                <div class="options-container" id="">
+                    <div class="js-auto-height-inner">
+                        @Html.EditorFor(x => x.MinDate, new {title = "From", inFilters = true, disableHint = true, fieldsetClassName = "search-from-date" })
+                        @Html.EditorFor(x => x.MaxDate, new {title = "To", inFilters = true, disableHint = true, fieldsetClassName = "search-to-date" })
 
-                    <div class="form-group">
-                        <a href="#" class="button button-secondary filter-button">Apply</a>
+                        <div class="form-group">
+                            <a href="#" class="button button-secondary filter-button">Apply</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
-    }
+            <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
+        }
+    </div>
+
+    <div role="alert" aria-live="assertive" id="results-notification" class="visuallyhidden"></div>
+    <h2 class="visuallyhidden">Search results listing</h2>
+    <div class="column-two-thirds" id="results-container">
+        @{Html.RenderPartial("_IndSchSearchResults");}
+    </div>
 </div>
-
-<div role="alert" aria-live="assertive" id="results-notification" class="visuallyhidden"></div>
-<h2 class="visuallyhidden">Search results listing</h2>
-<div class="column-two-thirds" id="results-container">
-@{Html.RenderPartial("_IndSchSearchResults");}
-
-</div>
-
-
-</div>
-
 
 
 @helper Selector(string label, string name, IEnumerable<LookupDto> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false)
@@ -99,9 +104,9 @@
                     <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
                     @foreach (var item in items)
                     {
-                        <div class="filter-wrapper">
-                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
-                            <label for="@(name)_@item.Id" class="filter-radio">
+                        <div class="multiple-choice multiple-choice--smaller multiple-choice--list">
+                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
+                            <label for="@(name)_@item.Id">
                                 @item
                             </label>
                         </div>

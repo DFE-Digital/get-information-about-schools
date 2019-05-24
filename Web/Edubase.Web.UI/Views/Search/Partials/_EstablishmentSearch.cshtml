@@ -14,13 +14,11 @@
                 @Html.HiddenFor(m => m.SelectedTab)
                 <fieldset class="search-toggle-panel">
                     <legend class="visually-hidden">Search by name or reference number</legend>
-                    <span class="radio-button-wrap">
+                    <div class="multiple-choice">
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.Text, new { id = "searchtype-name", data_toggle_panel = "#searchby-name-ref" })
-                        <label class="edubase-button-radio" for="searchtype-name">
-                            Name or reference number
-                        </label>
-                    </span>
-                    <div class="expanding-search-field" id="searchby-name-ref">
+                        <label for="searchtype-name">Name or reference number</label>
+                    </div>
+                    <div class="panel panel-border-narrow" id="searchby-name-ref">
                         @* This alert gets dynamically populated *@
                         <div class="warning-message visuallyhidden" role="alert">
                             <p class="message-text" aria-live="polite"></p>
@@ -42,11 +40,10 @@
                             @Html.TextBoxFor(x => x.TextSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggest?text=", maxlength="200", aria_describedby="name-reference-help" })
                         </div>
                         <div class="form-group">
-                            <span class="checkbox-wrap">
+                            <div class="multiple-choice">
                                 <input id="include-open-establishments-name" type="checkbox" checked="checked" name="OpenOnly" value="true" />
-                                <label for="include-open-establishments-name" class="edubase-button-checkbox">Include open schools only</label>
-                            </span>
-
+                                <label for="include-open-establishments-name">Include open schools only</label>
+                            </div>
                         </div>
                         @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
                         <div class="form-group">
@@ -64,14 +61,14 @@
             {
                 <fieldset class="search-toggle-panel">
                     <legend class="visually-hidden">Search by location</legend>
-                    <span class="radio-button-wrap">
+                    <div class="multiple-choice">
                         @Html.HiddenFor(m => m.SelectedTab)
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.Location, new { id = "searchtype-location", data_toggle_panel = "#searchby-location-ref" })
-                        <label class="edubase-button-radio" for="searchtype-location">
+                        <label for="searchtype-location">
                             Location
                         </label>
-                    </span>
-                    <div class="expanding-search-field" id="searchby-location-ref">
+                    </div>
+                    <div class="panel panel-border-narrow" id="searchby-location-ref">
                         @* This alert gets dynamically populated *@
                         <div class="warning-message visuallyhidden" role="alert">
                             <p class="message-text" aria-live="polite"></p>
@@ -91,10 +88,10 @@
                         @Html.HiddenFor(x => x.LocationSearchModel.AutoSuggestValue)
 
                         <div class="form-group">
-                            <span class="checkbox-wrap">
+                            <div class="multiple-choice">
                                 <input id="include-open-establishments-location" type="checkbox" checked="checked" name="OpenOnly" value="true" />
-                                <label for="include-open-establishments-location" class="edubase-button-checkbox">Include open schools only</label>
-                            </span>
+                                <label for="include-open-establishments-location">Include open schools only</label>
+                            </div>
                         </div>
                         <div class="form-group">
                             <button type="submit" class="button mobile-full-width search-button" id="location-search-submit" name="searchtype" value="@eSearchType.Location">Search</button>
@@ -110,15 +107,14 @@
                 <legend class="visually-hidden">Search by local authority</legend>
                 @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
                 {
-                    <span class="radio-button-wrap">
+                    <div class="multiple-choice">
                         @Html.HiddenFor(m => m.SelectedTab)
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.ByLocalAuthority, new { id = "searchtype-la", data_toggle_panel = "#searchby-la-ref" })
-
-                        <label class="edubase-button-radio" for="searchtype-la">
+                        <label for="searchtype-la">
                             Local authority
                         </label>
-                    </span>
-                    <div class="expanding-search-field" id="searchby-la-ref">
+                    </div>
+                    <div class="panel panel-border-narrow" id="searchby-la-ref">
                         <div class="warning-message visuallyhidden" role="alert">
                             <p class="message-text" aria-live="polite"></p>
                         </div>
@@ -131,7 +127,7 @@
 
                         <label class="form-label" for="LocalAuthorityToAdd">Enter one or more local authorities</label>
                         <div class="selected-las form-group">
-                            <div id="la-id-target">
+                            <div id="la-id-target" class="la-id-target form-control">
 
                                 @foreach (var id in Model.SelectedLocalAuthorityIds)
                                 {
@@ -151,10 +147,10 @@
                         </div>
 
                         <div class="form-group">
-                            <span class="checkbox-wrap">
+                            <div class="multiple-choice">
                                 <input id="include-open-establishments-la" type="checkbox" checked="checked" name="OpenOnly" value="true" />
-                                <label for="include-open-establishments-la" class="edubase-button-checkbox">Include open schools only</label>
-                            </span>
+                                <label for="include-open-establishments-la">Include open schools only</label>
+                            </div>
                         </div>
 
 
@@ -177,20 +173,19 @@
             {
                 <fieldset class="search-toggle-panel">
                     <legend class="visually-hidden">Search all establishments</legend>
-                    <span class="radio-button-wrap">
+                    <div class="multiple-choice">
                         @Html.HiddenFor(m => m.SelectedTab)
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.EstablishmentAll, new { id = "searchtype-all", data_toggle_panel = "#searchby-all-ref" })
-                        <label class="edubase-button-radio" for="searchtype-all">
+                        <label for="searchtype-all">
                             All establishments
                         </label>
-                    </span>
-                    <div class="expanding-search-field" id="searchby-all-ref">
+                    </div>
+                    <div class="panel panel-border-narrow" id="searchby-all-ref">
                         <div class="form-group">
-                            <span class="checkbox-wrap">
+                            <div class="multiple-choice">
                                 <input id="include-open-establishments-all" type="checkbox" checked="checked" name="OpenOnly" value="true" />
-                                <label for="include-open-establishments-all" class="edubase-button-checkbox">Include open schools only</label>
-                            </span>
-
+                                <label for="include-open-establishments-all">Include open schools only</label>
+                            </div>
                         </div>
                         @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
                         <div class="form-group">

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Edubase.Web.UI.Areas.Establishments.Models;
+using Edubase.Web.UI.Models.Search;
 
 namespace Edubase.Web.UI.Models
 {
@@ -169,11 +170,10 @@ namespace Edubase.Web.UI.Models
         public int? UrbanRuralId { get; set; }
         public int? GSSLAId { get; set; }
         public int? CASWardId { get; set; }
-        //public int? MSOAId { get; set; }
-        //public int? LSOAId { get; set; }
-
-        public string MSOACode { get; set; }
-        public string LSOACode { get; set; }
+        public string MSOAName { get; set; }
+        public int? MSOAId { get; set; }
+        public string LSOAName { get; set; }
+        public int? LSOAId { get; set; }
 
         [Display(Name = "BSO: Date of last inspection")]
         public DateTimeViewModel BSODateOfLastInspectionVisit { get; set; } = new DateTimeViewModel();
@@ -216,6 +216,8 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> UrbanRuralLookup { get; internal set; }
         public IEnumerable<SelectListItem> GSSLALookup { get; internal set; }
         public IEnumerable<SelectListItem> CASWards { get; internal set; }
+        public IEnumerable<LookupItemViewModel> MSOAs { get; set; }
+        public IEnumerable<LookupItemViewModel> LSOAs { get; set; }
 
         public IEnumerable<SelectListItem> PRUSENOptions { get; internal set; }
         public IEnumerable<SelectListItem> PRUEBDOptions { get; internal set; }
@@ -249,6 +251,7 @@ namespace Edubase.Web.UI.Models
         public DateTimeViewModel ChangeEffectiveDate { get; set; } = new DateTimeViewModel();
 
         public string OriginalEstablishmentName { get; set; }
+        public string OriginalTypeName { get; set; }
 
         public string Contact_EmailAddress { get; set; }
         public string ContactAlt_EmailAddress { get; set; }

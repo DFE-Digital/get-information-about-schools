@@ -17,8 +17,8 @@
         overflow: hidden;
     }
     .result-list .button-row {
-        display: none;     
-        padding: 0;   
+        display: none;
+        padding: 0;
     }
 
     .button-row {
@@ -31,7 +31,7 @@
     }
 
     .inline-submit {
-       
+
         margin-left: 0;
     }
 
@@ -40,11 +40,6 @@
         @include media(mobile) {
             width: 50%;
         }
-    }
-   
-    .button {
-        padding-left: 40px;
-        padding-right: 40px;
     }
 
     .table-caption {

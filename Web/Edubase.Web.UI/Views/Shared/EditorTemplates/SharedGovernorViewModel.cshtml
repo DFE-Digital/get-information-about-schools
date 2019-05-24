@@ -12,20 +12,18 @@
         <div class="form-group gov-radio-wrap">
             @if (Model.MultiSelect)
             {
-
-                <span class="checkbox-wrap">
+                <div class="multiple-choice">
                     @Html.CheckBoxFor(x => x.Selected, GetCheckboxAttributes(Model.PreExisting, "panel-trigger", @Html.NameFor(x => x.Selected), "#expand-"+Model.Id))
-
-                    <label class="edubase-button-checkbox" for="@Html.NameFor(x => x.Selected)">@Model.FullName</label>
-                </span>
+                    <label for="@Html.NameFor(x => x.Selected)">@Model.FullName</label>
+                </div>
             }
             else
             {
-                <span class="radio-button-wrap">
+                <div class="multiple-choice">
                     @Html.RadioButton(Model.Id.ToString(), Model.Id, Model.Selected,
-                        new {Name = "SelectedGovernorId", @class = "panel-trigger", @id = "gov-"+Model.Id, data_toggle_panel = "#expand-"+Model.Id })
-                    <label class="edubase-button-radio" for="gov-@Model.Id">@Model.FullName</label>
-                </span>
+                    new {Name = "SelectedGovernorId", @class = "panel-trigger", @id = "gov-"+Model.Id, data_toggle_panel = "#expand-"+Model.Id })
+                    <label for="gov-@Model.Id">@Model.FullName</label>
+                </div>
             }
         </div>
 

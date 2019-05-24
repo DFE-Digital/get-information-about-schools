@@ -11,11 +11,13 @@
                 {
                     <li>@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new { id = Model.LegalParentGroup.GroupUId, area = "Groups" }, null)</li>
                 }
-                <li>@Html.ActionLink(Model.Name, "Details", "Establishment", new {@class="requires-conf-to-leave"})</li>
+                <li>@Html.ActionLink(Model.OriginalEstablishmentName ?? Model.Name, "Details", "Establishment", new {@class="requires-conf-to-leave"})</li>
             </ul>
         </div>
     </div>
 </div>
+
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
 
 <div class="grid-row">
     <div class="column-full edit-changes-summary">
@@ -118,12 +120,13 @@
 
         @if (Model.CanOverrideCRProcess)
         {
-            <span class="checkbox-wrap">
-                @Html.CheckBoxFor(x => x.OverrideCRProcess, new { @id="override-cr"})
-                @Html.LabelFor(x => x.OverrideCRProcess, "Override CR", new {@for="override-cr", @class="edubase-button-checkbox"})
-            </span>
+            <div class="form-group push--bottom">
+                <div class="multiple-choice">
+                    @Html.CheckBoxFor(x => x.OverrideCRProcess, new { @id="override-cr"})
+                    @Html.LabelFor(x => x.OverrideCRProcess, "Override CR", new { @for="override-cr" })
+                </div>
+            </div>
         }
 
     </div>
 </div>
-

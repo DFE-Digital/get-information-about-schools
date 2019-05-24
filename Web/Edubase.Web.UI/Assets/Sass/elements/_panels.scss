@@ -1,6 +1,50 @@
 // Panels
 // ==========================================================================
 
+.panel {
+  @include box-sizing(border-box);
+  @extend %contain-floats;
+  clear: both;
+  border-left-style: solid;
+  border-color: $border-colour;
+
+  padding: em(15, 19);
+  margin-bottom: em(15, 19);
+
+  :first-child {
+    margin-top: 0;
+  }
+
+  :only-child,
+  :last-child {
+    margin-bottom: 0;
+  }
+}
+
+.panel-border-wide {
+  border-left-width: 10px;
+}
+
+// Used to show the left edge of "toggled" content
+.panel-border-narrow {
+  border-left-width: 5px;
+}
+
+// older
+// .panel-border-narrow {
+//     border-left: 5px $grey-2 solid;
+//     padding: 10px 10px 20px;
+// }
+
+// Panels within form groups
+// By default, panels have 15px bottom margin
+.form-group .panel-border-narrow {
+  float: left;
+  width: 100%;
+  // Remove the bottom padding as .form-group sets a bottom margin
+  padding-bottom: 0;
+  // Don't remove the bottom margin for all panels, assume they are often within stacked groups
+}
 
 // Indented panels with a grey left hand border
 .panel-indent {
@@ -50,74 +94,6 @@
 
 .gov-radio-wrap {
     margin-bottom: 8px;
-}
-
-.governor-toggles li {
-    margin-bottom: 36px;
-}
-
-.warning-message {
-    background-color: $yellow-25;
-    background-image: file-url('icons/icon-important-2x.png');
-    background-repeat: no-repeat;
-    background-position: 10px 50%;
-    background-size: 36px;
-    border-left: $black 4px solid;
-    min-height: 60px;
-
-    h3 {
-        padding: 12px 0 12px 58px;
-        font-weight: bold;
-    }
-
-    p {
-        font-weight: bold;
-        padding: 1em 12px 1em 58px;
-    }
-
-    ul {
-        padding-left: 58px;
-        margin-left: 32px;
-        margin-right: 12px;
-        font-weight: bold;
-
-        & + p {
-            padding-top: 0;
-        }
-
-        &.warning-list {
-            padding-bottom: 20px;
-        }
-    }
-
-    @include media(mobile) {
-        background-size: 24px;
-
-        p {
-            padding-left: 40px;
-        }
-
-        ul {
-            padding-left: 40px;
-        }
-    }
-
-    .search-toggle-panel & {
-        max-width: 50%;
-
-        @include media(mobile) {
-            max-width: 100%;
-        }
-    }
-
-    #group-search-container &,
-    #governor-search-wrapper & {
-        max-width: 50%;
-
-        @include media(mobile) {
-            max-width: 100%;
-        }
-    }
 }
 
 .section-break {

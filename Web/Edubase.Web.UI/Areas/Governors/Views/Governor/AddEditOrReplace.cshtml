@@ -50,10 +50,10 @@
 
             if (Model.AllowReinstateAsGovernor)
             {
-                <span class="checkbox-wrap">
+                <div class="multiple-choice">
                     @Html.CheckBoxFor(x => x.ReinstateAsGovernor, new { id = nameof(Model.ReinstateAsGovernor) })
-                    @Html.LabelFor(x => x.ReinstateAsGovernor, Model.ReinstateAsGovernorCheckboxLabel, new { @for = nameof(Model.ReinstateAsGovernor), @class = "edubase-button-checkbox" })
-                </span>
+                    @Html.LabelFor(x => x.ReinstateAsGovernor, Model.ReinstateAsGovernorCheckboxLabel, new { @for = nameof(Model.ReinstateAsGovernor) })
+                </div>
             }
         }
 
@@ -161,7 +161,7 @@
                 queryParameters['rag'] = $("#ReinstateAsGovernor").prop("checked");
 
                 location.search = $.param(queryParameters);
-                
+
             });
 
         }());

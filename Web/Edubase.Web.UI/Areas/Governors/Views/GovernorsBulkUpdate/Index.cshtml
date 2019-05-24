@@ -1,5 +1,9 @@
 @model GovernorsBulkUpdateViewModel
 
+@{
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Governance bulk update");
+}
+
 <div class="breadcrumbs">
     <ul>
         <li>
@@ -11,29 +15,7 @@
     </ul>
 </div>
 
-@if (Model.BadFileType)
-{
-    <div class="validation-summary-errors">
-        <span>Incorrect file type</span>
-        <ul>
-            <li>You have uploaded an incorrect file type. Please upload an XLSX file.</li>
-        </ul>
-    </div>
-}
-else if (Model.ErrorLogDownload != null)
-{
-    <div class="validation-summary-errors">
-        <span>Validation fail</span>
-        <ul>
-            <li>The data contained in the XLSX was invalid. Please download the error log to correct your data before resubmitting.</li>
-        </ul>
-    </div>
-}
-else
-{
-    @Html.ValidationSummary("Incorrect or missing details")
-}
-
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
 
 @using (Html.BeginRouteForm("GovernorsProcessBulkUpdate", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
@@ -67,7 +49,7 @@ else
 
             @if (Model.ErrorLogDownload != null)
             {
-                <div class="form-group error" id="error-log">
+                <div class="form-group error push--top" id="error-log">
                     <p class="error-message">Please download the error log to correct your data before resubmitting</p>
                     <p class="download-list-item">
                         <a href="@Model.ErrorLogDownload.Url">@Model.ErrorLogDownload.Name</a>
@@ -87,6 +69,27 @@ else
             <h2 class="heading-medium">Submit completed template</h2>
             <div class="form-group push--bottom @Html.ValidationCssClassFor(x => x.BulkFile)">
                 <label for="BulkFile" class="form-label">Upload a file</label>
+                <div class="expanding-content-wrapper flush--bottom" data-update-text="false">
+                    <a href="#" class="expanding-content-trigger">
+                        Max file size and other limits
+                    </a>
+                    <div class="expanding-content panel-indent">
+                        <p>
+                            Max file size is 1MB. There are also limits of:
+                            <ul class="list-bullet inside flush--bottom">
+                                <li>
+                                    5,000 rows per file for back office users
+                                </li>
+                                <li>
+                                    1,000 rows per file for EFADO, SFC and DDCE users
+                                </li>
+                                <li>
+                                    200 rows per file for establishment and multi-academy trust users
+                                </li>
+                            </ul>
+                        </p>
+                    </div>
+                </div>
                 @Html.ValidationMessageFor(x => x.BulkFile)
                 @Html.TextBoxFor(x => x.BulkFile, new { type = "file" })
             </div>

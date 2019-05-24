@@ -18,7 +18,7 @@
     </div>
     <div class="column-full">
         <div class="warning-message @Html.Conditional(!Model.SelectedLocalAuthorityIds.Any(), "hidden")" id="gov-la-warning">
-            <p>You can only view governors of establishments by local authority. For multi academy trust governors clear the local authority filter.</p>
+            <p>You can only view governors of establishments by local authority. For multi-academy trust governors clear the local authority filter.</p>
         </div>
     </div>
 </div>
@@ -98,17 +98,17 @@
                             <div class="js-auto-height-inner">
                                 <fieldset>
                                     <legend class="visuallyhidden">Select an option below to filter the results</legend>
-                                    <div class="filter-wrapper select-all-wrap">
-                                        <input id="govrole_all" class="filter-input select-all" type="checkbox" />
-                                        <label for="govrole_all" class="filter-radio">
+                                    <div class="select-all-wrap multiple-choice multiple-choice--smaller multiple-choice--list">
+                                        <input id="govrole_all" class="select-all" type="checkbox" />
+                                        <label for="govrole_all">
                                             All
                                         </label>
                                     </div>
                                     @foreach (var item in Model.GovernorRoles.OrderBy(x => x.Name))
                                     {
-                                        <div class="filter-wrapper">
-                                            <input name="@GovernorSearchViewModel.BIND_ALIAS_ROLE_ID" class="trigger-result-update filter-input" value="@item.Id" id="role_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedRoleIds.Contains(item.Id), "checked") />
-                                            <label for="role_@item.Id" class="filter-radio">
+                                        <div class="multiple-choice multiple-choice--smaller multiple-choice--list">
+                                            <input name="@GovernorSearchViewModel.BIND_ALIAS_ROLE_ID" class="trigger-result-update" value="@item.Id" id="role_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedRoleIds.Contains(item.Id), "checked") />
+                                            <label for="role_@item.Id">
                                                 @item
                                             </label>
                                         </div>
@@ -130,17 +130,17 @@
                             <div class="js-auto-height-inner">
                                 <fieldset>
                                     <legend class="visuallyhidden">Select an option below to filter the results</legend>
-                                    <div class="filter-wrapper select-all-wrap">
-                                        <input id="grouptype_all" class="filter-input select-all" type="checkbox" />
-                                        <label for="grouptype_all" class="filter-radio">
+                                    <div class="select-all-wrap multiple-choice multiple-choice--smaller multiple-choice--list">
+                                        <input id="grouptype_all" class="select-all" type="checkbox" />
+                                        <label for="grouptype_all">
                                             All
                                         </label>
                                     </div>
                                     @foreach (var item in Model.GovernorTypeFlags.OrderBy(x => x.Name))
                                     {
-                                        <div class="filter-wrapper">
-                                            <input name="g" class="trigger-result-update filter-input" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGovernorTypeFlagIds.Contains(item.Id), "checked") />
-                                            <label for="group-type_@item.Id" class="filter-radio">
+                                        <div class="multiple-choice multiple-choice--smaller multiple-choice--list">
+                                            <input name="g" class="trigger-result-update" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGovernorTypeFlagIds.Contains(item.Id), "checked") />
+                                            <label for="group-type_@item.Id">
                                                 @item
                                             </label>
                                         </div>
@@ -153,7 +153,7 @@
 
                     @Selector("Local authority", GovernorSearchViewModel.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds, filterRefine: true, isExtraFilter: true)
 
-                    <div id="filter-addtional-controls">
+                    <div id="filter-additional-controls">
                         <a href="#" class="add-clear-filters" id="clear-filters" role="search">Clear all filters</a>
                     </div>
 
@@ -222,17 +222,17 @@
             <div class="js-auto-height-inner">
                 <fieldset>
                     <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
-                    <div class="filter-wrapper select-all-wrap">
-                        <input id="@(name)_all" class="filter-input select-all" type="checkbox" />
-                        <label for="@(name)_all" class="filter-radio">
+                    <div class="select-all-wrap multiple-choice multiple-choice--smaller multiple-choice--list">
+                        <input id="@(name)_all" class="select-all js-filter-input" type="checkbox" />
+                        <label for="@(name)_all" class="js-filter-label">
                             All
                         </label>
                     </div>
                     @foreach (var item in items)
                     {
-                        <div class="filter-wrapper">
-                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
-                            <label for="@(name)_@item.Id" class="filter-radio">
+                        <div class="multiple-choice multiple-choice--smaller multiple-choice--list">
+                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update js-filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
+                            <label for="@(name)_@item.Id" class="js-filter-label">
                                 @item
                             </label>
                         </div>
