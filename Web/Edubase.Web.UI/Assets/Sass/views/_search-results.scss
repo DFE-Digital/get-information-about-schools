@@ -371,17 +371,13 @@ table.approval-items {
     display: block;
     float: left;
 }
-.add-filters-link {
-    margin-bottom: 2em;
-    float: right;
-}
 
 .save-filter-set-link {
     margin-bottom: 2em;
     float: right;
     font-size: 14px;
 }
-#filter-addtional-controls {
+#filter-additional-controls {
     display: none;
 
     .js-enabled & {

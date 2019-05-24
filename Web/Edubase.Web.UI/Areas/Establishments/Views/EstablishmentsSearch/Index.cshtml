@@ -10,13 +10,35 @@
     ViewBag.HideLogo = true;
 }
 
+<div class="breadcrumbs">
+    <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = Model.SearchType})">Back to find an establishment</a>
+</div>
+
+<div class="error-summary hidden" aria-labelledby="error-summary-title" role="alert" tabindex="-1" id="js-filter-error-summary">
+    <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
+    <ul class="error-summary-list">
+        <li class="open-date-filter-error hidden">
+            <a href="#open-date-filter">Please enter the open date in the format DD/MM/YYYY</a>
+        </li>
+        <li class="close-date-filter-error hidden">
+            <a href="#close-date-filter">Please enter the close date in the format DD/MM/YYYY</a>
+        </li>
+        <li class="option-select-AgeRangeLow-error hidden">
+            <a href="#option-select-AgeRangeLow">Please enter the low age range in the correct format, for example 5 to 11</a>
+        </li>
+        <li class="option-select-AgeRangeHigh-error hidden">
+            <a href="#option-select-AgeRangeHigh">Please enter the high age range in the correct format, for example 5 to 11</a>
+        </li>
+        <li class="summary-radius-error hidden">
+            <a href="#option-select-radius">Please enter a radius between 0 and 99.99</a>
+        </li>
+    </ul>
+</div>
+
 <div class="grid-row" id="search-results">
     <div class="column-full results-heading">
-        <div class="breadcrumbs">
-            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = Model.SearchType})">Back to find an establishment</a>
-        </div>
-
         <h1 class="heading-xlarge">Search results</h1>
+
         @if (Model.Count > 0)
         {
             <a class="download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()">Download these search results</a>
@@ -61,17 +83,9 @@
                 }
                 <text>Establishments matching &lsquo;</text><span class="bold-small">@displayLocation</span><text>&rsquo;</text>
             }
-    </p>
+        </p>
     </div>
     <div class="column-full">
-        <div class="error-summary hidden" id="js-filter-error-summary">
-            <h2 class="error-summary-heading heading-medium">There was a problem with your filter options</h2>
-            <ul class="error-summary-list">
-                <li class="summary-date-error error-message hidden">Please enter the date in the format DD/MM/YYYY</li>
-                <li class="summary-range-error error-message hidden">Please enter the age in the correct format, for example 5 to 11</li>
-                <li class="summary-radius-error error-message hidden">Please enter a radius between 0 and 99.99</li>
-            </ul>
-        </div>
         <div class="date-filter-warning warning-message @Html.Conditional(!Model.ShowDateFilterWarning, "hidden")">
             <p>Incomplete historical data means a number of records have no open date recorded and do not appear in this search.</p>
         </div>
@@ -168,7 +182,7 @@
                         </div>
                     </div>
 
-                    <div id="filter-addtional-controls">
+                    <div id="filter-additional-controls">
                         <a href="#" class="add-clear-filters" id="clear-filters" role="search">Clear all filters</a>
                         @if (User.Identity.IsAuthenticated)
                         {
@@ -338,7 +352,7 @@
         <div class="options-container" id="">
             <div class="js-auto-height-inner">
                 @Html.EditorFor(m => m.CloseDateFrom, new { disableHint = true, labelClass= "form-label" , title="From", inFilters = true, fieldsetClassName = "search-from-date" })
-                @Html.EditorFor(m => m.CloseDateTo, new { disableHint = true, labelClass = "form-label", title = "To", fieldSetClassName = "search-to-date" })
+                @Html.EditorFor(m => m.CloseDateTo, new { disableHint = true, labelClass = "form-label", title = "To", inFilters = true, fieldSetClassName = "search-to-date" })
 
                 <div class="form-group">
                     <a href="#" class="button button-secondary filter-button">Apply</a>
@@ -363,7 +377,7 @@
             <div class="js-auto-height-inner">
 
                 @Html.EditorFor(m => m.OpenDateFrom, new {disableHint = true, labelClass = "form-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date" })
-                @Html.EditorFor(m => m.OpenDateTo, new {disableHint = true, labelClass = "form-label", title = "To", fieldsetClassName = "search-to-date" })
+                @Html.EditorFor(m => m.OpenDateTo, new {disableHint = true, labelClass = "form-label", title = "To", inFilters = true, fieldsetClassName = "search-to-date" })
 
                 <div class="form-group">
                     <a href="#" class="button button-secondary filter-button">Apply</a>
@@ -395,7 +409,6 @@
 }
 
 @helper RadiusFilter() {
-
     <div class="govuk-option-select radius-filter js-collapsible no-scroll" data-closed-on-load="false" id="option-select-radius" data-bind-alias="@M.BIND_ALIAS_RADIUS"
          role="search">
 

@@ -24,88 +24,6 @@
         });
     }
 
-
-    function validateFilters() {
-        var filters = $('.date-filters').filter(':visible');
-        var canSubmit = true;
-        var rangeError = false;
-        filters.each(function (n, elem) {
-            $(elem).find('.form-group').slice(0, 2).removeClass('error');
-            $(elem).find('.error-message').addClass('hidden');
-
-            var validDate = true;
-            var dateObj = {};
-            var fromDateFields = $(elem).find('.search-from-date .form-control');
-            var toDateFields = $(elem).find('.search-to-date .form-control');
-
-            var fromDateValues = $.map(fromDateFields, function (field) {
-                if (field.value.trim() !== '') {
-                    return field.value;
-                }
-            });
-
-            var toDateValues = $.map(toDateFields, function (field) {
-                if (field.value.trim() !== '') {
-                    return field.value;
-                }
-            });
-
-            if (fromDateValues.length > 0 && fromDateValues.length < 3) {
-                validDate = false;
-            }
-            if (toDateValues.length > 0 && toDateValues.length < 3) {
-                validDate = false;
-            }
-
-
-            if (fromDateValues.length === 3 && validDate) {
-                dateObj.day = fromDateValues[0];
-                dateObj.month = fromDateValues[1] - 1;
-                dateObj.year = fromDateValues[2];
-
-                validDate = !DfE.searchUtils.validateDate(dateObj);
-            }
-
-            if (toDateValues.length === 3 && validDate) {
-                dateObj.day = toDateValues[0];
-                dateObj.month = toDateValues[1] - 1;
-                dateObj.year = toDateValues[2];
-
-                validDate = !DfE.searchUtils.validateDate(dateObj);
-            }
-
-            if (!validDate) {
-                $(elem).find('.form-group').slice(0, 2).addClass('error');
-                $(elem).find('.error-message').removeClass('hidden');
-                canSubmit = false;
-
-            } else {
-                var fromDate = new Date(fromDateValues[2], fromDateValues[1], fromDateValues[0]);
-                var toDate = new Date(toDateValues[2], toDateValues[1], toDateValues[0]);
-                if (toDate <= fromDate) {
-                    canSubmit = false;
-                    rangeError = true;
-                }
-            }
-
-
-
-            if (n + 1 === filters.length) {
-                if (!canSubmit) {
-                    $('#date-filter').find('.form-group').addClass('error');
-                    if (rangeError) {
-                        $('#date-filter').find('.date-range-error').slice(0, 1).removeClass('hidden');
-                    } else {
-                        $('#date-filter').find('.error-message').slice(0, 1).removeClass('hidden');
-                    }
-                }
-                filterError = canSubmit;
-
-            }
-        });
-
-    }
-
     function getResults() {
         resultsContainer.html(plsWait);
         resultsNotification.html('Please wait, loading search results');
@@ -207,9 +125,9 @@
 
         filterPanel.find('.trigger-result-update').on('change', function () {
             window.clearTimeout(filterIntent);
-            validateFilters();
+            var canSubmit = DfE.searchUtils.validateDateFilters('date-filter');
 
-            if (filterError) {
+            if (canSubmit) {
                 resultsContainer.addClass('pending-results-update');
                 filterIntent = window.setTimeout(function () {
                     searchParams = $('#change-history-filters').serialize();
@@ -226,9 +144,9 @@
         filterPanel.find('.filter-button').on('click', function (e) {
             e.preventDefault();
             window.clearTimeout(filterIntent);
-            validateFilters();
+            var canSubmit = DfE.searchUtils.validateDateFilters('date-filter');
 
-            if (filterError) {
+            if (canSubmit) {
                 resultsContainer.html(plsWait);
                 searchParams = $('#change-history-filters').serialize();
                 getResults();
