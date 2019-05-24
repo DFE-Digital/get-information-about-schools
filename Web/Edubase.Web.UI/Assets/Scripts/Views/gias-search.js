@@ -12,10 +12,10 @@ DfE.searchResults = (function () {
     var filterIntent = null;
     var seenOpenDateWarning = false;
     var downloadBaseUrl;
+    // these are the additional filters' full components. all hidden to start with
     var $additionalFilters = $('#EditSearchCollapse').find('.additional-search-critera');
     var $additionalFilterClear = $('#additional-filter-wrap').find('.additional-filter-clear');
     var $textFieldFilters = $('#EditSearchCollapse').find('input[type="text"]');
-    var $extraFiltersLink = $('#EditSearchCollapse').find('.add-filters-link');
     var optionTemplate = '<div class="multiple-choice multiple-choice--smaller multiple-choice--list"><input type="checkbox" value="#{0}" data-alias="{2}" id="ctrl-{0}" class="additional-filter-type js-filter-input" /><label  for="ctrl-{0}" class="js-filter-label">{1}</label></div>';
     var searchParams = deDupeParams($filterForm.find(':input').filter(function (n, ele) {
         return ele.value !== '';
@@ -45,6 +45,8 @@ DfE.searchResults = (function () {
             var optionsFragment = '';
             var self = this;
 
+            // going through every hidden additional filter component and
+            // templating the checkboxes with the right data (id, alias and label)
             $additionalFilters.each(function (n, elem) {
                 var elemId = $(elem).prop('id'),
                     elemText = $(elem).find('.option-select-label').text(),
@@ -54,25 +56,38 @@ DfE.searchResults = (function () {
 
             });
 
+            // outputting all the checkboxes to the page
             $('#filter-type-target').append(optionsFragment);
 
-            $extraFiltersLink.on('click',
-                function (e) {
-                    e.preventDefault();
-                    $('#additional-filter-wrap').removeClass('hidden');
-                    $("#filter-refine").prop("disabled", true);
-                });
-
+            // clicking on one of the checkboxes
             $("#additional-filter-wrap input").on("change", function (e) {
                 e.preventDefault();
-                $extraFiltersLink.removeClass('hidden');
+
+                if (this.id == 'ctrl-open-date-filter') {
+                    DfE.searchUtils.clearDateFilterErrors('open-date-filter');
+                }
+
+                if (this.id == 'ctrl-close-date-filter') {
+                    DfE.searchUtils.clearDateFilterErrors('close-date-filter');
+                }
+
+                if (this.id == 'ctrl-option-select-AgeRangeLow') {
+                    DfE.searchUtils.clearAgeFilterErrors('option-select-AgeRangeLow');
+                }
+
+                if (this.id == 'ctrl-option-select-AgeRangeHigh') {
+                    DfE.searchUtils.clearAgeFilterErrors('option-select-AgeRangeHigh');
+                }
 
                 var $selectedFilters = $('#additional-filter-wrap').find('input:checked');
+
+                // hide all additional filters
                 $additionalFilters.addClass('hidden');
 
                 var $ele = $('#selected-search-filters');
                 $ele.val("");
 
+                // show all additional selected filters
                 $selectedFilters.each(function () {
                     var idToShow = $(this).val();
                     $(idToShow).removeClass('hidden');
@@ -108,6 +123,9 @@ DfE.searchResults = (function () {
 
             });
 
+            // a hidden input which stores the selected filter ids (aliases) so that
+            // we know what additional filters need to be displayed.
+            // this also puts a check on the selected inputs
             if (document.getElementById('selected-search-filters')) {
                 var aliases = $('#selected-search-filters').val().split('');
                 $.each(aliases,
@@ -136,7 +154,6 @@ DfE.searchResults = (function () {
                 });
 
             $('#additional-filter-wrap').find('.additional-filter-type').on('change', function () {
-                    $("#filter-refine").prop("disabled", false);
                     if (!$(this).is(':checked')) {
                         $(this.value).find('input:checked').click();
                     }
@@ -386,9 +403,9 @@ DfE.searchResults = (function () {
             $('.age-filter').find('.filter-button').on('click',
                 function (e) {
                     e.preventDefault();
-                    DfE.searchUtils.validateAgeFilters();
+                    var ageFilterId = $(this).closest('.age-filter').attr('id');
+                    DfE.searchUtils.validateAgeFilters(ageFilterId);
                 });
-
 
 
             $('#clear-filters').on('click', function (e) {
@@ -412,7 +429,8 @@ DfE.searchResults = (function () {
             $('.date-filters').find('.filter-button').on('click',
             function (e) {
                 e.preventDefault();
-                DfE.searchUtils.validateDateFilters();
+                var dateFilterId = $(this).closest('.date-filters').attr('id');
+                DfE.searchUtils.validateDateFilters(dateFilterId);
             });
 
 

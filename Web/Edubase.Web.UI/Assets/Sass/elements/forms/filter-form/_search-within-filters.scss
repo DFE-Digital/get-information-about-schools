@@ -15,8 +15,8 @@
 
     .js-closed & {
         display: none;
-    } 
-    
+    }
+
     .no-js & {
         display: none;
     }
@@ -57,12 +57,8 @@
 .filter-suggestion {
     position: relative;
     background-color: $white;
-    span { 
+    span {
         font-weight: bold;
 
     }
-}
-
-input#filter-refine[disabled] {
-    background-color: $button-colour;
 }
