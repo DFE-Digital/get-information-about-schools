@@ -29,7 +29,9 @@
         <li class="option-select-AgeRangeHigh-error hidden">
             <a href="#option-select-AgeRangeHigh">Please enter the high age range in the correct format, for example 5 to 11</a>
         </li>
-        <li class="summary-radius-error hidden">Please enter a radius between 0 and 99.99</li>
+        <li class="summary-radius-error hidden">
+            <a href="#option-select-radius">Please enter a radius between 0 and 99.99</a>
+        </li>
     </ul>
 </div>
 
@@ -407,7 +409,6 @@
 }
 
 @helper RadiusFilter() {
-
     <div class="govuk-option-select radius-filter js-collapsible no-scroll" data-closed-on-load="false" id="option-select-radius" data-bind-alias="@M.BIND_ALIAS_RADIUS"
          role="search">
 

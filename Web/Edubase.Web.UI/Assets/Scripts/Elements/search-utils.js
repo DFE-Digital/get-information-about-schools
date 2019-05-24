@@ -236,6 +236,8 @@ DfE.searchUtils = (function () {
                     $(elem).find('.error-message').removeClass('hidden');
                     errorSummary.removeClass('hidden');
                     errorSummary.find('.summary-radius-error').removeClass('hidden');
+                    errorSummary.focus();
+                    window.document.title = "Error: Search results - GOV.UK";
                     return;
                 }
 
