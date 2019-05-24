@@ -105,8 +105,6 @@ DfE.searchUtils = (function () {
             }
 
             if (!validFromDate || !validToDate) {
-                $('#' + dateFilterId).find('.form-group').slice(0, 2).addClass('error');
-                $('#' + dateFilterId).find('.error-message').not('.date-range-error').removeClass('hidden');
                 canSubmit = false;
                 errorSummary.removeClass('hidden');
                 errorSummary.find('.' + dateFilterId + '-error').removeClass('hidden');
@@ -123,6 +121,14 @@ DfE.searchUtils = (function () {
                     DfE.searchResults.setSearchParams();
                     DfE.searchResults.getResults();
                 }
+            if (!validFromDate) {
+                $('#' + dateFilterId + ' .search-from-date').closest('.form-group').slice(0, 2).addClass('error');
+                $('#' + dateFilterId + ' .search-from-date').find('.error-message').not('.date-range-error').removeClass('hidden');
+            }
+
+            if (!validToDate) {
+                $('#' + dateFilterId + ' .search-to-date').closest('.form-group').slice(0, 2).addClass('error');
+                $('#' + dateFilterId + ' .search-to-date').find('.error-message').not('.date-range-error').removeClass('hidden');
             }
         },
         clearDateFilterErrors: function(dateFilterId){

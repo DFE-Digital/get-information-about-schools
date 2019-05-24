@@ -14,8 +14,6 @@
     <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = Model.SearchType})">Back to find an establishment</a>
 </div>
 
-@Html.Partial("_ValidationSummary", ViewData.ModelState)
-
 <div class="error-summary hidden" aria-labelledby="error-summary-title" role="alert" tabindex="-1" id="js-filter-error-summary">
     <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
     <ul class="error-summary-list">
@@ -352,7 +350,7 @@
         <div class="options-container" id="">
             <div class="js-auto-height-inner">
                 @Html.EditorFor(m => m.CloseDateFrom, new { disableHint = true, labelClass= "form-label" , title="From", inFilters = true, fieldsetClassName = "search-from-date" })
-                @Html.EditorFor(m => m.CloseDateTo, new { disableHint = true, labelClass = "form-label", title = "To", fieldSetClassName = "search-to-date" })
+                @Html.EditorFor(m => m.CloseDateTo, new { disableHint = true, labelClass = "form-label", title = "To", inFilters = true, fieldSetClassName = "search-to-date" })
 
                 <div class="form-group">
                     <a href="#" class="button button-secondary filter-button">Apply</a>
@@ -377,7 +375,7 @@
             <div class="js-auto-height-inner">
 
                 @Html.EditorFor(m => m.OpenDateFrom, new {disableHint = true, labelClass = "form-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date" })
-                @Html.EditorFor(m => m.OpenDateTo, new {disableHint = true, labelClass = "form-label", title = "To", fieldsetClassName = "search-to-date" })
+                @Html.EditorFor(m => m.OpenDateTo, new {disableHint = true, labelClass = "form-label", title = "To", inFilters = true, fieldsetClassName = "search-to-date" })
 
                 <div class="form-group">
                     <a href="#" class="button button-secondary filter-button">Apply</a>
