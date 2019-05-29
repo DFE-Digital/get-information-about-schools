@@ -154,14 +154,24 @@
         }
     }
 
-    .search-type-wrapper .multiple-choice label {
-        padding-left: 0;
-        font-weight: bold;
-
-        &:before,
-        &:after {
-            border: 0;
-            width: 0;
+    .search-type-wrapper {
+        .search-toggle-panel {
+            .multiple-choice--radio {
+                padding-left: 0;
+                input[type=radio] + label {
+                    padding-left: 0;
+                    font-weight: bold;
+                    &:before,
+                    &:after {
+                        display: none;
+                    }
+                }
+            }
+            .panel {
+                padding-top: 0;
+                padding-left: 0;
+                border: 0;
+            }
         }
     }
 

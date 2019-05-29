@@ -14,7 +14,7 @@
                 @Html.HiddenFor(m => m.SelectedTab)
                 <fieldset class="search-toggle-panel">
                     <legend class="visually-hidden">Search by name or reference number</legend>
-                    <div class="multiple-choice">
+                    <div class="multiple-choice multiple-choice--radio">
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.Text, new { id = "searchtype-name", data_toggle_panel = "#searchby-name-ref" })
                         <label for="searchtype-name">Name or reference number</label>
                     </div>
@@ -61,7 +61,7 @@
             {
                 <fieldset class="search-toggle-panel">
                     <legend class="visually-hidden">Search by location</legend>
-                    <div class="multiple-choice">
+                    <div class="multiple-choice multiple-choice--radio">
                         @Html.HiddenFor(m => m.SelectedTab)
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.Location, new { id = "searchtype-location", data_toggle_panel = "#searchby-location-ref" })
                         <label for="searchtype-location">
@@ -107,7 +107,7 @@
                 <legend class="visually-hidden">Search by local authority</legend>
                 @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
                 {
-                    <div class="multiple-choice">
+                    <div class="multiple-choice multiple-choice--radio">
                         @Html.HiddenFor(m => m.SelectedTab)
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.ByLocalAuthority, new { id = "searchtype-la", data_toggle_panel = "#searchby-la-ref" })
                         <label for="searchtype-la">
@@ -173,7 +173,7 @@
             {
                 <fieldset class="search-toggle-panel">
                     <legend class="visually-hidden">Search all establishments</legend>
-                    <div class="multiple-choice">
+                    <div class="multiple-choice multiple-choice--radio">
                         @Html.HiddenFor(m => m.SelectedTab)
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.EstablishmentAll, new { id = "searchtype-all", data_toggle_panel = "#searchby-all-ref" })
                         <label for="searchtype-all">

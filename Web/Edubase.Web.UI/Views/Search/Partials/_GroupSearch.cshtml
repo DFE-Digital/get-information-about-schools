@@ -20,7 +20,7 @@
         <ul>
             <li class="search-type-wrapper">
                 <fieldset class="search-toggle-panel">
-                    <div class="multiple-choice">
+                    <div class="multiple-choice multiple-choice--radio">
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.Group, new { id = "searchtype-name-group", name="search-by", value="all", data_toggle_panel = "#searchby-group-ref" })
                         <label for="searchtype-name-group">
                             Name or reference number
@@ -69,7 +69,7 @@
             <li class="search-type-wrapper">
 
                     <fieldset class="search-toggle-panel">
-                        <div class="multiple-choice">
+                        <div class="multiple-choice multiple-choice--radio">
                             <input id="searchtype-all-groups" name="search-by" value="all" type="radio" data-toggle-panel="#searchby-allgroups-ref">
                             <label for="searchtype-all-groups">
                                 All establishment groups
