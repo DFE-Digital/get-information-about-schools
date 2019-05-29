@@ -264,11 +264,11 @@ DfE.searchResults = (function () {
             $filterForm.find('.filter-clone').prop('disabled', true);
             $('#filter-form').find('.active-clear').addClass('clear-disabled');
             $('#filter-form').find('input[type="text"]').prop('disabled', true);
+            $resultsNotification.html('Please wait, loading search results');
         },
 
         getResults: function () {
             $resultsContainer.html(plsWait);
-            $resultsNotification.html('Please wait, loading search results');
             DfE.searchResults.disableFilters();
             $('.date-filter-warning').addClass('hidden');
 
