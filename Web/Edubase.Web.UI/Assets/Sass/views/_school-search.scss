@@ -60,7 +60,6 @@
 
 .remove-suggest-la {
     background-color: $grey-3;
-    color: $black;
     padding: 5px 32px 4px 5px;
     text-decoration: none;
     font-size: 14px;
@@ -68,6 +67,12 @@
     margin-bottom: 3px;
     float: left;
     position: relative;
+
+    &.link-button {
+        color: $black;
+    }
+
+
 
     &:hover {
         color: $black;
