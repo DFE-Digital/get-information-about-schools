@@ -60,7 +60,6 @@
 
 .remove-suggest-la {
     background-color: $grey-3;
-    color: $black;
     padding: 5px 32px 4px 5px;
     text-decoration: none;
     font-size: 14px;
@@ -68,6 +67,12 @@
     margin-bottom: 3px;
     float: left;
     position: relative;
+
+    &.link-button {
+        color: $black;
+    }
+
+
 
     &:hover {
         color: $black;
@@ -154,14 +159,24 @@
         }
     }
 
-    .search-type-wrapper .multiple-choice label {
-        padding-left: 0;
-        font-weight: bold;
-
-        &:before,
-        &:after {
-            border: 0;
-            width: 0;
+    .search-type-wrapper {
+        .search-toggle-panel {
+            .multiple-choice--radio {
+                padding-left: 0;
+                input[type=radio] + label {
+                    padding-left: 0;
+                    font-weight: bold;
+                    &:before,
+                    &:after {
+                        display: none;
+                    }
+                }
+            }
+            .panel {
+                padding-top: 0;
+                padding-left: 0;
+                border: 0;
+            }
         }
     }
 

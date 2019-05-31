@@ -1,6 +1,7 @@
 ﻿DfE = window.DfE || {};
 DfE.searchMap = (function () {
     var $filterForm = $('#filter-form');
+    var $resultsNotification = $('#results-notification');
     return {
         scriptsLoaded: false,
         softLimit: 900,
@@ -145,6 +146,8 @@ DfE.searchMap = (function () {
                 window.setTimeout(function() {
                     $('.map-header').removeClass('loading');
                     DfE.searchResults.enableFilters();
+                    var count = $('#map-count').text();
+                    $resultsNotification.html('Search results loaded. Showing ' + count + ' establishments in map view.');
                 },1500);
             }
 
@@ -161,6 +164,8 @@ DfE.searchMap = (function () {
                     e.preventDefault();
                     $('#map-container').addClass('hidden');
                     $('#results-container').removeClass('hidden');
+                    var count = $('#list-count').text();
+                    $resultsNotification.html('Search results loaded. Showing ' + count + ' establishments in list view.');
                     DfE.searchMap.currentView = 'list';
                 });
 

@@ -21,7 +21,7 @@
             {
                 @Html.HiddenFor(m => m.SelectedTab)
                 <fieldset class="search-toggle-panel">
-                    <div class="multiple-choice">
+                    <div class="multiple-choice multiple-choice--radio">
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.Governor, new { id = "searchtype-gov-namerole", name = "gsearch", value = "name-role", data_toggle_panel = "#searchtype-gov-namerole-ref" })
                         <label for="searchtype-gov-namerole">
                             Name or role
@@ -88,12 +88,12 @@
         </li>
         @if (User.Identity.IsAuthenticated)
         {
-            <li>
+            <li class="search-type-wrapper">
                 @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
                 {
                     @Html.HiddenFor(m => m.SelectedTab)
                     <fieldset class="search-toggle-panel">
-                        <div class="multiple-choice">
+                        <div class="multiple-choice multiple-choice--radio">
                             @Html.RadioButtonFor(m => m.SearchType, eSearchType.GovernorReference, new { id = "searchtype-gov-refno", name = "gsearch", value = "gid", data_toggle_panel = "#searchtype-gov-refno-ref" })
                             <label for="searchtype-gov-refno">
                                 Reference number
@@ -141,13 +141,13 @@
             <p>or</p>
         </li>
 
-        <li>
+        <li class="search-type-wrapper">
             @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
             {
                 @Html.HiddenFor(m => m.SelectedTab)
 
                 <fieldset class="search-toggle-panel">
-                    <div class="multiple-choice">
+                    <div class="multiple-choice multiple-choice--radio">
                         <input type="radio" id="searchtype-gov-all" data-toggle-panel="#searchtype-gov-all-ref" name="gsearch" value="all"
                         @Html.Conditional(gSearch == "all", "checked=checked") />
                         <label for="searchtype-gov-all">All governors</label>

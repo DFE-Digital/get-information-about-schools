@@ -197,7 +197,7 @@
         var suggestionsOpen = false;
         var selectedLocalAuthorities = [];
         var selectedLaButtonTemplate =
-                '<a id="button-{1}" class="link-button font-small remove-suggest-la" data-remove="{1}">{0}</a>',
+                '<a href="#" id="button-{1}" class="link-button font-small remove-suggest-la" data-remove="{1}" title="Click to remove local authority">{0}</a>',
             selectedLaHiddenTemplate = '<input type="hidden" name="d" value="{0}" id="{1}" />',
             re = /\{0\}/g,
             reId = /\{1}/g;
