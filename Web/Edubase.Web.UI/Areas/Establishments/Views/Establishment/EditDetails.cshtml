@@ -151,9 +151,10 @@
                         <div class="form-group @Html.ValidationCssClassFor(x => x.HeadEmailAddress)">
                             <label class="form-label" for="HeadEmailAddress">
                                 @(Model.EditPolicy.HeadteacherLabel) email address
+                                <a href="#help-text-headteacher-email-address" class="icon-help"><span class="visuallyhidden">Help with this field</span></a>
                             </label>
                             @Html.ValidationMessageFor(x => x.HeadEmailAddress)
-                            @Html.TextBoxFor(x => x.HeadEmailAddress, new { maxlength = 120, @class = "form-control", placeholder = "email address" })
+                            @Html.TextBoxFor(x => x.HeadEmailAddress, new { maxlength = 120, @class = "form-control", placeholder = "email address", aria_describedby = "help-text-headteacher-email-address" })
                         </div>
                     }
 
@@ -868,5 +869,10 @@
     <div id="help-text-email-address">
         <h3 class="heading-small">Email address</h3>
         <p>Please provide your official school email address. This is usually the email address that is displayed on your school website. You should not provide a personal email address in this field as this information may be released in certain circumstances.</p>
+    </div>
+
+    <div id="help-text-headteacher-email-address">
+        <h3 class="heading-small">@(Model.EditPolicy.HeadteacherLabel) email address</h3>
+        <p>The email address added to this field will be treated as personal and will not be visible to the public or included in responses to Freedom of Information Requests. The address will be used for official Departmental use where direct communication with the headteacher/ principal is required.</p>
     </div>
 </div>
