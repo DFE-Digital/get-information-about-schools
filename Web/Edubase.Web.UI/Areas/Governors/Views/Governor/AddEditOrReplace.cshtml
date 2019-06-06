@@ -14,7 +14,7 @@
 
 <div class="column-half">
 
-    @using (Html.BeginRouteForm(Model.FormPostRouteName, FormMethod.Post))
+    @using (Html.BeginRouteForm(Model.FormPostRouteName, FormMethod.Post, new {id = "governorEdit"}))
     {
 
         <h2 class="heading-medium tab-lead">
@@ -99,6 +99,11 @@
 {
     <script>
         (function () {
+            $("#governorEdit").submit(function() {
+                $("#save-button").attr("disabled", true);
+                return true;
+            });
+
             var $fields = $('#content').find('.form-control').not(".choose-governor");
             var exitAttached = false;
 
