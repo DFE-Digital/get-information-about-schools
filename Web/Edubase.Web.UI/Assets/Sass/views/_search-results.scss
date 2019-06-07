@@ -35,12 +35,8 @@
 }
 
 .search-results-header {
-    border-bottom: $black 3px solid;
+    border-bottom: $black 1px solid;
     position: relative;
-
-    .top-pagination .pagination {
-        border-bottom-width: 1px;
-    }
 
     .form-group {
         width: 90%;
@@ -164,12 +160,7 @@
     clear: both;
     min-height: 48px;
 
-    .top-pagination & {
-        border-bottom: $black 3px solid;
-    }
     .lower-pagination & {
-        border-top: $black 3px solid;
-
         p {
             margin-top: em(20, 16);
         }
