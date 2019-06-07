@@ -12,6 +12,7 @@
                 changes: [],
                 reason: '',
                 currentPage: 0,
+                slicePage: 0,
                 pages: [],
                 initialCount: 0,
                 currentCount: 0,
@@ -180,6 +181,15 @@
                 setCurrentPage: function (pageIndex) {
                     this.currentPage = pageIndex;
                     this.getChangesData(pageIndex * this.pageSize);
+                    if (this.currentPage < 3) {
+                        this.slicePage = 0;
+                    } else {
+                        if (this.currentPage > this.totalPages - 3) {
+                            this.slicePage = this.totalPages - 5;
+                        } else {
+                            this.slicePage = this.currentPage - 2;
+                        }
+                    }
                 },
                 showAll: function () {
                     this.currentPage = 0;
