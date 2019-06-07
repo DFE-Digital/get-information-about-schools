@@ -102,6 +102,24 @@
                 <div id="EditSearchCollapse" class="blanket-container">
                     <h2 class="visuallyhidden">Search results filters</h2>
 
+                    <div class="govuk-option-select js-collapsible"
+                         id="option-select-sort-by" role="search">
+                        <div class="container-head js-container-head">
+                            <div class="option-select-label">Sort by</div>
+                        </div>
+                        <div class="options-container">
+                            <label for="sortby-selector" class="visuallyhidden">Sort by</label>
+                            <select class="form-control trigger-result-update sortby-selector push-half--top" name="@M.BIND_ALIAS_SORT_BY" id="sortby-selector">
+                                @if (Model.SearchType == eSearchType.Location)
+                                {
+                                    <option id="distance" value="d" @Html.Conditional(Model.GetSortOption() == eSortBy.Distance, "selected")>Distance</option>
+                                }
+                                <option id="alpha-az" value="a" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
+                                <option id="alpha-za" value="z" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
+                            </select>
+                        </div>
+                    </div>
+
                     @if (Model.SearchType == eSearchType.Location)
                     {
                         @RadiusFilter()

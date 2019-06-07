@@ -10,31 +10,33 @@
     z-index: 1;
 }
 
-.map-link {
+%icon {
     position: relative;
-
     &:before {
         position: absolute;
         content: "";
-        background: transparent url("/public/assets/images/icons/icon-map.png") no-repeat 0 0;
-        width: 38px;
-        height: 56px;
-        background-size: 50%;
+        background-repeat: no-repeat;
+        background-size: contain;
+        width: 20px;
+        height: 30px;
+    }
+}
+
+.icon-map {
+    @extend %icon;
+    margin-left: 27px;
+    &:before {
+        background-image: url("/public/assets/images/icons/icon-map.png");
         left: -27px;
         top: -5px;
     }
 }
 
-.show-list-link {
-    position: relative;
-
+.icon-list {
+    @extend %icon;
+    margin-left: 30px;
     &:before {
-        position: absolute;
-        content: "";
-        background: transparent url("/public/assets/images/icons/icon-burger.png") no-repeat 0 0;
-        width: 71px;
-        height: 56px;
-        background-size: 30%;
+        background-image: url("/public/assets/images/icons/icon-burger.png");
         left: -30px;
         top: 0;
     }
