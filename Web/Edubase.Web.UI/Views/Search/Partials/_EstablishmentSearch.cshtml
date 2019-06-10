@@ -25,10 +25,20 @@
                         </div>
                         @if (Model.SearchType == eSearchType.Text && Model.NoResults)
                         {
-                            @* Static alert for no search results *@
-                            <div role="alert" class="warning-message js-trigger-aria-live">
-                                <p class="message-text" aria-live="polite">We couldn't find any establishments matching your search criteria</p>
-                            </div>
+                            if (Model.TextSearchModel.Text != null)
+                            {
+                                @* Static alert for no search results, where nothing was entered *@
+                                <div role="alert" class="warning-message js-trigger-aria-live">
+                                    <p class="message-text" aria-live="polite">Please enter an establishment name, URN, LAESTAB or UKPRN to start a search</p>
+                                </div>
+                            }
+                            else
+                            {
+                                @* Static alert for no search results *@
+                                <div role="alert" class="warning-message js-trigger-aria-live">
+                                    <p class="message-text" aria-live="polite">We couldn't find any establishments matching your search criteria</p>
+                                </div>
+                            }
                         }
                         <label class="form-label" for="TextSearchModel_Text">
                             Enter name, <abbr title="Unique Reference Number">URN</abbr>, LAESTAB or UKPRN
@@ -77,7 +87,7 @@
                         {
                             @* Currently not displaying. Redirecting instead *@
                             <div class="warning-message js-trigger-aria-live" role="alert">
-                                <p class="message-text" aria-live="polite">We couldn't find any locations matching your search criteria</p>
+                                <p class="message-text" aria-live="polite">Please enter a postcode, town or city to start a search</p>
                             </div>
                         }
                         <label class="form-label" for="LocationSearchModel_Text">Enter postcode, town or city</label>
@@ -120,9 +130,18 @@
                         </div>
                         @if (Model.SearchType == eSearchType.ByLocalAuthority && Model.NoResults)
                         {
-                            <div class="warning-message js-trigger-aria-live" role="alert">
-                                <p class="message-text" aria-live="polite">We couldn't find any local authorities matching your search criteria</p>
-                            </div>
+                            if (!Model.SelectedLocalAuthorityIds.Any())
+                            {
+                                <div class="warning-message js-trigger-aria-live" role="alert">
+                                    <p class="message-text" aria-live="polite">Please enter a local authority to start a search</p>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="warning-message js-trigger-aria-live" role="alert">
+                                    <p class="message-text" aria-live="polite">We couldn't find any local authorities matching your search criteria</p>
+                                </div>
+                            }
                         }
 
                         <label class="form-label" for="LocalAuthorityToAdd">Enter one or more local authorities</label>
@@ -141,7 +160,7 @@
                             </div>
                             <button type="submit"
                                     class="button-secondary button mobile-full-width no-js-remove"
-                                    name="searchtype" value="@eSearchType.LocalAuthorityDisambiguation">
+                                    name="SearchType" value="@eSearchType.LocalAuthorityDisambiguation">
                                 Find
                             </button>
                         </div>
@@ -154,7 +173,7 @@
                         </div>
 
 
-                        @Html.HiddenFieldsFromQueryString(new[] { "NoResults" })
+                        @Html.HiddenFieldsFromQueryString(new[] { "NoResults", "SearchType" })
                         <div class="form-group">
                             <button type="submit" class="button mobile-full-width button-below search-button" id="la-search-submit" name="SearchType" value='@eSearchType.ByLocalAuthority'>Search</button>
                         </div>
