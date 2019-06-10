@@ -241,7 +241,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     if (localAuthorityId.HasValue) filters.LocalAuthorityIds = new int[] { localAuthorityId.Value };
                     filters.EstablishmentNumber = laestab.EstablishmentNumber;
                 }
-                else if (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.EstablishmentName && model.TextSearchModel.Text != null)
+                else if ((model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.EstablishmentName && model.TextSearchModel.Text != null) || model.SearchType == eSearchType.EstablishmentAll)
                 {
                     payload.Text = model.TextSearchModel.Text;
                 }
