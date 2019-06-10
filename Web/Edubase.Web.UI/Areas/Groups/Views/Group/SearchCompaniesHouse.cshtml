@@ -70,7 +70,7 @@
                         {
                             <tr class="company-result">
                                 <td data-label="Name">@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups" }, null)</td>
-                                <td data-label="Companies House no."><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number" target="_blank">@result.Number</a></td>
+                                <td data-label="Companies House no."><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number" target="_blank">@result.Number <span class="visually-hidden">Opens in new window</span></a></td>
                                 <td data-label="Incorporated">@(result.IncorporationDate?.ToString("dd/MM/yyyy"))</td>
                                 <td data-label="Address">@(result.Address.ToString() ?? "Not recorded")</td>
                             </tr>
