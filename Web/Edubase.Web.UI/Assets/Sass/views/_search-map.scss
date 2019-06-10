@@ -10,38 +10,6 @@
     z-index: 1;
 }
 
-%icon {
-    position: relative;
-    &:before {
-        position: absolute;
-        content: "";
-        background-repeat: no-repeat;
-        background-size: contain;
-        width: 20px;
-        height: 30px;
-    }
-}
-
-.icon-map {
-    @extend %icon;
-    margin-left: 27px;
-    &:before {
-        background-image: url("/public/assets/images/icons/icon-map.png");
-        left: -27px;
-        top: -5px;
-    }
-}
-
-.icon-list {
-    @extend %icon;
-    margin-left: 30px;
-    &:before {
-        background-image: url("/public/assets/images/icons/icon-burger.png");
-        left: -30px;
-        top: 0;
-    }
-}
-
 .result-header-section {
     width: 100%;
     position: relative;
