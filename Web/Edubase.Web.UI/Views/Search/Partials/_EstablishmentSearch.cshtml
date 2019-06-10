@@ -47,7 +47,7 @@
                         </div>
                         @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
                         <div class="form-group">
-                            <button type="submit" class="button mobile-full-width search-button" id="name-search-submit">Search</button>
+                            <button type="submit" class="button mobile-full-width search-button" id="name-search-submit" name="SearchType" value="@eSearchType.Text">Search</button>
                         </div>
                         <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true" />
                     </div>
@@ -94,7 +94,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="button mobile-full-width search-button" id="location-search-submit" name="searchtype" value="@eSearchType.Location">Search</button>
+                            <button type="submit" class="button mobile-full-width search-button" id="location-search-submit" name="SearchType" value="@eSearchType.Location">Search</button>
                         </div>
                     </div>
 
@@ -156,7 +156,7 @@
 
                         @Html.HiddenFieldsFromQueryString(new[] { "NoResults" })
                         <div class="form-group">
-                            <button type="submit" class="button mobile-full-width button-below search-button" id="la-search-submit">Search</button>
+                            <button type="submit" class="button mobile-full-width button-below search-button" id="la-search-submit" name="SearchType" value='@eSearchType.ByLocalAuthority'>Search</button>
                         </div>
                     </div>
                 }
@@ -189,7 +189,7 @@
                         </div>
                         @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
                         <div class="form-group">
-                            <button type="submit" class="button mobile-full-width search-button" id="all-search-submit">Search</button>
+                            <button type="submit" class="button mobile-full-width search-button" id="all-search-submit" name="SearchType" value="@eSearchType.EstablishmentAll">Search</button>
                         </div>
 
                         <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true" />

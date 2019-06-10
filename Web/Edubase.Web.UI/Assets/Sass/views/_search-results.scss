@@ -62,35 +62,18 @@
         }
     }
 
-    .search-type-toggle {
-        bottom: 23px;
-        text-transform: capitalize;
-        position: absolute;
-        right: 0;
-        font-size: 16px;
-        text-decoration: none;
-
-        @include media(tablet) {
-            text-transform: none;
-        }
-
-        &:active, &:focus {
-            outline: none;
-        }
-
-        .extraneous {
-            display: none;
-
-            @include media(tablet) {
-                display: inline;
-            }
-        }
-    }
 }
 
+.search-type-toggle {
+    display: inline-block;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    text-decoration: none;
+}
 
 .school-results-listing {
-    margin: 35px 0 15px;
+    margin: 15px 0 15px;
 
     .top-pagination + & {
         margin-top: 15px;
@@ -228,11 +211,8 @@
 .map-header {
     border: 0;
     overflow: hidden;
-    p {
-        float: left;
-    }
-
 }
+
 div.approval-data {
     dl {
         font-size: 15px;
