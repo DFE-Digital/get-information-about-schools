@@ -16,7 +16,7 @@
 
   @include device-pixel-ratio() {
     background-image: file-url("icons/icon-file-download-2x.png");
-  } 
+  }
 }
 
 .icon-important {
@@ -107,7 +107,7 @@
 
          @include device-pixel-ratio() {
             background-image: file-url("icons/icon-file-download-2x.png");
-          } 
+          }
     }
     .icon-link-copy {
         vertical-align: middle;
@@ -145,17 +145,17 @@ td.download-list-item {
         content: '';
         width: 32px;
         height: 32px;
-        background-image: file-url("icons/exclaim-red.png");   
+        background-image: file-url("icons/exclaim-red.png");
         background-repeat: no-repeat;
         background-size: 28px;
         left: 0;
         top: 0;
-        
+
          @include device-pixel-ratio() {
             background-image: file-url("icons/exclaim-red-x2.png");
-        } 
+        }
     }
-    
+
 }
 
 .icon-help {
@@ -172,7 +172,7 @@ td.download-list-item {
         height: 13px;
         background-color: $govuk-blue;
         color: $white;
-        text-align: center;   
+        text-align: center;
         border-radius: 12px;
         padding: 1px 2px 2px;
         margin-left: 3px;
@@ -184,5 +184,38 @@ td.download-list-item {
         background-color: transparent;
         outline: none !important; // todo revisit the style in _tables.scss that has higher specificity
 
+    }
+}
+
+// Custom icons for map and list view links
+%icon {
+    position: relative;
+    &:before {
+        position: absolute;
+        content: "";
+        background-repeat: no-repeat;
+        background-size: contain;
+        width: 20px;
+        height: 30px;
+    }
+}
+
+.icon-map {
+    @extend %icon;
+    margin-left: 27px;
+    &:before {
+        background-image: url("/public/assets/images/icons/icon-map.png");
+        left: -27px;
+        top: -5px;
+    }
+}
+
+.icon-list {
+    @extend %icon;
+    margin-left: 30px;
+    &:before {
+        background-image: url("/public/assets/images/icons/icon-burger.png");
+        left: -30px;
+        top: 0;
     }
 }
