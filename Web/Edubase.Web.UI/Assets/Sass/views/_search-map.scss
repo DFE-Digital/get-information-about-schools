@@ -10,36 +10,6 @@
     z-index: 1;
 }
 
-.map-link {
-    position: relative;
-
-    &:before {
-        position: absolute;
-        content: "";
-        background: transparent url("/public/assets/images/icons/icon-map.png") no-repeat 0 0;
-        width: 38px;
-        height: 56px;
-        background-size: 50%;
-        left: -27px;
-        top: -5px;
-    }
-}
-
-.show-list-link {
-    position: relative;
-
-    &:before {
-        position: absolute;
-        content: "";
-        background: transparent url("/public/assets/images/icons/icon-burger.png") no-repeat 0 0;
-        width: 71px;
-        height: 56px;
-        background-size: 30%;
-        left: -30px;
-        top: 0;
-    }
-}
-
 .result-header-section {
     width: 100%;
     position: relative;
