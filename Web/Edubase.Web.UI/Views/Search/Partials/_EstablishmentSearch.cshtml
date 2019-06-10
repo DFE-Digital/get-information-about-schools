@@ -25,7 +25,7 @@
                         </div>
                         @if (Model.SearchType == eSearchType.Text && Model.NoResults)
                         {
-                            if (Model.TextSearchModel.Text != null)
+                            if (Model.TextSearchModel.Text == null)
                             {
                                 @* Static alert for no search results, where nothing was entered *@
                                 <div role="alert" class="warning-message js-trigger-aria-live">
