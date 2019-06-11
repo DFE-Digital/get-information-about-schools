@@ -156,13 +156,21 @@
     p {
         float: left;
         margin-top: 0;
+
+        @include media(mobile) {
+            float: none;
+        }
     }
 
     .pagination-links {
         clear: left;
-        margin: 0.2631578947em 0 0;
+        margin: 0;
         padding: 0;
         overflow: hidden;
+
+        @include media(mobile) {
+            margin-top: 12px;
+        }
 
         @media (min-width: 640px) {
             position: absolute;

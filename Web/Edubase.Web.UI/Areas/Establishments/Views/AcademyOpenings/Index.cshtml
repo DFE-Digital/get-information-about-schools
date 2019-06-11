@@ -97,8 +97,7 @@
                                         <span class="pagination-range">
                                             {{ paginationDescription }}
                                         </span>
-                                        of
-                                        <span class="result-count">{{currentCount}}</span>
+                                        of {{currentCount}}
                                     </p>
                                     <ul class="pagination-links">
                                         <li v-if="currentPage > 0"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)" aria-label="Previous page">Previous</a></li>
@@ -156,8 +155,7 @@
                                         <span class="pagination-range">
                                             {{ paginationDescription }}
                                         </span>
-                                        of
-                                        <span class="result-count">{{currentCount}}</span>
+                                        of {{currentCount}}
                                     </p>
                                     <ul class="pagination-links">
                                         <li v-if="currentPage > 0"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)" aria-label="Previous page">Previous</a></li>

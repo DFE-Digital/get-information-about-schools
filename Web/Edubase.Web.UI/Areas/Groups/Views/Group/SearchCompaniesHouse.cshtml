@@ -50,7 +50,7 @@
                 <div class="column-full top-pagination">
                     @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
                     {
-                        {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count' class='result-count'>", @Model.Count, "</span> establishments")},
+                        {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")},
                         {"maxPages", 5 }
                     })
                 </div>
@@ -92,7 +92,7 @@
                 <div class="column-full lower-pagination">
                     @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
                     {
-                        {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count' class='result-count'>", @Model.Count, "</span> establishments")},
+                        {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")},
                         {"maxPages", 5 }
                     })
                 </div>

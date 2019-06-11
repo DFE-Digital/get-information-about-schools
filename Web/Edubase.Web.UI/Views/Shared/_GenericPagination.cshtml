@@ -32,11 +32,11 @@
 <nav role="navigation" aria-label="Pagination" class="pagination">
     @if (ViewData.ContainsKey("resultsDescription"))
     {
-        <p>@Html.Raw(ViewData["resultsDescription"])</p>
+        <p class="flush--bottom">@Html.Raw(ViewData["resultsDescription"])</p>
     }
     else
     {
-        <p @Html.Conditional(ViewData.ContainsKey("hideDescription"),  "class='hidden'")>Showing @startResult - @endResult of @Model.Count</p>
+        <p class="flush--bottom">Showing @startResult - @endResult of @Model.Count</p>
     }
 
     <ul class="pagination-links">
