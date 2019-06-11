@@ -17,6 +17,7 @@
             selectedDate: '0',
             initialRecordCount: 0,
             currentPage: 0,
+            slicePage: 0,
             pageSize: 50,
             pages: [],
             currentCount: 0,
@@ -243,6 +244,15 @@
             },
             setCurrentPage: function (pageIndex) {
                 this.currentPage = pageIndex;
+                if (this.currentPage < 3) {
+                    this.slicePage = 0;
+                } else {
+                    if (this.currentPage > this.pages.length - 3) {
+                        this.slicePage = this.pages.length - 5;
+                    } else {
+                        this.slicePage = this.currentPage - 2;
+                    }
+                }
             },
             editEstab: function (urn) {
                 this.searchUrn = urn;

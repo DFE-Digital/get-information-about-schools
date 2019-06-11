@@ -22,28 +22,13 @@
         }
     }
 
-    .pagination {
-        border-bottom: 2px solid $black;
-        margin-bottom: 8px;
-    }
-
-    .academy-openings + .pagination {
-        border-bottom: 0;
-
-    }
-
-
     .academy-openings {
         table-layout: fixed;
         display: table;
-        border-bottom: 3px solid $black;
         margin-bottom: 20px;
         thead {
-            tr {
-                border-bottom: 4px solid $black;
-            }
-
             th {
+                border-color: $black;
                 text-align: left;
             }
         }

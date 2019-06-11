@@ -33,7 +33,7 @@
 
 @if (Model.Items.Any())
 {
-    <div>
+    <div class="top-pagination">
         @Html.Partial("_GenericPaginationV2", Model)
     </div>
     <table class="edubase-table sortable-table table-tight" id="changes-table">
@@ -72,7 +72,7 @@
             }
         </tbody>
     </table>
-    <div>
+    <div class="lower-pagination">
         @Html.Partial("_GenericPaginationV2", Model)
     </div>
 }

@@ -23,7 +23,7 @@ else if (Model.Results.Count > 0)
       <div class="top-pagination">
             @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
             {
-                {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count' class='result-count'>", @Model.Count, "</span> establishments")},
+                {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")},
                 {"maxPages", 5 }
             })
         </div>
@@ -31,7 +31,7 @@ else if (Model.Results.Count > 0)
     </div>
 
     <a href="#" class="js-enabled search-type-toggle icon-map" id="view-map">View on a map</a>
-    
+
     <ul class="school-results-listing">
         @foreach (var result in Model.Results)
         {
@@ -74,7 +74,11 @@ else if (Model.Results.Count > 0)
     if (Model.PageCount > 1)
     {
         <div class="lower-pagination">
-            @Html.Partial("_GenericPagination", Model, new ViewDataDictionary { { "hideDescription", true } })
+            @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
+            {
+                {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")},
+                {"maxPages", 5 }
+            })
         </div>
     }
 }
