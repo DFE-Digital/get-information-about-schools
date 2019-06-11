@@ -144,6 +144,7 @@
         {
             <a href="@WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)" target="_blank">
                 @WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)
+                <span class="visually-hidden">Opens in new window</span>
             </a>
         }
     </dd>
@@ -180,7 +181,7 @@
         @if (Model.OfstedRatingReportUrl != null)
         {
             <br />
-            <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="external">Ofsted report</a>
+            <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="external">Ofsted report <span class="visually-hidden">Opens in new window</span></a>
         }
     </dd>
 }
@@ -220,5 +221,5 @@
 
 @helper CSCPLink() {
     <dt class="cscp-link">School performance:</dt>
-    <dd class="cscp-link"><a href="https://www.compare-school-performance.service.gov.uk/school/@Model.Establishment.Urn" rel="external" target="_blank">Compare School and College Performance page</a></dd>
+    <dd class="cscp-link"><a href="https://www.compare-school-performance.service.gov.uk/school/@Model.Establishment.Urn" rel="external" target="_blank">Compare School and College Performance page <span class="visually-hidden">Opens in new window</span></a></dd>
 }

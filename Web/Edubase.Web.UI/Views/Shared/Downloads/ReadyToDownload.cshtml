@@ -32,7 +32,7 @@
     <div class="column-full">
         <h1 class="heading-xlarge">Download data</h1>
     </div>
-    <div class="horizontal-tabs-wrapper">        
+    <div class="horizontal-tabs-wrapper">
         <div class="column-two-thirds">
 
             <h2 class="bold-medium">Download @Model.DownloadName search results</h2>
@@ -49,7 +49,7 @@
             <ul>
                 <li class="download-list-item">
                     <span class="icon-link-copy">
-                        <a href="@Model.Progress.FileLocationUri" target="_blank" rel="nofollow">Data in @(Model.FileFormat.ToString()) format</a>
+                        <a href="@Model.Progress.FileLocationUri" target="_blank" rel="nofollow">Data in @(Model.FileFormat.ToString()) format <span class="visually-hidden">Opens in new window</span></a>
                         (will download as a ZIP file: open the ZIP to access its content)
                     </span>
 
@@ -58,4 +58,3 @@
         </div>
     </div>
 </div>
-
