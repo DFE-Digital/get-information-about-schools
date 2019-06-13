@@ -24,7 +24,7 @@
     <div>
         @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
         {
-            <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">Save</button>
+            <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
         }
         @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-secondary cancel mobile-full-width" })
     </div>
@@ -52,7 +52,7 @@
 
         @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date", editorPrefix = prefix})
 
-        <button id="add-estab-submit" type="submit" name="action" value="@VM.ActionLinkedEstablishmentAdd" class="button">Add</button>
+        <button id="add-estab-submit" type="submit" name="action" value="@VM.ActionLinkedEstablishmentAdd" class="button">Add establishment</button>
         @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
 
         }
@@ -126,14 +126,14 @@
                         @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                         {
                             <div class="button-row">
-                                <button type="submit" class="button button-secondary button-remove" name="action" value="@VM.ActionLinkedEstablishmentRemove@Model.LinkedEstablishments.Establishments[i].Urn">Remove</button>
-                                <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentEdit@Model.LinkedEstablishments.Establishments[i].Urn" class="button button-secondary">Edit</button>
+                                <button type="submit" class="button button-secondary button-remove" name="action" value="@VM.ActionLinkedEstablishmentRemove@Model.LinkedEstablishments.Establishments[i].Urn" aria-label="Remove establishment">Remove</button>
+                                <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentEdit@Model.LinkedEstablishments.Establishments[i].Urn" class="button button-secondary">Edit join date</button>
                             </div>
                         }
                         else if (Model.LinkedEstablishments.Establishments[i].EditMode)
                         {
                             <div class="form-group">
-                                <button id="save-joined-date-submit" type="submit" class="button" name="action" value="@VM.ActionLinkedEstablishmentSave">Save</button>
+                                <button id="save-joined-date-submit" type="submit" class="button" name="action" value="@VM.ActionLinkedEstablishmentSave">Save joined date</button>
                                 @Html.ActionLink("Cancel", "EditLinks", "Group", new { area = "Groups" }, new { @class = "button button-secondary js-allow-exit" })
                             </div>
                         }
@@ -154,7 +154,7 @@
         <div class="column-half">
             @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
             {
-                <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">Save</button>
+                <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
             }
             @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-secondary cancel mobile-full-width" })
 
