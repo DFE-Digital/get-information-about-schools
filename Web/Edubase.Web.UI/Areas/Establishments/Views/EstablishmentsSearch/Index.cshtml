@@ -181,7 +181,7 @@
                     @Selector("Urban/Rural description", M.BIND_ALIAS_URBRUR, Model.UrbanRuralDesignations.OrderBy(x => x.Name), Model.SelectedUrbanRuralIds, "additional-search-critera hidden", true)
 
                     <div id="additional-filter-wrap">
-                        <div class="govuk-option-select js-closed searchable-filters" data-closed-on-load="false" id="option-select-additional-filters"
+                        <div class="govuk-option-select js-when-on js-closed searchable-filters" data-closed-on-load="false" id="option-select-additional-filters"
                              role="search">
                             <div class="container-head js-container-head">
                                 <div class="option-select-label">More filters</div>
@@ -332,7 +332,7 @@
                     @foreach (var item in items)
                     {
                         <dl class="nested-items multiple-choice multiple-choice--smaller multiple-choice--list">
-                            <dt>
+                            <dt class="js-when-on">
                                 <input id="@(name)_@item.Id" class="filter-group-title" type="checkbox" @Html.Conditional(item.ChildItems.Any(x=> selectedItems.Contains(x.Id)), "checked")/>
                                 <label for="@(name)_@item.Id">@item</label>
                                 <a href="#" class="child-option-toggle js-child-option-toggle" aria-expanded="false"><span class="visually-hidden">Types within @item</span></a>
