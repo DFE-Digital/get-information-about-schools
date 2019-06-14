@@ -67,7 +67,6 @@ else
 
             @if (Model.GovernanceMode.HasValue)
             {
-                <h2 class="bold-small">Establishment governance</h2>
                 @DisplayGovernanceMode()
             }
         </div>
@@ -434,6 +433,7 @@ else
 {
     if (Model.EstablishmentUrn.HasValue && Model.GovernanceMode.HasValue)
     {
+        <h2 class="heading-small">Governor sharing</h2>
         if (Model.GovernanceMode == eGovernanceMode.LocalGovernors)
         {
             <div class="governors-section">
@@ -461,7 +461,7 @@ else
 
         if (Model.EditMode)
         {
-            @Html.RouteLink("Edit", "EstabEditGovernanceMode", new { establishmentUrn = Model.EstablishmentUrn }, new { @class = "button button-secondary" })
+            @Html.RouteLink("Edit governor sharing", "EstabEditGovernanceMode", new { establishmentUrn = Model.EstablishmentUrn }, new { @class = "button button-secondary" })
         }
     }
 }
