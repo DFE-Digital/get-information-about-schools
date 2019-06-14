@@ -36,7 +36,7 @@
             <p>@Html.Raw(item.Content.Replace("\n","<br/>"))</p>
             if (Model.UserCanEdit)
             {
-                @Html.RouteLink("Edit", "EditFaqItem", new { id = item.RowKey }, new { @class = "button button-secondary Faq-edit-button" })
+                @Html.RouteLink("Edit entry", "EditFaqItem", new { id = item.RowKey }, new { @class = "button button-secondary Faq-edit-button" })
             }
         }
     </div>

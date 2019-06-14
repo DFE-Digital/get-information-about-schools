@@ -67,7 +67,6 @@ else
 
             @if (Model.GovernanceMode.HasValue)
             {
-                <h2 class="bold-small">Establishment governance</h2>
                 @DisplayGovernanceMode()
             }
         </div>
@@ -114,7 +113,7 @@ else
     {
         <div class="grid-row">
             <div class="column-full">
-                @Html.RouteLink("Edit", "GroupEditDelegation", new { GroupUId = Model.GroupUId }, new { @class = "button button-secondary mobile-full-width" })
+                @Html.RouteLink("Edit delegated authority", "GroupEditDelegation", new { GroupUId = Model.GroupUId }, new { @class = "button button-secondary mobile-full-width" })
             </div>
         </div>
     }
@@ -137,7 +136,7 @@ else
     {
         <div class="grid-row">
             <div class="column-full">
-                @Html.RouteLink("Edit", "GroupEditCorporateContact", new { GroupUId = Model.GroupUId }, new { @class = "button button-secondary mobile-full-width" })
+                @Html.RouteLink("Edit corporate contact", "GroupEditCorporateContact", new { GroupUId = Model.GroupUId }, new { @class = "button button-secondary mobile-full-width" })
             </div>
         </div>
     }
@@ -315,13 +314,13 @@ else
                                 <div class="button-wrapper">
                                     @if (Model.EstablishmentUrn.HasValue && row.Model.RoleId.HasValue && EnumSets.SharedGovernorRoles.Contains(row.Model.RoleId.Value))
                                     {
-                                        @Html.RouteLink("Edit", "EditSharedGovernor",
+                                        @Html.RouteLink("Edit person", "EditSharedGovernor",
                                             new {establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id},
                                             new {@class = "button button-secondary mobile-full-width"})
                                     }
                                     else
                                     {
-                                        @Html.RouteLink("Edit", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor",
+                                        @Html.RouteLink("Edit person", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor",
                                             new {establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id},
                                             new {@class = "button button-secondary mobile-full-width"})
                                     }
@@ -330,20 +329,20 @@ else
                                     {
                                         if (Model.EstablishmentUrn.HasValue && (row.Model.RoleId.Value == (int) eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody || row.Model.RoleId.Value == (int) eLookupGovernorRole.ChairOfLocalGoverningBody))
                                         {
-                                            @Html.RouteLink("Replace", "EstabReplaceChair",
+                                            @Html.RouteLink("Replace person", "EstabReplaceChair",
                                                 new {establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id},
                                                 new {@class = "button button-secondary mobile-full-width"})
                                         }
                                         else
                                         {
-                                            @Html.RouteLink("Replace", Model.EstablishmentUrn.HasValue ? "EstabReplaceGovernor" : "GroupReplaceGovernor",
+                                            @Html.RouteLink("Replace person", Model.EstablishmentUrn.HasValue ? "EstabReplaceGovernor" : "GroupReplaceGovernor",
                                                 new {establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id},
                                                 new {@class = "button button-secondary mobile-full-width"})
                                         }
                                     }
                                     else
                                     {
-                                        @Html.RouteLink("Remove", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance",
+                                        @Html.RouteLink("Remove person", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance",
                                             null, null, "gid-" + row.Model.Id,
                                             new {establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, removalGid = row.Model.Id},
                                             new {@class = "button button-secondary mobile-full-width"})
@@ -376,7 +375,7 @@ else
                                                 <p>Provide a date term ends to retire this person</p>
                                                 @Html.EditorFor(x => x.RemovalAppointmentEndDate, new {title = "Date term ends", fieldsetClassName = "retirement-date"})
 
-                                                <button id="retire-governor" type="submit" name="action" value="Save" class="button">Save</button>
+                                                <button id="retire-governor" type="submit" name="action" value="Save" class="button">Save date and retire person</button>
 
                                                 @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new {establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId}, new {@class = "button button-secondary"})
 
@@ -407,13 +406,13 @@ else
                             <div class="button-wrapper">
                                 @if (Model.EstablishmentUrn.HasValue && ((eLookupGovernorRole) row.Model.RoleId == eLookupGovernorRole.Group_SharedLocalGovernor || (eLookupGovernorRole) row.Model.RoleId == eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody))
                                 {
-                                    @Html.RouteLink("Edit", "EditSharedGovernor",
+                                    @Html.RouteLink("Edit person", "EditSharedGovernor",
                                         new {establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id},
                                         new {@class = "button button-secondary mobile-full-width"})
                                 }
                                 else
                                 {
-                                    @Html.RouteLink("Edit", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor",
+                                    @Html.RouteLink("Edit person", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor",
                                         new {establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id},
                                         new {@class = "button button-secondary mobile-full-width"})
                                 }
@@ -434,6 +433,7 @@ else
 {
     if (Model.EstablishmentUrn.HasValue && Model.GovernanceMode.HasValue)
     {
+        <h2 class="heading-small">Governor sharing</h2>
         if (Model.GovernanceMode == eGovernanceMode.LocalGovernors)
         {
             <div class="governors-section">
@@ -461,7 +461,7 @@ else
 
         if (Model.EditMode)
         {
-            @Html.RouteLink("Edit", "EstabEditGovernanceMode", new { establishmentUrn = Model.EstablishmentUrn }, new { @class = "button button-secondary" })
+            @Html.RouteLink("Edit governor sharing", "EstabEditGovernanceMode", new { establishmentUrn = Model.EstablishmentUrn }, new { @class = "button button-secondary" })
         }
     }
 }

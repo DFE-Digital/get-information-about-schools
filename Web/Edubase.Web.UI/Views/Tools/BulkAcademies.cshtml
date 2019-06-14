@@ -134,7 +134,7 @@
                         </div>
                         <div class="button-row">
                             <button class="button mobile-full-width" id="add-item-to-list" v-on:click.prevent="addEstablishment" v-show="!pendingEdit">Add establishment</button>
-                            <button class="button mobile-full-width" id="save-item-to-list" v-on:click.prevent="addEstablishment" v-show="pendingEdit">Save</button>
+                            <button class="button mobile-full-width" id="save-item-to-list" v-on:click.prevent="addEstablishment" v-show="pendingEdit">Update establishment</button>
                             <a class="button mobile-full-width button-secondary" id="cancel-add-item-to-list" v-on:click.prevent="cancelAddEdit">Cancel</a>
                         </div>
 
@@ -164,17 +164,17 @@
                                 <td data-label="Establishment type">{{estab.typeName}}</td>
                                 <td data-label="Opening date">{{estab.displayDate}}</td>
                                 <td>
-                                    <a href="#" v-on:click.prevent="editRecord(estab.urn)">Edit</a>
+                                    <a href="#" v-on:click.prevent="editRecord(estab.urn)" aria-label="Edit establishment">Edit</a>
                                 </td>
                                 <td>
-                                    <a href="#" v-on:click="couldDelete(estab.urn)">Remove</a>
+                                    <a href="#" v-on:click="couldDelete(estab.urn)" aria-label="Remove establishment">Remove</a>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                     <p class="table-caption" v-show="establishments.length > 1">Showing 1 - {{establishments.length}} of {{establishments.length}}</p>
                     <div class="submit-cancel-panel" v-show="!isSearching || !pendingEdit">
-                        <button type="submit" name="action" value="" class="button mobile-full-width" id="go-create" v-on:click.prevent="commitChanges" v-show="establishments.length > 0">Create</button>
+                        <button type="submit" name="action" value="" class="button mobile-full-width" id="go-create" v-on:click.prevent="commitChanges" v-show="establishments.length > 0">Create academies</button>
                         @Html.ActionLink("Cancel", "Index", "Tools", new {}, new {@class = "button button-secondary cancel mobile-full-width", v_show = "(Object.keys(pendingEstab).length < 1 || establishments.length > 0) && !isProcessing"})
                     </div>
                 </div>

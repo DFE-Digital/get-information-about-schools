@@ -32,7 +32,7 @@
 
                 <div class="column-half">
 
-                    <button id="save-submit-top" type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASSave">Save</button>
+                    <button id="save-submit-top" type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASSave">Save details</button>
                     @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel mobile-full-width" })
 
 
@@ -594,7 +594,7 @@
                                 <div class="multiple-choice">
                                     <input id="@nameof(Model.SENProvisions)_@item.Id" type="checkbox" name="@nameof(Model.SENIds)"
                                     value="@item.Id" @Html.Conditional(Model.SENIds != null && Model.SENIds.Contains(item.Id), "checked")/>
-                                    <label for="@nameof(Model.SENProvisions)_@item.Id">@item.Name</label>    
+                                    <label for="@nameof(Model.SENProvisions)_@item.Id">@item.Name</label>
                                 </div>
                             }
                             </fieldset>
@@ -745,7 +745,7 @@
                         @Html.EditorFor(x => x.BSODateOfNextInspectionVisit, new { title = "BSO: Next inspection visit" })
                     }
 
-                    <button id="save-submit-bottom" type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, "details")">Save</button>
+                    <button id="save-submit-bottom" type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, "details")">Save details</button>
                     @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel mobile-full-width" })
 
                 </div>

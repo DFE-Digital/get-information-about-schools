@@ -66,7 +66,7 @@
 
     <div class="grid-row">
         <div class="column-full submit-cancel-panel">
-            <button type="submit" name="action" class="button mobile-full-width" id="create-submit" value="@VM.ActionSave">Create</button>
+            <button type="submit" name="action" class="button mobile-full-width" id="create-submit" value="@VM.ActionSave">Create @Model.EntityName</button>
             @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-secondary cancel mobile-full-width" })
         </div>
     </div>

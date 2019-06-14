@@ -38,7 +38,7 @@
                             <td data-label="Establishment name">@item.EstablishmentName</td>
                             <td data-label="Type of link">@item.LinkTypeName</td>
                             <td data-label="Date linked">@(item.LinkDate?.ToString("dd/MM/yyyy"))</td>
-                            <td><a href="@Url.RouteUrl("EditEstabLink", new { urn = Model.Urn, linkid = item.Id })">Edit</a></td>
+                            <td><a href="@Url.RouteUrl("EditEstabLink", new { urn = Model.Urn, linkid = item.Id })" aria-label="Edit establishment link">Edit</a></td>
                         </tr>
                     }
                 </tbody>
