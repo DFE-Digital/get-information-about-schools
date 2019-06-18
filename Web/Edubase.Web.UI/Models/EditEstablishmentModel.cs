@@ -156,7 +156,6 @@ namespace Edubase.Web.UI.Models
 
         public int? ProprietorTypeId { get; set; }
 
-        [JsonIgnore]
         public eProprietorType? ProprietorType
         {
             get => ProprietorTypeId.HasValue ? (eProprietorType) ProprietorTypeId.Value : null as eProprietorType?;
@@ -459,21 +458,7 @@ namespace Edubase.Web.UI.Models
 
         [DisplayName("Preferred job title")]
         public string ChairOfProprietorsBodyPreferredJobTitle { get; set; }
-
-        public bool AnyChairOfProprietorsFieldsSet => new[]
-        {
-            ChairOfProprietorsBodyName,
-            ChairOfProprietorsBodyStreet,
-            ChairOfProprietorsBodyLocality,
-            ChairOfProprietorsBodyAddress3,
-            ChairOfProprietorsBodyTown,
-            ChairOfProprietorsBodyPostcode,
-            ChairOfProprietorsBodyTelephoneNumber,
-            ChairOfProprietorsBodyFaxNumber,
-            ChairOfProprietorsBodyEmail,
-            ChairOfProprietorsBodyPreferredJobTitle
-        }.Any(x => x.Clean() != null);
-
+        
         [DisplayName("Accommodation changes")]
         public int? AccommodationChangedId { get; set; }
 

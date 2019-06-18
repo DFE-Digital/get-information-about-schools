@@ -1,5 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 using System.Threading.Tasks;
 using Edubase.Common;
@@ -7,6 +9,7 @@ using Edubase.Services.Domain;
 using Edubase.Common.Cache;
 using System.Runtime.CompilerServices;
 using System.Linq.Expressions;
+using Edubase.Services.Enums;
 
 namespace Edubase.Services.Lookup
 {
@@ -78,6 +81,22 @@ namespace Edubase.Services.Lookup
                 { "CountryId", async id => (await NationalitiesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "CountyId", async id => (await CountiesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "OfstedRatingId", async id => (await OfstedRatingsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "ProprietorTypeId", async id => (await Task.Run(() =>
+                {
+                    // a little bit overkill, but making use of the existing pattern to display enum choice
+                    var pt = (eProprietorType)id;
+                    var type = pt.GetType();
+                    var member = type.GetMember(pt.ToString());
+                    var displayName = pt.ToString();
+
+                    var attributes = member.Select(e => e.GetCustomAttributes(typeof(DisplayAttribute), false)).FirstOrDefault();
+                    if (attributes != null && attributes.Length > 0)
+                    {
+                        displayName= ((DisplayAttribute) attributes[0]).Name;
+                    }
+                    
+                    return displayName;
+                })) }
             };
         }
 

@@ -61,7 +61,6 @@ namespace Edubase.Services.Establishments.Models
             "inspectorateId",
             "section41ApprovedId",
             "proprietorName",
-            "proprietorTypeId",
             "SENStat",
             "SENNoStat",
             "SENIds",

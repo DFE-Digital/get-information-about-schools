@@ -159,17 +159,6 @@ namespace Edubase.Services.Establishments.Models
 
         public int? ProprietorTypeId { get; set; }
 
-        [JsonIgnore]
-        public eProprietorType? ProprietorType
-        {
-            get
-                => ProprietorTypeId.HasValue
-                    ? (eProprietorType) ProprietorTypeId.Value
-                    : null as eProprietorType?;
-
-            set => ProprietorTypeId = (int?) value; 
-        }
-
         [DisplayName("Number of special pupils under a SEN statement/EHCP"), JsonProperty("SENStat")]
         public int? SENStat { get; set; }
 
