@@ -113,6 +113,9 @@ namespace Edubase.Services.Establishments.Models
 
         public virtual T ProprietorName { get; set; }
 
+        [JsonProperty("ProprietorType")]
+        public virtual T ProprietorTypeId { get; set; }
+
         public virtual T SENStat { get; set; }
 
         public virtual T SENNoStat { get; set; }

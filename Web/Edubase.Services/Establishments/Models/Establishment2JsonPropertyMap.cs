@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Edubase.Services.Establishments.Models
 {
@@ -61,6 +61,7 @@ namespace Edubase.Services.Establishments.Models
             "inspectorateId",
             "section41ApprovedId",
             "proprietorName",
+            "proprietorTypeId",
             "SENStat",
             "SENNoStat",
             "SENIds",

@@ -1,6 +1,7 @@
-﻿@using System.Linq
+@using System.Linq
 @using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
 @using System.Linq.Expressions
+@using Edubase.Services.Enums
 @model ViewModel
 @{
     if (Model.ChangesSummary == null)
@@ -115,20 +116,18 @@
 
                 <fieldset class="toggle-panels inline" id="proprietor-radios">
                     <legend class="bold-legend">Proprietor</legend>
-                    <div class="multiple-choice">
-                        <input type="radio" name="proprietor-type" value="single" id="proprietor-type-single" data-toggle-panel="#proprietor-single"  @Html.Conditional(!Model.AnyChairOfProprietorsFieldsSet, "checked") />
-                        <label for="proprietor-type-single">
-                            Single proprietor
-                        </label>
-                    </div>
-                    <div class="multiple-choice">
-                        <input type="radio" name="proprietor-type" value="body" id="proprietor-type-body" data-toggle-panel="#proprietor-body" @Html.Conditional(Model.AnyChairOfProprietorsFieldsSet, "checked") />
-                        <label for="proprietor-type-body">
-                            Proprietory body
-                        </label>
-                    </div>
-                </fieldset>
-                <div id="proprietor-single" class="panel panel-border-narrow push-half--top">
+                        @foreach (eProprietorType pt in Enum.GetValues(typeof(eProprietorType)))
+                        {
+                        <div class="multiple-choice">
+                            @{
+                                var id = TagBuilder.CreateSanitizedId(string.Format("{0}-{1}", "proprietor-type", pt));
+                            }
+                            @Html.RadioButtonFor(x => x.ProprietorType, pt, new { id, data_toggle_panel = $"#{pt}" })
+                            @Html.Label(pt.EnumDisplayNameFor(), new { @for = id, data_toggle_panel = pt })
+                        </div>
+                        }
+                    </fieldset>
+                <div id="@eProprietorType.SingleProprietor.ToString()" class="panel panel-border-narrow push-half--top">
                     <h4 class="heading-small">Proprietor details</h4>
                     <div id="cloneable-fields-container">
                         @RenderTextBox(x => x.ProprietorsPreferredJobTitle)
@@ -152,7 +151,7 @@
 
 
                 </div>
-                <div id="proprietor-body" class="panel panel-border-narrow push-half--top">
+                <div id="@eProprietorType.ProprietorBody.ToString()" class="panel panel-border-narrow push-half--top">
                     <h4 class="heading-small">Proprietor body details</h4>
                     <div id="field-clone-target">
 

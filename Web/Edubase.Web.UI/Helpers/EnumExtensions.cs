@@ -1,6 +1,9 @@
-﻿using System;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Core.Metadata.Edm;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Web;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -20,6 +23,22 @@ namespace Edubase.Web.UI.Helpers
             }
 
             return en.ToString();
+        }
+
+
+        public static string EnumDisplayNameFor(this Enum en)
+        {
+            var type = en.GetType();
+            var member = type.GetMember(en.ToString());
+            var displayName = en.ToString();
+
+            var attributes = member.Select(e => e.GetCustomAttributes(typeof(DisplayAttribute), false)).FirstOrDefault();
+            if (attributes != null && attributes.Length > 0)
+            {
+                displayName = ((DisplayAttribute) attributes[0]).Name;
+            }
+
+            return displayName;
         }
     }
 }
