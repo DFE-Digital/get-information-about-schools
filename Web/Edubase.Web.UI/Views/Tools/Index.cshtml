@@ -33,14 +33,14 @@
                 <h2 class="heading-medium">@label</h2>
             </div>
         </div>
-        <div class="grid-row">
+        <ul class="columns-2">
             @foreach (var item in list)
             {
-                <div class="column-half">
-                    <h3>@item.Link</h3>
+                <li>
+                    <h3 class="heading-small">@item.Link</h3>
                     <p>@Html.Raw(item.Description)</p>
-                </div>
+                </li>
             }
-        </div>
+        </ul>
     }
 }
