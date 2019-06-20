@@ -668,6 +668,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 domainModel.SENIds = viewModel.SENIds ?? new int[0];
             }
 
+            if (keys.Contains(nameof(viewModel.ProprietorType)))
+            {
+                domainModel.ProprietorTypeId = viewModel.ProprietorTypeId;
+            }
+
             domainModel.AdditionalAddresses = viewModel.AdditionalAddresses.ToArray();
         }
 

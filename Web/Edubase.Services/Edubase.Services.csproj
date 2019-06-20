@@ -181,6 +181,7 @@
     <Compile Include="Enums\eLookupGovernorRole.cs" />
     <Compile Include="Enums\eLookupGroupStatus.cs" />
     <Compile Include="Enums\eLookupGroupType.cs" />
+    <Compile Include="Enums\eProprietorType.cs" />
     <Compile Include="Enums\eLookupSearchSource.cs" />
     <Compile Include="Enums\EnumSets.cs" />
     <Compile Include="Enums\GroupChangeLinkType.cs" />
