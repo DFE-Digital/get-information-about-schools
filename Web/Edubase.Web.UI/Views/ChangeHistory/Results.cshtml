@@ -30,7 +30,7 @@
 </div>
 
 <div class="grid-row">
-    <div class="column-full results-heading change-history-results-heading">
+    <div class="column-full results-heading flush--bottom">
         @{
             var heading = (Model.SearchType.OneOfThese(eSearchType.Group, eSearchType.GroupAll)) ? "Group change history" : "Establishment change history";
             if (Model.SingleEstablishment && !string.IsNullOrWhiteSpace(Model.EstablishmentName))
