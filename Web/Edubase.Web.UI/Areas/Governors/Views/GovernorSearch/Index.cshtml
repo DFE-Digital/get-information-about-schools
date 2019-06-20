@@ -13,7 +13,7 @@
         <div class="breadcrumbs">
             @Html.ActionLink("Back to find a governor", "Index", "Search", new { area = "", SelectedTab = "Governors", gsearch = gSearch }, null)
         </div>
-        <h1 class="heading-xlarge">Search results</h1>
+        <h1 class="heading-xlarge">Search results for governors</h1>
         <a class="download-link @(Model.Count > 5000 ? "prevent-download": "")" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()">Download these search results</a>
     </div>
     <div class="column-full">
