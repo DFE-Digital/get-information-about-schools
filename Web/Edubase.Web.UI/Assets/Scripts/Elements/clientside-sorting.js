@@ -133,6 +133,12 @@
                 $tbody[0].appendChild(frag);
             }
 
+            // Add default aria-label to each table header link
+            $triggers.each(function(){
+                var headerName = $(this).text().trim();
+                $(this).attr('aria-label', headerName + '. Click to sort data by this column.');
+            });
+
             $triggers.on('click', function (e) {
                 e.preventDefault();
                 var sort = $.data(this, 'sortType');
@@ -149,6 +155,12 @@
                 $(this).addClass('selected-sort');
 
                 $(this).addClass(sortClass);
+
+                // Adding a custom aria-label to the selected table header link
+                var sortDirText;
+                var sortTextFull = $(this).text().trim();
+                asc ? sortDirText = 'an ascending order' : sortDirText = 'a descending order';
+                $(this).attr('aria-label', sortTextFull + ' is sorted in ' + sortDirText + '. Click to change order. All other columns are sortable.');
 
                 sortKey = $.data(this, 'sortKey');
 
@@ -176,6 +188,3 @@
         });
     }
 }($));
-
-
-
