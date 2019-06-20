@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Security.Principal;
 using Edubase.Common;
 using Edubase.Services.Enums;
@@ -35,8 +35,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
                     ET.AcademySpecialConverter,
                     ET.AcademySpecialSponsorLed,
                     ET.AcademySponsorLed,
-                    ET.FurtherEducation,
-                    ET.SixthFormCentres,
                     ET.CityTechnologyCollege,
                     ET.FreeSchools,
                     ET.FreeSchools1619,
