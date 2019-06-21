@@ -1,6 +1,5 @@
 @using Edubase.Services.Geo;
 @using Edubase.Web.UI;
-
 @using VM = Edubase.Web.UI.Models.Search.LocationDisambiguationViewModel;
 @model VM
 @{
@@ -8,41 +7,39 @@
     ViewBag.hideLogo = true;
 }
 
+<div class="breadcrumbs">
+        <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.Location})">Back to find an establishment</a>
+</div>
+
 <div class="grid-row">
     <div class="column-full">
-        <h1 class="heading-xlarge">Get information about schools</h1>
+        <h1 class="heading-xlarge">Search results for establishments</h1>
+
+        <p class="font-small"><span class="bold-medium">@Model.MatchingLocations.Count</span> &nbsp;location@(Model.MatchingLocations.Count == 1 ? "" : "s") matching '<span class="bold-small">@Model.SearchText</span>'</p>
+
+        @if (Model.MatchingLocations.Count > 1)
+        {
+            <p class="bold-small">Select the location you are interested in</p>
+
+            <ul class="push--bottom">
+                @foreach (var item in Model.MatchingLocations)
+                {
+                    <li>@LocationLink(item)</li>
+                }
+            </ul>
+            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.Location})" class="button button-secondary">Back to search</a>
+        }
+        else if (Model.MatchingLocations.Count == 1)
+        {
+            <p>Did you mean @LocationLink(Model.MatchingLocations[0])?</p>
+            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.Location})" class="button button-secondary">Back to search</a>
+        }
+        else
+        {
+            <p class="bold-small">No locations were found. Please refine your search criteria.<br /></p>
+            <a href="/" class="button button-next">Continue</a>
+        }
     </div>
-
-    <a href="/">Back</a>
-
-    <p>Search by location:</p>
-
-    <p class="font-small"><span class="bold-medium">@Model.MatchingLocations.Count</span> &nbsp;Location@(Model.MatchingLocations.Count == 1 ? "" : "s") matching '<span class="bold-small">@Model.SearchText</span>'</p>
-
-    @if (Model.MatchingLocations.Count > 1)
-    {
-        <p class="bold-small">Select the location you are interested in</p>
-
-        <ul>
-            @foreach (var item in Model.MatchingLocations)
-            {
-                <li>@LocationLink(item)</li>
-            }
-        </ul>
-        <br />
-        <a href="/" class="button">Cancel</a>
-    }
-    else if (Model.MatchingLocations.Count == 1)
-    {
-        <p>
-            Did you mean @LocationLink(Model.MatchingLocations[0])?
-        </p>
-    }
-    else
-    {
-        <p class="bold-small">No locations were found. Please refine your search criteria.<br /></p>
-        <a href="/" class="button button-next">Continue</a>
-    }
 </div>
 
 @helper LocationLink(PlaceDto place)
