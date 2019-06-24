@@ -52,8 +52,18 @@
                         @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].Name)
                         @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].Address)
                         @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].OpeningDate)
-                        @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].EstablishmentType)
+                        @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].EstablishmentTypeId)
                     }
+
+                    <h2 class="heading-small">Establishment details</h2>
+
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.EstablishmentSearch.EstablishmentTypeId)">
+                        <label class="form-label" for="TypeId">Establishment type</label>
+                        @Html.ValidationMessageFor(x=>x.EstablishmentSearch.EstablishmentTypeId)
+                        @Html.DropDownListFor(x => x.EstablishmentSearch.EstablishmentTypeId, Model.EstablishmentTypes, "", new { @class = "form-control" })
+                    </div>
+
+                    @Html.EditorFor(x => x.EstablishmentSearch.OpeningDate, new { title = "Opening date" })
 
                     <div class="form-group inline-with-button">
                         <button type="submit" class="button inline-submit" id="find-urn">Add establishment</button>

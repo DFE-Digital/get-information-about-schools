@@ -34,15 +34,17 @@ namespace Edubase.Web.UI.Controllers
     {
         private readonly ISecurityService _securityService;
         private readonly IEstablishmentReadService _establishmentReadService;
+        private readonly IEstablishmentWriteService _establishmentWriteService;
         private readonly ICachedLookupService _lookup;
         private readonly IClientStorage _clientStorage;
         private readonly ILocalAuthoritySetRepository _localAuthoritySetRepository;
         private readonly IEstablishmentDownloadService _establishmentDownloadService;
 
-        public ToolsController(ISecurityService securityService, IEstablishmentReadService establishmentReadService, ICachedLookupService lookup, IClientStorage clientStorage, ILocalAuthoritySetRepository localAuthoritySetRepository, IEstablishmentDownloadService establishmentDownloadService)
+        public ToolsController(ISecurityService securityService, IEstablishmentReadService establishmentReadService, IEstablishmentWriteService establishmentWriteService, ICachedLookupService lookup, IClientStorage clientStorage, ILocalAuthoritySetRepository localAuthoritySetRepository, IEstablishmentDownloadService establishmentDownloadService)
         {
             _securityService = securityService;
             _establishmentReadService = establishmentReadService;
+            _establishmentWriteService = establishmentWriteService;
             _lookup = lookup;
             _clientStorage = clientStorage;
             _localAuthoritySetRepository = localAuthoritySetRepository;
@@ -98,12 +100,33 @@ namespace Edubase.Web.UI.Controllers
                 var estCall = await _establishmentReadService.GetAsync((int)model.Urn, User);
                 var estModel = estCall.GetResult();
 
+                var establishmentTypeFullList = (await _lookup.EstablishmentTypesGetAllAsync()).ToList();
+                var filteredList = establishmentTypeFullList.ToList();
+                foreach (var establishmentLookupDto in establishmentTypeFullList)
+                {
+                    var validationEnvelope = await _establishmentWriteService.ValidateBulkCreateAcademies(new NewAcademyRequest[]
+                    {
+                        new NewAcademyRequest()
+                        {
+                            TypeId = establishmentLookupDto.Id,
+                            OpeningDate = DateTime.Now,
+                            PredecessorEstablishmentUrn = (int)estModel.Urn
+                        }
+                    }, User);
+
+                    if (validationEnvelope.HasErrors || (validationEnvelope.Response.Length > 0 && validationEnvelope.Response[0].HasErrors))
+                    {
+                        filteredList.RemoveAll(x => x.Id == establishmentLookupDto.Id);
+                    }
+                }
+
+                model.EstablishmentTypes = filteredList.ToSelectList(estModel.TypeId);
+                
                 model.EstablishmentSearch = new BulkAcademiesViewModel()
                 {
                     Urn = estModel.Urn,
                     Name = estModel.Name,
-                    EstablishmentType = "type",
-                    OpeningDate = DateTime.Now,
+                    EstablishmentTypeId = estModel.TypeId,
                     Address = StringUtil.ConcatNonEmpties(", ",
                         estModel.Address_Line1,
                         estModel.Address_Locality,
@@ -131,11 +154,13 @@ namespace Edubase.Web.UI.Controllers
                 {
                     Urn = model.EstablishmentSearch.Urn,
                     Name = model.EstablishmentSearch.Name,
-                    EstablishmentType = "type",
-                    OpeningDate = DateTime.Now,
+                    EstablishmentTypeId = model.EstablishmentSearch.EstablishmentTypeId,
+                    OpeningDate = model.EstablishmentSearch.OpeningDate,
                     Address = model.EstablishmentSearch.Address
                 });
             }
+
+            model.EstablishmentTypes = (await _lookup.EstablishmentTypesGetAllAsync()).ToSelectList();
 
             return View(model);
         }

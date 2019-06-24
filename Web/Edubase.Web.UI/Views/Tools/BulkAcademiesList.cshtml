@@ -42,7 +42,7 @@
                         @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].Name)
                         @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].Address)
                         @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].OpeningDate)
-                        @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].EstablishmentType)
+                        @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].EstablishmentTypeId)
                     }
 
                     <div class="form-group inline-with-button">
@@ -67,7 +67,7 @@
                             @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].Name)
                             @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].Address)
                             @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].OpeningDate)
-                            @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].EstablishmentType)
+                            @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].EstablishmentTypeId)
                         }
 
 
@@ -89,7 +89,7 @@
                                 <tr>
                                     <td data-label="URN">@est.Urn</td>
                                     <td data-label="Name">@est.Name</td>
-                                    <td data-label="Establishment type">Academy Special Converter</td>
+                                    <td data-label="Establishment type">@Model.EstablishmentTypes.FirstOrDefault(x => x.Value.Equals(est.EstablishmentTypeId.ToString(), StringComparison.InvariantCultureIgnoreCase)).Text</td>
                                     <td data-label="Opening date">@est.OpeningDate</td>
                                     <td><a href="#" aria-label="Edit establishment">Edit</a></td>
                                     <td>
