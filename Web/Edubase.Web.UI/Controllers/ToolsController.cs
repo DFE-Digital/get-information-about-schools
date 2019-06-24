@@ -1,3 +1,4 @@
+using System.Net;
 using EdubaseRoles = Edubase.Services.Security.EdubaseRoles;
 
 namespace Edubase.Web.UI.Controllers
@@ -81,6 +82,63 @@ namespace Edubase.Web.UI.Controllers
 
         [HttpGet, MvcAuthorizeRoles(R.AP_AOS, R.ROLE_BACKOFFICE, R.EFADO)]
         public ActionResult BulkAcademies() => View();
+
+        [HttpPost, MvcAuthorizeRoles(R.AP_AOS, R.ROLE_BACKOFFICE, R.EFADO)]
+        public async Task<ActionResult> BulkAcademiesSearch(BulkAcademiesCreateViewModel model, int? removeUrn, string editUrn)
+        {
+            if (removeUrn != null)
+            {
+                model.EstablishmentsToAdd.RemoveAll(x => x.Urn == removeUrn);
+                model.Urn = null;
+                return View("BulkAcademiesList", model);
+            }
+
+            if (model.Urn != null)
+            {
+                var estCall = await _establishmentReadService.GetAsync((int)model.Urn, User);
+                var estModel = estCall.GetResult();
+
+                model.EstablishmentSearch = new BulkAcademiesViewModel()
+                {
+                    Urn = estModel.Urn,
+                    Name = estModel.Name,
+                    EstablishmentType = "type",
+                    OpeningDate = DateTime.Now,
+                    Address = StringUtil.ConcatNonEmpties(", ",
+                        estModel.Address_Line1,
+                        estModel.Address_Locality,
+                        estModel.Address_Line3,
+                        estModel.Address_CityOrTown,
+                        estModel.Address_PostCode)
+                };
+            }
+
+            return View(model);
+        }
+
+        [HttpPost, MvcAuthorizeRoles(R.AP_AOS, R.ROLE_BACKOFFICE, R.EFADO)]
+        public async Task<ActionResult> BulkAcademiesList(BulkAcademiesCreateViewModel model)
+        {
+            if (model.EstablishmentsToAdd == null)
+            {
+                model.EstablishmentsToAdd = new List<BulkAcademiesViewModel>();
+            }
+
+            if (model.EstablishmentSearch != null)
+            {
+                // todo - will need to add the end date and the establishment type I guess
+                model.EstablishmentsToAdd.Add(new BulkAcademiesViewModel
+                {
+                    Urn = model.EstablishmentSearch.Urn,
+                    Name = model.EstablishmentSearch.Name,
+                    EstablishmentType = "type",
+                    OpeningDate = DateTime.Now,
+                    Address = model.EstablishmentSearch.Address
+                });
+            }
+
+            return View(model);
+        }
 
         [HttpGet, MvcAuthorizeRoles(R.AP_AOS, R.ROLE_BACKOFFICE, R.EFADO, R.SOU, R.IEBT)]
         public async Task<ActionResult> MergersTool()

@@ -428,6 +428,7 @@
     <Compile Include="Models\HeirarchicalLookupItemViewModel.cs" />
     <Compile Include="Models\PaginationViewModel.cs" />
     <Compile Include="Models\Search\LocationDisambiguationViewModel.cs" />
+    <Compile Include="Models\Tools\BulkAcademiesCreateViewModel.cs" />
     <Compile Include="Models\Tools\IndSchoolsSearchViewModel.cs" />
     <Compile Include="Models\Tools\PredefinedLASetViewModel.cs" />
     <Compile Include="Models\Tools\PredefinedLASetsViewModel.cs" />
@@ -1001,6 +1002,8 @@
     <Content Include="Views\Home\Help.cshtml" />
     <Content Include="Views\Faq\CreateEdit.cshtml" />
     <Content Include="Views\Faq\Index.cshtml" />
+    <Content Include="Views\Tools\BulkAcademiesSearch.cshtml" />
+    <Content Include="Views\Tools\BulkAcademiesList.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>

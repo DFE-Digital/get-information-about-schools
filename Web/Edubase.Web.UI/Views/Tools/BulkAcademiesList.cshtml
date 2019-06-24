@@ -1,0 +1,111 @@
+@using Edubase.Common;
+@model BulkAcademiesCreateViewModel
+
+@{
+    ViewBag.Title = "Enter new academy details";
+    ViewBag.bodyClasses = "bulk-academy-create";
+}
+
+<div class="breadcrumbs">
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+        <li>
+            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+        </li>
+    </ul>
+</div>
+
+
+<div class="grid-row">
+    <div class="column-full">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState)
+    </div>
+    <div class="column-full">
+        <div class="grid-row">
+            <div class="column-full">
+                <h1 class="heading-xlarge">@ViewBag.Title</h1>
+                <p>Verify this is the correct establishment and enter the type and opening date.</p>
+            </div>
+        </div>
+
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <h2 class="heading-small">Predecessor school:</h2>
+
+                @using (Html.BeginForm("BulkAcademiesSearch", "Tools", FormMethod.Post))
+                {
+                    for (int i = 0; i < Model.EstablishmentsToAdd?.Count; i++)
+                    {
+                        @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].Urn)
+                        @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].Name)
+                        @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].Address)
+                        @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].OpeningDate)
+                        @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].EstablishmentType)
+                    }
+
+                    <div class="form-group inline-with-button">
+                        <label class="form-label" for="Urn">
+                            Establishment <abbr title="Unique Reference Number">URN</abbr>
+                        </label>
+                        @Html.TextBox("Urn", null, new { @class = "form-control" })
+                        <button type="submit" class="button inline-submit" id="find-urn">Search</button>
+                    </div>
+                }
+            </div>
+
+                <div class="academies-list-wrapper column-full" style="">
+                    <h2 class="heading-medium">Academies to create</h2>
+
+
+                    @using (Html.BeginForm("BulkAcademiesSearch", "Tools", FormMethod.Post))
+                    {
+                        for (int i = 0; i < Model.EstablishmentsToAdd?.Count; i++)
+                        {
+                            @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].Urn)
+                            @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].Name)
+                            @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].Address)
+                            @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].OpeningDate)
+                            @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].EstablishmentType)
+                        }
+
+
+                    <table class="edubase-table">
+                        <caption class="visuallyhidden">Academies to create</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col"><abbr title="Unique Reference Number">URN</abbr></th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Establishment type</th>
+                                <th scope="col">Opening date</th>
+                                <th scope="col" colspan="2"><span class="visuallyhidden">Action links</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var est in Model.EstablishmentsToAdd)
+                            {
+                                <tr>
+                                    <td data-label="URN">@est.Urn</td>
+                                    <td data-label="Name">@est.Name</td>
+                                    <td data-label="Establishment type">Academy Special Converter</td>
+                                    <td data-label="Opening date">@est.OpeningDate</td>
+                                    <td><a href="#" aria-label="Edit establishment">Edit</a></td>
+                                    <td>
+                                        <button name="removeUrn" value="@est.Urn">Remove</button>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+
+                    }
+
+                    <div class="submit-cancel-panel"><button type="submit" name="action" value="" id="go-create" class="button mobile-full-width" style="">Create academies</button> <a href="/Tools" class="button button-secondary cancel mobile-full-width" style="">Cancel</a></div>
+                </div>
+            
+        </div>
+    </div>
+</div>

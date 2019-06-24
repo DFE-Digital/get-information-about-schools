@@ -1,0 +1,66 @@
+@using Edubase.Common;
+@model BulkAcademiesCreateViewModel
+
+@{
+    ViewBag.Title = "Enter new academy details";
+    ViewBag.bodyClasses = "bulk-academy-create";
+}
+
+<div class="breadcrumbs">
+    <ul>
+        <li>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+        </li>
+        <li>
+            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+        </li>
+    </ul>
+</div>
+
+
+<div class="grid-row">
+    <div class="column-full">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState)
+    </div>
+    <div class="column-full">
+        <div class="grid-row">
+            <div class="column-full">
+                <h1 class="heading-xlarge">@ViewBag.Title</h1>
+                <p>Verify this is the correct establishment and enter the type and opening date.</p>
+            </div>
+        </div>
+
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <h2 class="heading-small">Predecessor school:</h2>
+                <p class="establishment-details">
+                    @Model.EstablishmentSearch.Name;<br>
+                    @Model.EstablishmentSearch.Address<br>
+                    <abbr title="Unique Reference Number">URN</abbr>: @Model.EstablishmentSearch.Urn<br>
+                    @Html.ActionLink("Wrong establishment?", "BulkAcademies", "Tools")
+                </p>
+
+                @using (Html.BeginForm("BulkAcademiesList", "Tools", FormMethod.Post))
+                {
+                    @Html.HiddenFor(x => x.EstablishmentSearch.Urn)
+                    @Html.HiddenFor(x => x.EstablishmentSearch.Name)
+                    @Html.HiddenFor(x => x.EstablishmentSearch.Address)
+
+                    for (int i = 0; i < Model.EstablishmentsToAdd?.Count; i++)
+                    {
+                        @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].Urn)
+                        @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].Name)
+                        @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].Address)
+                        @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].OpeningDate)
+                        @Html.HiddenFor(model => Model.EstablishmentsToAdd[i].EstablishmentType)
+                    }
+
+                    <div class="form-group inline-with-button">
+                        <button type="submit" class="button inline-submit" id="find-urn">Add establishment</button>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

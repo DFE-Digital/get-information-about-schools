@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "Bulk create new academies";
     ViewBag.bodyClasses = "bulk-academy-create";
 }
@@ -14,288 +14,35 @@
     </ul>
 </div>
 
-<div id="bulk-academies" v-cloak>
-    <div v-if="showGlobalError" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
-        <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
-        <h2 class="heading-medium error-summary-heading no-academies hidden">No academies have been specified</h2>
-        <p class="invalid-urn error-sub-heading hidden">Predecessor school not recognised</p>
-        <p class="missing-date error-sub-heading hidden">Please specify an opening date</p>
-        <ul class="error-summary-list">
-            <li v-show="invalidUrn">
-                <a href="#establishment-urn">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a>
-            </li>
-            <li v-show="duplicateUrn">
-                <a href="#establishment-urn"><abbr title="Unique Reference Number">URN</abbr> is a duplicate</a>
-            </li>
-            <li v-show="urnLookUpError!==''">
-                <a href="#establishment-urn" v-if="urnLookUpError">{{urnLookUpError}}</a>
-            </li>
-            <li v-show="apiValidationError!==''">
-                <a href="#establishment-urn" v-if="apiValidationError">{{apiValidationError}}</a>
-            </li>
-            <li v-show="noAcademyError">
-                <a href="#academy-type">Please add an academy</a>
-            </li>
-            <li v-show="academyUnselectedError">
-                <a href="#academy-type">Please select an establishment type</a>
-            </li>
-            <li v-show="openDateError">
-                <a href="#academy-open-date">Opening date not specified</a>
-            </li>
-        </ul>
+
+<div class="grid-row">
+    <div class="column-full">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState)
     </div>
-
-    <!-- API Errors -->
-    <div v-show="Object.keys(apiError).length> 0">
-        <h1 class="heading-xlarge">Sorry, something went wrong</h1>
-        <p>Please try again later.</p>
-        <p>A report of the error has been sent to our technical team.</p>
-
-        <p class="api-error-code" v-show="apiError.hasOwnProperty('errorCode')">Error code: {{apiError.errorCode}}</p>
-        <div v-show="apiError.hasOwnProperty('technicalDetails')">
-            <code>
-                {{apiError.technicalDetails}}
-            </code>
-        </div>
-    </div>
-
-    <!-- No API errors -->
-    <div v-show="Object.keys(apiError).length === 0">
-
-        <!-- Heading and intro paragraph -->
+    <div class="column-full">
         <div class="grid-row">
             <div class="column-full">
-                <h1 class="heading-xlarge">{{pageHeading}}</h1>
-                <p v-show="Object.keys(pendingEstab).length < 2 && !isProcessing && !isComplete">
-                    Create new academies from the predecessor school record
-                </p>
+                <h1 class="heading-xlarge">@ViewBag.Title</h1>
+                <p>Create new academies from the predecessor school record</p>
             </div>
-        </div>
-
-        <form id="bulk-academy-create">
-            <div class="grid-row" v-show="!isComplete && !isProcessing">
-
-                <div class="column-two-thirds">
-                    <div v-show="Object.keys(pendingEstab).length < 2">
-                        <h2 class="heading-small">Predecessor school</h2>
-                        <div v-bind:class="['form-group', 'inline-with-button', (invalidUrn || duplicateUrn ||urnLookUpError!=='') ? 'error' : '']">
-                            <label for="establishment-urn" class="form-label">
-                                Establishment <abbr title="Unique Reference Number">URN</abbr>
-                                <span class="error-message" v-show="invalidUrn">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
-                                <span class="error-message" v-show="duplicateUrn">This establishment has already been added.</span>
-                                <span class="error-message" v-show="estabTypeError">This establishment is already an academy.</span>
-                                <span class="error-message" v-show="urnLookUpError !== ''">{{urnLookUpError}}</span>
-                            </label>
-                            <input id="establishment-urn" class="form-control" type="text" v-model="searchUrn" />
-                            <button class="button inline-submit" id="find-urn" v-on:click.prevent="estabLookUp">Search</button>
-
-                        </div>
-                    </div>
-
-                    <div class="establishment-found" v-show="Object.keys(pendingEstab).length > 1">
-                        <p>Verify this is the correct establishment and enter the type and opening date.</p>
-                        <h2 class="heading-small">Predecessor school</h2>
-                        <p class="establishment-details">
-                            {{pendingEstab.name}} <br />
-                            {{pendingEstabAddress}} <br />
-                            <abbr title="Unique Reference Number">URN</abbr>: {{pendingEstab.urn}} <br />
-                            <span v-show="!pendingEdit">
-                                <a href="#" class="change-link" v-on:click.prevent="wrongEstablishment">Wrong establishment?</a>
-                            </span>
-                        </p>
-
-                        <h2 class="heading-small">Establishment details</h2>
-                        <div v-bind:class="['form-group', academyUnselectedError? 'error' : '']" id="searched-establishment-details">
-                            <label class="form-label" for="academy-type">
-                                New establishment type
-                            </label>
-                            <span class="error-message" v-show="academyUnselectedError">Please select establishment type</span>
-                            <select class="form-control" id="academy-type" v-model="pendingEstab.academyType" autocomplete="off"></select>
-                        </div>
-                        <div v-bind:class="['form-group','range-group',  openDateError? 'error': '']" id="academy-open-date">
-                            <fieldset>
-                                <span class="error-message" v-show="openDateError">Please select establishment open date</span>
-                                <legend>Opening date</legend>
-                                <div class="form-hint">For example, 20 03 2003</div>
-
-                                <span class="inline-form-control">
-                                    <label for="opendate-day">Day</label>
-                                    <input type="text" class="form-control date-text-day" id="opendate-day" v-model="openDateDay" />
-                                </span>
-                                <span class="inline-form-control">
-                                    <label for="opendate-month">Month</label>
-                                    <input type="text" class="form-control date-text-month" id="opendate-month" v-model="openDateMonth" />
-                                </span>
-                                <span class="inline-form-contol">
-                                    <label for="opendate-year">Year</label>
-                                    <input type="text" class="form-control date-text-year" id="opendate-year" v-model="openDateYear" />
-                                </span>
-                            </fieldset>
-                        </div>
-                        <div class="button-row">
-                            <button class="button mobile-full-width" id="add-item-to-list" v-on:click.prevent="addEstablishment" v-show="!pendingEdit">Add establishment</button>
-                            <button class="button mobile-full-width" id="save-item-to-list" v-on:click.prevent="addEstablishment" v-show="pendingEdit">Update establishment</button>
-                            <a class="button mobile-full-width button-secondary" id="cancel-add-item-to-list" v-on:click.prevent="cancelAddEdit">Cancel</a>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="academies-list-wrapper column-full" v-show="establishments.length > 0 && !pendingEdit && !isSearching">
-                    <h2 class="heading-medium">Academies to create</h2>
-                    <p class="table-caption" v-show="establishments.length > 1">Showing 1 - {{establishments.length}} of {{establishments.length}}</p>
-                    <table class="edubase-table">
-                        <caption class="visuallyhidden">Academies to create</caption>
-                        <thead>
-                            <tr>
-                                <th scope="col"><abbr title="Unique Reference Number">URN</abbr></th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Establishment type</th>
-                                <th scope="col">Opening date</th>
-                                <th scope="col" colspan="2">
-                                <span class="visuallyhidden">Action links</span>
-                            </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="estab in establishments">
-                                <td data-label="URN">{{estab.urn}}</td>
-                                <td data-label="Name">{{estab.name}}</td>
-                                <td data-label="Establishment type">{{estab.typeName}}</td>
-                                <td data-label="Opening date">{{estab.displayDate}}</td>
-                                <td>
-                                    <a href="#" v-on:click.prevent="editRecord(estab.urn)" aria-label="Edit establishment">Edit</a>
-                                </td>
-                                <td>
-                                    <a href="#" v-on:click="couldDelete(estab.urn)" aria-label="Remove establishment">Remove</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p class="table-caption" v-show="establishments.length > 1">Showing 1 - {{establishments.length}} of {{establishments.length}}</p>
-                    <div class="submit-cancel-panel" v-show="!isSearching || !pendingEdit">
-                        <button type="submit" name="action" value="" class="button mobile-full-width" id="go-create" v-on:click.prevent="commitChanges" v-show="establishments.length > 0">Create academies</button>
-                        @Html.ActionLink("Cancel", "Index", "Tools", new {}, new {@class = "button button-secondary cancel mobile-full-width", v_show = "(Object.keys(pendingEstab).length < 1 || establishments.length > 0) && !isProcessing"})
-                    </div>
-                </div>
-            </div>
-        </form>
-
-        <div class="progress-indicator" v-show="isProcessing">
-            <p v-show="isCommiting">Please wait. Creating academies ({{createdCount}} of {{establishments.length}})</p>
         </div>
 
         <div class="grid-row">
-            <div class="bulk-create-result column-full" v-show="isComplete">
+            <div class="column-two-thirds">
+                <h2 class="heading-small">Predecessor school:</h2>
 
-                <p>The following new academies have been created. All predecessor record and links have been updated automatically</p>
-                <p class="table-caption">Showing 1 - {{createdAcademies.length}} of {{createdAcademies.length}}</p>
-                <table class="edubase-table">
-                    <caption class="visuallyhidden">Academies created</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col"><abbr title="Unique Reference Number">URN</abbr></th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Establishment type</th>
-                            <th scope="col">Opening date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="estab in createdAcademies">
-                            <td data-label="URN"><a v-bind:href='detailUrl(estab.urn)'>{{estab.urn}}</a></td>
-                            <td data-label="Name"><a v-bind:href='detailUrl(estab.urn)'>{{estab.name}}</a></td>
-                            <td data-label="Establishment type" v-html="lookUpType(estab.typeId)"></td>
-                            <td data-label="Opening date" v-html="formatDisplayDate(estab.openingDate)"></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p class="table-caption">Showing 1 - {{createdAcademies.length}} of {{createdAcademies.length}}</p>
-            </div>
-        </div>
+                @using (Html.BeginForm("BulkAcademiesSearch", "Tools", FormMethod.Post))
+                {
+                <div class="form-group inline-with-button">
+                    <label class="form-label" for="Urn">
+                        Establishment <abbr title="Unique Reference Number">URN</abbr>
+                    </label>
+                    @Html.TextBox("Urn", null, new { @class = "form-control" })
+                    <button type="submit" class="button inline-submit" id="find-urn">Search</button>
+                </div>
+                }
 
-        <div id="modal-overlay" class="modal-overlay" v-show="pendingDelete || displayExitWarning"></div>
-        <div id="modal-content" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc" class="modal-content" v-show="pendingDelete" >
-            <a href="#" id="exit-overlay" class="modal-exit" v-on:click.prevent="pendingDelete=false, pendingDeleteItem=''">Close</a>
-            <div id="modal-inner">
-                <h3 class="heading-large" id="modal-label" tabindex="0">Are you sure you want to remove this establishment?</h3>
-                <p id="modal-desc" tabindex="0">This will permanently remove it from the list.</p>
-            </div>
-            <div class="button-row">
-                <a href="#" id="button-ok" class="button mobile-full-width" v-on:click.prevent="confirmDelete">OK</a>
-                <a href="#" id="button-cancel" class="button button-secondary mobile-full-width" v-on:click.prevent="pendingDelete=false, pendingDeleteItem=''">Cancel</a>
-            </div>
-        </div>
-
-        <div role="dialog" class="modal-content" id="modal-content-2" aria-labelledby="modal-label-2" aria-describedby="modal-desc-2" v-show="displayExitWarning">
-            <a href="#" id="exit-overlay" class="modal-exit" v-on:click.prevent="displayExitWarning=false">Close</a>
-            <div id="modal-inner">
-                <h3 class="heading-large" id="modal-label-2" tabindex="0">Are you sure you want to leave?</h3>
-                <p id="modal-desc-2" tabindex="0">All changes will be lost.</p>
-            </div>
-            <div class="button-row">
-                <a href="#" id="button-ok" class="button mobile-full-width modal-button" v-on:click.prevent="confirmedExit">OK</a>
-                <a href="#" id="button-cancel" class="button button-secondary mobile-full-width modal-button" v-on:click.prevent="displayExitWarning=false">Cancel</a>
             </div>
         </div>
     </div>
 </div>
-
-
-@section ViewScripts {
-    <script>
-        var types = [
-            { "id": 39, "name": "Academy 16-19 Converter" },
-            { "id": 40, "name": "Academy 16-19 Sponsor Led" },
-            { "id": 36, "name": "Academy Alternative Provision Converter" },
-            { "id": 37, "name": "Academy Alternative Provision Sponsor Led" },
-            { "id": 28, "name": "Academy Converter" },
-            { "id": 38, "name": "Academy Special Converter" },
-            { "id": 27, "name": "Academy Special Sponsor Led" },
-            { "id": 22, "name": "Academy Sponsor Led" },
-            { "id": 31, "name": "British Schools Overseas" },
-            { "id": 41, "name": "Children's Centre" },
-            { "id": 42, "name": "Children's Centre Linked Site" },
-            { "id": 5, "name": "City Technology College" },
-            { "id": 1, "name": "Community School" },
-            { "id": 6, "name": "Community Special School" },
-            { "id": 4, "name": "Foundation School" },
-            { "id": 11, "name": "Foundation Special School" },
-            { "id": 29, "name": "Free Schools" },
-            { "id": 33, "name": "Free Schools - 16-19" },
-            { "id": 32, "name": "Free Schools - Alternative Provision" },
-            { "id": 30, "name": "Free Schools Special" },
-            { "id": 15, "name": "Further Education" },
-            { "id": 23, "name": "Higher Education Institutions" },
-            { "id": 43, "name": "Institution funded by other Government Department" },
-            { "id": 13, "name": "LA Nursery School" },
-            { "id": 21, "name": "Miscellaneous" },
-            { "id": 7, "name": "Non-Maintained Special School" },
-            { "id": 19, "name": "Offshore Schools" },
-            { "id": 10, "name": "Other Independent School" },
-            { "id": 9, "name": "Other Independent Special School" },
-            { "id": 12, "name": "Pupil Referral Unit" },
-            { "id": 18, "name": "Secure Units" },
-            { "id": 20, "name": "Service Childrens Education" },
-            { "id": 25, "name": "Sixth Form Centres" },
-            { "id": 26, "name": "Special Post 16 Institution" },
-            { "id": 35, "name": "Studio Schools" },
-            { "id": 34, "name": "University Technical College" },
-            { "id": 2, "name": "Voluntary Aided School" },
-            { "id": 3, "name": "Voluntary Controlled School" },
-            { "id": 24, "name": "Welsh Establishment" }
-        ];
-        var academyTypes = [
-            { "id": 39, "name": "Academy 16-19 Converter" },
-            //{ "id": 40, "name": "Academy 16-19 Sponsor Led" },
-            { "id": 36, "name": "Academy Alternative Provision Converter" },
-            //{ "id": 37, "name": "Academy Alternative Provision Sponsor Led" },
-            { "id": 28, "name": "Academy Converter" },
-            { "id": 38, "name": "Academy Special Converter" }//,
-            // { "id": 27, "name": "Academy Special Sponsor Led" },
-            // { "id": 22, "name": "Academy Sponsor Led" }
-        ];
-    </script>
-
-    <script src="/Assets/Scripts/standalone/bulk-create-academies.js"></script>
-    @*<script src="/public/assets/scripts/standalone/bulk-create-academies.js"></script>*@
-}
