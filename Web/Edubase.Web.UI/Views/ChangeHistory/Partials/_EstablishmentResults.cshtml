@@ -44,7 +44,7 @@
             {
                 if (tableColumn.Item3 || !Model.SingleEstablishment)
                 {
-                    <th scope="col">
+                    <th class="@Html.Conditional(@tableColumn.Item1 == "originatorUserName", "visuallyhidden js-reveal-when-no-filter") @Html.Conditional(@tableColumn.Item1 == "approverUserName", "visuallyhidden js-reveal-when-no-filter")" scope="col">
                         <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
                         class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
                         aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
@@ -66,8 +66,8 @@
                     <td data-label="Updated field" class="table-tight--break-word">@item.FieldName</td>
                     <td data-label="Old value" class="table-tight--break-word">@item.OldValue</td>
                     <td data-label="New value" class="table-tight--break-word">@item.NewValue</td>
-                    <td data-label="Suggested by" class="break-word">@item.SuggesterName</td>
-                    <td data-label="Approved by" class="break-word">@item.ApproverName</td>
+                    <td data-label="Suggested by" class="break-word visuallyhidden js-reveal-when-no-filter">@item.SuggesterName</td>
+                    <td data-label="Approved by" class="break-word visuallyhidden js-reveal-when-no-filter">@item.ApproverName</td>
                 </tr>
             }
         </tbody>
