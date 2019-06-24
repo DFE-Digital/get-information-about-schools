@@ -230,18 +230,6 @@
     }
     <script>
         $('#school-governance').find('.sortable-table').clientSort();
-        $(function () {
-            var url = "https://www.compare-school-performance.service.gov.uk/estab-details/@Model.Establishment.Urn";
-            $.ajax({
-                type: 'HEAD',
-                url: url,
-                success: function () { $(".cscp-link").show(); },
-                error: function (xhr, e) {
-                    if (e.status == 404) console.log("The url on the target returned 404");
-                    else console.log("Error: " + JSON.stringify(e));
-                }
-            });
-        });
     </script>
 
 }

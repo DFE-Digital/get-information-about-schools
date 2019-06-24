@@ -158,7 +158,7 @@
 
 @if (Model.Establishment.TypeId.OneOfThese(ET.SixthFormCentres, ET.FurtherEducation, ET.InstitutionFundedByOtherGovernmentDepartment))
 {
-    @CSCPLink()
+    @OtherServicesLinks()
 }
 
 @if (Model.DisplayPolicy.OfstedRatingId)
@@ -196,7 +196,7 @@
     ET.FoundationSchool, ET.VoluntaryAidedSchool, ET.VoluntaryControlledSchool,
     ET.CommunitySpecialSchool, ET.FoundationSpecialSchool))
 {
-    @CSCPLink()
+    @OtherServicesLinks()
 }
 
 @if (Model.DisplayPolicy.InspectorateId)
@@ -210,7 +210,7 @@
 @if (Model.Establishment.TypeId.OneOfThese(ET.OtherIndependentSchool,
     ET.NonmaintainedSpecialSchool, ET.OtherIndependentSpecialSchool))
 {
-    @CSCPLink()
+    @OtherServicesLinks()
 }
 
 @if (Model.DisplayPolicy.ProprietorName)
@@ -219,7 +219,16 @@
     <dd>@Model.Establishment.ProprietorName</dd>
 }
 
-@helper CSCPLink() {
-    <dt class="cscp-link">School performance:</dt>
-    <dd class="cscp-link"><a href="https://www.compare-school-performance.service.gov.uk/school/@Model.Establishment.Urn" rel="external" target="_blank">Compare School and College Performance page <span class="visually-hidden">Opens in new window</span></a></dd>
+@helper OtherServicesLinks() {
+    <dt>Data from other services:</dt>
+    <dd>
+        <ul>
+            <li>
+                <a href="https://www.compare-school-performance.service.gov.uk/school/@Model.Establishment.Urn" rel="external" target="_blank">Compare School and College Performance <span class="visually-hidden">Opens in new window</span></a>
+            </li>
+            <li>
+                <a href="https://schools-financial-benchmarking.service.gov.uk/school/detail?urn=@Model.Establishment.Urn" rel="external" target="_blank">Schools Financial Benchmarking <span class="visually-hidden">Opens in new window</span></a>
+            </li>
+        </ul>
+    </dd>
 }
