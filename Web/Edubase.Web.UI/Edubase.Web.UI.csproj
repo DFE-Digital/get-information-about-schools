@@ -1002,8 +1002,6 @@
     <Content Include="Views\Home\Help.cshtml" />
     <Content Include="Views\Faq\CreateEdit.cshtml" />
     <Content Include="Views\Faq\Index.cshtml" />
-    <Content Include="Views\Tools\BulkAcademiesSearch.cshtml" />
-    <Content Include="Views\Tools\BulkAcademiesList.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>

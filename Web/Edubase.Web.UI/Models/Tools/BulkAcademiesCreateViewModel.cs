@@ -1,23 +1,32 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Models.Tools
 {
-    public class BulkAcademiesViewModel
+    public class BulkAcademyViewModel
     {
         public int? Urn { get; set; }
         public string Name { get; set; }
         public int? EstablishmentTypeId { get; set; }
-        public DateTimeViewModel OpeningDate { get; set; } = new DateTimeViewModel();
+        public DateTime? OpeningDate { get; set; }
+        public DateTimeViewModel OpeningDateView {
+            get => new DateTimeViewModel(OpeningDate);
+            set => OpeningDate = value.ToDateTime();
+        }
         public string Address { get; set; }
+        public int? ReplacedUrn { get; set; }
     }
 
-    public class BulkAcademiesCreateViewModel
+    public class BulkAcademiesViewModel
     {
-        public List<BulkAcademiesViewModel> EstablishmentsToAdd { get; set; }
-        public BulkAcademiesViewModel EstablishmentSearch { get; set; }
-        public int? Urn { get; set; }
-        public IEnumerable<SelectListItem> EstablishmentTypes { get; set; }
+        public List<BulkAcademyViewModel> ItemsToAdd { get; set; }
+        public BulkAcademyViewModel FoundItem { get; set; }
+        public int? SearchUrn { get; set; }
+        public IEnumerable<SelectListItem> ItemTypes { get; set; }
+        public IEnumerable<SelectListItem> FilteredItemTypes { get; set; }
+        public Guid ProgressGuid { get; set; }
+        public bool IsComplete { get; set; }
     }
 }

@@ -1,7 +1,31 @@
+@using Edubase.Common;
+@using Edubase.Web.UI.Controllers
+@model BulkAcademiesViewModel
+
 @{
     ViewBag.Title = "Bulk create new academies";
+    ViewBag.Subtitle = "Create new academies from the predecessor school record";
     ViewBag.bodyClasses = "bulk-academy-create";
+
+    if (Model?.FoundItem != null)
+    {
+        ViewBag.Title = "Enter new academy details";
+        ViewBag.Subtitle = "Verify this is the correct establishment and enter the type and opening date.";
+    }
+
+    if (Model?.FoundItem != null && Model?.ItemsToAdd?.Count(x => x.Urn == Model?.FoundItem?.Urn) > 0)
+    {
+        ViewBag.Title = "Edit details";
+        ViewBag.Subtitle = "Verify this is the correct establishment and enter the type and opening date.";
+    }
+
+    if (Model?.IsComplete == true)
+    {
+        ViewBag.Title = "Academies created";
+        ViewBag.Subtitle = "The following new academies have been created. All predecessor record and links have been updated automatically";
+    }
 }
+
 
 <div class="breadcrumbs">
     <ul>
@@ -23,26 +47,161 @@
         <div class="grid-row">
             <div class="column-full">
                 <h1 class="heading-xlarge">@ViewBag.Title</h1>
-                <p>Create new academies from the predecessor school record</p>
+                <p>@ViewBag.Subtitle</p>
             </div>
         </div>
 
-        <div class="grid-row">
-            <div class="column-two-thirds">
-                <h2 class="heading-small">Predecessor school:</h2>
 
-                @using (Html.BeginForm("BulkAcademiesSearch", "Tools", FormMethod.Post))
+        @using (Html.BeginForm())
+        {
+            if (Model?.ItemsToAdd?.Count() > 0)
+            {
+                for (int i = 0; i < Model.ItemsToAdd?.Count; i++)
                 {
-                <div class="form-group inline-with-button">
-                    <label class="form-label" for="Urn">
-                        Establishment <abbr title="Unique Reference Number">URN</abbr>
-                    </label>
-                    @Html.TextBox("Urn", null, new { @class = "form-control" })
-                    <button type="submit" class="button inline-submit" id="find-urn">Search</button>
-                </div>
+                    @Html.HiddenFor(model => Model.ItemsToAdd[i].Urn)
+                    @Html.HiddenFor(model => Model.ItemsToAdd[i].Name)
+                    @Html.HiddenFor(model => Model.ItemsToAdd[i].Address)
+                    @Html.HiddenFor(model => Model.ItemsToAdd[i].OpeningDate)
+                    @Html.HiddenFor(model => Model.ItemsToAdd[i].EstablishmentTypeId)
                 }
+            }
 
-            </div>
-        </div>
+            <!-- EDIT -->
+            if (Model?.FoundItem != null)
+            {
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h2 class="heading-small">Predecessor school:</h2>
+                        <p class="establishment-details">
+                            @Model.FoundItem.Name;<br>
+                            @Model.FoundItem.Address<br>
+                            <abbr title="Unique Reference Number">URN</abbr>: @Model.FoundItem.Urn<br>
+                        </p>
+                        @Html.HiddenFor(x => x.FoundItem.Urn)
+                        @Html.HiddenFor(x => x.FoundItem.Name)
+                        @Html.HiddenFor(x => x.FoundItem.Address)
+                        <h2 class="heading-small">Establishment details</h2>
+
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.FilteredItemTypes)">
+                            <label class="form-label" for="FilteredItemTypes">Establishment type</label>
+                            @Html.ValidationMessageFor(x => x.FilteredItemTypes)
+                            @Html.DropDownListFor(x => x.FoundItem.EstablishmentTypeId, Model.FilteredItemTypes, "Please select", new { @class = "form-control", @id = nameof(Model.FilteredItemTypes) })
+                        </div>
+
+                        @Html.EditorFor(x => x.FoundItem.OpeningDateView, new { title = "Opening date" })
+
+                        <div class="button-row">
+                            <button type="submit" class="button mobile-full-width" id="find-urn">@(ViewBag.ButtonText ?? "Add establishment")</button>
+                            <button name="cancel" value="true" class="button mobile-full-width button-secondary">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+            <!-- SEARCH -->
+            if (Model?.FoundItem == null && Model?.IsComplete != true)
+            {
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h2 class="heading-small">Predecessor school:</h2>
+                        <div class="form-group inline-with-button @Html.ValidationCssClassFor(x => x.SearchUrn)">
+                            <label class="form-label" for="Urn">
+                                Establishment <abbr title="Unique Reference Number">URN</abbr>
+                            </label>
+                            @Html.ValidationMessageFor(x => x.SearchUrn)
+                            @Html.TextBoxFor(x => x.SearchUrn, null, new { @class = "form-control" })
+                            <button type="submit" class="button inline-submit" id="find-urn">Search</button>
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+            <!-- LIST -->
+            if (Model?.ItemsToAdd?.Count() > 0 && Model?.FoundItem == null && Model?.IsComplete != true)
+            {
+                <div class="grid-row">
+                    <div class="academies-list-wrapper column-full" style="">
+                        <h2 class="heading-medium">Academies to create</h2>
+                        <table class="edubase-table">
+                            <caption class="visuallyhidden">Academies to create</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col"><abbr title="Unique Reference Number">URN</abbr></th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Establishment type</th>
+                                    <th scope="col">Opening date</th>
+                                    <th scope="col" colspan="2"><span class="visuallyhidden">Action links</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var est in Model.ItemsToAdd)
+                                {
+                                    <tr>
+                                        <td data-label="URN">@est.Urn</td>
+                                        <td data-label="Name">@est.Name</td>
+                                        <td data-label="Establishment type">@Model.ItemTypes.FirstOrDefault(x => x.Value.Equals(est.EstablishmentTypeId.ToString(), StringComparison.InvariantCultureIgnoreCase)).Text</td>
+                                        <td data-label="Opening date">@est.OpeningDateView</td>
+                                        <td>
+                                            <button name="editUrn" value="@est.Urn" aria-label="Edit establishment">Edit</button>
+                                        </td>
+                                        <td>
+                                            <button name="removeUrn" value="@est.Urn">Remove</button>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                        <div class="submit-cancel-panel">
+                            <button type="submit" name="action" value="" id="go-create" class="button mobile-full-width" style="">Create academies</button>
+                            <a href="/Tools" class="button button-secondary cancel mobile-full-width" style="">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+            <!-- COMPLETE -->
+            if (Model?.IsComplete == true)
+            {
+                <div class="grid-row">
+                    <div class="academies-list-wrapper column-full" style="">
+                        <h2 class="heading-medium">Academies created</h2>
+                        <table class="edubase-table">
+                            <caption class="visuallyhidden">Academies created</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col"><abbr title="Unique Reference Number">URN</abbr></th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Establishment type</th>
+                                    <th scope="col">Opening date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var est in Model.ItemsToAdd)
+                                {
+                                    <tr>
+                                        <td data-label="URN">
+                                            @Html.ActionLink(est.ReplacedUrn.ToString(), "Details", "Establishment", new { id = est.ReplacedUrn, area = "Establishments" }, null)
+                                        </td>
+                                        <td data-label="Name">
+                                            @Html.ActionLink(est.Name, "Details", "Establishment", new {id = est.ReplacedUrn, area = "Establishments"}, null)
+                                        </td>
+                                        <td data-label="Establishment type">@Model.ItemTypes.FirstOrDefault(x => x.Value.Equals(est.EstablishmentTypeId.ToString(), StringComparison.InvariantCultureIgnoreCase)).Text</td>
+                                        <td data-label="Opening date">@est.OpeningDateView</td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+        }
+
     </div>
 </div>
