@@ -465,7 +465,7 @@ table tbody .url {
         display: block;
         float: left;
 
-        &:focus, &:active {
+        &:active {
             background-color: transparent;
             outline: 0;
         }
