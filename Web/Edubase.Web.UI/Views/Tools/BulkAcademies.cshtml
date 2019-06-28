@@ -51,7 +51,6 @@
             </div>
         </div>
 
-
         @using (Html.BeginForm())
         {
             if (Model?.ItemsToAdd?.Count() > 0)
@@ -91,8 +90,8 @@
                         @Html.EditorFor(x => x.FoundItem.OpeningDateView, new { title = "Opening date" })
 
                         <div class="button-row">
-                            <button type="submit" class="button mobile-full-width" id="find-urn">@(ViewBag.ButtonText ?? "Add establishment")</button>
-                            <button name="cancel" value="true" class="button mobile-full-width button-secondary">Cancel</button>
+                            <button type="submit" name="action" value="add" class="button mobile-full-width" id="find-urn">@(ViewBag.ButtonText ?? "Add establishment")</button>
+                            <button name="action" value="cancel" class="button mobile-full-width button-secondary">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -111,7 +110,7 @@
                             </label>
                             @Html.ValidationMessageFor(x => x.SearchUrn)
                             @Html.TextBoxFor(x => x.SearchUrn, null, new { @class = "form-control" })
-                            <button type="submit" class="button inline-submit" id="find-urn">Search</button>
+                            <button type="submit" name="action" value="search" class="button inline-submit" id="find-urn">Search</button>
                         </div>
                     </div>
                 </div>
@@ -156,8 +155,8 @@
                             </tbody>
                         </table>
                         <div class="submit-cancel-panel">
-                            <button type="submit" name="action" value="" id="go-create" class="button mobile-full-width" style="">Create academies</button>
-                            <a href="/Tools" class="button button-secondary cancel mobile-full-width" style="">Cancel</a>
+                            <button type="submit" name="action" value="create" id="go-create" class="button mobile-full-width" style="">Create academies</button>
+                            @Html.ActionLink("Cancel", "Index", "Tools", null, new { @Class = "button button-secondary cancel mobile-full-width" })
                         </div>
                     </div>
                 </div>
@@ -189,7 +188,7 @@
                                             @Html.ActionLink(est.ReplacedUrn.ToString(), "Details", "Establishment", new { id = est.ReplacedUrn, area = "Establishments" }, null)
                                         </td>
                                         <td data-label="Name">
-                                            @Html.ActionLink(est.Name, "Details", "Establishment", new {id = est.ReplacedUrn, area = "Establishments"}, null)
+                                            @Html.ActionLink(est.Name, "Details", "Establishment", new { id = est.ReplacedUrn, area = "Establishments" }, null)
                                         </td>
                                         <td data-label="Establishment type">@Model.ItemTypes.FirstOrDefault(x => x.Value.Equals(est.EstablishmentTypeId.ToString(), StringComparison.InvariantCultureIgnoreCase)).Text</td>
                                         <td data-label="Opening date">@est.OpeningDateView</td>
@@ -205,3 +204,4 @@
 
     </div>
 </div>
+

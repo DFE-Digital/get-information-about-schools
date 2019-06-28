@@ -1,4 +1,5 @@
 using Edubase.Services.Domain;
+using Microsoft.Ajax.Utilities;
 using EdubaseRoles = Edubase.Services.Security.EdubaseRoles;
 
 namespace Edubase.Web.UI.Controllers
@@ -86,27 +87,44 @@ namespace Edubase.Web.UI.Controllers
         public ActionResult BulkAcademies() => View();
 
         [HttpPost, MvcAuthorizeRoles(R.AP_AOS, R.ROLE_BACKOFFICE, R.EFADO)]
-        public async Task<ActionResult> BulkAcademies(BulkAcademiesViewModel model, int? removeUrn, int? editUrn, bool? cancel)
+        public async Task<ActionResult> BulkAcademies(BulkAcademiesViewModel model, int? removeUrn, int? editUrn, string action)
         {
             var establishmentTypeFullList = (await _lookup.EstablishmentTypesGetAllAsync()).ToList();
             model.ItemTypes = establishmentTypeFullList.ToSelectList();
             EstablishmentModel est = null;
 
+            SelectListItem[] filteredItems = null;
+
             // validation
-            if (model.SearchUrn == null && model.FoundItem == null && model.ItemsToAdd == null)
+            if (action == "search")
             {
-                ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a URN");
-            }
-            if (model.SearchUrn != null)
-            {
-                var estCall = await _establishmentReadService.GetAsync((int) model.SearchUrn, User);
-                est = estCall.GetResult();
-                if (est == null)
+                if (model.SearchUrn == null)
                 {
-                    ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a valid URN");
+                    ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a URN");
+                }
+                else if (model.ItemsToAdd?.Any(x => x.Urn == model.SearchUrn) == true)
+                {
+                    ModelState.AddModelError(nameof(model.SearchUrn), "URN is a duplicate");
+                }
+                else
+                {
+                    var estCall = await _establishmentReadService.GetAsync((int) model.SearchUrn, User);
+                    est = estCall.GetResult();
+                    if (est == null)
+                    {
+                        ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a valid URN");
+                    }
+                    else
+                    {
+                        filteredItems = (await GetFilteredBulkAcademyTypes((int) est.Urn, establishmentTypeFullList)).ToSelectList(est?.TypeId)?.ToArray();
+                        if (filteredItems?.Length == 0)
+                        {
+                            ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a valid URN");
+                        }
+                    }
                 }
             }
-            if (model.FoundItem != null && model.FoundItem.EstablishmentTypeId == null)
+            if (action == "add" && model.FoundItem.EstablishmentTypeId == null)
             {
                 ModelState.AddModelError(nameof(model.FilteredItemTypes), "Please select an establishment type");
                 model.FilteredItemTypes = (await GetFilteredBulkAcademyTypes(model.FoundItem.Urn ?? 0, establishmentTypeFullList)).ToSelectList(model.FoundItem.EstablishmentTypeId);
@@ -119,7 +137,7 @@ namespace Edubase.Web.UI.Controllers
             ModelState.Clear();
 
             // cancel either an original addition or an edit
-            if (cancel == true)
+            if (action == "cancel")
             {
                 model.SearchUrn = null;
                 model.FoundItem = null;
@@ -145,7 +163,7 @@ namespace Edubase.Web.UI.Controllers
                 }
                 else
                 {
-                    model.FilteredItemTypes = (await GetFilteredBulkAcademyTypes((int)est.Urn, establishmentTypeFullList)).ToSelectList(est?.TypeId);
+                    model.FilteredItemTypes = filteredItems;
                     model.FoundItem = new BulkAcademyViewModel()
                     {
                         Urn = est.Urn,
@@ -191,10 +209,8 @@ namespace Edubase.Web.UI.Controllers
             }
 
             // submit
-            if (model.SearchUrn == null && model.ItemsToAdd?.Any() == true)
+            if (action == "create" && model.ItemsToAdd?.Any() == true)
             {
-                // extend the timeout for this call, just incase there are a huge number in the batch
-                HttpContext.Server.ScriptTimeout = 300;
                 var processResponse = await ProcessBulkAcademies(model.ItemsToAdd);
                 model.ProgressGuid = processResponse.Item1;
                 model.ItemsToAdd = processResponse.Item2;
