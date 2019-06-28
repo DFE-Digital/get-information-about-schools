@@ -13,7 +13,7 @@
         <div class="breadcrumbs">
             @Html.ActionLink("Back to find a governor", "Index", "Search", new { area = "", SelectedTab = "Governors", gsearch = gSearch }, null)
         </div>
-        <h1 class="heading-xlarge">Search results</h1>
+        <h1 class="heading-xlarge">Search results for governors</h1>
         <a class="download-link @(Model.Count > 5000 ? "prevent-download": "")" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()">Download these search results</a>
     </div>
     <div class="column-full">
@@ -70,6 +70,8 @@
         <div class="filter-form" id="filter-form">
             <div id="EditSearchCollapse" class="blanket-container">
                 <h2 class="visuallyhidden">Search results filters</h2>
+                <a href="#results-container" class="visuallyhidden">Skip filters</a>
+
                 <form method="get" action="@Url.Action("Index", "GovernorSearch", new {area = "Governors"})">
                     <input type="hidden" id="client-only-searchtype" value="GovernorsAll" />
 

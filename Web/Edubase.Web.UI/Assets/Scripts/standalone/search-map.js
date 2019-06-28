@@ -164,6 +164,7 @@ DfE.searchMap = (function () {
                     e.preventDefault();
                     $('#map-container').addClass('hidden');
                     $('#results-container').removeClass('hidden');
+                    $('#option-select-sort-by').removeClass('hidden');
                     var count = $('#list-count').text();
                     $resultsNotification.html('Search results loaded. Showing ' + count + ' establishments in list view.');
                     DfE.searchMap.currentView = 'list';
@@ -184,6 +185,7 @@ DfE.searchMap = (function () {
                         }
                     }
 
+                    $('#option-select-sort-by').addClass('hidden');
                     DfE.searchMap.currentView = 'map';
                 });
         },

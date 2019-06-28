@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using Edubase.Services.Enums;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Models.Search;
+using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Models
 {
@@ -151,6 +153,15 @@ namespace Edubase.Web.UI.Models
 
         [Display(Name = "Name")]
         public string ProprietorName { get; set; }
+
+        public int? ProprietorTypeId { get; set; }
+
+        public eProprietorType? ProprietorType
+        {
+            get => ProprietorTypeId.HasValue ? (eProprietorType) ProprietorTypeId.Value : null as eProprietorType?;
+            set => ProprietorTypeId = (int?) value;
+        }
+
         public int? Section41ApprovedId { get; set; }
         public int[] SENIds { get; set; } = new int[0];
         public int? TypeOfResourcedProvisionId { get; set; }
@@ -447,21 +458,7 @@ namespace Edubase.Web.UI.Models
 
         [DisplayName("Preferred job title")]
         public string ChairOfProprietorsBodyPreferredJobTitle { get; set; }
-
-        public bool AnyChairOfProprietorsFieldsSet => new[]
-        {
-            ChairOfProprietorsBodyName,
-            ChairOfProprietorsBodyStreet,
-            ChairOfProprietorsBodyLocality,
-            ChairOfProprietorsBodyAddress3,
-            ChairOfProprietorsBodyTown,
-            ChairOfProprietorsBodyPostcode,
-            ChairOfProprietorsBodyTelephoneNumber,
-            ChairOfProprietorsBodyFaxNumber,
-            ChairOfProprietorsBodyEmail,
-            ChairOfProprietorsBodyPreferredJobTitle
-        }.Any(x => x.Clean() != null);
-
+        
         [DisplayName("Accommodation changes")]
         public int? AccommodationChangedId { get; set; }
 

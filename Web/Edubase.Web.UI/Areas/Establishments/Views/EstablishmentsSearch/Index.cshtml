@@ -37,61 +37,63 @@
 
 <div class="grid-row" id="search-results">
     <div class="column-full results-heading">
-        <h1 class="heading-xlarge">Search results</h1>
+        <h1 class="heading-xlarge">Search results for establishments</h1>
 
         @if (Model.Count > 0)
         {
             <a class="download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()">Download these search results</a>
         }
     </div>
-    <div class="column-full">
-        <p>
-            @if (Model.SearchType == eSearchType.Text)
-            {
-                if (Model.TextSearchType == M.eTextSearchType.EstablishmentName ||
-                    Model.TextSearchType == M.eTextSearchType.Unknown)
+    @if (Model.SearchType != eSearchType.EstablishmentAll )
+    {
+        <div class="column-full">
+            <p>
+                @if (Model.SearchType == eSearchType.Text)
                 {
-                    if (!Model.TextSearchModel.Text.IsEmpty())
+                    if (Model.TextSearchType == M.eTextSearchType.EstablishmentName ||
+                    Model.TextSearchType == M.eTextSearchType.Unknown)
                     {
-                        <text>Establishments matching &lsquo;<span class="bold-small">@Model.TextSearchModel.Text</span>&rsquo;</text>
+                        if (!Model.TextSearchModel.Text.IsEmpty())
+                        {
+                            <text>Establishments matching &lsquo;<span class="bold-small">@Model.TextSearchModel.Text</span>&rsquo;</text>
+                        }
+                    }
+                    else if (Model.TextSearchType == M.eTextSearchType.LAESTAB)
+                    {
+                        <text>Establishments matching the LAESTAB "@Model.TextSearchModel.Text".</text>
+                    }
+                    else if (Model.TextSearchType == M.eTextSearchType.UKPRN)
+                    {
+                        <text>Establishments matching the <abbr title="UK Provider Reference Number">UKPRN</abbr> "@Model.TextSearchModel.Text".</text>
+                    }
+                    else if (Model.TextSearchType == M.eTextSearchType.URN)
+                    {
+                        <text>Establishments matching the <abbr title="Unique Reference Number">URN</abbr> "@Model.TextSearchModel.Text".</text>
                     }
                 }
-                else if (Model.TextSearchType == M.eTextSearchType.LAESTAB)
+                else if (Model.SearchType == eSearchType.ByLocalAuthority)
                 {
-                    <text>Establishments matching the LAESTAB "@Model.TextSearchModel.Text".</text>
+                    <text>Establishments in <span id="la-list">the selected local authorities</span></text>
                 }
-                else if (Model.TextSearchType == M.eTextSearchType.UKPRN)
+                else if (Model.SearchType == eSearchType.Location)
                 {
-                    <text>Establishments matching the <abbr title="UK Provider Reference Number">UKPRN</abbr> "@Model.TextSearchModel.Text".</text>
+                    var displayLocation = Model.LocationSearchModel.Text;
+                    var lastIndex = displayLocation.LastIndexOf(",");
+                    if (lastIndex > -1)
+                    {
+                        displayLocation = displayLocation.Substring(0, lastIndex);
+                    }
+                    <text>Establishments matching &lsquo;</text><span class="bold-small">@displayLocation</span><text>&rsquo;</text>
                 }
-                else if (Model.TextSearchType == M.eTextSearchType.URN)
-                {
-                    <text>Establishments matching the <abbr title="Unique Reference Number">URN</abbr> "@Model.TextSearchModel.Text".</text>
-                }
-            }
-            else if (Model.SearchType == eSearchType.ByLocalAuthority)
-            {
-                <text>Establishments in <span id="la-list">the selected local authorities</span></text>
-            }
-            else if (Model.SearchType == eSearchType.Location)
-            {
-                var displayLocation = Model.LocationSearchModel.Text;
-                var lastIndex = displayLocation.LastIndexOf(",");
-                if (lastIndex > -1)
-                {
-                    displayLocation = displayLocation.Substring(0, lastIndex);
-                }
-                <text>Establishments matching &lsquo;</text><span class="bold-small">@displayLocation</span><text>&rsquo;</text>
-            }
-        </p>
-    </div>
+            </p>
+        </div>
+    }
     <div class="column-full">
         <div class="date-filter-warning warning-message @Html.Conditional(!Model.ShowDateFilterWarning, "hidden")">
             <p>Incomplete historical data means a number of records have no open date recorded and do not appear in this search.</p>
         </div>
     </div>
 </div>
-
 
 <div class="grid-row">
     <form method="get" action="@Url.Action("Index", "EstablishmentsSearch", new {area = ""})">
@@ -101,6 +103,25 @@
 
                 <div id="EditSearchCollapse" class="blanket-container">
                     <h2 class="visuallyhidden">Search results filters</h2>
+                    <a href="#results-container" class="visuallyhidden">Skip filters</a>
+
+                    <div class="govuk-option-select js-collapsible"
+                         id="option-select-sort-by" role="search">
+                        <div class="container-head js-container-head">
+                            <div class="option-select-label">Sort by</div>
+                        </div>
+                        <div class="options-container">
+                            <label for="sortby-selector" class="visuallyhidden">Sort by</label>
+                            <select class="form-control trigger-result-update sortby-selector push-half--top" name="@M.BIND_ALIAS_SORT_BY" id="sortby-selector">
+                                @if (Model.SearchType == eSearchType.Location)
+                                {
+                                    <option id="distance" value="d" @Html.Conditional(Model.GetSortOption() == eSortBy.Distance, "selected")>Distance</option>
+                                }
+                                <option id="alpha-az" value="a" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
+                                <option id="alpha-za" value="z" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
+                            </select>
+                        </div>
+                    </div>
 
                     @if (Model.SearchType == eSearchType.Location)
                     {
@@ -163,7 +184,7 @@
                     @Selector("Urban/Rural description", M.BIND_ALIAS_URBRUR, Model.UrbanRuralDesignations.OrderBy(x => x.Name), Model.SelectedUrbanRuralIds, "additional-search-critera hidden", true)
 
                     <div id="additional-filter-wrap">
-                        <div class="govuk-option-select js-closed searchable-filters" data-closed-on-load="false" id="option-select-additional-filters"
+                        <div class="govuk-option-select js-when-on js-closed searchable-filters" data-closed-on-load="false" id="option-select-additional-filters"
                              role="search">
                             <div class="container-head js-container-head">
                                 <div class="option-select-label">More filters</div>
@@ -314,7 +335,7 @@
                     @foreach (var item in items)
                     {
                         <dl class="nested-items multiple-choice multiple-choice--smaller multiple-choice--list">
-                            <dt>
+                            <dt class="js-when-on">
                                 <input id="@(name)_@item.Id" class="filter-group-title" type="checkbox" @Html.Conditional(item.ChildItems.Any(x=> selectedItems.Contains(x.Id)), "checked")/>
                                 <label for="@(name)_@item.Id">@item</label>
                                 <a href="#" class="child-option-toggle js-child-option-toggle" aria-expanded="false"><span class="visually-hidden">Types within @item</span></a>

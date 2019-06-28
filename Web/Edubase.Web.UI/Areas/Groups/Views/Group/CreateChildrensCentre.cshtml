@@ -237,8 +237,8 @@
 
                                         <td data-label="Name" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">{{estab.name}}</td>
                                         <td data-label="Join date" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">{{ estab.joinDate }}</td>
-                                        <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="editJoiningEstab(estab.urn); clearErrors()">Edit</a></td>
-                                        <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="removeJoiningEstab(estab.urn)">Remove</a></td>
+                                        <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="editJoiningEstab(estab.urn); clearErrors()" aria-label="Edit children's centre's join date">Edit</a></td>
+                                        <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="removeJoiningEstab(estab.urn)" aria-label="Remove children's centre">Remove</a></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -251,7 +251,7 @@
                             {
                                 <input type="hidden" name="action" value="@GroupEditorViewModel.ActionSave"/>
                                 <!--JB: until final step, go to next step and show "continue", then final step submit with text "create" -->
-                                <button type="submit" name="action" class="button mobile-full-width" value="@GroupEditorViewModel.ActionSave" v-on:click.prevent="clearErrors(); submitCentres();">Create</button>
+                                <button type="submit" name="action" class="button mobile-full-width" value="@GroupEditorViewModel.ActionSave" v-on:click.prevent="clearErrors(); submitCentres();">Create children's centre {{groupTypeName}}</button>
                             }
 
                             @(Model.InEditMode
@@ -292,8 +292,8 @@
                     <div class="column-full">
                         <div class="submit-cancel-panel">
                             <a href="#" class="button mobile-full-width" v-on:click.prevent="addToGroup()">
-                                <span v-show="!pendingEdit">Add</span>
-                                <span v-show="pendingEdit">Update</span>
+                                <span v-show="!pendingEdit">Add children's centre</span>
+                                <span v-show="pendingEdit">Update children's centre</span>
                             </a>
                             <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="appState='addCentre', searchUrn=''; clearErrors();" v-show="!pendingEdit">Cancel</a>
                             <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="cancelEdit" v-show="pendingEdit">

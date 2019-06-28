@@ -7,49 +7,40 @@
     ViewBag.hideLogo = true;
 }
 
-<div class="grid-row">
-    <div class="column-full">
-        <h1 class="heading-xlarge">Get information about schools</h1>
-    </div>
-
-    <a href="/">Back</a>
-    
-    <p>Search by Local authority:</p>
-
-    <p class="font-small"><span class="bold-medium">@Model.MatchingLocalAuthorities.Count</span> &nbsp;Local authorit@(Model.MatchingLocalAuthorities.Count == 1 ? "y" : "ies") matching '<span class="bold-small">@Model.SearchText</span>'</p>
-
-    @if (Model.MatchingLocalAuthorities.Count > 1)
-    {
-        <p class="bold-small">Select the Local authority you are interested in</p>
-
-        <ul>
-            @foreach (var item in Model.MatchingLocalAuthorities)
-            {
-                <li><a href="/?@QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.AddUnique(item.Id).ToArray())#la">@item.Name</a></li>
-            }
-        </ul>
-        <br />
-        <a href="/?@QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.ToArray())#la" class="button">Cancel</a>
-    }
-    else if (Model.MatchingLocalAuthorities.Count == 1)
-    {
-        <p>Did you mean 
-            <a href="/?@QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.AddUnique(Model.MatchingLocalAuthorities[0].Id).ToArray())#la">
-                @Model.MatchingLocalAuthorities[0].Name
-            </a>?
-        </p>
-    }else
-    {
-        <p class="bold-small">No results were found. Please refine your search criteria.<br /></p>
-        <a href="/?@QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.ToArray())#la" class="button button-next">Continue</a>
-    }
-
-
-
+<div class="breadcrumbs">
+        <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})">Back to find an establishment</a>
 </div>
 
-@section ViewScripts{
-    
+<div class="grid-row">
+    <div class="column-full">
+        <h1 class="heading-xlarge">Search results for establishments</h1>
 
-}
+        <p class="font-small"><span class="bold-medium">@Model.MatchingLocalAuthorities.Count</span> &nbsp;local authorit@(Model.MatchingLocalAuthorities.Count == 1 ? "y" : "ies") matching '<span class="bold-small">@Model.SearchText</span>'</p>
 
+        @if (Model.MatchingLocalAuthorities.Count > 1)
+        {
+            <p class="bold-small">Select the local authority you are interested in</p>
+
+            <ul class="push--bottom">
+                @foreach (var item in Model.MatchingLocalAuthorities)
+                {
+                    <li><a href="/?@QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.AddUnique(item.Id).ToArray())#la">@item.Name</a></li>
+                }
+            </ul>
+            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="button button-secondary">Back to search</a>
+        }
+        else if (Model.MatchingLocalAuthorities.Count == 1)
+        {
+            <p>Did you mean
+                <a href="/?@QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.AddUnique(Model.MatchingLocalAuthorities[0].Id).ToArray())#la">
+                    @Model.MatchingLocalAuthorities[0].Name
+                </a>?
+            </p>
+            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="button button-secondary">Back to search</a>
+        }else
+        {
+            <p class="bold-small">No results were found. Please refine your search criteria.<br /></p>
+            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="button button-secondary">Back to search</a>
+        }
+    </div>
+</div>

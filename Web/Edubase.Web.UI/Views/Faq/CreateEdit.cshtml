@@ -48,7 +48,7 @@
                 @Html.TextBoxFor(x => x.DisplayOrder, new { @class = "form-control" })
             </div>
 
-            <button type="submit" class="button">Save</button>
+            <button type="submit" class="button">Save entry</button>
             if (Model.Id != null)
             {
                 <button type="submit" class="button button-secondary" name="@nameof(Model.IsDeleting)" id="delete-button" value="true">Delete</button>

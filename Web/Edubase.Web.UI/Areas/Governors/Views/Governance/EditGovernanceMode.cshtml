@@ -9,7 +9,7 @@
 }
 
 <div class="column-two-thirds">
-    <h1 class="heading-medium">Establishment governance</h1>
+    <h1 class="heading-medium">Governor sharing</h1>
 
     @using (Html.BeginRouteForm("EstabEditGovernanceMode", FormMethod.Post))
     {
@@ -19,47 +19,43 @@
                 <legend class="visually-hidden">Select a governance policy</legend>
                 @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.LocalGovernors))
                 {
-                    <div class="form-group">
+                    <div class="form-group text">
                         @Html.GiasRadioFor( x=>x.GovernanceMode,
                             eGovernanceMode.LocalGovernors,
-                            "This establishment has local governors, not shared governors.",
-                            "mid-length-label")
+                            "This establishment has local governors, not shared governors." )
 
                     </div>
                 }
                 @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.LocalAndSharedGovernors))
                 {
-                    <div class="form-group">
+                    <div class="form-group text">
                         @Html.GiasRadioFor(x => x.GovernanceMode,
                             eGovernanceMode.LocalAndSharedGovernors,
-                            "This establishment has local governors and also shares governors with other academies in the trust.",
-                            "long-label")
+                            "This establishment has local governors and also shares governors with other academies in the trust.")
 
                     </div>
                 }
                 @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.NoLocalGovernors))
                 {
-                    <div class="form-group">
+                    <div class="form-group text">
                         @Html.GiasRadioFor(x =>x.GovernanceMode,
                             eGovernanceMode.NoLocalGovernors,
-                            "This establishment is part of a multi-academy trust and does not have local governors.",
-                            "long-label")
+                            "This establishment is part of a multi-academy trust and does not have local governors.")
 
                     </div>
                 }
                 @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.SharesLocalGovernors))
                 {
-                    <div class="form-group">
+                    <div class="form-group text">
                         @Html.GiasRadioFor(x => x.GovernanceMode,
                             eGovernanceMode.SharesLocalGovernors,
-                            "This establishment shares local governors with other academies in the trust.",
-                            "long-label")
+                            "This establishment shares local governors with other academies in the trust.")
 
                     </div>
                 }
             </fieldset>
         </div>
-        <button type="submit" name="action" class="button">Save</button>
+        <button type="submit" name="action" class="button">Save governor sharing</button>
         @Html.ActionLink("Cancel", "Edit", "Governor", new { area = "Governors", establishmentUrn = Model.Urn }, new { @class = "button button-secondary" })
     }
 </div>

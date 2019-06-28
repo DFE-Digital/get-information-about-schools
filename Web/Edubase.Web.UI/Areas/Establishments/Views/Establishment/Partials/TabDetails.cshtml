@@ -10,6 +10,7 @@
 
     @if (Model.Establishment.Location != null)
     {
+        <a href="#details-summary" class="visually-hidden">Skip map</a>
         <div class="map-container">
             <div id="map" class="school-detail-map"
                  data-latlng="[@(Model.Establishment.Location?.Longitude),@(Model.Establishment.Location?.Latitude)]"
@@ -19,7 +20,7 @@
         </div>
     }
 
-    <div class="detail-summary">
+    <div class="detail-summary" id="details-summary">
         <dl>
             @{Html.RenderPartial(@"Partials\Header");}
 

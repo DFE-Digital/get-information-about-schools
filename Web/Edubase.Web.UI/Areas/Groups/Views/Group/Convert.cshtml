@@ -77,7 +77,7 @@ else
                     <dt>Companies House number:</dt>
                     @if (Model.Details.CompaniesHouseNumber != null)
                     {
-                        <dd><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.Details.CompaniesHouseNumber" target="_blank">@Model.Details.CompaniesHouseNumber</a></dd>
+                        <dd><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.Details.CompaniesHouseNumber" target="_blank">@Model.Details.CompaniesHouseNumber <span class="visually-hidden">Opens in new window</span></a></dd>
                     }
                     else
                     {

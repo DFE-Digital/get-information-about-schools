@@ -79,7 +79,7 @@ category: Base
   @extend %site-width-container;
   @extend %contain-floats;
   padding-bottom: $gutter;
-  
+
   @include media(desktop) {
     padding-bottom: $gutter*3;
   }
@@ -151,4 +151,23 @@ category: Base
   @include grid-column( 1/1 );
   float: none !important;
   clear: both;
+}
+
+// Simple 2 columns
+
+.columns-2 {
+    columns: 2;
+    column-gap: 30px;
+    @include media(mobile) {
+        columns: 1;
+    }
+    > li {
+        .heading-small {
+            margin-top: 0;
+        }
+    }
+    li {
+        padding-top: 4px;
+        break-inside: avoid;
+    }
 }

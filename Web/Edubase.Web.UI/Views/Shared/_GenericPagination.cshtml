@@ -29,22 +29,22 @@
 
 }
 
-<div class="pagination">
+<nav role="navigation" aria-label="Pagination" class="pagination">
     @if (ViewData.ContainsKey("resultsDescription"))
     {
-        <p>@Html.Raw(ViewData["resultsDescription"])</p>
+        <p class="flush--bottom">@Html.Raw(ViewData["resultsDescription"])</p>
     }
-    else 
+    else
     {
-        <p @Html.Conditional(ViewData.ContainsKey("hideDescription"),  "class='hidden'")>Showing @startResult - @endResult of @Model.Count</p>
+        <p class="flush--bottom">Showing @startResult - @endResult of @Model.Count</p>
     }
-    
+
     <ul class="pagination-links">
 
         @if (currentPage > 0)
         {
             <li>
-                <a href="@Url.Current(new {startIndex = ((currentPage - 1) * Model.PageSize), Count = Model.Count})" class="pagination-prev">Previous</a>
+                <a href="@Url.Current(new {startIndex = ((currentPage - 1) * Model.PageSize), Count = Model.Count})" class="pagination-prev" aria-label="Previous page">Previous</a>
             </li>
         }
 
@@ -53,13 +53,13 @@
             var displayPage = i + 1;
             if (i == currentPage)
             {
-                <li><span class="go-nowhere numeric-pagination">@displayPage.ToString()</span></li>
+                <li><span class="go-nowhere numeric-pagination" aria-current="true" aria-label="Page @displayPage.ToString(), current page">@displayPage.ToString()</span></li>
             }
             else
             {
                 var tabletClass = (i >= currentPage - 2 && i <= currentPage + 2) ? "tablet-pagination" : "";
                 <li>
-                    <a href="@Url.Current(new {startIndex = (i * Model.PageSize), Count = Model.Count})" class="numeric-pagination @tabletClass">@displayPage</a>
+                    <a href="@Url.Current(new {startIndex = (i * Model.PageSize), Count = Model.Count})" class="numeric-pagination @tabletClass" aria-label="Page @displayPage">@displayPage</a>
                 </li>
 
             }
@@ -68,9 +68,9 @@
         @if (currentPage < Model.PageCount - 1)
         {
             <li>
-                <a href="@Url.Current(new {startIndex = ((currentPage + 1) * Model.PageSize), Count = Model.Count})" class="pagination-next">Next</a>
+                <a href="@Url.Current(new {startIndex = ((currentPage + 1) * Model.PageSize), Count = Model.Count})" class="pagination-next" aria-label="Next page">Next</a>
             </li>
         }
 
     </ul>
-</div>
+</nav>

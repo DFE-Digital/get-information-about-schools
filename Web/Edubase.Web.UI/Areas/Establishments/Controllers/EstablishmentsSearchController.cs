@@ -241,7 +241,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     if (localAuthorityId.HasValue) filters.LocalAuthorityIds = new int[] { localAuthorityId.Value };
                     filters.EstablishmentNumber = laestab.EstablishmentNumber;
                 }
-                else if (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.EstablishmentName)
+                else if ((model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.EstablishmentName && model.TextSearchModel.Text != null) || model.SearchType == eSearchType.EstablishmentAll)
                 {
                     payload.Text = model.TextSearchModel.Text;
                 }
@@ -256,6 +256,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     payload.RadiusInMiles = model.GetRadiusOption();
                 }
                 else retVal.ErrorMessage = "The co-ordinate could not be parsed.";
+            }
+            else if (model.SearchType == eSearchType.ByLocalAuthority) {
+                if (!model.SelectedLocalAuthorityIds.Any())
+                {
+                    retVal.ErrorMessage = "No local authority was selected";
+                }
             }
 
             filters.EducationPhaseIds = model.SelectedEducationPhaseIds.ToArray();

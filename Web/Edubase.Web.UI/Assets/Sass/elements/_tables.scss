@@ -82,8 +82,6 @@ table tbody .url {
 
 
 .edubase-table {
-    border-top: 1px solid $black;
-
     &.no-pagination {
         border-top: 0;
 
@@ -101,7 +99,7 @@ table tbody .url {
 
     thead {
         td, th {
-            border-bottom: 4px $black solid;
+            border-bottom: 1px $black solid;
         }
 
         th {
@@ -467,7 +465,7 @@ table tbody .url {
         display: block;
         float: left;
 
-        &:focus, &:active {
+        &:active {
             background-color: transparent;
             outline: 0;
         }

@@ -42,7 +42,7 @@
                             <p>@Html.Raw(item.Content)</p>
                             if (Model.UserCanEdit)
                             {
-                                @Html.RouteLink("Edit", "EditGlossaryItem", new { id = item.RowKey }, new { @class = "button button-secondary glossary-edit-button" })
+                                @Html.RouteLink("Edit entry", "EditGlossaryItem", new { id = item.RowKey }, new { @class = "button button-secondary glossary-edit-button" })
                             }
                         }
                     </div>

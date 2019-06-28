@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Common.Reflection;
 using Edubase.Common.Spatial;
 using Edubase.Services.Domain;
@@ -156,6 +156,8 @@ namespace Edubase.Services.Establishments.Models
         public int? Section41ApprovedId { get; set; }
 
         public string ProprietorName { get; set; }
+
+        public int? ProprietorTypeId { get; set; }
 
         [DisplayName("Number of special pupils under a SEN statement/EHCP"), JsonProperty("SENStat")]
         public int? SENStat { get; set; }

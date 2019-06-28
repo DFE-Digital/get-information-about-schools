@@ -100,26 +100,31 @@
                         </div>
                     </form>
 
-                    <div class="pagination" v-show="!isProcessing">
-                        <p class="pagination-info">
-                            Showing
-                            <span class="pagination-range">
-                                {{ paginationDescription }}
-                            </span>
-                            of
-                            <span class="result-count">{{currentCount}}</span>
-                        </p>
-                        <ul class="pagination-links">
-                            <li v-if="currentPage > 0  && totalPages > 1"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)">Previous</a></li>
-                            <li v-if="totalPages > 1" v-for="item in totalPages">
-                                <span v-if="item === currentPage + 1" class="numeric-pagination go-nowhere">{{ item }}</span>
-                                <a v-else href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(item -1)">{{ item }}</a>
-                            </li>
-                            <li v-if="currentPage +1 < totalPages && totalPages > 1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)">Next</a></li>
+                    <div class="top-pagination">
+                        <nav role="navigation" aria-label="Pagination" class="pagination" v-show="!isProcessing">
+                            <p class="pagination-info">
+                                Showing
+                                <span class="pagination-range">
+                                    {{ paginationDescription }}
+                                </span>
+                                of {{currentCount}}
+                            </p>
+                            <ul class="pagination-links">
+                                <li v-if="currentPage > 0  && totalPages > 1"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)" aria-label="Previous page">Previous</a></li>
 
-                            <li v-if="totalPages > 1"><a href="#" class="pagination-next" style="margin-left:5px;" v-on:click.prevent="showAll()">Show all</a></li>
-                        </ul>
+                                <li v-if="totalPages > 1" v-for="index in 5">
+                                    <a v-show="(index + slicePage - 1) < currentPage" href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index + slicePage - 1)" :aria-label="'Page ' + (index + slicePage)">{{ index + slicePage }}</a>
+                                    <span v-show="(index + slicePage - 1) === currentPage" class="numeric-pagination go-nowhere" aria-current="true" :aria-label="'Page ' + (index + slicePage) + ', current page'">{{ index + slicePage }}</span>
+                                    <a v-show="(index + slicePage - 1) > currentPage" href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index + slicePage - 1)" :aria-label="'Page ' + (index + slicePage)">{{ index + slicePage }}</a>
+                                </li>
+
+                                <li v-if="currentPage +1 < totalPages && totalPages > 1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)" aria-label="Next page">Next</a></li>
+
+                                <li v-if="totalPages > 1"><a href="#" class="pagination-next" style="margin-left:5px;" v-on:click.prevent="showAll()">Show all</a></li>
+                            </ul>
+                        </nav>
                     </div>
+
                     <div class="changes-list-wrapper" v-show="!isProcessing">
                         <table class="edubase-table approval-changes sortable-table" id="changes-table">
                             <caption class="visuallyhidden">Items for approval</caption>
@@ -168,6 +173,30 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <div class="lower-pagination">
+                        <nav role="navigation" aria-label="Pagination" class="pagination" v-show="!isProcessing">
+                            <p class="pagination-info">
+                                Showing
+                                <span class="pagination-range">
+                                    {{ paginationDescription }}
+                                </span>
+                                of {{currentCount}}
+                            </p>
+                            <ul class="pagination-links">
+                                <li v-if="currentPage > 0  && totalPages > 1"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)" aria-label="Previous page">Previous</a></li>
+
+                                <li v-if="totalPages > 1" v-for="index in 5">
+                                    <a v-show="(index + slicePage - 1) < currentPage" href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index + slicePage - 1)" :aria-label="'Page ' + (index + slicePage)">{{ index + slicePage }}</a>
+                                    <span v-show="(index + slicePage - 1) === currentPage" class="numeric-pagination go-nowhere" aria-current="true" :aria-label="'Page ' + (index + slicePage) + ', current page'">{{ index + slicePage }}</span>
+                                    <a v-show="(index + slicePage - 1) > currentPage" href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index + slicePage - 1)" :aria-label="'Page ' + (index + slicePage)">{{ index + slicePage }}</a>
+                                </li>
+
+                                <li v-if="currentPage +1 < totalPages && totalPages > 1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)" aria-label="Next page">Next</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+
                 </div>
             </div>
         </div>

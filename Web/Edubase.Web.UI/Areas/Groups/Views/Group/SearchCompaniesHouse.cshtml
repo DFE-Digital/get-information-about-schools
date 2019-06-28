@@ -41,12 +41,18 @@
 
     if (Model.Results != null)
     {
+        var startResult = Model.StartIndex + 1;
+        var endResult = (Model.StartIndex + Model.PageSize > Model.Count) ? Model.Count : Model.StartIndex + Model.PageSize;
 
         if (Model.Results.PageCount > 1)
         {
             <div class="grid-row">
                 <div class="column-full top-pagination">
-                    @Html.Partial("_GenericPagination", Model)
+                    @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
+                    {
+                        {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")},
+                        {"maxPages", 5 }
+                    })
                 </div>
             </div>
         }
@@ -70,7 +76,7 @@
                         {
                             <tr class="company-result">
                                 <td data-label="Name">@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups" }, null)</td>
-                                <td data-label="Companies House no."><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number" target="_blank">@result.Number</a></td>
+                                <td data-label="Companies House no."><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number" target="_blank">@result.Number <span class="visually-hidden">Opens in new window</span></a></td>
                                 <td data-label="Incorporated">@(result.IncorporationDate?.ToString("dd/MM/yyyy"))</td>
                                 <td data-label="Address">@(result.Address.ToString() ?? "Not recorded")</td>
                             </tr>
@@ -84,7 +90,11 @@
         {
             <div class="grid-row">
                 <div class="column-full lower-pagination">
-                    @Html.Partial("_GenericPagination", Model)
+                    @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
+                    {
+                        {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")},
+                        {"maxPages", 5 }
+                    })
                 </div>
             </div>
         }
