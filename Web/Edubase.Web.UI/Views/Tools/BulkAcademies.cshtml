@@ -70,7 +70,7 @@
             {
                 <div class="grid-row">
                     <div class="column-two-thirds">
-                        <h2 class="heading-small">Predecessor school:</h2>
+                        <h2 class="heading-small">Predecessor school</h2>
                         <p class="establishment-details">
                             @Model.FoundItem.Name;<br>
                             @Model.FoundItem.Address<br>
@@ -103,7 +103,7 @@
             {
                 <div class="grid-row">
                     <div class="column-two-thirds">
-                        <h2 class="heading-small">Predecessor school:</h2>
+                        <h2 class="heading-small">Predecessor school</h2>
                         <div class="form-group inline-with-button @Html.ValidationCssClassFor(x => x.SearchUrn)">
                             <label class="form-label" for="Urn">
                                 Establishment <abbr title="Unique Reference Number">URN</abbr>
@@ -121,9 +121,9 @@
             if (Model?.ItemsToAdd?.Count() > 0 && Model?.FoundItem == null && Model?.IsComplete != true)
             {
                 <div class="grid-row">
-                    <div class="academies-list-wrapper column-full" style="">
-                        <h2 class="heading-medium">Academies to create</h2>
-                        <table class="edubase-table">
+                    <div class="academies-list-wrapper column-full">
+                        <h2 class="heading-medium flush--top">Academies to create</h2>
+                        <table class="edubase-table table--larger">
                             <caption class="visuallyhidden">Academies to create</caption>
                             <thead>
                                 <tr>
@@ -144,10 +144,10 @@
                                         <td data-label="Establishment type">@Model.ItemTypes.FirstOrDefault(x => x.Value.Equals(est.EstablishmentTypeId.ToString(), StringComparison.InvariantCultureIgnoreCase)).Text</td>
                                         <td data-label="Opening date">@est.OpeningDateView</td>
                                         <td>
-                                            <button name="editUrn" value="@est.Urn" aria-label="Edit establishment">Edit</button>
+                                            <button name="editUrn" value="@est.Urn" class="link-button" aria-label="Edit establishment">Edit</button>
                                         </td>
                                         <td>
-                                            <button name="removeUrn" value="@est.Urn">Remove</button>
+                                            <button name="removeUrn" value="@est.Urn" class="link-button" aria-label="Remove establishment">Remove</button>
                                         </td>
                                     </tr>
                                 }
@@ -167,9 +167,8 @@
             if (Model?.IsComplete == true)
             {
                 <div class="grid-row">
-                    <div class="academies-list-wrapper column-full" style="">
-                        <h2 class="heading-medium">Academies created</h2>
-                        <table class="edubase-table">
+                    <div class="academies-list-wrapper column-full">
+                        <table class="edubase-table table--larger">
                             <caption class="visuallyhidden">Academies created</caption>
                             <thead>
                                 <tr>
