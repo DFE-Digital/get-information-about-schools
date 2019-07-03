@@ -7,14 +7,10 @@
 
     <div v-show="Object.keys(apiBork).length === 0">
         <div class="breadcrumbs">
-            <ul>
-                <li>
-                    @Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)
-                </li>
-                <li>
-                    @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, null)
-                </li>
-            </ul>
+            <ol>
+                <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
+                <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
+            </ol>
         </div>
 
         <div v-if="approvalError || rejectionError || noneSelectedError || invalidReason || reasonLength || apiError.length > 0" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">

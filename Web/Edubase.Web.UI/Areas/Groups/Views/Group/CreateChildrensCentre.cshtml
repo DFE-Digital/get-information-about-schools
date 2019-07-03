@@ -7,11 +7,10 @@
 
 
 <div class="breadcrumbs">
-    <ul>
+    <ol>
         <li>@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
         <li>@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, null)</li>
-        <li v-show="appState != 'initial' && !isProcessing">@Html.ActionLink("Create children's centre group or collaboration", "CreateNewGroup", "Group", new {area = "Groups", type = "ChildrensCentre"}, null)</li>
-    </ul>
+    </ol>
 </div>
 
 <div id="create-childrens-centre" v-cloak>

@@ -3,7 +3,10 @@
 }
 
 <div class="breadcrumbs">
-    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null) > @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+    <ol>
+        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
+        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
+    </ol>
 </div>
 
 <div class="grid-row">

@@ -13,13 +13,13 @@
 <div class="breadcrumbs">
     @if (Model.SearchQueryString.IsNullOrWhiteSpace())
     {
-        <ul>
+        <ol>
             <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
             @if (Model.LegalParentGroup != null)
             {
                 <li>@Html.RouteLink(Model.LegalParentGroupRouteDto.Value.Label, Model.LegalParentGroupRouteDto.Value.RouteName, Model.LegalParentGroupRouteDto.Value.RouteValues)</li>
             }
-        </ul>
+        </ol>
     }
     else
     {

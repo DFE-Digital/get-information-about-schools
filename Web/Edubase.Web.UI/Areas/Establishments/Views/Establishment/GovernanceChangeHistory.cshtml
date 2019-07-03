@@ -36,14 +36,14 @@
 }
 
 <div class="breadcrumbs">
-    <ul>
+    <ol>
         <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
         @if (Model.LegalParentGroup != null)
         {
             <li>@Html.RouteLink(Model.LegalParentGroupRouteDto.Value.Label, Model.LegalParentGroupRouteDto.Value.RouteName, Model.LegalParentGroupRouteDto.Value.RouteValues)</li>
         }
         <li>@Html.RouteLink(Model.Establishment.Name, "EstabDetails", new { id = Model.Establishment.Urn })</li>
-    </ul>
+    </ol>
 </div>
 
 <h1 class="heading-large">
@@ -123,4 +123,3 @@
         </div>
     </div>
 </div>
-
