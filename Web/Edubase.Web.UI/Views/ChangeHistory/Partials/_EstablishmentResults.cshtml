@@ -44,7 +44,8 @@
             {
                 if (tableColumn.Item3 || !Model.SingleEstablishment)
                 {
-                    <th class="@Html.Conditional(@tableColumn.Item1 == "originatorUserName", "visuallyhidden js-reveal-when-no-filter") @Html.Conditional(@tableColumn.Item1 == "approverUserName", "visuallyhidden js-reveal-when-no-filter")" scope="col">
+                    var toggleHide = tableColumn.Item1 == "originatorUserName" || tableColumn.Item1 == "approverUserName";
+                    <th class="@(toggleHide ? "visuallyhidden js-reveal-when-no-filter" : "")" scope="col">
                         <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
                         class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
                         aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
