@@ -81,7 +81,7 @@
     function toggleFilters() {
         openState = !openState;
         if (openState) {
-            $('#filter-toggle').text('Hide filters');
+            $('#filter-toggle').text('Hide filters to show user information');
             $('#changes-table').addClass('table-tight');
           } else {
             $('#filter-toggle').text('Show filters');
@@ -101,6 +101,7 @@
         $('#filter-toggle').toggleClass('filters-closed');
         filterPanel.toggleClass('hidden');
         resultsContainer.toggleClass('column-full column-two-thirds');
+        $('.js-reveal-when-no-filter').toggleClass('visuallyhidden');
     }
 
 
