@@ -1,3 +1,4 @@
+@using Edubase.Common
 @using Edubase.Services.Enums
 @model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
 
@@ -16,7 +17,7 @@
 
     string editorPrefix = ViewData["editorPrefix"]?.ToString();
 }
-    
+
 <div class="form-group @Html.ValidationCssClassFor(x => x.GovernorTitleId)">
     @Html.LabelFor(x => x.GovernorTitleId)
     @Html.ValidationMessageFor(x => x.GovernorTitleId)
@@ -43,10 +44,10 @@
 
 @if (Model.DisplayPolicy.Id)
 {
-<div class="form-group">
-    @Html.LabelFor(x => x.GID)
-    <input class="form-control" value="@Model.GID" readonly="readonly" disabled="disabled" />
-</div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.GID)
+        <input class="form-control" value="@Model.GID" readonly="readonly" disabled="disabled" />
+    </div>
 }
 
 @if (Model.DisplayPolicy.AppointingBodyId)
@@ -68,13 +69,25 @@
 
 @if (Model.DisplayPolicy.AppointmentEndDate)
 {
-    @Html.EditorFor(x => x.AppointmentEndDate, new {title = Model.GovernorRole == eLookupGovernorRole.Member ? "Date stepped down" : "Date term ends", showReactivationWarning })
+    @Html.EditorFor(x => x.AppointmentEndDate, new { title = Model.GovernorRole == eLookupGovernorRole.Member ? "Date stepped down" : "Date term ends", showReactivationWarning })
 }
 
 @if (Model.DisplayPolicy.EmailAddress)
 {
+    var labelText = "Email address";
+    if (Model.GovernorRole.OneOfThese(
+        eLookupGovernorRole.ChairOfGovernors,
+        eLookupGovernorRole.ChairOfTrustees,
+        eLookupGovernorRole.AccountingOfficer,
+        eLookupGovernorRole.ChiefFinancialOfficer,
+        eLookupGovernorRole.ChairOfLocalGoverningBody
+        ))
+    {
+        labelText += " (required to save record)";
+    }
+
     <div class="form-group @Html.ValidationCssClassFor(x => x.EmailAddress)">
-        @Html.LabelFor(x => x.EmailAddress, "Email address (required to save record)")
+        @Html.LabelFor(x => x.EmailAddress, labelText)
         @Html.ValidationMessageFor(x => x.EmailAddress)
         @Html.TextBoxFor(x => x.EmailAddress, new { @class = "form-control" })
     </div>
