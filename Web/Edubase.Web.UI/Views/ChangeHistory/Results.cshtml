@@ -54,8 +54,12 @@
             <h2 class="error-summary-heading heading-medium">Something went wrong</h2>
             <p>Please refresh the page to try again</p>
         </div>
+        @if (Model.IsEstablishmentSearch)
+        {
+            <p class="font-xsmall flush--bottom">To see the 'Suggested from' and 'Approved by' columns, please hide the filters.</p>
+        }
         <p>
-            <a href="#" class="hide-show-filters" id="filter-toggle">Hide filters to show user information</a>
+            <a href="#" class="hide-show-filters" id="filter-toggle">Hide filters</a>
         </p>
     </div>
     <form id="change-history-filters">

@@ -81,7 +81,7 @@
     function toggleFilters() {
         openState = !openState;
         if (openState) {
-            $('#filter-toggle').text('Hide filters to show user information');
+            $('#filter-toggle').text('Hide filters');
             $('#changes-table').addClass('table-tight');
           } else {
             $('#filter-toggle').text('Show filters');
