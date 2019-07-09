@@ -168,12 +168,14 @@
                                 @if (Request.IsAuthenticated)
                                 {
                                     <li>
-                                        @Html.ActionLink("Log off", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id = "logout-link", Class="login-link" })
+                                        @Html.ActionLink("Sign off", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id = "logout-link", Class="login-link" })
                                     </li>
                                 }
                                 else
                                 {
-                                    <li>@Html.ActionLink("Log in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { Class="login-link" })</li>
+                                    <li>
+                                        @Html.ActionLink("Sign in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { Class="login-link" })
+                                    </li>
                                 }
                             </ul>
 
