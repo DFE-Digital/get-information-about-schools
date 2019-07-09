@@ -143,3 +143,20 @@ $path: $images-path;
   display: inline-block;
   padding: 0 6px;
 }
+
+// This .content class is inside the global header which is found
+// inside govuk-template. Placing this modification here as it is
+// needed for the .login-link below.
+
+.content {
+    @include media(desktop) {
+        position: relative;
+    }
+}
+
+.login-link {
+    @include media(desktop) {
+        position: absolute;
+        right: 10px;
+    }
+}

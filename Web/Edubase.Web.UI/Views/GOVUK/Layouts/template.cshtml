@@ -162,17 +162,19 @@
                                 @if (Request.IsAuthenticated)
                                 {
                                     <li><a href="/Tools">Tools</a></li>
-                                    <li><a href="/help">Help</a></li>
+                                }
+                                <li><a href="/help">Help</a></li>
+                                <li><a href="/News">News</a></li>
+                                @if (Request.IsAuthenticated)
+                                {
                                     <li>
-                                        @Html.ActionLink("Log off", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id = "logout-link" })
+                                        @Html.ActionLink("Log off", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id = "logout-link", Class="login-link" })
                                     </li>
                                 }
                                 else
                                 {
-                                    <li><a href="/help">Help</a></li>
-                                    <li>@Html.ActionLink("Log in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, null)</li>
+                                    <li>@Html.ActionLink("Log in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { Class="login-link" })</li>
                                 }
-                                <li><a href="/News">News</a></li>
                             </ul>
 
                         </nav>
