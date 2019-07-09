@@ -113,9 +113,10 @@
                     </table>
                     if (Model.ChangeHistory.PageCount > 1)
                     {
-                        <div class="lower-pagination">
+                        <div class="lower-pagination push--bottom">
                             @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
                         </div>
+                        @helpers.BackToTopLink()
                     }
 
                 }

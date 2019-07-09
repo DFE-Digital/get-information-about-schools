@@ -47,10 +47,11 @@
                 }
             </tbody>
         </table>
-        <div class="lower-pagination">
+        <div class="lower-pagination push--bottom">
             <div class="pagination">
                 <p>Showing 1 - @Model.Result.CreatedEstablishments.Length of @Model.Result.CreatedEstablishments.Length</p>
             </div>
         </div>
+        @helpers.BackToTopLink()
     </div>
 </div>

@@ -85,12 +85,15 @@
         if (Model.Results.PageCount > 1)
         {
             <div class="grid-row">
-                <div class="column-full lower-pagination">
-                    @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
-                    {
-                        {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")},
-                        {"maxPages", 5 }
-                    })
+                <div class="column-full">
+                    <div class="lower-pagination push--bottom">
+                        @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
+                        {
+                            {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")},
+                            {"maxPages", 5 }
+                        })
+                    </div>
+                    @helpers.BackToTopLink()
                 </div>
             </div>
         }

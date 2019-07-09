@@ -111,9 +111,10 @@
                         </table>
                         @if (Model.ScheduledExtracts.PageCount > 1)
                         {
-                            <div class="lower-pagination">
+                            <div class="lower-pagination push--bottom">
                                 @Html.Partial("_GenericPaginationV2", Model.ScheduledExtracts)
                             </div>
+                            @helpers.BackToTopLink()
                         }
                     </div>
                 }
