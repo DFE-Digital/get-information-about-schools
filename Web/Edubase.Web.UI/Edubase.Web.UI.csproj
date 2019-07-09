@@ -885,6 +885,7 @@
     <Content Include="Areas\Establishments\Views\BulkAssociateEstabs2Groups\InProgress.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\GovernanceChangeHistory.cshtml" />
     <Content Include="Areas\Groups\Views\Group\GovernanceChangeHistory.cshtml" />
+    <Content Include="App_Code\helpers.cshtml" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
