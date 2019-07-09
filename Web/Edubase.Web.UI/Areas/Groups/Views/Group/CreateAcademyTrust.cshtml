@@ -7,7 +7,7 @@
 }
 
 <div class="breadcrumbs">
-    <ul>
+    <ol>
         <li>
             @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
         </li>
@@ -17,7 +17,7 @@
         <li>
             @Html.ActionLink("Create an academy trust", "SearchCompaniesHouse", "Group", new { area = "Groups" }, null)
         </li>
-    </ul>
+    </ol>
 </div>
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)

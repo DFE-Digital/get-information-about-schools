@@ -34,11 +34,11 @@
 <div class="breadcrumbs">
     @if (Model.SearchQueryString.IsNullOrWhiteSpace())
     {
-        <ul>
+        <ol>
             <li>
                 @Html.ActionLink("Home", "Index", "Search", new {area = "", selectedTab = "Groups"}, null)
             </li>
-        </ul>
+        </ol>
 
     }
     else

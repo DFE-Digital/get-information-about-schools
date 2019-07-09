@@ -34,10 +34,10 @@
 
 }
 <div class="breadcrumbs">
-    <ul>
+    <ol>
         <li>@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
         <li>@Html.RouteLink(Model.Group.Name, "GroupDetails", new {id = Model.Group.GroupUId })</li>
-    </ul>
+    </ol>
 </div>
 
 <h1 class="heading-large">@Model.Group.Name</h1>

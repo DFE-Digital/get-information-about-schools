@@ -4,14 +4,17 @@
 }
 
 <div class="breadcrumbs">
-    <ul>
+    <ol>
         <li>
             @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
         </li>
         <li>
+            <a href="/help">Help</a>
+        </li>
+        <li>
             @Html.RouteLink("FAQs", "Faq")
         </li>
-    </ul>
+    </ol>
 </div>
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)

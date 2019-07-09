@@ -5,13 +5,13 @@
 }
 
 <div class="breadcrumbs">
-    <ul>
+    <ol>
         <li>@Html.RouteLink("Home", "Homepage")</li>
         @foreach (var item in breadcrumbRoutes)
         {
             <li>@Html.RouteLink(item.Label, item.RouteName, item.RouteValues)</li>
         }
-    </ul>
+    </ol>
 </div>
 
 <div class="grid-row">
