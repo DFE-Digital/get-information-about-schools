@@ -25,7 +25,7 @@
             if (!document.getElementById('edubase-tooltip')) {
                 tooltipScaffold();
             }
-           
+
             var el = this.el,
                 opts = this.opts,
                 self = this;
@@ -46,7 +46,7 @@
                 var content = $(contentSelector).html();
 
                 $(opts.contentTarget).html(content);
-                
+
                 self.positionToolTip();
 
                 self.$toolTip.removeClass('hidden')
@@ -63,10 +63,10 @@
             this.$toolTip.find('.tooltip-close').on('click', function(e) {
                 e.preventDefault();
                 closeToolTip();
-                
+
             });
 
-           
+
         },
         positionToolTip: function() {
             var el = this.el,
@@ -82,7 +82,7 @@
                 leftPos = winWidth - toolTipWidth - 10;
 
                 self.$toolTip.css({ top: offset.top + 45 + 'px', left: leftPos + 'px' });
-                
+
                 self.$toolTip.find('.pointer, .pointer-shadow')
                     .css({
                         left: -1 * (parseInt(self.$toolTip.css('left'), 10) - offset.left + 7) + 'px'
@@ -107,5 +107,4 @@
 
 }($));
 
-$('#content').find('.icon-help').tooltip();
-
+$('#content').find('.js-tooltip').tooltip();
