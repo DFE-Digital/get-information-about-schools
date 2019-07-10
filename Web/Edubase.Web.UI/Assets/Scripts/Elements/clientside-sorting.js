@@ -46,8 +46,6 @@
                 return $(ele).data().sortKey === opts.initialSortKey;
             });
 
-
-
             $tbody.find('tr').each(function () {
                 var $row = $(this);
                 var temp = {};
@@ -61,7 +59,6 @@
 
             this.sortData = sortData;
 
-
             function dateFromString(dateString) {
                 var dateParts = dateString.split('/');
                 if (dateParts.length < 3) { // probably says not recorded or something similar
@@ -69,7 +66,6 @@
                 }
                 return new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
             }
-
 
             function sortDate (a, b) {
                 if (asc) {
@@ -133,6 +129,17 @@
                 $tbody[0].appendChild(frag);
             }
 
+            // Adding data-labels back to the <td>'s to display the label in mobile view
+            function addDataLabels() {
+                $('.sortable-table tbody tr').each(function(){
+                    var $this = $(this);
+                    $this.children('td').each(function(index){
+                        var headerLabel = $this.parent().siblings('thead').find('tr th:eq('+index+') a').text().trim();
+                        $(this).attr('data-label', headerLabel);
+                    });
+                });
+            }
+
             // Add default aria-label to each table header link
             $triggers.each(function(){
                 var headerName = $(this).text().trim();
@@ -174,6 +181,7 @@
 
                 self.sortData = sorted;
                 rebuildTableBody();
+                addDataLabels();
             });
 
             selectedTrigger.click();
