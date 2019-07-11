@@ -28,15 +28,15 @@ describe('Tab tests', function tabCheck(){
     afterEach(function() {
         document.body.removeChild(document.getElementById('fixture'));
     });
-	
+
 	it('jQuery is available', function(){
 		expect(window.$).not.toBeUndefined();
 	});
-	
+
 	it('jQuery has a defined prototype', function(){
 		expect($.fn).not.toBeUndefined();
 	});
-	
+
 	it('jQuery prototype has a tabs property', function() {
 		expect($.fn.hasOwnProperty('tabs')).toBeTruthy();
 	});
@@ -49,9 +49,9 @@ describe('Tab tests', function tabCheck(){
        expect(document.getElementById('tab0').hasAttribute('aria-hidden')).toBeTruthy();
     });
 
-	it('tab-able content has a tab-index property and it is set to zero', function(){
+	it('tab-able content has a tabindex property and it is set to zero', function(){
 	    var contentTab0 = document.querySelectorAll('.tab-content')[0];
-       expect(contentTab0.hasAttribute('tab-index') && contentTab0.getAttribute('tab-index') == 0).toBeTruthy();
+       expect(contentTab0.hasAttribute('tabindex') && contentTab0.getAttribute('tabindex') == 0).toBeTruthy();
     });
 
     it('initially, only one tab is visible', function(){
@@ -80,5 +80,3 @@ describe('Tab tests', function tabCheck(){
     })
 
 });
-
-
