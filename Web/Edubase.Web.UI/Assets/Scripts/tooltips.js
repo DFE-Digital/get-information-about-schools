@@ -36,10 +36,23 @@
                 self.$toolTip.addClass('hidden')
                     .attr('aria-hidden', true);
 
+                // Focus on the tooltip link after closing the tooltip window
+                // so that keyboard users can carry on from where they left off
+                $('.tooltip-open').focus();
+
+                // Clearing all open tooltip links
+                $('.tooltip-link').removeClass('tooltip-open');
+
                 $('body').off('click', '#full-content', closeToolTip);
            }
 
             $(el).on('click', function(e) {
+                // Clearing all open tooltip links
+                $('.tooltip-link').removeClass('tooltip-open');
+
+                // Marking the selected tooltip link to focus on when exiting
+                $(el).addClass('tooltip-open');
+                
                 e.preventDefault();
                 e.stopPropagation();
                 var contentSelector = $(this).attr('href');
@@ -83,7 +96,7 @@
             if (offset.left + toolTipWidth > winWidth) {
                 leftPos = winWidth - toolTipWidth - 10;
 
-                self.$toolTip.css({ top: offset.top + 45 + 'px', left: leftPos + 'px' });
+                self.$toolTip.css({ top: offset.top + 40 + 'px', left: leftPos + 'px' });
 
                 self.$toolTip.find('.pointer, .pointer-shadow')
                     .css({
@@ -91,7 +104,7 @@
                     });
 
             } else {
-                self.$toolTip.css({ top: offset.top + 45 + 'px', left: offset.left - 26 + 'px' });
+                self.$toolTip.css({ top: offset.top + 40 + 'px', left: offset.left - 26 + 'px' });
 
                 self.$toolTip.find('.pointer, .pointer-shadow').removeAttr('style');
 
