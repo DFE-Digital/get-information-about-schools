@@ -14,8 +14,8 @@
     function tooltipScaffold() {
         var tooltip = '<div id="edubase-tooltip" class="edubase-tooltip hidden" aria-hidden="true">' +
             '<span class="pointer-shadow"></span><span class="pointer"></span>' +
-            '<a href="#" class="tooltip-close" title="close tool tip"><span class="visuallyhidden">Close</span></a>' +
-            '<div id="tooltip-content" class="tooltip-content" tab-index="-1"></div></div>';
+            '<div id="tooltip-content" class="tooltip-content" tabindex="0"></div>' +
+            '<a href="#" class="tooltip-close" title="close tool tip"><span class="visuallyhidden">Close</span></a></div>';
 
         $('#full-content').after(tooltip);
     }
@@ -52,6 +52,8 @@
                 self.$toolTip.removeClass('hidden')
                     .attr('aria-hidden', false);
 
+                // Focus on the tooltip after clicking so that
+                // it'll get read out by screen readers
                 $('#tooltip-content').focus();
 
                 window.setTimeout(function() {
