@@ -8,7 +8,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 {
     public class SearchCompaniesHouseModel
     {
-        [Required]
+        public bool Search { get; set; } = false;
+
         public string SearchText { get; set; }
         public PagedDto<CompanyProfile> Results { get; set; }
         public int StartIndex { get; set; }

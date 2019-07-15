@@ -451,12 +451,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         }
 
         [HttpGet, EdubaseAuthorize, Route(nameof(SearchCompaniesHouse)), EdubaseAuthorize]
-        public async Task<ActionResult> SearchCompaniesHouse()
-        {
-            return View(new SearchCompaniesHouseModel());
-        }
-
-        [HttpPost, EdubaseAuthorize, Route(nameof(SearchCompaniesHouse)), EdubaseAuthorize]
         public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel)
         {
             if (!viewModel.SearchText.IsNullOrEmpty())
@@ -478,6 +472,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 {
                     return RedirectToAction("CreateAcademyTrust", "Group", new { companiesHouseNumber = viewModel.Results.Items.First().Number, area = "Groups" });
                 }
+            }
+
+            if (viewModel.Search && viewModel.SearchText.IsNullOrEmpty())
+            {
+                ModelState.AddModelError(nameof(viewModel.SearchText), "The SearchText field is required.");
             }
             return View(viewModel);
         }
