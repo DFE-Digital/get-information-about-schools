@@ -41,10 +41,10 @@
                 </tbody>
             </table>
 
-            <div class="lower-pagination">
+            <div class="lower-pagination push--bottom">
                 @Html.Partial("_GenericPaginationV2", Model.Results)
             </div>
-
+            @helpers.BackToTopLink()
         }
         else
         {

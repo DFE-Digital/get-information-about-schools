@@ -30,8 +30,8 @@
    };
 }
 
-   @if (Model.Items.Any())
-   {
+@if (Model.Items.Any())
+{
     <div>
         @Html.Partial("_GenericPaginationV2", Model)
     </div>
@@ -91,11 +91,12 @@
             }
         </tbody>
     </table>
-        <div>
-            @Html.Partial("_GenericPaginationV2", Model)
-        </div>
-    }
-    else
-    {
-        <p>There are no results, please widen your search with the filters.</p>
-    }
+    <div class="lower-pagination push--bottom">
+        @Html.Partial("_GenericPaginationV2", Model)
+    </div>
+    @helpers.BackToTopLink()
+}
+else
+{
+    <p>There are no results, please widen your search with the filters.</p>
+}

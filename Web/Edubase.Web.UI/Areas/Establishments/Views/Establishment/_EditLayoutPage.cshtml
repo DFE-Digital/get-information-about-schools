@@ -9,13 +9,13 @@
     Layout = "~/Views/Dfe/Layouts/template.cshtml";
 }
 <div class="breadcrumbs">
-    <ul>
+    <ol>
         <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
         @if (Model.LegalParentGroup != null)
         {
             <li>@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new { id = Model.LegalParentGroup.GroupUId, area = "Groups" }, null)</li>
         }
-    </ul>
+    </ol>
 </div>
 
 @if (ViewBag.ShowSaved != null && ViewBag.ShowSaved)

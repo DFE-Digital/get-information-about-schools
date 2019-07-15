@@ -143,3 +143,59 @@ $path: $images-path;
   display: inline-block;
   padding: 0 6px;
 }
+
+// This .content class is inside the global header which is found
+// inside govuk-template. Placing this modification here as it is
+// needed for the .login-link below.
+
+.content {
+    @include media(desktop) {
+        position: relative;
+    }
+}
+
+.login-link {
+    @include media(desktop) {
+        position: absolute;
+        right: 10px;
+    }
+}
+
+// Back to top
+.back-to-top-link {
+    font-size: 16px;
+}
+
+.back-to-top-icon {
+    display: inline-block;
+    width: .8em;
+    height: 1em;
+    margin-top: -5px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+// Tooltip link (with '?' icon)
+.tooltip-link {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    &:after {
+        position: absolute;
+        content: '?';
+        width: 12px;
+        height: 13px;
+        background-color: $govuk-blue;
+        color: $white;
+        text-align: center;
+        border-radius: 12px;
+        padding: 1px 2px 2px;
+        margin-left: 3px;
+        top: 2px;
+        font-size: 12px;
+    }
+    
+    &:focus {
+        outline-width: 1px;
+    }
+}

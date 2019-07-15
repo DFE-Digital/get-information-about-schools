@@ -19,8 +19,8 @@
                 self = this,
                 tooltip = '<div id="edubase-tooltip" class="edubase-tooltip truncated-tooltip hidden" aria-hidden="true">' +
                     '<span class="pointer-shadow"></span><span class="pointer"></span>' +
-                    '<div id="tooltip-content" class="tooltip-content" tab-index="-1"></div></div>',
-                
+                    '<div id="tooltip-content" class="tooltip-content" tabindex="-1"></div></div>',
+
                 showTooltip = function (text) {
                     if (!$('#edubase-tooltip').hasClass('hidden')) {
                         $(window).trigger('tooltipShift');
@@ -60,7 +60,7 @@
             if (!document.getElementById('edubase-tooltip')) {
                 $(document.body).append(tooltip);
             }
-            
+
             if (originalText.length <= opts.maxCharacters) {
                 return;
             } else {
@@ -80,7 +80,7 @@
                 } else {
                     hideTooltip();
                     self.clicks = 0;
-                }                
+                }
             });
 
             $('.tooltip-close').on('click', function() {

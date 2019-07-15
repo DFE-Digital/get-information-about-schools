@@ -4,14 +4,10 @@
     ViewBag.bodyClasses = "search-changes schools-search-page";
 }
 <div class="breadcrumbs">
-    <ul>
-        <li>
-            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-        </li>
-        <li>
-            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
-        </li>
-    </ul>
+    <ol>
+        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
+        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
+    </ol>
 </div>
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
@@ -78,8 +74,8 @@
                                             }
                                             <label class="form-label" for="TextSearchModel_Text">
                                                 Enter name, <abbr title="Unique Reference Number">URN</abbr>, LAESTAB or UKPRN
-                                                <a href="#name-reference-help" class="icon-help">
-                                                    <span class="visuallyhidden">About reference numbers</span>
+                                                <a href="#name-reference-help" class="tooltip-link js-tooltip">
+                                                    <span class="visuallyhidden">Help with reference numbers</span>
                                                 </a>
                                             </label>
                                             <div class="form-group">
@@ -199,8 +195,8 @@
                                                 }
                                                 <label class="form-label" for="GroupSearchModel_Text">
                                                     Enter name, Companies House number, Group <abbr title="Unique Identifier">UID</abbr> or ID
-                                                    <a href="#group-reference" class="icon-help">
-                                                        <span class="visuallyhidden">About reference numbers</span>
+                                                    <a href="#group-reference" class="tooltip-link js-tooltip">
+                                                        <span class="visuallyhidden">Help with reference numbers</span>
                                                     </a>
                                                 </label>
                                                 <div class="form-group">

@@ -73,7 +73,7 @@
     <!-- Default non-defined size, also used for Android 2.1+ devices -->
     <link rel="apple-touch-icon-precomposed" href="/public/govuk_template/assets/images/apple-touch-icon-60x60.png?0.12.0">
 
-    
+
     <!--[if gt IE 8]><!--><link href="/public/assets/stylesheets/main.css?v=1.0.0.0" rel="stylesheet" type="text/css"><!--<![endif]-->
     <!--[if IE 6]><link href="/public/assets/stylesheets/main-ie6.css" rel="stylesheet" type="text/css" /><![endif]-->
     <!--[if IE 7]><link href="/public/assets/stylesheets/main-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
@@ -87,12 +87,12 @@
                 m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
             })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
             ga('create', 'UA-10311450-23', 'auto');
-                
+
                 ga('send', 'pageview');
-                
+
     </script>
 
-    
+
 
 </head>
 <body class="no-js">
@@ -103,7 +103,7 @@
                 if (navigator.userAgent.indexOf('Mac OS X') > -1) { document.body.className += ' is-mac';}
             </script>
 
-        
+
 
         <div id="skiplink-container">
             <div>
@@ -120,7 +120,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!--end global-cookie-message-->
 
         <header role="banner" id="global-header" class="with-proposition">
@@ -132,7 +132,7 @@
                             GOV.UK
                         </a>
                     </div>
-                    
+
                 </div>
                 <div class="header-proposition">
                     <div class="content">
@@ -152,7 +152,7 @@
         </header>
         <!--end header-->
 
-        
+
 
         <div id="global-header-bar">
             <div class="inner-block">
@@ -172,28 +172,28 @@
     </p>
 </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
 
 
-        
+
 
 
 <main id="content" class="page error-page" role="main" tabindex="-1">
 
-    
+
 
 
 <div class="grid-row">
     <div class="column-full">
         <div class="breadcrumbs">
-            <ul>
+            <ol>
                 <li>
                     <a href="/">Home</a>
                 </li>
-            </ul>
+            </ol>
 
         </div>
         <h1 class="heading-xlarge">Access denied</h1>
@@ -237,7 +237,7 @@
         <div id="global-app-error" class="app-error hidden"></div>
         <script src="/public/govuk_template/assets/javascripts/govuk-template.js?0.13.0" type="text/javascript"></script>
 
-        
+
 
         <script src="/public/jquery/dist/jquery.min.js"></script>
         <script src="/public/jquery-simulate/jquery.simulate.js"></script>
@@ -251,9 +251,9 @@
             <script src="/public/assets/scripts/application.js?v=1.0.0.0"></script>
         <!--<![endif]-->
 
- 
 
-        
+
+
 
     </div>
 

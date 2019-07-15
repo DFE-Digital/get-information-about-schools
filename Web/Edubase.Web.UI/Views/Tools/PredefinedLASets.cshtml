@@ -9,11 +9,11 @@
 <div class="grid-row">
     <div class="column-full results-heading">
         <div class="breadcrumbs">
-            <ul>
+            <ol>
                 <li>@Html.RouteLink("Home", "Homepage")</li>
                 <li>@Html.RouteLink("Tools", "Tools")</li>
                 <li>@Html.RouteLink("View independent schools' significant dates", "IndSchSearch")</li>
-            </ul>
+            </ol>
         </div>
         <h1 class="heading-xlarge">
             Predefined local authority sets
@@ -61,9 +61,10 @@
     </table>
     if (Model.Results.PageCount > 1)
     {
-        <div class="lower-pagination">
+        <div class="lower-pagination push--bottom">
             @Html.Partial("_GenericPaginationV2", Model.Results)
         </div>
+        @helpers.BackToTopLink()
     }
 }
 else

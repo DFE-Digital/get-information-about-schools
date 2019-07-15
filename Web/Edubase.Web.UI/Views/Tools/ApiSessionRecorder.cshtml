@@ -5,13 +5,11 @@
 }
 
 <div class="breadcrumbs">
-    <ul>
-        <li>
-            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-        </li>
+    <ol>
+        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
         <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
         <li>API Session Recorder</li>
-    </ul>
+    </ol>
 </div>
 
 <div class="grid-row">
@@ -38,7 +36,7 @@
     </div>
 
     <div class="grid-row">
-    
+
         @if (ViewBag.SessionId != null)
         {
             <div class="column-full">

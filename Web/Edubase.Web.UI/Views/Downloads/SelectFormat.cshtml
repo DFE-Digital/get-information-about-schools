@@ -6,13 +6,13 @@
 }
 
 <div class="breadcrumbs">
-    <ul>
+    <ol>
         <li>@Html.RouteLink("Home", "Homepage")</li>
         @foreach (var item in breadcrumbRoutes)
         {
             <li>@Html.RouteLink(item.Label, item.RouteName, item.RouteValues)</li>
         }
-    </ul>
+    </ol>
 </div>
 
 <div class="grid-row">
@@ -27,7 +27,7 @@
                 You can download your requested data in either CSV or XLSX format.
                 The file will download as a ZIP file: open the ZIP to access its contents.
             </p>
-            
+
             @using (Html.BeginRouteForm((string)ViewBag.RouteName, FormMethod.Get))
             {
                 <input type="hidden" name="state" value="@Request.QueryString["state"]" />
@@ -46,4 +46,3 @@
         </div>
     </div>
 </div>
-

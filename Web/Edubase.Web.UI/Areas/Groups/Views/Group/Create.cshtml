@@ -11,10 +11,10 @@
 }
 
 <div class="breadcrumbs">
-    <ul>
+    <ol>
         <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
         <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-    </ul>
+    </ol>
 </div>
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)

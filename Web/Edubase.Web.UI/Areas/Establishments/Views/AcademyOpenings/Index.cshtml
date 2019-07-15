@@ -5,14 +5,14 @@
 }
 
 <div class="breadcrumbs">
-    <ul>
+    <ol>
         <li>
             @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
         </li>
         <li>
             @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
         </li>
-    </ul>
+    </ol>
 </div>
 
 <div id="academy-opening-app" v-cloak>
@@ -148,7 +148,7 @@
                                 </tbody>
                             </table>
 
-                            <div class="lower-pagination">
+                            <div class="lower-pagination push--bottom">
                                 <nav role="navigation" aria-label="Pagination" class="pagination">
                                     <p class="pagination-info">
                                         Showing
@@ -168,8 +168,7 @@
                                     </ul>
                                 </nav>
                             </div>
-
-
+                            @helpers.BackToTopLink()
                         </div>
 
                         <!-- Academy search -->

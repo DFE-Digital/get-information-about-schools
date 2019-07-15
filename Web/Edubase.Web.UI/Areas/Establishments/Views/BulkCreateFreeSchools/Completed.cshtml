@@ -1,11 +1,11 @@
 ﻿@model BulkCreateFreeSchoolsViewModel
 
 <div class="breadcrumbs">
-    <ul>
+    <ol>
         <li>@Html.RouteLink("Home", "Homepage")</li>
         <li>@Html.RouteLink("Tools", "Tools")</li>
         <li>@Html.RouteLink("Bulk create new free schools", "BulkCreateFreeSchools")</li>
-    </ul>
+    </ol>
 </div>
 
 <div class="grid-row">
@@ -47,10 +47,11 @@
                 }
             </tbody>
         </table>
-        <div class="lower-pagination">
+        <div class="lower-pagination push--bottom">
             <div class="pagination">
                 <p>Showing 1 - @Model.Result.CreatedEstablishments.Length of @Model.Result.CreatedEstablishments.Length</p>
             </div>
         </div>
+        @helpers.BackToTopLink()
     </div>
 </div>
