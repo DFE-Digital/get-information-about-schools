@@ -140,8 +140,12 @@ $path: $images-path;
 }
 
 .action-link {
-  display: inline-block;
-  padding: 0 6px;
+    display: inline-block;
+    padding: 0 6px;
+    &.link-button {
+        // Overriding 0 padding on .link-buttons as action-links.
+        padding: 0 6px;
+    }
 }
 
 // This .content class is inside the global header which is found
@@ -194,8 +198,18 @@ $path: $images-path;
         top: 2px;
         font-size: 12px;
     }
-    
+
     &:focus {
         outline-width: 1px;
     }
+}
+
+// Buttons styled as link
+.link-button {
+    padding: 0;
+    background-color: transparent;
+    color: $link-colour;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
 }
