@@ -123,6 +123,14 @@
                 <div class="grid-row">
                     <div class="academies-list-wrapper column-full">
                         <h2 class="heading-medium flush--top">Academies to create</h2>
+
+                        @{
+                            if (Model.ItemsToAdd.Count > 1)
+                            {
+                                <p class="table-caption">Showing 1 - @Model.ItemsToAdd.Count of @Model.ItemsToAdd.Count</p>
+                            }
+                        }
+
                         <table class="edubase-table table--larger">
                             <caption class="visuallyhidden">Academies to create</caption>
                             <thead>
@@ -154,6 +162,14 @@
 
                             </tbody>
                         </table>
+
+                        @{
+                            if (Model.ItemsToAdd.Count > 1)
+                            {
+                                <p class="table-caption">Showing 1 - @Model.ItemsToAdd.Count of @Model.ItemsToAdd.Count</p>
+                            }
+                        }
+
                         <div class="submit-cancel-panel">
                             <button type="submit" name="action" value="create" id="go-create" class="button mobile-full-width">Create academies</button>
                             @Html.ActionLink("Cancel", "Index", "Tools", null, new { @Class = "button button-secondary cancel mobile-full-width" })
