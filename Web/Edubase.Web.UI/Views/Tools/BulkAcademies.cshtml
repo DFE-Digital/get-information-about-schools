@@ -155,7 +155,7 @@
                                             <button name="editUrn" value="@est.Urn" class="link-button font-xsmall" aria-label="Edit establishment">Edit</button>
                                         </td>
                                         <td>
-                                            <button name="removeUrn" value="@est.Urn" class="link-button font-xsmall" aria-label="Remove establishment">Remove</button>
+                                            <button id="removeUrn" name="removeUrn" value="@est.Urn" class="link-button font-xsmall" aria-label="Remove establishment">Remove</button>
                                         </td>
                                     </tr>
                                 }
@@ -219,3 +219,29 @@
 
     </div>
 </div>
+
+@section ViewScripts
+{
+    <script>
+        var $fields = $('#content').find('.form-control');
+        var exitAttached = false;
+        $fields.on('change',
+            function() {
+                if (!exitAttached) {
+                    DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
+                    exitAttached = true;
+                }
+
+            });
+
+        $('#content').find('#removeUrn').okCancel({
+            triggerEvent: 'click',
+            title: 'Are you sure you want to remove this establishment?',
+            content: 'This will permanently remove it from the list.',
+            ok: function () {
+                $(this.el).data().okCancel.unbind();
+                $(this.el).click();
+            }
+        })
+    </script>
+}
