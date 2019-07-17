@@ -67,8 +67,5 @@ else if (Model.Count > 0)
 }
 else
 {
-    <div class="column-two-thirds">
-        <p class="no-school-results">There are no results for your search. Please check the search criteria or @Html.ActionLink("try again", "Index", "Search", new { area = "" }, null) using alternative combination of criteria fields.
-        </p>
-    </div>
+    <p>There are no results for your search. Please change the filters to adjust your search, or go @Html.ActionLink("back to the search page", "Index", "Search", new { area = "", SelectedTab = "Governors" }, null) to start again.</p>
 }
