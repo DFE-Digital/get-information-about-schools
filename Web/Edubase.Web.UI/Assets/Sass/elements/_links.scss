@@ -119,7 +119,7 @@ $path: $images-path;
     display: block;
     float: left;
 
-    &:before {
+    &:after {
         content: '+';
         position: absolute;
         left: 0;
@@ -194,7 +194,7 @@ $path: $images-path;
         top: 2px;
         font-size: 12px;
     }
-    
+
     &:focus {
         outline-width: 1px;
     }
