@@ -61,6 +61,10 @@ main {
   @include core-16;
 }
 
+.font-xxsmall {
+  @include core-14;
+}
+
 // Bold font sizes
 .bold-xxlarge {
   @include bold-80();
@@ -248,5 +252,3 @@ code {
   border: 1px solid $border-colour;
   padding: 3px 7px;
 }
-
-

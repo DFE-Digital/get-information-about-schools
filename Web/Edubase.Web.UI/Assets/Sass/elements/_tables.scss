@@ -4,21 +4,30 @@
 $changeTableThPadding: 18px;
 
 table {
-  border-collapse: collapse;
-  border-spacing: 0;
-  width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
 }
 
-table th,
-table td {
-  @include core-14;
-  padding: 6px 10px 6px 8px;
-  color: #0b0c0c;
-  border-bottom: 1px solid $border-colour;
-  vertical-align: top;
-  &.no-border {
-      border-bottom:none;
-  }
+table {
+    th, td {
+        @include core-14;
+        padding: 6px 10px 6px 8px;
+        color: #0b0c0c;
+        border-bottom: 1px solid $border-colour;
+        vertical-align: top;
+        &.no-border {
+            border-bottom:none;
+        }
+    }
+    &.table--larger {
+        th {
+            @include bold-16;
+        }
+        td {
+            @include core-16;
+        }
+    }
 }
 
 tbody th {

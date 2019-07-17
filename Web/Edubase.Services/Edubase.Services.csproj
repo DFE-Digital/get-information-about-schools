@@ -140,6 +140,7 @@
     <Compile Include="Core\IClientStorage.cs" />
     <Compile Include="Core\Pagination.cs" />
     <Compile Include="Core\IPagination.cs" />
+    <Compile Include="CustomDateTimeConverter.cs" />
     <Compile Include="DataQuality\DataQualityReadService.cs" />
     <Compile Include="DataQuality\DataQualityWriteService.cs" />
     <Compile Include="DataQuality\IDataQualityReadService.cs" />
