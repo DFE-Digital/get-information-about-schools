@@ -8,9 +8,7 @@
 }
 @if (Model.Error != null)
 {
-    <div class="column-two-thirds">
-        <p class="no-school-results">There are no results for your search. Please @Html.ActionLink("try again", "Index", "Search", new { area = "" }, null) using different spelling or words.</p>
-    </div>
+    <p>There are no results for your search. Please change the filters to adjust your search, or go @Html.ActionLink("back to the search page", "Index", "Search", new { area = "", SelectedTab = "Groups" }, null) to start again.</p>
 }
 else if (Model.Results.Count > 0)
 {
@@ -50,26 +48,16 @@ else if (Model.Results.Count > 0)
         }
     </ul>
 
-
-        <div class="lower-pagination">
-            @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
-            {
-                {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of ", @Model.Count, " groups")},
-                {"maxPages", 5 }
-            })
-        </div>
-
+    <div class="lower-pagination push--bottom">
+        @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
+        {
+            {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of ", @Model.Count, " groups")},
+            {"maxPages", 5 }
+        })
+    </div>
+    @helpers.BackToTopLink()
 }
 else
 {
-    <div class="column-two-thirds">
-        @if (Model.GroupSearchModel.Text.IsInteger())
-        {
-            <p class="no-school-results">There are no results for your search. Please check the number entered or @Html.ActionLink("try again", "Index", "Search", new { area = "" }, null) using the group name.</p>
-        }
-        else
-        {
-            <p class="no-school-results">There are no results for your search. Please @Html.ActionLink("try again", "Index", "Search", new { area = "" }, null) using different spelling or words.</p>
-        }
-    </div>
+    <p>There are no results for your search. Please change the filters to adjust your search, or go @Html.ActionLink("back to the search page", "Index", "Search", new { area = "", SelectedTab = "Groups" }, null) to start again.</p>
 }

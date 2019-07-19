@@ -4,11 +4,9 @@
 }
 
 <div class="breadcrumbs">
-    <ul>
-        <li>
-            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-        </li>
-    </ul>
+    <ol>
+        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
+    </ol>
 </div>
 
 <div class="grid-row">
@@ -28,8 +26,8 @@
 
         <ul class="chevron-accordion">
             <li class="controls">
-                <button href="#" class="button-as-link open-all-panels">Open all</button>
-                <button href="#" class="button-as-link close-all-panels">Close all</button>
+                <button href="#" class="link-button font-xsmall push--right open-all-panels">Open all</button>
+                <button href="#" class="link-button font-xsmall close-all-panels">Close all</button>
             </li>
             @foreach (var group in Model.Items)
             {
@@ -49,8 +47,8 @@
                 </li>
             }
             <li class="controls">
-                <button href="#" class="button-as-link open-all-panels">Open all</button>
-                <button href="#" class="button-as-link close-all-panels">Close all</button>
+                <button href="#" class="link-button font-xsmall push--right open-all-panels">Open all</button>
+                <button href="#" class="link-button font-xsmall close-all-panels">Close all</button>
             </li>
 
         </ul>

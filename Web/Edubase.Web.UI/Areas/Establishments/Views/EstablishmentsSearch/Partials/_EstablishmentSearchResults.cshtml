@@ -73,16 +73,17 @@ else if (Model.Results.Count > 0)
     </ul>
     if (Model.PageCount > 1)
     {
-        <div class="lower-pagination">
+        <div class="lower-pagination push--bottom">
             @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
             {
                 {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")},
                 {"maxPages", 5 }
             })
         </div>
+        @helpers.BackToTopLink()
     }
 }
 else
 {
-    <p class="no-school-results">There are no results for your search. Please @Html.ActionLink("try again", "Index", "Search", new { area = "" }, null) using different spelling or words.</p>
+    <p>There are no results for your search. Please change the filters to adjust your search, or go @Html.ActionLink("back to the search page", "Index", "Search", new { area = "" }, null) to start again.</p>
 }

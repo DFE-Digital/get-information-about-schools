@@ -2,19 +2,14 @@
 @model CreateChildrensCentreViewModel
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Create a new establishment");
-    ViewBag.Title = "Create a new establishment";
     ViewBag.bodyClasses = "create-establishment school-details";
 }
 
 <div class="breadcrumbs">
-    <ul>
-        <li>
-            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-        </li>
-        <li>
-            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
-        </li>
-    </ul>
+    <ol>
+        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
+        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
+    </ol>
 </div>
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)

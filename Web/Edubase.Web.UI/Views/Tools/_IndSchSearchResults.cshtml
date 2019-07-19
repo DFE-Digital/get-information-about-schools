@@ -41,12 +41,13 @@
                 </tbody>
             </table>
 
-            <div class="lower-pagination">
+            <div class="lower-pagination push--bottom">
                 @Html.Partial("_GenericPaginationV2", Model.Results)
             </div>
-
+            @helpers.BackToTopLink()
         }
         else
         {
-            <p>Sorry, no results were found. Please expand your search criteria and search again.</p>
+            <p>There are no results for your search. Please change the filters to adjust your search, or go @Html.ActionLink("back to the search page", "IndependentSchoolsSearch", "Tools") to start again.</p>
+
         }

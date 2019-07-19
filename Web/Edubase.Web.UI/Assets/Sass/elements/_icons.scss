@@ -158,35 +158,6 @@ td.download-list-item {
 
 }
 
-.icon-help {
-    position:relative;
-    /*display: inline-block;
-    width: 20px;
-    height: 20px;
-    top: 3px;*/
-
-    &:after {
-        position: absolute;
-        content: '?';
-        width: 12px;
-        height: 13px;
-        background-color: $govuk-blue;
-        color: $white;
-        text-align: center;
-        border-radius: 12px;
-        padding: 1px 2px 2px;
-        margin-left: 3px;
-        top: 2px;
-        font-size: 12px;
-
-    }
-    &:focus {
-        background-color: transparent;
-        outline: none !important; // todo revisit the style in _tables.scss that has higher specificity
-
-    }
-}
-
 // Custom icons for map and list view links
 %icon {
     position: relative;

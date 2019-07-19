@@ -9,11 +9,11 @@
 <div class="grid-row">
     <div class="column-full results-heading">
         <div class="breadcrumbs">
-            <ul>
+            <ol>
                 <li>@Html.RouteLink("Home", "Homepage")</li>
                 <li>@Html.RouteLink("Tools", "Tools")</li>
                 <li>@Html.RouteLink("View independent schools' significant dates", "IndSchSearch")</li>
-            </ul>
+            </ol>
         </div>
         <h1 class="heading-xlarge">
             Predefined local authority sets
@@ -52,7 +52,7 @@
                         {
                             <a href="@Url.RouteUrl("IndSchSearch")?@QueryStringHelper.ToQueryString("d", item.Ids)&SelectedLocalAuthoritySetId=@item.RowKey" class="action-link" aria-label="Select set">Select</a>
                             @Html.RouteLink("Edit", "EditPredefinedLASet", new { id = item.RowKey }, new { @class = "action-link", @aria_link = "Edit set" })
-                            <button class="button-as-link action-link" style="font-size:14px;" type="submit" id="delete" aria-label="Remove set">Remove</button>
+                            <button class="link-button font-xxsmall action-link" type="submit" id="delete" aria-label="Remove set">Remove</button>
                         }
                     </td>
                 </tr>
@@ -61,9 +61,10 @@
     </table>
     if (Model.Results.PageCount > 1)
     {
-        <div class="lower-pagination">
+        <div class="lower-pagination push--bottom">
             @Html.Partial("_GenericPaginationV2", Model.Results)
         </div>
+        @helpers.BackToTopLink()
     }
 }
 else

@@ -5,12 +5,11 @@
 }
 
 <div class="breadcrumbs">
-    <ul>
+    <ol>
         <li>@Html.RouteLink("Home", "Homepage")</li>
         <li>@Html.RouteLink("Tools", "Tools")</li>
         <li>@Html.RouteLink("View independent schools' significant dates", "IndSchSearch")</li>
-        @*<li>@Html.RouteLink("Predefined local authority sets", "PredefinedLASets")</li>*@
-    </ul>
+    </ol>
 </div>
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)

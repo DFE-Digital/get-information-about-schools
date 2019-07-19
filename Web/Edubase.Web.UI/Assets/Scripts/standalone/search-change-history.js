@@ -101,6 +101,7 @@
         $('#filter-toggle').toggleClass('filters-closed');
         filterPanel.toggleClass('hidden');
         resultsContainer.toggleClass('column-full column-two-thirds');
+        $('.js-reveal-when-no-filter').toggleClass('visuallyhidden');
     }
 
 

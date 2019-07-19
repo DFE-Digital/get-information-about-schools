@@ -1,19 +1,19 @@
 ﻿/**
- * utility for toggling content 
+ * utility for toggling content
  * from a link click
- * 
+ *
  *  - assumes content is initially hidden (css)
  *  - by default will initialise on '.expanding-content-wrapper'
  *
  *  - basic HTML structure -
- * 
+ *
  *  <div class='expanding-content-wrapper'>
  *      <a class='expanding-content-trigger'>Open something</a>
  *      <div class='expanding-content'>
  *          ~ HTML ~
  *      </div>
  *  </div>
- *  
+ *
  */
 (function ($) {
     'use strict';
@@ -28,10 +28,10 @@
         updateText: true
     };
     /**
-     * @constructor 
+     * @constructor
      * @param {} el - the container for the expandable component
      * @param {} opts - user instance options
-     * @returns {} 
+     * @returns {}
      */
     function Expandable(el, opts) {
         this.el = el;
@@ -46,7 +46,7 @@
         /**
          * initialistaion
          * @public
-         * @returns {} 
+         * @returns {}
          */
         init: function () {
             var $el = $(this.el),
@@ -59,7 +59,7 @@
             // no js - content is expanded, aria requires set up
             $contentArea.css({ display: 'none' }).attr('aria-hidden', true);
             // make the first child element of the content focusable
-            $contentArea.children().slice(0, 1).attr('tab-index', 0);
+            $contentArea.children().slice(0, 1).attr('tabindex', 0);
             $trigger.css({ display: 'inline-block' });
 
             $trigger.on('click', function (e) {

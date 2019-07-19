@@ -34,11 +34,11 @@
 <div class="breadcrumbs">
     @if (Model.SearchQueryString.IsNullOrWhiteSpace())
     {
-        <ul>
+        <ol>
             <li>
                 @Html.ActionLink("Home", "Index", "Search", new {area = "", selectedTab = "Groups"}, null)
             </li>
-        </ul>
+        </ol>
 
     }
     else
@@ -358,9 +358,10 @@
 
                             if (Model.ChangeHistory.PageCount > 1)
                             {
-                                <div class="lower-pagination">
+                                <div class="lower-pagination push--bottom">
                                     @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
                                 </div>
+                                @helpers.BackToTopLink()
                             }
 
                         }

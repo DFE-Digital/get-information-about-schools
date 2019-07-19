@@ -67,7 +67,7 @@
 
             @if (Model.DisplayPolicy.Capacity)
             {
-                <dt>School capacity: <a href="#help-text-school-capacity" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></dt>
+                <dt>School capacity: <a href="#help-text-school-capacity" class="tooltip-link js-tooltip"><span class="visuallyhidden">Help with school capacity field</span></a></dt>
                 <dd>@Model.Establishment.Capacity</dd>
             }
 
@@ -205,13 +205,13 @@
 
             @if (Model.DisplayPolicy.FreeSchoolMealsNumber)
             {
-                <dt>Number of pupils eligible for free school meals: <a href="#help-text-fsm" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></dt>
+                <dt>Number of pupils eligible for free school meals: <a href="#help-text-fsm" class="tooltip-link js-tooltip"><span class="visuallyhidden">Help with number of pupils eligible for free school meals field</span></a></dt>
                 <dd>@(Model.Establishment.FreeSchoolMealsNumber?.ToString() ?? "Not recorded")</dd>
             }
 
             @if (Model.DisplayPolicy.FreeSchoolMealsPercentage)
             {
-                <dt>Percentage of children eligible for free school meals: <a href="#help-text-fsm" class="icon-help"><span class="visuallyhidden">Help with this field</span></a></dt>
+                <dt>Percentage of children eligible for free school meals: <a href="#help-text-fsm" class="tooltip-link js-tooltip"><span class="visuallyhidden">Help with percentage of children eligible for free school meals field</span></a></dt>
                 <dd>@(Model.Establishment.FreeSchoolMealsPercentage?.ToString().Append("%") ?? "Not recorded")</dd>
             }
 

@@ -109,22 +109,6 @@ $path: $images-path;
   }
 }
 
-.button-as-link {
-  @include core-19();
-  background: none;
-  border: none;
-  text-decoration: underline;
-  color: $link-colour;
-  cursor: pointer;
-
-  &:hover {
-      color: $link-hover-colour;
-  }
-  &:focus {
-      background-color: $yellow;
-  }
-}
-
 // Button skins
 // --------------------------------------------------
 
@@ -230,4 +214,3 @@ input[type="button"] {
 
     }
 }
-

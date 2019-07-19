@@ -1,7 +1,7 @@
 ﻿
 
 .chevron-accordion {
-    
+
     .panel-trigger {
         text-indent: 0;
         padding: 11px 0 12px;
@@ -38,11 +38,6 @@
 
         &:first-of-type {
             border-bottom: $grey-2 2px solid;
-        }
-
-        .button-as-link {
-            font-size: 16px;
-            margin-left: 1em;
         }
     }
 

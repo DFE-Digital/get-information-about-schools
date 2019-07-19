@@ -6,20 +6,18 @@
 }
 
 <div class="breadcrumbs">
-    <ul>
-        <li>
-            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-        </li>
-        <li>
-            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
-        </li>
-    </ul>
+    <ol>
+        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
+        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
+    </ol>
 </div>
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-@using (Html.BeginForm("SearchCompaniesHouse", "Group", FormMethod.Post))
+@using (Html.BeginForm("SearchCompaniesHouse", "Group", FormMethod.Get))
 {
+    @Html.HiddenFor(x => x.Search, new { Value = "true" })
+
     <div class="grid-row">
         <div class="column-full">
             <h1 class="heading-xlarge">Create an academy trust</h1>
@@ -89,12 +87,15 @@
         if (Model.Results.PageCount > 1)
         {
             <div class="grid-row">
-                <div class="column-full lower-pagination">
-                    @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
-                    {
-                        {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")},
-                        {"maxPages", 5 }
-                    })
+                <div class="column-full">
+                    <div class="lower-pagination push--bottom">
+                        @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
+                        {
+                            {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")},
+                            {"maxPages", 5 }
+                        })
+                    </div>
+                    @helpers.BackToTopLink()
                 </div>
             </div>
         }

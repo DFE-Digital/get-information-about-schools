@@ -62,8 +62,8 @@ DfE.Views.editLocation = {
       value = suggestionSource.value;
 
       source = new Bloodhound({
-        datumTokenizer: function (d) { return Bloodhound.tokenizers.whitespace(d[field]); },
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        datumTokenizer: function (d) { return Bloodhound.tokenizers.nonword(d[field]); },
+        queryTokenizer: Bloodhound.tokenizers.whitespace, 
         local: suggestionSource.data
       });
       source.initialize();

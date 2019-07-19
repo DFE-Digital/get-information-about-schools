@@ -4,14 +4,14 @@
 }
 
 <div class="breadcrumbs">
-    <ul>
+    <ol>
         <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
         <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
         @if (Model.Details != null)
         {
             <li>@Html.ActionLink("Convert to multi-academy trust", "Convert", "Group", new { area = "Groups" })</li>
         }
-    </ul>
+    </ol>
 </div>
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
@@ -67,7 +67,7 @@ else
         @Html.HiddenFor(x => x.CountyName)
         @Html.HiddenFor(x => x.Text)
         <div class="grid-row">
-            <div class="column-two-thirds">
+            <div class="column-full">
 
                 <h2 class="heading-small">Existing trust details</h2>
 

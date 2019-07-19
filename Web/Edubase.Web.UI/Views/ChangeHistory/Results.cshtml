@@ -7,7 +7,7 @@
 }
 
 <div class="breadcrumbs">
-    <ul>
+    <ol>
         <li>
             @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
         </li>
@@ -17,7 +17,7 @@
         <li>
             @Html.ActionLink("Change history", "Index", "ChangeHistory", new { area = ""}, null)
         </li>
-    </ul>
+    </ol>
 </div>
 
 <div class="error-summary hidden" aria-labelledby="error-summary-title" role="alert" tabindex="-1" id="js-filter-error-summary">
@@ -54,6 +54,10 @@
             <h2 class="error-summary-heading heading-medium">Something went wrong</h2>
             <p>Please refresh the page to try again</p>
         </div>
+        @if (Model.IsEstablishmentSearch)
+        {
+            <p class="font-xsmall flush--bottom">To see the 'Suggested from' and 'Approved by' columns, please hide the filters.</p>
+        }
         <p>
             <a href="#" class="hide-show-filters" id="filter-toggle">Hide filters</a>
         </p>
@@ -132,7 +136,7 @@
     <div class="column-two-thirds" id="results-container">
         @if (Model.Count == 0)
         {
-            <p>There are no results, please widen your search with the filters.</p>
+            <p>There are no results for your search. Please change the filters to adjust your search, or go @Html.ActionLink("back to the search page", "Index", "ChangeHistory", new { area = "", SelectedTab = Model.IsEstablishmentSearch ? "Establishments" : "Groups" }, null) to start again.</p>
         }
         else
         {
