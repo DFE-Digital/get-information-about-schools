@@ -122,7 +122,7 @@ namespace Edubase.Web.UI.Controllers
                             return Redirect(url);
                         }
 
-                        if (viewModel.SearchType == eSearchType.Group)
+                        if (viewModel.SearchType.OneOfThese(eSearchType.Group, eSearchType.GroupAll))
                         {
                             return Redirect(Url.Action("Index", "GroupSearch", new { area = "Groups" }) + "?" + Request.QueryString);
                         }
