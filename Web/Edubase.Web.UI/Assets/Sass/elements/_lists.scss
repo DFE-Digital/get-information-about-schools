@@ -79,6 +79,7 @@ ol {
 
 
 .key-value-list {
+
     margin-bottom: 20px;
     overflow: hidden;
 
@@ -107,12 +108,23 @@ ol {
 
         dt {
             width: 230px;
-            margin-bottom: 12px;
         }
 
         dd {
             max-width: 360px;
-            margin-bottom: 12px;
+        }
+    }
+
+    @include media(mobile) {
+        dt, dd {
+            float: none;
+        }
+
+        dd {
+            margin-bottom: 8px;
+            &:last-child {
+                margin-bottom: 0;
+            }
         }
     }
 }

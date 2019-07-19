@@ -173,7 +173,8 @@
                             Add two or more children's centres to create a children's centre {{groupTypeName}}
                             <span v-if="groupType==8">and choose which one you would like as the lead centre</span>.
                         </p>
-
+                    </div>
+                    <div class="column-full">
                         <h2 class="heading-medium">New children's centre {{groupTypeName}} details</h2>
                         <div class="warning-message" v-show="groupNameWarningMessage.length >0">
                             <p v-html="groupNameWarningMessage"></p>
@@ -188,7 +189,8 @@
                             <dt>Local authority:</dt>
                             <dd id="group-la">{{laName}}</dd>
                         </dl>
-
+                    </div>
+                    <div class="column-two-thirds">
                         <h2 class="heading-medium">Add children's centres</h2>
                         <div v-bind:class="['form-group inline-with-button', (urnError || urnApiErrors.length > 0 || duplicateUrnError || tooFewCentresError)? 'error' : '']">
                             @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)

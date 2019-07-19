@@ -65,7 +65,7 @@
             if (Model?.FoundItem != null)
             {
                 <div class="grid-row">
-                    <div class="column-two-thirds">
+                    <div class="column-full">
                         <h2 class="heading-small">Predecessor school</h2>
                         <dl class="key-value-list fixed-label">
                             <dt>School name:</dt>
@@ -78,7 +78,9 @@
                         <button name="action" value="cancel" class="link-button font-small">Wrong establishment?</button>
                         @Html.HiddenFor(x => x.FoundItem.Urn)
                         @Html.HiddenFor(x => x.FoundItem.Name)
-                        @Html.HiddenFor(x => x.FoundItem.Address)
+                        @Html.HiddenFor(x => x.FoundItem.Address)    
+                    </div>
+                    <div class="column-two-thirds">
 
                         <h2 class="heading-small">Establishment details</h2>
                         <div class="form-group @Html.ValidationCssClassFor(x => x.FilteredItemTypes)">
