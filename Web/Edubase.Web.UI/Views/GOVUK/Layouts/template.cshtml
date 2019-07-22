@@ -5,6 +5,8 @@
     var title = !string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title : "Get information about schools";
     var documentTitle = string.Format("{0} - {1}", title, "GOV.UK");
     var gtmKey = System.Configuration.ConfigurationManager.AppSettings["GoogleTagManagerKey"];
+
+    var envHeader = System.Configuration.ConfigurationManager.AppSettings["Environment"] ?? string.Empty;
 }
 <!DOCTYPE html>
 <!--[if lt IE 9]><html class="lt-ie9" lang="en"><![endif]-->
@@ -140,11 +142,34 @@
         <!--end global-cookie-message-->
 
         <header role="banner" id="global-header" class="with-proposition">
+
+            @{
+                switch (envHeader.ToLower())
+                {
+                    case "localdev":
+                        <div style='background-color: #68dcde; text-align: center'><span class="bold-xsmall">ATTENTION!</span> This is a <span class="bold-xsmall">Test</span> version, running locally</div>
+                        break;
+
+                    case "dev":
+                    case "exp":
+                        <div style='background-color: #59f051; text-align: center'><span class="bold-xsmall">ATTENTION!</span> This is a <span class="bold-xsmall">Test</span> version shared with other developers</div>
+                        break;
+
+                    case "stage":
+                        <div style='background-color: #FFA500; text-align: center'><span class="bold-xsmall">ATTENTION!</span> This is a <span class="bold-xsmall">Pre-production</span> version used for testing purposes</div>
+                        break;
+
+                    case "prodlcs":
+                        <div style='background-color: #FF0000; text-align: center'><span class="bold-xsmall">ATTENTION!</span> This is a <span class="bold-xsmall">Prod LCS</span> version</div>
+                            break;
+                    }
+                }
+
             <div class="header-wrapper">
                 <div class="header-global">
                     <div class="header-logo">
                         <a href="http://www.gov.uk/" title="Go to the GOV.UK homepage" id="logo" class="content">
-                            <img src="/public/govuk_template/assets/images/gov.uk_logotype_crown.png?0.13.0" width="35" height="31" alt="" style="visibility:visible">
+                            <img src="/public/govuk_template/assets/images/gov.uk_logotype_crown.png?0.13.0" width="35" height="31" alt="" style="visibility: visible">
                             GOV.UK
                         </a>
                     </div>
@@ -168,13 +193,13 @@
                                 @if (Request.IsAuthenticated)
                                 {
                                     <li>
-                                        @Html.ActionLink("Sign off", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id = "logout-link", Class="login-link" })
+                                        @Html.ActionLink("Sign off", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id = "logout-link", Class = "login-link" })
                                     </li>
                                 }
                                 else
                                 {
                                     <li>
-                                        @Html.ActionLink("Sign in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { Class="login-link" })
+                                        @Html.ActionLink("Sign in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { Class = "login-link" })
                                     </li>
                                 }
                             </ul>
