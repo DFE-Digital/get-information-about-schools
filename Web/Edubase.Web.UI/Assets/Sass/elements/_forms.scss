@@ -241,6 +241,11 @@ legend {
         float: none;
         clear: both;
     }
+
+    &.mobile-full-width--inline {
+        display: inline-block;
+        float: none;
+    }
 }
 
 
@@ -388,7 +393,10 @@ fieldset legend.heading-small {
 
 .urn-search {
     width: 200px;
-    margin-right: 12px
+    margin-right: 12px;
+    @include media (mobile) {
+        width: 100%;
+    }
 }
 
 .inline-button {
