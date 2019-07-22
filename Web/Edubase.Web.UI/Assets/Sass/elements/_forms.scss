@@ -99,6 +99,7 @@ fieldset {
 
 // Add spacing under spans within labels
 legend {
+    display: inline-block; //Fixes a line-break problem on Edge
     .form-label,
     .form-label-bold {
         padding-bottom: 7px;
