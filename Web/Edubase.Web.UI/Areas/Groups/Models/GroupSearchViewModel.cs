@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Services.Enums;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Helpers.ModelBinding;
@@ -43,5 +43,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
 
         [BindAlias("s")]
         public List<int> SelectedGroupStatusIds { get; set; } = new List<int>();
+
+        public eSearchType SearchType { get; set; }
     }
 }
