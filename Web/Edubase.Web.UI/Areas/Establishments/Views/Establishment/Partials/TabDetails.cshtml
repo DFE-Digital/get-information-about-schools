@@ -10,7 +10,7 @@
 
     @if (Model.Establishment.Location != null)
     {
-        <a href="#details-summary" class="visually-hidden">Skip map</a>
+        <a href="#details-summary" class="visually-hidden-focusable">Skip map</a>
         <div class="map-container">
             <div id="map" class="school-detail-map"
                  data-latlng="[@(Model.Establishment.Location?.Longitude),@(Model.Establishment.Location?.Latitude)]"

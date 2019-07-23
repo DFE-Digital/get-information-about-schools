@@ -107,10 +107,6 @@
     position: relative;
     left: 16px;
     font-size: 16px;
-    &:focus {
-        background-color: transparent;
-        outline: 0;
-    }
 
     &:before {
         content: "";
