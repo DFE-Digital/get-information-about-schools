@@ -153,12 +153,6 @@ legend {
     border: 2px solid;
 }
 
-.form-control.search-box {
-    padding: 5px;
-}
-
-
-
 // Form control widths
 .form-control-3-4 {
     width: 100%;
@@ -390,17 +384,10 @@ fieldset legend.heading-small {
     margin-left: 20px;
 }
 
-
-.urn-search {
-    width: 200px;
-    margin-right: 12px;
-    @include media (mobile) {
-        width: 100%;
-    }
-}
-
 .inline-button {
-    font-size: 16px;
+    @include media (tablet) {
+        font-size: 16px;
+    }
 }
 
 .data-status-group {
