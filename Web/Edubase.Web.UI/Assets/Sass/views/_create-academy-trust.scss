@@ -29,18 +29,6 @@
         padding: 20px 0;
     }
 
-    .inline-submit {
-        margin-left: 0;
-    }
-
-    .inline-with-button .form-control {
-        width: 60%;
-
-        @include media(mobile) {
-            width: 50%;
-        }
-    }
-
     .table-caption {
         font-size: 14px;
         margin: 12px 0;
