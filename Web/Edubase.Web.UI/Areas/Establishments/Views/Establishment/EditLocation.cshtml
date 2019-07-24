@@ -55,10 +55,16 @@
 
                 @if (Model.EditPolicy.AdministrativeDistrictId)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.AdministrativeDistrictId)">
-                        <label for="AdministrativeDistrictId" class="form-label">District</label>
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.AdministrativeDistrictId) @Html.ValidationCssClassFor(x => x.AdministrativeDistrictName)" id="searchby-district-ref">
+                        <label for="@nameof(Model.AdministrativeDistrictName)">District</label>
                         @Html.ValidationMessageFor(x => x.AdministrativeDistrictId)
-                        @Html.DropDownListFor(x => x.AdministrativeDistrictId, Model.AdministrativeDistricts, "", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AdministrativeDistrictName)
+
+                        <div id="AdministrativeDistrictId" class="floating-text-field-wrap form-control">
+                            @Html.TextBoxFor(x => x.AdministrativeDistrictName, new { @class = "floating-text-field", autocomplete = "off" })
+                        </div>
+
+                        @Html.HiddenFor(x => x.AdministrativeDistrictId, new { id = "AdministrativeDistrictIdHidden" })
                     </div>
                 }
 
@@ -196,6 +202,7 @@
                     var jScriptVersion;
                     window.lsoas = @Html.Json(Model.LSOAs);
                     window.msoas = @Html.Json(Model.MSOAs);
+                    window.districts = @Html.Json(Model.AdministrativeDistricts);
 
                     if (!$('html').hasClass('lt-ie9')) {
                         DfE.Views.editLocation.init();

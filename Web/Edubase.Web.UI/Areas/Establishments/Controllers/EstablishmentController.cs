@@ -394,6 +394,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             SetProperty(targetViewModel, model, m => m.RSCRegionId);
             SetProperty(targetViewModel, model, m => m.GovernmentOfficeRegionId);
             SetProperty(targetViewModel, model, m => m.AdministrativeDistrictId);
+            SetProperty(targetViewModel, model, m => m.AdministrativeDistrictName);
             SetProperty(targetViewModel, model, m => m.AdministrativeWardId);
             SetProperty(targetViewModel, model, m => m.ParliamentaryConstituencyId);
             SetProperty(targetViewModel, model, m => m.UrbanRuralId);
@@ -600,6 +601,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.EditPolicy.AdditionalAddresses = CanUserDefineAdditionalAddresses(domainModel.TypeId.GetValueOrDefault());
 
             await PopulateSelectLists(viewModel);
+
+            if (domainModel.AdministrativeDistrictId.HasValue)
+            {
+                var District = (await _cachedLookupService.AdministrativeDistrictsGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.AdministrativeDistrictId.Value);
+                viewModel.AdministrativeDistrictName = District?.Name;
+                viewModel.AdministrativeDistrictId = domainModel.AdministrativeDistrictId;
+            }
 
             if (domainModel.MSOAId.HasValue)
             {
@@ -909,7 +917,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.ChildcareFacilitiesProvisions = (await _cachedLookupService.ChildcareFacilitiesGetAllAsync()).ToSelectList(viewModel.ChildcareFacilitiesId);
             viewModel.RSCRegions = (await _cachedLookupService.RscRegionsGetAllAsync()).ToSelectList(viewModel.RSCRegionId);
             viewModel.GovernmentOfficeRegions = (await _cachedLookupService.GovernmentOfficeRegionsGetAllAsync()).ToSelectList(viewModel.GovernmentOfficeRegionId);
-            viewModel.AdministrativeDistricts = (await _cachedLookupService.AdministrativeDistrictsGetAllAsync()).ToSelectList(viewModel.AdministrativeDistrictId);
+            viewModel.AdministrativeDistricts = (await _cachedLookupService.AdministrativeDistrictsGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, x.Name)).ToList();
             viewModel.AdministrativeWards = (await _cachedLookupService.AdministrativeWardsGetAllAsync()).ToSelectList(viewModel.AdministrativeWardId);
             viewModel.ParliamentaryConstituencies = (await _cachedLookupService.ParliamentaryConstituenciesGetAllAsync()).ToSelectList(viewModel.ParliamentaryConstituencyId);
             viewModel.UrbanRuralLookup = (await _cachedLookupService.UrbanRuralGetAllAsync()).ToSelectList(viewModel.UrbanRuralId);

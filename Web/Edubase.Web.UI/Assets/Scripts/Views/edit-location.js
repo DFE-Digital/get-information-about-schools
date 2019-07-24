@@ -22,6 +22,9 @@ DfE.Views.editLocation = {
     if (typeof (jScriptVersion) === 'undefined' || jScriptVersion >= 9) {
       $(function () {
         setTimeout(function () {
+          self.bindAutosuggest('#AdministrativeDistrictName',
+            '#AdministrativeDistrictIdHidden',
+            { data: window.districts, name: "name", value: "id" });
           self.bindAutosuggest('#LSOAName',
             '#LSOAIdHidden',
             { data: window.lsoas, name: "name", value: "id" });
@@ -136,6 +139,32 @@ DfE.Views.editLocation = {
         highLightFirstSuggestion.call(this);
       });
     }
+
+    $('#AdministrativeDistrictName').on('typeahead:render', function (e) {
+      highLightFirstSuggestion.call(this);
+    });
+
+    $('#AdministrativeDistrictName, #TextSearchModel_Text').on('typeahead:open', function (e) {
+      highLightFirstSuggestion.call(this);
+    });
+
+    $('#AdministrativeDistrictName').on('keydown', function (e) {
+      var $input = $(this);
+      if (e.which === 13) {
+        e.preventDefault();
+        e.stopPropagation();
+        if ($.trim($(this).val()).length === 0) {
+          return self.showWarning($('#searchby-district-ref'), 'Please enter a District to start a search');
+
+        }
+        if (!$(this).nextAll('.tt-menu').hasClass('tt-empty')) {
+          $(this).nextAll('.tt-menu').find('.tt-cursor').click();
+        } else {
+          return self.showWarning($('#searchby-district-ref'),
+            'We don’t recognise this District. Amend it or clear it to continue searching.');
+        }
+      }
+    });
     
     $('#LSOAName').on('typeahead:render', function (e) {
       highLightFirstSuggestion.call(this);
@@ -189,7 +218,6 @@ DfE.Views.editLocation = {
       }
     });
   }
-
 };
 
 
