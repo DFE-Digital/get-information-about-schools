@@ -241,20 +241,16 @@
 .detail-summary {
     clear: both;
 
-    div {
-        font-size: 16px;
-    }
-
     dl {
         overflow: hidden;
         margin: 16px 0;
-        font-size: 14px;
+        font-size: 16px;
     }
 
     dt {
         float: left;
         clear: left;
-        width: 20.84%;
+        width: 25%;
         margin-right: 12px;
         padding: 8px 0;
         word-wrap: break-word;
@@ -264,7 +260,11 @@
         }
 
         @include media(mobile) {
-            width: 40%;
+            font-weight: bold;
+            float: none;
+            width: 100%;
+            margin-right: 0;
+            padding: 0 0 2px 0;
         }
     }
 
@@ -272,6 +272,13 @@
         float: left;
         padding: 8px 0;
         max-width: 68.5%;
+        @include media(mobile) {
+            float: none;
+            padding: 0;
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 16px;
+        }
     }
 
     #school-dashboard & {
@@ -284,10 +291,16 @@
 
         dt {
             width: 34.8%;
+            @include media(mobile) {
+                width: 100%;
+            }
         }
 
         dd {
             max-width: 53.5%;
+            @include media(mobile) {
+                max-width: 100%;
+            }
         }
     }
 }
