@@ -33,14 +33,13 @@
         <h2 class="bold-large">List of @Model.ListOfEstablishmentsPluralName (@Model.LinkedEstablishments.Establishments.Count)</h2>
     </div>
 
-    <div class="column-half">
-        <span class="bold-xsmall">Add establishment</span>
-        <p class="font-xsmall">Enter the establishment's Unique Reference Number (URN)</p>
-        <div class="form-group add-establishment-link @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)">
-            <label for="LinkedEstablishments_LinkedEstablishmentSearch_Urn" class="visuallyhidden">Search for an establishment</label>
+    <div class="column-two-thirds">
+        <h3 class="heading-small">Add establishment</h3>
+        <div class="form-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)">
+            <label class="form-label" for="LinkedEstablishments_LinkedEstablishmentSearch_Urn">Enter the establishment's Unique Reference Number (URN)</label>
             @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
-            @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "form-control form-control-1-2 search-box" })
-            <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" class="button push-half--left">Search URN</button>
+            @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "form-control form-control-1-2 push-half--bottom" })
+            <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" class="button inline-button mobile-full-width mobile-full-width--inline">Search URN</button>
         </div>
         @if (Model.LinkedEstablishments.LinkedEstablishmentSearch.HasResult)
         {

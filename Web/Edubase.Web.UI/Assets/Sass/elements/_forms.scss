@@ -153,12 +153,6 @@ legend {
     border: 2px solid;
 }
 
-.form-control.search-box {
-    padding: 5px;
-}
-
-
-
 // Form control widths
 .form-control-3-4 {
     width: 100%;
@@ -240,6 +234,11 @@ legend {
         width: 100%;
         float: none;
         clear: both;
+    }
+
+    &.mobile-full-width--inline {
+        display: inline-block;
+        float: none;
     }
 }
 
@@ -380,19 +379,10 @@ fieldset legend.heading-small {
     padding: 3px;
 }
 
-.inline-submit {
-    font-size: 16px;
-    margin-left: 20px;
-}
-
-
-.urn-search {
-    width: 200px;
-    margin-right: 12px
-}
-
 .inline-button {
-    font-size: 16px;
+    @include media (tablet) {
+        font-size: 16px;
+    }
 }
 
 .data-status-group {

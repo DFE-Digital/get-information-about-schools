@@ -58,22 +58,6 @@
 
 }
 
-.inline-with-button {
-    .form-control {
-        width: 75%;
-        margin-right: 12px;
-
-        @include media(mobile) {
-            width: calc(100% - 115px);
-        }
-    }
-    .button-next {
-        font-size: 16px;
-        margin-right: 0;
-    }
-
-}
-
 .trust-details {
     margin: 10px 0;
 

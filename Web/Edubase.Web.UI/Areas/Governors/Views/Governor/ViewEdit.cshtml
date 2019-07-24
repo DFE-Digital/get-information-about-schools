@@ -27,16 +27,16 @@
             @DisplayGovernanceMode()
         </div>
 
-        <div class="column-half">
+        <div class="column-two-thirds">
             <h2 id="role" class="heading-small">Add person</h2>
 
             @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabAddGovernor" : "GroupAddGovernor", new { groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, FormMethod.Get))
             {
-            <div class="form-group inline-select-button push--bottom @Html.ValidationCssClass("role")">
+            <div class="form-group push--bottom @Html.ValidationCssClass("role")">
                 <label class="form-label" for="roleid">Select role</label>
                 @Html.ValidationMessage("role")
-                @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem { Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = ((eLookupGovernorRole)x.Id).ToString() }), new { id = "roleid", @class = "form-control" })
-                <input type="submit" value="Add person" class="button" />
+                @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem { Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = ((eLookupGovernorRole)x.Id).ToString() }), new { id = "roleid", @class = "form-control form-control-1-2 push-half--bottom" })
+                <input type="submit" value="Add person" class="button mobile-full-width mobile-full-width--inline" />
             </div>
 
             }
