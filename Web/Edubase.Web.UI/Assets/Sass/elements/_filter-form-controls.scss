@@ -26,11 +26,15 @@
     }
 
     .filter-button {
-        @include core-19;
-        width: 58%;
+        width: 63%;
         float: right;
         margin-bottom: 12px;
-        margin-right: 32px;
+        margin-right: 20px;
+        @include media(mobile) {
+            float: none;
+            width: 100%;
+            @include box-sizing(border-box);
+        }
     }
 
 }
@@ -47,11 +51,15 @@
     }
 
     .filter-button {
-        @include core-19;
-        width: 70%;
+        width: 78%;
         float: right;
         margin-bottom: 12px;
-        margin-right: 44px;
+        margin-right: 30px;
+        @include media(mobile) {
+            float: none;
+            width: 100%;
+            @include box-sizing(border-box);
+        }
     }
     .range-group {
         margin: 12px;
@@ -79,28 +87,27 @@
     }
 
     .filter-button {
-        @include core-16;
         float: right;
         margin-bottom: 4px;
-        height: 20.664px;
         width: 70%;
-        margin-right: 44px;
         margin-top: 8px;
+        margin-right: 0;
 
         @include media(desktop) {
             width: auto;
-            margin-right: 24px;
             margin-top: 3px;
         }
 
         @include media(mobile) {
-            width: 80%;
+            width: 100%;
             float: none;
+            @include box-sizing(border-box);
         }
     }
 
     .range-group {
-        margin: 12px;
+        @include box-sizing(border-box);
+        padding: 12px;
     }
 
     .inline-form-control {
