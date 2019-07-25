@@ -78,7 +78,7 @@
                         <button name="action" value="cancel" class="link-button font-small">Wrong establishment?</button>
                         @Html.HiddenFor(x => x.FoundItem.Urn)
                         @Html.HiddenFor(x => x.FoundItem.Name)
-                        @Html.HiddenFor(x => x.FoundItem.Address)    
+                        @Html.HiddenFor(x => x.FoundItem.Address)
                     </div>
                     <div class="column-two-thirds">
 
@@ -106,13 +106,13 @@
                 <div class="grid-row">
                     <div class="column-two-thirds">
                         <h2 class="heading-small">Predecessor school</h2>
-                        <div class="form-group inline-with-button @Html.ValidationCssClassFor(x => x.SearchUrn)">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.SearchUrn)">
                             <label class="form-label" for="Urn">
                                 Establishment <abbr title="Unique Reference Number">URN</abbr>
                             </label>
                             @Html.ValidationMessageFor(x => x.SearchUrn)
-                            @Html.TextBoxFor(x => x.SearchUrn, null, new { @class = "form-control" })
-                            <button type="submit" name="action" value="search" class="button inline-submit" id="find-urn">Search</button>
+                            @Html.TextBoxFor(x => x.SearchUrn, null, new { @class = "form-control form-control-1-2 push-half--bottom" })
+                            <button type="submit" name="action" value="search" class="button inline-button mobile-full-width mobile-full-width--inline" id="find-urn">Search URN</button>
                         </div>
                     </div>
                 </div>

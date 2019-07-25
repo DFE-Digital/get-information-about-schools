@@ -9,6 +9,7 @@ namespace Edubase.Web.UI.Models.Search
         Group,
         Governor,
         GovernorReference,
+        GovernorAll,
         LocalAuthorityDisambiguation,
         GroupAll
     }

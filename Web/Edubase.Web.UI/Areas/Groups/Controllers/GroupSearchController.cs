@@ -89,6 +89,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
         private async Task<ActionResult> SearchGroups(GroupSearchViewModel model)
         {
+            if (model.SearchType == eSearchType.Group &&
+                model.GroupSearchModel.Text.IsNullOrEmpty())
+            {
+                return RedirectToSearchPage(model);
+            }
+
             if (model.GroupSearchModel.AutoSuggestValueAsInt.HasValue) return RedirectToDetailPage(model.GroupSearchModel.AutoSuggestValueAsInt.Value);
             else
             {
@@ -128,9 +134,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 {"controller", "Search"},
                 {"area", string.Empty},
                 {"SelectedTab", SearchViewModel.Tab.Groups},
-                {"SearchType", eSearchType.Group},
+                {"SearchType", model.SearchType},
                 {"GroupSearchModel.Text", model.GroupSearchModel.Text},
-                { "NoResults", "True"}
+                {"NoResults", "True"}
             };
             return new RedirectResult(Url.RouteUrl(routeDictionary));
         }

@@ -174,39 +174,43 @@
                         <!-- Academy search -->
                         <div id="academy-search" class="tab-content">
                             <!-- search app -->
-                            <div id="academy-search-app">
-                                <form>
-                                    <div v-bind:class="['form-group', searchError? 'error' : '']">
-                                        <label class="form-label" for="academy-search-field">
-                                            Enter establishment <abbr title="Unique Reference Number">URN</abbr>
-                                        </label>
-                                        <span class="error-message" v-show="searchError">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
-                                        <input type="text" class="form-control  desktop-inline" id="academy-search-field" v-model.trim="searchUrn" />
+                            <div class="grid-row">
+                                <div class="column-two-thirds">
+                                    <div id="academy-search-app">
+                                    <form>
+                                        <div v-bind:class="['form-group', searchError? 'error' : '']">
+                                            <label class="form-label" for="academy-search-field">
+                                                Enter establishment <abbr title="Unique Reference Number">URN</abbr>
+                                            </label>
+                                            <span class="error-message" v-show="searchError">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
+                                            <input type="text" class="form-control form-control-1-2 push-half--bottom" id="academy-search-field" v-model.trim="searchUrn" />
 
-                                        <input type="submit" class="button inline-submit" value="Search for establishment" v-on:click.prevent="validateUrn" />
+                                            <input type="submit" class="button inline-button mobile-full-width mobile-full-width--inline" value="Search URN" v-on:click.prevent="validateUrn" />
+                                        </div>
+
+                                    </form>
+
+                                    <!-- Search results -->
+                                    <div v-show="presentDetail" v-if="od.urn" class="openings-single-result">
+                                        <h2 class="heading-small">Establishment found</h2>
+                                        <div class="urn-result">
+                                            <h4 class="heading-small">Opening date: {{od.displayDate }}</h4>
+                                            <dl>
+                                                <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
+                                                <dd><a v-bind:href="detailUrl(od.urn )">{{ od.urn }}</a></dd>
+                                                <dt>Establishment name:</dt>
+                                                <dd>{{updateName}}</dd>
+                                                <dt>Establishment type:</dt>
+                                                <dd>{{ od.establishmentType }}</dd>
+                                                <dt>Predecessor <abbr title="Unique Reference Number">URN</abbr>:</dt>
+                                                <dd><a v-bind:href="detailUrl(od.predecessorUrn )" v-if="od.predecessorUrn">{{ od.predecessorUrn }}</a></dd>
+                                                <dt>Predecessor name:</dt>
+                                                <dd>{{ od.predecessorName }}</dd>
+                                            </dl>
+                                            <a href="#" class="button" v-on:click.prevent="editEstab(od.urn)">Edit opening detail</a>
+                                        </div>
                                     </div>
-
-                                </form>
-
-                                <!-- Search results -->
-                                <div v-show="presentDetail" v-if="od.urn" class="openings-single-result">
-                                    <h2 class="heading-small">Establishment found</h2>
-                                    <div class="urn-result">
-                                        <h4 class="heading-small">Opening date: {{od.displayDate }}</h4>
-                                        <dl>
-                                            <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
-                                            <dd><a v-bind:href="detailUrl(od.urn )">{{ od.urn }}</a></dd>
-                                            <dt>Establishment name:</dt>
-                                            <dd>{{updateName}}</dd>
-                                            <dt>Establishment type:</dt>
-                                            <dd>{{ od.establishmentType }}</dd>
-                                            <dt>Predecessor <abbr title="Unique Reference Number">URN</abbr>:</dt>
-                                            <dd><a v-bind:href="detailUrl(od.predecessorUrn )" v-if="od.predecessorUrn">{{ od.predecessorUrn }}</a></dd>
-                                            <dt>Predecessor name:</dt>
-                                            <dd>{{ od.predecessorName }}</dd>
-                                        </dl>
-                                        <a href="#" class="button" v-on:click.prevent="editEstab(od.urn)">Edit opening detail</a>
-                                    </div>
+                            </div>
                                 </div>
                             </div>
                         </div>

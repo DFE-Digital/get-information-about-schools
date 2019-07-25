@@ -53,6 +53,12 @@ $path: $images-path;
         top: 0;
         height: 100%;
     }
+
+    // To be added in the future!
+    // @include media (mobile) {
+    //     width: 100%;
+    //     text-align: center;
+    // }
 }
 
 // Fix unwanted button padding in Firefox
