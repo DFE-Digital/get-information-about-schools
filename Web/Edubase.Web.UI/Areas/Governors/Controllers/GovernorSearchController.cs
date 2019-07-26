@@ -109,10 +109,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         private async Task<ActionResult> SearchGovernors(GovernorSearchViewModel model)
         {
             // before processing any of the model, make sure something has been searched for if not 'All'
-            if (model.SearchType == eSearchType.Governor &&
+            if ((model.SearchType == eSearchType.Governor &&
                 model.SelectedRoleIds.Count == 0 &&
                 model.GovernorSearchModel.Forename.IsNullOrEmpty() &&
-                model.GovernorSearchModel.Surname.IsNullOrEmpty())
+                model.GovernorSearchModel.Surname.IsNullOrEmpty()) ||
+                (model.SearchType == eSearchType.GovernorReference &&
+                 !model.GovernorSearchModel.Gid.HasValue))
             {
                 return RedirectToSearchPage(model);
             }
@@ -155,7 +157,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 case eSearchType.Governor:
                     routeDictionary.Add("GovernorSearchModel.Forename", model.GovernorSearchModel.Forename);
                     routeDictionary.Add("GovernorSearchModel.Surname", model.GovernorSearchModel.Surname);
-
                     foreach (var i in model.GovernorSearchModel.RoleId)
                     {
                         routeDictionary.Add("GovernorSearchModel.RoleId", i);
