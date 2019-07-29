@@ -178,10 +178,13 @@ namespace Edubase.Web.UI.Models
         public int? AdministrativeDistrictId { get; set; }
         public string AdministrativeDistrictName { get; set; }
         public int? AdministrativeWardId { get; set; }
+        public string AdministrativeWardName { get; set; }
         public int? ParliamentaryConstituencyId { get; set; }
+        public string ParliamentaryConstituencyName { get; set; }
         public int? UrbanRuralId { get; set; }
         public int? GSSLAId { get; set; }
         public int? CASWardId { get; set; }
+        public string CASWardName { get; set; }
         public string MSOAName { get; set; }
         public int? MSOAId { get; set; }
         public string LSOAName { get; set; }
@@ -222,12 +225,12 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<SelectListItem> ChildcareFacilitiesProvisions { get; set; }
         public IEnumerable<SelectListItem> RSCRegions { get; internal set; }
         public IEnumerable<SelectListItem> GovernmentOfficeRegions { get; internal set; }
-        public IEnumerable<LookupItemViewModel> AdministrativeDistricts { get; set; }
-        public IEnumerable<SelectListItem> AdministrativeWards { get; internal set; }
-        public IEnumerable<SelectListItem> ParliamentaryConstituencies { get; internal set; }
+        public IEnumerable<LookupItemViewModel> AdministrativeDistricts { get; internal set; }
+        public IEnumerable<LookupItemViewModel> AdministrativeWards { get; internal set; }
+        public IEnumerable<LookupItemViewModel> ParliamentaryConstituencies { get; internal set; }
         public IEnumerable<SelectListItem> UrbanRuralLookup { get; internal set; }
         public IEnumerable<SelectListItem> GSSLALookup { get; internal set; }
-        public IEnumerable<SelectListItem> CASWards { get; internal set; }
+        public IEnumerable<LookupItemViewModel> CASWards { get; internal set; }
         public IEnumerable<LookupItemViewModel> MSOAs { get; set; }
         public IEnumerable<LookupItemViewModel> LSOAs { get; set; }
 
