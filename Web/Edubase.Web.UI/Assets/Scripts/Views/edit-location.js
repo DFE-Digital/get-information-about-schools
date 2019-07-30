@@ -26,6 +26,7 @@ DfE.Views.editLocation = {
           self.bindAutosuggest('#AdministrativeWardName', '#searchby-wards-ref', 'Ward', '#AdministrativeWardIdHidden', { data: window.wards, name: "name", value: "id" });
           self.bindAutosuggest('#ParliamentaryConstituencyName', '#searchby-constituency-ref', 'Parliamentary constituency', '#ParliamentaryConstituencyIdHidden', { data: window.constituencies, name: "name", value: "id" });
           self.bindAutosuggest('#CASWardName', '#searchby-casward-ref', 'Census ward', '#CASWardIdHidden', { data: window.caswards, name: "name", value: "id" });
+          self.bindAutosuggest('#GSSLAName', '#searchby-gssla-ref', 'LA Code', '#GSSLAIdHidden', { data: window.gsslas, name: "name", value: "id" });
           self.bindAutosuggest('#LSOAName', '#searchby-lsoa-ref', 'LSOA', '#LSOAIdHidden', { data: window.lsoas, name: "name", value: "id" });
           self.bindAutosuggest('#MSOAName', '#searchby-msoa-ref', 'MSOA', '#MSOAIdHidden', { data: window.msoas, name: "name", value: "id" });
           },

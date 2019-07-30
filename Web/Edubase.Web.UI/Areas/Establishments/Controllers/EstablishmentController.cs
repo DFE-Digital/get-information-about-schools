@@ -401,6 +401,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             SetProperty(targetViewModel, model, m => m.ParliamentaryConstituencyName);
             SetProperty(targetViewModel, model, m => m.UrbanRuralId);
             SetProperty(targetViewModel, model, m => m.GSSLAId);
+            SetProperty(targetViewModel, model, m => m.GSSLAName);
             SetProperty(targetViewModel, model, m => m.Easting);
             SetProperty(targetViewModel, model, m => m.Northing);
             SetProperty(targetViewModel, model, m => m.CASWardId);
@@ -631,6 +632,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 var lookup = (await _cachedLookupService.CASWardsGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.CASWardId.Value);
                 viewModel.CASWardName = lookup?.Name;
                 viewModel.CASWardId = domainModel.CASWardId;
+            }
+
+            if (domainModel.GSSLAId.HasValue)
+            {
+                var lookup = (await _cachedLookupService.GSSLAGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.GSSLAId.Value);
+                viewModel.GSSLAName = lookup?.Name;
+                viewModel.GSSLAId = domainModel.GSSLAId;
             }
 
             if (domainModel.MSOAId.HasValue)
@@ -945,7 +953,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.AdministrativeWards = (await _cachedLookupService.AdministrativeWardsGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, x.Name)).ToList();
             viewModel.ParliamentaryConstituencies = (await _cachedLookupService.ParliamentaryConstituenciesGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, x.Name)).ToList();
             viewModel.UrbanRuralLookup = (await _cachedLookupService.UrbanRuralGetAllAsync()).ToSelectList(viewModel.UrbanRuralId);
-            viewModel.GSSLALookup = (await _cachedLookupService.GSSLAGetAllAsync()).ToSelectList(viewModel.GSSLAId);
+            viewModel.GSSLALookup = (await _cachedLookupService.GSSLAGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, x.Name)).ToList();
             viewModel.CASWards = (await _cachedLookupService.CASWardsGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, x.Name)).ToList();
             viewModel.PruFulltimeProvisionOptions = (await _cachedLookupService.PruFulltimeProvisionsGetAllAsync()).ToSelectList(viewModel.PruFulltimeProvisionId);
             viewModel.PruEducatedByOthersOptions = (await _cachedLookupService.PruEducatedByOthersGetAllAsync()).ToSelectList(viewModel.PruEducatedByOthersId);
