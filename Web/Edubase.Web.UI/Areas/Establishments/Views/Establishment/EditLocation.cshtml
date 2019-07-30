@@ -109,10 +109,16 @@
 
                 @if (Model.EditPolicy.GSSLAId)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.GSSLAId)">
-                        <label for="GSSLAId" class="form-label"><abbr title="Government Statistical Service">GSS</abbr> LA code</label>
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.GSSLAId) @Html.ValidationCssClassFor(x => x.GSSLAName)" id="searchby-gssla-ref">
+                        <label for="@nameof(Model.GSSLAName)"><abbr title="Government Statistical Service">GSS</abbr> LA code</label>
                         @Html.ValidationMessageFor(x => x.GSSLAId)
-                        @Html.DropDownListFor(x => x.GSSLAId, Model.GSSLALookup, "", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.GSSLAName)
+
+                        <div id="GSSLAId" class="floating-text-field-wrap form-control">
+                            @Html.TextBoxFor(x => x.GSSLAName, new { @class = "floating-text-field", autocomplete = "off" })
+                        </div>
+
+                        @Html.HiddenFor(x => x.GSSLAId, new { id = "GSSLAIdHidden" })
                     </div>
                 }
 
@@ -224,6 +230,7 @@
                     window.wards = @Html.Json(Model.AdministrativeWards);
                     window.constituencies = @Html.Json(Model.ParliamentaryConstituencies);
                     window.caswards = @Html.Json(Model.CASWards);
+                    window.gsslas = @Html.Json(Model.GSSLALookup);
 
                     if (!$('html').hasClass('lt-ie9')) {
                         DfE.Views.editLocation.init();
