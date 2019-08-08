@@ -44,8 +44,8 @@
         <div class="grid-row">
             <div class="column-full">
                 <div class="button-row">
-                    <button type="submit" name="actionname" class="button mobile-full-width" value="find">Continue</button>
-                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-secondary cancel mobile-full-width" })
+                    <button type="submit" name="actionname" class="button" value="find">Continue</button>
+                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-secondary cancel" })
                 </div>
             </div>
         </div>
@@ -100,9 +100,9 @@ else
                     @Html.GiasCheckboxFor(x => x.CopyGovernanceInfo, "Copy single-academy trust governance to multi-academy trust")
                 </div>
 
-                @Html.RouteLink("« Go back", "GroupConvertSAT2MAT", null, new { @class = "button button-secondary cancel mobile-full-width" })
-                <button type="submit" name="actionname" class="button mobile-full-width" value="confirm">Convert</button>
-                @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-secondary cancel mobile-full-width" })
+                @Html.RouteLink("« Go back", "GroupConvertSAT2MAT", null, new { @class = "button button-secondary cancel" })
+                <button type="submit" name="actionname" class="button" value="confirm">Convert</button>
+                @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-secondary cancel" })
             </div>
         </div>
     }

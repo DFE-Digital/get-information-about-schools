@@ -20,7 +20,7 @@ DfE.Util.showUnload = function (message, permitedExits) {
             overlay = '<div id="modal-overlay" class="modal-overlay hidden"></div>' +
             	'<div id="modal-content" class="modal-content hidden" role="dialog"><a href="#" id="exit-overlay" class="modal-exit">Close</a><div id="modal-inner">' +
                 '<h3 class="heading-large">Are you sure you want to leave this page?</h3><p>Any unsaved changes will be lost.</p></div> ' +
-                '<div class="button-row"><a href="#" class="button mobile-full-width" id="button-ok">OK</a><a href="#" class="button button-secondary mobile-full-width" id="button-cancel">Cancel</a></div>' +
+                '<div class="button-row"><a href="#" class="button" id="button-ok">OK</a><a href="#" class="button button-secondary" id="button-cancel">Cancel</a></div>' +
                 '</div>';
 
     $('body').append(overlay);

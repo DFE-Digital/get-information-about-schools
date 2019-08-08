@@ -10,7 +10,7 @@
     <div class="tab-content">
         <div class="links-list">
             <div>
-                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary mobile-full-width" })
+                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary" })
             </div>
 
             <p>
@@ -47,7 +47,7 @@
                 <a href="@Url.RouteUrl("EditEstabLinks_SearchForEstablishment", new { id = Model.Urn })" class="plus-link">Add another link</a>
             </p>
             <div class="button-row">
-                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary mobile-full-width" })
+                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary" })
             </div>
 
         </div>

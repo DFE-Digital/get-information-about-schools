@@ -24,9 +24,9 @@
     <div>
         @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
         {
-            <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
+            <button type="submit" name="action" class="button" value="@VM.ActionSave">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
         }
-        @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-secondary cancel mobile-full-width" })
+        @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-secondary cancel" })
     </div>
 
     <div class="column-two-thirds">
@@ -39,7 +39,7 @@
             <label class="form-label" for="LinkedEstablishments_LinkedEstablishmentSearch_Urn">Enter the establishment's Unique Reference Number (URN)</label>
             @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
             @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "form-control form-control-1-2 push-half--bottom" })
-            <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" class="button inline-button mobile-full-width mobile-full-width--inline">Search URN</button>
+            <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" class="button inline-button">Search URN</button>
         </div>
         @if (Model.LinkedEstablishments.LinkedEstablishmentSearch.HasResult)
         {
@@ -153,9 +153,9 @@
         <div class="column-half">
             @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
             {
-                <button type="submit" name="action" class="button mobile-full-width" value="@VM.ActionSave">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
+                <button type="submit" name="action" class="button" value="@VM.ActionSave">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
             }
-            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-secondary cancel mobile-full-width" })
+            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-secondary cancel" })
 
 
         </div>

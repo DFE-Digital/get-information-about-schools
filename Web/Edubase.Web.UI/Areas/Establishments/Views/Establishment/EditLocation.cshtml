@@ -28,8 +28,8 @@
 
             <div class="column-half">
 
-                <button type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveLocation)">Save location</button>
-                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel mobile-full-width" })
+                <button type="submit" class="button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveLocation)">Save location</button>
+                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel" })
 
                 <div class="form-group first" style="height:0;"></div>
 
@@ -185,8 +185,8 @@
                     </div>
                 }
 
-                <button type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveLocation)">Save location</button>
-                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel mobile-full-width" })
+                <button type="submit" class="button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveLocation)">Save location</button>
+                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel" })
 
 
             </div>
@@ -197,10 +197,10 @@
             Html.RenderPartial("Partials/_ConfirmChanges");
 
             <div class="button-row">
-                <button class="button-secondary button mobile-full-width" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button>
-                <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="button mobile-full-width js-confirm">Confirm</button>
+                <button class="button-secondary button" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button>
+                <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="button js-confirm">Confirm</button>
 
-                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "button button-secondary mobile-full-width", id = "cancel-edit"})
+                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "button button-secondary", id = "cancel-edit"})
             </div>
 
             @section ViewScripts {

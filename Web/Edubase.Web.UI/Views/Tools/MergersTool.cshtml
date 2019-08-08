@@ -186,8 +186,8 @@
                     </div>
                     <div class="column-full">
                         <div class="button-row">
-                            <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="checkMergeType">Continue</button>
-                            <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                            <button type="submit" name="action" value="" class="button" v-on:click.prevent="checkMergeType">Continue</button>
+                            <button type="submit" name="action" value="" class="button button-secondary cancel" v-on:click.prevent="restart">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -197,9 +197,9 @@
                     <div v-show="!validMergeUrns">
                         <div class="column-full top-button-panel">
                             <div class="submit-cancel-panel">
-                                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false; clearErrors();"> &laquo; Go back</a>
+                                <a href="#" class="button button-secondary" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false; clearErrors();"> &laquo; Go back</a>
                                 <button type="submit" name="action" value="" class="button" v-on:click.prevent="validateAmalgamationFields">Continue</button>
-                                <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                                <button type="submit" name="action" value="" class="button button-secondary cancel" v-on:click.prevent="restart">Cancel</button>
                             </div>
                         </div>
                         <div class="column-two-thirds">
@@ -245,18 +245,18 @@
 
                         <div class="column-full">
                             <div class="submit-cancel-panel">
-                                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false; clearErrors();"> &laquo; Go back</a>
-                                <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="validateAmalgamationFields">Continue</button>
-                                <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                                <a href="#" class="button button-secondary" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false; clearErrors();"> &laquo; Go back</a>
+                                <button type="submit" name="action" value="" class="button" v-on:click.prevent="validateAmalgamationFields">Continue</button>
+                                <button type="submit" name="action" value="" class="button button-secondary cancel" v-on:click.prevent="restart">Cancel</button>
                             </div>
                         </div>
                     </div>
                     <div v-show="mergerType==='amalgamation' && validMergeUrns && !completeAmalgamation">
                         <div class="column-full top-button-panel">
                             <div class="submit-cancel-panel">
-                                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="validMergeUrns=false; clearErrors();">&laquo; Go back</a>
-                                <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="processAmalgamation">Process</button>
-                                <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                                <a href="#" class="button button-secondary" v-on:click.prevent="validMergeUrns=false; clearErrors();">&laquo; Go back</a>
+                                <button type="submit" name="action" value="" class="button" v-on:click.prevent="processAmalgamation">Process</button>
+                                <button type="submit" name="action" value="" class="button button-secondary cancel" v-on:click.prevent="restart">Cancel</button>
                             </div>
                         </div>
                         <div class="column-two-thirds">
@@ -314,9 +314,9 @@
                         </div>
                         <div class="column-full">
                             <div class="submit-cancel-panel">
-                                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="validMergeUrns=false; clearErrors();">&laquo; Go back</a>
-                                <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="processAmalgamation">Process</button>
-                                <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                                <a href="#" class="button button-secondary" v-on:click.prevent="validMergeUrns=false; clearErrors();">&laquo; Go back</a>
+                                <button type="submit" name="action" value="" class="button" v-on:click.prevent="processAmalgamation">Process</button>
+                                <button type="submit" name="action" value="" class="button button-secondary cancel" v-on:click.prevent="restart">Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -403,9 +403,9 @@
                         </div>
                         <div class="column-full">
                             <div class="submit-cancel-panel">
-                                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false; clearErrors();"> &laquo; Go back</a>
-                                <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="validateMergeFields">Continue</button>
-                                <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                                <a href="#" class="button button-secondary" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false; clearErrors();"> &laquo; Go back</a>
+                                <button type="submit" name="action" value="" class="button" v-on:click.prevent="validateMergeFields">Continue</button>
+                                <button type="submit" name="action" value="" class="button button-secondary cancel" v-on:click.prevent="restart">Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -451,9 +451,9 @@
                         </div>
                         <div class="column-full">
                             <div class="submit-cancel-panel">
-                                <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="validMergeUrns=false; clearErrors();">&laquo; Go back</a>
-                                <button type="submit" name="action" value="" class="button mobile-full-width" v-on:click.prevent="processMerger">Process</button>
-                                <button type="submit" name="action" value="" class="button button-secondary cancel mobile-full-width" v-on:click.prevent="restart">Cancel</button>
+                                <a href="#" class="button button-secondary" v-on:click.prevent="validMergeUrns=false; clearErrors();">&laquo; Go back</a>
+                                <button type="submit" name="action" value="" class="button" v-on:click.prevent="processMerger">Process</button>
+                                <button type="submit" name="action" value="" class="button button-secondary cancel" v-on:click.prevent="restart">Cancel</button>
                             </div>
                         </div>
 
@@ -500,8 +500,8 @@
                 <p id="modal-desc" tabindex="0">Any unsaved changes will be lost.</p>
             </div>
             <div class="button-row">
-                <a href="#" class="button mobile-full-width" id="button-ok" v-on:click.prevent="exitConfirmed">OK</a>
-                <a href="#" class="button button-secondary mobile-full-width" id="button-cancel" v-on:click.prevent="presentExitWarning = false">Cancel</a>
+                <a href="#" class="button" id="button-ok" v-on:click.prevent="exitConfirmed">OK</a>
+                <a href="#" class="button button-secondary" id="button-cancel" v-on:click.prevent="presentExitWarning = false">Cancel</a>
             </div>
         </div>
     </div>

@@ -127,16 +127,16 @@
         <div class="column-full">
             @if (Model.TrustExists == true)
             {
-                @Html.ActionLink("Back to company search", "SearchCompaniesHouse", "Group", new {area = "Groups"}, new {@class = "button mobile-full-width cancel"})
+                @Html.ActionLink("Back to company search", "SearchCompaniesHouse", "Group", new {area = "Groups"}, new {@class = "button cancel"})
             }
             else
             {
-                @Html.ActionLink("« Go back", "SearchCompaniesHouse", "Group", new {area = "Groups"}, new {@class = "button button-secondary mobile-full-width cancel"})
+                @Html.ActionLink("« Go back", "SearchCompaniesHouse", "Group", new {area = "Groups"}, new {@class = "button button-secondary cancel"})
                 if (Model.AllowSave)
                 {
-                    <button type="submit" class="button submit mobile-full-width">Create academy trust</button>
+                    <button type="submit" class="button submit">Create academy trust</button>
                 }
-                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-secondary mobile-full-width cancel"})
+                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-secondary cancel"})
             }
         </div>
     </div>
