@@ -23,7 +23,7 @@ DfE.Views.editLocation = {
       $(function() {
         setTimeout(function() {
           self.bindAutosuggest('#AdministrativeDistrictName', '#searchby-district-ref', 'District', '#AdministrativeDistrictIdHidden', { data: window.districts, name: "name", value: "id" });
-          self.bindAutosuggest('#AdministrativeWardName', '#searchby-wards-ref', 'Ward', '#AdministrativeWardIdHidden', { data: window.wards, name: "name", value: "id" });
+          self.bindAutosuggest('#AdministrativeWardName', '#searchby-ward-ref', 'Ward', '#AdministrativeWardIdHidden', { data: window.wards, name: "name", value: "id" });
           self.bindAutosuggest('#ParliamentaryConstituencyName', '#searchby-constituency-ref', 'Parliamentary constituency', '#ParliamentaryConstituencyIdHidden', { data: window.constituencies, name: "name", value: "id" });
           self.bindAutosuggest('#CASWardName', '#searchby-casward-ref', 'Census ward', '#CASWardIdHidden', { data: window.caswards, name: "name", value: "id" });
           self.bindAutosuggest('#GSSLAName', '#searchby-gssla-ref', 'LA Code', '#GSSLAIdHidden', { data: window.gsslas, name: "name", value: "id" });
@@ -36,6 +36,13 @@ DfE.Views.editLocation = {
   },
 
   bindAutosuggest: function (targetInputElementName, warningInputElement, targetDisplayName, targetResolvedInputElementName, suggestionSource) {
+
+    // Setting a .focused class on the pseudo wrapper
+    $(targetInputElementName).on('focus', function () {
+        $(warningInputElement + ' .autosuggest').addClass('focused');
+    }).on('blur', function () {
+        $(warningInputElement + ' .autosuggest').removeClass('focused');
+    });
 
     if ($(targetInputElementName).length === 0) {
       console.log("The input field '" + targetInputElementName + "' does not exist.");
@@ -65,7 +72,7 @@ DfE.Views.editLocation = {
 
       source = new Bloodhound({
         datumTokenizer: function (d) { return Bloodhound.tokenizers.nonword(d[field]); },
-        queryTokenizer: Bloodhound.tokenizers.whitespace, 
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
         local: suggestionSource.data
       });
       source.initialize();
@@ -77,7 +84,7 @@ DfE.Views.editLocation = {
     var templateHandler = function (suggestion) {
       return '<div><a class="js-allow-exit" href="javascript:">' + suggestion[field] + '</a></div>';
     };
-    
+
     $(targetInputElementName).typeahead({
       hint: false,
       highlight: true,
@@ -168,5 +175,3 @@ DfE.Views.editLocation = {
       });
   }
 };
-
-

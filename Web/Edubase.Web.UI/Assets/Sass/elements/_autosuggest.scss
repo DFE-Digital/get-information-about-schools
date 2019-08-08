@@ -2,7 +2,15 @@
 .suggestion-highlight {
     font-weight: bold;
 }
+
 // typeahead
+
+.autosuggest {
+    // Setting a focus style on the pseudo wrapper
+    &.focused {
+        border: 3px solid $focus-colour;
+    }
+}
 
 .tt-dataset {
     .tt-cursor {
@@ -74,17 +82,17 @@
         font-size: 14px;
         display: inline-block;
         color: $grey-2;
-        
+
         @include media(mobile) {
             position: absolute;
             bottom: 2px;
             right: 2px;
             max-width: 100%;
         }
-        
+
         @include media(tablet) {
             max-width: 35%;
-        }    
+        }
     }
 }
 
