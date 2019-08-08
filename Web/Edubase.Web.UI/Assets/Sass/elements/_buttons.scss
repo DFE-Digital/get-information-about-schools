@@ -57,6 +57,7 @@ $path: $images-path;
     @include media (mobile) {
         width: 100%;
         text-align: center;
+        @include box-sizing(border-box);
     }
 }
 

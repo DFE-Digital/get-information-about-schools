@@ -143,7 +143,7 @@
                             @Html.DropDownListFor(x => x.ProprietorsCountyId, Model.Counties, "", new { @class = "form-control" })
                         </div>
 
-                        @RenderTextBox(x => x.ProprietorsPostcode, "cloneable",  "postcode-field")
+                        @RenderTextBox(x => x.ProprietorsPostcode, "cloneable",  "form-control-1-2")
                         @RenderTextBox(x => x.ProprietorsTelephoneNumber, "cloneable")
                         @RenderTextBox(x => x.ProprietorsFaxNumber, "cloneable")
                         @RenderTextBox(x => x.ProprietorsEmail, "cloneable")
@@ -172,7 +172,7 @@
                         @Html.DropDownListFor(x => x.ChairOfProprietorsBodyCountyId, Model.Counties, "", new { @class = "form-control" })
                     </div>
 
-                    @RenderTextBox(x => x.ChairOfProprietorsBodyPostcode, null, "postcode-field")
+                    @RenderTextBox(x => x.ChairOfProprietorsBodyPostcode, null, "form-control-1-2")
                     @RenderTextBox(x => x.ChairOfProprietorsBodyTelephoneNumber)
                     @RenderTextBox(x => x.ChairOfProprietorsBodyFaxNumber)
                     @RenderTextBox(x => x.ChairOfProprietorsBodyEmail)

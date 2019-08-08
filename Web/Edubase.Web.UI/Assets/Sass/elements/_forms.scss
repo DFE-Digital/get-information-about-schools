@@ -338,12 +338,6 @@ fieldset.column-half {
     margin: 20px 0;
 }
 
-.postcode-field {
-    width: 180px;
-    float: left;
-    margin-right: 1.5em;
-}
-
 .edubase-button {
     font-size: 16px;
 }
@@ -360,6 +354,10 @@ fieldset legend.heading-small {
     font-size: 16px;
     display: inline-block;
     margin-top: 8px;
+    @include media (tablet) {
+        margin-left: 24px;
+    }
+
 }
 
 .lookup-heading {

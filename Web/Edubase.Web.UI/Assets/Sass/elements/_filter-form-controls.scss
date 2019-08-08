@@ -33,7 +33,6 @@
         @include media(mobile) {
             float: none;
             width: 100%;
-            @include box-sizing(border-box);
         }
     }
 
@@ -58,7 +57,6 @@
         @include media(mobile) {
             float: none;
             width: 100%;
-            @include box-sizing(border-box);
         }
     }
     .range-group {
@@ -101,7 +99,6 @@
         @include media(mobile) {
             width: 100%;
             float: none;
-            @include box-sizing(border-box);
         }
     }
 

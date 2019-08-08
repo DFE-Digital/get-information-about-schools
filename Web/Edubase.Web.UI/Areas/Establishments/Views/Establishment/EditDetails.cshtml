@@ -90,7 +90,7 @@
                     <div class="form-group @Html.ValidationCssClassFor(x => x.Address_PostCode)">
                         @Html.LabelFor(x => x.Address_PostCode, "Postcode", new { @class = "form-label" })
                         @Html.ValidationMessageFor(x => x.Address_PostCode)
-                        @Html.TextBoxFor(x => x.Address_PostCode, new { maxlength = 120, @class = "form-control postcode-field", disabled = "disabled" })
+                        @Html.TextBoxFor(x => x.Address_PostCode, new { maxlength = 120, @class = "form-control form-control-1-2", disabled = "disabled" })
                         @Html.HiddenFor(x => x.Address_PostCode)
                         @Html.RouteLink("Replace this address", "AddOrReplaceEstablishmentAddress", new { urn = Model.Urn, target = "main" }, new { @class = "replace-address" })
                     </div>
@@ -103,7 +103,7 @@
                     {
                         Html.RenderPartial("Partials/_EditAddresses");
                         <div class="form-group">
-                            @Html.RouteLink("Add new address", "AddOrReplaceEstablishmentAddress", new { urn = Model.Urn, target = "alt-new" }, new { @class = "replace-address" })
+                            @Html.RouteLink("Add new address", "AddOrReplaceEstablishmentAddress", new { urn = Model.Urn, target = "alt-new" }, new { @class = "replace-address flush--left" })
                         </div>
                     }
 
