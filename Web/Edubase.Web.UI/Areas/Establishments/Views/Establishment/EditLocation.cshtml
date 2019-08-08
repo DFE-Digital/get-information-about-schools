@@ -55,28 +55,46 @@
 
                 @if (Model.EditPolicy.AdministrativeDistrictId)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.AdministrativeDistrictId)">
-                        <label for="AdministrativeDistrictId" class="form-label">District</label>
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.AdministrativeDistrictId) @Html.ValidationCssClassFor(x => x.AdministrativeDistrictName)" id="searchby-district-ref">
+                        <label for="@nameof(Model.AdministrativeDistrictName)">District</label>
                         @Html.ValidationMessageFor(x => x.AdministrativeDistrictId)
-                        @Html.DropDownListFor(x => x.AdministrativeDistrictId, Model.AdministrativeDistricts, "", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AdministrativeDistrictName)
+
+                        <div id="AdministrativeDistrictId" class="floating-text-field-wrap form-control">
+                            @Html.TextBoxFor(x => x.AdministrativeDistrictName, new { @class = "floating-text-field", autocomplete = "off" })
+                        </div>
+
+                        @Html.HiddenFor(x => x.AdministrativeDistrictId, new { id = "AdministrativeDistrictIdHidden" })
                     </div>
                 }
 
                 @if (Model.EditPolicy.AdministrativeWardId)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.AdministrativeWardId)">
-                        <label for="AdministrativeWardId" class="form-label">Ward</label>
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.AdministrativeWardId) @Html.ValidationCssClassFor(x => x.AdministrativeWardName)" id="searchby-ward-ref">
+                        <label for="@nameof(Model.AdministrativeWardName)">Ward</label>
                         @Html.ValidationMessageFor(x => x.AdministrativeWardId)
-                        @Html.DropDownListFor(x => x.AdministrativeWardId, Model.AdministrativeWards, "", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.AdministrativeWardName)
+
+                        <div id="AdministrativeWardId" class="floating-text-field-wrap form-control">
+                            @Html.TextBoxFor(x => x.AdministrativeWardName, new { @class = "floating-text-field", autocomplete = "off" })
+                        </div>
+
+                        @Html.HiddenFor(x => x.AdministrativeWardId, new { id = "AdministrativeWardIdHidden" })
                     </div>
                 }
 
                 @if (Model.EditPolicy.ParliamentaryConstituencyId)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.ParliamentaryConstituencyId)">
-                        <label for="ParliamentaryConstituencyId" class="form-label">Parliamentary constituency</label>
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.ParliamentaryConstituencyId) @Html.ValidationCssClassFor(x => x.ParliamentaryConstituencyName)" id="searchby-constituency-ref">
+                        <label for="@nameof(Model.ParliamentaryConstituencyName)">Parliamentary constituency</label>
                         @Html.ValidationMessageFor(x => x.ParliamentaryConstituencyId)
-                        @Html.DropDownListFor(x => x.ParliamentaryConstituencyId, Model.ParliamentaryConstituencies, "", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.ParliamentaryConstituencyName)
+
+                        <div id="AdministrativeWardId" class="floating-text-field-wrap form-control">
+                            @Html.TextBoxFor(x => x.ParliamentaryConstituencyName, new { @class = "floating-text-field", autocomplete = "off" })
+                        </div>
+
+                        @Html.HiddenFor(x => x.ParliamentaryConstituencyId, new { id = "ParliamentaryConstituencyIdHidden" })
                     </div>
                 }
 
@@ -91,10 +109,16 @@
 
                 @if (Model.EditPolicy.GSSLAId)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.GSSLAId)">
-                        <label for="GSSLAId" class="form-label"><abbr title="Government Statistical Service">GSS</abbr> LA code</label>
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.GSSLAId) @Html.ValidationCssClassFor(x => x.GSSLAName)" id="searchby-gssla-ref">
+                        <label for="@nameof(Model.GSSLAName)"><abbr title="Government Statistical Service">GSS</abbr> LA code</label>
                         @Html.ValidationMessageFor(x => x.GSSLAId)
-                        @Html.DropDownListFor(x => x.GSSLAId, Model.GSSLALookup, "", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.GSSLAName)
+
+                        <div id="GSSLAId" class="floating-text-field-wrap form-control">
+                            @Html.TextBoxFor(x => x.GSSLAName, new { @class = "floating-text-field", autocomplete = "off" })
+                        </div>
+
+                        @Html.HiddenFor(x => x.GSSLAId, new { id = "GSSLAIdHidden" })
                     </div>
                 }
 
@@ -118,10 +142,16 @@
 
                 @if (Model.EditPolicy.CASWardId)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.CASWardId)">
-                        <label for="CASWardId" class="form-label">Census ward</label>
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.CASWardId) @Html.ValidationCssClassFor(x => x.CASWardName)" id="searchby-casward-ref">
+                        <label for="@nameof(Model.CASWardName)">Census ward</label>
                         @Html.ValidationMessageFor(x => x.CASWardId)
-                        @Html.DropDownListFor(x => x.CASWardId, Model.CASWards, "", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.CASWardName)
+
+                        <div id="CASWardId" class="floating-text-field-wrap form-control">
+                            @Html.TextBoxFor(x => x.CASWardName, new { @class = "floating-text-field", autocomplete = "off" })
+                        </div>
+
+                        @Html.HiddenFor(x => x.CASWardId, new { id = "CASWardIdHidden" })
                     </div>
                 }
 
@@ -196,6 +226,11 @@
                     var jScriptVersion;
                     window.lsoas = @Html.Json(Model.LSOAs);
                     window.msoas = @Html.Json(Model.MSOAs);
+                    window.districts = @Html.Json(Model.AdministrativeDistricts);
+                    window.wards = @Html.Json(Model.AdministrativeWards);
+                    window.constituencies = @Html.Json(Model.ParliamentaryConstituencies);
+                    window.caswards = @Html.Json(Model.CASWards);
+                    window.gsslas = @Html.Json(Model.GSSLALookup);
 
                     if (!$('html').hasClass('lt-ie9')) {
                         DfE.Views.editLocation.init();

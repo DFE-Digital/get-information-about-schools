@@ -119,10 +119,20 @@
                             </div>
                             @if (Model.SearchType == eSearchType.GovernorReference && Model.NoResults)
                             {
-                            @* Static alert for no search results *@
-                                <div role="alert" class="warning-message js-trigger-aria-live">
-                                    <p class="warning-message-text" aria-live="polite">We couldn't find any governors matching your search criteria</p>
-                                </div>
+                                if (!Model.GovernorSearchModel.Gid.HasValue)
+                                {
+                                @* Static alert for no search results *@
+                                    <div role="alert" class="warning-message js-trigger-aria-live">
+                                        <p class="warning-message-text" aria-live="polite">Please enter a governor ID to start a search</p>
+                                    </div>
+                                }
+                                else
+                                {
+                                @* Static alert for no search results *@
+                                    <div role="alert" class="warning-message js-trigger-aria-live">
+                                        <p class="warning-message-text" aria-live="polite">We couldn't find any governors matching your search criteria</p>
+                                    </div>
+                                }
                             }
                             <div class="form-group @Html.ValidationCssClassFor(x => x.GovernorSearchModel.Gid)">
                                 <label for="GovernorSearchModel_Gid" class="form-label">
@@ -141,7 +151,7 @@
 
                             <div class="form-group">
 
-                                <button type="submit" id="governor-search-submit-1" class="button mobile-full-width" name="searchtype" value="@eSearchType.Governor">Search</button>
+                                <button type="submit" id="governor-search-submit-1" class="button mobile-full-width" name="searchtype" value="@eSearchType.GovernorReference">Search</button>
                             </div>
 
                         </div>
