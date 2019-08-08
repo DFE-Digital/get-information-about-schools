@@ -29,8 +29,8 @@
 
         <div class="grid-row">
             <div class="column-full">
-                <button type="submit" name="action" class="button mobile-full-width" id="edit-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Save details" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
-                @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-secondary cancel mobile-full-width" })
+                <button type="submit" name="action" class="button" id="edit-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Save details" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
+                @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-secondary cancel" })
             </div>
         </div>
         <div class="grid-row">
@@ -178,8 +178,8 @@
 
                 <br />
 
-                <button type="submit" name="action" class="button mobile-full-width" id="edit-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Save details" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
-                @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-secondary cancel mobile-full-width" })
+                <button type="submit" name="action" class="button" id="edit-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Save details" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
+                @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "button button-secondary cancel" })
             </div>
         </div>
 

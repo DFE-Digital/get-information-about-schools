@@ -49,8 +49,8 @@
                             <div class="form-group push--bottom" :class="[errorEmptySearch ? 'error' : '']">
                                 <label class="form-label" for="search">Search by field name</label>
                                 <span v-if="errorEmptySearch" class="field-validation-error">Enter a field name to search</span>
-                                <input id="search" v-model="search" class="form-control search" placeholder="Search..." @@keydown.enter.prevent="doSearch" />
-                                <button class="button button-search icon-only" @@click="doSearch" type="button"><span class="visuallyhidden">Search</span></button>
+                                <input id="search" v-model="search" class="form-control form-control-1-2 push-half--bottom" @@keydown.enter.prevent="doSearch" />
+                                <button class="button inline-button" @@click="doSearch" type="button">Search</button>
 
                                 <div class="switch" v-show="!isFiltered">
                                     <a href="javascript:" @@click="showAlphabeticalView" v-show="!alphabeticalView">View in alphabetical order</a>

@@ -7,9 +7,9 @@
         }
 
         .date-filters.govuk-option-select .filter-button {
-            width: calc(100%-64px);
-            margin-left: 32px;
+            width: 100%;
             float: none;
+            @include box-sizing(border-box);
         }
 
         #results-container {

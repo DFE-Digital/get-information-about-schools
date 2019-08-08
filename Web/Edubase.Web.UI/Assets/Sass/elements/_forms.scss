@@ -223,26 +223,6 @@ legend {
     }
 }
 
-.mobile-full-width {
-    display: block;
-    float: left;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-
-    @include media(mobile) {
-        width: 100%;
-        float: none;
-        clear: both;
-    }
-
-    &.mobile-full-width--inline {
-        display: inline-block;
-        float: none;
-    }
-}
-
-
 .help-icon {
     border-radius: 20px;
     text-align: center;
@@ -339,12 +319,6 @@ fieldset.column-half {
     margin: 20px 0;
 }
 
-.postcode-field {
-    width: 180px;
-    float: left;
-    margin-right: 1.5em;
-}
-
 .edubase-button {
     font-size: 16px;
 }
@@ -361,6 +335,10 @@ fieldset legend.heading-small {
     font-size: 16px;
     display: inline-block;
     margin-top: 8px;
+    @include media (tablet) {
+        margin-left: 24px;
+    }
+
 }
 
 .lookup-heading {

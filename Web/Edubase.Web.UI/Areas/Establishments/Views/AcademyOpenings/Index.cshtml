@@ -185,7 +185,7 @@
                                             <span class="error-message" v-show="searchError">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
                                             <input type="text" class="form-control form-control-1-2 push-half--bottom" id="academy-search-field" v-model.trim="searchUrn" />
 
-                                            <input type="submit" class="button inline-button mobile-full-width mobile-full-width--inline" value="Search URN" v-on:click.prevent="validateUrn" />
+                                            <input type="submit" class="button inline-button" value="Search URN" v-on:click.prevent="validateUrn" />
                                         </div>
 
                                     </form>
@@ -289,8 +289,8 @@
                 <p id="modal-desc" tabindex="0">Any unsaved changes will be lost.</p>
             </div>
             <div class="button-row">
-                <a href="#" class="button mobile-full-width" id="button-ok" v-on:click.prevent="exitWarningOkClick">OK</a>
-                <a href="#" class="button button-secondary mobile-full-width" id="button-cancel" v-on:click.prevent="presentExitWarning = false, anchorTarget=''">Cancel</a>
+                <a href="#" class="button" id="button-ok" v-on:click.prevent="exitWarningOkClick">OK</a>
+                <a href="#" class="button button-secondary" id="button-cancel" v-on:click.prevent="presentExitWarning = false, anchorTarget=''">Cancel</a>
             </div>
         </div>
     </div>

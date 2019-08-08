@@ -86,26 +86,6 @@
 
 
 .custom-fields-download {
-    .form-control.search {
-        min-width: 200px;
-        width: 40%;
-        height: 42px;
-    }
-
-    .button-search {
-        @include bold-24;
-        background-image: file-url("icons/icon-search-2x.png");
-        background-repeat: no-repeat;
-        background-position: 100% 50%;
-        background-size: 30px 22px;
-        padding: em(7) em(41) em(4) em(16);
-    }
-
-    .button-search.icon-only {
-        padding: 0;
-        width: 40px;
-        height: 40px;
-    }
 
     .switch {
         float:right;
@@ -113,9 +93,5 @@
             float:none;
             padding-top:8px;
         }
-    }
-
-    input[type=submit]{
-        width: 150px;
     }
 }
