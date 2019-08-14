@@ -99,6 +99,7 @@ fieldset {
 
 // Add spacing under spans within labels
 legend {
+    display: inline-block; //Fixes a line-break problem on Edge
     .form-label,
     .form-label-bold {
         padding-bottom: 7px;
@@ -151,12 +152,6 @@ legend {
     background-color: $white;
     border: 2px solid;
 }
-
-.form-control.search-box {
-    padding: 5px;
-}
-
-
 
 // Form control widths
 .form-control-3-4 {
@@ -227,21 +222,6 @@ legend {
         clear: both;
     }
 }
-
-.mobile-full-width {
-    display: block;
-    float: left;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-
-    @include media(mobile) {
-        width: 100%;
-        float: none;
-        clear: both;
-    }
-}
-
 
 .help-icon {
     border-radius: 20px;
@@ -339,12 +319,6 @@ fieldset.column-half {
     margin: 20px 0;
 }
 
-.postcode-field {
-    width: 180px;
-    float: left;
-    margin-right: 1.5em;
-}
-
 .edubase-button {
     font-size: 16px;
 }
@@ -361,6 +335,10 @@ fieldset legend.heading-small {
     font-size: 16px;
     display: inline-block;
     margin-top: 8px;
+    @include media (tablet) {
+        margin-left: 24px;
+    }
+
 }
 
 .lookup-heading {
@@ -379,19 +357,10 @@ fieldset legend.heading-small {
     padding: 3px;
 }
 
-.inline-submit {
-    font-size: 16px;
-    margin-left: 20px;
-}
-
-
-.urn-search {
-    width: 200px;
-    margin-right: 12px
-}
-
 .inline-button {
-    font-size: 16px;
+    @include media (tablet) {
+        font-size: 16px;
+    }
 }
 
 .data-status-group {

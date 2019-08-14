@@ -120,7 +120,7 @@
 
                     @if (Model.CanUserEdit)
                     {
-                        @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-secondary mobile-full-width" })
+                        @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-secondary" })
                     }
                     <div class="detail-summary">
                         <dl>
@@ -183,7 +183,7 @@
 
                     @if (Model.CanUserEdit)
                     {
-                        @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-secondary mobile-full-width" })
+                        @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-secondary" })
                     }
 
                 </div>
@@ -192,7 +192,7 @@
 
                     @if (Model.CanUserEdit)
                     {
-                        @Html.ActionLink($"Edit {Model.EstablishmentsPluralName.ToLower()}", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-secondary mobile-full-width" })
+                        @Html.ActionLink($"Edit {Model.EstablishmentsPluralName.ToLower()}", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-secondary" })
                     }
 
                     <div class="column-full">
@@ -256,7 +256,7 @@
 
                     @if (Model.CanUserEdit && Model.Establishments.Count > 0)
                     {
-                        @Html.ActionLink($"Edit {Model.EstablishmentsPluralName.ToLower()}", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-secondary mobile-full-width lower" })
+                        @Html.ActionLink($"Edit {Model.EstablishmentsPluralName.ToLower()}", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "button button-secondary lower" })
                     }
 
                 </div>
@@ -268,7 +268,7 @@
                         @if (Model.CanUserEditGovernance)
                         {
                             <div class="button-wrap">
-                                @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "button button-secondary mobile-full-width" })
+                                @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "button button-secondary" })
                             </div>
 
                         }
@@ -278,7 +278,7 @@
                         @if (Model.CanUserEditGovernance)
                         {
                             <div class="button-wrap">
-                                @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "button button-secondary mobile-full-width" })
+                                @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "button button-secondary" })
                             </div>
 
                         }

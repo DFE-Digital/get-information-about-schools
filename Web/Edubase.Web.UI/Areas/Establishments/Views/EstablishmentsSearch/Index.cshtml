@@ -103,7 +103,7 @@
 
                 <div id="EditSearchCollapse" class="blanket-container">
                     <h2 class="visuallyhidden">Search results filters</h2>
-                    <a href="#results-container" class="visuallyhidden">Skip filters</a>
+                    <a href="#results-container" class="visually-hidden-focusable">Skip filters</a>
 
                     <div class="govuk-option-select js-collapsible"
                          id="option-select-sort-by" role="search">
@@ -228,7 +228,7 @@
 
                     @Html.HiddenFor(x => x.SearchType)
                 </div>
-                
+
             </div>
 
             <div role="alert" aria-live="assertive" id="results-notification" class="visuallyhidden"></div>
@@ -376,7 +376,7 @@
                 @Html.EditorFor(m => m.CloseDateFrom, new { disableHint = true, labelClass= "form-label" , title="From", inFilters = true, fieldsetClassName = "search-from-date" })
                 @Html.EditorFor(m => m.CloseDateTo, new { disableHint = true, labelClass = "form-label", title = "To", inFilters = true, fieldSetClassName = "search-to-date" })
 
-                <div class="form-group">
+                <div class="form-group soft-half--sides">
                     <a href="#" class="button button-secondary filter-button">Apply</a>
                 </div>
             </div>
@@ -401,7 +401,7 @@
                 @Html.EditorFor(m => m.OpenDateFrom, new {disableHint = true, labelClass = "form-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date" })
                 @Html.EditorFor(m => m.OpenDateTo, new {disableHint = true, labelClass = "form-label", title = "To", inFilters = true, fieldsetClassName = "search-to-date" })
 
-                <div class="form-group">
+                <div class="form-group soft-half--sides">
                     <a href="#" class="button button-secondary filter-button">Apply</a>
                 </div>
             </div>

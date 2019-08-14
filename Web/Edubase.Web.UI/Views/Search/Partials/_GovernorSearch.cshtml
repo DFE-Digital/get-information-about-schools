@@ -1,3 +1,4 @@
+@using Edubase.Common
 @using Edubase.Web.UI.Models.Search;
 @using eStatus = Edubase.Services.Enums.eLookupEstablishmentStatus;
 @using VM = Edubase.Web.UI.Models.Search.SearchViewModel;
@@ -35,18 +36,30 @@
                         </div>
                         @if (Model.SearchType == eSearchType.Governor && Model.NoResults)
                         {
-                            @* Static alert for no search results *@
-                            <div role="alert" class="warning-message js-trigger-aria-live">
-                                <p class="warning-message-text" aria-live="polite">We couldn't find any governors matching your search criteria</p>
-                            </div>
+                            if (Model.GovernorSearchModel.Forename.IsNullOrEmpty() &&
+                                Model.GovernorSearchModel.Surname.IsNullOrEmpty() &&
+                                Model.GovernorSearchModel.RoleId.Length == 0)
+                            {
+                                @* Static alert for no search results *@
+                                <div role="alert" class="warning-message js-trigger-aria-live">
+                                    <p class="warning-message-text" aria-live="polite">Please enter a governor to start a search</p>
+                                </div>
+                            }
+                            else
+                            {
+                                @* Static alert for no search results *@
+                                <div role="alert" class="warning-message js-trigger-aria-live">
+                                    <p class="warning-message-text" aria-live="polite">We couldn't find any governors matching your search criteria</p>
+                                </div>
+                            }
                         }
                         <div class="edubase-search-element">
                             <label for="forename" class="form-label">First name</label>
-                            @Html.TextBoxFor(x => x.GovernorSearchModel.Forename, new {maxlength = 120, id = "forename", @class = "form-control"})
+                            @Html.TextBoxFor(x => x.GovernorSearchModel.Forename, new { maxlength = 120, id = "forename", @class = "form-control" })
                         </div>
                         <div class="edubase-search-element">
                             <label for="surname" class="form-label">Last name</label>
-                            @Html.TextBoxFor(x => x.GovernorSearchModel.Surname, new {maxlength = 120, id = "surname", @class = "form-control"})
+                            @Html.TextBoxFor(x => x.GovernorSearchModel.Surname, new { maxlength = 120, id = "surname", @class = "form-control" })
                         </div>
 
                         <div class="form-group">
@@ -57,16 +70,16 @@
                                 </div>
                                 <div class="options-container" id="governor-roles">
                                     <fieldset>
-                                    @foreach (var governorRole in Model.GovernorRoles)
-                                    {
-                                        <div class="multiple-choice multiple-choice--smaller multiple-choice--list">
-                                            <input name="GovernorSearchModel.RoleId"
-                                            id="govrole-@governorRole.Id.ToString()" value="@governorRole.Id.ToString()" type="checkbox" />
-                                            <label for="govrole-@governorRole.Id.ToString()">
-                                                @FormatHelpers.FirstCharToUpper(@governorRole.Name.ToLower())
-                                            </label>
-                                        </div>
-                                    }
+                                        @foreach (var governorRole in Model.GovernorRoles)
+                                        {
+                                            <div class="multiple-choice multiple-choice--smaller multiple-choice--list">
+                                                <input name="GovernorSearchModel.RoleId"
+                                                       id="govrole-@governorRole.Id.ToString()" value="@governorRole.Id.ToString()" type="checkbox" />
+                                                <label for="govrole-@governorRole.Id.ToString()">
+                                                    @FormatHelpers.FirstCharToUpper(@governorRole.Name.ToLower())
+                                                </label>
+                                            </div>
+                                        }
                                     </fieldset>
                                 </div>
                             </div>
@@ -74,13 +87,13 @@
 
                         <div class="form-group">
                             <div class="multiple-choice">
-                                @Html.CheckBoxFor(x => x.GovernorSearchModel.IncludeHistoric, new {id = "IncludeHistoricRole0"})
+                                @Html.CheckBoxFor(x => x.GovernorSearchModel.IncludeHistoric, new { id = "IncludeHistoricRole0" })
                                 <label for="IncludeHistoricRole0">Include historic records (governors who stepped down in the last 12 months)</label>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <button type="submit" id="governor-search-submit" class="button mobile-full-width" name="searchtype" value="@eSearchType.Governor">Search</button>
+                            <button type="submit" id="governor-search-submit" class="button" name="searchtype" value="@eSearchType.Governor">Search</button>
                         </div>
                     </div>
                 </fieldset>
@@ -106,10 +119,20 @@
                             </div>
                             @if (Model.SearchType == eSearchType.GovernorReference && Model.NoResults)
                             {
-                            @* Static alert for no search results *@
-                                <div role="alert" class="warning-message js-trigger-aria-live">
-                                    <p class="warning-message-text" aria-live="polite">We couldn't find any governors matching your search criteria</p>
-                                </div>
+                                if (!Model.GovernorSearchModel.Gid.HasValue)
+                                {
+                                @* Static alert for no search results *@
+                                    <div role="alert" class="warning-message js-trigger-aria-live">
+                                        <p class="warning-message-text" aria-live="polite">Please enter a governor ID to start a search</p>
+                                    </div>
+                                }
+                                else
+                                {
+                                @* Static alert for no search results *@
+                                    <div role="alert" class="warning-message js-trigger-aria-live">
+                                        <p class="warning-message-text" aria-live="polite">We couldn't find any governors matching your search criteria</p>
+                                    </div>
+                                }
                             }
                             <div class="form-group @Html.ValidationCssClassFor(x => x.GovernorSearchModel.Gid)">
                                 <label for="GovernorSearchModel_Gid" class="form-label">
@@ -128,7 +151,7 @@
 
                             <div class="form-group">
 
-                                <button type="submit" id="governor-search-submit-1" class="button mobile-full-width" name="searchtype" value="@eSearchType.Governor">Search</button>
+                                <button type="submit" id="governor-search-submit-1" class="button" name="searchtype" value="@eSearchType.GovernorReference">Search</button>
                             </div>
 
                         </div>
@@ -161,7 +184,7 @@
                         </div>
 
                         <div class="form-group">
-                            <button type="submit" id="governor-search-submit-2" class="button mobile-full-width" name="searchtype" value="@eSearchType.Governor">Search</button>
+                            <button type="submit" id="governor-search-submit-2" class="button" name="searchtype" value="@eSearchType.GovernorAll">Search</button>
                         </div>
 
                     </div>

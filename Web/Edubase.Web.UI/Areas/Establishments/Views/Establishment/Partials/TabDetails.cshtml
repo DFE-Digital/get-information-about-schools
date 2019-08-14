@@ -5,12 +5,12 @@
 <div id="school-dashboard" class="tab-content">
     @if (Model.UserCanEdit)
     {
-        @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary mobile-full-width" })
+        @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary" })
     }
 
     @if (Model.Establishment.Location != null)
     {
-        <a href="#details-summary" class="visually-hidden">Skip map</a>
+        <a href="#details-summary" class="visually-hidden-focusable">Skip map</a>
         <div class="map-container">
             <div id="map" class="school-detail-map"
                  data-latlng="[@(Model.Establishment.Location?.Longitude),@(Model.Establishment.Location?.Latitude)]"
@@ -366,6 +366,6 @@
 
     @if (Model.UserCanEdit)
     {
-        @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary mobile-full-width" })
+        @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary" })
     }
 </div>

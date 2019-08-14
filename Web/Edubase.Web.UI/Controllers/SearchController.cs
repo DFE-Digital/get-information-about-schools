@@ -122,12 +122,12 @@ namespace Edubase.Web.UI.Controllers
                             return Redirect(url);
                         }
 
-                        if (viewModel.SearchType == eSearchType.Group)
+                        if (viewModel.SearchType.OneOfThese(eSearchType.Group, eSearchType.GroupAll))
                         {
                             return Redirect(Url.Action("Index", "GroupSearch", new { area = "Groups" }) + "?" + Request.QueryString);
                         }
 
-                        if (viewModel.SearchType.OneOfThese(eSearchType.Governor, eSearchType.GovernorReference))
+                        if (viewModel.SearchType.OneOfThese(eSearchType.Governor, eSearchType.GovernorReference, eSearchType.GovernorAll))
                         {
                             return Redirect(
                                 $"{Url.Action("Index", "GovernorSearch", new { area = "Governors" })}?{Request.QueryString}&{string.Join("&", viewModel.GovernorSearchModel.RoleId.Select(r => $"&{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}={r}"))}");

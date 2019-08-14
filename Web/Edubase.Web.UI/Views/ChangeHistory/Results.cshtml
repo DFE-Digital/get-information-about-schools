@@ -78,7 +78,7 @@
             <div class="filter-form" id="filter-form">
                 <div id="EditSearchCollapse" class="blanket-container">
                     <h2 class="visuallyhidden">Search results filters</h2>
-                    <a href="#results-container" class="visuallyhidden">Skip filters</a>
+                    <a href="#results-container" class="visually-hidden-focusable">Skip filters</a>
 
                     <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="false" id="date-filter" role="search">
                         <div class="container-head js-container-head">
@@ -99,7 +99,7 @@
                                     }
                                     @Html.EditorFor(m => m.DateFilterFrom, new {disableHint = true, labelClass = "form-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date"})
                                     @Html.EditorFor(m => m.DateFilterTo, new {disableHint = true, labelClass = "form-label", title = "To", inFilters = true, fieldsetClassName = "search-to-date"})
-                                    <div class="form-group">
+                                    <div class="form-group soft-half--sides">
                                         <a href="#" class="button button-secondary filter-button">Apply</a>
                                     </div>
                                 </fieldset>

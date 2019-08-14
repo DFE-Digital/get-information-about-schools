@@ -26,8 +26,8 @@
 
             <div class="column-full top-button-panel">
                 <div class="submit-cancel-panel">
-                    <button type="submit" name="action" value="" class="button mobile-full-width">Create establishment</button>
-                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-secondary cancel mobile-full-width" })
+                    <button type="submit" name="action" value="" class="button">Create establishment</button>
+                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-secondary cancel" })
                 </div>
             </div>
 
@@ -165,8 +165,8 @@
 
             <div class="column-full">
                 <div class="submit-cancel-panel">
-                    <button type="submit" name="action" value="" class="button mobile-full-width" id="create-submit">Create establishment</button>
-                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-secondary cancel mobile-full-width" })
+                    <button type="submit" name="action" value="" class="button" id="create-submit">Create establishment</button>
+                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-secondary cancel" })
                 </div>
             </div>
         }
@@ -185,8 +185,8 @@
             <p tabindex="0" id="model-desc">The record you are creating for <strong>@(warning.MessageParameters[0])</strong> in <strong>@(warning.MessageParameters[1])</strong> may duplicate existing record(s): <strong>@(warning.MessageParameters[2])</strong>
         </div>
         <div class="button-row">
-            <a href="#" class="button mobile-full-width" id="overlay-proceed-0">Proceed</a>
-            <a href="#" class="button button-secondary mobile-full-width js-allow-exit" id="overlay-cancel-0">Cancel</a>
+            <a href="#" class="button" id="overlay-proceed-0">Proceed</a>
+            <a href="#" class="button button-secondary js-allow-exit" id="overlay-cancel-0">Cancel</a>
         </div>
     </div>
 }

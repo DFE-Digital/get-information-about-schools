@@ -32,8 +32,8 @@
 
                 <div class="column-half">
 
-                    <button id="save-submit-top" type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASSave">Save details</button>
-                    @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel mobile-full-width" })
+                    <button id="save-submit-top" type="submit" class="button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASSave">Save details</button>
+                    @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel" })
 
 
                     <div class="form-group first @Html.ValidationCssClassFor(x => x.Name)">
@@ -90,7 +90,7 @@
                     <div class="form-group @Html.ValidationCssClassFor(x => x.Address_PostCode)">
                         @Html.LabelFor(x => x.Address_PostCode, "Postcode", new { @class = "form-label" })
                         @Html.ValidationMessageFor(x => x.Address_PostCode)
-                        @Html.TextBoxFor(x => x.Address_PostCode, new { maxlength = 120, @class = "form-control postcode-field", disabled = "disabled" })
+                        @Html.TextBoxFor(x => x.Address_PostCode, new { maxlength = 120, @class = "form-control form-control-1-2", disabled = "disabled" })
                         @Html.HiddenFor(x => x.Address_PostCode)
                         @Html.RouteLink("Replace this address", "AddOrReplaceEstablishmentAddress", new { urn = Model.Urn, target = "main" }, new { @class = "replace-address" })
                     </div>
@@ -103,7 +103,7 @@
                     {
                         Html.RenderPartial("Partials/_EditAddresses");
                         <div class="form-group">
-                            @Html.RouteLink("Add new address", "AddOrReplaceEstablishmentAddress", new { urn = Model.Urn, target = "alt-new" }, new { @class = "replace-address" })
+                            @Html.RouteLink("Add new address", "AddOrReplaceEstablishmentAddress", new { urn = Model.Urn, target = "alt-new" }, new { @class = "replace-address flush--left" })
                         </div>
                     }
 
@@ -745,8 +745,8 @@
                         @Html.EditorFor(x => x.BSODateOfNextInspectionVisit, new { title = "BSO: Next inspection visit" })
                     }
 
-                    <button id="save-submit-bottom" type="submit" class="button mobile-full-width" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, "details")">Save details</button>
-                    @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel mobile-full-width" })
+                    <button id="save-submit-bottom" type="submit" class="button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, "details")">Save details</button>
+                    @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel" })
 
                 </div>
             </div>
@@ -757,10 +757,10 @@
             Html.RenderPartial("Partials/_ConfirmChanges");
 
             <div class="button-row">
-                <button class="button-secondary button mobile-full-width" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button>
-                <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="button mobile-full-width js-confirm">Confirm</button>
+                <button class="button-secondary button" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button>
+                <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="button js-confirm">Confirm</button>
 
-                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary mobile-full-width", id = "cancel-edit" })
+                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary", id = "cancel-edit" })
             </div>
 
             @section ViewScripts {

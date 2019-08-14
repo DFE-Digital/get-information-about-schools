@@ -103,8 +103,8 @@
                     </div>
                     <div class="column-full">
                         <div class="submit-cancel-panel">
-                            <a href="#" class="button mobile-full-width" v-on:click.prevent="step0Continue">Continue</a>
-                            @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-secondary mobile-full-width"})
+                            <a href="#" class="button" v-on:click.prevent="step0Continue">Continue</a>
+                            @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-secondary"})
                         </div>
                     </div>
                 </div>
@@ -149,13 +149,13 @@
                     </div>
                     <div class="column-full">
                         <div class="submit-cancel-panel">
-                            <a href="#" class="button mobile-full-width" v-on:click.prevent="step1Continue()">
+                            <a href="#" class="button" v-on:click.prevent="step1Continue()">
                                 Continue
                             </a>
-                            <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="step0Complete=false, appState = 'initial'; clearErrors()" v-show="!detailEdit">
+                            <a href="#" class="button button-secondary" v-on:click.prevent="step0Complete=false, appState = 'initial'; clearErrors()" v-show="!detailEdit">
                                 Cancel
                             </a>
-                            <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="step1Continue" v-show="detailEdit">
+                            <a href="#" class="button button-secondary" v-on:click.prevent="step1Continue" v-show="detailEdit">
                                 Cancel
                             </a>
 
@@ -192,15 +192,15 @@
                     </div>
                     <div class="column-two-thirds">
                         <h2 class="heading-medium">Add children's centres</h2>
-                        <div v-bind:class="['form-group inline-with-button', (urnError || urnApiErrors.length > 0 || duplicateUrnError || tooFewCentresError)? 'error' : '']">
+                        <div v-bind:class="['form-group', (urnError || urnApiErrors.length > 0 || duplicateUrnError || tooFewCentresError)? 'error' : '']">
                             @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
                             <label class="form-label" for="LinkedEstablishments_LinkedEstablishmentSearch_Urn">
                                 Establishment <abbr title="Unique Reference Number">URN</abbr>
                             </label>
                             <span class="error-message" v-show="urnError || urnApiErrors.length > 0 || duplicateUrnError">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
                             <span class="error-message" v-show="tooFewCentresError">Add more centres to the {{groupTypeName}}</span>
-                            @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new {@class = "form-control form-control-1-2 search-box", v_model = "searchUrn"})
-                            <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" class="button inline-submit" v-on:click.prevent="lookupUrn">Search</button>
+                            @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new {@class = "form-control form-control-1-2 push-half--bottom", v_model = "searchUrn"})
+                            <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" class="button inline-button" v-on:click.prevent="lookupUrn">Search URN</button>
                         </div>
                     </div>
                     <div class="column-full">
@@ -247,17 +247,17 @@
                         </div>
                         <div class="submit-cancel-panel">
 
-                            <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="appState='groupDetail', apiErrors=[], detailEdit = true; clearErrors()">&laquo; Go back</a>
+                            <a href="#" class="button button-secondary" v-on:click.prevent="appState='groupDetail', apiErrors=[], detailEdit = true; clearErrors()">&laquo; Go back</a>
                             @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                             {
                                 <input type="hidden" name="action" value="@GroupEditorViewModel.ActionSave"/>
                                 <!--JB: until final step, go to next step and show "continue", then final step submit with text "create" -->
-                                <button type="submit" name="action" class="button mobile-full-width" value="@GroupEditorViewModel.ActionSave" v-on:click.prevent="clearErrors(); submitCentres();">Create children's centre {{groupTypeName}}</button>
+                                <button type="submit" name="action" class="button" value="@GroupEditorViewModel.ActionSave" v-on:click.prevent="clearErrors(); submitCentres();">Create children's centre {{groupTypeName}}</button>
                             }
 
                             @(Model.InEditMode
-                                ? Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "button button-secondary cancel mobile-full-width"})
-                                : Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-secondary cancel mobile-full-width"}))
+                                ? Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "button button-secondary cancel"})
+                                : Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-secondary cancel"}))
                         </div>
                     </div>
                 </div>
@@ -292,12 +292,12 @@
                     </div>
                     <div class="column-full">
                         <div class="submit-cancel-panel">
-                            <a href="#" class="button mobile-full-width" v-on:click.prevent="addToGroup()">
+                            <a href="#" class="button" v-on:click.prevent="addToGroup()">
                                 <span v-show="!pendingEdit">Add children's centre</span>
                                 <span v-show="pendingEdit">Update children's centre</span>
                             </a>
-                            <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="appState='addCentre', searchUrn=''; clearErrors();" v-show="!pendingEdit">Cancel</a>
-                            <a href="#" class="button button-secondary mobile-full-width" v-on:click.prevent="cancelEdit" v-show="pendingEdit">
+                            <a href="#" class="button button-secondary" v-on:click.prevent="appState='addCentre', searchUrn=''; clearErrors();" v-show="!pendingEdit">Cancel</a>
+                            <a href="#" class="button button-secondary" v-on:click.prevent="cancelEdit" v-show="pendingEdit">
                                 Cancel
                             </a>
                         </div>

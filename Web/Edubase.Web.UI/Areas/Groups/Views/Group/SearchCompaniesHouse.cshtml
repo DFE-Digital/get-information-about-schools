@@ -27,11 +27,11 @@
     <div class="grid-row">
         <div class="column-two-thirds">
             <h2 class="heading-small">Add company</h2>
-            <div class="form-group inline-with-button @Html.ValidationCssClassFor(x => x.SearchText)">
+            <div class="form-group @Html.ValidationCssClassFor(x => x.SearchText)">
                 @Html.LabelFor(x => x.SearchText, "Enter the Companies House name or number", new { @class = "form-label" })
                 @Html.ValidationMessageFor(x => x.SearchText)
-                @Html.TextBoxFor(x => x.SearchText, new { maxlength = 120, @class = "form-control " })
-                <button type="submit" class="button inline-submit">Search</button>
+                @Html.TextBoxFor(x => x.SearchText, new { maxlength = 120, @class = "form-control form-control-3-4 push-half--bottom" })
+                <button type="submit" class="button inline-button">Search</button>
             </div>
 
         </div>

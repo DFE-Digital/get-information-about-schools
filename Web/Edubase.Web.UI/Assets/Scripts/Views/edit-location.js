@@ -1,5 +1,5 @@
 DfE.Views.editLocation = {
-  init: function (options) {
+  init: function(options) {
     'use strict';
 
     var defaults = {
@@ -20,20 +20,29 @@ DfE.Views.editLocation = {
     });
 
     if (typeof (jScriptVersion) === 'undefined' || jScriptVersion >= 9) {
-      $(function () {
-        setTimeout(function () {
-          self.bindAutosuggest('#LSOAName',
-            '#LSOAIdHidden',
-            { data: window.lsoas, name: "name", value: "id" });
-          self.bindAutosuggest('#MSOAName',
-            '#MSOAIdHidden',
-            { data: window.msoas, name: "name", value: "id" });
-        }, 500);
+      $(function() {
+        setTimeout(function() {
+          self.bindAutosuggest('#AdministrativeDistrictName', '#searchby-district-ref', 'District', '#AdministrativeDistrictIdHidden', { data: window.districts, name: "name", value: "id" });
+          self.bindAutosuggest('#AdministrativeWardName', '#searchby-ward-ref', 'Ward', '#AdministrativeWardIdHidden', { data: window.wards, name: "name", value: "id" });
+          self.bindAutosuggest('#ParliamentaryConstituencyName', '#searchby-constituency-ref', 'Parliamentary constituency', '#ParliamentaryConstituencyIdHidden', { data: window.constituencies, name: "name", value: "id" });
+          self.bindAutosuggest('#CASWardName', '#searchby-casward-ref', 'Census ward', '#CASWardIdHidden', { data: window.caswards, name: "name", value: "id" });
+          self.bindAutosuggest('#GSSLAName', '#searchby-gssla-ref', 'LA Code', '#GSSLAIdHidden', { data: window.gsslas, name: "name", value: "id" });
+          self.bindAutosuggest('#LSOAName', '#searchby-lsoa-ref', 'LSOA', '#LSOAIdHidden', { data: window.lsoas, name: "name", value: "id" });
+          self.bindAutosuggest('#MSOAName', '#searchby-msoa-ref', 'MSOA', '#MSOAIdHidden', { data: window.msoas, name: "name", value: "id" });
+          },
+          500);
       });
     }
   },
-  
-  bindAutosuggest: function (targetInputElementName, targetResolvedInputElementName, suggestionSource) {
+
+  bindAutosuggest: function (targetInputElementName, warningInputElement, targetDisplayName, targetResolvedInputElementName, suggestionSource) {
+
+    // Setting a .focused class on the pseudo wrapper
+    $(targetInputElementName).on('focus', function () {
+        $(warningInputElement + ' .autosuggest').addClass('focused');
+    }).on('blur', function () {
+        $(warningInputElement + ' .autosuggest').removeClass('focused');
+    });
 
     if ($(targetInputElementName).length === 0) {
       console.log("The input field '" + targetInputElementName + "' does not exist.");
@@ -63,7 +72,7 @@ DfE.Views.editLocation = {
 
       source = new Bloodhound({
         datumTokenizer: function (d) { return Bloodhound.tokenizers.nonword(d[field]); },
-        queryTokenizer: Bloodhound.tokenizers.whitespace, 
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
         local: suggestionSource.data
       });
       source.initialize();
@@ -75,7 +84,7 @@ DfE.Views.editLocation = {
     var templateHandler = function (suggestion) {
       return '<div><a class="js-allow-exit" href="javascript:">' + suggestion[field] + '</a></div>';
     };
-    
+
     $(targetInputElementName).typeahead({
       hint: false,
       highlight: true,
@@ -136,60 +145,33 @@ DfE.Views.editLocation = {
         highLightFirstSuggestion.call(this);
       });
     }
-    
-    $('#LSOAName').on('typeahead:render', function (e) {
-      highLightFirstSuggestion.call(this);
-    });
 
-    $('#LSOAName, #TextSearchModel_Text').on('typeahead:open', function (e) {
-      highLightFirstSuggestion.call(this);
-    });
+    $(targetInputElementName).on('typeahead:render',
+      function (e) {
+        highLightFirstSuggestion.call(this);
+      });
 
-    $('#LSOAName').on('keydown', function (e) {
-      var $input = $(this);
-      if (e.which === 13) {
-        e.preventDefault();
-        e.stopPropagation();
-        if ($.trim($(this).val()).length === 0) {
-          return self.showWarning($('#searchby-lsoa-ref'), 'Please enter a LSOA to start a search');
+    $(targetInputElementName, '#TextSearchModel_Text').on('typeahead:open',
+      function (e) {
+        highLightFirstSuggestion.call(this);
+      });
 
+    $(targetInputElementName).on('keydown',
+      function (e) {
+        var $input = $(this);
+        if (e.which === 13) {
+          e.preventDefault();
+          e.stopPropagation();
+          if ($.trim($(this).val()).length === 0) {
+            return self.showWarning($(warningInputElement), 'Please enter a ' + targetDisplayName + ' to start a search');
+          }
+          if (!$(this).nextAll('.tt-menu').hasClass('tt-empty')) {
+            $(this).nextAll('.tt-menu').find('.tt-cursor').click();
+          } else {
+            return self.showWarning($(warningInputElement),
+              'We don’t recognise this ' + targetDisplayName + '. Amend it or clear it to continue searching.');
+          }
         }
-        if (!$(this).nextAll('.tt-menu').hasClass('tt-empty')) {
-          $(this).nextAll('.tt-menu').find('.tt-cursor').click();
-        } else {
-          return self.showWarning($('#searchby-lsoa-ref'),
-            'We don’t recognise this LSOA. Amend it or clear it to continue searching.');
-        }
-      }
-    });
-
-    $('#MSOAName').on('typeahead:render', function (e) {
-      highLightFirstSuggestion.call(this);
-    });
-
-    $('#MSOAName, #TextSearchModel_Text').on('typeahead:open', function (e) {
-      highLightFirstSuggestion.call(this);
-    });
-
-    $('#MSOAName').on('keydown', function (e) {
-      var $input = $(this);
-      if (e.which === 13) {
-        e.preventDefault();
-        e.stopPropagation();
-        if ($.trim($(this).val()).length === 0) {
-          return self.showWarning($('#searchby-MSOA-ref'), 'Please enter a MSOA to start a search');
-
-        }
-        if (!$(this).nextAll('.tt-menu').hasClass('tt-empty')) {
-          $(this).nextAll('.tt-menu').find('.tt-cursor').click();
-        } else {
-          return self.showWarning($('#searchby-msoa-ref'),
-            'We don’t recognise this MSOA. Amend it or clear it to continue searching.');
-        }
-      }
-    });
+      });
   }
-
 };
-
-

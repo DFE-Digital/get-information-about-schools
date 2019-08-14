@@ -41,15 +41,15 @@
                 </fieldset>
             </div>
         </div>
-        <div class="column-two-thirds">
+        <div class="column-full">
             <h2 class="heading-medium">Select local authorities</h2>
             <div class="form-group @Html.ValidationCssClassFor(x => x.SelectedLocalAuthorityIds)">
                 @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Select a predefined set or individually add local authorities", new { @class = "form-label", @for = "SelectedLocalAuthoritySetId" })
-                @Html.DropDownListFor(x => x.SelectedLocalAuthoritySetId, Model.LocalAuthoritySetSelectList, "Custom", new { @class = "form-control form-control-3-4" })
-                @Html.RouteLink("View predefined sets", "PredefinedLASets", null, new { @class = "baseline-inline" })
+                @Html.DropDownListFor(x => x.SelectedLocalAuthoritySetId, Model.LocalAuthoritySetSelectList, "Custom", new { @class = "form-control form-control-1-2 push-half--right push-half--bottom" })
+                @Html.RouteLink("View predefined sets", "PredefinedLASets", null, new { @class = "inline-button" })
             </div>
 
-            <div class="form-group form-control-3-4 ">
+            <div class="form-group form-control-1-2">
                 @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Add local authorities", new { @class = "visuallyhidden", @for = "LocalAuthorityToAdd" })
                 <div id="la-id-target" class="la-id-target form-control">
                     @foreach (var id in Model.SelectedLocalAuthorityIds)
@@ -81,8 +81,8 @@
             </div>
 
             <div class="form-group push--top">
-                <button type="submit" name="@VM.BindAliasForActionName" class="button mobile-full-width" value="@VM.ActionSearch">Continue</button>
-                @Html.ActionLink("Cancel", "Index", "Tools", null, new { @class = "button button-secondary mobile-full-width" })
+                <button type="submit" name="@VM.BindAliasForActionName" class="button" value="@VM.ActionSearch">Continue</button>
+                @Html.ActionLink("Cancel", "Index", "Tools", null, new { @class = "button button-secondary" })
             </div>
         </div>
     </div>

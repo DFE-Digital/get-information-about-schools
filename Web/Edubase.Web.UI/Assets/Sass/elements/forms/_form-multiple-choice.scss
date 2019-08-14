@@ -184,8 +184,9 @@
     padding-left: 0;
 
     label {
-        padding: 9px 0 7px 36px;
-        width: 90%;
+        width: 100%;
+        @include box-sizing(border-box);
+        padding: 9px 9px 7px 36px;
         border-bottom: 1px solid $border-colour;
         font-size: 16px;
         &:hover {
@@ -199,6 +200,20 @@
             transform: none;
             border-left: 0;
             @include opacity(1);
+        }
+    }
+
+    // Extra padding for the toggle icon
+    &.nested-items {
+        label {
+            padding-right: 30px;
+        }
+
+        // Extra padding removed for the nested items
+        .filter-group {
+            label {
+                padding-right: 9px;
+            }
         }
     }
 

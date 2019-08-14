@@ -3,7 +3,7 @@
 <div id="school-links" class="tab-content">
     @if (Model.UserCanEdit)
     {
-        <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Establishment.Urn })" class="button button-secondary mobile-full-width">Edit links</a>
+        <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Establishment.Urn })" class="button button-secondary">Edit links</a>
 
     }
 
@@ -51,7 +51,7 @@
     @if (Model.UserCanEdit)
     {
         <div class="button-row">
-            <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Establishment.Urn })" class="button button-secondary mobile-full-width">Edit links</a>
+            <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Establishment.Urn })" class="button button-secondary">Edit links</a>
         </div>
 
     }

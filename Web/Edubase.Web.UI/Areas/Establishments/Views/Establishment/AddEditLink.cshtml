@@ -84,12 +84,12 @@
             }
 
             <div class="button-row">
-                <button id="save-submit" name="act" value="save" class="button mobile-full-width js-allow-exit">Save link</button>
+                <button id="save-submit" name="act" value="save" class="button js-allow-exit">Save link</button>
                 @if (!Model.IsNew)
                 {
-                    <button name="act" value="delete" class="button button-secondary mobile-full-width estab-link-delete">Delete</button>
+                    <button name="act" value="delete" class="button button-secondary estab-link-delete">Delete</button>
                 }
-                <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Urn })" class="button button-secondary  mobile-full-width">Cancel</a>
+                <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Urn })" class="button button-secondary">Cancel</a>
             </div>
         </div>
     </div>

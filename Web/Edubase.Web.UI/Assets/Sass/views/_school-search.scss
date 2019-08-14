@@ -1,4 +1,4 @@
-﻿// styles for the schools search view
+// styles for the schools search view
 
 
 .expanding-search-field {
@@ -144,54 +144,67 @@
 }
 
 .no-js {
-    .selected-las {
-        width: 100%;
-    }
+  .selected-las {
+    width: 100%;
+  }
 
-    #la-id-target {
-        border-width: 2px;
-        width: 50%;
-        float: left;
-        margin-right: 12px;
-        @include media(mobile) {
-            width: 98%;
-            margin-bottom: 12px;
-        }
-    }
+  #la-id-target {
+    border-width: 2px;
+    width: 50%;
+    float: left;
+    margin-right: 12px;
 
-    .search-type-wrapper {
-        .search-toggle-panel {
-            .multiple-choice--radio {
-                padding-left: 0;
-                input[type=radio] + label {
-                    padding-left: 0;
-                    font-weight: bold;
-                    &:before,
-                    &:after {
-                        display: none;
-                    }
-                }
-            }
-            .panel {
-                padding-top: 0;
-                padding-left: 0;
-                border: 0;
-            }
-        }
+    @include media(mobile) {
+      width: 98%;
+      margin-bottom: 12px;
     }
+  }
 
-    .expanding-search-field {
-        border-left: 0;
+  .search-type-wrapper {
+    .search-toggle-panel {
+      .multiple-choice--radio {
         padding-left: 0;
-        margin-left: 0;
-    }
 
-    #TextSearchModel_Text {
-        width: 50%;
-         @include media(mobile) {
-            width: 100%;
+        input[type=radio] + label {
+          padding-left: 0;
+          font-weight: bold;
+
+          &:before,
+          &:after {
+            display: none;
+          }
         }
+      }
+
+      .panel {
+        padding-top: 0;
+        padding-left: 0;
+        border: 0;
+      }
     }
+  }
+
+  .expanding-search-field {
+    border-left: 0;
+    padding-left: 0;
+    margin-left: 0;
+  }
+
+  #TextSearchModel_Text {
+    width: 50%;
+
+    @include media(mobile) {
+      width: 100%;
+    }
+  }
+
+  #GroupSearchModel_Text {
+    width: 50%;
+
+    @include media(mobile) {
+      width: 100%;
+    }
+  }
 }
 
 .faux-legend {

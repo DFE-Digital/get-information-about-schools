@@ -78,7 +78,7 @@
                         <button name="action" value="cancel" class="link-button font-small">Wrong establishment?</button>
                         @Html.HiddenFor(x => x.FoundItem.Urn)
                         @Html.HiddenFor(x => x.FoundItem.Name)
-                        @Html.HiddenFor(x => x.FoundItem.Address)    
+                        @Html.HiddenFor(x => x.FoundItem.Address)
                     </div>
                     <div class="column-two-thirds">
 
@@ -92,8 +92,8 @@
                         @Html.EditorFor(x => x.FoundItem.OpeningDateView, new { title = "Opening date" })
 
                         <div class="button-row">
-                            <button type="submit" name="action" value="add" class="button mobile-full-width" id="find-urn">@(ViewBag.ButtonText ?? "Add establishment")</button>
-                            <button name="action" value="cancel" class="button mobile-full-width button-secondary">Cancel</button>
+                            <button type="submit" name="action" value="add" class="button" id="find-urn">@(ViewBag.ButtonText ?? "Add establishment")</button>
+                            <button name="action" value="cancel" class="button button-secondary">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -106,13 +106,13 @@
                 <div class="grid-row">
                     <div class="column-two-thirds">
                         <h2 class="heading-small">Predecessor school</h2>
-                        <div class="form-group inline-with-button @Html.ValidationCssClassFor(x => x.SearchUrn)">
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.SearchUrn)">
                             <label class="form-label" for="Urn">
                                 Establishment <abbr title="Unique Reference Number">URN</abbr>
                             </label>
                             @Html.ValidationMessageFor(x => x.SearchUrn)
-                            @Html.TextBoxFor(x => x.SearchUrn, null, new { @class = "form-control" })
-                            <button type="submit" name="action" value="search" class="button inline-submit" id="find-urn">Search</button>
+                            @Html.TextBoxFor(x => x.SearchUrn, null, new { @class = "form-control form-control-1-2 push-half--bottom" })
+                            <button type="submit" name="action" value="search" class="button inline-button" id="find-urn">Search URN</button>
                         </div>
                     </div>
                 </div>
@@ -173,8 +173,8 @@
                         }
 
                         <div class="submit-cancel-panel">
-                            <button type="submit" name="action" value="create" id="go-create" class="button mobile-full-width">Create academies</button>
-                            @Html.ActionLink("Cancel", "Index", "Tools", null, new { @Class = "button button-secondary cancel mobile-full-width" })
+                            <button type="submit" name="action" value="create" id="go-create" class="button">Create academies</button>
+                            @Html.ActionLink("Cancel", "Index", "Tools", null, new { @Class = "button button-secondary cancel" })
                         </div>
                     </div>
                 </div>
