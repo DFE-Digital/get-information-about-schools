@@ -1,6 +1,19 @@
 // Radio buttons & checkboxes
 
 // By default, multiple choice inputs stack vertically
+legend.multiple-choice {
+  display: block;
+  float: none;
+  clear: left;
+  position: relative;
+  padding: 0 0 0 0px;
+  margin-bottom: $gutter-one-third;
+
+  @include media(tablet) {
+    float: left;
+  }
+}
+
 .multiple-choice {
 
     display: block;
