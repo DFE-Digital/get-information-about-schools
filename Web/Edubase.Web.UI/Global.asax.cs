@@ -1,4 +1,4 @@
-﻿using Autofac;
+using Autofac;
 using Edubase.Common;
 using Edubase.Common.Cache;
 using Edubase.Services;
@@ -6,10 +6,15 @@ using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Validation;
 using FluentValidation.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Http;
+using System.Xml;
 using AzureTableLogger;
 using Newtonsoft.Json.Serialization;
 using Kentor.AuthServices.Exceptions;
@@ -23,7 +28,17 @@ namespace Edubase.Web.UI
     {
         protected void Application_Start()
         {
-            
+#if DEBUG
+            try
+            {
+                GetExternalSettings();
+            }
+            catch (Exception e)
+            {
+                throw new UnauthorizedAccessException("Could not get external settings. This is probably because you haven't been issued the external settings file.");
+            }
+#endif
+
             GlobalConfiguration.Configure(x => 
             {
                 x.MapHttpAttributeRoutes();
@@ -53,6 +68,52 @@ namespace Edubase.Web.UI
             ValueProviderFactories.Factories.Add(new TokenValueProviderFactory());
 
             MvcHandler.DisableMvcResponseHeader = true;
+        }
+
+
+        private static void GetExternalSettings()
+        {
+            string configPath = Path.Combine(AppContext.BaseDirectory, "../../devsecrets.gias.config.alwaysignore");
+            if (!File.Exists(configPath)) throw new FileNotFoundException();
+            XmlDocument doc;
+            string xmlIn;
+            using (StreamReader reader = new StreamReader(new FileStream(configPath, FileMode.Open, FileAccess.Read, FileShare.Read)))
+            {
+                doc = new XmlDocument();
+                xmlIn = reader.ReadToEnd();
+            }
+
+            doc.LoadXml(xmlIn);
+            foreach (XmlNode child in doc.ChildNodes)
+            {
+                if (!child.Name.Equals("configuration")) continue;
+                foreach (XmlNode childNode in child.ChildNodes)
+                {
+                    if (childNode.Name.Equals("appSettings"))
+                    {
+                        foreach (XmlNode node in childNode.ChildNodes)
+                        {
+                            if (node.Name.Equals("add"))
+                            {
+                                ConfigurationManager.AppSettings[node.Attributes?["key"].Value] = node.Attributes?["value"].Value;
+                            }
+                        }
+                    }
+                    else if (childNode.Name.Equals("connectionStrings"))
+                    {
+                        FieldInfo configurationReadOnlyField = typeof(ConfigurationElement).GetField("_bReadOnly", BindingFlags.Instance | BindingFlags.NonPublic);
+                        foreach (XmlNode node in childNode.ChildNodes)
+                        {
+                            if (!node.Name.Equals("add")) continue;
+                            if (node.Attributes == null) continue;
+                            ConnectionStringSettings connection = ConfigurationManager.ConnectionStrings[node.Attributes?["name"].Value];
+                            configurationReadOnlyField?.SetValue(connection, false);
+                            connection.ConnectionString = node.Attributes?["connectionString"].Value;
+                        }
+                    }
+                }
+
+            }
         }
 
         protected void Application_Error(object sender, EventArgs e)
