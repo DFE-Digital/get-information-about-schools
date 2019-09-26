@@ -205,3 +205,5 @@ Web/Web.UI/
 
 .idea
 
+# Secrets file. DO NOT CHANGE
+**/*.alwaysignore
