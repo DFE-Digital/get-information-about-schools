@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" %>
+<%@ Page Language="C#" %>
 <% Response.StatusCode = 404; %>
 
 <!DOCTYPE html>
@@ -168,7 +168,7 @@
                         <div class="phase-banner-beta">
     <p>
         <strong class="phase-tag">BETA</strong>
-        <span>This is a new service – your <a href="http://www.smartsurvey.co.uk/s/Getinformationaboutschools/" rel="external" target="_blank" class="font16-ext-link">feedback<span class="visuallyhidden"></span></a> will help us to improve it.</span>
+        <span>This is a new service. Our feedback survey is currently closed. We plan to re-open it soon.</span>
     </p>
 </div>
                     </div>

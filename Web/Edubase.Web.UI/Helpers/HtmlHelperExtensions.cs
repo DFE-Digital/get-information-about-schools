@@ -103,7 +103,7 @@ namespace Edubase.Web.UI.Helpers
                 var vals = query.GetValues(item);
                 foreach (var item2 in vals)
                 {
-                    sb.AppendLine("\r\n\t\t\t\t\t\t\t\t\t" + $@"<input type=""hidden"" name=""{item}"" value=""{item2}"" />");
+                    sb.AppendLine("\r\n\t\t\t\t\t\t\t\t\t" + $@"<input type=""hidden"" name=""{HttpUtility.HtmlEncode(item)}"" value=""{HttpUtility.HtmlEncode(item2)}"" />");
                 }
             }
             return new MvcHtmlString(sb.ToString());
