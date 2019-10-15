@@ -29,7 +29,7 @@ namespace Edubase.Web.UI.Controllers.Api
                 var apiResult = retVal.GetResult();
                 var minRes = new EstbalishmentApiResponse
                 {
-                    Status = "Success",
+                    Status = retVal.Status.ToString(),
                     ReturnValue = new EstablishmentApiPayload()
                     {
                         Name = apiResult.Name,
