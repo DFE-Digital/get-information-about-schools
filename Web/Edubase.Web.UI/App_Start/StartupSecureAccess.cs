@@ -49,8 +49,7 @@ namespace Edubase.Web.UI
             var spOptions = new SPOptions
             {
                 EntityId = new EntityId(ApplicationIdpEntityId),
-                ReturnUrl = ExternalAuthDefaultCallbackUrl,
-                AuthenticateRequestSigningBehavior = SigningBehavior.Always
+                ReturnUrl = ExternalAuthDefaultCallbackUrl
             };
 
             spOptions.ServiceCertificates.Add(new ServiceCertificate
@@ -66,7 +65,6 @@ namespace Edubase.Web.UI
                 AllowUnsolicitedAuthnResponse = true,
                 Binding = Saml2BindingType.HttpRedirect,
                 MetadataLocation = MetadataLocation.AbsoluteUri,
-                WantAuthnRequestsSigned = true,
                 DisableOutboundLogoutRequests = true
             };
 
