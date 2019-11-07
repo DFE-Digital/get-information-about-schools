@@ -75,15 +75,12 @@ namespace Edubase.Web.UI
         {
             string configPath = Path.Combine(AppContext.BaseDirectory, "../../devsecrets.gias.config.alwaysignore");
             if (!File.Exists(configPath)) throw new FileNotFoundException();
-            XmlDocument doc;
-            string xmlIn;
-            using (StreamReader reader = new StreamReader(new FileStream(configPath, FileMode.Open, FileAccess.Read, FileShare.Read)))
+            XmlDocument doc = new XmlDocument();
+            using (XmlReader reader = XmlReader.Create(configPath, GetSecureXmlReaderSettings()))
             {
-                doc = new XmlDocument();
-                xmlIn = reader.ReadToEnd();
+                doc.Load(reader);
             }
 
-            doc.LoadXml(xmlIn);
             foreach (XmlNode child in doc.ChildNodes)
             {
                 if (!child.Name.Equals("configuration")) continue;
@@ -158,6 +155,17 @@ namespace Edubase.Web.UI
 
         }
 
-
+        private static XmlReaderSettings GetSecureXmlReaderSettings()
+        {
+            XmlReaderSettings settings = new XmlReaderSettings
+            {
+                IgnoreComments = true,
+                IgnoreProcessingInstructions = true,
+                IgnoreWhitespace = true,
+                DtdProcessing = DtdProcessing.Ignore,
+                XmlResolver = null
+            };
+            return settings;
+        }
     }
 }
