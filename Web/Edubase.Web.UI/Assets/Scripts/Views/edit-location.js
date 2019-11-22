@@ -73,7 +73,30 @@ DfE.Views.editLocation = {
       source = new Bloodhound({
         datumTokenizer: function (d) { return Bloodhound.tokenizers.nonword(d[field]); },
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        local: suggestionSource.data
+        local: suggestionSource.data,
+        sorter: function (a, b) {
+            var inputString = $(targetInputElementName).val();
+
+            //move exact matches to top
+            if (inputString === a[field]) { return -1; }
+            if (inputString === b[field]) { return 1; }
+
+            //close match without case matching
+            if (inputString.toLowerCase() === a[field].toLowerCase()) { return -1; }
+            if (inputString.toLowerCase() === b[field].toLowerCase()) { return 1; }
+
+            if ((inputString !== a[field]) && (inputString !== b[field])) {
+
+              if (a[field] < b[field]) {
+                return -1;
+              }
+              else if (a[field] > b[field]) {
+                return 1;
+              }
+              else return 0;
+            }
+            return 0;
+        }
       });
       source.initialize();
     } else {
