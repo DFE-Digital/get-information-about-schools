@@ -66,27 +66,27 @@ namespace Edubase.Web.UI.Controllers
                 UserCanCreateSchoolTrustGroup = createGroupPermission.GroupTypes.Any(x => x == GT.Trust),
                 UserCanCreateAcademySponsor = createGroupPermission.GroupTypes.Any(x => x == GT.SchoolSponsor),
                 UserCanCreateEstablishment = createEstablishmentPermission.CanCreate,
-                UserCanManageAcademyOpenings = User.InRole(R.ROLE_BACKOFFICE, R.EFADO, R.AP_AOS),
-                UserCanBulkCreateAcademies = User.InRole(R.ROLE_BACKOFFICE, R.EFADO, R.AP_AOS),
-                UserCanMergeOrAmalgamateEstablishments = User.InRole(R.EDUBASE, R.ROLE_BACKOFFICE, R.EDUBASE_CMT, R.AP_AOS, R.APT, R.EFADO, R.FST, R.IEBT, R.SOU),
-                UserCanBulkUpdateGovernors = User.InRole(R.EDUBASE_GROUP_MAT, R.ESTABLISHMENT, R.EFADO, R.ROLE_BACKOFFICE),
-                UserCanBulkUpdateEstablishments = User.InRole(R.EDUBASE_CMT, R.EDUBASE, R.AP_AOS, R.APT, R.EDUBASE_CHILDRENS_CENTRE_POLICY, R.EFADO, R.EFAHNS, R.FST, R.IEBT, R.SOU, R.EDUBASE_LACCDO, R.LADO, R.LSU, R.UKRLP),
-                UserCanApprove = User.InRole(R.EDUBASE, R.EDUBASE_CMT, R.ROLE_BACKOFFICE, R.AP_AOS, R.APT, R.EDUBASE_CHILDRENS_CENTRE_POLICY, R.EFADO, R.EFAHNS, R.FST, R.IEBT, R.SOU, R.EDUBASE_LACCDO, R.LADO, R.LSU),
+                UserCanManageAcademyOpenings = User.InRole(AuthorizedRoles.CanManageAcademyOpenings),
+                UserCanBulkCreateAcademies = User.InRole(AuthorizedRoles.CanBulkCreateAcademies),
+                UserCanMergeOrAmalgamateEstablishments = User.InRole(AuthorizedRoles.CanMergeEstablishments),
+                UserCanBulkUpdateGovernors = User.InRole(AuthorizedRoles.CanBulkUpdateGovernors),
+                UserCanBulkUpdateEstablishments = User.InRole(AuthorizedRoles.CanBulkUpdateEstablishments),
+                UserCanApprove = User.InRole(AuthorizedRoles.CanApprove),
                 UserCanSearchChangeHistory = true,
-                UserCanConvertAcademyTrusts = User.InRole(R.EDUBASE, R.EDUBASE_CMT, R.ROLE_BACKOFFICE, R.AP_AOS),
-                UserCanViewIndependentSchoolsSignificantDates = User.InRole(R.EDUBASE, R.EDUBASE_CMT, R.ROLE_BACKOFFICE, R.IEBT),
-                UserCanBulkCreateFreeSchools = User.InRole(R.EDUBASE, R.ROLE_BACKOFFICE, R.EDUBASE_CMT, R.FST),
-                UserCanBulkAssociateEstabs2Groups = User.InRole(R.EDUBASE, R.ROLE_BACKOFFICE, R.EDUBASE_CMT, R.AP_AOS),
-                UserCanDownloadMATClosureReport = User.InRole(R.EDUBASE, R.ROLE_BACKOFFICE, R.EDUBASE_CMT, R.AP_AOS)
+                UserCanConvertAcademyTrusts = User.InRole(AuthorizedRoles.CanManageAcademyTrusts),
+                UserCanViewIndependentSchoolsSignificantDates = User.InRole(AuthorizedRoles.CanSearchIndependentSchools),
+                UserCanBulkCreateFreeSchools = User.InRole(AuthorizedRoles.CanBulkCreateFreeSchools),
+                UserCanBulkAssociateEstabs2Groups = User.InRole(AuthorizedRoles.CanBulkAssociateEstabs2Groups),
+                UserCanDownloadMATClosureReport = User.InRole(AuthorizedRoles.CanManageAcademyTrusts)
             };
 
             return View(viewModel);
         }
 
-        [HttpGet, MvcAuthorizeRoles(R.AP_AOS, R.ROLE_BACKOFFICE, R.EFADO)]
+        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanBulkCreateAcademies)]
         public ActionResult BulkAcademies() => View();
 
-        [HttpPost, MvcAuthorizeRoles(R.AP_AOS, R.ROLE_BACKOFFICE, R.EFADO)]
+        [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanBulkCreateAcademies)]
         public async Task<ActionResult> BulkAcademies(BulkAcademiesViewModel model, int? removeUrn, int? editUrn, string action)
         {
             var establishmentTypeFullList = (await _lookup.EstablishmentTypesGetAllAsync()).ToList();
@@ -301,7 +301,7 @@ namespace Edubase.Web.UI.Controllers
 
 
 
-        [HttpGet, MvcAuthorizeRoles(R.AP_AOS, R.ROLE_BACKOFFICE, R.EFADO, R.SOU, R.IEBT)]
+        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanMergeEstablishments)]
         public async Task<ActionResult> MergersTool()
         {
             var settings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
@@ -342,7 +342,7 @@ namespace Edubase.Web.UI.Controllers
             return View("ApiSessionRecorder");
         }
 
-        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools", Name = "IndSchSearch")]
+        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanSearchIndependentSchools), Route("~/independent-schools", Name = "IndSchSearch")]
         public async Task<ActionResult> IndependentSchoolsSearch(IndSchoolsSearchViewModel viewModel)
         {
             await PopulateLookupData(viewModel);
@@ -380,7 +380,7 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
         
-        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools/results-js", Name = "IndSchSearchResultsPartial")]
+        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanSearchIndependentSchools), Route("~/independent-schools/results-js", Name = "IndSchSearchResultsPartial")]
         public async Task<ActionResult> IndependentSchoolsSearchResults(IndSchoolsSearchViewModel viewModel)
         {
             await PopulateLookupData(viewModel);
@@ -390,7 +390,7 @@ namespace Edubase.Web.UI.Controllers
             return PartialView("_IndSchSearchResults", viewModel);
         }
 
-        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools/download", Name = "IndSchSearchResultsRequestDownload")]
+        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools), Route("~/independent-schools/download", Name = "IndSchSearchResultsRequestDownload")]
         public async Task<ActionResult> IndependentSchoolsSearchDownload(IndSchoolsSearchViewModel viewModel)
         {
             var id = await _establishmentDownloadService.SearchWithDownloadGenerationAsync(new EstablishmentSearchDownloadPayload
@@ -403,7 +403,7 @@ namespace Edubase.Web.UI.Controllers
             return RedirectToRoute("IndSchSearchResultsDownload", new { id, viewModel.Mode });
         }
 
-        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools/download/{id}", Name = "IndSchSearchResultsDownload")]
+        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools), Route("~/independent-schools/download/{id}", Name = "IndSchSearchResultsDownload")]
         public async Task<ActionResult> IndependentSchoolsSearchDownload(Guid id, string mode)
         {
             ViewBag.Subtitle = mode == IndSchoolsSearchViewModel.SpecifierDateOfActionGeneral ? "Download results for next general action required": "Download results for next welfare action required";
@@ -418,7 +418,7 @@ namespace Edubase.Web.UI.Controllers
             return View("IndSchoolSearchDownload/ReadyToDownload", model);
         }
 
-        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools/predefined-local-authority-sets", Name = "PredefinedLASets")]
+        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools), Route("~/independent-schools/predefined-local-authority-sets", Name = "PredefinedLASets")]
         public async Task<ActionResult> PredefinedLASets(PredefinedLASetsViewModel viewModel)
         {
             viewModel.LocalAuthorities = await _lookup.LocalAuthorityGetAllAsync();
@@ -427,7 +427,7 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
-        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools/predefined-local-authority-sets/create", Name = "CreatePredefinedLASet")]
+        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools), Route("~/independent-schools/predefined-local-authority-sets/create", Name = "CreatePredefinedLASet")]
         public async Task<ActionResult> CreatePredefinedLASet(PredefinedLASetViewModel viewModel)
         {
             ModelState.Clear();
@@ -435,7 +435,7 @@ namespace Edubase.Web.UI.Controllers
             return View("CreateEditPredefinedLASet", viewModel);
         }
 
-        [HttpGet, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools/predefined-local-authority-sets/edit/{id}", Name = "EditPredefinedLASet")]
+        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools), Route("~/independent-schools/predefined-local-authority-sets/edit/{id}", Name = "EditPredefinedLASet")]
         public async Task<ActionResult> EditPredefinedLASet(string id)
         {
             var entity = await _localAuthoritySetRepository.GetAsync(id);
@@ -448,7 +448,7 @@ namespace Edubase.Web.UI.Controllers
             });
         }
 
-        [HttpPost, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), 
+        [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools), 
             Route("~/independent-schools/predefined-local-authority-sets/edit/{id}", Name = "EditPredefinedLASetPost"),
             Route("~/independent-schools/predefined-local-authority-sets/create", Name = "CreatePredefinedLASetPost")]
         public async Task<ActionResult> CreateEditPredefinedLASet(PredefinedLASetViewModel viewModel)
@@ -487,7 +487,7 @@ namespace Edubase.Web.UI.Controllers
             return View("CreateEditPredefinedLASet", viewModel);
         }
 
-        [HttpPost, MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.IEBT), Route("~/independent-schools/predefined-local-authority-sets/delete/{id}", Name = "DeletePredefinedLASet")]
+        [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools), Route("~/independent-schools/predefined-local-authority-sets/delete/{id}", Name = "DeletePredefinedLASet")]
         public async Task<ActionResult> DeletePredefinedLASet(string id)
         {
             await _localAuthoritySetRepository.DeleteAsync(id);

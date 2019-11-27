@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -50,7 +50,7 @@ namespace Edubase.Web.UI.Controllers
             var urgent = false;
             foreach (var kvp in _roleToDataSetMappings)
             {
-                if (User.InRole(kvp.Key, EdubaseRoles.ROLE_BACKOFFICE))
+                if (User.InRole(kvp.Key, AuthorizedRoles.CanEdit))
                 {
                     var lastUpdated = items.FirstOrDefault(d => d.EstablishmentType == kvp.Value)?.LastUpdated;
                     if (lastUpdated?.ToDateTime() == null || 
@@ -87,11 +87,11 @@ namespace Edubase.Web.UI.Controllers
 
             foreach (var kvp in _roleToDataSetMappings)
             {
-                if (User.InRole(kvp.Key, EdubaseRoles.ROLE_BACKOFFICE))
+                if (User.InRole(kvp.Key, AuthorizedRoles.CanEdit))
                 {
                     var item = new DataQualityStatusItem {EstablishmentType = kvp.Value};
 
-                    if (User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE))
+                    if (User.IsInRole(AuthorizedRoles.CanEdit))
                     {
                         item.LastUpdated = datasets.FirstOrDefault(d => d.EstablishmentType == kvp.Value)?.LastUpdated;
                     }

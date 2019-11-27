@@ -9,9 +9,7 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    using R = Services.Security.EdubaseRoles;
-
-    [RouteArea("Governors"), RoutePrefix("BulkUpdate"), MvcAuthorizeRoles(R.EDUBASE_GROUP_MAT, R.ESTABLISHMENT, R.EFADO, R.ROLE_BACKOFFICE)]
+    [RouteArea("Governors"), RoutePrefix("BulkUpdate"), MvcAuthorizeRoles(AuthorizedRoles.CanBulkUpdateGovernors)]
     public class GovernorsBulkUpdateController : Controller
     {
         readonly IGovernorsWriteService _governorsWriteService;

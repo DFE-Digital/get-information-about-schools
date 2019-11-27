@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -32,5 +32,8 @@ namespace Edubase.Services.Security
         /// <returns></returns>
         public static bool InRole(this IPrincipal principal, params string[] roles)
             => roles.Any(x => principal.IsInRole(x));
+
+        public static bool InRole(this IPrincipal principal, string roles)
+            => roles.Split(',').Any(x => principal.IsInRole(x));
     }
 }

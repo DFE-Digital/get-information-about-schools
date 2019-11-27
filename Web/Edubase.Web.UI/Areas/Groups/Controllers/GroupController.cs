@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
@@ -60,10 +61,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         }
 
 
-        [HttpGet, EdubaseAuthorize, Route("Convert", Name = "GroupConvertSAT2MAT")]
+        [HttpGet, EdubaseAuthorize, Route("Convert", Name = "GroupConvertSAT2MAT"), MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyTrusts)]
         public ActionResult Convert() => View(new ConvertSATViewModel());
 
-        [HttpPost, EdubaseAuthorize, Route("Convert", Name = "PostGroupConvertSAT2MAT"), ValidateAntiForgeryToken]
+        [HttpPost, EdubaseAuthorize, Route("Convert", Name = "PostGroupConvertSAT2MAT"), MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyTrusts), ValidateAntiForgeryToken]
         public async Task<ActionResult> Convert(ConvertSATViewModel viewModel)
         {
             if (viewModel.ActionName == "find" && ModelState.IsValid)
@@ -97,8 +98,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
 
-        [HttpPost]
-        [Route("Create/{type}"), EdubaseAuthorize]
+        [HttpPost, Route("Create/{type}"), EdubaseAuthorize]
         public async Task<ActionResult> Create(GroupEditorViewModel viewModel, string type)
         {
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
@@ -154,8 +154,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(vm);
         }
 
-        [HttpGet]
-        [Route("Create/{type}"), EdubaseAuthorize]
+        [HttpGet, Route("Create/{type}"), EdubaseAuthorize]
         public async Task<ActionResult> CreateNewGroup(string type)
         {
             var groupTypeMode = StringUtil.ToEnum<eGroupTypeMode>(type);
@@ -208,7 +207,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View("Create", viewModel);
         }
 
-        [Route(nameof(Details) + "/{id:int}", Name = "GroupDetails"), HttpGet]
+        [HttpGet, Route(nameof(Details) + "/{id:int}", Name = "GroupDetails")]
         public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Groups, int skip = 0, string sortBy = null, bool saved = false)
         {
             ViewBag.ShowSaved = saved;
@@ -268,8 +267,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View("GovernanceChangeHistory", viewModel);
         }
 
-        [HttpGet]
-        [Route("Edit/{id:int}/Details"), EdubaseAuthorize]
+        [HttpGet, Route("Edit/{id:int}/Details"), EdubaseAuthorize]
         public async Task<ActionResult> EditDetails(int id)
         {
             var domainModel = (await _groupReadService.GetAsync(id, User)).GetResult();
@@ -305,13 +303,13 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             viewModel.CanUserCloseMATAndMarkAsCreatedInError = viewModel.GroupType.OneOfThese(GT.MultiacademyTrust)
                 && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed)
-                && User.InRole(R.ROLE_BACKOFFICE);
+                && User.InRole(AuthorizedRoles.CanEdit);
 
             viewModel.IsLocalAuthorityEditable = viewModel.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)
-                && viewModel.LinkedEstablishments.Establishments.Count == 0 && User.InRole(R.ROLE_BACKOFFICE);
+                && viewModel.LinkedEstablishments.Establishments.Count == 0 && User.InRole(AuthorizedRoles.CanEdit);
 
 
-            if(User.InRole(R.EDUBASE, R.ROLE_BACKOFFICE, R.EDUBASE_CMT, R.AP_AOS) && viewModel.GroupType.OneOfThese(GT.MultiacademyTrust))
+            if(User.InRole(AuthorizedRoles.CanBulkAssociateEstabs2Groups) && viewModel.GroupType.OneOfThese(GT.MultiacademyTrust))
             {
                 viewModel.CanUserEditClosedDate = true;
                 viewModel.CanUserEditStatus = true;
@@ -321,8 +319,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View("EditDetails", viewModel);
         }
 
-        [HttpPost]
-        [Route("Edit/{id:int}/Details"), EdubaseAuthorize]
+        [HttpPost, Route("Edit/{id:int}/Details"), EdubaseAuthorize]
         public async Task<ActionResult> EditDetails(GroupEditorViewModel viewModel)
         {
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
@@ -362,8 +359,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View("EditDetails", viewModel);
         }
 
-        [HttpGet]
-        [Route("Edit/{id:int}/Links"), EdubaseAuthorize]
+        [HttpGet, Route("Edit/{id:int}/Links"), EdubaseAuthorize]
         public async Task<ActionResult> EditLinks(int id, bool saved = false)
         {
             ViewBag.ShowSaved = saved;
@@ -387,8 +383,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
 
-        [HttpPost]
-        [Route("Edit/{id:int}/Links"), EdubaseAuthorize]
+        [HttpPost, Route("Edit/{id:int}/Links"), EdubaseAuthorize]
         public async Task<ActionResult> EditLinks(GroupEditorViewModel viewModel)
         {
             var model = (await _groupReadService.GetAsync(viewModel.GroupUId.Value, User)).GetResult();
@@ -410,6 +405,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         [HttpPost, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}")]
         public async Task<ActionResult> SaveNewAcademyTrust(CreateAcademyTrustViewModel viewModel)
         {
+            var permission = await _securityService.GetCreateGroupPermissionAsync(User);
+            if (!permission.GroupTypes.Any(x => x == GT.MultiacademyTrust || x == GT.SingleacademyTrust))
+            {
+                throw new PermissionDeniedException("Current principal does not have permission to create a group of this type.");
+            }
+
             var dto = new SaveGroupDto(new GroupModel
             {
                 Address = UriHelper.DeserializeUrlToken<AddressDto>(viewModel.CompaniesHouseAddressToken),
@@ -450,9 +451,15 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View("CreateAcademyTrust", viewModel);
         }
 
-        [HttpGet, EdubaseAuthorize, Route(nameof(SearchCompaniesHouse)), EdubaseAuthorize]
+        [HttpGet, EdubaseAuthorize, Route(nameof(SearchCompaniesHouse))]
         public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel)
         {
+            var permission = await _securityService.GetCreateGroupPermissionAsync(User);
+            if (!permission.GroupTypes.Any(x => x == GT.MultiacademyTrust || x == GT.SingleacademyTrust))
+            {
+                throw new PermissionDeniedException("Current principal does not have the required permissions.");
+            }
+
             if (!viewModel.SearchText.IsNullOrEmpty())
             {
                 if (viewModel.SearchText.IsInteger())
