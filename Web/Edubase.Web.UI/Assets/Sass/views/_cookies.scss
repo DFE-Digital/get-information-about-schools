@@ -1,4 +1,28 @@
-﻿.cookies {
+/* TODO Hard-coded colours and margins - resolve aside part of GOV.UK Frontend migration */
+.app-cookie-banner {
+  background-color: #fff !important;
+  color: #00703c;
+  padding: 10px 0;
+  display: none;
+
+  .no-js & {
+    display: block;
+  }
+
+  .govuk-button {
+    margin: 10px 10px 5px 0;
+    display: inline-block;
+    padding: 5px 10px;
+    border: 2px solid #00703c;
+    background-color: #fff;
+    color: #00703c;
+    box-shadow: none;
+    font-size: 1.1875em;
+    line-height: 1;
+  }
+}
+
+.cookies {
     .font-small {
       font-family: "nta", Arial, sans-serif;
       font-weight: 400;
