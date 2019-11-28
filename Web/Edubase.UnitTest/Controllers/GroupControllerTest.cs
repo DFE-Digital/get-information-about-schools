@@ -648,6 +648,10 @@ namespace Edubase.UnitTest.Controllers
             gws.Setup(x => x.ValidateAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ValidationEnvelopeDto());
             gws.Setup(x => x.SaveNewAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ApiResponse<NumericResultDto>(true) { Response = new NumericResultDto { Value = 123 } });
 
+            GetMock<ISecurityService>().Setup(x => x.GetCreateGroupPermissionAsync(It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new CreateGroupPermissionDto { GroupTypes = new eLookupGroupType[] { eLookupGroupType.MultiacademyTrust }});
+
+
             var vm = new CreateAcademyTrustViewModel
             {
                 CompaniesHouseAddressToken = UriHelper.SerializeToUrlToken(new AddressDto { Line1 = "line1", CityOrTown = "Bobville" }),
