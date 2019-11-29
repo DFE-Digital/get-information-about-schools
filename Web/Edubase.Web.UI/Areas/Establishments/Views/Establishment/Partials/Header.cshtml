@@ -1,4 +1,4 @@
-﻿@using Edubase.Web.UI.ValueConverters;
+@using Edubase.Web.UI.ValueConverters;
 @using Edubase.Web.UI.Areas.Establishments.Models.Search;
 @using Edubase.Common;
 @using ET = Edubase.Services.Enums.eLookupEstablishmentType;
@@ -33,13 +33,15 @@
     }
 </dd>
 
-@if (Model.DisplayPolicy.HeadEmailAddress)
+@if (Model.DisplayPolicy.HeadAppointmentDate)
 {
-    <dt>@(Model.DisplayPolicy.HeadteacherLabel) appointment date</dt>
+    <dt>@(Model.DisplayPolicy.HeadteacherLabel) appointment date:</dt>
     <dd>
         @(Model.Establishment.HeadAppointmentDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
     </dd>
+}
 
+@if (Model.DisplayPolicy.HeadEmailAddress) { 
     <dt>@(Model.DisplayPolicy.HeadEmailAddressLabel):</dt>
     <dd>
         @(Model.Establishment.HeadEmailAddress ?? "Not recorded")
@@ -219,7 +221,8 @@
     <dd>@Model.Establishment.ProprietorName</dd>
 }
 
-@helper OtherServicesLinks() {
+@helper OtherServicesLinks()
+{
     <dt>Data from other services:</dt>
     <dd>
         <ul>
