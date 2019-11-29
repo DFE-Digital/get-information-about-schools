@@ -22,13 +22,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route(Name = "EstabBulkUpdate")]
-        public ActionResult Index() => View(new BulkUpdateViewModel(User.IsInRole(AuthorizedRoles.CanEdit)));
+        public ActionResult Index() => View(new BulkUpdateViewModel(User.IsInRole(AuthorizedRoles.IsAdmin)));
 
 
         [HttpPost, Route(Name = "ProcessBulkUpdate")]
         public async Task<ActionResult> ProcessBulkUpdate(BulkUpdateViewModel viewModel)
         {
-            viewModel.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.CanEdit);
+            viewModel.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin);
 
             if (ModelState.IsValid)
             {
@@ -81,7 +81,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     EffectiveDate = new UI.Models.DateTimeViewModel(dto.EffectiveDate),
                     Result = model
                 };
-                vm.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.CanEdit);
+                vm.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin);
                 vm.OverrideCRProcess = dto.OverrideCRProcess;
                 return View("Index", vm);
             }

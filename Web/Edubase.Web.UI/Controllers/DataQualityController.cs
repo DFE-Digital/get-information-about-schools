@@ -50,7 +50,7 @@ namespace Edubase.Web.UI.Controllers
             var urgent = false;
             foreach (var kvp in _roleToDataSetMappings)
             {
-                if (User.InRole(kvp.Key, AuthorizedRoles.CanEdit))
+                if (User.InRole(kvp.Key, AuthorizedRoles.IsAdmin))
                 {
                     var lastUpdated = items.FirstOrDefault(d => d.EstablishmentType == kvp.Value)?.LastUpdated;
                     if (lastUpdated?.ToDateTime() == null || 
@@ -87,11 +87,11 @@ namespace Edubase.Web.UI.Controllers
 
             foreach (var kvp in _roleToDataSetMappings)
             {
-                if (User.InRole(kvp.Key, AuthorizedRoles.CanEdit))
+                if (User.InRole(kvp.Key, AuthorizedRoles.IsAdmin))
                 {
                     var item = new DataQualityStatusItem {EstablishmentType = kvp.Value};
 
-                    if (User.IsInRole(AuthorizedRoles.CanEdit))
+                    if (User.IsInRole(AuthorizedRoles.IsAdmin))
                     {
                         item.LastUpdated = datasets.FirstOrDefault(d => d.EstablishmentType == kvp.Value)?.LastUpdated;
                     }

@@ -72,7 +72,6 @@ namespace Edubase.Web.UI.Controllers
                 UserCanBulkUpdateGovernors = User.InRole(AuthorizedRoles.CanBulkUpdateGovernors),
                 UserCanBulkUpdateEstablishments = User.InRole(AuthorizedRoles.CanBulkUpdateEstablishments),
                 UserCanApprove = User.InRole(AuthorizedRoles.CanApprove),
-                UserCanSearchChangeHistory = true,
                 UserCanConvertAcademyTrusts = User.InRole(AuthorizedRoles.CanManageAcademyTrusts),
                 UserCanViewIndependentSchoolsSignificantDates = User.InRole(AuthorizedRoles.CanSearchIndependentSchools),
                 UserCanBulkCreateFreeSchools = User.InRole(AuthorizedRoles.CanBulkCreateFreeSchools),

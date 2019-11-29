@@ -604,7 +604,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             viewModel.EditPolicy = (await _establishmentReadService.GetEditPolicyAsync(domainModel, User)).EditPolicy;
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.EditPolicy, User);
-            viewModel.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.CanEdit);
+            viewModel.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin);
             viewModel.SENIds = viewModel.SENIds ?? new int[0];
 
             preprocessViewModel?.Invoke(viewModel);
@@ -1066,7 +1066,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
 
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.EditPolicy, User);
-            viewModel.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.CanEdit);
+            viewModel.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin);
 
             await PopulateSelectLists(viewModel);
 
