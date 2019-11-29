@@ -303,10 +303,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             viewModel.CanUserCloseMATAndMarkAsCreatedInError = viewModel.GroupType.OneOfThese(GT.MultiacademyTrust)
                 && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed)
-                && User.InRole(AuthorizedRoles.CanEdit);
+                && User.InRole(AuthorizedRoles.IsAdmin);
 
             viewModel.IsLocalAuthorityEditable = viewModel.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)
-                && viewModel.LinkedEstablishments.Establishments.Count == 0 && User.InRole(AuthorizedRoles.CanEdit);
+                && viewModel.LinkedEstablishments.Establishments.Count == 0 && User.InRole(AuthorizedRoles.IsAdmin);
 
 
             if(User.InRole(AuthorizedRoles.CanBulkAssociateEstabs2Groups) && viewModel.GroupType.OneOfThese(GT.MultiacademyTrust))

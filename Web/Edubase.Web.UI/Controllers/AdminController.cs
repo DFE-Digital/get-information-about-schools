@@ -18,7 +18,7 @@ using System.Linq;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("Admin"), Route("{action=Logs}"), MvcAuthorizeRoles(AuthorizedRoles.CanEdit)]
+    [RoutePrefix("Admin"), Route("{action=Logs}"), MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
     public class AdminController : EduBaseController
     {
         private readonly ILoggingService _loggingService;

@@ -29,7 +29,6 @@ namespace Edubase.Web.UI.Models
         public bool UserCanBulkUpdateGovernors { get; internal set; }
         public bool UserCanBulkUpdateEstablishments { get; internal set; }
         public bool UserCanApprove { get; internal set; }
-        public bool UserCanSearchChangeHistory { get; internal set; }
         public bool UserCanConvertAcademyTrusts { get; internal set; }
         public bool UserCanViewIndependentSchoolsSignificantDates { get; internal set; }
         public bool UserCanBulkCreateFreeSchools { get; internal set; }
@@ -70,7 +69,7 @@ namespace Edubase.Web.UI.Models
             if (UserCanApprove) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Approvals", "PendingApprovals"), Description = "View your pending changes and approve or reject." });
             if (UserCanManageAcademyOpenings) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Manage academy openings", "ManageAcademyOpenings"), Description = "View details of proposed-to-open academies. Edit academy names and opening dates." });
             retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("View data status", "ViewStatus", "DataQuality"), Description = "See when each team’s data was last updated. You can also confirm that your team's data is up to date." });
-            if (UserCanSearchChangeHistory) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Change history", "ChangeHistoryCriteria"), Description = "View changes in the data relating to establishments and groups." });
+            retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Change history", "ChangeHistoryCriteria"), Description = "View changes in the data relating to establishments and groups." });
             if (UserCanViewIndependentSchoolsSignificantDates) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View independent schools' significant dates", "IndSchSearch"), Description = "View independent schools' &lsquo;Next general action required&rsquo; or &lsquo;Next action required by welfare&rsquo; dates." });
             if (UserCanDownloadMATClosureReport) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View closed multi-academy trust details", "DownloadMATClosureReport"), Description = "This is a list of multi-academy trusts that are currently open on GIAS but reported closed by Companies House." });
             return retVal;
