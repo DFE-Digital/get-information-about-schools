@@ -75,22 +75,24 @@ DfE.Views.editLocation = {
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         local: suggestionSource.data,
         sorter: function (a, b) {
-            var inputString = $(targetInputElementName).val();
+            var inputString = $(targetInputElementName).val().toLowerCase();
+            var aText = a[field].toLowerCase();
+            var bText = b[field].toLowerCase();
+            var regex = /(.*?)\s\[(.*?)\]/gi;
 
-            //move exact matches to top
-            if (inputString === a[field]) { return -1; }
-            if (inputString === b[field]) { return 1; }
+            //move exact non-bracket matches to top
+            if (inputString === aText.replace(regex, "$1")) { return -1; }
+            if (inputString === bText.replace(regex, "$1")) { return 1; }
 
-            //close match without case matching
-            if (inputString.toLowerCase() === a[field].toLowerCase()) { return -1; }
-            if (inputString.toLowerCase() === b[field].toLowerCase()) { return 1; }
-
-            if ((inputString !== a[field]) && (inputString !== b[field])) {
-
-              if (a[field] < b[field]) {
+            //move exact inner-bracket matches to top
+            if (inputString === aText.replace(regex, "$2")) { return -1; }
+            if (inputString === bText.replace(regex, "$2")) { return 1; }
+            
+            if ((inputString !== aText) && (inputString !== bText)) {
+              if (aText < bText) {
                 return -1;
               }
-              else if (a[field] > b[field]) {
+              else if (aText > bText) {
                 return 1;
               }
               else return 0;
