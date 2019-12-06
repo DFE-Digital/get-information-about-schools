@@ -146,7 +146,7 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        [HttpGet, EdubaseAuthorize]
+        [HttpGet, EdubaseAuthorize, MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyTrusts)]
         [Route("Download/MATClosureReport", Name = "DownloadMATClosureReport")]
         public async Task<ActionResult> DownloadMATClosureReportAsync()
         {

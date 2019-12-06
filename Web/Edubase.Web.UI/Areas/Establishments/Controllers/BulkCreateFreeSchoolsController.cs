@@ -15,7 +15,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
     using R = Services.Security.EdubaseRoles;
 
-    [RouteArea("Establishments"), MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.FST)]
+    [RouteArea("Establishments"), MvcAuthorizeRoles(AuthorizedRoles.CanBulkCreateFreeSchools)]
     public class BulkCreateFreeSchoolsController : EduBaseController
     {
         const string ViewName = "BulkCreateFreeSchools";

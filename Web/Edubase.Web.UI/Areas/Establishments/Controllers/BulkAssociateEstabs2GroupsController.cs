@@ -15,7 +15,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
     using R = Services.Security.EdubaseRoles;
 
-    [RouteArea("Establishments"), MvcAuthorizeRoles(R.ROLE_BACKOFFICE, R.AP_AOS)]
+    [RouteArea("Establishments"), MvcAuthorizeRoles(AuthorizedRoles.CanBulkAssociateEstabs2Groups)]
     public class BulkAssociateEstabs2GroupsController : EduBaseController
     {
         private const string ViewName = "BulkAssociateEstabs2Groups";

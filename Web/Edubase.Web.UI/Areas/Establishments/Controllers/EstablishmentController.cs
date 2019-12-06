@@ -30,6 +30,7 @@ using Edubase.Web.UI.Areas.Establishments.Models.Validators;
 using Edubase.Web.UI.Areas.Governors.Controllers;
 using Edubase.Web.UI.Controllers;
 using Edubase.Web.UI.Filters;
+using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
 using FluentValidation.Mvc;
@@ -174,6 +175,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpGet, EdubaseAuthorize, Route("Create", Name = "CreateEstablishment")]
         public async Task<ActionResult> Create()
         {
+            var permission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
+            if (!permission.CanCreate)
+            {
+                throw new PermissionDeniedException("Current principal does not have the required permissions.");
+            }
+
             var viewModel = new CreateChildrensCentreViewModel
             {
                 CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User),
@@ -597,7 +604,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             viewModel.EditPolicy = (await _establishmentReadService.GetEditPolicyAsync(domainModel, User)).EditPolicy;
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.EditPolicy, User);
-            viewModel.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
+            viewModel.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin);
             viewModel.SENIds = viewModel.SENIds ?? new int[0];
 
             preprocessViewModel?.Invoke(viewModel);
@@ -658,7 +665,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         public bool CanUserDefineAdditionalAddresses(int typeId)
-            => typeId.OneOfThese(ET.NonmaintainedSpecialSchool, ET.OtherIndependentSchool, ET.OtherIndependentSpecialSchool) && User.InRole(EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EDUBASE_CMT, EdubaseRoles.IEBT);
+            => typeId.OneOfThese(ET.NonmaintainedSpecialSchool, ET.OtherIndependentSchool, ET.OtherIndependentSpecialSchool) && User.InRole(AuthorizedRoles.CanDefineAdditionalAddresses);
 
         private async Task<ActionResult> DeleteLinkAsync(EditEstablishmentLinksViewModel deltaViewModel)
         {
@@ -1059,7 +1066,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
 
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.EditPolicy, User);
-            viewModel.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
+            viewModel.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin);
 
             await PopulateSelectLists(viewModel);
 

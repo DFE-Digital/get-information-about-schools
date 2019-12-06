@@ -62,15 +62,21 @@
 (function () {
   "use strict"
   var root = this;
-  if(typeof root.GOVUK === 'undefined') { root.GOVUK = {}; }
+  if (typeof root.GOVUK === 'undefined') { root.GOVUK = {}; }
 
+  // TODO Ensure this cookie banner behaviour is retained when doing GOV.UK Frontend migration
   GOVUK.addCookieMessage = function () {
-    var message = document.getElementById('global-cookie-message'),
-        hasCookieMessage = (message && GOVUK.cookie('seen_cookie_message') === null);
+    const message = document.getElementById('global-cookie-message');
+    const acceptedCookies = (message && GOVUK.cookie('seen_cookie_message') !== null);
 
-    if (hasCookieMessage) {
+    if (!acceptedCookies) {
       message.style.display = 'block';
-      GOVUK.cookie('seen_cookie_message', 'yes', { days: 28 });
+
+      document.getElementById('button-accept-cookies').addEventListener('click', function (e) {
+        e.preventDefault();
+        message.style.display = 'none';
+        GOVUK.cookie('seen_cookie_message', 'yes', { days: 28 });
+      });
     }
   };
 }).call(this);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Autofac;
 using Edubase.Common;
@@ -18,7 +18,7 @@ using System.Linq;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("Admin"), Route("{action=Logs}"), MvcAuthorizeRoles(EdubaseRoles.ROLE_BACKOFFICE)]
+    [RoutePrefix("Admin"), Route("{action=Logs}"), MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
     public class AdminController : EduBaseController
     {
         private readonly ILoggingService _loggingService;

@@ -1,15 +1,11 @@
-﻿using Edubase.Services.Approvals;
-using Edubase.Services.Approvals.Models;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
 using Edubase.Services.Lookup;
-using Edubase.Services.Security;
 using Edubase.Web.UI.Helpers;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -21,6 +17,7 @@ namespace Edubase.Web.UI.Controllers.Api
 {
     using M = EstablishmentSearchResultModel;
 
+    [MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyOpenings)]
     public class AcademyOpeningsApiController : ApiController
     {
         private readonly IEstablishmentReadService _establishmentReadService;
@@ -44,7 +41,7 @@ namespace Edubase.Web.UI.Controllers.Api
         /// <param name="skip"></param>
         /// <param name="take"></param>
         /// <returns></returns>
-        [Route("api/academy-openings/list/{from:datetime}/{to:datetime}/{skip:int}/{take:int}"), HttpGet, HttpAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO)]
+        [Route("api/academy-openings/list/{from:datetime}/{to:datetime}/{skip:int}/{take:int}"), HttpGet]
         public async Task<dynamic> GetListAsync(DateTime from, DateTime to, int skip, int take)
         {
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
@@ -96,7 +93,7 @@ namespace Edubase.Web.UI.Controllers.Api
         /// <param name="urn"></param>
         /// <param name="payload"></param>
         /// <returns></returns>
-        [Route("api/academy/{urn:int}"), HttpPost, HttpAuthorizeRoles(EdubaseRoles.AP_AOS, EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EFADO)]
+        [Route("api/academy/{urn:int}"), HttpPost]
         public async Task<HttpResponseMessage> SaveAsync(int urn, [FromBody] dynamic payload)
         {
             DateTime openingDate = payload.openDate;

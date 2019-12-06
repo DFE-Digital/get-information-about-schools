@@ -1,4 +1,4 @@
-﻿using Edubase.Data.Entity;
+using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
 using Edubase.Services.Security;
 using Edubase.Web.UI.Filters;
@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -26,13 +27,13 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> Index()
         {
             var result = await _glossaryRepository.GetAllAsync(1000);
-            return View(new GlossaryViewModel(result.Items) { UserCanEdit = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE) });
+            return View(new GlossaryViewModel(result.Items) { UserCanEdit = User.IsInRole(AuthorizedRoles.IsAdmin) });
         }
 
-        [Route("Create", Name = "CreateGlossaryItem"), HttpGet, EdubaseAuthorize(Roles = EdubaseRoles.ROLE_BACKOFFICE)]
+        [Route("Create", Name = "CreateGlossaryItem"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public ActionResult Create() => View("CreateEdit", new GlossaryItemViewModel());
         
-        [Route("Edit/{id}", Name = "EditGlossaryItem"), HttpGet, EdubaseAuthorize(Roles = EdubaseRoles.ROLE_BACKOFFICE)]
+        [Route("Edit/{id}", Name = "EditGlossaryItem"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> EditAsync(string id)
         {
             var item = await _glossaryRepository.GetAsync(id);
@@ -45,7 +46,7 @@ namespace Edubase.Web.UI.Controllers
             });
         }
 
-        [Route("Edit/{id}", Name = "PostEditGlossaryItem"), HttpPost, EdubaseAuthorize(Roles = EdubaseRoles.ROLE_BACKOFFICE)]
+        [Route("Edit/{id}", Name = "PostEditGlossaryItem"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> EditAsync(GlossaryItemViewModel viewModel)
         {
             var item = await _glossaryRepository.GetAsync(viewModel.Id);
@@ -67,7 +68,7 @@ namespace Edubase.Web.UI.Controllers
             else return View("CreateEdit", viewModel);
         }
 
-        [Route("Create", Name = "PostCreateGlossaryItem"), HttpPost, EdubaseAuthorize(Roles = EdubaseRoles.ROLE_BACKOFFICE)]
+        [Route("Create", Name = "PostCreateGlossaryItem"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> CreateAsync(GlossaryItemViewModel viewModel)
         {
             if (ModelState.IsValid)
