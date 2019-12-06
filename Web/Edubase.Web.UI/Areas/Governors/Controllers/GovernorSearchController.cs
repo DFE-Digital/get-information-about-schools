@@ -151,15 +151,17 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 {"SelectedTab", SearchViewModel.Tab.Governors},
                 {"SearchType", model.SearchType}
             };
+            var routeSuffix = "";
 
             switch (model.SearchType)
             {
                 case eSearchType.Governor:
                     routeDictionary.Add("GovernorSearchModel.Forename", model.GovernorSearchModel.Forename);
                     routeDictionary.Add("GovernorSearchModel.Surname", model.GovernorSearchModel.Surname);
-                    foreach (var i in model.GovernorSearchModel.RoleId)
+
+                    foreach (var roleId in model.GovernorSearchModel.RoleId)
                     {
-                        routeDictionary.Add("GovernorSearchModel.RoleId", i);
+                        routeSuffix += $"&GovernorSearchModel.RoleId={roleId}";
                     }
 
                     routeDictionary.Add("NoResults", true);
@@ -170,7 +172,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     break;
             }
 
-            return new RedirectResult(Url.RouteUrl(routeDictionary));
+            return new RedirectResult(Url.RouteUrl(routeDictionary) + routeSuffix);
         }
 
         private GovernorSearchPayload CreateSearchPayload(GovernorSearchViewModel model) => new GovernorSearchPayload(model.StartIndex, model.PageSize)

@@ -74,7 +74,12 @@
                                         {
                                             <div class="multiple-choice multiple-choice--smaller multiple-choice--list">
                                                 <input name="GovernorSearchModel.RoleId"
-                                                       id="govrole-@governorRole.Id.ToString()" value="@governorRole.Id.ToString()" type="checkbox" />
+                                                       id="govrole-@governorRole.Id.ToString()" value="@governorRole.Id.ToString()" type="checkbox"
+                                                       @if (Model.GovernorSearchModel.RoleId.Contains(governorRole.Id))
+                                                       {
+                                                           <text>checked="checked"</text>
+                                                       }
+                                                       />
                                                 <label for="govrole-@governorRole.Id.ToString()">
                                                     @FormatHelpers.FirstCharToUpper(@governorRole.Name.ToLower())
                                                 </label>
@@ -100,7 +105,7 @@
             }
         </li>
         @if (User.Identity.IsAuthenticated)
-        {
+                                                       {
             <li class="search-type-wrapper">
                 @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
                 {
