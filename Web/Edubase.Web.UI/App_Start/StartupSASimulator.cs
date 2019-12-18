@@ -3,15 +3,15 @@ using System.Globalization;
 using System.IdentityModel.Metadata;
 using System.Security.Claims;
 using System.Web.Helpers;
-using Kentor.AuthServices;
-using Kentor.AuthServices.Configuration;
-using Kentor.AuthServices.Metadata;
-using Kentor.AuthServices.Owin;
-using Kentor.AuthServices.WebSso;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
+using Sustainsys.Saml2;
+using Sustainsys.Saml2.Configuration;
+using Sustainsys.Saml2.Metadata;
+using Sustainsys.Saml2.Owin;
+using Sustainsys.Saml2.WebSso;
 
 [assembly: OwinStartup("SASimulatorConfiguration", typeof(Edubase.Web.UI.StartupSASimulator))]
 
@@ -36,14 +36,14 @@ namespace Edubase.Web.UI
             });
 
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
-            app.UseKentorAuthServicesAuthentication(CreateAuthServicesOptions());
+            app.UseSaml2Authentication(CreateAuthServicesOptions());
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
         }
 
-        private static KentorAuthServicesAuthenticationOptions CreateAuthServicesOptions()
+        private static Saml2AuthenticationOptions CreateAuthServicesOptions()
         {
             var spOptions = CreateSPOptions();
-            var authServicesOptions = new KentorAuthServicesAuthenticationOptions(false)
+            var authServicesOptions = new Saml2AuthenticationOptions(false)
             {
                 SPOptions = spOptions
             };
@@ -74,7 +74,8 @@ namespace Edubase.Web.UI
             {
                 EntityId = new EntityId("http://edubase.gov"),
                 Organization = organization,
-                ReturnUrl = StartupSecureAccess.ExternalAuthDefaultCallbackUrl
+                ReturnUrl = StartupSecureAccess.ExternalAuthDefaultCallbackUrl,
+                MinIncomingSigningAlgorithm = "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
             };
 
             var techContact = new ContactPerson
