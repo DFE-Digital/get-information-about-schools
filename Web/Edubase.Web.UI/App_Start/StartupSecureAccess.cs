@@ -36,7 +36,8 @@ namespace Edubase.Web.UI
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
                 Provider = new CookieAuthenticationProvider(),
-                ExpireTimeSpan = ConfiguredExpireTimeSpan
+                ExpireTimeSpan = ConfiguredExpireTimeSpan,
+                CookieSecure = CookieSecureOption.Always
             });
 
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
