@@ -73,7 +73,32 @@ DfE.Views.editLocation = {
       source = new Bloodhound({
         datumTokenizer: function (d) { return Bloodhound.tokenizers.nonword(d[field]); },
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        local: suggestionSource.data
+        local: suggestionSource.data,
+        sorter: function (a, b) {
+            var inputString = $(targetInputElementName).val().toLowerCase();
+            var aText = a[field].toLowerCase();
+            var bText = b[field].toLowerCase();
+            var regex = /(.*?)\s\[(.*?)\]/gi;
+
+            //move exact non-bracket matches to top
+            if (inputString === aText.replace(regex, "$1")) { return -1; }
+            if (inputString === bText.replace(regex, "$1")) { return 1; }
+
+            //move exact inner-bracket matches to top
+            if (inputString === aText.replace(regex, "$2")) { return -1; }
+            if (inputString === bText.replace(regex, "$2")) { return 1; }
+            
+            if ((inputString !== aText) && (inputString !== bText)) {
+              if (aText < bText) {
+                return -1;
+              }
+              else if (aText > bText) {
+                return 1;
+              }
+              else return 0;
+            }
+            return 0;
+        }
       });
       source.initialize();
     } else {

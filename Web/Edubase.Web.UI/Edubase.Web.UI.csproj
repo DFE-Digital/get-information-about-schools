@@ -309,6 +309,7 @@
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Glimpse\AllUsersApiTraceTab.cs" />
     <Compile Include="Glimpse\CurrentUserApiTraceTab.cs" />
+    <Compile Include="Helpers\AuthorizedRoles.cs" />
     <Compile Include="Helpers\BrowserClientStorage.cs" />
     <Compile Include="Helpers\CannotBeEmptyAttribute.cs" />
     <Compile Include="Helpers\FormHelpers.cs" />

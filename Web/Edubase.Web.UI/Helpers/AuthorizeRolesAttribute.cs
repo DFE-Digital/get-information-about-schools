@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,6 +11,11 @@ namespace Edubase.Web.UI.Helpers
         {
             Roles = string.Join(",", roles);
         }
+
+        public MvcAuthorizeRolesAttribute(string roles) : base()
+        {
+            Roles = roles;
+        }
     }
 
     public class HttpAuthorizeRolesAttribute : System.Web.Http.AuthorizeAttribute
@@ -18,6 +23,11 @@ namespace Edubase.Web.UI.Helpers
         public HttpAuthorizeRolesAttribute(params string[] roles) : base()
         {
             Roles = string.Join(",", roles);
+        }
+
+        public HttpAuthorizeRolesAttribute(string roles) : base()
+        {
+            Roles = roles;
         }
     }
 }

@@ -30,6 +30,7 @@ using Edubase.Web.UI.Areas.Establishments.Models.Validators;
 using Edubase.Web.UI.Areas.Governors.Controllers;
 using Edubase.Web.UI.Controllers;
 using Edubase.Web.UI.Filters;
+using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
 using FluentValidation.Mvc;
@@ -174,6 +175,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpGet, EdubaseAuthorize, Route("Create", Name = "CreateEstablishment")]
         public async Task<ActionResult> Create()
         {
+            var permission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
+            if (!permission.CanCreate)
+            {
+                throw new PermissionDeniedException("Current principal does not have the required permissions.");
+            }
+
             var viewModel = new CreateChildrensCentreViewModel
             {
                 CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User),
@@ -597,7 +604,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             viewModel.EditPolicy = (await _establishmentReadService.GetEditPolicyAsync(domainModel, User)).EditPolicy;
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.EditPolicy, User);
-            viewModel.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
+            viewModel.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin);
             viewModel.SENIds = viewModel.SENIds ?? new int[0];
 
             preprocessViewModel?.Invoke(viewModel);
@@ -616,7 +623,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             if (domainModel.AdministrativeWardId.HasValue)
             {
                 var lookup = (await _cachedLookupService.AdministrativeWardsGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.AdministrativeWardId.Value);
-                viewModel.AdministrativeWardName = lookup?.Name;
+                viewModel.AdministrativeWardName = $"{lookup?.Name} [{lookup?.Code}]";
                 viewModel.AdministrativeWardId = domainModel.AdministrativeWardId;
             }
 
@@ -630,7 +637,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             if (domainModel.CASWardId.HasValue)
             {
                 var lookup = (await _cachedLookupService.CASWardsGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.CASWardId.Value);
-                viewModel.CASWardName = lookup?.Name;
+                viewModel.CASWardName = $"{lookup?.Name} [{lookup?.Code}]";
                 viewModel.CASWardId = domainModel.CASWardId;
             }
 
@@ -658,7 +665,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         public bool CanUserDefineAdditionalAddresses(int typeId)
-            => typeId.OneOfThese(ET.NonmaintainedSpecialSchool, ET.OtherIndependentSchool, ET.OtherIndependentSpecialSchool) && User.InRole(EdubaseRoles.ROLE_BACKOFFICE, EdubaseRoles.EDUBASE_CMT, EdubaseRoles.IEBT);
+            => typeId.OneOfThese(ET.NonmaintainedSpecialSchool, ET.OtherIndependentSchool, ET.OtherIndependentSpecialSchool) && User.InRole(AuthorizedRoles.CanDefineAdditionalAddresses);
 
         private async Task<ActionResult> DeleteLinkAsync(EditEstablishmentLinksViewModel deltaViewModel)
         {
@@ -950,11 +957,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.RSCRegions = (await _cachedLookupService.RscRegionsGetAllAsync()).ToSelectList(viewModel.RSCRegionId);
             viewModel.GovernmentOfficeRegions = (await _cachedLookupService.GovernmentOfficeRegionsGetAllAsync()).ToSelectList(viewModel.GovernmentOfficeRegionId);
             viewModel.AdministrativeDistricts = (await _cachedLookupService.AdministrativeDistrictsGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, x.Name)).ToList();
-            viewModel.AdministrativeWards = (await _cachedLookupService.AdministrativeWardsGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, x.Name)).ToList();
+            viewModel.AdministrativeWards = (await _cachedLookupService.AdministrativeWardsGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, $"{x.Name} [{x.Code}]")).ToList();
             viewModel.ParliamentaryConstituencies = (await _cachedLookupService.ParliamentaryConstituenciesGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, x.Name)).ToList();
             viewModel.UrbanRuralLookup = (await _cachedLookupService.UrbanRuralGetAllAsync()).ToSelectList(viewModel.UrbanRuralId);
             viewModel.GSSLALookup = (await _cachedLookupService.GSSLAGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, x.Name)).ToList();
-            viewModel.CASWards = (await _cachedLookupService.CASWardsGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, x.Name)).ToList();
+            viewModel.CASWards = (await _cachedLookupService.CASWardsGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, $"{x.Name} [{x.Code}]")).ToList();
             viewModel.PruFulltimeProvisionOptions = (await _cachedLookupService.PruFulltimeProvisionsGetAllAsync()).ToSelectList(viewModel.PruFulltimeProvisionId);
             viewModel.PruEducatedByOthersOptions = (await _cachedLookupService.PruEducatedByOthersGetAllAsync()).ToSelectList(viewModel.PruEducatedByOthersId);
             viewModel.PRUEBDOptions = (await _cachedLookupService.PRUEBDsGetAllAsync()).ToSelectList(viewModel.PRUEBDId);
@@ -1059,7 +1066,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
 
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.EditPolicy, User);
-            viewModel.CanOverrideCRProcess = User.IsInRole(EdubaseRoles.ROLE_BACKOFFICE);
+            viewModel.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin);
 
             await PopulateSelectLists(viewModel);
 

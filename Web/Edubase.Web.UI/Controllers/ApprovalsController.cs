@@ -1,9 +1,10 @@
-﻿using Edubase.Web.UI.Filters;
+using Edubase.Web.UI.Filters;
 using System.Web.Mvc;
+using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [RoutePrefix("Approvals"), Route("{action=index}")]
+    [RoutePrefix("Approvals"), Route("{action=index}"), MvcAuthorizeRoles(AuthorizedRoles.CanApprove)]
     public class ApprovalsController : Controller
     {
         [HttpGet, EdubaseAuthorize, Route(Name = "PendingApprovals")]

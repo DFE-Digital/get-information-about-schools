@@ -11,9 +11,7 @@ using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
-    using R = Services.Security.EdubaseRoles;
-
-    [RouteArea("Establishments"), RoutePrefix("BulkUpdate"), MvcAuthorizeRoles(R.ROLE_PRISM, R.ROLE_STAKEHOLDER, R.ROLE_BACKOFFICE)]
+    [RouteArea("Establishments"), RoutePrefix("BulkUpdate"), MvcAuthorizeRoles(AuthorizedRoles.CanBulkUpdateEstablishments)]
     public class BulkUpdateController : Controller
     {
         readonly IEstablishmentWriteService _establishmentWriteService;
@@ -24,13 +22,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route(Name = "EstabBulkUpdate")]
-        public ActionResult Index() => View(new BulkUpdateViewModel(User.IsInRole(R.ROLE_BACKOFFICE)));
+        public ActionResult Index() => View(new BulkUpdateViewModel(User.IsInRole(AuthorizedRoles.IsAdmin)));
 
 
         [HttpPost, Route(Name = "ProcessBulkUpdate")]
         public async Task<ActionResult> ProcessBulkUpdate(BulkUpdateViewModel viewModel)
         {
-            viewModel.CanOverrideCRProcess = User.IsInRole(R.ROLE_BACKOFFICE);
+            viewModel.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin);
 
             if (ModelState.IsValid)
             {
@@ -83,7 +81,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     EffectiveDate = new UI.Models.DateTimeViewModel(dto.EffectiveDate),
                     Result = model
                 };
-                vm.CanOverrideCRProcess = User.IsInRole(R.ROLE_BACKOFFICE);
+                vm.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin);
                 vm.OverrideCRProcess = dto.OverrideCRProcess;
                 return View("Index", vm);
             }
