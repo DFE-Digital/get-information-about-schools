@@ -50,7 +50,8 @@ namespace Edubase.Web.UI
             var spOptions = new SPOptions
             {
                 EntityId = new EntityId(ApplicationIdpEntityId),
-                ReturnUrl = ExternalAuthDefaultCallbackUrl
+                ReturnUrl = ExternalAuthDefaultCallbackUrl,
+                MinIncomingSigningAlgorithm = "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
             };
 
             spOptions.ServiceCertificates.Add(new ServiceCertificate
