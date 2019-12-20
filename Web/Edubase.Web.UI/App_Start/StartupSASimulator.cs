@@ -55,7 +55,6 @@ namespace Edubase.Web.UI
                 SingleSignOnServiceUrl = new Uri("http://dfe-sign-in-simulator.azurewebsites.net/")
             };
 
-            //idp.SigningKeys.AddConfiguredKey(new X509Certificate2(HostingEnvironment.MapPath("~/App_Data/Kentor.AuthServices.StubIdp.cer")));
             authServicesOptions.IdentityProviders.Add(idp);
             new Federation("http://dfe-sign-in-simulator.azurewebsites.net/Federation", true, authServicesOptions);
             return authServicesOptions;
