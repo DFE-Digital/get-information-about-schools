@@ -1,4 +1,4 @@
-﻿var postcodeLookUp = new Vue({
+var postcodeLookUp = new Vue({
     el: '#postcode-lookup',
     data: {
         postcodeUrl: '/public/assets/scripts/JSON/postcodeResults.js',
@@ -46,7 +46,7 @@
             var postCodeUrl = this.postcodeUrl;
             var self = this;
 
-            if (postCode.length > 0) { // TODO replace with more robust validation
+            if (postCode.length > 0) { // TODO replace with more robust validation - backlog item #38716
                 self.postcodeError = false;
 
                 $('#address-results').find('option:gt(0)').remove();

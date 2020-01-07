@@ -53,7 +53,6 @@
                         <tr>
                             @foreach (var cell in row.Cells)
                             {
-                                // TODO: These data labels are being stripped off, probably via JS
                                 <td data-label="@Model.HeaderCells[cellCount].Text">@(cell.Text ?? "Not recorded")</td>
                                 cellCount++;
                             }

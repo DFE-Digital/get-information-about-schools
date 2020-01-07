@@ -807,15 +807,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
         private async Task PopulateGovernors(EstablishmentDetailViewModel viewModel)
         {
-            try
-            {
-                var governorsController = DependencyResolver.Current.GetService<GovernorController>();
-                viewModel.GovernorsGridViewModel = await governorsController.CreateGovernorsViewModel(establishmentModel: viewModel.Establishment, user: User);
-            }
-            catch (Exception) // todo: tech debt, need to more gracefully handle 404 in this instance.
-            {
-                viewModel.GovernorsGridViewModel = new Governors.Models.GovernorsGridViewModel { DomainModel = new Services.Governors.Models.GovernorsDetailsDto() };
-            }
+            var governorsController = DependencyResolver.Current.GetService<GovernorController>();
+            viewModel.GovernorsGridViewModel = await governorsController.CreateGovernorsViewModel(establishmentModel: viewModel.Establishment, user: User);
         }
 
         private async Task PopulateGroups(int id, EstablishmentDetailViewModel viewModel)

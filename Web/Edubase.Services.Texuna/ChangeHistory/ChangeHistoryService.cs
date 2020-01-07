@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Domain;
+using Edubase.Services.Domain;
 using Edubase.Services.Texuna.ChangeHistory.Models;
 using System;
 using System.Collections.Generic;
@@ -25,10 +25,10 @@ namespace Edubase.Services.Texuna.ChangeHistory
         public async Task<List<UserGroupModel>> GetSuggesterGroupsAsync(IPrincipal principal)
             => (await _httpClient.GetAsync<List<UserGroupModel>>("groups/suggesters", principal)).GetResponse();
 
+        [Obsolete("Please use GetSuggesterGroupsAsync", true)]
         public async Task<List<UserGroupModel>> GetApproversGroupsAsync(IPrincipal principal)
         {
             throw new NotImplementedException("GetApproversGroupsAsync is not implemented because it returns the exact same information as GetSuggesterGroupsAsync");
-            //return (await _httpClient.GetAsync<List<UserGroupModel>>("groups/approvers", principal)).GetResponse();
         }
 
         public async Task<ProgressDto> SearchWithDownloadGenerationAsync(SearchChangeHistoryDownloadPayload payload, IPrincipal principal)
