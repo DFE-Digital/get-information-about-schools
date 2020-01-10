@@ -1,4 +1,4 @@
-﻿@model ChangeHistoryViewModel
+@model ChangeHistoryViewModel
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Search change history");
     ViewBag.bodyClasses = "search-changes schools-search-page";
@@ -264,7 +264,7 @@
     <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
     <script src="/public/assets/scripts/standalone/accessibility.js"></script>
 
-    <script>
+    <script nonce="4CC30YJLSMKGDS6G">
         (function() {
             DfE.Views.schoolSearch.init({ highlightFirstSuggestion: true });
         }());

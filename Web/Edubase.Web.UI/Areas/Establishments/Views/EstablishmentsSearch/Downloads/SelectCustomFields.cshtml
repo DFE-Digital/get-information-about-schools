@@ -1,4 +1,4 @@
-﻿@using Edubase.Services.Enums
+@using Edubase.Services.Enums
 @using Microsoft.Ajax.Utilities
 @using Edubase.Web.UI.Areas.Establishments.Models.Search
 @model EstablishmentSearchDownloadViewModel
@@ -108,7 +108,7 @@
 
 @section ViewScripts
 {
-    <script>
+    <script nonce="4CC30YJLSMKGDS6G">
         var fieldList = @Html.Json(Model.CustomFields);
         var fieldListByCat = @Html.Json(Model.CustomFieldsByCategory);
         var selections = @Html.Json(Model.SelectedCustomFields);
