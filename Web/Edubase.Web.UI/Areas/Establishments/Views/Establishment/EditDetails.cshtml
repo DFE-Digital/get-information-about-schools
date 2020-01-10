@@ -765,7 +765,7 @@
 
             @section ViewScripts {
 
-                <script>
+                <script nonce="06cb7b504645a8ce1558dbddf1885bca45ec92e23d3c9a28e6e1e464c70d15fe">
                     $('#cancel-edit, .requires-conf-to-leave').okCancel({
                         ok: function() {
                             window.location = this.el.getAttribute('href');
@@ -793,7 +793,7 @@
         else
         {
             @section ViewScripts {
-                <script>
+                <script nonce="06cb7b504645a8ce1558dbddf1885bca45ec92e23d3c9a28e6e1e464c70d15fe">
                     var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);
                     var phases = @Html.Json(Model.EducationPhases);
 

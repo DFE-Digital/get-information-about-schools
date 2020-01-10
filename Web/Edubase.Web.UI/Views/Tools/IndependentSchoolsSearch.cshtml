@@ -1,4 +1,4 @@
-﻿@using VM = Edubase.Web.UI.Models.Tools.IndSchoolsSearchViewModel;
+@using VM = Edubase.Web.UI.Models.Tools.IndSchoolsSearchViewModel;
 @model VM
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "View independent schools’ significant dates");
@@ -93,7 +93,7 @@
 @section ViewScripts{
     <script src="/public/assets/scripts/standalone/accessibility.js"></script>
     <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
-    <script>
+    <script nonce="06cb7b504645a8ce1558dbddf1885bca45ec92e23d3c9a28e6e1e464c70d15fe">
         window.localAuthorities = @Html.Json(Model.LocalAuthorities);
         window.sets = @Html.Json(Model.LocalAuthoritySets);
 

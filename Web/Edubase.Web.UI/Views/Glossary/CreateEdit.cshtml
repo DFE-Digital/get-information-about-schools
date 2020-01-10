@@ -1,4 +1,4 @@
-﻿@model GlossaryItemViewModel
+@model GlossaryItemViewModel
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "GIAS: Glossary");
 }
@@ -50,7 +50,7 @@
 
 @section ViewScripts
 {
-    <script>
+    <script nonce="06cb7b504645a8ce1558dbddf1885bca45ec92e23d3c9a28e6e1e464c70d15fe">
         (function () {
             var okDelete = false;
             $('.entry-content').textCount({ maxLength: 1000 });
