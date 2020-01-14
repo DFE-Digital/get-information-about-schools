@@ -3,7 +3,7 @@
     var request = HttpContext.Current.Request;
     var sortDir = "desc";
     var sortDirText = "a descending order";
-    var sortField = "effectiveDateUtc";
+    var sortField = "changedDateUtc";
 
     if (request.QueryString["sortby"] != null)
     {
@@ -19,7 +19,8 @@
 
     var tableColumns = new List<Tuple<string, string, bool>>
    {
-       Tuple.Create("effectiveDateUtc", "Date changed", true),
+       Tuple.Create("changedDateUtc", "Date changed", true),
+       Tuple.Create("effectiveDateUtc", "Effective date", true),
        Tuple.Create("establishmentUrn", "URN", false),
        Tuple.Create("establishmentName", "Establishment", false),
        Tuple.Create("fieldName", "Updated field", true),
@@ -57,19 +58,20 @@
         <tbody>
             @foreach (var item in Model.Items)
             {
-                <tr>
-                    <td data-label="Date changed">@(item.EffectiveDate?.ToString("dd/MM/yyyy"))</td>
-                    @if (!Model.SingleEstablishment)
-                    {
-                        <td data-label="URN">@Html.RouteLink(item.EstablishmentUrn?.ToString() ?? "Unknown", "EstabDetails", new { id = item.EstablishmentUrn })</td>
-                        <td data-label="Establishment" class="table-tight--break-word">@Html.RouteLink(item.EstablishmentName ?? "Unknown", "EstabDetails", new { id = item.EstablishmentUrn })</td>
-                    }
-                    <td data-label="Updated field" class="table-tight--break-word">@item.FieldName</td>
-                    <td data-label="Old value" class="table-tight--break-word">@item.OldValue</td>
-                    <td data-label="New value" class="table-tight--break-word">@item.NewValue</td>
-                    <td data-label="Suggested by" class="break-word visuallyhidden js-reveal-when-no-filter">@item.SuggesterName</td>
-                    <td data-label="Approved by" class="break-word visuallyhidden js-reveal-when-no-filter">@item.ApproverName</td>
-                </tr>
+            <tr>
+                <td data-label="Date changed">@(item.DateChanged?.ToString("dd/MM/yyyy"))</td>
+                <td data-label="Effective date">@(item.EffectiveDate?.ToString("dd/MM/yyyy"))</td>
+                @if (!Model.SingleEstablishment)
+                {
+                    <td data-label="URN">@Html.RouteLink(item.EstablishmentUrn?.ToString() ?? "Unknown", "EstabDetails", new { id = item.EstablishmentUrn })</td>
+                    <td data-label="Establishment" class="table-tight--break-word">@Html.RouteLink(item.EstablishmentName ?? "Unknown", "EstabDetails", new { id = item.EstablishmentUrn })</td>
+                }
+                <td data-label="Updated field" class="table-tight--break-word">@item.FieldName</td>
+                <td data-label="Old value" class="table-tight--break-word">@item.OldValue</td>
+                <td data-label="New value" class="table-tight--break-word">@item.NewValue</td>
+                <td data-label="Suggested by" class="break-word visuallyhidden js-reveal-when-no-filter">@item.SuggesterName</td>
+                <td data-label="Approved by" class="break-word visuallyhidden js-reveal-when-no-filter">@item.ApproverName</td>
+            </tr>
             }
         </tbody>
     </table>
