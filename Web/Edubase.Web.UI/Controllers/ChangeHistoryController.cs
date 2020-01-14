@@ -309,6 +309,7 @@ namespace Edubase.Web.UI.Controllers
                         ApproverName = i.ApproverUserName,
                         EffectiveDate = i.EffectiveDateUtc,
                         RequestedDate = i.RequestedDateUtc,
+                        DateChanged = i.ChangedDateUtc,
                         EstablishmentUrn = i.Urn,
                         FieldName = i.Name,
                         OldValue = i.OldValue,
@@ -333,6 +334,7 @@ namespace Edubase.Web.UI.Controllers
                     SuggesterName = i.OriginatorUserName,
                     EffectiveDate = i.EffectiveDateUtc,
                     RequestedDate = i.RequestedDateUtc,
+                    DateChanged = i.ChangedDateUtc,
                     FieldName = i.Name,
                     OldValue = i.OldValue,
                     NewValue = i.NewValue
