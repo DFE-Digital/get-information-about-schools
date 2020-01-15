@@ -5,7 +5,7 @@
     var request = HttpContext.Current.Request;
     var sortDir = "desc";
     var sortDirText = "a descending order";
-    var sortField = "effectiveDateUtc";
+    var sortField = "changedDateUtc";
 
     if (request.QueryString["sortby"] != null)
     {
@@ -19,7 +19,8 @@
 
     var tableColumns = new List<Tuple<string, string>>
     {
-        Tuple.Create("effectiveDateUtc", "Date changed"),
+        Tuple.Create("changedDateUtc", "Date changed"),
+        Tuple.Create("effectiveDateUtc", "Effective date"),
         Tuple.Create("fieldName", "Updated field"),
         Tuple.Create("oldValue", "Old value"),
         Tuple.Create("newValue", "New value"),
@@ -66,7 +67,8 @@
             @foreach (var item in Model.ChangeHistory.Items)
             {
                 <tr>
-                    <td data-label="Date changed">@(item.EffectiveDateUtc?.ToString("dd/MM/yyyy"))</td>
+                    <td data-label="Date changed">@(item.ChangedDateUtc?.ToString("dd/MM/yyyy"))</td>
+                    <td data-label="Effective date">@(item.EffectiveDateUtc?.ToString("dd/MM/yyyy"))</td>
                     <td data-label="Updated field">@item.Name</td>
                     <td data-label="Old value">@item.OldValue</td>
                     <td data-label="New value">@item.NewValue</td>
