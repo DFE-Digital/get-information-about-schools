@@ -1,12 +1,9 @@
 using Autofac;
-using Edubase.Common;
 using Edubase.Common.Cache;
-using Edubase.Services;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Validation;
 using FluentValidation.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Reflection;
@@ -17,10 +14,9 @@ using System.Web.Http;
 using System.Xml;
 using AzureTableLogger;
 using Newtonsoft.Json.Serialization;
-using Kentor.AuthServices.Exceptions;
-using Edubase.Web.UI.Areas.Establishments.Models.Search;
 using Edubase.Web.UI.Helpers.ModelBinding;
 using Edubase.Web.UI.Helpers.ValueProviders;
+using Sustainsys.Saml2.Exceptions;
 
 namespace Edubase.Web.UI
 {
