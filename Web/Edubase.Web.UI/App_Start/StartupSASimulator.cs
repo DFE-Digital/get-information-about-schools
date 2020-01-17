@@ -1,6 +1,5 @@
 using System;
 using System.Globalization;
-using System.IdentityModel.Metadata;
 using System.Security.Claims;
 using System.Web.Helpers;
 using Microsoft.AspNet.Identity;
@@ -62,7 +61,8 @@ namespace Edubase.Web.UI
 
         private static SPOptions CreateSPOptions()
         {
-            var swedish = CultureInfo.GetCultureInfo("sv-se");
+            //var swedish = CultureInfo.GetCultureInfo("sv-se");
+            var swedish = "sv-se";
 
             var organization = new Organization();
             organization.Names.Add(new LocalizedName("Edubase", swedish));
@@ -92,8 +92,9 @@ namespace Edubase.Web.UI
             supportContact.EmailAddresses.Add("support@example.com");
             spOptions.Contacts.Add(supportContact);
 
-            var attributeConsumingService = new AttributeConsumingService("AuthServices")
+            var attributeConsumingService = new AttributeConsumingService()
             {
+                ServiceNames = { new LocalizedName("AuthServices", "en") },
                 IsDefault = true,
             };
 

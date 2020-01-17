@@ -1,6 +1,5 @@
 using System;
 using System.Configuration;
-using System.IdentityModel.Metadata;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Web.Helpers;
@@ -11,6 +10,7 @@ using Microsoft.Owin.Security.Cookies;
 using Owin;
 using Sustainsys.Saml2;
 using Sustainsys.Saml2.Configuration;
+using Sustainsys.Saml2.Metadata;
 using Sustainsys.Saml2.Owin;
 using Sustainsys.Saml2.WebSso;
 
