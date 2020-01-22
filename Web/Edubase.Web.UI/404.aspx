@@ -14,7 +14,7 @@
     <meta property="og:image" content="/public/govuk_template/assets/images/opengraph-image.png?0.12.0">
     <meta name="description" content="">
 
-    <script type="text/javascript" nonce="06cb7b504645a8ce1558dbddf1885bca45ec92e23d3c9a28e6e1e464c70d15fe">
+    <script type="text/javascript" nonce="@Html.ScriptNonce()">
         (function () {
             if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
                 var d = document, c = "appendChild", a = d.createElement("style");
@@ -33,7 +33,7 @@
     <link href="/public/govuk_template/assets/stylesheets/govuk-template-print.css?0.12.0" media="print" rel="stylesheet" type="text/css" />
 
     <!--[if IE 8]>
-    <script type="text/javascript" nonce="06cb7b504645a8ce1558dbddf1885bca45ec92e23d3c9a28e6e1e464c70d15fe">
+    <script type="text/javascript" nonce="@Html.ScriptNonce()">
         (function () {
             if (window.opera) {
                 return;
@@ -79,7 +79,7 @@
     <!--[if IE 7]><link href="/public/assets/stylesheets/main-ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
     <!--[if IE 8]><link href="/public/assets/stylesheets/main-ie8.css" rel="stylesheet" type="text/css"/><![endif]-->
 
-    <script type="text/javascript" nonce="06cb7b504645a8ce1558dbddf1885bca45ec92e23d3c9a28e6e1e464c70d15fe">
+    <script type="text/javascript" nonce="@Html.ScriptNonce()">
             (function (i, s, o, g, r, a, m) {
                 i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
                     (i[r].q = i[r].q || []).push(arguments)
@@ -97,7 +97,7 @@
 </head>
 <body class="no-js">
     <div id="full-content">
-            <script type="text/javascript" nonce="06cb7b504645a8ce1558dbddf1885bca45ec92e23d3c9a28e6e1e464c70d15fe">
+            <script type="text/javascript" nonce="@Html.ScriptNonce()">
                 document.body.className = document.body.className.replace(/\bno-js\b/, 'js-enabled');
                 if (!('ontouchstart' in document.documentElement)) { document.body.className += ' no-touch'; }
                 if (navigator.userAgent.indexOf('Mac OS X') > -1) { document.body.className += ' is-mac';}
@@ -258,10 +258,10 @@
     </div>
 
 <!-- Visual Studio Browser Link -->
-<script type="application/json" id="__browserLink_initializationData" nonce="06cb7b504645a8ce1558dbddf1885bca45ec92e23d3c9a28e6e1e464c70d15fe">
+<script type="application/json" id="__browserLink_initializationData" nonce="@Html.ScriptNonce()">
     {"appName":"Chrome","requestId":"baabe3959edc478a974c2a32db57dd3b"}
 </script>
-<script type="text/javascript" src="http://localhost:50272/26969e32c85b42049f570abd548a690c/browserLink" async="async" nonce="06cb7b504645a8ce1558dbddf1885bca45ec92e23d3c9a28e6e1e464c70d15fe"></script>
+<script type="text/javascript" src="http://localhost:50272/26969e32c85b42049f570abd548a690c/browserLink" async="async" nonce="@Html.ScriptNonce()"></script>
 <!-- End Browser Link -->
 
 </body>

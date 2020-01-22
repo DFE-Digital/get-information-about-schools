@@ -1,4 +1,4 @@
-﻿@using Edubase.Web.UI.Controllers
+@using Edubase.Web.UI.Controllers
 @using Microsoft.AspNet.Identity
 @{
     ViewBag.assetsPath = "/public/govuk_template/assets";
@@ -17,7 +17,7 @@
 <!--<![endif]-->
 <head>
     <!-- Google Tag Manager -->
-    <script nonce="06cb7b504645a8ce1558dbddf1885bca45ec92e23d3c9a28e6e1e464c70d15fe">
+    <script nonce="@Html.ScriptNonce()">
         (function (w, d, s, l, i) {
             w[l] = w[l] || []; w[l].push({
                 'gtm.start':
@@ -37,7 +37,7 @@
     <meta name="description" content="@(ViewBag.pageDescription)">
     <meta name="keywords" content="Edubase" />
 
-    <script type="text/javascript" nonce="06cb7b504645a8ce1558dbddf1885bca45ec92e23d3c9a28e6e1e464c70d15fe">
+    <script type="text/javascript" nonce="@Html.ScriptNonce()">
         (function () {
             if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
                 var d = document, c = "appendChild", a = d.createElement("style");
@@ -56,7 +56,7 @@
     <link href="@(ViewBag.assetsPath)/stylesheets/govuk-template-print.css?0.12.0" media="print" rel="stylesheet" type="text/css" />
 
     <!--[if IE 8]>
-    <script type="text/javascript" nonce="06cb7b504645a8ce1558dbddf1885bca45ec92e23d3c9a28e6e1e464c70d15fe">
+    <script type="text/javascript" nonce="@Html.ScriptNonce()">
         (function () {
             if (window.opera) {
                 return;
@@ -109,7 +109,7 @@
     <div id="full-content">
         @if (!Request.Browser.Browser.Contains("MSIE 8"))
         {
-            <script type="text/javascript" nonce="06cb7b504645a8ce1558dbddf1885bca45ec92e23d3c9a28e6e1e464c70d15fe">
+            <script type="text/javascript" nonce="@Html.ScriptNonce()">
                 document.body.className = document.body.className.replace(/\bno-js\b/, 'js-enabled');
                 if (!('ontouchstart' in document.documentElement)) { document.body.className += ' no-touch'; }
                 if (navigator.userAgent.indexOf('Mac OS X') > -1) { document.body.className += ' is-mac'; }
@@ -283,7 +283,7 @@
             <script type="text/javascript" src="/public/assets/scripts/standalone/data-status.js"></script>
         }
 
-        <script nonce="06cb7b504645a8ce1558dbddf1885bca45ec92e23d3c9a28e6e1e464c70d15fe">
+        <script nonce="@Html.ScriptNonce()">
             (function () {
                 var myetag = GOVUK.getCookie("@Edubase.Web.UI.Controllers.HomeController.NewsBlobETag");
                 var etag = "@Edubase.Web.UI.Controllers.HomeController.GetNewsPageETag()";
@@ -313,7 +313,7 @@
 
     </div>
 
-    <script nonce="06cb7b504645a8ce1558dbddf1885bca45ec92e23d3c9a28e6e1e464c70d15fe">
+    <script nonce="@Html.ScriptNonce()">
         if (top.location !== location) {
             top.location.href = document.location.href;
         }
