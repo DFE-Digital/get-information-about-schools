@@ -205,7 +205,7 @@
 
             @section ViewScripts {
 
-                <script nonce="06cb7b504645a8ce1558dbddf1885bca45ec92e23d3c9a28e6e1e464c70d15fe">
+                <script nonce="@Html.ScriptNonce()">
                     $('#cancel-edit, .requires-conf-to-leave').okCancel({
                         ok: function() {
                             window.location = this.el.getAttribute('href');
@@ -222,7 +222,7 @@
         {
             @section ViewScripts {
                 <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
-                <script type="text/javascript" nonce="06cb7b504645a8ce1558dbddf1885bca45ec92e23d3c9a28e6e1e464c70d15fe">
+                <script type="text/javascript" nonce="@Html.ScriptNonce()">
                     var jScriptVersion;
                     window.lsoas = @Html.Json(Model.LSOAs);
                     window.msoas = @Html.Json(Model.MSOAs);
