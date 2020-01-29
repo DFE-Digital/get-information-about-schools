@@ -39,7 +39,7 @@ namespace Edubase.Web.UI
             }
 #endif
 
-            GlobalConfiguration.Configure(x => 
+            GlobalConfiguration.Configure(x =>
             {
                 x.MapHttpAttributeRoutes();
                 IocConfig.Register(x);
@@ -50,19 +50,17 @@ namespace Edubase.Web.UI
 
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ExceptionHandler>());
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            
+
             IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ICacheAccessor>().InitialiseIfNecessaryAsync().Wait();
-            
+
             var fluentValidationModelValidatorProvider = new FluentValidationModelValidatorProvider(new AutofacValidatorFactory(IocConfig.AutofacDependencyResolver));
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
             fluentValidationModelValidatorProvider.AddImplicitRequiredValidator = false;
             ModelValidatorProviders.Providers.Add(fluentValidationModelValidatorProvider);
-            
-#if (DEBUG)
-            IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<IAzLogger>().ScheduleLogFlush(5);
-#else
-            IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<IAzLogger>().ScheduleLogFlush(10, 40);
-#endif
+
+            var logger = IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<IAzLogger>();
+            logger.ScheduleLogFlush();
+            logger.ScheduleLogPurge();
 
             ModelBinders.Binders.DefaultBinder = new DefaultModelBinderEx();
             ValueProviderFactories.Factories.Add(new TokenValueProviderFactory());
