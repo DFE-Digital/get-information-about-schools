@@ -91,11 +91,14 @@ namespace Edubase.Web.UI
             CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["DataConnectionString"].ConnectionString);
             builder.RegisterInstance(cloudStorageAccount);
 
-            builder.RegisterType<LoggingService>().WithParameters(new [] {
-                new TypedParameter(typeof(CloudStorageAccount), cloudStorageAccount),
-                new TypedParameter(typeof(string), "AZTLoggerMessages")
+            builder.Register(context => new LoggingServicePolicy {FlushInterval = TimeSpan.FromSeconds(30), RetentionCheckInterval = TimeSpan.FromDays(1), RetentionCutoffAge = 90, UsagePolicy = UsagePolicy.SCHEDULED}).SingleInstance();
+            builder.Register(context =>
+            {
+                var loggingServicePolicy = context.Resolve<LoggingServicePolicy>();
+                return new LoggingService(loggingServicePolicy, cloudStorageAccount, "AZTLoggerMessages");
             }).As<ILoggingService>().SingleInstance();
             builder.RegisterType<AzLogger>().As<IAzLogger>().SingleInstance();
+            
             builder.RegisterType<ExceptionHandler>().AsSelf().SingleInstance();
 
             var dbGeographyConverter = new DbGeographyConverter();
