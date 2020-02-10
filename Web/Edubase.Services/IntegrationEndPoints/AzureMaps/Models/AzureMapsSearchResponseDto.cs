@@ -26,6 +26,8 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps.Models
         public Address address { get; set; }
         public Position position { get; set; }
         public Viewport viewport { get; set; }
+        public Boundingbox boundingBox { get; set; }
+        public Datasources dataSources { get; set; }
     }
 
     internal class Address
@@ -66,5 +68,28 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps.Models
     {
         public float lat { get; set; }
         public float lon { get; set; }
+    }
+    internal class Boundingbox
+    {
+        public Topleftpoint1 topLeftPoint { get; set; }
+        public Btmrightpoint1 btmRightPoint { get; set; }
+    }
+    internal class Topleftpoint1
+    {
+        public float lat { get; set; }
+        public float lon { get; set; }
+    }
+    internal class Btmrightpoint1
+    {
+        public float lat { get; set; }
+        public float lon { get; set; }
+    }
+    internal class Datasources
+    {
+        public Geometry geometry { get; set; }
+    }
+    internal class Geometry
+    {
+        public string id { get; set; }
     }
 }
