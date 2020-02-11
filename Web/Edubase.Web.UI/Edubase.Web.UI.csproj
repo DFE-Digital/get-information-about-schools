@@ -895,6 +895,7 @@
     <Content Include="public\dirrty\dirrty.jquery.json" />
     <Content Include="public\dirrty\LICENSE" />
     <Content Include="public\dirrty\README.md" />
+    <Content Include="robots.txt" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
