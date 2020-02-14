@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Domain;
+using Edubase.Services.Domain;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Downloads;
 using Edubase.Services.Groups.Models;
@@ -90,7 +90,7 @@ namespace Edubase.UnitTest.Controllers
             context.SetupGet(x => x.Request).Returns(request.Object);
             context.SetupGet(x => x.User).Returns(principal);
 
-            grs.Setup(x => x.SearchByIdsAsync(It.IsAny<string>(), It.Is<int?>(i => i == 1000), It.IsAny<string>(), It.Is<IPrincipal>(p => p == principal))).ReturnsAsync(() => new ApiPagedResult<SearchGroupDocument>(1, new List<SearchGroupDocument>(){
+            grs.Setup(x => x.SearchByIdsAsync(It.IsAny<string>(), It.Is<int?>(i => i == 1000), It.IsAny<string>(), It.IsAny<string>(), It.Is<IPrincipal>(p => p == principal))).ReturnsAsync(() => new ApiPagedResult<SearchGroupDocument>(1, new List<SearchGroupDocument>(){
                 new SearchGroupDocument{ Name="Group 1000", GroupUId = 1000 }
             }));
 

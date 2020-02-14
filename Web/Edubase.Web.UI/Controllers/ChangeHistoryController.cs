@@ -467,7 +467,7 @@ namespace Edubase.Web.UI.Controllers
                 var searchText = model.GroupSearchModel.Text.Clean();
                 if (searchText != null)
                     results =
-                        await _groupReadService.SearchByIdsAsync(searchText, searchText.ToInteger(), searchText, User);
+                        await _groupReadService.SearchByIdsAsync(searchText, searchText.ToInteger(), searchText, searchText, User);
 
                 if (results == null || results.Count == 0)
                 {
