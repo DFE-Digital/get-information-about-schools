@@ -25,6 +25,8 @@ namespace Edubase.Services.Groups.Models
         public string GroupId { get; set; }
         public int? LocalAuthorityId { get; set; }
         public string CorporateContact { get; set; }
+
+        [JsonProperty("UKPRN")]
         public string UKPRN { get; set; }
         public bool ConfirmationUpToDateGovernanceRequired { get; set; }
         public bool UrgentConfirmationUpToDateGovernanceRequired { get; set; }
