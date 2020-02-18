@@ -240,8 +240,13 @@
                                             <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
                                             <dd>@result.Urn</dd>
 
-                                            <dt><abbr title="Unique Reference Number">UKPRN</abbr>:</dt>
-                                            <dd>@result.UKPRN</dd>
+
+                                            @if (Model.UKPRN.HasValue)
+                                            {
+                                                <dt class="inline-details"><abbr title="UK provider reference number (UKPRN)">UKPRN</abbr>:</dt>
+                                                <dd>@Model.UKPRN</dd>
+                                            }
+
 
                                             <dt class="inline-details">
                                                 <abbr title="Local authority - Establishment number">LAESTAB</abbr>:
