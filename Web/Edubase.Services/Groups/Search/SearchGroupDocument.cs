@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Services.Domain;
 using System;
 
@@ -18,5 +18,6 @@ namespace Edubase.Services.Groups.Models
         public int EstablishmentCount { get; set; }
         public int? LocalAuthorityId { get; set; }
         public AddressDto Address { get; set; }
+        public string UKPRN { get; set; }
     }
 }

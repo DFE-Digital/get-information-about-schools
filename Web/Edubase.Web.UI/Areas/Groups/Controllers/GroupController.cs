@@ -69,7 +69,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         {
             if (viewModel.ActionName == "find" && ModelState.IsValid)
             {
-                var result = (await _groupReadService.SearchByIdsAsync(viewModel.Text, viewModel.Text.ToInteger(), viewModel.Text, User)).Items.FirstOrDefault();
+                var result = (await _groupReadService.SearchByIdsAsync(viewModel.Text, viewModel.Text.ToInteger(), viewModel.Text, viewModel.Text, User)).Items.FirstOrDefault();
                 if (result == null) ModelState.AddModelError(nameof(viewModel.Text), "We were unable to find a single-academy trust matching those details");
                 else if (result.StatusId == ((int) GS.Closed)) ModelState.AddModelError(nameof(viewModel.Text), "Closed single-academy trusts can not be converted");
                 else if (result.GroupTypeId != (int) GT.SingleacademyTrust) ModelState.AddModelError(nameof(viewModel.Text), "That's an invalid group because it's of the wrong type.");
@@ -129,7 +129,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             var vm = new CreateAcademyTrustViewModel(companyProfile.Items.First(), groupTypes);
 
-            var existingTrust = await _groupReadService.SearchByIdsAsync(null, null, companiesHouseNumber, User);
+            var existingTrust = await _groupReadService.SearchByIdsAsync(null, null, companiesHouseNumber, null, User);
             if (existingTrust != null && existingTrust.Items.Any())
             {
                 vm.TrustExists = true;
@@ -229,7 +229,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 GroupTypeId = model.GroupTypeId ?? -1,
                 IsClosed = model.StatusId == (int)eLookupGroupStatus.Closed || model.StatusId == (int)eLookupGroupStatus.CreatedInError,
                 IsClosedInError = model.StatusId == (int)eLookupGroupStatus.CreatedInError,
-                CloseDate = model.ClosedDate
+                CloseDate = model.ClosedDate,
+                UKPRN = model.UKPRN.ToInteger()
             };
 
             if (viewModel.IsUserLoggedOn)
@@ -286,7 +287,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 GroupId = domainModel.GroupId,
                 SelectedTabName = "details",
                 StatusId = domainModel.StatusId,
-                OriginalStatusId = domainModel.StatusId
+                OriginalStatusId = domainModel.StatusId,
+                UKPRN = domainModel.UKPRN.ToInteger()
             };
             viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
 
@@ -524,7 +526,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 OpenDate = viewModel.OpenDate.ToDateTime(),
                 ClosedDate = viewModel.ClosedDate.ToDateTime(),
                 Address = UriHelper.TryDeserializeUrlToken<AddressDto>(viewModel.AddressJsonToken),
-                StatusId = viewModel.StatusId
+                StatusId = viewModel.StatusId,
+                UKPRN = viewModel.UKPRN.ToString()
             };
 
             List<LinkedEstablishmentGroup> createLinksDomainModel() => viewModel.LinkedEstablishments.Establishments.Select(x => new LinkedEstablishmentGroup
@@ -587,7 +590,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     LocalAuthorityName = establishmentGroup.LocalAuthorityName,
                     PhaseName = establishmentGroup.PhaseName,
                     StatusName = establishmentGroup.StatusName,
-                    Location = establishmentGroup.Location
+                    Location = establishmentGroup.Location,
+                    UKPRN = establishmentGroup.UKPRN
                 });
             }
         }

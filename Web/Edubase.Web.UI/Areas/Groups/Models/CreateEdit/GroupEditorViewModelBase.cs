@@ -56,7 +56,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public string SelectedTabName { get; set; }
         public int? StatusId { get; set; }
         public int? OriginalStatusId { get; set; }
-
-
+        public int? UKPRN { get; set; }
     }
 }
