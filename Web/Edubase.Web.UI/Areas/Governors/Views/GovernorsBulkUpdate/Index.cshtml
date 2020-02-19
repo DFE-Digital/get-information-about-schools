@@ -15,7 +15,6 @@
 
 @using (Html.BeginRouteForm("GovernorsProcessBulkUpdate", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    @Html.HiddenFor(x => x.TemplateUri)
     <div class="grid-row">
         <div class="column-full">
             @if (Model.WasSuccessful)
@@ -56,9 +55,11 @@
 
         <div class="column-full">
             <h2 class="heading-medium">Download template</h2>
-            <p>Please download the template using the link below. Then, provide or update your governance information in the template.
-             Finally, upload the completed template using the 'Choose file' button below.</p>
-            <a href="@Model.TemplateUri" class="download-list-item">GovernanceTemplate.xlsx, 18KB</a>
+            <p>
+                Please download the template using the link below. Then, provide or update your governance information in the template.
+                Finally, upload the completed template using the 'Choose file' button below.
+            </p>
+            @Html.ActionLink("GovernanceTemplate.xlsx, 18KB", "DownloadTemplate", null, new { @class = "download-list-item" })
         </div>
 
         <div class="column-full">

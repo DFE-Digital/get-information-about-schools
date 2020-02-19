@@ -24,13 +24,14 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         [HttpGet, Route(Name = "GovernorsBulkUpdate")]
         public async Task<ActionResult> Index()
         {
-            var viewModel = new GovernorsBulkUpdateViewModel
-            {
-                TemplateUri = await _governorsReadService.GetGovernorBulkUpdateTemplateUri(User)
-            };
-            return View(viewModel);
+            return View(new GovernorsBulkUpdateViewModel());
         }
 
+        [HttpGet, Route("DownloadTemplate")]
+        public async Task<ActionResult> DownloadTemplate()
+        {
+            return Redirect(await _governorsReadService.GetGovernorBulkUpdateTemplateUri(User));
+        }
 
         [HttpPost, Route(Name = "GovernorsProcessBulkUpdate")]
         public async Task<ActionResult> ProcessBulkUpdate(GovernorsBulkUpdateViewModel viewModel)
