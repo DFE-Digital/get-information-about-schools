@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.2\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.2\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
@@ -543,68 +543,7 @@
     <Content Include="public\assets\images\maps\google-open-marker.png" />
     <Content Include="public\assets\images\maps\open-marker.png" />
     <Content Include="public\assets\scripts\application.js" />
-    <Content Include="public\assets\scripts\leaflet-bundle.js" />
-    <Content Include="public\assets\scripts\standalone\accessibility.js" />
-    <Content Include="public\assets\scripts\standalone\add-edit-link.js" />
-    <Content Include="public\assets\scripts\standalone\add-edit-or-replace.js" />
-    <Content Include="public\assets\scripts\standalone\add-or-replace-address.js" />
-    <Content Include="public\assets\scripts\standalone\approvals.js" />
-    <Content Include="public\assets\scripts\standalone\azure-maps.js" />
-    <Content Include="public\assets\scripts\standalone\bulk-academies-view.js" />
-    <Content Include="public\assets\scripts\standalone\bulk-academies.js" />
-    <Content Include="public\assets\scripts\standalone\bulk-create-academies.js" />
-    <Content Include="public\assets\scripts\standalone\change-history-index.js" />
-    <Content Include="public\assets\scripts\standalone\change-history-results.js" />
-    <Content Include="public\assets\scripts\standalone\create-childrens-centre.js" />
-    <Content Include="public\assets\scripts\standalone\create-edit-predefined-la-sets.js" />
-    <Content Include="public\assets\scripts\standalone\create.js" />
-    <Content Include="public\assets\scripts\standalone\data-quality-edit-status.js" />
-    <Content Include="public\assets\scripts\standalone\data-status.js" />
-    <Content Include="public\assets\scripts\standalone\downloads-file-prepare.js" />
-    <Content Include="public\assets\scripts\standalone\downloads-select-custom-fields.js" />
-    <Content Include="public\assets\scripts\standalone\downloads-select-dataset.js" />
-    <Content Include="public\assets\scripts\standalone\edit-details-change-summary.js" />
-    <Content Include="public\assets\scripts\standalone\edit-details-non-summary.js" />
-    <Content Include="public\assets\scripts\standalone\edit-helpdesk-change-summary.js" />
-    <Content Include="public\assets\scripts\standalone\edit-helpdesk-non-summary.js" />
-    <Content Include="public\assets\scripts\standalone\edit-iebt-change-summary.js" />
-    <Content Include="public\assets\scripts\standalone\edit-iebt-non-summary.js" />
-    <Content Include="public\assets\scripts\standalone\edit-location-change-summary.js" />
-    <Content Include="public\assets\scripts\standalone\edit-location-non-summary.js" />
-    <Content Include="public\assets\scripts\standalone\establishment-links.js" />
-    <Content Include="public\assets\scripts\standalone\establishmentLinks.js" />
-    <Content Include="public\assets\scripts\standalone\faq-create-edit.js" />
-    <Content Include="public\assets\scripts\standalone\glossary-create-edit.js" />
-    <Content Include="public\assets\scripts\standalone\glossary-index.js" />
-    <Content Include="public\assets\scripts\standalone\google-tag-manager.js" />
-    <Content Include="public\assets\scripts\standalone\governor-search-index.js" />
-    <Content Include="public\assets\scripts\standalone\group-create-academy-trust.js" />
-    <Content Include="public\assets\scripts\standalone\group-create-warnings.js" />
-    <Content Include="public\assets\scripts\standalone\group-create.js" />
-    <Content Include="public\assets\scripts\standalone\group-details.js" />
-    <Content Include="public\assets\scripts\standalone\group-edit-delegation.js" />
-    <Content Include="public\assets\scripts\standalone\group-edit-details.js" />
-    <Content Include="public\assets\scripts\standalone\group-edit-links-editmode.js" />
-    <Content Include="public\assets\scripts\standalone\group-edit-links-nonedit.js" />
-    <Content Include="public\assets\scripts\standalone\group-results.js" />
-    <Content Include="public\assets\scripts\standalone\group-sorttable.js" />
-    <Content Include="public\assets\scripts\standalone\ie-8.js" />
-    <Content Include="public\assets\scripts\standalone\ie-mobile.js" />
-    <Content Include="public\assets\scripts\standalone\independent-schools-search.js" />
-    <Content Include="public\assets\scripts\standalone\indi-search.js" />
-    <Content Include="public\assets\scripts\standalone\manage-academy-openings.js" />
-    <Content Include="public\assets\scripts\standalone\merge-amalgamate.js" />
-    <Content Include="public\assets\scripts\standalone\mergers-tool.js" />
-    <Content Include="public\assets\scripts\standalone\predefined-la-sets.js" />
-    <Content Include="public\assets\scripts\standalone\rejection-reasons.js" />
-    <Content Include="public\assets\scripts\standalone\replace-chair.js" />
-    <Content Include="public\assets\scripts\standalone\search-change-history.js" />
-    <Content Include="public\assets\scripts\standalone\search-index-view.js" />
-    <Content Include="public\assets\scripts\standalone\search-index.js" />
-    <Content Include="public\assets\scripts\standalone\search-map.js" />
-    <Content Include="public\assets\scripts\standalone\template.js" />
-    <Content Include="public\assets\scripts\standalone\unload.js" />
-    <Content Include="public\assets\scripts\standalone\view-edit.js" />
+    <Content Include="public\assets\scripts\**\*.*" />
     <Content Include="public\assets\stylesheets\**\*.*" />
     <Content Include="Assets\Sass\utils\_edubase-mixins.scss" />
     <Content Include="Assets\Sass\elements\_mobile-nav.scss" />
