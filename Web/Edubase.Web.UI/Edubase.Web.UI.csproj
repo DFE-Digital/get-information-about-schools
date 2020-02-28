@@ -464,6 +464,7 @@
     <Compile Include="Models\Grid\GridViewModel.cs" />
     <Compile Include="Models\HeirarchicalLookupItemViewModel.cs" />
     <Compile Include="Models\PaginationViewModel.cs" />
+    <Compile Include="Models\Search\DownloadErrorViewModel.cs" />
     <Compile Include="Models\Search\LocationDisambiguationViewModel.cs" />
     <Compile Include="Models\Tools\BulkAcademiesCreateViewModel.cs" />
     <Compile Include="Models\Tools\IndSchoolsSearchViewModel.cs" />
@@ -1038,6 +1039,7 @@
     <Content Include="Views\Home\Help.cshtml" />
     <Content Include="Views\Faq\CreateEdit.cshtml" />
     <Content Include="Views\Faq\Index.cshtml" />
+    <Content Include="Views\Shared\Downloads\DownloadError.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>
