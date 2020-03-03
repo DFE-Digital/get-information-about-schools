@@ -49,6 +49,7 @@ using Edubase.Services.Texuna.Core;
 using System.Web;
 using AzureTableLogger;
 using AzureTableLogger.Services;
+using Edubase.Services.ExternalLookup;
 using Edubase.Web.UI.Filters;
 using Microsoft.WindowsAzure.Storage;
 using Edubase.Services.Geo;
@@ -154,6 +155,8 @@ namespace Edubase.Web.UI
             builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
             builder.RegisterType<FaqRepository>().AsSelf().SingleInstance();
+
+            builder.RegisterType<FBService>().As<IFBService>();
         }
 
         public static JsonMediaTypeFormatter CreateJsonMediaTypeFormatter()

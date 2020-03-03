@@ -19,6 +19,7 @@ using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Exceptions;
+using Edubase.Services.ExternalLookup;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Lookup;
@@ -49,6 +50,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private readonly IGroupReadService _groupReadService;
         private readonly IMapper _mapper;
         private readonly IResourcesHelper _resourcesHelper;
+        private readonly IFBService _fbService;
 
         private readonly ISecurityService _securityService;
         private readonly Lazy<string[]> _formKeys;
@@ -77,7 +79,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             IEstablishmentWriteService establishmentWriteService,
             ICachedLookupService cachedLookupService,
             IResourcesHelper resourcesHelper,
-            ISecurityService securityService)
+            ISecurityService securityService,
+            IFBService fbService)
         {
             _cachedLookupService = cachedLookupService;
             _establishmentReadService = establishmentReadService;
@@ -86,6 +89,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _mapper = mapper;
             _resourcesHelper = resourcesHelper;
             _securityService = securityService;
+            _fbService = fbService;
 
             _formKeys = new Lazy<string[]>(
                 () => Request?.Form?.AllKeys.Select(x => x.GetPart(".")).Distinct().ToArray(),
@@ -261,7 +265,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             ViewBag.PendingApprovalCount = pending;
             ViewBag.ShowSaved = saved;
 
-            var viewModel = new EstablishmentDetailViewModel
+            var viewModel = new EstablishmentDetailViewModel(_fbService)
             {
                 IsUserLoggedOn = User.Identity.IsAuthenticated,
                 SearchQueryString = searchQueryString,
@@ -305,7 +309,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             var changes = await _establishmentReadService.GetGovernanceChangeHistoryAsync(id, skip, 100, sortBy, User);
 
-            var viewModel = new EstablishmentDetailViewModel
+            var viewModel = new EstablishmentDetailViewModel(_fbService)
             {
                 Establishment = result.ReturnValue,
                 ChangeHistory = changes
