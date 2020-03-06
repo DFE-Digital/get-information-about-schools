@@ -59,23 +59,43 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
                 {
                     var serializer = new JsonSerializer();
                     var azureMapsResponse = serializer.Deserialize<AzureMapsSearchResponseDto>(reader);
-                    var retVal = azureMapsResponse.results
+                    var results = azureMapsResponse.results
                         .Where(result => result.type != "Cross Street"
                                          && !(result.entityType != null && result.entityType == "CountrySecondarySubdivision"))
-                        .Select(x => new PlaceDto(GetAddressDescription(x, text), new LatLon(x.position.lat, x.position.lon)))
-                        .ToArray();
+                        .ToList();
+                    
+                    var municipalities = results.Where(x => x.entityType == "Municipality").ToList();
+                    var subMunicipalities = results.Where(x => x.entityType == "MunicipalitySubdivision").ToList();
+                    // If the response contains a "MunicipalitySubdivision" with the same name as a returned Municipality (town),
+                    // use the coordinates of that result for the position of the town and remove it from the result set.
+                    // This addresses an issue where a small number of towns have inaccurate coordinates associated with them.
+                    foreach (var municipality in municipalities)
+                    {
+                        var child = subMunicipalities.FirstOrDefault(
+                            x => x.address.municipality == municipality.address.municipality
+                                 && x.address.municipalitySubdivision == municipality.address.municipality);
+                        if (child == null)
+                        {
+                            continue;
+                        }
+                        municipality.position.lat = child.position.lat;
+                        municipality.position.lon = child.position.lon;
+                        results.Remove(child);
+                    }
+
+                    var parsedResults = results.Select(x => new PlaceDto(GetAddressDescription(x, text), new LatLon(x.position.lat, x.position.lon))).ToArray();
 
                     // If the search string is a postcode and none of the returned results contain the given post code, then return zero results, so that the search is deferred to OS places.
                     if (text.IsUkPostCode())
                     {
                         var postCode = text.Remove(" ").ToLower();
-                        if (!retVal.Any(x => (x.Name ?? "").ToLower().Remove(" ").Contains("," + postCode.Remove(" "))))
+                        if (!parsedResults.Any(x => (x.Name ?? "").ToLower().Remove(" ").Contains("," + postCode.Remove(" "))))
                         {
                             return new PlaceDto[0];
                         }
                     }
 
-                    return retVal;
+                    return parsedResults;
                 }
             }
         }
