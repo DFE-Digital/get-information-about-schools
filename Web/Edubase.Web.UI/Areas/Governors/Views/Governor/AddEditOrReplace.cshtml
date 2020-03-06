@@ -97,7 +97,7 @@
 
 @section ViewScripts
 {
-    <script>
+    <script nonce="@Html.ScriptNonce()">
         (function () {
             $("#governorEdit").submit(function() {
                 $("#save-button").attr("disabled", true);

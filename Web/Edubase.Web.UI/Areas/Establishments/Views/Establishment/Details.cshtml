@@ -222,13 +222,13 @@
 
     @if (Model.Establishment.CloseDate != null)
     {
-        <script>var estabOpen = false;</script>
+        <script nonce="@Html.ScriptNonce()">var estabOpen = false;</script>
     }
     else
     {
-        <script>var estabOpen = true;</script>
+        <script nonce="@Html.ScriptNonce()">var estabOpen = true;</script>
     }
-    <script>
+    <script nonce="@Html.ScriptNonce()">
         $('#school-governance').find('.sortable-table').clientSort();
     </script>
 

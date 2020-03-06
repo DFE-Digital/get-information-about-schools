@@ -765,7 +765,7 @@
 
             @section ViewScripts {
 
-                <script>
+                <script nonce="@Html.ScriptNonce()">
                     $('#cancel-edit, .requires-conf-to-leave').okCancel({
                         ok: function() {
                             window.location = this.el.getAttribute('href');
@@ -793,7 +793,7 @@
         else
         {
             @section ViewScripts {
-                <script>
+                <script nonce="@Html.ScriptNonce()">
                     var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);
                     var phases = @Html.Json(Model.EducationPhases);
 

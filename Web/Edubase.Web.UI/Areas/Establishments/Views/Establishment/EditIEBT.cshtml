@@ -204,7 +204,7 @@
 
                 @section ViewScripts {
 
-                    <script>
+                    <script nonce="@Html.ScriptNonce()">
                         $('#cancel-edit, .requires-conf-to-leave').okCancel({
                             ok: function() {
                                 window.location = this.el.getAttribute('href');
@@ -221,7 +221,7 @@
         else
         {
             @section ViewScripts {
-                <script>
+                <script nonce="@Html.ScriptNonce()">
                     var $fields = $('#content').find('.form-control');
                     var exitAttached = false;
 

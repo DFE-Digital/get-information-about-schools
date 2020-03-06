@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
 <!--[if gt IE 8]><!--><html lang="en"><!--<![endif]-->
 <head>
 
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <title><%= title %> <% if title != '' %>&ndash;<% end %> <%= @config['global_title'] %></title>
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="@Html.ScriptNonce()">
     (function () {
         if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
             var d = document, c = "appendChild", a = d.createElement("style");
@@ -24,7 +24,7 @@
     <link href="<%= @config['assets_path'] %>/stylesheets/govuk-template-print.css?0.12.0" media="print" rel="stylesheet" type="text/css" />
 
     <!--[if IE 8]>
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="@Html.ScriptNonce()">
       (function(){if(window.opera){return;}
        setTimeout(function(){var a=document,g,b={families:(g=
        ["nta"]),urls:["<%= @config['assets_path'] %>stylesheets/fonts-ie8.css?0.13.0"]},
@@ -68,7 +68,7 @@
 </head>
 
 <body class="hgt-body">
-    <script type="text/javascript">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+    <script type="text/javascript" nonce="@Html.ScriptNonce()">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
     <div id="skiplink-container">
         <div>

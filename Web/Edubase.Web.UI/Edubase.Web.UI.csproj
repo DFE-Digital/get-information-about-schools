@@ -315,6 +315,7 @@
     <Compile Include="Helpers\FormHelpers.cs" />
     <Compile Include="Helpers\ILayoutHelper.cs" />
     <Compile Include="Helpers\LayoutHelper.cs" />
+    <Compile Include="Helpers\NonceHelper.cs" />
     <Compile Include="Helpers\RouteDto.cs" />
     <Compile Include="Helpers\ValueProviders\TokenValueProviderFactory.cs" />
     <Compile Include="Models\AgeRangeFilterViewModel.cs" />

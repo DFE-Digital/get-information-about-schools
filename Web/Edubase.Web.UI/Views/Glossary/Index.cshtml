@@ -58,7 +58,7 @@
 
 @section ViewScripts
 {
-    <script>
+    <script nonce="@Html.ScriptNonce()">
         (function () {
             var panels = document.querySelectorAll('.expander-panel');
             var openAll = document.querySelectorAll('.open-all-panels');

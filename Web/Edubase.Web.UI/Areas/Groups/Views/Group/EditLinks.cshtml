@@ -165,7 +165,7 @@
 {
     @if (Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
     {
-        <script>
+        <script nonce="@Html.ScriptNonce()">
             var $fields = $('#content').find('.form-control');
             var exitAttached = false;
             $fields.on('change',
@@ -181,7 +181,7 @@
     }
     @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
     {
-        <script>
+        <script nonce="@Html.ScriptNonce()">
             $('#content').find('.button-remove').okCancel({
                 triggerEvent: 'click',
                 title: 'Are you sure you want to remove this academy?',
@@ -197,7 +197,7 @@
 
     @if (Request.HttpMethod == "POST" && Model.Action != "cancel" )
     {
-        <script>
+        <script nonce="@Html.ScriptNonce()">
             $(function () {
                 DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
             });

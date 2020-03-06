@@ -1,7 +1,9 @@
 using System;
+using System.Configuration;
 using System.Globalization;
 using System.IdentityModel.Metadata;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Web.Helpers;
 using Kentor.AuthServices;
 using Kentor.AuthServices.Configuration;
@@ -17,6 +19,8 @@ using Owin;
 
 namespace Edubase.Web.UI
 {
+    using static ConfigurationManager;
+
     public class StartupSASimulator
     {
         public void Configuration(IAppBuilder app)
@@ -37,6 +41,22 @@ namespace Edubase.Web.UI
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
             app.UseKentorAuthServicesAuthentication(CreateAuthServicesOptions());
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
+
+            app.Use((context, next) =>
+            {
+                var rng = new RNGCryptoServiceProvider();
+                var nonceBytes = new byte[32];
+                rng.GetBytes(nonceBytes);
+                var nonce = Convert.ToBase64String(nonceBytes);
+                context.Set("ScriptNonce", nonce);
+
+                var securityPolicy = AppSettings["Content-Security-Policy"];
+                securityPolicy = securityPolicy.Replace("nonce-inject", $"nonce-{nonce}");
+
+                context.Response.Headers.Append("Content-Security-Policy", securityPolicy);
+                context.Response.Headers.Append("X-Content-Security-Policy", securityPolicy);
+                return next();
+            });
         }
 
         private static KentorAuthServicesAuthenticationOptions CreateAuthServicesOptions()
