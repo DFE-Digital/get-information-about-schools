@@ -506,7 +506,6 @@
     <Content Include="public\assets\images\maps\google-closed-marker.png" />
     <Content Include="public\assets\images\maps\google-open-marker.png" />
     <Content Include="public\assets\images\maps\open-marker.png" />
-    <Content Include="public\assets\scripts\application.js" />
     <Content Include="public\assets\scripts\**\*.*" />
     <Content Include="public\assets\stylesheets\**\*.*" />
     <Content Include="Assets\Sass\utils\_edubase-mixins.scss" />
