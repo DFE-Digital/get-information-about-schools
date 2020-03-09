@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.2\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.2\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
@@ -562,12 +562,9 @@
     <Content Include="Assets\Scripts\Elements\Forms\clear-text-fields.js" />
     <Content Include="Assets\Scripts\Elements\Forms\ok-cancel.js" />
     <Content Include="Assets\Scripts\Elements\radio-toggles.js" />
-    <Content Include="Assets\Scripts\JSON\addressResult.js" />
     <Content Include="Assets\Scripts\JSON\establishmentLinks.js" />
-    <Content Include="Assets\Scripts\JSON\postcodeResults.js" />
     <Content Include="Assets\Scripts\libs\vue\vue.js" />
     <Content Include="Assets\Scripts\libs\vue\vue.min.js" />
-    <Content Include="Assets\Scripts\standalone\address-lookup.js" />
     <Content Include="Assets\Scripts\standalone\manage-academy-openings.js" />
     <Content Include="Assets\Scripts\standalone\search-change-history.js" />
     <Content Include="Assets\Scripts\tooltips.js" />
