@@ -104,7 +104,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 model.GroupStatuses = (await _lookupService.GroupStatusesGetAllAsync()).Select(x => new LookupItemViewModel(x)).ToList();
 
                 ApiPagedResult<SearchGroupDocument> results = null;
-                if (text != null) results = await _groupReadService.SearchByIdsAsync(text, text.ToInteger(), text, User);
+                if (text != null) results = await _groupReadService.SearchByIdsAsync(text, text.ToInteger(), text, text, User);
 
                 if (results != null && results.Count > 0)
                 {
