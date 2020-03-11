@@ -1,4 +1,4 @@
-﻿@using Edubase.Web.UI.ValueConverters;
+@using Edubase.Web.UI.ValueConverters;
 @using Edubase.Web.UI.Areas.Establishments.Models.Search;
 @using Edubase.Common;
 @using ET = Edubase.Services.Enums.eLookupEstablishmentType;
@@ -226,9 +226,12 @@
             <li>
                 <a href="https://www.compare-school-performance.service.gov.uk/school/@Model.Establishment.Urn" rel="external" target="_blank">Compare School and College Performance <span class="visually-hidden">Opens in new window</span></a>
             </li>
-            <li>
-                <a href="https://schools-financial-benchmarking.service.gov.uk/school/detail?urn=@Model.Establishment.Urn" rel="external" target="_blank">Schools Financial Benchmarking <span class="visually-hidden">Opens in new window</span></a>
-            </li>
+            @if (Model.ShowFinancialBenchmarking)
+            {
+                <li>
+                    <a href="@Model.FinancialBenchmarkingURL" rel="external" target="_blank">Schools Financial Benchmarking <span class="visually-hidden">Opens in new window</span></a>
+                </li>
+            }
         </ul>
     </dd>
 }
