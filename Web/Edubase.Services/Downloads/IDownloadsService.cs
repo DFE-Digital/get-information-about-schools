@@ -13,6 +13,6 @@ namespace Edubase.Services.Downloads
         Task<PaginatedResult<ScheduledExtract>> GetScheduledExtractsAsync(int skip, int take, IPrincipal principal);
         Task<string> GenerateScheduledExtractAsync(int id, IPrincipal principal);
         Task<ProgressDto> GetProgressOfScheduledExtractGenerationAsync(Guid id, IPrincipal principal);
-        Task<bool> IsDownloadAvailable(string path, Guid? id, IPrincipal principal);
+        Task<bool> IsDownloadAvailable(string path, string id, IPrincipal principal);
     }
 }

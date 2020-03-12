@@ -42,7 +42,7 @@ namespace Edubase.Services.Texuna.Downloads
         public async Task<ProgressDto> GetProgressOfScheduledExtractGenerationAsync(Guid id, IPrincipal principal)
             => (await _httpClient.GetAsync<ProgressDto>($"scheduled-extract/progress/{id}", principal)).Response;
 
-        public async Task<bool> IsDownloadAvailable(string path, Guid? id, IPrincipal principal)
-            => (await _httpClient.GetAsync<BoolResult>($"download/available?resource={path}&id={id.ToString()}", principal)).GetResponse().Value;
+        public async Task<bool> IsDownloadAvailable(string path, string id, IPrincipal principal)
+            => (await _httpClient.GetAsync<BoolResult>($"download/available?resource={path}&id={id}", principal)).GetResponse().Value;
     }
 }

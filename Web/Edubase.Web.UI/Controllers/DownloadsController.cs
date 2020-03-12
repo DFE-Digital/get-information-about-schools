@@ -149,7 +149,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpPost, Route("Download/Extract", Name="DownloadExtract")]
-        public async Task<ActionResult> DownloadExtractAsync(string path, Guid? id, string searchQueryString = null, eLookupSearchSource? searchSource = null)
+        public async Task<ActionResult> DownloadExtractAsync(string path, string id, string searchQueryString = null, eLookupSearchSource? searchSource = null)
         {
             var uri = new Uri(path);
             var downloadAvailable = await _downloadsService.IsDownloadAvailable($"/{uri.Segments.Last()}", id, User);
