@@ -1,4 +1,4 @@
-﻿using Edubase.Web.UI.MvcResult;
+using Edubase.Web.UI.MvcResult;
 using System;
 using System.Net;
 using System.Web.Mvc;
@@ -22,7 +22,7 @@ namespace Edubase.Web.UI.Filters
                     ReturnUrl = filterContext.RequestContext.HttpContext.Request.Url.PathAndQuery
                 });
 
-                filterContext.Result = new ChallengeResult("KentorAuthServices", redirectUrl);
+                filterContext.Result = new ChallengeResult("Saml2", redirectUrl);
             }
         }
     }

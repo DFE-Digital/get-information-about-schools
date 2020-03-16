@@ -1,19 +1,19 @@
 using System;
 using System.Configuration;
-using System.IdentityModel.Metadata;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Web.Helpers;
 using System.Web.Hosting;
-using Kentor.AuthServices;
-using Kentor.AuthServices.Configuration;
-using Kentor.AuthServices.Owin;
-using Kentor.AuthServices.WebSso;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
+using Sustainsys.Saml2;
+using Sustainsys.Saml2.Configuration;
+using Sustainsys.Saml2.Metadata;
+using Sustainsys.Saml2.Owin;
+using Sustainsys.Saml2.WebSso;
 
 [assembly: OwinStartup("SecureAccessConfiguration", typeof(Edubase.Web.UI.StartupSecureAccess))]
 
@@ -37,11 +37,12 @@ namespace Edubase.Web.UI
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
                 Provider = new CookieAuthenticationProvider(),
-                ExpireTimeSpan = ConfiguredExpireTimeSpan
+                ExpireTimeSpan = ConfiguredExpireTimeSpan,
+                CookieSecure = CookieSecureOption.Always
             });
 
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
-            app.UseKentorAuthServicesAuthentication(CreateAuthServicesOptions());
+            app.UseSaml2Authentication(CreateAuthServicesOptions());
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
 
             app.Use((context, next) =>
@@ -61,13 +62,13 @@ namespace Edubase.Web.UI
             });
 
         }
-        private static KentorAuthServicesAuthenticationOptions CreateAuthServicesOptions()
+        private static Saml2AuthenticationOptions CreateAuthServicesOptions()
         {
             var spOptions = new SPOptions
             {
                 EntityId = new EntityId(ApplicationIdpEntityId),
                 ReturnUrl = ExternalAuthDefaultCallbackUrl,
-                AuthenticateRequestSigningBehavior = SigningBehavior.Always
+                MinIncomingSigningAlgorithm = "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
             };
 
             spOptions.ServiceCertificates.Add(new ServiceCertificate
@@ -76,14 +77,13 @@ namespace Edubase.Web.UI
                 Certificate = GetSPCertificateFromAppData()
             });
 
-            var authServicesOptions = new KentorAuthServicesAuthenticationOptions(false) { SPOptions = spOptions };
+            var authServicesOptions = new Saml2AuthenticationOptions(false) { SPOptions = spOptions };
 
             var idp = new IdentityProvider(new EntityId(MetadataLocation.AbsoluteUri), spOptions)
             {
                 AllowUnsolicitedAuthnResponse = true,
                 Binding = Saml2BindingType.HttpRedirect,
                 MetadataLocation = MetadataLocation.AbsoluteUri,
-                WantAuthnRequestsSigned = true,
                 DisableOutboundLogoutRequests = true
             };
 

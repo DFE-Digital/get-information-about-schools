@@ -1,0 +1,1841 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Sustainsys.Saml2</name>
+    </assembly>
+    <members>
+        <member name="T:Sustainsys.Saml2.CertificateStatus">
+            <summary>
+            Is this certificate for current or future use?
+            </summary>
+        </member>
+        <member name="F:Sustainsys.Saml2.CertificateStatus.Current">
+            <summary>
+            The certificate is used for current requests
+            </summary>
+        </member>
+        <member name="F:Sustainsys.Saml2.CertificateStatus.Future">
+            <summary>
+            The certificate is used for current and/or future requests
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.CertificateUse">
+            <summary>
+            How is the certificate used?
+            </summary>
+        </member>
+        <member name="F:Sustainsys.Saml2.CertificateUse.Both">
+            <summary>
+            The certificate is used for either signing or encryption, or both.
+            Equivalent to Signing | Encryption.
+            </summary>
+        </member>
+        <member name="F:Sustainsys.Saml2.CertificateUse.Signing">
+            <summary>
+            The certificate is used for signing outbound requests
+            </summary>
+        </member>
+        <member name="F:Sustainsys.Saml2.CertificateUse.Encryption">
+            <summary>
+            The certificate is used for decrypting inbound assertions
+            </summary>
+        </member>
+        <member name="F:Sustainsys.Saml2.CertificateUse.TlsClient">
+            <summary>
+            The certificate is used as a Tls Client certificate for outbound
+            tls requests.
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.ClaimsExtensions">
+            <summary>
+            Extension methods for claims.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.ClaimsExtensions.ToSaml2NameIdentifier(System.Security.Claims.Claim)">
+            <summary>
+            Create a Saml2NameIdentifier from a claim.
+            </summary>
+            <param name="claim">Name identifier or Saml2 logout info claim.</param>
+            <returns>Saml2NameIdentifier</returns>
+            <remarks>The field order is:NameQualifier,SPNameQualifier,Format,SPProvidedID,Value</remarks>
+        </member>
+        <member name="T:Sustainsys.Saml2.ClaimsIdentityExtensions">
+            <summary>
+            Extension methods for Claims Identities
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.ClaimsIdentityExtensions.ToSaml2Assertion(System.Security.Claims.ClaimsIdentity,Sustainsys.Saml2.Metadata.EntityId)">
+            <summary>
+            Creates a Saml2Assertion from a ClaimsIdentity.
+            </summary>
+            <param name="identity">Claims to include in Assertion.</param>
+            <param name="issuer">Issuer to include in assertion.</param>
+            <returns>Saml2Assertion</returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.ClaimsIdentityExtensions.ToSaml2Assertion(System.Security.Claims.ClaimsIdentity,Sustainsys.Saml2.Metadata.EntityId,System.Uri)">
+            <summary>
+            Creates a Saml2Assertion from a ClaimsIdentity.
+            </summary>
+            <param name="identity">Claims to include in Assertion.</param>
+            <param name="issuer">Issuer to include in assertion.</param>
+            <param name="audience">Audience to set as audience restriction.</param>
+            <returns>Saml2Assertion</returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.ClaimsIdentityExtensions.ToSaml2Assertion(System.Security.Claims.ClaimsIdentity,Sustainsys.Saml2.Metadata.EntityId,System.Uri,Microsoft.IdentityModel.Tokens.Saml2.Saml2Id,System.Uri)">
+            <summary>
+            Creates a Saml2Assertion from a ClaimsIdentity.
+            </summary>
+            <param name="identity">Claims to include in Assertion.</param>
+            <param name="issuer">Issuer to include in assertion.</param>
+            <param name="audience">Audience to set as audience restriction.</param>
+            <param name="inResponseTo">In response to id</param>
+            <param name="destinationUri">The destination Uri for the message</param>
+            <returns>Saml2Assertion</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:Sustainsys.Saml2.ClaimsIdentityExtensions.ToSaml2NameIdentifier(System.Security.Claims.ClaimsIdentity)">
+            <summary>
+            Create a Saml2NameIdentifier from the identity.
+            </summary>
+            <param name="identity">Identity to get NameIdentifier claim from.</param>
+            <returns>Saml2NameIdentifier</returns>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.ArtifactResolutionServiceCollection">
+            <summary>
+            Config collection of ArtifactResolutionElements.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.ArtifactResolutionServiceCollection.CreateNewElement">
+            <summary>
+            Factory for element type.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.ArtifactResolutionServiceCollection.GetElementKey(System.Configuration.ConfigurationElement)">
+            <summary>
+            Get an identifying key of the element.
+            </summary>
+            <param name="element">Element</param>
+            <returns>Index of endpoint</returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.ArtifactResolutionServiceCollection.GetEnumerator">
+            <summary>
+            Generic enumerator.
+            </summary>
+            <returns>Generic enumerator</returns>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.ArtifactResolutionServiceElement">
+            <summary>
+            Configuration of an artifact resolution service endpoint on an idp.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.ArtifactResolutionServiceElement.Index">
+            <summary>
+            Index of the artifact resolution service endpoint.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.ArtifactResolutionServiceElement.Location">
+            <summary>
+            Location of the endpoint.
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.CertificateCollection">
+            <summary>
+            Collection of certificate elements.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.CertificateCollection.CreateNewElement">
+            <summary>
+            Create a new element of the right type.
+            </summary>
+            <returns>A new certificate element</returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.CertificateCollection.GetElementKey(System.Configuration.ConfigurationElement)">
+            <summary>
+            Get the key of an element.
+            </summary>
+            <param name="element">Element to get key of.</param>
+            <returns>A guid. There is no support for removing items and we
+            want this to be unique.</returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.CertificateCollection.GetEnumerator">
+            <summary>
+            Get enumerator for the elements.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.CertificateElement">
+            <summary>
+            Config element for the signing certificate.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.CertificateElement.IsReadOnly">
+            <summary>
+            Allows local modification of the configuration for testing purposes
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.CertificateElement.FileName">
+            <summary>
+            File name of cert stored in file.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.CertificateElement.StoreName">
+            <summary>
+            Store name to search.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.CertificateElement.StoreLocation">
+            <summary>
+            Store location to search.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.CertificateElement.FindValue">
+            <summary>
+            The search term used for searching the certificate store.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.CertificateElement.X509FindType">
+            <summary>
+            Find type, what field to search.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.CertificateElement.LoadCertificate">
+            <summary>
+            Load the certificate pointed to by this configuration.
+            </summary>
+            <returns>Certificate</returns>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.Compatibility">
+            <summary>
+            Compatibility settings. Can be used to make Saml2 accept
+            certain non-standard behaviour.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.Compatibility.#ctor">
+            <summary>
+            Ctor
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.Compatibility.#ctor(Sustainsys.Saml2.Configuration.CompatibilityElement)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="configElement">Config element to load</param>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Compatibility.UnpackEntitiesDescriptorInIdentityProviderMetadata">
+            <summary>
+            If an EntitiesDescriptor element is found when loading metadata
+            for an IdentityProvider, automatically check inside it if there
+            is a single EntityDescriptor and in that case use it.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Compatibility.DisableLogoutStateCookie">
+            <summary>
+            Do not send logout state cookie, e.g. if you are not using ReturnUrl
+            or if you know the cookie will be lost due to cross-domain redirects
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Compatibility.StrictOwinAuthenticationMode">
+            <summary>
+            Honor the owin authentication mode even on logout. Normally the logout
+            handling is always done as if the middleware was active, to allow for
+            simple sign out without specifying an auth type.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Compatibility.IgnoreAuthenticationContextInResponse">
+            <summary>
+            Do not read the AuthnContext element in Saml2Response.
+            If you do not need these values to be present as claims in the generated
+            identity, using this option can prevent XML format errors (IDX13102)
+            e.g. when value cannot parse as absolute URI
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Compatibility.IgnoreMissingInResponseTo">
+            <summary>
+            Ignore the check for the missing InResponseTo attribute in the Saml response.
+            This is different to setting the allowUnsolicitedAuthnResponse as it will only
+            ignore the InResponseTo attribute if there is no relayState. Setting
+            IgnoreMissingInResponseTo to true will always skip the check.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Compatibility.EnableLogoutOverPost">
+            <summary>
+            Handling logout requires access to the authenticated user session. If logout
+            is done over the POST binding, the session cookie must have SameSite=None
+            set (which is probably a bad idea). To avoid problems, disable logout
+            over POST in metadata by default.
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.CompatibilityElement">
+            <summary>
+            Compatibility settings. Can be used to make Saml2 accept
+            certain non-standard behaviour.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.CompatibilityElement.IsReadOnly">
+            <summary>
+            Used for testing, always returns true in production.
+            </summary>
+            <returns>Returns true (unless during tests)</returns>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.CompatibilityElement.UnpackEntitiesDescriptorInIdentityProviderMetadata">
+            <summary>
+            If an EntitiesDescriptor element is found when loading metadata
+            for an IdentityProvider, automatically check inside it if there
+            is a single EntityDescriptor and in that case use it.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.CompatibilityElement.DisableLogoutStateCookie">
+            <summary>
+            Do not send logout state cookie, e.g. if you are not using ReturnUrl
+            or if you know the cookie will be lost due to cross-domain redirects
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.CompatibilityElement.IgnoreMissingInResponseTo">
+            <summary>
+            Ignore the check for the missing InResponseTo attribute in the Saml response.
+            This is different to setting the allowUnsolicitedAuthnResponse as it will only
+            ignore the InResponseTo attribute if there is no relayState. Setting
+            IgnoreMissingInResponseTo to true will always skip the check.
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.ConfiguredAndLoadedSigningKeysCollection">
+            <summary>
+            Collection of items with two sources: configured and loaded dyanically.
+            The dynamically loaded can reset while the configured are kept.
+            metadata.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.ConfiguredAndLoadedSigningKeysCollection.AddConfiguredKey(Sustainsys.Saml2.Tokens.SecurityKeyIdentifierClause)">
+            <summary>
+            Add a configured key.
+            </summary>
+            <param name="key">Key to add.</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.ConfiguredAndLoadedSigningKeysCollection.AddConfiguredKey(System.Security.Cryptography.X509Certificates.X509Certificate2)">
+            <summary>
+            Add a configured certificate.
+            </summary>
+            <param name="certificate">Certificate to add.</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.ConfiguredAndLoadedSigningKeysCollection.SetLoadedItems(System.Collections.Generic.IList{Sustainsys.Saml2.Tokens.SecurityKeyIdentifierClause})">
+            <summary>
+            Set the complete set of loaded items keys. Previously loaded items
+            are cleared, configured items remain.
+            </summary>
+            <param name="items">Items to set</param>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.ConfiguredAndLoadedSigningKeysCollection.LoadedItems">
+            <summary>
+            The loaded items.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.ConfiguredAndLoadedSigningKeysCollection.GetEnumerator">
+            <summary>
+            Gets an enumerator to the combined set of keys.
+            </summary>
+            <returns>Enumerator</returns>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.ContactPersonElement">
+            <summary>
+            Contact person for a SAML2 entity.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.ContactPersonElement.ContactType">
+            <summary>
+            The type of this contact. A value from the 
+            System.IdentityModel.Metadata.ContactType enumeration.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.ContactPersonElement.Company">
+            <summary>
+            Name of the company of the contact.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.ContactPersonElement.GivenName">
+            <summary>
+            Given name of the contact.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.ContactPersonElement.Surname">
+            <summary>
+            Surname of the contact.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.ContactPersonElement.PhoneNumber">
+            <summary>
+            Phone number of the contact.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.ContactPersonElement.Email">
+            <summary>
+            E-mail of the contact.
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.ContactPersonsCollection">
+            <summary>
+            Config collection of contacts.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.ContactPersonsCollection.CreateNewElement">
+            <summary>
+            Create a new element of the right type.
+            </summary>
+            <returns>A new ContactPersonElement.</returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.ContactPersonsCollection.GetElementKey(System.Configuration.ConfigurationElement)">
+            <summary>
+            Get the key of an element.
+            </summary>
+            <param name="element">Element to get key of.</param>
+            <returns>A guid. There is no support for removing items and we
+            want this to be unique.</returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.ContactPersonsCollection.GetEnumerator">
+            <summary>
+            Get enumerator for the elements.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.EntityIdConverter">
+            <summary>
+            Converts between string and EntityId, used by the configuration system to
+            allow configuration properties of type EntityId.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.EntityIdConverter.ConvertFrom(System.ComponentModel.ITypeDescriptorContext,System.Globalization.CultureInfo,System.Object)">
+            <summary>
+            Converts a string to an EntityId
+            </summary>
+            <param name="context">Ignored</param>
+            <param name="culture">Ignored</param>
+            <param name="value">String to convert</param>
+            <returns>EntityID</returns>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.FederationCollection">
+            <summary>
+            Config collection of federations.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.FederationCollection.CreateNewElement">
+            <summary>
+            Create new elemnt of the right type.
+            </summary>
+            <returns>FederationElement</returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.FederationCollection.GetElementKey(System.Configuration.ConfigurationElement)">
+            <summary>
+            Get the key of an element, which is the metadata url.
+            </summary>
+            <param name="element">FedertionElement</param>
+            <returns></returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.FederationCollection.GetEnumerator">
+            <summary>
+            Generic IEnumerable implementation.
+            </summary>
+            <returns>Enumerator</returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.FederationCollection.RegisterFederations(Sustainsys.Saml2.Configuration.IOptions)">
+            <summary>
+            Registers the identity providers from the configured federations in the identity provider dictionary.
+            </summary>
+            <param name="options">Current options.</param>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.FederationElement">
+            <summary>
+            Configuration of a federation.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.FederationElement.MetadataLocation">
+            <summary>
+            Location (url, local path or app relative path such as ~/App_Data)
+            where metadata is located.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.FederationElement.AllowUnsolicitedAuthnResponse">
+            <summary>
+            Are unsolicited responses from the idps in the federation allowed?
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.FederationElement.SigningCertificates">
+            <summary>
+            Signing certificates for the federation
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.IdentityProviderCollection">
+            <summary>
+            Config collection of IdentityProviderElements.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.IdentityProviderCollection.CreateNewElement">
+            <summary>
+            Create new element of right type.
+            </summary>
+            <returns>IdentityProviderElement</returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.IdentityProviderCollection.GetElementKey(System.Configuration.ConfigurationElement)">
+            <summary>
+            Get the name of an element.
+            </summary>
+            <param name="element">IdentityProviderElement</param>
+            <returns>element.Name</returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.IdentityProviderCollection.GetEnumerator">
+            <summary>
+            Get a strongly typed enumerator.
+            </summary>
+            <returns>Strongly typed enumerator.</returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.IdentityProviderCollection.RegisterIdentityProviders(Sustainsys.Saml2.Configuration.IOptions)">
+            <summary>
+            Register the configured identity providers in the dictionary of active idps.
+            </summary>
+            <param name="options">Current options.</param>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.IdentityProviderDictionary">
+            <summary>
+            A thread safe wrapper around a dictionary for the identity providers.
+            </summary>
+            <remarks>
+            First I thought about using a ConcurrentDictionary, but that does not maintain
+            any order of the added objects. Since the first idp added becomes the default idp,
+            the order must be preserved. And there has to be queuing semantics if the first idp
+            is dynamically loaded from a federation and later removed. Locks are simple and
+            this part of the code shouldn't be that performance sensitive.
+            </remarks>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IdentityProviderDictionary.Item(Sustainsys.Saml2.Metadata.EntityId)">
+            <summary>
+            Gets an idp from the entity id.
+            </summary>
+            <param name="entityId">entity Id to look up.</param>
+            <returns>IdentityProvider</returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.IdentityProviderDictionary.Add(Sustainsys.Saml2.IdentityProvider)">
+            <summary>
+            Add an identity provider to the collection..
+            </summary>
+            <param name="idp">Identity provider to add.</param>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IdentityProviderDictionary.Default">
+            <summary>
+            The default identity provider; i.e. the first registered of the currently known.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IdentityProviderDictionary.KnownIdentityProviders">
+            <summary>
+            Gets all currently known identity providers. Note that the returned
+            enumeration is a copy to avoid race conditions.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.IdentityProviderDictionary.TryGetValue(Sustainsys.Saml2.Metadata.EntityId,Sustainsys.Saml2.IdentityProvider@)">
+            <summary>
+            Try to get the value of an idp with a given entity id.
+            </summary>
+            <param name="idpEntityId">Entity id to search for.</param>
+            <param name="idp">The idp, if found.</param>
+            <returns>True if an idp with the given entity id was found.</returns>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IdentityProviderDictionary.IsEmpty">
+            <summary>
+            Checks if there are no known identity providers.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.IdentityProviderDictionary.Remove(Sustainsys.Saml2.Metadata.EntityId)">
+            <summary>
+            Removes the idp with the given entity id, if present. If no such
+            entity is found, nothing is done.
+            </summary>
+            <param name="idp">EntityId of idp to remove.</param>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.IdentityProviderElement">
+            <summary>
+            Config element for the identity provider element.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.IdentityProviderElement.IsReadOnly">
+            <summary>
+            Allows local modification of the configuration for testing purposes
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IdentityProviderElement.EntityId">
+            <summary>
+            EntityId as presented by the idp. Used as key to configuration.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IdentityProviderElement.SignOnUrl">
+            <summary>
+            Destination url to send sign in requests to.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IdentityProviderElement.LogoutUrl">
+            <summary>
+            Single logout url endpoint of Idp.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IdentityProviderElement.Binding">
+            <summary>
+            The binding to use when sending requests to the Idp.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IdentityProviderElement.SigningCertificate">
+            <summary>
+            Certificate location for the certificate the Idp uses to sign its messages.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IdentityProviderElement.OutboundSigningAlgorithm">
+            <summary>
+            Signing algorithm for outbound messages to this Idp. Overrides the
+            main signature algorithm configured in <see cref="T:Sustainsys.Saml2.Configuration.SPOptions"/>.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IdentityProviderElement.AllowUnsolicitedAuthnResponse">
+            <summary>
+            Allow unsolicited responses. That is InResponseTo is missing in the AuthnRequest.
+            If true InResponseTo is not required.
+            If false InResponseTo is required.
+            Even though AllowUnsolicitedAuthnResponse is true the InResponseTo must be valid if existing.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IdentityProviderElement.LoadMetadata">
+            <summary>
+            Enable automatic downloading of metadata form the well-known uri (i.e. interpret
+            the EntityID as an uri and download metadata from it).
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IdentityProviderElement.MetadataLocation">
+            <summary>
+            Metadata location url to be used for automatic downloading of metadata.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IdentityProviderElement.ArtifactResolutionServices">
+            <summary>
+            Artifact Resolution endpoints for the identity provider.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IdentityProviderElement.WantAuthnRequestsSigned">
+            <summary>
+            Does this Idp want the AuthnRequests to be signed?
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IdentityProviderElement.DisableOutboundLogoutRequests">
+            <summary>
+            Disable outbound logout requests to this idp, even though
+            Saml2 is configured for single logout and the idp supports
+            it. This setting might be usable when adding SLO to an existing
+            setup, to ensure that everyone is ready for SLO before activating.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IdentityProviderElement.RelayStateUsedAsReturnUrl">
+            <summary>
+            Indicates that the IDP sends the return url as part of the RelayState.
+            This is used when <see cref="P:Sustainsys.Saml2.Configuration.IdentityProviderElement.AllowUnsolicitedAuthnResponse"/> is enabled.
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.IOptions">
+            <summary>
+            Root interface for the options objects, handling all configuration of
+            Saml2.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IOptions.SPOptions">
+            <summary>
+            Options for the service provider's behaviour; i.e. everything except
+            the idp list and the notifications.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IOptions.IdentityProviders">
+            <summary>
+            Information about known identity providers.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.IOptions.Notifications">
+            <summary>
+            Set of callbacks that can be used as extension points for various
+            events.
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.MetadataElement">
+            <summary>
+            Metadata configuration.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.MetadataElement.AllowChange">
+            <summary>
+            Used by tests to write-enable config.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.MetadataElement.IsReadOnly">
+            <summary>
+            Is the element contents read only? Always true in production, but
+            can be changed during tests.
+            </summary>
+            <returns>Is the element contents read only?</returns>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.MetadataElement.Organization">
+            <summary>
+            Information about organization.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.MetadataElement.CacheDuration">
+            <summary>
+            Optional attribute that describes for how long anyone may cache the metadata
+            presented by the service provider. Defaults to 1 hour.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.MetadataElement.ValidUntil">
+            <summary>
+            How long after generation should the metadata be valid?
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.MetadataElement.Contacts">
+            <summary>
+            Collection of contacts.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.MetadataElement.RequestedAttributes">
+            <summary>
+            Requested attributes of the service provider.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.MetadataElement.WantAssertionsSigned">
+            <summary>
+            Metadata flag that we want assertions to be signed.
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.NameIdPolicyElement">
+            <summary>
+            NamedId policy configuration element.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.NameIdPolicyElement.AllowCreate">
+            <summary>
+            Allow create.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.NameIdPolicyElement.Format">
+            <summary>
+            The NameId format.
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.Options">
+            <summary>
+            Options implementation for handling in memory options.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Options.Notifications">
+            <summary>
+            Set of callbacks that can be used as extension points for various
+            events.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Options.FromConfiguration">
+            <summary>
+            Reads the options from the current config file.
+            </summary>
+            <returns>Options object.</returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.Options.#ctor(Sustainsys.Saml2.Configuration.SPOptions)">
+            <summary>
+            Creates an options object with the specified SPOptions.
+            </summary>
+            <param name="spOptions"></param>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Options.SPOptions">
+            <summary>
+            Options for the service provider's behaviour; i.e. everything except
+            the idp and federation list.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Options.IdentityProviders">
+            <summary>
+            Available identity providers.
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.OrganizationElement">
+            <summary>
+            Information about the organization responsible for the entity.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.OrganizationElement.IsReadOnly">
+            <summary>
+            Is this section readonly?
+            </summary>
+            <returns>Is this section readonly?</returns>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.OrganizationElement.Name">
+            <summary>
+            Name of the organization.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.OrganizationElement.DisplayName">
+            <summary>
+            Display name of the organization.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.OrganizationElement.Url">
+            <summary>
+            Url of the organization.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.OrganizationElement.Language">
+            <summary>
+            The language that should be used for the organization strings.
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.RequestedAttributeElement">
+            <summary>
+            Config for a requested element in the SPs metadata.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.RequestedAttributeElement.Name">
+            <summary>
+            Name of the attribute. Usually on the form urn:oid:....
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.RequestedAttributeElement.FriendlyName">
+            <summary>
+            Friendly, human readable name of the attribute.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.RequestedAttributeElement.NameFormat">
+            <summary>
+            Format of the Name property, one of the standard Uris in the saml specification.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.RequestedAttributeElement.IsRequired">
+            <summary>
+            Is this attribute required by the SP for it to work correctly?
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.RequestedAttributesCollection">
+            <summary>
+            Collection of requested attributes that an SP wants in incoming assertions.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.RequestedAttributesCollection.CreateNewElement">
+            <summary>
+            Create a new element of the right type.
+            </summary>
+            <returns>A new RequestedAttributeElement</returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.RequestedAttributesCollection.GetElementKey(System.Configuration.ConfigurationElement)">
+            <summary>
+            Get the key of an element.
+            </summary>
+            <param name="element">Element to get key of.</param>
+            <returns>The name of the requested attribute.</returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.RequestedAttributesCollection.GetEnumerator">
+            <summary>
+            Get a generic enumerator to the collection.
+            </summary>
+            <returns>Generic enumerator</returns>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.RequestedAuthnContextElement">
+            <summary>
+            Configuration of RequestedAuthnContext in generated AuthnRequests.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.RequestedAuthnContextElement.IsReadOnly">
+            <summary>
+            Used for testing, always returns true in production.
+            </summary>
+            <returns>Returns true (unless during tests)</returns>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.RequestedAuthnContextElement.AuthnContextClassRef">
+            <summary>
+            AuthnContextClassRef. Either a full URL or the last word of a
+            standard URL.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.RequestedAuthnContextElement.Comparison">
+            <summary>
+            Comparison mode of AuthnContextClassRef
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.Saml2Notifications">
+            <summary>
+            Set of callbacks that can be used as extension points for various
+            events.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Saml2Notifications.AuthenticationRequestCreated">
+            <summary>
+            Notification called when a <see cref="T:Sustainsys.Saml2.Saml2P.Saml2AuthenticationRequest"/>
+            has been created. The authenticationrequest can be amended and
+            modified.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Saml2Notifications.SignInCommandResultCreated">
+            <summary>
+            Notification called when the SignIn command has produced a
+            <see cref="T:Sustainsys.Saml2.WebSso.CommandResult"/>, but before anything has been applied
+            to the outgoing response. Set the <see cref="P:Sustainsys.Saml2.WebSso.CommandResult.HandledResult"/>
+            flag to suppress the library's built in apply functionality to the
+            outgoing response.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Saml2Notifications.SelectIdentityProvider">
+            <summary>
+            Notification called when the SignIn command is about to select
+            what Idp to use for the request. The EntityId is the one supplied
+            (e.g. through query string). To select a specicic IdentityProvider
+            simply return it. Return <code>null</code> to fall back to built
+            in selection.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Saml2Notifications.EmitSameSiteNone">
+            <summary>
+            Notification called to decide if a SameSite=None attribute should
+            be set for a cookie. The default implementation is based on the pseudo
+            code supplied by Google in https://www.chromium.org/updates/same-site/incompatible-clients
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Saml2Notifications.GetLogoutResponseState">
+            <summary>
+            Notification called when the logout command is about to use the 
+            <code>StoredRequestState</code> derived from the request's RelayState data.
+            Return a different StoredRequestState if you would like to customize the 
+            RelayState lookup. 
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Saml2Notifications.GetPublicOrigin">
+            <summary>
+            Notification called when a command is about to construct a fully-qualified url
+            Return a non-null Uri if you need to override this per request. Otherwise
+            it will fall back to the normal logic that checks the request Uri 
+            and the SPOptions.PublicOrigin setting
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Saml2Notifications.ProcessSingleLogoutResponseStatus">
+            <summary>
+            Notification called when single logout status is returned from IDP.
+            Return true to indicate that your notification has handled this status. Otherwise
+            it will fall back to the normal status processing logic.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Saml2Notifications.GetBinding">
+            <summary>
+            Get a binding that can unbind data from the supplied request. The
+            default is to use <see cref="M:Sustainsys.Saml2.WebSso.Saml2Binding.Get(Sustainsys.Saml2.WebSso.HttpRequestData)"/>
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Saml2Notifications.MessageUnbound">
+            <summary>
+            Notification called when the command has extracted data from
+            request (by using <see cref="M:Sustainsys.Saml2.WebSso.Saml2Binding.Unbind(Sustainsys.Saml2.WebSso.HttpRequestData,Sustainsys.Saml2.Configuration.IOptions)"/>)
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Saml2Notifications.AcsCommandResultCreated">
+            <summary>
+            Notification called when the ACS command has produced a
+            <see cref="T:Sustainsys.Saml2.WebSso.CommandResult"/>, but before anything has been applied
+            to the outgoing response. Set the <see cref="P:Sustainsys.Saml2.WebSso.CommandResult.HandledResult"/>
+            flag to suppress the library's built in apply functionality to the
+            outgoing response.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Saml2Notifications.LogoutCommandResultCreated">
+            <summary>
+            Notification called when the Logout command has produced a
+            <see cref="T:Sustainsys.Saml2.WebSso.CommandResult"/>, but before anything has been applied
+            to the outgoing response. Set the <see cref="P:Sustainsys.Saml2.WebSso.CommandResult.HandledResult"/>
+            flag to suppress the library's built in apply functionality to the
+            outgoing response.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Saml2Notifications.MetadataCreated">
+            <summary>
+            Notification called when metadata has been created, but before
+            signing. At this point the contents of the metadata can be
+            altered before presented.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Saml2Notifications.MetadataCommandResultCreated">
+            <summary>
+            Notification called when the Metadata command has produced a
+            <see cref="T:Sustainsys.Saml2.WebSso.CommandResult"/>, but before anything has been applied
+            to the outgoing response. Set the <see cref="P:Sustainsys.Saml2.WebSso.CommandResult.HandledResult"/>
+            flag to suppress the library's built in apply functionality to the
+            outgoing response.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Saml2Notifications.ValidateAbsoluteReturnUrl">
+            <summary>
+            Notification called by the SignIn and Logout commands to validate a ReturnUrl that is not relative.
+            Return true to indicate that you accept the ReturnUrl, false otherwise.
+            Default validation do not accept any absolute URL.
+            When false is returned, the SignIn and Logout commands will throw an <see cref="T:System.InvalidOperationException"/>.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.Saml2Notifications.GetIdentityProvider">
+            <summary>
+            Notification called when getting an identity provider. Default version is to return
+            the given idp from Options.IdentityProviders.
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.ServiceCertificateCollection">
+            <summary>
+            Certificates used by the service provider for signing, decryption and
+            TLS client certificates for artifact resolve.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.ServiceCertificateCollection.Add(System.Security.Cryptography.X509Certificates.X509Certificate2)">
+            <summary>
+            Add a certificate to the collection with default status use and
+            metadata behaviour.
+            </summary>
+            <param name="certificate">Certificate to add.</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.ServiceCertificateCollection.InsertItem(System.Int32,Sustainsys.Saml2.ServiceCertificate)">
+            <summary>
+            Add to the collection at the specified position.
+            </summary>
+            <param name="index">Position index.</param>
+            <param name="item">Service certificate to add.</param>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.ServiceCertificateElement">
+            <summary>
+            Config element for the service certificate element.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.ServiceCertificateElement.Status">
+            <summary>
+            Is this certificate for current or future use?
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.ServiceCertificateElement.Use">
+            <summary>
+            Intended use of the certificate
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.ServiceCertificateElement.MetadataPublishOverride">
+            <summary>
+            How should we override the metadata publishing rules?
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.ServiceCertificateElementCollection">
+            <summary>
+            Config collection of ServiceCertificateElements.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.ServiceCertificateElementCollection.CreateNewElement">
+            <summary>
+            Create new element of right type.
+            </summary>
+            <returns>ServiceCertificateElement</returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.ServiceCertificateElementCollection.GetElementKey(System.Configuration.ConfigurationElement)">
+            <summary>
+            Get the name of an element.
+            </summary>
+            <param name="element">ServiceCertificateElement</param>
+            <returns>element.Name</returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.ServiceCertificateElementCollection.GetEnumerator">
+            <summary>
+            Get a strongly typed enumerator.
+            </summary>
+            <returns>Strongly typed enumerator.</returns>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.ServiceCertificateElementCollection.RegisterServiceCertificates(Sustainsys.Saml2.Configuration.SPOptions)">
+            <summary>
+            Register the configured service certificates.
+            </summary>
+            <param name="options">Current options.</param>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.SigningBehavior">
+            <summary>
+            Signing behavior for requests.
+            </summary>
+        </member>
+        <member name="F:Sustainsys.Saml2.Configuration.SigningBehavior.IfIdpWantAuthnRequestsSigned">
+            <summary>
+            Sign authnrequests if the idp is configured for it. This is the 
+            default behavior.
+            </summary>
+        </member>
+        <member name="F:Sustainsys.Saml2.Configuration.SigningBehavior.Always">
+            <summary>
+            Always sign AuthnRequests. AuthnRequestsSigned is set to true
+            in metadata.
+            </summary>
+        </member>
+        <member name="F:Sustainsys.Saml2.Configuration.SigningBehavior.Never">
+            <summary>
+            Never sign AuthnRequests.
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.SPOptions">
+            <summary>
+            Options for the service provider's behaviour; i.e. everything except
+            the idp and federation list.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.SPOptions.#ctor">
+            <summary>
+            Ctor
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.SPOptions.#ctor(Sustainsys.Saml2.Configuration.SustainsysSaml2Section)">
+            <summary>
+            Construct the options from the given configuration section
+            </summary>
+            <param name="configSection"></param>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.ReturnUrl">
+            <summary>
+            Return Uri to redirect the client to, if no return uri was specified
+            when initiating the signin sequence.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.MetadataCacheDuration">
+            <summary>
+            Recommendation of cache refresh interval to those who reads our
+            metadata.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.MetadataValidDuration">
+            <summary>
+            Maximum validity duration after fetch for those who reads our
+            metadata. Exposed as an absolute validUntil time in the metadata.
+            If set to null, no validUntil is exposed in metadata.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.Saml2PSecurityTokenHandler">
+            <summary>
+            The security token handler used to process incoming assertions for this SP.
+            The default value is to lazy create one using the current EntityId.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.DiscoveryServiceUrl">
+            <summary>
+            Url to discovery service to use if no idp is specified in the sign in call.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.EntityId">
+            <summary>
+            EntityId - The identity of the ServiceProvider to use when sending requests to Idp
+            and presenting the SP in metadata.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.ModulePath">
+            <summary>
+            Application root relative path for Saml2 endpoints. The
+            default is "/Saml2".
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.PublicOrigin">
+            <summary>
+            By default, the service provider uses the host, protocol, port and
+            application root path from the HTTP request when creating links. 
+            This might not be accurate in reverse proxy or load-balancing
+            situations. You can override the origin used for link generation
+            for the entire application using this property. To override per request,
+            implement a <code>GetPublicOrigin</code> Notification function.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.Organization">
+            <summary>
+            Metadata describing the organization responsible for the entity.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.NameIdPolicy">
+            <summary>
+            NameId Policy.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.RequestedAuthnContext">
+            <summary>
+            RequestedAuthnContext
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.Contacts">
+            <summary>
+            Collection of contacts for the SAML2 entity.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.AttributeConsumingServices">
+            <summary>
+            Collection of attribute consuming services for the service provider.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.ServiceCertificates">
+            <summary>
+            Certificates used by the service provider for signing or decryption.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.DecryptionServiceCertificates">
+            <summary>
+            Certificates valid for use in decryption
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.SigningServiceCertificate">
+            <summary>
+            Certificate for use in signing outbound requests
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.MetadataCertificates">
+            <summary>
+            Certificates to be published in metadata
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.AuthenticateRequestSigningBehavior">
+            <summary>
+            Signing behaviour for AuthnRequests.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.OutboundSigningAlgorithm">
+            <summary>
+            Signing algorithm for metadata and outbound messages. Can be 
+            overriden for each <see cref="T:Sustainsys.Saml2.IdentityProvider"/>.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.WantAssertionsSigned">
+            <summary>
+            Metadata flag that we want assertions to be signed.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.ValidateCertificates">
+            <summary>
+            Validate certificates when validating signatures? Normally not a
+            good idea as SAML2 deployments typically exchange certificates
+            directly and instead of relying on the public certificate
+            infrastructure.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.Compatibility">
+            <summary>
+            Compatibility settings. Can be used to make Saml2 accept
+            certain non-standard behaviour.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.MinIncomingSigningAlgorithm">
+            <summary>
+            Minimum accepted signature algorithm for any incoming messages.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SPOptions.Logger">
+            <summary>
+            Adapter to logging framework of hosting application.
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.Configuration.SustainsysSaml2Section">
+            <summary>
+            Config section for the module.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.IsReadOnly">
+            <summary>
+            Used for testing, always returns true in production.
+            </summary>
+            <returns>Returns true (unless during tests)</returns>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.Current">
+            <summary>
+            Current config as read from app/web.config.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.EntityId">
+            <summary>
+            EntityId - The identity of the ServiceProvider to use when sending requests to Idp
+            and presenting the SP in metadata.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.ReturnUrl">
+            <summary>
+            The Url to redirect back to after successfull authentication.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.PublicOrigin">
+            <summary>
+            By default, the service provider uses the host, protocol, and port
+            from the HTTP request when creating links. This might not be
+            accurate in reverse proxy or load-balancing situations. You can
+            override the origin used for link generation using this property.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.IdentityProviders">
+            <summary>
+            Set of identity providers known to the service provider.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.Federations">
+            <summary>
+            Set of federations. The service provider will trust all the idps in these federations.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.DiscoveryServiceUrl">
+            <summary>
+            Url to discovery service to use if no idp is specified in the sign in call.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.ModulePath">
+            <summary>
+            Application root relative path for Saml2 endpoints. The 
+            default is "Saml2".
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.NameIdPolicyElement">
+            <summary>
+            NamedId policy element.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.RequestedAuthnContext">
+            <summary>
+            RequestedAuthnContext config.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.Organization">
+            <summary>
+            Metadata describing the organization responsible for the entity.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.Metadata">
+            <summary>
+            Metadata of the service provider.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.Contacts">
+            <summary>
+            Contacts for the SAML2 entity.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.AttributeConsumingServices">
+            <summary>
+            Attribute consuming services.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.ServiceCertificates">
+            <summary>
+            Certificates used by the service provider for signing and/or decryption.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.AuthenticateRequestSigningBehavior">
+            <summary>
+            Signing behavior for created AuthnRequests.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.OutboundSigningAlgorithm">
+            <summary>
+            Signing algorithm for metadata and outbound messages. Can be 
+            overriden for each <see cref="T:Sustainsys.Saml2.IdentityProvider"/>.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.MinIncomingSigningAlgorithm">
+            <summary>
+            Weakest accepted signing algorithm for inbound messages.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.ValidateCertificates">
+            <summary>
+            Validate certificates when validating signatures? Normally not a
+            good idea as SAML2 deployments typically exchange certificates
+            directly and instead of relying on the public certificate
+            infrastructure.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Configuration.SustainsysSaml2Section.Compatibility">
+            <summary>
+            Compatibility settings. Can be used to make Saml2 accept
+            certain non-standard behaviour.
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.DateTimeExtensions">
+            <summary>
+            Helper methods for DateTime formatting.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.DateTimeExtensions.ToSaml2DateTimeString(System.DateTime)">
+            <summary>
+            Format a datetime for inclusion in SAML messages.
+            </summary>
+            <param name="dateTime">Datetime to format.</param>
+            <returns>Formatted value.</returns>
+        </member>
+        <member name="T:Sustainsys.Saml2.Exceptions.BadFormatSamlResponseException">
+            <summary>
+            A SAML response was found, but could not be parsed due to formatting issues.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.BadFormatSamlResponseException.#ctor">
+            <summary>
+            Ctor
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.BadFormatSamlResponseException.#ctor(System.String)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="message">Message of the exception.</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.BadFormatSamlResponseException.#ctor(System.String,System.Exception)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="message">Message of the exception.</param>
+            <param name="innerException">Inner exception.</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.BadFormatSamlResponseException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Serialization Ctor
+            </summary>
+            <param name="info">Serialization info</param>
+            <param name="context">Serialization context</param>
+        </member>
+        <member name="T:Sustainsys.Saml2.Exceptions.InvalidSignatureException">
+            <summary>
+            Exception thrown when an signature is not valid according to the
+            SAML standard.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.InvalidSignatureException.#ctor">
+            <summary>
+            Default ctor
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.InvalidSignatureException.#ctor(System.String)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="message">Message of exception</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.InvalidSignatureException.#ctor(System.String,System.Exception)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="message">Message</param>
+            <param name="innerException">Inner exception</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.InvalidSignatureException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Serialization Ctor
+            </summary>
+            <param name="info">Serialization info</param>
+            <param name="context">Serialization context</param>
+        </member>
+        <member name="T:Sustainsys.Saml2.Exceptions.NoSamlResponseFoundException">
+            <summary>
+            No saml response was found in the http request.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.NoSamlResponseFoundException.#ctor">
+            <summary>
+            Default Ctor, setting message to a default.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.NoSamlResponseFoundException.#ctor(System.String)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="message">Message of the exception.</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.NoSamlResponseFoundException.#ctor(System.String,System.Exception)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="message">Message of the exception.</param>
+            <param name="innerException">Inner exception.</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.NoSamlResponseFoundException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Serialization Ctor
+            </summary>
+            <param name="info">Serialization info</param>
+            <param name="context">Serialization context</param>
+        </member>
+        <member name="T:Sustainsys.Saml2.Exceptions.Saml2Exception">
+            <summary>
+            Base class for authentication services specific exceptions, that might                     
+            require special handling for error reporting to the user.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.Saml2Exception.#ctor">
+            <summary>
+            Default Ctor
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.Saml2Exception.#ctor(System.String)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="message">Message of the exception.</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.Saml2Exception.#ctor(System.String,System.Exception)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="message">Message of the exception.</param>
+            <param name="innerException">Inner exception.</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.Saml2Exception.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Serialization Ctor
+            </summary>
+            <param name="info">Serialization info</param>
+            <param name="context">Serialization context</param>
+        </member>
+        <member name="T:Sustainsys.Saml2.Exceptions.Saml2ResponseFailedValidationException">
+            <summary>
+            A SAML2 Response failed validation.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.Saml2ResponseFailedValidationException.#ctor">
+            <summary>
+            Ctor
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.Saml2ResponseFailedValidationException.#ctor(System.String)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="message">Message of the exception.</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.Saml2ResponseFailedValidationException.#ctor(System.String,System.Exception)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="message">Message of the exception.</param>
+            <param name="innerException">Inner exception.</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.Saml2ResponseFailedValidationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Serialization Ctor
+            </summary>
+            <param name="info">Serialization info</param>
+            <param name="context">Serialization context</param>
+        </member>
+        <member name="T:Sustainsys.Saml2.Exceptions.UnexpectedInResponseToException">
+            <summary>
+            A SAML2 Response failed InResponseTo validation because RelayState is lost, or an unsolicited response contains an InResponseTo
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.UnexpectedInResponseToException.#ctor">
+            <summary>
+            Ctor
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.UnexpectedInResponseToException.#ctor(System.String)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="message">Message of the exception.</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.UnexpectedInResponseToException.#ctor(System.String,System.Exception)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="message">Message of the exception.</param>
+            <param name="innerException">Inner exception.</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.UnexpectedInResponseToException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Serialization Ctor
+            </summary>
+            <param name="info">Serialization info</param>
+            <param name="context">Serialization context</param>
+        </member>
+        <member name="T:Sustainsys.Saml2.Exceptions.UnsuccessfulSamlOperationException">
+            <summary>
+            Extended exception containing information about the status and status message SAML response.  
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Exceptions.UnsuccessfulSamlOperationException.Status">
+            <summary>
+            Status of the SAML2Response
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Exceptions.UnsuccessfulSamlOperationException.StatusMessage">
+            <summary>
+            Status message of SAML2Response
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Exceptions.UnsuccessfulSamlOperationException.SecondLevelStatus">
+            <summary>
+            Second level status of SAML2Response
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.UnsuccessfulSamlOperationException.#ctor(System.String,Sustainsys.Saml2.Saml2P.Saml2StatusCode,System.String,System.String)">
+            <summary>
+            Ctor, bundling the Saml2 status codes and message into the exception message.
+            </summary>
+            <param name="message">Exception message.</param>
+            <param name="statusCode">Status of the SAML2Response</param>
+            <param name="statusMessage">Status message of SAML2Response</param>
+            <param name="secondLevelStatus">Second level status of SAML2Response</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.UnsuccessfulSamlOperationException.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.UnsuccessfulSamlOperationException.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.UnsuccessfulSamlOperationException.#ctor(System.String,System.Exception)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+            <param name="innerException"></param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.UnsuccessfulSamlOperationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Exceptions.UnsuccessfulSamlOperationException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="T:Sustainsys.Saml2.Federation">
+            <summary>
+            Represents a federation known to this service provider.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Federation.#ctor(Sustainsys.Saml2.Configuration.FederationElement,Sustainsys.Saml2.Configuration.IOptions)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="config">Config to use to initialize the federation.</param>
+            <param name="options">Options to pass on to created IdentityProvider
+            instances and register identity providers in.</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Federation.#ctor(System.String,System.Boolean,Sustainsys.Saml2.Configuration.IOptions)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="metadataLocation">Location (url, local path or app 
+            relative path such as ~/App_Data) where metadata is located.</param>
+            <param name="allowUnsolicitedAuthnResponse">Should unsolicited responses 
+            from idps in this federation be accepted?</param>
+            <param name="options">Options to pass on to created IdentityProvider
+            instances and register identity providers in.</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Federation.#ctor(System.String,System.Boolean,Sustainsys.Saml2.Configuration.IOptions,System.Collections.Generic.IEnumerable{System.Security.Cryptography.X509Certificates.X509Certificate2})">
+            <summary>
+            Ctor
+            </summary>
+            <param name="metadataLocation">Location (url, local path or app 
+            relative path such as ~/App_Data) where metadata is located.</param>
+            <param name="allowUnsolicitedAuthnResponse">Should unsolicited responses 
+            from idps in this federation be accepted?</param>
+            <param name="options">Options to pass on to created IdentityProvider
+            instances and register identity providers in.</param>
+            <param name="signingKeys">List of signing keys to use to validate metadata.</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.Federation.#ctor(System.String,System.Boolean,Sustainsys.Saml2.Configuration.IOptions,System.Collections.Generic.IEnumerable{Sustainsys.Saml2.Tokens.SecurityKeyIdentifierClause})">
+            <summary>
+            Ctor
+            </summary>
+            <param name="metadataLocation">Location (url, local path or app 
+            relative path such as ~/App_Data) where metadata is located.</param>
+            <param name="allowUnsolicitedAuthnResponse">Should unsolicited responses 
+            from idps in this federation be accepted?</param>
+            <param name="options">Options to pass on to created IdentityProvider
+            instances and register identity providers in.</param>
+            <param name="signingKeys">List of signing keys to use to validate metadata.</param>
+        </member>
+        <member name="P:Sustainsys.Saml2.Federation.MetadataValidUntil">
+            <summary>
+            For how long is the metadata that the federation has loaded valid?
+            Null if there is no limit.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.Federation.SigningKeys">
+            <summary>
+            Signing keys to use to verify the metadata before using it.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.ICachedMetadata.CacheDuration">
+            <summary>
+            Permitted cache duration for the metadata.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.ICachedMetadata.ValidUntil">
+            <summary>
+            Valid until
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.IdentityProvider">
+            <summary>
+            Represents a known identity provider that this service provider can communicate with.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.IdentityProvider.#ctor(Sustainsys.Saml2.Metadata.EntityId,Sustainsys.Saml2.Configuration.SPOptions)">
+            <summary>
+            Ctor
+            </summary>
+            <param name="entityId">Entity id of the identityprovider.</param>
+            <param name="spOptions">Service provider options to use when 
+            creating AuthnRequests for this Idp.</param>
+        </member>
+        <member name="P:Sustainsys.Saml2.IdentityProvider.LoadMetadata">
+            <summary>
+            Should this idp load metadata? The metadata is loaded immediately
+            when the property is set to true, so the <see cref="P:Sustainsys.Saml2.IdentityProvider.MetadataLocation"/>
+            must be correct before settingLoadMetadata to true.</summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.IdentityProvider.Binding">
+            <summary>
+            The binding used when sending AuthnRequests to the identity provider.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.IdentityProvider.SingleSignOnServiceUrl">
+            <summary>
+            The Url of the single sign on service. This is where the browser is redirected or
+            where the post data is sent to when sending an AuthnRequest to the idp.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.IdentityProvider.ArtifactResolutionServiceUrls">
+            <summary>
+            Artifact resolution endpoints on the idp.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.IdentityProvider.SingleLogoutServiceUrl">
+            <summary>
+            The Url of the single sign out service. This is where the browser
+            is redirected or where the post data is sent to when sending a
+            LogoutRequest to the idp.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.IdentityProvider.SingleLogoutServiceResponseUrl">
+            <summary>
+            The Url to send single logout responses to. Defaults to 
+            SingleLogoutServiceUrl.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.IdentityProvider.SingleLogoutServiceBinding">
+            <summary>
+            Binding for the Single logout service. If not set, returns the
+            same as the main binding (used for AuthnRequests)
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.IdentityProvider.EntityId">
+            <summary>
+            The Entity Id of the identity provider.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.IdentityProvider.AllowUnsolicitedAuthnResponse">
+            <summary>
+            Is this idp allowed to send unsolicited responses, i.e. idp initiated sign in?
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.IdentityProvider.RelayStateUsedAsReturnUrl">
+            <summary>
+            Does the RelayState contains the return url?, 
+            This setting is used only when the AllowUnsolicitedAuthnResponse setting is enabled.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.IdentityProvider.MetadataLocation">
+            <summary>
+            Location of metadata for the Identity Provider. Automatically enables
+            <see cref="P:Sustainsys.Saml2.IdentityProvider.LoadMetadata"/>. The location can be a URL, an absolute
+            path to a local file or an app relative  path 
+            (e.g. ~/App_Data/IdpMetadata.xml). By default the entity id is
+            interpreted as the metadata location (which is a convention).
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.IdentityProvider.CreateAuthenticateRequest(Sustainsys.Saml2.WebSso.Saml2Urls)">
+            <summary>
+            Create an authenticate request aimed for this idp.
+            </summary>
+            <param name="saml2Urls">Urls for Saml2, used to populate fields
+            in the created AuthnRequest</param>
+        </member>
+        <member name="P:Sustainsys.Saml2.IdentityProvider.OutboundSigningAlgorithm">
+            <summary>
+            Signing Algorithm to be used when signing oubound messages.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.IdentityProvider.Bind(Sustainsys.Saml2.Saml2P.ISaml2Message)">
+            <summary>
+            Bind a Saml2AuthenticateRequest using the active binding of the idp,
+            producing a CommandResult with the result of the binding.
+            </summary>
+            <param name="request">The AuthnRequest to bind.</param>
+            <returns>CommandResult with the bound request.</returns>
+        </member>
+        <member name="P:Sustainsys.Saml2.IdentityProvider.SigningKeys">
+            <summary>
+            The public key of the idp that is used to verify signatures of responses/assertions.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.IdentityProvider.ReadMetadata(Sustainsys.Saml2.Metadata.EntityDescriptor)">
+            <summary>
+            Reads the supplied metadata and sets all properties of the 
+            IdentityProvider based on the metadata.
+            </summary>
+            <param name="metadata">Metadata to read.</param>
+        </member>
+        <member name="P:Sustainsys.Saml2.IdentityProvider.MetadataValidUntil">
+            <summary>
+            Validity time of the metadata this idp was configured from. Null if
+            idp was not configured from metadata.
+            </summary>
+        </member>
+        <member name="P:Sustainsys.Saml2.IdentityProvider.WantAuthnRequestsSigned">
+            <summary>
+            Does this Idp want the AuthnRequests signed?
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.IdentityProvider.CreateLogoutRequest(System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Create a logout request to the idp, for the current identity.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Sustainsys.Saml2.IdentityProvider.DisableOutboundLogoutRequests">
+            <summary>
+            Disable outbound logout requests to this idp, even though
+            Saml2 is configured for single logout and the idp supports
+            it. This setting might be usable when adding SLO to an existing
+            setup, to ensure that everyone is ready for SLO before activating.
+            </summary>
+        </member>
+        <member name="T:Sustainsys.Saml2.ILoggerAdapter">
+            <summary>
+            Interface for an adapter around the logging framework used on each
+            platform.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.ILoggerAdapter.WriteInformation(System.String)">
+            <summary>
+            Write informational message.
+            </summary>
+            <param name="message">Message to write.</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.ILoggerAdapter.WriteError(System.String,System.Exception)">
+            <summary>
+            Write an error message
+            </summary>
+            <param name="message">Message</param>
+            <param name="ex">Exception to include in error message.</param>
+        </member>
+        <member name="M:Sustainsys.Saml2.ILoggerAdapter.WriteVerbose(System.String)">
+            <summary>
+            Write an informational message on the verbose level.
+            </summary>
+            <param name="message">Message to write</param>
+        </member>
+        <member name="T:Sustainsys.Saml2.Internal.ClientCertificateWebClient">
+            <summary>
+            A WebClient implementation that will add a list of client 
+            certificates to the requests it makes.
+            </summary>
+        </member>
+        <member name="M:Sustainsys.Saml2.Internal.ClientCertificateWebClient.#ctor(System.Collections.Generic.IEnumerable{System.Security.Cryptography.X509Certificates.X509Certificate2})">
+            <summary>
+      

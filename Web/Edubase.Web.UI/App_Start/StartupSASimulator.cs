@@ -1,19 +1,18 @@
 using System;
 using System.Configuration;
 using System.Globalization;
-using System.IdentityModel.Metadata;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Web.Helpers;
-using Kentor.AuthServices;
-using Kentor.AuthServices.Configuration;
-using Kentor.AuthServices.Metadata;
-using Kentor.AuthServices.Owin;
-using Kentor.AuthServices.WebSso;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
+using Sustainsys.Saml2;
+using Sustainsys.Saml2.Configuration;
+using Sustainsys.Saml2.Metadata;
+using Sustainsys.Saml2.Owin;
+using Sustainsys.Saml2.WebSso;
 
 [assembly: OwinStartup("SASimulatorConfiguration", typeof(Edubase.Web.UI.StartupSASimulator))]
 
@@ -35,11 +34,12 @@ namespace Edubase.Web.UI
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
                 Provider = new CookieAuthenticationProvider(),
-                ExpireTimeSpan = StartupSecureAccess.ConfiguredExpireTimeSpan
+                ExpireTimeSpan = StartupSecureAccess.ConfiguredExpireTimeSpan,
+                CookieSecure = CookieSecureOption.SameAsRequest
             });
 
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
-            app.UseKentorAuthServicesAuthentication(CreateAuthServicesOptions());
+            app.UseSaml2Authentication(CreateAuthServicesOptions());
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
 
             app.Use((context, next) =>
@@ -59,10 +59,10 @@ namespace Edubase.Web.UI
             });
         }
 
-        private static KentorAuthServicesAuthenticationOptions CreateAuthServicesOptions()
+        private static Saml2AuthenticationOptions CreateAuthServicesOptions()
         {
             var spOptions = CreateSPOptions();
-            var authServicesOptions = new KentorAuthServicesAuthenticationOptions(false)
+            var authServicesOptions = new Saml2AuthenticationOptions(false)
             {
                 SPOptions = spOptions
             };
@@ -74,7 +74,6 @@ namespace Edubase.Web.UI
                 SingleSignOnServiceUrl = new Uri("http://dfe-sign-in-simulator.azurewebsites.net/")
             };
 
-            //idp.SigningKeys.AddConfiguredKey(new X509Certificate2(HostingEnvironment.MapPath("~/App_Data/Kentor.AuthServices.StubIdp.cer")));
             authServicesOptions.IdentityProviders.Add(idp);
             new Federation("http://dfe-sign-in-simulator.azurewebsites.net/Federation", true, authServicesOptions);
             return authServicesOptions;
@@ -82,7 +81,8 @@ namespace Edubase.Web.UI
 
         private static SPOptions CreateSPOptions()
         {
-            var swedish = CultureInfo.GetCultureInfo("sv-se");
+            //var swedish = CultureInfo.GetCultureInfo("sv-se");
+            var swedish = "sv-se";
 
             var organization = new Organization();
             organization.Names.Add(new LocalizedName("Edubase", swedish));
@@ -93,7 +93,8 @@ namespace Edubase.Web.UI
             {
                 EntityId = new EntityId("http://edubase.gov"),
                 Organization = organization,
-                ReturnUrl = StartupSecureAccess.ExternalAuthDefaultCallbackUrl
+                ReturnUrl = StartupSecureAccess.ExternalAuthDefaultCallbackUrl,
+                MinIncomingSigningAlgorithm = "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
             };
 
             var techContact = new ContactPerson
@@ -111,8 +112,9 @@ namespace Edubase.Web.UI
             supportContact.EmailAddresses.Add("support@example.com");
             spOptions.Contacts.Add(supportContact);
 
-            var attributeConsumingService = new AttributeConsumingService("AuthServices")
+            var attributeConsumingService = new AttributeConsumingService()
             {
+                ServiceNames = { new LocalizedName("AuthServices", "en") },
                 IsDefault = true,
             };
 

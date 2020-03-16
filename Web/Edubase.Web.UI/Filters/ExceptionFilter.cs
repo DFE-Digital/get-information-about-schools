@@ -1,7 +1,4 @@
-using Edubase.Data.Entity;
-using Edubase.Services;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Web;
@@ -9,10 +6,9 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Edubase.Common;
 using Edubase.Services.Exceptions;
-using Autofac.Core;
 using AzureTableLogger;
 using AzureTableLogger.LogMessages;
-using Kentor.AuthServices.Exceptions;
+using Sustainsys.Saml2.Exceptions;
 
 namespace Edubase.Web.UI.Filters
 {
