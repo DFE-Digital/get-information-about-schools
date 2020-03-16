@@ -1,4 +1,4 @@
-﻿@using Microsoft.Ajax.Utilities
+@using Microsoft.Ajax.Utilities
 @model BulkUpdateViewModel
 
 @{
@@ -50,65 +50,71 @@
 }
 
 
-@using (Html.BeginRouteForm("ProcessBulkUpdate", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    <div class="grid-row">
-        <div class="column-full">
-            @if (Model.Result != null && Model.Result.IsCompleted() && !Model.Result.IsFailure() && !Model.Result.CompletedWithErrors())
-            {
-                <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
-                    <div class="tick"></div>
-                    <p class="message-text" aria-live="polite">Your bulk update was successful.</p>
-                    <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
-                </div>
-            }
-            <h1 class="heading-xlarge">Establishment bulk update</h1>
 
-            <p class="text">
-                Update establishment records by uploading a CSV or XLSX file. Multiple column updates must be in XLSX format.
-            </p>
-        </div>
-        <div class="column-full">
-
-            <div class="expanding-content-wrapper" data-update-text="false">
-                <a href="#" class="expanding-content-trigger">
-                    Help with preparing files
-                </a>
-                <div class="expanding-content panel-indent">
-                    <p>For a step by step guide to prepare documents for bulk update please download this file.</p>
-                    <p class="download-list-item">
-                        <a href="https://edubasepr.blob.core.windows.net/guidance/Establishment_Bulk_Update_Guide.pdf" target="_blank" rel="nofollow" class="js-track" data-track="bulkUpdate|establish-bulk-update|download">Establishment bulk update guidance PDF, 353KB <span class="visually-hidden">Opens in new window</span></a>
-                    </p>
-                </div>
+<div class="grid-row">
+    <div class="column-full">
+        @if (Model.Result != null && Model.Result.IsCompleted() && !Model.Result.IsFailure() && !Model.Result.CompletedWithErrors())
+        {
+            <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
+                <div class="tick"></div>
+                <p class="message-text" aria-live="polite">Your bulk update was successful.</p>
+                <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
             </div>
+        }
+        <h1 class="heading-xlarge">Establishment bulk update</h1>
 
-            @if (Model.Result != null)
+        <p class="text">
+            Update establishment records by uploading a CSV or XLSX file. Multiple column updates must be in XLSX format.
+        </p>
+    </div>
+    <div class="column-full">
+
+        <div class="expanding-content-wrapper" data-update-text="false">
+            <a href="#" class="expanding-content-trigger">
+                Help with preparing files
+            </a>
+            <div class="expanding-content panel-indent">
+                <p>For a step by step guide to prepare documents for bulk update please download this file.</p>
+                <p class="download-list-item">
+                    <a href="https://edubasepr.blob.core.windows.net/guidance/Establishment_Bulk_Update_Guide.pdf" target="_blank" rel="nofollow" class="js-track" data-track="bulkUpdate|establish-bulk-update|download">Establishment bulk update guidance PDF, 353KB <span class="visually-hidden">Opens in new window</span></a>
+                </p>
+            </div>
+        </div>
+
+        @if (Model.Result != null)
+        {
+            if (!Model.Result.Errors.Any())
             {
-                if (!Model.Result.Errors.Any())
-                {
-                    if (Model.Result.IsFailure())
-                    {
-                        <div class="form-group error" id="error-log">
-                            <p class="error-message">Please download the error log to correct your data before resubmitting</p>
-                            <p class="download-list-item">
-                                <a href="@Model.Result.ErrorLogFile.Url">@Model.Result.ErrorLogFile.Name</a>
-                            </p>
-                        </div>
-                    }
+                var uri = new Uri(Model.Result.ErrorLogFile.Url);
+                var path = uri.GetLeftPart(UriPartial.Path);
 
-                    if (Model.Result.CompletedWithErrors())
-                    {
-                        <div class="form-group error" id="import-errors">
+                using (Html.BeginRouteForm("DownloadExtract", FormMethod.Post))
+                {
+                    @Html.Hidden("id", @Model.Result.Id)
+                    @Html.Hidden("path", path)
+
+                    <div class="form-group error" id="error-log">
+
+                        @if (Model.Result.CompletedWithErrors())
+                        {
                             <p class="error-message">@Model.Result.RowErrors rows encountered errors during import. Please download the error log to correct your data before resubmitting</p>
-                            <p class="download-list-item">
-                                <a href="@Model.Result.ErrorLogFile.Url">@Model.Result.ErrorLogFile.Name</a>
-                            </p>
-                        </div>
-                    }
+                        }
+                        else
+                        {
+                            <p class="error-message">Please download the error log to correct your data before resubmitting</p>
+                        }
+
+                        <p class="download-list-item">
+                            <input type="submit" class="button inline-button" value="@Model.Result.ErrorLogFile.Name" /><br />
+                        </p>
+                    </div>
                 }
             }
+        }
+    </div>
 
-        </div>
+    @using (Html.BeginRouteForm("ProcessBulkUpdate", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
         <div class="column-half">
             <div class="form-group push--bottom @Html.ValidationCssClassFor(x => x.BulkFile)">
                 <label for="BulkFile" class="form-label">Upload a file</label>
@@ -117,7 +123,8 @@
                         Max file size and other limits
                     </a>
                     <div class="expanding-content panel-indent">
-                        <p>Max file size is 1MB. There are also limits of:
+                        <p>
+                            Max file size is 1MB. There are also limits of:
                             <ul class="list-bullet inside flush--bottom">
                                 <li>
                                     5,000 rows per file for back office users
@@ -162,8 +169,9 @@
             <a href="/Tools" class="button button-secondary cancel">Cancel</a>
         </div>
 
-</div>
-}
+        }
+    </div>
+
 
 
 @section ViewScripts{

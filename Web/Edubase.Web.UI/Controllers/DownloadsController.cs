@@ -15,6 +15,8 @@ using Edubase.Web.UI.Helpers;
 using System.Linq;
 using System.Net.Http;
 using Edubase.Services;
+using Edubase.Web.UI.Models.Search;
+using MoreLinq;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -143,6 +145,27 @@ namespace Edubase.Web.UI.Controllers
             else
             {
                 return HttpNotFound();
+            }
+        }
+
+        [HttpPost, Route("Download/Extract", Name="DownloadExtract")]
+        public async Task<ActionResult> DownloadExtractAsync(string path, string id, string searchQueryString = null, eLookupSearchSource? searchSource = null)
+        {
+            var uri = new Uri(path);
+            var downloadAvailable = await _downloadsService.IsDownloadAvailable($"/{uri.Segments.Last()}", id, User);
+
+            if (downloadAvailable)
+            {
+                return Redirect($"{path}?id={id}");
+            }
+            else
+            {
+                var view = new DownloadErrorViewModel
+                {
+                    SearchQueryString = searchQueryString,
+                    SearchSource = searchSource
+                };
+                return View("Downloads/DownloadError", view);
             }
         }
 
