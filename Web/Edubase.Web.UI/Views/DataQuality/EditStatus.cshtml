@@ -1,4 +1,4 @@
-﻿@model Edubase.Web.UI.Models.DataQuality.EditDataQualityStatusViewModel
+@model Edubase.Web.UI.Models.DataQuality.EditDataQualityStatusViewModel
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Update data status");
     ViewBag.bodyClasses = "data-quality";
@@ -48,7 +48,7 @@
 
 @section ViewScripts
 {
-    <script>
+    <script nonce="@Html.ScriptNonce()">
         var $fields = $('#content').find('.form-control');
         var exitAttached = false;
 

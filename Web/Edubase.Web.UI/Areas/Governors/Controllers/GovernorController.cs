@@ -745,24 +745,32 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         {
             user = user ?? User;
             establishmentUrn = establishmentUrn ?? establishmentModel?.Urn;
+            GovernorsGridViewModel viewModel;
 
-            var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, user);
-            var viewModel = new GovernorsGridViewModel(domainModel, false, groupUId, establishmentUrn, _nomenclatureService,
-                (await _cachedLookupService.NationalitiesGetAllAsync()), (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()));
-
-            if (establishmentUrn.HasValue || establishmentModel != null)
+            try
             {
-                var estabDomainModel = establishmentModel ?? (await _establishmentReadService.GetAsync(establishmentUrn.Value, user)).GetResult();
-                var items = await _establishmentReadService.GetPermissibleLocalGovernorsAsync(establishmentUrn.Value, user); // The API uses 1 as a default value, hence we have to call another API to deduce whether to show the Governance mode UI section
-                viewModel.GovernanceMode = items.Any() ? estabDomainModel.GovernanceMode : null;
+                var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, user);
+                viewModel = new GovernorsGridViewModel(domainModel, false, groupUId, establishmentUrn, _nomenclatureService,
+                    (await _cachedLookupService.NationalitiesGetAllAsync()), (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()));
+
+                if (establishmentUrn.HasValue || establishmentModel != null)
+                {
+                    var estabDomainModel = establishmentModel ?? (await _establishmentReadService.GetAsync(establishmentUrn.Value, user)).GetResult();
+                    var items = await _establishmentReadService.GetPermissibleLocalGovernorsAsync(establishmentUrn.Value, user); // The API uses 1 as a default value, hence we have to call another API to deduce whether to show the Governance mode UI section
+                    viewModel.GovernanceMode = items.Any() ? estabDomainModel.GovernanceMode : null;
+                }
+
+                if (groupUId.HasValue)
+                {
+                    var groupModel = (await _groupReadService.GetAsync(groupUId.Value, user)).GetResult();
+                    viewModel.ShowDelegationAndCorpContactInformation = groupModel.GroupTypeId == (int) eLookupGroupType.MultiacademyTrust;
+                    viewModel.DelegationInformation = groupModel.DelegationInformation;
+                    viewModel.CorporateContact = groupModel.CorporateContact;
+                }
             }
-
-            if (groupUId.HasValue)
+            catch (Exception)   // to more gracefully handle Texuna services UsageQuotaExceededException
             {
-                var groupModel = (await _groupReadService.GetAsync(groupUId.Value, user)).GetResult();
-                viewModel.ShowDelegationAndCorpContactInformation = groupModel.GroupTypeId == (int) eLookupGroupType.MultiacademyTrust;
-                viewModel.DelegationInformation = groupModel.DelegationInformation;
-                viewModel.CorporateContact = groupModel.CorporateContact;
+                viewModel = new GovernorsGridViewModel { DomainModel = new GovernorsDetailsDto() };
             }
 
             return viewModel;

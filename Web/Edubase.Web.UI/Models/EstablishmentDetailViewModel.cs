@@ -11,11 +11,20 @@ using Edubase.Services.Core;
 using Edubase.Web.UI.Helpers;
 using System;
 using System.Linq;
+using Edubase.Services.ExternalLookup;
 
 namespace Edubase.Web.UI.Models
 {
     public class EstablishmentDetailViewModel
     {
+        private readonly IFBService fbService;
+
+        public EstablishmentDetailViewModel(IFBService fbService = null)
+        {
+            this.fbService = fbService;
+            LegalParentGroupRouteDto = new Lazy<RouteDto>(() => LegalParentGroup != null ? new RouteDto("GroupDetails", new System.Web.Routing.RouteValueDictionary(new { id = LegalParentGroup.GroupUId }), LegalParentGroup.Name) : null);
+        }
+            
         private static Dictionary<int, string> _groupType2FieldLabelMappings = new Dictionary<int, string>
         {
             [(int)eLookupGroupType.SingleacademyTrust] = "Single-academy trust",
@@ -70,11 +79,6 @@ namespace Edubase.Web.UI.Models
         public string SearchQueryString { get; set; }
 
         public eLookupSearchSource? SearchSource { get; set; }
-
-        public EstablishmentDetailViewModel()
-        {
-            LegalParentGroupRouteDto = new Lazy<RouteDto>(() => LegalParentGroup != null ? new RouteDto("GroupDetails", new System.Web.Routing.RouteValueDictionary(new { id = LegalParentGroup.GroupUId }), LegalParentGroup.Name) : null);
-        }
 
         public string OfstedRatingReportUrl => (Establishment.OfstedRatingId.HasValue
             ? new OfstedRatingUrl(Establishment.Urn).ToString() : null as string);
@@ -188,5 +192,17 @@ namespace Edubase.Web.UI.Models
         public bool MediumPriorityGovernanceConfirmationPending => Establishment.ConfirmationUpToDateGovernanceRequired && !Establishment.UrgentConfirmationUpToDateGovernanceRequired;
         public bool HighPriorityEstablishmentConfirmationPending => (Establishment?.UrgentConfirmationUpToDateRequired).GetValueOrDefault();
         public bool HighPriorityGovernanceConfirmationPending => (Establishment?.UrgentConfirmationUpToDateGovernanceRequired).GetValueOrDefault();
+
+        public string FinancialBenchmarkingURL => fbService.SchoolURL(Establishment.Urn);
+
+        private bool? showFinancialBenchmarking;
+        public bool ShowFinancialBenchmarking
+        {
+            get
+            {
+                if (!showFinancialBenchmarking.HasValue) showFinancialBenchmarking = fbService != null && fbService.CheckExists(Establishment.Urn);
+                return showFinancialBenchmarking.Value;
+            }
+        }
     }
 }

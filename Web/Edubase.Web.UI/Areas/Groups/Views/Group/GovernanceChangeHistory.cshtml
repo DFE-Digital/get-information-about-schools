@@ -133,7 +133,7 @@
 
 @section ViewScripts
 {
-    <script>
+    <script nonce="@Html.ScriptNonce()">
         $('#governance').find('.sortable-table').clientSort();
     </script>
     <script src="/public/assets/scripts/leaflet-bundle.js"></script>

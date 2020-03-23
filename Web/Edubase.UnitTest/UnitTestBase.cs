@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -9,6 +9,7 @@ using Autofac;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
+using Edubase.Services.ExternalLookup;
 using Edubase.Services.Lookup;
 using Moq;
 using MoreLinq;
@@ -92,6 +93,7 @@ namespace Edubase.UnitTest
             GetMock<UrlHelper>()
                 .Setup(u => u.RouteUrl(It.IsAny<string>(), It.IsAny<object>()))
                 .Returns("fake url");
+            AddMock<IFBService>();
         }
 
         private void SetupHttpRequest()

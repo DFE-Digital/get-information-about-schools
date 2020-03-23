@@ -105,7 +105,7 @@
 
 @section ViewScripts
 {
-    <script>
+    <script nonce="@Html.ScriptNonce()">
         (function() {
             var $radios = $('#full-content').find('.core-full');
             var $panel = $('#data-download-options');

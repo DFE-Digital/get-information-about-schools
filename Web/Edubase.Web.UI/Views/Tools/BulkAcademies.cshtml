@@ -224,7 +224,7 @@
 
 @section ViewScripts
 {
-    <script>
+    <script nonce="@Html.ScriptNonce()">
         var $fields = $('#content').find('.form-control');
         var exitAttached = false;
         $fields.on('change',

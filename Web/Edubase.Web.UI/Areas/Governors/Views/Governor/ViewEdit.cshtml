@@ -468,7 +468,7 @@ else
 
 @section ViewScripts{
 
-    <script>
+    <script nonce="@Html.ScriptNonce()">
         $(function () {
             var dismissed = false;
             var form = $('form#removal-form');

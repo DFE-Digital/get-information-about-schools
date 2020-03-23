@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Common.Spatial;
 using Edubase.Web.UI.Models;
 using System;
@@ -14,6 +14,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public int? Id { get; set; }
         public string Name { get; set; }
         public int Urn { get; set; }
+        public int? UKPRN { get; set; }
         public string Address { get; set; }
         public string TypeName { get; set; }
         public string HeadFirstName { get; set; }

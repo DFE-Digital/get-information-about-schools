@@ -1,4 +1,4 @@
-﻿@using Edubase.Services.Domain
+@using Edubase.Services.Domain
 @model CreateChildrensCentreViewModel
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Create a new establishment");
@@ -193,7 +193,7 @@
 
 @section ViewScripts {
 
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="@Html.ScriptNonce()">
 
         // Setting up variables
         var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);

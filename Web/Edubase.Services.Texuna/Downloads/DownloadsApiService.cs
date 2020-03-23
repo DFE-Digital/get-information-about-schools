@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Core;
+using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Downloads;
 using Edubase.Services.Downloads.Models;
@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Edubase.Services.Texuna.Models;
 
 namespace Edubase.Services.Texuna.Downloads
 {
@@ -41,6 +42,7 @@ namespace Edubase.Services.Texuna.Downloads
         public async Task<ProgressDto> GetProgressOfScheduledExtractGenerationAsync(Guid id, IPrincipal principal)
             => (await _httpClient.GetAsync<ProgressDto>($"scheduled-extract/progress/{id}", principal)).Response;
 
-
+        public async Task<bool> IsDownloadAvailable(string path, string id, IPrincipal principal)
+            => (await _httpClient.GetAsync<BoolResult>($"download/available?resource={path}&id={id}", principal)).GetResponse().Value;
     }
 }

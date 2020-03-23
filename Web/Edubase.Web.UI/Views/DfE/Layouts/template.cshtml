@@ -1,4 +1,4 @@
-﻿@using Edubase.Web.UI.Controllers
+@using Edubase.Web.UI.Controllers
 @{
     Layout = "../../govuk/layouts/template.cshtml";
     var version = typeof (HomeController).Assembly.GetName().Version;
@@ -35,7 +35,7 @@
         <!--<![endif]-->
 
         <!--[if (gte IE 9)|!(IE)]><!-->
-        <script>
+        <script nonce="@Html.ScriptNonce()">
             var azureMapsApiKey = "@(System.Configuration.ConfigurationManager.AppSettings["AzureMapsApiKey"])";
         </script>
         <script src="/public/assets/scripts/leaflet-bundle.js"></script>

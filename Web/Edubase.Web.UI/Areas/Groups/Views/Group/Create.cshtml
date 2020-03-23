@@ -1,4 +1,4 @@
-﻿@using Edubase.Common;
+@using Edubase.Common;
 @using Edubase.Common.Text
 @using Edubase.Services.Domain
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
@@ -80,7 +80,7 @@
 
 @section ViewScripts
 {
-    <script>
+    <script nonce="@Html.ScriptNonce()">
         var $fields = $('#content').find('.form-control');
         var exitAttached = false;
 
@@ -95,7 +95,7 @@
 
     @if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND))
     {
-        <script>
+        <script nonce="@Html.ScriptNonce()">
             (function() {
                 var mask = $('#warning-modal-overlay-0');
                 var modal = $('#warning-modal-content-0');

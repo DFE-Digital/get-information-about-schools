@@ -1,4 +1,4 @@
-﻿using Edubase.Common.Spatial;
+using Edubase.Common.Spatial;
 using Edubase.Services.Domain;
 using Newtonsoft.Json;
 using System;
@@ -20,6 +20,7 @@ namespace Edubase.Services.Groups.Models
         public string Name { get; set; }
         public string TypeName { get; set; }
         public int? Urn { get; set; }
+        public int? UKPRN { get; set; }
 
         [JsonProperty("phaseName")]
         public string PhaseName { get; set; }

@@ -89,7 +89,7 @@
 @section ViewScripts{
     <script src="/public/assets/scripts/standalone/accessibility.js"></script>
     <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
-    <script>
+    <script nonce="@Html.ScriptNonce()">
         window.localAuthorities = @Html.Json(Model.LocalAuthorities);
 
         (function () {

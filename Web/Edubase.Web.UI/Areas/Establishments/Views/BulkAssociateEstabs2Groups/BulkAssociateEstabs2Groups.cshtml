@@ -12,33 +12,52 @@
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-@using (Html.BeginRouteForm("BulkAssociateEstabs2GroupsPost", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    <div class="grid-row">
-        <div class="column-full">
-            <h1 class="heading-xlarge">Bulk upload academies to trust/sponsor</h1>
-            <p>Use this tool to upload new academies to the relevant trusts / sponsor.</p>
-        </div>
-        <div class="column-full">
-            @if (Model?.Result?.RowErrors > 0)
+<div class="grid-row">
+    <div class="column-full">
+        <h1 class="heading-xlarge">Bulk upload academies to trust/sponsor</h1>
+        <p>Use this tool to upload new academies to the relevant trusts / sponsor.</p>
+    </div>
+    <div class="column-full">
+        @if (Model?.Result?.RowErrors > 0)
+        {
+            var uri = new Uri(Model.Result.ErrorLogFile.Url);
+            var path = uri.GetLeftPart(UriPartial.Path);
+
+            using (Html.BeginRouteForm("DownloadExtract", FormMethod.Post))
             {
+                @Html.Hidden("id", @Model.Result.Id)
+                @Html.Hidden("path", path)
+
                 <div class="form-group error" id="error-log">
-                    <p class="error-message">Please download the error log to correct your data before resubmitting</p>
+
+                    @if (Model.Result.CompletedWithErrors())
+                    {
+                        <p class="error-message">@Model.Result.RowErrors rows encountered errors during import. Please download the error log to correct your data before resubmitting</p>
+                    }
+                    else
+                    {
+                        <p class="error-message">Please download the error log to correct your data before resubmitting</p>
+                    }
+
                     <p class="download-list-item">
-                        <a href="@Model.Result.ErrorLogFile.Url">@Model.Result.ErrorLogFile.Name</a>
+                        <input type="submit" class="button inline-button" value="@Model.Result.ErrorLogFile.Name" /><br />
                     </p>
                 </div>
             }
-        </div>
+        }
 
-        <div class="column-full">
-            <h2 class="heading-medium">Download template</h2>
-            <p>
-                Please use this template to list the academies.
-            </p>
-            <a href="http://edubasepr.blob.core.windows.net/content/academies_bulk_upload.xls" class="download-list-item">Academies_bulk_upload.xls, 25KB</a>
-        </div>
+    </div>
 
+    <div class="column-full">
+        <h2 class="heading-medium">Download template</h2>
+        <p>
+            Please use this template to list the academies.
+        </p>
+        <a href="http://edubasepr.blob.core.windows.net/content/academies_bulk_upload.xls" class="download-list-item">Academies_bulk_upload.xls, 25KB</a>
+    </div>
+
+    @using (Html.BeginRouteForm("BulkAssociateEstabs2GroupsPost", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
         <div class="column-full">
             <h2 class="heading-medium">Upload completed template</h2>
             <div class="form-group push--bottom @Html.ValidationCssClassFor(x => x.BulkFile)">
@@ -51,5 +70,5 @@
                 <a href="/Tools" class="button button-secondary cancel">Cancel</a>
             </div>
         </div>
-    </div>
-}
+    }
+</div>
