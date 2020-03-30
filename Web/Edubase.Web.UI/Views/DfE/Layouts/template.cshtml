@@ -12,7 +12,7 @@
     @(RenderSection("Head", required: false))
 }
 
-<main id="content" class="page @(ViewBag.pageClass)" role="main" tabindex="-1">
+<main id="main-content" class="page @(ViewBag.pageClass)" role="main" tabindex="-1">
     @RenderBody()
 </main>
 
@@ -20,33 +20,27 @@
 
     @if (!Request.Browser.Browser.Contains("MSIE 8"))
     {
-        <!--[if (gte IE 9)|!(IE)]><!-->
-        <script src="/public/jquery/dist/jquery.min.js"></script>
-        <script src="/public/jquery-simulate/jquery.simulate.js"></script>
-        <!--<![endif]-->
+@*         <!--[if (gte IE 9)|!(IE)]><!--> *@
+@*         <script src="/public/jquery/dist/jquery.min.js"></script> *@
+@*         <script src="/public/jquery-simulate/jquery.simulate.js"></script> *@
+@*         <!--<![endif]--> *@
 
-        <script src="/public/dirrty/dist/jquery.dirrty.js"></script>
+@*         <script src="/public/dirrty/dist/jquery.dirrty.js"></script> *@
 
-        <!--[if IE 9]>
-        <script src="/public/termi/element.details.ie8.js"></script>
-        <!--<![endif]-->
-        <!--[if gt IE 9]>
-        <script src="/public/termi/element.details.js"></script>
-        <!--<![endif]-->
+@*         <!--[if IE 9]> *@
+@*         <script src="/public/termi/element.details.ie8.js"></script> *@
+@*         <!--<![endif]--> *@
+@*         <!--[if gt IE 9]> *@
+@*         <script src="/public/termi/element.details.js"></script> *@
+@*         <!--<![endif]--> *@
 
-        <!--[if (gte IE 9)|!(IE)]><!-->
         <script nonce="@Html.ScriptNonce()">
             var azureMapsApiKey = "@(System.Configuration.ConfigurationManager.AppSettings["AzureMapsApiKey"])";
         </script>
-        <script src="/public/assets/scripts/leaflet-bundle.js"></script>
-        <script src="/public/assets/scripts/application.js?v=@version"></script>
+        <script src="/public/assets/scripts/build/leaflet-bundle.js"></script>
+        <script src="/public/assets/scripts/build/bundle.js?v=@version"></script>
 
-        <!--<![endif]-->
 
-        <!--[if (gte IE 9)|!(IE)]><!-->
         @(RenderSection("ViewScripts", required: false))
-        <!--<![endif]-->
     }
-
-
 }

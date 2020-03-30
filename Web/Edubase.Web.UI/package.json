@@ -4,11 +4,23 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "stylelint": "stylelint '**/*.scss' --config .stylelintrc",
+    "build:dev": "webpack --env prod --progress",
+    "build:prod": "webpack --env prod",
+    "build:local": "webpack --env dev --profile",
+    "gulp": "gulp"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/preset-env": "^7.7.7",
+    "autoprefixer": "^9.7.5",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.1.0",
+    "babel-preset-env": "^1.7.0",
+    "cssnano": "^4.1.10",
+    "del": "^5.1.0",
     "govuk_frontend_toolkit": "7.0.1",
     "grunt": "~0.4.5",
     "grunt-cli": "~0.1.13",
@@ -20,6 +32,13 @@
     "grunt-hologram": "~0.0.7",
     "grunt-karma": "~0.12.0",
     "grunt-sass": "^2.1.0",
+    "gulp": "^4.0.2",
+    "gulp-if": "^3.0.0",
+    "gulp-postcss": "^8.0.0",
+    "gulp-run": "^1.7.1",
+    "gulp-sass": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-stylelint": "^13.0.0",
     "jasmine-core": "~2.3.4",
     "karma": "~0.13.3",
     "karma-chrome-launcher": "~0.2.0",
@@ -28,7 +47,19 @@
     "karma-ie-launcher": "~0.2.0",
     "karma-jasmine": "~0.3.6",
     "karma-mocha-reporter": "~1.1.0",
+    "leaflet": "^1.6.0",
+    "leaflet.markercluster": "^1.4.1",
     "load-grunt-config": "~0.17.2",
-    "load-grunt-tasks": "~3.2.0"
+    "load-grunt-tasks": "~3.2.0",
+    "stylelint": "^13.2.1",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "vue": "^2.6.11",
+    "vue-loader": "^15.9.1",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
+  },
+  "dependencies": {
+    "govuk-frontend": "^3.6.0",
+    "jquery": "^3.4.1"
   }
 }

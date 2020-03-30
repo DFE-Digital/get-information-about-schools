@@ -1,0 +1,126 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: govuk-colour('black');
+  opacity: 0.6;
+  filter: alpha(opacity=60);
+  z-index: 500;
+
+  &.hidden {
+    display: none;
+  }
+
+}
+
+.modal-content {
+  position: fixed;
+  z-index: 501;
+  background-color: govuk-colour('white');
+  width: 50%;
+  max-height: 80%;
+  top: 10%;
+  left: 25%;
+  overflow: auto;
+
+
+  @include govuk-media-query($until: tablet){
+    width: 90%;
+    max-height: 50%;
+    top: 25%;
+    left: 5%;
+  }
+
+  @include govuk-media-query(desktop) {
+    width: 480px;
+    left: 50%;
+    margin-left: - 240px;
+  }
+
+
+  &.hidden {
+    display: none;
+  }
+
+  .heading-large:focus {
+    outline: none;
+  }
+  #modal-inner, .modal-inner {
+    padding: 2em 2em 0;
+
+  }
+
+  .button-row {
+    padding: 5px 2em 2em;
+    margin-bottom: 0;
+    overflow: hidden;
+
+    @include govuk-media-query($until: tablet) {
+      padding-bottom: 1em;
+    }
+
+    .govuk-button {
+      min-width: 100px;
+
+      &:first-of-type {
+        margin-right: 15px;
+
+        @include govuk-media-query($until: tablet) {
+          margin-right: 0;
+        }
+      }
+
+      &:focus {
+        background-color: govuk-colour('green');
+        color: govuk-colour('white');
+        box-shadow: none;
+      }
+    }
+  }
+}
+
+.modal-exit {
+  position: absolute;
+  right: 8px;
+  top: 6px;
+}
+
+.data-status-summary {
+  position: fixed;
+  z-index: 501;
+  background-color: govuk-colour('white');
+  width: 90%;
+  max-height: 80%;
+  top: 10%;
+  left: 5%;
+  overflow: auto;
+
+  @include govuk-media-query(desktop) {
+    max-width: 940px;
+    left: 50%;
+    margin-left: -470px;
+  }
+
+  .edubase-table {
+    border-top: 0;
+  }
+  tbody tr:last-child {
+    td {
+      border-bottom: 0;
+    }
+  }
+  .warning-message {
+    margin: 0 0 20px;
+  }
+
+  .button-row {
+    overflow: hidden;
+    padding: 5px;
+  }
+
+  .overlay-padder {
+    padding: 0 2em 1em;
+  }
+}

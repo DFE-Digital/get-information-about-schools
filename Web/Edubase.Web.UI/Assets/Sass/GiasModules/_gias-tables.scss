@@ -1,0 +1,6 @@
+.edubase-table {
+  @include govuk-font(16);
+  .govuk-table__caption {
+    font-weight: normal;
+  }
+}

@@ -1,0 +1,94 @@
+
+$pointer-size: 15px;
+@include mq-add-breakpoint(tooltipBreak, 410px);
+
+.helptext-container {
+  border-top: 1px solid $govuk-border-colour;
+  .js-enabled & {
+    display: none;
+  }
+}
+
+.edubase-tooltip {
+  position: absolute;
+  z-index: 600;
+  width: 480px;
+  background: #fff;
+  box-shadow: 0 0 3px 3px govuk-colour('mid-grey');
+  border: 1px solid $govuk-border-colour;
+
+  @include govuk-media-query($until: tooltipBreak) {
+    width: 310px;
+  }
+
+  &.hidden {
+    display: none;
+  }
+
+  .pointer {
+    position: absolute;
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: $pointer-size solid transparent;
+    border-right: $pointer-size solid transparent;
+    border-bottom: $pointer-size solid govuk-colour('white');
+    z-index: 602;
+    left: 20px;
+    top: -13px;
+
+  }
+  .pointer-shadow {
+    position: absolute;
+    content: '';
+    width: 0;
+    height: 0;
+    border-right: $pointer-size solid transparent;
+    border-left: $pointer-size solid transparent;
+    border-bottom: $pointer-size solid $govuk-border-colour;
+    z-index: 601;
+    left: 20px;
+    top: -18px;
+  }
+
+  .tooltip-close {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    width: 16px;
+    height: 16px;
+    background-image: url("/public/assets/images/icons/tooltip-close.gif");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .tooltip-content {
+    padding: 12px;
+    font-size: 14px;
+  }
+  .heading-small {
+    margin-top: 0.52em;
+    font-size: 14px;
+  }
+}
+
+.truncated-content {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.truncated-tooltip {
+  width: auto;
+  padding-right: 14px;
+  .pointer,
+  .pointer-shadow {
+    right: 15px;
+    left: auto;
+  }
+
+  .tooltip-close {
+    width: 12px;
+    height: 12px;
+  }
+}

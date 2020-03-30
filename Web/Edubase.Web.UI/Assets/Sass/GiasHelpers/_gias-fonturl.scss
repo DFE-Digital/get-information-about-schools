@@ -1,0 +1,7 @@
+$govuk-font-url-function: '/public/govuk-frontend/fonts/';
+
+@function font-url($filename) {
+  @return url('/public/govuk-frontend/fonts/' + $filename);
+}
+
+$govuk-font-url-function: 'font-url';

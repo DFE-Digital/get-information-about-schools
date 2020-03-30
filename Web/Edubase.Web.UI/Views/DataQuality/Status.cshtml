@@ -15,21 +15,21 @@
 <div id="data-status-summary" class="data-status-summary" role="dialog" aria-labelledby="modal-label" tabindex="0">
     <a href="#" id="data-status-close" class="modal-exit">Close</a>
     <div class="overlay-padder">
-        <h1 class="heading-large" id="modal-label">@((Model.Urgent) ? "Update your data status" : "Data status")</h1>
-        <table class="edubase-table retain-columns">
-            <caption class="table-caption">These dates show when each of our teams last updated their data.</caption>
-            <thead>
-                <tr>
-                    <th scope="col">Establishment type</th>
-                    <th scope="col">Last updated</th>
+        <h1 class="govuk-heading-l" id="modal-label">@((Model.Urgent) ? "Update your data status" : "Data status")</h1>
+        <table class="govuk-table edubase-table retain-columns">
+            <caption class="govuk-table__caption">These dates show when each of our teams last updated their data.</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Establishment type</th>
+                    <th scope="col" class="govuk-table__header">Last updated</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="govuk-table__body">
                 @foreach (var data in Model.Items)
                 {
-                    <tr>
-                        <td>@data.EstablishmentType.GetEnumMember()</td>
-                        <td>@data.LastUpdated.ToString()</td>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@data.EstablishmentType.GetEnumMember()</td>
+                        <td class="govuk-table__cell">@data.LastUpdated.ToString()</td>
                     </tr>
                 }
             </tbody>
@@ -38,13 +38,13 @@
         <div class="button-row">
         @if (Model.Urgent)
         {
-            <a href="#" class="button" id="data-status-update">Update</a>
-            <a href="#" class="button button-secondary" id="data-status-close">Exit</a>
+            <a href="#" class="govuk-button" id="data-status-update">Update</a>
+            <a href="#" class="govuk-button govuk-button--secondary data-status-exit">Exit</a>
         }
         else
         {
-            <a href="#" class="button" id="data-status-info">More info</a>
-            <a href="#" class="button button-secondary" id="data-status-close">Exit</a>
+            <a href="#" class="govuk-button" id="data-status-info">More info</a>
+            <a href="#" class="govuk-button govuk-button--secondary data-status-exit">Exit</a>
 
         }
 

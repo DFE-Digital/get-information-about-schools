@@ -8,7 +8,7 @@
     opacity: 0.6;
     filter: alpha(opacity=60);
     z-index: 500;
-    
+
     &.hidden {
         display: none;
     }
@@ -24,7 +24,7 @@
     top: 10%;
     left: 25%;
     overflow: auto;
-    
+
 
     @include media(mobile){
         width: 90%;
@@ -39,7 +39,7 @@
         margin-left: - 240px;
     }
 
-        
+
     &.hidden {
         display: none;
     }
@@ -49,10 +49,10 @@
     }
     #modal-inner, .modal-inner {
         padding: 2em 2em 0;
-                 
+
     }
 
-    .button-row {        
+    .button-row {
         padding: 5px 2em 2em;
         margin-bottom: 0;
         overflow: hidden;
@@ -100,10 +100,11 @@
     .warning-message {
         margin: 0 0 20px;
     }
-    
+
     .button-row {
         overflow: hidden;
         padding: 4px;
+
     }
 
     .overlay-padder {
