@@ -1,4 +1,4 @@
-call run gulp build
+call npm run gulp build
 @echo off
 echo Exit Code is %errorlevel%
 @echo on
