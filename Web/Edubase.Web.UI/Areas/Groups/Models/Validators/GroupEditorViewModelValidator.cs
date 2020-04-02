@@ -119,16 +119,18 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .WithMessage("Group ID already exists. Enter a different group ID.")
                     .When(x => x.GroupTypeMode.OneOfThese(eGroupTypeMode.AcademyTrust, eGroupTypeMode.Sponsor) && x.SaveGroupDetail, ApplyConditionTo.AllValidators);
 
-                RuleForEach(x => x.LinkedEstablishments.Establishments)
-                    .Must((model, estab) => VerifyJoinedDate(estab.JoinedDateEditable.ToDateTime() ?? estab.JoinedDate, model))
-                    .When(x => x.OpenDate.ToDateTime().Value.Date == DateTime.Now.Date)
-                    .WithMessage("The join date you entered is before today. Please enter a later date.")
-                    .WithSummaryMessage("The join date you entered is before today. Please enter a later date.")
+                When(x => x.OpenDate.ToDateTime().HasValue, () =>
+                {
+                    RuleForEach(x => x.LinkedEstablishments.Establishments)
+                        .Must((model, estab) => VerifyJoinedDate(estab.JoinedDateEditable.ToDateTime() ?? estab.JoinedDate, model))
+                        .When(x => x.OpenDate.ToDateTime().GetValueOrDefault().Date == DateTime.Now.Date)
+                        .WithMessage("The join date you entered is before today. Please enter a later date.")
+                        .WithSummaryMessage("The join date you entered is before today. Please enter a later date.")
 
-                    .Must((model, estab) => VerifyJoinedDate(estab.JoinedDateEditable.ToDateTime() ?? estab.JoinedDate, model))
-                    .When(x => x.OpenDate.ToDateTime().Value.Date != DateTime.Now.Date)
-                    .WithMessage(x => $"The join date you entered is before the {x.GroupType}'s open date of {x.OpenDate}. Please enter a later date.");
-
+                        .Must((model, estab) => VerifyJoinedDate(estab.JoinedDateEditable.ToDateTime() ?? estab.JoinedDate, model))
+                        .When(x => x.OpenDate.ToDateTime().GetValueOrDefault().Date != DateTime.Now.Date)
+                        .WithMessage(x => $"The join date you entered is before the {x.GroupType}'s open date of {x.OpenDate}. Please enter a later date.");
+                });
             });
         }
 
