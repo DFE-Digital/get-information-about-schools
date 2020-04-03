@@ -760,7 +760,7 @@ namespace Edubase.UnitTest.Controllers
 
         private List<EstablishmentGroupViewModel> CreateEstablishmentGroupViewModelList(int count)
         {
-            var y = Faker.RandomNumber.Next(1, count); // what index should be CCIsLeadCentre == true
+            var y = Faker.RandomNumber.Next(0, count); // what index should be CCIsLeadCentre == true
             return Enumerable.Range(1, count).Select(x => new EstablishmentGroupViewModel
             {
                 Address = Faker.Address.StreetAddress(),
