@@ -12,7 +12,8 @@ module.exports = (env) => {
 
     entry: {
       'bundle': './Assets/Scripts/Entry/entry.js',
-      'leaflet-bundle': './Assets/Scripts/Entry/leaflet.js'
+      'leaflet-bundle': './Assets/Scripts/Entry/leaflet.js',
+      'search-bundle': './Assets/Scripts/Entry/search.js'
     },
 
     output: {

@@ -24,9 +24,9 @@
     </div>
 
     <div class="column-full">
-        <div class="horizontal-tabs-wrapper">
+        <div class="gias-tabs-wrapper">
             <div class="tab-wrap search-tabs">
-                <ul class="horizontal-tabs">
+                <ul class="gias-tabs">
                     <li>
                         @{ var estabSelected = Model.SelectedTab == ChangeHistoryViewModel.Tab.Establishments ? "selected-tab" : ""; }
                         @Html.RouteLink("Establishment change history", "ChangeHistoryCriteria", new {SelectedTab = "Establishments"}, new {@class = $"horizontal-tab estab {estabSelected}" })
@@ -38,7 +38,7 @@
                 </ul>
             </div>
 
-            <div class="tab-content-wrapper horizontal-tabs-content">
+            <div class="tab-content-wrapper gias-tabs-content">
                 @if (Model.SelectedTab == ChangeHistoryViewModel.Tab.Establishments) {
                 <div id="establishments" class="tab-content">
 

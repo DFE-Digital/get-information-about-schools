@@ -94,11 +94,11 @@
 
     @{Html.RenderPartial(@"Partials\GroupConfirmationNotifications");}
 
-    <div class="grid-row horizontal-tabs-wrapper">
+    <div class="grid-row gias-tabs-wrapper">
         <div class="column-full">
 
             <div class="tab-wrap">
-                <ul class="horizontal-tabs">
+                <ul class="gias-tabs">
                     <li><a href="#details" class="horizontal-tab">Details</a></li>
                     <li><a href="#list" class="horizontal-tab">@Model.EstablishmentsPluralName (@Model.Establishments.Count)</a></li>
 
@@ -115,7 +115,7 @@
                 </ul>
             </div>
 
-            <div class="tab-content-wrapper horizontal-tabs-content">
+            <div class="tab-content-wrapper gias-tabs-content">
                 <div id="details" class="tab-content">
 
                     @if (Model.CanUserEdit)

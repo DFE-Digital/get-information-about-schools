@@ -12,17 +12,17 @@
     <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})">Back to find an establishment</a>
 </div>
 
-<div class="grid-row">
-    <div class="column-full">
-        <h1 class="heading-xlarge">Search results for establishments</h1>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Search results for establishments</h1>
 
-        <p class="font-small"><span class="bold-medium">@Model.MatchingLocalAuthorities.Count</span> &nbsp;local authorit@(Model.MatchingLocalAuthorities.Count == 1 ? "y" : "ies") matching '<span class="bold-small">@Model.SearchText</span>'</p>
+        <p class="govuk-body-s"><strong>@Model.MatchingLocalAuthorities.Count</strong> &nbsp;local authorit@(Model.MatchingLocalAuthorities.Count == 1 ? "y" : "ies") matching '<strong>@Model.SearchText</strong>'</p>
 
         @if (Model.MatchingLocalAuthorities.Count > 1)
         {
-            <p class="bold-small">Select the local authority you are interested in</p>
+            <p class="govuk-body-s"><strong>Select the local authority you are interested in</strong></p>
 
-            <ul class="push--bottom">
+            <ul class="govuk-list">
                 @foreach (var item in Model.MatchingLocalAuthorities)
                 {
                     <li><a href="/?@QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.AddUnique(item.Id).ToArray())#la">@item.Name</a></li>
@@ -40,7 +40,7 @@
             <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="button button-secondary">Back to search</a>
         }else
         {
-            <p class="bold-small">No results were found. Please refine your search criteria.<br /></p>
+            <p class="govuk-body-s"><strong>No results were found. Please refine your search criteria.</strong><br /></p>
             <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="button button-secondary">Back to search</a>
         }
     </div>

@@ -7,34 +7,37 @@
     ViewBag.bodyClasses = "schools-search-page search-page";
     ViewBag.hideLogo = true;
     ViewBag.siteSection = "search";
+    var version = typeof (VM).Assembly.GetName().Version;
 }
 
-<div class="grid-row">
-    <div class="column-full">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
         @Html.Partial("_ValidationSummary", ViewData.ModelState)
         @{ Html.RenderPartial("Partials/_SearchHeader"); }
     </div>
-    <div class="column-full">
-        <div class="horizontal-tabs-wrapper">
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="gias-tabs-wrapper">
             <div class="tab-wrap search-tabs">
-                <ul class="horizontal-tabs">
-                    <li>
-                        <a href="/?SelectedTab=Establishments" class="horizontal-tab estab @((Model.SelectedTab == SearchViewModel.Tab.Establishments) ? "selected-tab" : "" )">
+                <ul class="gias-tabs">
+                    <li class="gias-tabs__list-item @((Model.SelectedTab == SearchViewModel.Tab.Establishments) ? "gias-tabs__list-item--selected" : "" )">
+                        <a href="/?SelectedTab=Establishments" class="gias-tabs__tab estab">
                             Find an establishment
                         </a>
                     </li>
-                    <li>
-                        <a href="/?SelectedTab=Groups" class="horizontal-tab group @((Model.SelectedTab == SearchViewModel.Tab.Groups) ? "selected-tab" : "" )">
+                    <li class="gias-tabs__list-item @((Model.SelectedTab == SearchViewModel.Tab.Groups) ? "gias-tabs__list-item--selected" : "" )">
+                        <a href="/?SelectedTab=Groups" class="gias-tabs__tab group">
                             Find an establishment group
                         </a>
                     </li>
-                    <li>
-                        <a href="/?SelectedTab=Governors" class="horizontal-tab governors @((Model.SelectedTab == SearchViewModel.Tab.Governors) ? "selected-tab" : "" )">Find a governor</a>
+                    <li class="gias-tabs__list-item @((Model.SelectedTab == SearchViewModel.Tab.Governors) ? "gias-tabs__list-item--selected" : "" )">
+                        <a href="/?SelectedTab=Governors" class="gias-tabs__tab governors">Find a governor</a>
                     </li>
                 </ul>
             </div>
 
-            <div class="tab-content-wrapper horizontal-tabs-content">
+            <div class="tab-content-wrapper gias-tabs-content">
                 <div id="establishments" class="tab-content @((Model.SelectedTab != SearchViewModel.Tab.Establishments) ? "hidden-tab-content" : "")" aria-hidden="@(Model.SelectedTab != SearchViewModel.Tab.Establishments)">
 
                     @{ Html.RenderPartial("Partials/_EstablishmentSearch"); }
@@ -64,10 +67,7 @@
 
     <script type="text/javascript" nonce="@Html.ScriptNonce()">
         window.localAuthorities = @Html.Json(Model.LocalAuthorities);
-
-        // if (!$('html').hasClass('lt-ie9')) {
-        //     DfE.Views.schoolSearch.init();
-        // }
     </script>
 
+    <script src="/public/assets/scripts/build/search-bundle.js?v=@version"></script>
 }

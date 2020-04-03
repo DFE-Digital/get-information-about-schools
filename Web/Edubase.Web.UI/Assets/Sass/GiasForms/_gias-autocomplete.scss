@@ -1,0 +1,53 @@
+// custom skin for https://leaverou.github.io/awesomplete
+.awesomplete {
+  @include govuk-media-query($until: tablet) {
+    width: 240px;
+  }
+  display: inline-block;
+  position: relative;
+  width: 400px;
+
+  ul {
+    position: absolute;
+    z-index: 5;
+    background-color: govuk-colour('white');
+    border: 1px solid govuk-colour('black');
+    left: 0;
+    top: 40px;
+    margin: 0;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: scroll;
+    width: 100%;
+  }
+
+  li {
+    list-style: none;
+    border-bottom: 1px solid govuk-colour('black');
+    background-color: govuk-colour('white');
+    color: govuk-colour('black');
+    padding: govuk-spacing(1);
+
+    @include govuk-font(16);
+
+    mark {
+      font-weight: bold;
+      background-color: transparent;
+    }
+
+    &:hover,
+    &[aria-selected='true'] {
+      cursor: pointer;
+      background-color: $govuk-brand-colour;
+      color: govuk-colour('white');
+
+      mark {
+        color: govuk-colour('white');
+      }
+    }
+  }
+
+  .visually-hidden {
+    @include govuk-visually-hidden();
+  }
+}

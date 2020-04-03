@@ -12,10 +12,9 @@
 </p>
 
 
-<fieldset>
-    <legend>
-        <h2 class="heading-small flush--top">Search by:</h2>
-    </legend>
+<div>
+    <h2 class="govuk-heading-s">Search by:</h2>
+
     <ul>
         <li class="search-type-wrapper">
         @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
@@ -25,13 +24,14 @@
                 <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true"/>
                 <input type="hidden" name="g" value="true" />
 
-                <fieldset class="search-toggle-panel">
-                    <div class="multiple-choice multiple-choice--radio">
-                        @Html.RadioButtonFor(m => m.SearchType, eSearchType.Group, new { id = "searchtype-name-group", name="search-by", value="all", data_toggle_panel = "#searchby-group-ref" })
-                        <label for="searchtype-name-group">
-                            Name or reference number
-                        </label>
-
+                <fieldset class="govuk-fieldset search-toggle-panel">
+                    <div class="govuk-radio" data-module="govuk-radio">
+                        <div class="govuk-radios__item">
+                            @Html.RadioButtonFor(m => m.SearchType, eSearchType.Group, new {id = "searchtype-name-group", name = "search-by", value = "all", data_toggle_panel = "#searchby-group-ref", @class = "govuk-radios__input"})
+                            <label for="searchtype-name-group" class="govuk-label govuk-radios__label">
+                                Name or reference number
+                            </label>
+                        </div>
                     </div>
                     <div class="panel panel-border-narrow" id="searchby-group-ref">
                         <div class="edubase-search-element with-typeahead has-typeahead" id="group-search-container">
@@ -55,18 +55,18 @@
                                     </div>
                                 }
                             }
-                            <label class="form-label" for="GroupSearchModel_Text">
+                            <label class="govuk-label" for="GroupSearchModel_Text">
                                 Enter name, Companies House number, Group <abbr title="Unique Identifier">UID</abbr> or ID
                                 <a href="#group-reference" class="tooltip-link js-tooltip">
-                                    <span class="visuallyhidden">Help with reference numbers</span>
+                                    <span class="govuk-visually-hidden">Help with reference numbers</span>
                                 </a>
                             </label>
                             <div class="form-group">
-                                @Html.TextBoxFor(x => x.GroupSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=", maxlength = "200", aria_describedby="group-reference" })
+                                @Html.TextBoxFor(x => x.GroupSearchModel.Text, new { @class = "govuk-input govuk-input--width-20", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=", maxlength = "200", aria_describedby="group-reference" })
                             </div>
                         </div>
                         <div class="form-group">
-                            <button type="submit" id="group-search-submit" class="button  search-button" name="searchtype" value="@eSearchType.Group">Search</button>
+                            <button type="submit" id="group-search-submit" class="govuk-button  search-button" name="searchtype" value="@eSearchType.Group">Search</button>
                         </div>
                     </div>
                 </fieldset>
@@ -84,17 +84,18 @@
             <input type="hidden" name="@VM.BIND_ALIAS_STATUSIDS" value="@((int)eStatus.Open)" />
             <input type="hidden" name="@VM.BIND_ALIAS_STATUSIDS" value="@((int)eStatus.OpenButProposedToClose)" />
 
-            <fieldset class="search-toggle-panel">
-                <div class="multiple-choice multiple-choice--radio">
-                    <input id="searchtype-all-groups" name="search-by" value="all" type="radio" data-toggle-panel="#searchby-allgroups-ref">
-                    <label for="searchtype-all-groups">
-                        All establishment groups
-                    </label>
+            <fieldset class="govuk-fieldset search-toggle-panel">
+                <div class="govuk-radio" data-module="govuk-radio">
+                    <div class="govuk-radios__item">
+                        <input id="searchtype-all-groups" name="search-by" value="all" type="radio" data-toggle-panel="#searchby-allgroups-ref" class="govuk-radios__input">
+                        <label for="searchtype-all-groups" class="govuk-label govuk-radios__label">
+                            All establishment groups
+                        </label>
+                    </div>
                 </div>
                 <div class="panel panel-border-narrow" id="searchby-allgroups-ref">
                     <div class="form-group">
-                        <button type="submit" id="group-search-submit-2" class="button  search-button" name="searchtype" value="@eSearchType.GroupAll">Search</button>
-
+                        <button type="submit" id="group-search-submit-2" class="govuk-button  search-button" name="searchtype" value="@eSearchType.GroupAll">Search</button>
                     </div>
                 </div>
             </fieldset>
@@ -103,5 +104,5 @@
 
 
     </ul>
-</fieldset>
+</div>
 

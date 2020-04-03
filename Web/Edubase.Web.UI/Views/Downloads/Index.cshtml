@@ -28,11 +28,11 @@
 
 <div class="grid-row">
     <div class="column-full">
-        <div class="horizontal-tabs-wrapper">
+        <div class="gias-tabs-wrapper">
             @if (Model.AreScheduledExtractsAvailable)
             {
                 <div class="tab-wrap">
-                    <ul class="horizontal-tabs">
+                    <ul class="gias-tabs">
                         <li>
                             <a href="#group-data" class="horizontal-tab">
                                 Establishment &amp; group data
@@ -46,7 +46,7 @@
                     </ul>
                 </div>
             }
-            <div class="tab-content-wrapper horizontal-tabs-content">
+            <div class="tab-content-wrapper gias-tabs-content">
                 <div id="group-data" class="tab-content">
                     <div class="column-two-thirds">
                     @foreach (var group in downloadGroups)

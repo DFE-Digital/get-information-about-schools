@@ -5,6 +5,8 @@ $govuk-global-styles: true;
 @import "node_modules/govuk-frontend/govuk/all";
 @import "GiasGlobalElements/all";
 @import "GiasModules/all";
+@import "GiasIcons/all";
+@import "GiasForms/all";
 
 //$is-ie: false;
 //$ie-version: 9;

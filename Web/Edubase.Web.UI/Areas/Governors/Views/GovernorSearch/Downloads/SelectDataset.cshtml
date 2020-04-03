@@ -22,14 +22,14 @@
     <div class="column-full">
         <h1 class="heading-xlarge">Download data</h1>
     </div>
-    <div class="horizontal-tabs-wrapper">
+    <div class="gias-tabs-wrapper">
         <div class="column-full">
 
             <h2 class="bold-medium">Download governor search results</h2>
             <p>1 of 4</p>
             <h2 class="bold-medium">Select the data you are interested in</h2>
             <p>
-                Non-public data includes the home postcode, date of birth and previous names of governors. 
+                Non-public data includes the home postcode, date of birth and previous names of governors.
             </p>
 
             @using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get))
@@ -45,7 +45,7 @@
                                 var inputName = Model.IncludeNonPublicData;
                             }
                             @Html.GiasRadioFor(m => m.IncludeNonPublicData, "false", "Public data", null, new {@checked="checked"} )
-                           
+
                             @Html.GiasRadioFor(m => m.IncludeNonPublicData, "true", "Public and non-public data")
 
                         </fieldset>

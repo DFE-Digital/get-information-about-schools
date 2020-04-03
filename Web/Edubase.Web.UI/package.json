@@ -59,6 +59,7 @@
     "webpack-cli": "^3.3.11"
   },
   "dependencies": {
+    "awesomplete": "^1.1.5",
     "govuk-frontend": "^3.6.0",
     "jquery": "^3.4.1"
   }

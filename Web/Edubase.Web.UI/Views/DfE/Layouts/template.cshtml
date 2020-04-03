@@ -12,7 +12,9 @@
     @(RenderSection("Head", required: false))
 }
 
-<main id="main-content" class="page @(ViewBag.pageClass)" role="main" tabindex="-1">
+@RenderSection("BackLink", false)
+
+<main id="main-content" class="govuk-main-wrapper @(ViewBag.pageClass)" role="main" tabindex="-1">
     @RenderBody()
 </main>
 
@@ -37,7 +39,7 @@
         <script nonce="@Html.ScriptNonce()">
             var azureMapsApiKey = "@(System.Configuration.ConfigurationManager.AppSettings["AzureMapsApiKey"])";
         </script>
-        <script src="/public/assets/scripts/build/leaflet-bundle.js"></script>
+        <script src="/public/assets/scripts/build/leaflet-bundle.js?v=@version"></script>
         <script src="/public/assets/scripts/build/bundle.js?v=@version"></script>
 
 

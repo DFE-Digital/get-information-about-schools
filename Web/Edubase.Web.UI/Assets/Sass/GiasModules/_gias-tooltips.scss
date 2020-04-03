@@ -34,7 +34,7 @@ $pointer-size: 15px;
     border-right: $pointer-size solid transparent;
     border-bottom: $pointer-size solid govuk-colour('white');
     z-index: 602;
-    left: 20px;
+    left: 24px;
     top: -13px;
 
   }
@@ -47,7 +47,7 @@ $pointer-size: 15px;
     border-left: $pointer-size solid transparent;
     border-bottom: $pointer-size solid $govuk-border-colour;
     z-index: 601;
-    left: 20px;
+    left: 24px;
     top: -18px;
   }
 
@@ -66,8 +66,13 @@ $pointer-size: 15px;
     padding: 12px;
     font-size: 14px;
   }
-  .heading-small {
+
+  .govuk-heading-s {
     margin-top: 0.52em;
+    font-size: 14px;
+  }
+
+  p {
     font-size: 14px;
   }
 }

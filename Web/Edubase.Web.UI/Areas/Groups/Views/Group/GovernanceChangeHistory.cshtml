@@ -49,11 +49,11 @@
         @Html.RouteLink("Download group data", "GroupDataDownload", new { uid = Model.Group.GroupUId, state = UriHelper.SerializeToUrlToken(new[] { new RouteDto("GroupDetails", new RouteValueDictionary(new { id = Model.Group.GroupUId }), Model.Group.Name) }) }, new { rel = "nofollow" })
     </p>
 
-    <div class="grid-row horizontal-tabs-wrapper">
+    <div class="grid-row gias-tabs-wrapper">
         <div class="column-full">
 
             <div class="tab-wrap">
-                <ul class="horizontal-tabs">
+                <ul class="gias-tabs">
                     @if (Model.IsUserLoggedOn)
                     {
                         <li><a href="#change-history" class="horizontal-tab">Governance Changes</a></li>
@@ -61,7 +61,7 @@
                 </ul>
             </div>
 
-            <div class="tab-content-wrapper horizontal-tabs-content">
+            <div class="tab-content-wrapper gias-tabs-content">
 
                 @if (Model.IsUserLoggedOn)
                 {

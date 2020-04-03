@@ -105,9 +105,9 @@
 @{Html.RenderPartial(@"Partials\ConfirmationNotifications");}
 
 <div class="column-full">
-    <div class="grid-row horizontal-tabs-wrapper">
+    <div class="grid-row gias-tabs-wrapper">
         <div class="tab-wrap">
-            <ul class="horizontal-tabs">
+            <ul class="gias-tabs">
                 @if (Model.TabDisplayPolicy.Details)
                 {
                     <li><a href="#school-dashboard" class="horizontal-tab">Details</a></li>
@@ -145,7 +145,7 @@
                 }
             </ul>
         </div>
-        <div class="tab-content-wrapper horizontal-tabs-content">
+        <div class="tab-content-wrapper gias-tabs-content">
             @{
                 if (Model.TabDisplayPolicy.Details)
                 {
