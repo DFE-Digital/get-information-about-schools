@@ -1,5 +1,6 @@
 @using Edubase.Web.UI.Models.Search;
 @using Edubase.Web.UI
+@using Glimpse.Core.Configuration
 @using VM = Edubase.Web.UI.Models.Search.LocalAuthorityDisambiguationViewModel;
 @model VM
 @{
@@ -8,19 +9,16 @@
     ViewBag.siteSection = "search";
 }
 
-<div class="breadcrumbs">
-    <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})">Back to find an establishment</a>
-</div>
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-xl">Search results for establishments</h1>
 
-        <p class="govuk-body-s"><strong>@Model.MatchingLocalAuthorities.Count</strong> &nbsp;local authorit@(Model.MatchingLocalAuthorities.Count == 1 ? "y" : "ies") matching '<strong>@Model.SearchText</strong>'</p>
+        <p><strong>@Model.MatchingLocalAuthorities.Count</strong> &nbsp;local authorit@(Model.MatchingLocalAuthorities.Count == 1 ? "y" : "ies") matching '<strong>@Model.SearchText</strong>'</p>
 
         @if (Model.MatchingLocalAuthorities.Count > 1)
         {
-            <p class="govuk-body-s"><strong>Select the local authority you are interested in</strong></p>
+            <p><strong>Select the local authority you are interested in</strong></p>
 
             <ul class="govuk-list">
                 @foreach (var item in Model.MatchingLocalAuthorities)
@@ -40,8 +38,12 @@
             <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="button button-secondary">Back to search</a>
         }else
         {
-            <p class="govuk-body-s"><strong>No results were found. Please refine your search criteria.</strong><br /></p>
+            <p><strong>No results were found. Please refine your search criteria.</strong><br /></p>
             <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="button button-secondary">Back to search</a>
         }
     </div>
 </div>
+
+@section BackLink {
+    <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="govuk-back-link">Back to find an establishment</a>
+}

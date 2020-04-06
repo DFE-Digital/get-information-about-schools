@@ -4,7 +4,9 @@ const autocompleteSetup = (function(){
   const MINCHARS = 2;
   let intervalId;
 
-  function getSchoolNameSuggestions(searchString, autocomplete) {
+  function getNameSuggestions(searchString, autocomplete, isMatSearch) {
+    let url =  isMatSearch ? `/search/suggestgroup?text=${searchString}`: `/search/suggest?text=${searchString}`;
+
     intervalId = setTimeout(function() {
     const openOnly = document.getElementById('include-open-establishments-name');
       $.ajax({
@@ -83,7 +85,7 @@ const autocompleteSetup = (function(){
       }
 
       if (this.value.length > 2 && shouldGetResults) {
-        getSchoolNameSuggestions(this.value, schoolNameAutoSuggest);
+        getNameSuggestions(this.value, schoolNameAutoSuggest,false);
       }
 
       if (code === 13) {
@@ -98,6 +100,54 @@ const autocompleteSetup = (function(){
     });
 
     schoolNameInput.addEventListener('focus', function () {
+      openSuggestionsOnFocus(schoolNameAutoSuggest);
+    });
+
+    /* ###################
+        MAT name
+     ################### */
+    const matNameInput = document.getElementById('GroupSearchModel_Text');
+
+    const matNameAutoSuggest = new Awesomplete(matNameInput, {
+      replace: function(suggestion) {
+        this.input.value = suggestion;
+      },
+      data: function(item, input) {
+        return {
+          label: item.text,
+          value: item.urn
+        }
+      },
+      filter: function(item, input) {
+        return true;
+      },
+      autoFirst: true
+    });
+
+    matNameInput.addEventListener('keyup', function (e) {
+      const code = (e.keyCode || e.which);
+      let shouldGetResults = true;
+      clearInterval(intervalId);
+      if (code === 37 || code === 38 || code === 39 || code === 40 || code === 27 || code === 13) {
+        shouldGetResults = false;
+      }
+
+      if (this.value.length > 2 && shouldGetResults) {
+        getNameSuggestions(this.value, matNameAutoSuggest, true);
+      }
+
+      if (code === 13) {
+        window.setTimeout(function () {
+          matNameInput.parentElement.nextElementSibling.click();
+        }, 10);
+      }
+    });
+
+    matNameInput.addEventListener('awesomplete-select', function (ev) {
+      document.getElementById('TextSearchModel_AutoSuggestValue').value = ev.text.value;
+    });
+
+    matNameInput.addEventListener('focus', function () {
       openSuggestionsOnFocus(schoolNameAutoSuggest);
     });
 

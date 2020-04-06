@@ -1,0 +1,50 @@
+.govuk-option-select {
+  border: 4px solid govuk-tint(govuk-colour('mid-grey'), 50);
+  border-right: 0;
+
+  .container-head {
+    background-color: govuk-tint(govuk-colour('mid-grey'), 50);
+    padding: 5px 10px;
+
+    @include govuk-typography-common();
+  }
+
+  .option-select-label {
+    font-size: 19px;
+    font-weight: bold;
+  }
+
+  .options-container {
+    max-height: 320px;
+    overflow-y: scroll;
+  }
+
+  .govuk-checkboxes__item {
+    border-bottom: 1px solid $govuk-border-colour;
+    display: block;
+    float: none;
+    font-size: 16px;
+    padding-left: 40px;
+  }
+
+  .govuk-checkboxes__label {
+    float: none;
+    display: block;
+
+    &::before {
+      left: 5px;
+    }
+
+    &::after {
+      left: 10px;
+    }
+  }
+  // someone in the GDS front end team should re-evaluate their choices
+  .govuk-checkboxes--small .govuk-checkboxes__item:hover .govuk-checkboxes__input:not(:disabled) + .govuk-checkboxes__label::before {
+    box-shadow: none;
+  }
+}
+
+.gias-governor-roles {
+  max-width: 400px;
+}

@@ -8,37 +8,33 @@
     ViewBag.siteSection = "search";
 }
 
-<div class="breadcrumbs">
-    <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.Location})">Back to find an establishment</a>
-</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Search results for establishments</h1>
 
-<div class="grid-row">
-    <div class="column-full">
-        <h1 class="heading-xlarge">Search results for establishments</h1>
-
-        <p class="font-small"><span class="bold-medium">@Model.MatchingLocations.Count</span> &nbsp;location@(Model.MatchingLocations.Count == 1 ? "" : "s") matching '<span class="bold-small">@Model.SearchText</span>'</p>
+        <p class="govuk-body"><strong>@Model.MatchingLocations.Count</strong> &nbsp;location@(Model.MatchingLocations.Count == 1 ? "" : "s") matching '<strong>@Model.SearchText</strong>'</p>
 
         @if (Model.MatchingLocations.Count > 1)
         {
-            <p class="bold-small">Select the location you are interested in</p>
+            <p class="govuk-body"><strong>Select the location you are interested in</strong></p>
 
-            <ul class="push--bottom">
+            <ul class="govuk-list">
                 @foreach (var item in Model.MatchingLocations)
                 {
                     <li>@LocationLink(item)</li>
                 }
             </ul>
-            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.Location})" class="button button-secondary">Back to search</a>
+            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.Location})" class="govuk-button govuk-button--secondary">Back to search</a>
         }
         else if (Model.MatchingLocations.Count == 1)
         {
             <p>Did you mean @LocationLink(Model.MatchingLocations[0])?</p>
-            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.Location})" class="button button-secondary">Back to search</a>
+            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.Location})" class="govuk-button govuk-button--secondary">Back to search</a>
         }
         else
         {
-            <p class="bold-small">No locations were found. Please refine your search criteria.<br /></p>
-            <a href="/" class="button button-next">Continue</a>
+            <p class="govuk-body"><strong>No locations were found. Please refine your search criteria.</strong><br /></p>
+            <a href="/" class="govuk-button button button-next">Continue</a>
         }
     </div>
 </div>
@@ -50,4 +46,9 @@
 
     <a href="@Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" })?@queryString">@place.Name</a>
 
+}
+
+@section BackLink
+{
+    <a class="govuk-back-link" href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.Location})">Back to find an establishment</a>
 }

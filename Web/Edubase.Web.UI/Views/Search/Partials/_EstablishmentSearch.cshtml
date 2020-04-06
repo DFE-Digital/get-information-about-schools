@@ -21,7 +21,7 @@
             </div>
             <div class="panel panel-border-narrow" id="searchby-name-ref">
                 @* This alert gets dynamically populated *@
-                <div class="warning-message visuallyhidden" role="alert">
+                <div class="warning-message govuk-visually-hidden" role="alert">
                     <p class="message-text" aria-live="polite"></p>
                 </div>
                 @if (Model.SearchType == eSearchType.Text && Model.NoResults)
@@ -87,7 +87,7 @@
             </div>
             <div class="panel panel-border-narrow" id="searchby-location-ref">
                 @* This alert gets dynamically populated *@
-                <div class="warning-message visuallyhidden" role="alert">
+                <div class="warning-message govuk-visually-hidden" role="alert">
                     <p class="message-text" aria-live="polite"></p>
                 </div>
                 @if (Model.SearchType == eSearchType.Location && Model.NoResults)
@@ -136,7 +136,7 @@
                 </div>
             </div>
             <div class="panel panel-border-narrow" id="searchby-la-ref">
-                <div class="warning-message visuallyhidden" role="alert">
+                <div class="warning-message govuk-visually-hidden" role="alert">
                     <p class="message-text" aria-live="polite"></p>
                 </div>
                 @if (Model.SearchType == eSearchType.ByLocalAuthority && Model.NoResults)
