@@ -106,6 +106,7 @@
   .edubase-table {
     border-top: 0;
   }
+
   tbody tr:last-child {
     td {
       border-bottom: 0;
@@ -117,10 +118,17 @@
 
   .button-row {
     overflow: hidden;
-    padding: 5px;
+    @include govuk-media-query($from: tablet) {
+      padding: 5px;
+
+      .govuk-button {
+        margin-right: 15px;
+      }
+    }
+
   }
 
   .overlay-padder {
-    padding: 0 2em 1em;
+    padding: 2em 2em 1em;
   }
 }
