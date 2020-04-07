@@ -87,12 +87,6 @@ const autocompleteSetup = (function(){
       if (this.value.length > 2 && shouldGetResults) {
         getNameSuggestions(this.value, schoolNameAutoSuggest,false);
       }
-
-      if (code === 13) {
-        window.setTimeout(function () {
-          schoolNameInput.parentElement.nextElementSibling.click();
-        }, 10);
-      }
     });
 
     schoolNameInput.addEventListener('awesomplete-select', function (ev) {
@@ -135,12 +129,6 @@ const autocompleteSetup = (function(){
       if (this.value.length > 2 && shouldGetResults) {
         getNameSuggestions(this.value, matNameAutoSuggest, true);
       }
-
-      if (code === 13) {
-        window.setTimeout(function () {
-          matNameInput.parentElement.nextElementSibling.click();
-        }, 10);
-      }
     });
 
     matNameInput.addEventListener('awesomplete-select', function (ev) {
@@ -182,12 +170,6 @@ const autocompleteSetup = (function(){
       if (this.value.length >= 2 && shouldGetResults) {
         getLocationSuggestions(this.value, schoolLocationAutoSuggest);
       }
-
-      if (code === 13) {
-        window.setTimeout(function () {
-          schoolLocationInput.parentElement.nextElementSibling.click();
-        }, 10);
-      }
     });
 
     schoolLocationInput.addEventListener('awesomplete-select', function (ev) {
@@ -211,9 +193,6 @@ const autocompleteSetup = (function(){
           value: item.id
         }
       },
-      // replace: function (suggestion) {
-      //   this.input.value = '';
-      // },
       autoFirst: true
     });
 
@@ -257,9 +236,7 @@ const autocompleteSetup = (function(){
       }
 
       laInput.value = '';
-      console.log(e.text);
     });
-
   }
 
   return { setUp };
