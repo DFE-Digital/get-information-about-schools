@@ -1,3 +1,4 @@
+const sass = require('node-sass');
 module.exports = function (grunt) {
   var isLocal = grunt.option('target') === "local";
   return {
@@ -9,6 +10,7 @@ module.exports = function (grunt) {
         'public/assets/stylesheets/main-ie8.css': 'Assets/Sass/main-ie8.scss'
       },
       options: {
+        implementation: sass,
         includePaths: ['node_modules/govuk_frontend_toolkit/stylesheets'],
         outputStyle: isLocal ? 'expanded' : 'compressed',
         imagePath: '../images',
@@ -23,6 +25,7 @@ module.exports = function (grunt) {
         'public/assets/stylesheets/main-ie8.css': 'Assets/Sass/main-ie8.scss'
       },
       options: {
+        implementation: sass,
         includePaths: ['node_modules/govuk_frontend_toolkit/stylesheets'],
         outputStyle: 'compressed',
         imagePath: '../images',
