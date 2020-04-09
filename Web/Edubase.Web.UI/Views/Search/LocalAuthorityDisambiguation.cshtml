@@ -26,7 +26,8 @@
                     <li><a href="/?@QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.AddUnique(item.Id).ToArray())#la">@item.Name</a></li>
                 }
             </ul>
-            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="button button-secondary">Back to search</a>
+            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="govuk-button govuk-button--secondary js-show-inline">Back to search</a>
+            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments"})" class="govuk-button govuk-button--secondary no-js-show-inline">Back to search</a>
         }
         else if (Model.MatchingLocalAuthorities.Count == 1)
         {
@@ -35,15 +36,18 @@
                     @Model.MatchingLocalAuthorities[0].Name
                 </a>?
             </p>
-            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="button button-secondary">Back to search</a>
+            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="govuk-button govuk-button--secondary js-show-inline">Back to search</a>
+            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments"})" class="govuk-button govuk-button--secondary no-js-show-inline">Back to search</a>
         }else
         {
             <p><strong>No results were found. Please refine your search criteria.</strong><br /></p>
-            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="button button-secondary">Back to search</a>
+            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="govuk-button govuk-button--secondary js-show-inline">Back to search</a>
+            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments"})" class="govuk-button govuk-button--secondary no-js-show-inline">Back to search</a>
         }
     </div>
 </div>
 
 @section BackLink {
-    <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="govuk-back-link">Back to find an establishment</a>
+    <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="govuk-back-link js-show-inline">Back to find an establishment</a>
+    <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments"})" class="govuk-back-link no-js-show-inline">Back to find an establishment</a>
 }

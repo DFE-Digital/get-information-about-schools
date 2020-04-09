@@ -1,0 +1,31 @@
+.js-enabled .js-hidden {
+  display: none;
+}
+
+.no-js {
+  .no-js-show-inline {
+    display: inline-block;
+  }
+
+  .no-js-show-block {
+    display: block;
+  }
+  .js-show-inline,
+  .js-show-block {
+    display: none;
+  }
+}
+
+.js-enabled {
+  .js-show-inline {
+    display: inline-block;
+  }
+  .js-show-block {
+    display: block;
+  }
+
+  .no-js-show-block,
+  .no-js-show-inline {
+    display: none;
+  }
+}
