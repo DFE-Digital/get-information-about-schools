@@ -24,14 +24,14 @@ namespace Edubase.Web.UI.Helpers
             var fullHtmlFieldName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(expressionText);
             var state = htmlHelper.ViewData.ModelState[fullHtmlFieldName];
             if (state == null) return MvcHtmlString.Empty;
-            return state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("error");
+            return state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-form-group--error");
         }
 
         public static MvcHtmlString ValidationCssClass(this HtmlHelper htmlHelper, string modelName)
         {
             var state = htmlHelper.ViewData.ModelState[modelName];
             if (state == null) return MvcHtmlString.Empty;
-            return state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("error");
+            return state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-error-message");
         }
 
         public static MvcHtmlString ValidationMessageNested(this HtmlHelper htmlHelper, string modelName)
@@ -68,9 +68,9 @@ namespace Edubase.Web.UI.Helpers
 
             return MvcHtmlString.Empty;
         }
-        
 
-        public static IHtmlString Json<TModel>(this HtmlHelper<TModel> htmlHelper, object data) => htmlHelper.Raw(JsonConvert.SerializeObject(data, Formatting.None, 
+
+        public static IHtmlString Json<TModel>(this HtmlHelper<TModel> htmlHelper, object data) => htmlHelper.Raw(JsonConvert.SerializeObject(data, Formatting.None,
             new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
 
         public static IHtmlString Conditional<TModel>(this HtmlHelper<TModel> htmlHelper, bool condition, string text)
@@ -81,7 +81,7 @@ namespace Edubase.Web.UI.Helpers
 
         public static IHtmlString HiddenFor<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, bool condition, Expression<Func<TModel, TProperty>> expression)
          => condition ? htmlHelper.HiddenFor(expression) : MvcHtmlString.Empty;
-        
+
         /// <summary>
         /// Puts all the stuff that's current in the querystring into hidden form fields.
         /// </summary>
@@ -148,7 +148,7 @@ namespace Edubase.Web.UI.Helpers
                 ViewData = viewData;
             }
         }
-        
+
         /// <summary>
         /// Outputs the supplied file size in megabytes and appends 'MB', or if the supplied bytes value is null, a zero length string is returned.
         /// </summary>
@@ -175,9 +175,9 @@ namespace Edubase.Web.UI.Helpers
         /// <param name="htmlHelper"></param>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static string Field<TModel>(this HtmlHelper<TModel> htmlHelper, object obj, string dateFormat = null) 
+        public static string Field<TModel>(this HtmlHelper<TModel> htmlHelper, object obj, string dateFormat = null)
             => (obj is DateTime? ? ((DateTime?)obj)?.ToString(dateFormat ?? "dd/MM/yyyy").Clean() : obj?.ToString().Clean()) ?? "Not recorded";
-        
+
 
 
     }
