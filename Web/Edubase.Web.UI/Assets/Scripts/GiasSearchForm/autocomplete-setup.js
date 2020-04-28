@@ -73,6 +73,7 @@ const autocompleteSetup = (function(){
       filter: function(item, input) {
         return true;
       },
+      sort: false,
       autoFirst: true
     });
 
@@ -115,6 +116,7 @@ const autocompleteSetup = (function(){
       filter: function(item, input) {
         return true;
       },
+      sort: false,
       autoFirst: true
     });
 
@@ -155,6 +157,7 @@ const autocompleteSetup = (function(){
       filter: function () {
         return true;
       },
+      sort: false,
       autoFirst: true
     });
 
@@ -193,6 +196,7 @@ const autocompleteSetup = (function(){
           value: item.id
         }
       },
+      sort: false,
       autoFirst: true
     });
 
