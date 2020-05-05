@@ -1,4 +1,6 @@
 User-agent: *
-Disallow: /Establishments/Search/*
-Disallow: /Groups/Search/*
-Disallow: /Governors/Search/*
+Disallow: /Account
+Disallow: /Establishments/Search
+Disallow: /Downloads
+Disallow: /Groups/Search
+Disallow: /Governors/Search
