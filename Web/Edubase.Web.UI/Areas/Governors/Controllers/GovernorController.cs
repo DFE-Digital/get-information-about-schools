@@ -792,10 +792,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 foreach (var property in properties)
                 {
                     JsonPropertyAttribute attribute = null;
-                    if (property.HasAttribute<JsonPropertyAttribute>())
-                    {
-                        attribute = property.GetAttribute<JsonPropertyAttribute>();
-                    }
+                    attribute = property.GetAttribute<JsonPropertyAttribute>();
 
                     if (string.Equals(error.Fields, property.Name, StringComparison.OrdinalIgnoreCase) ||
                         (attribute != null && string.Equals(error.Fields, attribute.PropertyName, StringComparison.OrdinalIgnoreCase)))
