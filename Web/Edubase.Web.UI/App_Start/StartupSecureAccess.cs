@@ -7,6 +7,7 @@ using System.Web.Helpers;
 using System.Web.Hosting;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
+using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 using Sustainsys.Saml2;
@@ -42,7 +43,17 @@ namespace Edubase.Web.UI
                 CookieSameSite = SameSiteMode.Lax
             });
 
-            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+            //app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+            // needing to UseCookieAuthentication twice, as UseExternalSignInCookie doesn't have configuration for SameSite
+            app.SetDefaultSignInAsAuthenticationType(DefaultAuthenticationTypes.ExternalCookie);
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationType = DefaultAuthenticationTypes.ExternalCookie,
+                ExpireTimeSpan = TimeSpan.FromMinutes(5.0),
+                CookieSecure = CookieSecureOption.SameAsRequest,
+                CookieSameSite = SameSiteMode.Lax
+            });
+
             app.UseSaml2Authentication(CreateAuthServicesOptions());
             AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
 
