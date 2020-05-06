@@ -1,4 +1,4 @@
-﻿using Edubase.Common.Cache;
+using Edubase.Common.Cache;
 using Edubase.Services;
 using Edubase.Services.Lookup;
 using System;
@@ -49,7 +49,7 @@ namespace Edubase.Web.UI.Controllers
                 await _cacheAccessor.SetAsync(NewsBlobETag, etag, TimeSpan.FromHours(1));
             }
 
-            Response.Cookies.Set(new HttpCookie(NewsBlobETag, etag) { Expires = DateTime.MaxValue });
+            Response.Cookies.Set(new HttpCookie(NewsBlobETag, etag) { Expires = DateTime.MaxValue, SameSite = SameSiteMode.Strict});
 
             return View(new MvcHtmlString(html));
         }
