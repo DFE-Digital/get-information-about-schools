@@ -44,10 +44,11 @@ namespace Edubase.Web.UI
             });
 
             //app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
-            // needing to UseCookieAuthentication twice, as UseExternalSignInCookie doesn't have configuration for SameSite
+            // -- Replaced with internal logic of UseExternalSignInCookie as the default CookieAuthenticationOptions do not include CookieSameSite value
             app.SetDefaultSignInAsAuthenticationType(DefaultAuthenticationTypes.ExternalCookie);
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
+                AuthenticationMode = AuthenticationMode.Passive,
                 AuthenticationType = DefaultAuthenticationTypes.ExternalCookie,
                 ExpireTimeSpan = TimeSpan.FromMinutes(5.0),
                 CookieSecure = CookieSecureOption.SameAsRequest,

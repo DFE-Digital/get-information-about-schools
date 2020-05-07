@@ -46,6 +46,7 @@ namespace Edubase.Web.UI
             app.SetDefaultSignInAsAuthenticationType(DefaultAuthenticationTypes.ExternalCookie);
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
+                AuthenticationMode = AuthenticationMode.Passive,
                 AuthenticationType = DefaultAuthenticationTypes.ExternalCookie,
                 ExpireTimeSpan = TimeSpan.FromMinutes(5.0),
                 CookieSecure = CookieSecureOption.SameAsRequest,
