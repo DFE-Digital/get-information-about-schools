@@ -51,7 +51,7 @@ namespace Edubase.Web.UI
                 AuthenticationMode = AuthenticationMode.Passive,
                 AuthenticationType = DefaultAuthenticationTypes.ExternalCookie,
                 ExpireTimeSpan = TimeSpan.FromMinutes(5.0),
-                CookieSecure = CookieSecureOption.SameAsRequest,
+                CookieSecure = CookieSecureOption.Always,
                 CookieSameSite = SameSiteMode.Lax
             });
 
