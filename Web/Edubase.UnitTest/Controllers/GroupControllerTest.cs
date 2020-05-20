@@ -371,7 +371,7 @@ namespace Edubase.UnitTest.Controllers
         public async Task Group_Convert_FindNonExistentSAT()
         {
             var grs = GetMock<IGroupReadService>();
-            grs.Setup(x => x.SearchByIdsAsync(It.IsAny<string>(), It.Is<int?>(i => i == 1000), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiPagedResult<SearchGroupDocument>(0, new List<SearchGroupDocument>()));
+            grs.Setup(x => x.SearchByIdsAsync(It.IsAny<string>(), It.Is<int?>(i => i == 1000), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiPagedResult<SearchGroupDocument>(0, new List<SearchGroupDocument>()));
             
             var response = (ViewResult) await ObjectUnderTest.Convert(new ConvertSATViewModel
             {
@@ -387,7 +387,7 @@ namespace Edubase.UnitTest.Controllers
         public async Task Group_Convert_FindInvalidGroupType()
         {
             var grs = GetMock<IGroupReadService>();
-            grs.Setup(x => x.SearchByIdsAsync(It.IsAny<string>(), It.Is<int?>(i => i == 1000), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiPagedResult<SearchGroupDocument>(1, new List<SearchGroupDocument>(){
+            grs.Setup(x => x.SearchByIdsAsync(It.IsAny<string>(), It.Is<int?>(i => i == 1000), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiPagedResult<SearchGroupDocument>(1, new List<SearchGroupDocument>(){
                 new SearchGroupDocument{ Name="Group 1000", GroupUId = 1000, GroupTypeId=(int)eLookupGroupType.MultiacademyTrust }
             }));
 
@@ -405,7 +405,7 @@ namespace Edubase.UnitTest.Controllers
         public async Task Group_Convert_FindValidGroup()
         {
             GetMock<ICachedLookupService>().Setup(x => x.GetNameAsync(It.IsAny<Expression<Func<int?>>>(), It.IsAny<string>())).ReturnsAsync("placeholder");
-            GetMock<IGroupReadService>().Setup(x => x.SearchByIdsAsync(It.IsAny<string>(), It.Is<int?>(i => i == 1000), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiPagedResult<SearchGroupDocument>(1, new List<SearchGroupDocument>(){
+            GetMock<IGroupReadService>().Setup(x => x.SearchByIdsAsync(It.IsAny<string>(), It.Is<int?>(i => i == 1000), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiPagedResult<SearchGroupDocument>(1, new List<SearchGroupDocument>(){
                 new SearchGroupDocument{ Name="Group 1000", GroupUId = 1000, GroupTypeId=(int)eLookupGroupType.SingleacademyTrust }
             }));
 

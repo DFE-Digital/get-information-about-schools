@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Services.Core;
 using System.Linq;
 using System.Web;
@@ -20,7 +20,7 @@ namespace Edubase.Web.UI.Helpers
 
         public string Save(string key, string value)
         {
-            _httpContext.Response.Cookies.Set(new HttpCookie(key, value));
+            _httpContext.Response.Cookies.Set(new HttpCookie(key, value) { SameSite = SameSiteMode.Strict});
             return value;
         }
     }
