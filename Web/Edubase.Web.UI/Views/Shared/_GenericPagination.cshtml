@@ -32,11 +32,11 @@
 <nav role="navigation" aria-label="Pagination" class="pagination">
     @if (ViewData.ContainsKey("resultsDescription"))
     {
-        <p class="flush--bottom">@Html.Raw(ViewData["resultsDescription"])</p>
+        <p class="govuk-body-s">@Html.Raw(ViewData["resultsDescription"])</p>
     }
     else
     {
-        <p class="flush--bottom">Showing @startResult - @endResult of @Model.Count</p>
+        <p class="govuk-body-s">Showing @startResult - @endResult of @Model.Count</p>
     }
 
     <ul class="pagination-links">

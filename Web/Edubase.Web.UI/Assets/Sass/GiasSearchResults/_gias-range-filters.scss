@@ -1,0 +1,105 @@
+// open date + age range filters
+.age-filter {
+  .govuk-input {
+    min-width: 112px;
+  }
+
+  .govuk-form-group {
+    margin: 10px;
+  }
+
+  .gias-range-input__item {
+    display: inline-block;
+    margin-right: 10px;
+  }
+
+  .govuk-button--secondary {
+    width: 88%;
+    margin-bottom: 10px;
+  }
+
+  .govuk-error-message {
+    font-size: 16px;
+  }
+}
+
+.date-group {
+  .govuk-label,
+  .govuk-fieldset__legend {
+    font-size: 16px;
+  }
+
+  .govuk-label {
+    margin-bottom: 0;
+  }
+
+  .govuk-fieldset__legend {
+    display: inline-block;
+    font-weight: bold;
+    float: left;
+    min-width: 40px;
+    padding-top: 37px;
+    margin: 0 5px;
+  }
+
+  .govuk-input {
+    display: inline-block;
+    font-size: 16px;
+    width: 60px;
+  }
+
+  .gias-year-input__item {
+    margin-right: 0;
+  }
+}
+
+.date-filters {
+  .govuk-form-group {
+    margin: 10px 0;
+  }
+
+  .govuk-button--secondary {
+    width: 77%;
+    float: right;
+    margin-right: 20px;
+    margin-bottom: 10px;
+  }
+
+  .govuk-error-message {
+    font-size: 16px;
+  }
+}
+
+.govuk-option-select  {
+  position: relative;
+}
+
+.clear-selections {
+  display: none;
+  position: absolute;
+  top: 37px;
+  left: 90px;
+  z-index: 100;
+  font-size: 14px;
+
+  &.active-clear {
+    display: inline-block;
+  }
+
+  &.clear-disabled {
+    color: $govuk-secondary-text-colour;
+    text-decoration: none;
+  }
+
+  .age-filter & ,
+  .date-filters & {
+    left: 94px;
+  }
+}
+
+.range-group {
+  .govuk-error-message {
+    display: block;
+    padding-left: 10px;
+  }
+}

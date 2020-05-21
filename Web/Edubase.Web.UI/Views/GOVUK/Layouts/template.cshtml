@@ -185,23 +185,12 @@
 
         @RenderSection("AfterHeader", required: false)
 
-        <!--end global-header-bar-->
+
+    <!--end global-header-bar-->
 
         <div class="govuk-width-container govuk-width-container">
             @(Html.Partial("../govuk/partials/phase/beta"))
-
-
-@*         @if (User.Identity.IsAuthenticated) *@
-@*         { *@
-@*             <div class="side-width-wrapper"> *@
-@*                 <div class="grid-row"> *@
-@*                     <div class="column-full"> *@
-@* *@
-@*                     </div> *@
-@*                 </div> *@
-@*             </div> *@
-@*         } *@
-
+            @RenderSection("BackLink", false)
         @RenderBody()
         </div>
         <footer class="govuk-footer" id="footer" role="contentinfo">

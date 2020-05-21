@@ -1,0 +1,51 @@
+.search-type-toggle {
+  display: inline-block;
+  margin-top: govuk-spacing(3);
+  margin-bottom: govuk-spacing(3);
+}
+
+.school-results-listing {
+  margin: govuk-spacing(3) 0;
+  padding: 0;
+  list-style: none;
+
+  .trust-details {
+    float: none;
+
+    @include govuk-media-query($until: tablet) {
+      width: 100%;
+    }
+  }
+}
+
+.gias-result-tile {
+  margin-bottom: govuk-spacing(4);
+  border-bottom: 1px solid $govuk-border-colour;
+
+  dl {
+    @include govuk-typography-common();
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+
+    @include govuk-media-query($from: tablet) {
+      font-size: 14px;
+    }
+  }
+
+  dt, dd {
+    float: left;
+    margin: 0;
+  }
+
+  dt {
+    clear: left;
+    padding-right: 0.5em;
+
+    &.inline-details {
+      clear: none;
+      margin-left: 12px;
+    }
+  }
+}

@@ -1,0 +1,121 @@
+.js-collapsible {
+  .js-container-head {
+    z-index: 97;
+    position: relative;
+    border: none;
+    display: block;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    margin-bottom: -1px;
+    padding: 5px 0;
+    background-color: govuk-tint(govuk-colour('mid-grey'), 50);
+
+    &:after {
+      position: absolute;
+      background: url('/public/assets/images/option-select-toggle-sprite.png') no-repeat right 5px;
+      width: 24px;
+      height: 25px;
+      content: "";
+      right: 0;
+      top: 0;
+    }
+
+    &:hover {
+      background-color: govuk-tint(govuk-colour('mid-grey'), 50);
+    }
+
+    &:hover + .options-container {
+      border-color:govuk-tint(govuk-colour('mid-grey'), 50);
+    }
+
+    &[disabled] {
+      background-image: none;
+      color: inherit;
+    }
+  }
+
+  &.js-closed {
+    button:after {
+      background-position: right -75px;
+    }
+
+    .options-container {
+      display: none;
+    }
+  }
+
+  .option-select-label {
+    padding: 5px 0  5px 10px;
+  }
+
+  .js-selected-counter {
+    padding-left: 10px;
+  }
+}
+
+.child-option-toggle {
+  position: absolute;
+  right: 5px;
+  top: 6px;
+
+  &:after {
+    content: "";
+    background-image: url('/public/assets/images/option-select-toggle-child-sprite.png');
+    background-repeat: no-repeat;
+    background-position: 50% 100%;
+    background-size: 28px auto;
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+
+  &.open-children::after {
+    background-position: 50% top;
+  }
+
+  &:active, &:focus {
+    background-color: transparent;
+    box-shadow: none;
+    outline-width: 0;
+  }
+
+  .no-js & {
+    display: none;
+  }
+}
+
+.additional-filters {
+  background-color: govuk-colour('white');
+
+  .container-head {
+    padding-left: 0;
+  }
+
+  .option-select-label {
+    padding-left: 0;
+  }
+
+  .search-field-wrap {
+    background-color: govuk-colour('white');
+    border: 1px solid govuk-colour('black');
+
+    .filter-searchwithin-label {
+      width: 88%;
+    }
+  }
+
+  .filter-search {
+    border-bottom: 0;
+    padding-top: 8px;
+  }
+
+  .field-clear {
+    top: 6px;
+  }
+
+  &.govuk-option-select .options-container {
+    border-width: 1px;
+    border-color: govuk-colour('black');
+  }
+}

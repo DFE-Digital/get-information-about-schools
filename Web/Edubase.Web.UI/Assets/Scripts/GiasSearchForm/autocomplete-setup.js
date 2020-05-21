@@ -38,7 +38,7 @@ const autocompleteSetup = (function(){
           autocomplete.list = response.map((location) => {
             let obj = {};
             obj.text = location.name.replace('Saint', 'St ');
-            obj.location = `${location.latitude}, ${location.longitude}`;
+            obj.location = `${location.coords.latitude}, ${location.coords.longitude}`;
 
             return obj;
           });

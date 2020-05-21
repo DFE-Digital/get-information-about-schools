@@ -19,6 +19,13 @@
     overflow-y: scroll;
   }
 
+  &.no-scroll {
+    .options-container {
+      overflow-y: hidden;
+      border-right: 4px solid govuk-tint(govuk-colour('mid-grey'), 50);
+    }
+  }
+
   .govuk-checkboxes__item {
     border-bottom: 1px solid $govuk-border-colour;
     display: block;

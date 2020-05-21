@@ -1,0 +1,13 @@
+@import "icon-helpers";
+
+.icon-list {
+  @extend %icon;
+  margin-left: 27px;
+
+  &:before {
+    background-image: url("/public/assets/images/icons/icon-burger.png");
+    left: -27px;
+    top: 2px;
+  }
+}
+

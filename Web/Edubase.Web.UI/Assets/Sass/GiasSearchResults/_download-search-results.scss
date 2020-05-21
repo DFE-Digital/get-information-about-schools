@@ -1,0 +1,19 @@
+.search-results-download-link-container {
+  position: relative;
+  padding: govuk-spacing(1) 0;
+}
+.search-results-download-link {
+  display:block;
+  margin-top: govuk-spacing(2);
+  margin-right: govuk-spacing(2);
+  outline: none;
+  padding: govuk-spacing(1);
+  font-size: 19px;
+
+  @include govuk-media-query($from: desktop){
+    margin-right: 0;
+    position: absolute;
+    right: 0;
+    bottom: 10px;
+  }
+}
