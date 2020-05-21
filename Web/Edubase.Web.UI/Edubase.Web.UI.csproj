@@ -530,6 +530,7 @@
     <Content Include="public\assets\scripts\build\bundle.js" />
     <Content Include="public\assets\scripts\build\leaflet-bundle.js" />
     <Content Include="public\assets\scripts\build\search-bundle.js" />
+    <Content Include="public\assets\scripts\build\search-results-bundle.js" />
     <Content Include="public\assets\stylesheets\**\*.*" />
     <Content Include="Areas\Establishments\Views\Web.config" />
     <Content Include="Areas\Establishments\Views\_ViewStart.cshtml" />
