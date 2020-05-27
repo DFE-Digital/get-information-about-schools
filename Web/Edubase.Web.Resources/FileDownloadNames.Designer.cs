@@ -61,6 +61,15 @@ namespace Edubase.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SAT and MAT membership history CSV.
+        /// </summary>
+        public static string academies_mat_membership {
+            get {
+                return ResourceManager.GetString("academies_mat_membership", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Establishment fields CSV.
         /// </summary>
         public static string all_edubase_data {
