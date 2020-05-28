@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Domain;
+using Edubase.Services.Domain;
 using Edubase.Services.Establishments.Downloads;
 using System;
 using System.Collections.Generic;

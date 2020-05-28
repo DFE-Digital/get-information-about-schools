@@ -28,20 +28,40 @@
     }
 </div>
 
-<div class="grid-row">
-    <div class="column-full">
-        <h1 class="heading-xlarge">Download error</h1>
-    </div>
-    <div class="horizontal-tabs-wrapper">
-        <div class="column-two-thirds">
-            <h2 class="bold-medium">The file you have requested no longer exists.</h2>
-            <br />
-            <p class="font-small">This may be due to the following factors:</p>
 
-            <ul class="list-bullet">
-                <li>Your file successfully downloaded, but the request was repeated. Please check your browser window.</li>
-                <li>Your original download request was cancelled. If so, please return to the search results page to repeat your request.</li>
-            </ul>
+@if (Model.NeedsRegenerating)
+{
+    <div class="grid-row">
+        <div class="column-full">
+            <h1 class="heading-xlarge">File missing</h1>
+        </div>
+        <div class="horizontal-tabs-wrapper">
+            <div class="column-two-thirds">
+                <h2 class="bold-medium">The requested file needs to be regenerated.</h2>
+                <br />
+                <p class="font-small">Please return to the previous page and try again.</p>
+            </div>
         </div>
     </div>
-</div>
+}
+else
+{
+    <div class="grid-row">
+        <div class="column-full">
+            <h1 class="heading-xlarge">Download error</h1>
+        </div>
+        <div class="horizontal-tabs-wrapper">
+            <div class="column-two-thirds">
+                <h2 class="bold-medium">The file you have requested no longer exists.</h2>
+                <br />
+                <p class="font-small">This may be due to the following factors:</p>
+
+                <ul class="list-bullet">
+                    <li>Your file successfully downloaded, but the request was repeated. Please check your browser window.</li>
+                    <li>Your original download request was cancelled. If so, please return to the search results page to repeat your request.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+
