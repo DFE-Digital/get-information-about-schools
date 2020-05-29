@@ -85,7 +85,7 @@ namespace Edubase.Services.Texuna.Groups
             return (await _httpClient.PostAsync<ApiPagedResult<SearchGroupDocument>>("group/search", payload, principal)).GetResponse();
         }
 
-        public async Task<ApiPagedResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, string ukprn, IPrincipal principal)
+        public async Task<ApiPagedResult<SearchGroupDocument>> SearchByIdsAsync(string groupId, int? groupUId, string companiesHouseNumber, int? ukprn, IPrincipal principal)
         {
             return (await _httpClient.GetAsync<ApiPagedResult<SearchGroupDocument>>(string.Concat("group/searchbyids?",
                 groupId.UrlTokenize("groupId"), 
