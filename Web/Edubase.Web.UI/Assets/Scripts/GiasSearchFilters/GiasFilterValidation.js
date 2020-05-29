@@ -115,12 +115,10 @@ const GiasFilterValidation = {
     }
 
     if (!validFromDate) {
-     // $('#' + dateFilterId + ' .search-from-date').closest('.govuk-form-group').slice(0, 2).addClass('govuk-form-group--errorerror');
       $('#' + dateFilterId + ' .search-from-date').find('.govuk-error-message').not('.date-range-error').removeClass('hidden');
     }
 
     if (!validToDate) {
-      //$('#' + dateFilterId + ' .search-to-date').closest('.govuk-form-group').slice(0, 2).addClass('govuk-form-group--error');
       $('#' + dateFilterId + ' .search-to-date').find('.govuk-error-message').not('.date-range-error').removeClass('hidden');
     }
 
@@ -128,7 +126,6 @@ const GiasFilterValidation = {
   },
 
   validateAgeFilter: function(ageFilterId) {
-    console.log('validate!!');
     let canSubmit = true;
     const errorSummary = $('#js-filter-error-summary');
     const $ageFilter = $('#' + ageFilterId);
@@ -148,7 +145,6 @@ const GiasFilterValidation = {
       });
 
     if (!valid) {
-     // $ageFilter.find('.date-group').addClass('govuk-form-group--error');
       $ageFilter.find('.govuk-error-message').removeClass('hidden');
       errorSummary.removeClass('hidden');
       errorSummary.find('.' + ageFilterId + '-error').removeClass('hidden');

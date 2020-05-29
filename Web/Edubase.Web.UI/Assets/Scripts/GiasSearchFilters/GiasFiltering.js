@@ -67,26 +67,45 @@ class GiasFiltering {
         self.getResults();
       });
 
+    function resetGlobalError() {
+      const errorSummary = $('#js-filter-error-summary');
+      errorSummary.addClass('hidden');
+      errorSummary.find('li').addClass('hidden');
+    }
+
     $('.age-filter').find('.filter-button').on('click',
       function (e) {
-      console.log('validate age');
         e.preventDefault();
-        const ageFilterId = $(this).closest('.age-filter').attr('id');
+        resetGlobalError();
+        const $filter = $(this).closest('.age-filter');
+        const ageFilterId = $filter.attr('id');
         let canSubmit = GiasFilterValidation.validateAgeFilter(ageFilterId);
+        $filter.find('.govuk-input').removeClass('govuk-input--error');
+        $filter.find('.govuk-error-message').addClass('hidden');
+
         if (canSubmit) {
             self.setParams();
             self.getResults();
+        } else {
+          $filter.find('.govuk-input').addClass('govuk-input--error');
         }
       });
 
     $('.date-filters').find('.filter-button').on('click',
       function (e) {
         e.preventDefault();
-        const dateFilterId = $(this).closest('.date-filters').attr('id');
+        resetGlobalError();
+        const $filter = $(this).closest('.date-filters');
+        const dateFilterId = $filter.attr('id');
         const canSubmit =  GiasFilterValidation.validateDateFilters(dateFilterId);
+        $filter.find('.govuk-input').removeClass('govuk-input--error');
+        $filter.find('.govuk-error-message').addClass('hidden');
+
         if (canSubmit) {
           self.setParams();
           self.getResults();
+        } else {
+          $filter.find('.govuk-input').addClass('govuk-input--error');
         }
       });
 
