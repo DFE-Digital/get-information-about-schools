@@ -23,6 +23,10 @@
   border-bottom: 1px solid $govuk-border-colour;
   position: relative;
 
+  &:last-child {
+    border-bottom: 0;
+  }
+
   dl {
     @include govuk-typography-common();
     overflow: hidden;

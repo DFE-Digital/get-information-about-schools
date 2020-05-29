@@ -80,7 +80,6 @@ else if (Model.Results.Count > 0)
     if (Model.PageCount > 1)
     {
         <div class="lower-pagination push--bottom">
-            <hr class="govuk-section-break govuk-section-break--visible">
             @Html.Partial("_GenericPagination", Model, new ViewDataDictionary { {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")}, {"maxPages", 5} })
         </div>
         @helpers.BackToTopLink()
