@@ -3,39 +3,39 @@
 <div id="school-links" class="tab-content">
     @if (Model.UserCanEdit)
     {
-        <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Establishment.Urn })" class="button button-secondary">Edit links</a>
+        <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Establishment.Urn })" class="govuk-button govuk-button--secondary">Edit links</a>
 
     }
 
     @if (Model.LinkedEstablishments.Any())
     {
-        <p class="table-caption">
+        <p class="govuk-!-font-size-16">
             These establishments are linked with @Model.Establishment.Name,
             <abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn. For example, they may be predecessor or successor establishments.
         </p>
 
         <div class="table-count">
-            <p>Showing 1 - @Model.LinkedEstablishments.Count() of @Model.LinkedEstablishments.Count()</p>
+            <p class="govuk-body-s">Showing 1 - @Model.LinkedEstablishments.Count() of @Model.LinkedEstablishments.Count()</p>
         </div>
 
-        <table class="edubase-table">
-            <caption class="visuallyhidden">Links</caption>
-            <thead>
-                <tr>
-                    <th scope="col" class="links-urn"><abbr title="Unique Reference Number">URN</abbr></th>
-                    <th scope="col" class="links-name">Establishment name</th>
-                    <th scope="col" class="links-type">Type of link</th>
-                    <th scope="col" class="links-date">Date linked</th>
+        <table class="govuk-table gias-table">
+            <caption class="govuk-visually-hidden">Links</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header links-urn"><abbr title="Unique Reference Number">URN</abbr></th>
+                    <th scope="col" class="govuk-table__header links-name">Establishment name</th>
+                    <th scope="col" class="govuk-table__header links-type">Type of link</th>
+                    <th scope="col" class="govuk-table__header links-date">Date linked</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="govuk-table__body">
             @foreach (var l in Model.LinkedEstablishments)
             {
-                <tr>
-                    <td data-label="URN">@Html.ActionLink(l.Urn.ToString(), "Details", new {id = l.Urn})</td>
-                    <td data-label="Establishment name">@Html.ActionLink((l.EstablishmentName ?? "-"), "Details", new {id = l.Urn})</td>
-                    <td data-label="Type of link">@l.LinkTypeName</td>
-                    <td data-label="Date linked">@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
+                <tr class="govuk-table__row">
+                    <td data-label="URN" class="govuk-table__cell">@Html.ActionLink(l.Urn.ToString(), "Details", new {id = l.Urn})</td>
+                    <td data-label="Establishment name" class="govuk-table__cell">@Html.ActionLink((l.EstablishmentName ?? "-"), "Details", new {id = l.Urn})</td>
+                    <td data-label="Type of link" class="govuk-table__cell">@l.LinkTypeName</td>
+                    <td data-label="Date linked" class="govuk-table__cell">@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
                 </tr>
             }
             </tbody>
@@ -45,13 +45,13 @@
     }
     else
     {
-        <p>There are no linked establishments</p>
+        <p class="govuk-body-s">There are no linked establishments</p>
     }
 
     @if (Model.UserCanEdit)
     {
         <div class="button-row">
-            <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Establishment.Urn })" class="button button-secondary">Edit links</a>
+            <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Establishment.Urn })" class="govuk-button govuk-button--secondary">Edit links</a>
         </div>
 
     }

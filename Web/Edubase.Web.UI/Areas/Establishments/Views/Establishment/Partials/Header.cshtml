@@ -4,158 +4,189 @@
 @using ET = Edubase.Services.Enums.eLookupEstablishmentType;
 @model EstablishmentDetailViewModel
 
-<dt>Address:</dt>
-<dd>@Model.GetAddress()</dd>
-<dt>Local authority:</dt>
-<dd>
-    @if (Model.Establishment.LocalAuthorityId.HasValue)
-    {
-        <a href="/Establishments/Search?searchtype=ByLocalAuthority&@EstablishmentSearchViewModel.BIND_ALIAS_LAIDS=@Model.Establishment.LocalAuthorityId">
-            @Model.LocalAuthorityName
-        </a>
-        <text>(@Model.LocalAuthorityCode)</text>
-    }
-</dd>
-
-<dt>@(Model.DisplayPolicy.HeadteacherLabel):</dt>
-<dd>
-    @if (Model.DisplayPolicy.HeadTitleId)
-    {
-        <text>@Model.HeadTitleName.Replace("Not recorded", string.Empty)</text>
-    }
-    @if (Model.DisplayPolicy.HeadFirstName)
-    {
-        <text>@Model.Establishment.HeadFirstName</text>
-    }
-    @if (Model.DisplayPolicy.HeadLastName)
-    {
-        <text>@Model.Establishment.HeadLastName</text>
-    }
-</dd>
+<div class="gias-summary-list__row">
+    <dt class="gias-summary-list__key">Address:</dt>
+    <dd class="gias-summary-list__value">@Model.GetAddress()</dd>
+</div>
+<div class="gias-summary-list__row">
+    <dt class="gias-summary-list__key">Local authority:</dt>
+    <dd class="gias-summary-list__value">
+        @if (Model.Establishment.LocalAuthorityId.HasValue)
+        {
+            <a href="/Establishments/Search?searchtype=ByLocalAuthority&@EstablishmentSearchViewModel.BIND_ALIAS_LAIDS=@Model.Establishment.LocalAuthorityId">
+                @Model.LocalAuthorityName
+            </a>
+            <text>(@Model.LocalAuthorityCode)</text>
+        }
+    </dd>
+</div>
+<div class="gias-summary-list__row">
+    <dt class="gias-summary-list__key">@(Model.DisplayPolicy.HeadteacherLabel):</dt>
+    <dd class="gias-summary-list__value">
+        @if (Model.DisplayPolicy.HeadTitleId)
+        {
+            <text>@Model.HeadTitleName.Replace("Not recorded", string.Empty)</text>
+        }
+        @if (Model.DisplayPolicy.HeadFirstName)
+        {
+            <text>@Model.Establishment.HeadFirstName</text>
+        }
+        @if (Model.DisplayPolicy.HeadLastName)
+        {
+            <text>@Model.Establishment.HeadLastName</text>
+        }
+    </dd>
+</div>
 
 @if (Model.DisplayPolicy.HeadAppointmentDate)
 {
-    <dt>@(Model.DisplayPolicy.HeadteacherLabel) appointment date:</dt>
-    <dd>
-        @(Model.Establishment.HeadAppointmentDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
-    </dd>
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">@(Model.DisplayPolicy.HeadteacherLabel) appointment date:</dt>
+        <dd class="gias-summary-list__value">
+            @(Model.Establishment.HeadAppointmentDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
+        </dd>
+    </div>
 }
 
-@if (Model.DisplayPolicy.HeadEmailAddress) { 
-    <dt>@(Model.DisplayPolicy.HeadEmailAddressLabel):</dt>
-    <dd>
-        @(Model.Establishment.HeadEmailAddress ?? "Not recorded")
-    </dd>
+@if (Model.DisplayPolicy.HeadEmailAddress)
+{
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">@(Model.DisplayPolicy.HeadEmailAddressLabel):</dt>
+        <dd class="gias-summary-list__value">
+            @(Model.Establishment.HeadEmailAddress ?? "Not recorded")
+        </dd>
+    </div>
 }
 
 @if (Model.DisplayPolicy.AgeRange)
 {
-    <dt scope="col">Age range: <a href="#help-text-age-range" class="tooltip-link js-tooltip"><span class="visuallyhidden">Help with age range field</span></a></dt>
-    <dd>
-        @if (Model.Establishment.StatutoryLowAge.HasValue && Model.Establishment.StatutoryHighAge.HasValue)
-        {
-            <text>@(Model.Establishment.StatutoryLowAge) to @(Model.Establishment.StatutoryHighAge)</text>
-        }
-    </dd>
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">
+            Age range:
+            <a href="#help-text-age-range" class="tooltip-link js-tooltip">
+                <span class="govuk-visually-hidden">Help with age range field</span>
+            </a>
+        </dt>
+        <dd class="gias-summary-list__value">
+            @if (Model.Establishment.StatutoryLowAge.HasValue && Model.Establishment.StatutoryHighAge.HasValue)
+            {
+                <text>@(Model.Establishment.StatutoryLowAge) to @(Model.Establishment.StatutoryHighAge)</text>
+            }
+        </dd>
+    </div>
 }
 
-
-<dt>Phase of education:</dt>
-<dd>
-    @Model.EducationPhaseName
-</dd>
-
+<div class="gias-summary-list__row">
+    <dt class="gias-summary-list__key">Phase of education:</dt>
+    <dd class="gias-summary-list__value">
+        @Model.EducationPhaseName
+    </dd>
+</div>
 @if (Model.DisplayPolicy.TypeId)
 {
-
-    <dt>@(Model.DisplayPolicy.EstablishmentTypeLabel):</dt>
-    <dd>
-        @Model.TypeName
-    </dd>
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">@(Model.DisplayPolicy.EstablishmentTypeLabel):</dt>
+        <dd class="gias-summary-list__value">
+            @Model.TypeName
+        </dd>
+    </div>
 }
 
 @if (Model.DisplayPolicy.FurtherEducationTypeId)
 {
-    <dt>Further education type:</dt>
-    <dd>
-        @Model.FurtherEducationTypeName
-    </dd>
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">Further education type:</dt>
+        <dd class="gias-summary-list__value">
+            @Model.FurtherEducationTypeName
+        </dd>
+    </div>
 }
 
 @foreach (var group in Model.Groups.OrderByDescending(g => Model.GetGroupFieldLabel(g)))
 {
-    <dt>@(Model.GetGroupFieldLabel(group)):</dt>
-    <dd>
-        @Html.ActionLink(group.Name, "Details", "Group", new { id = group.GroupUId, area = "Groups" }, null)
-    </dd>
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">@(Model.GetGroupFieldLabel(group)):</dt>
+        <dd class="gias-summary-list__value">
+            @Html.ActionLink(group.Name, "Details", "Group", new {id = group.GroupUId, area = "Groups"}, null)
+        </dd>
+    </div>
 }
 
 @if (Model.DisplayPolicy.GenderId)
 {
-    <dt>Gender of entry:</dt>
-    <dd>
-        @Model.GenderName
-    </dd>
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">Gender of entry:</dt>
+        <dd class="gias-summary-list__value">
+            @Model.GenderName
+        </dd>
+    </div>
 }
+<div class="gias-summary-list__row">
 
-<dt>ID:</dt>
-<dd>
-    <abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn,
-    @if (Model.DisplayPolicy.EstablishmentNumber)
-    {
-        <text>DfE number: @Model.Establishment.GetLAESTAB(Model.LocalAuthorityCode)<br /></text>
-    }
-    @if (Model.DisplayPolicy.UKPRN && Model.Establishment.UKPRN.HasValue)
-    {
-        <text><abbr title="UK Provider Reference Number">UKPRN</abbr>: @Model.Establishment.UKPRN</text>
-    }
-</dd>
-
-
-<dt>Establishment status:</dt>
-<dd>
-    @if (Model.IsClosed)
-    {
-        <span class="pending-closure">
+    <dt class="gias-summary-list__key">ID:</dt>
+    <dd class="gias-summary-list__value">
+        <abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn,
+        @if (Model.DisplayPolicy.EstablishmentNumber)
+        {
+            <text>DfE number: @Model.Establishment.GetLAESTAB(Model.LocalAuthorityCode)<br/></text>
+        }
+        @if (Model.DisplayPolicy.UKPRN && Model.Establishment.UKPRN.HasValue)
+        {
+            <text><abbr title="UK Provider Reference Number">UKPRN</abbr>: @Model.Establishment.UKPRN</text>
+        }
+    </dd>
+</div>
+<div class="gias-summary-list__row">
+    <dt class="gias-summary-list__key">Establishment status:</dt>
+    <dd class="gias-summary-list__value">
+        @if (Model.IsClosed)
+        {
+            <span class="pending-closure">
+                @Model.StatusName
+            </span>
+        }
+        else
+        {
             @Model.StatusName
-        </span>
-    }
-    else
-    {
-        @Model.StatusName
-    }
-</dd>
-
+        }
+    </dd>
+</div>
 @if (Model.DisplayPolicy.AdmissionsPolicyId)
 {
-    <dt>Admissions policy:</dt>
-    <dd>
-        @Model.AdmissionsPolicyName
-    </dd>
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">Admissions policy:</dt>
+        <dd class="gias-summary-list__value">
+            @Model.AdmissionsPolicyName
+        </dd>
+    </div>
 }
 
 @if (Model.DisplayPolicy.Contact_WebsiteAddress)
 {
-    <dt>Website:</dt>
-    <dd>
-        @if (Model.Establishment.Contact_WebsiteAddress == null)
-        {
-            <text>Not recorded</text>
-        }
-        else
-        {
-            <a href="@WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)" target="_blank">
-                @WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)
-                <span class="visually-hidden">Opens in new window</span>
-            </a>
-        }
-    </dd>
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">Website:</dt>
+        <dd class="gias-summary-list__value">
+            @if (Model.Establishment.Contact_WebsiteAddress == null)
+            {
+                <text>Not recorded</text>
+            }
+            else
+            {
+                <a href="@WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)" target="_blank">
+                    @WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)
+                    <span class="govuk-visually-hidden">Opens in new window</span>
+                </a>
+            }
+        </dd>
+    </div>
 }
 
 @if (Model.DisplayPolicy.Contact_TelephoneNumber)
 {
-    <dt>Telephone:</dt>
-    <dd>@(Model.Establishment.Contact_TelephoneNumber ?? "Not recorded")</dd>
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">Telephone:</dt>
+        <dd class="gias-summary-list__value">@(Model.Establishment.Contact_TelephoneNumber ?? "Not recorded")</dd>
+    </div>
 }
 
 @if (Model.Establishment.TypeId.OneOfThese(ET.SixthFormCentres, ET.FurtherEducation, ET.InstitutionFundedByOtherGovernmentDepartment))
@@ -165,27 +196,29 @@
 
 @if (Model.DisplayPolicy.OfstedRatingId)
 {
-    <dt>Ofsted rating:</dt>
-    <dd>
-        @if (Model.Establishment.OfstedRatingId.HasValue)
-        {
-            <span class="highlighted-ofsted-rating">@Model.OfstedRatingName</span>
-        }
-        else
-        {
-            <span>Not recorded</span>
-        }
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">Ofsted rating:</dt>
+        <dd class="gias-summary-list__value">
+            @if (Model.Establishment.OfstedRatingId.HasValue)
+            {
+                <span class="highlighted-ofsted-rating">@Model.OfstedRatingName</span>
+            }
+            else
+            {
+                <span>Not recorded</span>
+            }
 
-        @if (Model.Establishment.OfstedInspectionDate.HasValue)
-        {
-            <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("dd MMMM yyyy")))</span>
-        }
-        @if (Model.OfstedRatingReportUrl != null)
-        {
-            <br />
-            <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="external">Ofsted report <span class="visually-hidden">Opens in new window</span></a>
-        }
-    </dd>
+            @if (Model.Establishment.OfstedInspectionDate.HasValue)
+            {
+                <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("dd MMMM yyyy")))</span>
+            }
+            @if (Model.OfstedRatingReportUrl != null)
+            {
+                <br/>
+                <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="external">Ofsted report <span class="govuk-visually-hidden">Opens in new window</span></a>
+            }
+        </dd>
+    </div>
 }
 
 @if (Model.Establishment.TypeId.OneOfThese(ET.Academy1619SponsorLed,
@@ -203,10 +236,12 @@
 
 @if (Model.DisplayPolicy.InspectorateId)
 {
-    <dt>Inspectorate:</dt>
-    <dd>
-        @Model.InspectorateName
-    </dd>
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">Inspectorate:</dt>
+        <dd class="gias-summary-list__value">
+            @Model.InspectorateName
+        </dd>
+    </div>
 }
 
 @if (Model.Establishment.TypeId.OneOfThese(ET.OtherIndependentSchool,
@@ -217,24 +252,28 @@
 
 @if (Model.DisplayPolicy.ProprietorName)
 {
-    <dt>Proprietor's name:</dt>
-    <dd>@Model.Establishment.ProprietorName</dd>
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">Proprietor's name:</dt>
+        <dd class="gias-summary-list__value">@Model.Establishment.ProprietorName</dd>
+    </div>
 }
 
 @helper OtherServicesLinks()
 {
-    <dt>Data from other services:</dt>
-    <dd>
-        <ul>
-            <li>
-                <a href="https://www.compare-school-performance.service.gov.uk/school/@Model.Establishment.Urn" rel="external" target="_blank">Compare School and College Performance <span class="visually-hidden">Opens in new window</span></a>
-            </li>
-            @if (Model.ShowFinancialBenchmarking)
-            {
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">Data from other services:</dt>
+        <dd class="gias-summary-list__value">
+            <ul class="govuk-list govuk-!-font-size-14">
                 <li>
-                    <a href="@Model.FinancialBenchmarkingURL" rel="external" target="_blank">Schools Financial Benchmarking <span class="visually-hidden">Opens in new window</span></a>
+                    <a href="https://www.compare-school-performance.service.gov.uk/school/@Model.Establishment.Urn" rel="external" target="_blank">Compare School and College Performance <span class="govuk-visually-hidden">Opens in new window</span></a>
                 </li>
-            }
-        </ul>
-    </dd>
+                @if (Model.ShowFinancialBenchmarking)
+                {
+                    <li>
+                        <a href="@Model.FinancialBenchmarkingURL" rel="external" target="_blank">Schools Financial Benchmarking <span class="govuk-visually-hidden">Opens in new window</span></a>
+                    </li>
+                }
+            </ul>
+        </dd>
+    </div>
 }

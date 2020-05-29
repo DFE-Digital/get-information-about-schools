@@ -9,40 +9,53 @@
     ViewBag.PageClass = "school-details";
     ViewBag.HideLogo = true;
 }
+@section BreadCrumbs {
+   <div class="govuk-grid-row">
+       <div class="govuk-grid-column-full">
+           <div class="govuk-breadcrumbs">
+               <ol class="govuk-breadcrumbs__list">
+                   <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
 
-    <div class="breadcrumbs">
-        <ol>
-            <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
+                   @if (!Model.SearchQueryString.IsNullOrWhiteSpace())
+                   {
+                       if (Model.SearchSource == eLookupSearchSource.Governors)
+                       {
+                           <li class="govuk-breadcrumbs__list-item">
+                               <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Search results</a>
+                           </li>
+                       }
+                       else
+                       {
+                           <li class="govuk-breadcrumbs__list-item">
+                               <a href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Search results</a>
+                           </li>
+                       }
+                   }
 
-            @if (!Model.SearchQueryString.IsNullOrWhiteSpace()) { 
-                if (Model.SearchSource == eLookupSearchSource.Governors)
-                {
-                    <li>
-                        <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Search results</a>
-                    </li>
-                }
-                else
-                {
-                    <li>
-                        <a href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Search results</a>
-                    </li>
-                }
-            }
-
-            @if (Model.LegalParentGroup != null)
-            {
-                <li>@Html.RouteLink(Model.LegalParentGroupRouteDto.Value.Label, Model.LegalParentGroupRouteDto.Value.RouteName, Model.LegalParentGroupRouteDto.Value.RouteValues)</li>
-            }
-        </ol>
-    </div>
+                   @if (Model.LegalParentGroup != null)
+                   {
+                       <li class="govuk-breadcrumbs__list-item">@Html.RouteLink(Model.LegalParentGroupRouteDto.Value.Label, Model.LegalParentGroupRouteDto.Value.RouteName, Model.LegalParentGroupRouteDto.Value.RouteValues)</li>
+                   }
+               </ol>
+           </div>
+       </div>
+   </div>
+}
 
 @if (ViewBag.ShowSaved != null && ViewBag.ShowSaved)
 {
-    <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
-        <div class="tick"></div>
-        <p class="message-text" aria-live="polite">Your changes have been saved</p>
-        <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
+                <div class="tick"></div>
+                <p class="message-text" aria-live="polite">Your changes have been saved</p>
+                <a class="cross" href="#">
+                    <span class="govuk-visually-hidden">Dismiss notification</span>
+                </a>
+            </div>
+        </div>
     </div>
+
 }
 
 @if ((ViewBag.ApprovedCount != null && ViewBag.ApprovedCount > 0) || (ViewBag.PendingApprovalCount != null && ViewBag.PendingApprovalCount > 0))
@@ -50,145 +63,157 @@
     var approvedCount = (int) ViewBag.ApprovedCount;
     var pendingCount = (int) ViewBag.PendingApprovalCount;
     var pendingTickClass = approvedCount > 0 ? "tickNotTop" : "tick";
-    <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
-        <p class="message-text" aria-live="polite">
-            @if (approvedCount > 0)
-            {
-                <div class="tick"></div>
-                <p>@approvedCount change@(Html.Conditional(approvedCount > 1, "s")) to establishment details @(approvedCount > 1 ? "have" : "has") been instantly updated.</p>
-            }
-            @if (approvedCount > 0 && pendingCount > 0)
-            {
-                <p><br /></p>
-            }
-            @if (pendingCount > 0)
-            {
-                <div class="@pendingTickClass"></div>
-                <p>@pendingCount change@(Html.Conditional(pendingCount > 1, "s")) to establishment details require DfE approval. You do not need to take any action now and changes will be made soon. If the DfE need more information they will contact you.</p>
-            }
-        </p>
-        <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
+                <p class="message-text" aria-live="polite">
+                    @if (approvedCount > 0)
+                    {
+                        <div class="tick"></div>
+                        <p>@approvedCount change@(Html.Conditional(approvedCount > 1, "s")) to establishment details @(approvedCount > 1 ? "have" : "has") been instantly updated.</p>
+                    }
+                    @if (approvedCount > 0 && pendingCount > 0)
+                    {
+                        <p>
+                            <br/>
+                        </p>
+                    }
+                    @if (pendingCount > 0)
+                    {
+                        <div class="@pendingTickClass"></div>
+                        <p>@pendingCount change@(Html.Conditional(pendingCount > 1, "s")) to establishment details require DfE approval. You do not need to take any action now and changes will be made soon. If the DfE need more information they will contact you.</p>
+                    }
+                </p>
+                <a class="cross" href="#">
+                    <span class="govuk-visually-hidden">Dismiss notification</span>
+                </a>
+            </div>
+        </div>
     </div>
 }
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l gias-landing-heading">
+            <span class="heading-preamble">Establishment</span>
+            @(Model.Establishment.Name.Clean() ?? "(name not recorded)")
+        </h1>
 
-<h1 class="heading-large">
-    <span class="heading-secondary">Establishment</span>
-    @(Model.Establishment.Name.Clean() ?? "(name not recorded)")
-</h1>
+        <p class="urn establishment-fine-detail"><abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn</p>
+        <p class="establishment-type establishment-fine-detail">@Model.TypeName</p>
+        <p class="establishment-data-download">
+            @Html.RouteLink("Download establishment data", "EstabDataDownload", new {Model.Establishment.Urn, state = UriHelper.SerializeToUrlToken(RouteDto.Create(Model.LegalParentGroupRouteDto.Value, Model.EstabDetailRouteDto))}, new {rel = "nofollow"})
+        </p>
 
-<p class="urn"><abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn</p>
-<p class="establishment-type">@Model.TypeName</p>
-<p class="establishment-data-download">
-    @Html.RouteLink("Download establishment data", "EstabDataDownload", new { Model.Establishment.Urn, state = UriHelper.SerializeToUrlToken(RouteDto.Create(Model.LegalParentGroupRouteDto.Value, Model.EstabDetailRouteDto)) }, new { rel = "nofollow" })
-</p>
-
-@if (Model.IsClosed)
-{
-    if (Model.Establishment.CloseDate != null)
-    {
-        <div class="panel-indent flush--top push-half--bottom">
-            <p>
-                This establishment closed on @(Model.Establishment.CloseDate?.ToString("dd/MM/yyyy")).
-                View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
-            </p>
-        </div>
-    }
-    else
-    {
-        <div class="panel-indent flush--top push-half--bottom">
-            <p>
-               This establishment is closed.
-                View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
-            </p>
-        </div>
-    }
-}
-
+        @if (Model.IsClosed)
+        {
+            if (Model.Establishment.CloseDate != null)
+            {
+                <div class="panel-indent flush--top push-half--bottom">
+                    <p>
+                        This establishment closed on @(Model.Establishment.CloseDate?.ToString("dd/MM/yyyy")).
+                        View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
+                    </p>
+                </div>
+            }
+            else
+            {
+                <div class="panel-indent flush--top push-half--bottom">
+                    <p>
+                        This establishment is closed.
+                        View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
+                    </p>
+                </div>
+            }
+        }
+    </div>
+</div>
 @{Html.RenderPartial(@"Partials\ConfirmationNotifications");}
 
-<div class="column-full">
-    <div class="grid-row gias-tabs-wrapper">
-        <div class="tab-wrap">
-            <ul class="gias-tabs">
-                @if (Model.TabDisplayPolicy.Details)
-                {
-                    <li><a href="#school-dashboard" class="horizontal-tab">Details</a></li>
-                }
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="gias-tabs-wrapper">
+            <div class="tab-wrap">
+                <ul class="gias-tabs">
+                    @if (Model.TabDisplayPolicy.Details)
+                    {
+                        <li class="gias-tabs__list-item"><a href="#school-dashboard" class="gias-tabs__tab">Details</a></li>
+                    }
 
-                @if (Model.TabDisplayPolicy.Governance)
-                {
-                    <li><a href="#school-governance" class="horizontal-tab">Governance</a></li>
-                }
+                    @if (Model.TabDisplayPolicy.Governance)
+                    {
+                        <li class="gias-tabs__list-item"><a href="#school-governance" class="gias-tabs__tab">Governance</a></li>
+                    }
 
 
-                @if (Model.TabDisplayPolicy.IEBT)
-                {
-                    <li><a href="#school-iebt" class="horizontal-tab">IEBT</a></li>
-                }
+                    @if (Model.TabDisplayPolicy.IEBT)
+                    {
+                        <li class="gias-tabs__list-item"><a href="#school-iebt" class="gias-tabs__tab">IEBT</a></li>
+                    }
 
-                @if (Model.TabDisplayPolicy.Links)
-                {
-                    <li><a href="#school-links" class="horizontal-tab">Links</a></li>
-                }
+                    @if (Model.TabDisplayPolicy.Links)
+                    {
+                        <li class="gias-tabs__list-item"><a href="#school-links" class="gias-tabs__tab">Links</a></li>
+                    }
 
-                @if (Model.TabDisplayPolicy.Location)
-                {
-                    <li><a href="#school-location" class="horizontal-tab">Location</a></li>
-                }
+                    @if (Model.TabDisplayPolicy.Location)
+                    {
+                        <li class="gias-tabs__list-item"><a href="#school-location" class="gias-tabs__tab">Location</a></li>
+                    }
 
-                @if (Model.ChangeHistory != null && Model.TabDisplayPolicy.ChangeHistory)
-                {
-                    <li><a href="#school-change-history" class="horizontal-tab">Changes</a></li>
-                }
+                    @if (Model.ChangeHistory != null && Model.TabDisplayPolicy.ChangeHistory)
+                    {
+                        <li class="gias-tabs__list-item"><a href="#school-change-history" class="gias-tabs__tab">Changes</a></li>
+                    }
 
-                @if (Model.TabDisplayPolicy.Helpdesk)
-                {
-                    <li><a href="#helpdesk" class="horizontal-tab">Helpdesk</a></li>
-                }
-            </ul>
-        </div>
-        <div class="tab-content-wrapper gias-tabs-content">
-            @{
-                if (Model.TabDisplayPolicy.Details)
-                {
-                    Html.RenderPartial(@"Partials\TabDetails");
-                }
+                    @if (Model.TabDisplayPolicy.Helpdesk)
+                    {
+                        <li class="gias-tabs__list-item"><a href="#helpdesk" class="gias-tabs__tab">Helpdesk</a></li>
+                    }
+                </ul>
+            </div>
+            <div class="tab-content-wrapper gias-tabs-content">
+                @{
+                    if (Model.TabDisplayPolicy.Details)
+                    {
+                        Html.RenderPartial(@"Partials\TabDetails");
+                    }
 
-                if (Model.TabDisplayPolicy.Governance)
-                {
-                    Html.RenderPartial(@"Partials\TabGovernance");
-                }
+                    if (Model.TabDisplayPolicy.Governance)
+                    {
+                        Html.RenderPartial(@"Partials\TabGovernance");
+                    }
 
-                if (Model.TabDisplayPolicy.IEBT)
-                {
-                    Html.RenderPartial(@"Partials\TabIEBT");
-                }
+                    if (Model.TabDisplayPolicy.IEBT)
+                    {
+                        Html.RenderPartial(@"Partials\TabIEBT");
+                    }
 
-                if (Model.TabDisplayPolicy.Links)
-                {
-                    Html.RenderPartial(@"Partials\TabLinks");
-                }
+                    if (Model.TabDisplayPolicy.Links)
+                    {
+                        Html.RenderPartial(@"Partials\TabLinks");
+                    }
 
-                if (Model.TabDisplayPolicy.Location)
-                {
-                    Html.RenderPartial(@"Partials\TabLocation");
-                }
+                    if (Model.TabDisplayPolicy.Location)
+                    {
+                        Html.RenderPartial(@"Partials\TabLocation");
+                    }
 
-                if (Model.ChangeHistory != null && Model.TabDisplayPolicy.ChangeHistory)
-                {
-                    Html.RenderPartial(@"Partials\TabChangeHistory");
-                }
+                    if (Model.ChangeHistory != null && Model.TabDisplayPolicy.ChangeHistory)
+                    {
+                        Html.RenderPartial(@"Partials\TabChangeHistory");
+                    }
 
-                if (Model.TabDisplayPolicy.Helpdesk)
-                {
-                    Html.RenderPartial(@"Partials\TabHelpdesk");
+                    if (Model.TabDisplayPolicy.Helpdesk)
+                    {
+                        Html.RenderPartial(@"Partials\TabHelpdesk");
+                    }
                 }
-            }
+            </div>
         </div>
     </div>
 </div>
-
-<div class="column-full helptext-container">
+<div class="govuk-grid-row">
+<div class="govuk-grid-column-full helptext-container">
     <div id="help-text-age-range">
         <h3 class="heading-small">Age range</h3>
         <p>@Model.AgeRangeToolTip</p>
@@ -199,8 +224,8 @@
     </div>
 
     <div id="help-text-school-capacity">
-        <h3 class="heading-small">School capacity</h3>
-        <p>@Model.SchoolCapacityToolTip</p>
+        <h3 class="govuk-heading-s">School capacity</h3>
+        <p class="govuk-body-s">@Model.SchoolCapacityToolTip</p>
         @if (!Model.SchoolCapacityToolTipLink.IsNullOrEmpty())
         {
             <p>Link: <a href="@Model.SchoolCapacityToolTipLink">@Model.SchoolCapacityToolTipLink</a></p>
@@ -208,30 +233,18 @@
     </div>
 
     <div id="help-text-fsm">
-        <h3 class="heading-small">Free School Meals</h3>
-        <p>
+        <h3 class="govuk-heading-s">Free School Meals</h3>
+        <p class="govuk-body-s">
             This shows whether a pupil's family have claimed eligibility for free school meals as reported in the annual spring school census. Parents are able to claim free school meals if they receive a qualifying benefit.
             This does not show pupils who actually received free school meals but those who are eligible to receive them.
         </p>
     </div>
 
 </div>
-
+</div>
 
 @section ViewScripts {
-
-    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
-
-    @if (Model.Establishment.CloseDate != null)
-    {
-        <script nonce="@Html.ScriptNonce()">var estabOpen = false;</script>
-    }
-    else
-    {
-        <script nonce="@Html.ScriptNonce()">var estabOpen = true;</script>
-    }
-    <script nonce="@Html.ScriptNonce()">
-        $('#school-governance').find('.sortable-table').clientSort();
-    </script>
+<script nonce="@Html.ScriptNonce()">var estabOpen = @((Model.Establishment.CloseDate == null).ToString().ToLower());</script>
+<script src="/public/assets/scripts/build/landing-page-bundle.js"></script>
 
 }

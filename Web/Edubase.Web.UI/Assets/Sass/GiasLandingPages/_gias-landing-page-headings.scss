@@ -1,0 +1,35 @@
+.gias-landing-heading {
+  margin-bottom: 10px;
+}
+
+.heading-preamble {
+  display: block;
+  color: $govuk-secondary-text-colour;
+  font-size: 24px;
+  font-weight: normal;
+  padding-bottom: 5px;
+}
+
+.establishment-fine-detail {
+  display: inline-block;
+  color: $govuk-secondary-text-colour;
+  font-weight: bold;
+  font-size: 14px;
+  margin-right: 10px;
+
+  @include govuk-media-query($until: tablet) {
+    display: block;
+    margin-bottom: 5px;
+  }
+}
+
+.establishment-data-download {
+  float: right;
+  margin-bottom: 25px;
+  overflow: hidden;
+  font-size: 16px;
+
+  @include govuk-media-query($until: tablet) {
+    float: none;
+  }
+}

@@ -3,17 +3,17 @@
 <div class="governor-grid">
     @if (!Model.IsHistoricRole)
     {
-        <h2 class="heading-small">@Model.Title</h2>
+        <h2 class="govuk-heading-s">@Model.Title</h2>
     }
     @if (!User.Identity.IsAuthenticated && Model.GroupUid != null && Model.IsSharedRole)
     {
         if (Model.Rows.Any())
         {
-            <p class="none">This multi-academy trust operates a shared governance model, please see the information displayed on the individual academy records.</p>
+            <p class="govuk-!-font-size-14">This multi-academy trust operates a shared governance model, please see the information displayed on the individual academy records.</p>
         }
         else
         {
-            <p class="none">Not recorded</p>
+            <p class="govuk-!-font-size-14">Not recorded</p>
         }
     }
     else
@@ -22,15 +22,15 @@
         {
             if (!User.Identity.IsAuthenticated)
             {
-                <table class="edubase-table list-table sortable-table governors">
-                    <caption class="visuallyhidden">@Model.Title</caption>
-                    <thead>
-                    <tr>
+                <table class="govuk-table gias-table govuk-!-font-size-14 list-table sortable-table governors">
+                    <caption class="govuk-visually-hidden">@Model.Title</caption>
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
                         @foreach (var column in Model.HeaderCells)
                         {
                             if (!String.IsNullOrEmpty(column.SortKey))
                             {
-                                <th scope="col" class="col-@column.SortKey @(@Model.HeaderCells[1].SortKey == "appointed" ? "has-appointed" : "")">
+                                <th scope="col" class="govuk-table__header col-@column.SortKey @(@Model.HeaderCells[1].SortKey == "appointed" ? "has-appointed" : "")">
                                     <a href="#" class="js-sort-header" data-sort-key="@column.SortKey" data-sort-type="@column.SortType">
                                         @(column.Text ?? "Not recorded")
                                     </a>
@@ -38,7 +38,7 @@
                             }
                             else
                             {
-                                <th>
+                                <th class="govuk-table__header">
                                     @(column.Text ?? "Not recorded")
                                 </th>
                             }
@@ -46,14 +46,14 @@
                         }
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="govuk-table__body">
                     @foreach (var row in Model.Rows)
                     {
                         var cellCount = 0;
-                        <tr>
+                        <tr class="govuk-table__row">
                             @foreach (var cell in row.Cells)
                             {
-                                <td data-label="@Model.HeaderCells[cellCount].Text">@(cell.Text ?? "Not recorded")</td>
+                                <td data-label="@Model.HeaderCells[cellCount].Text" class="govuk-table__cell">@(cell.Text ?? "Not recorded")</td>
                                 cellCount++;
                             }
                         </tr>
@@ -90,7 +90,7 @@
         }
         else
         {
-            <p class="none">Not recorded</p>
+            <p class="govuk-!-font-size-14">Not recorded</p>
         }
     }
 </div>

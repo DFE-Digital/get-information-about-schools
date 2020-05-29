@@ -191,7 +191,8 @@
         <div class="govuk-width-container govuk-width-container">
             @(Html.Partial("../govuk/partials/phase/beta"))
             @RenderSection("BackLink", false)
-        @RenderBody()
+            @RenderSection("BreadCrumbs", false)
+            @RenderBody()
         </div>
         <footer class="govuk-footer" id="footer" role="contentinfo">
             <div class="govuk-width-container">

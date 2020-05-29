@@ -1,6 +1,87 @@
-.edubase-table {
+.gias-table {
   @include govuk-font(16);
   .govuk-table__caption {
     font-weight: normal;
+  }
+
+  .govuk-table__head {
+    .govuk-table__header,
+    .govuk-table__cell {
+      border-bottom: 1px solid govuk-colour('black');
+    }
+  }
+
+  .govuk-table__body {
+    .govuk-table__header,
+    .govuk-table__cell {
+      border-bottom: 1px solid $govuk-border-colour;
+    }
+  }
+
+  &.list-table {
+    .govuk-table__body {
+      .govuk-table__row:last-child {
+        .govuk-table__header,
+        .govuk-table__cell {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+
+  &.approval-changes {
+    table-layout: fixed;
+    font-size: 13px;
+
+    .govuk-table__header,
+    .govuk-table__cell {
+      word-wrap: break-word;
+    }
+
+    .govuk-table__body .govuk-table__cell {
+      padding-right: 10px;
+    }
+  }
+
+  @include govuk-media-query($until: tablet) {
+    .govuk-table__head {
+      display: none;
+    }
+
+    .govuk-table__row {
+      border-top: 1px solid govuk-colour('black');
+
+      &:first-child {
+        border: none;
+      }
+    }
+
+    td {
+      clear: left;
+      display: block;
+      float: left;
+      width: 100% !important;
+      border-bottom: 1px solid $govuk-border-colour;
+      max-width: 100%;
+      padding: 12px 0;
+
+
+      &:before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        padding-right: 0.5em;
+      }
+
+      &:last-child {
+        border: 0;
+      }
+
+      &.fixed-width {
+        &:before {
+          width:150px;
+        }
+      }
+    }
   }
 }

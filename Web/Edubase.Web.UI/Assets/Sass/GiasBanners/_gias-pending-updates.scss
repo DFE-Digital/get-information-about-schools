@@ -1,0 +1,61 @@
+.pending-updates-message {
+  background-color: govuk-colour("turquoise");
+  font-size: 15px;
+  color: govuk-colour('white');
+  padding: 15px 35px 15px 45px;
+  position: relative;
+  margin-bottom: 10px;
+
+  .tick {
+    position: absolute;
+    left: 10px;
+    top: 12px;
+    width: 35px;
+    height: 35px;
+    background-image: url('/public/assets/images/icons/tick.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  .tickNotTop {
+    position: absolute;
+    left: 10px;
+    width: 35px;
+    height: 35px;
+    background-image: url('/public/assets/images/icons/tick.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  .cross {
+    position: absolute;
+    background-image: url('/public/assets/images/icons/icon-white-cross-transparent.png');
+    top: 12px;
+    right: 12px;
+    width: 18px;
+    height: 18px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    cursor: pointer;
+  }
+
+  .exclaim {
+    position: absolute;
+    left: 10px;
+    top: 15px;
+    width: 24px;
+    height: 24px;
+    background-image: url('/public/assets/images/icons/exclaim.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  p {
+    margin: 0;
+    color: govuk-colour('white');
+  }
+
+  a {
+    color: white;
+  }
+}

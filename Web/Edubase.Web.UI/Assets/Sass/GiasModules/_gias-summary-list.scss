@@ -1,0 +1,68 @@
+.gias-summary-list {
+  @include govuk-font(16);
+  display: table;
+  margin: 0;
+
+  .tooltip-link {
+    top: 2px;
+    width: 16px;
+    height: 16px;
+
+    &::after {
+      position: absolute;
+      content: '?';
+      width: 12px;
+      height: 12px;
+      border-radius: 12px;
+      padding: 0 2px 5px;
+      margin-left: 3px;
+      top: 0;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+  }
+
+  &.gias-summary-list--inline {
+    .gias-summary-list__key {
+      width: auto;
+      display: block;
+      float: left;
+      margin-right: 5px;
+    }
+    .gias-summary-list__value {
+      float: left;
+      display: block;
+    }
+  }
+}
+
+.gias-summary-list__row {
+  display: table-row;
+  line-height: 2.1;
+  @include govuk-media-query($until: tablet) {
+    display: block;
+    font-size: 16px;
+  }
+}
+
+.gias-summary-list__key {
+  display: table-cell;
+  margin: 0;
+  padding: 0;
+  width: 34%;
+
+  @include govuk-media-query($until: tablet) {
+    display: block;
+    font-weight: bold;
+  }
+}
+
+.gias-summary-list__value {
+  display: table-cell;
+  margin: 0;
+  padding: 0;
+
+  @include govuk-media-query($until: tablet) {
+    display: block;
+  }
+}
