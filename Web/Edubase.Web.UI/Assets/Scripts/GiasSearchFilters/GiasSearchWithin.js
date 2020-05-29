@@ -19,7 +19,7 @@ class GiasSearchWithin {
     const opts = this.opts;
     const searchField = $el.find('.filter-search');
     const clearButton = $el.find('.field-clear');
-    const originalFilters = $el.find('.js-filter-input');
+    const originalFilters = $el.find('.trigger-result-update');
 
     $el.find('.options-container').css({ minHeight: '200px' });
 
