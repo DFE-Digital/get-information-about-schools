@@ -62,7 +62,7 @@ const GiasFilterValidation = {
     errorSummary.find('.' + dateFilterId + '-error').addClass('hidden');
     $dateFilter.find('.form-group').slice(0, 2).removeClass('error');
     $dateFilter.find('.error-message').addClass('hidden');
-    
+
     let validFromDate = true;
     let validToDate = true;
     let dateObj = {};

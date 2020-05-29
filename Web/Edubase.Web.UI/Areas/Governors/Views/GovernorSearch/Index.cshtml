@@ -37,7 +37,7 @@
 
                 @if (Model.GovernorSearchModel.Forename.Clean() != null)
                 {
-                <text>first name &lsquo;<span class="bold-small">@Model.GovernorSearchModel.Forename</span>&rsquo;</text>
+                <text>first name &lsquo;<span class="govuk-!-font-weight-bold">@Model.GovernorSearchModel.Forename</span>&rsquo;</text>
 
                 }
 
@@ -47,7 +47,7 @@
                     {
                     <text>, </text>
                     }
-                <text>last name &lsquo;<span class="bold-small">@Model.GovernorSearchModel.Surname</span>&rsquo;</text>
+                <text>last name &lsquo;<span class="govuk-!-font-weight-bold">@Model.GovernorSearchModel.Surname</span>&rsquo;</text>
                 }
 
                 @if (Model.SelectedRoleIds.Any())
@@ -60,7 +60,7 @@
                 {
                 <text>for </text>
                 }
-                <text>roles <span class="governor-roles">@Html.Raw(Model.RoleNames)</span></text>
+                <text>roles <span class="governor-roles govuk-!-font-weight-bold">@Html.Raw(Model.RoleNames)</span></text>
                 }
             </p>
         </div>
