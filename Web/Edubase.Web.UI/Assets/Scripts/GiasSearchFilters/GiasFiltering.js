@@ -161,6 +161,24 @@ class GiasFiltering {
       this.$form.find('.filter-group-title').prop('checked', false);
       selectedFilters.slice(0, 1).trigger('change');
     });
+
+    const $openSelector = $("#b_1");
+    const $openClosedSelector = $("#b_4");
+
+    $($openSelector).change(function () {
+      if (this.checked) {
+        $openClosedSelector.prop('checked', true);
+      }
+    });
+
+    const $groupOpenSelector = $("#group-status_1");
+    const $groupOpenClosedSelector = $("#group-status_4");
+
+    $($groupOpenSelector).change(function () {
+      if (this.checked) {
+        $groupOpenClosedSelector.prop('checked', true);
+      }
+    });
   }
 
   deDupeParams(qs) {

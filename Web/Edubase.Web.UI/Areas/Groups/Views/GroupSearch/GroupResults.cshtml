@@ -156,14 +156,14 @@
 @* @section ViewScripts *@
 @* { *@
 @*     <script language="javascript" nonce="@Html.ScriptNonce()"> *@
-@*         var $openSelector = $("#group-status_1"); *@
-@*         var $openClosedSelector = $("#group-status_4"); *@
-@* *@
-@*         $($openSelector).change(function () { *@
-@*             if (this.checked) { *@
-@*                 $openClosedSelector.prop('checked', true); *@
-@*             } *@
-@*         }); *@
+        var $openSelector = $("#group-status_1");
+        var $openClosedSelector = $("#group-status_4");
+
+        $($openSelector).change(function () {
+            if (this.checked) {
+                $openClosedSelector.prop('checked', true);
+            }
+        });
 @* *@
 @*         DfE.searchResults.init(); *@
 @* *@
