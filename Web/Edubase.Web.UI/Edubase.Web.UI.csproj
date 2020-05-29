@@ -528,6 +528,7 @@
     <Content Include="public\assets\images\maps\google-open-marker.png" />
     <Content Include="public\assets\images\maps\open-marker.png" />
     <Content Include="public\assets\scripts\build\bundle.js" />
+    <Content Include="public\assets\scripts\build\landing-page-bundle.js" />
     <Content Include="public\assets\scripts\build\leaflet-bundle.js" />
     <Content Include="public\assets\scripts\build\search-bundle.js" />
     <Content Include="public\assets\scripts\build\search-results-bundle.js" />
