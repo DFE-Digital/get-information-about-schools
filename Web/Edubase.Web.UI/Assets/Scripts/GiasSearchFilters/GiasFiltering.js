@@ -65,18 +65,6 @@ class GiasFiltering {
 
         self.setParams();
         self.getResults();
-        // if (n + 1 === filters.length && canSubmit) {
-        //
-        //   // if (DfE.searchMap.currentView === 'map') {
-        //   //   DfE.searchResults.setSearchParams();
-        //   //   DfE.searchMap.getSearchData();
-        //   // } else {
-        //   DfE.searchMap.dataRefreshRequired = true;
-        //   DfE.searchResults.setSearchParams();
-        //   DfE.searchResults.getResults();
-        //   //}
-        //
-        // }
       });
 
     $('.age-filter').find('.filter-button').on('click',
@@ -86,13 +74,8 @@ class GiasFiltering {
         const ageFilterId = $(this).closest('.age-filter').attr('id');
         let canSubmit = GiasFilterValidation.validateAgeFilter(ageFilterId);
         if (canSubmit) {
-          // if (DfE.searchMap.currentView === 'map') {
-          //   DfE.searchMap.getSearchData();
-          // } else {
-           // DfE.searchMap.dataRefreshRequired = true;
             self.setParams();
             self.getResults();
-          //}
         }
       });
 
@@ -104,14 +87,6 @@ class GiasFiltering {
         if (canSubmit) {
           self.setParams();
           self.getResults();
-          // if (DfE.searchMap.currentView === 'map') {
-          //   DfE.searchMap.getSearchData();
-          // } else {
-          //   DfE.searchMap.dataRefreshRequired = true;
-          //
-          //   DfE.searchResults.setSearchParams();
-          //   DfE.searchResults.getResults();
-          // }
         }
       });
 
@@ -139,9 +114,6 @@ class GiasFiltering {
       if (self.filterIntent) {
         window.clearTimeout(self.filterIntent);
       }
-      // if (DfE.searchMap != null && DfE.searchMap.scriptsLoaded) {
-      //   DfE.searchMap.clearPoints();
-      // }
 
      $('#results-container').addClass('pending-results-update');
       this.searchParams = self.deDupeParams(self.$form.find(':input').filter(function (n, ele) {
@@ -170,6 +142,24 @@ class GiasFiltering {
 
       }, 1500);
 
+    });
+
+    $('#clear-filters').on('click', (e)=> {
+      e.preventDefault();
+      window.clearTimeout(this.filterIntent);
+      this.$form.find('input[type="text"]').val('');
+      this.$form.find('.clear-selections').click();
+      const selectedFilters = this.$form
+        .find('.options-container .trigger-result-update')
+        .filter(function (n, item) {
+          return $(item).prop('checked');
+        });
+      selectedFilters.prop('checked', false);
+      this.$form.find('.select-all').next('label').removeClass('partial-selection');
+      this.$form.find('.select-all').prop('checked', false);
+      this.$form.find('.filter-group-title').next('label').removeClass('partial-selection');
+      this.$form.find('.filter-group-title').prop('checked', false);
+      selectedFilters.slice(0, 1).trigger('change');
     });
   }
 
