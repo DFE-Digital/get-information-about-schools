@@ -19,9 +19,45 @@ class GiasNestedFilters {
     const trigger = $el.find(opts.expander);
     const optionsPanel = $el.find('.filter-group');
     const childControls = optionsPanel.find('input');
+    const $clearLinks = $('#filter-form').find('.filter-clear');
     const checkedChildren = childControls.filter(function (n, elem) {
       return elem.checked;
     });
+
+    const textFilters = $('#EditSearchCollapse').find('.age-filter .govuk-input, .date-filters .govuk-input');
+
+    textFilters.on('blur', function () {
+      const valueEntered = $(this).parents('.js-auto-height-inner').find('.govuk-input').filter(function(n, input){
+        return input.value.length > 0
+      }).length > 0;
+
+      if (valueEntered) {
+        $(this).parents('.govuk-option-select').find('.clear-selections').addClass('active-clear');
+      } else {
+        $(this).parents('.govuk-option-select').find('.clear-selections').removeClass('active-clear');
+      }
+    });
+
+    textFilters.each(function (n, filter) {
+      const filterHasValue = $(filter).parents('.js-auto-height-inner').find('.govuk-input').filter(function(n, input){
+        return input.value.length > 0
+      }).length > 0;
+
+      if (filterHasValue) {
+        $(this).parents('.govuk-option-select').find('.clear-selections').addClass('active-clear');
+      }
+    });
+
+    $clearLinks.on('click', function (e) {
+        e.preventDefault();
+        if (!$(this).hasClass('clear-disabled')) {
+          const $govUkSelect = $(this).parents('.govuk-option-select');
+          if ($govUkSelect.hasClass('date-filters') || $govUkSelect.hasClass('age-filter')) {
+            $govUkSelect.find('input[type="text"]').val('');
+            $(this).removeClass('active-clear');
+          }
+        }
+      });
 
     if (checkedChildren.length > 0) {
       parent.prop('checked', true);
