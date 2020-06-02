@@ -373,8 +373,10 @@ class GiasFiltering {
     const filterCount = this.$form.find(':checkbox, select').filter(':checked, :selected').length;
     let token = null;
 
-    if (filterCount > 0)
+    if (filterCount > 0){
       token = QueryString('tok')
+    }
+
 
     $.ajax({
       url: "/api/save-search-token",

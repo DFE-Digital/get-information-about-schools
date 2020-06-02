@@ -54,6 +54,12 @@ class GiasAdditionalFilters {
         return '#' + filter.id.replace('ctrl-','');
       });
 
+      const aliases = $.makeArray($selectedFilters.map((n, filter) => {
+        return $(filter).data().alias;
+      })).join('');
+
+      $('#selected-search-filters').val(aliases);
+
       allAdditionalFilters.addClass('hidden');
       $(toShow.join(',')).removeClass('hidden');
 
