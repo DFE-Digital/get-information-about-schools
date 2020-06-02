@@ -59,6 +59,9 @@ class GiasFiltering {
           errorSummary.find('.summary-radius-error').removeClass('hidden');
           errorSummary.removeClass('hidden').focus();
           window.document.title = "Error: Search results - GOV.UK";
+          window.setTimeout(function(){
+            self.enableFilters();
+          },0);
           return;
         }
 
@@ -87,24 +90,32 @@ class GiasFiltering {
             self.getResults();
         } else {
           $filter.find('.govuk-input').addClass('govuk-input--error');
+          $filter.find('.govuk-error-message').removeClass('hidden');
+          window.setTimeout(function(){
+            self.enableFilters();
+          },0);
         }
       });
 
     $('.date-filters').find('.filter-button').on('click',
       function (e) {
         e.preventDefault();
-        resetGlobalError();
+        //resetGlobalError();
         const $filter = $(this).closest('.date-filters');
         const dateFilterId = $filter.attr('id');
         const canSubmit =  GiasFilterValidation.validateDateFilters(dateFilterId);
-        $filter.find('.govuk-input').removeClass('govuk-input--error');
-        $filter.find('.govuk-error-message').addClass('hidden');
+        //$filter.find('.govuk-input').removeClass('govuk-input--error');
+        //$filter.find('.govuk-error-message').addClass('hidden');
 
         if (canSubmit) {
           self.setParams();
           self.getResults();
         } else {
-          $filter.find('.govuk-input').addClass('govuk-input--error');
+          //$filter.find('.govuk-input').addClass('govuk-input--error');
+          //$filter.find('.govuk-error-message').not('.date-range-error').removeClass('hidden');
+          window.setTimeout(function(){
+            self.enableFilters();
+          },0);
         }
       });
 

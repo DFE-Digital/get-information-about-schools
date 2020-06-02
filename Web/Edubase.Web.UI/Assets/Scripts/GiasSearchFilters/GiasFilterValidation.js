@@ -61,7 +61,7 @@ const GiasFilterValidation = {
     window.document.title = "Search results - GOV.UK";
     errorSummary.find('.' + dateFilterId + '-error').addClass('hidden');
     $dateFilter.find('.form-group').slice(0, 2).removeClass('error');
-    $dateFilter.find('.error-message').addClass('hidden');
+    $dateFilter.find('.govuk-error-message').addClass('hidden');
 
     let validFromDate = true;
     let validToDate = true;
@@ -112,14 +112,24 @@ const GiasFilterValidation = {
       window.document.title = "Error: Search results - GOV.UK";
     }
 
+    const fromSection = $('#' + dateFilterId + ' .search-from-date');
+    const toSection = $('#' + dateFilterId + ' .search-to-date');
+
     if (!validFromDate) {
-      $('#' + dateFilterId + ' .search-from-date').find('.govuk-error-message').not('.date-range-error').removeClass('hidden');
+      fromSection.find('.govuk-error-message').not('.date-range-error').removeClass('hidden');
+      fromSection.find('.govuk-input').addClass('govuk-input--error');
+    } else {
+      fromSection.find('.govuk-error-message').not('.date-range-error').addClass('hidden');
+      fromSection.find('.govuk-input').removeClass('govuk-input--error');
     }
 
     if (!validToDate) {
-      $('#' + dateFilterId + ' .search-to-date').find('.govuk-error-message').not('.date-range-error').removeClass('hidden');
+      toSection.find('.govuk-error-message').not('.date-range-error').removeClass('hidden');
+      toSection.find('.govuk-input').addClass('govuk-input--error');
+    } else {
+      toSection.find('.govuk-error-message').not('.date-range-error').addClass('hidden');
+      toSection.find('.govuk-input').removeClass('govuk-input--error');
     }
-
     return canSubmit;
   },
 
