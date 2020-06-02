@@ -24,6 +24,8 @@ class GiasSearchMap {
       }),
       currentView: 'list',
     }
+
+    this.setSearchParams();
   }
 
   setUp() {
@@ -35,8 +37,21 @@ class GiasSearchMap {
       this.config.scriptsLoaded = true;
 
     } else {
-      this.getSearchData();
+      this.getSearchData('setUp');
     }
+  }
+
+  setSearchParams() {
+    function deDupeParams(qs) {
+      const paramArray = qs.split('&');
+      return paramArray.sort().filter(function (item, pos, ary) {
+        return !pos || item !== ary[pos - 1];
+      }).join('&');
+    }
+
+    this.searchParams = deDupeParams($('#filter-form').find(':input').filter(function (n, ele) {
+      return ele.value !== '';
+    }).serialize());
   }
 
   getSearchData() {
@@ -48,21 +63,13 @@ class GiasSearchMap {
     this.breachLimit = false;
     $('#map-count').text('0');
 
-    function deDupeParams(qs) {
-      const paramArray = qs.split('&');
-      return paramArray.sort().filter(function (item, pos, ary) {
-        return !pos || item !== ary[pos - 1];
-      }).join('&');
-    }
-
-
-    //DfE.searchResults.disableFilters();
     getPoints();
 
-
     function getPoints() {
-
+      self.isLoadingPoints = true;
       function pointsLoaded() {
+        self.isLoadingPoints = false;
+        window.enableFilters();
         self.clusterGroup.setZIndex(10);
         if (!self.mapObj.hasLayer(self.clusterGroup)) {
           self.mapObj.addLayer(self.clusterGroup);
@@ -71,8 +78,7 @@ class GiasSearchMap {
         self.mapObj.fitBounds(self.clusterGroup.getBounds());
         window.setTimeout(function () {
           $('.map-header').removeClass('loading');
-         // DfE.searchResults.enableFilters();
-          var count = $('#map-count').text();
+          const count = $('#map-count').text();
           self.$resultsNotification.html('Search results loaded. Showing ' + count + ' establishments in map view.');
         }, 1500);
       }
@@ -80,17 +86,16 @@ class GiasSearchMap {
       $('.map-header').addClass('loading');
       $('#map-data-warning').addClass('hidden');
       $('#zero-results-message').addClass('hidden');
+
       $.ajax({
         url: '/Establishments/Search/results-json',
-        data: deDupeParams(self.$filterForm.find(':input').filter(function (n, ele) {
-          return ele.value !== '';
-        }).serialize()) + '&startIndex=' + startIndex,
+        data: self.searchParams + '&startIndex=' + startIndex,
         dataType: 'JSON',
         success: function (data, status, xhr) {
           if (Number(xhr.getResponseHeader("x-count")) > 0) {
             resultCount = Number(xhr.getResponseHeader("x-count"));
           }
-
+          startIndex += self.config.step;
           $(data).each(function (n, elem) {
             if (elem.location) {
               const lat = Number(elem.location.latitude);
@@ -116,7 +121,6 @@ class GiasSearchMap {
 
               self.clusterGroup.addLayer(marker);
               pointCount++;
-
             }
 
           });
@@ -129,7 +133,6 @@ class GiasSearchMap {
             $('#zero-results-message').removeClass('hidden');
 
             $('.map-header').removeClass('loading');
-            DfE.searchResults.enableFilters();
             return;
           }
 
@@ -149,14 +152,12 @@ class GiasSearchMap {
                 });
 
             } else {
-              startIndex += self.config.step;
               getPoints();
             }
 
           } else {
             pointsLoaded();
           }
-
 
         },
         error: function (xhr) {
@@ -173,41 +174,59 @@ class GiasSearchMap {
   bindActions() {
     const self = this;
     const $main = $('#main-content');
-    $main.on('click','#view-list',(e)=> {
-        e.preventDefault();
-        $('#map-container').addClass('hidden');
-        $('#results-container').removeClass('hidden');
-        $('#option-select-sort-by').removeClass('hidden');
-        const count = $('#list-count').text();
-        this.$resultsNotification.html('Search results loaded. Showing ' + count + ' establishments in list view.');
-        this.config.currentView = 'list';
-      });
+    $main.on('click', '#view-list', (e) => {
+      e.preventDefault();
+      $('#map-container').addClass('hidden');
+      $('#results-container').removeClass('hidden');
+      $('#option-select-sort-by').removeClass('hidden');
+      const count = $('#list-count').text();
+      this.$resultsNotification.html('Search results loaded. Showing ' + count + ' establishments in list view.');
+      this.config.currentView = 'list';
+    });
 
-    $main.on('click', '#view-map', (e)=> {
-        e.preventDefault();
-        if (!this.config.scriptsLoaded) {
-          this.setUp();
-        } else {
-          $('#results-container').addClass('hidden');
-          $('#map-container').removeClass('hidden');
-          if (this.config.dataRefreshRequired) {
-            this.getSearchData();
-            this.config.dataRefreshRequired = false;
-          }
+    $main.on('click', '#view-map', (e) => {
+      e.preventDefault();
+      if (!this.config.scriptsLoaded) {
+        this.setUp();
+      } else {
+        $('#results-container').addClass('hidden');
+        $('#map-container').removeClass('hidden');
+        if (this.config.dataRefreshRequired) {
+          this.clearPoints();
+          this.getSearchData('view map');
+          this.config.dataRefreshRequired = false;
         }
-
-        $('#option-select-sort-by').addClass('hidden');
-        this.config.currentView = 'map';
-      });
-
-    $(window).on('ajaxResultLoad', function(){
-      self.config.dataRefreshRequired = true;
-      if(self.currentView === 'map') {
-        self.clearPoints();
-        self.getSearchData();
       }
-    })
+
+      $('#option-select-sort-by').addClass('hidden');
+      this.config.currentView = 'map';
+    });
+
+    $(document).on('change', '.trigger-result-update', function () {
+      self.setSearchParams();
+    });
+
+    this.$filterForm.find('.filter-button').on('click', function () {
+      window.enableFilters();
+      self.setSearchParams();
+      window.disableFilters();
+    });
+
   }
+
+  refreshMap() {
+    // called by other scripts to notify map to update data either now or at next view switch
+    if (this.config.currentView === 'map') {
+      this.clearPoints();
+      this.getSearchData('map refresh');
+      if (this.isLoadingPoints) {
+        window.disableFilters();
+      }
+    } else {
+      this.config.dataRefreshRequired = true;
+    }
+  }
+
   initMap() {
     const self = this;
     self.currentView = 'map';
@@ -242,7 +261,7 @@ class GiasSearchMap {
 
 
     this.mapObj = searchMap;
-    this.getSearchData(true);
+    this.getSearchData('init');
     this.bindActions();
 
     searchMap.on('zoomend',

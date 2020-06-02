@@ -14,6 +14,10 @@ $filterForm.find('.nested-items').giasNestedFilters();
 $filterForm.find('.searchable-filters').giasSearchWithin();
 $filterForm.find('.select-all').giasSelectAll();
 
-new GiasFiltering();
+const filtering = new GiasFiltering();
 const gMap = new GiasSearchMap();
 gMap.bindActions();
+
+window.gMap = gMap;
+window.disableFilters = filtering.disableFilters;
+window.enableFilters = filtering.enableFilters;

@@ -2,6 +2,10 @@
   border: 4px solid govuk-tint(govuk-colour('mid-grey'), 50);
   border-right: 0;
 
+  .is-mac & {
+    border-right: 4px solid govuk-tint(govuk-colour('mid-grey'), 50);
+  }
+
   .container-head {
     background-color: govuk-tint(govuk-colour('mid-grey'), 50);
     padding: 5px 10px;

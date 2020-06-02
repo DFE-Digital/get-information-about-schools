@@ -51,7 +51,6 @@ class GiasFiltering {
         $filter.find('.govuk-input').removeClass('govuk-input--error');
 
         const isValid = GiasFilterValidation.validateRadiusFilter();
-        console.log(isValid);
         if (!isValid) {
          // $filter.find('.govuk-form-group').addClass('govuk-form-group--error');
           $filter.find('.govuk-error-message').removeClass('hidden');
@@ -142,22 +141,46 @@ class GiasFiltering {
 
       self.filterIntent = window.setTimeout(function () {
         self.getResults();
-        // if (DfE.searchMap.currentView === 'map') {
-        //   DfE.searchMap.getSearchData();
-        // } else {
-        //   DfE.searchMap.dataRefreshRequired = true;
-        // }
-        // if (searchType === 'ByLocalAuthority') {
-        //   DfE.searchUtils.updateSearchedLas();
-        // }
-        // if (searchType === 'GovernorsAll') {
-        //   DfE.searchUtils.updateGovernorRoles();
-        //
-        //   $('#gov-la-warning').addClass('hidden');
-        //   if (self.shouldShowGovWarning()) {
-        //     $('#gov-la-warning').removeClass('hidden');
-        //   }
-        // }
+        if (self.searchType === 'ByLocalAuthority') {
+          let laCount = 0;
+          let selectedLas = [];
+          $('#option-select-local-authority').find('.trigger-result-update').filter(':checked').each(function () {
+            const label = $(this).parent().clone();
+            label.find('span, input').remove();
+            const text = label.text();
+            selectedLas.push('&lsquo;<span class="govuk-!-font-weight-bold">' + $.trim(text) + '</span>&rsquo;');
+            laCount++;
+          });
+          selectedLas = selectedLas.join(', ');
+          const lastComma = selectedLas.lastIndexOf(',');
+          if (laCount > 1) {
+            selectedLas = selectedLas.substring(0, lastComma) +
+              ' and ' +
+              selectedLas.substring(lastComma + 1, selectedLas.length);
+          }
+
+          $('#la-list').html(selectedLas);
+        }
+        if (self.searchType === 'GovernorsAll') {
+          let selectedGovRoles = [];
+          $('#option-select-role-type').find('.trigger-result-update').filter(':checked').each(function () {
+            const label = $(this).parent().clone();
+            label.find('span, input').remove();
+            const text = label.text();
+            selectedGovRoles.push('&lsquo;<span class="govuk-!-font-weight-bold">' + $.trim(text) + '</span>&rsquo;');
+          });
+          selectedGovRoles = selectedGovRoles.join(', ');
+          const lastComma = selectedGovRoles.lastIndexOf(',');
+          selectedGovRoles = selectedGovRoles.substring(0, lastComma) +
+            ' and ' +
+            selectedGovRoles.substring(lastComma + 1, selectedGovRoles.length);
+          $('.governor-roles').html(selectedGovRoles);
+
+          $('#gov-la-warning').addClass('hidden');
+          if (self.shouldShowGovWarning()) {
+            $('#gov-la-warning').removeClass('hidden');
+          }
+        }
 
       }, 1500);
 
@@ -288,12 +311,11 @@ class GiasFiltering {
               $resultsNotification.html('Search results loaded. No ' + self.searchCategory + ' found.');
             }
 
+
             $(window).trigger({
               type: 'ajaxResultLoad',
               count: count
             });
-
-
 
             if (xhr.getResponseHeader("x-show-date-filter-warning") === "true") {
               $('.date-filter-warning').removeClass('hidden');
@@ -305,6 +327,7 @@ class GiasFiltering {
 
             $('.js-save-set').removeClass('hidden');
             self.enableFilters();
+            window.gMap.refreshMap();
           }
         });
       },
