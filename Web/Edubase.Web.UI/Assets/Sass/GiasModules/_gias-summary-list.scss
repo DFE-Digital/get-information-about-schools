@@ -29,6 +29,7 @@
       float: left;
       margin-right: 5px;
     }
+
     .gias-summary-list__value {
       float: left;
       display: block;
@@ -38,7 +39,9 @@
 
 .gias-summary-list__row {
   display: table-row;
-  line-height: 2.1;
+  line-height: 1.6;
+  height: 2em;
+
   @include govuk-media-query($until: tablet) {
     display: block;
     font-size: 16px;
@@ -48,7 +51,7 @@
 .gias-summary-list__key {
   display: table-cell;
   margin: 0;
-  padding: 0;
+  padding: 0 5px 0;
   width: 34%;
 
   @include govuk-media-query($until: tablet) {
