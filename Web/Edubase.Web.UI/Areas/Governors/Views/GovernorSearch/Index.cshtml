@@ -54,13 +54,13 @@
                 {
                 if (Model.GovernorSearchModel.Surname.Clean() != null || Model.GovernorSearchModel.Forename.Clean() != null)
                 {
-                <text>and </text>
+                <span class="conjunction-text">and </span>
                 }
                 else
                 {
-                <text>for </text>
+                <span class="conjunction-text">for </span>
                 }
-                <text>roles <span class="governor-roles govuk-!-font-weight-bold">@Html.Raw(Model.RoleNames)</span></text>
+                <span class="conjunction-text">roles</span> <span class="governor-roles govuk-!-font-weight-bold">@Html.Raw(Model.RoleNames)</span>
                 }
             </p>
         </div>

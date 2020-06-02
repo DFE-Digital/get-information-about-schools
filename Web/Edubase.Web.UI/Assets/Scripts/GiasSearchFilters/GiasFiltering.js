@@ -61,17 +61,26 @@ class GiasFiltering {
 
   updateGovernorsDescription() {
     let selectedGovRoles = [];
-    $('#option-select-role-type').find('.trigger-result-update').filter(':checked').each(function () {
-      const label = $(this).parent().clone();
-      label.find('span, input').remove();
-      const text = label.text();
-      selectedGovRoles.push('&lsquo;<span class="govuk-!-font-weight-bold">' + $.trim(text) + '</span>&rsquo;');
-    });
-    selectedGovRoles = selectedGovRoles.join(', ');
-    const lastComma = selectedGovRoles.lastIndexOf(',');
-    selectedGovRoles = selectedGovRoles.substring(0, lastComma) +
-      ' and ' +
-      selectedGovRoles.substring(lastComma + 1, selectedGovRoles.length);
+    const selectedRoles = $('#option-select-role-type').find('.trigger-result-update').filter(':checked');
+    if (selectedRoles.length > 0) {
+      selectedRoles.each(function () {
+        const label = $(this).parent().clone();
+        label.find('span, input').remove();
+        const text = label.text();
+        selectedGovRoles.push('&lsquo;<span class="govuk-!-font-weight-bold">' + $.trim(text) + '</span>&rsquo;');
+      });
+      selectedGovRoles = selectedGovRoles.join(', ');
+      const lastComma = selectedGovRoles.lastIndexOf(',');
+      selectedGovRoles = selectedGovRoles.substring(0, lastComma) +
+        ' and ' +
+        selectedGovRoles.substring(lastComma + 1, selectedGovRoles.length);
+
+      $('.conjunction-text').removeClass('hidden');
+    } else {
+      selectedGovRoles = '';
+      $('.conjunction-text').addClass('hidden');
+    }
+
     $('.governor-roles').html(selectedGovRoles);
 
     $('#gov-la-warning').addClass('hidden');
