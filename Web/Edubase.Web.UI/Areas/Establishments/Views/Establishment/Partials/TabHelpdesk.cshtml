@@ -12,7 +12,7 @@
         <h2 class="govuk-heading-s">Helpdesk notes:</h2>
         <div class="govuk-body">@(Model.Establishment.HelpdeskNotes.Clean() ?? "Not recorded")</div>
 
-        <dl class="gias-summary-list gias-summary-list--inline">
+        <dl class="gias-summary-list">
             <div class="gias-summary-list__row">
                 <dt class="gias-summary-list__key">EduBase last update:</dt>
                 <dd class="gias-summary-list__value">@(Model.Establishment.HelpdeskLastUpdate?.ToString("dd/MM/yyyy"))</dd>
