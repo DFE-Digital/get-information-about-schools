@@ -207,3 +207,6 @@ Web/Web.UI/
 
 # Secrets file. DO NOT CHANGE
 **/*.alwaysignore
+
+/Web/.nuget/NuGet.Config
+Web/packages

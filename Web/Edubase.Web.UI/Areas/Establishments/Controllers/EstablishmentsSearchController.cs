@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IdentityModel.Protocols.WSTrust;
 using Edubase.Common;
 using Edubase.Web.UI.Models;
 using System.Linq;
@@ -19,6 +18,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
     using Services.Establishments.Search;
     using Services.Lookup;
     using System;
+    using System.Collections.Specialized;
     using System.Threading.Tasks;
     using System.Web.Hosting;
     using UI.Controllers;
@@ -120,7 +120,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (viewModel.Dataset == eDataSet.Custom && !viewModel.SelectedCustomFields.Any())
             {
-                viewModel.SearchQueryString = Request.QueryString.ToString();
+                // the SearchQueryString is used for the breadcrumb response. We dont want to retain the Dataset selection as part of that
+                var queryString = new NameValueCollection(Request.QueryString);
+                queryString.Remove("Dataset");
+                viewModel.SearchQueryString = queryString.ToQueryString();
                 viewModel.CustomFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User)).OrderBy(x => x.Name).ToList();
                 return View("Downloads/SelectCustomFields", viewModel);
             }

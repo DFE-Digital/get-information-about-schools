@@ -10,29 +10,31 @@
     ViewBag.HideLogo = true;
 }
 
-<div class="breadcrumbs">
-    @if (Model.SearchQueryString.IsNullOrWhiteSpace())
-    {
+    <div class="breadcrumbs">
         <ol>
             <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
+
+            @if (!Model.SearchQueryString.IsNullOrWhiteSpace()) { 
+                if (Model.SearchSource == eLookupSearchSource.Governors)
+                {
+                    <li>
+                        <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Search results</a>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Search results</a>
+                    </li>
+                }
+            }
+
             @if (Model.LegalParentGroup != null)
             {
                 <li>@Html.RouteLink(Model.LegalParentGroupRouteDto.Value.Label, Model.LegalParentGroupRouteDto.Value.RouteName, Model.LegalParentGroupRouteDto.Value.RouteValues)</li>
             }
         </ol>
-    }
-    else
-    {
-        if (Model.SearchSource == eLookupSearchSource.Governors)
-        {
-            <a href=@($"{Url.Action("Index", "GovernorSearch", new { area = "Governors" })}?{Model.SearchQueryString}")>Back to search results</a>
-        }
-        else
-        {
-            <a href=@($"{Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" })}?{Model.SearchQueryString}")> Back to search results</a>
-        }
-    }
-</div>
+    </div>
 
 @if (ViewBag.ShowSaved != null && ViewBag.ShowSaved)
 {
