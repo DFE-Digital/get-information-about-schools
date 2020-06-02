@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Edubase.Common;
+using Glimpse.AspNet.Tab;
 
 namespace Edubase.Web.UI.Helpers
 {
@@ -78,6 +79,16 @@ namespace Edubase.Web.UI.Helpers
             }
 
             return sb.ToString();
+        }
+
+        public static string AbsoluteActionUrl(
+            this UrlHelper urlHelper,
+            string actionName,
+            string controllerName,
+            object routeValues = null)
+        {
+            var scheme = urlHelper.RequestContext.HttpContext.Request.Url.Scheme;
+            return urlHelper.Action(actionName, controllerName, routeValues, scheme);
         }
     }
 }
