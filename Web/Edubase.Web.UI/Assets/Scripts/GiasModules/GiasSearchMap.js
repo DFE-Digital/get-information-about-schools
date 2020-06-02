@@ -133,6 +133,7 @@ class GiasSearchMap {
             $('#zero-results-message').removeClass('hidden');
 
             $('.map-header').removeClass('loading');
+            window.enableFilters();
             return;
           }
 
