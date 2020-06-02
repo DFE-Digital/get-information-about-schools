@@ -20,8 +20,13 @@ class GiasFiltering {
         this.searchCategory = 'establishments';
       } else if (this.searchType === 'EstablishmentGroupsAll') {
         this.searchCategory = 'establishment groups';
+
       } else if (this.searchType === 'GovernorsAll') {
         this.searchCategory = 'governors';
+        this.updateGovernorsDescription();
+      }
+      if (this.searchType === 'ByLocalAuthority') {
+        this.updateLaDescription();
       }
     }
 
@@ -33,6 +38,47 @@ class GiasFiltering {
     return $('#option-select-local-authority').find(':checkbox').filter(':checked').length > 0;
   }
 
+  updateLaDescription() {
+    let laCount = 0;
+    let selectedLas = [];
+    $('#option-select-local-authority').find('.trigger-result-update').filter(':checked').each(function () {
+      const label = $(this).parent().clone();
+      label.find('span, input').remove();
+      const text = label.text();
+      selectedLas.push('&lsquo;<span class="govuk-!-font-weight-bold">' + $.trim(text) + '</span>&rsquo;');
+      laCount++;
+    });
+    selectedLas = selectedLas.join(', ');
+    const lastComma = selectedLas.lastIndexOf(',');
+    if (laCount > 1) {
+      selectedLas = selectedLas.substring(0, lastComma) +
+        ' and ' +
+        selectedLas.substring(lastComma + 1, selectedLas.length);
+    }
+
+    $('#la-list').html(selectedLas);
+  }
+
+  updateGovernorsDescription() {
+    let selectedGovRoles = [];
+    $('#option-select-role-type').find('.trigger-result-update').filter(':checked').each(function () {
+      const label = $(this).parent().clone();
+      label.find('span, input').remove();
+      const text = label.text();
+      selectedGovRoles.push('&lsquo;<span class="govuk-!-font-weight-bold">' + $.trim(text) + '</span>&rsquo;');
+    });
+    selectedGovRoles = selectedGovRoles.join(', ');
+    const lastComma = selectedGovRoles.lastIndexOf(',');
+    selectedGovRoles = selectedGovRoles.substring(0, lastComma) +
+      ' and ' +
+      selectedGovRoles.substring(lastComma + 1, selectedGovRoles.length);
+    $('.governor-roles').html(selectedGovRoles);
+
+    $('#gov-la-warning').addClass('hidden');
+    if (this.shouldShowGovWarning()) {
+      $('#gov-la-warning').removeClass('hidden');
+    }
+  }
   bindEvents() {
     const self = this;
     $(".js-save-set").on("click", (e) => {
@@ -153,44 +199,10 @@ class GiasFiltering {
       self.filterIntent = window.setTimeout(function () {
         self.getResults();
         if (self.searchType === 'ByLocalAuthority') {
-          let laCount = 0;
-          let selectedLas = [];
-          $('#option-select-local-authority').find('.trigger-result-update').filter(':checked').each(function () {
-            const label = $(this).parent().clone();
-            label.find('span, input').remove();
-            const text = label.text();
-            selectedLas.push('&lsquo;<span class="govuk-!-font-weight-bold">' + $.trim(text) + '</span>&rsquo;');
-            laCount++;
-          });
-          selectedLas = selectedLas.join(', ');
-          const lastComma = selectedLas.lastIndexOf(',');
-          if (laCount > 1) {
-            selectedLas = selectedLas.substring(0, lastComma) +
-              ' and ' +
-              selectedLas.substring(lastComma + 1, selectedLas.length);
-          }
-
-          $('#la-list').html(selectedLas);
+          self.updateLaDescription();
         }
         if (self.searchType === 'GovernorsAll') {
-          let selectedGovRoles = [];
-          $('#option-select-role-type').find('.trigger-result-update').filter(':checked').each(function () {
-            const label = $(this).parent().clone();
-            label.find('span, input').remove();
-            const text = label.text();
-            selectedGovRoles.push('&lsquo;<span class="govuk-!-font-weight-bold">' + $.trim(text) + '</span>&rsquo;');
-          });
-          selectedGovRoles = selectedGovRoles.join(', ');
-          const lastComma = selectedGovRoles.lastIndexOf(',');
-          selectedGovRoles = selectedGovRoles.substring(0, lastComma) +
-            ' and ' +
-            selectedGovRoles.substring(lastComma + 1, selectedGovRoles.length);
-          $('.governor-roles').html(selectedGovRoles);
-
-          $('#gov-la-warning').addClass('hidden');
-          if (self.shouldShowGovWarning()) {
-            $('#gov-la-warning').removeClass('hidden');
-          }
+          self.updateGovernorsDescription();
         }
 
       }, 1500);
