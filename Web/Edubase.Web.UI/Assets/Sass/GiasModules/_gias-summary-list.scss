@@ -76,5 +76,9 @@
 
   @include govuk-media-query($until: tablet) {
     display: block;
+
+    a {
+      word-break: break-word;
+    }
   }
 }
