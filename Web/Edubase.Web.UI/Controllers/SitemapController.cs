@@ -11,8 +11,10 @@ using System.Xml.Linq;
 using Edubase.Common;
 using Edubase.Common.Cache;
 using Edubase.Services.Establishments;
+using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
 using Edubase.Services.Groups;
+using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
@@ -25,6 +27,7 @@ namespace Edubase.Web.UI.Controllers
         private IGroupReadService _groupReadService;
         private ICacheAccessor _cacheAccessor;
         public const string cacheTag = "sitemap";
+        public const int take = 5000;
 
         public SitemapController(IEstablishmentReadService establishmentReadService,
         IGroupReadService groupReadService,
@@ -38,6 +41,7 @@ namespace Edubase.Web.UI.Controllers
         [Route("~/sitemap.xml")]
         public async Task<ActionResult> SitemapXml()
         {
+            Server.ScriptTimeout = 300;
             var xml = await GetSitemapDocument();
             return this.Content(xml, MediaTypeNames.Text.Xml, Encoding.UTF8);
         }
@@ -52,23 +56,22 @@ namespace Edubase.Web.UI.Controllers
             }
             else
             {
-                var cacheTime = ConfigurationManager.AppSettings["SitemapCacheHours"].ToInteger() ?? 24;
+                var cacheDays = ConfigurationManager.AppSettings["SitemapCacheDays"].ToInteger() ?? 1;
                 var freshMap = await GenerateSitemapDocument();
-                await _cacheAccessor.SetAsync(cacheTag, freshMap, TimeSpan.FromHours(cacheTime));
+                await _cacheAccessor.SetAsync(cacheTag, freshMap, TimeSpan.FromDays(cacheDays));
                 return freshMap;
             }
         }
 
         public async Task<string> GenerateSitemapDocument()
         {
-            List<SitemapNode> siteNodes = GetSitemapNodes().ToList();
+            var siteNodes = GetSitemapNodes().ToList();
             siteNodes.AddRange(await GetEstablishmentNodes(0.8));
             siteNodes.AddRange(await GetGroupNodes(0.8));
-
             return BuildSitemapXml(siteNodes);
         }
 
-        public string BuildSitemapXml(List<SitemapNode> siteNodes)
+        public string BuildSitemapXml(IReadOnlyCollection<SitemapNode> siteNodes)
         {
             XNamespace xmlns = "http://www.sitemaps.org/schemas/sitemap/0.9";
             XElement root = new XElement(xmlns + "urlset");
@@ -149,24 +152,39 @@ namespace Edubase.Web.UI.Controllers
         public async Task<IReadOnlyCollection<SitemapNode>> GetEstablishmentNodes(double? priority)
         {
             var urlHelper = this.Url;
-            List<SitemapNode> nodes = new List<SitemapNode>();
+            var nodes = new List<SitemapNode>();
+            if (ExcludeApiLookup())
+            {
+                return nodes;
+            }
 
-            // first we need to see how many results there will be:
             var resultCount = await _establishmentReadService.SearchAsync(new EstablishmentSearchPayload { Filters = new EstablishmentSearchFilters { StatusIds = new[] { 1, 4 } }, Take = 1 }, User);
+            var resultItems = new List<EstablishmentSearchResultModel>();
             if (resultCount.Count > 0)
             {
-                // then call the endpoint for all of the possible establishments. //resultCount.Count
-                var resultTotal = await _establishmentReadService.SearchAsync(new EstablishmentSearchPayload { Filters = new EstablishmentSearchFilters { StatusIds = new[] { 1, 4 } }, Take = 100 }, User);
-                foreach (var establishmentSearchResultModel in resultTotal.Items)
+                // the backend will timeout if we query too large a dataset, so we loop it.
+                var skip = 0;
+                do
                 {
-                    nodes.Add(new SitemapNode()
+                    var lookup = await _establishmentReadService.SearchAsync(new EstablishmentSearchPayload { Filters = new EstablishmentSearchFilters { StatusIds = new[] { 1, 4 } }, Skip = skip, Take = take }, User);
+                    resultItems.AddRange(lookup.Items);
+                    if (skip + take >= resultCount.Count)
                     {
-                        Url = urlHelper.AbsoluteActionUrl("Details","Establishment", new {area="Establishments", id = establishmentSearchResultModel.Urn }),
-                        Priority = priority,
-                        Frequency = SitemapFrequency.Weekly,
-                        LastModified = establishmentSearchResultModel.LastUpdatedUtc
-                    });
-                }
+                        break;
+                    }
+                    skip += take;
+                } while (true);
+            }
+
+            foreach (var item in resultItems)
+            {
+                nodes.Add(new SitemapNode()
+                {
+                    Url = urlHelper.AbsoluteActionUrl("Details", "Establishment", new { area = "Establishments", id = item.Urn }),
+                    Priority = priority,
+                    Frequency = SitemapFrequency.Weekly,
+                    LastModified = item.LastUpdatedUtc
+                });
             }
 
             return nodes;
@@ -175,28 +193,46 @@ namespace Edubase.Web.UI.Controllers
         public async Task<IReadOnlyCollection<SitemapNode>> GetGroupNodes(double? priority)
         {
             var urlHelper = this.Url;
-            List<SitemapNode> nodes = new List<SitemapNode>();
+            var nodes = new List<SitemapNode>();
+            if (ExcludeApiLookup())
+            {
+                return nodes;
+            }
 
-            var results = await _groupReadService.SearchAsync(new GroupSearchPayload { GroupStatusIds = new []{1,4}, Take = 1}, User);
-
-            // first we need to see how many results there will be:
             var resultCount = await _groupReadService.SearchAsync(new GroupSearchPayload { GroupStatusIds = new[] { 1, 4 }, Take = 1 }, User);
+            var resultItems = new List<SearchGroupDocument>();
             if (resultCount.Count > 0)
             {
-                // then call the endpoint for all of the possible establishments. //resultCount.Count
-                var resultTotal = await _groupReadService.SearchAsync(new GroupSearchPayload { GroupStatusIds = new[] { 1, 4 }, Take = 100 }, User);
-                foreach (var establishmentSearchResultModel in resultTotal.Items)
+                // the backend will timeout if we query too large a dataset, so we loop it.
+                var skip = 0;
+                do
                 {
-                    nodes.Add(new SitemapNode()
+                    var lookup = await _groupReadService.SearchAsync(new GroupSearchPayload { GroupStatusIds = new[] { 1, 4 }, Skip = skip, Take = take }, User);
+                    resultItems.AddRange(lookup.Items);
+                    if (skip + take >= resultCount.Count)
                     {
-                        Url = urlHelper.AbsoluteActionUrl($"Details","Group", new {area="Groups", id=establishmentSearchResultModel.GroupUId}),
-                        Frequency = SitemapFrequency.Weekly,
-                        Priority = priority
-                    });
-                }
+                        break;
+                    }
+                    skip += take;
+                } while (true);
+            }
+
+            foreach (var item in resultItems)
+            {
+                nodes.Add(new SitemapNode()
+                {
+                    Url = urlHelper.AbsoluteActionUrl($"Details", "Group", new { area = "Groups", id = item.GroupUId }),
+                    Frequency = SitemapFrequency.Weekly,
+                    Priority = priority
+                });
             }
 
             return nodes;
+        }
+
+        private bool ExcludeApiLookup()
+        {
+            return (ConfigurationManager.AppSettings["SitemapExcludeApi"].ToInteger() ?? 0) != 0;
         }
     }
 }
