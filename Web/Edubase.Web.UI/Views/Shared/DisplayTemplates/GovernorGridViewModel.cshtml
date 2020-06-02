@@ -42,7 +42,6 @@
                                     @(column.Text ?? "Not recorded")
                                 </th>
                             }
-
                         }
                     </tr>
                     </thead>
@@ -66,19 +65,24 @@
                 foreach (var row in Model.Rows)
                 {
                     <div id="gov-id-@row.Model.Id" class="governor-edit-panel @Html.DuplicateCssClassFor(row.Model.Id)">
-                        <h2 class="heading-xsmall" id="gid-@row.Model.Id">@row.Cells[0].Text</h2>
-                        <dl class="key-value-list">
+                        <h2 class="govuk-heading-s" id="gid-@row.Model.Id">@row.Cells[0].Text</h2>
+                        <dl class="gias-summary-list gias-summary-list--inline">
                             @if (Model.IsHistoricRole)
                             {
-                                <dt>Role:</dt>
-                                <dd>@Model.RoleName</dd>
+                                <div class="gias-summary-list__row">
+                                    <dt class="gias-summary-list__key">Role:</dt>
+                                    <dd class="gias-summary-list__value">@Model.RoleName</dd>
+                                </div>
                             }
                             @foreach (var cell in row.Cells.Skip(1))
                             {
                                 if (cell.Parent != null)
                                 {
-                                    <dt>@cell.Parent.Text:</dt>
-                                    <dd>@(cell.Text ?? "Not recorded")</dd>
+                                    <div class="gias-summary-list__row">
+                                        <dt class="gias-summary-list__key">@cell.Parent.Text:</dt>
+                                        <dd class="gias-summary-list__value">@(cell.Text ?? "Not recorded")</dd>
+                                    </div>
+
                                 }
                             }
                         </dl>
@@ -86,7 +90,6 @@
                     </div>
                 }
             }
-
         }
         else
         {

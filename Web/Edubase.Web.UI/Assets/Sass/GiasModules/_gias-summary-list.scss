@@ -1,3 +1,9 @@
+.detail-summary {
+  @include govuk-media-query($until: tablet) {
+    clear: both;
+  }
+}
+
 .gias-summary-list {
   @include govuk-font(16);
   display: table;
@@ -45,18 +51,21 @@
   @include govuk-media-query($until: tablet) {
     display: block;
     font-size: 16px;
+    height: auto;
   }
 }
 
 .gias-summary-list__key {
   display: table-cell;
   margin: 0;
-  padding: 0 5px 0;
+  padding: 0 5px 0 0;
   width: 34%;
 
   @include govuk-media-query($until: tablet) {
     display: block;
+    clear: both;
     font-weight: bold;
+    width: 100%;
   }
 }
 
