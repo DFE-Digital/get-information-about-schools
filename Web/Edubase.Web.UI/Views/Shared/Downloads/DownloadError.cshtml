@@ -1,9 +1,24 @@
+@using Edubase.Common
 @using Edubase.Services.Enums
 @using Microsoft.Ajax.Utilities
 @model DownloadErrorViewModel
 @{
     ViewBag.bodyClasses = "schools-search-page search-page";
     ViewBag.hideLogo = true;
+
+    var searchLink = "";
+    if (Model.SearchSource == eLookupSearchSource.Governors)
+    {
+        searchLink = $"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}";
+    }
+    else if (Model.SearchSource == eLookupSearchSource.Establishments)
+    {
+        searchLink = $"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}";
+    }
+    else if (Model.SearchSource == eLookupSearchSource.Groups)
+    {
+        searchLink = $"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}";
+    }
 }
 
 <div class="breadcrumbs">
@@ -13,17 +28,9 @@
     }
     else
     {
-        if (Model.SearchSource == eLookupSearchSource.Governors)
+        if (!searchLink.IsNullOrEmpty())
         {
-            <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
-        }
-        else if (Model.SearchSource == eLookupSearchSource.Establishments)
-        {
-            <a href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Back to search results</a>
-        }
-        else if (Model.SearchSource == eLookupSearchSource.Groups)
-        {
-            <a href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}")> Back to search results</a>
+            <a href=@(searchLink)>Back to search results</a>
         }
     }
 </div>
@@ -33,13 +40,13 @@
 {
     <div class="grid-row">
         <div class="column-full">
-            <h1 class="heading-xlarge">File missing</h1>
+            <h1 class="heading-xlarge">Something went wrong</h1>
         </div>
         <div class="horizontal-tabs-wrapper">
             <div class="column-two-thirds">
-                <h2 class="bold-medium">The requested file needs to be regenerated.</h2>
+                <h2 class="bold-medium">The requested file is no longer available for download.</h2>
                 <br />
-                <p class="font-small">Please return to the previous page and try again.</p>
+                <p class="font-small">Please <a href=@(searchLink)>return to the search results</a> and repeat your request.</p>
             </div>
         </div>
     </div>
