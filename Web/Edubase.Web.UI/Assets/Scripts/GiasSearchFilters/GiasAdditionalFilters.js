@@ -9,7 +9,7 @@ class GiasAdditionalFilters {
     const additionalFilters = $('#EditSearchCollapse').find('.additional-search-critera');
     function checkBoxTemplate(props) {
       return `<div class="govuk-checkboxes__item">
-              <input value="#${props.elemId}" data-alias="${props.dataAlias}" id="ctrl-${props.elemId}" class="additional-search-critera govuk-checkboxes__input" type="checkbox">
+              <input value="#${props.elemId}" data-alias="${props.dataAlias}" id="ctrl-${props.elemId}" class="js-filter-input additional-search-critera govuk-checkboxes__input" type="checkbox">
                 <label for="ctrl-${props.elemId}" class="js-filter-label govuk-label govuk-checkboxes__label">
                     ${props.text}
                 </label>

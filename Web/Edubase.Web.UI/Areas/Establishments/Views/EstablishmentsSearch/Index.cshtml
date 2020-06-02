@@ -298,7 +298,7 @@
                         {
 
                             <div class="govuk-checkboxes__item">
-                                <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update govuk-checkboxes__input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
+                                <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="js-filter-input trigger-result-update govuk-checkboxes__input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
                                 <label for="@(name)_@item.Id" class="js-filter-label govuk-label govuk-checkboxes__label">
                                     @item
                                 </label>
@@ -364,7 +364,7 @@
                                 @foreach (var child in item.ChildItems)
                                 {
                                     <div class="govuk-checkboxes__item">
-                                        <input name="@name" value="@child.Id" id="@(name)_@(item.Id)_@child.Id" class="govuk-checkboxes__input trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(child.Id), "checked")/>
+                                        <input name="@name" value="@child.Id" id="@(name)_@(item.Id)_@child.Id" class="govuk-checkboxes__input js-filter-input trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(child.Id), "checked")/>
                                         <label for="@(name)_@(item.Id)_@child.Id" class="govuk-checkboxes__label govuk-label">
                                             @child
                                         </label>

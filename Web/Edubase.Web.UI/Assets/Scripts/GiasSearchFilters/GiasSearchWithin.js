@@ -19,7 +19,7 @@ class GiasSearchWithin {
     const opts = this.opts;
     const searchField = $el.find('.filter-search');
     const clearButton = $el.find('.field-clear');
-    const originalFilters = $el.find('.trigger-result-update');
+    const originalFilters = $el.find('.js-filter-input');
 
     $el.find('.options-container').css({ minHeight: '200px' });
 
@@ -29,10 +29,11 @@ class GiasSearchWithin {
       let html = '';
       for (let i = 0, len = options.length; i < len; i++) {
         const opt = options[i];
+
         const optionText = opt.text.replace(new RegExp(userText, 'gi'), function(match) {
           return '<span>' + match + '</span>';
         });
-        var suggestion = opts.suggestionTemplate.replace(/\{0\}/g, opt.id).replace('{1}', optionText);
+        let suggestion = opts.suggestionTemplate.replace(/\{0}/g, opt.id).replace('{1}', optionText);
         if (opt.checked) {
           suggestion = suggestion.replace('{2}', 'checked="checked"');
         } else {
@@ -59,8 +60,8 @@ class GiasSearchWithin {
     //attach events
     searchField.on('keyup', function () {
       if (this.value.trim().length > 1) {
-        var searchVal = new RegExp(this.value, 'i');
-        var options = self.dataList.filter(function (suggestion) {
+        const searchVal = new RegExp(this.value, 'i');
+        const options = self.dataList.filter(function (suggestion) {
           if (searchVal.test(suggestion.text)) {
             return suggestion;
           }

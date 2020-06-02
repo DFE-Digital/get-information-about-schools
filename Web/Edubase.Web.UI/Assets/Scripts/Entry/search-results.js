@@ -11,7 +11,7 @@ import GiasSearchMap from "../GiasModules/GiasSearchMap";
 new GiasAdditionalFilters();
 $filterForm.find('.govuk-option-select').optionSelect();
 $filterForm.find('.nested-items').giasNestedFilters();
-$filterForm.find('.searchable-filters').giasSearchWithin();
+
 $filterForm.find('.select-all').giasSelectAll();
 
 const filtering = new GiasFiltering();
@@ -21,3 +21,4 @@ gMap.bindActions();
 window.gMap = gMap;
 window.disableFilters = filtering.disableFilters;
 window.enableFilters = filtering.enableFilters;
+$filterForm.find('.searchable-filters').giasSearchWithin();
