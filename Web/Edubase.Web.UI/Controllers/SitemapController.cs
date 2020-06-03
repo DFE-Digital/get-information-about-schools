@@ -18,6 +18,7 @@ using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
+using Edubase.Web.UI.Models.Search;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -111,6 +112,18 @@ namespace Edubase.Web.UI.Controllers
                     Priority = 1,
                     Frequency = SitemapFrequency.Yearly
                 });
+
+            foreach (var tab in (SearchViewModel.Tab[]) Enum.GetValues(typeof(SearchViewModel.Tab)))
+            {
+                nodes.Add(
+                    new SitemapNode()
+                    {
+                        Url = urlHelper.AbsoluteActionUrl("Index", "Search", new { SelectedTab = tab }),
+                        Priority = 1,
+                        Frequency = SitemapFrequency.Yearly
+                    });
+            }
+
             nodes.Add(
                 new SitemapNode()
                 {
