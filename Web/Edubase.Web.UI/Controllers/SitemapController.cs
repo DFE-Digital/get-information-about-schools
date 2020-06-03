@@ -40,28 +40,26 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [Route("~/sitemap.xml")]
-        public async Task<ActionResult> SitemapXml()
+        public async Task<ActionResult> SitemapXml(bool? refresh)
         {
             Server.ScriptTimeout = 300;
-            var xml = await GetSitemapDocument();
+            var xml = await GetSitemapDocument(refresh.GetValueOrDefault());
             return this.Content(xml, MediaTypeNames.Text.Xml, Encoding.UTF8);
         }
 
         
-        public async Task<string> GetSitemapDocument()
+        public async Task<string> GetSitemapDocument(bool refresh)
         {
-            var cache = await _cacheAccessor.GetAsync<string>(cacheTag);
-            if (cache != null)
-            {
-                return (string) cache;
-            }
-            else
+            var sitemap = await _cacheAccessor.GetAsync<string>(cacheTag);
+
+            if (sitemap.IsNullOrEmpty() || refresh)
             {
                 var cacheDays = ConfigurationManager.AppSettings["SitemapCacheDays"].ToInteger() ?? 1;
-                var freshMap = await GenerateSitemapDocument();
-                await _cacheAccessor.SetAsync(cacheTag, freshMap, TimeSpan.FromDays(cacheDays));
-                return freshMap;
+                sitemap = await GenerateSitemapDocument();
+                await _cacheAccessor.SetAsync(cacheTag, sitemap, TimeSpan.FromDays(cacheDays));
             }
+
+            return sitemap;
         }
 
         public async Task<string> GenerateSitemapDocument()
