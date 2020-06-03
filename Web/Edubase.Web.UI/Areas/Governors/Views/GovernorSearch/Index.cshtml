@@ -7,6 +7,11 @@
 
     var gSearch = Request.QueryString["gsearch"];
 }
+@section Head
+{
+    <meta name="robots" content="noindex,nofollow" />
+}
+
 
 <div class="grid-row">
     <div class="column-full results-heading">
@@ -34,7 +39,7 @@
 
                 @if (Model.GovernorSearchModel.Forename.Clean() != null)
                 {
-                <text>first name &lsquo;<span class="bold-small">@Model.GovernorSearchModel.Forename</span>&rsquo;</text>
+                    <text>first name &lsquo;<span class="bold-small">@Model.GovernorSearchModel.Forename</span>&rsquo;</text>
 
                 }
 
@@ -42,22 +47,22 @@
                 {
                     if (Model.GovernorSearchModel.Forename.Clean() != null)
                     {
-                    <text>, </text>
+                        <text>, </text>
                     }
-                <text>last name &lsquo;<span class="bold-small">@Model.GovernorSearchModel.Surname</span>&rsquo;</text>
+                    <text>last name &lsquo;<span class="bold-small">@Model.GovernorSearchModel.Surname</span>&rsquo;</text>
                 }
 
                 @if (Model.SelectedRoleIds.Any())
                 {
-                if (Model.GovernorSearchModel.Surname.Clean() != null || Model.GovernorSearchModel.Forename.Clean() != null)
-                {
-                <text>and </text>
-                }
-                else
-                {
-                <text>for </text>
-                }
-                <text>roles <span class="governor-roles">@Html.Raw(Model.RoleNames)</span></text>
+                    if (Model.GovernorSearchModel.Surname.Clean() != null || Model.GovernorSearchModel.Forename.Clean() != null)
+                    {
+                        <text>and </text>
+                    }
+                    else
+                    {
+                        <text>for </text>
+                    }
+                    <text>roles <span class="governor-roles">@Html.Raw(Model.RoleNames)</span></text>
                 }
             </p>
         </div>
@@ -233,7 +238,7 @@
                     @foreach (var item in items)
                     {
                         <div class="multiple-choice multiple-choice--smaller multiple-choice--list">
-                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update js-filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
+                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update js-filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
                             <label for="@(name)_@item.Id" class="js-filter-label">
                                 @item
                             </label>

@@ -9,6 +9,10 @@
     ViewBag.PageClass = "search-results";
     ViewBag.HideLogo = true;
 }
+@section Head
+{
+    <meta name="robots" content="noindex,nofollow" />
+}
 
 <div class="breadcrumbs">
     <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = Model.SearchType})">Back to find an establishment</a>
@@ -44,7 +48,7 @@
             <a class="download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()">Download these search results</a>
         }
     </div>
-    @if (Model.SearchType != eSearchType.EstablishmentAll )
+    @if (Model.SearchType != eSearchType.EstablishmentAll)
     {
         <div class="column-full">
             <p>
@@ -287,7 +291,7 @@
                     @foreach (var item in items)
                     {
                         <div class="multiple-choice multiple-choice--smaller multiple-choice--list">
-                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update js-filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
+                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update js-filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
                             <label for="@(name)_@item.Id" class="js-filter-label">
                                 @item
                             </label>
@@ -301,7 +305,7 @@
 
 
 
-@helper SelectorNested(string label, string name, IEnumerable<HeirarchicalLookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false,  bool filterRefine = false)
+@helper SelectorNested(string label, string name, IEnumerable<HeirarchicalLookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false, bool filterRefine = false)
 {
     var closed = isExtraFilter && (Model.SelectedExtraSearchFilters == null || !Model.SelectedExtraSearchFilters.Contains(name));
     if (!closed)
@@ -310,8 +314,7 @@
     }
     <div class="govuk-option-select js-collapsible nested-filter-options js-selectable @additionalClassName @Html.Conditional(filterRefine, "searchable-filters")" data-closed-on-load="false" @*@(isExtraFilter ? "false" : "true")*@
          id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name"
-         role="search"
-         >
+         role="search">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter">
@@ -320,7 +323,7 @@
         </div>
         @if (filterRefine)
         {
-           @SearchWithin(@label)
+            @SearchWithin(@label)
         }
         <div class="options-container">
             <div class="suggestion-target"></div>
@@ -337,7 +340,7 @@
                     {
                         <dl class="nested-items multiple-choice multiple-choice--smaller multiple-choice--list">
                             <dt class="js-when-on">
-                                <input id="@(name)_@item.Id" class="filter-group-title" type="checkbox" @Html.Conditional(item.ChildItems.Any(x=> selectedItems.Contains(x.Id)), "checked")/>
+                                <input id="@(name)_@item.Id" class="filter-group-title" type="checkbox" @Html.Conditional(item.ChildItems.Any(x => selectedItems.Contains(x.Id)), "checked") />
                                 <label for="@(name)_@item.Id">@item</label>
                                 <a href="#" class="child-option-toggle js-child-option-toggle" aria-expanded="false"><span class="visually-hidden">Types within @item</span></a>
                             </dt>
@@ -345,7 +348,7 @@
                                 @foreach (var child in item.ChildItems)
                                 {
                                     <div class="multiple-choice multiple-choice--smaller multiple-choice--list">
-                                        <input name="@name" value="@child.Id" id="@(name)_@(item.Id)_@child.Id" class="trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(child.Id), "checked")/>
+                                        <input name="@name" value="@child.Id" id="@(name)_@(item.Id)_@child.Id" class="trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(child.Id), "checked") />
                                         <label for="@(name)_@(item.Id)_@child.Id">
                                             @child
                                         </label>
@@ -373,7 +376,7 @@
         <a href="#" class="clear-selections filter-clear">Clear</a>
         <div class="options-container" id="">
             <div class="js-auto-height-inner">
-                @Html.EditorFor(m => m.CloseDateFrom, new { disableHint = true, labelClass= "form-label" , title="From", inFilters = true, fieldsetClassName = "search-from-date" })
+                @Html.EditorFor(m => m.CloseDateFrom, new { disableHint = true, labelClass = "form-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date" })
                 @Html.EditorFor(m => m.CloseDateTo, new { disableHint = true, labelClass = "form-label", title = "To", inFilters = true, fieldSetClassName = "search-to-date" })
 
                 <div class="form-group soft-half--sides">
@@ -398,8 +401,8 @@
         <div class="options-container" id="">
             <div class="js-auto-height-inner">
 
-                @Html.EditorFor(m => m.OpenDateFrom, new {disableHint = true, labelClass = "form-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date" })
-                @Html.EditorFor(m => m.OpenDateTo, new {disableHint = true, labelClass = "form-label", title = "To", inFilters = true, fieldsetClassName = "search-to-date" })
+                @Html.EditorFor(m => m.OpenDateFrom, new { disableHint = true, labelClass = "form-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date" })
+                @Html.EditorFor(m => m.OpenDateTo, new { disableHint = true, labelClass = "form-label", title = "To", inFilters = true, fieldsetClassName = "search-to-date" })
 
                 <div class="form-group soft-half--sides">
                     <a href="#" class="button button-secondary filter-button">Apply</a>
@@ -430,7 +433,8 @@
 
 }
 
-@helper RadiusFilter() {
+@helper RadiusFilter()
+{
     <div class="govuk-option-select radius-filter js-collapsible no-scroll" data-closed-on-load="false" id="option-select-radius" data-bind-alias="@M.BIND_ALIAS_RADIUS"
          role="search">
 
@@ -467,7 +471,7 @@
         var $openSelector = $("#b_1");
         var $openClosedSelector = $("#b_4");
 
-        $($openSelector).change(function() {
+        $($openSelector).change(function () {
             if (this.checked) {
                 $openClosedSelector.prop('checked', true);
             }
