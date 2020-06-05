@@ -1,12 +1,12 @@
 @using Edubase.Web.UI.Controllers
 @{
     Layout = "../../govuk/layouts/template.cshtml";
-    var version = typeof (HomeController).Assembly.GetName().Version;
+    var version = typeof(HomeController).Assembly.GetName().Version;
 }
 
 @section Head {
-    <!--[if gt IE 8]><!--><link href="/public/assets/stylesheets/main.css?v=@version" rel="stylesheet" type="text/css"><!--<![endif]-->
-
+    <!--[if gt IE 8]><!-->
+    <link href="/public/assets/stylesheets/main.css?v=@version" rel="stylesheet" type="text/css"><!--<![endif]-->
     <!--[if lte IE 8]><link href="/public/assets/stylesheets/main-ie8.css" rel="stylesheet" type="text/css"/><![endif]-->
 
     @(RenderSection("Head", required: false))

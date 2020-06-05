@@ -8,6 +8,10 @@
     ViewBag.bodyClasses = " search-page custom-fields-download";
     ViewBag.hideLogo = true;
 }
+@section Head
+{
+    <meta name="robots" content="noindex,nofollow" />
+}
 
 <div class="breadcrumbs">
     @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
@@ -77,7 +81,7 @@
                                     <a class="panel-trigger" :href="'#target-'+index" aria-expanded="false" :aria-controls="'target-'+index">{{item.category}}</a>
                                     <div class="expander-panel-content" id="'target-'+index">
 
-                                        <div  v-for="(field, i) in item.customFields" class="multiple-choice">
+                                        <div v-for="(field, i) in item.customFields" class="multiple-choice">
                                             <input :id="'chk2-'+(index+'_'+i)" type="checkbox" :value="field.id" v-model="selections" />
                                             <label :for="'chk2-'+(index+'_'+i)">{{ field.name }}</label>
                                         </div>

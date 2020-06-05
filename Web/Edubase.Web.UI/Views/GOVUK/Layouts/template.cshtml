@@ -182,7 +182,7 @@
 
                             <ul id="proposition-links">
                                 <li><a href="/">Search</a></li>
-                                <li><a href="/Downloads">Downloads</a></li>
+                                <li><a href="/Downloads" rel="nofollow">Downloads</a></li>
                                 @if (Request.IsAuthenticated)
                                 {
                                     <li><a href="/Tools">Tools</a></li>
@@ -192,13 +192,13 @@
                                 @if (Request.IsAuthenticated)
                                 {
                                     <li>
-                                        @Html.ActionLink("Sign off", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id = "logout-link", Class = "login-link" })
+                                        @Html.ActionLink("Sign off", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id = "logout-link", Class = "login-link", rel = "nofollow" })
                                     </li>
                                 }
                                 else
                                 {
                                     <li>
-                                        @Html.ActionLink("Sign in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { Class = "login-link" })
+                                        @Html.ActionLink("Sign in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { Class = "login-link", rel = "nofollow" })
                                     </li>
                                 }
                             </ul>

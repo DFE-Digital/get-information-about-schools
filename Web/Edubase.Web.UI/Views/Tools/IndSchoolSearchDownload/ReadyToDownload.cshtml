@@ -36,8 +36,8 @@
     </div>
     <div class="column-full">
         <div class="button-row">
-            <br/>
-            @Html.RouteLink("« Go back", "IndSchSearch", null, new {@class = "button button-secondary back-to-indi"})
+            <br />
+            @Html.RouteLink("« Go back", "IndSchSearch", null, new { @class = "button button-secondary back-to-indi" })
         </div>
     </div>
 </div>
@@ -45,7 +45,7 @@
 @section ViewScripts
 {
     <script nonce="@Html.ScriptNonce()">
-        $('.back-to-indi').on('click', function(e) {
+        $('.back-to-indi').on('click', function (e) {
             e.preventDefault();
             window.history.go(-1);
         })
