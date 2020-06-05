@@ -45,7 +45,7 @@ namespace Edubase.Web.UI.Controllers
         [Route("~/sitemap.xml")]
         public async Task<ActionResult> SitemapXml(bool? refresh)
         {
-            Server.ScriptTimeout = 300;
+            Server.ScriptTimeout = 450;
             var xml = await GetSitemapDocument(refresh.GetValueOrDefault());
             return this.Content(xml, MediaTypeNames.Text.Xml, Encoding.UTF8);
         }
@@ -247,7 +247,7 @@ namespace Edubase.Web.UI.Controllers
                 node.LastModified = lastUpdated;
             }
 
-            if (string.IsNullOrEmpty(tag))
+            if (!string.IsNullOrEmpty(tag))
             {
                 node.Url = $"{node.Url}#{tag}";
             }
