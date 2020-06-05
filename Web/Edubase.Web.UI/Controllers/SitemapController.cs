@@ -10,12 +10,15 @@ using System.Web.Mvc;
 using System.Xml.Linq;
 using Edubase.Common;
 using Edubase.Common.Cache;
+using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
+using Edubase.Services.Establishments.DisplayPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
+using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Search;
@@ -50,9 +53,9 @@ namespace Edubase.Web.UI.Controllers
         
         public async Task<string> GetSitemapDocument(bool refresh)
         {
-            var sitemap = await _cacheAccessor.GetAsync<string>(cacheTag);
+            var sitemap = refresh ? string.Empty : await _cacheAccessor.GetAsync<string>(cacheTag);
 
-            if (sitemap.IsNullOrEmpty() || refresh)
+            if (sitemap.IsNullOrEmpty())
             {
                 var cacheDays = ConfigurationManager.AppSettings["SitemapCacheDays"].ToInteger() ?? 1;
                 sitemap = await GenerateSitemapDocument();
@@ -103,60 +106,17 @@ namespace Edubase.Web.UI.Controllers
             string scheme = urlHelper.RequestContext.HttpContext.Request.Url.Scheme;
             List<SitemapNode> nodes = new List<SitemapNode>();
 
-            nodes.Add(
-                new SitemapNode()
-                {
-                    Url = urlHelper.AbsoluteActionUrl("Index", "Search"),
-                    Priority = 1,
-                    Frequency = SitemapFrequency.Yearly
-                });
-
+            nodes.Add(BuildNode("Index", "Search", null, null, 1, SitemapFrequency.Yearly));
             foreach (var tab in (SearchViewModel.Tab[]) Enum.GetValues(typeof(SearchViewModel.Tab)))
             {
-                nodes.Add(
-                    new SitemapNode()
-                    {
-                        Url = urlHelper.AbsoluteActionUrl("Index", "Search", new { SelectedTab = tab }),
-                        Priority = 1,
-                        Frequency = SitemapFrequency.Yearly
-                    });
+                nodes.Add(BuildNode("Index", "Search", new { SelectedTab = tab }, null, 1, SitemapFrequency.Yearly));
             }
 
-            nodes.Add(
-                new SitemapNode()
-                {
-                    Url = urlHelper.AbsoluteActionUrl("News", "Home"),
-                    Priority = 0.9,
-                    Frequency = SitemapFrequency.Weekly
-                });
-            nodes.Add(
-                new SitemapNode()
-                {
-                    Url = urlHelper.AbsoluteActionUrl("Help", "Home"),
-                    Priority = 0.5,
-                    Frequency = SitemapFrequency.Yearly
-                });
-            nodes.Add(
-                new SitemapNode()
-                {
-                    Url = urlHelper.AbsoluteActionUrl("Index", "Faq"),
-                    Priority = 0.6,
-                    Frequency = SitemapFrequency.Monthly
-                });
-            nodes.Add(
-                new SitemapNode()
-                {
-                    Url = urlHelper.AbsoluteActionUrl("Cookies", "Home"),
-                    Priority = 0.5,
-                    Frequency = SitemapFrequency.Monthly
-                });
-            nodes.Add(
-                new SitemapNode()
-                {
-                    Url = urlHelper.AbsoluteActionUrl("Index", "Glossary"),
-                    Priority = 0.5,
-                    Frequency = SitemapFrequency.Monthly
-                });
+            nodes.Add(BuildNode("News", "Home", null, null, 0.9, SitemapFrequency.Weekly));
+            nodes.Add(BuildNode("Help", "Home", null, null, 0.5, SitemapFrequency.Yearly));
+            nodes.Add(BuildNode("Index", "Faq", null, null, 0.6));
+            nodes.Add(BuildNode("Cookies", "Home"));
+            nodes.Add(BuildNode("Index", "Glossary"));
             return nodes;
         }
 
@@ -171,6 +131,7 @@ namespace Edubase.Web.UI.Controllers
 
             var resultCount = await _establishmentReadService.SearchAsync(new EstablishmentSearchPayload { Filters = new EstablishmentSearchFilters { StatusIds = new[] { 1, 4 } }, Take = 1 }, User);
             var resultItems = new List<EstablishmentSearchResultModel>();
+
             if (resultCount.Count > 0)
             {
                 // the backend will timeout if we query too large a dataset, so we loop it.
@@ -189,13 +150,28 @@ namespace Edubase.Web.UI.Controllers
 
             foreach (var item in resultItems)
             {
-                nodes.Add(new SitemapNode()
-                {
-                    Url = urlHelper.AbsoluteActionUrl("Details", "Establishment", new { area = "Establishments", id = item.Urn }),
-                    Priority = priority,
-                    Frequency = SitemapFrequency.Weekly,
-                    LastModified = item.LastUpdatedUtc
-                });
+                nodes.Add(BuildNode("Details", "Establishment", new { area = "Establishments", id = item.Urn }, null, priority, SitemapFrequency.Weekly, item.LastUpdatedUtc));
+                nodes.AddRange(GetEstablishmentTabs(item,priority-0.1));
+            }
+
+            return nodes;
+        }
+
+        public IReadOnlyCollection<SitemapNode> GetEstablishmentTabs(EstablishmentModel item, double? priority)
+        {
+            var urlHelper = this.Url;
+            var nodes = new List<SitemapNode>();
+
+            nodes.Add(BuildNode("Details", "Establishment", new { area = "Establishments", id = item.Urn }, "school-dashboard", priority, SitemapFrequency.Weekly, item.LastUpdatedUtc));
+            nodes.Add(BuildNode("Details", "Establishment", new { area = "Establishments", id = item.Urn }, "school-links", priority, SitemapFrequency.Weekly, item.LastUpdatedUtc));
+            nodes.Add(BuildNode("Details", "Establishment", new { area = "Establishments", id = item.Urn }, "school-location", priority, SitemapFrequency.Weekly, item.LastUpdatedUtc));
+
+            // not all establishments have the governance page displayed for the general public
+            var displayPolicy = new EstablishmentDisplayEditPolicy { IEBTDetail = new IEBTDetailDisplayEditPolicy() };
+            var tabPolicy = new TabDisplayPolicy(item, displayPolicy, User);
+            if (tabPolicy.Governance)
+            {
+                nodes.Add(BuildNode("Details", "Establishment", new { area = "Establishments", id = item.Urn }, "school-governance", priority, SitemapFrequency.Weekly, item.LastUpdatedUtc));
             }
 
             return nodes;
@@ -230,15 +206,53 @@ namespace Edubase.Web.UI.Controllers
 
             foreach (var item in resultItems)
             {
-                nodes.Add(new SitemapNode()
-                {
-                    Url = urlHelper.AbsoluteActionUrl($"Details", "Group", new { area = "Groups", id = item.GroupUId }),
-                    Frequency = SitemapFrequency.Weekly,
-                    Priority = priority
-                });
+                nodes.Add(BuildNode("Details", "Group", new { area = "Groups", id = item.GroupUId }, null, priority, SitemapFrequency.Weekly));
+                nodes.AddRange(GetGroupTabs(item, priority - 0.1));
             }
 
             return nodes;
+        }
+
+
+        public IReadOnlyCollection<SitemapNode> GetGroupTabs(SearchGroupDocument item, double? priority)
+        {
+            var urlHelper = this.Url;
+            var nodes = new List<SitemapNode>();
+
+            nodes.Add(BuildNode("Details", "Group", new { area = "Groups", id = item.GroupUId }, "details", priority, SitemapFrequency.Weekly));
+            nodes.Add(BuildNode("Details", "Group", new { area = "Groups", id = item.GroupUId }, "list", priority, SitemapFrequency.Weekly));
+
+            // not all groups have access to governance tab
+            if  (item.GroupTypeId == (int) eLookupGroupType.MultiacademyTrust)
+            {
+                nodes.Add(BuildNode("Details","Group", new { area = "Groups", id = item.GroupUId }, "governance", priority, SitemapFrequency.Weekly));
+            }
+
+            return nodes;
+        }
+
+
+        private SitemapNode BuildNode(string action, string controllerName, object routeValues = null, string tag = null, double ? priority = 0.5, SitemapFrequency frequency = SitemapFrequency.Monthly, DateTime? lastUpdated = null)
+        {
+            var urlHelper = this.Url;
+            var node = new SitemapNode()
+            {
+                Url = urlHelper.AbsoluteActionUrl(action, controllerName, routeValues),
+                Priority = priority,
+                Frequency = frequency
+            };
+
+            if (lastUpdated.HasValue)
+            {
+                node.LastModified = lastUpdated;
+            }
+
+            if (string.IsNullOrEmpty(tag))
+            {
+                node.Url = $"{node.Url}#{tag}";
+            }
+
+            return node;
         }
 
         private bool ExcludeApiLookup()
