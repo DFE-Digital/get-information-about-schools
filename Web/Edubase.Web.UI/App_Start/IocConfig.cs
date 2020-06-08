@@ -159,6 +159,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
             builder.RegisterType<FaqRepository>().AsSelf().SingleInstance();
 
+            builder.RegisterType<CSCPService>().As<ICSCPService>();
             builder.RegisterType<FBService>().As<IFBService>();
         }
 

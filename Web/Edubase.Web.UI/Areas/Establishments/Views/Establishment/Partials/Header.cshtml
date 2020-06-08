@@ -226,9 +226,12 @@
     <dt>Data from other services:</dt>
     <dd>
         <ul>
-            <li>
-                <a href="https://www.compare-school-performance.service.gov.uk/school/@Model.Establishment.Urn" rel="external" target="_blank">Compare School and College Performance <span class="visually-hidden">Opens in new window</span></a>
-            </li>
+            @if (Model.ShowCscp)
+            {
+                <li>
+                    <a href="@Model.CscpURL" rel="external" target="_blank">Compare School and College Performance <span class="visually-hidden">Opens in new window</span></a>
+                </li>
+            }
             @if (Model.ShowFinancialBenchmarking)
             {
                 <li>

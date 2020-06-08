@@ -126,6 +126,8 @@ namespace Edubase.UnitTest.Controllers
             GetMock<IMapper>().Setup(m => m.Map(It.IsAny<IEBTModel>(), editEstabModel)).Returns(editEstabModel);
             GetMock<IEstablishmentReadService>().Setup(e => e.GetEditPolicyAsync(establishment, It.IsAny<IPrincipal>())).ReturnsAsync(() => new EstablishmentEditPolicyEnvelope { EditPolicy = new EstablishmentDisplayEditPolicy { IEBTDetail = new IEBTDetailDisplayEditPolicy() } });
             GetMock<IPrincipal>().Setup(p => p.IsInRole(It.IsAny<string>())).Returns(true);
+            GetMock<ICSCPService>().Setup(x => x.CheckExists(It.IsAny<int>())).Returns(true);
+            GetMock<ICSCPService>().Setup(x => x.SchoolURL(It.IsAny<int>())).Returns("https://cscp.azurewebsites.net/school/123456");
             GetMock<IFBService>().Setup(x => x.CheckExists(It.IsAny<int>())).Returns(true);
             GetMock<IFBService>().Setup(x => x.SchoolURL(It.IsAny<int>())).Returns("https://sfb.azurewebsites.net/school/detail?urn=123456");
 

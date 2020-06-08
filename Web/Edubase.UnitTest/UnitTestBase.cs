@@ -93,6 +93,7 @@ namespace Edubase.UnitTest
             GetMock<UrlHelper>()
                 .Setup(u => u.RouteUrl(It.IsAny<string>(), It.IsAny<object>()))
                 .Returns("fake url");
+            AddMock<ICSCPService>();
             AddMock<IFBService>();
         }
 
