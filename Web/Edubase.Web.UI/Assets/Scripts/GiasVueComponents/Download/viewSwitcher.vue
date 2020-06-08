@@ -1,0 +1,22 @@
+<template>
+    <div class="gias-align-right">
+        <a role="button" href="#" v-show="viewAsList" v-on:click.prevent="changeViewMode">View in sections</a>
+        <a role="button" href="#" v-show="!viewAsList" v-on:click.prevent="changeViewMode">View in alphabetical order</a>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: "viewSwitcher",
+        props: {
+            viewAsList: Boolean
+        },
+        methods: {
+            changeViewMode() {
+                this.$root.changeViewMode();
+            }
+        }
+    }
+
+</script>
+

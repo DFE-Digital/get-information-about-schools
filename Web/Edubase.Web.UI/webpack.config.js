@@ -16,6 +16,7 @@ module.exports = (env) => {
       'search-bundle': './Assets/Scripts/Entry/search.js',
       'search-results-bundle': './Assets/Scripts/Entry/search-results.js',
       'landing-page-bundle': './Assets/Scripts/Entry/landing-pages.js',
+      'download-select-fields': './Assets/Scripts/Entry/download-select-fields',
     },
 
     output: {

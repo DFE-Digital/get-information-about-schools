@@ -8,121 +8,108 @@
     ViewBag.hideLogo = true;
 }
 
-<div class="breadcrumbs">
+@section BackLink
+{
     @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
     {
-        @Html.ActionLink("Home", "Index", "Search", new { area = "" })
+        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-back-link"})
     }
     else
     {
-        <a href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Back to search results</a>
+        <a class="govuk-back-link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Back to search results</a>
     }
-</div>
 
-<div class="grid-row">
-    <div class="column-full">
-        <h1 class="heading-xlarge">Download data</h1>
+}
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Download data</h1>
     </div>
-    <div class="gias-tabs-wrapper">
-        <div class="column-full">
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-m">Download establishment search results</h2>
+        <h2 class="govuk-heading-m">Select the data you are interested in</h2>
+        <p>
+            Core data includes commonly used fields including <abbr title="Unique Reference Number">URN</abbr>,
+            establishment name, address, type and phase. Full data includes all data fields.
+        </p>
 
-            <h2 class="bold-medium">Download establishment search results</h2>
-            <br />
-            <h2 class="bold-medium">Select the data you are interested in</h2>
-            <p>
-                Core data includes commonly used fields including <abbr title="Unique Reference Number">URN</abbr>,
-                establishment name, address, type and phase. Full data includes all data fields.
-            </p>
-
-            <div class="expanding-content-wrapper" data-update-text="true" data-opened-text="Less information" data-closed-text="More information">
-                <a href="#" class="expanding-content-trigger">
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
                     More information
-                </a>
-                <div class="expanding-content panel-indent">
-                    <p class="bold-small">Core data fields</p>
-                    <p>Address, Admissions Policy, Boarders, Close Date, County, Diocese, Establishment Name, Establishment Number, Establishment Status, Federation Flag, Federations, Further Education Type, Gender, Head First Name, Head Last Name, Head Title, LA, Locality, Nursery Provision, Official Sixth Form, Open Date, Phase Of Education, Postcode, Religious Character, Religious Ethos, School Sponsor Flag, School Sponsors, Statutory High Age, Statutory Low Age, Street, Telephone Number, Town, Trusts, Trust School Flag, Type Of Establishment, UKPRN, <abbr title="Unique Reference Number">URN</abbr>, School Website</p>
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                <p class="govuk-!-font-weight-bold">Core data fields</p>
+                <p>Address, Admissions Policy, Boarders, Close Date, County, Diocese, Establishment Name, Establishment Number, Establishment Status, Federation Flag, Federations, Further Education Type, Gender, Head First Name, Head Last Name, Head Title, LA, Locality, Nursery Provision, Official Sixth Form, Open Date, Phase Of Education, Postcode, Religious Character, Religious Ethos, School Sponsor Flag, School Sponsors, Statutory High Age, Statutory Low Age, Street, Telephone Number, Town, Trusts, Trust School Flag, Type Of Establishment, UKPRN, <abbr title="Unique Reference Number">URN</abbr>, School Website</p>
+            </div>
+        </details>
+
+        @using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get))
+        {
+            @Html.HiddenFor(m => m.SearchQueryString)
+            <div class="download-step">
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-visually-hidden">Select a data set</legend>
+                        <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                            <div class="govuk-radios__item">
+                                @Html.GiasRadioFor(m => m.Dataset, "core", "Core set of data", null, new { @checked = "checked", @class = "govuk-radios__input core-full", data_aria_controls = "core-additional" })
+                            </div>
+                            <div class="govuk-radios__conditional" id="core-additional">
+                                @DataOptions()
+                            </div>
+                            <div class="govuk-radios__item">
+                                @Html.GiasRadioFor(m => m.Dataset, "full", "Full set of data", null, new { @class = "govuk-radios__input core-full", data_aria_controls = "full-additional" })
+                            </div>
+                            <div class="govuk-radios__conditional" id="full-additional">
+                                @DataOptions()
+                            </div>
+                            <div class="govuk-radios__item">
+                                @Html.GiasRadioFor(m => m.Dataset, "custom", "Choose a specific set of data", null, new {@class = "govuk-radios__input  custom-fields"})
+                            </div>
+                        </div>
+                    </fieldset>
                 </div>
             </div>
 
-            @using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get))
-            {
-                @Html.HiddenFor(m => m.SearchQueryString)
-                <div class="download-step">
-                    <div class="form-group">
-                        <fieldset class="stacked-controls">
-                            <legend class="visually-hidden">Select a data set</legend>
+            @Html.HiddenFieldsFromQueryString()
 
-                            @Html.GiasRadioFor(m => m.Dataset, "core", "Core set of data", null, new { @checked = "checked", @class = "core-full" })
+            <input class="govuk-button" type="submit" value="Select and continue">
+        }
 
-                            @Html.GiasRadioFor(m => m.Dataset, "full", "Full set of data", null, new { @class = "core-full" })
-
-                            @Html.GiasRadioFor(m => m.Dataset, "custom", "Choose a specific set of data", null, new { @class = "custom-fields" })
-
-                            <div class="panel panel-border-narrow" id="data-download-options">
-                                <fieldset>
-                                    <legend class="multiple-choice bold">Include additional data:</legend>
-
-                                    @if (Model.AllowIncludeEmailAddresses)
-                                    {
-                                        @Html.GiasCheckboxFor(m => m.IncludeEmailAddresses, "Email addresses")
-
-                                    }
-
-                                    @if (Model.AllowIncludeIEBTFields)
-                                    {
-                                        @Html.GiasCheckboxFor(m => m.IncludeIEBTFields, "IEBT fields")
-
-                                    }
-
-                                    @if (Model.AllowIncludeBringUpFields)
-                                    {
-                                        @Html.GiasCheckboxFor(m => m.IncludeBringUpFields, "Bring up fields")
-
-                                    }
-
-                                    @if (Model.AllowIncludeChildrensCentreFields)
-                                    {
-                                        @Html.GiasCheckboxFor(m => m.IncludeChildrensCentreFields, "Children's centre fields")
-
-                                    }
-
-                                    @Html.GiasCheckboxFor(m => m.IncludeLinks, "Links")
-
-                                </fieldset>
-                            </div>
-                        </fieldset>
-                    </div>
-                </div>
-
-                @Html.HiddenFieldsFromQueryString()
-
-                <input class="button" type="submit" value="Select and continue">
-            }
-
-        </div>
     </div>
 </div>
 
-@section ViewScripts
-{
-    <script nonce="@Html.ScriptNonce()">
-        (function() {
-            var $radios = $('#full-content').find('.core-full');
-            var $panel = $('#data-download-options');
-            if ($panel.length > 0) {
-                $radios.on('change', function () {
-                    $panel.detach().insertAfter($(this).parents('.multiple-choice'));
-                });
 
-                $panel.detach().insertAfter(
-                    $radios.filter(function(n, rad) {
-                        return rad.checked;
-                    }).parents('.multiple-choice'));
+@helper DataOptions()
+{
+    <div class="govuk-form-group">
+        <div class="govuk-checkboxes">
+            @if (Model.AllowIncludeEmailAddresses)
+            {
+                @Html.GiasCheckboxFor( m => m.IncludeEmailAddresses, "Email addresses", null, new {@class = "govuk-checkboxes__input"})
             }
 
-            $(".custom-fields").on("change", function () {
-                $panel.detach();
-            });
-        }());
-    </script>
+            @if (Model.AllowIncludeIEBTFields)
+            {
+                @Html.GiasCheckboxFor(m => m.IncludeIEBTFields, "IEBT fields", null, new {@class = "govuk-checkboxes__input"})
+            }
+
+            @if (Model.AllowIncludeBringUpFields)
+            {
+                @Html.GiasCheckboxFor(m => m.IncludeBringUpFields, "Bring up fields", null, new {@class = "govuk-checkboxes__input"})
+            }
+
+            @if (Model.AllowIncludeChildrensCentreFields)
+            {
+                @Html.GiasCheckboxFor(m => m.IncludeChildrensCentreFields, "Children's centre fields", null, new {@class = "govuk-checkboxes__input"})
+            }
+
+            @Html.GiasCheckboxFor(m => m.IncludeLinks, "Links", null, new {@class = "govuk-checkboxes__input"})
+        </div>
+    </div>
 }

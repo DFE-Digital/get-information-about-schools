@@ -1,0 +1,28 @@
+.gias-download-list-item {
+  width: auto;
+  padding: 10px 0 20px 40px;
+  position: relative;
+  display: block;
+
+  &:before {
+    position: absolute;
+    content: '';
+    width: 30px;
+    height: 39px;
+    background-image: url("/public/assets/images/icons/icon-file-download.png");
+    background-size:30px 39px;
+    background-repeat: no-repeat;
+    left: 0;
+    top: 10px;
+  }
+  .icon-link-copy {
+    vertical-align: middle;
+  }
+  .alternative-file-directions {
+    display: block;
+  }
+
+  .govuk-button {
+    margin-bottom: govuk-spacing(1);
+  }
+}
