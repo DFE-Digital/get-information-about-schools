@@ -72,7 +72,7 @@
 .gias-summary-list__value {
   display: table-cell;
   margin: 0;
-  padding: 0;
+  padding: 0 10px 0 0;
 
   @include govuk-media-query($until: tablet) {
     display: block;
