@@ -20,7 +20,7 @@
             <a class="govuk-back-link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Back to search results</a>
         }
 }
-<div id="field-select-app">
+<div id="field-select-app" v-cloak>
     @* *@
     @* <div class="govuk-grid-row "> *@
     @*     <div class="govuk-grid-column-full"> *@
@@ -165,61 +165,6 @@
         @Html.HiddenFieldsFromQueryString(new[] {EstablishmentSearchDownloadViewModel.SelectedCustomFieldsBindAlias})
     }
 </div>
-@* <div class="download-step"> *@
-@* <fieldset class="stacked-controls"> *@
-@*     <legend class="visually-hidden">Search by field name</legend> *@
-@* *@
-@*     <div class="form-group push--bottom" :class="[errorEmptySearch ? 'error' : '']"> *@
-@*         <label class="form-label" for="search">Search by field name</label> *@
-@*         <span v-if="errorEmptySearch" class="field-validation-error">Enter a field name to search</span> *@
-@*         <input id="search" v-model="search" class="form-control form-control-1-2 push-half--bottom" @@keydown.enter.prevent="doSearch" /> *@
-@*         <button class="button inline-button" @@click="doSearch" type="button">Search</button> *@
-@* *@
-@*         <div class="switch" v-show="!isFiltered"> *@
-@*             <a href="javascript:" @@click="showAlphabeticalView" v-show="!alphabeticalView">View in alphabetical order</a> *@
-@*             <a href="javascript:" @@click="showCategorisedView" v-show="!categorisedView">View in sections</a> *@
-@*         </div> *@
-@*     </div> *@
-@* </fieldset> *@
-@* *@
-@* <fieldset class="stacked-controls"> *@
-@*     <legend class="visually-hidden">Select fields to download</legend> *@
-@*     <div> *@
-@*         <input class="button" type="submit" value="Next" /> *@
-@*         <div class="switch" v-show="!isFiltered"> *@
-@*             <button href="javascript:" class="link-button font-small push-half--right" @@click="selectAll" type="button">Select all</button> *@
-@*             <button href="javascript:" class="link-button font-small" @@click="clearAll" type="button">Clear all</button> *@
-@*         </div> *@
-@*     </div> *@
-@* *@
-@*     <ul :id="[categorisedView ? 'errorOneFieldReq' : '']" :class="['categorised-list', 'chevron-accordion', categorisedView ? '' : 'hidden', errorOneFieldReq ? 'error' : '']"> *@
-@*         <li v-if="errorOneFieldReq"> *@
-@*             <span class="field-validation-error">Select at least one field</span> *@
-@*         </li> *@
-@*         <li class="expander-panel" v-for="(item, index) in fieldsByCategory"> *@
-@*             <a class="panel-trigger" :href="'#target-'+index" aria-expanded="false" :aria-controls="'target-'+index">{{item.category}}</a> *@
-@*             <div class="expander-panel-content" id="'target-'+index"> *@
-@* *@
-@*                 <div  v-for="(field, i) in item.customFields" class="multiple-choice"> *@
-@*                     <input :id="'chk2-'+(index+'_'+i)" type="checkbox" :value="field.id" v-model="selections" /> *@
-@*                     <label :for="'chk2-'+(index+'_'+i)">{{ field.name }}</label> *@
-@*                 </div> *@
-@*             </div> *@
-@*         </li> *@
-@*     </ul> *@
-@* *@
-@*     <div :id="[alphabeticalView ? 'errorOneFieldReq' : '']" :class="['alphabetical-list', alphabeticalView ? '' : 'hidden', errorOneFieldReq ? 'error' : '']"> *@
-@*         <span v-if="errorOneFieldReq" class="field-validation-error">Select at least one field</span> *@
-@*         <div v-for="(item, index) in filteredList" class="multiple-choice"> *@
-@*             <input :id="'chk-'+index" type="checkbox" name="@EstablishmentSearchDownloadViewModel.SelectedCustomFieldsBindAlias" :value="item.id" v-model="selections" /> *@
-@*             <label :for="'chk-'+index">{{ item.name }}</label> *@
-@*         </div> *@
-@*     </div> *@
-@* *@
-@*     <p v-show="filteredList.length == 0">No results</p> *@
-
-@* </fieldset> *@
-@* </div> *@
 
 
 
@@ -231,93 +176,3 @@
     </script>
     <script src="/public/assets/scripts/build/download-select-fields.js"></script>
 }
-
-@* @section ViewScripts *@
-@* { *@
-@*     <script nonce="@Html.ScriptNonce()"> *@
-@*         var fieldList = @Html.Json(Model.CustomFields); *@
-@*         var fieldListByCat = @Html.Json(Model.CustomFieldsByCategory); *@
-@*         var selections = @Html.Json(Model.SelectedCustomFields); *@
-@* *@
-@*         var app = new Vue({ *@
-@*             el: "#select-custom", *@
-@*             data: { *@
-@*                 fields: fieldList, *@
-@*                 fieldsByCategory: fieldListByCat, *@
-@*                 filteredList: fieldList, *@
-@*                 selections: selections, *@
-@*                 showValidationError: false, *@
-@*                 errorOneFieldReq: false, *@
-@*                 errorEmptySearch: false, *@
-@*                 uiMode: "c", *@
-@*                 search: null, *@
-@*                 isFiltered: false *@
-@*             }, *@
-@*             methods: { *@
-@*                 selectAll: function(){ *@
-@*                     this.selections = []; *@
-@*                     [].forEach.call(this.fields, function(item){ this.selections.push(item.id);  }.bind(this)); *@
-@*                 }, *@
-@*                 clearAll: function(){ *@
-@*                     this.selections = []; *@
-@*                 }, *@
-@*                 validateForm: function(e) { *@
-@*                     if(this.selections.length > 0) return true; *@
-@*                     else { *@
-@*                         $(window).scrollTop(0); *@
-@*                         this.showValidationError = true; *@
-@*                         this.errorOneFieldReq = true; *@
-@*                         this.errorEmptySearch = false; *@
-@*                         e.preventDefault(); *@
-@*                         this.errorFocus(); *@
-@*                     } *@
-@*                 }, *@
-@*                 showAlphabeticalView: function(){ *@
-@*                     this.uiMode = "a"; *@
-@*                 }, *@
-@*                 showCategorisedView: function(){ *@
-@*                     this.uiMode = "c"; *@
-@*                 }, *@
-@*                 doSearch: function () { *@
-@*                     if (this.search) { *@
-@*                         this.showAlphabeticalView(); *@
-@*                         this.filteredList = this.fields.filter(function (f) { return f.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1; }.bind(this)); *@
-@*                         this.isFiltered = true; *@
-@*                         this.showValidationError = false; *@
-@*                         this.errorEmptySearch = false; *@
-@*                         this.errorOneFieldReq = false; *@
-@*                     } else { *@
-@*                         this.filteredList = this.fields; *@
-@*                         this.isFiltered = false; *@
-@*                         this.showValidationError = true; *@
-@*                         this.errorEmptySearch = true; *@
-@*                         this.errorOneFieldReq = false; *@
-@*                         this.errorFocus(); *@
-@*                     } *@
-@*                 }, *@
-@*                 errorFocus: function(){ *@
-@*                     window.document.title = "Error: Download establishment search results - GOV.UK"; *@
-@*                     if ($('.error-summary').length) { *@
-@*                         $('.error-summary').focus(); *@
-@*                     } else { *@
-@*                         window.setTimeout(function(){ *@
-@*                             $('.error-summary').focus(); *@
-@*                         },500); *@
-@*                     } *@
-@*                 }, *@
-@*                 focusOnSearch: function(e){ *@
-@*                     e.preventDefault(); *@
-@*                     $('#search').focus(); *@
-@*                 } *@
-@*             }, *@
-@*             computed: { *@
-@*                 alphabeticalView: function () { return this.uiMode == "a"; }, *@
-@*                 categorisedView: function () { return this.uiMode == "c"; } *@
-@*             } *@
-@*         }); *@
-@* *@
-@*         $("form").removeClass("hidden"); *@
-@*         $(".panel-trigger").on("click", function (el) { $(this).parent().toggleClass("open-expander"); }); *@
-@* *@
-@*     </script> *@
-@* } *@
