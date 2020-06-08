@@ -1,5 +1,3 @@
-@include mq-add-breakpoint(mapBreak, 360px);
-
 .landing-page-map-container {
   float: right;
   width: 40%;
@@ -17,7 +15,7 @@
     display: block;
   }
 
-  @include govuk-media-query($until: mapBreak) {
+  @include govuk-media-query($until: tablet) {
     width: 100%;
     float: none;
 
