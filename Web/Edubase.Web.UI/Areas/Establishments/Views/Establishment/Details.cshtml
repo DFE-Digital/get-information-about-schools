@@ -108,7 +108,7 @@
         {
             if (Model.Establishment.CloseDate != null)
             {
-                <div class="panel-indent flush--top push-half--bottom">
+                <div class="gias-establishment-closed-message">
                     <p>
                         This establishment closed on @(Model.Establishment.CloseDate?.ToString("dd/MM/yyyy")).
                         View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
@@ -117,7 +117,7 @@
             }
             else
             {
-                <div class="panel-indent flush--top push-half--bottom">
+                <div class="gias-establishment-closed-message">
                     <p>
                         This establishment is closed.
                         View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
