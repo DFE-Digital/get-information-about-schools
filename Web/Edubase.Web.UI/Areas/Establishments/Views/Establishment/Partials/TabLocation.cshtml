@@ -63,18 +63,19 @@
     <br />
     @if (Model.AdditionalAddressList.Any())
     {
-        <h3 class="font-small">Other sites</h3>
-        <br />
+        <h3 class="govuk-heading-s">Other sites</h3>
         foreach (var address in Model.AdditionalAddressList)
         {
             if (address.SiteName != null)
             {
-                <h4 class="font-small">@address.SiteName</h4>
+                <h4 class="govuk-heading-s">@address.SiteName</h4>
             }
             <div class="detail-summary">
-                <dl>
-                    <dt class="gias-summary-list__key">Address:</dt>
-                    <dd class="gias-summary-list__value">@address.GetAddress()</dd>
+                <dl class="gias-summary-list">
+                    <div class="gias-summary-list__row">
+                        <dt class="gias-summary-list__key">Address:</dt>
+                        <dd class="gias-summary-list__value">@address.GetAddress()</dd>
+                    </div>
                 </dl>
             </div>
         }
