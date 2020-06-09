@@ -338,6 +338,7 @@
     <Compile Include="Controllers\GlossaryController.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\ValidateEstablishmentJoinedDateModel.cs" />
     <Compile Include="Controllers\SitemapController.cs" />
+    <Compile Include="Filters\ModelStateTransfer.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Glimpse\AllUsersApiTraceTab.cs" />
     <Compile Include="Glimpse\CurrentUserApiTraceTab.cs" />
