@@ -67,7 +67,7 @@ $pointer-size: 15px;
     font-size: 14px;
 
     &:focus {
-      outline: $govuk-focus-colour 1px;
+      outline: $govuk-focus-colour 1px solid;
     }
   }
 
