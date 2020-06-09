@@ -23,7 +23,6 @@
   background-color: govuk-colour('light-grey');
   border: 1px solid govuk-colour('white');
   border-bottom-width: 5px;
-  font-size: 16px;
 
   @include govuk-media-query($until: desktop) {
     /* stylelint-disable length-zero-no-unit */
@@ -32,10 +31,6 @@
     margin-bottom: 5px;
     border-color: $govuk-border-colour;
     border-bottom-width: 1px;
-  }
-
-  @include govuk-media-query($until: tablet) {
-    font-size: 12px;
   }
 }
 
