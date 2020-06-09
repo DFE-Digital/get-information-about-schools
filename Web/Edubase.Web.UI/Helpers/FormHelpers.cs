@@ -178,11 +178,12 @@ namespace Edubase.Web.UI.Helpers
             var labelBuilder = new TagBuilder("label");
 
             labelBuilder.MergeAttribute("for", id);
-            labelBuilder.MergeAttribute("class", string.Concat(additionalLabelClasses));
+            labelBuilder.MergeAttribute("class", string.Concat("govuk-label govuk-checkboxes__label", additionalLabelClasses));
             labelBuilder.InnerHtml = labelText;
 
             var checkbox = new TagBuilder("input");
             checkbox.Attributes["type"] =  "checkbox";
+            checkbox.Attributes["name"] = inputName;
 
             if (htmlAttributes != null)
             {
@@ -193,7 +194,7 @@ namespace Edubase.Web.UI.Helpers
                 }
             }
 
-            return new MvcHtmlString("<div class=\"multiple-choice\">" + checkbox + labelBuilder + "</div>");
+            return new MvcHtmlString("<div class=\"govuk-checkboxes__item\">" + checkbox + labelBuilder + "</div>");
 
         }
     }

@@ -91,25 +91,25 @@
         <div class="govuk-checkboxes">
             @if (Model.AllowIncludeEmailAddresses)
             {
-                @Html.GiasCheckboxFor( m => m.IncludeEmailAddresses, "Email addresses", null, new {@class = "govuk-checkboxes__input"})
+                @FormHelpers.GiasCheckbox("IncludeEmailAddresses", "IncludeEmailAddresses", "Email addresses", null, new {id = "IncludeEmailAddresses", @class = "govuk-checkboxes__input"})
             }
 
             @if (Model.AllowIncludeIEBTFields)
             {
-                @Html.GiasCheckboxFor(m => m.IncludeIEBTFields, "IEBT fields", null, new {@class = "govuk-checkboxes__input"})
+                @FormHelpers.GiasCheckbox("IncludeIEBTFields", "IncludeIEBTFields","IEBT fields", null, new {id = "IncludeIEBTFields", @class = "govuk-checkboxes__input"})
             }
 
             @if (Model.AllowIncludeBringUpFields)
             {
-                @Html.GiasCheckboxFor(m => m.IncludeBringUpFields, "Bring up fields", null, new {@class = "govuk-checkboxes__input"})
+                @FormHelpers.GiasCheckbox("IncludeBringUpFields", "IncludeBringUpFields", "Bring up fields", null, new {id = "IncludeBringUpFields", @class = "govuk-checkboxes__input"})
             }
 
             @if (Model.AllowIncludeChildrensCentreFields)
             {
-                @Html.GiasCheckboxFor(m => m.IncludeChildrensCentreFields, "Children's centre fields", null, new {@class = "govuk-checkboxes__input"})
+                @FormHelpers.GiasCheckbox("IncludeChildrensCentreFields", "IncludeChildrensCentreFields","Children's centre fields" ,null, new {id = "IncludeChildrensCentreFields", @class = "govuk-checkboxes__input"})
             }
 
-            @Html.GiasCheckboxFor(m => m.IncludeLinks, "Links", null, new {@class = "govuk-checkboxes__input"})
+            @FormHelpers.GiasCheckbox("IncludeLinks", "IncludeLinks", "Links", null,new {id = "IncludeLinks", @class = "govuk-checkboxes__input"})
         </div>
     </div>
 }
