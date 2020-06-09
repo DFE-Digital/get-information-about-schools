@@ -7,6 +7,7 @@ import GiasNestedFilters from "../GiasSearchFilters/GiasNestedFilters";
 import GiasSelectAll from "../GiasSearchFilters/GiasSelectAll";
 import GiasFiltering from "../GiasSearchFilters/GiasFiltering";
 import GiasSearchMap from "../GiasModules/GiasSearchMap";
+import GiasGovernorsDownloadWarning from "../GiasSearchFilters/GiasGovernorsDownloadWarning";
 
 new GiasAdditionalFilters();
 $filterForm.find('.govuk-option-select').optionSelect();
@@ -22,3 +23,7 @@ window.gMap = gMap;
 window.disableFilters = filtering.disableFilters;
 window.enableFilters = filtering.enableFilters;
 $filterForm.find('.searchable-filters').giasSearchWithin();
+
+if (document.getElementById('governors-search-results')) {
+  new GiasGovernorsDownloadWarning();
+}
