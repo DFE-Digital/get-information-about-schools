@@ -33,6 +33,11 @@
     table-layout: fixed;
     font-size: 13px;
 
+    .gias-summary-list__key,
+    .gias-summary-list__value {
+      font-size: 13px;
+    }
+
     .govuk-table__header,
     .govuk-table__cell {
       word-wrap: break-word;
@@ -56,7 +61,7 @@
       }
     }
 
-    td {
+    .govuk-table__cell {
       clear: left;
       display: block;
       float: left;
@@ -64,6 +69,16 @@
       border-bottom: 1px solid $govuk-border-colour;
       max-width: 100%;
       padding: 12px 0;
+
+      .gias-summary-list {
+        position: relative;
+        top: -2px;
+      }
+
+      .gias-summary-list__key,
+      .gias-summary-list__value {
+        font-size: 12px;
+      }
 
 
       &:before {

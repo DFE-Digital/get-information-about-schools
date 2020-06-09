@@ -5,7 +5,7 @@ import GiasLandingMap from "../GiasLandingPages/GiasLandingMap";
 
 const $main = $('#main-content');
 
-const $map = $('#map');
+const $map = $('#map, #group-map');
 const mobileToggleSwitch = $('#map-toggle');
 let mapInitialised = false;
 

@@ -15,7 +15,7 @@
     display: block;
   }
 
-  @include govuk-media-query($until: tablet) {
+  @include govuk-media-query($until: desktop) {
     width: 100%;
     float: none;
 
@@ -26,5 +26,12 @@
     .school-detail-map {
       display: none;
     }
+  }
+}
+
+.detail-summary,
+.group-establishment-list {
+  @include govuk-media-query($until: desktop) {
+    clear: both;
   }
 }

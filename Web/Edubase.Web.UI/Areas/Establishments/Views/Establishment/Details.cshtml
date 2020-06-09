@@ -215,7 +215,7 @@
 <div class="govuk-grid-row">
 <div class="govuk-grid-column-full helptext-container">
     <div id="help-text-age-range">
-        <h3 class="heading-small">Age range</h3>
+        <h3 class="govuk-heading-s">Age range</h3>
         <p>@Model.AgeRangeToolTip</p>
         @if (!Model.AgeRangeToolTipLink.IsNullOrEmpty())
         {
@@ -244,7 +244,9 @@
 </div>
 
 @section ViewScripts {
-<script nonce="@Html.ScriptNonce()">var estabOpen = @((Model.Establishment.CloseDate == null).ToString().ToLower());</script>
+<script nonce="@Html.ScriptNonce()">
+    var estabOpen = @((Model.Establishment.CloseDate == null).ToString().ToLower());
+    var mapMode = 'establishment';
+</script>
 <script src="/public/assets/scripts/build/landing-page-bundle.js"></script>
-
 }

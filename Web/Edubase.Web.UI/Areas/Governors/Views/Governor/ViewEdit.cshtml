@@ -71,7 +71,7 @@ else
 
     if (Model.ShowDelegationAndCorpContactInformation)
     {
-        <div class="column-full governors-section">
+        <div class="govuk-grid-column-full governors-section">
             @ShowDelegationInformation()
             <br/>
             @ShowCorporateContactInformation()
@@ -96,7 +96,7 @@ else
 @helper ShowDelegationInformation()
 {
     <h2 class="govuk-heading-s">Delegated authority of local governing body</h2>
-    <details class="govuk-details" data-module="govuk-details">
+    <details class="govuk-details govuk-!-font-size-16" data-module="govuk-details">
         <summary class="govuk-details__summary">
             <span class="govuk-details__summary-text">
                 More details
@@ -119,7 +119,7 @@ else
 @helper ShowCorporateContactInformation()
 {
     <h2 class="govuk-heading-s">Corporate contact</h2>
-    <details class="govuk-details" data-module="govuk-details">
+    <details class="govuk-details govuk-!-font-size-16" data-module="govuk-details">
         <summary class="govuk-details__summary">
             <span class="govuk-details__summary-text">
                 More details
@@ -144,7 +144,7 @@ else
 {
     <div class="governors-section">
         <h2 class="govuk-heading-s">Legal duty to provide governance information</h2>
-        <details class="govuk-details govuk-!-font-size-14" data-module="govuk-details">
+        <details class="govuk-details govuk-!-font-size-16" data-module="govuk-details">
             <summary class="govuk-details__summary">
                 <span class="govuk-details__summary-text">
                     More details

@@ -5,34 +5,45 @@
 
 @if (Model.Group.UrgentConfirmationUpToDateGovernanceRequired)
 {
-    <div class="up-to-date-confirmations high-priority">
-        <h2>Governance record last confirmed: <span>@date</span></h2>
-        @using (Html.BeginRouteForm("GroupGovernanceConfirmUpToDate", new { uid = Model.Group.GroupUId.Value }, FormMethod.Post))
-        {
-            <label for="confirm-button">Confirm governance record is up to date</label>
-            <button class="button button-secondary" id="confirm-button">Confirm</button>
-        }
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="up-to-date-confirmations high-priority">
+                    <h2>Governance record last confirmed: <span>@date</span></h2>
+                    @using (Html.BeginRouteForm("GroupGovernanceConfirmUpToDate", new { uid = Model.Group.GroupUId.Value }, FormMethod.Post))
+                    {
+                        <label class="govuk-body-s">Confirm governance record is up to date</label>
+                        <button class="govuk-button govuk-button--secondary" id="confirm-button">Confirm<span class="govuk-visually-hidden"> governance record is up to date</span></button>
+                    }
+                </div>
+        </div>
     </div>
+
 }
 else if (Model.Group.ConfirmationUpToDateGovernanceRequired)
 {
-    <div class="up-to-date-confirmations expanding-content-wrapper" data-update-text="false">
-        <a class="expanding-content-trigger" href="#">Confirm records</a>
-        <div class="expanding-content panel-indent">
-            <div class="data-confirmation-panel">
-                <p class="confirmation-statement">
-                    Governance record last confirmed:
-                    <span class="confirmation-date">@date</span>
-                </p>
-                @using (Html.BeginRouteForm("GroupGovernanceConfirmUpToDate", new { uid = Model.Group.GroupUId.Value }, FormMethod.Post))
-                {
-                    <label class="confirmation-label" for="governance-data-confirm">
-                        Confirm governance record is up to date:
-                    </label>
-                    <button class="button button-secondary confirmation-button" id="governance-data-confirm">Confirm</button>
-                }
-            </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">Confirm records</span>
+                </summary>
+                <div class="govuk-details__text">
+                    <div class="data-confirmation-panel">
+                        <p class="confirmation-statement">
+                            Governance record last confirmed:
+                            <span class="confirmation-date">@date</span>
+                        </p>
+                        @using (Html.BeginRouteForm("GroupGovernanceConfirmUpToDate", new {uid = Model.Group.GroupUId.Value}, FormMethod.Post))
+                        {
+                            <p class="confirmation-label" for="governance-data-confirm">
+                                Confirm governance record is up to date:
+                            </p>
+                            <button class="govuk-button govuk-button--secondary confirmation-button" id="governance-data-confirm">Confirm <span class="govuk-visually-hidden"> governance record is up to date</span></button>
+                        }
+                    </div>
+                </div>
+            </details>
         </div>
-
     </div>
+
 }
