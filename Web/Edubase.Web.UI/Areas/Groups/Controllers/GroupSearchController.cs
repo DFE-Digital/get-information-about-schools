@@ -70,17 +70,34 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         [HttpGet, Route("Download")]
         public async Task<ActionResult> Download(Guid id, eFileFormat fileFormat, string searchQueryString = null, eLookupSearchSource? searchSource = null)
         {
-            var model = await _groupDownloadService.GetDownloadGenerationProgressAsync(id, User);
+            var model = new ProgressDto();
+            try
+            {
+                model = await _groupDownloadService.GetDownloadGenerationProgressAsync(id, User);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.StartsWith("The API returned 404 Not Found"))
+                {
+                    // if the file no longer exists (user refreshes the page post download etc) then the api returns a 404 and throws an error. This allows for a more graceful response
+                    model.Error = "Download process not found for associated id";
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
             var viewModel = new GroupSearchDownloadGenerationProgressViewModel(model)
             {
                 FileFormat = fileFormat,
                 SearchSource = searchSource,
                 SearchQueryString = searchQueryString
             };
-            
+
 
             if (model.HasErrored)
-                throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
+                return View("Downloads/DownloadError", new DownloadErrorViewModel { SearchQueryString = searchQueryString, SearchSource = searchSource, NeedsRegenerating = true });
 
             if (!model.IsComplete) return View("Downloads/PreparingFilePleaseWait", viewModel.SetStep(2));
 

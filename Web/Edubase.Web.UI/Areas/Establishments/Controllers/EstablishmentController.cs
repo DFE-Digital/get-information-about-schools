@@ -51,6 +51,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private readonly IMapper _mapper;
         private readonly IResourcesHelper _resourcesHelper;
         private readonly IFBService _fbService;
+        private readonly ICSCPService _cscpService;
 
         private readonly ISecurityService _securityService;
         private readonly Lazy<string[]> _formKeys;
@@ -80,7 +81,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             ICachedLookupService cachedLookupService,
             IResourcesHelper resourcesHelper,
             ISecurityService securityService,
-            IFBService fbService)
+            IFBService fbService,
+            ICSCPService cscpService)
         {
             _cachedLookupService = cachedLookupService;
             _establishmentReadService = establishmentReadService;
@@ -90,6 +92,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _resourcesHelper = resourcesHelper;
             _securityService = securityService;
             _fbService = fbService;
+            _cscpService = cscpService;
 
             _formKeys = new Lazy<string[]>(
                 () => Request?.Form?.AllKeys.Select(x => x.GetPart(".")).Distinct().ToArray(),
@@ -265,7 +268,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             ViewBag.PendingApprovalCount = pending;
             ViewBag.ShowSaved = saved;
 
-            var viewModel = new EstablishmentDetailViewModel(_fbService)
+            var viewModel = new EstablishmentDetailViewModel(_fbService, _cscpService)
             {
                 IsUserLoggedOn = User.Identity.IsAuthenticated,
                 SearchQueryString = searchQueryString,
@@ -309,7 +312,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             var changes = await _establishmentReadService.GetGovernanceChangeHistoryAsync(id, skip, 100, sortBy, User);
 
-            var viewModel = new EstablishmentDetailViewModel(_fbService)
+            var viewModel = new EstablishmentDetailViewModel(_fbService, _cscpService)
             {
                 Establishment = result.ReturnValue,
                 ChangeHistory = changes

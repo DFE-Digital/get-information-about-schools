@@ -6,18 +6,22 @@
     ViewBag.PageClass = "search-results";
     ViewBag.HideLogo = true;
 }
+@section Head
+{
+    <meta name="robots" content="noindex,nofollow" />
+}
 
 <div class="grid-row">
     <div class="column-full results-heading">
         <div class="breadcrumbs">
-            @Html.ActionLink("Back to find an establishment group", "Index",  new { controller="Search", area = "", SelectedTab = "Groups" })
+            @Html.ActionLink("Back to find an establishment group", "Index", new { controller = "Search", area = "", SelectedTab = "Groups" })
         </div>
         <h1 class="heading-xlarge">Search results for establishment groups</h1>
-        <a class="download-link" href="@Url.Action("PrepareDownload", "GroupSearch")?@Url.CurrentQueryString()">Download these search results</a>
+        <a class="download-link" href="@Url.Action("PrepareDownload", "GroupSearch")?@Url.CurrentQueryString()" rel="nofollow">Download these search results</a>
 
     </div>
     @if (!Model.GroupSearchModel.Text.IsNullOrEmpty())
-            {
+    {
         <div class="column-full">
             <p>Establishment groups matching &lsquo;<span class="bold-small">@Model.GroupSearchModel.Text</span>&rsquo;.</p>
         </div>
@@ -95,14 +99,15 @@
                             @*<a href="#" class="clear-selections filter-clear">Clear</a>*@
                             <div class="options-container" id="">
                                 <div class="js-auto-height-inner">
-                                    <fieldset><span class="visuallyhidden">- changing the selection will refresh the results</span>
+                                    <fieldset>
+                                        <span class="visuallyhidden">- changing the selection will refresh the results</span>
                                         <legend class="visuallyhidden">Select an option below to filter the results</legend>
-                                    <div class="select-all-wrap multiple-choice multiple-choice--smaller multiple-choice--list">
-                                        <input id="groupstatus_all" class="select-all" type="checkbox" />
-                                        <label for="groupstatus_all">
-                                            All
-                                        </label>
-                                    </div>
+                                        <div class="select-all-wrap multiple-choice multiple-choice--smaller multiple-choice--list">
+                                            <input id="groupstatus_all" class="select-all" type="checkbox" />
+                                            <label for="groupstatus_all">
+                                                All
+                                            </label>
+                                        </div>
                                         @foreach (var item in Model.GroupStatuses)
                                         {
                                             <div class="multiple-choice multiple-choice--smaller multiple-choice--list">

@@ -6,5 +6,6 @@ namespace Edubase.Web.UI.Models.Search
     {
         public string SearchQueryString { get; set; }
         public eLookupSearchSource? SearchSource { get; set; }
+        public bool NeedsRegenerating { get; set; }
     }
 }

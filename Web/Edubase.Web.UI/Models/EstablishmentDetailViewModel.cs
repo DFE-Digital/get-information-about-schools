@@ -18,10 +18,12 @@ namespace Edubase.Web.UI.Models
     public class EstablishmentDetailViewModel
     {
         private readonly IFBService fbService;
+        private readonly ICSCPService cscpService;
 
-        public EstablishmentDetailViewModel(IFBService fbService = null)
+        public EstablishmentDetailViewModel(IFBService fbService = null, ICSCPService cscpService = null)
         {
             this.fbService = fbService;
+            this.cscpService = cscpService;
             LegalParentGroupRouteDto = new Lazy<RouteDto>(() => LegalParentGroup != null ? new RouteDto("GroupDetails", new System.Web.Routing.RouteValueDictionary(new { id = LegalParentGroup.GroupUId }), LegalParentGroup.Name) : null);
         }
             
@@ -192,6 +194,17 @@ namespace Edubase.Web.UI.Models
         public bool MediumPriorityGovernanceConfirmationPending => Establishment.ConfirmationUpToDateGovernanceRequired && !Establishment.UrgentConfirmationUpToDateGovernanceRequired;
         public bool HighPriorityEstablishmentConfirmationPending => (Establishment?.UrgentConfirmationUpToDateRequired).GetValueOrDefault();
         public bool HighPriorityGovernanceConfirmationPending => (Establishment?.UrgentConfirmationUpToDateGovernanceRequired).GetValueOrDefault();
+
+        public string CscpURL => cscpService.SchoolURL(Establishment.Urn);
+        private bool? showCscp;
+        public bool ShowCscp
+        {
+            get
+            {
+                if (!showCscp.HasValue) showCscp = cscpService != null && cscpService.CheckExists(Establishment.Urn);
+                return showCscp.Value;
+            }
+        }
 
         public string FinancialBenchmarkingURL => fbService.SchoolURL(Establishment.Urn);
 

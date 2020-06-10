@@ -7,6 +7,10 @@
     ViewBag.bodyClasses = " search-page";
     ViewBag.hideLogo = true;
 }
+@section Head
+{
+    <meta name="robots" content="noindex,nofollow" />
+}
 
 <div class="breadcrumbs">
     @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
@@ -106,7 +110,7 @@
 @section ViewScripts
 {
     <script nonce="@Html.ScriptNonce()">
-        (function() {
+        (function () {
             var $radios = $('#full-content').find('.core-full');
             var $panel = $('#data-download-options');
             if ($panel.length > 0) {
@@ -115,7 +119,7 @@
                 });
 
                 $panel.detach().insertAfter(
-                    $radios.filter(function(n, rad) {
+                    $radios.filter(function (n, rad) {
                         return rad.checked;
                     }).parents('.multiple-choice'));
             }
