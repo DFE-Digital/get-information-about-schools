@@ -47,6 +47,11 @@
 
   .option-select-label {
     padding: 5px 0  5px 10px;
+    font-size: 16px;
+
+    @include govuk-media-query($until: tablet){
+      font-size: 14px;
+    }
   }
 
   .js-selected-counter {
@@ -61,7 +66,7 @@
 
   &:after {
     content: "";
-    background-image: url('/public/assets/images/option-select-toggle-child-sprite.png');
+    background-image: url('/public/assets/images/option-select-toggle-child-sprite-2020.png');
     background-repeat: no-repeat;
     background-position: 50% 100%;
     background-size: 28px auto;

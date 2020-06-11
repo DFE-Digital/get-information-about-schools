@@ -108,11 +108,10 @@
         <input type="hidden" id="client-only-searchtype" value="@Model.SearchType" />
         <div class="filter-form" id="filter-form">
             <div class="govuk-grid-column-one-third">
-
+                <h2 class="gias-heading-xs">Filters</h2>
+                <a href="#" class="add-clear-filters" id="clear-filters" role="search">Clear all filters</a>
                 <div id="EditSearchCollapse" class="search-result-filters blanket-container">
-                    <h2 class="govuk-visually-hidden">Search results filters</h2>
                     <a href="#results-container" class="govuk-skip-link">Skip filters</a>
-
                     <div class="govuk-option-select js-collapsible no-scroll" id="option-select-sort-by" role="search">
                         <div class="container-head js-container-head">
                             <div class="option-select-label">Sort by</div>
@@ -150,9 +149,9 @@
 
                     @CloseDateFilter()
 
-                    @Html.EditorFor(x => x.AgeRangeLow, new { title = "Age range low", id = "age-range-low-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_LOW_FROM })
+                    @Html.EditorFor(x => x.AgeRangeLow, new {title = "Age range low", id = "age-range-low-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_LOW_FROM})
 
-                    @Html.EditorFor(x => x.AgeRangeHigh, new { title = "Age range high", id = "age-range-high-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_HIGH_FROM })
+                    @Html.EditorFor(x => x.AgeRangeHigh, new {title = "Age range high", id = "age-range-high-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_HIGH_FROM})
 
                     @Selector("Admissions policy", M.BIND_ALIAS_ADMPOL, Model.AdmissionsPolicies.OrderBy(x => x.Name), Model.SelectedAdmissionsPolicyIds, "additional-search-critera hidden", true)
 
@@ -211,14 +210,13 @@
                     </div>
 
                     <div id="filter-additional-controls">
-                        <a href="#" class="add-clear-filters" id="clear-filters" role="search">Clear all filters</a>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <a href="javascript:" class="save-filter-set-link js-save-set hidden">Save filter set</a>
                         }
                     </div>
 
-                    <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit" />
+                    <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit"/>
 
                     @if (Model.SearchType == eSearchType.Text)
                     {
@@ -231,7 +229,7 @@
                         @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.AutoSuggestValue)
                     }
 
-                    <input type="hidden" id="selected-search-filters" name="@M.BIND_ALIAS_SELECTED_SEARCH_FILTERS" value="@Model.SelectedExtraSearchFilters" />
+                    <input type="hidden" id="selected-search-filters" name="@M.BIND_ALIAS_SELECTED_SEARCH_FILTERS" value="@Model.SelectedExtraSearchFilters"/>
 
                     @Html.HiddenFor(x => x.SearchType)
                 </div>

@@ -1,0 +1,19 @@
+@include mq-add-breakpoint('resultsBp', 835px)
+
+.search-results {
+  .govuk-grid-column-one-third {
+    position: relative;
+  }
+
+  @include govuk-media-query($until: resultsBp) {
+    .govuk-grid-column-one-third,
+    .govuk-grid-column-two-thirds {
+      width: 100%;
+    }
+  }
+}
+
+.gias-heading-xs {
+  @include govuk-font(16, 'bold');
+  margin: 0 0 govuk-spacing(1);
+}

@@ -7,6 +7,10 @@
   .govuk-option-select {
     margin-bottom: govuk-spacing(2);
   }
+
+  .filter-button {
+    font-size: 16px;
+  }
 }
 
 .inline-form-control {
@@ -18,6 +22,11 @@
   .filter-button {
     margin-bottom: 0;
     float: right;
+
+    @include govuk-media-query($until: tablet) {
+      margin-top: govuk-spacing(2);
+      float: none;
+    }
   }
 }
 
@@ -120,4 +129,11 @@
   &.padded-indicator {
     padding-top: 80px;
   }
+}
+
+.add-clear-filters {
+  @include govuk-font(16);
+  position: absolute;
+  right: 15px;
+  top: 0;
 }
