@@ -184,6 +184,7 @@ namespace Edubase.Web.UI.Helpers
             var checkbox = new TagBuilder("input");
             checkbox.Attributes["type"] =  "checkbox";
             checkbox.Attributes["name"] = inputName;
+            checkbox.Attributes["value"] = inputValue;
 
             if (htmlAttributes != null)
             {
