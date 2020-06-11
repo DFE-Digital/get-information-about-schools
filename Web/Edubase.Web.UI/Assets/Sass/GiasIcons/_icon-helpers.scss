@@ -8,4 +8,8 @@
     width: 20px;
     height: 30px;
   }
+
+  @include govuk-media-query($until: tablet) {
+    font-size: 14px;
+  }
 }

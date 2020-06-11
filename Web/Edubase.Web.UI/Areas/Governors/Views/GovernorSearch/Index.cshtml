@@ -7,17 +7,19 @@
 
     var gSearch = Request.QueryString["gsearch"];
 }
+
 @section BackLink
 {
-    @Html.ActionLink("Back to find a governor", "Index", "Search", new { area = "", SelectedTab = "Governors", gsearch = gSearch }, new { @class= "govuk-back-link"})
+    @Html.ActionLink("Back to find a governor", "Index", "Search", new {area = "", SelectedTab = "Governors", gsearch = gSearch}, new {@class = "govuk-back-link"})
 }
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full results-heading">
 
         <h1 class="govuk-heading-xl">Search results for governors</h1>
         <div class="search-results-download-link-container">
-        <a class="search-results-download-link @(Model.Count > 5000 ? "prevent-download": "")" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()">Download these search results</a>
-    </div>
+            <a class="search-results-download-link @(Model.Count > 5000 ? "prevent-download" : "")" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()">Download these search results</a>
+        </div>
     </div>
     <div class="govuk-grid-column-full">
         <div class="warning-message @Html.Conditional(!Model.SelectedLocalAuthorityIds.Any(), "hidden")" id="gov-la-warning">
@@ -37,30 +39,30 @@
 
                 @if (Model.GovernorSearchModel.Forename.Clean() != null)
                 {
-                <text>first name &lsquo;<span class="govuk-!-font-weight-bold">@Model.GovernorSearchModel.Forename</span>&rsquo;</text>
-
+                    <text>first name &lsquo;<span class="govuk-!-font-weight-bold">@Model.GovernorSearchModel.Forename</span>&rsquo;</text>
                 }
 
                 @if (Model.GovernorSearchModel.Surname.Clean() != null)
                 {
                     if (Model.GovernorSearchModel.Forename.Clean() != null)
                     {
-                    <text>, </text>
+                        <text>, </text>
                     }
-                <text>last name &lsquo;<span class="govuk-!-font-weight-bold">@Model.GovernorSearchModel.Surname</span>&rsquo;</text>
+                    <text>last name &lsquo;<span class="govuk-!-font-weight-bold">@Model.GovernorSearchModel.Surname</span>&rsquo;</text>
                 }
 
                 @if (Model.SelectedRoleIds.Any())
                 {
-                if (Model.GovernorSearchModel.Surname.Clean() != null || Model.GovernorSearchModel.Forename.Clean() != null)
-                {
-                <span class="conjunction-text">and </span>
-                }
-                else
-                {
-                <span class="conjunction-text">for </span>
-                }
-                <span class="conjunction-text">roles</span> <span class="governor-roles govuk-!-font-weight-bold">@Html.Raw(Model.RoleNames)</span>
+                    if (Model.GovernorSearchModel.Surname.Clean() != null || Model.GovernorSearchModel.Forename.Clean() != null)
+                    {
+                        <span class="conjunction-text">and </span>
+                    }
+                    else
+                    {
+                        <span class="conjunction-text">for </span>
+                    }
+                    <span class="conjunction-text">roles</span>
+                    <span class="governor-roles govuk-!-font-weight-bold">@Html.Raw(Model.RoleNames)</span>
                 }
             </p>
         </div>
@@ -72,12 +74,11 @@
     <div class="govuk-grid-column-one-third">
         <div class="filter-form" id="filter-form">
             <div id="EditSearchCollapse" class="search-result-filters blanket-container">
-                <h2 class="govuk-visually-hidden">Search results filters</h2>
+                <h2 class="gias-heading-xs">Filters</h2>
                 <a href="#results-container" class="govuk-skip-link">Skip filters</a>
-
+                <a href="#" class="add-clear-filters" id="clear-filters" role="search">Clear all filters</a>
                 <form method="get" action="@Url.Action("Index", "GovernorSearch", new {area = "Governors"})">
-                    <input type="hidden" id="client-only-searchtype" value="GovernorsAll" />
-
+                    <input type="hidden" id="client-only-searchtype" value="GovernorsAll"/>
                     <div class="govuk-option-select js-collapsible"
                          id="option-select-sort-by" role="search">
                         <div class="container-head js-container-head">
@@ -115,12 +116,11 @@
                                         @foreach (var item in Model.GovernorRoles.OrderBy(x => x.Name))
                                         {
                                             <div class="govuk-checkboxes__item">
-                                                <input name="@GovernorSearchViewModel.BIND_ALIAS_ROLE_ID" class="govuk-checkboxes__input trigger-result-update" value="@item.Id" id="role_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedRoleIds.Contains(item.Id), "checked") />
+                                                <input name="@GovernorSearchViewModel.BIND_ALIAS_ROLE_ID" class="govuk-checkboxes__input trigger-result-update" value="@item.Id" id="role_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedRoleIds.Contains(item.Id), "checked")/>
                                                 <label for="role_@item.Id" class="govuk-checkboxes__label">
                                                     @item
                                                 </label>
                                             </div>
-
                                         }
                                     </div>
                                 </fieldset>
@@ -148,15 +148,15 @@
                                         </div>
                                     </div>
                                     <div class="govuk-checkboxes gias-filter-checkboxes">
-                                    @foreach (var item in Model.GovernorTypeFlags.OrderBy(x => x.Name))
-                                    {
-                                        <div class="govuk-checkboxes__item">
-                                            <input name="g" class="govuk-checkboxes__input trigger-result-update" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGovernorTypeFlagIds.Contains(item.Id), "checked") />
-                                            <label for="group-type_@item.Id" class="govuk-checkboxes__label">
-                                                @item
-                                            </label>
-                                        </div>
-                                    }
+                                        @foreach (var item in Model.GovernorTypeFlags.OrderBy(x => x.Name))
+                                        {
+                                            <div class="govuk-checkboxes__item">
+                                                <input name="g" class="govuk-checkboxes__input trigger-result-update" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGovernorTypeFlagIds.Contains(item.Id), "checked")/>
+                                                <label for="group-type_@item.Id" class="govuk-checkboxes__label">
+                                                    @item
+                                                </label>
+                                            </div>
+                                        }
                                     </div>
                                 </fieldset>
                             </div>
@@ -166,11 +166,7 @@
 
                     @Selector("Local authority", GovernorSearchViewModel.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds, filterRefine: true, isExtraFilter: true)
 
-                    <div id="filter-additional-controls">
-                        <a href="#" class="add-clear-filters" id="clear-filters" role="search">Clear all filters</a>
-                    </div>
-
-                    <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit" />
+                    <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit"/>
                     @Html.HiddenFor(!Model.GovernorSearchModel.Forename.IsEmpty(), x => x.GovernorSearchModel.Forename)
                     @Html.HiddenFor(!Model.GovernorSearchModel.Surname.IsEmpty(), x => x.GovernorSearchModel.Surname)
                     @Html.HiddenFor(Model.GovernorSearchModel.IncludeHistoric, x => x.GovernorSearchModel.IncludeHistoric)
@@ -217,7 +213,7 @@
         additionalClassName = additionalClassName.RemoveSubstring("hidden");
     }
     <div class="govuk-option-select js-collapsible @additionalClassName @Html.Conditional(filterRefine, "searchable-filters")" data-closed-on-load="@(isExtraFilter ? "false" : "true")"
-         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name"
+         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/", "-")" data-bind-alias="@name"
          role="search">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>

@@ -34,8 +34,9 @@
         <div class="filter-form" id="filter-form">
 
             <div id="EditSearchCollapse" class="search-result-filters blanket-container">
-                <h2 class="govuk-visually-hidden">Search results filters</h2>
-                <a href="#results-container" class="govuk-skip-link">Skip filters</a>
+               <h2 class="gias-heading-xs">Filters</h2>
+               <a href="#results-container" class="govuk-skip-link">Skip filters</a>
+               <a href="#" class="add-clear-filters" id="clear-filters" role="search">Clear all filters</a>
 
                 <form method="get" action="@Url.Action("Index", "GroupSearch", new { area = "Groups" })">
                     <input type="hidden" id="client-only-searchtype" value="EstablishmentGroupsAll" />
@@ -126,9 +127,7 @@
                             </div>
                         </div>
                     }
-                    <div id="filter-additional-controls">
-                        <a href="#" class="add-clear-filters" id="clear-filters" role="search">Clear all filters</a>
-                    </div>
+
                     <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit" />
                     @Html.HiddenFor(!Model.GroupSearchModel.Text.IsEmpty(), x => x.GroupSearchModel.Text)
                     @Html.HiddenFor(!Model.GroupSearchModel.AutoSuggestValue.IsEmpty(), x => x.GroupSearchModel.AutoSuggestValue)

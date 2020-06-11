@@ -1,13 +1,17 @@
 .search-results-download-link-container {
   position: relative;
   padding: govuk-spacing(1) 0;
+
+  @include govuk-media-query($until: tablet) {
+    padding-top: 0;
+  }
 }
 .search-results-download-link {
   display:block;
-  margin-top: govuk-spacing(2);
+  margin-top: 0;
   margin-right: govuk-spacing(2);
   outline: none;
-  padding: govuk-spacing(1) govuk-spacing(1) govuk-spacing(1) 0;
+  padding: 0 govuk-spacing(1) govuk-spacing(1) 0;
   font-size: 14px;
 
   @include govuk-media-query($from: desktop){

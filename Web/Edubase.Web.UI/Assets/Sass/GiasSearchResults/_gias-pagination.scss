@@ -5,6 +5,10 @@
   clear: both;
   min-height: 48px;
 
+  @include govuk-media-query($until: tablet) {
+    font-size: 14px;
+  }
+
   //.lower-pagination & {
   //  p {
   //    margin-top: em(20, 16);
