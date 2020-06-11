@@ -6,9 +6,9 @@
         <label class="govuk-label" for="field-text-search">
             Search by field name
         </label>
-        <input v-bind:class="['govuk-input govuk-input--width-20', filterSearchError? 'govuk-input--error' : '']"
+        <input v-bind:class="['govuk-input gias-inline-search__field', filterSearchError? 'govuk-input--error' : '']"
                id="field-text-search" v-model="filterSearchText" type="text">
-        <button class="govuk-button" v-on:click.prevent="filterFilters">Search</button>
+        <button class="govuk-button gias-inline-search__button" v-on:click.prevent="filterFilters">Search</button>
         <a href="#" v-on:click.prevent="resetTextFilter" v-if="showClearButton">Clear search</a>
     </div>
 </template>

@@ -66,13 +66,10 @@
             </div>
 
             <div class="govuk-grid-row">
-                <checkbox-remote-selection :selected-fields="selectedFields"/>
-            </div>
-
-            <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
                     <input type="submit" class="govuk-button" value="Next"/>
                 </div>
+                <checkbox-remote-selection :selected-fields="selectedFields"/>
             </div>
 
             <div class="govuk-grid-row" v-show="!viewAsList">
@@ -112,8 +109,6 @@
                 </div>
             </div>
         </div>
-
-
 
         <div id="no-js-container">
             <div class="govuk-grid-row">

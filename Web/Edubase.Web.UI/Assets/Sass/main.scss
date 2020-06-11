@@ -3,6 +3,7 @@ $govuk-global-styles: true;
 @import "GiasHelpers/all";
 // govuk
 @import "node_modules/govuk-frontend/govuk/all";
+@import "GiasHelpers/gias-display";
 @import "GiasGlobalElements/all";
 @import "GiasModules/all";
 @import "GiasIcons/all";

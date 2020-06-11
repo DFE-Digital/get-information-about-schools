@@ -1,5 +1,5 @@
 <template>
-    <div class="govuk-grid-column-one-half govuk-!-padding-bottom-8">
+    <div class="govuk-grid-column-one-half govuk-!-padding-bottom-8 gias-align-right__from-tablet govuk-!-padding-top-2">
         <a href="#" v-on:click.prevent="selectAll">Select all</a>
         <a href="#" v-on:click.prevent="deselectAll">Clear all</a>
     </div>

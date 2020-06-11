@@ -1,0 +1,12 @@
+.gias-inline-search__button {
+  @include govuk-media-query($until: tablet) {
+    margin-top: govuk-spacing(2);
+  }
+}
+
+.gias-inline-search__field {
+  @include govuk-media-query($from: tablet){
+    max-width: 38ex + 3ex;
+    width: calc(100% - 100px);
+  }
+}

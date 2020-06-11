@@ -41,3 +41,10 @@
 .gias-align-right {
   text-align: right;
 }
+
+.gias-align-right__from-tablet {
+
+  @include govuk-media-query($from: tablet) {
+    text-align: right;
+  }
+}
