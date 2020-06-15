@@ -75,7 +75,7 @@
                         @Html.ValidationMessageFor(x => x.AdministrativeWardId)
                         @Html.ValidationMessageFor(x => x.AdministrativeWardName)
 
-                        <div id="AdministrativeWardId" class="autosuggest floating-text-field-wrap form-control">
+                        <div id="AdministrativeWardId" class="autosuggest scrollableAutosuggest floating-text-field-wrap form-control">
                             @Html.TextBoxFor(x => x.AdministrativeWardName, new { @class = "floating-text-field", autocomplete = "off" })
                         </div>
 
@@ -147,7 +147,7 @@
                         @Html.ValidationMessageFor(x => x.CASWardId)
                         @Html.ValidationMessageFor(x => x.CASWardName)
 
-                        <div id="CASWardId" class="autosuggest floating-text-field-wrap form-control">
+                        <div id="CASWardId" class="autosuggest scrollableAutosuggest floating-text-field-wrap form-control">
                             @Html.TextBoxFor(x => x.CASWardName, new { @class = "floating-text-field", autocomplete = "off" })
                         </div>
 

@@ -23,9 +23,9 @@ DfE.Views.editLocation = {
       $(function() {
         setTimeout(function() {
           self.bindAutosuggest('#AdministrativeDistrictName', '#searchby-district-ref', 'District', '#AdministrativeDistrictIdHidden', { data: window.districts, name: "name", value: "id" });
-          self.bindAutosuggest('#AdministrativeWardName', '#searchby-ward-ref', 'Ward', '#AdministrativeWardIdHidden', { data: window.wards, name: "name", value: "id" });
+          self.bindAutosuggest('#AdministrativeWardName', '#searchby-ward-ref', 'Ward', '#AdministrativeWardIdHidden', { data: window.wards, name: "name", value: "id" }, 30);
           self.bindAutosuggest('#ParliamentaryConstituencyName', '#searchby-constituency-ref', 'Parliamentary constituency', '#ParliamentaryConstituencyIdHidden', { data: window.constituencies, name: "name", value: "id" });
-          self.bindAutosuggest('#CASWardName', '#searchby-casward-ref', 'Census ward', '#CASWardIdHidden', { data: window.caswards, name: "name", value: "id" });
+          self.bindAutosuggest('#CASWardName', '#searchby-casward-ref', 'Census ward', '#CASWardIdHidden', { data: window.caswards, name: "name", value: "id" }, 30);
           self.bindAutosuggest('#GSSLAName', '#searchby-gssla-ref', 'LA Code', '#GSSLAIdHidden', { data: window.gsslas, name: "name", value: "id" });
           self.bindAutosuggest('#LSOAName', '#searchby-lsoa-ref', 'LSOA', '#LSOAIdHidden', { data: window.lsoas, name: "name", value: "id" });
           self.bindAutosuggest('#MSOAName', '#searchby-msoa-ref', 'MSOA', '#MSOAIdHidden', { data: window.msoas, name: "name", value: "id" });
@@ -35,7 +35,7 @@ DfE.Views.editLocation = {
     }
   },
 
-  bindAutosuggest: function (targetInputElementName, warningInputElement, targetDisplayName, targetResolvedInputElementName, suggestionSource) {
+  bindAutosuggest: function (targetInputElementName, warningInputElement, targetDisplayName, targetResolvedInputElementName, suggestionSource, limit) {
 
     // Setting a .focused class on the pseudo wrapper
     $(targetInputElementName).on('focus', function () {
@@ -54,6 +54,9 @@ DfE.Views.editLocation = {
     var value = "id";
     var source = null;
     var minChars = 0;
+    if (limit == null) {
+      limit = 10;
+    }
 
     if (typeof (suggestionSource) === "function") { // remote source
       minChars = 3;
@@ -124,7 +127,7 @@ DfE.Views.editLocation = {
       ariaOwnsId: "arialist_" + DfE.Util.randomNumber()
     }, {
         display: field,
-        limit: 10,
+        limit: limit,
         source: source,
         templates: {
           suggestion: templateHandler
