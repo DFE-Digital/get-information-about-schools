@@ -166,17 +166,16 @@
                         @if (Request.IsAuthenticated)
                         {
                             <li class="govuk-header__navigation-item">
-                                @Html.ActionLink("Sign off", "LogOff", "Account", new {area = "", returnUrl = Request.Url.PathAndQuery}, new {id = "logout-link", Class = "login-link govuk-header__link"})
+                                @Html.ActionLink("Sign off", "LogOff", "Account", new {area = "", returnUrl = Request.Url.PathAndQuery}, new {id = "logout-link", Class = "login-link govuk-header__link", rel="nofollow"})
                             </li>
                         }
                         else
                         {
                             <li class="govuk-header__navigation-item">
-                                @Html.ActionLink("Sign in", "LogIn", "Account", new {area = "", returnUrl = Request.Url.PathAndQuery}, new {Class = "login-link govuk-header__link"})
+                                @Html.ActionLink("Sign in", "LogIn", "Account", new {area = "", returnUrl = Request.Url.PathAndQuery}, new {Class = "login-link govuk-header__link", rel="nofollow"})
                             </li>
                         }
                     </ul>
-
                 </nav>
             </div>
             </div>
@@ -255,7 +254,6 @@
         <script nonce="@Html.ScriptNonce()">
              new checkGiasDataStatus();
         </script>
-@*         <script type="text/javascript" src="/public/assets/scripts/standalone/data-status.js"></script> *@
     }
 </div>
 </body>

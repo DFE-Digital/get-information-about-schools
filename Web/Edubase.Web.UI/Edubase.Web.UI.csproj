@@ -337,6 +337,8 @@
     <Compile Include="Controllers\FaqController.cs" />
     <Compile Include="Controllers\GlossaryController.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\ValidateEstablishmentJoinedDateModel.cs" />
+    <Compile Include="Controllers\SitemapController.cs" />
+    <Compile Include="Filters\ModelStateTransfer.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Glimpse\AllUsersApiTraceTab.cs" />
     <Compile Include="Glimpse\CurrentUserApiTraceTab.cs" />
@@ -348,6 +350,7 @@
     <Compile Include="Helpers\LayoutHelper.cs" />
     <Compile Include="Helpers\NonceHelper.cs" />
     <Compile Include="Helpers\RouteDto.cs" />
+    <Compile Include="Models\SiteMapNode.cs" />
     <Compile Include="Helpers\ValueProviders\TokenValueProviderFactory.cs" />
     <Compile Include="Models\AgeRangeFilterViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\BulkUpdateViewModel.cs" />
@@ -652,6 +655,7 @@
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
     <Content Include="robots.txt" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="App_offline_x.htm" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

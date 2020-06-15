@@ -8,6 +8,10 @@
     ViewBag.bodyClasses = " search-page custom-fields-download";
     ViewBag.hideLogo = true;
 }
+@section Head
+{
+    <meta name="robots" content="noindex,nofollow" />
+}
 
 @section BackLink
 {
@@ -80,6 +84,7 @@
                 </div>
             </div>
 
+<<<<<<< HEAD
             <div class="govuk-grid-row" v-show="viewAsList">
                 <div class="govuk-grid-column-full">
                     <div class="govuk-form-group" v-if="searchMatches.length === 0">

@@ -198,7 +198,9 @@
     <Compile Include="Exceptions\TexunaApiNotImplementedException.cs" />
     <Compile Include="Exceptions\TexunaApiSystemException.cs" />
     <Compile Include="Exceptions\UsageQuotaExceededException.cs" />
+    <Compile Include="ExternalLookup\CSCPService.cs" />
     <Compile Include="ExternalLookup\FBService.cs" />
+    <Compile Include="ExternalLookup\ICSCPService.cs" />
     <Compile Include="ExternalLookup\IFBService.cs" />
     <Compile Include="Geo\IPlacesLookupService.cs" />
     <Compile Include="Geo\PlaceDto.cs" />

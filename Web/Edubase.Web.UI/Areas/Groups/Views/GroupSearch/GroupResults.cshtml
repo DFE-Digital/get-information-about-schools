@@ -6,6 +6,11 @@
     ViewBag.PageClass = "search-results";
     ViewBag.HideLogo = true;
 }
+@section Head
+{
+    <meta name="robots" content="noindex,nofollow" />
+}
+
 @section BackLink
 {
     @Html.ActionLink("Back to find an establishment group", "Index",  new { controller="Search", area = "", SelectedTab = "Groups" }, new {@class="govuk-back-link"})
@@ -16,12 +21,12 @@
 
         <h1 class="govuk-heading-xl">Search results for establishment groups</h1>
         <div class="search-results-download-link-container">
-            <a class="search-results-download-link" href="@Url.Action("PrepareDownload", "GroupSearch")?@Url.CurrentQueryString()">Download these search results</a>
+            <a rel="nofollow" class="search-results-download-link" href="@Url.Action("PrepareDownload", "GroupSearch")?@Url.CurrentQueryString()">Download these search results</a>
         </div>
 
     </div>
     @if (!Model.GroupSearchModel.Text.IsNullOrEmpty())
-            {
+    {
         <div class="govuk-grid-column-full">
             <p>Establishment groups matching &lsquo;<span class="govuk-!-font-weight-bold">@Model.GroupSearchModel.Text</span>&rsquo;.</p>
         </div>

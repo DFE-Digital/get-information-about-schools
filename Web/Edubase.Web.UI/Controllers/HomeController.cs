@@ -2,10 +2,17 @@ using Edubase.Common.Cache;
 using Edubase.Services;
 using Edubase.Services.Lookup;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
+using System.Net.Mime;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml.Linq;
+using Edubase.Services.Establishments;
+using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -89,6 +96,8 @@ namespace Edubase.Web.UI.Controllers
 
             return etag;
         }
+
+
         private static string CleanETag(string s) => s.Replace("\"", string.Empty);
     }
 }

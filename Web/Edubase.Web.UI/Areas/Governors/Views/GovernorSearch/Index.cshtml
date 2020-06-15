@@ -7,6 +7,11 @@
 
     var gSearch = Request.QueryString["gsearch"];
 }
+@section Head
+{
+    <meta name="robots" content="noindex,nofollow" />
+}
+
 
 @section BackLink
 {
@@ -18,7 +23,7 @@
 
         <h1 class="govuk-heading-xl">Search results for governors</h1>
         <div class="search-results-download-link-container">
-            <a class="search-results-download-link @(Model.Count > 5000 ? "prevent-download" : "")" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()">Download these search results</a>
+            <a class="search-results-download-link @(Model.Count > 5000 ? "prevent-download" : "")" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()" rel="nofollow">Download these search results</a>
         </div>
     </div>
     <div class="govuk-grid-column-full">
@@ -64,6 +69,12 @@
                     <span class="conjunction-text">roles</span>
                     <span class="governor-roles govuk-!-font-weight-bold">@Html.Raw(Model.RoleNames)</span>
                 }
+                    else
+                    {
+                        <text>for </text>
+                    }
+                    <text>roles <span class="governor-roles">@Html.Raw(Model.RoleNames)</span></text>
+
             </p>
         </div>
     </div>

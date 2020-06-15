@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Edubase.Web.UI.Filters;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -21,10 +22,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             _governorsReadService = governorsReadService;
         }
 
-        [HttpGet, Route(Name = "GovernorsBulkUpdate")]
+        [HttpGet, Route(Name = "GovernorsBulkUpdate"), ImportModelState]
         public async Task<ActionResult> Index()
         {
-            return View(new GovernorsBulkUpdateViewModel());
+            var vm = TempData["ProcessBulkUpdate"] as GovernorsBulkUpdateViewModel ?? new GovernorsBulkUpdateViewModel();
+            return View("Index", vm);
         }
 
         [HttpGet, Route("DownloadTemplate")]
@@ -33,7 +35,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return Redirect(await _governorsReadService.GetGovernorBulkUpdateTemplateUri(User));
         }
 
-        [HttpPost, Route(Name = "GovernorsProcessBulkUpdate")]
+        [HttpPost, Route(Name = "GovernorsProcessBulkUpdate"), ExportModelState]
         public async Task<ActionResult> ProcessBulkUpdate(GovernorsBulkUpdateViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -52,7 +54,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     {
                         var apiResponse = await _governorsWriteService.BulkUpdateProcessRequestAsync(result.Id, User);
                         viewModel.WasSuccessful = apiResponse.Success;
-                        if (apiResponse.HasErrors) ModelState.AddModelError("BulkFile", apiResponse.Errors[0].Message);
+                        if (apiResponse.HasErrors) { ModelState.AddModelError("BulkFile", apiResponse.Errors[0].Message); }
                     }
                     else
                     {
@@ -74,7 +76,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 viewModel.BadFileType = true;
             }
 
-            return View("Index", viewModel);
+            TempData["ProcessBulkUpdate"] = viewModel;
+            return RedirectToAction("Index");
         }
     }
 }

@@ -4,6 +4,11 @@
     ViewBag.hideLogo = true;
     var breadcrumbRoutes = ViewBag.BreadcrumbRoutes as RouteDto[];
 }
+@section Head
+ {
+     <meta name="robots" content="noindex,nofollow" />
+ }
+
 @section Breadcrumbs
 {
 <div class="govuk-grid-row">
@@ -19,7 +24,7 @@
            </div>
        </div>
    </div>
-}
+
 
 
 <div class="govuk-grid-row">

@@ -1,4 +1,4 @@
-﻿@using Edubase.Services.Enums
+@using Edubase.Services.Enums
 @using Microsoft.Ajax.Utilities
 @model IDownloadGenerationProgressModel
 @{
@@ -8,6 +8,7 @@
 
 @section Head {
     <meta http-equiv="refresh" content="2">
+    <meta name="robots" content="noindex,nofollow" />
 }
 
 @section BreadCrumbs
@@ -42,6 +43,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h2 class="govuk-heading-m">Download @Model.DownloadName search results</h2>
+
 
         @if (Model.TotalSteps.HasValue)
         {

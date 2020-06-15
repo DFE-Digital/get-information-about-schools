@@ -1,9 +1,13 @@
-﻿@using Edubase.Services.Downloads.Models;
+@using Edubase.Services.Downloads.Models;
 @model DownloadsViewModel
 @{
     ViewBag.Title = "Downloads";
     ViewBag.HideLogo = true;
     var downloadGroups = Model.GetFileDownloadGroups();
+}
+@section Head
+{
+    <meta name="robots" content="noindex,nofollow" />
 }
 
 <div class="grid-row">
@@ -49,27 +53,27 @@
             <div class="tab-content-wrapper gias-tabs-content">
                 <div id="group-data" class="tab-content">
                     <div class="column-two-thirds">
-                    @foreach (var group in downloadGroups)
-                    {
-                        <h2 class="heading-medium">@group.Heading</h2>
-                        <p>@group.Paragraph</p>
-                        foreach (var item in group.SubSections)
+                        @foreach (var group in downloadGroups)
                         {
-                            <h3 class="heading-small push-half--bottom">@item.Heading</h3>
-                            <ul class="list push--bottom">
-                            @foreach (var file in item.Files)
+                            <h2 class="heading-medium">@group.Heading</h2>
+                            <p>@group.Paragraph</p>
+                            foreach (var item in group.SubSections)
                             {
-                                <li class="download-list-item">
-                                    <span class="icon-link-copy">
-                                        <a href="@(file.Item2.AuthenticationRequired ? Url.RouteUrl("DownloadFile", new { id = file.Item2.Tag }) : file.Item2.Url)" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
-                                            @file.Item1@Html.Conditional(file.Item2.FileSizeInBytes > 0, ", " + Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes)) <span class="visually-hidden">Opens in new window</span>
-                                        </a>
-                                    </span>
-                                </li>
+                                <h3 class="heading-small push-half--bottom">@item.Heading</h3>
+                                <ul class="list push--bottom">
+                                    @foreach (var file in item.Files)
+                                    {
+                                        <li class="download-list-item">
+                                            <span class="icon-link-copy">
+                                                <a href="@(file.Item2.AuthenticationRequired ? Url.RouteUrl("DownloadFile", new { id = file.Item2.Tag }) : file.Item2.Url)" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
+                                                    @file.Item1@Html.Conditional(file.Item2.FileSizeInBytes > 0, ", " + Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes)) <span class="visually-hidden">Opens in new window</span>
+                                                </a>
+                                            </span>
+                                        </li>
+                                    }
+                                </ul>
                             }
-                            </ul>
                         }
-                    }
                     </div>
                 </div>
                 @if (Model.AreScheduledExtractsAvailable)
@@ -96,17 +100,17 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            @foreach (var item in Model.ScheduledExtracts.Items)
-                            {
-                                <tr>
-                                    <td class="download-list-item">
-                                        @Html.RouteLink(item.Name, "RequestScheduledExtract", new {id = item.Id}, new {rel = "nofollow"})
-                                    </td>
-                                    <td>
-                                        @item.Id
-                                    </td>
-                                </tr>
-                            }
+                                @foreach (var item in Model.ScheduledExtracts.Items)
+                                {
+                                    <tr>
+                                        <td class="download-list-item">
+                                            @Html.RouteLink(item.Name, "RequestScheduledExtract", new { id = item.Id }, new { rel = "nofollow" })
+                                        </td>
+                                        <td>
+                                            @item.Id
+                                        </td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                         @if (Model.ScheduledExtracts.PageCount > 1)

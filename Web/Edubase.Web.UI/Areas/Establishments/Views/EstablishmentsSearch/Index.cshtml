@@ -9,6 +9,12 @@
     ViewBag.PageClass = "search-results";
     ViewBag.HideLogo = true;
 }
+
+@section Head
+ {
+     <meta name="robots" content="noindex,nofollow" />
+ }
+
 @section BackLink
 {
     <a class="govuk-back-link" href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = Model.SearchType})">Back to find an establishment</a>
@@ -47,12 +53,11 @@
         @if (Model.Count > 0)
         {
             <div class="search-results-download-link-container">
-                <a class="search-results-download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()">Download these search results</a>
+                <a class="search-results-download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()" rel="nofollow">Download these search results</a>
             </div>
-
         }
     </div>
-    @if (Model.SearchType != eSearchType.EstablishmentAll )
+    @if (Model.SearchType != eSearchType.EstablishmentAll)
     {
         <div class="govuk-grid-column-full">
             <p>
@@ -312,7 +317,7 @@
 
 
 
-@helper SelectorNested(string label, string name, IEnumerable<HeirarchicalLookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false,  bool filterRefine = false)
+@helper SelectorNested(string label, string name, IEnumerable<HeirarchicalLookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "", bool isExtraFilter = false, bool filterRefine = false)
 {
     var closed = isExtraFilter && (Model.SelectedExtraSearchFilters == null || !Model.SelectedExtraSearchFilters.Contains(name));
     if (!closed)
@@ -330,7 +335,7 @@
         </div>
         @if (filterRefine)
         {
-           @SearchWithin(@label)
+            @SearchWithin(@label)
         }
         <div class="options-container">
             <div class="suggestion-target"></div>
@@ -356,7 +361,6 @@
                                          <a href="#" class="child-option-toggle js-child-option-toggle" aria-expanded="false"><span class="govuk-visually-hidden">Types within @item</span></a>
                                     </div>
                                 </div>
-
                             </dt>
                             <dd class="filter-group">
                                 <div class="govuk-checkboxes gias-filter-checkboxes">
@@ -449,7 +453,8 @@
 
 }
 
-@helper RadiusFilter() {
+@helper RadiusFilter()
+{
     <div class="govuk-option-select radius-filter js-collapsible no-scroll" data-closed-on-load="false" id="option-select-radius" data-bind-alias="@M.BIND_ALIAS_RADIUS"
          role="search">
 
@@ -481,24 +486,3 @@
 {
     <script src="/public/assets/scripts/build/search-results-bundle.js"></script>
 }
-
-@* *@
-@* @section ViewScripts *@
-@* { *@
-@*     <script src="/public/assets/scripts/leaflet-bundle.js"></script> *@
-@*     <script src="/public/assets/scripts/standalone/search-map.js"></script> *@
-@*     <script language="javascript" nonce="@Html.ScriptNonce()"> *@
-@*         var $openSelector = $("#b_1"); *@
-@*         var $openClosedSelector = $("#b_4"); *@
-@* *@
-@*         $($openSelector).change(function() { *@
-@*             if (this.checked) { *@
-@*                 $openClosedSelector.prop('checked', true); *@
-@*             } *@
-@*         }); *@
-@* *@
-@*         DfE.searchResults.init(); *@
-@*         $('#filter-form').find('.searchable-filters').searchWithinFilters(); *@
-@*     </script> *@
-@* *@
-@* } *@

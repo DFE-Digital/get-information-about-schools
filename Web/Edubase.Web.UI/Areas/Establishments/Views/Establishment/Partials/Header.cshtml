@@ -264,9 +264,12 @@
         <dt class="gias-summary-list__key">Data from other services:</dt>
         <dd class="gias-summary-list__value">
             <ul class="govuk-list govuk-!-font-size-14">
-                <li>
-                    <a href="https://www.compare-school-performance.service.gov.uk/school/@Model.Establishment.Urn" rel="external" target="_blank">Compare School and College Performance <span class="govuk-visually-hidden">Opens in new window</span></a>
-                </li>
+                @if (Model.ShowCscp)
+                {
+                    <li>
+                        <a href="@Model.CscpURL" rel="external" target="_blank">Compare School and College Performance <span class="visually-hidden">Opens in new window</span></a>
+                    </li>
+                }
                 @if (Model.ShowFinancialBenchmarking)
                 {
                     <li>
