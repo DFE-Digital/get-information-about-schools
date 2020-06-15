@@ -225,7 +225,10 @@
 
                 @if (Model.CanUserEdit)
                 {
-                    @Html.ActionLink("Edit details", "EditDetails", "Group", new {id = Model.Group.GroupUId, area = "Groups"}, new {@class = "govuk-button govuk-button--secondary"})
+                    <div class="govuk-!-padding-top-4">
+                        @Html.ActionLink("Edit details", "EditDetails", "Group", new {id = Model.Group.GroupUId, area = "Groups"}, new {@class = "govuk-button govuk-button--secondary"})
+                    </div>
+
                 }
 
             </div>
@@ -458,16 +461,10 @@
         </div>
     </div>
 </div>
-@* @section ViewScripts *@
-@* { *@
-@* <script src="/public/assets/scripts/standalone/accessibility.js"></script> *@
-@* <script nonce="@Html.ScriptNonce()"> *@
-@*         $('#governance').find('.sortable-table').clientSort(); *@
-@*     </script> *@
-@* } *@
+
 @section ViewScripts
 {
     <script nonce="@Html.ScriptNonce()">var mapMode = 'group';</script>
-  <script src="/public/assets/scripts/build/landing-page-bundle.js"></script>
+    <script src="/public/assets/scripts/build/landing-page-bundle.js"></script>
 }
 

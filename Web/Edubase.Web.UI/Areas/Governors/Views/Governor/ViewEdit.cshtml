@@ -96,7 +96,7 @@ else
 @helper ShowDelegationInformation()
 {
     <h2 class="govuk-heading-s">Delegated authority of local governing body</h2>
-    <details class="govuk-details govuk-!-font-size-14" data-module="govuk-details">
+    <details class="govuk-details govuk-!-font-size-16" data-module="govuk-details">
         <summary class="govuk-details__summary">
             <span class="govuk-details__summary-text">
                 More details
@@ -126,8 +126,10 @@ else
             </span>
         </summary>
         <div class="govuk-details__text">
+            <p class="govuk-body-s">
             This only applies to organisations (most often a diocese or higher education institution) which are a corporate member or director/trustee of an academy trust. They should provide contact details here for someone in their organisation who can provide information on which members of their organisation have acted in the capacity of corporate member or corporate director/trustee.
-        </div>
+            </p>
+            </div>
     </details>
     <p>@(Model.CorporateContact ?? "Not recorded")</p>
     if (Model.EditMode)
@@ -246,7 +248,7 @@ else
                             </span>
                         </summary>
                         <div class="govuk-details__text">
-                            <table class="govuk-table govuk-!-font-size-14 gias-table list-table sortable-table historical governors">
+                            <table class="govuk-table govuk-!-font-size-16 gias-table list-table sortable-table historical governors">
                                 <caption class="govuk-visually-hidden">Historical governance</caption>
                                 <thead class="govuk-table__head">
                                 <tr class="govuk-table__row">
