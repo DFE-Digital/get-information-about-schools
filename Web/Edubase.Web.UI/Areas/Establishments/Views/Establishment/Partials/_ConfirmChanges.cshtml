@@ -2,38 +2,58 @@
 @using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
 @model ViewModel
 
-<div class="grid-row">
-    <div class="column-full">
-        <div class="breadcrumbs">
-            <ol>
-                <li>@Html.ActionLink("Home", "Index", "Search")</li>
+@* <div class="grid-row"> *@
+@*     <div class="column-full"> *@
+@*         <div class="breadcrumbs"> *@
+@*             <ol> *@
+@*                 <li>@Html.ActionLink("Home", "Index", "Search")</li> *@
+@*                 @if (Model.LegalParentGroup != null) *@
+@*                 { *@
+@*                     <li>@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new { id = Model.LegalParentGroup.GroupUId, area = "Groups" }, null)</li> *@
+@*                 } *@
+@*                 <li>@Html.ActionLink(Model.OriginalEstablishmentName ?? Model.Name, "Details", "Establishment", new {@class="requires-conf-to-leave"})</li> *@
+@*             </ol> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
+
+
+@section BreadCrumbs
+{
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="govuk-breadcrumbs">
+            <ol class="govuk-breadcrumbs__list">
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search")</li>
                 @if (Model.LegalParentGroup != null)
                 {
-                    <li>@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new { id = Model.LegalParentGroup.GroupUId, area = "Groups" }, null)</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new { id = Model.LegalParentGroup.GroupUId, area = "Groups" }, null)</li>
                 }
-                <li>@Html.ActionLink(Model.OriginalEstablishmentName ?? Model.Name, "Details", "Establishment", new {@class="requires-conf-to-leave"})</li>
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink(Model.OriginalEstablishmentName ?? Model.Name, "Details", "Establishment", new {@class="requires-conf-to-leave"})</li>
             </ol>
         </div>
     </div>
 </div>
-
+}
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-<div class="grid-row">
-    <div class="column-full edit-changes-summary">
-
-        <h1 class="heading-large">Confirm updates to establishment</h1>
-
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l">Confirm updates to establishment</h1>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
         @if (Model.IsAcademy || Model.IsLAMaintained || Model.CCIsDemoting || Model.CCIsPromoting)
         {
-            <div class="panel-indent push-half--ends text">
+            <div class="gias-panel-indent">
                 @if (Model.IsAcademy)
                 {
-                    <p class="flush--bottom hard--bottom">
+                    <p>
                         Please confirm that in making these changes the academy has:
                     </p>
-                    <ul class="list list-bullet warning-list">
-                        <li>followed the <a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" rel="external" target="_blank">statutory guidance <span class="visually-hidden">Opens in new window</span></a>
+                    <ul class="govuk-list govuk-list--bullet warning-list">
+                        <li>followed the <a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" rel="external" target="_blank">statutory guidance <span class=" govuk-visually-hidden">Opens in new window</span></a>
                         </li>
                         <li>submitted a deed of variation to the funding agreement where required</li>
                     </ul>
@@ -42,15 +62,15 @@
                 {
                     <p>
                         Please confirm that in making prescribed alterations the governing body or local authority has followed and completed the
-                        <a href="https://www.gov.uk/government/publications/school-organisation-maintained-schools" rel="external" target="_blank">statutory process <span class="visually-hidden">Opens in new window</span></a>.
+                        <a href="https://www.gov.uk/government/publications/school-organisation-maintained-schools" rel="external" target="_blank">statutory process <span class=" govuk-visually-hidden">Opens in new window</span></a>.
                     </p>
                 }
 
                 @if (Model.CCIsDemoting)
                 {
-                    <h3>I confirm that:</h3>
-                    <ul class="list-bullet">
-                        <li>I have read the <a href="https://edubasepr.blob.core.windows.net/guidance/DfE%20Short%20Guide%20for%20LAs.docx" rel="external" target="_blank">DfE's short guide for LAs <span class="visually-hidden">Opens in new window</span></a> document, and</li>
+                    <h3 class="govuk-heading-s">I confirm that:</h3>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>I have read the <a href="https://edubasepr.blob.core.windows.net/guidance/DfE%20Short%20Guide%20for%20LAs.docx" rel="external" target="_blank">DfE's short guide for LAs <span class=" govuk-visually-hidden">Opens in new window</span></a> document, and</li>
                         <li>I have demoted this children's centre record because it's no longer a children's centre in its own right but continues to contribute to our children's centre provision.</li>
                     </ul>
 
@@ -58,9 +78,9 @@
                 }
                 else if (Model.CCIsPromoting)
                 {
-                    <h3>I confirm that:</h3>
-                    <ul class="font-small list list-bullet warning-list">
-                        <li>I have read the <a href="https://edubasepr.blob.core.windows.net/guidance/DfE%20Short%20Guide%20for%20LAs.docx" rel="external" target="_blank">DfE's short guide for LAs <span class="visually-hidden">Opens in new window</span></a> document, and</li>
+                    <h3 class="govuk-heading-s">I confirm that:</h3>
+                    <ul class="govuk-list govuk-list--bullet warning-list">
+                        <li>I have read the <a href="https://edubasepr.blob.core.windows.net/guidance/DfE%20Short%20Guide%20for%20LAs.docx" rel="external" target="_blank">DfE's short guide for LAs <span class="govuk-visually-hidden">Opens in new window</span></a> document, and</li>
                         <li>I have promoted this linked site record because it fulfils the legal definition of a children's centre in its own right.</li>
                     </ul>
                 }
@@ -69,64 +89,75 @@
 
         @if (Model.ShowDuplicateRecordWarning)
         {
-            <div class="panel-indent push-half--ends text">
+            <div class="panel-indent">
                 <p>
                     There is already an establishment with the same name and local authority recorded. By confirming this change you acknowledge you may be duplicating the record.
                 </p>
             </div>
         }
 
-        <p class="text">Please confirm updates to the following items for the Establishment @Model.OriginalEstablishmentName. <abbr title="Unique Reference Number">URN</abbr>: @Model.Urn.</p>
-
-        <p class="table-caption">Showing 1 - @Model.ChangesSummary.Count of  @Model.ChangesSummary.Count</p>
-        <table class="edubase-table changes-summary confirm-changes">
-            <caption class="visuallyhidden">Establishment updates summary</caption>
-            <thead>
-                <tr>
-                    <th scope="col">Field</th>
-                    <th scope="col">Old value</th>
-                    <th scope="col">New value</th>
-                    <th scope="col">This field requires approval</th>
-                    <th scope="col">Approver</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.ChangesSummary) {
-                    <tr>
-                        <td data-label="Field">@item.Name</td>
-                        <td data-label="Old value">@(item.OldValue ?? "<empty>")</td>
-                        <td data-label="New value">@(item.NewValue ?? "<empty>")</td>
-                        <td data-label="This field requires approval">
-                            @if (item.RequiresApproval) {
-                                <div class="requires-approval">Yes</div>
-                            } else {
-                                @: No
-                            }
-                        </td>
-                        <td data-label="Approver name">
-                            @if (item.RequiresApproval) {
-                                @(item.ApproverName ?? "-")
-                            } else {
-                                @: &ndash;
-                            }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <p class="table-caption">Showing 1 - @Model.ChangesSummary.Count of  @Model.ChangesSummary.Count</p>
-
-        @Html.EditorFor(x => x.ChangeEffectiveDate, new { title = "Effective date (optional)" })
-
-        @if (Model.CanOverrideCRProcess)
-        {
-            <div class="form-group push--bottom">
-                <div class="multiple-choice">
-                    @Html.CheckBoxFor(x => x.OverrideCRProcess, new { @id="override-cr"})
-                    @Html.LabelFor(x => x.OverrideCRProcess, "Override CR", new { @for="override-cr" })
-                </div>
-            </div>
-        }
-
+        <p>Please confirm updates to the following items for the Establishment @Model.OriginalEstablishmentName. <abbr title="Unique Reference Number">URN</abbr>: @Model.Urn.</p>
     </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+    <p class="govuk-body-s">Showing 1 - @Model.ChangesSummary.Count of @Model.ChangesSummary.Count</p>
+    <table class="gias-table govuk-table changes-summary confirm-changes">
+        <caption class="govuk-visually-hidden">Establishment updates summary</caption>
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Field</th>
+            <th scope="col" class="govuk-table__header">Old value</th>
+            <th scope="col" class="govuk-table__header">New value</th>
+            <th scope="col" class="govuk-table__header">This field requires approval</th>
+            <th scope="col" class="govuk-table__header">Approver</th>
+        </tr>
+        </thead>
+        <tbody  class="govuk-table__body">
+        @foreach (var item in Model.ChangesSummary)
+        {
+            <tr class="govuk-table__row">
+                <td data-label="Field" class="govuk-table__cell">@item.Name</td>
+                <td data-label="Old value" class="govuk-table__cell">@(item.OldValue ?? "<empty>")</td>
+                <td data-label="New value" class="govuk-table__cell">@(item.NewValue ?? "<empty>")</td>
+                <td data-label="This field requires approval" class="govuk-table__cell">
+                    @if (item.RequiresApproval)
+                    {
+                        <div class="requires-approval">Yes</div>
+                    }
+                    else
+                    {
+                        @: No
+                    }
+                </td>
+                <td data-label="Approver name" class="govuk-table__cell">
+                    @if (item.RequiresApproval)
+                    {
+                        @(item.ApproverName ?? "-")
+                    }
+                    else
+                    {
+                        @: &ndash;
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <p class="govuk-body-s">Showing 1 - @Model.ChangesSummary.Count of @Model.ChangesSummary.Count</p>
+
+    <div class="gias-confirmation--date-editor">
+        @Html.EditorFor(x => x.ChangeEffectiveDate, new {title = "Effective date (optional)"})
+    </div>
+    @if (Model.CanOverrideCRProcess)
+    {
+        <div class="govuk-form-group">
+            <div class="govuk-checkboxes">
+                     @FormHelpers.GiasCheckbox("true", "OverrideCRProcess", "Override CR",null, new {@id = "override-cr", @class = "govuk-checkboxes__input"})
+                     @* @Html.LabelFor(x => x.OverrideCRProcess, "Override CR", new {@for = "override-cr"}) *@
+            </div>
+        </div>
+    }
+
+</div>
 </div>

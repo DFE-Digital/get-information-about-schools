@@ -11,7 +11,7 @@ const defaults = {
   onPause: false,
   immediate: false,
   idPrefix: '',
-  okLabel: 'OK'
+  okLabel: 'OK',
 };
 
 class GiasOkCancel {

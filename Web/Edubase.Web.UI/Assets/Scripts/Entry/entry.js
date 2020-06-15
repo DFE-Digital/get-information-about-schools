@@ -3,7 +3,7 @@ const $ = require('jquery');
 
 import giasAriaLive from '../GiasGlobal/giasAriaLive';
 import GiasToolTip from "../GiasGlobal/GiasToolTips";
-import GiasOkCancel from "../GiasModules/GiasOkCancel";
+import GiasOkCancel from "../GiasModules/GiasModals/GiasOkCancel";
 const checkGiasDataStatus = require("../GiasStandalone/GiasDataStatus");
 const dfeCookieManager = require('../GiasModules/DfeCookieManager');
 

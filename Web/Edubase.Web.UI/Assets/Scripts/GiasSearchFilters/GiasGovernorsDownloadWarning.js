@@ -1,4 +1,4 @@
-import GiasOkCancel from "../GiasModules/GiasOkCancel";
+import GiasOkCancel from "../GiasModules/GiasModals/GiasOkCancel";
 
 class GiasGovernorsDownloadWarning{
   constructor() {

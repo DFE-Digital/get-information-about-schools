@@ -3,7 +3,7 @@
 @using ViewModel = Edubase.Web.UI.Areas.Establishments.Models.IEstablishmentPageViewModel
 @model ViewModel
 @{
-    ViewBag.bodyClasses = "create-edit-school school-details";
+    ViewBag.bodyClasses = "create-edit school-details";
     ViewBag.hideLogo = true;
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Edit establishment");
     Layout = "~/Views/Dfe/Layouts/template.cshtml";
@@ -11,19 +11,7 @@
 
 @section BreadCrumbs
 {
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-            <div class="govuk-breadcrumbs">
-                <ol class="govuk-breadcrumbs__list">
-                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
-                    @if (Model.LegalParentGroup != null)
-                    {
-                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new {id = Model.LegalParentGroup.GroupUId, area = "Groups"}, null)</li>
-                    }
-                </ol>
-            </div>
-        </div>
-    </div>
+ @RenderSection("BreadCrumbs", false)
 }
 
 @if (ViewBag.ShowSaved != null && ViewBag.ShowSaved)
@@ -57,83 +45,40 @@ else
         <div class="gias-tabs-wrapper">
             <div class="tab-wrap">
                 <ul class="gias-tabs">
-                    <li class="gias-tabs__list-item">
-                        @if (string.Equals(Model.SelectedTab, "details"))
-                        {
-                            <a href="@Url.Action("EditDetails", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="horizontal-tab selected-tab">Details</a>
-                        }
-                        else
-                        {
-                            <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#school-dashboard")" class="horizontal-tab">Details</a>
-                        }
-
+                    <li class="gias-tabs__list-item @Html.Conditional(string.Equals(Model.SelectedTab, "details"), "gias-tabs__list-item--selected")">
+                        <a href="@Url.Action("EditDetails", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="gias-tabs__tab">Details</a>
                     </li>
 
                     @if (Model.TabDisplayPolicy.Governance)
                     {
-                        <li class="gias-tabs__list-item">
-                            @if (string.Equals(Model.SelectedTab, "governance"))
-                            {
-                                <a href="@Url.Action("Edit", "Governor", new { establishmentUrn = Model.Urn, area = "Governors" })" class="horizontal-tab selected-tab">Governance</a>
-                            }
-                            else
-                            {
-                                <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#school-governance")" class="horizontal-tab">Governance</a>
-                            }
+                        <li class="gias-tabs__list-item @Html.Conditional(string.Equals(Model.SelectedTab, "governance"), "gias-tabs__list-item--selected")">
+                            <a href="@Url.Action("Edit", "Governor", new { establishmentUrn = Model.Urn, area = "Governors" })" class="gias-tabs__tab">Governance</a>
                         </li>
                     }
 
                     @if (Model.TabDisplayPolicy.IEBT)
                     {
-                        <li class="gias-tabs__list-item">
-                            @if (string.Equals(Model.SelectedTab, "iebt"))
-                            {
-                                <a href="@Url.Action("EditIEBT", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="horizontal-tab selected-tab">IEBT</a>
-                            }
-                            else
-                            {
-                                <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#school-iebt")" class="horizontal-tab">IEBT</a>
-                            }
+                        <li class="gias-tabs__list-item @Html.Conditional(string.Equals(Model.SelectedTab, "iebt"), "gias-tabs__list-item--selected")">
+                            <a href="@Url.Action("EditIEBT", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="gias-tabs__tab">IEBT</a>
                         </li>
                     }
 
-                    <li class="gias-tabs__list-item">
-                        @if (string.Equals(Model.SelectedTab, "links"))
-                        {
-                            <a href="@Url.Action("EditLinks", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="horizontal-tab selected-tab">Links</a>
-                        }
-                        else
-                        {
-                            <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#school-links")" class="horizontal-tab">Links</a>
-                        }
+                    <li class="gias-tabs__list-item @Html.Conditional(string.Equals(Model.SelectedTab, "links"), "gias-tabs__list-item--selected")">
+                        <a href="@Url.Action("EditLinks", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="gias-tabs__tab">Links</a>
                     </li>
 
 
                     @if (Model.TabDisplayPolicy.Location)
                     {
-                        <li class="gias-tabs__list-item">
-                            @if (string.Equals(Model.SelectedTab, "location"))
-                            {
-                                <a href="@Url.Action("EditLocation", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="horizontal-tab selected-tab">Location</a>
-                            }
-                            else
-                            {
-                                <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#school-location")" class="horizontal-tab">Location</a>
-                            }
+                        <li class="gias-tabs__list-item @Html.Conditional(string.Equals(Model.SelectedTab, "location"), "gias-tabs__list-item--selected")">
+                           <a href="@Url.Action("EditLocation", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="gias-tabs__tab">Location</a>
                         </li>
                     }
 
                     @if (Model.TabDisplayPolicy.Helpdesk)
                     {
-                        <li class="gias-tabs__list-item">
-                            @if (string.Equals(Model.SelectedTab, "helpdesk"))
-                            {
-                                <a href="@Url.Action("EditHelpdesk", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="horizontal-tab @Html.Conditional(Model.SelectedTab == "helpdesk", "selected-tab")">Helpdesk</a>
-                            }
-                            else
-                            {
-                                <a href="@($"{Url.Action("Details", "Establishment", new {id = Model.Urn, area = "Establishments"})}#helpdesk")" class="horizontal-tab">Helpdesk</a>
-                            }
+                        <li class="gias-tabs__list-item @Html.Conditional(string.Equals(Model.SelectedTab, "helpdesk"), "gias-tabs__list-item--selected")">
+                            <a href="@Url.Action("EditHelpdesk", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="gias-tabs__tab">Helpdesk</a>
                         </li>
                     }
                 </ul>
@@ -159,3 +104,4 @@ else
 {
     @(RenderSection("ViewScripts", required: false))
 }
+
