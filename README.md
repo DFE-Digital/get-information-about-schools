@@ -12,8 +12,8 @@ There is a &quot;fake api&quot; project which can be used for stubbing out APIs 
 
 ## Frameworks
 
-- .NET Framework 4.6.1
-- ASP.NET MVC 5.2.3
+- .NET Framework 4.7.2
+- ASP.NET MVC 5.2.7
 
 ## Languages
 
@@ -24,7 +24,7 @@ There is a &quot;fake api&quot; project which can be used for stubbing out APIs 
 
 ## Tools
 
-- Visual Studio 2017
+- Visual Studio 2019
 - NodeJS / npm
 - Ruby
 - Grunt
