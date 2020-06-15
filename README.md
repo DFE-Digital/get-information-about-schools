@@ -26,9 +26,7 @@ There is a &quot;fake api&quot; project which can be used for stubbing out APIs 
 
 - Visual Studio 2019
 - NodeJS / npm
-- Ruby
 - Grunt
-- Bower
 - Nuget
 - Git
 
