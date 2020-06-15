@@ -71,7 +71,7 @@ namespace Edubase.Web.UI.Models
             retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("View data status", "ViewStatus", "DataQuality"), Description = "See when each team’s data was last updated. You can also confirm that your team's data is up to date." });
             retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Change history", "ChangeHistoryCriteria"), Description = "View changes in the data relating to establishments and groups." });
             if (UserCanViewIndependentSchoolsSignificantDates) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View independent schools' significant dates", "IndSchSearch"), Description = "View independent schools' &lsquo;Next general action required&rsquo; or &lsquo;Next action required by welfare&rsquo; dates." });
-            if (UserCanDownloadMATClosureReport) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View closed multi-academy trust details", "DownloadMATClosureReport"), Description = "This is a list of multi-academy trusts that are currently open on GIAS but reported closed by Companies House." });
+            if (UserCanDownloadMATClosureReport) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View closed single academy trust and multi academy trust details", "DownloadMATClosureReport"), Description = "This is a list of single academy trusts and multi-academy trusts that are currently open on GIAS but reported closed by Companies House." });
             return retVal;
         }
 

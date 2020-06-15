@@ -175,7 +175,7 @@ namespace Edubase.Web.UI.Controllers
         {
             using (var c = IocConfig.CreateHttpClient())
             {
-                var requestMessage = await _httpClientHelper.CreateHttpRequestMessageAsync(HttpMethod.Get, "downloads/matclosurereport.csv", User);
+                var requestMessage = await _httpClientHelper.CreateHttpRequestMessageAsync(HttpMethod.Get, "downloads/matSatClosureReport.csv", User);
                 var response = (await c.SendAsync(requestMessage));
 
                 if(response.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -185,7 +185,7 @@ namespace Edubase.Web.UI.Controllers
                 else
                 {
                     response.EnsureSuccessStatusCode();
-                    return new FileStreamResult(await response.Content.ReadAsStreamAsync(), response.Content.Headers.ContentType.MediaType) { FileDownloadName = $"matclosurereport_{DateTime.Now.Date.ToString("dd-MM-yyyy")}.csv" };
+                    return new FileStreamResult(await response.Content.ReadAsStreamAsync(), response.Content.Headers.ContentType.MediaType) { FileDownloadName = $"SatAndMatClosureReport_{DateTime.Now.Date.ToString("dd-MM-yyyy")}.csv" };
                 }
             }
         }
