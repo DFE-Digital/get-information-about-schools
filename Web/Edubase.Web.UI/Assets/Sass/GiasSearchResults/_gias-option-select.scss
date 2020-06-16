@@ -2,14 +2,14 @@
   .js-container-head {
     z-index: 97;
     position: relative;
-    border: none;
     display: block;
     width: 100%;
     text-align: left;
     cursor: pointer;
     margin-bottom: -1px;
-    padding: 5px 0;
+    padding: 4px 0;
     background-color: govuk-tint(govuk-colour('mid-grey'), 50);
+    border: 1px solid govuk-tint(govuk-colour('mid-grey'), 50);
 
     &:after {
       position: absolute;
