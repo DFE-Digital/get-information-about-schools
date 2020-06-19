@@ -303,7 +303,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 viewModel.GroupTypeName = await _lookup.GetNameAsync(() => viewModel.GroupTypeId);
             }
 
-            viewModel.CanUserCloseMATAndMarkAsCreatedInError = viewModel.GroupType.OneOfThese(GT.MultiacademyTrust)
+            viewModel.CanUserCloseMATAndMarkAsCreatedInError = viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust)
                 && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed)
                 && User.InRole(AuthorizedRoles.IsAdmin);
 
