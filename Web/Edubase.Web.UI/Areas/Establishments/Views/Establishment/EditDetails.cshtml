@@ -542,7 +542,7 @@
     @if (Model.EditPolicy.FreeSchoolMealsNumber)
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FreeSchoolMealsNumber)">
-            @Html.LabelFor(x => x.FreeSchoolMealsNumber)
+            @Html.LabelFor(x => x.FreeSchoolMealsNumber, new {@class = "govuk-label"})
             @Html.ValidationMessageFor(x => x.FreeSchoolMealsNumber, null, new {@class = "govuk-error-message"})
             @Html.TextBoxFor(x => x.FreeSchoolMealsNumber, new {@class = "govuk-input"})
         </div>
@@ -551,7 +551,7 @@
     @if (Model.EditPolicy.FreeSchoolMealsPercentage)
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FreeSchoolMealsPercentage)">
-            @Html.LabelFor(x => x.FreeSchoolMealsPercentage)
+            @Html.LabelFor(x => x.FreeSchoolMealsPercentage, new {@class = "govuk-label"})
             @Html.ValidationMessageFor(x => x.FreeSchoolMealsPercentage, null, new {@class = "govuk-error-message"})
             @Html.TextBoxFor(x => x.FreeSchoolMealsPercentage, new {@class = "govuk-input"})
         </div>
@@ -561,7 +561,7 @@
     @if (Model.EditPolicy.SENStat)
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SENStat)">
-            @Html.LabelFor(x => x.SENStat)
+            @Html.LabelFor(x => x.SENStat, new {@class = "govuk-label"})
             @Html.ValidationMessageFor(x => x.SENStat, null, new {@class = "govuk-error-message"})
             @Html.TextBoxFor(x => x.SENStat, new {@class = "govuk-input"})
         </div>
@@ -570,7 +570,7 @@
     @if (Model.EditPolicy.SENNoStat)
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SENNoStat)">
-            @Html.LabelFor(x => x.SENNoStat)
+            @Html.LabelFor(x => x.SENNoStat, new {@class = "govuk-label"})
             @Html.ValidationMessageFor(x => x.SENNoStat, null, new {@class = "govuk-error-message"})
             @Html.TextBoxFor(x => x.SENNoStat, new {@class = "govuk-input"})
         </div>
