@@ -45,7 +45,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             ApiWarningCodes.CONFIRMATION_FEDERATION_NO_LINKS_CLOSE,
             ApiWarningCodes.CONFIRMATION_FEDERATION_BECOMES_CLOSED_LINKS_REMOVED,
             ApiWarningCodes.GROUP_OPEN_DATE_ALIGNMENT,
-            ApiWarningCodes.CONFIRMATION_MAT_CLOSE_LINKS
+            ApiWarningCodes.CONFIRMATION_MAT_CLOSE_LINKS,
+            ApiWarningCodes.CONFIRMATION_SAT_CLOSE_LINKS
         };
         
         public string Action { get; set; }
@@ -120,6 +121,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public IEnumerable<SelectListItem> LocalAuthorities { get; set; }
 
         public const string UIWarningCodeMatClosureAreYouSure = "mat_closure_are_you_sure";
+        public const string UIWarningCodeSatClosureAreYouSure = "sat_closure_are_you_sure";
 
         public List<ApiWarning> WarningsToProcess { get; private set; } = new List<ApiWarning>();
 
@@ -136,6 +138,11 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
                 if (OriginalStatusId != (int) eLookupGroupStatus.Closed && StatusId == (int) eLookupGroupStatus.Closed && GroupTypeId == (int) GT.MultiacademyTrust)
                 {
                     WarningsToProcess.Add(new ApiWarning { Code = UIWarningCodeMatClosureAreYouSure, Message = "Are you sure you want to close this multi-academy trust?" });
+                }
+
+                if (OriginalStatusId != (int) eLookupGroupStatus.Closed && StatusId == (int) eLookupGroupStatus.Closed && GroupTypeId == (int) GT.SingleacademyTrust)
+                {
+                    WarningsToProcess.Add(new ApiWarning { Code = UIWarningCodeSatClosureAreYouSure, Message = "Are you sure you want to close this single-academy trust?" });
                 }
             }
         }
