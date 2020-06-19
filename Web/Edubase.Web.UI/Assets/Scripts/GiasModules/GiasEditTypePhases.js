@@ -22,13 +22,14 @@ const typeToPhase = {
     $phaseSelector.html(optionList);
   },
   bindEvents: function() {
-    const $typeSelector = $("#TypeId");
-    const self = this;
-    this.filterEstablishmentPhases();
-    $typeSelector.on('change', function() {
-      self.filterEstablishmentPhases();
-    });
-
+    if (window.window.type2PhaseMap) {
+      const $typeSelector = $("#TypeId");
+      const self = this;
+      this.filterEstablishmentPhases();
+      $typeSelector.on('change', function() {
+        self.filterEstablishmentPhases();
+      });
+    }
   }
 }
 
