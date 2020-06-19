@@ -109,5 +109,9 @@
   .govuk-button {
     margin-bottom: 0;
     margin-right: 15px;
+
+    @include govuk-media-query($until: tablet) {
+      margin-bottom: 10px;
+    }
   }
 }
