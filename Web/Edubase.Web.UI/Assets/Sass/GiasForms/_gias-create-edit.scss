@@ -24,6 +24,7 @@
       float: none;
       padding: 0 0 20px;
       font-size: 19px;
+      margin-left: 0;
     }
 
     .govuk-error-message {
@@ -35,4 +36,14 @@
 .create-edit .range-group .inline-form-control {
   float: left;
   margin-left: 0;
+}
+
+.requires-approval {
+  color: govuk-colour('orange');
+  width: 50px;
+  display: inline-block;
+  background-image: url("/public/assets/images/icons/icon-information-2x.png");
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: contain;
 }
