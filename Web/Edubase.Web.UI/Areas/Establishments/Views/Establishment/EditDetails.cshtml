@@ -317,7 +317,7 @@
             @Html.DropDownListFor(x => x.OfstedRatingId, Model.OfstedRatings, "", new {@class = "govuk-select"})
         </div>
 
-        @Html.EditorFor(x => x.OfstedInspectionDate, new {title = "Ofsted last inspection"})
+        @Html.EditorFor(x => x.OfstedInspectionDate, new {title = "Ofsted last inspection", fieldsetClassName = "edit-date-fieldset"})
 
         <div class="govuk-form-group">
             <label for="ofsted-report" class="govuk-label">Ofsted report link</label>
@@ -420,7 +420,7 @@
 
     @if (Model.EditPolicy.OpenDate)
     {
-        @Html.EditorFor(x => x.OpenDate, new {title = "Open date"})
+        @Html.EditorFor(x => x.OpenDate, new {title = "Open date", fieldsetClassName = "edit-date-fieldset"})
     }
 
     @if (Model.EditPolicy.ReasonEstablishmentOpenedId)
@@ -434,7 +434,7 @@
 
     @if (Model.EditPolicy.CloseDate)
     {
-        @Html.EditorFor(x => x.CloseDate, new {title = "Close date"})
+        @Html.EditorFor(x => x.CloseDate, new {title = "Close date", fieldsetClassName = "edit-date-fieldset"})
     }
 
     @if (Model.EditPolicy.ReasonEstablishmentClosedId)
@@ -760,12 +760,12 @@
 
     @if (Model.EditPolicy.BSODateOfLastInspectionVisit)
     {
-        @Html.EditorFor(x => x.BSODateOfLastInspectionVisit, new {title = "BSO: Date of last inspection"})
+        @Html.EditorFor(x => x.BSODateOfLastInspectionVisit, new {title = "BSO: Date of last inspection", fieldsetClassName = "edit-date-fieldset"})
     }
 
     @if (Model.EditPolicy.BSODateOfNextInspectionVisit)
     {
-        @Html.EditorFor(x => x.BSODateOfNextInspectionVisit, new {title = "BSO: Next inspection visit"})
+        @Html.EditorFor(x => x.BSODateOfNextInspectionVisit, new {title = "BSO: Next inspection visit", fieldsetClassName = "edit-date-fieldset"})
     }
     <div class="button-row">
         <button id="save-submit-bottom" type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, "details")">Save details</button>
