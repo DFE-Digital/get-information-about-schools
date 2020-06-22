@@ -1,6 +1,9 @@
 .gias-inline-search__button {
+  margin-left: govuk-spacing(1);
+
   @include govuk-media-query($until: tablet) {
     margin-top: govuk-spacing(2);
+    margin-left: 0;
   }
 }
 
