@@ -34,6 +34,17 @@ namespace Edubase.Web.UI.Helpers
             return state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-error-message");
         }
 
+        public static MvcHtmlString TextBoxValidationClass<TModel, TProperty>(
+            this HtmlHelper<TModel> htmlHelper,
+            Expression<Func<TModel, TProperty>> expression)
+        {
+            var expressionText = ExpressionHelper.GetExpressionText(expression);
+            var fullHtmlFieldName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(expressionText);
+            var state = htmlHelper.ViewData.ModelState[fullHtmlFieldName];
+            if (state == null) return MvcHtmlString.Empty;
+            return state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-input--error");
+        }
+
         public static MvcHtmlString ValidationMessageNested(this HtmlHelper htmlHelper, string modelName)
         {
             var fullFieldName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(modelName);
