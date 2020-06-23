@@ -5,12 +5,12 @@ const autocompleteSetup = (function(){
   let intervalId;
 
   function getNameSuggestions(searchString, autocomplete, isMatSearch) {
-    let url =  isMatSearch ? `/search/suggestgroup?text=${searchString}`: `/search/suggest?text=${searchString}`;
+    const url =  isMatSearch ? `/search/suggestgroup?text=${searchString}`: `/search/suggest?text=${searchString}`;
 
     intervalId = setTimeout(function() {
     const openOnly = document.getElementById('include-open-establishments-name');
       $.ajax({
-        url: `/search/suggest?text=${searchString}`,
+        url: url,
         dataType: 'json',
         success: function(response) {
           autocomplete.list = response.filter((school)=> {
