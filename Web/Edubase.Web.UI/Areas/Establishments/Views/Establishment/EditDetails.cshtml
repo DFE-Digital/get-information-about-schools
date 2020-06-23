@@ -254,8 +254,8 @@
     @if (Model.EditPolicy.EstablishmentNumber)
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
-            <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-!-font-weight-bold govuk-!-font-size-16">DfE number</legend>
+            <fieldset class="govuk-fieldset gias-fieldset">
+                <legend class="govuk-fieldset__legend">DfE number</legend>
                 <p class="govuk-hint govuk-body-s">LA code and Establishment number</p>
                 @Html.ValidationMessageFor(x => x.EstablishmentNumber, null, new {@class = "govuk-error-message"})
                 <label class="govuk-visually-hidden" for="lacode"> LA code</label>
