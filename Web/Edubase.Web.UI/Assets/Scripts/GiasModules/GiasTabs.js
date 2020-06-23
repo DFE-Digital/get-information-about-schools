@@ -20,11 +20,10 @@ class GiasTabs {
     const $tabbedContent = $el.find('.' + opts.tabContentClass);
 
     this.validHashes = $.map($tabs, function (elem) {
-        if ($(elem).find('a').attr('href').indexOf('#') === 0) {
-          return $(elem).find('a').attr('href').split('#')[1];
-        }
-      });
-
+      if ($(elem).find('a').attr('href').indexOf('#') === 0) {
+        return $(elem).find('a').attr('href').split('#')[1];
+      }
+    });
 
     $tabbedContent.attr('tabindex', 0);
     $tabbedContent.addClass('hidden-tab-content').attr('aria-hidden', true);
@@ -50,12 +49,12 @@ class GiasTabs {
     const $tabbedContent = $(this.el).find('.' + opts.tabContentClass);
     const initialTabSelection = $.inArray(window.location.hash.replace('#', ''), this.validHashes);
 
-    $('.tab-manipulator').on('click', function (e) {
+    $('.tab-manipulator').on('click', (e)=> {
       e.preventDefault();
-      var hash = $(this).attr('href').replace('#', ''),
-        hasTab = $.inArray(hash, this.validHashes);
+      const hash = $(e.target).attr('href').replace('#', '');
+      const hasTab = $.inArray(hash, this.validHashes);
       if (hasTab > -1) {
-        $tabs.eq(hasTab).click();
+        $tabs.eq(hasTab).find('a').click();
         $(window).scrollTop($tabs.offset().top);
       }
     });
