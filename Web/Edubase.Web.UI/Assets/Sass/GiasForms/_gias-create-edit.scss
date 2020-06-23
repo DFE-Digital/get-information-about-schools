@@ -6,7 +6,8 @@
 
 // date inputs rendered through the editor template in the
 // edit details page
-.date-group .edit-date-fieldset {
+.date-group .edit-date-fieldset,
+.edit-age-range-fieldset {
   .govuk-fieldset__legend {
     font-size: 19px;
     font-weight: bold;

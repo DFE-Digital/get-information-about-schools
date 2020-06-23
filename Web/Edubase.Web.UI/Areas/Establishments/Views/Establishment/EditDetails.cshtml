@@ -180,8 +180,8 @@
     @if (Model.EditPolicy.AgeRange)
     {
         <div class="govuk-form-group range-group @Html.ValidationCssClassFor(x => x.StatutoryHighAge) @Html.ValidationCssClassFor(x => x.StatutoryLowAge)">
-            <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-!-font-weight-bold govuk-!-font-size-16">
+            <fieldset class="govuk-fieldset edit-age-range-fieldset">
+                <legend class="govuk-fieldset__legend">
                     Age range
                 </legend>
                 @Html.ValidationMessageFor(x => x.StatutoryLowAge, null, new {@class = "govuk-error-message"})
