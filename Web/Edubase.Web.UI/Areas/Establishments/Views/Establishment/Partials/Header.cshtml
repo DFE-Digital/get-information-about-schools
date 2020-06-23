@@ -226,6 +226,12 @@
     <dt>Data from other services:</dt>
     <dd>
         <ul>
+            @if (!Model.ShowCscp && !Model.ShowFinancialBenchmarking)
+            {
+            <li>
+                Not applicable
+            </li>
+            }
             @if (Model.ShowCscp)
             {
                 <li>
