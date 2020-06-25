@@ -531,6 +531,7 @@
     <Content Include="public\assets\images\maps\google-open-marker.png" />
     <Content Include="public\assets\images\maps\open-marker.png" />
     <Content Include="public\assets\images\option-select-toggle-child-sprite-2020.png" />
+    <Content Include="public\assets\scripts\build\add-edit-governor.js" />
     <Content Include="public\assets\scripts\build\bundle.js" />
     <Content Include="public\assets\scripts\build\download-select-fields.js" />
     <Content Include="public\assets\scripts\build\edit-details.js" />

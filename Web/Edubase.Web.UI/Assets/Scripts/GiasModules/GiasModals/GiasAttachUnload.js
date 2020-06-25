@@ -2,7 +2,13 @@ import GiasOkCancel from "./GiasOkCancel";
 
 class GiasAttachUnload  {
   constructor(options) {
-    this.opts = options;
+    this.opts = options || {};
+    if (this.opts.fields) {
+      this.$fields = $(options.fields);
+    } else {
+      this.$fields = $('#main-content').find(':input')
+    }
+
     if (window.isConfimingChanges){
       this.attachConfirmationExitWarning();
     }
@@ -12,7 +18,6 @@ class GiasAttachUnload  {
   }
 
   setExitStatus(status) {
-    console.log('exit status ', status);
     this.canExit = status;
   }
 
@@ -66,7 +71,7 @@ class GiasAttachUnload  {
       });
     }
 
-    $content.find(':input').on('change', ()=> {
+    this.$fields.on('change', ()=> {
       self.canExit = false;
       bindExitEvents();
     });
@@ -74,7 +79,6 @@ class GiasAttachUnload  {
     if (window.isDirty) {
       bindExitEvents();
     }
-
   }
 
   attachConfirmationExitWarning() {

@@ -18,6 +18,7 @@ module.exports = (env) => {
       'landing-page-bundle': './Assets/Scripts/Entry/landing-pages.js',
       'download-select-fields': './Assets/Scripts/Entry/download-select-fields',
       'edit-details': './Assets/Scripts/Entry/edit-details',
+      'add-edit-governor': './Assets/Scripts/Entry/add-edit-governor',
     },
 
     output: {

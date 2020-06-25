@@ -1,22 +1,25 @@
 ﻿@model EstablishmentDetailViewModel
 
 <div id="school-governance" class="tab-content">
+
+    @if (Model.UserCanEdit)
+    {
     <div class="govuk-grid-row">
-        @if (Model.UserCanEdit)
-        {
         <div class="govuk-grid-column-full">
             @Html.ActionLink("Edit governance", "Edit", "Governor", new { establishmentUrn = Model.Establishment.Urn, area = "Governors" }, new { @class = "govuk-button govuk-button--secondary" })
         </div>
-        }
+    </div>
+    }
 
-        @{Html.RenderAction("View", "Governor", new { viewModel = Model.GovernorsGridViewModel, area = "Governors" });}
+    @{Html.RenderAction("View", "Governor", new { viewModel = Model.GovernorsGridViewModel, area = "Governors" });}
 
-        @if (Model.UserCanEdit)
-        {
+    @if (Model.UserCanEdit)
+    {
+        <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
                 @Html.ActionLink("Edit governance", "Edit", "Governor", new { establishmentUrn = Model.Establishment.Urn, area = "Governors" }, new { @class = "govuk-button govuk-button--secondary" })
             </div>
+        </div>
 
-        }
-    </div>
+    }
 </div>

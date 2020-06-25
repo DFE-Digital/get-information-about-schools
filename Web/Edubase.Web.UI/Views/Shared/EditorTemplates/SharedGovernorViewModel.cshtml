@@ -8,24 +8,26 @@
 }
 
 <li>
-    <div class="expander-panel @(Model.Selected ? "open-expander" : "")">
-        <div class="form-group gov-radio-wrap">
+
+    <div class="govuk-form-group ">
+        <div class="govuk-radios">
             @if (Model.MultiSelect)
             {
-                <div class="multiple-choice">
-                    @Html.CheckBoxFor(x => x.Selected, GetCheckboxAttributes(Model.PreExisting, "panel-trigger", @Html.NameFor(x => x.Selected), "#expand-"+Model.Id))
-                    <label for="@Html.NameFor(x => x.Selected)">@Model.FullName</label>
+
+                <div class="govuk-radios__item">
+                    @Html.CheckBoxFor(x => x.Selected, GetCheckboxAttributes(Model.PreExisting, "govuk-radios__input", @Html.NameFor(x => x.Selected), "#expand-" + Model.Id))
+                    <label class="govuk-radios__label" for="@Html.NameFor(x => x.Selected)">@Model.FullName</label>
                 </div>
             }
             else
             {
-                <div class="multiple-choice">
-                    @Html.RadioButton(Model.Id.ToString(), Model.Id, Model.Selected,
-                    new {Name = "SelectedGovernorId", @class = "panel-trigger", @id = "gov-"+Model.Id, data_toggle_panel = "#expand-"+Model.Id })
-                    <label for="gov-@Model.Id">@Model.FullName</label>
+                <div class="govuk-radios__item">
+                    @Html.RadioButton(Model.Id.ToString(), Model.Id, Model.Selected, new {Name = "SelectedGovernorId", @class = "govuk-radios__input", @id = "gov-" + Model.Id, data_toggle_panel = "#expand-" + Model.Id})
+                    <label class="govuk-radios__label" for="gov-@Model.Id">@Model.FullName</label>
                 </div>
             }
         </div>
+    </div>
 
 
         @Html.HiddenFor(x => x.Id)
@@ -36,20 +38,23 @@
         <div class="shared-governor @(Model.PreExisting ? "remove-border": "")">
             @if (Model.PreExisting)
             {
-                <p class="bold-xsmall">Already shared with this establishment</p>
+                <p class="govuk-body-s govuk-!-font-weight-bold">Already shared with this establishment</p>
             }
-            <dl class="key-value-list">
+            <dl class="gias-summary-list govuk-!-font-size-16">
                 @if (Model.SharedWith.Any())
                 {
-                    <dt>Shared with:</dt>
-                    <dd>
-                        @foreach (var establishment in Model.SharedWith)
-                        {
-                            <div>
-                                @establishment.EstablishmentName, <abbr title="Unique Reference Number">URN</abbr>: @establishment.Urn
-                            </div>
-                        }
-                    </dd>
+                    <div class="gias-summary-list__row">
+                        <dt class="gias-summary-list__key">Shared with:</dt>
+                        <dd class="gias-summary-list__value">
+                            @foreach (var establishment in Model.SharedWith)
+                            {
+                                <div>
+                                    @establishment.EstablishmentName, <abbr title="Unique Reference Number">URN</abbr>: @establishment.Urn
+                                </div>
+                            }
+                        </dd>
+                    </div>
+
                 }
                 <dt>Postcode:</dt>
                 <dd>@Model.PostCode</dd>
@@ -57,13 +62,21 @@
             @if (!Model.PreExisting)
             {
                 <div id="expand-@Model.Id">
-                    <dl class="key-value-list">
-                        <dt><abbr title="Governor ID number">GID</abbr>:</dt>
-                        <dd>@Model.Id</dd>
-                        <dt>Appointed by:</dt>
-                        <dd>@Model.AppointingBodyName</dd>
-                        <dt>Date of birth:</dt>
-                        <dd>@(Model.DOB?.ToString("dd/MM/yyyy"))</dd>
+                    <dl class="gias-summary-list">
+                        <div class="gias-summary-list__row">
+                            <dt class="gias-summary-list__key">
+                                <abbr title="Governor ID number">GID</abbr>:
+                            </dt>
+                            <dd class="gias-summary-list__value">@Model.Id</dd>
+                        </div>
+                        <div class="gias-summary-list__row">
+                            <dt class="gias-summary-list__key">Appointed by:</dt>
+                            <dd class="gias-summary-list__value">@Model.AppointingBodyName</dd>
+                        </div>
+                        <div class="gias-summary-list__row">
+                            <dt class="gias-summary-list__key">Date of birth:</dt>
+                            <dd class="gias-summary-list__value">@(Model.DOB?.ToString("dd/MM/yyyy"))</dd>
+                        </div>
                     </dl>
 
                     @Html.EditorFor(x => x.AppointmentStartDate, new { @readonly = Model.PreExisting || disableStartDate, ClassPrefix = "start-date" })

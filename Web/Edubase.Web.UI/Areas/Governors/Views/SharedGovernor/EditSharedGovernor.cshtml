@@ -6,24 +6,24 @@
     Layout = Model.Layout;
 }
 
-<div id="edit-shared-governor" class="tab-content">
-    <div class="column-two-thirds">
+<div id="edit-shared-governor" class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
         @using (Html.BeginForm("EditSharedGovernor", "SharedGovernor", FormMethod.Post))
         {
             @Html.HiddenFor(m => m.Governor.Id)
             @Html.HiddenFor(m => m.Urn)
-            <div class="button-row">
-                <input type="submit" value="Save" class="button" />
-                <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-secondary">Cancel</a>
+            <div class="button-row govuk-!-margin-bottom-3">
+                <input type="submit" value="Save" class="govuk-button" />
+                <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="govuk-button govuk-button--secondary">Cancel</a>
             </div>
-            <h2 class="heading-medium">Edit @Model.GovernorType</h2>
+            <h2 class="govuk-heading-m">Edit @Model.GovernorType</h2>
             <div class="edit-governor">
-                <h3 class="heading-small">@Model.Governor.FullName</h3>
-                @Html.EditorFor(x => x.Governor.AppointmentStartDate)
-                @Html.EditorFor(x => x.Governor.AppointmentEndDate)
+                <h3 class="govuk-heading-s">@Model.Governor.FullName</h3>
+                @Html.EditorFor(x => x.Governor.AppointmentStartDate, new { fieldsetClassName = "edit-date-fieldset"})
+                @Html.EditorFor(x => x.Governor.AppointmentEndDate, new { fieldsetClassName = "edit-date-fieldset"})
                 <div class="button-row">
-                    <input type="submit" value="Save" class="button" />
-                    <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-secondary">Cancel</a>
+                    <input type="submit" value="Save" class="govuk-button" />
+                    <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="govuk-button govuk-button--secondary">Cancel</a>
                 </div>
             </div>
         }
