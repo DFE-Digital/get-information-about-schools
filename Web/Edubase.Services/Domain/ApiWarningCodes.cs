@@ -12,6 +12,7 @@ namespace Edubase.Services.Domain
         public const string ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND = "establishment.with.same.name.la.found";
         public const string GROUP_OPEN_DATE_ALIGNMENT = "confirmation.links.adjust.dates"; // when the open date is later than one or more of the linked estabs' joined dates.
         public const string CONFIRMATION_MAT_CLOSE_LINKS = "confirmation.mat.close.links";
+        public const string CONFIRMATION_SAT_CLOSE_LINKS = "confirmation.sat.close.links";
 
         public static readonly string[] All = new[] {
             GROUP_WITH_SIMILAR_NAME_FOUND,
@@ -23,7 +24,8 @@ namespace Edubase.Services.Domain
             ESTABLISHMENT_WITH_SAME_NAME_LA_POSTCODE_FOUND,
             ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND,
             GROUP_OPEN_DATE_ALIGNMENT,
-            CONFIRMATION_MAT_CLOSE_LINKS
+            CONFIRMATION_MAT_CLOSE_LINKS,
+            CONFIRMATION_SAT_CLOSE_LINKS
         };
     }
 }
