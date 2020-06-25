@@ -33,30 +33,42 @@
 
 
 }
-<div class="breadcrumbs">
-    <ol>
-        <li>@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
-        <li>@Html.RouteLink(Model.Group.Name, "GroupDetails", new {id = Model.Group.GroupUId })</li>
-    </ol>
+
+@section BreadCrumbs
+{
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="govuk-breadcrumbs">
+            <ol class="govuk-breadcrumbs__list">
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
+                <li class="govuk-breadcrumbs__list-item">@Html.RouteLink(Model.Group.Name, "GroupDetails", new {id = Model.Group.GroupUId})</li>
+            </ol>
+        </div>
+    </div>
 </div>
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l gias-landing-heading">@Model.Group.Name</h1>
 
-<h1 class="heading-large">@Model.Group.Name</h1>
+        <p class="establishment-fine-detail"><abbr title="Unique Identifier">UID</abbr>: @Model.Group.GroupUId</p>
+        <p class="group-type establishment-fine-detail">@Model.GroupTypeName</p>
 
-    <p class="urn"><abbr title="Unique Identifier">UID</abbr>: @Model.Group.GroupUId</p>
-    <p class="group-type">@Model.GroupTypeName</p>
-
-    <p class="group-data-download">
-        @Html.RouteLink("Download group data", "GroupDataDownload", new { uid = Model.Group.GroupUId, state = UriHelper.SerializeToUrlToken(new[] { new RouteDto("GroupDetails", new RouteValueDictionary(new { id = Model.Group.GroupUId }), Model.Group.Name) }) }, new { rel = "nofollow" })
-    </p>
-
-    <div class="grid-row gias-tabs-wrapper">
-        <div class="column-full">
-
-            <div class="tab-wrap">
+        <p class="govuk-body">
+            @Html.RouteLink("Download group data", "GroupDataDownload", new { uid = Model.Group.GroupUId, state = UriHelper.SerializeToUrlToken(new[] { new RouteDto("GroupDetails", new RouteValueDictionary(new { id = Model.Group.GroupUId }), Model.Group.Name) }) }, new { rel = "nofollow" })
+        </p>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+    <div class="gias-tabs-wrapper">
+        <div class="tab-wrap">
                 <ul class="gias-tabs">
                     @if (Model.IsUserLoggedOn)
                     {
-                        <li><a href="#change-history" class="horizontal-tab">Governance Changes</a></li>
+                        <li class="gias-tabs__list-item gias-tabs__list-item--selected">
+                            <span class="gias-tabs__tab">Governance Changes</span>
+                        </li>
                     }
                 </ul>
             </div>
@@ -66,7 +78,7 @@
                 @if (Model.IsUserLoggedOn)
                 {
                     <div id="change-history" class="tab-content">
-                        <h2 class="bold-small">Governance Change History</h2>
+                        <h2 class="govuk-heading-s">Governance Change History</h2>
                         @if (!Model.ChangeHistory.Items.Any())
                         {
                             <p>There are no change records available at the moment</p>
@@ -74,9 +86,10 @@
                         else
                         {
                             <p>
-                                @Html.RouteLink("Download data in CSV format", "DownloadGroupGovernanceChangeHistory", new { groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.csv }, new { style = "margin-bottom:10px; display:block;" })
-                                @Html.RouteLink("Download data in XLSX format", "DownloadGroupGovernanceChangeHistory", new { groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.xlsx }, null)
-                                <br />
+                                @Html.RouteLink("Download data in CSV format", "DownloadGroupGovernanceChangeHistory", new {groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.csv})
+                            </p>
+                            <p>
+                                @Html.RouteLink("Download data in XLSX format", "DownloadGroupGovernanceChangeHistory", new {groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.xlsx})
                             </p>
 
                             if (Model.ChangeHistory.PageCount > 1)
@@ -86,13 +99,13 @@
                                 </div>
                             }
 
-                            <table class="edubase-table approval-changes sortable-table">
-                                <caption class="visuallyhidden">Governance change history</caption>
-                                <thead>
-                                    <tr>
+                            <table class="govuk-table gias-table approval-changes sortable-table">
+                                <caption class="govuk-visually-hidden">Governance change history</caption>
+                                <thead class="govuk-table__head">
+                                    <tr class="govuk-table__row">
                                     @foreach (var tableColumn in tableColumns)
                                     {
-                                        <th scope="col">
+                                        <th scope="col" class="govuk-table__header">
                                             <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
                                             class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
                                             aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
@@ -100,17 +113,17 @@
                                     }
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="govuk-table__body">
                                     @foreach (var item in Model.ChangeHistory.Items)
                                     {
-                                        <tr>
-                                            <td data-label="Date changed">@(item.EffectiveDateUtc?.ToString("dd/MM/yyyy"))</td>
-                                            <td data-label="Updated field">@item.Name</td>
-                                            <td data-label="Old value">@item.OldValue</td>
-                                            <td data-label="New value">@item.NewValue</td>
-                                            <td data-label="Date requested">@(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))</td>
-                                            <td data-label="Suggested from">@item.OriginatorUserName</td>
-                                            <td data-label="Approved by">@(item.ApproverUserName ?? "--")</td>
+                                        <tr class="govuk-table__row">
+                                            <td data-label="Date changed" class="govuk-table__cell">@(item.EffectiveDateUtc?.ToString("dd/MM/yyyy"))</td>
+                                            <td data-label="Updated field" class="govuk-table__cell">@item.Name</td>
+                                            <td data-label="Old value" class="govuk-table__cell">@item.OldValue</td>
+                                            <td data-label="New value" class="govuk-table__cell">@item.NewValue</td>
+                                            <td data-label="Date requested" class="govuk-table__cell">@(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))</td>
+                                            <td data-label="Suggested from" class="govuk-table__cell">@item.OriginatorUserName</td>
+                                            <td data-label="Approved by" class="govuk-table__cell">@(item.ApproverUserName ?? "--")</td>
                                         </tr>
                                     }
                                 </tbody>
@@ -130,11 +143,12 @@
             </div>
         </div>
     </div>
+</div>
 
 @section ViewScripts
 {
-    <script nonce="@Html.ScriptNonce()">
-        $('#governance').find('.sortable-table').clientSort();
-    </script>
-    <script src="/public/assets/scripts/leaflet-bundle.js"></script>
+    @* <script nonce="@Html.ScriptNonce()"> *@
+    @*     $('#governance').find('.sortable-table').clientSort(); *@
+    @* </script> *@
+    @* <script src="/public/assets/scripts/leaflet-bundle.js"></script> *@
 }
