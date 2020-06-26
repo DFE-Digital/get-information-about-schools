@@ -131,7 +131,7 @@
             }
             else
             {
-                @Html.ActionLink("« Go back", "SearchCompaniesHouse", "Group", new {area = "Groups"}, new {@class = "button button-secondary cancel"})
+                @Html.ActionLink(HttpUtility.HtmlDecode("&laquo; Go back"), "SearchCompaniesHouse", "Group", new {area = "Groups"}, new {@class = "button button-secondary cancel"})
                 if (Model.AllowSave)
                 {
                     <button type="submit" class="button submit">Create academy trust</button>
