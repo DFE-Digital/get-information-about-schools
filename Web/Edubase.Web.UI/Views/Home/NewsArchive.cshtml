@@ -1,0 +1,30 @@
+@model IHtmlString
+@{
+    ViewBag.Title = "Get information about schools";
+    ViewBag.bodyClasses = "news-page";
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        <div class="breadcrumbs">
+            <ol>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("News", "News", "Home")
+                </li>
+            </ol>
+        </div>
+        <h1 class="heading-xlarge">Archive</h1>
+    </div>
+</div>
+<div class="grid-row news">
+
+    <div class="column-two-thirds news-blog">
+        <hr />
+        @Model
+
+    </div>
+
+</div>

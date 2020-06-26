@@ -1,4 +1,4 @@
-﻿@model IHtmlString
+@model IHtmlString
 @{
     ViewBag.Title = "Get information about schools";
     ViewBag.bodyClasses = "news-page";
@@ -14,6 +14,9 @@
             </ol>
         </div>
         <h1 class="heading-xlarge">News</h1>
+        <div class="text-align-right">
+            @Html.ActionLink("News Archive", "NewsArchive", "Home")
+        </div>
     </div>
 </div>
 <div class="grid-row news">
@@ -25,7 +28,7 @@
     </div>
 
     <div class="column-third about">
-        <hr />
+        <hr/>
 
         <h3 class="heading-medium bold-medium push-half--top">About the Get information about schools service</h3>
         <p>
@@ -43,7 +46,7 @@
             Any personal information that is processed further by any organisation for other purposes will be subject to the terms of data protection legislation.
         </p>
 
-        <hr />
+        <hr/>
 
     </div>
 
