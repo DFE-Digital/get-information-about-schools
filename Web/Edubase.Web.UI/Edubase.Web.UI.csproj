@@ -535,6 +535,7 @@
     <Content Include="public\assets\scripts\build\bundle.js" />
     <Content Include="public\assets\scripts\build\download-select-fields.js" />
     <Content Include="public\assets\scripts\build\edit-details.js" />
+    <Content Include="public\assets\scripts\build\edit-establishment-links.js" />
     <Content Include="public\assets\scripts\build\landing-page-bundle.js" />
     <Content Include="public\assets\scripts\build\leaflet-bundle.js" />
     <Content Include="public\assets\scripts\build\search-bundle.js" />

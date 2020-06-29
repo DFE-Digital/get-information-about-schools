@@ -19,6 +19,7 @@ module.exports = (env) => {
       'download-select-fields': './Assets/Scripts/Entry/download-select-fields',
       'edit-details': './Assets/Scripts/Entry/edit-details',
       'add-edit-governor': './Assets/Scripts/Entry/add-edit-governor',
+      'edit-establishment-links': './Assets/Scripts/Entry/edit-establishment-links',
     },
 
     output: {

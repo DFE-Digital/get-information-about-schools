@@ -22,6 +22,12 @@
   }
 }
 
+.create-edit-form-group .edit-date-fieldset {
+  .govuk-error-message {
+    padding-left: 0;
+  }
+}
+
 .create-edit {
   .govuk-select {
     width: 100%;

@@ -185,6 +185,7 @@ namespace Edubase.Web.UI.Helpers
             checkbox.Attributes["type"] =  "checkbox";
             checkbox.Attributes["name"] = inputName;
             checkbox.Attributes["value"] = inputValue;
+            checkbox.Attributes["class"] = "govuk-checkboxes__input";
 
             if (htmlAttributes != null)
             {

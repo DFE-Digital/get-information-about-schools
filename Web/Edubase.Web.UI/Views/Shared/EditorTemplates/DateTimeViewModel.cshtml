@@ -98,7 +98,7 @@
             var errContent = new List<MvcHtmlString>()
             {
                 Html.ValidationMessageNested(ViewData.ModelMetadata.PropertyName),
-                Html.ValidationMessageFor(x => x),
+                Html.ValidationMessageFor(x => x, null, new{ @class="govuk-error-message" }),
                 Html.ValidationMessageFor(x => x.Day, null, new{ @class="govuk-error-message" }),
                 Html.ValidationMessageFor(x => x.Month, null, new{ @class="govuk-error-message" }),
                 Html.ValidationMessageFor(x => x.Year, null, new{ @class="govuk-error-message" })

@@ -1,11 +1,11 @@
 .pending-updates-message {
   background-color: govuk-colour("turquoise");
-  font-size: 15px;
   color: govuk-colour('white');
   padding: 15px 35px 15px 45px;
   position: relative;
   margin-bottom: 10px;
 
+  @include govuk-font(16);
   .tick {
     position: absolute;
     left: 10px;
@@ -53,6 +53,7 @@
   p {
     margin: 0;
     color: govuk-colour('white');
+    @include govuk-font(16);
   }
 
   a {
