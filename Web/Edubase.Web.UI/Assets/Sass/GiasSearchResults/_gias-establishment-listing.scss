@@ -18,6 +18,23 @@
   }
 }
 
+.group-establishment-list {
+  .school-results-listing {
+    margin-top: 0;
+    > li {
+      padding-top: govuk-spacing(4);
+    }
+
+    li:first-child {
+      padding-top: 0;
+    }
+
+    h2 {
+      margin-bottom: govuk-spacing(3);
+    }
+  }
+}
+
 .gias-result-tile {
   margin-bottom: govuk-spacing(4);
   border-bottom: 1px solid $govuk-border-colour;
