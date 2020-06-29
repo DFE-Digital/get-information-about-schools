@@ -50,7 +50,6 @@
 
   @include govuk-media-query($until: tablet) {
     display: block;
-    font-size: 16px;
     height: auto;
   }
 }
