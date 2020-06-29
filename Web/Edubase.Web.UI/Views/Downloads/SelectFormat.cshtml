@@ -52,12 +52,9 @@
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-visually-hidden">Select your preferred format</legend>
                         <div class="govuk-radios">
-                            <div class="govuk-radios__item">
-                                @FormHelpers.GiasRadio("csv", "downloadtype", "Data in CSV format", null, new {@checked = "checked"})
-                            </div>
-                            <div class="govuk-radios__item">
-                                @FormHelpers.GiasRadio("xlsx", "downloadtype", "Data in XLSX (Excel) format")
-                            </div>
+                            @FormHelpers.GiasRadio("csv", "downloadtype", "Data in CSV format", null, new {@checked = "checked"})
+
+                            @FormHelpers.GiasRadio("xlsx", "downloadtype", "Data in XLSX (Excel) format")
                         </div>
                     </fieldset>
                 </div>
