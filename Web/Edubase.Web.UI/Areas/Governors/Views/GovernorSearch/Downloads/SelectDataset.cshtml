@@ -1,4 +1,4 @@
-@using Edubase.Services.Enums
+﻿@using Edubase.Services.Enums
 @using Microsoft.Ajax.Utilities
 @using Edubase.Web.UI.Areas.Governors.Models
 @model GovernorSearchDownloadViewModel
@@ -48,7 +48,6 @@
                             @{
                                 var inputName = Model.IncludeNonPublicData;
                             }
-<<<<<<< HEAD
                             <div class="govuk-radios">
                                 <div class="govuk-radios__item">
                                     @Html.GiasRadioFor(m => m.IncludeNonPublicData, "false", "Public data", null, new {@checked="checked", @class = "govuk-radios__input"} )
@@ -57,12 +56,7 @@
                                     @Html.GiasRadioFor(m => m.IncludeNonPublicData, "true", "Public and non-public data", null, new {@class = "govuk-radios__input"})
                                 </div>
                             </div>
-=======
-                            @Html.GiasRadioFor(m => m.IncludeNonPublicData, "false", "Public data", null, new { @checked = "checked" })
 
-                            @Html.GiasRadioFor(m => m.IncludeNonPublicData, "true", "Public and non-public data")
-
->>>>>>> dev
                         </fieldset>
                     </div>
                 </div>
