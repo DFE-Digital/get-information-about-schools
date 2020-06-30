@@ -8,7 +8,7 @@
 }
 
 <div class="breadcrumbs">
-    <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.Location})">Back to find an establishment</a>
+    <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Establishments, SearchType = eSearchType.Location})">Back to find an establishment</a>
 </div>
 
 <div class="grid-row">
@@ -27,17 +27,17 @@
                     <li>@LocationLink(item)</li>
                 }
             </ul>
-            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.Location})" class="button button-secondary">Back to search</a>
+            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Establishments, SearchType = eSearchType.Location})" class="button button-secondary">Back to search</a>
         }
         else if (Model.MatchingLocations.Count == 1)
         {
             <p>Did you mean @LocationLink(Model.MatchingLocations[0])?</p>
-            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.Location})" class="button button-secondary">Back to search</a>
+            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Establishments, SearchType = eSearchType.Location})" class="button button-secondary">Back to search</a>
         }
         else
         {
             <p class="bold-small">No locations were found. Please refine your search criteria.<br /></p>
-            <a href="/" class="button button-next">Continue</a>
+            <a href="@Url.Action("Index", "Search", new {area = ""})" class="button button-next">Continue</a>
         }
     </div>
 </div>

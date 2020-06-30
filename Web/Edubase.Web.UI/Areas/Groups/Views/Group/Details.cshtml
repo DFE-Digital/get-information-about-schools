@@ -1,6 +1,7 @@
 @using Edubase.Common
 @using Edubase.Services.Domain
 @using Edubase.Services.Enums
+@using Edubase.Web.UI.Models.Search
 @using Microsoft.Ajax.Utilities
 @model GroupDetailViewModel
 @{
@@ -36,7 +37,7 @@
     {
         <ol>
             <li>
-                @Html.ActionLink("Home", "Index", "Search", new {area = "", selectedTab = "Groups"}, null)
+                @Html.ActionLink("Home", "Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Groups}, null)
             </li>
         </ol>
 

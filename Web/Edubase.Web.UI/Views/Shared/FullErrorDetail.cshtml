@@ -1,4 +1,4 @@
-﻿@model Exception
+@model Exception
 @{
     var isPartialView = ((bool?)ViewBag.IsPartialView).GetValueOrDefault();
     Layout = isPartialView ? null as string : "../dfe/layouts/template.cshtml";
@@ -40,9 +40,6 @@
             </tr>
             <tr>
                 <td colspan="2" class="plain">@FormatHelpers.HtmlizeNewLines(Model.ToString())</td>
-            </tr>
-            <tr>
-                <td colspan="2" style="text-align:right;"><a href="/Admin/LogDetail/@ViewBag.ErrorCode" target="_blank">View full error report <span class="visually-hidden">Opens in new window</span></a></td>
             </tr>
         </table>
     </div>

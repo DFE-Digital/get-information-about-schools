@@ -125,17 +125,17 @@
         </div>
 
         <div class="app-cookie-banner js-cookie-banner" id="global-cookie-message">
-                    @if (string.IsNullOrEmpty(ViewBag.cookieMessage) == false)
-                    {
-                        @(ViewBag.cookieMessage)
-                    }
-                    else
-                    {
-                        <p class="govuk-width-container">
-                            GOV.UK uses cookies which are essential for the site to work. We also use non-essential cookies to help us improve government digital services. Any data collected is anonymised. By continuing to use this site, you agree to our use of cookies. <a href="/cookies" class="govuk-link">Find out more about cookies</a><br />
-                            <button class="govuk-button" id="button-accept-cookies">Accept cookies</button>
-                        </p>
-                    }
+            @if (string.IsNullOrEmpty(ViewBag.cookieMessage) == false)
+            {
+                @(ViewBag.cookieMessage)
+            }
+            else
+            {
+                <p class="govuk-width-container">
+                    GOV.UK uses cookies which are essential for the site to work. We also use non-essential cookies to help us improve government digital services. Any data collected is anonymised. By continuing to use this site, you agree to our use of cookies. @Html.ActionLink("Find out more about cookies", "Cookies", "Home", new {area=""}, new { @class="govuk-link" })<br />
+                    <button class="govuk-button" id="button-accept-cookies">Accept cookies</button>
+                </p>
+            }
         </div>
 
         <!--end global-cookie-message-->
@@ -178,30 +178,29 @@
                     <div class="content">
                         <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
                         <nav id="proposition-menu">
-                            <a href="/" id="proposition-name">Get information about schools</a>
+                            @Html.ActionLink("Get information about schools", "Index", "Search", new {area = ""}, new { id="proposition-name"})
 
                             <ul id="proposition-links">
-                                <li><a href="/">Search</a></li>
-                                <li><a href="/Downloads" rel="nofollow">Downloads</a></li>
+                                <li>@Html.ActionLink("Search", "Index", "Search", new {area = ""}, null)</li>
+                                <li>@Html.ActionLink("Downloads", "Index", "Downloads", new {area = ""}, null)</li>
+
                                 @if (Request.IsAuthenticated)
                                 {
-                                    <li><a href="/Tools">Tools</a></li>
+                                    <li>@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, null)</li>
                                 }
-                                <li><a href="/help">Help</a></li>
-                                <li><a href="/News">News</a></li>
+
+                                <li>@Html.ActionLink("Help", "Help", "Home", new {area = ""}, null)</li>
+                                <li>@Html.ActionLink("News", "News", "Home", new {area = ""}, null)</li>
+
                                 @if (Request.IsAuthenticated)
                                 {
-                                    <li>
-                                        @Html.ActionLink("Sign off", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id = "logout-link", Class = "login-link", rel = "nofollow" })
-                                    </li>
+                                    <li>@Html.ActionLink("Sign off", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id = "logout-link", Class = "login-link", rel = "nofollow" })</li>
                                 }
                                 else
                                 {
-                                    <li>
-                                        @Html.ActionLink("Sign in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { Class = "login-link", rel = "nofollow" })
-                                    </li>
+                                    <li>@Html.ActionLink("Sign in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { Class = "login-link", rel = "nofollow" })</li>
                                 }
-                            </ul>
+                                </ul>
 
                         </nav>
                     </div>
@@ -253,10 +252,10 @@
                         <h2 class="visuallyhidden">Support links</h2>
                         <ul>
                             <li><a href="https://form.education.gov.uk/fillform.php?self=1&form_id=hGz7nZcsdnX&noLoginPrompt=1" target="_blank" rel="external">Contact <span class="visually-hidden">Opens in new window</span></a></li>
-                            <li><a href="/cookies">Cookies</a></li>
+                            <li>@Html.ActionLink("Cookies", "Cookies", "Home")</li>
                             <li>@Html.RouteLink("Glossary", "Glossary")</li>
-                            <li><a href="/guidance">Guidance</a></li>
-                            @*<li><a href="/news">News</a></li>*@
+                            <li>@Html.ActionLink("Guidance", "Guidance", "Home")</li>
+                            @*<li>@Html.ActionLink("News", "News", "Home")</li>*@
                         </ul>
 
                         <div class="open-government-licence">

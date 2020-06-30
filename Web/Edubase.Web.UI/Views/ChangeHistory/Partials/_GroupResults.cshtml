@@ -1,4 +1,4 @@
-﻿@using Edubase.Services.Enums
+@using Edubase.Services.Enums
 @model ChangeHistoryViewModel
 
 @{
@@ -98,5 +98,5 @@
 }
 else
 {
-    <p>There are no results for your search. Please change the filters to adjust your search, or go @Html.ActionLink("back to the search page", "Index", "ChangeHistory", new { area = "", SelectedTab = "Groups" }, null) to start again.</p>
+    <p>There are no results for your search. Please change the filters to adjust your search, or go @Html.ActionLink("back to the search page", "Index", "ChangeHistory", new { area = "", SelectedTab = SearchViewModel.Tab.Groups }, null) to start again.</p>
 }

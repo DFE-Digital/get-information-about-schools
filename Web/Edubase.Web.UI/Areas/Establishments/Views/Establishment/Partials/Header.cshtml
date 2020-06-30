@@ -10,7 +10,7 @@
 <dd>
     @if (Model.Establishment.LocalAuthorityId.HasValue)
     {
-        <a href="/Establishments/Search?searchtype=ByLocalAuthority&@EstablishmentSearchViewModel.BIND_ALIAS_LAIDS=@Model.Establishment.LocalAuthorityId">
+        <a href="@Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})?searchtype=ByLocalAuthority&@EstablishmentSearchViewModel.BIND_ALIAS_LAIDS=@Model.Establishment.LocalAuthorityId">
             @Model.LocalAuthorityName
         </a>
         <text>(@Model.LocalAuthorityCode)</text>
