@@ -175,6 +175,7 @@ namespace Edubase.Web.UI.Controllers
             }
 
             nodes.Add(BuildNode("News", "Home", null, null, 0.9, SitemapFrequency.Weekly));
+            nodes.Add(BuildNode("NewsArchive", "Home", null, null, 0.3));
             nodes.Add(BuildNode("Help", "Home", null, null, 0.5, SitemapFrequency.Yearly));
             nodes.Add(BuildNode("Index", "Faq", null, null, 0.6));
             nodes.Add(BuildNode("Cookies", "Home"));
