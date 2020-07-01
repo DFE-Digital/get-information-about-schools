@@ -1,4 +1,4 @@
-﻿#global-news-message {
+#global-news-message {
     background-color: $yellow-25;
 
     .inner-block {
@@ -46,6 +46,9 @@
         }
 
         div.column-two-thirds.news-blog {
+            a {
+                word-break: break-word;
+            }
             h2 {
                 margin-top: 0.7em;
                 margin-bottom: 0.7em;
