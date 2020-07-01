@@ -83,7 +83,7 @@
 
         @if (Model.Result != null)
         {
-            if (Model.Result.IsFailure())
+            if (Model.Result.IsFailure() || Model.Result.CompletedWithErrors())
             {
                 var uri = new Uri(Model.Result.ErrorLogFile.Url);
                 var path = uri.GetLeftPart(UriPartial.Path);
