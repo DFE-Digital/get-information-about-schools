@@ -9,7 +9,7 @@
     }
     else
     {
-        ViewBag.bodyClasses = "create-edit-school school-details";
+        ViewBag.bodyClasses = "create-edit school-details";
         ViewBag.hideLogo = true;
         ViewBag.Title = "Edit establishment";
     }
@@ -24,44 +24,44 @@
         @Html.HiddenFor(x => x.ChangesInstantCount)
         @Html.HiddenFor(x => x.ChangesRequireApprovalCount)
 
-        <div class="" style="display:@Html.Conditional(Model.ChangesSummary != null, "none");">
+        <div class="govuk-grid-row @Html.Conditional(Model.ChangesSummary != null, "hidden")">
 
-            <div class="column-half">
-
-                <button type="submit" class="button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveLocation)">Save location</button>
-                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel" })
-
-                <div class="form-group first" style="height:0;"></div>
-
+            <div class="govuk-grid-column-full">
+                <div class="button-row govuk-!-margin-bottom-4">
+                    <button type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveLocation)">Save location</button>
+                    @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "govuk-button govuk-button--secondary cancel" })
+                </div>
+            </div>
+            <div class="govuk-grid-column-one-half">
                 @if (Model.EditPolicy.RSCRegionId)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.RSCRegionId)">
-                        <label for="RSCRegionId" class="form-label" title="Regional School Comissioner">
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.RSCRegionId)">
+                        <label for="RSCRegionId" class="govuk-label" title="Regional School Comissioner">
                             <abbr title="Regional Schools Commissioner">RSC</abbr> region
                         </label>
-                        @Html.ValidationMessageFor(x => x.RSCRegionId)
-                        @Html.DropDownListFor(x => x.RSCRegionId, Model.RSCRegions, "", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(x => x.RSCRegionId, null, new {@class = "govuk-error-message"})
+                        @Html.DropDownListFor(x => x.RSCRegionId, Model.RSCRegions, "", new { @class = "govuk-select" })
                     </div>
                 }
 
                 @if (Model.EditPolicy.GovernmentOfficeRegionId)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.GovernmentOfficeRegionId)">
-                        <label for="GovernmentOfficeRegionId" class="form-label">Government office region</label>
-                        @Html.ValidationMessageFor(x => x.GovernmentOfficeRegionId)
-                        @Html.DropDownListFor(x => x.GovernmentOfficeRegionId, Model.GovernmentOfficeRegions, "", new { @class = "form-control" })
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernmentOfficeRegionId)">
+                        <label for="GovernmentOfficeRegionId" class="govuk-label">Government office region</label>
+                        @Html.ValidationMessageFor(x => x.GovernmentOfficeRegionId, null, new {@class = "govuk-error-message"})
+                        @Html.DropDownListFor(x => x.GovernmentOfficeRegionId, Model.GovernmentOfficeRegions, "", new { @class = "govuk-select" })
                     </div>
                 }
 
                 @if (Model.EditPolicy.AdministrativeDistrictId)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.AdministrativeDistrictId) @Html.ValidationCssClassFor(x => x.AdministrativeDistrictName)" id="searchby-district-ref">
-                        <label for="@nameof(Model.AdministrativeDistrictName)">District</label>
-                        @Html.ValidationMessageFor(x => x.AdministrativeDistrictId)
-                        @Html.ValidationMessageFor(x => x.AdministrativeDistrictName)
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.AdministrativeDistrictId) @Html.ValidationCssClassFor(x => x.AdministrativeDistrictName)" id="searchby-district-ref">
+                        <label class="govuk-label" for="@nameof(Model.AdministrativeDistrictName)">District</label>
+                        @Html.ValidationMessageFor(x => x.AdministrativeDistrictId, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.AdministrativeDistrictName, null, new {@class = "govuk-error-message"})
 
-                        <div id="AdministrativeDistrictId" class="autosuggest floating-text-field-wrap form-control">
-                            @Html.TextBoxFor(x => x.AdministrativeDistrictName, new { @class = "floating-text-field", autocomplete = "off" })
+                        <div id="AdministrativeDistrictId" class="autosuggest">
+                            @Html.TextBoxFor(x => x.AdministrativeDistrictName, new {@class = "govuk-input", autocomplete = "off"})
                         </div>
 
                         @Html.HiddenFor(x => x.AdministrativeDistrictId, new { id = "AdministrativeDistrictIdHidden" })
@@ -70,13 +70,12 @@
 
                 @if (Model.EditPolicy.AdministrativeWardId)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.AdministrativeWardId) @Html.ValidationCssClassFor(x => x.AdministrativeWardName)" id="searchby-ward-ref">
-                        <label for="@nameof(Model.AdministrativeWardName)">Ward</label>
-                        @Html.ValidationMessageFor(x => x.AdministrativeWardId)
-                        @Html.ValidationMessageFor(x => x.AdministrativeWardName)
-
-                        <div id="AdministrativeWardId" class="autosuggest scrollableAutosuggest floating-text-field-wrap form-control">
-                            @Html.TextBoxFor(x => x.AdministrativeWardName, new { @class = "floating-text-field", autocomplete = "off" })
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.AdministrativeWardId) @Html.ValidationCssClassFor(x => x.AdministrativeWardName)" id="searchby-ward-ref">
+                        <label class="govuk-label" for="@nameof(Model.AdministrativeWardName)">Ward</label>
+                        @Html.ValidationMessageFor(x => x.AdministrativeWardId, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.AdministrativeWardName, null, new {@class = "govuk-error-message"})
+                        <div id="AdministrativeWardId" class="autosuggest scrollableAutosuggest form-control">
+                            @Html.TextBoxFor(x => x.AdministrativeWardName, new { @class = "govuk-input", autocomplete = "off" })
                         </div>
 
                         @Html.HiddenFor(x => x.AdministrativeWardId, new { id = "AdministrativeWardIdHidden" })
@@ -85,13 +84,13 @@
 
                 @if (Model.EditPolicy.ParliamentaryConstituencyId)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.ParliamentaryConstituencyId) @Html.ValidationCssClassFor(x => x.ParliamentaryConstituencyName)" id="searchby-constituency-ref">
-                        <label for="@nameof(Model.ParliamentaryConstituencyName)">Parliamentary constituency</label>
-                        @Html.ValidationMessageFor(x => x.ParliamentaryConstituencyId)
-                        @Html.ValidationMessageFor(x => x.ParliamentaryConstituencyName)
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ParliamentaryConstituencyId) @Html.ValidationCssClassFor(x => x.ParliamentaryConstituencyName)" id="searchby-constituency-ref">
+                        <label class="govuk-label" for="@nameof(Model.ParliamentaryConstituencyName)">Parliamentary constituency</label>
+                        @Html.ValidationMessageFor(x => x.ParliamentaryConstituencyId, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.ParliamentaryConstituencyName, null, new {@class = "govuk-error-message"})
 
-                        <div id="AdministrativeWardId" class="autosuggest floating-text-field-wrap form-control">
-                            @Html.TextBoxFor(x => x.ParliamentaryConstituencyName, new { @class = "floating-text-field", autocomplete = "off" })
+                        <div id="AdministrativeWardId" class="autosuggest form-control">
+                            @Html.TextBoxFor(x => x.ParliamentaryConstituencyName, new { @class = "govuk-input", autocomplete = "off" })
                         </div>
 
                         @Html.HiddenFor(x => x.ParliamentaryConstituencyId, new { id = "ParliamentaryConstituencyIdHidden" })
@@ -100,22 +99,22 @@
 
                 @if (Model.EditPolicy.UrbanRuralId)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.UrbanRuralId)">
-                        <label for="UrbanRuralId" class="form-label">Urban/rural description</label>
-                        @Html.ValidationMessageFor(x => x.UrbanRuralId)
-                        @Html.DropDownListFor(x => x.UrbanRuralId, Model.UrbanRuralLookup, "", new { @class = "form-control" })
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.UrbanRuralId)">
+                        <label for="UrbanRuralId" class="govuk-label">Urban/rural description</label>
+                        @Html.ValidationMessageFor(x => x.UrbanRuralId, null, new {@class = "govuk-error-message"})
+                        @Html.DropDownListFor(x => x.UrbanRuralId, Model.UrbanRuralLookup, "", new { @class = "govuk-select" })
                     </div>
                 }
 
                 @if (Model.EditPolicy.GSSLAId)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.GSSLAId) @Html.ValidationCssClassFor(x => x.GSSLAName)" id="searchby-gssla-ref">
-                        <label for="@nameof(Model.GSSLAName)"><abbr title="Government Statistical Service">GSS</abbr> LA code</label>
-                        @Html.ValidationMessageFor(x => x.GSSLAId)
-                        @Html.ValidationMessageFor(x => x.GSSLAName)
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GSSLAId) @Html.ValidationCssClassFor(x => x.GSSLAName)" id="searchby-gssla-ref">
+                        <label class="govuk-label" for="@nameof(Model.GSSLAName)"><abbr title="Government Statistical Service">GSS</abbr> LA code</label>
+                        @Html.ValidationMessageFor(x => x.GSSLAId, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.GSSLAName, null, new {@class = "govuk-error-message"})
 
-                        <div id="GSSLAId" class="autosuggest floating-text-field-wrap form-control">
-                            @Html.TextBoxFor(x => x.GSSLAName, new { @class = "floating-text-field", autocomplete = "off" })
+                        <div id="GSSLAId" class="autosuggest">
+                            @Html.TextBoxFor(x => x.GSSLAName, new { @class = "govuk-input", autocomplete = "off" })
                         </div>
 
                         @Html.HiddenFor(x => x.GSSLAId, new { id = "GSSLAIdHidden" })
@@ -124,31 +123,31 @@
 
                 @if (Model.EditPolicy.Easting)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.Easting)">
-                        <label for="Easting">Easting</label>
-                        @Html.ValidationMessageFor(x => x.Easting)
-                        @Html.TextBoxFor(x => x.Easting, new { @class = "form-control" })
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Easting)">
+                        <label class="govuk-label" for="Easting">Easting</label>
+                        @Html.ValidationMessageFor(x => x.Easting, null, new {@class = "govuk-error-message"})
+                        @Html.TextBoxFor(x => x.Easting, new { @class = "govuk-input" })
                     </div>
                 }
 
                 @if (Model.EditPolicy.Northing)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.Northing)">
-                        <label for="Northing">Northing</label>
-                        @Html.ValidationMessageFor(x => x.Northing)
-                        @Html.TextBoxFor(x => x.Northing, new { @class = "form-control" })
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Northing)">
+                        <label class="govuk-label" for="Northing">Northing</label>
+                        @Html.ValidationMessageFor(x => x.Northing, null, new {@class = "govuk-error-message"})
+                        @Html.TextBoxFor(x => x.Northing, new { @class = "govuk-input" })
                     </div>
                 }
 
                 @if (Model.EditPolicy.CASWardId)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.CASWardId) @Html.ValidationCssClassFor(x => x.CASWardName)" id="searchby-casward-ref">
-                        <label for="@nameof(Model.CASWardName)">Census ward</label>
-                        @Html.ValidationMessageFor(x => x.CASWardId)
-                        @Html.ValidationMessageFor(x => x.CASWardName)
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CASWardId) @Html.ValidationCssClassFor(x => x.CASWardName)" id="searchby-casward-ref">
+                        <label class="govuk-label" for="@nameof(Model.CASWardName)">Census ward</label>
+                        @Html.ValidationMessageFor(x => x.CASWardId, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.CASWardName, null, new {@class = "govuk-error-message"})
 
-                        <div id="CASWardId" class="autosuggest scrollableAutosuggest floating-text-field-wrap form-control">
-                            @Html.TextBoxFor(x => x.CASWardName, new { @class = "floating-text-field", autocomplete = "off" })
+                        <div id="CASWardId" class="autosuggest scrollableAutosuggest">
+                            @Html.TextBoxFor(x => x.CASWardName, new { @class = "govuk-input", autocomplete = "off" })
                         </div>
 
                         @Html.HiddenFor(x => x.CASWardId, new { id = "CASWardIdHidden" })
@@ -157,13 +156,13 @@
 
                 @if (Model.EditPolicy.MSOACode)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.MSOAId) @Html.ValidationCssClassFor(x => x.MSOAName)" id="searchby-msoa-ref">
-                        <label for="@nameof(Model.MSOAName)">Middle Super Output Area (MSOA)</label>
-                        @Html.ValidationMessageFor(x => x.MSOAId)
-                        @Html.ValidationMessageFor(x => x.MSOAName)
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.MSOAId) @Html.ValidationCssClassFor(x => x.MSOAName)" id="searchby-msoa-ref">
+                        <label class="govuk-label" for="@nameof(Model.MSOAName)">Middle Super Output Area (MSOA)</label>
+                        @Html.ValidationMessageFor(x => x.MSOAId, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.MSOAName, null, new {@class = "govuk-error-message"})
 
-                        <div id="MSOAId" class="autosuggest floating-text-field-wrap form-control">
-                            @Html.TextBoxFor(x => x.MSOAName, new { @class = "floating-text-field", autocomplete = "off" })
+                        <div id="MSOAId" class="autosuggest">
+                            @Html.TextBoxFor(x => x.MSOAName, new { @class = "govuk-input floating-text-field", autocomplete = "off" })
                         </div>
 
                         @Html.HiddenFor(x => x.MSOAId, new { id = "MSOAIdHidden" })
@@ -172,82 +171,62 @@
 
                 @if (Model.EditPolicy.LSOACode)
                 {
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.LSOAId) @Html.ValidationCssClassFor(x => x.LSOAName)" id="searchby-lsoa-ref">
-                        <label for="@nameof(Model.LSOAName)">Lower Super Output Area (LSOA)</label>
-                        @Html.ValidationMessageFor(x => x.LSOAId)
-                        @Html.ValidationMessageFor(x => x.LSOAName)
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LSOAId) @Html.ValidationCssClassFor(x => x.LSOAName)" id="searchby-lsoa-ref">
+                        <label class="govuk-label" for="@nameof(Model.LSOAName)">Lower Super Output Area (LSOA)</label>
+                        @Html.ValidationMessageFor(x => x.LSOAId, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.LSOAName, null, new {@class = "govuk-error-message"})
 
-                        <div id="LSOAId" class="autosuggest floating-text-field-wrap form-control">
-                            @Html.TextBoxFor(x => x.LSOAName, new { @class = "floating-text-field", autocomplete = "off" })
+                        <div id="LSOAId" class="autosuggest">
+                            @Html.TextBoxFor(x => x.LSOAName, new { @class = "govuk-input floating-text-field", autocomplete = "off" })
                         </div>
 
                         @Html.HiddenFor(x => x.LSOAId, new { id = "LSOAIdHidden" })
                     </div>
                 }
-
-                <button type="submit" class="button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveLocation)">Save location</button>
-                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel" })
-
-
+            </div>
+            <div class="govuk-grid-column-full">
+                <div class="button-row">
+                    <button type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveLocation)">Save location</button>
+                    @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary cancel"})
+                </div>
             </div>
         </div>
-
         @if (Model.ChangesSummary != null)
         {
             Html.RenderPartial("Partials/_ConfirmChanges");
 
             <div class="button-row">
-                <button class="button-secondary button" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button>
-                <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="button js-confirm">Confirm</button>
+                <button class="govuk-button--secondary govuk-button" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button>
+                <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm">Confirm</button>
 
-                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "button button-secondary", id = "cancel-edit"})
+                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary", id = "cancel-edit"})
             </div>
-
-            @section ViewScripts {
-
-                <script nonce="@Html.ScriptNonce()">
-                    $('#cancel-edit, .requires-conf-to-leave').okCancel({
-                        ok: function() {
-                            window.location = this.el.getAttribute('href');
-                        },
-                        title: 'Are you sure you want to leave this page?',
-                        content: 'Any unsaved changes will be lost',
-                        triggerEvent: 'click'
-                    });
-                </script>
-
-            }
-        }
-        else
-        {
-            @section ViewScripts {
-                <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
-                <script type="text/javascript" nonce="@Html.ScriptNonce()">
-                    var jScriptVersion;
-                    window.lsoas = @Html.Json(Model.LSOAs);
-                    window.msoas = @Html.Json(Model.MSOAs);
-                    window.districts = @Html.Json(Model.AdministrativeDistricts);
-                    window.wards = @Html.Json(Model.AdministrativeWards);
-                    window.constituencies = @Html.Json(Model.ParliamentaryConstituencies);
-                    window.caswards = @Html.Json(Model.CASWards);
-                    window.gsslas = @Html.Json(Model.GSSLALookup);
-
-                    if (!$('html').hasClass('lt-ie9')) {
-                        DfE.Views.editLocation.init();
-                    }
-
-                    var $fields = $('#content').find('.form-control');
-                    var exitAttached = false;
-
-                    $fields.on('change keyup', function () {
-                        if (!exitAttached) {
-                            DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
-                            exitAttached = true;
-                        }
-                    });
-                </script>
-            }
         }
 
     </div>
 }
+@if (Model.ChangesSummary == null)
+{
+@section ViewScripts
+{
+    <script nonce="@Html.ScriptNonce()">
+        var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());
+        window.lsoas = @Html.Json(Model.LSOAs);
+        window.msoas = @Html.Json(Model.MSOAs);
+        window.districts = @Html.Json(Model.AdministrativeDistricts);
+        window.wards = @Html.Json(Model.AdministrativeWards);
+        window.constituencies = @Html.Json(Model.ParliamentaryConstituencies);
+        window.caswards = @Html.Json(Model.CASWards);
+        window.gsslas = @Html.Json(Model.GSSLALookup);
+
+    </script>
+    <script src="/public/assets/scripts/build/edit-location.js"></script>
+}
+}
+else
+{
+@section ViewScripts
+{
+    var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());
+    <script src="/public/assets/scripts/build/edit-location.js"></script>
+}}

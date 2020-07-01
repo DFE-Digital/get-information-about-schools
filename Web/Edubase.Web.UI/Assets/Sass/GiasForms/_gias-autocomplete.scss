@@ -51,3 +51,9 @@
     @include govuk-visually-hidden();
   }
 }
+
+.create-edit {
+  .awesomplete {
+    width: 100%;
+  }
+}
