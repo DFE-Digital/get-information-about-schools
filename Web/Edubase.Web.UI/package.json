@@ -38,6 +38,8 @@
     "karma-mocha-reporter": "~1.1.0",
     "leaflet": "^1.6.0",
     "leaflet.markercluster": "^1.4.1",
+    "lodash.assign": "^4.2.0",
+    "lodash.throttle": "^4.1.1",
     "stylelint": "^13.2.1",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "vue": "^2.6.11",

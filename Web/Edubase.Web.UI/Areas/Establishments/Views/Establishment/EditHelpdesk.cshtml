@@ -23,87 +23,67 @@
         @Html.HiddenFor(x => x.ChangesInstantCount)
         @Html.HiddenFor(x => x.ChangesRequireApprovalCount)
 
-        <div style="display:@Html.Conditional(Model.ChangesSummary != null, "none");">
-
-            <div class="column-half">
-
-                <button type="submit" class="button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveHelpdesk)">Save helpdesk note</button>
-                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel" })
-
-                <div class="form-group first">
-                    @Html.LabelFor(x => x.HelpdeskNotes, new { @class="form-label"})
-                    @Html.TextAreaFor(x => x.HelpdeskNotes, new { @class = "form-control", rows = "10", maxlength = "1000" })
+        <div class="@Html.Conditional(Model.ChangesSummary != null, "hidden")">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <div class="button-row govuk-!-margin-bottom-4">
+                        <button type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveHelpdesk)">Save helpdesk note</button>
+                        @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary"})
+                    </div>
                 </div>
-
-                @Html.EditorFor(x => x.HelpdeskLastUpdate)
-
-                <div class="form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousLocalAuthorityId)">
-                    @Html.LabelFor(x => x.HelpdeskPreviousLocalAuthorityId)
-                    @Html.DropDownListFor(x => x.HelpdeskPreviousLocalAuthorityId, Model.LocalAuthorities, "Please select a local authority", new { @class = "form-control" })
-                </div>
-
-                <div class="form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousEstablishmentNumber)">
-                    @Html.LabelFor(x => x.HelpdeskPreviousEstablishmentNumber)
-                    @Html.ValidationMessageFor(x => x.HelpdeskPreviousEstablishmentNumber)
-                    @Html.TextBoxFor(x => x.HelpdeskPreviousEstablishmentNumber, new { @class = "form-control" })
-                </div>
-
-                <div class="button-row push--top">
-                    <button type="submit" class="button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveHelpdesk)">Save helpdesk note</button>
-                    @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel" })
-                </div>
-
             </div>
-        </div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    <div class="govuk-form-group">
+                        @Html.LabelFor(x => x.HelpdeskNotes, new {@class = "govuk-label"})
+                        @Html.TextAreaFor(x => x.HelpdeskNotes, new {@class = "govuk-textarea", rows = "10", maxlength = "1000"})
+                    </div>
 
+                    @Html.EditorFor(x => x.HelpdeskLastUpdate, new {fieldsetClassName = "edit-date-fieldset" })
+
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousLocalAuthorityId)">
+                        @Html.LabelFor(x => x.HelpdeskPreviousLocalAuthorityId, new { @class = "govuk-label"})
+                        @Html.DropDownListFor(x => x.HelpdeskPreviousLocalAuthorityId, Model.LocalAuthorities, "Please select a local authority", new {@class = "govuk-select"})
+                    </div>
+
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousEstablishmentNumber)">
+                        @Html.LabelFor(x => x.HelpdeskPreviousEstablishmentNumber, new { @class = "govuk-label"})
+                        @Html.ValidationMessageFor(x => x.HelpdeskPreviousEstablishmentNumber, null, new { @class = "govuk-error-message"})
+                        @Html.TextBoxFor(x => x.HelpdeskPreviousEstablishmentNumber, new {@class = "govuk-input"})
+                    </div>
+                </div>
+            </div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <div class="button-row ">
+                        <button type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveHelpdesk)">Save helpdesk note</button>
+                        @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary cancel"})
+                    </div>
+                </div>
+            </div>
+
+        </div>
         @if (Model.ChangesSummary != null)
         {
             Html.RenderPartial("Partials/_ConfirmChanges");
 
             <div class="button-row">
-                <button class="button-secondary button" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button>
-                <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="button js-confirm">Confirm</button>
+                <button class="govuk-button--secondary govuk-button" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button>
+                <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm">Confirm</button>
 
-                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "button button-secondary", id = "cancel-edit"})
+                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary", id = "cancel-edit"})
             </div>
 
-            @section ViewScripts {
 
-                <script nonce="@Html.ScriptNonce()">
-                    $('#cancel-edit, .requires-conf-to-leave').okCancel({
-                        ok: function() {
-                            window.location = this.el.getAttribute('href');
-                        },
-                        title: 'Are you sure you want to leave this page?',
-                        content: 'Any unsaved changes will be lost',
-                        triggerEvent: 'click'
-                    });
-
-                    $('#HelpdeskNotes').textCount({ maxLength: 255 });
-                </script>
-
-            }
-        }
-        else
-        {
-            @section ViewScripts {
-                <script nonce="@Html.ScriptNonce()">
-
-                    var $fields = $('#content').find('.form-control');
-                    var exitAttached = false;
-
-                    $fields.on('change keyup', function () {
-                        if (!exitAttached) {
-                            DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
-                            exitAttached = true;
-                        }
-                    });
-
-                    $('#HelpdeskNotes').textCount({ maxLength: 255 });
-
-                </script>
-            }
         }
 
-    </div>
+</div>
+}
+
+@section ViewScripts
+{
+    <script nonce="@Html.ScriptNonce()">
+        var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());
+    </script>
+    <script src="/public/assets/scripts/build/edit-helpdesk.js"></script>
 }

@@ -227,6 +227,8 @@ else
 {
 @section ViewScripts
 {
-    var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());
+    <script nonce="@Html.ScriptNonce()">
+        var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());
+    </script>
     <script src="/public/assets/scripts/build/edit-location.js"></script>
 }}

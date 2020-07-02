@@ -21,6 +21,7 @@ module.exports = (env) => {
       'add-edit-governor': './Assets/Scripts/Entry/add-edit-governor',
       'edit-establishment-links': './Assets/Scripts/Entry/edit-establishment-links',
       'edit-location': './Assets/Scripts/Entry/edit-location',
+      'edit-helpdesk': './Assets/Scripts/Entry/edit-helpdesk',
     },
 
     output: {
