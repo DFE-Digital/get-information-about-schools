@@ -15,7 +15,7 @@
 }
 
 <div class="breadcrumbs">
-    <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = Model.SearchType})">Back to find an establishment</a>
+    <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Establishments, SearchType = Model.SearchType})">Back to find an establishment</a>
 </div>
 
 <div class="error-summary hidden" aria-labelledby="error-summary-title" role="alert" tabindex="-1" id="js-filter-error-summary">

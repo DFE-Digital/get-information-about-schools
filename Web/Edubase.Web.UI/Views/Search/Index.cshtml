@@ -18,17 +18,17 @@
             <div class="tab-wrap search-tabs">
                 <ul class="horizontal-tabs">
                     <li>
-                        <a href="/?SelectedTab=Establishments" class="horizontal-tab estab @((Model.SelectedTab == SearchViewModel.Tab.Establishments) ? "selected-tab" : "" )">
+                        <a href="@Url.Action("Index", "Search", new {area = "",SelectedTab = SearchViewModel.Tab.Establishments})" class="horizontal-tab estab @((Model.SelectedTab == SearchViewModel.Tab.Establishments) ? "selected-tab" : "")">
                             Find an establishment
                         </a>
                     </li>
                     <li>
-                        <a href="/?SelectedTab=Groups" class="horizontal-tab group @((Model.SelectedTab == SearchViewModel.Tab.Groups) ? "selected-tab" : "" )">
+                        <a href="@Url.Action("Index", "Search", new {area = "",SelectedTab = SearchViewModel.Tab.Groups})" class="horizontal-tab group @((Model.SelectedTab == SearchViewModel.Tab.Groups) ? "selected-tab" : "" )">
                             Find an establishment group
                         </a>
                     </li>
                     <li>
-                        <a href="/?SelectedTab=Governors" class="horizontal-tab governors @((Model.SelectedTab == SearchViewModel.Tab.Governors) ? "selected-tab" : "" )">Find a governor</a>
+                        <a href="@Url.Action("Index", "Search", new {area = "",SelectedTab = SearchViewModel.Tab.Governors})" class="horizontal-tab governors @((Model.SelectedTab == SearchViewModel.Tab.Governors) ? "selected-tab" : "" )">Find a governor</a>
                     </li>
                 </ul>
             </div>
