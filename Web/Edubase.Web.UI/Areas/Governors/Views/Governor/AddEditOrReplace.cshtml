@@ -45,21 +45,18 @@
         {
             <h3 class="govuk-heading-s">@Model.ReplaceGovernorViewModel.Name</h3>
             <div class="date-group-wrap">
-                @Html.EditorFor(x => x.ReplaceGovernorViewModel.AppointmentEndDate, new { title = "Date term ends (required to save record)" })
+                @Html.EditorFor(x => x.ReplaceGovernorViewModel.AppointmentEndDate, new { title = "Date term ends (required to save record)", fieldSetClassName = "edit-date-fieldset" })
             </div>
 
             if (Model.AllowReinstateAsGovernor)
             {
                 <div class="govuk-checkboxes">
-                    <div class="govuk-checkboxes__item">
-                        @Html.CheckBoxFor(x => x.ReinstateAsGovernor, new { id = nameof(Model.ReinstateAsGovernor) })
-                        @Html.LabelFor(x => x.ReinstateAsGovernor, Model.ReinstateAsGovernorCheckboxLabel, new { @for = nameof(Model.ReinstateAsGovernor) })
-                    </div>
+                    @FormHelpers.GiasCheckbox("true", "ReinstateAsGovernor", Model.ReinstateAsGovernorCheckboxLabel, null,new {id = nameof(Model.ReinstateAsGovernor)})
                 </div>
             }
         }
 
-        <h2 class="govuk-heading-m">@(Model.ReplaceGovernorViewModel.GID.HasValue ? string.Concat("New ", Model.GovernorRoleName).ToSentenceCase() : Model.GovernorRoleName)</h2>
+        <h2 class="govuk-heading-m govuk-!-padding-top-6">@(Model.ReplaceGovernorViewModel.GID.HasValue ? string.Concat("New ", Model.GovernorRoleName).ToSentenceCase() : Model.GovernorRoleName)</h2>
 
         if (Model.ExistingGovernors.Any())
         {
