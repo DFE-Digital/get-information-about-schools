@@ -40,7 +40,7 @@
             {
                 <p class="govuk-body-s govuk-!-font-weight-bold">Already shared with this establishment</p>
             }
-            <dl class="gias-summary-list govuk-!-font-size-16">
+            <dl class="gias-summary-list gias-summary-list--inline govuk-!-font-size-16">
                 @if (Model.SharedWith.Any())
                 {
                     <div class="gias-summary-list__row">
@@ -56,8 +56,10 @@
                     </div>
 
                 }
-                <dt>Postcode:</dt>
-                <dd>@Model.PostCode</dd>
+                <div class="gias-summary-list__row">
+                    <dt class="gias-summary-list__key">Postcode:</dt>
+                    <dd class="gias-summary-list__value">@Model.PostCode</dd>
+                </div>
             </dl>
             @if (!Model.PreExisting)
             {
