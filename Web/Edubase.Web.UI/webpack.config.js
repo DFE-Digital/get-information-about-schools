@@ -1,7 +1,10 @@
 'use strict';
 const webpack = require('webpack');
 const path = require('path');
+const glob = require('glob');
 const buildDir = path.resolve('./public/assets/scripts/build');
+const entryDirPath = path.resolve('./Assets/Scripts/Entry/');
+const entryFiles = path.join(entryDirPath, '**/*.js');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
@@ -10,19 +13,13 @@ module.exports = (env) => {
   return {
     mode: isProdBuild ? 'production' : 'development',
 
-    entry: {
-      'bundle': './Assets/Scripts/Entry/entry.js',
-      'leaflet-bundle': './Assets/Scripts/Entry/leaflet.js',
-      'search-bundle': './Assets/Scripts/Entry/search.js',
-      'search-results-bundle': './Assets/Scripts/Entry/search-results.js',
-      'landing-page-bundle': './Assets/Scripts/Entry/landing-pages.js',
-      'download-select-fields': './Assets/Scripts/Entry/download-select-fields',
-      'edit-details': './Assets/Scripts/Entry/edit-details',
-      'add-edit-governor': './Assets/Scripts/Entry/add-edit-governor',
-      'edit-establishment-links': './Assets/Scripts/Entry/edit-establishment-links',
-      'edit-location': './Assets/Scripts/Entry/edit-location',
-      'edit-helpdesk': './Assets/Scripts/Entry/edit-helpdesk',
-    },
+    entry: glob
+      .sync(entryFiles)
+      .reduce((acc, filePath) => {
+        const file = path.parse(filePath);
+        acc[file.name] = path.resolve(process.cwd(), filePath);
+        return acc;
+      }, {}),
 
     output: {
       filename: '[name].js',

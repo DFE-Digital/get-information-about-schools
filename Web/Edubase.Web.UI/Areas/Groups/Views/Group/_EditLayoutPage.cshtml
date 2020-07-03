@@ -3,7 +3,7 @@
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.IGroupPageViewModel;
 @model VM
 @{
-    ViewBag.bodyClasses = "school-details";
+    ViewBag.bodyClasses = "create-edit school-details";
     if(string.Equals(Model.SelectedTabName, "governance"))
     {
         ViewBag.bodyClasses = String.Concat("governance ", ViewBag.bodyClasses);
@@ -14,60 +14,46 @@
     Layout = "~/Views/Dfe/Layouts/template.cshtml";
 }
 
-<div class="breadcrumbs">
-    <ol>
-        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
-    </ol>
-</div>
+@section BreadCrumbs {
+   <div class="govuk-grid-row">
+       <div class="govuk-grid-column-full">
+           <div class="govuk-breadcrumbs">
+               <ol class="govuk-breadcrumbs__list">
+                   <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
+               </ol>
+           </div>
+       </div>
+   </div>
+}
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-<h1 class="heading-large">@(ViewBag.OriginalGroupName ?? Model.GroupName)</h1>
+<h1 class="govuk-heading-l gias-landing-heading">@(ViewBag.OriginalGroupName ?? Model.GroupName)</h1>
 
-<p class="urn"><abbr title="Unique Identifier">UID</abbr>: @Model.GroupUId</p>
-<p class="establishment-type">@(ViewBag.OriginalGroupTypeName ?? Model.GroupTypeName)</p>
+<p class="urn establishment-fine-detail"><abbr title="Unique Identifier">UID</abbr>: @Model.GroupUId</p>
+<p class="establishment-type establishment-fine-detail">@(ViewBag.OriginalGroupTypeName ?? Model.GroupTypeName)</p>
 @if (ViewData.ContainsKey("DuplicateGovernor"))
 {
     @Html.Partial("~/Areas/Governors/Views/Governor/_DuplicateGovernor.cshtml", ViewData["DuplicateGovernor"])
 }
 
-<div class="grid-row">
-    <div class="column-full">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
         <div class="gias-tabs-wrapper">
             <div class="tab-wrap">
                 <ul class="gias-tabs">
-                    <li>
-                        @if (string.Equals(Model.SelectedTabName, "details"))
-                        {
-                            <a href="@Url.Action("EditDetails", "Group", new { id = Model.GroupUId, area = "Groups" })" class="horizontal-tab selected-tab">Details</a>
-                        }
-                        else
-                        {
-                            <a href="@($"{Url.Action("Details", "Group", new {id = Model.GroupUId, area = "Groups"})}#details")" class="horizontal-tab">Details</a>
-                        }
+                    <li class="gias-tabs__list-item @Html.Conditional(Model.SelectedTabName == "details", "gias-tabs__list-item--selected")">
+                         <a href="@Url.Action("EditDetails", "Group", new { id = Model.GroupUId, area = "Groups" })" class="gias-tabs__tab">Details</a>
+
                     </li>
                     @if (Model.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
                     {
-                        <li>
-                            @if (string.Equals(Model.SelectedTabName, "governance"))
-                            {
-                                <a href="@Url.Action("Edit", "Governor", new { groupUId = Model.GroupUId, area = "Governors" })" class="horizontal-tab selected-tab">Governance</a>
-                            }
-                            else
-                            {
-                                <a href="@($"{Url.Action("Details", "Group", new {id = Model.GroupUId, area = "Groups"})}#governance")" class="horizontal-tab @Html.Conditional(Model.SelectedTabName == "governance", "selected-tab")">Governance</a>
-                            }
+                        <li class="gias-tabs__list-item  @Html.Conditional(Model.SelectedTabName == "governance", "gias-tabs__list-item--selected")">
+                            <a href="@Url.Action("Edit", "Governor", new { groupUId = Model.GroupUId, area = "Governors" })" class="gias-tabs__tab">Governance</a>
                         </li>
                     }
-                    <li>
-                        @if (string.Equals(Model.SelectedTabName, "links"))
-                        {
-                            <a href="@Url.Action("EditLinks", "Group", new { id = Model.GroupUId, area = "Groups" })" class="horizontal-tab selected-tab">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
-                        }
-                        else
-                        {
-                            <a href="@($"{Url.Action("Details", "Group", new {id = Model.GroupUId, area = "Groups"})}#list")" class="horizontal-tab">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
-                        }
+                    <li class="gias-tabs__list-item  @Html.Conditional(Model.SelectedTabName == "links", "gias-tabs__list-item--selected")">
+                        <a href="@Url.Action("EditLinks", "Group", new { id = Model.GroupUId, area = "Groups" })" class="gias-tabs__tab">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
                     </li>
                 </ul>
             </div>
