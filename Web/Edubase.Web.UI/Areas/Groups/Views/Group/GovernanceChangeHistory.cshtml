@@ -54,7 +54,7 @@
         <p class="establishment-fine-detail"><abbr title="Unique Identifier">UID</abbr>: @Model.Group.GroupUId</p>
         <p class="group-type establishment-fine-detail">@Model.GroupTypeName</p>
 
-        <p class="govuk-body">
+        <p class="govuk-body-s establishment-data-download">
             @Html.RouteLink("Download group data", "GroupDataDownload", new { uid = Model.Group.GroupUId, state = UriHelper.SerializeToUrlToken(new[] { new RouteDto("GroupDetails", new RouteValueDictionary(new { id = Model.Group.GroupUId }), Model.Group.Name) }) }, new { rel = "nofollow" })
         </p>
     </div>
@@ -85,10 +85,10 @@
                         }
                         else
                         {
-                            <p>
+                            <p class="govuk-body-s">
                                 @Html.RouteLink("Download data in CSV format", "DownloadGroupGovernanceChangeHistory", new {groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.csv})
                             </p>
-                            <p>
+                            <p class="govuk-body-s">
                                 @Html.RouteLink("Download data in XLSX format", "DownloadGroupGovernanceChangeHistory", new {groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.xlsx})
                             </p>
 

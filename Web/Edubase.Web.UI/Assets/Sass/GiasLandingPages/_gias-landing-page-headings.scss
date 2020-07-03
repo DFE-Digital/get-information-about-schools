@@ -27,7 +27,8 @@
   float: right;
   margin-bottom: 25px;
   overflow: hidden;
-  font-size: 16px;
+
+  @include govuk-font(16);
 
   @include govuk-media-query($until: tablet) {
     float: none;

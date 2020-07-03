@@ -39,9 +39,10 @@
     else
     {
         <p class="govuk-body-s">
-            @Html.ActionLink("Download data in CSV format", "DownloadChangeHistory", "Downloads", new { establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.csv }, new { style = "margin-bottom:10px; display:block;" })
+            @Html.ActionLink("Download data in CSV format", "DownloadChangeHistory", "Downloads", new { establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.csv }, null)
+        </p>
+        <p class="govuk-body-s">
             @Html.ActionLink("Download data in XLSX format", "DownloadChangeHistory", "Downloads", new { establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.xlsx }, null)
-            <br />
         </p>
         if (Model.ChangeHistory.PageCount > 1)
         {

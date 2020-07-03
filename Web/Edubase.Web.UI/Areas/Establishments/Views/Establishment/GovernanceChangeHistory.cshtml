@@ -80,10 +80,10 @@
                 }
                 else
                 {
-                    <p class="govuk-body">
+                    <p class="govuk-body-s">
                         @Html.RouteLink("Download data in CSV format", "DownloadEstablishmentGovernanceChangeHistory", new { id = Model.Establishment.Urn, downloadType = DownloadType.csv })
                     </p>
-                    <p class="govuk-body">
+                    <p class="govuk-body-s">
                         @Html.RouteLink("Download data in XLSX format", "DownloadEstablishmentGovernanceChangeHistory", new { id = Model.Establishment.Urn, downloadType = DownloadType.xlsx })
                     </p>
                     if (Model.ChangeHistory.PageCount > 1)
@@ -92,7 +92,7 @@
                             @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
                         </div>
                     }
-                    <table class="gias-table sortable-table govuk-table">
+                    <table class="approval-changes govuk-table gias-table sortable-table">
                         <caption class="govuk-visually-hidden">Governance change history</caption>
                         <thead class="govuk-table__head">
                             <tr class="govuk-table__row">
