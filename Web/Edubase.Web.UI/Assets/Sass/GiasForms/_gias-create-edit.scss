@@ -68,3 +68,9 @@
   background-position: right center;
   background-size: contain;
 }
+
+.btn-add-person {
+  @include govuk-media-query($until: 840px) {
+    margin-top: govuk-spacing(3);
+  }
+}

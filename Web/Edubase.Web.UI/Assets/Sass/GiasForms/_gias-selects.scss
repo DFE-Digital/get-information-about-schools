@@ -1,25 +1,27 @@
 .govuk-select {
-  &.govuk-input--width-20 {
-    width: 38ex + 3ex;
-  }
+  @include govuk-media-query($from: tablet) {
+    &.govuk-input--width-20 {
+      width: 38ex + 3ex;
+    }
 
-  &.govuk-input--width-10 {
-    width: 20ex + 3ex;
-  }
+    &.govuk-input--width-10 {
+      width: 20ex + 3ex;
+    }
 
-  &.govuk-input--width-5 {
-    width: 10.8ex;
-  }
+    &.govuk-input--width-5 {
+      width: 10.8ex;
+    }
 
-  &.govuk-input--width-4 {
-    width: 9ex;
-  }
+    &.govuk-input--width-4 {
+      width: 9ex;
+    }
 
-  &.govuk-input--width-3 {
-    width: 7.2ex;
-  }
+    &.govuk-input--width-3 {
+      width: 7.2ex;
+    }
 
-  &.govuk-input--width-2 {
-    width: 5.4ex;
+    &.govuk-input--width-2 {
+      width: 5.4ex;
+    }
   }
 }

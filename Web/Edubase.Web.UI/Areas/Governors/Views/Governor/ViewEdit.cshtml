@@ -48,8 +48,8 @@
                 <div class="govuk-form-group push--bottom @Html.ValidationCssClass("role")">
                     <label class="govuk-label" for="roleid">Select role</label>
                     @Html.ValidationMessage("role")
-                    @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem {Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = ((eLookupGovernorRole) x.Id).ToString()}), new {id = "roleid", @class = "govuk-select govuk-input--width-20"})
-                    <input type="submit" value="Add person" class="govuk-button" data-module="govuk-button"/>
+                    @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem {Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = ((eLookupGovernorRole) x.Id).ToString()}), new {id = "roleid", @class = "govuk-select govuk-input--width-20 gias-role-selection"})
+                    <input type="submit" value="Add person" class="govuk-button btn-add-person" data-module="govuk-button"/>
                 </div>
             }
         </div>
