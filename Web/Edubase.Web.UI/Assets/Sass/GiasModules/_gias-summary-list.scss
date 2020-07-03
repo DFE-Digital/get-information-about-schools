@@ -81,3 +81,11 @@
     }
   }
 }
+
+.shared-governor {
+  @include govuk-media-query($from: tablet) {
+    .gias-summary-list--inline .gias-summary-list__key {
+      width: 100px;
+    }
+  }
+}

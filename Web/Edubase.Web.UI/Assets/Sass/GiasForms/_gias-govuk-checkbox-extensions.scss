@@ -1,0 +1,20 @@
+// Focused state
+.govuk-checkboxes__input:focus + input + .govuk-checkboxes__label::before {
+  border-width: 4px;
+  box-shadow: 0 0 0 $govuk-focus-width $govuk-focus-colour;
+}
+
+// Selected state
+.govuk-checkboxes__input:checked + input + .govuk-checkboxes__label::after {
+  opacity: 1;
+}
+
+// Disabled state
+.govuk-checkboxes__input:disabled,
+.govuk-checkboxes__input:disabled + input + .govuk-checkboxes__label {
+  cursor: default;
+}
+
+.govuk-checkboxes__input:disabled + input + .govuk-checkboxes__label {
+  opacity: .5;
+}
