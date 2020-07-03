@@ -22,7 +22,7 @@
                 </label>
                 @Html.ValidationMessageFor(x => x.SearchUrn, null, new {@class="govuk-error-message"})
                 @Html.TextBoxFor(x => x.SearchUrn, new {@class = "govuk-input govuk-input--width-10"})
-                <button id="search-urn-submit" class="govuk-button " name="@SearchForEstablishmentViewModel.BIND_ALIAS_DOSEARCH" value="true">Search URN</button>
+                <button id="search-urn-submit" class="govuk-button links-estab-search-button" name="@SearchForEstablishmentViewModel.BIND_ALIAS_DOSEARCH" value="true">Search URN</button>
             </div>
         </div>
     </div>
