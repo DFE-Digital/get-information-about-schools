@@ -31,10 +31,7 @@
             {
             <div class="govuk-form-group">
                 <div class="govuk-checkboxes">
-                    <div class="govuk-checkboxes__item">
-                        @Html.CheckBoxFor(x => x.Reinstate, new {id = nameof(Model.Reinstate), @class = "govuk-checkboxes__input"})
-                        @Html.LabelFor(x => x.Reinstate, "Re-instate as local governor", new {@for = nameof(Model.Reinstate), @class = "govuk-checkboxes__label"})
-                    </div>
+                    @FormHelpers.GiasCheckbox("true", "Reinstate", "Re-instate as local governor", null, new {id = "Reinstate"})
                 </div>
             </div>
             }
