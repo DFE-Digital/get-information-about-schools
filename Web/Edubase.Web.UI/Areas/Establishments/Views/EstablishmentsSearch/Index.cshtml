@@ -17,9 +17,8 @@
 
 @section BackLink
 {
-    <a class="govuk-back-link" href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = Model.SearchType})">Back to find an establishment</a>
+    <a class="govuk-back-link" href="@Url.Action("Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Establishments, SearchType = Model.SearchType})">Back to find an establishment</a>
 }
-
 
 <div class="govuk-error-summary hidden" id="js-filter-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
   <h2 class="govuk-error-summary__title" id="error-summary-title">

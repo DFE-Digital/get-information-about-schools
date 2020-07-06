@@ -20,6 +20,7 @@ namespace Edubase.Web.UI.Controllers
     public class HomeController : EduBaseController
     {
         const string NewsBlobNameHtml = "newsblog.html";
+        const string ArchiveBlobNameHtml = "archiveblog.html";
         public const string NewsBlobETag = "newsblog-etag";
         
         private readonly ILookupService _lookup;
@@ -46,6 +47,11 @@ namespace Edubase.Web.UI.Controllers
             var html = await _cacheAccessor.GetAsync<string>(NewsBlobNameHtml);
             var etag = await _cacheAccessor.GetAsync<string>(NewsBlobETag);
 
+            if (refresh.GetValueOrDefault())
+            {
+                await _cacheAccessor.DeleteAsync(ArchiveBlobNameHtml);
+            }
+
             if((html == null && await blob.ExistsAsync()) || refresh.GetValueOrDefault())
             {
                 await blob.FetchAttributesAsync();
@@ -57,6 +63,23 @@ namespace Edubase.Web.UI.Controllers
             }
 
             Response.Cookies.Set(new HttpCookie(NewsBlobETag, etag) { Expires = DateTime.MaxValue, SameSite = SameSiteMode.Strict});
+
+            return View(new MvcHtmlString(html));
+        }
+
+        [Route("~/news/archive")]
+        public async Task<ActionResult> NewsArchive()
+        {
+            var blob = _blobService.GetBlobReference("content", ArchiveBlobNameHtml);
+            var html = await _cacheAccessor.GetAsync<string>(ArchiveBlobNameHtml);
+
+            if (html == null && await blob.ExistsAsync())
+            {
+                await blob.FetchAttributesAsync();
+                html = await blob.DownloadTextAsync();
+
+                await _cacheAccessor.SetAsync(ArchiveBlobNameHtml, html, TimeSpan.FromHours(1));
+            }
 
             return View(new MvcHtmlString(html));
         }

@@ -90,7 +90,7 @@
             else
             {
                 <p class="govuk-width-container">
-                    GOV.UK uses cookies which are essential for the site to work. We also use non-essential cookies to help us improve government digital services. Any data collected is anonymised. By continuing to use this site, you agree to our use of cookies. <a href="/cookies" class="govuk-link">Find out more about cookies</a><br />
+                    GOV.UK uses cookies which are essential for the site to work. We also use non-essential cookies to help us improve government digital services. Any data collected is anonymised. By continuing to use this site, you agree to our use of cookies. @Html.ActionLink("Find out more about cookies", "Cookies", "Home", new {area=""}, new { @class="govuk-link" })<br />
                     <button class="govuk-button" id="button-accept-cookies">Accept cookies</button>
                 </p>
             }
@@ -136,48 +136,45 @@
                         </span>
                     </a>
                 </div>
-                @* @RenderSection("InsideHeader", required: false) *@
 
-            <div class="govuk-header__content">
-                <a href="/" class="govuk-header__link govuk-header__link--service-name">
-                    Get information about schools
-                </a>
-                <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
-                <nav>
-                    <ul id="navigation" class="govuk-header__navigation " aria-label="Top Level Navigation">
-                        <li class="govuk-header__navigation-item @(ViewBag.siteSection == "search"? "govuk-header__navigation-item--active" : String.Empty)">
-                            <a href="/" class="govuk-header__link" >Search</a>
-                        </li>
-                        <li class="govuk-header__navigation-item @(ViewBag.siteSection == "downloads"? "govuk-header__navigation-item--active" : String.Empty)">
-                            <a href="/Downloads" class="govuk-header__link" >Downloads</a>
-                        </li>
-                        @if (Request.IsAuthenticated)
-                        {
-                            <li class="govuk-header__navigation-item @(ViewBag.siteSection == "tools"? "govuk-header__navigation-item--active" : String.Empty)">
-                                <a href="/Tools" class="govuk-header__link">Tools</a>
+                <div class="govuk-header__content">
+                     @Html.ActionLink("Get information about schools", "Index", "Search", new {area = ""}, new { id="proposition-name", @class="govuk-header__link govuk-header__link--service-name"})
+                     <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
+                    <nav>
+                        <ul id="navigation" class="govuk-header__navigation " aria-label="Top Level Navigation">
+                            <li class="govuk-header__navigation-item @(ViewBag.siteSection == "search" ? "govuk-header__navigation-item--active" : String.Empty)">
+                               @Html.ActionLink("Search", "Index", "Search", new {area = ""}, new { @class="govuk-header__link"})
                             </li>
-                        }
-                        <li class="govuk-header__navigation-item @(ViewBag.siteSection == "help"? "govuk-header__navigation-item--active" : String.Empty)">
-                            <a href="/help" class="govuk-header__link" >Help</a>
-                        </li>
-                        <li class="govuk-header__navigation-item @(ViewBag.siteSection == "news"? "govuk-header__navigation-item--active" : String.Empty)">
-                            <a href="/News" class="govuk-header__link" >News</a>
-                        </li>
-                        @if (Request.IsAuthenticated)
-                        {
-                            <li class="govuk-header__navigation-item">
-                                @Html.ActionLink("Sign off", "LogOff", "Account", new {area = "", returnUrl = Request.Url.PathAndQuery}, new {id = "logout-link", Class = "login-link govuk-header__link", rel="nofollow"})
+                            <li class="govuk-header__navigation-item @(ViewBag.siteSection == "downloads" ? "govuk-header__navigation-item--active" : String.Empty)">
+                                @Html.ActionLink("Downloads", "Index", "Downloads", new {area = ""}, new { @class="govuk-header__link"})
                             </li>
-                        }
-                        else
-                        {
-                            <li class="govuk-header__navigation-item">
-                                @Html.ActionLink("Sign in", "LogIn", "Account", new {area = "", returnUrl = Request.Url.PathAndQuery}, new {Class = "login-link govuk-header__link", rel="nofollow"})
+                            @if (Request.IsAuthenticated)
+                            {
+                                <li class="govuk-header__navigation-item @(ViewBag.siteSection == "tools" ? "govuk-header__navigation-item--active" : String.Empty)">
+                                    @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new { @class="govuk-header__link"})
+                                </li>
+                            }
+                            <li class="govuk-header__navigation-item @(ViewBag.siteSection == "help" ? "govuk-header__navigation-item--active" : String.Empty)">
+                                @Html.ActionLink("Help", "Help", "Home", new {area = ""}, new { @class="govuk-header__link"})
                             </li>
-                        }
-                    </ul>
-                </nav>
-            </div>
+                            <li class="govuk-header__navigation-item @(ViewBag.siteSection == "news" ? "govuk-header__navigation-item--active" : String.Empty)">
+                                <a href="/News" class="govuk-header__link">News</a>
+                            </li>
+                            @if (Request.IsAuthenticated)
+                            {
+                                <li class="govuk-header__navigation-item">
+                                    @Html.ActionLink("Sign off", "LogOff", "Account", new {area = "", returnUrl = Request.Url.PathAndQuery}, new {id = "logout-link", Class = "login-link govuk-header__link", rel = "nofollow"})
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="govuk-header__navigation-item">
+                                    @Html.ActionLink("Sign in", "LogIn", "Account", new {area = "", returnUrl = Request.Url.PathAndQuery}, new {Class = "login-link govuk-header__link", rel = "nofollow"})
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </header>
         <!--end header-->
@@ -205,10 +202,9 @@
                                     <span class="govuk-visually-hidden">Opens in new window</span>
                                 </a>
                             </li>
-                            <li class="govuk-footer__inline-list-item"><a href="/cookies" class="govuk-footer__link">Cookies</a></li>
+                            <li class="govuk-footer__inline-list-item">@Html.ActionLink("Cookies", "Cookies", "Home", new { @class="govuk-footer__link" })</li>
                             <li class="govuk-footer__inline-list-item">@Html.RouteLink("Glossary", "Glossary", null, new { @class="govuk-footer__link"})</li>
-                            <li class="govuk-footer__inline-list-item"><a href="/guidance" class="govuk-footer__link">Guidance</a></li>
-                            @*<li class="govuk-footer__inline-list-item"><a href="/news" class="govuk-footer__link">News</a></li>*@
+                            <li class="govuk-footer__inline-list-item">@Html.ActionLink("Guidance", "Guidance", "Home", new { @class="govuk-footer__link" })</li>
                         </ul>
 
                         <svg aria-hidden="true" focusable="false" class="govuk-footer__licence-logo" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 483.2 195.7" height="17" width="41">

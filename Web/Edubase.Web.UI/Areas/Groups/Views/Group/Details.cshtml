@@ -1,6 +1,7 @@
 @using Edubase.Common
 @using Edubase.Services.Domain
 @using Edubase.Services.Enums
+@using Edubase.Web.UI.Models.Search
 @using Microsoft.Ajax.Utilities
 @model GroupDetailViewModel
 @{
@@ -37,7 +38,7 @@
 
     @if (Model.SearchQueryString.IsNullOrWhiteSpace())
     {
-        @Html.ActionLink("Home", "Index", "Search", new {area = "", selectedTab = "Groups"}, new {@class = "govuk-back-link"})
+        @Html.ActionLink("Home", "Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Groups}, new {@class = "govuk-back-link"})
     }
     else
     {

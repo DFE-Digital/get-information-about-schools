@@ -8,6 +8,9 @@ namespace Edubase.Services.Enums
         SingleProprietor = 1,
 
         [Display(Name = "Proprietor Body")]
-        ProprietorBody = 2
+        ProprietorBody = 2,
+
+        [Display(Name = "Not Applicable"), EnumGias(true)]
+        NotApplicable = 3
     }
 }

@@ -83,7 +83,7 @@
 
         @if (Model.Result != null)
         {
-            if (!Model.Result.Errors.Any())
+            if (Model.Result.IsFailure() || Model.Result.CompletedWithErrors())
             {
                 var uri = new Uri(Model.Result.ErrorLogFile.Url);
                 var path = uri.GetLeftPart(UriPartial.Path);
@@ -166,7 +166,7 @@
         </div>
         <div class="column-full">
             <button type="submit" class="button" value="Submit">Submit</button>
-            <a href="/Tools" class="button button-secondary cancel">Cancel</a>
+            @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new { @class = "button button-secondary cancel" })
         </div>
 
         }

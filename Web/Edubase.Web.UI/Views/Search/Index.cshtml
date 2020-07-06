@@ -22,17 +22,17 @@
             <div class="tab-wrap search-tabs">
                 <ul class="gias-tabs">
                     <li class="gias-tabs__list-item @((Model.SelectedTab == SearchViewModel.Tab.Establishments) ? "gias-tabs__list-item--selected" : "" )">
-                        <a href="/?SelectedTab=Establishments" class="gias-tabs__tab estab">
+                        <a href="@Url.Action("Index", "Search", new {area = "",SelectedTab = SearchViewModel.Tab.Establishments})" class="gias-tabs__tab estab">
                             Find an establishment
                         </a>
                     </li>
                     <li class="gias-tabs__list-item @((Model.SelectedTab == SearchViewModel.Tab.Groups) ? "gias-tabs__list-item--selected" : "" )">
-                        <a href="/?SelectedTab=Groups" class="gias-tabs__tab group">
+                        <a href="@Url.Action("Index", "Search", new {area = "",SelectedTab = SearchViewModel.Tab.Groups})" class="gias-tabs__tab group">
                             Find an establishment group
                         </a>
                     </li>
                     <li class="gias-tabs__list-item @((Model.SelectedTab == SearchViewModel.Tab.Governors) ? "gias-tabs__list-item--selected" : "" )">
-                        <a href="/?SelectedTab=Governors" class="gias-tabs__tab governors">Find a governor</a>
+                        <a href="@Url.Action("Index", "Search", new {area = "",SelectedTab = SearchViewModel.Tab.Governors})" class="gias-tabs__tab governors">Find a governor</a>
                     </li>
                 </ul>
             </div>

@@ -29,11 +29,11 @@
                 <ul class="gias-tabs">
                     <li>
                         @{ var estabSelected = Model.SelectedTab == ChangeHistoryViewModel.Tab.Establishments ? "selected-tab" : ""; }
-                        @Html.RouteLink("Establishment change history", "ChangeHistoryCriteria", new {SelectedTab = "Establishments"}, new {@class = $"horizontal-tab estab {estabSelected}" })
+                        @Html.RouteLink("Establishment change history", "ChangeHistoryCriteria", new {SelectedTab = SearchViewModel.Tab.Establishments}, new {@class = $"horizontal-tab estab {estabSelected}" })
                     </li>
                     <li>
                         @{ var groupSelected = Model.SelectedTab == ChangeHistoryViewModel.Tab.Groups ? "selected-tab" : ""; }
-                        @Html.RouteLink("Group change history", "ChangeHistoryCriteria", new { SelectedTab = "Groups" }, new { @class = $"horizontal-tab group {groupSelected}" })
+                        @Html.RouteLink("Group change history", "ChangeHistoryCriteria", new { SelectedTab = SearchViewModel.Tab.Groups }, new { @class = $"horizontal-tab group {groupSelected}" })
                     </li>
                 </ul>
             </div>

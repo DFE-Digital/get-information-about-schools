@@ -60,7 +60,7 @@
         <div class="button-row">
             @if (Model.UserCanUpdate)
             {
-                <a class="button button-secondary" href="/DataQuality/Edit">Update</a>
+                @Html.ActionLink("Update", "EditStatus", "DataQuality", new {area = ""}, new { @class = "button button-secondary" })
             }
         </div>
     </div>

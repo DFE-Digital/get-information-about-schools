@@ -185,7 +185,7 @@ namespace Edubase.Web.UI.Controllers
                 else
                 {
                     response.EnsureSuccessStatusCode();
-                    return new FileStreamResult(await response.Content.ReadAsStreamAsync(), response.Content.Headers.ContentType.MediaType) { FileDownloadName = $"matclosurereport_{DateTime.Now.Date.ToString("dd-MM-yyyy")}.csv" };
+                    return new FileStreamResult(await response.Content.ReadAsStreamAsync(), response.Content.Headers.ContentType.MediaType) { FileDownloadName = $"SatAndMatClosureReport_{DateTime.Now.Date.ToString("dd-MM-yyyy")}.csv" };
                 }
             }
         }

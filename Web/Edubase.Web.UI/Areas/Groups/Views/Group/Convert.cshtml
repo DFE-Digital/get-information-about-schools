@@ -1,4 +1,4 @@
-﻿@model ConvertSATViewModel
+@model ConvertSATViewModel
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Convert single-academy trusts to multi-academy trusts");
 }
@@ -97,10 +97,10 @@ else
         <div class="grid-row">
             <div class="column-full">
                 <div class="form-group">
-                    @Html.GiasCheckboxFor(x => x.CopyGovernanceInfo, "Copy single-academy trust governance to multi-academy trust")
+                    @Html.GiasCheckboxFor(x => x.CopyGovernanceInfo, "Copy single-academy trust governance to multi-academy trust")
                 </div>
 
-                @Html.RouteLink("« Go back", "GroupConvertSAT2MAT", null, new { @class = "button button-secondary cancel" })
+                @Html.RouteLink(HttpUtility.HtmlDecode("&laquo; Go back"), "GroupConvertSAT2MAT", null, new { @class = "button button-secondary cancel" })
                 <button type="submit" name="actionname" class="button" value="confirm">Convert</button>
                 @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-secondary cancel" })
             </div>

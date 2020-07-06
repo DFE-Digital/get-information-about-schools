@@ -9,7 +9,7 @@
             @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
         </li>
         <li>
-            <a href="/help">Help</a>
+            @Html.ActionLink("Help", "Help", "Home",new { area = "" },null)
         </li>
         <li>
             @Html.RouteLink("FAQs", "Faq")
