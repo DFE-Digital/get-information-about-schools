@@ -142,6 +142,16 @@
 
             });
         });
+
+        var $mc = $('#main-content');
+        var $panels = $mc.find('.gias-nested-conditional');
+
+        $panels.addClass('hidden').attr('aria-hidden', true);
+
+        $mc.find('.gias-nested-radio-toggle').on('change', function() {
+            $panels.addClass('hidden').attr('aria-hidden', true);
+            $($(this).data().togglePanel).removeClass('hidden').removeAttr('aria-hidden');
+        });
     </script>
 }
 
