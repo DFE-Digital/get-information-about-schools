@@ -163,13 +163,15 @@ namespace Edubase.Web.UI.Helpers
         /// <param name="labelText"></param>
         /// <param name="additionalLabelClasses"></param>
         /// <param name="htmlAttributes"></param>
+        /// <param name="isChecked"></param>
         /// <returns></returns>
         public static MvcHtmlString GiasCheckbox(
             string inputValue,
             string inputName,
             string labelText,
             string additionalLabelClasses = "",
-            object htmlAttributes = null
+            object htmlAttributes = null,
+            bool isChecked = false
         )
         {
             var attributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
@@ -186,6 +188,11 @@ namespace Edubase.Web.UI.Helpers
             checkbox.Attributes["name"] = inputName;
             checkbox.Attributes["value"] = inputValue;
             checkbox.Attributes["class"] = "govuk-checkboxes__input";
+
+            if (isChecked)
+            {
+                checkbox.Attributes["checked"] = "checked";
+            }
 
             if (htmlAttributes != null)
             {
