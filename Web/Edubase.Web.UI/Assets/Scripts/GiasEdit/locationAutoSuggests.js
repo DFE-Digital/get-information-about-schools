@@ -58,7 +58,9 @@ function setUp() {
       const _input = document.getElementById(config.textFieldId);
       const _hiddenInput = document.getElementById(config.hiddenFieldId);
 
-      new Awesomplete(_input, {
+      _input.dataset.storedValue = _input.value;
+
+      const awe = new Awesomplete(_input, {
         list: config.suggestions.map((k) => {
           return k.name;
         }),
@@ -67,11 +69,26 @@ function setUp() {
           _hiddenInput.value = config.suggestions.filter((s) => {
             return s.name.toLowerCase() === suggestion.toLowerCase();
           })[0].id;
+
+          _input.dataset.storedValue = suggestion;
         },
 
         autoFirst: true,
         maxItems: config.maxItems,
         minChars: 1
+      });
+
+      _input.addEventListener('change',function(){
+        if (_input.value !== _input.dataset.storedValue) {
+          _hiddenInput.value = '';
+        }
+      });
+
+      _input.addEventListener('focus', function() {
+        if (awe.ul.childNodes.length > 0 && awe.ul.hasAttribute('hidden')) {
+          awe.evaluate();
+          awe.open();
+        }
       });
     }
   }
