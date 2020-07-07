@@ -3,7 +3,7 @@
 @{
     ViewBag.bodyClasses = "create-edit-school create-academy-trust";
     ViewBag.hideLogo = true;
-    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Create an academy trust");
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Create new academy trust");
 }
 
 <div class="breadcrumbs">
@@ -15,7 +15,7 @@
             @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
         </li>
         <li>
-            @Html.ActionLink("Create an academy trust", "SearchCompaniesHouse", "Group", new { area = "Groups" }, null)
+            @Html.ActionLink("Create new academy trust", "SearchCompaniesHouse", "Group", new { area = "Groups" }, null)
         </li>
     </ol>
 </div>
