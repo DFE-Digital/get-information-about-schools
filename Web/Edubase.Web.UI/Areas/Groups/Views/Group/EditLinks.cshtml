@@ -46,7 +46,7 @@
                 <label class="govuk-label" for="LinkedEstablishments_LinkedEstablishmentSearch_Urn">Enter the establishment's Unique Reference Number (URN)</label>
                 @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, null, new {@class = "govuk-error-message"})
                 @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new {@class = "govuk-input  govuk-!-width-one-half"})
-                <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" class="govuk-button inline-button">Search URN</button>
+                <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" class="govuk-button inline-button links-estab-search-button">Search URN</button>
             </div>
             @if (Model.LinkedEstablishments.LinkedEstablishmentSearch.HasResult)
             {
