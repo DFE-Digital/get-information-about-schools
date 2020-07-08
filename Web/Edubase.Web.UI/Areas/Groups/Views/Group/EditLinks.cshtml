@@ -72,11 +72,13 @@
                 {
                     var e = Model.LinkedEstablishments.Establishments[i];
                     <li>
-                        <h4 class="govuk-heading-s">@Html.ActionLink( Model.LinkedEstablishments.Establishments[i].Name, "Details", "Establishment", new { id = Model.LinkedEstablishments.Establishments[i].Urn, area = "Establishments" })</h4>
-                        @if (ViewData.ModelState["linkedEstablishments[" + i + "].id"] != null)
-                        {
+                        <h4 class="govuk-heading-s">
+                            @Html.ActionLink(Model.LinkedEstablishments.Establishments[i].Name, "Details", "Establishment", new {id = Model.LinkedEstablishments.Establishments[i].Urn, area = "Establishments"}, null)
+                        </h4>
+                         @if (ViewData.ModelState["linkedEstablishments[" + i + "].id"] != null)
+                         {
                             <div class="govuk-error-message">@Html.ValidationMessageNested("linkedEstablishments[" + i + "].id")</div>
-                        }
+                         }
                         <dl class="gias-summary-list gias-summary-list--inline">
                             <div class="gias-summary-list__row">
                                 <dt class="gias-summary-list__key">Address:</dt>
