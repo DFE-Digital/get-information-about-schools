@@ -59,3 +59,17 @@
     }
 
 </div>
+@section ViewScripts
+{
+    <script nonce="@Html.ScriptNonce()">
+    $('.gias-checkboxes__conditional--input').on('change', function(e) {
+        const panel = $('#' + $(this).attr('aria-controls')).parent('.shared-governor');
+        if (this.checked) {
+           panel.addClass('gias-checkboxes__conditional--expanded');
+        } else {
+            panel.removeClass('gias-checkboxes__conditional--expanded');
+        }
+
+    });
+    </script>
+}
