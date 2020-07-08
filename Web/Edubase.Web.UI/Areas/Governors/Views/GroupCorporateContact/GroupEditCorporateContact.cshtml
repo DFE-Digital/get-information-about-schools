@@ -6,22 +6,22 @@
     Layout = Model.Layout;
 }
 
-<div id="" class="tab-content">
-    <div class="column-two-thirds">
-        <h1 class="heading-medium tab-lead">Corporate contact</h1>
+<div id="" class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-m">Corporate contact</h1>
         @using (Html.BeginRouteForm("GroupEditCorporateContactPost", FormMethod.Post))
         {
             @Html.HiddenFor(m => m.GroupUId)
             <div class="edit-governor">
-                <div class="form-group">
-                    @Html.LabelFor(x => x.CorporateContact, new { @class = "form-label" })
+                <div class="govuk-form-group">
+                    @Html.LabelFor(x => x.CorporateContact, new { @class = "govuk-label" })
 
-                    @Html.TextBoxFor(x => x.CorporateContact, new { rows = "6", cols = "60", @class = "form-control", maxlength = 15 })
+                    @Html.TextBoxFor(x => x.CorporateContact, new { @class = "govuk-input govuk-!-width-two-thirds", maxlength = 15 })
                 </div>
 
                 <div class="button-row">
-                    <button type="submit" value="Save" class="button">Save corporate contact</button>
-                    <a href="@Url.RouteUrl("GroupEditGovernance", new {GroupUId = Model.GroupUId})" class="button button-secondary">Cancel</a>
+                    <button type="submit" value="Save" class="govuk-button">Save corporate contact</button>
+                    <a href="@Url.RouteUrl("GroupEditGovernance", new {GroupUId = Model.GroupUId})" class="govuk-button govuk-button--secondary">Cancel</a>
                 </div>
             </div>
         }
