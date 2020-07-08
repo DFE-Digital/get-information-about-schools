@@ -34,7 +34,7 @@
     else
     {
         classBinding = "class=\"govuk-form-group create-edit-form-group date-group "
-            + Html.ValidationCssClass(ViewData.ModelMetadata.PropertyName) + " "
+            + Html.ValidationGroupCssClass(ViewData.ModelMetadata.PropertyName) + " "
             + Html.ValidationCssClassFor(x => x) + " "
             + Html.ValidationCssClassFor(x => x.Day) + " "
             + Html.ValidationCssClassFor(x => x.Month) + " "
