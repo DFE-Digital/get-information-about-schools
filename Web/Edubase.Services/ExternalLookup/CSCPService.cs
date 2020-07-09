@@ -40,24 +40,20 @@ namespace Edubase.Services.ExternalLookup
             _retryWithTimeout = Policy.TimeoutAsync(1).Wrap(Policy.Handle<HttpRequestException>().WaitAndRetryAsync(new[] { TimeSpan.FromSeconds(1) }));
         }
 
-        public string SchoolURL(int? urn)
+        public string SchoolURL(int? urn, string name)
         {
-            return $"{_client.BaseAddress.AbsoluteUri}school/{urn}";
+            var safeName = UriHelper.SchoolNameUrl(name);
+            return $"{_client.BaseAddress.AbsoluteUri}school/{urn}/{safeName}";
         }
 
-        private HttpRequestMessage HeadSchoolRestRequest(int? urn, string redirect = null)
+
+        private HttpRequestMessage HeadSchoolRestRequest(int? urn, string name)
         {
-            if (string.IsNullOrEmpty(redirect))
-            {
-                return new HttpRequestMessage(HttpMethod.Head, $"/school/{urn}");
-            }
-            else
-            {
-                return new HttpRequestMessage(HttpMethod.Head, redirect);
-            }
+            var safeName = UriHelper.SchoolNameUrl(name);
+            return new HttpRequestMessage(HttpMethod.Head, $"/school/{urn}/{safeName}");
         }
 
-        public bool CheckExists(int? urn)
+        public bool CheckExists(int? urn, string name)
         {
             var key = $"cscp-{urn}";
             var value = MemoryCache.Default.Get(key);
@@ -68,7 +64,7 @@ namespace Edubase.Services.ExternalLookup
             else
             {
                 var cacheTime = ConfigurationManager.AppSettings["CscpCacheHours"].ToInteger() ?? 8;
-                var request = HeadSchoolRestRequest(urn);
+                var request = HeadSchoolRestRequest(urn, name);
                 try
                 {
                     var result = ExecuteRequest(request);
@@ -87,18 +83,8 @@ namespace Edubase.Services.ExternalLookup
         {
             return _retryPolicy.Execute(() =>
             {
-                var initialPath = request.RequestUri.ToString();
                 var response = _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).Result;
 
-                // authentication is stripped on any url forwarding, which cscp uses.
-                if (request.Headers.Authorization != null)
-                {
-                    if (response.StatusCode == HttpStatusCode.Unauthorized && request.RequestUri.AbsolutePath != initialPath)
-                    {
-                        response = _client.SendAsync(HeadSchoolRestRequest(null, request.RequestUri.AbsolutePath), HttpCompletionOption.ResponseHeadersRead).Result;
-                    }
-                }
-                
                 return response.StatusCode;
             });
         }
