@@ -54,7 +54,7 @@
                     @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
                     {
                         <div class="form-group">
-                            <label class="form-label" for="companiesHouseNumber">Companies house number</label>
+                            <label class="form-label" for="companiesHouseNumber">Companies House number</label>
                             <input type="text" value="@Model.CompaniesHouseNumber" class="form-control" disabled="disabled" id="companiesHouseNumber" />
                             @Html.HiddenFor(x => x.CompaniesHouseNumber)
                         </div>
