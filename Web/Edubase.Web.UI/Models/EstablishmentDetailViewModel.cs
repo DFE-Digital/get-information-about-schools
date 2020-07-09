@@ -195,13 +195,13 @@ namespace Edubase.Web.UI.Models
         public bool HighPriorityEstablishmentConfirmationPending => (Establishment?.UrgentConfirmationUpToDateRequired).GetValueOrDefault();
         public bool HighPriorityGovernanceConfirmationPending => (Establishment?.UrgentConfirmationUpToDateGovernanceRequired).GetValueOrDefault();
 
-        public string CscpURL => cscpService.SchoolURL(Establishment.Urn);
+        public string CscpURL => cscpService.SchoolURL(Establishment.Urn, Establishment.Name);
         private bool? showCscp;
         public bool ShowCscp
         {
             get
             {
-                if (!showCscp.HasValue) showCscp = cscpService != null && cscpService.CheckExists(Establishment.Urn);
+                if (!showCscp.HasValue) showCscp = cscpService != null && cscpService.CheckExists(Establishment.Urn, Establishment.Name);
                 return showCscp.Value;
             }
         }
