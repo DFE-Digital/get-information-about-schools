@@ -26,224 +26,212 @@
     }
 }
 
+@section BreadCrumbs
+{
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="govuk-breadcrumbs">
+            <ol class="govuk-breadcrumbs__list">
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link"})</li>
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new { @class = "govuk-breadcrumbs__link" })</li>
+            </ol>
+        </div>
+    </div>
+</div>
+}
 
-<div class="breadcrumbs">
-    <ol>
-        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
-        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-    </ol>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState)
+        <h1 class="govuk-heading-xl">@ViewBag.Title</h1>
+        <p>@ViewBag.Subtitle</p>
+    </div>
 </div>
 
+@using (Html.BeginForm())
+{
+    if (Model?.ItemsToAdd?.Count() > 0)
+    {
+        for (int i = 0; i < Model.ItemsToAdd?.Count; i++)
+        {
+            @Html.HiddenFor(model => Model.ItemsToAdd[i].Urn)
+            @Html.HiddenFor(model => Model.ItemsToAdd[i].Name)
+            @Html.HiddenFor(model => Model.ItemsToAdd[i].Address)
+            @Html.HiddenFor(model => Model.ItemsToAdd[i].OpeningDate)
+            @Html.HiddenFor(model => Model.ItemsToAdd[i].EstablishmentTypeId)
+        }
+    }
 
-<div class="grid-row">
-    <div class="column-full">
-        @Html.Partial("_ValidationSummary", ViewData.ModelState)
-    </div>
-    <div class="column-full">
-        <div class="grid-row">
-            <div class="column-full">
-                <h1 class="heading-xlarge">@ViewBag.Title</h1>
-                <p>@ViewBag.Subtitle</p>
+    <!-- EDIT -->
+    if (Model?.FoundItem != null)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <h2 class="govuk-heading-s">Predecessor school</h2>
+                <dl class="gias-summary-list gias-summary-list-l gias-summary-list--inline">
+                    <div class="gias-summary-list__row">
+                        <dt class="gias-summary-list__key">School name:</dt>
+                        <dd class="gias-summary-list__value">@Model.FoundItem.Name</dd>
+                    </div>
+                    <div class="gias-summary-list__row">
+                        <dt class="gias-summary-list__key">Address:</dt>
+                        <dd class="gias-summary-list__value">@Model.FoundItem.Address</dd>
+                    </div>
+                    <div class="gias-summary-list__row">
+                        <dt class="gias-summary-list__key"><abbr title="Unique Reference Number">URN</abbr>:</dt>
+                        <dd class="gias-summary-list__value">@Model.FoundItem.Urn</dd>
+                    </div>
+                </dl>
+                <div class="govuk-!-padding-top-2">
+                    <button name="action" value="cancel" class="gias-link-button">Wrong establishment?</button>
+                </div>
+
+                @Html.HiddenFor(x => x.FoundItem.Urn)
+                @Html.HiddenFor(x => x.FoundItem.Name)
+                @Html.HiddenFor(x => x.FoundItem.Address)
+            </div>
+            <div class="govuk-grid-column-two-thirds">
+                <h2 class="govuk-heading-s govuk-!-padding-top-2 govuk-!-margin-bottom-1">Establishment details</h2>
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FilteredItemTypes)">
+                    <label class="govuk-label" for="FilteredItemTypes">Establishment type</label>
+                    @Html.ValidationMessageFor(x => x.FilteredItemTypes, null, new { @class = "govuk-error-message"})
+                    @Html.DropDownListFor(x => x.FoundItem.EstablishmentTypeId, Model.FilteredItemTypes, "Please select", new { @class = "govuk-select", @id = nameof(Model.FilteredItemTypes) })
+                </div>
+
+                @Html.EditorFor(x => x.FoundItem.OpeningDateView, new { title = "Opening date", fieldsetClassName = "edit-date-fieldset" })
+
+                <div class="button-row">
+                    <button type="submit" name="action" value="add" class="govuk-button" id="find-urn">@(ViewBag.ButtonText ?? "Add establishment")</button>
+                    <button name="action" value="cancel" class="govuk-button govuk-button--secondary">Cancel</button>
+                </div>
             </div>
         </div>
+    }
 
-        @using (Html.BeginForm())
-        {
-            if (Model?.ItemsToAdd?.Count() > 0)
-            {
-                for (int i = 0; i < Model.ItemsToAdd?.Count; i++)
-                {
-                    @Html.HiddenFor(model => Model.ItemsToAdd[i].Urn)
-                    @Html.HiddenFor(model => Model.ItemsToAdd[i].Name)
-                    @Html.HiddenFor(model => Model.ItemsToAdd[i].Address)
-                    @Html.HiddenFor(model => Model.ItemsToAdd[i].OpeningDate)
-                    @Html.HiddenFor(model => Model.ItemsToAdd[i].EstablishmentTypeId)
+
+    <!-- SEARCH -->
+    if (Model?.FoundItem == null && Model?.IsComplete != true)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h2 class="govuk-heading-s">Predecessor school</h2>
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SearchUrn)">
+                    <label class="govuk-label" for="Urn">
+                        Establishment <abbr title="Unique Reference Number">URN</abbr>
+                    </label>
+                    @Html.ValidationMessageFor(x => x.SearchUrn, null, new { @class = "govuk-error-message"})
+                    @Html.TextBoxFor(x => x.SearchUrn, null, new { @class = "govuk-input govuk-!-width-one-half" })
+                    <button type="submit" name="action" value="search" class="govuk-button links-estab-search-button" id="find-urn">Search URN</button>
+                </div>
+            </div>
+        </div>
+    }
+
+
+    <!-- LIST -->
+    if (Model?.ItemsToAdd?.Count() > 0 && Model?.FoundItem == null && Model?.IsComplete != true)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <h2 class="govuk-heading-m">Academies to create</h2>
+
+                @{
+                    if (Model.ItemsToAdd.Count > 1)
+                    {
+                        <p class="table-caption">Showing 1 - @Model.ItemsToAdd.Count of @Model.ItemsToAdd.Count</p>
+                    }
                 }
-            }
 
-            <!-- EDIT -->
-            if (Model?.FoundItem != null)
-            {
-                <div class="grid-row">
-                    <div class="column-full">
-                        <h2 class="heading-small">Predecessor school</h2>
-                        <dl class="key-value-list fixed-label">
-                            <dt>School name:</dt>
-                            <dd>@Model.FoundItem.Name</dd>
-                            <dt>Address:</dt>
-                            <dd>@Model.FoundItem.Address</dd>
-                            <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
-                            <dd>@Model.FoundItem.Urn</dd>
-                        </dl>
-                        <button name="action" value="cancel" class="link-button font-small">Wrong establishment?</button>
-                        @Html.HiddenFor(x => x.FoundItem.Urn)
-                        @Html.HiddenFor(x => x.FoundItem.Name)
-                        @Html.HiddenFor(x => x.FoundItem.Address)
-                    </div>
-                    <div class="column-two-thirds">
+                <table class="govuk-table gias-table">
+                    <caption class="govuk-visually-hidden">Academies to create</caption>
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header"><abbr title="Unique Reference Number">URN</abbr></th>
+                            <th scope="col" class="govuk-table__header">Name</th>
+                            <th scope="col" class="govuk-table__header">Establishment type</th>
+                            <th scope="col" class="govuk-table__header">Opening date</th>
+                            <th scope="col" colspan="2" class="govuk-table__header"><span class="govuk-visually-hidden">Action links</span></th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
 
-                        <h2 class="heading-small">Establishment details</h2>
-                        <div class="form-group @Html.ValidationCssClassFor(x => x.FilteredItemTypes)">
-                            <label class="form-label" for="FilteredItemTypes">Establishment type</label>
-                            @Html.ValidationMessageFor(x => x.FilteredItemTypes)
-                            @Html.DropDownListFor(x => x.FoundItem.EstablishmentTypeId, Model.FilteredItemTypes, "Please select", new { @class = "form-control", @id = nameof(Model.FilteredItemTypes) })
-                        </div>
-
-                        @Html.EditorFor(x => x.FoundItem.OpeningDateView, new { title = "Opening date" })
-
-                        <div class="button-row">
-                            <button type="submit" name="action" value="add" class="button" id="find-urn">@(ViewBag.ButtonText ?? "Add establishment")</button>
-                            <button name="action" value="cancel" class="button button-secondary">Cancel</button>
-                        </div>
-                    </div>
-                </div>
-            }
-
-
-            <!-- SEARCH -->
-            if (Model?.FoundItem == null && Model?.IsComplete != true)
-            {
-                <div class="grid-row">
-                    <div class="column-two-thirds">
-                        <h2 class="heading-small">Predecessor school</h2>
-                        <div class="form-group @Html.ValidationCssClassFor(x => x.SearchUrn)">
-                            <label class="form-label" for="Urn">
-                                Establishment <abbr title="Unique Reference Number">URN</abbr>
-                            </label>
-                            @Html.ValidationMessageFor(x => x.SearchUrn)
-                            @Html.TextBoxFor(x => x.SearchUrn, null, new { @class = "form-control form-control-1-2 push-half--bottom" })
-                            <button type="submit" name="action" value="search" class="button inline-button" id="find-urn">Search URN</button>
-                        </div>
-                    </div>
-                </div>
-            }
-
-
-            <!-- LIST -->
-            if (Model?.ItemsToAdd?.Count() > 0 && Model?.FoundItem == null && Model?.IsComplete != true)
-            {
-                <div class="grid-row">
-                    <div class="academies-list-wrapper column-full">
-                        <h2 class="heading-medium flush--top">Academies to create</h2>
-
-                        @{
-                            if (Model.ItemsToAdd.Count > 1)
-                            {
-                                <p class="table-caption">Showing 1 - @Model.ItemsToAdd.Count of @Model.ItemsToAdd.Count</p>
-                            }
+                        @foreach (var est in Model.ItemsToAdd)
+                        {
+                            <tr class="govuk-table__row">
+                                <td data-label="URN" class="govuk-table__cell">@est.Urn</td>
+                                <td data-label="Name" class="govuk-table__cell">@est.Name</td>
+                                <td data-label="Establishment type" class="govuk-table__cell">@Model.ItemTypes.FirstOrDefault(x => x.Value.Equals(est.EstablishmentTypeId.ToString(), StringComparison.InvariantCultureIgnoreCase)).Text</td>
+                                <td data-label="Opening date" class="govuk-table__cell">@est.OpeningDateView</td>
+                                <td class="govuk-table__cell">
+                                    <button name="editUrn" value="@est.Urn" class="gias-link-button gias-link-button-s" aria-label="Edit establishment">Edit</button>
+                                </td>
+                                <td class="govuk-table__cell">
+                                    <button id="removeUrn" name="removeUrn" value="@est.Urn" class="remove-urn gias-link-button gias-link-button-s" aria-label="Remove establishment">Remove</button>
+                                </td>
+                            </tr>
                         }
 
-                        <table class="edubase-table table--larger">
-                            <caption class="visuallyhidden">Academies to create</caption>
-                            <thead>
-                                <tr>
-                                    <th scope="col"><abbr title="Unique Reference Number">URN</abbr></th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Establishment type</th>
-                                    <th scope="col">Opening date</th>
-                                    <th scope="col" colspan="2"><span class="visuallyhidden">Action links</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                    </tbody>
+                </table>
 
-                                @foreach (var est in Model.ItemsToAdd)
-                                {
-                                    <tr>
-                                        <td data-label="URN">@est.Urn</td>
-                                        <td data-label="Name">@est.Name</td>
-                                        <td data-label="Establishment type">@Model.ItemTypes.FirstOrDefault(x => x.Value.Equals(est.EstablishmentTypeId.ToString(), StringComparison.InvariantCultureIgnoreCase)).Text</td>
-                                        <td data-label="Opening date">@est.OpeningDateView</td>
-                                        <td>
-                                            <button name="editUrn" value="@est.Urn" class="link-button font-xsmall" aria-label="Edit establishment">Edit</button>
-                                        </td>
-                                        <td>
-                                            <button id="removeUrn" name="removeUrn" value="@est.Urn" class="link-button font-xsmall" aria-label="Remove establishment">Remove</button>
-                                        </td>
-                                    </tr>
-                                }
+                @{
+                    if (Model.ItemsToAdd.Count > 1)
+                    {
+                        <p class="table-caption">Showing 1 - @Model.ItemsToAdd.Count of @Model.ItemsToAdd.Count</p>
+                    }
+                }
 
-                            </tbody>
-                        </table>
+                <div class="button-row">
+                    <button type="submit" name="action" value="create" id="go-create" class="govuk-button">Create academies</button>
+                    @Html.ActionLink("Cancel", "Index", "Tools", null, new { @class = "govuk-button govuk-button--secondary cancel" })
+                </div>
+            </div>
+        </div>
+    }
 
-                        @{
-                            if (Model.ItemsToAdd.Count > 1)
-                            {
-                                <p class="table-caption">Showing 1 - @Model.ItemsToAdd.Count of @Model.ItemsToAdd.Count</p>
-                            }
+
+    <!-- COMPLETE -->
+    if (Model?.IsComplete == true)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <table class="govuk-table gias-table">
+                    <caption class="govuk-visually-hidden">Academies created</caption>
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header"><abbr title="Unique Reference Number">URN</abbr></th>
+                            <th scope="col" class="govuk-table__header">Name</th>
+                            <th scope="col" class="govuk-table__header">Establishment type</th>
+                            <th scope="col" class="govuk-table__header">Opening date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+
+                        @foreach (var est in Model.ItemsToAdd)
+                        {
+                            <tr class="govuk-table__row">
+                                <td data-label="URN" class="govuk-table__cell">
+                                    @Html.ActionLink(est.ReplacedUrn.ToString(), "Details", "Establishment", new { id = est.ReplacedUrn, area = "Establishments" }, null)
+                                </td>
+                                <td data-label="Name" class="govuk-table__cell">
+                                    @Html.ActionLink(est.Name, "Details", "Establishment", new { id = est.ReplacedUrn, area = "Establishments" }, null)
+                                </td>
+                                <td data-label="Establishment type" class="govuk-table__cell">@Model.ItemTypes.FirstOrDefault(x => x.Value.Equals(est.EstablishmentTypeId.ToString(), StringComparison.InvariantCultureIgnoreCase)).Text</td>
+                                <td data-label="Opening date" class="govuk-table__cell">@est.OpeningDateView</td>
+                            </tr>
                         }
 
-                        <div class="submit-cancel-panel">
-                            <button type="submit" name="action" value="create" id="go-create" class="button">Create academies</button>
-                            @Html.ActionLink("Cancel", "Index", "Tools", null, new { @Class = "button button-secondary cancel" })
-                        </div>
-                    </div>
-                </div>
-            }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
 
 
-            <!-- COMPLETE -->
-            if (Model?.IsComplete == true)
-            {
-                <div class="grid-row">
-                    <div class="academies-list-wrapper column-full">
-                        <table class="edubase-table table--larger">
-                            <caption class="visuallyhidden">Academies created</caption>
-                            <thead>
-                                <tr>
-                                    <th scope="col"><abbr title="Unique Reference Number">URN</abbr></th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Establishment type</th>
-                                    <th scope="col">Opening date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                @foreach (var est in Model.ItemsToAdd)
-                                {
-                                    <tr>
-                                        <td data-label="URN">
-                                            @Html.ActionLink(est.ReplacedUrn.ToString(), "Details", "Establishment", new { id = est.ReplacedUrn, area = "Establishments" }, null)
-                                        </td>
-                                        <td data-label="Name">
-                                            @Html.ActionLink(est.Name, "Details", "Establishment", new { id = est.ReplacedUrn, area = "Establishments" }, null)
-                                        </td>
-                                        <td data-label="Establishment type">@Model.ItemTypes.FirstOrDefault(x => x.Value.Equals(est.EstablishmentTypeId.ToString(), StringComparison.InvariantCultureIgnoreCase)).Text</td>
-                                        <td data-label="Opening date">@est.OpeningDateView</td>
-                                    </tr>
-                                }
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            }
-        }
-
-    </div>
-</div>
 
 @section ViewScripts
 {
-    <script nonce="@Html.ScriptNonce()">
-        var $fields = $('#content').find('.form-control');
-        var exitAttached = false;
-        $fields.on('change',
-            function() {
-                if (!exitAttached) {
-                    DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
-                    exitAttached = true;
-                }
+    <script src="/public/assets/scripts/build/bulk-academies.js"></script>
 
-            });
-
-        $('#content').find('#removeUrn').okCancel({
-            triggerEvent: 'click',
-            title: 'Are you sure you want to remove this establishment?',
-            content: 'This will permanently remove it from the list.',
-            ok: function () {
-                $(this.el).data().okCancel.unbind();
-                $(this.el).click();
-            }
-        })
-    </script>
 }
