@@ -14,27 +14,27 @@
        <div class="govuk-grid-column-full">
            <div class="govuk-breadcrumbs">
                <ol class="govuk-breadcrumbs__list">
-                   <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
+                   <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new {area = ""}, new { @class = "govuk-breadcrumbs__link"})</li>
 
                    @if (!Model.SearchQueryString.IsNullOrWhiteSpace())
                    {
                        if (Model.SearchSource == eLookupSearchSource.Governors)
                        {
                            <li class="govuk-breadcrumbs__list-item">
-                               <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Search results</a>
+                               <a class="govuk-breadcrumbs__link" href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Search results</a>
                            </li>
                        }
                        else
                        {
                            <li class="govuk-breadcrumbs__list-item">
-                               <a href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Search results</a>
+                               <a class="govuk-breadcrumbs__link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Search results</a>
                            </li>
                        }
                    }
 
                    @if (Model.LegalParentGroup != null)
                    {
-                       <li class="govuk-breadcrumbs__list-item">@Html.RouteLink(Model.LegalParentGroupRouteDto.Value.Label, Model.LegalParentGroupRouteDto.Value.RouteName, Model.LegalParentGroupRouteDto.Value.RouteValues)</li>
+                       <li class="govuk-breadcrumbs__list-item">@Html.RouteLink(Model.LegalParentGroupRouteDto.Value.Label, Model.LegalParentGroupRouteDto.Value.RouteName, Model.LegalParentGroupRouteDto.Value.RouteValues, new { @class = "govuk-breadcrumbs__link"})</li>
                    }
                </ol>
            </div>

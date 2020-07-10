@@ -1,0 +1,5 @@
+.gias-wrapped-label-at-mobile {
+  @include govuk-media-query($until: tablet) {
+    padding-top: 0;
+  }
+}

@@ -1,51 +1,58 @@
-@model ConvertSATViewModel
+﻿@model ConvertSATViewModel
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Convert single-academy trusts to multi-academy trusts");
+    ViewBag.SiteSection = "tools";
 }
 
-<div class="breadcrumbs">
-    <ol>
-        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
-        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-        @if (Model.Details != null)
-        {
-            <li>@Html.ActionLink("Convert to multi-academy trust", "Convert", "Group", new { area = "Groups" })</li>
-        }
-    </ol>
-</div>
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new {area = ""}, new { @class = "govuk-breadcrumbs__link"})</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new { @class = "govuk-breadcrumbs__link" })</li>
+                    @if (Model.Details != null)
+                    {
+                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Convert to multi-academy trust", "Convert", "Group", new {area = "Groups"},new { @class = "govuk-breadcrumbs__link"})</li>
+                    }
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-<h1 class="heading-xlarge">Convert to multi-academy trust</h1>
+<h1 class="govuk-heading-xl">Convert to multi-academy trust</h1>
 
 @if (Model.Details == null)
 {
-    <div class="grid-row">
-        <div class="column-two-thirds">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
             <p>Convert single-academy trusts into multi-academy trusts using either the current company record or a new one from companies house</p>
-            <h2 class="heading-medium">Current single-academy trust</h2>
+            <h2 class="govuk-heading-m">Current single-academy trust</h2>
         </div>
     </div>
 
     using (Html.BeginRouteForm("PostGroupConvertSAT2MAT", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        <div class="grid-row">
-            <div class="column-full">
-                <fieldset>
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.Text)">
-                        @Html.LabelFor(x => x.Text, "Companies House number, Group UID or ID", new { @class = "form-label" })
-                        @Html.ValidationMessageFor(x => x.Text)
-                        @Html.TextBoxFor(x => x.Text, new { @class = "form-control form-control-1-2" })
-                    </div>
-                </fieldset>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Text)">
+                    @Html.LabelFor(x => x.Text, "Companies House number, Group UID or ID", new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.Text, null, new { @class = "govuk-error-message"})
+                    @Html.TextBoxFor(x => x.Text, new { @class = "govuk-input govuk-!-width-one-half" })
+                </div>
             </div>
         </div>
-        <div class="grid-row">
-            <div class="column-full">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
                 <div class="button-row">
-                    <button type="submit" name="actionname" class="button" value="find">Continue</button>
-                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-secondary cancel" })
+                    <button type="submit" name="actionname" class="govuk-button" value="find">Continue</button>
+                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel" })
                 </div>
             </div>
         </div>
@@ -53,8 +60,8 @@
 }
 else
 {
-    <div class="grid-row">
-        <div class="column-two-thirds">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
             <p>Check this is the correct single-academy trust before converting. A new <abbr title="Unique Identifier">UID</abbr> will be created on conversion.</p>
         </div>
     </div>
@@ -66,43 +73,58 @@ else
         @Html.HiddenFor(x => x.CountryName)
         @Html.HiddenFor(x => x.CountyName)
         @Html.HiddenFor(x => x.Text)
-        <div class="grid-row">
-            <div class="column-full">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
 
-                <h2 class="heading-small">Existing trust details</h2>
+                <h2 class="govuk-heading-s">Existing trust details</h2>
 
-                <dl class="key-value-list trust-detail-list">
-                    <dt>Trust name:</dt>
-                    <dd>@Model.Details.Name</dd>
-                    <dt>Companies House number:</dt>
-                    @if (Model.Details.CompaniesHouseNumber != null)
-                    {
-                        <dd><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.Details.CompaniesHouseNumber" target="_blank">@Model.Details.CompaniesHouseNumber <span class="visually-hidden">Opens in new window</span></a></dd>
-                    }
-                    else
-                    {
-                        <dd>Not recorded</dd>
-                    }
-
-                    <dt>Address:</dt>
-                    <dd>@Model.GetAddress()</dd>
-                    <dt>Group <abbr title="Unique Identifier">UID</abbr>:</dt>
-                    <dd>@Model.Details.GroupUId</dd>
-                    <dt>Group ID:</dt>
-                    <dd>@(Model.Details.GroupId ?? "Not recorded")</dd>
+                <dl class="gias-summary-list gias-summary-list-l">
+                    <div class="gias-summary-list__row">
+                        <dt class="gias-summary-list__key">Trust name:</dt>
+                        <dd class="gias-summary-list__value">@Model.Details.Name</dd>
+                    </div>
+                    <div class="gias-summary-list__row">
+                        <dt class="gias-summary-list__key">Companies House number:</dt>
+                        @if (Model.Details.CompaniesHouseNumber != null)
+                        {
+                            <dd class="gias-summary-list__value">
+                                <a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.Details.CompaniesHouseNumber" target="_blank">
+                                    @Model.Details.CompaniesHouseNumber <span class="visually-hidden">Opens in new window</span>
+                                </a>
+                            </dd>
+                        }
+                        else
+                        {
+                            <dd class="gias-summary-list__value">Not recorded</dd>
+                        }
+                    </div>
+                    <div class="gias-summary-list__row">
+                        <dt class="gias-summary-list__key">Address:</dt>
+                        <dd class="gias-summary-list__value">@Model.GetAddress()</dd>
+                    </div>
+                    <div class="gias-summary-list__row">
+                        <dt class="gias-summary-list__key">Group <abbr title="Unique Identifier">UID</abbr>:</dt>
+                        <dd class="gias-summary-list__value">@Model.Details.GroupUId</dd>
+                    </div>
+                    <div class="gias-summary-list__row">
+                        <dt class="gias-summary-list__key">Group ID:</dt>
+                        <dd class="gias-summary-list__value">@(Model.Details.GroupId ?? "Not recorded")</dd>
+                    </div>
                 </dl>
 
             </div>
         </div>
-        <div class="grid-row">
-            <div class="column-full">
-                <div class="form-group">
-                    @Html.GiasCheckboxFor(x => x.CopyGovernanceInfo, "Copy single-academy trust governance to multi-academy trust")
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <div class="govuk-form-group govuk-!-padding-top-4">
+                    @Html.GiasCheckboxFor(x => x.CopyGovernanceInfo, "Copy single-academy trust governance to multi-academy trust", " gias-wrapped-label-at-mobile ", new { @class = "govuk-checkboxes__input"})
                 </div>
 
-                @Html.RouteLink(HttpUtility.HtmlDecode("&laquo; Go back"), "GroupConvertSAT2MAT", null, new { @class = "button button-secondary cancel" })
-                <button type="submit" name="actionname" class="button" value="confirm">Convert</button>
-                @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-secondary cancel" })
+                <div class="button-row">
+                    @Html.RouteLink(HttpUtility.HtmlDecode("&laquo; Go back"), "GroupConvertSAT2MAT", null, new {@class = "govuk-button govuk-button--secondary cancel"})
+                    <button type="submit" name="actionname" class="govuk-button" value="confirm">Convert</button>
+                    @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "govuk-button govuk-button--secondary cancel"})
+                </div>
             </div>
         </div>
     }

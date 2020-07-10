@@ -40,8 +40,8 @@
     <div class="govuk-grid-column-full">
         <div class="govuk-breadcrumbs">
             <ol class="govuk-breadcrumbs__list">
-                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
-                <li class="govuk-breadcrumbs__list-item">@Html.RouteLink(Model.Group.Name, "GroupDetails", new {id = Model.Group.GroupUId})</li>
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new {area = ""}, new { @class = "govuk-breadcrumbs__link"})</li>
+                <li class="govuk-breadcrumbs__list-item">@Html.RouteLink(Model.Group.Name, "GroupDetails", new {id = Model.Group.GroupUId}, new { @class = "govuk-breadcrumbs__link"})</li>
             </ol>
         </div>
     </div>
