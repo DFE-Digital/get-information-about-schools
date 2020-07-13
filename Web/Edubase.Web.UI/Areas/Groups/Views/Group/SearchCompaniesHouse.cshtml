@@ -3,35 +3,45 @@
     ViewBag.bodyClasses = "create-edit-school create-academy-trust";
     ViewBag.hideLogo = true;
     ViewBag.Title = "Create academy trust";
+    ViewBag.SiteSection = "tools";
 }
 
-<div class="breadcrumbs">
-    <ol>
-        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
-        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-    </ol>
+@section BreadCrumbs
+{
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="govuk-breadcrumbs">
+            <ol class="govuk-breadcrumbs__list">
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link"})</li>
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new { @class = "govuk-breadcrumbs__link" })</li>
+            </ol>
+        </div>
+    </div>
 </div>
+}
 
-@Html.Partial("_ValidationSummary", ViewData.ModelState)
+
+
 
 @using (Html.BeginForm("SearchCompaniesHouse", "Group", FormMethod.Get))
 {
     @Html.HiddenFor(x => x.Search, new { Value = "true" })
 
-    <div class="grid-row">
-        <div class="column-full">
-            <h1 class="heading-xlarge">Create an academy trust</h1>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            @Html.Partial("_ValidationSummary", ViewData.ModelState)
+            <h1 class="govuk-heading-xl">Create an academy trust</h1>
             <p>To create an academy trust record select the company record from Companies House.</p>
         </div>
     </div>
-    <div class="grid-row">
-        <div class="column-two-thirds">
-            <h2 class="heading-small">Add company</h2>
-            <div class="form-group @Html.ValidationCssClassFor(x => x.SearchText)">
-                @Html.LabelFor(x => x.SearchText, "Enter the Companies House name or number", new { @class = "form-label" })
-                @Html.ValidationMessageFor(x => x.SearchText)
-                @Html.TextBoxFor(x => x.SearchText, new { maxlength = 120, @class = "form-control form-control-3-4 push-half--bottom" })
-                <button type="submit" class="button inline-button">Search</button>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h2 class="govuk-heading-s">Add company</h2>
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SearchText)">
+                @Html.LabelFor(x => x.SearchText, "Enter the Companies House name or number", new { @class = "govuk-label" })
+                @Html.ValidationMessageFor(x => x.SearchText, null, new { @class = "govuk-error-message"})
+                @Html.TextBoxFor(x => x.SearchText, new { maxlength = 120, @class = "govuk-input  govuk-!-width-three-quarters" })
+                <button type="submit" class="govuk-button links-estab-search-button">Search</button>
             </div>
 
         </div>
@@ -44,8 +54,8 @@
 
         if (Model.Results.PageCount > 1)
         {
-            <div class="grid-row">
-                <div class="column-full top-pagination">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full top-pagination">
                     @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
                     {
                         {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")},
@@ -58,27 +68,29 @@
 
         if (Model.Results.Items.Any())
         {
-            <div class="grid-row">
-                <div class="column-full">
-                    <table class="edubase-table company-details">
-                        <caption class="visuallyhidden">Company search results</caption>
-                        <thead>
-                            <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Companies House no.</th>
-                                <th scope="col">Incorporated</th>
-                                <th scope="col">Address</th>
-                            </tr>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <table class="govuk-table gias-table company-details">
+                        <caption class="govuk-visually-hidden">Company search results</caption>
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header">Name</th>
+                            <th scope="col" class="govuk-table__header">Companies House no.</th>
+                            <th scope="col" class="govuk-table__header">Incorporated</th>
+                            <th scope="col" class="govuk-table__header">Address</th>
+                        </tr>
                         </thead>
+                        <tbody class="govuk-table__body">
                         @foreach (var result in Model.Results.Items)
                         {
-                            <tr class="company-result">
-                                <td data-label="Name">@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups" }, null)</td>
-                                <td data-label="Companies House no."><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number" target="_blank">@result.Number <span class="visually-hidden">Opens in new window</span></a></td>
-                                <td data-label="Incorporated">@(result.IncorporationDate?.ToString("dd/MM/yyyy"))</td>
-                                <td data-label="Address">@(result.Address.ToString() ?? "Not recorded")</td>
+                            <tr class="govuk-table__row">
+                                <td data-label="Name" class="govuk-table__cell">@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups" }, null)</td>
+                                <td data-label="Companies House no." class="govuk-table__cell"><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number" target="_blank">@result.Number <span class="govuk-visually-hidden">Opens in new window</span></a></td>
+                                <td data-label="Incorporated" class="govuk-table__cell">@(result.IncorporationDate?.ToString("dd/MM/yyyy"))</td>
+                                <td data-label="Address" class="govuk-table__cell">@(result.Address.ToString() ?? "Not recorded")</td>
                             </tr>
                         }
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -86,9 +98,9 @@
 
         if (Model.Results.PageCount > 1)
         {
-            <div class="grid-row">
-                <div class="column-full">
-                    <div class="lower-pagination push--bottom">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <div class="lower-pagination">
                         @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
                         {
                             {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")},
@@ -102,6 +114,6 @@
     }
 }
 
-@section ViewScripts{
-    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
-}
+@* @section ViewScripts{ *@
+@*     <script src="/public/assets/scripts/standalone/accessibility.js"></script> *@
+@* } *@
