@@ -31,7 +31,29 @@
 
 }
 <div id="school-change-history" class="tab-content approval-data">
-    <h2 class="bold-small">Change History</h2>
+
+    <div>
+        <div class="column-two-thirds">
+            <h2 class="bold-small">Change History</h2>
+        </div>
+
+        @if (User.Identity.IsAuthenticated && Model.GovernorsGridViewModel.DomainModel.HasGovernors)
+        {
+            <div class="column-third text-align-right">
+                @if (Model.GovernorsGridViewModel.EstablishmentUrn.HasValue)
+                {
+                    @Html.RouteLink("View governance change history", "EstabDetailGovChangeHistory", new { id = Model.GovernorsGridViewModel.EstablishmentUrn })
+                    <br /><br />
+                }
+                else
+                {
+                    @Html.RouteLink("View governance change history", "GroupDetailGovChangeHistory", new { id = Model.GovernorsGridViewModel.GroupUId })
+                    <br /><br />
+                }
+            </div>
+        }
+    </div>
+
     @if (!Model.ChangeHistory.Items.Any())
     {
         <p>There are no change records available at the moment</p>
@@ -39,9 +61,9 @@
     else
     {
         <p>
-            @Html.ActionLink("Download data in CSV format", "DownloadChangeHistory", "Downloads", new { establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.csv }, new { style = "margin-bottom:10px; display:block;" })
-            @Html.ActionLink("Download data in XLSX format", "DownloadChangeHistory", "Downloads", new { establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.xlsx }, null)
-            <br />
+            @Html.ActionLink("Download data in CSV format", "DownloadChangeHistory", "Downloads", new {establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.csv}, new {style = "margin-bottom:10px; display:block;"})
+            @Html.ActionLink("Download data in XLSX format", "DownloadChangeHistory", "Downloads", new {establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.xlsx}, null)
+            <br/>
         </p>
         if (Model.ChangeHistory.PageCount > 1)
         {
@@ -52,16 +74,16 @@
         <table class="approval-changes edubase-table sortable-table">
             <caption class="visuallyhidden">Change history</caption>
             <thead>
-                <tr>
+            <tr>
                 @foreach (var tableColumn in tableColumns)
                 {
                     <th scope="col">
                         <a href="@Url.SortUrl(tableColumn.Item1, "#school-change-history")"
-                        class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
-                        aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
+                           class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                           aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
                     </th>
                 }
-                </tr>
+            </tr>
             </thead>
             <tbody>
             @foreach (var item in Model.ChangeHistory.Items)

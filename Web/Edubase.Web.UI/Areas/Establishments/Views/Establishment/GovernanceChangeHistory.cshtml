@@ -62,9 +62,20 @@
             </ul>
         </div>
         <div class="tab-content-wrapper horizontal-tabs-content">
-
             <div id="change-history" class="tab-content approval-data">
-                <h2 class="bold-small">Governance Change History</h2>
+                <div>
+                    <div class="column-two-thirds">
+                        <h2 class="bold-small">Governance Change History</h2>
+                    </div>
+                    @if (Model.ChangeHistory != null && Model.TabDisplayPolicy.ChangeHistory)
+                    {
+                        <div class="column-third text-align-right">
+                            @Html.RouteLink("View establishment change history", "EstabDetails", null, null, "school-change-history", new {id = Model.Establishment.Urn}, null)
+                            <br/><br/>
+                        </div>
+                    }
+                </div>
+
                 @if (!Model.ChangeHistory.Items.Any())
                 {
                     <p>There are no change records available at the moment</p>
@@ -86,14 +97,14 @@
                         <caption class="visuallyhidden">Governance change history</caption>
                         <thead>
                             <tr>
-                            @foreach (var tableColumn in tableColumns)
-                            {
-                                <th scope="col">
-                                    <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
-                                    class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
-                                    aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
-                                </th>
-                            }
+                                @foreach (var tableColumn in tableColumns)
+                                {
+                                    <th scope="col">
+                                        <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
+                                           class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                                           aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
+                                    </th>
+                                }
                             </tr>
                         </thead>
                         <tbody>
