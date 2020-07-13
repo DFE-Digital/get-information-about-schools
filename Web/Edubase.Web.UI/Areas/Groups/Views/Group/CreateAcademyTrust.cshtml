@@ -155,17 +155,7 @@
 
 @section ViewScripts
 {
-    <script nonce="@Html.ScriptNonce()">
-        var $fields = $('#content').find('.form-control');
-        var exitAttached = false;
-
-        $fields.on('change', function () {
-            if (!exitAttached) {
-                DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
-                exitAttached = true;
-            }
-        });
-    </script>
+   <script src="/public/assets/scripts/build/bulk-academies.js"></script>
 }
 
 @functions
