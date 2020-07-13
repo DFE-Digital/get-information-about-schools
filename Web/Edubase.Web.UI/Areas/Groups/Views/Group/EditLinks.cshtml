@@ -77,7 +77,10 @@
                         </h4>
                          @if (ViewData.ModelState["linkedEstablishments[" + i + "].id"] != null)
                          {
-                            <div class="govuk-error-message">@Html.ValidationMessageNested("linkedEstablishments[" + i + "].id")</div>
+                             <div class="govuk-form-group govuk-form-group--error govuk-!-padding-bottom-1 govuk-!-padding-top-2 govuk-!-margin-bottom-1">
+                                 <div class="govuk-error-message">@Html.ValidationMessageNested("linkedEstablishments[" + i + "].id")</div>
+                             </div>
+
                          }
                         <dl class="gias-summary-list gias-summary-list--inline">
                             <div class="gias-summary-list__row">
