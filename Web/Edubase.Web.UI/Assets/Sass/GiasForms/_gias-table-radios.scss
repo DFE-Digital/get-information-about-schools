@@ -1,0 +1,21 @@
+.gias-radios__item-table {
+  min-height: 30px;
+
+  .govuk-radios__label {
+    &::before {
+      width: 24px;
+      height: 24px;
+      background-color: govuk-colour('white');
+    }
+
+    &::after {
+      border-width: 7px;
+      top: 5px;
+      left: 5px;
+    }
+  }
+  .govuk-radios__input:focus + .govuk-radios__label::before {
+    box-shadow: none;
+    border-width: 2px;
+  }
+}

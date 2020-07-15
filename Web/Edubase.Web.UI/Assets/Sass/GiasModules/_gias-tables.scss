@@ -15,6 +15,10 @@
     .govuk-table__header,
     .govuk-table__cell {
       border-bottom: 1px solid $govuk-border-colour;
+
+      &.highlight {
+        background-color: govuk-colour("light-grey");
+      }
     }
   }
 

@@ -29,7 +29,7 @@
     {
         showBinding = String.Concat((string)@ViewData["vueModel"], "Error");
         messageBinding = String.Concat((string)@ViewData["vueModel"], "ErrorMessage");
-        classBinding = String.Concat("v-bind:class=\"[", @showBinding, "?'error': '', 'form-group create-edit-form-group date-group']\"");
+        classBinding = String.Concat("v-bind:class=\"[", @showBinding, "?'govuk-form-group--error': '', 'govuk-form-group create-edit-form-group date-group']\"");
     }
     else
     {

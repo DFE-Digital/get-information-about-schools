@@ -2,160 +2,160 @@
 @{
     ViewBag.hideLogo = true;
     ViewBag.Title = Model.PageTitle;
-    ViewBag.BodyClasses = "create-childrens-centre";
+    ViewBag.BodyClasses = "create-childrens-centre create-edit";
+    ViewBag.SiteSection = "tools";
 }
 
 
-<div class="breadcrumbs">
-    <ol>
-        <li>@Html.ActionLink("Home", "Index", "Search", new {area = ""}, null)</li>
-        <li>@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, null)</li>
-    </ol>
+@section BreadCrumbs
+{
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="govuk-breadcrumbs">
+            <ol class="govuk-breadcrumbs__list">
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link"})</li>
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new { @class = "govuk-breadcrumbs__link" })</li>
+            </ol>
+        </div>
+    </div>
 </div>
-
+}
 <div id="create-childrens-centre" v-cloak>
 
-    <div v-if="groupNameApiError.length>0 || groupNameError || laError || openDateError || tooFewCentresError || urnError || urnApiErrors.length>0 || duplicateUrnError || apiErrors.length>0 || joinDateError" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
-        <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
-        <ul class="error-summary-list">
-            <li v-show="groupNameApiError.length>0">
-                <a href="#GroupName">{{groupNameApiError}}</a>
-            </li>
-            <li v-show="groupNameError">
-                <a href="#GroupName">Please enter the {{groupTypeName}} name</a>
-            </li>
-            <li v-show="openDateError">
-                <a href="#OpenDate">Please check the opening date you have entered</a>
-            </li>
-            <li v-show="laError">
-                <a href="#LocalAuthorityId">Please select a local authority</a>
-            </li>
-            <li v-show="tooFewCentresError">
-                <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">You need to add at least two centres</a>
-            </li>
-            <li v-show="urnError">
-                <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a>
-            </li>
-            <li v-show="urnApiErrors.length>0" v-for="err in urnApiErrors">
-                <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">{{err.field}} : {{err.message}}</a>
-            </li>
-            <li v-show="duplicateUrnError">
-                <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">The <abbr title="Unique Reference Number">URN</abbr> is a duplicate</a>
-            </li>
-            <li v-show="apiErrors.length>0" v-for="err in apiErrors">
-                <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">{{err.field}} : {{err.message}}</a>
-            </li>
-            <li v-show="joinDateError">
-                <a href="#JoinedDate">Please check the joined date you have entered</a>
-            </li>
+    <div v-if="groupNameApiError.length>0 || groupNameError || laError || openDateError || tooFewCentresError || urnError || urnApiErrors.length>0 || duplicateUrnError || apiErrors.length>0 || joinDateError" class="govuk-error-summary" aria-labelledby="govuk-error-summary-title" role="alert" tabindex="-1">
+        <h2 id="govuk-error-summary-title" class="govuk-error-summary__title">Incorrect or missing details</h2>
+        <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+                <li v-show="groupNameApiError.length>0">
+                    <a href="#GroupName">{{groupNameApiError}}</a>
+                </li>
+                <li v-show="groupNameError">
+                    <a href="#GroupName">Please enter the {{groupTypeName}} name</a>
+                </li>
+                <li v-show="openDateError">
+                    <a href="#OpenDate">Please check the opening date you have entered</a>
+                </li>
+                <li v-show="laError">
+                    <a href="#LocalAuthorityId">Please select a local authority</a>
+                </li>
+                <li v-show="tooFewCentresError">
+                    <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">You need to add at least two centres</a>
+                </li>
+                <li v-show="urnError">
+                    <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a>
+                </li>
+                <li v-show="urnApiErrors.length>0" v-for="err in urnApiErrors">
+                    <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">{{err.field}} : {{err.message}}</a>
+                </li>
+                <li v-show="duplicateUrnError">
+                    <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">The <abbr title="Unique Reference Number">URN</abbr> is a duplicate</a>
+                </li>
+                <li v-show="apiErrors.length>0" v-for="err in apiErrors">
+                    <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">{{err.field}} : {{err.message}}</a>
+                </li>
+                <li v-show="joinDateError">
+                    <a href="#JoinedDate">Please check the joined date you have entered</a>
+                </li>
 
-        </ul>
+            </ul>
+        </div>
     </div>
 
     @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-    <div v-show="Object.keys(apiError).length> 0">
-        <h1 class="heading-xlarge">Sorry, something went wrong</h1>
-        <p>Please try again later.</p>
-        <p>A report of the error has been sent to our technical team.</p>
-
-        <p class="api-error-code" v-show="apiError.hasOwnProperty('errorCode')">Error code: {{apiError.errorCode}}</p>
-        <div v-show="apiError.hasOwnProperty('technicalDetails')">
-            <code>
-                {{apiError.technicalDetails}}
-            </code>
-        </div>
+<div>
+    <gias-api-error :api-error="apiError"/>
+</div>
+<div v-show="Object.keys(apiError).length === 0">
+    <div>
+        <gias-wait-spinner :is-processing="isProcessing"/>
     </div>
-    <div v-show="Object.keys(apiError).length === 0">
 
-        <div aria-live="polite" class="wait-spinner" v-show="isProcessing">
-            <p class="visually-hidden">Please wait</p>
-        </div>
         @using (Html.BeginForm("Create", "Group", new {area = "Groups"}, FormMethod.Post, new {@id = "create-childrens-centres"}))
         {
             @Html.HiddenFor(x => x.GroupUId)
             @Html.HiddenFor(x => x.GroupTypeMode)
             @Html.HiddenFor(x => x.SaveMode)
 
-            <div class="grid-row">
+            <div class="govuk-grid-row" v-show="Object.keys(apiError).length === 0">
                 @* STEP 1 - Choosing group or collaboration *@
                 <div id="step1" v-show="appState === 'initial'">
-                    <div class="column-full">
-                        <h1 class="heading-xlarge">@Model.PageTitle</h1>
+                    <div class="govuk-grid-column-full">
+                        <h1 class="govuk-heading-xl">@Model.PageTitle</h1>
                     </div>
-                    <div class="column-two-thirds">
+                    <div class="govuk-grid-column-two-thirds">
                         <p>You can use this to create children's centre groups or collaborations of existing establishments.</p>
-                        <fieldset class="radio-wrap stacked-controls">
-                            <legend class="heading-medium">Select the process that you are interested in</legend>
-                            <div class="form-group">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend--m">Select the process that you are interested in</legend>
+                            <div class="govuk-form-group">
+                                <div class="govuk-radios">
                                 @foreach (var groupType in Model.CCGroupTypes)
                                 {
                                     var inputId = "grouptypeid-" + groupType.Value;
-                                    <div class="multiple-choice">
-                                        @Html.RadioButtonFor(x => x.GroupTypeId, groupType.Value, new {id = inputId, v_model = "groupType"})
-                                        <label for="@inputId">
-                                            @groupType.Text
-                                        </label>
+                                    <div class="govuk-radios__item">
+                                        @Html.RadioButtonFor(x => x.GroupTypeId, groupType.Value, new {id = inputId, v_model = "groupType", @class = "govuk-radios__input"})
+                                        <label for="@inputId" class="govuk-radios__label">@groupType.Text</label>
                                     </div>
-                                }
+                                 }
+                                </div>
                             </div>
                         </fieldset>
                     </div>
-                    <div class="column-full">
-                        <div class="submit-cancel-panel">
-                            <a href="#" class="button" v-on:click.prevent="step0Continue">Continue</a>
-                            @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-secondary"})
+                    <div class="govuk-grid-column-full">
+                        <div class="button-row">
+                            <a href="#" class="govuk-button" v-on:click.prevent="step0Continue">Continue</a>
+                            @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "govuk-button govuk-button--secondary"})
                         </div>
                     </div>
                 </div>
 
                 @* STEP 2 *@
                 <div id="step2" v-show="appState==='groupDetail' && !isProcessing">
-                    <div class="column-full">
-                        <h1 class="heading-xlarge">Enter the children's centre {{groupTypeName}} details</h1>
+                    <div class="govuk-grid-column-full">
+                        <h1 class="govuk-heading-xl">Enter the children's centre {{groupTypeName}} details</h1>
                     </div>
-                    <div class="column-half">
+                    <div class="govuk-grid-column-one-half">
                         <p>Add the details of the children's centre {{groupTypeName}} you'd like to create.</p>
 
-                        <h2 class="heading-medium">Children's centre {{groupTypeName}} details</h2>
-                        <div v-bind:class="['form-group', (groupNameError || groupNameApiError.length>0)? 'error' : '']">
-                            <label for="GroupName" class="form-label">{{capitalise(groupTypeName)}} name</label>
-                            @Html.ValidationMessageFor(x => x.GroupName)
-                            <span class="error-message" v-show="groupNameError">Please check the {{groupTypeName}} name</span>
-                            <span class="error-message" v-show="groupNameApiError.length>0">{{groupNameApiError}}</span>
-                            @Html.TextBoxFor(x => x.GroupName, new {@class = "form-control", v_model = "groupName"})
+                        <h2 class="govuk-heading-m">Children's centre {{groupTypeName}} details</h2>
+                        <div v-bind:class="['govuk-form-group', (groupNameError || groupNameApiError.length>0)? 'govuk-form-group--error' : '']">
+                            <label for="GroupName" class="govuk-label">{{capitalise(groupTypeName)}} name</label>
+                            @Html.ValidationMessageFor(x => x.GroupName, null, new { @class = "govuk-error-message"})
+                            <span class="govuk-error-message" v-show="groupNameError">Please check the {{groupTypeName}} name</span>
+                            <span class="govuk-error-message" v-show="groupNameApiError.length>0">{{groupNameApiError}}</span>
+                            @Html.TextBoxFor(x => x.GroupName, new {@class = "govuk-input", v_model = "groupName"})
                         </div>
 
                         @Html.HiddenFor(x => x.GroupTypeId)
 
-                        @Html.EditorFor(x => x.OpenDate, new {title = Model.OpenDateLabel, vueModel = "openDate"})
+                        @Html.EditorFor(x => x.OpenDate, new {title = Model.OpenDateLabel, vueModel = "openDate", fieldsetClassName = "edit-date-fieldset"})
 
-                        <div v-bind:class="['form-group', laError? 'error' : '']">
-                            <label for="LocalAuthorityId" class="form-label">Local authority</label>
-                            @Html.ValidationMessageFor(x => x.LocalAuthorityId)
-                            <span class="error-message" v-show="laError">Please select a local authority</span>
+                        <div v-bind:class="['govuk-form-group', laError? 'govuk-form-group--error' : '']">
+                            <label for="LocalAuthorityId" class="govuk-label">Local authority</label>
+                            @Html.ValidationMessageFor(x => x.LocalAuthorityId, null, new { @class = "govuk-error-message"})
+                            <span class="govuk-error-message" v-show="laError">Please select a local authority</span>
                             @if (Model.IsLocalAuthorityEditable)
                             {
-                                @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new {@class = "form-control", v_model = "la"})
+                                @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new {@class = "govuk-select", v_model = "la"})
                             }
                             else
                             {
-                                <input type="text" value="@(Model.LocalAuthorityName)" disabled="disabled" class="form-control" v-model="laName" id="uneditable-la"/>
+                                <input type="text" value="@(Model.LocalAuthorityName)" disabled="disabled" class="govuk-input" v-model="laName" id="uneditable-la"/>
                                 @Html.HiddenFor(x => x.LocalAuthorityName, new {id = "uneditable-la-name"})
                                 @Html.HiddenFor(x => x.LocalAuthorityId, new {id = "la-code"})
                             }
                             @Html.HiddenFor(x => x.IsLocalAuthorityEditable)
                         </div>
                     </div>
-                    <div class="column-full">
-                        <div class="submit-cancel-panel">
-                            <a href="#" class="button" v-on:click.prevent="step1Continue()">
+                    <div class="govuk-grid-column-full">
+                        <div class="button-row">
+                            <a href="#" class="govuk-button" v-on:click.prevent="step1Continue()">
                                 Continue
                             </a>
-                            <a href="#" class="button button-secondary" v-on:click.prevent="step0Complete=false, appState = 'initial'; clearErrors()" v-show="!detailEdit">
+                            <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="step0Complete=false, appState = 'initial'; clearErrors()" v-show="!detailEdit">
                                 Cancel
                             </a>
-                            <a href="#" class="button button-secondary" v-on:click.prevent="step1Continue" v-show="detailEdit">
+                            <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="step1Continue" v-show="detailEdit">
                                 Cancel
                             </a>
 
@@ -165,113 +165,125 @@
 
                 @* STEP 3 *@
                 <div id="step3" v-show="appState==='addCentre' && !isProcessing">
-                    <div class="column-full">
-                        <h1 class="heading-intro">Add children's centres</h1>
+                    <div class="govuk-grid-column-full">
+                        <h1 class="govuk-heading-xl">Add children's centres</h1>
                     </div>
-                    <div class="column-two-thirds">
+                    <div class="govuk-grid-column-two-thirds">
                         <p>
                             Add two or more children's centres to create a children's centre {{groupTypeName}}
                             <span v-if="groupType==8">and choose which one you would like as the lead centre</span>.
                         </p>
                     </div>
-                    <div class="column-full">
-                        <h2 class="heading-medium">New children's centre {{groupTypeName}} details</h2>
+                    <div class="govuk-grid-column-full">
+                        <h2 class="govuk-heading-m">New children's centre {{groupTypeName}} details</h2>
                         <div class="warning-message" v-show="groupNameWarningMessage.length >0">
                             <p v-html="groupNameWarningMessage"></p>
                         </div>
-                        <dl class="key-value-list fixed-label">
-                            <dt>Group Name:</dt>
-                            <dd id="group-name">{{groupName}}</dd>
-                            <dt>Open date:</dt>
-                            <dd id="group-open-date">{{openDate}}</dd>
-                            <dt>Group status:</dt>
-                            <dd id="group-status">{{groupStatus}}</dd>
-                            <dt>Local authority:</dt>
-                            <dd id="group-la">{{laName}}</dd>
+                        <dl class="gias-summary-list">
+                            <div class="gias-summary-list__row">
+                                <dt class="gias-summary-list__key">Group Name:</dt>
+                                <dd id="group-name" class="gias-summary-list__value">{{groupName}}</dd>
+                            </div>
+                            <div class="gias-summary-list__row">
+                                <dt class="gias-summary-list__key">Open date:</dt>
+                                <dd id="group-open-date" class="gias-summary-list__value">{{openDate}}</dd>
+                            </div>
+                            <div class="gias-summary-list__row">
+                                <dt class="gias-summary-list__key">Group status:</dt>
+                                <dd id="group-status" class="gias-summary-list__value">{{groupStatus}}</dd>
+                            </div>
+                            <div class="gias-summary-list__row">
+                                <dt class="gias-summary-list__key">Local authority:</dt>
+                                <dd id="group-la" class="gias-summary-list__value">{{laName}}</dd>
+                            </div>
                         </dl>
                     </div>
-                    <div class="column-two-thirds">
-                        <h2 class="heading-medium">Add children's centres</h2>
-                        <div v-bind:class="['form-group', (urnError || urnApiErrors.length > 0 || duplicateUrnError || tooFewCentresError)? 'error' : '']">
-                            @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
-                            <label class="form-label" for="LinkedEstablishments_LinkedEstablishmentSearch_Urn">
+                    <div class="govuk-grid-column-two-thirds">
+                        <h2 class="govuk-heading-m">Add children's centres</h2>
+                        <div v-bind:class="['govuk-form-group', (urnError || urnApiErrors.length > 0 || duplicateUrnError || tooFewCentresError)? 'govuk-form-group--error' : '']">
+                            @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, null, new { @class = "govuk-error-message"})
+                            <label class="govuk-label" for="LinkedEstablishments_LinkedEstablishmentSearch_Urn">
                                 Establishment <abbr title="Unique Reference Number">URN</abbr>
                             </label>
-                            <span class="error-message" v-show="urnError || urnApiErrors.length > 0 || duplicateUrnError">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
-                            <span class="error-message" v-show="tooFewCentresError">Add more centres to the {{groupTypeName}}</span>
-                            @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new {@class = "form-control form-control-1-2 push-half--bottom", v_model = "searchUrn"})
-                            <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" class="button inline-button" v-on:click.prevent="lookupUrn">Search URN</button>
+                            <span class="govuk-error-message" v-show="urnError || urnApiErrors.length > 0 || duplicateUrnError">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
+                            <span class="govuk-error-message" v-show="tooFewCentresError">Add more centres to the {{groupTypeName}}</span>
+                            @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new {@class = "govuk-input govuk-!-width-two-thirds", v_model = "searchUrn"})
+                            <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" class="govuk-button btn-add-person" v-on:click.prevent="lookupUrn">Search URN</button>
                         </div>
                     </div>
-                    <div class="column-full">
+                    <div class="govuk-grid-column-full">
                         <!-- JB: list of "added" centres here -->
                         <div v-show="centresInGroup.length > 0">
-                            <h2 class="heading-medium">Children’s centres to add to the {{groupTypeName}}</h2>
+                            <h2 class="govuk-heading-m">Children's centres to add to the {{groupTypeName}}</h2>
                             <p class="table-caption">{{ tableCount }}</p>
-                            <table class="edubase-table childrens-centre-listing">
-                                <caption class="visuallyhidden">Children's centres added</caption>
-                                <thead>
-                                    <tr>
-                                        <th scope="col" v-if="groupType === '8'">Lead centre</th>
-                                        <th scope="col"><abbr title="Unique Reference Number">URN</abbr></th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Join date</th>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
+                            <table class="govuk-table gias-table childrens-centre-listing">
+                                <caption class="govuk-visually-hidden">Children's centres added</caption>
+                                <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
+                                    <th scope="col" v-if="groupType === '8'" class="govuk-table__header">Lead centre</th>
+                                    <th scope="col" class="govuk-table__header"><abbr title="Unique Reference Number">URN</abbr></th>
+                                    <th scope="col" class="govuk-table__header">Name</th>
+                                    <th scope="col" class="govuk-table__header">Join date</th>
+                                    <td class="govuk-table__cell"></td>
+                                    <td class="govuk-table__cell"></td>
+                                </tr>
                                 </thead>
-                                <tbody>
-                                    <tr v-for="(estab, index) in centresInGroup">
-                                        <td data-label="Lead centre" v-bind:class="['radio-cell',(estab.urn == groupLead)? 'highlight': '']" v-if="groupType === '8'">
-                                            <div class="multiple-choice multiple-choice--smaller">
-                                                <input type="radio" name="lead-centre" :value="estab.urn" v-bind:id="generateRadioId(estab.urn)" :checked="estab.urn == groupLead" v-model="groupLead"/>
-                                                <label v-bind:for="generateRadioId(estab.urn)">
-                                                    <span class="visuallyhidden">Set as lead establishment</span>
-                                                </label>
+                                <tbody class="govuk-table__body">
+                                <tr v-for="(estab, index) in centresInGroup"  class="govuk-table__row">
+                                    <td data-label="Lead centre" v-bind:class="['govuk-table__cell radio-cell',(estab.urn == groupLead)? 'highlight': '']" v-if="groupType === '8'">
+                                        <div class="govuk-radios">
+                                            <div class="govuk-radios__item gias-radios__item-table">
+                                            <input type="radio" class="govuk-radios__input" name="lead-centre" :value="estab.urn" v-bind:id="generateRadioId(estab.urn)" :checked="estab.urn == groupLead" v-model="groupLead"/>
+                                            <label class="govuk-radios__label" v-bind:for="generateRadioId(estab.urn)">
+                                                <span class="govuk-visually-hidden">Set as lead establishment</span>
+                                            </label>
                                             </div>
-                                        </td>
+                                        </div>
+                                    </td>
 
-                                        <td data-label="URN" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">
-                                            <input type="hidden" :value="estab.urn" name="estab-in-group"/> <!-- :value is deliberate - vue js attribute bind. visual studio likes to remove : when reformatting!!! -->
-                                            {{estab.urn}}
-                                        </td>
+                                    <td data-label="URN" v-bind:class="['govuk-table__cell', (estab.urn == groupLead)? 'highlight': '']">
+                                        <input type="hidden" :value="estab.urn" name="estab-in-group"/> <!-- :value is deliberate - vue js attribute bind. visual studio likes to remove : when reformatting!!! -->
+                                        {{estab.urn}}
+                                    </td>
 
-                                        <td data-label="Name" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">{{estab.name}}</td>
-                                        <td data-label="Join date" v-bind:class="[(estab.urn == groupLead)? 'highlight': '']">{{ estab.joinDate }}</td>
-                                        <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="editJoiningEstab(estab.urn); clearErrors()" aria-label="Edit children's centre's join date">Edit</a></td>
-                                        <td v-bind:class="[(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="removeJoiningEstab(estab.urn)" aria-label="Remove children's centre">Remove</a></td>
-                                    </tr>
+                                    <td data-label="Name" v-bind:class="['govuk-table__cell', (estab.urn == groupLead)? 'highlight': '']">{{estab.name}}</td>
+                                    <td data-label="Join date" v-bind:class="['govuk-table__cell',(estab.urn == groupLead)? 'highlight': '']">{{ estab.joinDate }}</td>
+                                    <td v-bind:class="['govuk-table__cell',(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="editJoiningEstab(estab.urn); clearErrors()" aria-label="Edit children's centre's join date">Edit</a></td>
+                                    <td v-bind:class="['govuk-table__cell',(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="removeJoiningEstab(estab.urn)" aria-label="Remove children's centre">Remove</a></td>
+                                </tr>
                                 </tbody>
                             </table>
                             <p class="table-caption">{{tableCount}}</p>
                         </div>
-                        <div class="submit-cancel-panel">
+                    </div>
+                        <div class="govuk-grid-column-full">
+                        <div class="button-row">
 
-                            <a href="#" class="button button-secondary" v-on:click.prevent="appState='groupDetail', apiErrors=[], detailEdit = true; clearErrors()">&laquo; Go back</a>
+                            <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="appState='groupDetail', apiErrors=[], detailEdit = true; clearErrors()">&laquo; Go back</a>
                             @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                             {
                                 <input type="hidden" name="action" value="@GroupEditorViewModel.ActionSave"/>
                                 <!--JB: until final step, go to next step and show "continue", then final step submit with text "create" -->
-                                <button type="submit" name="action" class="button" value="@GroupEditorViewModel.ActionSave" v-on:click.prevent="clearErrors(); submitCentres();">Create children's centre {{groupTypeName}}</button>
+                                <button type="submit" name="action" class="govuk-button" value="@GroupEditorViewModel.ActionSave" v-on:click.prevent="clearErrors(); submitCentres();">Create children's centre {{groupTypeName}}</button>
                             }
 
                             @(Model.InEditMode
-                                ? Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "button button-secondary cancel"})
-                                : Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-secondary cancel"}))
+                                ? Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel"})
+                                : Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "govuk-button govuk-button--secondary cancel"}))
                         </div>
                     </div>
                 </div>
 
 
                 <div id="children-centre-details" v-show="appState==='detail'">
-                    <div class="column-full">
+                    <div class="govuk-grid-column-full">
 
-                        <h1 class="heading-intro" v-show="!pendingEdit">Enter the children's centre details</h1>
-                        <h1 class="heading-intro" v-show="pendingEdit">Edit the children's centre group details</h1>
+                        <h1 class="govuk-heading-xl" v-show="!pendingEdit">Enter the children's centre details</h1>
+                        <h1 class="govuk-heading-xl" v-show="pendingEdit">Edit the children's centre group details</h1>
                     </div>
-                    <div class="column-full">
+                    <div class="govuk-grid-column-full">
                         <p>Ensure this is the right children's centre and add a joined date.</p>
-                        <h2 class="heading-medium">Childrens centre</h2>
+                        <h2 class="govuk-heading-m">Childrens centre</h2>
                         <p>
                             {{pendingEstab.name}}
                             <br/>
@@ -282,22 +294,22 @@
                             <a href="#" v-on:click.prevent="appState='addCentre', searchUrn=''; clearErrors();" v-show="!pendingEdit">Wrong establishment?</a>
                         </p>
                     </div>
-                    <div class="column-half">
-                        @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date", vueModel = "joinDate" })
+                    <div class="govuk-grid-column-one-half">
+                        @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date", vueModel = "joinDate", fieldsetClassName = "edit-date-fieldset"})
 
 
                         @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
 
                         <input type="hidden" name="@(nameof(GroupEditorViewModel.ProcessedWarnings))" id="processed-warnings" />
                     </div>
-                    <div class="column-full">
-                        <div class="submit-cancel-panel">
-                            <a href="#" class="button" v-on:click.prevent="addToGroup()">
+                    <div class="govuk-grid-column-full">
+                        <div class="button-row">
+                            <a href="#" class="govuk-button" v-on:click.prevent="addToGroup()">
                                 <span v-show="!pendingEdit">Add children's centre</span>
                                 <span v-show="pendingEdit">Update children's centre</span>
                             </a>
-                            <a href="#" class="button button-secondary" v-on:click.prevent="appState='addCentre', searchUrn=''; clearErrors();" v-show="!pendingEdit">Cancel</a>
-                            <a href="#" class="button button-secondary" v-on:click.prevent="cancelEdit" v-show="pendingEdit">
+                            <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="appState='addCentre', searchUrn=''; clearErrors();" v-show="!pendingEdit">Cancel</a>
+                            <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="cancelEdit" v-show="pendingEdit">
                                 Cancel
                             </a>
                         </div>
@@ -311,5 +323,5 @@
 </div>
 @section ViewScripts
 {
-    <script src="/public/assets/scripts/standalone/create-childrens-centre.js"></script>
+    <script src="/public/assets/scripts/build/create-childrens-centre.js"></script>
 }
