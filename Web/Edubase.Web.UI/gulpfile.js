@@ -67,7 +67,7 @@ const compileProdCss = series(cleanCss, lintScss,  parallel(prodCss));
 const compileDevCss = series(cleanCss, lintScss, parallel(devCss));
 
 const buildDevJs = series(cleanJs, devJs);
-const buildProdJs = series(unitTest, prodJs);
+const buildProdJs = series( prodJs);
 
 const buildDev = series(cleanCss, lintScss, parallel(devCss, devJs));
 
