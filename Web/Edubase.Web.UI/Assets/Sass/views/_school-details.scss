@@ -1,168 +1,180 @@
 
 .school-details {
 
-    h1.heading-large, .heading-xlarge {
-        margin-bottom: 0;
+  h1.heading-large, .heading-xlarge {
+    margin-bottom: 0;
+  }
+
+
+
+  p.establishment-type {
+    font-size: 14px;
+    color: $grey-1;
+    font-weight: bold;
+    margin: 8px 0;
+
+    @include media (tablet) {
+      float: left;
+    }
+  }
+
+  .establishment-data-download {
+    margin: 4px 0 12px;
+
+    @include media(tablet) {
+      overflow: hidden;
+      float: right;
+      margin-bottom: 24px;
+
+      a {
+        font-size: 16px;
+      }
+    }
+  }
+
+  .horizontal-tabs-content .tab-content {
+    padding-top: 16px;
+  }
+
+  table.estab-links,
+  table.edit-estab-links {
+
+    th {
+      font-weight: bold;
     }
 
+    th, td {
+      padding: 9px !important;
+      text-align: left;
+      border: 2px solid $grey-3;
+      font-size: 14px;
+    }
+  }
+
+  table.borderless.estab-links {
+
+    th, td {
+      border: none;
+    }
+  }
+
+  table.borderless.estab-links.add-linked-estab {
+    th, td {
+      border: none;
+      padding: 3px 0px 3px 0px;
+    }
+  }
 
 
-    p.establishment-type {
-        font-size: 14px;
-        color: $grey-1;
-        font-weight: bold;
-        margin: 8px 0;
+  div.mvo table.estab-links {
+    th {
+      width: 150px;
+    }
+  }
 
-        @include media (tablet) {
-            float: left;
-        }
+
+  td {
+    position: relative;
+  }
+
+  .tab {
+    border-style: solid;
+    border-color: black;
+    border-width: 0 1px 1px 1px;
+    padding: 15px 10px;
+
+    .last {
+      border-bottom: 1px solid black;
+    }
+  }
+
+  .outer {
+    @include media(desktop, tablet) {
+      border-top: 1px solid black;
+      border-right: 1px solid black;
     }
 
-    .establishment-data-download {
-        margin: 4px 0 12px;
+    margin-top: 45px;
+  }
 
-        @include media(tablet) {
-            overflow: hidden;
-            float: right;
-            margin-bottom: 24px;
+  .content-column {
+    padding-left: 0 !important;
+    margin-left: -1px;
 
-            a {
-                font-size: 16px;
-            }
-        }
+    @include media(desktop, tablet) {
+      border-style: solid;
+      border-color: black;
+      border-width: 0 0 1px 1px;
+    }
+  }
+
+  .change-history-title {
+    @include media (tablet) {
+      float: left;
+    }
+  }
+
+  .school-governance-history {
+    @include media (tablet) {
+      overflow: hidden;
+      float: right;
+    }
+  }
+
+  .borderless {
+    width: 100%;
+    clear: left;
+
+    th, td {
+      border: none;
+      font-size: 14px;
     }
 
-    .horizontal-tabs-content .tab-content {
-        padding-top: 16px;
+    th {
+      padding-left: 0;
     }
 
-    table.estab-links,
-    table.edit-estab-links {
+    @media(min-width: 640px) {
+      width: 60%;
+    }
+  }
 
-        th {
-            font-weight: bold;
-        }
+  .borderless.editor {
+    th, td {
+      padding: 0px 10px 3px 0px;
+    }
+  }
 
-        th, td {
-            padding: 9px !important;
-            text-align: left;
-            border: 2px solid $grey-3;
-            font-size: 14px;
-        }
+  .map-container {
+    width: 40%;
+    float: right;
+
+    .map-toggle {
+      display: none;
+      float: left;
+      margin: 8px 0 8px 0;
+      font-size: 16px;
     }
 
-    table.borderless.estab-links {
+    @media(max-width: 640px) {
+      width: 100%;
+      float: none;
 
-        th, td {
-            border: none;
-        }
-    }
-
-    table.borderless.estab-links.add-linked-estab {
-        th, td {
-            border: none;
-            padding: 3px 0px 3px 0px;
-        }
-    }
-
-
-    div.mvo table.estab-links {
-        th {
-            width: 150px;
-        }
-    }
-
-
-    td {
-        position: relative;
-    }
-
-    .tab {
-        border-style: solid;
-        border-color: black;
-        border-width: 0 1px 1px 1px;
-        padding: 15px 10px;
-
-        .last {
-            border-bottom: 1px solid black;
-        }
-    }
-
-    .outer {
-        @include media(desktop, tablet) {
-            border-top: 1px solid black;
-            border-right: 1px solid black;
-        }
-
-        margin-top: 45px;
-    }
-
-    .content-column {
-        padding-left: 0 !important;
-        margin-left: -1px;
-
-        @include media(desktop, tablet) {
-            border-style: solid;
-            border-color: black;
-            border-width: 0 0 1px 1px;
-        }
-    }
-
-
-    .borderless {
-        width: 100%;
-        clear: left;
-
-        th, td {
-            border: none;
-            font-size: 14px;
-        }
-
-        th {
-            padding-left: 0;
-        }
-
-        @media(min-width: 640px) {
-            width: 60%;
-        }
-    }
-
-    .borderless.editor {
-        th, td {
-            padding: 0px 10px 3px 0px;
-        }
-    }
-
-    .map-container {
-        width: 40%;
-        float: right;
-
-        .map-toggle {
-            display: none;
-            float: left;
-            margin: 8px 0 8px 0;
-            font-size: 16px;
-        }
-
-        @media(max-width: 640px) {
-            width: 100%;
-            float: none;
-
-            .map-toggle {
-                display: block;
-            }
-        }
-    }
-
-    .school-detail-map {
-        width: 100%;
-        height: 320px;
+      .map-toggle {
         display: block;
-
-        @media(max-width: 640px) {
-            display: none;
-        }
+      }
     }
+  }
+
+  .school-detail-map {
+    width: 100%;
+    height: 320px;
+    display: block;
+
+    @media(max-width: 640px) {
+      display: none;
+    }
+  }
 }
 
 .expanding-content-trigger {

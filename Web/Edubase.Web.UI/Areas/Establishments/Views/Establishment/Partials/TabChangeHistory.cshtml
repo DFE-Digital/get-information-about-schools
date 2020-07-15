@@ -32,19 +32,15 @@
 }
 <div id="school-change-history" class="tab-content approval-data">
 
-    <div>
-        <div class="column-two-thirds">
-            <h2 class="bold-small">Change History</h2>
-        </div>
+    <h2 class="bold-small change-history-title">Change History</h2>
 
-        @if (User.Identity.IsAuthenticated && Model.GovernorsGridViewModel.DomainModel.HasGovernors)
-        {
-            <div class="column-third text-align-right">
-                @Html.RouteLink("View governance change history", "EstabDetailGovChangeHistory", new { id = Model.GovernorsGridViewModel.EstablishmentUrn })
-                <br /><br />
-            </div>
-        }
-    </div>
+    @if (User.Identity.IsAuthenticated && Model.GovernorsGridViewModel.DomainModel.HasGovernors)
+    {
+        <div class="school-governance-history">
+            @Html.RouteLink("View governance change history", "EstabDetailGovChangeHistory", new { id = Model.GovernorsGridViewModel.EstablishmentUrn })
+            <br /><br />
+        </div>
+    }
 
     @if (!Model.ChangeHistory.Items.Any())
     {

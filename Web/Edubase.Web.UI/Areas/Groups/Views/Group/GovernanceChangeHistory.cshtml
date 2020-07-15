@@ -66,14 +66,10 @@
                 @if (Model.IsUserLoggedOn)
                 {
                     <div id="change-history" class="tab-content">
-                        <div>
-                            <div class="column-two-thirds">
-                                <h2 class="bold-small">Governance Change History</h2>
-                            </div>
-                            <div class="column-third text-align-right">
-                                @Html.RouteLink("View group change history", "GroupDetails", null, null, "change-history", new { id = Model.Group.GroupUId }, null)
-                                <br /><br />
-                            </div>
+                        <h2 class="bold-small change-history-title">Governance Change History</h2>
+                        <div class="group-governance-history">
+                            @Html.RouteLink("View group change history", "GroupDetails", null, null, "change-history", new {id = Model.Group.GroupUId}, null)
+                            <br/><br/>
                         </div>
 
                         @if (!Model.ChangeHistory.Items.Any())

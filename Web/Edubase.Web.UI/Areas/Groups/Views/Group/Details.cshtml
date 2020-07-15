@@ -305,19 +305,15 @@
                 {
                     <div id="change-history" class="tab-content">
 
-                        <div>
-                            <div class="column-two-thirds">
-                                <h2 class="bold-small">Change History</h2>
-                            </div>
+                        <h2 class="bold-small change-history-title">Change History</h2>
 
-                            @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
-                            {
-                                <div class="column-third text-align-right">
-                                    @Html.RouteLink("View governance change history", "GroupDetailGovChangeHistory", new { id = Model.Group.GroupUId })
-                                    <br /><br />
-                                </div>
-                            }
-                        </div>
+                        @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
+                        {
+                            <div class="group-governance-history">
+                                @Html.RouteLink("View governance change history", "GroupDetailGovChangeHistory", new { id = Model.Group.GroupUId })
+                                <br /><br />
+                            </div>
+                        }
 
                         @if (!Model.ChangeHistory.Items.Any())
                         {
