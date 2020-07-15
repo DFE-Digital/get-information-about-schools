@@ -79,7 +79,7 @@ namespace Edubase.Web.UI.Helpers
                 }
             }
 
-            return htmlHelper.ValidationMessage(modelName, (string) null);
+            return htmlHelper.ValidationMessage(modelName, (string) null, new { @class = "govuk-error-message"});
         }
 
         public static MvcHtmlString DuplicateCssClassFor(this HtmlHelper htmlHelper, int? governorId)
