@@ -63,18 +63,14 @@
         </div>
         <div class="tab-content-wrapper horizontal-tabs-content">
             <div id="change-history" class="tab-content approval-data">
-                <div>
-                    <div class="column-two-thirds">
-                        <h2 class="bold-small">Governance Change History</h2>
+                <h2 class="bold-small change-history-title">Governance Change History</h2>
+                @if (Model.ChangeHistory != null && Model.TabDisplayPolicy.ChangeHistory)
+                {
+                    <div class="school-governance-history">
+                        @Html.RouteLink("View establishment change history", "EstabDetails", null, null, "school-change-history", new {id = Model.Establishment.Urn}, null)
+                        <br/><br/>
                     </div>
-                    @if (Model.ChangeHistory != null && Model.TabDisplayPolicy.ChangeHistory)
-                    {
-                        <div class="column-third text-align-right">
-                            @Html.RouteLink("View establishment change history", "EstabDetails", null, null, "school-change-history", new {id = Model.Establishment.Urn}, null)
-                            <br/><br/>
-                        </div>
-                    }
-                </div>
+                }
 
                 @if (!Model.ChangeHistory.Items.Any())
                 {

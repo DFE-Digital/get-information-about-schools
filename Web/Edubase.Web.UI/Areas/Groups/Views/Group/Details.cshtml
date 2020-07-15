@@ -304,7 +304,17 @@
                 @if (Model.IsUserLoggedOn)
                 {
                     <div id="change-history" class="tab-content">
-                        <h2 class="bold-small">Change History</h2>
+
+                        <h2 class="bold-small change-history-title">Change History</h2>
+
+                        @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
+                        {
+                            <div class="group-governance-history">
+                                @Html.RouteLink("View governance change history", "GroupDetailGovChangeHistory", new { id = Model.Group.GroupUId })
+                                <br /><br />
+                            </div>
+                        }
+
                         @if (!Model.ChangeHistory.Items.Any())
                         {
                             <p>There are no change records available at the moment</p>
@@ -312,9 +322,9 @@
                         else
                         {
                             <p>
-                                @Html.ActionLink("Download data in CSV format", "DownloadChangeHistory", "Downloads", new { groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.csv }, new { style = "margin-bottom:10px; display:block;" })
-                                @Html.ActionLink("Download data in XLSX format", "DownloadChangeHistory", "Downloads", new { groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.xlsx }, null)
-                                <br />
+                                @Html.ActionLink("Download data in CSV format", "DownloadChangeHistory", "Downloads", new {groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.csv}, new {style = "margin-bottom:10px; display:block;"})
+                                @Html.ActionLink("Download data in XLSX format", "DownloadChangeHistory", "Downloads", new {groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.xlsx}, null)
+                                <br/>
                             </p>
 
                             if (Model.ChangeHistory.PageCount > 1)
@@ -327,48 +337,48 @@
                             <table class="edubase-table approval-changes sortable-table">
                                 <caption class="visuallyhidden">Change history</caption>
                                 <thead>
-                                    <tr>
+                                <tr>
                                     @foreach (var tableColumn in tableColumns)
                                     {
                                         <th scope="col">
                                             <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
-                                            class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
-                                            aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
+                                               class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                                               aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
                                         </th>
                                     }
-                                    </tr>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var item in Model.ChangeHistory.Items.Where(x=>x.RequestType != GroupChangeRequestType.NewGroupLink))
-                                    {
-                                        <tr>
-                                            <td data-label="Date changed">
-                                                @(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))
-                                            </td>
-                                            <td data-label="Request type">
-                                                @item.RequestType.GetEnumMember()
-                                            </td>
-                                            <td data-label="Change">
-                                                <dl>
-                                                    @if (item.RequestType == GroupChangeRequestType.GroupChange)
-                                                    {
-                                                        <dt>Field</dt><dd>@item.Name</dd>
-                                                        <dt>Old value</dt><dd>@item.OldValue</dd>
-                                                        <dt>New value</dt><dd>@item.NewValue</dd>
-                                                    }
-                                                    else if (item.RequestType != GroupChangeRequestType.NewGroup)
-                                                    {
-                                                        <dt>Establishment</dt><dd>@item.LinkUrn @item.LinkEstablishmentName</dd>
-                                                        <dt>Link date</dt><dd>@(item.LinkDateUtc?.ToString("dd/MM/yyyy"))</dd>
-                                                        <dt>Type</dt><dd>@(item.LinkType?.ToString() ?? "Not recorded")</dd>
-                                                    }
-                                                </dl>
-                                            </td>
-                                            <td data-label="Suggested by">
-                                                @item.OriginatorUserName
-                                            </td>
-                                        </tr>
-                                    }
+                                @foreach (var item in Model.ChangeHistory.Items.Where(x => x.RequestType != GroupChangeRequestType.NewGroupLink))
+                                {
+                                    <tr>
+                                        <td data-label="Date changed">
+                                            @(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))
+                                        </td>
+                                        <td data-label="Request type">
+                                            @item.RequestType.GetEnumMember()
+                                        </td>
+                                        <td data-label="Change">
+                                            <dl>
+                                                @if (item.RequestType == GroupChangeRequestType.GroupChange)
+                                                {
+                                                    <dt>Field</dt><dd>@item.Name</dd>
+                                                    <dt>Old value</dt><dd>@item.OldValue</dd>
+                                                    <dt>New value</dt><dd>@item.NewValue</dd>
+                                                }
+                                                else if (item.RequestType != GroupChangeRequestType.NewGroup)
+                                                {
+                                                    <dt>Establishment</dt><dd>@item.LinkUrn @item.LinkEstablishmentName</dd>
+                                                    <dt>Link date</dt><dd>@(item.LinkDateUtc?.ToString("dd/MM/yyyy"))</dd>
+                                                    <dt>Type</dt><dd>@(item.LinkType?.ToString() ?? "Not recorded")</dd>
+                                                }
+                                            </dl>
+                                        </td>
+                                        <td data-label="Suggested by">
+                                            @item.OriginatorUserName
+                                        </td>
+                                    </tr>
+                                }
                                 </tbody>
                             </table>
 
