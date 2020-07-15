@@ -40,16 +40,8 @@
         @if (User.Identity.IsAuthenticated && Model.GovernorsGridViewModel.DomainModel.HasGovernors)
         {
             <div class="column-third text-align-right">
-                @if (Model.GovernorsGridViewModel.EstablishmentUrn.HasValue)
-                {
-                    @Html.RouteLink("View governance change history", "EstabDetailGovChangeHistory", new { id = Model.GovernorsGridViewModel.EstablishmentUrn })
-                    <br /><br />
-                }
-                else
-                {
-                    @Html.RouteLink("View governance change history", "GroupDetailGovChangeHistory", new { id = Model.GovernorsGridViewModel.GroupUId })
-                    <br /><br />
-                }
+                @Html.RouteLink("View governance change history", "EstabDetailGovChangeHistory", new { id = Model.GovernorsGridViewModel.EstablishmentUrn })
+                <br /><br />
             </div>
         }
     </div>

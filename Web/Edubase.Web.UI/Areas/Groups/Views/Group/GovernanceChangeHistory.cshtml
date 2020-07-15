@@ -66,7 +66,16 @@
                 @if (Model.IsUserLoggedOn)
                 {
                     <div id="change-history" class="tab-content">
-                        <h2 class="bold-small">Governance Change History</h2>
+                        <div>
+                            <div class="column-two-thirds">
+                                <h2 class="bold-small">Governance Change History</h2>
+                            </div>
+                            <div class="column-third text-align-right">
+                                @Html.RouteLink("View group change history", "GroupDetails", null, null, "change-history", new { id = Model.Group.GroupUId }, null)
+                                <br /><br />
+                            </div>
+                        </div>
+
                         @if (!Model.ChangeHistory.Items.Any())
                         {
                             <p>There are no change records available at the moment</p>
@@ -74,9 +83,9 @@
                         else
                         {
                             <p>
-                                @Html.RouteLink("Download data in CSV format", "DownloadGroupGovernanceChangeHistory", new { groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.csv }, new { style = "margin-bottom:10px; display:block;" })
-                                @Html.RouteLink("Download data in XLSX format", "DownloadGroupGovernanceChangeHistory", new { groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.xlsx }, null)
-                                <br />
+                                @Html.RouteLink("Download data in CSV format", "DownloadGroupGovernanceChangeHistory", new {groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.csv}, new {style = "margin-bottom:10px; display:block;"})
+                                @Html.RouteLink("Download data in XLSX format", "DownloadGroupGovernanceChangeHistory", new {groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.xlsx}, null)
+                                <br/>
                             </p>
 
                             if (Model.ChangeHistory.PageCount > 1)
@@ -89,30 +98,30 @@
                             <table class="edubase-table approval-changes sortable-table">
                                 <caption class="visuallyhidden">Governance change history</caption>
                                 <thead>
-                                    <tr>
+                                <tr>
                                     @foreach (var tableColumn in tableColumns)
                                     {
                                         <th scope="col">
                                             <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
-                                            class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
-                                            aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
+                                               class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                                               aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
                                         </th>
                                     }
-                                    </tr>
+                                </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var item in Model.ChangeHistory.Items)
-                                    {
-                                        <tr>
-                                            <td data-label="Date changed">@(item.EffectiveDateUtc?.ToString("dd/MM/yyyy"))</td>
-                                            <td data-label="Updated field">@item.Name</td>
-                                            <td data-label="Old value">@item.OldValue</td>
-                                            <td data-label="New value">@item.NewValue</td>
-                                            <td data-label="Date requested">@(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))</td>
-                                            <td data-label="Suggested from">@item.OriginatorUserName</td>
-                                            <td data-label="Approved by">@(item.ApproverUserName ?? "--")</td>
-                                        </tr>
-                                    }
+                                @foreach (var item in Model.ChangeHistory.Items)
+                                {
+                                    <tr>
+                                        <td data-label="Date changed">@(item.EffectiveDateUtc?.ToString("dd/MM/yyyy"))</td>
+                                        <td data-label="Updated field">@item.Name</td>
+                                        <td data-label="Old value">@item.OldValue</td>
+                                        <td data-label="New value">@item.NewValue</td>
+                                        <td data-label="Date requested">@(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))</td>
+                                        <td data-label="Suggested from">@item.OriginatorUserName</td>
+                                        <td data-label="Approved by">@(item.ApproverUserName ?? "--")</td>
+                                    </tr>
+                                }
                                 </tbody>
                             </table>
 
