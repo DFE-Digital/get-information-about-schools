@@ -2,19 +2,28 @@
 @{
     ViewBag.Title = "Get information about schools";
     ViewBag.bodyClasses = "tools-landing";
+    ViewBag.SiteSection = "downloads";
     var creationActions = Model.GetCreateActions(Html);
     var updateActions = Model.GetUpdateActions(Html);
 }
 
-<div class="breadcrumbs">
-    <ol>
-        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
-    </ol>
-</div>
+@section BreadCrumbs {
+   <div class="govuk-grid-row">
+       <div class="govuk-grid-column-full">
+           <div class="govuk-breadcrumbs">
+               <ol class="govuk-breadcrumbs__list">
+                   <li class="govuk-breadcrumbs__list-item">
+                       @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                   </li>
+               </ol>
+           </div>
+       </div>
+   </div>
+}
 
-<div class="grid-row">
-    <div class="column-full">
-        <h1 class="heading-intro">Tools</h1>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Tools</h1>
     </div>
 </div>
 
@@ -26,19 +35,30 @@
 {
     if (list.Any())
     {
-        <div class="grid-row">
-            <div class="column-full @Html.Conditional(sectionBreak, "section-break")">
-                <h2 class="heading-medium">@label</h2>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                @if (sectionBreak)
+                {
+                    <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+                }
+                <h2 class="govuk-heading-m">@label</h2>
             </div>
         </div>
-        <ul class="columns-2">
-            @foreach (var item in list)
-            {
-                <li>
-                    <h3 class="heading-small">@item.Link</h3>
-                    <p>@Html.Raw(item.Description)</p>
-                </li>
-            }
-        </ul>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <ul class="govuk-list gias-columns-2">
+                    @foreach (var item in list)
+                    {
+                        <li>
+                            <h3 class="govuk-heading-s">@item.Link</h3>
+                            <p>@Html.Raw(item.Description)</p>
+                        </li>
+                    }
+                </ul>
+
+
+            </div>
+        </div>
+
     }
 }
