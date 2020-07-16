@@ -377,7 +377,7 @@ else
                             }
                             else // We're in 'removal mode' for this governor.
                             {
-                                <div class="governor-edit-panel govuk-!-padding-top-6">
+                                <div class="governor-edit-panel">
 
                                     @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabDeleteOrRetireGovernor" : "GroupDeleteOrRetireGovernor", FormMethod.Post, new {id = "removal-form"}))
                                     {
@@ -420,11 +420,14 @@ else
                                         }
                                         else
                                         {
-                                            <div class="remove-governor date-group-wrap panel-indent">
+                                            <div class="remove-governor gias-panel-indent">
                                                 <p>Confirm you wish to remove this person</p>
-                                                <input id="remove-shared-governor" type="submit" name="action" value="Remove" class="button"/>
+                                                <div class="button-row">
+                                                    <input id="remove-shared-governor" type="submit" name="action" value="Remove" class="govuk-button"/>
 
-                                                @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new {establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary"})
+                                                    @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new {establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary"})
+                                                </div>
+
                                             </div>
                                         }
                                     }

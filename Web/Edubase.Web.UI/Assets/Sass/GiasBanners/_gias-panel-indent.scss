@@ -2,4 +2,11 @@
   border-left: 4px solid $govuk-border-colour;
   padding: 5px 0 5px 15px;
   margin: 30px 15px 5px 0;
+
+  &.remove-governor {
+    padding-left: govuk-spacing(4);
+    padding-bottom: govuk-spacing(2);
+    border-left: 4px solid $govuk-border-colour;
+    margin-bottom: govuk-spacing(4);
+  }
 }
