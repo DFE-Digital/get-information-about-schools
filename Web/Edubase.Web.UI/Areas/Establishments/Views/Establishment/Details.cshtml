@@ -34,7 +34,9 @@
 
                    @if (Model.LegalParentGroup != null)
                    {
-                       <li class="govuk-breadcrumbs__list-item">@Html.RouteLink(Model.LegalParentGroupRouteDto.Value.Label, Model.LegalParentGroupRouteDto.Value.RouteName, Model.LegalParentGroupRouteDto.Value.RouteValues, new { @class = "govuk-breadcrumbs__link"})</li>
+                       <li class="govuk-breadcrumbs__list-item">
+                           @Html.RouteLink(Model.LegalParentGroupRouteDto.Value.Label, Model.LegalParentGroupRouteDto.Value.RouteName, Model.LegalParentGroupRouteDto.Value.RouteValues, HtmlHelper.AnonymousObjectToHtmlAttributes(new { @class = "govuk-breadcrumbs__link"}))
+                       </li>
                    }
                </ol>
            </div>
