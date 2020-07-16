@@ -71,8 +71,9 @@
                 @for (int i = 0; i < Model.LinkedEstablishments.Establishments.Count; i++)
                 {
                     var e = Model.LinkedEstablishments.Establishments[i];
+                    var id = String.Concat("linkedEstablishments_", @i, "__id");
                     <li>
-                        <h4 class="govuk-heading-s">
+                        <h4 class="govuk-heading-s" id="@id">
                             @Html.ActionLink(Model.LinkedEstablishments.Establishments[i].Name, "Details", "Establishment", new {id = Model.LinkedEstablishments.Establishments[i].Urn, area = "Establishments"}, null)
                         </h4>
                          @if (ViewData.ModelState["linkedEstablishments[" + i + "].id"] != null)
