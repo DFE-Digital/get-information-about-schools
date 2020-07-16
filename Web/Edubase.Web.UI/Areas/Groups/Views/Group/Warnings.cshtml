@@ -7,7 +7,8 @@
 
     <div class="modal-overlay" id="warning-modal-overlay-0"></div>
     <div class="modal-content" id="warning-modal-content-0" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
-        <a href="#" id="warning-exit-overlay-0" class="modal-exit js-allow-exit">Close</a>
+        @* <a href="#" id="warning-exit-overlay-0" class="modal-exit js-allow-exit">Close</a> *@
+        @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "modal-exit js-allow-exit"})
         <div class="modal-inner">
             <h3 class="govuk-heading-m" tabindex="0" id="modal-label">Similar name</h3>
             <p tabindex="0" id="model-desc">There's already a group with a similar name:<br /><strong>@warning.MessageParameters[0]</strong>, <abbr title="Unique Identifier">UID</abbr>: @warning.MessageParameters[1]</p>
@@ -25,11 +26,12 @@
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.CONFIRMATION_CC_CLOSE);
     <div class="modal-overlay" id="warning-modal-overlay-1"></div>
     <div class="modal-content" id="warning-modal-content-1" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
-        <a href="#" id="warning-exit-overlay-1" class="modal-exit">Close</a>
+        @* <a href="#" id="warning-exit-overlay-1" class="modal-exit">Close</a> *@
+         @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "modal-exit js-allow-exit"})
         <div class="modal-inner">
             <h3 class="govuk-heading-m" tabindex="0" id="modal-label">Confirmation</h3>
             <p tabindex="0" id="model-desc">I confirm that:</p>
-            <ul class="govuk-list govuk-list-bullet">
+            <ul class="govuk-list govuk-list--bullet">
                 <li>I have read the DfE's short guide for LAs document, and</li>
                 <li>by closing this children's centres group all linked children's centre establishments will have their links removed from this group.</li>
             </ul>
@@ -47,7 +49,8 @@
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.CONFIRMATION_FEDERATION_BECOMES_CLOSED_LINKS_REMOVED);
     <div class="modal-overlay" id="warning-modal-overlay-2"></div>
     <div class="modal-content" id="warning-modal-content-2" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
-        <a href="#" id="warning-exit-overlay-2" class="modal-exit">Close</a>
+        @* <a href="#" id="warning-exit-overlay-2" class="modal-exit">Close</a> *@
+         @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "modal-exit js-allow-exit"})
         <div class="modal-inner">
             <h3 class="govuk-heading-m" tabindex="0" id="modal-label">Establishment removal</h3>
             <p tabindex="0" id="model-desc">All establishments will be removed from this federation.</p>
@@ -64,7 +67,8 @@
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.CONFIRMATION_FEDERATION_NO_LINKS_CLOSE);
     <div class="modal-overlay" id="warning-modal-overlay-3"></div>
     <div class="modal-content" id="warning-modal-content-3" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
-        <a href="#" id="warning-exit-overlay-3" class="modal-exit">Close</a>
+        @* <a href="#" id="warning-exit-overlay-3" class="modal-exit">Close</a> *@
+         @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "modal-exit js-allow-exit"})
         <div class="modal-inner">
             <h3 class="govuk-heading-m" tabindex="0" id="modal-label">Federation closure</h3>
             <p tabindex="0" id="model-desc">This federation has no linked establishments, so it will be set as closed once you save the record.</p>
@@ -85,7 +89,8 @@
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.GROUP_OPEN_DATE_ALIGNMENT);
     <div class="modal-overlay" id="warning-modal-overlay-4"></div>
     <div class="modal-content" id="warning-modal-content-4" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
-        <a href="#" id="warning-exit-overlay-4" class="modal-exit">Close</a>
+    @* <a href="#" id="warning-exit-overlay-4" class="modal-exit">Close</a> *@
+     @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "modal-exit js-allow-exit"})
         <div class="modal-inner">
             <h3 class="govuk-heading-m" tabindex="0" id="modal-label">Are you sure you want to change the open date?</h3>
             <p tabindex="0" id="model-desc">This open date is later than some of the @Model.ListOfEstablishmentsPluralName.ToLower()’ joined dates. These joined dates will be automatically aligned to the new open date.</p>
@@ -104,7 +109,8 @@
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.CONFIRMATION_MAT_CLOSE_LINKS);
     <div class="modal-overlay" id="warning-modal-overlay-5"></div>
     <div class="modal-content" id="warning-modal-content-5" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
-        <a href="#" id="warning-exit-overlay-5" class="modal-exit">Close</a>
+        @* <a href="#" id="warning-exit-overlay-5" class="modal-exit">Close</a> *@
+         @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "modal-exit js-allow-exit"})
         <div class="modal-inner">
             <h3 class="govuk-heading-m" tabindex="0" id="modal-label">Are you sure you wish to continue?</h3>
             <p tabindex="0" id="model-desc">@warning.Message</p>
@@ -120,14 +126,15 @@ else if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.CONFIRMATION
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.CONFIRMATION_SAT_CLOSE_LINKS);
     <div class="modal-overlay" id="warning-modal-overlay-5"></div>
     <div class="modal-content" id="warning-modal-content-5" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
-        <a href="#" id="warning-exit-overlay-5" class="modal-exit">Close</a>
+        @* <a href="#" id="warning-exit-overlay-5" class="modal-exit">Close</a> *@
+         @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "modal-exit js-allow-exit"})
         <div class="modal-inner">
-            <h3 class="heading-medium" tabindex="0" id="modal-label">Are you sure you wish to continue?</h3>
+            <h3 class="govuk-heading-m" tabindex="0" id="modal-label">Are you sure you wish to continue?</h3>
             <p tabindex="0" id="model-desc">@warning.Message</p>
         </div>
         <div class="button-row">
-            <a href="#" class="button" id="overlay-proceed-5">Proceed</a>
-            <a href="#" class="button button-secondary" id="overlay-cancel-5">Cancel</a>
+            <button type="submit" name="action" value="save" class="govuk-button">Proceed</button>
+            @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel"})
         </div>
     </div>
 }
@@ -136,7 +143,8 @@ else if (Model.WarningsToProcess.SingleOrDefault(x => x.Code == GroupEditorViewM
     var warning = Model.WarningsToProcess.Single(x => x.Code == GroupEditorViewModel.UIWarningCodeMatClosureAreYouSure);
     <div class="modal-overlay" id="warning-modal-overlay-6"></div>
     <div class="modal-content" id="warning-modal-content-6" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
-        <a href="#" id="warning-exit-overlay-6" class="modal-exit">Close</a>
+        @* <a href="#" id="warning-exit-overlay-6" class="modal-exit">Close</a> *@
+         @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "modal-exit js-allow-exit"})
         <div class="modal-inner">
             <h3 class="govuk-heading-m" tabindex="0" id="modal-label">Are you sure you wish to continue?</h3>
             <p tabindex="0" id="model-desc">@warning.Message</p>
@@ -152,7 +160,8 @@ else if (Model.WarningsToProcess.SingleOrDefault(x => x.Code == GroupEditorViewM
     var warning = Model.WarningsToProcess.Single(x => x.Code == GroupEditorViewModel.UIWarningCodeSatClosureAreYouSure);
     <div class="modal-overlay" id="warning-modal-overlay-6"></div>
     <div class="modal-content" id="warning-modal-content-6" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
-        <a href="#" id="warning-exit-overlay-6" class="modal-exit">Close</a>
+        @* <a href="#" id="warning-exit-overlay-6" class="modal-exit">Close</a> *@
+         @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "modal-exit js-allow-exit"})
         <div class="modal-inner">
             <h3 class="heading-medium" tabindex="0" id="modal-label">Are you sure you wish to continue?</h3>
             <p tabindex="0" id="model-desc">@warning.Message</p>
