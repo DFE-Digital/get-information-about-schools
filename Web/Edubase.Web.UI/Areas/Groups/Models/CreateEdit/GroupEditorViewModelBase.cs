@@ -23,11 +23,11 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         
         private static readonly Dictionary<eGroupTypeMode, string> _entityNames = new Dictionary<eGroupTypeMode, string>
         {
-            [eGroupTypeMode.ChildrensCentre] = "children's centre group or collaboration",
-            [eGroupTypeMode.Trust] = "school trust",
-            [eGroupTypeMode.Federation] = "school federation",
-            [eGroupTypeMode.AcademyTrust] = "Academy Trust",
-            [eGroupTypeMode.Sponsor] = "academy sponsor",
+            [eGroupTypeMode.ChildrensCentre] = "a children's centre group or collaboration",
+            [eGroupTypeMode.Trust] = "a school trust",
+            [eGroupTypeMode.Federation] = "a school federation",
+            [eGroupTypeMode.AcademyTrust] = "an academy trust",
+            [eGroupTypeMode.Sponsor] = "an academy sponsor",
         };
 
         public eGroupTypeMode GroupTypeMode
