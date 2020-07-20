@@ -1,4 +1,4 @@
-﻿@model GroupEditorViewModel
+@model GroupEditorViewModel
 @{
     ViewBag.hideLogo = true;
     ViewBag.Title = Model.PageTitle;
@@ -94,7 +94,7 @@
                                     <div class="multiple-choice">
                                         @Html.RadioButtonFor(x => x.GroupTypeId, groupType.Value, new {id = inputId, v_model = "groupType"})
                                         <label for="@inputId">
-                                            @groupType.Text
+                                            @FormatHelpers.FirstCharToUpper(@groupType.Text.ToLower())
                                         </label>
                                     </div>
                                 }
