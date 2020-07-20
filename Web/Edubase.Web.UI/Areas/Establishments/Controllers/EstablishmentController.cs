@@ -465,7 +465,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {
                     viewModel.LookupAddresses = await _establishmentReadService.GetAddressesByPostCodeAsync(viewModel.PostCode, User);
                     if (viewModel.LookupAddresses.Any()) viewModel.Step = "selectaddress";
-                    else ModelState.AddModelError("PostCode", "We couldn't find any addresses matching that postcode");
+                    else ModelState.AddModelError("PostCode", "We could not find any addresses matching that postcode");
                 }
                 else viewModel.Step = "editaddress";
             }
