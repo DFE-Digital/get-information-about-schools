@@ -57,7 +57,7 @@ namespace Edubase.Web.UI.Models
         {
             var retVal = new List<LinkAction>();
             if (UserCanBulkUpdateEstablishments) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk update establishments", "EstabBulkUpdate"), Description = "Update establishment data as a collection, rather than by individual entries." });
-            if (UserCanBulkAssociateEstabs2Groups) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk upload academies to trust<span style=\"visibility: hidden\"> </span>/<span style=\"visibility: hidden\"> </span>sponsor", "BulkAssociateEstabs2Groups"), Description = "Use this tool to upload new academies to the relevant trusts<span style=\"visibility:hidden\"> </span>/<span style=\"visibility:hidden\"> </span>sponsor" });
+            if (UserCanBulkAssociateEstabs2Groups) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk upload academies to trust<span class=\"visually-hidden\">&nbsp;</span>/<span class=\"visually-hidden\">&nbsp;</span>sponsor", "BulkAssociateEstabs2Groups"), Description = "Use this tool to upload new academies to the relevant trusts<span class=\"visually-hidden\">&nbsp;</span>/<span class=\"visually-hidden\">&nbsp;</span>sponsor" });
             if (UserCanBulkUpdateGovernors) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk update governance", "GovernorsBulkUpdate"), Description = "Update your governance data as a collection, rather than by individual entries." });
             return retVal;
         }
