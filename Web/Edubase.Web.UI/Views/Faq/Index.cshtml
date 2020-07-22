@@ -3,43 +3,67 @@
     ViewBag.Title = "GIAS: Frequently asked questions";
 }
 
-<div class="breadcrumbs">
-    <ol>
-        <li>
-            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-        </li>
-        <li>
-            @Html.ActionLink("Help", "Help", "Home", new { area = "" }, null)
-        </li>
-    </ol>
-</div>
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Help", "Help", "Home", new { area = "" }, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
 
-<div class="grid-row">
-    <div class="column-full">
-        <h1 class="heading-xlarge">Get information about schools: FAQs</h1>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full govuk-!-padding-bottom-6">
+        <h1 class="govuk-heading-xl">Get information about schools: FAQs</h1>
         <p>Answers to commonly asked questions about Get information about schools.</p>
-        <br />
-        <hr />
-        <br />
     </div>
 </div>
 
 
-<div class="grid-row">
-    <div class="column-full">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
         @if (Model.UserCanEdit)
         {
-            @Html.RouteLink("New Entry", "CreateFaqItem", null, new { @class = "plus-link", style = "float:none;" })
+            <p>
+                @Html.RouteLink("New Entry", "CreateFaqItem", null, new { @class = "plus-link" })
+            </p>
+
         }
 
 
         @foreach (var item in Model.Items)
         {
-            <h2 class="heading-@(item.TitleFontSize??"small")">@item.Title</h2>
+            // GDS migration. If at some point the FAQs only contain new content
+            // created after this page has been released, this can go
+            // old content has small/medium/ large, but these are removed in favour of s/m/l in the new front end
+            var headingModifer = "";
+            if (item.TitleFontSize == "large")
+            {
+                headingModifer = "l";
+            }
+            else if (item.TitleFontSize == "medium")
+            {
+                headingModifer = "m";
+            }
+            else if (item.TitleFontSize == "small")
+            {
+                headingModifer = "s";
+            }
+            <h2 class="govuk-heading-@headingModifer">@item.Title</h2>
             <p>@Html.Raw(item.Content.Replace("\n","<br/>"))</p>
             if (Model.UserCanEdit)
             {
-                @Html.RouteLink("Edit entry", "EditFaqItem", new { id = item.RowKey }, new { @class = "button button-secondary Faq-edit-button" })
+                @Html.RouteLink("Edit entry", "EditFaqItem", new { id = item.RowKey }, new { @class = "govuk-button govuk-button--secondary Faq-edit-button" })
             }
         }
     </div>
