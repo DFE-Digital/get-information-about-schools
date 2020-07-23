@@ -34,7 +34,7 @@
             @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.ProcessedWarnings)
 
-            <div class="govuk-grid-column-full">
+            <div class="govuk-grid-column-full gias-hidden__from-tablet">
                 <div class="button-row govuk-!-margin-bottom-4">
                     <button type="submit" name="action" value="" class="govuk-button">Create establishment</button>
                     @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel" })
