@@ -43,12 +43,12 @@ namespace Edubase.Web.UI.Models
             if (UserCanCreateAcademyTrustGroup) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new academy trust", "SearchCompaniesHouse", "Group", new { area = "Groups" }, null), Description = "Set up a new record for your school trust." });
             if (UserCanCreateEstablishment) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Create a new establishment", "CreateEstablishment"), Description = "Set up a new establishment record." });
             if (UserCanCreateSchoolTrustGroup) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new school trust", "CreateNewGroup", "Group", new { area = "Groups", type = "Trust" }, null), Description = "Enter the trust's name and select the opening date and status." });
-            if (UserCanMergeOrAmalgamateEstablishments) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Merge & amalgamate establishments", "MergersTool", "Tools"), Description = "Carry out mergers and amalgamations." });
+            if (UserCanMergeOrAmalgamateEstablishments) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Amalgamate & merge establishments", "MergersTool", "Tools"), Description = "Carry out amalgamations and mergers." });
 
             if (UserCanBulkCreateAcademies) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Bulk create new academies", "BulkAcademies", "Tools"), Description = "Create records for multi-academy and single-academy trusts using information from Companies House." });
             if (UserCanCreateChildrensCentreGroup) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new children's centre group or collaboration", "CreateNewGroup", "Group", new { area = "Groups", type = "ChildrensCentre" }, null), Description = "Create records for children's centre groups and children's centre collaborations for your local authority." });
             if (UserCanCreateFederationGroup) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new federation", "CreateNewGroup", "Group", new { area = "Groups", type = "Federation" }, null), Description = "Enter the federation's name and select its status and opening date." });
-            if (UserCanCreateAcademySponsor) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new sponsor", "CreateNewGroup", "Group", new { area = "Groups", type = "Sponsor" }, null), Description = "Enter the sponsor's name and select the open date and status." });
+            if (UserCanCreateAcademySponsor) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new academy sponsor", "CreateNewGroup", "Group", new { area = "Groups", type = "Sponsor" }, null), Description = "Enter the sponsor's name and select the open date and status." });
             if (UserCanBulkCreateFreeSchools) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk create new free schools", "BulkCreateFreeSchools"), Description = "Set up a new free schools records as a collection, rather than by individual entries." });
             return retVal;
         }
@@ -57,7 +57,7 @@ namespace Edubase.Web.UI.Models
         {
             var retVal = new List<LinkAction>();
             if (UserCanBulkUpdateEstablishments) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk update establishments", "EstabBulkUpdate"), Description = "Update establishment data as a collection, rather than by individual entries." });
-            if (UserCanBulkAssociateEstabs2Groups) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk upload academies to trust/sponsor", "BulkAssociateEstabs2Groups"), Description = "Use this tool to upload new academies to the relevant trusts / sponsor" });
+            if (UserCanBulkAssociateEstabs2Groups) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk upload academies to trust<span class=\"visually-hidden\">&nbsp;</span>/<span class=\"visually-hidden\">&nbsp;</span>sponsor", "BulkAssociateEstabs2Groups"), Description = "Use this tool to upload new academies to the relevant trusts<span class=\"visually-hidden\">&nbsp;</span>/<span class=\"visually-hidden\">&nbsp;</span>sponsor" });
             if (UserCanBulkUpdateGovernors) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk update governance", "GovernorsBulkUpdate"), Description = "Update your governance data as a collection, rather than by individual entries." });
             return retVal;
         }

@@ -475,7 +475,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
                 if (viewModel.Results.Count == 0)
                 {
-                    ModelState.AddModelError(nameof(viewModel.SearchText), "We couldn't find any companies matching your search criteria");
+                    ModelState.AddModelError(nameof(viewModel.SearchText), "We could not find any companies matching your search criteria");
                 }
                 else if (viewModel.Results.Count == 1)
                 {
