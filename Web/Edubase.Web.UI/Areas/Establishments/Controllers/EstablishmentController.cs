@@ -50,8 +50,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private readonly IGroupReadService _groupReadService;
         private readonly IMapper _mapper;
         private readonly IResourcesHelper _resourcesHelper;
-        private readonly IFBService _fbService;
-        private readonly ICSCPService _cscpService;
+        private readonly IExternalLookupService _externalLookupService;
 
         private readonly ISecurityService _securityService;
         private readonly Lazy<string[]> _formKeys;
@@ -81,8 +80,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             ICachedLookupService cachedLookupService,
             IResourcesHelper resourcesHelper,
             ISecurityService securityService,
-            IFBService fbService,
-            ICSCPService cscpService)
+            IExternalLookupService externalLookupService)
         {
             _cachedLookupService = cachedLookupService;
             _establishmentReadService = establishmentReadService;
@@ -91,8 +89,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _mapper = mapper;
             _resourcesHelper = resourcesHelper;
             _securityService = securityService;
-            _fbService = fbService;
-            _cscpService = cscpService;
+            _externalLookupService = externalLookupService;
 
             _formKeys = new Lazy<string[]>(
                 () => Request?.Form?.AllKeys.Select(x => x.GetPart(".")).Distinct().ToArray(),
@@ -268,7 +265,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             ViewBag.PendingApprovalCount = pending;
             ViewBag.ShowSaved = saved;
 
-            var viewModel = new EstablishmentDetailViewModel(_fbService, _cscpService)
+            var viewModel = new EstablishmentDetailViewModel(_externalLookupService)
             {
                 IsUserLoggedOn = User.Identity.IsAuthenticated,
                 SearchQueryString = searchQueryString,
@@ -312,7 +309,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             var changes = await _establishmentReadService.GetGovernanceChangeHistoryAsync(id, skip, 100, sortBy, User);
 
-            var viewModel = new EstablishmentDetailViewModel(_fbService, _cscpService)
+            var viewModel = new EstablishmentDetailViewModel(_externalLookupService)
             {
                 Establishment = result.ReturnValue,
                 ChangeHistory = changes

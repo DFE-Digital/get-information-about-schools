@@ -114,6 +114,15 @@ namespace Edubase.Web.UI
             builder.RegisterType<AzureMapsService>().As<IAzureMapsService>();
             builder.RegisterType<OSPlacesApiService>().As<IOSPlacesApiService>();
             builder.RegisterType<PlacesLookupService>().As<IPlacesLookupService>();
+
+            builder.RegisterInstance(CreateCscpClient()).SingleInstance().Named<HttpClient>("CscpClient");
+            builder.Register(c => new CSCPService(c.ResolveNamed<HttpClient>("CscpClient"))).As<ICSCPService>();
+
+            builder.RegisterInstance(CreateSfbClient()).SingleInstance().Named<HttpClient>("SfbClient");
+            builder.Register(c => new FBService(c.ResolveNamed<HttpClient>("SfbClient"))).As<IFBService>();
+
+            builder.RegisterType<ExternalLookupService>().As<IExternalLookupService>().SingleInstance().AutoActivate();
+
             builder.RegisterInstance(AutoMapperWebConfiguration.CreateMapper()).As<IMapper>();
             builder.RegisterInstance(new NomenclatureService()).AsSelf();
 
@@ -158,9 +167,6 @@ namespace Edubase.Web.UI
             builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
             builder.RegisterType<FaqRepository>().AsSelf().SingleInstance();
-
-            builder.RegisterType<CSCPService>().As<ICSCPService>().SingleInstance();
-            builder.RegisterType<FBService>().As<IFBService>().SingleInstance();
         }
 
         public static JsonMediaTypeFormatter CreateJsonMediaTypeFormatter()
@@ -186,6 +192,40 @@ namespace Edubase.Web.UI
 
             var apiUsername = ConfigurationManager.AppSettings["api:Username"];
             var apiPassword = ConfigurationManager.AppSettings["api:Password"];
+
+            if (apiUsername != null && apiPassword != null)
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());
+
+            return client;
+        }
+
+        public static HttpClient CreateCscpClient()
+        {
+            var client = new HttpClient(new HttpClientHandler { UseCookies = false })
+            {
+                BaseAddress = new Uri(ConfigurationManager.AppSettings["CscpURL"]),
+                Timeout = TimeSpan.FromSeconds(10),
+            };
+
+            var apiUsername = ConfigurationManager.AppSettings["CscpUsername"];
+            var apiPassword = ConfigurationManager.AppSettings["CscpPassword"];
+
+            if (apiUsername != null && apiPassword != null)
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());
+
+            return client;
+        }
+
+        public static HttpClient CreateSfbClient()
+        {
+            var client = new HttpClient(new HttpClientHandler { UseCookies = false })
+            {
+                BaseAddress = new Uri(ConfigurationManager.AppSettings["FinancialBenchmarkingURL"]),
+                Timeout = TimeSpan.FromSeconds(10),
+            };
+
+            var apiUsername = ConfigurationManager.AppSettings["FinancialBenchmarkingUsername"];
+            var apiPassword = ConfigurationManager.AppSettings["FinancialBenchmarkingPassword"];
 
             if (apiUsername != null && apiPassword != null)
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());

@@ -13,6 +13,7 @@ using System.Web.Routing;
 using System.Web.Http;
 using System.Xml;
 using AzureTableLogger;
+using Edubase.Services.ExternalLookup;
 using Newtonsoft.Json.Serialization;
 using Edubase.Web.UI.Helpers.ModelBinding;
 using Edubase.Web.UI.Helpers.ValueProviders;
@@ -57,6 +58,8 @@ namespace Edubase.Web.UI
             var logger = IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<IAzLogger>();
             logger.ScheduleLogFlush();
             logger.ScheduleLogPurge();
+
+            IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<IExternalLookupService>();
 
             ModelBinders.Binders.DefaultBinder = new DefaultModelBinderEx();
             ValueProviderFactories.Factories.Add(new TokenValueProviderFactory());
