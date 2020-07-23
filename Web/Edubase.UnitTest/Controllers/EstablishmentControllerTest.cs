@@ -247,6 +247,7 @@ namespace Edubase.UnitTest.Controllers
             AddMock<ICachedLookupService>();
             AddMock<IResourcesHelper>();
             AddMock<ISecurityService>();
+            AddMock<IExternalLookupService>();
             base.InitialiseMocks();
         }
     }
