@@ -4,26 +4,589 @@
     ViewBag.bodyClasses = "news-page";
 }
 
-<div class="grid-row">
-    <div class="column-full">
-        <div class="breadcrumbs">
-            <ol>
-                <li>
-                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-                </li>
-                <li>
-                    @Html.ActionLink("News", "News", "Home")
-                </li>
-            </ol>
-        </div>
-        <h1 class="heading-xlarge">Archive</h1>
+@section BreadCrumbs
+ {
+ <div class="govuk-grid-row">
+     <div class="govuk-grid-column-full">
+         <div class="govuk-breadcrumbs">
+             <ol class="govuk-breadcrumbs__list">
+                 <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link"})</li>
+                 <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("News", "News", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link"})</li>
+             </ol>
+         </div>
+     </div>
+ </div>
+ }
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Archive</h1>
     </div>
 </div>
-<div class="grid-row news">
+<div class="govuk-grid-row news">
 
-    <div class="column-two-thirds news-blog">
-        <hr />
-        @Model
+    <div class="govuk-grid-column-two-thirds news-blog">
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+        @* @Model *@
+    <h2 class="govuk-heading-m">System update<br/><span class="govuk-!-font-weight-regular">25 July 2019</span></h2>
+    <p>An updated version of the Get information about schools (GIAS) service has been released to all users. You do not need to take any specific action.</p>
+    <p>This is the fourth of our series of releases focusing on improving the experience for users with accessibility needs.</p>
+    <p>This release also includes the following changes:</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>
+            The "Details" section of each establishment page now includes a direct link to the equivalent page on our sister-services ("Compare school and college performance" and "Schools financial benchmarking").
+        </li>
+        <li>
+            Bug fixes and fine-tuning to improve the overall user experience.
+        </li>
+    </ul>
+
+    <p>Further improvements will be added in future releases but you can comment on any changes in your experience by completing our <a href="http://www.smartsurvey.co.uk/s/Getinformationaboutschools/" target="_blank">survey</a>.</p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+    <h2 class="govuk-heading-m">System update<br/><span class="govuk-!-font-weight-regular">04 July 2019</span></h2>
+    <p>An updated version of the Get information about schools (GIAS) service has been released to all users. You do not need to take any specific action.</p>
+    <p>This is the third of our series of releases focusing on improving the experience for users with accessibility needs.</p>
+    <p>This release also includes the following changes:</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>
+            The latest version of the AddressBase spatial and location data, including the revisions triggered by the <a href="https://www.legislation.gov.uk/uksi/2018/648/contents/made" target="_blank">local authority boundary changes</a> on 01 April 2019.
+        </li>
+        <li>
+            An update to the Single and Multi-Academy Trust governance sections, to ensure Trust users are able to comply with the requirements of the 2019 edition of the Academies Financial Handbook (<a href="https://www.gov.uk/government/publications/academies-financial-handbook" target="_blank">https://www.gov.uk/government/publications/academies-financial-handbook</a>)
+        </li>
+        <li>
+            Bug fixes and fine-tuning to improve the overall user experience.
+        </li>
+    </ul>
+
+    <p>Further improvements will be added in future releases but you can comment on any changes in your experience by completing our <a href="http://www.smartsurvey.co.uk/s/Getinformationaboutschools/" target="_blank">survey</a>.</p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+    <h2 class="govuk-heading-m">System update<br/><span class="govuk-!-font-weight-regular">06 June 2019</span></h2>
+    <p>An updated version of the Get information about schools (GIAS) service has been released to all users. You do not need to take any specific action.</p>
+    <p>This is the second of our series of releases focusing on improving the experience for users with accessibility needs.</p>
+    <p>Further improvements will be added in future releases but you can comment on any changes in your experience by completing our <a href="http://www.smartsurvey.co.uk/s/Getinformationaboutschools/" target="_blank">survey</a>.</p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+    <h2 class="govuk-heading-m">System update<br/><span class="govuk-!-font-weight-regular">11 April 2019</span></h2>
+    <p>An updated version of the Get information about schools (GIAS) service has been released to all users. You do not need to take any specific action.</p>
+    <p>This is the first of a series of releases focusing on improving the experience for users with accessibility needs. We would like to thank our users for their patience whilst we have been working on these improvements.</p>
+    <p>Further improvements will be added in future releases but you can comment on any changes in your experience by completing our <a href="http://www.smartsurvey.co.uk/s/Getinformationaboutschools/" target="_blank">survey</a>.</p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+    <h2 class="govuk-heading-m">Local authority structural changes</strong><br/><span class="govuk-!-font-weight-regular">01 April 2019</span></h2>
+    <p>The list of local authorities in the Get information about schools (GIAS) service has now been updated to reflect the changes arising from the <a href="https://www.legislation.gov.uk/uksi/2018/648/contents/made" target="_blank">Bournemouth, Dorset and Poole (Structural Changes) Order 2018</a>.</p>
+    <p>The DfE (aka LA Estab) number of establishments effected by these changes has also been updated.</p>
+    <p>Other underlying spatial and location data will be refreshed when the AddressBase update is available.</p>
+    <p>Users do not need to take any action within GIAS.</p>
+    <p>DfE Sign-in users and users of other downstream applications have been issued with separate guidance explaining the actions they need to take within those services.</p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+    <h2 class="govuk-heading-m">System update<br/><span class="govuk-!-font-weight-regular">18 December 2018</span></h2>
+    <p>An updated version of the Get information about schools (GIAS) service has been released to all users. You do not need to take any specific action.</p>
+    <p>
+        This release includes changes that have come from our user feedback - please continue to let us know what you think of the service by completing our
+        <a href="http://www.smartsurvey.co.uk/s/Getinformationaboutschools/">survey</a>.
+        You should report specific queries or faults by sending us a
+        <a href="https://form.education.gov.uk/en/AchieveForms/?form_uri=sandbox-publish://AF-Process-2b61dfcd-9296-4f6a-8a26-4671265cae67/AF-Stage-f3f5200e-e605-4a1b-ae6b-3536bc77305c/definition.json&redirectlink=%2Fen&cancelRedirectLink=%2Fen">service request</a>
+        but only after reading our <a href="/faq">FAQs</a>.
+    </p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>
+            Users who submit change requests can now see who will be responsible for approving them.
+        </li>
+        <li>
+            Public users can now see when a schools record was last updated or confirmed as accurate.
+        </li>
+        <li>
+            We’ve improved the school governance pages to make it easier for logged-in users to update the chair of governors for an academy.
+        </li>
+        <li>
+            Logged-in users can now see the change history for academy trusts as well as individual establishments.
+        </li>
+    </ul>
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+    <h2 class="govuk-heading-m">System update<br/><span class="govuk-!-font-weight-regular">04 December 2018</span></h2>
+    <p>An updated version of the Get information about schools (GIAS) service has been released to all users. You do not need to take any specific action.</p>
+    <p>
+        This release completes work to utilise our new Microsoft mapping service provider. This will ensure users of the GIAS mapping tools receive the same experience as our sister service,
+        <a href="https://www.gov.uk/school-performance-tables">Find and compare schools in England</a>.
+    </p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+    <h2 class="govuk-heading-m">DfE Sign-in</strong><br/><span class="govuk-!-font-weight-regular">31 October 2018</span></h2>
+    <p>
+        The way you log in to Get information about schools (GIAS) is changing. DfE Sign-in replaces Secure Access and users must migrate to this new accreditation system when instructed.
+    </p>
+    <p>
+        <strong class="bold-small">If you do not have a Secure Access username and password you do not need to take any action &ndash; you will continue to use GIAS as you do now.</strong>
+        This migration to DfE Sign-in does not see any other change to how the GIAS service works.
+    </p>
+    <p>
+        When you attempt to login to the GIAS service, you will receive a prompt to migrate, you will do this by entering your <strong class="bold-small">Secure Access <u class="bold-small">Username</u> and <u class="bold-small">Password</u></strong>. On screen instructions will
+        then clearly explain and guide you through the process. You cannot dismiss or ignore this requirement but it is a one-time exercise, after which, you will no longer use Secure Access to login to GIAS.
+        You may continue to use Secure Access for other services but these will also migrate in the coming weeks.
+    </p>
+    <p>
+        Each organisation has a Secure Access approver. The approver in each organisation will still need to use Secure Access to manage who can login to GIAS and any other services. When all services have migrated to DfE Sign-in, approvers will receive further information.
+    </p>
+    <p>
+        There may be minimal disruption to the GIAS service as we apply these changes on the morning of 1st November. If disruption becomes more extensive, we will provide an update on this news page. Users who encounter any
+        difficulties after this time should contact the DfE Sign-in Helpdesk.
+    </p>
+    <p>
+        We welcome your feedback as this helps us continue to improve the GIAS service &ndash; please complete our <a href="http://www.smartsurvey.co.uk/s/Getinformationaboutschools/" target="_blank">survey</a>.
+        To help us prioritise and sort your feedback, if you have comments regarding DfE Sign-in please provide it using this <a href="https://help.signin.education.gov.uk/contact/form" target="_blank">feedback form</a>.
+    </p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+    <h2 class="govuk-heading-m">Web services</h2>
+    <p>
+        Users that have a Web services account will see no immediate change following the migration to DfE Sign-in; data will continue to flow between services.
+        The next time you attempt to logon to the GIAS service you will be prompted to migrate and should follow the on screen instructions.
+    </p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+    <h2 class="govuk-heading-m">Information and advice for schools making changes</h2>
+    <p>
+        Users should remember to update their Get information about schools record as soon as possible and within specified timescales whenever there is a change to their establishment.
+    </p>
+    <p>
+        Additional guidance is now available for academies making major changes to their school (eg expanding, merging with another academy, or changing the school’s age range or faith).
+        The guidance document sets out the process you will need to follow, and explains which application form you should complete.
+        <br/>
+        <a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" target="_blank">https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy</a>
+    </p>
+    <p>
+        Statutory guidance about making organisation changes to local-authority maintained schools, including school closure is also available.
+        <br/>
+        <a href="https://www.gov.uk/government/publications/school-organisation-maintained-schools" target="_blank">https://www.gov.uk/government/publications/school-organisation-maintained-schools</a>
+    </p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+    <h2 class="govuk-heading-m">System update<br/><span class="govuk-!-font-weight-regular">19 October 2018</span></h2>
+    <p>
+        An updated version of the Get information about schools (GIAS) service has been released to all users. You do not need to take any specific action.
+    </p>
+    <p>
+        This release includes changes that have come from our user feedback - please continue to let us know what you think of the service by completing our <a href="http://www.smartsurvey.co.uk/s/Getinformationaboutschools/" target="_blank">survey</a>.
+        You should report specific queries or faults by sending us a
+        <a href="https://form.education.gov.uk/en/AchieveForms/?form_uri=sandbox-publish://AF-Process-2b61dfcd-9296-4f6a-8a26-4671265cae67/AF-Stage-f3f5200e-e605-4a1b-ae6b-3536bc77305c/definition.json&redirectlink=%2Fen&cancelRedirectLink=%2Fen" target="_blank">service request</a>
+        but only after reading our <a href="/faq">FAQs</a>.
+    </p>
+    <p>
+        Most of the changes apply only to logged-in users and include:
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                Governance change history - users can now view and download changes to their governance (link available to logged-in users on the governance tab).
+            </li>
+            <li>
+                Colleges and sixth forms can now confirm to DfE if they offer residential accommodation. You can do this by changing the ‘boarders’ data field to either ‘College / FE residential accommodation’ or ‘No boarders’.
+            </li>
+            <li>
+                Improvements to our address database that means all UK addresses are available in the system and are easier to change.
+            </li>
+        </ul>
+    </p>
+    <p>
+        We are also changing the ‘schools admissions policy’ field so that it reflects current practise. You may see your establishment record change to one of the following admissions type:
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                Selective
+            </li>
+            <li>
+                Non-selective
+            </li>
+            <li>
+                Not recorded
+            </li>
+            <li>
+                Not applicable
+            </li>
+        </ul>
+    </p>
+    <p>
+        Any changes are recorded in the change history of your establishment and you do not need to take any action.
+    </p>
+
+    <h2 class="govuk-heading-m">DfE Sign-in</h2>
+    <p>
+        The way you sign-in to DfE services is changing - Get information about schools will be moving over to DfE Sign-in in the coming weeks. You do not need to take any action until prompted.
+    </p>
+    <p>
+        Users with a Secure Access account will need to follow a simple on-boarding process, this starts by entering your Secure Access username and password to DfE Sign-in so we can recognise your account.
+    </p>
+    <p>
+        We will notify you with a message on this news page before we implement the change.
+    </p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+    <h2 class="govuk-heading-m">Feedback</strong><br/><span class="govuk-!-font-weight-regular">24 July 2018</span></h2>
+    <p>
+        We want to know what you think of the GIAS service.
+    </p>
+    <p>
+        We make frequent changes to the service - not all of which are obvious to all users - but every change comes from feedback from our users. It is not possible to respond to everyone but we do record every response to our survey and every helpdesk query so that we can continue to improve.
+    </p>
+    <p>
+        If you have never given us your feedback, please do so as it really is important to us.
+    </p>
+    <p>
+        <strong>If you have already taken our survey, please consider doing it again.</strong> We have been working on addressing your comments and feedback through a series of releases over recent months and we want to know if this has led to a change in your perceptions and experiences of using the service.
+    </p>
+    <p>
+        You will see from our update below that a further update to the service is now available.
+    </p>
+    <p>
+        Our survey is available by <a href="http://www.smartsurvey.co.uk/s/Getinformationaboutschools/">clicking here</a>.
+    </p>
+    <p>
+        Our survey is designed to understand your perceptions of the service. If you have identified a fault or need technical assistance, you should:
+        <ol class="govuk-list govuk-list--number">
+            <li>Have a look at our <a href="/faq">frequently asked questions page</a>. We update this with our most common issues. Let us know if you think there should be other questions on this page.</li>
+            <li>If the FAQs don’t help then please send us a <a href="https://form.education.gov.uk/en/AchieveForms/?form_uri=sandbox-publish://AF-Process-2b61dfcd-9296-4f6a-8a26-4671265cae67/AF-Stage-f3f5200e-e605-4a1b-ae6b-3536bc77305c/definition.json&redirectlink=%2Fen&cancelRedirectLink=%2Fen">service request</a>. It is important that you provide us with full and specific details of any action you could not complete along with details of any error messages.
+        </ol>
+    </p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+    <h2 class="govuk-heading-m">System update<br/><span class="govuk-!-font-weight-regular">24 July 2018</span></h2>
+    <p>
+        An updated version of the Get information about schools (GIAS) service has been released to all users. You do not need to take any specific action.
+    </p>
+    <p>
+        This release fixes known bugs and includes a number of major improvements to the service:
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                <strong>Confirmation of fields requiring authorisation</strong>
+                <br/>
+                Some fields require authorisation before changes that you make come in to effect - this will not change. <br/>
+                The service will now tell you which fields require authorisation when you confirm your changes.
+            </li>
+            <li>
+                <strong>Changes to the governance page</strong>
+                <ol class="govuk-list govuk-list--number">
+                    <li>
+                        When a new Chair of governors is elected from within the existing governing board and the previous chair is remaining on the board you can now swap them.
+                        To do this, select ‘replace’ that is available in edit mode and then select the appropriate name in the ‘Choose governor’ drop down list.
+                    </li>
+                    <li>
+                        A message will be sent to all users associated with an establishment when any governor is 180 days away from ending their term. This is to allow time for the establishment to appoint a new governor if that is required. A further reminder will be sent on the day the term ends.
+                    </li>
+                </ol>
+            </li>
+            <li>
+                <strong>Federation tool</strong><br/>
+                We have made changes to this tool that will allow schools to create new federations. Note that you can only create a federation when you attach two or more schools to it.
+            </li>
+        </ul>
+
+        <br/>
+        <p>Some other changes include:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>Number of pupils is now shown on screen (note this is as per <a href="https://www.gov.uk/government/collections/statistics-school-and-pupil-numbers">School Census data</a> and may not be the most up to date figure)</li>
+            <li>Increased postcode coverage</li>
+            <li>New changes will always overrule pending changes</li>
+            <li>Religious character will default to ‘not recorded’ for any new establishment records</li>
+            <li>The on-screen map will not show results if there are more than 1000 locations</li>
+            <li>A suggested privacy notice is available on the governance screen in the ‘more details’ drop down link. The suggested privacy notice along with others is available here: <a href="https://www.gov.uk/government/publications/data-protection-and-privacy-privacy-notices">https://www.gov.uk/government/publications/data-protection-and-privacy-privacy-notices</a></li>
+        </ul>
+    </p>
+    <p>Please continue to provide us with feedback by using our <a href="http://www.smartsurvey.co.uk/s/Getinformationaboutschools/">survey</a>.</p>
+    <p>For faults and technical queries, please use our <a href="https://form.education.gov.uk/en/AchieveForms/?form_uri=sandbox-publish://AF-Process-2b61dfcd-9296-4f6a-8a26-4671265cae67/AF-Stage-f3f5200e-e605-4a1b-ae6b-3536bc77305c/definition.json&redirectlink=%2Fen&cancelRedirectLink=%2Fen">service request form</a>.</p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+    <h2 class="govuk-heading-m">System update<br/><span class="govuk-!-font-weight-regular">07 June 2018</span></h2>
+    <p>
+        An updated version of the Get information about schools (GIAS) service has been released to all users. You do not need to take any specific action.
+    </p>
+    <p>
+        As with previous system updates, this release includes fixes to known bugs and delivers some back-end improvements.
+    </p>
+    <p>
+        Feedback is very important to us and whilst we are not able to respond to everyone, it allows us to concentrate on the improvements that users need. For instance, users told us that they would find it helpful to choose which data fields are in their download and we have made this available in this release.
+    </p>
+    <p>
+        If your views of the service change as we deliver further enhancements then we encourage you to complete our survey again by <a href="http://www.smartsurvey.co.uk/s/Getinformationaboutschools/">clicking here</a>
+    </p>
+    <p>
+        How to get help:
+    </p>
+    <p>
+        A <a href="/faq">frequently asked questions</a> page is now available and this will detail the most common queries; you should consult this prior to contacting us.
+        If you identify a specific fault or are unable to complete a required action after consulting the FAQs, you should complete a
+        <a href="https://form.education.gov.uk/en/AchieveForms/?form_uri=sandbox-publish://AF-Process-2b61dfcd-9296-4f6a-8a26-4671265cae67/AF-Stage-f3f5200e-e605-4a1b-ae6b-3536bc77305c/definition.json&redirectlink=%2Fen&cancelRedirectLink=%2Fen">service request</a>.
+        Please provide us with full and specific details of the action you could not complete along with details of any error messages.
+    </p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+    <h2 class="govuk-heading-m">System update<br/><span class="govuk-!-font-weight-regular">28 March 2018</span></h2>
+    <p>
+        An updated version of the Get information about schools (GIAS) service has been released to all users. You do not need to take any specific action.
+    </p>
+    <p>
+        This release fixes known bugs and includes a number of improvements to the service including:
+        <ul class="govuk-list govuk-list--bullet">
+            <li>location data updates</li>
+            <li>location maps available for all sites on group pages</li>
+            <li>ability to record additional addresses for independent schools</li>
+            <li>ability to record a corporate contact for all multi-academy trusts</li>
+            <li>inclusion of links to the <a href="https://compare-school-performance.service.gov.uk/">Compare Schools Performance</a> pages</li>
+            <li>sortable columns for all data tables</li>
+            <li>when converting single academy trusts, the original school will be added to newly created multi-academy trust</li>
+            <li>establishment groups that are closed will be more clearly marked as such with a banner at the top of the page</li>
+        </ul>
+    </p>
+    <p>
+        We have also implemented some back-end enhancements that may not be immediately visible to users but will increase the usability of the service. For example, action buttons will not be available to click until the completion of an appropriate action. These enhancements will also improve the stability and speed of the service.
+    </p>
+    <p>
+        Users are encouraged to continue to provide us with feedback about general use of the service. Whilst we cannot respond to everyone, we do take actions based on user feedback - please complete our survey by <a href="http://www.smartsurvey.co.uk/s/Getinformationaboutschools">clicking here</a>.
+        If your perception of the service changes you can complete this again to tell us.
+    </p>
+    <p>
+        If you identify a specific fault or are unable to complete a required action, you should complete a <a href="https://form.education.gov.uk/fillform.php?self=1&form_id=AH8ogiDeAfD&noLoginPrompt=1">service request</a>. Please provide us with details of the action you could not complete along with details of any error messages.
+    </p>
+    <p>
+        Important note: We remind users of the <a href="/downloads">downloads</a> page that provides all establishment data which is also split by academy/maintained schools, children’s centres and establishment groups. These files are quicker to download when compared to using the search and filter functionality.
+    </p>
+
+
+    <h2 class="govuk-heading-m">Updating records to use services linked to Secure Access<br/><span class="govuk-!-font-weight-regular">26 October 2017</span></h2>
+    <p>
+        Secure Access requires users to update and/or confirm that their ‘EduBase’ record is correct within specified time periods. Until this action is completed, the availability of other services (including S2S, COLLECT, RAISE/ASP) that are controlled by Secure Access will be limited.
+    </p>
+    <p>
+        As Get information about schools (GIAS) is now live, it is your establishment GIAS information that you should update. You should read references to ‘EduBase’ in this process as GIAS.
+    </p>
+    <p>
+        To update your establishment information on GIAS please do the following:
+        <ul class="govuk-list govuk-list--bullet">
+            <li>Log into Secure Access and make sure that you are on your account home page</li>
+            <li>Click on Get information about schools in your list of available services</li>
+            <li>You should then be taken to your establishment information page on GIAS. If instead you are taken to a public search page for the site you will need to click on ‘Log in’ at the top of the page (you should see this in a black margin). Provide your Secure Access login details and this will take you to your establishment information.</li>
+            <li>Check your establishment details and you should now be able to edit them</li>
+            <li>Edit your establishment information if necessary</li>
+            <li>If you are satisfied that your establishment information is up to date, confirm the details. There should be a confirm details button either in the ‘Details’ tab on your establishment information page or just above the ‘Details’ tab</li>
+            <li>Go back to Secure Access once you have confirmed the details. Refresh your page by pressing F5 or clicking on the ‘Home’ button at the top of the page</li>
+            <li>Your establishment details will be correct and you should have access to your services again.</li>
+        </ul>
+    </p>
+    <p>
+        If the above does not work or you require further assistance then please let us know by logging a web form here:
+        <a href="https://form.education.gov.uk/fillform.php?self=1&form_id=AH8ogiDeAfD&noLoginPrompt=1">https://form.education.gov.uk/fillform.php?self=1&form_id=AH8ogiDeAfD&noLoginPrompt=1</a>
+    </p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+    <h2 class="govuk-heading-m">System update<br/><span class="govuk-!-font-weight-regular">23 October 2017</span></h2>
+    <p>
+        A further release of the Get information about schools system is now available. You do not need to take any actions for these improvements to take effect.
+    </p>
+    <p>
+        This release includes functionality to help interrogate data within the service as well as minor bug fixes and improvements to back office support. You can now use the following functionality:
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                improved search within change history
+            </li>
+            <li>
+                sortable table columns
+            </li>
+            <li>
+                select all option added to search filters
+            </li>
+            <li>
+                search within establishment filters
+            </li>
+            <li>
+                additional download files
+            </li>
+            <li>
+                option to include links data in downloads
+            </li>
+        </ul>
+    </p>
+    <p>
+        Please continue to send us your feedback about the site by using the link at the top of the page. This allows us to identify trends and supports our prioritisation of service improvements.
+    </p>
+    <p>
+        If you need assistance to complete a task, please use our <a href="/guidance">guidance pages</a>. If you still can’t complete a task, contact our helpdesk using this <a href="https://form.education.gov.uk/fillform.php?self=1&form_id=hGz7nZcsdnX&noLoginPrompt=1" target="_blank">form</a>.
+    </p>
+    <p>
+        For issues with passwords or logging on to Secure Access please see this <a href="https://sa.education.gov.uk/ui/help" target="_blank">help page</a>.
+    </p>
+    <h2 class="govuk-heading-m">Important action for Web services users only</h2>
+    <p>
+        Web services users should update their settings to point to this new location:
+    </p>
+    <p>
+        <a href="http://ea-edubase-api-prod.azurewebsites.net/edubase/schema/service.wsdl" target="_blank">http://ea-edubase-api-prod.azurewebsites.net/edubase/schema/service.wsdl</a>
+    </p>
+    <p>
+        All users must migrate to this new location, as we will disable the current service in the coming weeks. All existing user names and passwords will continue to work.
+    </p>
+    <p>
+        We will contact known users directly but we advise that you plan to make this change as soon as possible.
+    </p>
+    <p>
+        If you do not use Web services then you should ignore this message.
+    </p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+    <h2 class="govuk-heading-m">System update<br/><span class="govuk-!-font-weight-regular">6 October 2017</span></h2>
+    <p>
+        A further release of the Get information about schools system is now available. You do not need to take any actions for these improvements to take effect.
+    </p>
+    <p>
+        Our previous release fixed a number of known issues and some problems affecting specific users.
+        Since then we have been working on enhancements to the way the service works and we have based these improvements on the user feedback that we have received. These enhancements include:
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                Search functionality:
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>results can now be shown on a map</li>
+                    <li>removal of the ‘Pre LGR’ local authority which will make it easier to search for establishments by local authority</li>
+                    <li>search filters are now listed alphabetically</li>
+                </ul>
+            </li>
+            <li>
+                Downloads:
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>An increase in the number of files that can be downloaded in both .cvs and .xls formats</li>
+                    <li>Single group details can now be downloaded</li>
+                </ul>
+            </li>
+            <li>
+                Improvements for internal users
+            </li>
+        </ul>
+    </p>
+    <p>
+        Please continue to send us general feedback about the site by using the link at the top of the page. This allows us to identify trends and supports our prioritisation of service improvements.
+    </p>
+    <p>
+        If you need help to complete a task, please use our <a href="/guidance">guidance pages</a>. If you can’t complete a task, contact our helpdesk using this
+        <a href="https://form.education.gov.uk/fillform.php?self=1&form_id=hGz7nZcsdnX&noLoginPrompt=1" target="_blank">form</a>.
+    </p>
+    <p>
+        For issues with passwords or logging on to Secure Access please see this <a href="https://sa.education.gov.uk/ui/help" target="_blank">help page</a>.
+    </p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+    <h2 class="govuk-heading-m">System update<br/><span class="govuk-!-font-weight-regular">29 September 2017</span></h2>
+    <p>
+        An updated version of Get information about schools is now available. You do not need to take any action for these improvements to take effect.
+    </p>
+    <p>
+        This release contains a number of service improvements to address functionality and usability issues including:
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                Postcode search
+            </li>
+            <li>
+                Governor details - both viewing and editing records
+            </li>
+            <li>
+                Establishment filters
+            </li>
+            <li>
+                Login problems
+            </li>
+        </ul>
+    </p>
+    <p>
+        This release will also address specific issues experienced by some GIAS users.
+    </p>
+    <p>
+        If you encounter any problems while using the site please refer to the <a href="/guidance">guidance</a> in the first instance. If this does not resolve your query then please contact our helpdesk using this
+        <a href="https://form.education.gov.uk/fillform.php?self=1&form_id=hGz7nZcsdnX&noLoginPrompt=1" target="_blank">form</a>.
+    </p>
+    <p>
+        You can continue to provide us with general feedback via the link at the top of the page.
+    </p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+    <h2 class="govuk-heading-m">Progress update<br/><span class="govuk-!-font-weight-regular">18 September 2017</span></h2>
+    <p>
+        Get information about schools is now available for all users. All data that was in EduBase at 5pm on Friday 15th September has been migrated to the new service.
+    </p>
+    <p>
+        Users can view the majority of information available in the service without a password. If you previously had a password to access EduBase, use the same login details
+        (via Secure Access) to access the service and make changes.
+    </p>
+    <p>
+        We will continue to review the service and to deliver further improvements. Details of some of the areas that we have already committed to are included in the
+        <a href="/areas-under-development">development update</a>.
+        You can contribute to this work by continuing to send us feedback via the link at the top of the page.
+    </p>
+    <p>
+        If you need support, guidance material is available <a href="/guidance">here</a>. If you can’t find what you need, contact our Helpdesk by completing the
+        Data Collections Service Request <a href="https://form.education.gov.uk/fillform.php?self=1&form_id=hGz7nZcsdnX&noLoginPrompt=1" target="_blank">form</a>
+    </p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+    <h2 class="govuk-heading-m">Progress update<br/><span class="govuk-!-font-weight-regular">30 August 2017</span></h2>
+    <p>
+        We will launch Get information about schools on Monday 18 September. This service will become the primary source of school data from that point replacing the current EduBase system.
+    </p>
+    <p>
+        In preparation for this launch, users should stop making updates to EduBase from 5pm on Friday 15 September as the database will be frozen and data transferred to the new service. All existing credentials (managed through Secure Access) will continue
+        to be valid once the new service is live and will provide the same privileges as they currently do. The feedback we have received so far on the test version is proving useful and we encourage users to continue to complete targeted test scripts or
+        provide feedback via the general ‘feedback’ link.
+    </p>
+    <p>
+        We have released a further and final version of the test system that allows users to update shared governor information. Following the launch of Get information about schools, we will look to deliver further enhancements and functional improvements -
+        a list of those that we have committed to so far is available <a href="/areas-under-development">here</a>.
+    </p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+    <h2 class="govuk-heading-m">Progress update<br/><span class="govuk-!-font-weight-regular">14 August 2017</span></h2>
+    <p>
+        Many thanks to those of you who continue to provide feedback through the general ‘feedback’ link and respond to our targeted test scripts. If you haven’t given feedback yet, you still have a few weeks before we switch off Edubase2 and make ‘Get information about schools’ the primary source for establishment data. We’ll let you know the exact timing of this shortly, so please continue to check this news page for further updates.
+    </p>
+    <p>
+        We have released a further update to the system that includes general service improvements as well as enhancements to the download functionality and ‘Create new federation’, ‘Create new school trusts’ and ‘Create new sponsors’ tools. We are continuing to develop shared governance and other functionality. An updated list of the areas being worked on is <a href="/areas-under-development">here</a>; we’re not looking for feedback on these areas at this time.
+    </p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+    <h2 class="govuk-heading-m">Progress update<br/><span class="govuk-!-font-weight-regular">28 July 2017</span></h2>
+    <p>
+        Thank you to those users that have provided us with feedback whether this has been through our targeted test scripts or through the general ‘feedback’ link displayed on the site. Testing continues and whilst we are unable
+        to respond individually, we welcome further feedback. If you have been sent a test script it would help us if you complete this as soon as possible after you receive it.
+    </p>
+    <p>
+        We have released an update to the system that includes a number of service improvements such as the relaxation of certain obfuscation rules and improvements to response times. Some issues remain around shared governance
+        in particular and we continue to work on fixes for these. An updated list of the areas with known issues is <a href="/areas-under-development">here</a>; feedback on these areas is not needed at this time.
+    </p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+    <h2 class="govuk-heading-m">Initial release<br/><span class="govuk-!-font-weight-regular">17 July 2017</span></h2>
+    <p>We need your help to test the system and provide feedback. You can click on the &lsquo;feedback&rsquo; link at the top of each page. Use this to tell us what you were trying to do and any difficulties such as errors or missing functionality you encountered.</p>
+    <p>Key stakeholders who have already been helping us to develop the new service will shortly receive test scripts. These scripts will detail specific tasks to be completed and should be used to ensure the new service meets your needs. We&rsquo;ll send specific messages including log-on credentials to those of you selected in the coming days and weeks. </p>
+    <p>We can&rsquo;t respond to all feedback but we&rsquo;ll add updates to this news page during the familiarisation period. </p>
+    <p>Development of the system will continue during the familiarisation period and you&rsquo;ll also see the release of additional functionality. We&rsquo;ll also add information about this extra functionality and deta</p>
+
     </div>
 
 </div>

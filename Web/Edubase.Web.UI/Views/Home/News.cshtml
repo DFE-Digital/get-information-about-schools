@@ -3,33 +3,366 @@
     ViewBag.Title = "Get information about schools";
     ViewBag.bodyClasses = "news-page";
 }
-
-<div class="grid-row">
-    <div class="column-full">
-        <div class="breadcrumbs">
-            <ol>
-                <li>
-                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-                </li>
+@section BreadCrumbs
+{
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="govuk-breadcrumbs">
+            <ol class="govuk-breadcrumbs__list">
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link"})</li>
             </ol>
         </div>
-        <h1 class="heading-xlarge">News</h1>
-        <div class="text-align-right">
+    </div>
+</div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">News</h1>
+        <div class="gias-align-right">
             @Html.ActionLink("News Archive", "NewsArchive", "Home")
         </div>
     </div>
 </div>
-<div class="grid-row news">
+<div class="govuk-grid-row news">
 
-    <div class="column-two-thirds news-blog">
-        <hr />
-        @Model
+    <div class="govuk-grid-column-two-thirds news-blog">
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+        @* @Model *@
+        <h2 class="govuk-heading-m">System update<br /><span class="govuk-!-font-weight-normal">28 July 2020</span></h2>
+        <p>An updated version of the Get information about schools (GIAS) service has been released to all users. You do not need to take any specific action.</p>
+        <p>This release includes the following improvements:</p>
+        	<ul class="govuk-list govuk-list--bullet">
+                <li>
+        			Addition of new links to allow easier navigation between the establishment and governance change history pages of each establishment’s record.
+                </li>
+        		<li>
+        			Improvements to the experience of users with accessibility needs.
+        		</li>
+        		<li>
+        			Bug fixes and fine-tuning to improve the overall user experience, including:
+        			<ul class="govuk-list govuk-list--bullet">
+                        <li>
+        					Resolution of an issue resulting in address details in the ‘All group records with links’ downloadable files not being displayed.
+        				</li>
+        				<li>
+        					Clearer error messaging for local authority maintained school users attempting to create a federation.
+        				</li>
+        				<li>
+        					Improved validation rules for users editing school governor records.
+        				</li>
+        				<li>
+        					Increased consistency of the terminology used to reflect an academy trust’s incorporated and opened dates across the website and in downloadable files.
+        				</li>
+                    </ul>
+        		</li>
+            </ul>
+
+        <p>In future releases we plan to include:</p>
+        	<ul class="govuk-list govuk-list--bullet">
+                <li>
+        			Access to historical versions of the common downloads, to support longitudinal analysis of GIAS data.
+                </li>
+        		<li>
+        			Addition of the new user satisfaction survey.
+        		</li>
+        		<li>
+        			Additional details to help users better understand and use the different daily downloads provided on the downloads page.
+        		</li>
+            </ul>
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+
+
+        <h2 class="govuk-heading-m">System update<br /><span class="govuk-!-font-weight-normal">14 July 2020</span></h2>
+        <p>An updated version of the Get information about schools (GIAS) service has been released to all users. You do not need to take any specific action.</p>
+        <p>This release includes the following improvements:</p>
+        	<ul class="govuk-list govuk-list--bullet">
+                <li>
+        			Addition of an archived news page. All users can still view the most recent news articles on the main news page and, from there, access older items by selecting the ‘News archive link’.
+                </li>
+        		<li>
+        			Improvements to the bulk creation tool for DfE academies, operations, and strategy users.
+        		</li>
+        		<li>
+        			Improvements to the experience of users with accessibility needs.
+        		</li>
+        		<li>
+        			Bug fixes and fine-tuning to improve the overall user experience, including:
+        			<ul class="govuk-list govuk-list--bullet">
+                        <li>
+        					Resolution of an issue that prevented users with responsibility for maintaining children’s centres records from saving changes if the children’s centre manager details were unavailable.
+        				</li>
+        				<li>
+        					Resolution of an issue that caused inaccurate inspectorate data to be displayed in some extracts and downloads where an independent school had converted to another type of establishment.
+        				</li>
+        				<li>
+        					Improved clarity of which establishment types the proprietor information is applicable to.
+        				</li>
+        				<li>
+        					Clearer messaging in the ‘Data from other services’ section of an establishment’s record to confirm when there are no live links to other websites for that establishment.
+        				</li>
+        				<li>
+        					Resolution of an issue that resulted in some users receiving a reminder to review their establishment’s record earlier than required.
+        				</li>
+                    </ul>
+        		</li>
+            </ul>
+
+        <p>In future releases we plan to include:</p>
+        	<ul class="govuk-list govuk-list--bullet">
+                <li>
+        			Access to historical versions of the common downloads, to support longitudinal analysis of GIAS data.
+                </li>
+        		<li>
+        			Addition of the new user satisfaction survey.
+        		</li>
+        		<li>
+        			Additional details to help users better understand and use the different daily downloads provided on the downloads page.
+        		</li>
+            </ul>
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+
+
+        <h2 class="govuk-heading-m">System update<br /><span class="govuk-!-font-weight-normal">01 July 2020</span></h2>
+        <p>An updated version of the Get information about schools (GIAS) service has been released to all users. You do not need to take any specific action.</p>
+        <p>This release includes the following improvements:</p>
+        	<ul class="govuk-list govuk-list--bullet">
+                <li>
+        			Improved ability to remind establishment users when their GIAS record is due for review - see earlier news stories for more details.
+                </li>
+        		<li>
+        			Previously, the record of an establishment in the process of converting to an academy was locked to users at the point that the record for the successor academy was created. Now, users will be able to edit the record of the current establishment until 4 weeks before the successor academy is due to open.
+        		</li>
+        		<li>
+        			Improvements to the experience for users with accessibility needs.
+        		</li>
+        		<li>
+        			Bug fixes and fine-tuning to improve the overall user experience, including:
+        			<ul class="govuk-list govuk-list--bullet">
+                        <li>
+        					Resolution of an issue impacting on the experience of users updating ward details.
+        				</li>
+        				<li>
+        					Resolution of an issue within the SAT and MAT membership history download.
+        				</li>
+                    </ul>
+        		</li>
+            </ul>
+
+        <p>In future releases we plan to include:
+        	<ul class="govuk-list govuk-list--bullet">
+                <li>
+        			Access to historical versions of the common downloads, to support longitudinal analysis of GIAS data.
+                </li>
+        		<li>
+        			Addition of the new user satisfaction survey.
+        		</li>
+        		<li>
+        			Addition of an archived news page.
+        		</li>
+            </ul>
+        </p>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+        <h2 class="govuk-heading-m">Advance warning to users responsible for keeping the establishment record up to date<br /></h2>
+        <p>Get information about schools (GIAS) is the Department for Education’s official register of educational establishments in England and Wales. It contains vital information about schools and is the national database of school governors.</p>
+        <p>GIAS data is used by key departmental digital services, data collections, funding calculations and statistical analysis.</p>
+        <p>The contact information held within GIAS is also used to support the promotion of important policy announcements and urgent communications with schools and academy trusts in emergencies.</p>
+        <p>For these reasons, it is essential that all establishments ensure their GIAS record details, including contact information are up to date.</p>
+        <p>GIAS will soon be implementing new functionality to remind establishment users and the headteacher when the establishment record has not been reviewed, updated and saved for more than 60 days and will continue to re-issue this reminder weekly until the action is undertaken. Please take this opportunity to review your establishment details in advance of the implementation of this functionality.</p>
+        <p><u>How to update your establishment’s record details</u>
+        	<ul class="govuk-list govuk-list--bullet">
+                <li>
+        			Go to the GIAS home page, select ‘Sign in’ using your DfE Sign-in (DSI) credentials and select GIAS from your available services.
+        		</li>
+        		<li>
+        			If you do not have a DSI account or your account does not have access to GIAS, please ask the DSI approver in your establishment to ensure you have access.
+        		</li>
+        		<li>
+        			Once logged in you can select your establishment’s record and then review the information on the different tabs and edit and/or save where required.
+        		</li>
+            </ul>
+        </p>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+        <h2 class="govuk-heading-m">System update<br />16 June 2020</h2>
+        <p>An updated version of the Get information about schools (GIAS) service has been released to all users. You do not need to take any specific action.</p>
+        <p>This release also includes the following improvements:
+        	<ul class="govuk-list govuk-list--bullet">
+                <li>
+        			Refreshed ONS geospatial and location data to reflect the recent Buckinghamshire unitary changes.
+                </li>
+        		<li>
+        			Improvements to the experience for users with accessibility needs.
+        		</li>
+        		<li>
+        			Bug fixes and fine-tuning to improve the overall user experience.
+        		</li>
+            </ul>
+        </p>
+        <p>In future releases we plan to introduce:
+        	<ul class="govuk-list govuk-list--bullet">
+                <li>
+        			Access to historical versions of the common downloads, to support longitudinal analysis of GIAS data.
+                </li>
+        		<li>
+        			Addition of the new user satisfaction survey.
+        		</li>
+        		<li>
+        			Improved ability to remind establishment users when their GIAS record is due for review.
+        		</li>
+            </ul>
+        </p>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+
+        <h2 class="govuk-heading-m">System update<br />02 June 2020</h2>
+        <p>An updated version of the Get information about schools (GIAS) service has been released to all users. You do not need to take any specific action.</p>
+        <p>This release also includes the following improvements:
+        	<ul class="govuk-list govuk-list--bullet">
+                <li>
+        			A new download available to all users which provides historical academy and academy trust data to enable better tracking of each academy’s membership and governance over time.
+                </li>
+        		<li>
+        			Improved resilience to the impact of excessive internet bot activity, to benefit the experience of all users.
+        		</li>
+        		<li>
+        			Revisions to some downloads to increase clarity of inspectorate data and Multi Academy Trust address details.
+        		</li>
+        		<li>
+        			Added ability for all users to search Group records by UKPRN.
+        		</li>
+        		<li>
+        			Completed work to make use of the gov.uk/Notify service for all GIAS notifications.
+        		</li>
+        		<li>
+        			Bug fixes and fine-tuning to improve the overall user experience.
+        		</li>
+            </ul>
+        </p>
+        <p>In future releases we plan to introduce:
+        	<ul class="govuk-list govuk-list--bullet">
+                <li>
+        			New access to historical versions of the common downloads to support longitudinal analysis of GIAS data.
+                </li>
+        		<li>
+        			Improvements to the experience for users with accessibility needs.
+        		</li>
+        		<li>
+        			Refreshed ONS geospatial and location data to reflect the recent Buckinghamshire unitary changes.
+        		</li>
+            </ul>
+        </p>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+        <h2 class="govuk-heading-m">Reminder to all establishments, trusts and governors<br /></h2>
+        <p>Get information about schools (GIAS) is the Department for Education’s official register of educational establishments in England and Wales. It contains vital information about schools and is the national database of school governors.</p>
+        <p>GIAS data is used by key departmental digital services, data collections, funding calculations and statistical analysis.</p>
+        <p>The contact information held within GIAS is also used to support the promotion of important policy announcements and urgent communications with schools and academy trusts in emergencies.</p>
+        <p>For these reasons, it is essential that all education settings ensure their details are up to date on GIAS.</p>
+        <p><u>Please take this opportunity to review the contact information we hold for your establishment.</u>
+        	<ul class="govuk-list govuk-list--bullet">
+                <li>
+        			To update your record, please go to the GIAS home page, "Sign in" using your "DfE Sign-in" credentials and select GIAS from your available services.
+        		</li>
+        		<li>
+        			If you do not have a DfE Sign-in account or your account does not have access to GIAS, please ask the DfE Sign-in approver in your education setting.
+        		</li>
+            </ul>
+        </p>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+        <h2 class="govuk-heading-m">System update<br />18 March 2020</h2>
+        <p>An updated version of the Get information about schools (GIAS) service has been released to all users. You do not need to take any specific action.</p>
+        <p>This release includes the following improvements:
+        	<ul class="govuk-list govuk-list--bullet">
+                <li>
+        			Improvements to the accuracy and coverage of UK Provider Reference Numbers (UKPRNs). UKPRNs on GIAS will now be automatically updated when there are changes to the UK Register of Learning Providers (UKRLP). Multi-academy trusts (MATs) and other group records now also display a UKPRN. They are also now included in downloads and can be added to web service profiles.
+                </li>
+        		<li>
+        			Updates to the following local authority and government office region names in line with Office for National Statistics (ONS) terminology
+
+
+        			<table class="govuk-table gias-table">
+        				<thead class="govuk-table__head">
+        					<tr class="govuk-table__row">
+        						<th scope="col" class="govuk-table__header">Current name in GIAS</th>
+        						<th scope="col" class="govuk-table__header">ONS name</th>
+        					</tr>
+        				</thead>
+        				<tbody class="govuk-table__body">
+        					<tr class="govuk-table__row">
+        						<td class="govuk-table__cell" data-label="Current name in GIAS">Bournemouth, Christchurch and Poole Council</td>
+        						<td class="govuk-table__cell" data-label="ONS name">Bournemouth, Christchurch and Poole</td>
+        					</tr>
+        					<tr class="govuk-table__row">
+        						<td class="govuk-table__cell" data-label="Current name in GIAS">Bristol City of</td>
+        						<td class="govuk-table__cell" data-label="ONS name">Bristol, City of</td>
+        					</tr>
+        					<tr class="govuk-table__row">
+        						<td class="govuk-table__cell" data-label="Current name in GIAS">Durham</td>
+        						<td class="govuk-table__cell" data-label="ONS name">County Durham</td>
+        					</tr>
+        					<tr class="govuk-table__row">
+        						<td class="govuk-table__cell" data-label="Current name in GIAS">Herefordshire</td>
+        						<td class="govuk-table__cell" data-label="ONS name">Herefordshire, County of</td>
+        					</tr>
+        					<tr class="govuk-table__row">
+        						<td class="govuk-table__cell" data-label="Current name in GIAS">Kingston upon Hull City of</td>
+        						<td class="govuk-table__cell" data-label="ONS name">Kingston upon Hull, City of</td>
+        					</tr>
+        					<tr class="govuk-table__row">
+        						<td class="govuk-table__cell" data-label="Current name in GIAS">Rhondda, Cynon, Taff</td>
+        						<td class="govuk-table__cell" data-label="ONS name">Rhondda Cynon Taf</td>
+        					</tr>
+        					<tr class="govuk-table__row">
+        						<td class="govuk-table__cell" data-label="Current name in GIAS">The Vale of Glamorgan</td>
+        						<td class="govuk-table__cell" data-label="ONS name">Vale of Glamorgan</td>
+        					</tr>
+        				</tbody>
+        			</table>
+
+
+        		</li>
+        		<li>
+        			Bug fixes and fine-tuning to improve the overall user experience
+        		</li>
+            </ul>
+        </p>
+        <p>In future releases we plan to introduce:
+        	<ul class="govuk-list govuk-list--bullet">
+                <li>
+        			Improved provision of the historical academy and academy trust data to enable better tracking of each academy’s sponsorship and governance over time.
+        		</li>
+        		<li>
+        			New access to historical versions of the common Downloads to support longitudinal analysis of GIAS data.
+        		</li>
+        		<li>
+        			Improved functionality to help remind establishments when to review and update their GIAS record
+        		</li>
+            </ul>
+        </p>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+
+
+        <h2 class="govuk-heading-m">System update<br />20 August 2019</h2>
+        <p>An updated version of the Get information about schools (GIAS) service has been released to all users. You do not need to take any specific action.</p>
+        <p>This is the last of our main releases focusing on improving the accessibility experience for all our users.</p>
+        <p>We would really welcome your feedback following these improvements. You can comment on any changes in your experience by completing our <a href="http://www.smartsurvey.co.uk/s/Getinformationaboutschools/" target="_blank">survey</a>.</p>
+
     </div>
 
-    <div class="column-third about">
-        <hr/>
+    <div class="govuk-grid-column-one-third about">
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
 
-        <h3 class="heading-medium bold-medium push-half--top">About the Get information about schools service</h3>
+        <h3 class="govuk-heading-m">About the Get information about schools service</h3>
         <p>
             Welcome to the Get information about schools service.
         </p>
@@ -45,7 +378,7 @@
             Any personal information that is processed further by any organisation for other purposes will be subject to the terms of data protection legislation.
         </p>
 
-        <hr/>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
 
     </div>
 
