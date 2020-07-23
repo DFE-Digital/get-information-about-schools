@@ -3,6 +3,14 @@ import GiasOkCancel from '../GiasModules/GiasModals/GiasOkCancel';
 
 new GiasTextCounter(document.querySelector('.entry-content'));
 const $delete = $('#delete-button');
+let warningTitle = 'Are you sure you want to delete this FAQ entry?';
+let warningContent = 'The entry will be removed from the FAQ immediately';
+
+if (window.isGlossaryEdit) {
+  warningTitle = warningTitle.replace('FAQ', 'glossary');
+  warningContent = warningContent.replace('FAQ', 'glossary');
+}
+
 
 $delete.okCancel({
   ok: function () {
@@ -12,7 +20,7 @@ $delete.okCancel({
   cancel: function() {
     this.closeModal();
   },
-  title: 'Are you sure you want to delete this FAQ entry?',
-  content: 'The entry will be removed from the FAQ immediately',
+  title: warningTitle,
+  content: warningContent,
   triggerEvent: 'click'
 });

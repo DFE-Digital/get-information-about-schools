@@ -1,139 +1,60 @@
 @model GlossaryViewModel
 @{
     ViewBag.Title = "GIAS: Glossary";
+    ViewBag.SiteSection = "help";
 }
 
-<div class="breadcrumbs">
-    <ol>
-        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
-    </ol>
-</div>
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
 
-<div class="grid-row">
-    <div class="column-two-thirds">
-        <h1 class="heading-xlarge">Glossary</h1>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">Glossary</h1>
         <p>The sections below give explanations for terms commonly used on this site. Select the first letter of the term you're searching for.</p>
     </div>
 </div>
 
 
-<div class="grid-row">
-    <div class="column-full">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
         @if (Model.UserCanEdit)
         {
             @Html.RouteLink("New Entry", "CreateGlossaryItem", null, new { @class = "plus-link" })
         }
-
-        <ul class="chevron-accordion">
-            <li class="controls">
-                <button href="#" class="link-button font-xsmall push--right open-all-panels">Open all</button>
-                <button href="#" class="link-button font-xsmall close-all-panels">Close all</button>
-            </li>
+        <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
             @foreach (var group in Model.Items)
             {
-                <li class="expander-panel">
-                    <a class="panel-trigger" href="#target-@group.Key" aria-expanded="false" aria-controls="target-@group.Key">@group.Key</a>
-                    <div class="expander-panel-content" id="target-@group.Key">
-                        @foreach (var item in group)
-                        {
-                            <h2 class="heading-small">@item.Title</h2>
-                            <p>@Html.Raw(item.Content)</p>
-                            if (Model.UserCanEdit)
-                            {
-                                @Html.RouteLink("Edit entry", "EditGlossaryItem", new { id = item.RowKey }, new { @class = "button button-secondary glossary-edit-button" })
-                            }
-                        }
+                <div class="govuk-accordion__section ">
+                    <div class="govuk-accordion__section-header">
+                        <h2 class="govuk-accordion__section-heading">
+                            <span class="govuk-accordion__section-button" id="ctrl-@group.Key">
+                                @group.Key
+                            </span>
+                        </h2>
                     </div>
-                </li>
+                    <div id="target-@group.Key" class="govuk-accordion__section-content" aria-labelledby="ctrl-@group.Key">
+                         @foreach (var item in group)
+                         {
+                            <h2 class="govuk-heading-s">@item.Title</h2>
+                            <p>@Html.Raw(item.Content)</p>
+                             if (Model.UserCanEdit)
+                             {
+                                 @Html.RouteLink("Edit entry", "EditGlossaryItem", new {id = item.RowKey}, new {@class = "govuk-button govuk-button--secondary glossary-edit-button"})
+                             }
+                         }
+                    </div>
+                </div>
             }
-            <li class="controls">
-                <button href="#" class="link-button font-xsmall push--right open-all-panels">Open all</button>
-                <button href="#" class="link-button font-xsmall close-all-panels">Close all</button>
-            </li>
-
-        </ul>
+        </div>
     </div>
 </div>
-
-
-@section ViewScripts
-{
-    <script nonce="@Html.ScriptNonce()">
-        (function () {
-            var panels = document.querySelectorAll('.expander-panel');
-            var openAll = document.querySelectorAll('.open-all-panels');
-            var closeAll = document.querySelectorAll('.close-all-panels');
-
-            function removeClass(el, className) {
-                if (el.classList) {
-                    el.classList.remove(className);
-                } else {
-                    el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
-                }
-            }
-
-            function addClass(el, className) {
-                if (el.classList) {
-                    el.classList.add(className);
-                } else {
-                    el.className += ' ' + className;
-                }
-            }
-
-
-            function hasClass(el, className) {
-                if (el.classList) {
-                    return el.classList.contains(className);
-                } else {
-                    return new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className);
-                }
-            }
-
-            [].forEach.call(panels,
-                function (el) {
-                    var trigger = el.querySelectorAll('.panel-trigger')[0];
-
-                    trigger.addEventListener('click',
-                        function (e) {
-                            e.preventDefault();
-                            if (hasClass(el, 'open-expander')) {
-                                removeClass(el, 'open-expander');
-                                trigger.setAttribute('aria-expanded', false);
-                            } else {
-                                addClass(el, 'open-expander');
-                                trigger.setAttribute('aria-expanded', true);
-                            }
-                        });
-                });
-
-            [].forEach.call(openAll,
-                function (el) {
-                    el.addEventListener('click',
-                        function (e) {
-                            e.preventDefault();
-                            [].forEach.call(panels,
-                                function (panel) {
-                                    addClass(panel, 'open-expander');
-                                    panel.querySelectorAll('.panel-trigger')[0].setAttribute('aria-expanded', true);
-                                });
-
-                        });
-                });
-
-            [].forEach.call(closeAll,
-                function (el) {
-                    el.addEventListener('click',
-                        function (e) {
-                            e.preventDefault();
-                            [].forEach.call(panels,
-                                function (panel) {
-                                    removeClass(panel, 'open-expander');
-                                    panel.querySelectorAll('.panel-trigger')[0].setAttribute('aria-expanded', false);
-                                });
-
-                        });
-                });
-
-        }());
-    </script>
-}

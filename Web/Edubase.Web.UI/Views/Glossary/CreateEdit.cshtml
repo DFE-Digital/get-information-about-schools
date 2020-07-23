@@ -1,77 +1,89 @@
 @model GlossaryItemViewModel
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "GIAS: Glossary");
+    ViewBag.SiteSection = "help";
 }
 
-<div class="breadcrumbs">
-    <ol>
-        <li>
-            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-        </li>
-        <li>
-            @Html.RouteLink("Glossary", "Glossary")
-        </li>
-    </ol>
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.RouteLink("Glossary", "Glossary", null,new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState)
+
+        <h1 class="govuk-heading-xl">@(Model.Id == null ? "Create" : "Edit") glossary entry</h1>
+    </div>
 </div>
-
-@Html.Partial("_ValidationSummary", ViewData.ModelState)
-
-<h1 class="heading-xlarge">@(Model.Id == null ? "Create" : "Edit") glossary entry</h1>
-
-<div class="grid-row">
-    <div class="column-two-thirds">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
         @using (Html.BeginRouteForm(Model.Id == null ? "PostCreateGlossaryItem" : "PostEditGlossaryItem", new { Model.Id } , FormMethod.Post))
         {
             @Html.HiddenFor(x => x.Id)
-            <div class="form-group @Html.ValidationCssClassFor(x => x.Title)">
-                @Html.LabelFor(x => x.Title)
-                @Html.ValidationMessageFor(x => x.Title)
-                @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Title)">
+                @Html.LabelFor(x => x.Title, new { @class = "govuk-label" })
+                @Html.ValidationMessageFor(x => x.Title, null, new { @class = "govuk-error-message" })
+                @Html.TextBoxFor(x => x.Title, new { @class = "govuk-input" })
             </div>
 
-            <div class="form-group @Html.ValidationCssClassFor(x => x.Content)">
-                @Html.LabelFor(x => x.Content)
-                @Html.ValidationMessageFor(x => x.Content)
-                @Html.TextAreaFor(x => x.Content, 10, 40, new { @class = "form-control entry-content" })
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Content)">
+                @Html.LabelFor(x => x.Content, new { @class = "govuk-label" })
+                @Html.ValidationMessageFor(x => x.Content, null, new { @class = "govuk-error-message" })
+                @Html.TextAreaFor(x => x.Content, 10, 40, new { @class = "govuk-textarea entry-content" })
             </div>
 
-            <button type="submit" class="button">Save entry</button>
-            if (Model.Id != null)
-            {
-                <button type="submit" class="button button-secondary" name="@nameof(Model.IsDeleting)"  id="delete-button" value="true">Delete</button>
-            }
-            @Html.RouteLink("Cancel", "Glossary", null, new { @class = "button button-secondary" })
+            <div class="button-row govuk-!-padding-top-8">
+                <button type="submit" class="govuk-button">Save entry</button>
+                @if (Model.Id != null)
+                {
+                    <button type="submit" class="govuk-button govuk-button--secondary" name="@nameof(Model.IsDeleting)"  id="delete-button" value="true">Delete</button>
+                }
+                @Html.RouteLink("Cancel", "Glossary", null, new { @class = "govuk-button govuk-button--secondary" })
+            </div>
         }
-
     </div>
 </div>
 
 
 @section ViewScripts
 {
+
     <script nonce="@Html.ScriptNonce()">
-        (function () {
-            var okDelete = false;
-            $('.entry-content').textCount({ maxLength: 1000 });
-
-            $('#delete-button').okCancel({
-                ok: function () {
-                    $('#delete-button').data().okCancel.unbind();
-                    $('#delete-button').click();
-                },
-                cancel: function() {
-                    this.closeModal();
-                },
-                title: 'Are you sure you want to delete this glossary entry?',
-                content: 'The entry will be removed from the glossary immediately',
-                triggerEvent: 'click'
-
-            });
-
-        }());
-
-
-
+    const isGlossaryEdit = true;
+        // (function () {
+        //     var okDelete = false;
+        //     $('.entry-content').textCount({ maxLength: 1000 });
+        //
+        //     $('#delete-button').okCancel({
+        //         ok: function () {
+        //             $('#delete-button').data().okCancel.unbind();
+        //             $('#delete-button').click();
+        //         },
+        //         cancel: function() {
+        //             this.closeModal();
+        //         },
+        //         title: 'Are you sure you want to delete this glossary entry?',
+        //         content: 'The entry will be removed from the glossary immediately',
+        //         triggerEvent: 'click'
+        //
+        //     });
+        //
+        // }());
     </script>
+
+    <script src="/public/assets/scripts/build/edit-faq-glossary.js"></script>
 }
