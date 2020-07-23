@@ -70,4 +70,11 @@ import GiasAttachUnload from '../GiasModules/GiasModals/GiasAttachUnload';
   $typeSelector.on('change keyup', filterEstablishmentPhaseList);
   new GiasAttachUnload();
 
+
+  // When the page reloads with a warning modal not opened via JS
+  $('.modal-exit, .cancel').on('click', function(e){
+    e.preventDefault();
+    $('.modal-content , .modal-overlay').addClass('hidden');
+  });
+
 }());

@@ -188,14 +188,14 @@
                 var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND);
                 <div class="modal-overlay" id="warning-modal-overlay-0"></div>
                 <div class="modal-content" id="warning-modal-content-0" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
-                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "modal-exit js-allow-exit" })
+                    @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "modal-exit js-allow-exit" })
                     <div class="modal-inner">
                         <h3 class="govuk-heading-l" tabindex="0" id="modal-label">Duplicate record</h3>
                         <p tabindex="0" id="model-desc">The record you are creating for <strong>@(warning.MessageParameters[0])</strong> in <strong>@(warning.MessageParameters[1])</strong> may duplicate existing record(s): <strong>@(warning.MessageParameters[2])</strong>
                     </div>
                     <div class="button-row">
                         <button type="submit" name="action" value="" class="govuk-button">Proceed</button>
-                        @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel" })
+                        @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "govuk-button govuk-button--secondary cancel" })
                     </div>
                 </div>
             }
