@@ -10,16 +10,27 @@
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, Model.PageTitle);
 }
 
-<div class="breadcrumbs">
-    <ol>
-        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
-        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-    </ol>
+@section BreadCrumbs
+{
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="govuk-breadcrumbs">
+            <ol class="govuk-breadcrumbs__list">
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link"})</li>
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new { @class = "govuk-breadcrumbs__link" })</li>
+            </ol>
+        </div>
+    </div>
+</div>
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState)
+
+        <h1 class="govuk-heading-xl">@Model.PageTitle</h1>
+    </div>
 </div>
 
-@Html.Partial("_ValidationSummary", ViewData.ModelState)
-
-<h1 class="heading-xlarge">@Model.PageTitle</h1>
 
 @using (Html.BeginForm("Create", "Group", new { area = "Groups", type = Model.GroupTypeMode }, FormMethod.Post))
 {
@@ -28,51 +39,53 @@
     @Html.HiddenFor(x => x.SaveMode)
     @Html.HiddenFor(x => x.ProcessedWarnings)
 
-    <div class="grid-row">
-        <div class="column-two-thirds">
-            Use this tool to create a @Model.EntityName
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <p>Use this tool to create a @Model.EntityName</p>
         </div>
 
-        <div class="column-half">
-            <h2 class="heading-medium">@Model.EntityName.ToSentenceCase() details</h2>
-            <div class="form-group @Html.ValidationCssClassFor(x=>x.GroupName)">
-                <label for="GroupName" class="form-label">@Model.FieldNamePrefix name</label>
-                @Html.ValidationMessageFor(x => x.GroupName)
-                @Html.TextBoxFor(x => x.GroupName, new { @class = "form-control" })
+        <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-m">@Model.EntityName.ToSentenceCase() details</h2>
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x=>x.GroupName)">
+                <label for="GroupName" class="govuk-label">@Model.FieldNamePrefix name</label>
+                @Html.ValidationMessageFor(x => x.GroupName, null , new { @class = "govuk-error-message" })
+                @Html.TextBoxFor(x => x.GroupName, new { @class = "govuk-input" })
             </div>
             @Html.HiddenFor(x => x.GroupTypeId)
-            @Html.EditorFor(x => x.OpenDate, new { title = Model.OpenDateLabel })
+            @Html.EditorFor(x => x.OpenDate, new { title = Model.OpenDateLabel, fieldsetClassName = "edit-date-fieldset" })
 
             @if (Model.GroupUId.HasValue)
             {
-                <div class="form-group">
-                    <label class="form-label">
+                <div class="govuk-form-group">
+                    <label class="govuk-label">
                         <abbr title="Unique Identifier">UID</abbr>
                     </label>
-                    <input value="@Model.GroupUId" disabled="disabled" class="form-control" />
+                    <input value="@Model.GroupUId" disabled="disabled" class="govuk-input" />
                 </div>
             }
 
             @if (Model.GroupType.Equals(L.SchoolSponsor))
             {
-                <div class="form-group  @Html.ValidationCssClassFor(x=>x.GroupId)">
-                    <label for="GroupId" class="form-label">Group ID</label>
-                    @Html.ValidationMessageFor(x => x.GroupId)
-                    @Html.TextBoxFor(x => x.GroupId, new { @class = "form-control", maxlength = 120 })
+                <div class="govuk-form-group  @Html.ValidationCssClassFor(x=>x.GroupId)">
+                    <label for="GroupId" class="govuk-label">Group ID</label>
+                    @Html.ValidationMessageFor(x => x.GroupId, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.GroupId, new { @class = "govuk-input", maxlength = 120 })
                 </div>
             }
         </div>
     </div>
 
-    <div class="grid-row">
-        <div class="column-full submit-cancel-panel">
-            <button type="submit" name="action" class="button" id="create-submit" value="@VM.ActionSave">Create @Model.EntityName</button>
-            @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "button button-secondary cancel" })
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="button-row">
+                <button type="submit" name="action" class="govuk-button" id="create-submit" value="@VM.ActionSave">Create @Model.EntityName</button>
+                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "govuk-button govuk-button--secondary cancel"})
+            </div>
         </div>
     </div>
 
-    <div class="grid-row">
-        <div class="column-full">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
             @Html.Partial("Warnings")
         </div>
     </div>
