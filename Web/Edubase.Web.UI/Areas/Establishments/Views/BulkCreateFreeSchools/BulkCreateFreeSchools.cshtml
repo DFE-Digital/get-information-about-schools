@@ -18,14 +18,14 @@
     <div class="grid-row">
         <div class="column-full">
             <h1 class="heading-xlarge">Bulk create new free schools</h1>
-            <p>Follow these steps to bulk create new free schools.</p>
+            <p>Follow these steps to bulk create new free schools:</p>
         </div>
         <div class="column-full">
             @if (Model?.Result?.RowErrors > 0)
             {
                 <div class="form-group error" id="error-log">
                     <p class="error-message">Please download the error log to correct your data before resubmitting</p>
-                    <p class="download-list-item">
+                    <p>
                         <a href="@Model.Result.ErrorLogFile.Url">@Model.Result.ErrorLogFile.Name</a>
                     </p>
                 </div>
@@ -33,25 +33,32 @@
         </div>
 
         <div class="column-full">
-            <h2 class="heading-medium">Download template</h2>
-            <p>
-                Please download the free schools template using the link below. Then, fill in the template with the free schools you wish to create.
-                Finally, upload the completed template using the 'Choose file' button below. All uploads must be in XLSX format.
-            </p>
-            <a href="https://edubasepr.blob.core.windows.net/content/Bulk_Create_Free_Schools_template.xlsx" class="download-list-item">FreeSchoolsTemplate.xlsx, 5KB</a>
+            <ol class="list list-number">
+                <li>
+                    <p>
+                        Download the free schools template using this link:<br />
+                        <a href="https://edubasepr.blob.core.windows.net/content/Bulk_Create_Free_Schools_template.xlsx">FreeSchoolsTemplate.xlsx, 5KB</a>
+                    </p>
+                </li>
+                <li>
+                    <p>Fill in the template with the free schools you wish to create.</p>
+                </li>
+                <li>
+                    <p>Upload the completed template using the 'Choose file' button below. All uploads must be in XLSX format.</p>
+                </li>
+            </ol>
         </div>
 
         <div class="column-full">
-            <h2 class="heading-medium">Upload completed template to create new free schools</h2>
             <div class="form-group push--bottom @Html.ValidationCssClassFor(x => x.BulkFile)">
-                <label for="BulkFile" class="form-label">Upload a file</label>
+                <label for="BulkFile" class="form-label">Upload a file:</label>
                 @Html.ValidationMessageFor(x => x.BulkFile)
                  @Html.TextBoxFor(x => x.BulkFile, new { type = "file" })
             </div>
 
             <div class="form-group">
-                <input type="submit" class="button" value="Submit"/>
-                <a href="/Tools" class="button button-secondary cancel">Cancel</a>
+                <input type="submit" class="button" value="Submit" />
+                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new { @class = "button button-secondary cancel" })
             </div>
         </div>
     </div>

@@ -1,5 +1,6 @@
 @using Edubase.Common;
 @using Edubase.Services.Groups.Search;
+@using Edubase.Web.UI.Models.Search
 @model GroupSearchViewModel
 @{
     ViewBag.Title = $"Search results for '{Model.GroupSearchModel.Text}'";
@@ -14,7 +15,7 @@
 <div class="grid-row">
     <div class="column-full results-heading">
         <div class="breadcrumbs">
-            @Html.ActionLink("Back to find an establishment group", "Index", new { controller = "Search", area = "", SelectedTab = "Groups" })
+            @Html.ActionLink("Back to find an establishment group", "Index", new { controller = "Search", area = "", SelectedTab = SearchViewModel.Tab.Groups })
         </div>
         <h1 class="heading-xlarge">Search results for establishment groups</h1>
         <a class="download-link" href="@Url.Action("PrepareDownload", "GroupSearch")?@Url.CurrentQueryString()" rel="nofollow">Download these search results</a>

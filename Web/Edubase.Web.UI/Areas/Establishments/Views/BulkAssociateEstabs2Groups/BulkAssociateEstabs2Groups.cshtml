@@ -14,8 +14,8 @@
 
 <div class="grid-row">
     <div class="column-full">
-        <h1 class="heading-xlarge">Bulk upload academies to trust/sponsor</h1>
-        <p>Use this tool to upload new academies to the relevant trusts / sponsor.</p>
+        <h1 class="heading-xlarge">Bulk upload academies to trust<span class="visually-hidden">&nbsp;</span>/<span class="visually-hidden">&nbsp;</span>sponsor</h1>
+        <p>Use this tool to upload new academies to the relevant trusts<span class="visually-hidden">&nbsp;</span>/<span class="visually-hidden">&nbsp;</span>sponsor.</p>
     </div>
     <div class="column-full">
         @if (Model?.Result?.RowErrors > 0)
@@ -67,7 +67,7 @@
             </div>
             <div class="form-group">
                 <input type="submit" class="button" value="Submit" />
-                <a href="/Tools" class="button button-secondary cancel">Cancel</a>
+                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class="button button-secondary cancel"})
             </div>
         </div>
     }

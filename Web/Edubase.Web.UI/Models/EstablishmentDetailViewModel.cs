@@ -11,33 +11,32 @@ using Edubase.Services.Core;
 using Edubase.Web.UI.Helpers;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Edubase.Services.ExternalLookup;
 
 namespace Edubase.Web.UI.Models
 {
     public class EstablishmentDetailViewModel
     {
-        private readonly IFBService fbService;
-        private readonly ICSCPService cscpService;
+        private readonly IExternalLookupService extService;
 
-        public EstablishmentDetailViewModel(IFBService fbService = null, ICSCPService cscpService = null)
+        public EstablishmentDetailViewModel(IExternalLookupService extService = null)
         {
-            this.fbService = fbService;
-            this.cscpService = cscpService;
+            this.extService = extService;
             LegalParentGroupRouteDto = new Lazy<RouteDto>(() => LegalParentGroup != null ? new RouteDto("GroupDetails", new System.Web.Routing.RouteValueDictionary(new { id = LegalParentGroup.GroupUId }), LegalParentGroup.Name) : null);
         }
-            
+
         private static Dictionary<int, string> _groupType2FieldLabelMappings = new Dictionary<int, string>
         {
-            [(int)eLookupGroupType.SingleacademyTrust] = "Single-academy trust",
-            [(int)eLookupGroupType.MultiacademyTrust] = "Academy trust",
-            [(int)eLookupGroupType.SchoolSponsor] = "Academy sponsor",
-            [(int)eLookupGroupType.Trust] = "Trust",
-            [(int)eLookupGroupType.Federation] = "Federation",
+            [(int) eLookupGroupType.SingleacademyTrust] = "Single-academy trust",
+            [(int) eLookupGroupType.MultiacademyTrust] = "Academy trust",
+            [(int) eLookupGroupType.SchoolSponsor] = "Academy sponsor",
+            [(int) eLookupGroupType.Trust] = "Trust",
+            [(int) eLookupGroupType.Federation] = "Federation",
 
-            [(int)eLookupGroupType.UmbrellaTrust] = "Umbrella trust",
-            [(int)eLookupGroupType.ChildrensCentresCollaboration] = "Childrens' centres collaboration",
-            [(int)eLookupGroupType.ChildrensCentresGroup] = "Childrens' centre group"
+            [(int) eLookupGroupType.UmbrellaTrust] = "Umbrella trust",
+            [(int) eLookupGroupType.ChildrensCentresCollaboration] = "Childrens' centres collaboration",
+            [(int) eLookupGroupType.ChildrensCentresGroup] = "Childrens' centre group"
         };
 
         public EstablishmentDisplayEditPolicy DisplayPolicy { get; set; }
@@ -76,7 +75,7 @@ namespace Edubase.Web.UI.Models
 
         public bool UserCanEdit { get; set; }
 
-        public bool IsClosed => Establishment.StatusId == (int)eLookupEstablishmentStatus.Closed;
+        public bool IsClosed => Establishment.StatusId == (int) eLookupEstablishmentStatus.Closed;
 
         public string SearchQueryString { get; set; }
 
@@ -195,25 +194,31 @@ namespace Edubase.Web.UI.Models
         public bool HighPriorityEstablishmentConfirmationPending => (Establishment?.UrgentConfirmationUpToDateRequired).GetValueOrDefault();
         public bool HighPriorityGovernanceConfirmationPending => (Establishment?.UrgentConfirmationUpToDateGovernanceRequired).GetValueOrDefault();
 
-        public string CscpURL => cscpService.SchoolURL(Establishment.Urn, Establishment.Name);
+        public string CscpURL => extService.CscpSchoolURL(Establishment.Urn, Establishment.Name);
         private bool? showCscp;
         public bool ShowCscp
         {
             get
             {
-                if (!showCscp.HasValue) showCscp = cscpService != null && cscpService.CheckExists(Establishment.Urn, Establishment.Name);
+                if (!showCscp.HasValue)
+                {
+                    showCscp = extService != null && Task.Run(() => extService.CscpCheckExists(Establishment.Urn, Establishment.Name)).Result;
+                }
                 return showCscp.Value;
             }
         }
 
-        public string FinancialBenchmarkingURL => fbService.SchoolURL(Establishment.Urn);
+        public string FinancialBenchmarkingURL => extService.SfbSchoolURL(Establishment.Urn);
 
         private bool? showFinancialBenchmarking;
         public bool ShowFinancialBenchmarking
         {
             get
             {
-                if (!showFinancialBenchmarking.HasValue) showFinancialBenchmarking = fbService != null && fbService.CheckExists(Establishment.Urn);
+                if (!showFinancialBenchmarking.HasValue)
+                {
+                    showFinancialBenchmarking = extService != null && Task.Run(() => extService.SfbCheckExists(Establishment.Urn)).Result;
+                }
                 return showFinancialBenchmarking.Value;
             }
         }

@@ -1,4 +1,4 @@
-﻿@model ToolsViewModel
+    @model ToolsViewModel
 @{
     ViewBag.Title = "Get information about schools";
     ViewBag.bodyClasses = "tools-landing";
@@ -35,7 +35,7 @@
             @foreach (var item in list)
             {
                 <li>
-                    <h3 class="heading-small">@item.Link</h3>
+                    <h3 class="heading-small">@Html.Raw(HttpUtility.HtmlDecode(item.Link.ToHtmlString()))</h3>
                     <p>@Html.Raw(item.Description)</p>
                 </li>
             }

@@ -1,6 +1,7 @@
 @using Edubase.Web.UI.Areas.Groups.Models
 @using Edubase.Common;
 @using Edubase.Services.Enums;
+@using Edubase.Web.UI.Models.Search
 @model GroupSearchViewModel
 @{
     var startResult = @Model.StartIndex + 1;
@@ -8,7 +9,7 @@
 }
 @if (Model.Error != null)
 {
-    <p>There are no results for your search. Please change the filters to adjust your search, or go @Html.ActionLink("back to the search page", "Index", "Search", new { area = "", SelectedTab = "Groups" }, null) to start again.</p>
+    <p>There are no results for your search. Please change the filters to adjust your search, or go @Html.ActionLink("back to the search page", "Index", "Search", new { area = "", SelectedTab = SearchViewModel.Tab.Groups }, null) to start again.</p>
 }
 else if (Model.Results.Count > 0)
 {
@@ -31,7 +32,7 @@ else if (Model.Results.Count > 0)
                 <dd>@(Model.GroupTypes.FirstOrDefault(x => x.Id == result.GroupTypeId)?.Name)</dd>
                 @if (result.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
                 {
-                    <dt>Companies House Number:</dt>
+                    <dt>Companies House number:</dt>
                     <dd>
                         @if (result.CompaniesHouseNumber != null)
                         {
@@ -59,5 +60,5 @@ else if (Model.Results.Count > 0)
 }
 else
 {
-    <p>There are no results for your search. Please change the filters to adjust your search, or go @Html.ActionLink("back to the search page", "Index", "Search", new { area = "", SelectedTab = "Groups" }, null) to start again.</p>
+    <p>There are no results for your search. Please change the filters to adjust your search, or go @Html.ActionLink("back to the search page", "Index", "Search", new { area = "", SelectedTab = SearchViewModel.Tab.Groups }, null) to start again.</p>
 }
