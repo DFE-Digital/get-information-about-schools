@@ -26,6 +26,23 @@ ol {
   }
 }
 
+.list-number-nested {
+  list-style-type: none;
+}
+
+.list-number-nested li {
+  margin-bottom: 5px;
+  position: relative;
+
+  &::before {
+    position: absolute;
+    width: 40px;
+    text-align: right;
+    left: -45px;
+    content: attr(data-idx) ".";
+  }
+}
+
 .list-bullet,
 .list-number {
   margin-top: 5px;
