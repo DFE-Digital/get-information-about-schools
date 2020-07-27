@@ -1,5 +1,6 @@
 using System;
 using System.Configuration;
+using System.Net;
 using System.Net.Http;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
@@ -53,9 +54,9 @@ namespace Edubase.Services.ExternalLookup
                 {
                     using (var response = await RetryPolicy.ExecuteAsync(async () => await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead)))
                     {
-                        var isSuccess = response.IsSuccessStatusCode;
-                        MemoryCache.Default.Set(new CacheItem(key, isSuccess), new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.Now.AddHours(cacheTime) });
-                        return isSuccess;
+                        var isOk = response.StatusCode == HttpStatusCode.OK;
+                        MemoryCache.Default.Set(new CacheItem(key, isOk), new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.Now.AddHours(cacheTime) });
+                        return isOk;
                     }
                 }
                 catch (Exception ex)
