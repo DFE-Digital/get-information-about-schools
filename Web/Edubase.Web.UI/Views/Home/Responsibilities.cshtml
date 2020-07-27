@@ -18,19 +18,19 @@
         <ul class="list list-number">
             <li>
                 <h2 class="heading-medium subheading">What is GIAS?</h2>
-                <ul class="list list-number">
-                    <li>
+                <ul class="list list-number list-number-nested">
+                    <li data-idx="1.1">
                         It is the Department for Education’s (DfE) register of educational establishments in England and Wales. It contains vital information about children’s centres, academies, free schools, maintained schools, independent schools, further education colleges (further education and sixth form corporations, specialist designated colleges and special post 16 institutions) and higher education institutions.
                     </li>
-                    <li>
+                    <li data-idx="1.2">
                         It is the
                         <a href="https://www.gov.uk/government/news/national-database-of-governors" target="_blank" rel="external">National Database of Governors</a>
                         (for those establishment types where this applies).
                     </li>
-                    <li>
+                    <li data-idx="1.3">
                         All establishments are assigned a GIAS record as part of their registration or change of establishment type process.
                     </li>
-                    <li>
+                    <li data-idx="1.4">
                         If you are unfamiliar with GIAS we suggest you have a look
                         @Html.ActionLink("here", "Index", "Search", new {area = ""}, null);
                         this is the public version. Section 4 below explains about the non-public version that colleagues associated to establishments with the relevant access need to do to keep the establishment’s GIAS information up to date.
@@ -40,11 +40,11 @@
 
             <li>
                 <h2 class="heading-medium subheading">Why does GIAS need to be kept up to date?</h2>
-                <ul class="list list-number">
-                    <li>
+                <ul class="list list-number list-number-nested">
+                    <li data-idx="2.1">
                         It is used by the DfE, other government departments and partners to contact establishments, update systems, perform analysis and inform policy decisions, some of which may carry funding implications.
                     </li>
-                    <li>
+                    <li data-idx="2.2">
                         Key departmental services, such as
                         <a href="https://services.signin.education.gov.uk/" target="_blank" rel="external">DfE Sign-in (DSI)</a>,
                         <a href="https://www.gov.uk/school-performance-tables" target="_blank" rel="external">Compare School and College Performance (CSCP) (also known as the School Performance Tables (SPT))</a>,
@@ -52,33 +52,33 @@
                         <a href="https://schools-financial-benchmarking.service.gov.uk/" target="_blank" rel="external">School Financial Benchmarking (SFB)</a>
                         use the information in GIAS to directly feed their services. If GIAS information is incorrect establishments (where applicable) may not be represented correctly on these key services that are available to the public and/or individual establishments.
                     </li>
-                    <li>
+                    <li data-idx="2.3">
                         The department’s partners, such as Ofsted, use information from GIAS directly for their website (where applicable) and for the planning of, and implementation of their inspections. If the GIAS information is incorrect establishments may be misrepresented publicly on their website and it could affect inspections.
                     </li>
-                    <li>
+                    <li data-idx="2.4">
                         Other partners, such as the
                         <a href="https://www.ukrlp.co.uk/" target="_blank" rel="external">UK Register of Learning Providers (UKRLP)</a>
                         who assign UK provider reference numbers (UKPRNs), also use GIAS information directly so it could affect the issuing of these numbers if GIAS establishment information is incorrect.
                     </li>
-                    <li>
+                    <li data-idx="2.5">
                         The information feeds many internal DfE systems and analysis (for example the termly school census, the annual school census for independent schools and the school workforce census data collections) so if the information on GIAS is incorrect it could have an impact on establishments, including funding allocations.
                     </li>
-                    <li>
+                    <li data-idx="2.6">
                         It is used by members of the public to see the publicly available information on establishments. If the information is not correct establishments are not being represented correctly to the public, many of whom are parents (or prospective parents) of the pupils and students in establishments.
                     </li>
-                    <li>
+                    <li data-idx="2.7">
                         Many external sources use the publicly available information about establishments, for example educational researchers and estate agents (to map establishments in a house buying area). If the information is incorrect establishments are being portrayed inaccurately in their research and systems.
                     </li>
-                    <li>
+                    <li data-idx="2.8">
                         It is the legislative avenue for local authority maintained schools to inform the Secretary of State of changes to establishments made through the prescribed alterations regulation process:
                         “<a href="https://www.gov.uk/government/publications/school-organisation-maintained-schools" target="_blank" rel="external">Making significant changes (‘prescribed alterations’) to maintained schools</a>”. For academies the
                         “<a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" target="_blank" rel="externa">Making significant changes to an open academy and closure by mutual agreement</a>” guidance sets out that GIAS must be kept up to date.
                     </li>
-                    <li>
+                    <li data-idx="2.9">
                         It is also the approved process for schools to inform the Secretary of State of their intention to join or leave a federation. Information on federating can be found
                         <a href="https://www.gov.uk/government/publications/governance-in-federations" target="_blank" rel="external">here</a>.
                     </li>
-                    <li>
+                    <li data-idx="2.10">
                         All governance boards are required to provide information to the Secretary of State about people involved in governance via GIAS which is also the
                         <a href="https://www.gov.uk/government/news/national-database-of-governors" target="_blank" rel="external">National Database of Governors</a>.
                         <a href="http://www.legislation.gov.uk/ukpga/1996/56/section/538">Section 538 of the Education Act 1996</a>
@@ -86,7 +86,7 @@
                         <a href="https://www.gov.uk/guidance/academies-financial-handbook" target="_blank" rel="external">Academies Financial Handbook</a>
                         provide further information about establishments responsibilities with regards to GIAS.
                     </li>
-                    <li>
+                    <li data-idx="2.11">
                         For these reasons, it is essential that all establishments ensure their details are up to date on GIAS.
                     </li>
                 </ul>
@@ -94,14 +94,14 @@
 
             <li>
                 <h2 class="heading-medium subheading">When should GIAS be updated</h2>
-                <ul class="list list-number">
-                    <li>
+                <ul class="list list-number list-number-nested">
+                    <li data-idx="3.1">
                         It is vital that establishments keep their GIAS record up to date.
                     </li>
-                    <li>
+                    <li data-idx="3.2">
                         It is the responsibility of establishments (and for local authority maintained schools the local authority and for academies the MAT) to keep their GIAS record up to date. GIAS must be updated whenever any of the fields associated with their record (establishment details or governance) has changed, or it has been agreed that there will be a change in their establishment that will affect information in their record.
                     </li>
-                    <li>
+                    <li data-idx="3.3">
                         Examples of changes are when a new headteacher or principle is appointed, changes in the establishments age range, if the gender of the establishment changes (where applicable), if the establishment (maintained schools only) is leaving or joining a federation, changes to trusts (single academy trusts (SATs) and multi academy trusts (MATs)), changes to academies and free schools, when a new governance role is appointed or one ends (where applicable).
                     </li>
                 </ul>
@@ -109,29 +109,29 @@
 
             <li>
                 <h2 class="heading-medium subheading">How to update GIAS</h2>
-                <ul class="list list-number">
-                    <li>
+                <ul class="list list-number list-number-nested">
+                    <li data-idx="4.1">
                         Those colleagues within establishments, local authorities and MATs who have access to the establishment record they are associated with do this via their
                         <a href="https://services.signin.education.gov.uk/" target="_blank" rel="external">DSI</a>
                         account that allows them to access their establishments GIAS record, access the non-public information and amend the establishment’s record. It is recommended that establishments have nominated members of staff who maintain the establishment’s GIAS record.
                     </li>
-                    <li>
+                    <li data-idx="4.2">
                         For those colleagues mentioned in 4.1 log into
                         <a href="https://services.signin.education.gov.uk/" target="_blank" rel="external">DSI</a>.
                         If you are a user of other DfE services, you need to select the GIAS option.
                     </li>
-                    <li>
+                    <li data-idx="4.3">
                         Each establishment has a DSI approver who can grant access to other colleagues within their establishment. It is the approver’s responsibility to keep the users who can access and edit their establishment’s GIAS record up to date (through adding and removing colleagues), taking into account the
                         <a href="https://www.gov.uk/government/publications/guide-to-the-general-data-protection-regulation" target="_blank" rel="external">General Data Protection Regulation (GDPR)</a>.
                         Local authority users and MAT users are given respective access via their own DSI approvers. In some cases, local authority users can make changes and approve and MAT users can suggest changes.
                     </li>
-                    <li>
+                    <li data-idx="4.4">
                         Once logged in details can be edited by selecting the relevant tabs, reviewing the information, and editing the fields that need amending. Prompts to save will be given where appropriate. It is important to save the tab, even if changes were not needed, as it confirms the information is correct and adds a date stamp to the records audit log.
                     </li>
-                    <li>
+                    <li data-idx="4.5">
                         When a record is saved some changes will take effect immediately and some may need relevant local authority or DfE approval, according to the establishment type and individual field being edited. You will be prompted where changes require further approval. On occasion, you may also need to provide supporting documentation to the relevant DfE policy team.
                     </li>
-                    <li>
+                    <li data-idx="4.6">
                         For further information on how to update establishment information on GIAS please see the
                         @Html.ActionLink("guidance", "Guidance", "Home", new { area = "" }, null) section on the site.
                         @Html.RouteLink("The frequently asked questions (FAQs)", "Faq") may also help.
@@ -139,7 +139,7 @@
                         <a href="https://form.education.gov.uk/en/AchieveForms/?form_uri=sandbox-publish://AF-Process-2b61dfcd-9296-4f6a-8a26-4671265cae67/AF-Stage-f3f5200e-e605-4a1b-ae6b-3536bc77305c/definition.json&redirectlink=%2Fen&cancelRedirectLink=%2Fen" target="_blank" rel="external">data collections service request form</a>
                         and choosing the Edubase (GIAS) option for your query. Please note there is a service level agreement (SLA) for responses so they will not be answered immediately.
                     </li>
-                    <li>
+                    <li data-idx="4.7">
                         The GIAS Support team recommends that, as a minimum, reviews of the record of the establishment you are associated with are undertaken monthly and required changes made.
                     </li>
                 </ul>
