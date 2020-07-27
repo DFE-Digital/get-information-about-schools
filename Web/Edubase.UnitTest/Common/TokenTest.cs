@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.UnitTest.Mocks;
 using NUnit.Framework;
 using System.Linq;
@@ -14,7 +14,9 @@ namespace Edubase.UnitTest.Common
         [Test]
         public void ValidateTokenPartitionsKeysAreAll4Digits()
         {
-            for (int i = 0; i < 3000; i++) // test 3000 days
+            var testDays = (new DateTime(2027, 12, 31) - DateTime.Now).TotalDays;
+
+            for (int i = 0; i < testDays; i++)
             {
                 var d = DateTime.Now.AddDays(i);
                 try
