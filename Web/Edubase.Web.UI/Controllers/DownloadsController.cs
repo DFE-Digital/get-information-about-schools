@@ -47,6 +47,37 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
+        [Route("Generate/{id}", Name = "GenerateDownload")]
+        public async Task<ActionResult> GenerateDownload(string id)
+        {
+            // we might get away with keeping the same view - if not, will want to use the new one (there's already a new placeholder created)
+
+            var response = await _downloadsService.GenerateExtractAsync(id, User);
+
+            if (response.Contains("fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
+            {
+                return View("ReadyToDownloadScheduledExtract", JsonConvert.DeserializeObject<ProgressDto>(response));
+            }
+            else
+            {
+                return RedirectToAction(nameof(DownloadGenerated), new { id = JsonConvert.DeserializeObject<ApiResultDto<Guid>>(response).Value });
+            }
+        }
+
+        [Route("DownloadGenerated/{id}", Name = "DownloadGenerated")]
+        public async Task<ActionResult> DownloadGenerated(Guid id)
+        {
+            var model = await _downloadsService.GetProgressOfGeneratedExtractAsync(id, User);
+
+            if (model.HasErrored)
+                throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
+
+            if (!model.IsComplete)
+                return View("PreparingScheduledExtractPleaseWait", model);
+
+            return View("ReadyToDownloadScheduledExtract", model);
+        }
+
         [Route("RequestScheduledExtract/{id}", Name = "RequestScheduledExtract")]
         public async Task<ActionResult> RequestScheduledExtract(int id)
         {
