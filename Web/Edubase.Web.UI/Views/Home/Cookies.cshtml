@@ -2,6 +2,23 @@
     ViewBag.Title = "Get information about schools";
     ViewBag.SiteSection = "help";
 }
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Help", "Help", "Home", new { area = "" }, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
 
 
 
