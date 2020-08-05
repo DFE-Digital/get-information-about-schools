@@ -305,7 +305,7 @@ const  ccApp = new Vue({
       o.joinedDate = [self.openDateYear, self.openDateMonth, self.openDateDay].join('-');
       o.cCIsLeadCentre = centre.urn === self.groupLead;
 
-      var validationObj = {
+      const validationObj = {
         "groupTypeId": self.groupType,
         "name": self.groupName,
         "openDate": [self.openDateYear, self.openDateMonth, self.openDateDay].join('-'),
@@ -461,8 +461,8 @@ const  ccApp = new Vue({
           $('#processed-warnings').val(true);
           for (i = 0; i < len; i++) {
             var centre = centres[i];
-            for (var j = 0, fLen = fields.length; j < fLen; j++) {
-              var input = document.createElement('input');
+            for (let j = 0, fLen = fields.length; j < fLen; j++) {
+              let input = document.createElement('input');
               input.type = 'hidden';
               input.name = 'LinkedEstablishments.Establishments[' + i + '].' + fields[j];
 
