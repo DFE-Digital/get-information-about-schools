@@ -26,6 +26,7 @@
         width: 100% !important;
         max-width: 100%;
         padding: 12px 0;
+        border: 0;
 
         &::before {
           content: attr(data-label);
