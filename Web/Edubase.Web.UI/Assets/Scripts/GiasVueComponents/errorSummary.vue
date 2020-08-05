@@ -6,7 +6,7 @@
     <div class="govuk-error-summary__body">
       <ul class="govuk-list govuk-error-summary__list" v-for="error in errors">
         <li>
-          <a :href="error.href">{{error.message}}</a>
+          <a :href="error.href" v-html="error.message"></a>
         </li>
       </ul>
     </div>

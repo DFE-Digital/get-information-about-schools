@@ -27,7 +27,7 @@
       },
       methods: {
         emitValue: function(value) {
-          this.$emit('input', Number(value));
+          this.$emit('input', value);
         }
       },
       computed: {

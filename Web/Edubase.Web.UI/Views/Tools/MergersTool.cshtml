@@ -1,11 +1,12 @@
 @{
     ViewBag.Title = "Amalgamations and mergers tool";
-    ViewBag.bodyClasses = "amalgamate";
+    ViewBag.bodyClasses = "create-edit";
 }
 
 <div id="mergers-app" v-cloak>
-    <div v-show="commitErrors == '' && Object.keys(apiError).length> 0">
-        <h1 class="heading-xlarge">Sorry, something went wrong</h1>
+<div v-show="commitErrors == '' && Object.keys(apiError).length> 0" class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Sorry, something went wrong</h1>
         <p>Please try again later.</p>
         <p>A report of the error has been sent to our technical team.</p>
 
@@ -16,495 +17,512 @@
             </code>
         </div>
     </div>
-    <div v-show="commitErrors != '' || Object.keys(apiError).length === 0">
-        <div class="breadcrumbs">
-            <ol>
-                <li>
-                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+</div>
+<div v-show="commitErrors !== '' || Object.keys(apiError).length === 0" class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="govuk-breadcrumbs">
+            <ol class="govuk-breadcrumbs__list">
+                <li class="govuk-breadcrumbs__list-item">
+                    @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
                 </li>
-                <li>
-                    @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
+                <li class="govuk-breadcrumbs__list-item">
+                    @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
                 </li>
-                <li v-show="mergerTypeConfirmed">
-                    @Html.ActionLink("Amalgamations and mergers tool", "MergersTool", "Tools", new { area = "" }, null)
+                <li v-show="mergerTypeConfirmed" class="govuk-breadcrumbs__list-item">
+                    @Html.ActionLink("Amalgamations and mergers tool", "MergersTool", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
                 </li>
             </ol>
         </div>
+    </div>
+</div>
 
-        @* ERROR SUMMARY *@
-        <div v-if="showGlobalError" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
-            <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
-            <ul class="error-summary-list">
-                @* CHOOSE *@
-                <li v-show="mergerTypeError">
-                    <a href="#radio-amalgamation">Please select 'Amalgamation' or 'Merger'</a>
-                </li>
+@* ERROR SUMMARY *@
+@* <div v-if="showGlobalError" class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1"> *@
+@*     <h2 id="error-summary-title" class="govuk-error-summary__title">Incorrect or missing details</h2> *@
+@*     <div class="govuk-error-summary__body"> *@
+@*         <ul class="govuk-list govuk-error-summary__list"> *@
+@*             $1$ CHOOSE #1# *@
+@*             <li v-show="mergerTypeError"> *@
+@*                 <a href="#radio-amalgamation">Please select 'Amalgamation' or 'Merger'</a> *@
+@*             </li> *@
+@* *@
+@*             $1$ BOTH #1# *@
+@*             <li v-show="duplicateUrnsError"> *@
+@*                 <a href="#linked-establishments">One or more <abbr title="Unique Reference Number">URNs</abbr> are duplicated. Please enter different URN(s)</a> *@
+@*             </li> *@
+@*             <li v-show="commitErrors != ''"> *@
+@*                 <a href="#" v-html="commitErrors"></a> *@
+@*             </li> *@
+@* *@
+@*             $1$ AMALGAMATION #1# *@
+@*             <li v-show="amalgamatedEstab1Empty"> *@
+@*                 <a href="#amalgamate-estab1">Enter the establishment 1 URN</a> *@
+@*             </li> *@
+@*             <li v-show="amalgamatedEstab1Invalid"> *@
+@*                 <a href="#amalgamate-estab1">The establishment 1 URN is invalid</a> *@
+@*             </li> *@
+@*             <li v-show="amalgamatedEstab1NoMatch"> *@
+@*                 <a href="#amalgamate-estab1">The establishment 1 URN was not found</a> *@
+@*             </li> *@
+@*             <li v-show="amalgamatedEstab2Empty"> *@
+@*                 <a href="#amalgamate-estab2">Enter the establishment 2 URN</a> *@
+@*             </li> *@
+@*             <li v-show="amalgamatedEstab2Invalid"> *@
+@*                 <a href="#amalgamate-estab2">The establishment 2 URN is invalid</a> *@
+@*             </li> *@
+@*             <li v-show="amalgamatedEstab2NoMatch"> *@
+@*                 <a href="#amalgamate-estab2">The establishment 2 URN was not found</a> *@
+@*             </li> *@
+@*             <li v-show="amalgamatedEstab3Invalid"> *@
+@*                 <a href="#amalgamate-estab3">The establishment 3 URN is invalid</a> *@
+@*             </li> *@
+@*             <li v-show="amalgamatedEstab3NoMatch"> *@
+@*                 <a href="#amalgamate-estab3">The establishment 3 URN was not found</a> *@
+@*             </li> *@
+@*             <li v-show="amalgamatedEstab4Invalid"> *@
+@*                 <a href="#amalgamate-estab4">The establishment 4 URN is invalid</a> *@
+@*             </li> *@
+@*             <li v-show="amalgamatedEstab4NoMatch"> *@
+@*                 <a href="#amalgamate-estab4">The establishment 4 URN was not found</a> *@
+@*             </li> *@
+@* *@
+@*             <li v-show="nameError"> *@
+@*                 <a href="#new-establishment-name">New school details must be completed before amalgamation. Please enter a new school name</a> *@
+@*             </li> *@
+@*             <li v-show="typeError"> *@
+@*                 <a href="#new-establishment-type">You haven't selected an establishment type. Please select one to continue</a> *@
+@*             </li> *@
+@*             <li v-show="phaseError"> *@
+@*                 <a href="#new-establishment-phase">You haven't selected an establishment phase. Please select one to continue</a> *@
+@*             </li> *@
+@*             <li v-show="laError"> *@
+@*                 <a href="#LocalAuthorityId">You haven't selected a local authority. Please select one to continue</a> *@
+@*             </li> *@
+@*             <li v-show="mergeDateError && mergerType==='amalgamation'"> *@
+@*                 <a href="#amalgamationdate-day">You have entered an invalid date. Please correct the date to continue</a> *@
+@*             </li> *@
+@* *@
+@*             $1$ MERGER #1# *@
+@*             <li v-show="leadEstabEmpty"> *@
+@*                 <a href="#lead-establishment">Enter the lead establishment URN</a> *@
+@*             </li> *@
+@*             <li v-show="leadEstabInvalid"> *@
+@*                 <a href="#lead-establishment">The lead establishment URN is invalid</a> *@
+@*             </li> *@
+@*             <li v-show="leadEstabNoMatch"> *@
+@*                 <a href="#lead-establishment">The lead establishment URN was not found</a> *@
+@*             </li> *@
+@*             <li v-show="linkedEstab1Empty"> *@
+@*                 <a href="#establishment-1">Enter the establishment 1 URN</a> *@
+@*             </li> *@
+@*             <li v-show="linkedEstab1Invalid"> *@
+@*                 <a href="#establishment-1">The establishment 1 URN is invalid</a> *@
+@*             </li> *@
+@*             <li v-show="linkedEstab1NoMatch"> *@
+@*                 <a href="#establishment-1">The establishment 1 URN was not found</a> *@
+@*             </li> *@
+@*             <li v-show="linkedEstab2Invalid"> *@
+@*                 <a href="#establishment-2">The establishment 2 URN is invalid</a> *@
+@*             </li> *@
+@*             <li v-show="linkedEstab2NoMatch"> *@
+@*                 <a href="#establishment-2">The establishment 2 URN was not found</a> *@
+@*             </li> *@
+@*             <li v-show="linkedEstab3Invalid"> *@
+@*                 <a href="#establishment-3">The establishment 3 URN is invalid</a> *@
+@*             </li> *@
+@*             <li v-show="linkedEstab3NoMatch"> *@
+@*                 <a href="#establishment-3">The establishment 3 URN was not found</a> *@
+@*             </li> *@
+@*             <li v-show="mergeDateError && mergerType==='merger'"> *@
+@*                 <a href="#merger-date">Merger date is invalid</a> *@
+@*             </li> *@
+@*         </ul> *@
+@*     </div> *@
+@* </div> *@
 
-                @* BOTH *@
-                <li v-show="duplicateUrnsError">
-                    <a href="#linked-establishments">One or more <abbr title="Unique Reference Number">URNs</abbr> are duplicated. Please enter different URN(s)</a>
-                </li>
-                <li v-show="commitErrors != ''">
-                    <a href="#" v-html="commitErrors"></a>
-                </li>
+<div class="govuk-grid-row">
+<div class="govuk-grid-column-full">
+    <div>
+        <error-summary :error-title="errorTitle" :errors="errors"/>
+    </div>
+    <h1 class="govuk-heading-xl" id="page-heading" v-html="pageTitle">
+        @* <span v-show="!mergerTypeConfirmed">Amalgamations and mergers tool</span> *@
+        @* <span v-show="mergerType == 'merger' && mergerTypeConfirmed && !mergerComplete">Merger</span> *@
+        @* <span v-show="mergerType == 'amalgamation' && !completeAmalgamation && mergerTypeConfirmed">Amalgamation</span> *@
+        @* <span v-show="mergerComplete && mergerType== 'merger'">Merger complete</span> *@
+        @* <span v-show="completeAmalgamation">Amalgamation complete</span> *@
+    </h1>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <gias-wait-spinner v-bind:is-processing="isProcessing"/>
+    </div>
+</div>
+<form>
 
-                @* AMALGAMATION *@
-                <li v-show="amalgamatedEstab1Empty">
-                    <a href="#amalgamate-estab1">Enter the establishment 1 URN</a>
-                </li>
-                <li v-show="amalgamatedEstab1Invalid">
-                    <a href="#amalgamate-estab1">The establishment 1 URN is invalid</a>
-                </li>
-                <li v-show="amalgamatedEstab1NoMatch">
-                    <a href="#amalgamate-estab1">The establishment 1 URN was not found</a>
-                </li>
-                <li v-show="amalgamatedEstab2Empty">
-                    <a href="#amalgamate-estab2">Enter the establishment 2 URN</a>
-                </li>
-                <li v-show="amalgamatedEstab2Invalid">
-                    <a href="#amalgamate-estab2">The establishment 2 URN is invalid</a>
-                </li>
-                <li v-show="amalgamatedEstab2NoMatch">
-                    <a href="#amalgamate-estab2">The establishment 2 URN was not found</a>
-                </li>
-                <li v-show="amalgamatedEstab3Invalid">
-                    <a href="#amalgamate-estab3">The establishment 3 URN is invalid</a>
-                </li>
-                <li v-show="amalgamatedEstab3NoMatch">
-                    <a href="#amalgamate-estab3">The establishment 3 URN was not found</a>
-                </li>
-                <li v-show="amalgamatedEstab4Invalid">
-                    <a href="#amalgamate-estab4">The establishment 4 URN is invalid</a>
-                </li>
-                <li v-show="amalgamatedEstab4NoMatch">
-                    <a href="#amalgamate-estab4">The establishment 4 URN was not found</a>
-                </li>
+@* Step 1 - Choosing Amalgamation or Merger *@
+<div v-show="!mergerTypeConfirmed && !validMergeUrns">
+    <div class="govuk-grid-column-two-thirds">
+        <p>
+            You can use this to amalgamate or merge establishments. This
+            process automatically creates/closes records and creates predecessor/successor links.
+        </p>
 
-                <li v-show="nameError">
-                    <a href="#new-establishment-name">New school details must be completed before amalgamation. Please enter a new school name</a>
-                </li>
-                <li v-show="typeError">
-                    <a href="#new-establishment-type">You haven't selected an establishment type. Please select one to continue</a>
-                </li>
-                <li v-show="phaseError">
-                    <a href="#new-establishment-phase">You haven't selected an establishment phase. Please select one to continue</a>
-                </li>
-                <li v-show="laError">
-                    <a href="#LocalAuthorityId">You haven't selected a local authority. Please select one to continue</a>
-                </li>
-                <li v-show="mergeDateError && mergerType==='amalgamation'">
-                    <a href="#amalgamationdate-day">You have entered an invalid date. Please correct the date to continue</a>
-                </li>
+        <fieldset class="merger-almalgamation govuk-fieldset govuk-!-margin-bottom-8">
+            <legend class="govuk-fieldset__legend--s govuk-!-font-weight-bold">Select the process you are interested in</legend>
 
-                @* MERGER *@
-                <li v-show="leadEstabEmpty">
-                    <a href="#lead-establishment">Enter the lead establishment URN</a>
-                </li>
-                <li v-show="leadEstabInvalid">
-                    <a href="#lead-establishment">The lead establishment URN is invalid</a>
-                </li>
-                <li v-show="leadEstabNoMatch">
-                    <a href="#lead-establishment">The lead establishment URN was not found</a>
-                </li>
-                <li v-show="linkedEstab1Empty">
-                    <a href="#establishment-1">Enter the establishment 1 URN</a>
-                </li>
-                <li v-show="linkedEstab1Invalid">
-                    <a href="#establishment-1">The establishment 1 URN is invalid</a>
-                </li>
-                <li v-show="linkedEstab1NoMatch">
-                    <a href="#establishment-1">The establishment 1 URN was not found</a>
-                </li>
-                <li v-show="linkedEstab2Invalid">
-                    <a href="#establishment-2">The establishment 2 URN is invalid</a>
-                </li>
-                <li v-show="linkedEstab2NoMatch">
-                    <a href="#establishment-2">The establishment 2 URN was not found</a>
-                </li>
-                <li v-show="linkedEstab3Invalid">
-                    <a href="#establishment-3">The establishment 3 URN is invalid</a>
-                </li>
-                <li v-show="linkedEstab3NoMatch">
-                    <a href="#establishment-3">The establishment 3 URN was not found</a>
-                </li>
-                <li v-show="mergeDateError && mergerType==='merger'">
-                    <a href="#merger-date">Merger date is invalid</a>
-                </li>
-            </ul>
+            <p id="almagamation-desc">
+                Amalgamation - a proposal for two or more schools to close and a new
+                school to be established.
+            </p>
+            <p id="merger-desc">
+                Merger - a proposal for one or more schools to close and the remaining
+                school to be altered.
+            </p>
+            <div v-bind:class="['govuk-form-group ', mergerTypeError ? 'govuk-form-group--error' : '']">
+                <span v-show="mergerTypeError" class="govuk-error-message">Please select almalgamation or merger.</span>
+                <div class="govuk-radios">
+                    <div class="govuk-radios__item">
+                        <input id="radio-amalgamation" class="govuk-radios__input" type="radio" name="radio-group" value="amalgamation" aria-describedby="almagamation-desc" v-model="mergerType">
+                        <label for="radio-amalgamation" class="govuk-radios__label">
+                            Amalgamation
+                        </label>
+                    </div>
+
+                    <div class="govuk-radios__item">
+                        <input id="radio-merger" class="govuk-radios__input" type="radio" name="radio-group" value="merger" aria-describedby="merger-desc" v-model="mergerType">
+                        <label for="radio-merger" class="govuk-radios__label">
+                            Merger
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+    <div class="govuk-grid-column-full">
+        <div class="button-row">
+            <button type="submit" name="action" value="" class="govuk-button" v-on:click.prevent="checkMergeType">Continue</button>
+            <button type="submit" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
         </div>
+    </div>
+</div>
 
-        <div class="grid-row">
-            <div class="column-full">
-                <h1 class="heading-xlarge" id="page-heading">
-                    <span v-show="!mergerTypeConfirmed">Amalgamations and mergers tool</span>
-                    <span v-show="mergerType == 'merger' && mergerTypeConfirmed && !mergerComplete">Merger</span>
-                    <span v-show="mergerType == 'amalgamation' && !completeAmalgamation && mergerTypeConfirmed">Amalgamation</span>
-                    <span v-show="mergerComplete && mergerType== 'merger'">Merger complete</span>
-                    <span v-show="completeAmalgamation">Amalgamation complete</span>
-                </h1>
-            </div>
-            <div aria-live="polite" class="wait-spinner" v-show="isProcessing">
-                <p class="visually-hidden">Please wait</p>
-            </div>
-            <form>
-
-                @* Step 1 - Choosing Amalgamation or Merger *@
-                <div v-show="!mergerTypeConfirmed && !validMergeUrns">
-                    <div class="column-two-thirds">
-                        <p>
-                            You can use this to amalgamate or merge establishments. This
-                            process automatically creates/closes records and creates predecessor/successor links.
-                        </p>
-
-                        <fieldset class="merger-almalgamation stacked-controls">
-                            <legend class="bold">Select the process you are interested in</legend>
-
-                            <p id="almagamation-desc">
-                                Amalgamation - a proposal for 2 or more schools to close and a new
-                                school to be established.
-                            </p>
-                            <p id="merger-desc">
-                                Merger - a proposal for 1 or more schools to close and the remaining
-                                school to be altered.
-                            </p>
-                            <div v-bind:class="['form-group special-snowflake-radios', mergerTypeError ? 'error' : '']">
-                                <span v-show="mergerTypeError" class="error-message">Please select almalgamation or merger.</span>
-                                <div class="multiple-choice">
-                                    <input id="radio-amalgamation" type="radio" name="radio-group" value="amalgamation" aria-describedby="almagamation-desc" v-model="mergerType">
-                                    <label for="radio-amalgamation">
-                                        Amalgamation
-                                    </label>
-                                </div>
-                                <div class="multiple-choice">
-                                    <input id="radio-merger" type="radio" name="radio-group" value="merger" aria-describedby="merger-desc" v-model="mergerType">
-                                    <label for="radio-merger">
-                                        Merger
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div class="column-full">
-                        <div class="button-row">
-                            <button type="submit" name="action" value="" class="button" v-on:click.prevent="checkMergeType">Continue</button>
-                            <button type="submit" name="action" value="" class="button button-secondary cancel" v-on:click.prevent="restart">Cancel</button>
-                        </div>
-                    </div>
-                </div>
-
-                @* Step 2a - Amalgamation  *@
-                <div v-show="mergerType ==='amalgamation' && mergerTypeConfirmed && !isProcessing">
-                    <div v-show="!validMergeUrns">
-                        <div class="column-full top-button-panel">
-                            <div class="submit-cancel-panel">
-                                <a href="#" class="button button-secondary" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false; clearErrors();"> &laquo; Go back</a>
-                                <button type="submit" name="action" value="" class="button" v-on:click.prevent="validateAmalgamationFields">Continue</button>
-                                <button type="submit" name="action" value="" class="button button-secondary cancel" v-on:click.prevent="restart">Cancel</button>
-                            </div>
-                        </div>
-                        <div class="column-two-thirds">
-                            <p>You can propose closing 2 or more schools and establishing a new school</p>
-                            <h2 class="heading-small">Select establishments to be amalgamated</h2>
-                            <p>Up to 4 establishments can be amalgamated (minimum of 2 establishments)</p>
-                        </div>
-                        <div class="column-half">
-                            <div class="form-group" v-bind:class="['field-group form-group', amalgamatedEstab1Empty || amalgamatedEstab1Invalid || amalgamatedEstab1NoMatch || !amalgamatedEstab1Empty && duplicateUrnsError ? 'error' : '' ]">
-                                <label for="amalgamate-estab1" class="form-label">Establishment 1 URN</label>
-                                <span v-if="amalgamatedEstab1Empty" class="error-message">Enter the establishment 1 URN</span>
-                                <span v-if="amalgamatedEstab1Invalid" class="error-message">The establishment 1 URN is invalid</span>
-                                <span v-if="amalgamatedEstab1NoMatch" class="error-message">The establishment 1 URN was not found</span>
-                                <span v-if="!amalgamatedEstab1Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
-                                <input class="form-control form-control-3-4" type="text" v-model="amalgamatedEstab1" id="amalgamate-estab1" />
-                            </div>
-
-                            <div class="form-group" v-bind:class="['field-group form-group', amalgamatedEstab2Empty || amalgamatedEstab2Invalid || amalgamatedEstab2NoMatch || !amalgamatedEstab2Empty && duplicateUrnsError ? 'error' : '' ]">
-                                <label for="amalgamate-estab2" class="form-label">Establishment 2 URN</label>
-                                <span v-if="amalgamatedEstab2Empty" class="error-message">Enter the establishment 2 URN</span>
-                                <span v-if="amalgamatedEstab2Invalid" class="error-message">The establishment 2 URN is invalid</span>
-                                <span v-if="amalgamatedEstab2NoMatch" class="error-message">The establishment 2 URN was not found</span>
-                                <span v-if="!amalgamatedEstab2Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
-                                <input class="form-control form-control-3-4" type="text" v-model="amalgamatedEstab2" id="amalgamate-estab2" />
-                            </div>
-
-                            <div class="form-group" v-bind:class="['field-group form-group', amalgamatedEstab3Invalid || amalgamatedEstab3NoMatch || !amalgamatedEstab3Empty && duplicateUrnsError ? 'error' : '' ]">
-                                <label for="amalgamate-estab3" class="form-label">Establishment 3 URN</label>
-                                <span v-if="amalgamatedEstab3Invalid" class="error-message">The establishment 3 URN is invalid</span>
-                                <span v-if="amalgamatedEstab3NoMatch" class="error-message">The establishment 3 URN was not found</span>
-                                <span v-if="!amalgamatedEstab3Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
-                                <input class="form-control form-control-3-4" type="text" v-model="amalgamatedEstab3" id="amalgamate-estab3" />
-                            </div>
-
-                            <div class="form-group" v-bind:class="['field-group form-group', amalgamatedEstab4Invalid || amalgamatedEstab4NoMatch || !amalgamatedEstab4Empty && duplicateUrnsError ? 'error' : '' ]">
-                                <label for="amalgamate-estab4" class="form-label">Establishment 4 URN</label>
-                                <span v-if="amalgamatedEstab4Invalid" class="error-message">The establishment 4 URN is invalid</span>
-                                <span v-if="amalgamatedEstab4NoMatch" class="error-message">The establishment 4 URN was not found</span>
-                                <span v-if="!amalgamatedEstab4Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
-                                <input class="form-control form-control-3-4" type="text" v-model="amalgamatedEstab4" id="amalgamate-estab4" />
-                            </div>
-                        </div>
-
-                        <div class="column-full">
-                            <div class="submit-cancel-panel">
-                                <a href="#" class="button button-secondary" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false; clearErrors();"> &laquo; Go back</a>
-                                <button type="submit" name="action" value="" class="button" v-on:click.prevent="validateAmalgamationFields">Continue</button>
-                                <button type="submit" name="action" value="" class="button button-secondary cancel" v-on:click.prevent="restart">Cancel</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div v-show="mergerType==='amalgamation' && validMergeUrns && !completeAmalgamation">
-                        <div class="column-full top-button-panel">
-                            <div class="submit-cancel-panel">
-                                <a href="#" class="button button-secondary" v-on:click.prevent="validMergeUrns=false; clearErrors();">&laquo; Go back</a>
-                                <button type="submit" name="action" value="" class="button" v-on:click.prevent="processAmalgamation">Process</button>
-                                <button type="submit" name="action" value="" class="button button-secondary cancel" v-on:click.prevent="restart">Cancel</button>
-                            </div>
-                        </div>
-                        <div class="column-two-thirds">
-                            <dl class="summary-list">
-                                <dt><strong class="heading-small">Closing establishment details</strong></dt>
-                                <dd>
-                                    <ol class="linked-establishments">
-                                        <li v-for="school in amalgamationEstabs"><span>{{school.urn}} - {{school.name}}</span></li>
-                                    </ol>
-                                </dd>
-                            </dl>
-                            <fieldset>
-                                <legend class="bold">New School details</legend>
-                                <div v-bind:class="['form-group', nameError ? 'error' : '' ]">
-                                    <label class="form-label" for="new-establishment-name">Establishment name</label>
-                                    <span v-show="nameError" class="error-message">Please enter the establishment name</span>
-                                    <input type="text" id="new-establishment-name" class="form-control" v-model="newName" />
-                                </div>
-                                <div v-bind:class="['form-group', typeError ? 'error' : '' ]">
-                                    <label class="form-label" for="new-establishment-type">Establishment type</label>
-                                    <span v-show="typeError" class="error-message">Please select the establishment type</span>
-                                    <select id="new-establishment-type" class="form-control" v-model="typeId" v-on:change="updatePhases"></select>
-                                </div>
-                                <div v-bind:class="['form-group', phaseError ? 'error' : '' ]">
-                                    <label class="form-label" for="new-establishment-phase">Establishment phase</label>
-                                    <span v-show="phaseError" class="error-message">Please select an establishment phase</span>
-                                    <select id="new-establishment-phase" class="form-control" v-model="phaseId"></select>
-                                </div>
-                                <div v-bind:class="['form-group', laError ? 'error' : '' ]">
-                                    <label for="LocalAuthorityId" class="form-label">Local authority</label>
-                                    <span v-show="laError" class="error-message">Please select a local authority</span>
-                                    <select class="form-control" id="LocalAuthorityId" name="LocalAuthorityId" v-model="laId"></select>
-                                </div>
-                                <div v-bind:class="['form-group range-group date-group', mergeDateError ? 'error' : '' ]">
-                                    <fieldset>
-                                        <legend class="bold">Amalgamation date</legend>
-                                        <div class="form-hint">For example, 20 03 2003</div>
-                                        <span v-show="mergeDateError" class="error-message">Please enter the date of the amalgamation</span>
-
-                                        <span class="inline-form-control">
-                                            <label for="amalgamationdate-day">Day</label>
-                                            <input class="form-control date-text-day" type="text" v-model="mergeDateDay" id="amalgamationdate-day">
-                                        </span>
-                                        <span class="inline-form-control">
-                                            <label for="amalgamationdate-month">Month</label>
-                                            <input class="form-control date-text-month" type="text" v-model="mergeDateMonth" id="amalgamationdate-month">
-                                        </span>
-                                        <span class="inline-form-contol">
-                                            <label for="amalgamationdate-year">Year</label>
-                                            <input class="form-control date-text-year" type="text" v-model="mergeDateYear" id="amalgamationdate-year">
-                                        </span>
-                                    </fieldset>
-                                </div>
-                            </fieldset>
-                        </div>
-                        <div class="column-full">
-                            <div class="submit-cancel-panel">
-                                <a href="#" class="button button-secondary" v-on:click.prevent="validMergeUrns=false; clearErrors();">&laquo; Go back</a>
-                                <button type="submit" name="action" value="" class="button" v-on:click.prevent="processAmalgamation">Process</button>
-                                <button type="submit" name="action" value="" class="button button-secondary cancel" v-on:click.prevent="restart">Cancel</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="column-two-thirds almalgamation-summary" v-show="completeAmalgamation">
-                        <div class="summary-panel">
-                            <dl class="summary-list">
-                                <dt><strong class="heading-small">Closing establishment details</strong></dt>
-                                <dd>
-                                    <ol class="linked-establishments">
-                                        <li v-for="school in amalgamationEstabs"><span>{{school.urn}} - {{school.name}}</span></li>
-                                    </ol>
-                                </dd>
-                            </dl>
-                        </div>
-
-                        <div class="summary-panel">
-                            <h3 class="heading-small">New establishment details</h3>
-                            <dl class="amalg-summary">
-                                <dt><a v-bind:href="amalgUrl">{{amalgUrn}} - {{ newName }}</a></dt>
-                                <dd>Establishment type: {{ selectedEstablishmentType }}</dd>
-                                <dd>Amalgamation date: {{ displayDate }}</dd>
-                            </dl>
-
-                        </div>
-                        <p>
-                            Please complete the new <a v-bind:href="amalgUrl">establishment record</a>.
-                        </p>
-                    </div>
-
-                </div>
-
-                @* Step 2b - Merger *@
-                <div v-show="(mergerType ==='merger' && mergerTypeConfirmed) && !isProcessing">
-                    <div v-show="!validMergeUrns">
-                        <div class="column-two-thirds" id="merger-details">
-                            <p>You can propose closing 1 or more schools and altering the remaining school.</p>
-
-                            <h2 class="heading-small">Select the lead establishment</h2>
-                            <p>The lead establishment will remain open</p>
-
-                            <div class="form-group" v-bind:class="['form-group', leadEstabEmpty || leadEstabInvalid || leadEstabNoMatch || !leadEstabEmpty && duplicateUrnsError ? 'error' : '' ]">
-                                <label class="form-label" for="lead-establishment">
-                                    Lead establishment <abbr title="Unique Reference Number">URN</abbr>
-                                </label>
-
-                                @* FORM ERROR MESSAGES - LEAD ESTABLISHMENT *@
-                                <span v-if="leadEstabEmpty" class="error-message">Enter the lead establishment URN</span>
-                                <span v-if="leadEstabInvalid" class="error-message">The lead establishment URN is invalid</span>
-                                <span v-if="leadEstabNoMatch" class="error-message">The lead establishment URN was not found</span>
-                                <span v-if="!leadEstabEmpty && duplicateUrnsError" class="error-message">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the URN.</span>
-                                <input class="form-control form-control-3-4" id="lead-establishment" type="text" v-model="leadEstab" />
-                            </div>
-
-                            <fieldset>
-                                <legend class="bold"><h2 class="heading-small">Select establishments to be merged with the lead establishment</h2></legend>
-                                <p>Up to 3 establishments can be merged (minimum of 1 establishment)</p>
-
-                                <div class="form-group"  v-bind:class="['form-group', linkedEstab1Empty || linkedEstab1Invalid || linkedEstab1NoMatch || !linkedEstab1Empty && duplicateUrnsError ? 'error' : '' ]">
-                                    <label for="establishment-1" class="form-label">Establishment 1 URN</label>
-                                    <span v-if="linkedEstab1Empty" class="error-message">Enter the establishment 1 URN</span>
-                                    <span v-if="linkedEstab1Invalid" class="error-message">The establishment 1 URN is invalid</span>
-                                    <span v-if="linkedEstab1NoMatch" class="error-message">The establishment 1 URN was not found</span>
-                                    <span v-if="!linkedEstab1Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
-                                    <input class="form-control form-control-3-4" id="establishment-1" type="text" v-model="linkedEstab1" />
-                                </div>
-
-                                <div class="form-group" v-bind:class="['form-group', linkedEstab2Invalid || linkedEstab2NoMatch || !linkedEstab2Empty && duplicateUrnsError ? 'error' : '' ]">
-                                    <label for="establishment-2" class="form-label">Establishment 2 URN</label>
-                                    <span v-if="linkedEstab2Invalid" class="error-message">The establishment 2 URN is invalid</span>
-                                    <span v-if="linkedEstab2NoMatch" class="error-message">The establishment 2 URN was not found</span>
-                                    <span v-if="!linkedEstab2Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
-                                    <input class="form-control form-control-3-4" id="establishment-2" type="text" v-model="linkedEstab2" />
-                                </div>
-
-                                <div class="form-group" v-bind:class="[linkedEstab3Invalid || linkedEstab3NoMatch || !linkedEstab3Empty && duplicateUrnsError ? 'error' : '' ]">
-                                    <label for="establishment-3" class="form-label">Establishment 3 URN</label>
-                                    <span v-if="linkedEstab3Invalid" class="error-message">The establishment 3 URN is invalid</span>
-                                    <span v-if="linkedEstab3NoMatch" class="error-message">The establishment 3 URN was not found</span>
-                                    <span v-if="!linkedEstab3Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span>
-                                    <input class="form-control form-control-3-4" id="establishment-3" type="text" v-model="linkedEstab3" />
-                                </div>
-                            </fieldset>
-                        </div>
-                        <div class="column-full">
-                            <div class="submit-cancel-panel">
-                                <a href="#" class="button button-secondary" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false; clearErrors();"> &laquo; Go back</a>
-                                <button type="submit" name="action" value="" class="button" v-on:click.prevent="validateMergeFields">Continue</button>
-                                <button type="submit" name="action" value="" class="button button-secondary cancel" v-on:click.prevent="restart">Cancel</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div v-show="validMergeUrns && !mergerComplete">
-                        <div class="column-two-thirds" id="merger-summary">
-                            <p>You can propose closing 1 or more schools and altering the remaining school.</p>
-                            <h2 class="heading-small">Establishments to be merged</h2>
-                            <p>
-                                Lead establishment (remains open)
-                                <br />
-                                <span>{{ leadEstab }}</span> {{ leadEstablishmentName }}
-                            </p>
-
-                            <dl class="merger-list">
-                                <dt>Establishments to be merged</dt>
-                                <dd>
-                                    <ol class="linked-establishments" id="linked-establishments">
-                                        <li v-for="(school, index) in mergerEstabs" v-if="school.urn !=leadEstab"><span>{{school.urn}} - {{school.name}}</span></li>
-                                    </ol>
-                                </dd>
-                            </dl>
-
-                            <div v-bind:class="['form-group range-group date-group', mergeDateError ? 'error' : '' ]">
-                                <fieldset id="merger-date">
-                                    <legend class="bold">Merge date</legend>
-                                    <div class="form-hint">For example, 20 03 2003</div>
-                                    <span v-show="mergeDateError" class="error-message">Please enter a valid establishment open date</span>
-
-                                    <span class="inline-form-control">
-                                        <label for="mergedate-day">Day</label>
-                                        <input class="form-control date-text-day" id="mergedate-day" name="OpenDate.Day" type="text" v-model="mergeDateDay">
-                                    </span>
-                                    <span class="inline-form-control">
-                                        <label for="mergedate-month">Month</label>
-                                        <input class="form-control date-text-month" id="mergedate-month" name="OpenDate.Month" type="text" v-model="mergeDateMonth">
-                                    </span>
-                                    <span class="inline-form-contol">
-                                        <label for="mergedate-year">Year</label>
-                                        <input class="form-control date-text-year" id="mergedate-year" name="OpenDate.Year" type="text" v-model="mergeDateYear">
-                                    </span>
-                                </fieldset>
-                            </div>
-                        </div>
-                        <div class="column-full">
-                            <div class="submit-cancel-panel">
-                                <a href="#" class="button button-secondary" v-on:click.prevent="validMergeUrns=false; clearErrors();">&laquo; Go back</a>
-                                <button type="submit" name="action" value="" class="button" v-on:click.prevent="processMerger">Process</button>
-                                <button type="submit" name="action" value="" class="button button-secondary cancel" v-on:click.prevent="restart">Cancel</button>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div v-show="mergerComplete">
-                        <div class="column-two-thirds">
-                            <div class="summary-panel">
-                                <dl class="summary-list">
-                                    <dt><strong class="bold-small">Closing establishment details</strong></dt>
-                                    <dd>
-                                        <ol class="linked-establishments">
-                                            <li v-for="school in mergerEstabs"><span>{{school.urn}} - {{school.name}}</span></li>
-                                        </ol>
-                                    </dd>
-                                </dl>
-                            </div>
-                            <div class="summary-panel">
-                                <h3 class="heading-small">Merged establishment details</h3>
-                                <a v-bind:href="schoolDetailUrl">{{leadEstab}} - {{leadEstablishmentName}}</a>
-                                <ul class="amalg-summary">
-                                    <li>Establishment type: Free schools</li>
-                                    <li>Merger date: {{displayDate}}</li>
-                                </ul>
-                            </div>
-
-
-                            <p>
-                                Please update the
-                                <a v-bind:href="schoolDetailUrl">merged record</a>
-                                to reflect any changes (for
-                                example, establishment name or age range).
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <div id="modal-overlay" class="modal-overlay" v-show="presentExitWarning"></div>
-        <div id="modal-content" class="modal-content" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc" v-show="presentExitWarning">
-            <a href="#" id="exit-overlay" class="modal-exit" v-on:click.prevent="presentExitWarning = false">Close</a>
-            <div id="modal-inner">
-                <h3 class="heading-large" id="modal-label" tabindex="0">Are you sure you want to leave this page?</h3>
-                <p id="modal-desc" tabindex="0">Any unsaved changes will be lost.</p>
-            </div>
+@* Step 2a - Amalgamation *@
+<div v-show="mergerType ==='amalgamation' && mergerTypeConfirmed && !isProcessing">
+    <div v-show="!validMergeUrns">
+        <div class="govuk-grid-column-full gias-hidden__from-tablet govuk-!-padding-bottom-6">
             <div class="button-row">
-                <a href="#" class="button" id="button-ok" v-on:click.prevent="exitConfirmed">OK</a>
-                <a href="#" class="button button-secondary" id="button-cancel" v-on:click.prevent="presentExitWarning = false">Cancel</a>
+                <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false; clearErrors();"> &laquo; Go back</a>
+                <button type="submit" name="action" value="" class="govuk-button" v-on:click.prevent="validateAmalgamationFields">Continue</button>
+                <button type="submit" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
+            </div>
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+            <p>You can propose closing two or more schools and establishing a new school</p>
+            <h2 class="govuk-heading-s">Select establishments to be amalgamated</h2>
+            <p>Up to 4 establishments can be amalgamated (minimum of 2 establishments)</p>
+        </div>
+        <div class="govuk-grid-column-one-half">
+            <div v-bind:class="['field-group govuk-form-group', amalgamatedUrn1Error.length > 0 ? 'govuk-form-group--error' : '' ]">
+                <label for="amalgamate-estab1" class="govuk-label">Establishment 1 URN</label>
+                <span v-if="amalgamatedUrn1Error.length > 0" class="govuk-error-message" v-html="amalgamatedUrn1Error"></span>
+                <input class="govuk-input govuk-!-width-three-quarters" type="text" v-model="amalgamatedEstab1" id="amalgamation-estab1" />
+            </div>
+
+
+            <div v-bind:class="['field-group govuk-form-group', amalgamatedUrn2Error.length > 0 ? 'govuk-form-group--error' : '' ]">
+                <label for="amalgamate-estab2" class="govuk-label">Establishment 2 URN</label>
+                <span v-if="amalgamatedUrn2Error.length > 0" class="govuk-error-message" v-html="amalgamatedUrn2Error"></span>
+                <input class="govuk-input govuk-!-width-three-quarters" type="text" v-model="amalgamatedEstab2" id="amalgamation-estab2" />
+            </div>
+            <div v-bind:class="['field-group govuk-form-group', amalgamatedUrn3Error.length > 0  ? 'govuk-form-group--error' : '' ]">
+                <label for="amalgamate-estab3" class="govuk-label">Establishment 3 URN</label>
+                <span v-if="amalgamatedUrn3Error.length > 0" class="govuk-error-message" v-html="amalgamatedUrn3Error"></span>
+                <input class="govuk-input govuk-!-width-three-quarters" type="text" v-model="amalgamatedEstab3" id="amalgamation-estab3" />
+            </div>
+
+            <div v-bind:class="['field-group govuk-form-group', amalgamatedUrn4Error.length > 0  ? 'govuk-form-group--error' : '' ]">
+                <label for="amalgamate-estab4" class="govuk-label">Establishment 4 URN</label>
+                <span v-if="amalgamatedUrn4Error.length > 0" class="govuk-error-message" v-html="amalgamatedUrn4Error"></span>
+                <input class="govuk-input govuk-!-width-three-quarters" type="text" v-model="amalgamatedEstab4" id="amalgamation-estab4" />
+            </div>
+        </div>
+
+        <div class="govuk-grid-column-full">
+            <div class="button-row govuk-!-padding-top-8">
+                <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false; clearErrors();"> &laquo; Go back</a>
+                <button type="submit" name="action" value="" class="govuk-button" v-on:click.prevent="validateAmalgamationFields">Continue</button>
+                <button type="submit" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
             </div>
         </div>
     </div>
+    <div v-show="mergerType==='amalgamation' && validMergeUrns && !completeAmalgamation">
+        <div class="govuk-grid-column-full gias-hidden__from-tablet govuk-!-padding-bottom-6">
+            <div class="button-row">
+                <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="validMergeUrns=false; clearErrors();">&laquo; Go back</a>
+                <button type="submit" name="action" value="" class="govuk-button" v-on:click.prevent="processAmalgamation">Process</button>
+                <button type="submit" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
+            </div>
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+            <h3 class="govuk-heading-s">Closing establishment details</h3></dt>
+            <ol class="govuk-list govuk-list--number linked-establishments">
+                <li v-for="school in amalgamationEstabs">
+                    <span>{{school.urn}} - {{school.name}}</span>
+                </li>
+            </ol>
+
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend--s">New School details</legend>
+                <div v-bind:class="['govuk-form-group', nameError ? 'govuk-form-group--error' : '' ]">
+                    <label class="govuk-label" for="new-establishment-name">Establishment name</label>
+                    <span v-show="nameError" class="govuk-error-message">Please enter the establishment name</span>
+                    <input type="text" id="new-establishment-name" class="govuk-input" v-model="newName" />
+                </div>
+                <div v-bind:class="['govuk-form-group', typeError ? 'govuk-gorm-group--error' : '' ]">
+                    <label class="govuk-label" for="new-establishment-type">Establishment type</label>
+                    <span v-show="typeError" class="govuk-error-message">Please select the establishment type</span>
+                    <select id="new-establishment-type" class="govuk-select" v-model="typeId" v-on:change="updatePhases"></select>
+                </div>
+                <div v-bind:class="['govuk-form-group', phaseError ? 'govuk-form-group--error' : '' ]">
+                    <label class="govuk-label" for="new-establishment-phase">Establishment phase</label>
+                    <span v-show="phaseError" class="govuk-error-message">Please select an establishment phase</span>
+                    <select id="new-establishment-phase" class="govuk-select" v-model="phaseId"></select>
+                </div>
+                <div v-bind:class="['govuk-form-group', laError ? 'govuk-form-group--error' : '' ]">
+                    <label for="LocalAuthorityId" class="govuk-label">Local authority</label>
+                    <span v-show="laError" class="govuk-error-message">Please select a local authority</span>
+                    <select class="govuk-select" id="LocalAuthorityId" name="LocalAuthorityId" v-model="laId"></select>
+                </div>
+                </fieldset>
+                <div v-bind:class="['govuk-form-group range-group date-group', mergeDateError ? 'govuk-form-group--error' : '' ]">
+                    <fieldset class="govuk-fieldset edit-date-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">Amalgamation date</legend>
+                        <div class="govuk-hint">For example, 20 03 2003</div>
+                        <span v-show="mergeDateError" class="govuk-error-message">Please enter the date of the amalgamation</span>
+                        <div class="govuk-date-input">
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    <div class="govuk-date-input__item">
+                                        <label for="amalgamationdate-day" class="govuk-label govuk-date-input__label">Day</label>
+                                        <input class="govuk-input date-text-day" type="text" v-model="mergeDateDay" id="amalgamationdate-day">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    <div class="govuk-date-input__item">
+                                        <label for="amalgamationdate-month" class="govuk-label govuk-date-input__label">Month</label>
+                                        <input class="govuk-input date-text-month" type="text" v-model="mergeDateMonth" id="amalgamationdate-month">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label for="amalgamationdate-year" class="govuk-label govuk-date-input__label">Year</label>
+                                    <input class="govuk-input gias-year-input__item date-text-year" type="text" v-model="mergeDateYear" id="amalgamationdate-year">
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+        </div>
+        <div class="govuk-grid-column-full">
+            <div class="button-row govuk-!-padding-top-6">
+                <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="validMergeUrns=false; clearErrors();">&laquo; Go back</a>
+                <button type="submit" name="action" value="" class="govuk-button" v-on:click.prevent="processAmalgamation">Process</button>
+                <button type="submit" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="govuk-grid-column-two-thirds almalgamation-summary" v-show="completeAmalgamation">
+        <div class="summary-panel">
+           <h3 class="govuk-heading-s">Closing establishment details</h3>
+
+            <ol class="govuk-list govuk-list--number linked-establishments">
+                <li v-for="school in amalgamationEstabs"><span>{{school.urn}} - {{school.name}}</span></li>
+            </ol>
+
+        </div>
+
+        <div class="summary-panel">
+            <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--m"/>
+            <h3 class="govuk-heading-s">New establishment details</h3>
+            <ul class="govuk-list govuk-list--spaced amalg-summary">
+                <li><a v-bind:href="amalgUrl">{{amalgUrn}} - {{ newName }}</a></li>
+                <li>Establishment type: {{ selectedEstablishmentType() }}</li>
+                <li>Amalgamation date: {{ displayDate }}</li>
+            </ul>
+            <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--m"/>
+        </div>
+        <p>
+            Please complete the new <a v-bind:href="amalgUrl">establishment record</a>.
+        </p>
+    </div>
+
+</div>
+
+
+@*Step 2b - Merger *@
+<div v-show="(mergerType ==='merger' && mergerTypeConfirmed) && !isProcessing">
+    <div v-show="!validMergeUrns">
+        <div class="govuk-grid-column-two-thirds" id="merger-details">
+            <p>You can propose closing one or more schools and altering the remaining school.</p>
+
+            <h2 class="govuk-heading-s">Select the lead establishment</h2>
+            <p>The lead establishment will remain open</p>
+
+            <div v-bind:class="['govuk-form-group', mergerUrn0Error.length > 0 ? 'govuk-form-group--error' : '' ]">
+                <label class="govuk-label" for="lead-establishment">
+                    Lead establishment <abbr title="Unique Reference Number">URN</abbr>
+                </label>
+
+                @* FORM ERROR MESSAGES - LEAD ESTABLISHMENT *@
+                <span v-if="mergerUrn0Error.length > 0" class="govuk-error-message" v-html="mergerUrn0Error"></span>
+                @* <span v-if="leadEstabEmpty" class="error-message">Enter the lead establishment URN</span> *@
+                @* <span v-if="leadEstabInvalid" class="error-message">The lead establishment URN is invalid</span> *@
+                @* <span v-if="leadEstabNoMatch" class="error-message">The lead establishment URN was not found</span> *@
+                @* <span v-if="!leadEstabEmpty && duplicateUrnsError" class="error-message">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the URN.</span> *@
+                <input class="govuk-input govuk-!-width-three-quarters" id="merger-estab0" type="text" v-model="mergerEstab0" />
+            </div>
+
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                    Select establishments to be merged with the lead establishment
+                </legend>
+                <p>Up to 3 establishments can be merged (minimum of 1 establishment)</p>
+
+                <div v-bind:class="['govuk-form-group', mergerUrn1Error.length > 0 ? 'govuk-form-group--error' : '' ]">
+                    <label for="establishment-1" class="govuk-label">Establishment 1 URN</label>
+                    <span v-if="mergerUrn1Error.length > 0" class="govuk-error-message" v-html="mergerUrn1Error"></span>
+                    @* <span v-if="linkedEstab1Empty" class="error-message">Enter the establishment 1 URN</span> *@
+                    @* <span v-if="linkedEstab1Invalid" class="error-message">The establishment 1 URN is invalid</span> *@
+                    @* <span v-if="linkedEstab1NoMatch" class="error-message">The establishment 1 URN was not found</span> *@
+                    @* <span v-if="!linkedEstab1Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span> *@
+                    <input class="govuk-input govuk-!-width-three-quarters" id="merger-estab1" type="text" v-model="mergerEstab1" />
+                </div>
+
+                <div v-bind:class="['govuk-form-group', mergerUrn2Error.length > 0 ? 'govuk-form-group--error' : '' ]">
+                    <label for="establishment-2" class="govuk-label">Establishment 2 URN</label>
+                    <span v-if="mergerUrn2Error.length > 0" class="govuk-error-message" v-html="mergerUrn2Error"></span>
+                    @* <span v-if="linkedEstab2Invalid" class="error-message">The establishment 2 URN is invalid</span> *@
+                    @* <span v-if="linkedEstab2NoMatch" class="error-message">The establishment 2 URN was not found</span> *@
+                    @* <span v-if="!linkedEstab2Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span> *@
+                    <input class="govuk-input govuk-!-width-three-quarters" id="merger-estab2" type="text" v-model="mergerEstab2" />
+                </div>
+
+                <div v-bind:class="['govuk-form-group', mergerUrn3Error.length > 0 ? 'govuk-form-group--error' : '' ]">
+                    <label for="establishment-3" class="govuk-label">Establishment 3 URN</label>
+                    <span v-if="mergerUrn3Error.length > 0" class="govuk-error-message" v-html="mergerUrn3Error"></span>
+                    @* <span v-if="linkedEstab3Invalid" class="error-message">The establishment 3 URN is invalid</span> *@
+                    @* <span v-if="linkedEstab3NoMatch" class="error-message">The establishment 3 URN was not found</span> *@
+                    @* <span v-if="!linkedEstab3Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span> *@
+                    <input class="govuk-input govuk-!-width-three-quarters" id="merger-estab3" type="text" v-model="mergerEstab3" />
+                </div>
+            </fieldset>
+        </div>
+        <div class="govuk-grid-column-full">
+            <div class="button-row govuk-!-padding-top-8">
+                <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false; clearErrors();"> &laquo; Go back</a>
+                <button type="submit" name="action" value="" class="govuk-button" v-on:click.prevent="validateMergeFields">Continue</button>
+                <button type="submit" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div v-show="validMergeUrns && !mergerComplete">
+        <div class="govuk-column-two-thirds" id="merger-summary">
+            <p>You can propose closing one or more schools and altering the remaining school.</p>
+            <h2 class="govuk-heading-s">Establishments to be merged</h2>
+            <p>
+                Lead establishment (remains open)
+                <br />
+                <span>{{ leadEstab }}</span> {{ leadEstablishmentName }}
+            </p>
+
+            <h2 class="govuk-heading-s">Establishments to be merged</h2>
+            <ol class="govuk-list govuk-list--number linked-establishments" id="linked-establishments">
+                <li v-for="(school, index) in mergerEstabs" v-if="school.urn !=leadEstab"><span>{{school.urn}} - {{school.name}}</span></li>
+            </ol>
+
+
+            <div v-bind:class="['govuk-form-group range-group date-group', mergeDateError ? 'govuk-form-group--error' : '' ]">
+                <fieldset id="merger-date" class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">Merge date</legend>
+                    <div class="govuk-hint">For example, 20 03 2003</div>
+                    <span v-show="mergeDateError" class="govuk-error-message">Please enter a valid establishment open date</span>
+
+                    <span class="inline-form-control">
+                        <label for="mergedate-day">Day</label>
+                        <input class="form-control date-text-day" id="mergedate-day" name="OpenDate.Day" type="text" v-model="mergeDateDay">
+                    </span>
+                    <span class="inline-form-control">
+                        <label for="mergedate-month">Month</label>
+                        <input class="form-control date-text-month" id="mergedate-month" name="OpenDate.Month" type="text" v-model="mergeDateMonth">
+                    </span>
+                    <span class="inline-form-contol">
+                        <label for="mergedate-year">Year</label>
+                        <input class="form-control date-text-year" id="mergedate-year" name="OpenDate.Year" type="text" v-model="mergeDateYear">
+                    </span>
+                </fieldset>
+            </div>
+        </div>
+        <div class="govuk-grid-column-full">
+            <div class="button-row">
+                <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="validMergeUrns=false; clearErrors();">&laquo; Go back</a>
+                <button type="submit" name="action" value="" class="govuk-button" v-on:click.prevent="processMerger">Process</button>
+                <button type="submit" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+@*     <div v-show="mergerComplete"> *@
+@*         <div class="column-two-thirds"> *@
+@*             <div class="summary-panel"> *@
+@*                 <dl class="summary-list"> *@
+@*                     <dt><strong class="bold-small">Closing establishment details</strong></dt> *@
+@*                     <dd> *@
+@*                         <ol class="linked-establishments"> *@
+@*                             <li v-for="school in mergerEstabs"><span>{{school.urn}} - {{school.name}}</span></li> *@
+@*                         </ol> *@
+@*                     </dd> *@
+@*                 </dl> *@
+@*             </div> *@
+@*             <div class="summary-panel"> *@
+@*                 <h3 class="heading-small">Merged establishment details</h3> *@
+@*                 <a v-bind:href="schoolDetailUrl">{{leadEstab}} - {{leadEstablishmentName}}</a> *@
+@*                 <ul class="amalg-summary"> *@
+@*                     <li>Establishment type: Free schools</li> *@
+@*                     <li>Merger date: {{displayDate}}</li> *@
+@*                 </ul> *@
+@*             </div> *@
+@* *@
+@* *@
+@*             <p> *@
+@*                 Please update the *@
+@*                 <a v-bind:href="schoolDetailUrl">merged record</a> *@
+@*                 to reflect any changes (for *@
+@*                 example, establishment name or age range). *@
+@*             </p> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
+</form>
+</div>
+
+@* <div id="modal-overlay" class="modal-overlay" v-show="presentExitWarning"></div> *@
+@* <div id="modal-content" class="modal-content" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc" v-show="presentExitWarning"> *@
+@*     <a href="#" id="exit-overlay" class="modal-exit" v-on:click.prevent="presentExitWarning = false">Close</a> *@
+@*     <div id="modal-inner"> *@
+@*         <h3 class="heading-large" id="modal-label" tabindex="0">Are you sure you want to leave this page?</h3> *@
+@*         <p id="modal-desc" tabindex="0">Any unsaved changes will be lost.</p> *@
+@*     </div> *@
+@*     <div class="button-row"> *@
+@*         <a href="#" class="button" id="button-ok" v-on:click.prevent="exitConfirmed">OK</a> *@
+@*         <a href="#" class="button button-secondary" id="button-cancel" v-on:click.prevent="presentExitWarning = false">Cancel</a> *@
+@*     </div> *@
+@* </div> *@
 </div>
 
 @section ViewScripts{
@@ -520,12 +538,11 @@
 
         var phases = @Html.Raw(ViewBag.PhasesJson);
 
-
-    </script>
-
+</script>
 
 
-    <script src="/Assets/Scripts/standalone/merge-amalgamate.js"></script>
+    <script src="/public/assets/scripts/build/merge-amalgamate.js"></script>
+    @* <script src="/Assets/Scripts/standalone/merge-amalgamate.js"></script> *@
 
     @*<script src="/public/assets/scripts/standalone/merge-amalgamate.js"></script>*@
 
