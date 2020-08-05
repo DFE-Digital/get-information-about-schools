@@ -3,3 +3,8 @@
     word-break: break-word;
   }
 }
+
+.gias-news-heading--date {
+  display: block;
+  @include govuk-font(19, 'regular');
+}
