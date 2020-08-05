@@ -50,13 +50,12 @@ namespace Edubase.Web.UI.Controllers
         [Route("Generate", Name = "GenerateDownload")]
         public async Task<ActionResult> GenerateDownload(string id)
         {
-            // we might get away with keeping the same view - if not, will want to use the new one (there's already a new placeholder created)
-
             var response = await _downloadsService.GenerateExtractAsync(id, User);
 
             if (response.Contains("fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
             {
-                return View("ReadyToDownloadGenerated", JsonConvert.DeserializeObject<ProgressDto>(response));
+                ViewBag.isDownload = true;
+                return View("ReadyToDownload", JsonConvert.DeserializeObject<ProgressDto>(response));
             }
             else
             {
@@ -72,10 +71,11 @@ namespace Edubase.Web.UI.Controllers
             if (model.HasErrored)
                 throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
 
+            ViewBag.isDownload = true;
             if (!model.IsComplete)
-                return View("PreparingScheduledExtractPleaseWait", model);
+                return View("PreparingFilePleaseWait", model);
 
-            return View("ReadyToDownloadGenerated", model);
+            return View("ReadyToDownload", model);
         }
 
         [Route("RequestScheduledExtract/{id}", Name = "RequestScheduledExtract")]
@@ -85,7 +85,7 @@ namespace Edubase.Web.UI.Controllers
 
             if (response.Contains("fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
             {
-                return View("ReadyToDownloadScheduledExtract", JsonConvert.DeserializeObject<ProgressDto>(response));
+                return View("ReadyToDownload", JsonConvert.DeserializeObject<ProgressDto>(response));
             }
             else
             {
@@ -102,9 +102,9 @@ namespace Edubase.Web.UI.Controllers
                 throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
 
             if (!model.IsComplete)
-                return View("PreparingScheduledExtractPleaseWait", model);
+                return View("PreparingFilePleaseWait", model);
 
-            return View("ReadyToDownloadScheduledExtract", model);
+            return View("ReadyToDownload", model);
         }
 
         [HttpGet, Route("Download/Establishment/{urn}", Name = "EstabDataDownload")]
