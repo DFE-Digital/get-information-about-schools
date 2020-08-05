@@ -1,0 +1,53 @@
+.govuk-accordion__controls {
+  padding-bottom: govuk-spacing(2);
+  position: relative;
+
+  .spt-back-to-top-linkage {
+    position: absolute;
+    left: 0;
+
+    @include govuk-media-query($until: tablet) {
+      font-size: 14px;
+    }
+  }
+
+  @media print {
+    display: none;
+  }
+}
+
+.govuk-accordion {
+  margin-bottom: govuk-spacing(1);
+
+  & + .govuk-accordion__controls {
+    margin-bottom: govuk-spacing(4);
+  }
+}
+
+.govuk-accordion__section-button {
+  font-size: 16px;
+}
+
+.govuk-accordion__section-summary {
+  font-size: 14px;
+}
+
+.govuk-accordion__open-all {
+  text-decoration: underline;
+}
+
+.govuk-accordion__section-content {
+  .govuk-table {
+    margin-bottom: 0;
+  }
+}
+
+@media print {
+  .govuk-accordion__icon {
+    display: none;
+  }
+
+  .govuk-accordion__section-content {
+    display: block !important;
+  }
+}

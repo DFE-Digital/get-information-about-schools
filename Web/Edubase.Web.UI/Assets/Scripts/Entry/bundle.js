@@ -4,6 +4,7 @@ const $ = require('jquery');
 import giasAriaLive from '../GiasGlobal/giasAriaLive';
 import GiasToolTip from "../GiasGlobal/GiasToolTips";
 import GiasOkCancel from "../GiasModules/GiasModals/GiasOkCancel";
+import GiasAccordionExtensions from '../GiasGlobal/GiasAccordionExtensions';
 const checkGiasDataStatus = require("../GiasStandalone/GiasDataStatus");
 const dfeCookieManager = require('../GiasModules/DfeCookieManager');
 
@@ -48,4 +49,4 @@ initAll();
 giasAriaLive();
 $('#main-content').find('.js-tooltip').giasToolTip();
 
-
+$('.govuk-accordion').giasAccordionExtensions();
