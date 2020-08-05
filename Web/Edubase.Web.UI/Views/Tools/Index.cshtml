@@ -1,4 +1,4 @@
-﻿@model ToolsViewModel
+    @model ToolsViewModel
 @{
     ViewBag.Title = "Get information about schools";
     ViewBag.bodyClasses = "tools-landing";
@@ -47,21 +47,20 @@
         <div class="govuk-grid-row">
             @{
                 var gridClass = list.Count == 1 ? "govuk-grid-column-one-half" : "govuk-grid-column-full";
+
             }
             <div class="@gridClass">
                 <ul class="govuk-list @Html.Conditional(list.Count > 1, "gias-columns-2")">
                     @foreach (var item in list)
                     {
                         <li>
-                            <h3 class="govuk-heading-s">@item.Link</h3>
+                            <h3 class="govuk-heading-s">@Html.Raw(HttpUtility.HtmlDecode(item.Link.ToHtmlString()))</h3>
                             <p class="@Html.Conditional(list.Count == 1, "govuk-!-padding-right-6")">
                                 @Html.Raw(item.Description)
                             </p>
                         </li>
                     }
                 </ul>
-
-
             </div>
         </div>
 

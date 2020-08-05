@@ -264,6 +264,12 @@
         <dt class="gias-summary-list__key">Data from other services:</dt>
         <dd class="gias-summary-list__value">
             <ul class="govuk-list govuk-!-font-size-14">
+                @if (!Model.ShowCscp && !Model.ShowFinancialBenchmarking)
+                {
+                    <li>
+                        Not applicable
+                    </li>
+                }
                 @if (Model.ShowCscp)
                 {
                     <li>
@@ -279,5 +285,4 @@
             </ul>
         </dd>
     </div>
-
 }

@@ -160,11 +160,11 @@
                             <legend class="bold">Select the process you are interested in</legend>
 
                             <p id="almagamation-desc">
-                                Amalgamation - a proposal for two or more schools to close and a new
+                                Amalgamation - a proposal for 2 or more schools to close and a new
                                 school to be established.
                             </p>
                             <p id="merger-desc">
-                                Merger - a proposal for one or more schools to close and the remaining
+                                Merger - a proposal for 1 or more schools to close and the remaining
                                 school to be altered.
                             </p>
                             <div v-bind:class="['form-group special-snowflake-radios', mergerTypeError ? 'error' : '']">
@@ -203,7 +203,7 @@
                             </div>
                         </div>
                         <div class="column-two-thirds">
-                            <p>You can propose closing two or more schools and establishing a new school</p>
+                            <p>You can propose closing 2 or more schools and establishing a new school</p>
                             <h2 class="heading-small">Select establishments to be amalgamated</h2>
                             <p>Up to 4 establishments can be amalgamated (minimum of 2 establishments)</p>
                         </div>
@@ -353,7 +353,7 @@
                 <div v-show="(mergerType ==='merger' && mergerTypeConfirmed) && !isProcessing">
                     <div v-show="!validMergeUrns">
                         <div class="column-two-thirds" id="merger-details">
-                            <p>You can propose closing one or more schools and altering the remaining school.</p>
+                            <p>You can propose closing 1 or more schools and altering the remaining school.</p>
 
                             <h2 class="heading-small">Select the lead establishment</h2>
                             <p>The lead establishment will remain open</p>
@@ -411,7 +411,7 @@
                     </div>
                     <div v-show="validMergeUrns && !mergerComplete">
                         <div class="column-two-thirds" id="merger-summary">
-                            <p>You can propose closing one or more schools and altering the remaining school.</p>
+                            <p>You can propose closing 1 or more schools and altering the remaining school.</p>
                             <h2 class="heading-small">Establishments to be merged</h2>
                             <p>
                                 Lead establishment (remains open)

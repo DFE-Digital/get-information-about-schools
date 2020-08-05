@@ -79,6 +79,12 @@
                 {
                     <div id="change-history" class="tab-content">
                         <h2 class="govuk-heading-s">Governance Change History</h2>
+
+                        <div class="group-governance-history">
+                            <p>
+                                @Html.RouteLink("View group change history", "GroupDetails", null, null, "change-history", new {id = Model.Group.GroupUId}, null)
+                            </p>
+                        </div>
                         @if (!Model.ChangeHistory.Items.Any())
                         {
                             <p>There are no change records available at the moment</p>
@@ -90,6 +96,7 @@
                             </p>
                             <p class="govuk-body-s">
                                 @Html.RouteLink("Download data in XLSX format", "DownloadGroupGovernanceChangeHistory", new {groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.xlsx})
+
                             </p>
 
                             if (Model.ChangeHistory.PageCount > 1)
@@ -103,15 +110,16 @@
                                 <caption class="govuk-visually-hidden">Governance change history</caption>
                                 <thead class="govuk-table__head">
                                     <tr class="govuk-table__row">
+
                                     @foreach (var tableColumn in tableColumns)
                                     {
                                         <th scope="col" class="govuk-table__header">
                                             <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
-                                            class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
-                                            aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
+                                               class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                                               aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
                                         </th>
                                     }
-                                    </tr>
+                                </tr>
                                 </thead>
                                 <tbody class="govuk-table__body">
                                     @foreach (var item in Model.ChangeHistory.Items)
@@ -126,6 +134,7 @@
                                             <td data-label="Approved by" class="govuk-table__cell">@(item.ApproverUserName ?? "--")</td>
                                         </tr>
                                     }
+
                                 </tbody>
                             </table>
 
@@ -145,10 +154,3 @@
     </div>
 </div>
 
-@section ViewScripts
-{
-    @* <script nonce="@Html.ScriptNonce()"> *@
-    @*     $('#governance').find('.sortable-table').clientSort(); *@
-    @* </script> *@
-    @* <script src="/public/assets/scripts/leaflet-bundle.js"></script> *@
-}

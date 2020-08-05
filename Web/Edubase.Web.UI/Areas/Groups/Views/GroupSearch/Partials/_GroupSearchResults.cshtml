@@ -32,7 +32,7 @@ else if (Model.Results.Count > 0)
                 <dd>@(Model.GroupTypes.FirstOrDefault(x => x.Id == result.GroupTypeId)?.Name)</dd>
                 @if (result.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
                 {
-                    <dt>Companies House Number:</dt>
+                    <dt>Companies House number:</dt>
                     <dd>
                         @if (result.CompaniesHouseNumber != null)
                         {

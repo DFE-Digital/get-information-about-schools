@@ -71,9 +71,19 @@
                 </li>
             </ul>
         </div>
+<<<<<<< HEAD
         <div class="tab-content-wrapper gias-tabs-content">
             <div id="change-history" class="tab-content approval-data">
                 <h2 class="govuk-heading-s">Governance Change History</h2>
+                @if (Model.ChangeHistory != null && Model.TabDisplayPolicy.ChangeHistory)
+                {
+                    <div class="school-governance-history">
+                        <p>
+                            @Html.RouteLink("View establishment change history", "EstabDetails", null, null, "school-change-history", new {id = Model.Establishment.Urn}, null)
+                        </p>
+                    </div>
+                }
+
                 @if (!Model.ChangeHistory.Items.Any())
                 {
                     <p class="govuk-body">There are no change records available at the moment</p>
@@ -104,6 +114,7 @@
                                     aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
                                 </th>
                             }
+
                             </tr>
                         </thead>
                         <tbody class="govuk-table__body">

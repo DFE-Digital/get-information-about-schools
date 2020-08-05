@@ -3,7 +3,7 @@
 @{
     ViewBag.bodyClasses = "create-edit create-academy-trust";
     ViewBag.hideLogo = true;
-    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Create an academy trust");
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Create new academy trust");
     ViewBag.SiteSection = "tools";
 }
 
@@ -20,7 +20,10 @@
         </div>
     </div>
 </div>
+
 }
+
+
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
@@ -72,7 +75,6 @@
                         <dd class="gias-summary-list__value">@Model.Address</dd>
                     </div>
                 </dl>
-
 
                 @Html.ActionLink("Wrong company?", "SearchCompaniesHouse", "Group", new {area = "Groups"}, new { @class = "change-link" })
             </div>

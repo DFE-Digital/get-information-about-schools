@@ -1,8 +1,10 @@
+using System.Threading.Tasks;
+
 namespace Edubase.Services.ExternalLookup
 {
     public interface ICSCPService
     {
-        bool CheckExists(int? urn);
-        string SchoolURL(int? urn);
+        Task<bool> CheckExists(int? urn, string name);
+        string SchoolURL(int? urn, string name);
     }
 }

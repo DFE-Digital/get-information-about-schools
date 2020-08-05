@@ -41,6 +41,19 @@
         }
     }
 
+    .change-history-title {
+        @include media (tablet) {
+            float: left;
+        }
+    }
+
+    .group-governance-history {
+        @include media (tablet) {
+            overflow: hidden;
+            float: right;
+        }
+    }
+
     .group-establishment-list {
         clear: left;
         max-width: 59%;

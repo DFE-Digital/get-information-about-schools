@@ -26,8 +26,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             [eGroupTypeMode.ChildrensCentre] = "children's centre group or collaboration",
             [eGroupTypeMode.Trust] = "school trust",
             [eGroupTypeMode.Federation] = "school federation",
-            [eGroupTypeMode.AcademyTrust] = "Academy Trust",
-            [eGroupTypeMode.Sponsor] = "academy sponsor",
+            [eGroupTypeMode.AcademyTrust] = "academy trust",
+            [eGroupTypeMode.Sponsor] = "academy sponsor"
         };
 
         public eGroupTypeMode GroupTypeMode
@@ -44,7 +44,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         }
 
         public string ListOfEstablishmentsPluralName { get; set; }
-        public string PageTitle => string.Concat(GroupUId.HasValue ? "Edit " : "Create ", EntityName);
+        public string PageTitle => string.Concat(GroupUId.HasValue ? "Edit " : "Create new ", EntityName);
         public string EntityName => _entityNames.Get(GroupTypeMode);
 
         public string Layout { get; set; }

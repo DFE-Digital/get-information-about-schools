@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +18,11 @@ namespace Edubase.Common
 
         public static T TryDeserializeUrlToken<T>(string token)
             => !string.IsNullOrWhiteSpace(token) ? DeserializeUrlToken<T>(token) : default(T);
-        
+
+        public static string SchoolNameUrl(string name)
+        {
+            return string.IsNullOrWhiteSpace(name) ? string.Empty : HttpUtility.UrlEncode(name.Replace(" ", "-").Replace("/", "-").ToLower());
+        }
+
     }
 }
