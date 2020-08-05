@@ -47,7 +47,7 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
-        [Route("Generate/{id}", Name = "GenerateDownload")]
+        [Route("Generate", Name = "GenerateDownload")]
         public async Task<ActionResult> GenerateDownload(string id)
         {
             // we might get away with keeping the same view - if not, will want to use the new one (there's already a new placeholder created)
@@ -56,7 +56,7 @@ namespace Edubase.Web.UI.Controllers
 
             if (response.Contains("fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
             {
-                return View("ReadyToDownloadScheduledExtract", JsonConvert.DeserializeObject<ProgressDto>(response));
+                return View("ReadyToDownloadGenerated", JsonConvert.DeserializeObject<ProgressDto>(response));
             }
             else
             {
@@ -64,7 +64,7 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        [Route("DownloadGenerated/{id}", Name = "DownloadGenerated")]
+        [Route("Generated/{id}", Name = "DownloadGenerated")]
         public async Task<ActionResult> DownloadGenerated(Guid id)
         {
             var model = await _downloadsService.GetProgressOfGeneratedExtractAsync(id, User);
@@ -75,7 +75,7 @@ namespace Edubase.Web.UI.Controllers
             if (!model.IsComplete)
                 return View("PreparingScheduledExtractPleaseWait", model);
 
-            return View("ReadyToDownloadScheduledExtract", model);
+            return View("ReadyToDownloadGenerated", model);
         }
 
         [Route("RequestScheduledExtract/{id}", Name = "RequestScheduledExtract")]
