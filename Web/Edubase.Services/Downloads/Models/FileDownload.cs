@@ -1,4 +1,4 @@
-﻿namespace Edubase.Services.Downloads.Models
+namespace Edubase.Services.Downloads.Models
 {
     public class FileDownload
     {
@@ -7,6 +7,8 @@
         public string Description { get; set; }
         public long FileSizeInBytes { get; set; }
         public string Tag { get; set; }
+        public bool RequiresGeneration { get; set; }
         public bool AuthenticationRequired { get; set; }
+        
     }
 }

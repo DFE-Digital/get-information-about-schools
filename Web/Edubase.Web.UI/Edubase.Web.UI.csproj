@@ -1041,6 +1041,7 @@
     <Content Include="Views\Shared\Downloads\DownloadError.cshtml" />
     <Content Include="Views\Home\NewsArchive.cshtml" />
     <Content Include="Views\Home\Responsibilities.cshtml" />
+    <Content Include="Views\Downloads\ReadyToDownloadGenerated.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>
