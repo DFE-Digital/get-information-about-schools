@@ -80,7 +80,7 @@
                     <div id="change-history" class="tab-content">
                         <h2 class="govuk-heading-s">Governance Change History</h2>
 
-                        <div class="group-governance-history">
+                        <div class="gias-governance-history-link-container">
                             <p>
                                 @Html.RouteLink("View group change history", "GroupDetails", null, null, "change-history", new {id = Model.Group.GroupUId}, null)
                             </p>
@@ -91,10 +91,10 @@
                         }
                         else
                         {
-                            <p class="govuk-body-s">
+                            <p class="govuk-body">
                                 @Html.RouteLink("Download data in CSV format", "DownloadGroupGovernanceChangeHistory", new {groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.csv})
                             </p>
-                            <p class="govuk-body-s">
+                            <p class="govuk-body">
                                 @Html.RouteLink("Download data in XLSX format", "DownloadGroupGovernanceChangeHistory", new {groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.xlsx})
 
                             </p>

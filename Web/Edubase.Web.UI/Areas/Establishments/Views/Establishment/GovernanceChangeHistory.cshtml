@@ -43,7 +43,9 @@
                     <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new {area = ""}, new { @class = "govuk-breadcrumbs__link"})</li>
                     @if (Model.LegalParentGroup != null)
                     {
-                        <li class="govuk-breadcrumbs__list-item">@Html.RouteLink(Model.LegalParentGroupRouteDto.Value.Label, Model.LegalParentGroupRouteDto.Value.RouteName, Model.LegalParentGroupRouteDto.Value.RouteValues, new { @class = "govuk-breadcrumbs__link"})</li>
+                        <li class="govuk-breadcrumbs__list-item">
+                            @Html.RouteLink(Model.LegalParentGroupRouteDto.Value.Label, Model.LegalParentGroupRouteDto.Value.RouteName, Model.LegalParentGroupRouteDto.Value.RouteValues, HtmlHelper.AnonymousObjectToHtmlAttributes(new {@class = "govuk-breadcrumbs__link"}))
+                        </li>
                     }
                     <li class="govuk-breadcrumbs__list-item">@Html.RouteLink(Model.Establishment.Name, "EstabDetails", new {id = Model.Establishment.Urn},new { @class = "govuk-breadcrumbs__link"})</li>
                 </ol>
@@ -76,7 +78,7 @@
                 <h2 class="govuk-heading-s">Governance Change History</h2>
                 @if (Model.ChangeHistory != null && Model.TabDisplayPolicy.ChangeHistory)
                 {
-                    <div class="school-governance-history">
+                    <div class="gias-governance-history-link-container">
                         <p>
                             @Html.RouteLink("View establishment change history", "EstabDetails", null, null, "school-change-history", new {id = Model.Establishment.Urn}, null)
                         </p>
@@ -89,10 +91,10 @@
                 }
                 else
                 {
-                    <p class="govuk-body-s">
+                    <p class="govuk-body">
                         @Html.RouteLink("Download data in CSV format", "DownloadEstablishmentGovernanceChangeHistory", new { id = Model.Establishment.Urn, downloadType = DownloadType.csv })
                     </p>
-                    <p class="govuk-body-s">
+                    <p class="govuk-body">
                         @Html.RouteLink("Download data in XLSX format", "DownloadEstablishmentGovernanceChangeHistory", new { id = Model.Establishment.Urn, downloadType = DownloadType.xlsx })
                     </p>
                     if (Model.ChangeHistory.PageCount > 1)

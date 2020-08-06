@@ -34,3 +34,12 @@
     float: none;
   }
 }
+
+.gias-governance-history-link-container {
+  float: none;
+
+  @include govuk-media-query($from: tablet) {
+    float: right;
+    display: block;
+  }
+}
