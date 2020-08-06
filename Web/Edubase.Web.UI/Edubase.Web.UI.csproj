@@ -956,8 +956,7 @@
     <Content Include="Areas\Establishments\Views\Establishment\EditDetails.cshtml" />
     <Content Include="Views\Downloads\Index.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\Create.cshtml" />
-    <Content Include="Views\Downloads\PreparingScheduledExtractPleaseWait.cshtml" />
-    <Content Include="Views\Downloads\ReadyToDownloadScheduledExtract.cshtml" />
+    <Content Include="Views\Downloads\PreparingFilePleaseWait.cshtml" />
     <Content Include="Views\ChangeHistory\Index.cshtml" />
     <Content Include="Views\ChangeHistory\ReadyToDownload.cshtml" />
     <Content Include="Views\ChangeHistory\PreparingPleaseWait.cshtml" />
@@ -1041,6 +1040,7 @@
     <Content Include="Views\Shared\Downloads\DownloadError.cshtml" />
     <Content Include="Views\Home\NewsArchive.cshtml" />
     <Content Include="Views\Home\Responsibilities.cshtml" />
+    <Content Include="Views\Downloads\ReadyToDownload.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>

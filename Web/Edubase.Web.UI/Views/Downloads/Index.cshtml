@@ -9,7 +9,6 @@
 {
     <meta name="robots" content="noindex,nofollow" />
 }
-
 <div class="grid-row">
     <div class="column-full">
         <div class="breadcrumbs">
@@ -65,9 +64,18 @@
                                     {
                                         <li class="download-list-item">
                                             <span class="icon-link-copy">
-                                                <a href="@(file.Item2.AuthenticationRequired ? Url.RouteUrl("DownloadFile", new { id = file.Item2.Tag }) : file.Item2.Url)" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
-                                                    @file.Item1@Html.Conditional(file.Item2.FileSizeInBytes > 0, ", " + Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes)) <span class="visually-hidden">Opens in new window</span>
-                                                </a>
+                                                @if (file.Item2.RequiresGeneration)
+                                                {
+                                                    <a href="@Url.RouteUrl("GenerateDownload", new {id = file.Item2.Tag})" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
+                                                        @file.Item1@Html.Conditional(file.Item2.FileSizeInBytes > 0, ", " + Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes)) <span class="visually-hidden">Opens in new window</span>
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="@(file.Item2.AuthenticationRequired ? Url.RouteUrl("DownloadFile", new {id = file.Item2.Tag}) : file.Item2.Url)" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
+                                                        @file.Item1@Html.Conditional(file.Item2.FileSizeInBytes > 0, ", " + Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes)) <span class="visually-hidden">Opens in new window</span>
+                                                    </a>
+                                                }
                                             </span>
                                         </li>
                                     }
