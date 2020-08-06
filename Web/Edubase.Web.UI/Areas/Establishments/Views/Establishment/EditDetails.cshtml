@@ -345,8 +345,8 @@
     @if (Model.EditPolicy.ReligiousCharacterId)
     {
         <div class="govuk-form-group">
-            <label class="govuk-label" for="religious-character">Religious character</label>
-            @Html.DropDownListFor(x => x.ReligiousCharacterId, Model.ReligiousCharacters, "", new {@class = "govuk-select", id = "religious-character"})
+            <label class="govuk-label" for="ReligiousCharacterId">Religious character</label>
+            @Html.DropDownListFor(x => x.ReligiousCharacterId, Model.ReligiousCharacters, "", new {@class = "govuk-select", id = "ReligiousCharacterId"})
         </div>
     }
 
