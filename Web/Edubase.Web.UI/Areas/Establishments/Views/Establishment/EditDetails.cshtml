@@ -89,7 +89,7 @@
     {
         <div class="govuk-form-group">
             <label for="Address_CountyId" class="govuk-label">County</label>
-            @Html.DropDownListFor(x => x.Address_CountyId, Model.Counties, "", new {@class = "govuk-input"})
+            @Html.DropDownListFor(x => x.Address_CountyId, Model.Counties, "", new {@class = "govuk-select"})
         </div>
     }
 
@@ -97,7 +97,7 @@
     {
         <div class="govuk-form-group">
             @Html.LabelFor(x => x.Address_CountryId, "Country", new {@class = "govuk-label"})
-            @Html.DropDownListFor(x => x.Address_CountryId, Model.Countries, "", new {@class = "govuk-input", disabled = "disabled"})
+            @Html.DropDownListFor(x => x.Address_CountryId, Model.Countries, "", new {@class = "govuk-select", disabled = "disabled"})
         </div>
     }
 
