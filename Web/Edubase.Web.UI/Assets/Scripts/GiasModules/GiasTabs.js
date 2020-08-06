@@ -65,6 +65,9 @@ class GiasTabs {
         return true;
       }
       e.preventDefault();
+      const yScroll = window.scrollY;
+
+      console.log('yScroll == ', yScroll);
       window.location.replace(targetContent);
 
       $tabs.removeClass(opts.selectedTabClass);
@@ -77,6 +80,7 @@ class GiasTabs {
       $(targetContent).removeClass('hidden-tab-content')
         .attr('aria-hidden', false);
       $(targetContent)[0].focus({preventScroll:true});
+      window.scroll(0, yScroll);
 
       $(window).trigger({ type: 'tabChange', tab: targetContent });
     });

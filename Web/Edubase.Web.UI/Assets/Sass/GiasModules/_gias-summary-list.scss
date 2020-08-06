@@ -1,4 +1,5 @@
 .detail-summary {
+  padding-right: govuk-spacing(2);
   @include govuk-media-query($until: tablet) {
     clear: both;
   }
@@ -40,6 +41,10 @@
       float: left;
       display: block;
     }
+  }
+
+  a {
+    word-break: break-word;
   }
 }
 
