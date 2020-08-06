@@ -65,12 +65,12 @@
       }
     }
 
-    .govuk-table__cell {
+    .govuk-table__body .govuk-table__cell {
       clear: left;
       display: block;
       float: left;
       width: 100% !important;
-      border-bottom: 1px solid $govuk-border-colour;
+      border-bottom: 0;
       max-width: 100%;
       padding: 12px 0;
 
