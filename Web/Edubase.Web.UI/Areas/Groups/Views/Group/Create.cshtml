@@ -81,7 +81,7 @@
         <div class="govuk-grid-column-full">
             <div class="button-row">
                 <button type="submit" name="action" class="govuk-button" id="create-submit" value="@VM.ActionSave">Create @Model.EntityName</button>
-                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "govuk-button govuk-button--secondary cancel"})
+                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
             </div>
         </div>
     </div>

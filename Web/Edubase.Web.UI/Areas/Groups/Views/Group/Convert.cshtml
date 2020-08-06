@@ -53,7 +53,7 @@
             <div class="govuk-grid-column-full">
                 <div class="button-row">
                     <button type="submit" name="actionname" class="govuk-button" value="find">Continue</button>
-                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel" })
+                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button" })
                 </div>
             </div>
         </div>
@@ -124,7 +124,7 @@ else
                 <div class="button-row">
                     @Html.RouteLink(HttpUtility.HtmlDecode("&laquo; Go back"), "GroupConvertSAT2MAT", null, new {@class = "govuk-button govuk-button--secondary cancel"})
                     <button type="submit" name="actionname" class="govuk-button" value="confirm">Convert</button>
-                    @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "govuk-button govuk-button--secondary cancel"})
+                    @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
                 </div>
             </div>
         </div>

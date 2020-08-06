@@ -29,7 +29,7 @@
             <div class="govuk-grid-column-full">
                 <div class="button-row govuk-!-margin-bottom-4">
                     <button type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveLocation)">Save location</button>
-                    @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "govuk-button govuk-button--secondary cancel" })
+                    @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button" })
                 </div>
             </div>
             <div class="govuk-grid-column-one-half">
@@ -187,7 +187,7 @@
             <div class="govuk-grid-column-full">
                 <div class="button-row">
                     <button type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveLocation)">Save location</button>
-                    @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary cancel"})
+                    @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
                 </div>
             </div>
         </div>
@@ -199,7 +199,7 @@
                 <button class="govuk-button--secondary govuk-button" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button>
                 <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm">Confirm</button>
 
-                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary", id = "cancel-edit"})
+                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary", id = "cancel-edit", data_module="govuk-button"})
             </div>
         }
 

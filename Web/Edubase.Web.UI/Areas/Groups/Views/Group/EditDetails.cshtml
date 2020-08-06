@@ -32,7 +32,7 @@
                 <div class="govuk-grid-column-full">
                     <div class="button-row govuk-!-margin-bottom-4">
                         <button type="submit" name="action" class="govuk-button" id="edit-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Save details" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
-                        @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel"})
+                        @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
                     </div>
                 </div>
             </div>
@@ -190,7 +190,7 @@
                 <div class="govuk-grid-column-full">
                     <div class="button-row govuk-!-padding-top-4">
                         <button type="submit" name="action" class="govuk-button" id="edit-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Save details" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
-                        @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel"})
+                        @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
                     </div>
 
                 </div>

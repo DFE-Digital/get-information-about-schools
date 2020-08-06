@@ -1,53 +1,64 @@
 ﻿@model BulkCreateFreeSchoolsViewModel
-
-<div class="breadcrumbs">
-    <ol>
-        <li>@Html.RouteLink("Home", "Homepage")</li>
-        <li>@Html.RouteLink("Tools", "Tools")</li>
-        <li>@Html.RouteLink("Bulk create new free schools", "BulkCreateFreeSchools")</li>
-    </ol>
-</div>
-
-<div class="grid-row">
-    <div class="column-full">
-        <h1 class="heading-xlarge">Free schools created</h1>
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.RouteLink("Bulk create new free schools", "BulkCreateFreeSchools", new {area = ""}, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Free schools created</h1>
         <p>Your free schools have been created and are pending approval.</p>
     </div>
-    <div class="column-full">
+    <div class="govuk-grid-column-full">
         <div class="top-pagination">
             <div class="pagination">
                 <p>Showing 1 - @Model.Result.CreatedEstablishments.Length of @Model.Result.CreatedEstablishments.Length</p>
             </div>
         </div>
-        <table class="edubase-table">
-            <caption class="visuallyhidden">Free schools created</caption>
-            <thead>
-                <tr>
-                    <th scope="col"><abbr title="Unique Reference Number">URN</abbr></th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Phase of education</th>
-                    <th scope="col">Establishment type</th>
-                    <th scope="col">Opening date</th>
-                    <th scope="col">Opening reason</th>
-                    <th scope="col">Establishment status</th>
+        <table class="govuk-table gias-table">
+            <caption class="govuk-visually-hidden">Free schools created</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header"><abbr title="Unique Reference Number">URN</abbr></th>
+                    <th scope="col" class="govuk-table__header">Name</th>
+                    <th scope="col" class="govuk-table__header">Phase of education</th>
+                    <th scope="col" class="govuk-table__header">Establishment type</th>
+                    <th scope="col" class="govuk-table__header">Opening date</th>
+                    <th scope="col" class="govuk-table__header">Opening reason</th>
+                    <th scope="col" class="govuk-table__header">Establishment status</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="govuk-table__body">
                 @foreach (var e in Model.Result.CreatedEstablishments)
                 {
-                    <tr>
-                        <td class="fixed-width" data-label="URN">@Html.RouteLink(e.Urn.ToString(), "EstabDetails", new { id = e.Urn })</td>
-                        <td class="fixed-width" data-label="Name of establishment">@Html.RouteLink(e.Name, "EstabDetails", new { id = e.Urn })</td>
-                        <td class="fixed-width" data-label="Phase of education">@e.PhaseOfEducationName</td>
-                        <td class="fixed-width" data-label="Establishment type">@e.EstablishmentTypeName</td>
-                        <td class="fixed-width" data-label="Opening date">@(e.OpenDate.ToString("dd/MM/yyyy"))</td>
-                        <td class="fixed-width" data-label="Opening reason">@e.ReasonForOpening</td>
-                        <td class="fixed-width" data-label="Establishment status">@e.EstablishmentStatusName</td>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell fixed-width" data-label="URN">@Html.RouteLink(e.Urn.ToString(), "EstabDetails", new { id = e.Urn })</td>
+                        <td class="govuk-table__cell fixed-width" data-label="Name of establishment">@Html.RouteLink(e.Name, "EstabDetails", new { id = e.Urn })</td>
+                        <td class="govuk-table__cell fixed-width" data-label="Phase of education">@e.PhaseOfEducationName</td>
+                        <td class="govuk-table__cell fixed-width" data-label="Establishment type">@e.EstablishmentTypeName</td>
+                        <td class="govuk-table__cell fixed-width" data-label="Opening date">@(e.OpenDate.ToString("dd/MM/yyyy"))</td>
+                        <td class="govuk-table__cell fixed-width" data-label="Opening reason">@e.ReasonForOpening</td>
+                        <td class="govuk-table__cell fixed-width" data-label="Establishment status">@e.EstablishmentStatusName</td>
                     </tr>
                 }
             </tbody>
         </table>
-        <div class="lower-pagination push--bottom">
+        <div class="lower-pagination govuk-!-padding-top-6">
             <div class="pagination">
                 <p>Showing 1 - @Model.Result.CreatedEstablishments.Length of @Model.Result.CreatedEstablishments.Length</p>
             </div>

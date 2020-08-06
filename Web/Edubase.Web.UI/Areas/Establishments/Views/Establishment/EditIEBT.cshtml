@@ -34,7 +34,7 @@
 
                 <div class="form-group">
                     <button type="submit" class="button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveIEBT)">Save IEBT</button>
-                    @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel" })
+                    @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel", data_module="govuk-button" })
                 </div>
 
                 <div class="form-group @Html.ValidationCssClassFor(x => x.Notes)">
@@ -189,7 +189,7 @@
 
                 <div class="button-row">
                     <button type="submit" class="button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveIEBT)">Save IEBT</button>
-                    @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel" })
+                    @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel", data_module="govuk-button" })
                 </div>
 
             </div>
@@ -202,7 +202,7 @@
                 <button class="button-secondary button" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button>
                 <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="button js-confirm">Confirm</button>
 
-                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "button button-secondary", id = "cancel-edit"})
+                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "button button-secondary", id = "cancel-edit", data_module="govuk-button"})
             </div>
 
                 @section ViewScripts {

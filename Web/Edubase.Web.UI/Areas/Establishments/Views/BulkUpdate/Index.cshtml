@@ -5,47 +5,62 @@
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Establishment bulk update");
 }
 
-<div class="breadcrumbs">
-    <ol>
-        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
-        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-    </ol>
-</div>
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
 @if (Model.Result?.RowErrors > 0)
 {
-    <div class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
-        <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
-        <ul class="error-summary-list">
-            @if (Model.Result.Errors.Any(x => x.Code == "error.mismatchType.EduBaseBulkUpload-MultipleColumnsfile.type.bulkUpload"))
-            {
-                <li>
-                    <a href="#BulkFile">Multiple column files must be XLSX and bulk upload files can be XLSX or tab delimited text files. For more information, see the Establishment bulk update guidance document below within 'Help with preparing files'</a>
-                </li>
-            } else if (Model.Result.Errors.Any())
-            {
-                <li>
-                    <a href="#BulkFile">@Model.Result.Errors.First().Message</a>
-                </li>
-            } else
-            {
-                if (Model.Result.IsFailure())
+    <div class="govuk-error-summary" aria-labelledby="error-summary-title" data-module="govuk-error-summary" tabindex="-1">
+        <h2 id="error-summary-title" class="govuk-error-summary__title">Incorrect or missing details</h2>
+        <div class="govuk-error-summary__body">
+            <ul class=" govuk-list govuk-error-summary__list">
+                @if (Model.Result.Errors.Any(x => x.Code == "error.mismatchType.EduBaseBulkUpload-MultipleColumnsfile.type.bulkUpload"))
                 {
                     <li>
-                        <a href="#error-log">Errors were found with your data. Correct your data before resubmitting.</a>
+                        <a href="#BulkFile">Multiple column files must be XLSX and bulk upload files can be XLSX or tab delimited text files. For more information, see the Establishment bulk update guidance document below within 'Help with preparing files'</a>
                     </li>
                 }
+                else if (Model.Result.Errors.Any())
+                {
+                    <li>
+                        <a href="#BulkFile">@Model.Result.Errors.First().Message</a>
+                    </li>
+                }
+                else
+                {
+                    if (Model.Result.IsFailure())
+                    {
+                        <li>
+                            <a href="#error-log">Errors were found with your data. Correct your data before resubmitting.</a>
+                        </li>
+                    }
 
-                if (Model.Result.CompletedWithErrors())
-                {
-                    <li>
-                        <a href="#import-errors">@Model.Result.RowErrors rows encountered errors during import. Correct your data before resubmitting.</a>
-                    </li>
+                    if (Model.Result.CompletedWithErrors())
+                    {
+                        <li>
+                            <a href="#import-errors">@Model.Result.RowErrors rows encountered errors during import. Correct your data before resubmitting.</a>
+                        </li>
+                    }
                 }
-            }
-        </ul>
+            </ul>
+        </div>
     </div>
 }
 

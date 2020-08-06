@@ -28,7 +28,7 @@
                 {
                     <button type="submit" name="action" class="govuk-button" value="@VM.ActionSave">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
                 }
-                @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary cancel" })
+                @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button" })
             </div>
         </div>
     </div>
@@ -156,7 +156,7 @@
                         {
                             <div class="button-row govuk-!-margin-bottom-6">
                                 <button id="save-joined-date-submit" type="submit" class="govuk-button" name="action" value="@VM.ActionLinkedEstablishmentSave">Save joined date</button>
-                                @Html.ActionLink("Cancel", "EditLinks", "Group", new { area = "Groups" }, new { @class = "govuk-button govuk-button--secondary js-allow-exit" })
+                                @Html.ActionLink("Cancel", "EditLinks", "Group", new { area = "Groups" }, new { @class = "govuk-button govuk-button--secondary js-allow-exit", data_module="govuk-button" })
                             </div>
                         }
 
@@ -181,7 +181,7 @@
                 {
                     <button type="submit" name="action" class="govuk-button" value="@VM.ActionSave">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
                 }
-                @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel"})
+                @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
             </div>
         </div>
     </div>
