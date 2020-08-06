@@ -66,8 +66,6 @@ class GiasTabs {
       }
       e.preventDefault();
       const yScroll = window.scrollY;
-
-      console.log('yScroll == ', yScroll);
       window.location.replace(targetContent);
 
       $tabs.removeClass(opts.selectedTabClass);
