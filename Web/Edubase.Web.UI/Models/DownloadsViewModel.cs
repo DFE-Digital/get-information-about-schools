@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Core;
+using Edubase.Services.Core;
 using Edubase.Services.Downloads.Models;
 using Edubase.Web.Resources;
 using MoreLinq;
@@ -35,12 +35,14 @@ namespace Edubase.Web.UI.Models
             var openAcademiesAndFreeSchoolsData = Downloads.Where(x => new[] { "all.open.academies.and.free.schools", "all.open.academies.and.free.school.links" }.Contains(x.Tag));
             var openStateFundedSchoolsData = Downloads.Where(x => new[] { "all.open.state-funded.schools", "all.open.state-funded.school.links" }.Contains(x.Tag));
             var openChildrensCentresData = Downloads.Where(x => new[] { "all.open.childrens.centres", "all.open.childrens.centres.links" }.Contains(x.Tag));
-            var openGroupData = Downloads.Where(x => new[] { "academy.sponsor.and.trust.links", "all.group.records", "all.group.links.records", "all.group.with.links.records", "academies.mat.membership" }.Contains(x.Tag));
+            var allGroupData = Downloads.Where(x => new[] { "all.group.records", "all.group.links.records", "all.group.with.links.records", "academies.mat.membership" }.Contains(x.Tag));
+            var openGroupData = Downloads.Where(x => new[] { "academy.sponsor.and.trust.links" }.Contains(x.Tag));
             var allGovernorData = Downloads.Where(x => new[] { "all.governance.records", "all.mat.governance.records", "all.academy.governance.records", "all.la.maintained.governance.records" }.Contains(x.Tag));
 
             var miscData = Downloads.Where(x => !allEstabData.Concat(openAcademiesAndFreeSchoolsData)
                 .Concat(openStateFundedSchoolsData)
                 .Concat(openChildrensCentresData)
+                .Concat(allGroupData)
                 .Concat(openGroupData)
                 .Concat(allGovernorData)
                 .Select(y => y.Tag)
@@ -90,18 +92,35 @@ namespace Edubase.Web.UI.Models
                 retVal.Add(section);
             }
 
-            if (openGroupData.Any())
+            if (allGroupData.Any() || openGroupData.Any())
             {
                 var section = new Section
                 {
                     Heading = "Establishment groups",
                     Paragraph = "You can download the complete record for the specified establishment group. There's a separate file with links to any establishments associated with the groups."
                 };
-                section.SubSections.Add(new Section
+                if (allGroupData.Any())
                 {
-                    Heading = "Open group data",
-                    Files = openGroupData.Select(x => new Tuple<string, FileDownload>(FileDownloadNames.ResourceManager.GetString(CleanTag(x.Tag)) ?? x.Name, x)).ToList()
-                });
+                    section.SubSections.Add(new Section
+                    {
+                        Heading = "All group data",
+                        Files = allGroupData.Select(x =>
+                            new Tuple<string, FileDownload>(
+                                FileDownloadNames.ResourceManager.GetString(CleanTag(x.Tag)) ?? x.Name, x)).ToList()
+                    });
+                }
+
+                if (openGroupData.Any())
+                {
+                    section.SubSections.Add(new Section
+                    {
+                        Heading = "Open group data",
+                        Files = openGroupData.Select(x =>
+                            new Tuple<string, FileDownload>(
+                                FileDownloadNames.ResourceManager.GetString(CleanTag(x.Tag)) ?? x.Name, x)).ToList()
+                    });
+                }
+
                 retVal.Add(section);
             }
 

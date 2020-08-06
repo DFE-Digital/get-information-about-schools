@@ -40,6 +40,9 @@ namespace Edubase.Web.UI.Controllers
         [Route("~/guidance")]
         public ActionResult Guidance() => View();
 
+        [Route("~/responsibilities")]
+        public ActionResult Responsibilities() => View();
+
         [Route("~/news")]
         public async Task<ActionResult> News(bool? refresh)
         {
