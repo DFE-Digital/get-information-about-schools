@@ -119,7 +119,7 @@
     {
         Html.RenderPartial("Partials/_EditAddresses");
         <div class="govuk-form-group">
-            @Html.RouteLink("Add new address", "AddOrReplaceEstablishmentAddress", new {urn = Model.Urn, target = "alt-new"}, new {@class = "replace-address flush--left"})
+            @Html.RouteLink("Add new address", "AddOrReplaceEstablishmentAddress", new {urn = Model.Urn, target = "alt-new"}, new {@class = "replace-address"})
         </div>
     }
 

@@ -99,3 +99,13 @@
     }
   }
 }
+
+.replace-address {
+  display: inline-block;
+  padding-left: govuk-spacing(1);
+
+  @include govuk-media-query($until: tablet) {
+    display: block;
+    padding: govuk-spacing(2) 0 0 0;
+  }
+}
