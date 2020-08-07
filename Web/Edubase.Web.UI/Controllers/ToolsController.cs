@@ -123,10 +123,24 @@ namespace Edubase.Web.UI.Controllers
                     }
                 }
             }
-            if (action == "add" && model.FoundItem.EstablishmentTypeId == null)
+
+            if (action == "add")
             {
-                ModelState.AddModelError(nameof(model.FilteredItemTypes), "Please select an establishment type");
                 model.FilteredItemTypes = (await GetFilteredBulkAcademyTypes(model.FoundItem.Urn ?? 0, establishmentTypeFullList)).ToSelectList(model.FoundItem.EstablishmentTypeId);
+
+                if (model.FoundItem.EstablishmentTypeId == null)
+                {
+                    ModelState.AddModelError(nameof(model.FilteredItemTypes), "Please select an establishment type");
+                }
+            } 
+
+            // cancel either an original addition or an edit
+            if (action == "cancel")
+            {
+                model.SearchUrn = null;
+                model.FoundItem = null;
+                ModelState.Clear();
+                return View(model);
             }
 
             if (!ModelState.IsValid)
@@ -134,14 +148,6 @@ namespace Edubase.Web.UI.Controllers
                 return View(model);
             }
             ModelState.Clear();
-
-            // cancel either an original addition or an edit
-            if (action == "cancel")
-            {
-                model.SearchUrn = null;
-                model.FoundItem = null;
-                return View(model);
-            }
 
             // remove
             if (removeUrn != null)
