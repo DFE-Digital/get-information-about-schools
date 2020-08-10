@@ -1,10 +1,32 @@
 @{
     ViewBag.Title = "Amalgamations and mergers tool";
     ViewBag.bodyClasses = "create-edit";
+    ViewBag.SiteSection = "tools";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li id="tertiary-breadcrumb" class="govuk-breadcrumbs__list-item hidden">
+                        @Html.ActionLink("Amalgamations and mergers tool", "MergersTool", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
 }
 
 <div id="mergers-app" v-cloak>
-<div v-show="commitErrors == '' && Object.keys(apiError).length> 0" class="govuk-grid-row">
+<div v-show="!commitErrors && Object.keys(apiError).length> 0" class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-xl">Sorry, something went wrong</h1>
         <p>Please try again later.</p>
@@ -18,140 +40,14 @@
         </div>
     </div>
 </div>
-<div v-show="commitErrors !== '' || Object.keys(apiError).length === 0" class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-        <div class="govuk-breadcrumbs">
-            <ol class="govuk-breadcrumbs__list">
-                <li class="govuk-breadcrumbs__list-item">
-                    @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
-                </li>
-                <li class="govuk-breadcrumbs__list-item">
-                    @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
-                </li>
-                <li v-show="mergerTypeConfirmed" class="govuk-breadcrumbs__list-item">
-                    @Html.ActionLink("Amalgamations and mergers tool", "MergersTool", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
-                </li>
-            </ol>
-        </div>
-    </div>
-</div>
 
-@* ERROR SUMMARY *@
-@* <div v-if="showGlobalError" class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1"> *@
-@*     <h2 id="error-summary-title" class="govuk-error-summary__title">Incorrect or missing details</h2> *@
-@*     <div class="govuk-error-summary__body"> *@
-@*         <ul class="govuk-list govuk-error-summary__list"> *@
-@*             $1$ CHOOSE #1# *@
-@*             <li v-show="mergerTypeError"> *@
-@*                 <a href="#radio-amalgamation">Please select 'Amalgamation' or 'Merger'</a> *@
-@*             </li> *@
-@* *@
-@*             $1$ BOTH #1# *@
-@*             <li v-show="duplicateUrnsError"> *@
-@*                 <a href="#linked-establishments">One or more <abbr title="Unique Reference Number">URNs</abbr> are duplicated. Please enter different URN(s)</a> *@
-@*             </li> *@
-@*             <li v-show="commitErrors != ''"> *@
-@*                 <a href="#" v-html="commitErrors"></a> *@
-@*             </li> *@
-@* *@
-@*             $1$ AMALGAMATION #1# *@
-@*             <li v-show="amalgamatedEstab1Empty"> *@
-@*                 <a href="#amalgamate-estab1">Enter the establishment 1 URN</a> *@
-@*             </li> *@
-@*             <li v-show="amalgamatedEstab1Invalid"> *@
-@*                 <a href="#amalgamate-estab1">The establishment 1 URN is invalid</a> *@
-@*             </li> *@
-@*             <li v-show="amalgamatedEstab1NoMatch"> *@
-@*                 <a href="#amalgamate-estab1">The establishment 1 URN was not found</a> *@
-@*             </li> *@
-@*             <li v-show="amalgamatedEstab2Empty"> *@
-@*                 <a href="#amalgamate-estab2">Enter the establishment 2 URN</a> *@
-@*             </li> *@
-@*             <li v-show="amalgamatedEstab2Invalid"> *@
-@*                 <a href="#amalgamate-estab2">The establishment 2 URN is invalid</a> *@
-@*             </li> *@
-@*             <li v-show="amalgamatedEstab2NoMatch"> *@
-@*                 <a href="#amalgamate-estab2">The establishment 2 URN was not found</a> *@
-@*             </li> *@
-@*             <li v-show="amalgamatedEstab3Invalid"> *@
-@*                 <a href="#amalgamate-estab3">The establishment 3 URN is invalid</a> *@
-@*             </li> *@
-@*             <li v-show="amalgamatedEstab3NoMatch"> *@
-@*                 <a href="#amalgamate-estab3">The establishment 3 URN was not found</a> *@
-@*             </li> *@
-@*             <li v-show="amalgamatedEstab4Invalid"> *@
-@*                 <a href="#amalgamate-estab4">The establishment 4 URN is invalid</a> *@
-@*             </li> *@
-@*             <li v-show="amalgamatedEstab4NoMatch"> *@
-@*                 <a href="#amalgamate-estab4">The establishment 4 URN was not found</a> *@
-@*             </li> *@
-@* *@
-@*             <li v-show="nameError"> *@
-@*                 <a href="#new-establishment-name">New school details must be completed before amalgamation. Please enter a new school name</a> *@
-@*             </li> *@
-@*             <li v-show="typeError"> *@
-@*                 <a href="#new-establishment-type">You haven't selected an establishment type. Please select one to continue</a> *@
-@*             </li> *@
-@*             <li v-show="phaseError"> *@
-@*                 <a href="#new-establishment-phase">You haven't selected an establishment phase. Please select one to continue</a> *@
-@*             </li> *@
-@*             <li v-show="laError"> *@
-@*                 <a href="#LocalAuthorityId">You haven't selected a local authority. Please select one to continue</a> *@
-@*             </li> *@
-@*             <li v-show="mergeDateError && mergerType==='amalgamation'"> *@
-@*                 <a href="#amalgamationdate-day">You have entered an invalid date. Please correct the date to continue</a> *@
-@*             </li> *@
-@* *@
-@*             $1$ MERGER #1# *@
-@*             <li v-show="leadEstabEmpty"> *@
-@*                 <a href="#lead-establishment">Enter the lead establishment URN</a> *@
-@*             </li> *@
-@*             <li v-show="leadEstabInvalid"> *@
-@*                 <a href="#lead-establishment">The lead establishment URN is invalid</a> *@
-@*             </li> *@
-@*             <li v-show="leadEstabNoMatch"> *@
-@*                 <a href="#lead-establishment">The lead establishment URN was not found</a> *@
-@*             </li> *@
-@*             <li v-show="linkedEstab1Empty"> *@
-@*                 <a href="#establishment-1">Enter the establishment 1 URN</a> *@
-@*             </li> *@
-@*             <li v-show="linkedEstab1Invalid"> *@
-@*                 <a href="#establishment-1">The establishment 1 URN is invalid</a> *@
-@*             </li> *@
-@*             <li v-show="linkedEstab1NoMatch"> *@
-@*                 <a href="#establishment-1">The establishment 1 URN was not found</a> *@
-@*             </li> *@
-@*             <li v-show="linkedEstab2Invalid"> *@
-@*                 <a href="#establishment-2">The establishment 2 URN is invalid</a> *@
-@*             </li> *@
-@*             <li v-show="linkedEstab2NoMatch"> *@
-@*                 <a href="#establishment-2">The establishment 2 URN was not found</a> *@
-@*             </li> *@
-@*             <li v-show="linkedEstab3Invalid"> *@
-@*                 <a href="#establishment-3">The establishment 3 URN is invalid</a> *@
-@*             </li> *@
-@*             <li v-show="linkedEstab3NoMatch"> *@
-@*                 <a href="#establishment-3">The establishment 3 URN was not found</a> *@
-@*             </li> *@
-@*             <li v-show="mergeDateError && mergerType==='merger'"> *@
-@*                 <a href="#merger-date">Merger date is invalid</a> *@
-@*             </li> *@
-@*         </ul> *@
-@*     </div> *@
-@* </div> *@
 
 <div class="govuk-grid-row">
 <div class="govuk-grid-column-full">
     <div>
         <error-summary :error-title="errorTitle" :errors="errors"/>
     </div>
-    <h1 class="govuk-heading-xl" id="page-heading" v-html="pageTitle">
-        @* <span v-show="!mergerTypeConfirmed">Amalgamations and mergers tool</span> *@
-        @* <span v-show="mergerType == 'merger' && mergerTypeConfirmed && !mergerComplete">Merger</span> *@
-        @* <span v-show="mergerType == 'amalgamation' && !completeAmalgamation && mergerTypeConfirmed">Amalgamation</span> *@
-        @* <span v-show="mergerComplete && mergerType== 'merger'">Merger complete</span> *@
-        @* <span v-show="completeAmalgamation">Amalgamation complete</span> *@
-    </h1>
+    <h1 class="govuk-heading-xl" id="page-heading" v-html="pageTitle"></h1>
 </div>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
@@ -277,25 +173,25 @@
                 <div v-bind:class="['govuk-form-group', nameError ? 'govuk-form-group--error' : '' ]">
                     <label class="govuk-label" for="new-establishment-name">Establishment name</label>
                     <span v-show="nameError" class="govuk-error-message">Please enter the establishment name</span>
-                    <input type="text" id="new-establishment-name" class="govuk-input" v-model="newName" />
+                    <input type="text" id="new-establishment-name" class="govuk-input govuk-input--width-20" v-model="newName" />
                 </div>
-                <div v-bind:class="['govuk-form-group', typeError ? 'govuk-gorm-group--error' : '' ]">
+                <div v-bind:class="['govuk-form-group', typeError ? 'govuk-form-group--error' : '' ]">
                     <label class="govuk-label" for="new-establishment-type">Establishment type</label>
                     <span v-show="typeError" class="govuk-error-message">Please select the establishment type</span>
-                    <select id="new-establishment-type" class="govuk-select" v-model="typeId" v-on:change="updatePhases"></select>
+                    <select id="new-establishment-type" class="govuk-select govuk-input--width-20" v-model="typeId" v-on:change="updatePhases"></select>
                 </div>
                 <div v-bind:class="['govuk-form-group', phaseError ? 'govuk-form-group--error' : '' ]">
                     <label class="govuk-label" for="new-establishment-phase">Establishment phase</label>
                     <span v-show="phaseError" class="govuk-error-message">Please select an establishment phase</span>
-                    <select id="new-establishment-phase" class="govuk-select" v-model="phaseId"></select>
+                    <select id="new-establishment-phase" class="govuk-select govuk-input--width-20" v-model="phaseId"></select>
                 </div>
                 <div v-bind:class="['govuk-form-group', laError ? 'govuk-form-group--error' : '' ]">
                     <label for="LocalAuthorityId" class="govuk-label">Local authority</label>
                     <span v-show="laError" class="govuk-error-message">Please select a local authority</span>
-                    <select class="govuk-select" id="LocalAuthorityId" name="LocalAuthorityId" v-model="laId"></select>
+                    <select class="govuk-select govuk-input--width-20" id="LocalAuthorityId" name="LocalAuthorityId" v-model="laId"></select>
                 </div>
                 </fieldset>
-                <div v-bind:class="['govuk-form-group range-group date-group', mergeDateError ? 'govuk-form-group--error' : '' ]">
+                <div v-bind:class="['govuk-form-group range-group date-group create-edit-form-group', mergeDateError ? 'govuk-form-group--error' : '' ]">
                     <fieldset class="govuk-fieldset edit-date-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">Amalgamation date</legend>
                         <div class="govuk-hint">For example, 20 03 2003</div>
@@ -303,18 +199,14 @@
                         <div class="govuk-date-input">
                             <div class="govuk-date-input__item">
                                 <div class="govuk-form-group">
-                                    <div class="govuk-date-input__item">
-                                        <label for="amalgamationdate-day" class="govuk-label govuk-date-input__label">Day</label>
-                                        <input class="govuk-input date-text-day" type="text" v-model="mergeDateDay" id="amalgamationdate-day">
-                                    </div>
+                                    <label for="amalgamationdate-day" class="govuk-label govuk-date-input__label">Day</label>
+                                    <input class="govuk-input date-text-day" type="text" v-model="mergeDateDay" id="amalgamationdate-day">
                                 </div>
                             </div>
                             <div class="govuk-date-input__item">
                                 <div class="govuk-form-group">
-                                    <div class="govuk-date-input__item">
-                                        <label for="amalgamationdate-month" class="govuk-label govuk-date-input__label">Month</label>
-                                        <input class="govuk-input date-text-month" type="text" v-model="mergeDateMonth" id="amalgamationdate-month">
-                                    </div>
+                                    <label for="amalgamationdate-month" class="govuk-label govuk-date-input__label">Month</label>
+                                    <input class="govuk-input date-text-month" type="text" v-model="mergeDateMonth" id="amalgamationdate-month">
                                 </div>
                             </div>
                             <div class="govuk-date-input__item">
@@ -381,11 +273,7 @@
 
                 @* FORM ERROR MESSAGES - LEAD ESTABLISHMENT *@
                 <span v-if="mergerUrn0Error.length > 0" class="govuk-error-message" v-html="mergerUrn0Error"></span>
-                @* <span v-if="leadEstabEmpty" class="error-message">Enter the lead establishment URN</span> *@
-                @* <span v-if="leadEstabInvalid" class="error-message">The lead establishment URN is invalid</span> *@
-                @* <span v-if="leadEstabNoMatch" class="error-message">The lead establishment URN was not found</span> *@
-                @* <span v-if="!leadEstabEmpty && duplicateUrnsError" class="error-message">Duplicate <abbr title="Unique Reference Number">URN</abbr>. Please correct the URN.</span> *@
-                <input class="govuk-input govuk-!-width-three-quarters" id="merger-estab0" type="text" v-model="mergerEstab0" />
+                <input class="govuk-input govuk-input--width-20" id="merger-estab0" type="text" v-model="mergerEstab0" />
             </div>
 
             <fieldset class="govuk-fieldset">
@@ -397,29 +285,19 @@
                 <div v-bind:class="['govuk-form-group', mergerUrn1Error.length > 0 ? 'govuk-form-group--error' : '' ]">
                     <label for="establishment-1" class="govuk-label">Establishment 1 URN</label>
                     <span v-if="mergerUrn1Error.length > 0" class="govuk-error-message" v-html="mergerUrn1Error"></span>
-                    @* <span v-if="linkedEstab1Empty" class="error-message">Enter the establishment 1 URN</span> *@
-                    @* <span v-if="linkedEstab1Invalid" class="error-message">The establishment 1 URN is invalid</span> *@
-                    @* <span v-if="linkedEstab1NoMatch" class="error-message">The establishment 1 URN was not found</span> *@
-                    @* <span v-if="!linkedEstab1Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span> *@
-                    <input class="govuk-input govuk-!-width-three-quarters" id="merger-estab1" type="text" v-model="mergerEstab1" />
+                   <input class="govuk-input govuk-input--width-20" id="merger-estab1" type="text" v-model="mergerEstab1" />
                 </div>
 
                 <div v-bind:class="['govuk-form-group', mergerUrn2Error.length > 0 ? 'govuk-form-group--error' : '' ]">
                     <label for="establishment-2" class="govuk-label">Establishment 2 URN</label>
                     <span v-if="mergerUrn2Error.length > 0" class="govuk-error-message" v-html="mergerUrn2Error"></span>
-                    @* <span v-if="linkedEstab2Invalid" class="error-message">The establishment 2 URN is invalid</span> *@
-                    @* <span v-if="linkedEstab2NoMatch" class="error-message">The establishment 2 URN was not found</span> *@
-                    @* <span v-if="!linkedEstab2Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span> *@
-                    <input class="govuk-input govuk-!-width-three-quarters" id="merger-estab2" type="text" v-model="mergerEstab2" />
+                   <input class="govuk-input govuk-input--width-20" id="merger-estab2" type="text" v-model="mergerEstab2" />
                 </div>
 
                 <div v-bind:class="['govuk-form-group', mergerUrn3Error.length > 0 ? 'govuk-form-group--error' : '' ]">
                     <label for="establishment-3" class="govuk-label">Establishment 3 URN</label>
                     <span v-if="mergerUrn3Error.length > 0" class="govuk-error-message" v-html="mergerUrn3Error"></span>
-                    @* <span v-if="linkedEstab3Invalid" class="error-message">The establishment 3 URN is invalid</span> *@
-                    @* <span v-if="linkedEstab3NoMatch" class="error-message">The establishment 3 URN was not found</span> *@
-                    @* <span v-if="!linkedEstab3Empty && duplicateUrnsError" class="error-message">Duplicate URN. Please correct the <abbr title="Unique Reference Number">URN</abbr>.</span> *@
-                    <input class="govuk-input govuk-!-width-three-quarters" id="merger-estab3" type="text" v-model="mergerEstab3" />
+                   <input class="govuk-input govuk-input--width-20" id="merger-estab3" type="text" v-model="mergerEstab3" />
                 </div>
             </fieldset>
         </div>
@@ -432,39 +310,47 @@
         </div>
     </div>
     <div v-show="validMergeUrns && !mergerComplete">
-        <div class="govuk-column-two-thirds" id="merger-summary">
+        <div class="govuk-grid-column-two-thirds" id="merger-summary">
             <p>You can propose closing one or more schools and altering the remaining school.</p>
             <h2 class="govuk-heading-s">Establishments to be merged</h2>
             <p>
                 Lead establishment (remains open)
                 <br />
-                <span>{{ leadEstab }}</span> {{ leadEstablishmentName }}
+                <span>{{ mergerEstab0 }}</span> {{ leadEstablishmentName }}
             </p>
 
-            <h2 class="govuk-heading-s">Establishments to be merged</h2>
+            <p>Establishments to be merged</p>
             <ol class="govuk-list govuk-list--number linked-establishments" id="linked-establishments">
-                <li v-for="(school, index) in mergerEstabs" v-if="school.urn !=leadEstab"><span>{{school.urn}} - {{school.name}}</span></li>
+                <li v-for="(school, index) in mergerEstabs" v-if="school.urn !== Number(mergerEstab0)"><span>{{school.urn}} - {{school.name}}</span></li>
             </ol>
 
 
-            <div v-bind:class="['govuk-form-group range-group date-group', mergeDateError ? 'govuk-form-group--error' : '' ]">
-                <fieldset id="merger-date" class="govuk-fieldset">
+            <div v-bind:class="['govuk-form-group range-group date-group create-edit-form-group', mergeDateError ? 'govuk-form-group--error' : '' ]">
+                <fieldset id="merger-date" class="govuk-fieldset edit-date-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">Merge date</legend>
                     <div class="govuk-hint">For example, 20 03 2003</div>
                     <span v-show="mergeDateError" class="govuk-error-message">Please enter a valid establishment open date</span>
+                    <div class="govuk-date-input">
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label for="mergedate-day" class="govuk-label">Day</label>
+                                <input class="govuk-input date-text-day" id="mergedate-day" name="OpenDate.Day" type="text" v-model="mergeDateDay">
+                            </div>
+                        </div>
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label for="mergedate-month" class="govuk-label">Month</label>
+                                <input class="govuk-input date-text-month" id="mergedate-month" name="OpenDate.Month" type="text" v-model="mergeDateMonth">
+                            </div>
+                        </div>
 
-                    <span class="inline-form-control">
-                        <label for="mergedate-day">Day</label>
-                        <input class="form-control date-text-day" id="mergedate-day" name="OpenDate.Day" type="text" v-model="mergeDateDay">
-                    </span>
-                    <span class="inline-form-control">
-                        <label for="mergedate-month">Month</label>
-                        <input class="form-control date-text-month" id="mergedate-month" name="OpenDate.Month" type="text" v-model="mergeDateMonth">
-                    </span>
-                    <span class="inline-form-contol">
-                        <label for="mergedate-year">Year</label>
-                        <input class="form-control date-text-year" id="mergedate-year" name="OpenDate.Year" type="text" v-model="mergeDateYear">
-                    </span>
+                        <div class="govuk-date-input__item">
+                            <div class="govuk-form-group">
+                                <label for="mergedate-year" class="govuk-label">Year</label>
+                                <input class="govuk-input date-text-year" id="mergedate-year" name="OpenDate.Year" type="text" v-model="mergeDateYear">
+                            </div>
+                        </div>
+                    </div>
                 </fieldset>
             </div>
         </div>
@@ -477,75 +363,57 @@
         </div>
 
     </div>
-@*     <div v-show="mergerComplete"> *@
-@*         <div class="column-two-thirds"> *@
-@*             <div class="summary-panel"> *@
-@*                 <dl class="summary-list"> *@
-@*                     <dt><strong class="bold-small">Closing establishment details</strong></dt> *@
-@*                     <dd> *@
-@*                         <ol class="linked-establishments"> *@
-@*                             <li v-for="school in mergerEstabs"><span>{{school.urn}} - {{school.name}}</span></li> *@
-@*                         </ol> *@
-@*                     </dd> *@
-@*                 </dl> *@
-@*             </div> *@
-@*             <div class="summary-panel"> *@
-@*                 <h3 class="heading-small">Merged establishment details</h3> *@
-@*                 <a v-bind:href="schoolDetailUrl">{{leadEstab}} - {{leadEstablishmentName}}</a> *@
-@*                 <ul class="amalg-summary"> *@
-@*                     <li>Establishment type: Free schools</li> *@
-@*                     <li>Merger date: {{displayDate}}</li> *@
-@*                 </ul> *@
-@*             </div> *@
-@* *@
-@* *@
-@*             <p> *@
-@*                 Please update the *@
-@*                 <a v-bind:href="schoolDetailUrl">merged record</a> *@
-@*                 to reflect any changes (for *@
-@*                 example, establishment name or age range). *@
-@*             </p> *@
-@*         </div> *@
-@*     </div> *@
-@* </div> *@
+    <div v-show="mergerComplete">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="summary-panel">
+                <h3 class="govuk-heading-s">Closing establishment details</h3>
+                <ol class="govuk-list govuk-list--number linked-establishments">
+                    <li v-for="school in mergerEstabs"><span>{{school.urn}} - {{school.name}}</span></li>
+                </ol>
 
+            </div>
+            <div class="summary-panel">
+                <h3 class="govuk-heading-s">Merged establishment details</h3>
+                <a v-bind:href="schoolDetailUrl">{{mergerEstab0}} - {{leadEstablishmentName}}</a>
+                <ul class="govuk-list amalg-summary">
+                    <li>Establishment type: Free schools</li>
+                    <li>Merger date: {{displayDate}}</li>
+                </ul>
+            </div>
+
+
+            <p>
+                Please update the
+                <a v-bind:href="schoolDetailUrl">merged record</a>
+                to reflect any changes (for
+                example, establishment name or age range).
+            </p>
+        </div>
+    </div>
 </div>
 </form>
-@* <div id="modal-overlay" class="modal-overlay" v-show="presentExitWarning"></div> *@
-@* <div id="modal-content" class="modal-content" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc" v-show="presentExitWarning"> *@
-@*     <a href="#" id="exit-overlay" class="modal-exit" v-on:click.prevent="presentExitWarning = false">Close</a> *@
-@*     <div id="modal-inner"> *@
-@*         <h3 class="heading-large" id="modal-label" tabindex="0">Are you sure you want to leave this page?</h3> *@
-@*         <p id="modal-desc" tabindex="0">Any unsaved changes will be lost.</p> *@
-@*     </div> *@
-@*     <div class="button-row"> *@
-@*         <a href="#" class="button" id="button-ok" v-on:click.prevent="exitConfirmed">OK</a> *@
-@*         <a href="#" class="button button-secondary" id="button-cancel" v-on:click.prevent="presentExitWarning = false">Cancel</a> *@
-@*     </div> *@
-@* </div> *@
 </div>
 
+<div id="modal-overlay" class="modal-overlay" v-show="presentExitWarning"></div>
+<div id="modal-content" class="modal-content" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc" v-show="presentExitWarning">
+    <a href="#" id="exit-overlay" class="modal-exit" v-on:click.prevent="presentExitWarning = false">Close</a>
+    <div id="modal-inner">
+        <h3 class="govuk-heading-l" id="modal-label" tabindex="0">Are you sure you want to leave this page?</h3>
+        <p id="modal-desc" tabindex="0">Any unsaved changes will be lost.</p>
+    </div>
+    <div class="button-row">
+        <a href="#" class="govuk-button" id="button-ok" v-on:click.prevent="exitConfirmed">OK</a>
+        <a href="#" class="govuk-button govuk-button-secondary" id="button-cancel" v-on:click.prevent="presentExitWarning = false">Cancel</a>
+    </div>
+</div>
+</div>
 @section ViewScripts{
-
     <script nonce="@Html.ScriptNonce()">
-
         // Jon: you want all this stuff 'ere
         var type2PhaseMap = @Html.Raw(ViewBag.Type2PhaseMapJson);
-
         var localAuthorities = @Html.Raw(ViewBag.LocalAuthoritiesJson);
-
         var types = @Html.Raw(ViewBag.TypesJson);
-
         var phases = @Html.Raw(ViewBag.PhasesJson);
-
-</script>
-
-
+    </script>
     <script src="/public/assets/scripts/build/merge-amalgamate.js"></script>
-    @* <script src="/Assets/Scripts/standalone/merge-amalgamate.js"></script> *@
-
-    @*<script src="/public/assets/scripts/standalone/merge-amalgamate.js"></script>*@
-
-
-
 }

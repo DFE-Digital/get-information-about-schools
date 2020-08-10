@@ -15,7 +15,7 @@ const mergersApp = new Vue({
     phases: window.phases,
     errorTitle: 'Incorrect or missing details',
     errors: [],
-    commitErrors: '',
+    commitErrors: false,
     apiError: {},
     isProcessing: false,
 
@@ -70,6 +70,7 @@ const mergersApp = new Vue({
     completeAmalgamation: false,
     amalgUrn: '',
     exitUrl: '',
+    presentExitWarning: false,
 
   },
   created: function() {
@@ -89,6 +90,13 @@ const mergersApp = new Vue({
 
     this.populateSelect('new-establishment-type', this.types);
     this.populateSelect('LocalAuthorityId', this.localAuthorities);
+    this.blockExits();
+  },
+  watch: {
+    mergerTypeConfirmed: function() {
+      // breadcrumbs out side of vue app, but need to be kept in sync
+      $('#tertiary-breadcrumb').toggleClass('hidden');
+    }
   },
   methods: {
     populateSelect: function (control, data) {
@@ -365,11 +373,11 @@ const mergersApp = new Vue({
         requests.push(self.urnCheck(self.mergerEstab1, 'mergerEstab1','mergerUrn1Error'));
       }
 
-      if (!this.mergerUrn2Error.length && this.amalgamatedEstab3.length) {
+      if (!this.mergerUrn2Error.length && this.mergerEstab2.length) {
         requests.push(self.urnCheck(self.mergerEstab2, 'mergerEstab2','mergerUrn2Error'));
       }
 
-      if (!this.mergerUrn3Error.length && this.amalgamatedEstab4.length) {
+      if (!this.mergerUrn3Error.length && this.mergerEstab3.length) {
         requests.push(self.urnCheck(self.mergerEstab3, 'mergerEstab3','mergerUrn3Error'));
       }
 
@@ -382,9 +390,13 @@ const mergersApp = new Vue({
         }
       });
     },
+    exitConfirmed: function() {
+      window.location = this.exitUrl;
+    },
     processAmalgamation: function () {
       const self = this;
       let postData = {};
+      this.errors = [];
 
       this.nameError = (this.newName.length < 1);
       this.typeError = (this.typeId === '');
@@ -392,6 +404,41 @@ const mergersApp = new Vue({
       this.phaseError = (this.phaseId === '');
       this.mergeDateError = this.validateMergerDate();
 
+
+      if (this.nameError) {
+        this.errors.push({
+          href: '#new-establishment-name',
+          message: 'New school details must be completed before amalgamation. Please enter a new school name.',
+        });
+      }
+
+      if (this.typeError) {
+        this.errors.push({
+          href: '#new-establishment-type',
+          message: 'You haven\'t selected an establishment type. Please select one to continue.',
+        });
+      }
+
+      if (this.phaseError) {
+        this.errors.push({
+          href: '#new-establishment-phase',
+          message: 'You haven\'t selected an establishment phase. Please select one to continue.',
+        });
+      }
+
+      if (this.laError) {
+        this.errors.push({
+          href: '#LocalAuthorityId',
+          message: 'You haven\'t selected a local authority. Please select one to continue.',
+        });
+      }
+
+      if (this.mergeDateError) {
+        this.errors.push({
+          href: '#amalgamationdate-day',
+          message: 'You have entered an invalid date. Please correct the date to continue',
+        });
+      }
       this.errorFocus();
 
       if (!this.nameError &&
@@ -428,14 +475,14 @@ const mergersApp = new Vue({
             }
           },
           error: function (jqXHR) {
-            var errObj = JSON.parse(jqXHR.responseText);
-            var errMessage = '';
+            const errObj = JSON.parse(jqXHR.responseText);
+            let errMessage = '';
 
             if (jqXHR.hasOwnProperty('responseJSON')) {
               self.apiError = jqXHR.responseJSON;
             }
 
-            for (var item in errObj) {
+            for (const item in errObj) {
               if (item === 'validationEnvelope' && errObj.validationEnvelope) {
                 var env = errObj[item][0].errors;
                 env.forEach(function (er) {
@@ -455,6 +502,83 @@ const mergersApp = new Vue({
         });
       }
     },
+    processMerger: function () {
+      const self = this;
+      let postData = {};
+      this.errors = [];
+
+      postData.operationType = 'merge';
+      postData.MergeOrAmalgamationDate = [this.mergeDateYear, this.mergeDateMonth, this.mergeDateDay].join('-');
+      postData.LeadEstablishmentUrn = this.mergerEstab0;
+      postData.UrnsToMerge = this.mergerEstabs.filter(function(item) {
+        console.log(item);
+        return item.urn !== Number(self.mergerEstab0);
+      }).map(function (estab) {
+        return estab.urn;
+      });
+
+      // postData.UrnsToMerge = postData.UrnsToMerge.filter(function(item) {
+      //   return item !== Number(self.mergerEstab0);
+      // });
+
+      this.mergeDateError = this.validateMergerDate();
+      this.errorFocus();
+
+      if (!this.mergeDateError) {
+        this.validLinkDate = true;
+        this.isProcessing = true;
+        $.ajax({
+          url: self.commitApi,
+          method: 'post',
+          contentType: 'application/json; charset=utf-8',
+          dataType: 'json',
+          data: JSON.stringify(postData),
+          success: function (data) {
+            if (data.hasOwnProperty('successful') && data.successful) {
+              self.mergerComplete = true;
+              self.isProcessing = false;
+              self.clearErrors();
+            }
+          },
+          error: function (jqXHR) {
+            const errObj = JSON.parse(jqXHR.responseText);
+            let errMessage = '';
+
+            if (jqXHR.hasOwnProperty('responseJSON')) {
+              self.apiError = jqXHR.responseJSON;
+            }
+
+            for (const item in errObj) {
+              if (item === 'validationEnvelope') {
+                const env = errObj[item][0].errors;
+                env.forEach(function (er) {
+                 // errMessage += er.message + '<br>';
+                  self.errors.push({
+                    href: '#',
+                    message: er.message
+                  });
+                });
+              } else if (!errObj.validationEnvelope && item === 'errors') {
+               //errMessage = errObj.errors[0].message;
+                self.errors.push({
+                  href: '#',
+                  message: errObj.errors[0].message
+                });
+                self.validMergeUrns = false;
+              }
+            }
+            self.commitErrors = self.errors.length > 0;
+            self.isProcessing = false;
+            self.errorFocus();
+          }
+        });
+      } else {
+       this.errors.push({
+         href: '#mergedate-day',
+         message: 'Merger date is invalid',
+       });
+      }
+    },
     selectedEstablishmentType: function () {
       const self = this;
       if (self.typeId !== '') {
@@ -471,14 +595,14 @@ const mergersApp = new Vue({
     },
     validateMergerDate: function () {
       const day = parseInt(this.mergeDateDay, 10);
-        const month = parseInt(this.mergeDateMonth -1, 10);
-        const year = parseInt(this.mergeDateYear, 10);
+      const month = parseInt(this.mergeDateMonth - 1, 10);
+      const year = parseInt(this.mergeDateYear, 10);
 
-        let dateError = false;
-        const months31 = [0, 2, 4, 6, 7, 9, 11];
-        const currentYear = new Date().getFullYear();
+      let dateError = false;
+      const months31 = [0, 2, 4, 6, 7, 9, 11];
+      const currentYear = new Date().getFullYear();
 
-      if (!day || !month || !year || isNaN(day) || isNaN(month) || isNaN(year)) {
+      if (!day || !this.mergeDateMonth || !year || isNaN(day) || isNaN(month) || isNaN(year)) {
         dateError = true;
       }
 
@@ -504,11 +628,33 @@ const mergersApp = new Vue({
         }
       }
 
-      if (month < 1 || month > 12) {
+      if (this.mergeDateMonth < 1 || this.mergeDateMonth > 12) {
         dateError = true;
       }
 
       return dateError;
+    },
+    restart: function () {
+      if (!this.mergerTypeConfirmed) {
+        window.location = '/Tools';
+        return;
+      }
+      window.location = '/Tools/MergersTool';
+    },
+    blockExits: function () {
+      const self = this;
+      $('a, [value="cancel"]').on('click', function (e) {
+        self.exitUrl = $(this).attr('href');
+        if ((self.mergerType === 'amalgamation' && !self.completeAmalgamation) ||
+          (self.mergerType == 'merger' && !self.mergerComplete)) {
+          e.preventDefault();
+          self.presentExitWarning = true;
+
+          window.setTimeout(function(){
+            $('#button-ok').focus();
+          },0)
+        }
+      });
     },
   },
   computed: {
@@ -537,6 +683,19 @@ const mergersApp = new Vue({
 
     displayDate: function () {
       return this.mergeDateDay + '/' + this.mergeDateMonth + '/' + this.mergeDateYear;
+    },
+    leadEstablishmentName: function () {
+      const self = this;
+      console.log(this.mergerEstabs);
+      console.log(this.mergerEstab0);
+      if (self.validMergeUrns && self.mergerType === 'merger') {
+        const leadName = self.mergerEstabs.filter(function (estab) {
+          return estab.urn === Number(self.mergerEstab0);
+        })[0].name;
+
+        return leadName;
+      }
+      return '';
     },
 
   }
