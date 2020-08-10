@@ -3,6 +3,8 @@
 
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Establishment bulk update");
+    ViewBag.SiteSection = "tools";
+    ViewBag.BodyClasses = "create-edit";
 }
 
 @section BreadCrumbs
@@ -66,35 +68,42 @@
 
 
 
-<div class="grid-row">
-    <div class="column-full">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
         @if (Model.Result != null && Model.Result.IsCompleted() && !Model.Result.IsFailure() && !Model.Result.CompletedWithErrors())
         {
             <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
                 <div class="tick"></div>
                 <p class="message-text" aria-live="polite">Your bulk update was successful.</p>
-                <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
+                <a class="cross" href="#"><span class="govuk-visually-hidden">Dismiss notification</span></a>
             </div>
         }
-        <h1 class="heading-xlarge">Establishment bulk update</h1>
-
-        <p class="text">
-            Update establishment records by uploading a CSV or XLSX file. Multiple column updates must be in XLSX format.
-        </p>
+        <h1 class="govuk-heading-xl">Establishment bulk update</h1>
     </div>
-    <div class="column-full">
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body">
+        Update establishment records by uploading a CSV or XLSX file. Multiple column updates must be in XLSX format.
+    </p>
+</div>
+    <div class="govuk-grid-column-full">
 
-        <div class="expanding-content-wrapper" data-update-text="false">
-            <a href="#" class="expanding-content-trigger">
+        <details class="govuk-details" data-module="govuk-details">
+           <summary class="govuk-details__summary">
+             <span class="govuk-details__summary-text">
                 Help with preparing files
-            </a>
-            <div class="expanding-content panel-indent">
-                <p>For a step by step guide to prepare documents for bulk update please download this file.</p>
-                <p class="download-list-item">
-                    <a href="https://edubasepr.blob.core.windows.net/guidance/Establishment_Bulk_Update_Guide.pdf" target="_blank" rel="nofollow" class="js-track" data-track="bulkUpdate|establish-bulk-update|download">Establishment bulk update guidance PDF, 353KB <span class="visually-hidden">Opens in new window</span></a>
+            </span>
+             </summary>
+              <div class="govuk-details__text">
+                  <p>
+                      For a step by step guide to prepare documents for bulk update please download this file.
+                  </p>
+                  <p>
+                    <a href="https://edubasepr.blob.core.windows.net/guidance/Establishment_Bulk_Update_Guide.pdf" target="_blank" rel="nofollow" class="js-track" data-track="bulkUpdate|establish-bulk-update|download">Establishment bulk update guidance PDF, 353KB <span class="govuk-visually-hidden">Opens in new window</span></a>
                 </p>
             </div>
-        </div>
+        </details>
 
         @if (Model.Result != null)
         {
@@ -108,19 +117,19 @@
                     @Html.Hidden("id", @Model.Result.Id)
                     @Html.Hidden("path", path)
 
-                    <div class="form-group error" id="error-log">
+                    <div class="govuk-form-group govuk-form-group--error" id="error-log">
 
                         @if (Model.Result.CompletedWithErrors())
                         {
-                            <p class="error-message">@Model.Result.RowErrors rows encountered errors during import. Please download the error log to correct your data before resubmitting</p>
+                            <p class="govuk-error-message">@Model.Result.RowErrors rows encountered errors during import. Please download the error log to correct your data before resubmitting</p>
                         }
                         else
                         {
-                            <p class="error-message">Please download the error log to correct your data before resubmitting</p>
+                            <p class="govuk-error-message">Please download the error log to correct your data before resubmitting</p>
                         }
 
-                        <p class="download-list-item">
-                            <input type="submit" class="button inline-button" value="@Model.Result.ErrorLogFile.Name" /><br />
+                        <p>
+                            <input type="submit" class="govuk-button" value="@Model.Result.ErrorLogFile.Name" /><br />
                         </p>
                     </div>
                 }
@@ -130,17 +139,18 @@
 
     @using (Html.BeginRouteForm("ProcessBulkUpdate", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-        <div class="column-half">
-            <div class="form-group push--bottom @Html.ValidationCssClassFor(x => x.BulkFile)">
-                <label for="BulkFile" class="form-label">Upload a file</label>
-                <div class="expanding-content-wrapper flush--bottom" data-update-text="false">
-                    <a href="#" class="expanding-content-trigger">
+        <div class="govuk-grid-column-one-half">
+            <div class="govuk-form-group  @Html.ValidationCssClassFor(x => x.BulkFile)">
+                <label for="BulkFile" class="govuk-label">Upload a file</label>
+                <details class="govuk-details" data-module="govuk-details">
+                  <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
                         Max file size and other limits
-                    </a>
-                    <div class="expanding-content panel-indent">
-                        <p>
-                            Max file size is 1MB. There are also limits of:
-                            <ul class="list-bullet inside flush--bottom">
+                    </span>
+                    </summary>
+                      <div class="govuk-details__text">
+                          <p>Max file size is 1MB. There are also limits of:</p>
+                            <ul class="govuk-list govuk-list--bullet inside flush--bottom">
                                 <li>
                                     5,000 rows per file for back office users
                                 </li>
@@ -151,44 +161,47 @@
                                     200 rows per file for establishment and multi-academy trust users
                                 </li>
                             </ul>
-                        </p>
                     </div>
-                </div>
-                @Html.ValidationMessageFor(x => x.BulkFile)
-                @Html.TextBoxFor(x => x.BulkFile, new { type = "file" })
+                </details>
+                @Html.ValidationMessageFor(x => x.BulkFile, null, new { @class = "govuk-error-message" })
+                @Html.TextBoxFor(x => x.BulkFile, new { type = "file", @class = "govuk-file-upload" })
             </div>
 
-            <div class="form-group push--bottom @Html.ValidationCssClassFor(x => x.BulkUpdateType)">
-                <label class="form-label" for="BulkUpdateType">
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.BulkUpdateType)">
+                <label class="govuk-label" for="BulkUpdateType">
                     Select file type
                 </label>
-                @Html.ValidationMessageFor(x => x.BulkUpdateType)
-                @Html.EnumDropDownListFor(x => x.BulkUpdateType, "Select...", new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.BulkUpdateType, null, new { @class = "govuk-error-message" })
+                @Html.EnumDropDownListFor(x => x.BulkUpdateType, "Select...", new { @class = "govuk-select" })
             </div>
 
-            @Html.EditorFor(m => m.EffectiveDate, new { title = "Effective date (optional)" })
+            @Html.EditorFor(m => m.EffectiveDate, new { title = "Effective date (optional)", fieldsetClassName = "edit-date-fieldset" })
 
             @if (Model.CanOverrideCRProcess)
             {
-                <div class="form-group push--ends">
-                    <div class="multiple-choice">
-                        @Html.CheckBoxFor(x => x.OverrideCRProcess, new { @id = "override-cr" })
-                        @Html.LabelFor(x => x.OverrideCRProcess, "Override CR", new { @for = "override-cr" })
+                <div class="govuk-form-group ">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            @Html.CheckBoxFor(x => x.OverrideCRProcess, new {@id = "override-cr", @class = "govuk-checkboxes__input"})
+                            @Html.LabelFor(x => x.OverrideCRProcess, "Override CR", new {@for = "override-cr", @class = "govuk-checkboxes__label"})
+                        </div>
                     </div>
                 </div>
             }
 
         </div>
-        <div class="column-full">
-            <button type="submit" class="button" value="Submit">Submit</button>
-            @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new { @class = "button button-secondary cancel" })
+        <div class="govuk-grid-column-full">
+            <div class="button-row govuk-!-padding-top-6">
+                <button type="submit" class="govuk-button" value="Submit">Submit</button>
+                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+            </div>
         </div>
 
         }
     </div>
 
 
-
-@section ViewScripts{
-    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
-}
+@* *@
+@* @section ViewScripts{ *@
+@*     <script src="/public/assets/scripts/standalone/accessibility.js"></script> *@
+@* } *@
