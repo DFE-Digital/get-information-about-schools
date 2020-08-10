@@ -66,7 +66,7 @@
                                             <span class="icon-link-copy">
                                                 @if (file.Item2.RequiresGeneration)
                                                 {
-                                                    <a href="@Url.RouteUrl("GenerateDownload", new {id = file.Item2.Tag})" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
+                                                    <a href="@Url.RouteUrl("GenerateDownload", new {id = file.Item2.Tag})" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
                                                         @file.Item1@Html.Conditional(file.Item2.FileSizeInBytes > 0, ", " + Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes)) <span class="visually-hidden">Opens in new window</span>
                                                     </a>
                                                 }
