@@ -223,8 +223,6 @@ const mergersApp = new Vue({
       this.clearErrors();
 
       this.isProcessing = true;
-      console.log(this.isProcessing);
-     // this.clearAmalgamationFields();
       this.amalgamationEstabs = [];
 
 
@@ -245,7 +243,6 @@ const mergersApp = new Vue({
       }
 
       const hasDupes = this.hasDuplicateUrn();
-      console.log( 'hasDupes == ', hasDupes);
       if (hasDupes) {
         this.errors.push({
           message: 'One or more <abbr title="Unique Reference Number">URNs</abbr> are duplicated. Please enter different URN(s)',
@@ -323,7 +320,6 @@ const mergersApp = new Vue({
       }
 
       const hasDupes = this.hasDuplicateUrn();
-      console.log( 'hasDupes == ', hasDupes);
       if (hasDupes) {
         this.errors.push({
           message: 'One or more <abbr title="Unique Reference Number">URNs</abbr> are duplicated. Please enter different URN(s)',
@@ -486,16 +482,20 @@ const mergersApp = new Vue({
               if (item === 'validationEnvelope' && errObj.validationEnvelope) {
                 var env = errObj[item][0].errors;
                 env.forEach(function (er) {
-                  //console.log(errObj[item][0].errors);
-                  //console.log(er);
-                  errMessage += er.message + '<br>';
+                  self.errors.push({
+                    href: '#',
+                    message: er.message
+                  });
                 });
               } else if (!errObj.validationEnvelope && item === 'errors') {
-                errMessage = errObj.errors[0].message;
+                self.errors.push({
+                  href: '#',
+                  message: errObj.errors[0].message
+                });
                 self.validMergeUrns = false;
               }
             }
-            self.commitErrors = errMessage;
+            self.commitErrors = this.errors.length > 0;
             self.isProcessing = false;
             self.errorFocus();
           }
@@ -511,7 +511,6 @@ const mergersApp = new Vue({
       postData.MergeOrAmalgamationDate = [this.mergeDateYear, this.mergeDateMonth, this.mergeDateDay].join('-');
       postData.LeadEstablishmentUrn = this.mergerEstab0;
       postData.UrnsToMerge = this.mergerEstabs.filter(function(item) {
-        console.log(item);
         return item.urn !== Number(self.mergerEstab0);
       }).map(function (estab) {
         return estab.urn;
@@ -686,8 +685,6 @@ const mergersApp = new Vue({
     },
     leadEstablishmentName: function () {
       const self = this;
-      console.log(this.mergerEstabs);
-      console.log(this.mergerEstab0);
       if (self.validMergeUrns && self.mergerType === 'merger') {
         const leadName = self.mergerEstabs.filter(function (estab) {
           return estab.urn === Number(self.mergerEstab0);
