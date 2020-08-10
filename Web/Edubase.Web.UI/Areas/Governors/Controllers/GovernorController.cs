@@ -716,7 +716,21 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var governors = (await _governorsReadService.GetSharedGovernorsAsync(model.Urn.Value, User)).Where(g => roles.Contains((eLookupGovernorRole) g.RoleId) && g.Id != model.ExistingGovernorId).ToList();
 
             model.NewLocalGovernor.DisplayPolicy = await _governorsReadService.GetEditorDisplayPolicyAsync((RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole) governor.RoleId.Value) ?? (eLookupGovernorRole) governor.RoleId.Value), false, User);
-            model.SharedGovernors = (await Task.WhenAll(governors.Select(async g => await SharedGovernorViewModel.MapFromGovernor(g, model.Urn.Value, _cachedLookupService)))).ToList();
+
+            var sourceGovernors = (await Task.WhenAll(governors.Select(async g => await SharedGovernorViewModel.MapFromGovernor(g, model.Urn.Value, _cachedLookupService)))).ToList();
+            for (int i = 0; i < model.SharedGovernors.Count; i++)
+            {
+                // if this is the one the user selected, we dont want to change any of the values they entered
+                if (model.SharedGovernors[i].Selected)
+                {
+                    model.SharedGovernors[i].SharedWith = sourceGovernors.First(x => x.Id == model.SharedGovernors[i].Id).SharedWith;
+                }
+                else
+                {
+                    model.SharedGovernors[i] = sourceGovernors.First(x => x.Id == model.SharedGovernors[i].Id);
+                    model.SharedGovernors[i].Selected = false;
+                }
+            }
 
             await PopulateSelectLists(model.NewLocalGovernor);
             await _layoutHelper.PopulateLayoutProperties(model, model.Urn, null, User);
@@ -732,7 +746,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             model.ExistingNonChairs = localGovernors.Select(x => new SelectListItem
             {
-                Text = x.Person_FirstName + " " + x.Person_LastName, Value = x.Id.ToString(),
+                Text = x.Person_FirstName + " " + x.Person_LastName,
+                Value = x.Id.ToString(),
                 Selected = model.SelectedPreviousExistingNonChairId.HasValue &&
                            model.SelectedPreviousExistingNonChairId.Value == x.Id
             });

@@ -25,7 +25,22 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public List<SharedGovernorViewModel> SharedGovernors { get; set; }
         public GovernorViewModel NewLocalGovernor { get; set; }
         public ChairType NewChairType { get; set; }
-        public int SelectedGovernorId { get; set; }
+
+        private int _selectedGovernorId;
+
+        public int SelectedGovernorId
+        {
+            get => _selectedGovernorId;
+            set
+            {
+                _selectedGovernorId = value;
+                var first = SharedGovernors.FirstOrDefault(x => x.Id == value);
+                if (first != null)
+                {
+                    first.Selected = true;
+                }
+            }
+        }
 
         public string SelectedTab { get; set; }
         public int? Urn { get; set; }
