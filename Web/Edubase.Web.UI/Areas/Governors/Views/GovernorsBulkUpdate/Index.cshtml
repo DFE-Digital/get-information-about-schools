@@ -2,44 +2,57 @@
 
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Governance bulk update");
+    ViewBag.SiteSection = "tools";
 }
 
-<div class="breadcrumbs">
-    <ol>
-        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
-        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-    </ol>
-</div>
-
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
 
-<div class="grid-row">
-    <div class="column-full">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
         @if (Model.WasSuccessful)
         {
             <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
                 <div class="tick"></div>
                 <p class="message-text" aria-live="polite">Your bulk update was successful.</p>
-                <a class="cross" href="#"><span class="visually-hidden">Dismiss notification</span></a>
+                <a class="cross" href="#"><span class="govuk-visually-hidden">Dismiss notification</span></a>
             </div>
         }
-        <h1 class="heading-xlarge">Governance bulk update</h1>
+        <h1 class="govuk-heading-xl">Governance bulk update</h1>
 
         <p>Follow these steps to bulk update governance data.</p>
     </div>
-    <div class="column-full">
-        <div class="expanding-content-wrapper flush--bottom" data-update-text="false">
-            <a href="#" class="expanding-content-trigger">
+    <div class="govuk-grid-column-full">
+        <details class="govuk-details" data-module="govuk-details">
+          <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
                 Help with preparing files
-            </a>
-            <div class="expanding-content panel-indent">
-                <p>For a step by step guide to prepare documents for bulk update please download this file.</p>
-                <p class="download-list-item">
-                    <a href="https://edubasepr.blob.core.windows.net/guidance/Governance%20User%20Guide.pdf" target="_blank" rel="nofollow" class="js-track" data-track="bulkUpdate|governance|download">Governance guidance PDF, 174KB <span class="visually-hidden">Opens in new window</span></a>
-                </p>
-            </div>
+           </span>
+             </summary>
+        <div class="govuk-details__text">
+            <p>For a step by step guide to prepare documents for bulk update please download this file.</p>
+            <p class="download-list-item">
+                <a href="https://edubasepr.blob.core.windows.net/guidance/Governance%20User%20Guide.pdf" target="_blank" rel="nofollow" class="js-track" data-track="bulkUpdate|governance|download">Governance guidance PDF, 174KB <span class="govuk-visually-hidden">Opens in new window</span></a>
+            </p>
         </div>
+        </details>
 
         @if (Model.ErrorLogDownload != null)
         {
@@ -52,10 +65,10 @@
                 @Html.Hidden("id", id)
                 @Html.Hidden("path", path)
 
-                <div class="form-group error push--top" id="error-log">
-                    <p class="error-message">Please download the error log to correct your data before resubmitting</p>
-                    <p class="download-list-item">
-                        <input type="submit" class="button inline-button"  value="@Model.ErrorLogDownload.Name" /><br />
+                <div class="govuk-form-group govuk-form-group--error" id="error-log">
+                    <p class="govuk-error-message">Please download the error log to correct your data before resubmitting</p>
+                    <p>
+                        <input type="submit" class="govuk-button"  value="@Model.ErrorLogDownload.Name" />
                     </p>
                 </div>
             }
@@ -63,55 +76,57 @@
 
     </div>
 
-    <div class="column-full">
-        <h2 class="heading-medium">Download template</h2>
+    <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-m">Download template</h2>
         <p>
             Please download the template using the link below. Then, provide or update your governance information in the template.
             Finally, upload the completed template using the 'Choose file' button below.
         </p>
-        @Html.ActionLink("GovernanceTemplate.xlsx, 18KB", "DownloadTemplate", null, new { @class = "download-list-item" })
+        <p>
+            @Html.ActionLink("GovernanceTemplate.xlsx, 18KB", "DownloadTemplate", null, new { @class = "download-list-item" })
+        </p>
+
     </div>
 
 
     @using (Html.BeginRouteForm("GovernorsProcessBulkUpdate", FormMethod.Post, new {enctype = "multipart/form-data"}))
     {
-        <div class="column-full">
-            <h2 class="heading-medium">Submit completed template</h2>
-            <div class="form-group push--bottom @Html.ValidationCssClassFor(x => x.BulkFile)">
-                <label for="BulkFile" class="form-label">Upload a file</label>
-                <div class="expanding-content-wrapper flush--bottom" data-update-text="false">
-                    <a href="#" class="expanding-content-trigger">
-                        Max file size and other limits
-                    </a>
-                    <div class="expanding-content panel-indent">
+        <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-m govuk-!-padding-top-6">Submit completed template</h2>
+            <div class="govuk-form-group   @Html.ValidationCssClassFor(x => x.BulkFile)">
+                <label for="BulkFile" class="govuk-label">Upload a file</label>
+                <details class="govuk-details" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                            Max file size and other limits
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text">
                         <p>
                             Max file size is 1MB. There are also limits of:
-                            <ul class="list-bullet inside flush--bottom">
-                                <li>
-                                    5,000 rows per file for back office users
-                                </li>
-                                <li>
-                                    1,000 rows per file for EFADO, SFC and DDCE users
-                                </li>
-                                <li>
-                                    200 rows per file for establishment and multi-academy trust users
-                                </li>
-                            </ul>
                         </p>
+                        <ul class="list-bullet inside flush--bottom">
+                            <li>
+                                5,000 rows per file for back office users
+                            </li>
+                            <li>
+                                1,000 rows per file for EFADO, SFC and DDCE users
+                            </li>
+                            <li>
+                                200 rows per file for establishment and multi-academy trust users
+                            </li>
+                        </ul>
                     </div>
-                </div>
-                @Html.ValidationMessageFor(x => x.BulkFile)
-                @Html.TextBoxFor(x => x.BulkFile, new {type = "file"})
+                </details>
             </div>
-            <div class="form-group">
-                <input type="submit" class="button" value="Submit" />
-                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new { @class = "button button-secondary cancel", data_module="govuk-button" })
+            @Html.ValidationMessageFor(x => x.BulkFile, null , new { @class = "govuk-error-message"})
+            @Html.TextBoxFor(x => x.BulkFile, new {type = "file" , @class = "govuk-file-upload"})
+        </div>
+        <div class="govuk-grid-column-full">
+            <div class="button-row govuk-!-padding-top-6">
+                <input type="submit" class="govuk-button" value="Submit" />
+                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new { @class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button" })
             </div>
         </div>
     }
 </div>
-
-
-@section ViewScripts {
-    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
-}
