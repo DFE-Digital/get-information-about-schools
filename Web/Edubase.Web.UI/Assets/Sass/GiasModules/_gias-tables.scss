@@ -143,7 +143,11 @@
 }
 
 .changes-summary .govuk-table__body .govuk-table__row:last-child .govuk-table__cell {
-  border-bottom: 4px solid govuk-colour('black');
+  border-bottom: 2px solid $govuk-border-colour;
+
+  @include govuk-media-query($until: tablet) {
+    border-bottom: 0;
+  }
 }
 
 .button-row {
