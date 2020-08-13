@@ -51,8 +51,8 @@
             @if (Model.LinkedEstablishments.LinkedEstablishmentSearch.HasResult)
             {
                 var prefix = string.Concat(nameof(Model.LinkedEstablishments), "_", nameof(Model.LinkedEstablishments.LinkedEstablishmentSearch));
-                <p class="govuk-body-s govuk-!-font-weight-bold">Establishment found</p>
-                <p class="govuk-body-s">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Name</p>
+                <h2 class="govuk-heading-s">Establishment found</h2>
+                <p class="govuk-body">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Name</p>
 
                 @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new {title = "Joined date", editorPrefix = prefix, fieldsetClassName = "edit-date-fieldset"})
 
@@ -147,14 +147,14 @@
 
                         @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                         {
-                            <div class="button-row govuk-!-margin-bottom-6">
+                            <div class="button-row govuk-!-margin-bottom-6 govuk-!-padding-top-4">
                                 <button type="submit" class="govuk-button govuk-button--secondary button-remove" name="action" value="@VM.ActionLinkedEstablishmentRemove@Model.LinkedEstablishments.Establishments[i].Urn" aria-label="Remove establishment">Remove</button>
                                 <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentEdit@Model.LinkedEstablishments.Establishments[i].Urn" class="govuk-button govuk-button--secondary">Edit join date</button>
                             </div>
                         }
                         else if (Model.LinkedEstablishments.Establishments[i].EditMode)
                         {
-                            <div class="button-row govuk-!-margin-bottom-6">
+                            <div class="button-row govuk-!-margin-bottom-6 govuk-!-padding-top-4">
                                 <button id="save-joined-date-submit" type="submit" class="govuk-button" name="action" value="@VM.ActionLinkedEstablishmentSave">Save joined date</button>
                                 @Html.ActionLink("Cancel", "EditLinks", "Group", new { area = "Groups" }, new { @class = "govuk-button govuk-button--secondary js-allow-exit", data_module="govuk-button" })
                             </div>

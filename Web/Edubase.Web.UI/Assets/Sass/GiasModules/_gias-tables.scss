@@ -156,7 +156,7 @@
     margin-right: 15px;
 
     @include govuk-media-query($until: tablet) {
-      margin-bottom: 10px;
+      margin-bottom: 10px;govuk-body-s govuk-!-font-weight-bold
     }
   }
 }
