@@ -1,3 +1,7 @@
 .govuk-file-upload {
   max-width: 100%;
+
+  &.input-validation-error {
+    max-width: calc(100% - 15px);
+  }
 }
