@@ -167,10 +167,14 @@ const mergersApp = new Vue({
     checkIfInvalid: function(component){
       return this[component].length && this[component].length < 5 || isNaN(this[component])
     },
-    validateField: function(component, componentErrorField){
+    validateField: function(component, componentErrorField, fieldId){
       if (this.checkIfInvalid(component)) {
         const index = component.replace(/\D/g,'');
         this[componentErrorField] = `The establishment ${index} URN is invalid`;
+        this.errors.push({
+          href: '#' + fieldId,
+          message:  `The establishment ${index} URN is invalid`,
+        });
       }
     },
     urnCheck: function(urn, component, errorField){
@@ -267,10 +271,10 @@ const mergersApp = new Vue({
       }
 
 
-      this.validateField('amalgamatedEstab1', 'amalgamatedUrn1Error');
-      this.validateField('amalgamatedEstab2','amalgamatedUrn2Error');
-      this.validateField('amalgamatedEstab3', 'amalgamatedUrn3Error');
-      this.validateField('amalgamatedEstab4', 'amalgamatedUrn4Error');
+      this.validateField('amalgamatedEstab1', 'amalgamatedUrn1Error', 'amalgamation-estab1');
+      this.validateField('amalgamatedEstab2','amalgamatedUrn2Error', 'amalgamation-estab2');
+      this.validateField('amalgamatedEstab3', 'amalgamatedUrn3Error', 'amalgamation-estab3');
+      this.validateField('amalgamatedEstab4', 'amalgamatedUrn4Error', 'amalgamation-estab4');
 
       let requests = [];
       if (!this.amalgamatedUrn1Error.length) {
@@ -343,26 +347,14 @@ const mergersApp = new Vue({
         }
       }
 
-      this.validateField('mergerEstab0', 'mergerUrn0Error');
-      this.validateField('mergerEstab1','mergerUrn1Error');
-      this.validateField('mergerEstab2', 'mergerUrn2Error');
-      this.validateField('mergerEstab3', 'mergerUrn3Error');
-
-      // var bothChecked;
-      // bothChecked = window.setInterval(function () {
-      //     if (self.leadEstabUrnChecked && self.linkedEstab1UrnChecked) {
-      //       if (self.leadEstabValid && self.linkedEstab1Valid && !self.showGlobalError) {
-      //         self.clearErrors();
-      //         self.validMergeUrns = true;
-      //       }
-      //       window.clearInterval(bothChecked);
-      //     }
-      //   },
-      //   100);
+      this.validateField('mergerEstab0', 'mergerUrn0Error', 'merger-estab0');
+      this.validateField('mergerEstab1','mergerUrn1Error', 'merger-estab1');
+      this.validateField('mergerEstab2', 'mergerUrn2Error', 'merger-estab2');
+      this.validateField('mergerEstab3', 'mergerUrn3Error', 'merger-estab3');
 
       let requests = [];
       if (!this.mergerUrn0Error.length) {
-        requests.push(self.urnCheck(self.mergerEstab0, 'mergerEstab0','amalgamatedUrn1Error'));
+        requests.push(self.urnCheck(self.mergerEstab0, 'mergerEstab0','mergerUrn0Error'));
       }
 
       if (!this.mergerUrn1Error.length) {
@@ -586,12 +578,7 @@ const mergersApp = new Vue({
         })[0].name;
       }
     },
-    schoolDetailUrl: function () {
-      return "/Establishments/Establishment/Details/" + this.leadEstab;
-    },
-    amalgUrl: function () {
-      return '/Establishments/Establishment/Details/' + this.amalgUrn;
-    },
+
     validateMergerDate: function () {
       const day = parseInt(this.mergeDateDay, 10);
       const month = parseInt(this.mergeDateMonth - 1, 10);
@@ -694,7 +681,12 @@ const mergersApp = new Vue({
       }
       return '';
     },
-
+    schoolDetailUrl: function () {
+      return "/Establishments/Establishment/Details/" + this.mergerEstab0;
+    },
+    amalgUrl: function () {
+      return '/Establishments/Establishment/Details/' + this.amalgUrn;
+    },
   }
 
 })
