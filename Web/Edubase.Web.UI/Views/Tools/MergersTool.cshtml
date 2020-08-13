@@ -120,14 +120,14 @@
         </div>
         <div class="govuk-grid-column-one-half">
             <div v-bind:class="['field-group govuk-form-group', amalgamatedUrn1Error.length > 0 ? 'govuk-form-group--error' : '' ]">
-                <label for="amalgamate-estab1" class="govuk-label">Establishment 1 URN</label>
+                <label for="amalgamation-estab1" class="govuk-label">Establishment 1 URN</label>
                 <span v-if="amalgamatedUrn1Error.length > 0" class="govuk-error-message" v-html="amalgamatedUrn1Error"></span>
                 <input class="govuk-input govuk-!-width-three-quarters" type="text" v-model="amalgamatedEstab1" id="amalgamation-estab1" />
             </div>
 
 
             <div v-bind:class="['field-group govuk-form-group', amalgamatedUrn2Error.length > 0 ? 'govuk-form-group--error' : '' ]">
-                <label for="amalgamate-estab2" class="govuk-label">Establishment 2 URN</label>
+                <label for="amalgamation-estab2" class="govuk-label">Establishment 2 URN</label>
                 <span v-if="amalgamatedUrn2Error.length > 0" class="govuk-error-message" v-html="amalgamatedUrn2Error"></span>
                 <input class="govuk-input govuk-!-width-three-quarters" type="text" v-model="amalgamatedEstab2" id="amalgamation-estab2" />
             </div>
@@ -138,7 +138,7 @@
             </div>
 
             <div v-bind:class="['field-group govuk-form-group', amalgamatedUrn4Error.length > 0  ? 'govuk-form-group--error' : '' ]">
-                <label for="amalgamate-estab4" class="govuk-label">Establishment 4 URN</label>
+                <label for="amalgamation-estab4" class="govuk-label">Establishment 4 URN</label>
                 <span v-if="amalgamatedUrn4Error.length > 0" class="govuk-error-message" v-html="amalgamatedUrn4Error"></span>
                 <input class="govuk-input govuk-!-width-three-quarters" type="text" v-model="amalgamatedEstab4" id="amalgamation-estab4" />
             </div>
@@ -283,19 +283,19 @@
                 <p>Up to 3 establishments can be merged (minimum of 1 establishment)</p>
 
                 <div v-bind:class="['govuk-form-group', mergerUrn1Error.length > 0 ? 'govuk-form-group--error' : '' ]">
-                    <label for="establishment-1" class="govuk-label">Establishment 1 URN</label>
+                    <label for="merger-estab1" class="govuk-label">Establishment 1 URN</label>
                     <span v-if="mergerUrn1Error.length > 0" class="govuk-error-message" v-html="mergerUrn1Error"></span>
                    <input class="govuk-input govuk-input--width-20" id="merger-estab1" type="text" v-model="mergerEstab1" />
                 </div>
 
                 <div v-bind:class="['govuk-form-group', mergerUrn2Error.length > 0 ? 'govuk-form-group--error' : '' ]">
-                    <label for="establishment-2" class="govuk-label">Establishment 2 URN</label>
+                    <label for="merger-estab2" class="govuk-label">Establishment 2 URN</label>
                     <span v-if="mergerUrn2Error.length > 0" class="govuk-error-message" v-html="mergerUrn2Error"></span>
                    <input class="govuk-input govuk-input--width-20" id="merger-estab2" type="text" v-model="mergerEstab2" />
                 </div>
 
                 <div v-bind:class="['govuk-form-group', mergerUrn3Error.length > 0 ? 'govuk-form-group--error' : '' ]">
-                    <label for="establishment-3" class="govuk-label">Establishment 3 URN</label>
+                    <label for="merger-estab3" class="govuk-label">Establishment 3 URN</label>
                     <span v-if="mergerUrn3Error.length > 0" class="govuk-error-message" v-html="mergerUrn3Error"></span>
                    <input class="govuk-input govuk-input--width-20" id="merger-estab3" type="text" v-model="mergerEstab3" />
                 </div>
