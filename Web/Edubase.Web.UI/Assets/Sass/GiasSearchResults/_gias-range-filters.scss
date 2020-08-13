@@ -53,6 +53,10 @@
   }
 }
 
+.mergers .date-group .govuk-label {
+  @include govuk-font(19);
+}
+
 .date-filters {
   .govuk-form-group {
     margin: 10px 0;
