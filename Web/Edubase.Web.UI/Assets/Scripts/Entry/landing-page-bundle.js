@@ -1,6 +1,6 @@
 import GiasTableSort from "../GiasModules/GiasTableSort";
 import GiasTabs from "../GiasModules/GiasTabs";
-import giasDismissMessage from "../GiasModules/GiasDismissMessage";
+
 import GiasLandingMap from "../GiasLandingPages/GiasLandingMap";
 
 const $main = $('#main-content');
@@ -35,4 +35,3 @@ if ($map.length && $map.css('display') === 'block') {
   });
 }
 
-giasDismissMessage();
