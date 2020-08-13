@@ -1,0 +1,9 @@
+// mapping of the input error styling over the razor className
+.input-validation-error {
+  border: $govuk-border-width-form-element-error solid $govuk-error-colour;
+
+  &:focus {
+    border-color: $govuk-input-border-colour;
+    box-shadow: none;
+  }
+}

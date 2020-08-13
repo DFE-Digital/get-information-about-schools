@@ -53,8 +53,11 @@
   }
 }
 
-.mergers .date-group .govuk-label {
-  @include govuk-font(19);
+.mergers,
+.bulk-change {
+  .date-group .govuk-label {
+    @include govuk-font(19);
+  }
 }
 
 .date-filters {
