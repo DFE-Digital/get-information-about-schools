@@ -118,9 +118,10 @@
                         </ul>
                     </div>
                 </details>
+
+                @Html.ValidationMessageFor(x => x.BulkFile, null , new { @class = "govuk-error-message"})
+                @Html.TextBoxFor(x => x.BulkFile, new {type = "file" , @class = "govuk-file-upload"})
             </div>
-            @Html.ValidationMessageFor(x => x.BulkFile, null , new { @class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.BulkFile, new {type = "file" , @class = "govuk-file-upload"})
         </div>
         <div class="govuk-grid-column-full">
             <div class="button-row govuk-!-padding-top-6">
