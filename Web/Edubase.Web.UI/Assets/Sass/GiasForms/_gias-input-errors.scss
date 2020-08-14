@@ -7,3 +7,16 @@
     box-shadow: none;
   }
 }
+
+.govuk-form-group--error {
+  .govuk-input,
+  .govuk-select,
+  .govuk-textarea {
+    border: $govuk-border-width-form-element-error solid $govuk-error-colour;
+
+    &:focus {
+      border-color: $govuk-input-border-colour;
+      box-shadow: none;
+    }
+  }
+}
