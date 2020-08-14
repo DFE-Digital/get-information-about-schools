@@ -76,6 +76,12 @@ namespace Edubase.Web.UI.Models
         public int? UKPRN { get; set; }
         public int? EstablishmentTypeGroupId { get; set; }
 
+        [Display(Name = "Quality Assurance Body name")]
+        public int? QualityAssuranceBodyNameId { get; set; }
+
+        [Display(Name = "Establishment Accredited")]
+        public int? EstablishmentAccreditedId { get; set; }
+
         /// <summary>
         /// Flags whether there are unsaved changes in the viewmodel
         /// </summary>
@@ -191,6 +197,18 @@ namespace Edubase.Web.UI.Models
         public string LSOAName { get; set; }
         public int? LSOAId { get; set; }
 
+        [Display(Name = "Quality Assurance Body report")]
+        public string QualityAssuranceBodyReport { get; set; }
+
+        [Display(Name = "Companies House number")]
+        public string CompaniesHouseNumber { get; set; }
+
+        [Display(Name = "Total number of full time teachers or tutors")]
+        public int? TotalFTTeachersTutors { get; set; }
+
+        [Display(Name = "Total number of part time teachers or tutors")]
+        public int? TotalPTTeachersTutors { get; set; }
+
         [Display(Name = "BSO: Date of last inspection")]
         public DateTimeViewModel BSODateOfLastInspectionVisit { get; set; } = new DateTimeViewModel();
 
@@ -237,6 +255,10 @@ namespace Edubase.Web.UI.Models
 
         public IEnumerable<SelectListItem> PRUSENOptions { get; internal set; }
         public IEnumerable<SelectListItem> PRUEBDOptions { get; internal set; }
+
+        public IEnumerable<SelectListItem> QualityAssuranceBodyName { get; set; }
+        public IEnumerable<SelectListItem> EstablishmentAccredited { get; set; }
+
 
         public TabDisplayPolicy TabDisplayPolicy { get; set; }
 

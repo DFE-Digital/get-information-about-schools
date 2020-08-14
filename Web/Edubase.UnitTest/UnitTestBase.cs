@@ -160,6 +160,8 @@ namespace Edubase.UnitTest
             cls.Setup(c => c.GovernorAppointingBodiesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
             cls.Setup(c => c.GovernorRolesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
             cls.Setup(c => c.BoardingEstablishmentGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
+            cls.Setup(c => c.EstablishmentAccreditedGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
+            cls.Setup(c => c.QualityAssuranceBodyNameGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
 
             cls.Setup(c => c.CCOperationalHoursGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
             cls.Setup(c => c.CCGovernanceGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });

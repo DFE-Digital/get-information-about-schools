@@ -13,5 +13,6 @@ namespace Edubase.Services.Enums
         SpecialSchools = 8,
         Universities = 5,
         WelshSchools = 9,
+        OnlineProvider = 11
     }
 }

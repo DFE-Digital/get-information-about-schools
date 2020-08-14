@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -112,5 +112,7 @@ namespace Edubase.Services.Establishments.Models
         public string ChairOfProprietorsBodyPreferredJobTitle { get; set; }
         public int? AccommodationChangedId { get; set; }
         public int? BoardingEstablishmentId { get; set; }
+        public int? TotalFTTeachersTutors { get; set; }
+        public int? TotalPTTeachersTutors { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Domain;
+using Edubase.Services.Domain;
 using Edubase.Services.Lookup;
 using Edubase.Services.Security;
 using System;
@@ -59,7 +59,8 @@ namespace Edubase.Services.Texuna.Lookup
             {35, new List<int> {3}},
             {34, new List<int> {3}},
             {2,  new List<int> {7}},
-            {3,  new List<int> {7}}
+            {3,  new List<int> {7}},
+            {45,  new List<int> {11}}
         };
 
         public LookupApiService(HttpClientWrapper httpClient, ISecurityService securityService)
@@ -107,6 +108,7 @@ namespace Edubase.Services.Texuna.Lookup
         public async Task<IEnumerable<LookupDto>> ChildcareFacilitiesGetAllAsync() => await GetData("childcare-facilities");
         public async Task<IEnumerable<LookupDto>> DiocesesGetAllAsync() => await GetData("dioceses");
         public async Task<IEnumerable<LookupDto>> DirectProvisionOfEarlyYearsGetAllAsync() => await GetData("direct-provision-of-early-years");
+        public async Task<IEnumerable<LookupDto>> EstablishmentAccreditedGetAllAsync() => await GetData("establishment-accredited");
         public async Task<IEnumerable<LookupDto>> EducationPhasesGetAllAsync() => await GetData("education-phases");
         public async Task<IEnumerable<LookupDto>> EstablishmentLinkTypesGetAllAsync() => await GetData("establishment-link-types");
         public async Task<IEnumerable<LookupDto>> FurtherEducationTypesGetAllAsync() => await GetData("further-education-types");
@@ -129,6 +131,7 @@ namespace Edubase.Services.Texuna.Lookup
         public async Task<IEnumerable<LookupDto>> PRUEBDsGetAllAsync() => await GetData("pruebds");
         public async Task<IEnumerable<LookupDto>> PruEducatedByOthersGetAllAsync() => await GetData("pru-educated-by-others");
         public async Task<IEnumerable<LookupDto>> PruFulltimeProvisionsGetAllAsync() => await GetData("pru-fulltime-provisions");
+        public async Task<IEnumerable<LookupDto>> QualityAssuranceBodyNameGetAllAsync() => await GetData("quality-assurance-body-name");
         public async Task<IEnumerable<LookupDto>> PRUSENsGetAllAsync() => await GetData("prusens");
         public async Task<IEnumerable<LookupDto>> ReasonEstablishmentClosedGetAllAsync() => await GetData("reason-establishment-closed");
         public async Task<IEnumerable<LookupDto>> ReasonEstablishmentOpenedGetAllAsync() => await GetData("reason-establishment-opened");
@@ -237,6 +240,11 @@ namespace Edubase.Services.Texuna.Lookup
             throw new NotImplementedException();
         }
         
+        public IEnumerable<LookupDto> EstablishmentAccreditedGetAll()
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<LookupDto> EstablishmentLinkTypesGetAll()
         {
             throw new NotImplementedException();
@@ -382,6 +390,10 @@ namespace Edubase.Services.Texuna.Lookup
             throw new NotImplementedException();
         }
         
+        public IEnumerable<LookupDto> QualityAssuranceBodyNameGetAll()
+        {
+            throw new NotImplementedException();
+        }        
         public IEnumerable<LookupDto> ReasonEstablishmentClosedGetAll()
         {
             throw new NotImplementedException();
