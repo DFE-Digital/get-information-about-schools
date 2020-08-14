@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Edubase.Services.Domain;
 
@@ -39,6 +39,8 @@ namespace Edubase.Services.Lookup
         void Dispose();
         IEnumerable<LookupDto> EducationPhasesGetAll();
         Task<IEnumerable<LookupDto>> EducationPhasesGetAllAsync();
+        IEnumerable<LookupDto> EstablishmentAccreditedGetAll();
+        Task<IEnumerable<LookupDto>> EstablishmentAccreditedGetAllAsync();
         IEnumerable<LookupDto> EstablishmentLinkTypesGetAll();
         Task<IEnumerable<LookupDto>> EstablishmentLinkTypesGetAllAsync();
         IEnumerable<LookupDto> EstablishmentStatusesGetAll();
@@ -99,6 +101,8 @@ namespace Edubase.Services.Lookup
         Task<IEnumerable<LookupDto>> PruFulltimeProvisionsGetAllAsync();
         IEnumerable<LookupDto> PRUSENsGetAll();
         Task<IEnumerable<LookupDto>> PRUSENsGetAllAsync();
+        IEnumerable<LookupDto> QualityAssuranceBodyNameGetAll();
+        Task<IEnumerable<LookupDto>> QualityAssuranceBodyNameGetAllAsync();
         IEnumerable<LookupDto> ReasonEstablishmentClosedGetAll();
         Task<IEnumerable<LookupDto>> ReasonEstablishmentClosedGetAllAsync();
         IEnumerable<LookupDto> ReasonEstablishmentOpenedGetAll();

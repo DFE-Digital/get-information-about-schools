@@ -1,5 +1,6 @@
 
 @using Edubase.Common;
+@using Edubase.Services.Enums
 @model EstablishmentDetailViewModel
 
 <div id="school-dashboard" class="tab-content">
@@ -84,15 +85,19 @@
 
             }
 
-                <dt>Open date / Reason:</dt>
-                <dd>
-                    @(Model.Establishment.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br />
-                    @Model.ReasonEstablishmentOpenedName
-                </dd>
+            @{ var openDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date" : "Open date"; }
+            <dt>
+                @openDateTitle / Reason:
+            </dt>
+            <dd>
+                @(Model.Establishment.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br />
+                @Model.ReasonEstablishmentOpenedName
+            </dd>
 
             @if (Model.DisplayPolicy.CloseDate)
             {
-                <dt>Close date / Reason:</dt>
+                var closeDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date ended" : "Open date";
+                <dt>@closeDateTitle / Reason:</dt>
                 <dd>
                     @(Model.Establishment.CloseDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br />
                     @Model.ReasonEstablishmentClosedName
@@ -101,10 +106,10 @@
 
             @if (Model.DisplayPolicy.CCOperationalHoursId)
             {
-                    <dt>Operational hours:</dt>
-                    <dd>
-                        @Model.CCOperationalHoursName
-                    </dd>
+                <dt>Operational hours:</dt>
+                <dd>
+                    @Model.CCOperationalHoursName
+                </dd>
             }
 
             @if (Model.DisplayPolicy.CCUnder5YearsOfAgeCount)
@@ -135,12 +140,12 @@
             {
                 <dt>Local authority contact name:</dt>
                 <dd>
-                    @(Model.Establishment?.CCLAContactDetail?.FullName ?? "Not recorded" )
+                    @(Model.Establishment?.CCLAContactDetail?.FullName ?? "Not recorded")
                 </dd>
 
                 <dt>Local authority contact email:</dt>
                 <dd>
-                    @(Model.Establishment?.CCLAContactDetail?.EmailAddress ?? "Not recorded" )
+                    @(Model.Establishment?.CCLAContactDetail?.EmailAddress ?? "Not recorded")
                 </dd>
 
                 <dt>Local authority contact telephone number:</dt>
@@ -246,6 +251,35 @@
                 <dd>@(Model.Establishment.LastChangedDate?.ToString("dd/MM/yyyy"))</dd>
             }
 
+
+
+            <!-- Online Provider content -->
+            @if (Model.DisplayPolicy.QualityAssuranceBodyNameId)
+            {
+                <dt>Quality Assurance Body name:</dt>
+                <dd>@(Model.QualityAssuranceBodyName ?? "Not recorded")</dd>
+            }
+
+            @if (Model.DisplayPolicy.QualityAssuranceBodyReport)
+            {
+                <dt>Quality Assurance Body report:</dt>
+                <dd>@(Model.Establishment.QualityAssuranceBodyReport ?? "Not recorded")</dd>
+            }
+
+            @if (Model.DisplayPolicy.CompaniesHouseNumber)
+            {
+                <dt>Companies House number:</dt>
+                <dd>@(Model.Establishment.CompaniesHouseNumber ?? "Not recorded")</dd>
+            }
+
+            @if (Model.DisplayPolicy.EstablishmentAccreditedId)
+            {
+                <dt>Establishment Accredited:</dt>
+                <dd>@(Model.EstablishmentAccredited ?? "Not recorded")</dd>
+            }
+            <!-- Online Provider content -->
+
+
             @if (Model.DisplayPolicy.SENIds)
             {
                 <dt>Type of SEN provision:</dt>
@@ -343,8 +377,8 @@
 
             @if (Model.DisplayPolicy.BSOInspectorateReportUrl)
             {
-                    <dt>Inspectorate report:</dt>
-                    <dd>@Model.Establishment.BSOInspectorateReportUrl</dd>
+                <dt>Inspectorate report:</dt>
+                <dd>@Model.Establishment.BSOInspectorateReportUrl</dd>
             }
 
             @if (Model.DisplayPolicy.BSODateOfLastInspectionVisit)

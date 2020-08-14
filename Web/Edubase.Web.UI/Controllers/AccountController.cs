@@ -93,7 +93,7 @@ namespace Edubase.Web.UI.Controllers
             }
             else if (principal.IsInRole(EdubaseRoles.IEBT))
             {
-                var searchQueryString = string.Join("&", new[] { ET.NonmaintainedSpecialSchool, ET.BritishSchoolsOverseas, ET.CityTechnologyCollege, ET.OtherIndependentSchool }
+                var searchQueryString = string.Join("&", new[] { ET.NonmaintainedSpecialSchool, ET.BritishSchoolsOverseas, ET.CityTechnologyCollege, ET.OtherIndependentSchool, ET.OnlineProvider }
                     .Select(x => $"{EstablishmentSearchViewModel.BIND_ALIAS_TYPEIDS}={(int)x}"));
                 return Redirect(string.Concat(Url.RouteUrl("EstabSearch"), "?", searchQueryString));
             }
