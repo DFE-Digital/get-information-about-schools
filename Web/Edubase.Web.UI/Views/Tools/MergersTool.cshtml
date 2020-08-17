@@ -132,7 +132,7 @@
                 <input class="govuk-input govuk-!-width-three-quarters" type="text" v-model="amalgamatedEstab2" id="amalgamation-estab2" />
             </div>
             <div v-bind:class="['field-group govuk-form-group', amalgamatedUrn3Error.length > 0  ? 'govuk-form-group--error' : '' ]">
-                <label for="amalgamate-estab3" class="govuk-label">Establishment 3 URN</label>
+                <label for="amalgamation-estab3" class="govuk-label">Establishment 3 URN</label>
                 <span v-if="amalgamatedUrn3Error.length > 0" class="govuk-error-message" v-html="amalgamatedUrn3Error"></span>
                 <input class="govuk-input govuk-!-width-three-quarters" type="text" v-model="amalgamatedEstab3" id="amalgamation-estab3" />
             </div>
@@ -267,7 +267,7 @@
             <p>The lead establishment will remain open</p>
 
             <div v-bind:class="['govuk-form-group', mergerUrn0Error.length > 0 ? 'govuk-form-group--error' : '' ]">
-                <label class="govuk-label" for="lead-establishment">
+                <label class="govuk-label" for="merger-estab0">
                     Lead establishment <abbr title="Unique Reference Number">URN</abbr>
                 </label>
 
