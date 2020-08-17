@@ -2,45 +2,37 @@
 @{
     ViewBag.Title = "Manage academy openings";
     ViewBag.bodyClasses = "manage-academy-openings";
+    ViewBag.SiteSection = "tools";
 }
 
-<div class="breadcrumbs">
-    <ol>
-        <li>
-            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-        </li>
-        <li>
-            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
-        </li>
-    </ol>
-</div>
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
 
-<div id="academy-opening-app" v-cloak>
-
+<div id="academy-opening-app" class="govuk-grid-row" v-cloak>
+<div class="govuk-grid-column-full">
     <!-- Error summary -->
     <div v-show="Object.keys(apiError).length === 0">
-        <div v-if="recordUpdateErrors.errors || searchError || updateNameError || openDateError" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
-            <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
-            <ul class="error-summary-list">
-                <li class="error-message" v-for="(item, index) in recordUpdateErrors.errors">
-                    {{item.message}}
-                </li>
-                <li v-if="searchError">
-                    <a href="#academy-search-field">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a>
-                </li>
-                <li v-if="updateNameError">
-                    <a href="#est-name">Please enter the establishment name</a>
-                </li>
-                <li v-if="openDateError">
-                    <a href="#opening-date">Please enter the establishment opening date</a>
-                </li>
-            </ul>
-        </div>
+        <error-summary :errors="errors" error-title="Incorrect or missing details" />
     </div>
 
     <!-- Error message -->
-    <div v-show="Object.keys(apiError).length>0">
-        <h1 class="heading-xlarge">Sorry, something went wrong</h1>
+    <div v-show="Object.keys(apiError).length > 0">
+        <h1 class="govuk-heading-xl">Sorry, something went wrong</h1>
         <p>Please try again later.</p>
         <p>A report of the error has been sent to our technical team.</p>
 
@@ -52,29 +44,31 @@
         </div>
     </div>
 
+</div>
+
     <!-- Show when no API errors -->
     <div v-show="Object.keys(apiError).length === 0">
         <!-- When not editing record -->
-        <div class="grid-row" v-show="!editRecord">
+        <div class="govuk-grid-row" v-show="!editRecord">
             <!-- Error message -->
-            <div class="column-full">
+            <div class="govuk-grid-column-full">
                 <div v-show="loadDataError" class="error-summary">
                     <h2 class="error-summary-heading heading-medium">Something went wrong</h2>
                     <p class="error-message">Please reload the page to try again.</p>
                 </div>
-                <h1 class="heading-xlarge">Manage academy openings</h1>
-                <div aria-live="polite" class="wait-spinner" v-show="isProcessing">
-                    <p class="visually-hidden">Please wait</p>
+                <h1 class="govuk-heading-xl">Manage academy openings</h1>
+                <div>
+                    <gias-wait-spinner :is-processing="isProcessing"/>
                 </div>
             </div>
 
-            <div class="column-full" v-show="!isProcessing">
+            <div class="govuk-grid-column-full" v-show="!isProcessing">
                 <div class="gias-tabs-wrapper">
                     <!-- Tabs -->
                     <div class="tab-wrap">
                         <ul class="gias-tabs">
-                            <li><a href="#calendar" class="horizontal-tab">Opening calendar</a></li>
-                            <li><a href="#academy-search" class="horizontal-tab">Academy search</a></li>
+                            <li class="gias-tabs__list-item"><a href="#calendar" class="gias-tabs__tab">Opening calendar</a></li>
+                            <li class="gias-tabs__list-item"><a href="#academy-search" class="gias-tabs__tab">Academy search</a></li>
                         </ul>
                     </div>
 
@@ -83,11 +77,11 @@
                         <!-- Opening calendar -->
                         <div id="calendar" class="tab-content">
 
-                            <div class="form-group month-selector">
-                                <label class="form-label" for="opening-date-filter">
+                            <div class="govuk-form-group month-selector">
+                                <label class="govuk-label" for="opening-date-filter">
                                     Opening date
                                 </label>
-                                <select class="form-control" v-model="selectedDate" v-on:change="buildDatePages" id="opening-date-filter"></select>
+                                <select class="govuk-select" v-model="selectedDate" v-on:change="buildDatePages" id="opening-date-filter"></select>
                             </div>
 
                             <div class="top-pagination">
@@ -113,11 +107,11 @@
                             </div>
 
 
-                            <table class="academy-openings sortable-table" id="openings-table">
-                                <caption class="visuallyhidden">Academy openings</caption>
-                                <thead>
-                                    <tr>
-                                        <th v-for="(value, key) in tableColumns" :class="'cell-' + key.toLowerCase()">
+                            <table class="govuk-table gias-table academy-openings sortable-table" id="openings-table">
+                                <caption class="govuk-visually-hidden">Academy openings</caption>
+                                <thead class="govuk-table__head">
+                                    <tr class="govuk-table__row">
+                                        <th v-for="(value, key) in tableColumns" :class="'cell-' + key.toLowerCase()" class="govuk-table__header">
                                             <a
                                                 href="#"
                                                 v-on:click.prevent="sortOpenings(key)"
@@ -125,23 +119,23 @@
                                                 :aria-label="[ sortKey===key && sortAscending ? value + ' is sorted in an ascending order. Click to change order. All other columns are sortable.' : '', sortKey===key && !sortAscending ? value + ' is sorted in a descending order. Click to change order. All other columns are sortable.' : '', sortKey===key ? '' : value + '. Click to sort data by this column.' ]"
                                             >{{ value }}</a>
                                         </th>
-                                        <th scope="col" class="cell-edit"><span class="visuallyhidden">Action links</span></th>
+                                        <th scope="col" class="govuk-table__header cell-edit"><span class="govuk-visually-hidden">Action links</span></th>
                                     </tr>
                                 </thead>
-                                <tbody v-if="pages.length > 0">
-                                    <tr v-for="(entry, index) in page">
-                                        <td data-label="Opening date" class="cell-openingdate"> {{entry.displayDate}} </td>
-                                        <td data-label="URN"><a v-bind:href="detailUrl(entry.urn)">{{entry.urn}}</a></td>
-                                        <td data-label="Establishment name">{{entry.name}}</td>
-                                        <td data-label="Establishment type">{{entry.establishmentType}}</td>
-                                        <td data-label="Predecessor URN"><a v-bind:href="detailUrl(entry.predecessorUrn)"  v-if="entry.predecessorUrn">{{entry.predecessorUrn}}</a></td>
-                                        <td data-label="Predecessor name">{{entry.predecessorName}}</td>
-                                        <td class="cell-edit"><a href="#" v-on:click.prevent="editEstab(entry.urn)" aria-label="Edit opening details">Edit</a></td>
+                                <tbody v-if="pages.length > 0" class="govuk-table__body">
+                                    <tr v-for="(entry, index) in page" class="govuk-table__row">
+                                        <td data-label="Opening date" class="govuk-table__cell cell-openingdate"> {{entry.displayDate}} </td>
+                                        <td data-label="URN" class="govuk-table__cell"><a v-bind:href="detailUrl(entry.urn)">{{entry.urn}}</a></td>
+                                        <td data-label="Establishment name" class="govuk-table__cell">{{entry.name}}</td>
+                                        <td data-label="Establishment type" class="govuk-table__cell">{{entry.establishmentType}}</td>
+                                        <td data-label="Predecessor URN" class="govuk-table__cell"><a v-bind:href="detailUrl(entry.predecessorUrn)"  v-if="entry.predecessorUrn">{{entry.predecessorUrn}}</a></td>
+                                        <td data-label="Predecessor name" class="govuk-table__cell">{{entry.predecessorName}}</td>
+                                        <td class="cell-edit govuk-table__cell"><a href="#" v-on:click.prevent="editEstab(entry.urn)" aria-label="Edit opening details">Edit</a></td>
                                     </tr>
                                 </tbody>
-                                <tbody v-else>
-                                    <tr>
-                                        <td colspan="7">
+                                <tbody v-else class="govuk-table__body">
+                                    <tr class="govuk-table__row">
+                                        <td colspan="7" class="govuk-table__cell">
                                             <p> [ NO RESULTS MESSAGE ] </p>
                                         </td>
                                     </tr>
@@ -174,43 +168,58 @@
                         <!-- Academy search -->
                         <div id="academy-search" class="tab-content">
                             <!-- search app -->
-                            <div class="grid-row">
-                                <div class="column-two-thirds">
+                            <div class="govuk-grid-row">
+                                <div class="govuk-grid-column-two-thirds">
                                     <div id="academy-search-app">
                                     <form>
-                                        <div v-bind:class="['form-group', searchError? 'error' : '']">
-                                            <label class="form-label" for="academy-search-field">
+                                        <div v-bind:class="['govuk-form-group', searchError? 'govuk-form-group--error' : '']">
+                                            <label class="govuk-label" for="academy-search-field">
                                                 Enter establishment <abbr title="Unique Reference Number">URN</abbr>
                                             </label>
-                                            <span class="error-message" v-show="searchError">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
-                                            <input type="text" class="form-control form-control-1-2 push-half--bottom" id="academy-search-field" v-model.trim="searchUrn" />
+                                            <span class="govuk-error-message" v-show="searchError">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
+                                            <input type="text" class="govuk-input govuk-input--width-20" id="academy-search-field" v-model.trim="searchUrn" />
 
-                                            <input type="submit" class="button inline-button" value="Search URN" v-on:click.prevent="validateUrn" />
+                                            <input type="submit" class="govuk-button inline-button" value="Search URN" v-on:click.prevent="validateUrn" />
                                         </div>
-
                                     </form>
 
                                     <!-- Search results -->
-                                    <div v-show="presentDetail" v-if="od.urn" class="openings-single-result">
-                                        <h2 class="heading-small">Establishment found</h2>
+                                    <div v-show="presentDetail" v-if="selectedOpeningDetails.urn" class="openings-single-result">
+                                        <h2 class="govuk-heading-s">Establishment found</h2>
                                         <div class="urn-result">
-                                            <h4 class="heading-small">Opening date: {{od.displayDate }}</h4>
-                                            <dl>
-                                                <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
-                                                <dd><a v-bind:href="detailUrl(od.urn )">{{ od.urn }}</a></dd>
-                                                <dt>Establishment name:</dt>
-                                                <dd>{{updateName}}</dd>
-                                                <dt>Establishment type:</dt>
-                                                <dd>{{ od.establishmentType }}</dd>
-                                                <dt>Predecessor <abbr title="Unique Reference Number">URN</abbr>:</dt>
-                                                <dd><a v-bind:href="detailUrl(od.predecessorUrn )" v-if="od.predecessorUrn">{{ od.predecessorUrn }}</a></dd>
-                                                <dt>Predecessor name:</dt>
-                                                <dd>{{ od.predecessorName }}</dd>
+                                            <h4 class="govuk-heading-s">Opening date: {{selectedOpeningDetails.displayDate }}</h4>
+                                            <dl class="gias-summary-list gias-summary-list--inline">
+                                                <div class="gias-summary-list__row">
+                                                    <dt class="gias-summary-list__key">
+                                                        <abbr title="Unique Reference Number">URN</abbr>:
+                                                    </dt>
+                                                    <dd class="gias-summary-list__value">
+                                                        <a v-bind:href="detailUrl(selectedOpeningDetails.urn )">{{ selectedOpeningDetails.urn }}</a>
+                                                    </dd>
+                                                </div>
+                                                <div class="gias-summary-list__row">
+                                                    <dt class="gias-summary-list__key">Establishment name:</dt>
+                                                    <dd class="gias-summary-list__value">{{updateName}}</dd>
+                                                </div>
+                                                <div class="gias-summary-list__row">
+                                                    <dt class="gias-summary-list__key">Establishment type:</dt>
+                                                    <dd class="gias-summary-list__value">{{ selectedOpeningDetails.establishmentType }}</dd>
+                                                </div>
+                                                <div class="gias-summary-list__row">
+                                                    <dt class="gias-summary-list__key">Predecessor <abbr title="Unique Reference Number">URN</abbr>:</dt>
+                                                    <dd class="gias-summary-list__value">
+                                                        <a v-bind:href="detailUrl(selectedOpeningDetails.predecessorUrn )" v-if="selectedOpeningDetails.predecessorUrn">{{ selectedOpeningDetails.predecessorUrn }}</a>
+                                                    </dd>
+                                                </div>
+                                                <div class="gias-summary-list__row">
+                                                    <dt class="gias-summary-list__key">Predecessor name:</dt>
+                                                    <dd class="gias-summary-list__value">{{ selectedOpeningDetails.predecessorName }}</dd>
+                                                </div>
                                             </dl>
-                                            <a href="#" class="button" v-on:click.prevent="editEstab(od.urn)">Edit opening details</a>
+                                            <a href="#" class="govuk-button" v-on:click.prevent="editEstab(selectedOpeningDetails.urn)">Edit opening details</a>
                                         </div>
                                     </div>
-                            </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -220,63 +229,70 @@
         </div>
 
         <!-- Record editing -->
-        <div class="grid-row" v-show="editRecord" v-cloak>
-            <div class="column-full">
-                <h1 class="heading-large">Edit opening details</h1>
+        <div class="govuk-grid-row" v-show="editRecord" v-cloak>
+            <div class="govuk-grid-column-full">
+                <h1 class="govuk-heading-l">Edit opening details</h1>
             </div>
-            <div class="column-half">
-                <div class="form-group">
-                    <label class="form-label" for="est-urn">Unique Reference Number (URN)</label>
-                    <input class="form-control" type="text" :value="od.urn" disabled="disabled" id="est-urn" />
+            <div class="govuk-grid-column-one-half">
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="est-urn">Unique Reference Number (URN)</label>
+                    <input class="govuk-input" type="text" :value="selectedOpeningDetails.urn" disabled="disabled" id="est-urn" />
                 </div>
 
-                <div v-bind:class="['form-group',  updateNameError ? 'error' : '' ]">
-                    <label class="form-label" for="est-name">Establishment name </label>
-                    <span class="error-message" v-if="updateNameError">Please enter the establishment name</span>
-                    <input class="form-control" type="text" v-model="updateName" v-on:change="attachUnload" id="est-name" />
+                <div v-bind:class="['govuk-form-group',  updateNameError ? 'govuk-form-group--error' : '' ]">
+                    <label class="govuk-label" for="est-name">Establishment name </label>
+                    <span class="govuk-error-message" v-if="updateNameError">Please enter the establishment name</span>
+                    <input class="govuk-input" type="text" v-model="updateName" v-on:change="attachUnload" id="est-name" />
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label" for="est-type">Establishment type</label>
-                    <input class="form-control" type="text" :value="od.establishmentType" disabled="disabled" id="est-type" />
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="est-type">Establishment type</label>
+                    <input class="govuk-input" type="text" :value="selectedOpeningDetails.establishmentType" disabled="disabled" id="est-type" />
                 </div>
 
-                <div v-bind:class="['form-group range-group', openDateError ? 'error' : '' ]">
-                    <fieldset id="opening-date">
-                        <span v-bind:class="['error-message']" v-if="openDateError">Please enter the establishment opening date</span>
-                        <legend>Opening date</legend>
-                        <div class="form-hint">For example, 20 03 2003</div>
+                <div v-bind:class="['govuk-form-group range-group', openDateError ? 'govuk-form-group--error' : '' ]">
+                    <fieldset id="opening-date" class="govuk-fieldset edit-date-fieldset">
+                        <span v-bind:class="['govuk-error-message']" v-if="openDateError">Please enter the establishment opening date</span>
+                        <legend class="govuk-fieldset__legend--s">Opening date</legend>
+                        <div class="govuk-hint">For example, 20 03 2003</div>
+                        <div class="govuk-date-input">
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    <label for="opendate-day" class="govuk-label govuk-date-input__label">Day</label>
+                                    <input class="govuk-input date-text-day govuk-date-input__input govuk-input--width-2" id="opendate-day" name="OpenDate.Day" type="text" v-model="updateDateDay" v-on:change="attachUnload">
 
-                        <span class="inline-form-control">
-                            <label for="opendate-day">Day</label>
-                            <input class="form-control date-text-day" id="opendate-day" name="OpenDate.Day" type="text" v-model="updateDateDay" v-on:change="attachUnload">
+                                </div>
+                            </div>
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    <label for="opendate-month" class="govuk-label govuk-date-input__label">Month</label>
+                                    <input class="govuk-input date-text-month govuk-date-input__input govuk-input--width-2" id="opendate-month" name="OpenDate.Month" type="text" v-model="updateDateMonth" v-on:change="attachUnload">
 
-                        </span>
-                        <span class="inline-form-control">
-                            <label for="opendate-month">Month</label>
-                            <input class="form-control date-text-month" id="opendate-month" name="OpenDate.Month" type="text" v-model="updateDateMonth" v-on:change="attachUnload">
-
-                        </span>
-                        <span class="inline-form-contol">
-                            <label for="opendate-year">Year</label>
-                            <input class="form-control date-text-year" id="opendate-year" name="OpenDate.Year" type="text" v-model="updateDateYear" v-on:change="attachUnload">
-                        </span>
+                                </div>
+                            </div>
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    <label for="opendate-year" class="govuk-label govuk-date-input__label">Year</label>
+                                    <input class="govuk-input date-text-year govuk-date-input__input govuk-input--width-4" id="opendate-year" name="OpenDate.Year" type="text" v-model="updateDateYear" v-on:change="attachUnload">
+                                </div>
+                            </div>
+                        </div>
                     </fieldset>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label" for="est-pred-urn">Predecessor <abbr title="Unique Reference Number">URN</abbr></label>
-                    <input type="text" class="form-control" disabled="disabled" :value="od.predecessorUrn" id="est-pred-urn" />
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="est-pred-urn">Predecessor <abbr title="Unique Reference Number">URN</abbr></label>
+                    <input type="text" class="govuk-input" disabled="disabled" v-model="selectedOpeningDetails.predecessorUrn" id="est-pred-urn" />
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label" for="est-pred-name">Predecessor name</label>
-                    <input type="text" class="form-control" disabled="disabled" :value="od.predecessorName" id="est-pred-name" />
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="est-pred-name">Predecessor name</label>
+                    <input type="text" class="govuk-input" disabled="disabled" v-model="selectedOpeningDetails.predecessorName" id="est-pred-name" />
                 </div>
 
-                <div class="button-row push--top">
-                    <input type="submit" class="button opening-save" value="Save" v-on:click.prevent="updateRecord" />
-                    <a href="#" class="button button-secondary" v-on:click="cancelEditClick">Cancel</a>
+                <div class="button-row">
+                    <input type="submit" class="govuk-button opening-save" value="Save" v-on:click.prevent="updateRecord" />
+                    <a href="#" class="govuk-button govuk-button-secondary" v-on:click="cancelEditClick">Cancel</a>
                 </div>
             </div>
         </div>
@@ -285,18 +301,17 @@
         <div id="modal-content" class="modal-content" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc" v-show="presentExitWarning">
             <a href="#" id="exit-overlay" class="modal-exit" v-on:click.prevent="presentExitWarning = false, anchorTarget=''">Close</a>
             <div id="modal-inner">
-                <h3 class="heading-large" id="modal-label" tabindex="0">Are you sure you want to leave this page?</h3>
+                <h3 class="govuk-heading-l" id="modal-label" tabindex="0">Are you sure you want to leave this page?</h3>
                 <p id="modal-desc" tabindex="0">Any unsaved changes will be lost.</p>
             </div>
             <div class="button-row">
-                <a href="#" class="button" id="button-ok" v-on:click.prevent="exitWarningOkClick">OK</a>
-                <a href="#" class="button button-secondary" id="button-cancel" v-on:click.prevent="presentExitWarning = false, anchorTarget=''">Cancel</a>
+                <a href="#" class="govuk-button" id="button-ok" v-on:click.prevent="exitWarningOkClick">OK</a>
+                <a href="#" class="govuk-button govuk-button--secondary" id="button-cancel" v-on:click.prevent="presentExitWarning = false, anchorTarget=''">Cancel</a>
             </div>
         </div>
     </div>
 </div>
 
 @section ViewScripts {
-    <script src="/public/assets/scripts/standalone/manage-academy-openings.js"></script>
-    @*<script src="/Assets/Scripts/standalone/manage-academy-openings.js"></script>*@
+    <script src="/public/assets/scripts/build/manage-academy-openings.js"></script>
 }
