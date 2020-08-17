@@ -487,7 +487,7 @@ const mergersApp = new Vue({
                 self.validMergeUrns = false;
               }
             }
-            self.commitErrors = this.errors.length > 0;
+            self.commitErrors = self.errors.length > 0;
             self.isProcessing = false;
             self.errorFocus();
           }
@@ -507,10 +507,6 @@ const mergersApp = new Vue({
       }).map(function (estab) {
         return estab.urn;
       });
-
-      // postData.UrnsToMerge = postData.UrnsToMerge.filter(function(item) {
-      //   return item !== Number(self.mergerEstab0);
-      // });
 
       this.mergeDateError = this.validateMergerDate();
       this.errorFocus();
@@ -564,7 +560,7 @@ const mergersApp = new Vue({
           }
         });
       } else {
-       this.errors.push({
+       self.errors.push({
          href: '#mergedate-day',
          message: 'Merger date is invalid',
        });
@@ -654,7 +650,7 @@ const mergersApp = new Vue({
       } else if(this.mergerType === 'amalgamation' && !this.completeAmalgamation && this.mergerTypeConfirmed) {
         return 'Amalgamation';
 
-      } else if (this.amalgamationComplete) {
+      } else if (this.completeAmalgamation) {
         return 'Amalgamation complete';
       } else {
         return 'Amalgamations and mergers tool';
