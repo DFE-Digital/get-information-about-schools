@@ -1,0 +1,317 @@
+﻿@{
+    ViewBag.Title = "Get information about schools";
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        <div class="breadcrumbs">
+            <ol>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Help", "Help", "Home", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Guidance", "Index", "Guidance", new { area = "" }, null)
+                </li>
+            </ol>
+        </div>
+        <h1 class="heading-xlarge">Establishment bulk update guidance</h1>
+    </div>
+</div>
+
+<div class="guidance">
+    <h2 class="heading-medium subheading">Introduction</h2>
+    <p>The bulk update tool allows you to make many updates in a single batch instead of editing individual establishment records. Multiple column files must be XLSX and bulk upload files can be XLSX or tab delimited text files.</p>
+    <p>If there’s an error in your data, we’ll send you a message to correct it. If your changes need approval, you’ll get a second message to say your change is either approved or declined.</p>
+    <p>If there’s an error in your data, we’ll send you a message to correct it.</p>
+    <p>If your changes need approval, you’ll get a second message to say your change is either approved or declined.</p>
+
+    <h2 class="heading-medium subheading">Bulk update steps</h2>
+    <p>You have to complete 3 steps to make changes via bulk update:</p>
+    <ul class="font-small list list-number">
+        <li>Create the file</li>
+        <li>Upload the file</li>
+        <li>Correct any errors</li>
+    </ul>
+
+    <p>Please use a file size smaller than 1MB. There are also limits of:</p>
+    <ul class="font-small list list-bullet">
+        <li>5,000 rows per file for back office users</li>
+        <li>1,000 rows per file for EFADO, SFC and DDCE users</li>
+        <li>200 rows per file for establishment and MAT users</li>
+    </ul>
+
+    <p>If your data exceeds these limits, split it into two or more files and upload them separately.</p>
+    <p>Multiple column files must be XLSX and bulk upload files can be XLSX or tab delimited text files</p>
+
+    <h2 class="heading-medium subheading">Create the file</h2>
+    <ul class="font-small list list-bullet">
+        <li>
+            <h2 class="heading-small subheading">Bulk upload</h2>
+            <p>You can use a spreadsheet editor (like Microsoft Excel or Open Office Calc) to create the file to be uploaded.</p>
+            <p>The file should contain 3 columns and as many rows as the changes you want to suggest with each row representing a change request:</p>
+            <ul class="font-small list list-bullet">
+                <li>The first column contains the establishment URN.</li>
+                <li>The second column contains the database name of the field you want to change. See the appendix to identify the name of the field(s) to change.</li>
+                <li>
+                    The third column contains the new value you want this field to have. Please note:
+                    <ul class="font-small list list-bullet">
+                        <li>For free text fields you can add any value you want</li>
+                        <li>For date fields you should provide the date in DD/MM/YYYY format</li>
+                        <li>For lookup fields you can add either the descriptor of the value or the code. See appendix.</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Leaving a cell of the third column blank deletes the value of the field. You don't need to add any headers or footers to your file.</p>
+            <p>
+                <img src="~/public/assets/images/guidance/establishment_bulk_update_spreadsheet.png" class="guidanceImageNoSwap" alt="example spreadsheet populated with Establishment URN in column A, Field name from appendix in column B, New data in column C" />
+            </p>
+        </li>
+
+        <li>
+            <h2 class="heading-small subheading">Multiple column file</h2>
+            <p>If you want to edit the same fields for several different schools, create a multiple column file. You can only use XLSX files.</p>
+            <p>You can use a spreadsheet editor (like Microsoft Excel or Open Office Calc) to create the file to be uploaded.</p>
+            <p>The file should contain headed short name columns and as many rows as the changes you want to suggest with each row representing an establishment.</p>
+            <p>
+                <img src="~/public/assets/images/guidance/establishment_bulk_update_multicolumn.png" class="guidanceImageNoSwap" alt="example multi-column spreadsheet populated with Establishment URN in column A, Head First Name in column B, Head Last Name in column C for multiple URNs, one on each line" />
+            </p>
+        </li>
+
+        <li>
+            <h2 class="heading-small subheading">Save the file</h2>
+            <p>Bulk upload files can be XLSX or tab delimited text files.</p>
+            <p>To create an XSLX file, save the file as ‘Excel Workbook’.</p>
+        </li>
+    </ul>
+
+
+    <h2 class="heading-medium subheading">Upload the file</h2>
+    <p>Having created the file, you can upload it. First, sign in to the app and visit the 'Bulk update establishments' page under the ‘Tools’ menu.</p>
+    <p>Click on 'Choose file' (see below). You will be presented with a browsing window that allows you to find and select the file you created in the first step. Select the file and click 'Open'.</p>
+    <p>You can then select the format of the file that you are uploading. Click on the drop-down list under the ‘Select file type’ option.</p>
+    <p>You can also select the date for the changes. If you select a date in the future, the changes will be applied on this date (if approved).</p>
+    <p>If you leave the date blank, the changes will be applied immediately (if approved) or as soon as they get approved by the appropriate data owner.</p>
+    <p>Finally, if you select a date in the past the changes will be applied immediately (if approved), or as soon as they get approved, but they will show as being effective from this date in the past.</p>
+    <p>
+        <img src="~/public/assets/images/guidance/establishment_bulk_update.png" class="guidanceImage" alt="view of the search establishment bulk update page" />
+        <img src="~/public/assets/images/guidance/establishment_bulk_update_mobile.png" class="guidanceMobileImage" alt="view of the search establishment bulk update page" />
+    </p>
+    <p>To start your bulk upload click ‘Submit’.</p>
+
+    <h2 class="heading-medium subheading">Errors</h2>
+    <p>
+        We’ll send you an email if there’s an error when you upload a file. Errors can include:
+        <ul class="font-small list list-bullet">
+            <li>the file is not in the correct format</li>
+            <li>you’re not allowed to change some fields</li>
+            <li>you didn’t select a file type</li>
+            <li>some of the field names or values you used were not correct.</li>
+        </ul>
+        Correct any errors and resubmit the file to complete your changes.
+    </p>
+
+    <h2 class="heading-medium subheading">Further assistance</h2>
+    <p>
+        If you have any issues when uploading a file, please <a href="https://form.education.gov.uk/fillform.php?self=1&form_id=hGz7nZcsdnX&noLoginPrompt=1" target="_blank" rel="external">contact our Service Desk<span class="visually-hidden"> Opens in new window</span></a>
+    </p>
+
+    <h2 class="heading-medium subheading">Appendix</h2>
+    <p>
+        <table class="edubase-table">
+            <thead>
+                <tr>
+                    <th>
+                        Database name (use this for your upload file)
+                    </th>
+                    <th>
+                        Equivalent field name in app
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>EstablishmentName</td><td>School / College Name</td></tr>
+                <tr><td>Street</td><td>Street</td></tr>
+                <tr><td>Locality</td><td>Locality</td></tr>
+                <tr><td>Address3</td><td>Address3</td></tr>
+                <tr><td>Town</td><td>Town</td></tr>
+                <tr><td>County (name)</td><td>County (name)</td></tr>
+                <tr><td>Postcode</td><td>Postcode</td></tr>
+                <tr><td>LA (name)</td><td>Local authority</td></tr>
+                <tr><td>HeadTitle (name)</td><td>Headteacher/Principal title</td></tr>
+                <tr><td>HeadFirstName</td><td>Headteacher/Principal first name</td></tr>
+                <tr><td>HeadLastName</td><td>eadteacher/Principal last name</td></tr>
+                <tr><td>HeadAppointmentDate</td><td>Headteacher date of appointment</td></tr>
+                <tr><td>HeadEmail</td><td>Headteacher/Principal email address</td></tr>
+                <tr><td>StatutoryLowAge</td><td>Age range Low</td></tr>
+                <tr><td>StatutoryHighAge</td><td>Age range High</td></tr>
+                <tr><td>PhaseOfEducation (name)</td><td>Phase of education</td></tr>
+                <tr><td>TypeOfEstablishment (name)</td><td>Establishment type</td></tr>
+                <tr><td>FurtherEducationType (name)</td><td>Further education type</td></tr>
+                <tr><td>Trusts (name)</td><td>Academy trust or Trust</td></tr>
+                <tr><td>SchoolSponsors (name)</td><td>Academy sponsor</td></tr>
+                <tr><td>Federations (name)</td><td>Federation</td></tr>
+                <tr><td>Gender (name)</td><td>Gender of entry</td></tr>
+                <tr><td>URN</td><td>URN</td></tr>
+                <tr><td>LA (code)</td><td>LA code</td></tr>
+                <tr><td>EstablishmentNumber</td><td>Establishment Number</td></tr>
+                <tr><td>UKPRN</td><td>UK provider reference number (UKPRN)</td></tr>
+                <tr><td>EstablishmentStatus (name)</td><td>Establishment status</td></tr>
+                <tr><td>AdmissionsPolicy (name)</td><td>Admissons policy</td></tr>
+                <tr><td>SchoolWebsite</td><td>Website</td></tr>
+                <tr><td>TelephoneNum</td><td>Telephone</td></tr>
+                <tr><td>OfstedRating</td><td>Ofsted rating</td></tr>
+                <tr><td>OfstedLastInspection</td><td>Ofsted last inspection</td></tr>
+                <tr><td>Osted report link</td><td>Ofsted report link</td></tr>
+                <tr><td>Inspectorate</td><td>Inspectorate</td></tr>
+                <tr><td>Proprietor's name</td><td>Proprietor's name</td></tr>
+                <tr><td>ReligiousCharacter (name)</td><td>Religious character</td></tr>
+                <tr><td>Diocese (name)</td><td>Diocese</td></tr>
+                <tr><td>ReligiousEthos (name)</td><td>Religious ethos</td></tr>
+                <tr><td>Boarders (name)</td><td>Boarders</td></tr>
+                <tr><td>NurseryProvision (name)</td><td>Nursery provision</td></tr>
+                <tr><td>OfficialSixthForm (name)</td><td>Official sixth form</td></tr>
+                <tr><td>SchoolCapacity</td><td>School capacity</td></tr>
+                <tr><td>Section 41 Approved</td><td>Section 41 approved</td></tr>
+                <tr><td>OpenDate</td><td>Open date</td></tr>
+                <tr><td>ReasonEstablishmentOpened (name)</td><td>Reason establishment opened</td></tr>
+                <tr><td>CloseDate</td><td>Close date</td></tr>
+                <tr><td>ReasonEstablishmentClosed (name)</td><td>Reason establishment closed</td></tr>
+                <tr><td>CCOperationalHours</td><td>Operational hours</td></tr>
+                <tr><td>CCNumberOfUnder5s</td><td>Number of under 5s</td></tr>
+                <tr><td>CCGovernance</td><td>Governance</td></tr>
+                <tr><td>CCGovernanceDetail</td><td>Governance detail</td></tr>
+                <tr><td>CCLAContactName</td><td>Local authority contact name</td></tr>
+                <tr><td>CCLAContactEmail</td><td>Local authority contact email</td></tr>
+                <tr><td>CCLAContactLAPhone</td><td>Local authority contact telephone number</td></tr>
+                <tr><td>ChildrensCentresGroupFlag</td><td>Delivery model</td></tr>
+                <tr><td>ChildrensCentresGroup (name)</td><td>Group/Collaboration name</td></tr>
+                <tr><td>CCGroupLead (name)</td><td>Group lead centre</td></tr>
+                <tr><td>ChildrensCentresPhaseType (name)</td><td>Phase</td></tr>
+                <tr><td>CCDisadvantagedArea (name)</td><td>Disadvantaged area</td></tr>
+                <tr><td>CCDirectProvisionOfEarlyYears (name)</td><td>Direct provision of early years</td></tr>
+                <tr><td>SpecialClasses (name)</td><td>Special classes</td></tr>
+                <tr><td>SENStat</td><td>Number of Special Pupils Under a SEN Statement/EHCP</td></tr>
+                <tr><td>SENNoStat</td><td>Number of Special Pupils Not Under a SEN Statement/EHCP</td></tr>
+                <tr><td>MainEmail</td><td>Email address</td></tr>
+                <tr><td>AlternativeEmail</td><td>Alternative email address</td></tr>
+                <tr><td>LastChangedDate</td><td>Last Changed Date</td></tr>
+                <tr><td>SEN1</td><td>Type of SEN provision</td></tr>
+                <tr><td>TeenMoth</td><td>Teenage mothers provision</td></tr>
+                <tr><td>TeenMothPlaces</td><td>Teenage mothers capacity</td></tr>
+                <tr><td>CCF</td><td>Childcare facilities provision</td></tr>
+                <tr><td>SENPRU</td><td>SEN facilities</td></tr>
+                <tr><td>EBD</td><td>Pupils with EBD</td></tr>
+                <tr><td>PlacesPRU</td><td>Number of places</td></tr>
+
+                <tr><td>FTProv</td><td>Full time provision</td></tr>
+                <tr><td>EdByOther</td><td>Pupils educated by other providers</td></tr>
+                <tr><td>TypeOfResourcedProvision</td><td>Type of resourced provision</td></tr>
+                <tr><td>ResourcedProvisionOnRoll</td><td>Resourced provision number on roll</td></tr>
+                <tr><td>ResourcedProvisionCapacity</td><td>Resourced provision capacity</td></tr>
+                <tr><td>SenUnitOnRoll</td><td>SEN unit number on roll</td></tr>
+                <tr><td>SenUnitCapacity</td><td>SEN unit capacity</td></tr>
+                <tr><td>InspectorateName</td><td>Inspectorate Name</td></tr>
+                <tr><td>InspectorateReport</td><td>Inspectorate Report</td></tr>
+                <tr><td>DateOfLastInspectionVisit</td><td>Date of Last Inspection Visit</td></tr>
+                <tr><td>NextInspectionVisit</td><td>Next Inspection Visit</td></tr>
+                <tr><td>RSCRegion</td><td>RSC Region</td></tr>
+                <tr><td>GOR</td><td>Government Office Region</td></tr>
+                <tr><td>DistrictAdministrative</td><td>District</td></tr>
+                <tr><td>AdministrativeWard</td><td>Ward</td></tr>
+                <tr><td>ParliamentaryConstituency</td><td>Parliamentary Constituency</td></tr>
+                <tr><td>UrbanRural</td><td>Urban/Rural Description</td></tr>
+                <tr><td>GSSLACode</td><td>GSS LA Code</td></tr>
+                <tr><td>Easting</td><td>Easting</td></tr>
+                <tr><td>Northing</td><td>Northing</td></tr>
+                <tr><td>CensusAreaStatisticWard</td><td>Census Ward</td></tr>
+                <tr><td>MSOA</td><td>Middle Super Output Area (MSOA)</td></tr>
+                <tr><td>LSOA</td><td>Lower Super Output Area (LSOA)</td></tr>
+                <tr><td>Notes</td><td>Notes</td></tr>
+                <tr><td>DateofLastFullBridgeInspection</td><td>Date of the Last Bridge Visit</td></tr>
+                <tr><td>DateofLastFullOfstedInspection</td><td>Date of the Last Ofsted Visit</td></tr>
+                <tr><td>DateofLastFullISIInspection</td><td>Date of the Last ISI Visit</td></tr>
+                <tr><td>DateofLastFullWelfareInspection</td><td>Date of the Last Welfare Visit</td></tr>
+                <tr><td>DateofLastFPVisit</td><td>Date of the Last FP Visit</td></tr>
+                <tr><td>DateofLastFullSISInspection</td><td>Date of the Last SIS Visit</td></tr>
+                <tr><td>DateNextFullInspection</td><td>Date Next Full Inspection Due</td></tr>
+                <tr><td>ActionGEN</td><td>Next General Action Required</td></tr>
+                <tr><td>ActionWEL</td><td>Next Action Required by WEL</td></tr>
+                <tr><td>ActionFP</td><td>Next Action Required by FP</td></tr>
+                <tr><td>Inspectorate</td><td>Inspectorate</td></tr>
+                <tr><td>IndependentSchoolType</td><td>Independent School Type</td></tr>
+                <tr><td>CharityName</td><td>Charity Organisation</td></tr>
+                <tr><td>CharityNum</td><td>Charity Registration Number</td></tr>
+
+                <tr><td>TotalPupilsFullTime</td><td>Total number of full time pupils</td></tr>
+                <tr><td>TotalPupilsPartTime</td><td>Total number of part time pupils</td></tr>
+                <tr><td>CompSchoolAge</td><td>Total number of pupils of compulsory school age</td></tr>
+                <tr><td>SENStat</td><td>Number of special pupils under a SEN statement/EHCP</td></tr>
+                <tr><td>SENNoStat</td><td>Number of special pupils not under a SEN statement/EHCP</td></tr>
+                <tr><td>TotalPupilsInPublicCare</td><td>Total Number of Pupils in Public Care</td></tr>
+                <tr><td>PTBoys2andUnder</td><td>PT Boys (Aged 2 and Under):</td></tr>
+                <tr><td>PTBoys3</td><td>PT Boys (Aged 3):</td></tr>
+                <tr><td>PTBoys4a</td><td>PT Boys (Aged 4a):</td></tr>
+                <tr><td>PTBoys4b</td><td>PT Boys (Aged 4b):</td></tr>
+                <tr><td>PTBoys4c</td><td>PT Boys (Aged 4c):</td></tr>
+                <tr><td>TotalBoyBoarders</td><td>Total number of boys in boarding schools</td></tr>
+                <tr><td>PTGirls2andUnder</td><td>PT Girls (Aged 2 and Under):</td></tr>
+                <tr><td>PTGirls3</td><td>PT Girls (Aged 3):</td></tr>
+                <tr><td>PTGirls4a</td><td>PT Girls (Aged 4a):</td></tr>
+                <tr><td>PTGirls4b</td><td>PT Girls (Aged 4b):</td></tr>
+                <tr><td>PTGirls4c</td><td>PT Girls (Aged 4c):</td></tr>
+                <tr><td>TotalGirlBoarders</td><td>Total number of Girls in boarding schools</td></tr>
+                <tr><td>TotalStaffFullTime</td><td>Total Number of Full Time Staff</td></tr>
+                <tr><td>TotalStaffPartTime</td><td>Total Number of Part Time Staff</td></tr>
+                <tr><td>LowDayFee</td><td>Lowest Annual Rate for Day Pupils:</td></tr>
+                <tr><td>HighDayFee</td><td>Highest Annual Rate for Day Pupils:</td></tr>
+                <tr><td>LowBoardFee</td><td>Lowest Annual Rate for Boarding Pupils:</td></tr>
+                <tr><td>HighBoardFee</td><td>Highest Annual Rate for Boarding Pupils:</td></tr>
+                <tr><td>BoardingEstablishment</td><td>Boarding Establishment</td></tr>
+                <tr><td>PropsName</td><td>Proprietor's Name:</td></tr>
+                <tr><td>PropsStreet</td><td>Proprietor's Street:</td></tr>
+                <tr><td>PropsLocality</td><td>Proprietor's Locality:</td></tr>
+                <tr><td>PropsAddress3</td><td>Proprietor's Address 3:</td></tr>
+                <tr><td>PropsTown</td><td>Proprietor's Town:</td></tr>
+                <tr><td>PropsCounty</td><td>Proprietor's County:</td></tr>
+                <tr><td>PropsPostcode</td><td>Proprietor's Postcode:</td></tr>
+                <tr><td>PropsTelephoneNum</td><td>Proprietor's Telephone Number:</td></tr>
+                <tr><td>PropsFaxNumber</td><td>Proprietor's Fax Number:</td></tr>
+                <tr><td>PropsEmail</td><td>Proprietor's Email:</td></tr>
+                <tr><td>PropsPreferredJobTitle</td><td>Proprietor's Preferred Job Title:</td></tr>
+                <tr><td>ChairOfProprietorBodyName</td><td>Chair of Proprietor's Body Name:</td></tr>
+                <tr><td>ChairOfProprietorBodyStreet</td><td>Chair of Proprietor's Body Street:</td></tr>
+                <tr><td>ChairOfProprietorBodyLocality</td><td>Chair of Proprietor's Body Locality:</td></tr>
+                <tr><td>ChairOfProprietorBodyAddress3</td><td>Chair of Proprietor's Body Address 3:</td></tr>
+                <tr><td>ChairOfProprietorBodyTown</td><td>Chair of Proprietor's Body Town:</td></tr>
+                <tr><td>ChairOfProprietorBodyCounty</td><td>Chair of Proprietor's Body County:</td></tr>
+                <tr><td>ChairOfProprietorBodyPostcode</td><td>Chair of Proprietor's Body Postcode:</td></tr>
+
+                <tr><td>ChairOfProprietorBodyTelephoneNum</td><td>Chair of Proprietor's Body Telephone Number:</td></tr>
+                <tr><td>ChairOfProprietorBodyFaxNumber</td><td>Chair of Proprietor's Body Fax Number:</td></tr>
+                <tr><td>ChairOfProprietorBodyEmail</td><td>Chair of Proprietor's Body Email:</td></tr>
+                <tr><td>ChairOfProprietorBodyPreferredJobTitle</td><td>Chair of Proprietor's Body Preferred Job Title:</td></tr>
+                <tr><td>AccomChange</td><td>Accomodation changed</td></tr>
+                <tr><td>HelpdeskNotes</td><td>Helpdesk notes</td></tr>
+                <tr><td>LastUpdate</td><td>Last update</td></tr>
+                <tr><td>Trigger1</td><td>Trigger 1</td></tr>
+                <tr><td>PreviousLA (name)</td><td>Previous local authority</td></tr>
+                <tr><td>PreviousEstablishmentNumber</td><td>Previous establishment number</td></tr>
+                <tr><td>AltSiteName</td><td>Site 2 name</td></tr>
+                <tr><td>ConStreet</td><td>Street</td></tr>
+                <tr><td>ConLocality</td><td>Locality</td></tr>
+                <tr><td>ContactAddress3</td><td>Address 3</td></tr>
+                <tr><td>ConTown</td><td>Town</td></tr>
+                <tr><td>ConCounty (name)</td><td>County</td></tr>
+                <tr><td>ConPostcode</td><td>Postcode</td></tr>
+                <tr><td>ConTelNumber</td><td>Telephone</td></tr>
+                <tr><td>LinkURN</td><td>URN</td></tr>
+                <tr><td>LinkName</td><td>Establishment name</td></tr>
+                <tr><td>LinkType</td><td>Type of link</td></tr>
+                <tr><td>LinkEstablishedDate</td><td>Date linked</td></tr>
+            </tbody>
+        </table>
+    </p>
+</div>

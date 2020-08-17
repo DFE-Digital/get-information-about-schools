@@ -180,8 +180,14 @@ namespace Edubase.Web.UI.Controllers
             nodes.Add(BuildNode("Index", "Faq", null, null, 0.6));
             nodes.Add(BuildNode("Cookies", "Home"));
             nodes.Add(BuildNode("Index", "Glossary"));
-            nodes.Add(BuildNode("Guidance", "Home"));
+            nodes.Add(BuildNode("Index", "Guidance"));
+            nodes.Add(BuildNode("General", "Guidance", null, null, 0.3));
+            nodes.Add(BuildNode("EstablishmentBulkUpdate", "Guidance", null, null, 0.3));
+            nodes.Add(BuildNode("ChildrensCentre", "Guidance", null, null, 0.3));
+            nodes.Add(BuildNode("Federation", "Guidance", null, null, 0.3));
+            nodes.Add(BuildNode("Governance", "Guidance", null, null, 0.3));
             nodes.Add(BuildNode("Responsibilities", "Home"));
+            nodes.Add(BuildNode("Privacy", "Home"));
             return nodes;
         }
 

@@ -16,6 +16,12 @@ ol {
   }
 }
 
+// Alpha lists
+.list-alpha {
+  list-style-type: lower-alpha;
+  padding-left: 20px;
+}
+
 // Numbered lists
 .list-number {
   list-style-type: decimal;
