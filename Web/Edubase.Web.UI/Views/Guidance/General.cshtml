@@ -1,0 +1,122 @@
+﻿@{
+    ViewBag.Title = "Get information about schools";
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        <div class="breadcrumbs">
+            <ol>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Help", "Help", "Home", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Guidance", "Index", "Guidance", new { area = "" }, null)
+                </li>
+            </ol>
+        </div>
+        <h1 class="heading-xlarge">General guidance</h1>
+    </div>
+</div>
+
+<div class="guidance">
+    <h2 class="heading-medium">Overview</h2>
+    <p>‘Get information about schools’ is a comprehensive database of educational establishments in England. It contains data on around 65,000 establishments, including academies, maintained schools and children’s centres.</p>
+    <p>Get information about schools currently contains over 250 data fields for each establishment, and this number is expected to grow.</p>
+
+    <p>Establishment data is available for several groups of users, such as:</p>
+    <ul class="font-small list list-bullet">
+        <li>the general public</li>
+        <li>establishment users</li>
+        <li>stakeholders</li>
+        <li>DfE staff</li>
+        <li>system administrators and helpdesk staff.</li>
+    </ul>
+
+    <p>Each group of users accesses their data through a separate online portal. Each portal provides access to Get information about schools functions available for a specific user group.</p>
+    <p>Get information about schools is mainly intended as resource for educational professionals. Parents and guardians are likely to find <a href="https://www.gov.uk/school-performance-tables" target="_blank" rel="external">Compare school and college performance<span class="visually-hidden"> Opens in new window</span></a> more helpful to meet their needs</p>
+
+    <h2 class="heading-medium subheading">How to log in</h2>
+    <p>If you are an educational professional and you need to log in to Get information about schools, click on the top menu bar ‘Sign in’ link which will take you to the login page.</p>
+    <p>Enter your user name and password to log in. If you don’t have these details, contact the named user at your organisation.</p>
+
+    <h2 class="heading-medium subheading">Search and menu options</h2>
+    <p>You can use either the search tabs or links in the top menu on Get information about schools. The search page allows you to search by establishment, group (for example multi academy trust or federation) or by governor.</p>
+    <p>The options available in the top menu depend on your role. All users can search and download data. Some users also have access to tools which allow them to create and edit details of establishments and groups.</p>
+
+    <h2 class="heading-medium subheading">Search using filters</h2>
+    <p>You can customise your search using search filters. These appear once you have used one of the three search options.</p>
+    <p>Each of the headings, for example ‘Establishment type’ and ‘Status’ opens a list of filters with tick boxes for you to search more specifically.</p>
+
+    <p>
+        <img src="~/public/assets/images/guidance/general_user_guide_search_filters.png" class="guidanceImage" alt="view of the search establishment results page showing the filters placed on the left side of the results" />
+        <img src="~/public/assets/images/guidance/general_user_guide_search_filters_mobile.png" class="guidanceMobileImage" alt="view of the search establishment results page showing the filters placed on the left side of the results" />
+    </p>
+
+    <p>To apply a filter, select its tick-box. All establishments which meet the defined criteria will be displayed in a summary report, along with current filter name and defined criteria (listed in the header). You can choose to edit the filter, create an extract file based on the filter you are viewing, or go back to the filter list.</p>
+    <p>You can also view an establishment record, by clicking on its name.</p>
+
+    <h2 class="heading-medium subheading">Establishment record</h2>
+    <p>Whenever you click on an establishment name, you will be taken to the full record for that establishment. This record contains all data available for the establishment in Get information about schools (depending on your security permissions).</p>
+    <p>As there are a large number of data fields available for each establishment, the establishment record is displayed using tabs, to group fields into subject areas. You can switch between these tabs to view data on different aspects of the record.</p>
+
+    <p>
+        <img src="~/public/assets/images/guidance/general_user_guide_establishment_details.png" class="guidanceImage" alt="view of the establishment details page" />
+        <img src="~/public/assets/images/guidance/general_user_guide_establishment_details_mobile.png" class="guidanceMobileImage" alt="view of the establishment details page" />
+    </p>
+
+    <p>The details tab is a summary of the key information held on the establishment. If you’re a logged in user, you can edit the establishment record to suggest changes/updates to a record.</p>
+    <p>To edit an establishment record, you should use the ‘Edit’ link at the top of the record. This option will take you to a page with fields offering free text and selection boxes, to help you suggest the appropriate change.</p>
+    <p>You can only view fields for which you have permission to edit. To suggest a change to a field that you do not have permission to edit, contact the Get information about schools Service desk.</p>
+    <p>The ‘Details’ tab also features a map of the establishment’s location. To navigate around the map, you can use:</p>
+    <ul class="font-small list list-bullet">
+        <li>
+            your keyboard arrows – click the appropriate arrow button to move the view north, south,
+            east or west.
+        </li>
+        <li>zoom +/- – click + to zoom in on the centre of the map, or click - to zoom out</li>
+        <li>left mouse button – hold down and move the mouse to pan around the map</li>
+        <li>mouse wheel – zoom in or out using the mouse wheel.</li>
+    </ul>
+    <p>You can also drag the stick figure on the right of the map to the establishment’s location for a photographic street view.</p>
+    <p>The ‘Governance’ tab gives you details of the establishment’s governing body, for example the names of governors and members, who appointed them and when their term began.</p>
+    <p>The ‘Links’ tab sets out details of predecessor and successor establishments, for example when a school becomes an academy.</p>
+    <p>The ‘Location’ tab gives details of the establishment’s parliamentary constituency, census ward and other geographical parameters.</p>
+
+    <h2 class="heading-medium subheading">Group record</h2>
+    <p>When you select the name of a multi academy trust, federation or other group, you will be taken to the group’s record. This record contains all data available for the group in Get information about schools (depending on your security permissions).</p>
+    <p>As there are a large number of data fields available for each group, the record is displayed using tabs, to group fields into subject areas. You can switch between these tabs to view data on different aspects of the record.</p>
+
+    <p>
+        <img src="~/public/assets/images/guidance/general_user_guide_group_edit.png" class="guidanceImage" alt="view of the group details page showing the edit details button placement" />
+        <img src="~/public/assets/images/guidance/general_user_guide_group_edit_mobile.png" class="guidanceMobileImage" alt="view of the group details page showing the edit details button placement" />
+    </p>
+
+    <p>The ‘Details’ tab gives the group’s address, Companies House number, incorporation date and other information. If you’re a logged in user with the relevant permissions, you can edit these details.</p>
+    <p>The ‘Academies’ tab lists all of the establishments in the trust. You can view the establishments’ records from this tab.</p>
+    <p>The ‘Governance’ tab explains the legal duty to provide this information and lists the governors, trustees and/or members responsible for governance.</p>
+    <p>The ‘Changes’ tab gives details of each change to the group’s record, including the date of the request and its type.</p>
+
+    <h2 class="heading-medium subheading">Downloads</h2>
+    <p>You can download records for establishment and groups. This section has an ‘Establishment and group data’ tab and a ‘Scheduled extracts’ tab. Browse these to find the data you need, then select the link to the file you want to download.</p>
+
+    <h2 class="heading-medium subheading">Change history</h2>
+    <p>This option allows you to view the change history and to generate reports showing the changes made to data held within Get information about schools. You can only see the ‘Changes’ tab if you have logged in to the service.</p>
+    <p>If you are the owner of a data field(s), you can view all pending change requests for which you are responsible. You will be required to approve all outstanding change requests in line with an agreed Service Level Agreement (SLA). To approve changes, click on Change reports, then click on Pending change request</p>
+
+    <p>
+        <img src="~/public/assets/images/guidance/general_user_guide_changes.png" class="guidanceImage" alt="view of the establishment change history page" />
+        <img src="~/public/assets/images/guidance/general_user_guide_changes_mobile.png" class="guidanceMobileImage" alt="view of the establishment change history page" />
+    </p>
+
+    <p>You will be presented with a list of change requests for which you are responsible.</p>
+    <p>To approve a pending change request, tick the check box next to the change request that you wish to approve, then click the ‘Approve’ button.</p>
+    <p>Alternatively, if you feel that the change is unwarranted, you can reject the request and provide your reason for rejecting the change.</p>
+
+    <h2 class="heading-medium subheading">Viewing the change history</h2>
+    <p>The Change history option is only available for certain logged in users. It’s a separate view from the establishment and group change history views.</p>
+    <p>It allows you to generate a report from the Get information about schools change history.</p>
+    <p>Select the ‘Filters’ criteria and select the fields you wish to check for changes. Select ‘Apply filters’ to view the results of your search.</p>
+</div>
