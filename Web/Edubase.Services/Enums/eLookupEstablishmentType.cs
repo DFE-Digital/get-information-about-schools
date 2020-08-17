@@ -47,5 +47,6 @@ namespace Edubase.Services.Enums
         VoluntaryAidedSchool = 2,
         VoluntaryControlledSchool = 3,
         WelshEstablishment = 24,
+        OnlineProvider = 45
     }
 }   

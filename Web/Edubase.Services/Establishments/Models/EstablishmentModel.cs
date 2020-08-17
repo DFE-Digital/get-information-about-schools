@@ -294,6 +294,10 @@ namespace Edubase.Services.Establishments.Models
         public DateTime? ConfirmationUpToDateGovernance_LastConfirmationDate { get; set; }
         public bool UrgentConfirmationUpToDateRequired { get; set; }
         public bool UrgentConfirmationUpToDateGovernanceRequired { get; set; }
-        
+
+        public int? QualityAssuranceBodyNameId { get; set; }
+        public string QualityAssuranceBodyReport { get; set; }
+        public string CompaniesHouseNumber { get; set; }
+        public int? EstablishmentAccreditedId { get; set; }
     }
 }

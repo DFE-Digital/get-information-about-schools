@@ -203,5 +203,10 @@ namespace Edubase.Services.Establishments.Models
 
         public T FreeSchoolMealsNumber { get; set; }
         public T FreeSchoolMealsPercentage { get; set; }
+
+        public T QualityAssuranceBodyNameId { get; set; }
+        public T QualityAssuranceBodyReport { get; set; }
+        public T CompaniesHouseNumber { get; set; }
+        public T EstablishmentAccreditedId { get; set; }
     }
 }

@@ -228,15 +228,8 @@
             <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.PTBoysAged4C?.ToString() ?? "Not recorded")</dd>
         </div>
     }
-
-    @if (p.TotalNumberOfBoysInBoardingSchools)
-    {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Total number of boys in boarding schools:</dt>
-            <dd class="gias-summary-list__value"> @(Model.Establishment.IEBTModel.TotalNumberOfBoysInBoardingSchools?.ToString() ?? "Not recorded")</dd>
-        </div>
-    }
 </dl>
+
 
 <dl class="gias-summary-list">
     @if (p.PTGirlsAged2AndUnder)

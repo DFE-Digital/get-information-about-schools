@@ -139,6 +139,12 @@
                 </div>
             </div>
         </div>
+        @if (ViewData["readonly"] as bool? ?? false)
+        {
+            @Html.HiddenFor(x => x.Day)
+            @Html.HiddenFor(x => x.Month)
+            @Html.HiddenFor(x => x.Year)
+        }
     </fieldset>
 </div>
 

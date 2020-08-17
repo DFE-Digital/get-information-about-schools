@@ -244,8 +244,11 @@
     </div>
 }
 
-@if (Model.Establishment.TypeId.OneOfThese(ET.OtherIndependentSchool,
-    ET.NonmaintainedSpecialSchool, ET.OtherIndependentSpecialSchool))
+@if (Model.Establishment.TypeId.OneOfThese(
+    ET.OtherIndependentSchool,
+    ET.NonmaintainedSpecialSchool,
+    ET.OtherIndependentSpecialSchool,
+    ET.OnlineProvider))
 {
     @OtherServicesLinks()
 }

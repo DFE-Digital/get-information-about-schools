@@ -151,7 +151,9 @@ namespace Edubase.Services.Texuna.Establishments
 
                 { ET.ChildrensCentre, new[] { EP.NotApplicable } },
                 { ET.ChildrensCentreLinkedSite, new[] { EP.NotApplicable } },
-                { ET.InstitutionFundedByOtherGovernmentDepartment, new[] { EP.NotApplicable } }
+                { ET.InstitutionFundedByOtherGovernmentDepartment, new[] { EP.NotApplicable } },
+
+                {ET.OnlineProvider, new []{ EP.Primary, EP.MiddleDeemedPrimary, EP.Secondary, EP.MiddleDeemedSecondary, EP._16Plus, EP.AllThrough }}
             };
 
             return retVal;

@@ -8,7 +8,6 @@
 }
 
 
-
 @if (Model.MultiSelect)
 {
     <div class="govuk-checkboxes__item">
@@ -80,8 +79,17 @@ else
                 </div>
             </dl>
 
+
+
             @Html.EditorFor(x => x.AppointmentStartDate, new {@readonly = Model.PreExisting || disableStartDate, ClassPrefix = "start-date", fieldsetClassName = "edit-date-fieldset"})
             @Html.EditorFor(x => x.AppointmentEndDate, new {@readonly = Model.PreExisting, fieldsetClassName = "edit-date-fieldset"})
+        </div>
+    }
+    else
+    {
+        <div class="hidden">
+            @Html.EditorFor(x => x.AppointmentStartDate)
+            @Html.EditorFor(x => x.AppointmentEndDate)
         </div>
     }
 

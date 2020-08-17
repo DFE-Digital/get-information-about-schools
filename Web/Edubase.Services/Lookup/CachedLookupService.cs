@@ -39,6 +39,7 @@ namespace Edubase.Services.Lookup
                 { "ProvisionNurseryId", async id => (await ProvisionNurseriesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "IEBTModel.BoardingEstablishmentId", async id => (await BoardingEstablishmentGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "IEBTModel.AccommodationChangedId", async id => (await AccommodationChangedGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
+                { "IEBTModel.QualityAssuranceBodyNameId", async id => (await QualityAssuranceBodyNameGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "ProvisionOfficialSixthFormId", async id => (await ProvisionOfficialSixthFormsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "GenderId", async id => (await GendersGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "ReligiousCharacterId", async id => (await ReligiousCharactersGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
@@ -143,6 +144,10 @@ namespace Edubase.Services.Lookup
         public IEnumerable<LookupDto> AccommodationChangedGetAll() => Auto(_lookupService.AccommodationChangedGetAll);
         public async Task<IEnumerable<LookupDto>> BoardingEstablishmentGetAllAsync() => await AutoAsync(_lookupService.BoardingEstablishmentGetAllAsync);
         public IEnumerable<LookupDto> BoardingEstablishmentGetAll() => Auto(_lookupService.BoardingEstablishmentGetAll);
+        public async Task<IEnumerable<LookupDto>> QualityAssuranceBodyNameGetAllAsync() => await AutoAsync(_lookupService.QualityAssuranceBodyNameGetAllAsync);
+        public IEnumerable<LookupDto> QualityAssuranceBodyNameGetAll() => Auto(_lookupService.QualityAssuranceBodyNameGetAll);
+        public async Task<IEnumerable<LookupDto>> EstablishmentAccreditedGetAllAsync() => await AutoAsync(_lookupService.EstablishmentAccreditedGetAllAsync);
+        public IEnumerable<LookupDto> EstablishmentAccreditedGetAll() => Auto(_lookupService.EstablishmentAccreditedGetAll);
         public async Task<IEnumerable<LookupDto>> CCGovernanceGetAllAsync() => await AutoAsync(_lookupService.CCGovernanceGetAllAsync);
         public IEnumerable<LookupDto> CCGovernanceGetAll() => Auto(_lookupService.CCGovernanceGetAll);
         public async Task<IEnumerable<LookupDto>> CCOperationalHoursGetAllAsync() => await AutoAsync(_lookupService.CCOperationalHoursGetAllAsync);

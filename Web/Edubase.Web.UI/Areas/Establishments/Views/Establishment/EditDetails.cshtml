@@ -22,10 +22,10 @@
         <div class="govuk-grid-column-full">
             <div class="govuk-breadcrumbs">
                 <ol class="govuk-breadcrumbs__list">
-                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new {area = ""}, new { @class = "govuk-breadcrumbs__link"})</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})</li>
                     @if (Model.LegalParentGroup != null)
                     {
-                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new {id = Model.LegalParentGroup.GroupUId, area = "Groups"}, new { @class = "govuk-breadcrumbs__link"})</li>
+                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new {id = Model.LegalParentGroup.GroupUId, area = "Groups"}, new {@class = "govuk-breadcrumbs__link"})</li>
                     }
                 </ol>
             </div>
@@ -767,6 +767,44 @@
     {
         @Html.EditorFor(x => x.BSODateOfNextInspectionVisit, new {title = "BSO: Next inspection visit", fieldsetClassName = "edit-date-fieldset"})
     }
+
+    <!-- Online Provider content -->
+    @if (Model.EditPolicy.QualityAssuranceBodyNameId)
+    {
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.QualityAssuranceBodyNameId)">
+            @Html.LabelFor(x => x.QualityAssuranceBodyNameId, null, new {@class = "govuk-label"})
+            @Html.ValidationMessageFor(x => x.QualityAssuranceBodyNameId, null, new {@class = "govuk-error-message"})
+            @Html.DropDownListFor(x => x.QualityAssuranceBodyNameId, Model.QualityAssuranceBodyName, "", new {@class = "govuk-select"})
+        </div>
+    }
+
+    @if (Model.EditPolicy.QualityAssuranceBodyReport)
+    {
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.QualityAssuranceBodyReport)">
+            @Html.LabelFor(x => x.QualityAssuranceBodyReport, null, new {@class = "govuk-label"})
+            @Html.ValidationMessageFor(x => x.QualityAssuranceBodyReport, null, new {@class = "govuk-error-message"})
+            @Html.TextBoxFor(x => x.QualityAssuranceBodyReport, new {@class = "form-input"})
+        </div>
+    }
+
+    @if (Model.EditPolicy.CompaniesHouseNumber)
+    {
+        <div class="form-group @Html.ValidationCssClassFor(x => x.CompaniesHouseNumber)">
+            @Html.LabelFor(x => x.CompaniesHouseNumber, null, new {@class = "govuk-label"})
+            @Html.ValidationMessageFor(x => x.CompaniesHouseNumber, null, new {@class = "govuk-error-message"})
+            @Html.TextBoxFor(x => x.CompaniesHouseNumber, new {@class = "govuk-input"})
+        </div>
+    }
+
+    @if (Model.EditPolicy.EstablishmentAccreditedId)
+    {
+        <div class="form-group @Html.ValidationCssClassFor(x => x.EstablishmentAccreditedId)">
+            @Html.LabelFor(x => x.EstablishmentAccreditedId, null, new {@class = "govuk-label"})
+            @Html.ValidationMessageFor(x => x.EstablishmentAccreditedId, null, new {@class = "govuk-error-message"})
+            @Html.DropDownListFor(x => x.EstablishmentAccreditedId, Model.EstablishmentAccredited, "", new {@class = "govuk-select"})
+        </div>
+    }
+    <!-- Online Provider content -->
     <div class="button-row">
         <button id="save-submit-bottom" type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, "details")">Save details</button>
         @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button"})
@@ -783,26 +821,24 @@
             <button class="govuk-button--secondary govuk-button" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button>
             <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm">Confirm</button>
 
-            @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary", id = "cancel-edit", data_module="govuk-button"})
+            @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary", id = "cancel-edit", data_module = "govuk-button"})
         </div>
 
-        @section ViewScripts {
-            <script nonce="@Html.ScriptNonce()">var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());</script>
-            <script src="/public/assets/scripts/build/edit-details.js"></script>
-        }
-    }
+@section ViewScripts {
+    <script nonce="@Html.ScriptNonce()">var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());</script>
+    <script src="/public/assets/scripts/build/edit-details.js"></script>
+}    }
     else
     {
-        @section ViewScripts {
-        <script nonce="@Html.ScriptNonce()">
+@section ViewScripts {
+    <script nonce="@Html.ScriptNonce()">
             var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());
             var isDirty = @(Model.IsDirty.ToString().ToLower());
             var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);
             var phases = @Html.Json(Model.EducationPhases);
         </script>
-        <script src="/public/assets/scripts/build/edit-details.js"></script>
-        }
-    }
+    <script src="/public/assets/scripts/build/edit-details.js"></script>
+}    }
 
     </div>
 }

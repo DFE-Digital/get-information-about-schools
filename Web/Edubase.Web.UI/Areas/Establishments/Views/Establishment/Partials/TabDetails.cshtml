@@ -1,4 +1,5 @@
 @using Edubase.Common;
+@using Edubase.Services.Enums
 @model EstablishmentDetailViewModel
 
 <div id="school-dashboard" class="tab-content">
@@ -105,7 +106,7 @@
     </div>
 }
 <div class="gias-summary-list__row">
-    <dt class="gias-summary-list__key">Open date / Reason:</dt>
+    <dt class="gias-summary-list__key">Open date<span class="govuk-visually-hidden"> </span>/<span class="govuk-visually-hidden"> </span>Reason:</dt>
     <dd class="gias-summary-list__value">
         @(Model.Establishment.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br/>
         @Model.ReasonEstablishmentOpenedName
@@ -115,7 +116,7 @@
 @if (Model.DisplayPolicy.CloseDate)
 {
     <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">Close date / Reason:</dt>
+        <dt class="gias-summary-list__key">Close date<span class="govuk-visually-hidden"> </span>/<span class="govuk-visually-hidden"> </span>Reason:</dt>
         <dd class="gias-summary-list__value">
             @(Model.Establishment.CloseDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br/>
             @Model.ReasonEstablishmentClosedName
@@ -316,10 +317,44 @@
 @if (Model.DisplayPolicy.LastChangedDate)
 {
     <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">Date last changed / confirmed:</dt>
+        <dt class="gias-summary-list__key">Date last changed<span class="govuk-visually-hidden"> </span>/<span class="govuk-visually-hidden"> </span>confirmed:</dt>
         <dd class="gias-summary-list__value">@(Model.Establishment.LastChangedDate?.ToString("dd/MM/yyyy"))</dd>
     </div>
 }
+
+<!-- Online Provider content -->
+@if (Model.DisplayPolicy.QualityAssuranceBodyNameId)
+{
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">Quality Assurance Body name:</dt>
+        <dd class="gias-summary-list__value">@(Model.QualityAssuranceBodyName ?? "Not recorded")</dd>
+    </div>
+}
+
+@if (Model.DisplayPolicy.QualityAssuranceBodyReport)
+{
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">Quality Assurance Body report:</dt>
+        <dd class="gias-summary-list__value">@(Model.Establishment.QualityAssuranceBodyReport ?? "Not recorded")</dd>
+    </div>
+}
+
+@if (Model.DisplayPolicy.CompaniesHouseNumber)
+{
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">Companies House number:</dt>
+        <dd class="gias-summary-list__value">@(Model.Establishment.CompaniesHouseNumber ?? "Not recorded")</dd>
+    </div>
+}
+
+@if (Model.DisplayPolicy.EstablishmentAccreditedId)
+{
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">Establishment Accredited:</dt>
+        <dd class="gias-summary-list__value">@(Model.EstablishmentAccredited ?? "Not recorded")</dd>
+    </div>
+}
+<!-- Online Provider content -->
 
 @if (Model.DisplayPolicy.SENIds)
 {
