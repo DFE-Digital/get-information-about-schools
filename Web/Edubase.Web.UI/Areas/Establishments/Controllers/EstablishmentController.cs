@@ -946,7 +946,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.BoardingProvisions = (await _cachedLookupService.ProvisionBoardingGetAllAsync()).ToSelectList(viewModel.ProvisionBoardingId);
             viewModel.BoardingEstablishment = (await _cachedLookupService.BoardingEstablishmentGetAllAsync()).ToSelectList(viewModel.BoardingEstablishmentId);
             viewModel.QualityAssuranceBodyName = (await _cachedLookupService.QualityAssuranceBodyNameGetAllAsync()).ToSelectList(viewModel.QualityAssuranceBodyNameId);
-            viewModel.EstablishmentAccredited = (await _cachedLookupService.BoardingEstablishmentGetAllAsync()).ToSelectList(viewModel.EstablishmentAccreditedId);
+            viewModel.EstablishmentAccredited = (await _cachedLookupService.EstablishmentAccreditedGetAllAsync()).ToSelectList(viewModel.EstablishmentAccreditedId);
             viewModel.NurseryProvisions = (await _cachedLookupService.ProvisionNurseriesGetAllAsync()).ToSelectList(viewModel.ProvisionNurseryId);
             viewModel.OfficialSixthFormProvisions = (await _cachedLookupService.ProvisionOfficialSixthFormsGetAllAsync()).ToSelectList(viewModel.ProvisionOfficialSixthFormId);
             viewModel.Section41ApprovedItems = (await _cachedLookupService.Section41ApprovedGetAllAsync()).ToSelectList(viewModel.Section41ApprovedId);
