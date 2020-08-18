@@ -10,7 +10,7 @@
     }
     else
     {
-        ViewBag.bodyClasses = "create-edit-school school-details";
+        ViewBag.bodyClasses = "create-edit";
         ViewBag.hideLogo = true;
         ViewBag.Title = "Edit establishment";
     }
@@ -30,28 +30,28 @@
 
         <div class="@Html.Conditional(Model.ChangesSummary != null, "hidden")">
 
-            <div class="column-half">
+            <div class="govuk-grid-column-one-half">
 
-                <div class="form-group">
-                    <button type="submit" class="button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveIEBT)">Save IEBT</button>
-                    @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel", data_module="govuk-button" })
+                <div class="button-row">
+                    <button type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveIEBT)">Save IEBT</button>
+                    @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button" })
                 </div>
 
-                <div class="form-group @Html.ValidationCssClassFor(x => x.Notes)">
-                    @Html.LabelFor(x => x.Notes)
-                    @Html.ValidationMessageFor(x => x.Notes)
-                    @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "10" })
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Notes)">
+                    @Html.LabelFor(x => x.Notes, null , new { @class = "govuk-label"})
+                    @Html.ValidationMessageFor(x => x.Notes, null, new { @class = "govuk-error-message" })
+                    @Html.TextAreaFor(x => x.Notes, new { @class = "govuk-textarea", rows = "10" })
                 </div>
 
-                <div class="form-group @Html.ValidationCssClassFor(x => x.Associations)">
-                    @Html.LabelFor(x => x.Associations)
-                    @Html.ValidationMessageFor(x => x.Associations)
-                    @Html.TextAreaFor(x => x.Associations, new { @class = "form-control", rows = "10" })
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Associations)">
+                    @Html.LabelFor(x => x.Associations, null , new { @class = "govuk-label"})
+                    @Html.ValidationMessageFor(x => x.Associations, null, new { @class = "govuk-error-message" })
+                    @Html.TextAreaFor(x => x.Associations, new { @class = "govuk-textarea", rows = "10" })
                 </div>
 
                 @if (Model.EditPolicy.IEBTDetail.DateOfTheLastBridgeVisit)
                 {
-                    @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Date of last Bridge visit" })
+                    @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Date of last Bridge visit", fieldsetClassName = "edit-date-fieldset" })
                 }
 
                 @if (Model.EditPolicy.IEBTDetail.DateOfLastOfstedVisit)

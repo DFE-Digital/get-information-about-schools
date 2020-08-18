@@ -51,7 +51,7 @@
             @if (Model.LinkedEstablishments.LinkedEstablishmentSearch.HasResult)
             {
                 var prefix = string.Concat(nameof(Model.LinkedEstablishments), "_", nameof(Model.LinkedEstablishments.LinkedEstablishmentSearch));
-                <h2 class="govuk-heading-s">Establishment found</h2>
+                <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Establishment found</h2>
                 <p class="govuk-body">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Name</p>
 
                 @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new {title = "Joined date", editorPrefix = prefix, fieldsetClassName = "edit-date-fieldset"})

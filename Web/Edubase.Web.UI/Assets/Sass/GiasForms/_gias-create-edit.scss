@@ -27,6 +27,10 @@
   .govuk-error-message {
     padding-left: 0;
   }
+
+  .govuk-label {
+    @include govuk-font(19);
+  }
 }
 
 .create-edit {
