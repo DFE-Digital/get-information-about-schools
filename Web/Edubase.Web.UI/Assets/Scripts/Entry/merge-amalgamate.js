@@ -282,7 +282,7 @@ const mergersApp = new Vue({
       }
 
       if (!this.amalgamatedUrn2Error.length) {
-        requests.push(self.urnCheck(self.amalgamatedEstab2, 'amalgamatedEstab2','amalgamatedUrn21Error'));
+        requests.push(self.urnCheck(self.amalgamatedEstab2, 'amalgamatedEstab2','amalgamatedUrn2Error'));
       }
 
       if (!this.amalgamatedUrn3Error.length && this.amalgamatedEstab3.length) {
