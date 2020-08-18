@@ -9,6 +9,7 @@ namespace Edubase.Services.Establishments.DisplayPolicies
     public class EstablishmentDisplayEditPolicy : EstablishmentFieldList
     {
         public string HeadteacherLabel { get; set; } = "Headteacher/Principal";
+        public string HeadPreferredJobTitleLabel { get; set; } = "Headteacher/Principal job title";
         public string HeadEmailAddressLabel { get; set; } = "Headteacher/Principal email";
         public string EstablishmentTypeLabel { get; set; } = "School type";
         public string MainEmailAddressLabel { get; set; } = "Email";
@@ -24,6 +25,13 @@ namespace Edubase.Services.Establishments.DisplayPolicies
                 HeadEmailAddressLabel = "Manager email";
                 MainEmailAddressLabel = "Centre email";
                 EstablishmentTypeLabel = "Provider type";
+            }
+
+            if(establishment.TypeId == (int)eLookupEstablishmentType.OnlineProvider)
+            {
+                HeadteacherLabel = "Headteacher/Manager";
+                HeadPreferredJobTitleLabel = "Headteacher/Manager preferred job title";
+                HeadEmailAddressLabel = "Headteacher/Manager email address";
             }
 
             return this;
