@@ -30,24 +30,36 @@
                 <button type="submit" class="button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveHelpdesk)">Save helpdesk note</button>
                 @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel" })
 
-                <div class="form-group first">
-                    @Html.LabelFor(x => x.HelpdeskNotes, new { @class="form-label"})
-                    @Html.TextAreaFor(x => x.HelpdeskNotes, new { @class = "form-control", rows = "10", maxlength = "1000" })
-                </div>
+                @if (Model.EditPolicy.HelpdeskNotes)
+                {
+                    <div class="form-group first">
+                        @Html.LabelFor(x => x.HelpdeskNotes, new { @class = "form-label" })
+                        @Html.TextAreaFor(x => x.HelpdeskNotes, new { @class = "form-control", rows = "10", maxlength = "1000" })
+                    </div>
+                }
 
-                @Html.EditorFor(x => x.HelpdeskLastUpdate)
+                @if (Model.EditPolicy.HelpdeskLastUpdate)
+                {
+                    @Html.EditorFor(x => x.HelpdeskLastUpdate)
+                }
 
-                <div class="form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousLocalAuthorityId)">
-                    @Html.LabelFor(x => x.HelpdeskPreviousLocalAuthorityId)
-                    @Html.DropDownListFor(x => x.HelpdeskPreviousLocalAuthorityId, Model.LocalAuthorities, "Please select a local authority", new { @class = "form-control" })
-                </div>
+                @if (Model.EditPolicy.HelpdeskPreviousLocalAuthorityId)
+                {
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousLocalAuthorityId)">
+                        @Html.LabelFor(x => x.HelpdeskPreviousLocalAuthorityId)
+                        @Html.DropDownListFor(x => x.HelpdeskPreviousLocalAuthorityId, Model.LocalAuthorities, "Please select a local authority", new { @class = "form-control" })
+                    </div>
+                }
 
-                <div class="form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousEstablishmentNumber)">
-                    @Html.LabelFor(x => x.HelpdeskPreviousEstablishmentNumber)
-                    @Html.ValidationMessageFor(x => x.HelpdeskPreviousEstablishmentNumber)
-                    @Html.TextBoxFor(x => x.HelpdeskPreviousEstablishmentNumber, new { @class = "form-control" })
-                </div>
-
+                @if (Model.EditPolicy.HelpdeskPreviousEstablishmentNumber)
+                {
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousEstablishmentNumber)">
+                        @Html.LabelFor(x => x.HelpdeskPreviousEstablishmentNumber)
+                        @Html.ValidationMessageFor(x => x.HelpdeskPreviousEstablishmentNumber)
+                        @Html.TextBoxFor(x => x.HelpdeskPreviousEstablishmentNumber, new { @class = "form-control" })
+                    </div>
+                }
+                
                 <div class="button-row push--top">
                     <button type="submit" class="button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveHelpdesk)">Save helpdesk note</button>
                     @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel" })
