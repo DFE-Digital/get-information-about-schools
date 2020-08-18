@@ -154,10 +154,10 @@ const mergersApp = new Vue({
       this.amalgamatedUrn2Error = '';
       this.amalgamatedUrn3Error = '';
       this.amalgamatedUrn4Error = '';
+      this.mergerUrn0Error = '';
       this.mergerUrn1Error = '';
       this.mergerUrn2Error = '';
       this.mergerUrn3Error = '';
-      this.mergerUrn4Error = '';
     },
 
     errorFocus: function () {
