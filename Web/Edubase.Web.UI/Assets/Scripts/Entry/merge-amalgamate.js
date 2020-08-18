@@ -117,6 +117,7 @@ const mergersApp = new Vue({
       const tp = type2PhaseMap;
       const self = this;
       const validOptions = [];
+      this.phaseId = '';
 
       let validPhaseIds = [];
       for (const k in tp) {
@@ -387,9 +388,9 @@ const mergersApp = new Vue({
       this.errors = [];
 
       this.nameError = (this.newName.length < 1);
-      this.typeError = (this.typeId === '');
-      this.laError = (this.laId === '');
-      this.phaseError = (this.phaseId === '');
+      this.typeError = (this.typeId === '' || typeof this.typeId === 'undefined');
+      this.laError = (this.laId === '' || typeof this.laId === 'undefined');
+      this.phaseError = (this.phaseId === '' || typeof this.phaseId === 'undefined');
       this.mergeDateError = this.validateMergerDate();
 
 
