@@ -1,4 +1,4 @@
-﻿@using Edubase.Common
+@using Edubase.Common
 @model EstablishmentDetailViewModel
 
 <div id="helpdesk" class="tab-content">
@@ -13,18 +13,29 @@
         <div>@(Model.Establishment.HelpdeskNotes.Clean() ?? "Not recorded")</div>
 
         <dl>
-            <dt>EduBase last update:</dt>
-            <dd>@(Model.Establishment.HelpdeskLastUpdate?.ToString("dd/MM/yyyy"))</dd>
+            @if (Model.DisplayPolicy.HelpdeskLastUpdate)
+            {
+                <dt>EduBase last update:</dt>
+                <dd>@(Model.Establishment.HelpdeskLastUpdate?.ToString("dd/MM/yyyy"))</dd>
+            }
 
+            @if (Model.DisplayPolicy.HelpdeskTrigger1)
+            {
+                <dt>EduBase trigger 1:</dt>
+                <dd>@Model.Establishment.HelpdeskTrigger1</dd>
+            }
 
-            <dt>EduBase trigger 1:</dt>
-            <dd>@Model.Establishment.HelpdeskTrigger1</dd>
+            @if (Model.DisplayPolicy.HelpdeskPreviousLocalAuthorityId)
+            {
+                <dt>Previous local authority:</dt>
+                <dd>@Model.HelpdeskPreviousLocalAuthorityName</dd>
+            }
 
-            <dt>Previous local authority:</dt>
-            <dd>@Model.HelpdeskPreviousLocalAuthorityName</dd>
-
-            <dt>Previous establishment number:</dt>
-            <dd>@Model.Establishment.HelpdeskPreviousEstablishmentNumber</dd>
+            @if (Model.DisplayPolicy.HelpdeskPreviousEstablishmentNumber)
+            {
+                <dt>Previous establishment number:</dt>
+                <dd>@Model.Establishment.HelpdeskPreviousEstablishmentNumber</dd>
+            }
 
         </dl>
     </div>
