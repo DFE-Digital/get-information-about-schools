@@ -74,6 +74,18 @@
       max-width: 100%;
       padding: 12px 0;
 
+      &.gias-table__mobile-block-label {
+        float: none;
+
+        &::before {
+          float: none;
+        }
+
+        .gias-summary-list {
+          top: 5px;
+        }
+      }
+
       .gias-summary-list {
         position: relative;
         top: -2px;
