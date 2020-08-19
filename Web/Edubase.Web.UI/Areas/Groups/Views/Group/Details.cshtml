@@ -139,7 +139,7 @@
                     @Html.ActionLink("Edit details", "EditDetails", "Group", new {id = Model.Group.GroupUId, area = "Groups"}, new {@class = "govuk-button govuk-button--secondary"})
                 }
                 <div class="detail-summary">
-                    <dl class="gias-summary-list">
+                    <dl class="gias-summary-list gias-summary-list--70">
                         @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
                         {
                             <div class="gias-summary-list__row">
