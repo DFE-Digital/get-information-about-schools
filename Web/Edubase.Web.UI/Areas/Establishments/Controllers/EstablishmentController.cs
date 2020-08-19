@@ -676,8 +676,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         public bool CanUserDefineAdditionalAddresses(int typeId)
             => typeId.OneOfThese(ET.NonmaintainedSpecialSchool,
                 ET.OtherIndependentSchool,
-                ET.OtherIndependentSpecialSchool,
-                ET.OnlineProvider) && User.InRole(AuthorizedRoles.CanDefineAdditionalAddresses);
+                ET.OtherIndependentSpecialSchool) && User.InRole(AuthorizedRoles.CanDefineAdditionalAddresses);
 
         private async Task<ActionResult> DeleteLinkAsync(EditEstablishmentLinksViewModel deltaViewModel)
         {

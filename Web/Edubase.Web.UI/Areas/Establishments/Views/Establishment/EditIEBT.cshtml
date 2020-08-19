@@ -37,17 +37,23 @@
                     @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel" })
                 </div>
 
-                <div class="form-group @Html.ValidationCssClassFor(x => x.Notes)">
-                    @Html.LabelFor(x => x.Notes)
-                    @Html.ValidationMessageFor(x => x.Notes)
-                    @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "10" })
-                </div>
+                @if (Model.EditPolicy.IEBTDetail.Notes)
+                {
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.Notes)">
+                        @Html.LabelFor(x => x.Notes)
+                        @Html.ValidationMessageFor(x => x.Notes)
+                        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "10" })
+                    </div>
+                }
 
-                <div class="form-group @Html.ValidationCssClassFor(x => x.Associations)">
-                    @Html.LabelFor(x => x.Associations)
-                    @Html.ValidationMessageFor(x => x.Associations)
-                    @Html.TextAreaFor(x => x.Associations, new { @class = "form-control", rows = "10" })
-                </div>
+                @if (Model.EditPolicy.IEBTDetail.Associations)
+                {
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.Associations)">
+                        @Html.LabelFor(x => x.Associations)
+                        @Html.ValidationMessageFor(x => x.Associations)
+                        @Html.TextAreaFor(x => x.Associations, new { @class = "form-control", rows = "10" })
+                    </div>
+                }
 
                 @if (Model.EditPolicy.IEBTDetail.DateOfTheLastBridgeVisit)
                 {
@@ -343,16 +349,16 @@
                     <div class="form-group cloneable @Html.ValidationCssClassFor(x => x.AccommodationChangedId)">
                         @Html.LabelFor(x => x.AccommodationChangedId)
                         @Html.ValidationMessageFor(x => x.AccommodationChangedId)
-                        @Html.DropDownListFor(x => x.AccommodationChangedId, Model.AccommodationChanges, "", new {@class = "form-control"})
+                        @Html.DropDownListFor(x => x.AccommodationChangedId, Model.AccommodationChanges, "", new { @class = "form-control" })
                     </div>
                 }
 
-                    <div class="button-row">
-                        <button type="submit" class="button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveIEBT)">Save IEBT</button>
-                        @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel" })
-                    </div>
-
+                <div class="button-row">
+                    <button type="submit" class="button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveIEBT)">Save IEBT</button>
+                    @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel" })
                 </div>
+
+            </div>
         </div>
 
         @if (Model.ChangesSummary != null)
