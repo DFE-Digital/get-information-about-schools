@@ -845,7 +845,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             vm.BoardingEstabName = await c.GetNameAsync(() => vm.Establishment.IEBTModel.BoardingEstablishmentId, nameof(IEBTModel));
             vm.AccommodationChangedName = await c.GetNameAsync(() => vm.Establishment.IEBTModel.AccommodationChangedId, nameof(IEBTModel));
             vm.QualityAssuranceBodyName = await c.GetNameAsync(() => vm.Establishment.QualityAssuranceBodyNameId);
-            vm.EstablishmentAccredited = await c.GetNameAsync(() => vm.Establishment.EstablishmentAccreditedId);
+            vm.EstablishmentAccreditedName = await c.GetNameAsync(() => vm.Establishment.EstablishmentAccreditedId);
             vm.ProvisionNurseryName = await c.GetNameAsync(() => vm.Establishment.ProvisionNurseryId);
             vm.ProvisionOfficialSixthFormName = await c.GetNameAsync(() => vm.Establishment.ProvisionOfficialSixthFormId);
             vm.Section41ApprovedName = await c.GetNameAsync(() => vm.Establishment.Section41ApprovedId);
