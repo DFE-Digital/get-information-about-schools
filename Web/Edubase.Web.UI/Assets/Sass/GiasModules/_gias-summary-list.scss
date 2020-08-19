@@ -49,6 +49,12 @@
     }
   }
 
+  &.gias-summary-list--40 {
+    @include govuk-media-query($from: tablet) {
+      width: 40%;
+    }
+  }
+
   a {
     word-break: break-word;
   }
