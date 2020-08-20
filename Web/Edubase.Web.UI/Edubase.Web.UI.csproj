@@ -545,6 +545,7 @@
     <Content Include="public\assets\images\guidance\establishment_bulk_update.png" />
     <Content Include="public\assets\images\guidance\establishment_bulk_update_mobile.png" />
     <Content Include="public\assets\images\guidance\establishment_bulk_update_multicolumn.png" />
+    <Content Include="public\assets\images\guidance\establishment_bulk_update_save_spreadsheet.png" />
     <Content Include="public\assets\images\guidance\establishment_bulk_update_spreadsheet.png" />
     <Content Include="public\assets\images\guidance\federation_tools_page.png" />
     <Content Include="public\assets\images\guidance\federation_tools_page_mobile.png" />
