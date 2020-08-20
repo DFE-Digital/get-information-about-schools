@@ -15,6 +15,9 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         [JsonProperty("dateOfLastOfstedVisit")]
         public T DateOfLastOfstedVisit { get; set; }
 
+        [JsonProperty("boardingEstablishmentId")]
+        public T BoardingEstablishmentId { get; set; }
+
         [JsonProperty("dateOfTheLastBridgeVisit")]
         public T DateOfTheLastBridgeVisit { get; set; }
 
