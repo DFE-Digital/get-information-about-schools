@@ -283,9 +283,11 @@
         </dl>
 
         <dl>
-            <dt>Boarding establishment:</dt>
-            <dd>@(Model.BoardingEstabName ?? "Not recorded")</dd>
-
+            @if (Model.DisplayPolicy.IEBTDetail.BoardingEstablishmentId)
+            {
+                <dt>Boarding establishment:</dt>
+                <dd>@(Model.BoardingEstabName ?? "Not recorded")</dd>
+            }
 
             @if (Model.DisplayPolicy.ProprietorName)
             {

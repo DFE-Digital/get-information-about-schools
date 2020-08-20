@@ -260,11 +260,14 @@
                     @RenderNumericTextBox(x => x.HighestAnnualRateForBoardingPupils)
                 }
 
-                <div class="form-group @Html.ValidationCssClassFor(x => x.BoardingEstablishmentId)">
-                    @Html.LabelFor(x => x.BoardingEstablishmentId)
-                    @Html.ValidationMessageFor(x => x.BoardingEstablishmentId)
-                    @Html.DropDownListFor(x => x.BoardingEstablishmentId, Model.BoardingEstablishment, "", new { @class = "form-control" })
-                </div>
+                @if (Model.EditPolicy.IEBTDetail.BoardingEstablishmentId)
+                {
+                    <div class="form-group @Html.ValidationCssClassFor(x => x.BoardingEstablishmentId)">
+                        @Html.LabelFor(x => x.BoardingEstablishmentId)
+                        @Html.ValidationMessageFor(x => x.BoardingEstablishmentId)
+                        @Html.DropDownListFor(x => x.BoardingEstablishmentId, Model.BoardingEstablishment, "", new {@class = "form-control"})
+                    </div>
+                }
 
 
                 <fieldset class="toggle-panels inline" id="proprietor-radios">
