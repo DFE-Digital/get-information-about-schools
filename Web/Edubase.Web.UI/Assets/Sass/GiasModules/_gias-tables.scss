@@ -127,15 +127,21 @@
     display: table-header-group;
   }
 
+  .govuk-table__header {
+    @include govuk-font(19);
+  }
+
   .govuk-table__cell {
     display: table-cell;
     float: none;
     width: auto !important;
+    @include govuk-font(19);
 
     @include govuk-media-query($until: tablet) {
       &.download-list-item {
         width: 220px !important;
         word-break: break-all;
+        border-bottom: 1px solid $govuk-border-colour;
 
         a {
           line-height: 1.4;
