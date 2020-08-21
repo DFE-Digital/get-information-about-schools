@@ -76,10 +76,10 @@ namespace Edubase.Web.UI.Models
         public int? UKPRN { get; set; }
         public int? EstablishmentTypeGroupId { get; set; }
 
-        [Display(Name = "Quality Assurance Body name")]
+        [Display(Name = "Quality assurance body name")]
         public int? QualityAssuranceBodyNameId { get; set; }
 
-        [Display(Name = "Establishment Accredited")]
+        [Display(Name = "Establishment accredited")]
         public int? EstablishmentAccreditedId { get; set; }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace Edubase.Web.UI.Models
         public string LSOAName { get; set; }
         public int? LSOAId { get; set; }
 
-        [Display(Name = "Quality Assurance Body report")]
+        [Display(Name = "Quality assurance body report")]
         public string QualityAssuranceBodyReport { get; set; }
 
         [Display(Name = "Companies House number")]
