@@ -76,7 +76,7 @@
                     </div>
                 </dl>
 
-                @Html.ActionLink("Wrong company?", "SearchCompaniesHouse", "Group", new {area = "Groups"}, new { @class = "change-link" })
+                <p>@Html.ActionLink("Wrong company?", "SearchCompaniesHouse", "Group", new {area = "Groups"}, new { @class = "change-link" })</p>
             </div>
 
             @Html.HiddenFor(x => x.CompaniesHouseAddressToken)
