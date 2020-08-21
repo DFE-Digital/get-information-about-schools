@@ -18,7 +18,7 @@
     <li class="search-type-wrapper">
         @using (Html.BeginRouteForm("SearchResults", FormMethod.Get, new {id = "governor-search-by-name-or-role"}))
         {
-            @Html.HiddenFor(m => m.SelectedTab)
+            @Html.HiddenFor(m => m.SelectedTab, new {id = "gov-selected-tab0"})
             <div class="govuk-fieldset search-toggle-panel">
                 <div class="govuk-form-group">
                     <div class="govuk-radio" data-module="govuk-radio">
@@ -114,7 +114,7 @@
         <li class="search-type-wrapper">
             @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
             {
-                @Html.HiddenFor(m => m.SelectedTab)
+                @Html.HiddenFor(m => m.SelectedTab, new {id = "gov-selected-tab1"})
                 <fieldset class="govuk-fieldset search-toggle-panel">
                     <div class="govuk-form-group">
                         <div class="govuk-radio" data-module="govuk-radio">
@@ -185,7 +185,7 @@
     <li class="search-type-wrapper">
         @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
         {
-            @Html.HiddenFor(m => m.SelectedTab)
+            @Html.HiddenFor(m => m.SelectedTab, new {id = "gov-selected-tab1"})
 
             <fieldset class="govuk-fieldset search-toggle-panel">
                 <div class="govuk-form-group">

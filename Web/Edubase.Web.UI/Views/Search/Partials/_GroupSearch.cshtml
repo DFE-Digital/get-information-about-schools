@@ -19,7 +19,7 @@
         <li class="search-type-wrapper">
             @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
             {
-                @Html.HiddenFor(m => m.SelectedTab)
+                @Html.HiddenFor(m => m.SelectedTab, new {id = "group-selected-tab0"})
                 @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
                 <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true"/>
                 <input type="hidden" name="g" value="true"/>
@@ -82,7 +82,7 @@
         <li class="search-type-wrapper">
             @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
             {
-                @Html.HiddenFor(m => m.SelectedTab)
+                @Html.HiddenFor(m => m.SelectedTab, new {id = "group-selected-tab1"})
                 <input type="hidden" name="@VM.BIND_ALIAS_STATUSIDS" value="@((int) eStatus.Open)"/>
                 <input type="hidden" name="@VM.BIND_ALIAS_STATUSIDS" value="@((int) eStatus.OpenButProposedToClose)"/>
 

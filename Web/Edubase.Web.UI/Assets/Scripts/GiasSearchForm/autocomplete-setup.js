@@ -91,7 +91,7 @@ const autocompleteSetup = (function(){
     });
 
     schoolNameInput.addEventListener('awesomplete-select', function (ev) {
-      document.getElementById('TextSearchModel_AutoSuggestValue').value = ev.text.value;
+      document.getElementById('estab-autosuggest-value').value = ev.text.value;
     });
 
     schoolNameInput.addEventListener('focus', function () {

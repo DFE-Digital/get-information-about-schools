@@ -8,7 +8,7 @@
 <li class="search-type-wrapper">
     @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
     {
-        @Html.HiddenFor(m => m.SelectedTab)
+        @Html.HiddenFor(m => m.SelectedTab, new {id = "estab-selected-tab0"})
         <fieldset class="govuk-fieldset search-toggle-panel">
             <legend class="govuk-visually-hidden">Search by name or reference number</legend>
             <div class="govuk-form-group">
@@ -59,7 +59,7 @@
                         </div>
                     </div>
                 </div>
-                @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
+                @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue, new {id = "estab-autosuggest-value"})
                 <div class="govuk-form-group">
                     <button type="submit" class="govuk-button" id="name-search-submit" name="SearchType" value="@eSearchType.Text">Search</button>
                 </div>
@@ -127,7 +127,7 @@
             <div class="govuk-form-group">
                 <div class="govuk-radio" data-module="govuk-radio">
                     <div class="govuk-radios__item">
-                        @Html.HiddenFor(m => m.SelectedTab)
+                        @Html.HiddenFor(m => m.SelectedTab, new {id = "estab-selected-tab1"})
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.ByLocalAuthority, new {id = "searchtype-la", data_toggle_panel = "#searchby-la-ref", @class = "govuk-radios__input"})
                         <label for="searchtype-la" class="govuk-label govuk-radios__label">
                             Local authority
@@ -207,7 +207,7 @@
             <div class="govuk-form-group">
                 <div class="govuk-radio" data-module="govuk-radio">
                     <div class="govuk-radios__item">
-                        @Html.HiddenFor(m => m.SelectedTab)
+                        @Html.HiddenFor(m => m.SelectedTab, new {id = "estab-selected-tab2"})
                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.EstablishmentAll, new {id = "searchtype-all", data_toggle_panel = "#searchby-all-ref", @class = "govuk-radios__input"})
                         <label for="searchtype-all" class="govuk-label govuk-radios__label">
                             All establishments
