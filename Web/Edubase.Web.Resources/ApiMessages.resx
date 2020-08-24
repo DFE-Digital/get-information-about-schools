@@ -127,10 +127,10 @@
     <value>Establishment is not LA maintained, please select another one.</value>
   </data>
   <data name="field.validation.headFirstName.can.not.be.empty" xml:space="preserve">
-    <value>Please enter a headteacher/principal first name</value>
+    <value>Please enter a headteacher/principal/manager first name</value>
   </data>
   <data name="field.validation.headLastName.can.not.be.empty" xml:space="preserve">
-    <value>Please enter a headteacher/principal last name</value>
+    <value>Please enter a headteacher/principal/manager last name</value>
   </data>
   <data name="field.validation.ReligiousCharacter" xml:space="preserve">
     <value>Please select 'Does not apply' for Religious Character</value>
