@@ -111,3 +111,9 @@
 .gias-summary-list-l {
   @include govuk-font(19);
 }
+
+.change-history {
+  .gias-summary-list__key {
+    font-weight: bold;
+  }
+}

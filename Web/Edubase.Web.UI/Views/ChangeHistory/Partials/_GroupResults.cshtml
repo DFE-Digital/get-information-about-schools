@@ -35,15 +35,15 @@
     <div>
         @Html.Partial("_GenericPaginationV2", Model)
     </div>
-    <table class="edubase-table sortable-table change-history table-tight" id="changes-table">
-        <caption class="visuallyhidden">Group change history search results</caption>
-        <thead>
-            <tr>
+    <table class="govuk-table gias-table sortable-table change-history-table" id="changes-table">
+        <caption class="govuk-visually-hidden">Group change history search results</caption>
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
             @foreach (var tableColumn in tableColumns)
             {
                 if (tableColumn.Item3 || !Model.SingleGroup)
                 {
-                    <th scope="col" class="cell-@tableColumn.Item1.ToLower()">
+                    <th scope="col" class="govuk-table__header cell-@tableColumn.Item1.ToLower()">
                         <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
                         class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
                         aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
@@ -52,41 +52,54 @@
             }
             </tr>
         </thead>
-        <tbody>
+        <tbody class="govuk-table__body">
             @foreach (var item in Model.Items)
             {
-                <tr>
-                    <td data-label="Date changed">@(item.RequestedDate?.ToString("dd/MM/yyyy"))</td>
+                <tr class="govuk-table__row">
+                    <td data-label="Date changed" class="govuk-table__cell">@(item.RequestedDate?.ToString("dd/MM/yyyy"))</td>
                     @if (!Model.SingleGroup)
                     {
-                        <td data-label="Group UID">@Html.RouteLink(item.GroupUId.ToString(), "GroupDetails", new { id = item.GroupUId })</td>
-                        <td data-label="Group">@Html.RouteLink(item.GroupName, "GroupDetails", new { id = item.GroupUId })</td>
+                        <td data-label="Group UID" class="govuk-table__cell">@Html.RouteLink(item.GroupUId.ToString(), "GroupDetails", new { id = item.GroupUId })</td>
+                        <td data-label="Group" class="govuk-table__cell">@Html.RouteLink(item.GroupName, "GroupDetails", new { id = item.GroupUId })</td>
                     }
-                    <td data-label="Request type">@item.RequestType</td>
-                    <td data-label="Change">
-                        <dl class="key-value-list">
+                    <td data-label="Request type" class="govuk-table__cell">@item.RequestType</td>
+                    <td data-label="Change" class="govuk-table__cell">
+                        <dl class="gias-summary-list">
                             @if (item.RequestType == GroupChangeRequestType.GroupChange)
                             {
-                                <dt>Field</dt>
-                                <dd>@item.FieldName</dd>
-                                <dt>Old value</dt>
-                                <dd>@item.OldValue</dd>
-                                <dt>New value</dt>
-                                <dd>@item.NewValue</dd>
+                                <div class="gias-summary-list__row">
+                                    <dt class="gias-summary-list__key">Field</dt>
+                                    <dd class="gias-summary-list__value">@item.FieldName</dd>
+                                </div>
+                                <div class="gias-summary-list__row">
+
+                                    <dt class="gias-summary-list__key">Old value</dt>
+                                    <dd class="gias-summary-list__value">@item.OldValue</dd>
+                                </div>
+                                <div class="gias-summary-list__row">
+                                    <dt class="gias-summary-list__key">New value</dt>
+                                    <dd class="gias-summary-list__value">@item.NewValue</dd>
+                                </div>
                             }
                             else
                             {
-                                <dt>Establishment</dt>
-                                <dd>@item.LinkUrn @item.LinkEstablishmentName</dd>
-                                <dt>Link date</dt>
-                                <dd>@(item.LinkDateUtc?.ToString("dd/MM/yyyy"))</dd>
-                                <dt>Type</dt>
-                                <dd>@(item.LinkType?.ToString() ?? "not recorded")</dd>
+                                <div class="gias-summary-list__row">
+                                    <dt class="gias-summary-list__key">Establishment</dt>
+                                    <dd class="gias-summary-list__value">@item.LinkUrn @item.LinkEstablishmentName</dd>
+                                </div>
+                                <div class="gias-summary-list__row">
+                                    <dt class="gias-summary-list__key">Link date</dt>
+                                    <dd class="gias-summary-list__value">@(item.LinkDateUtc?.ToString("dd/MM/yyyy"))</dd>
+                                </div>
+                                <div class="gias-summary-list__row">
+                                    <dt class="gias-summary-list__key">Type</dt>
+                                    <dd class="gias-summary-list__value">@(item.LinkType?.ToString() ?? "not recorded")</dd>
+                                </div>
                             }
 
                         </dl>
                     </td>
-                    <td data-label="Suggested by" class="table-tight--break-word">@item.SuggesterName</td>
+                    <td data-label="Suggested by" class="govuk-table__cell">@item.SuggesterName</td>
                 </tr>
             }
         </tbody>

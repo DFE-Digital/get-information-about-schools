@@ -1,257 +1,290 @@
 @model ChangeHistoryViewModel
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Search change history");
-    ViewBag.bodyClasses = "search-changes schools-search-page";
+    ViewBag.bodyClasses = "create-edit";
 }
-<div class="breadcrumbs">
-    <ol>
-        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
-        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-    </ol>
-</div>
 
-@Html.Partial("_ValidationSummary", ViewData.ModelState)
-
-<h1 class="heading-xlarge">Change history</h1>
-
-<div class="grid-row" id="change-history-app">
-    <div class="column-full">
-        <p>
-            This allows you to find out when establishments (such as schools, colleges and
-            children's centres) and groups (such as multi-academy trusts and federations)
-            made changes to their records and what was changed.
-        </p>
-    </div>
-
-    <div class="column-full">
-        <div class="gias-tabs-wrapper">
-            <div class="tab-wrap search-tabs">
-                <ul class="gias-tabs">
-                    <li>
-                        @{ var estabSelected = Model.SelectedTab == ChangeHistoryViewModel.Tab.Establishments ? "selected-tab" : ""; }
-                        @Html.RouteLink("Establishment change history", "ChangeHistoryCriteria", new {SelectedTab = SearchViewModel.Tab.Establishments}, new {@class = $"horizontal-tab estab {estabSelected}" })
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
                     </li>
-                    <li>
-                        @{ var groupSelected = Model.SelectedTab == ChangeHistoryViewModel.Tab.Groups ? "selected-tab" : ""; }
-                        @Html.RouteLink("Group change history", "ChangeHistoryCriteria", new { SelectedTab = SearchViewModel.Tab.Groups }, new { @class = $"horizontal-tab group {groupSelected}" })
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
                     </li>
-                </ul>
-            </div>
-
-            <div class="tab-content-wrapper gias-tabs-content">
-                @if (Model.SelectedTab == ChangeHistoryViewModel.Tab.Establishments) {
-                <div id="establishments" class="tab-content">
-
-                    <fieldset class="search-types-accordion">
-                        <legend>
-                            <h2 class="heading-small flush--top">Search by:</h2>
-                        </legend>
-
-                        <ul class="search-type-list has-typeahead">
-                            <li class="search-type-wrapper">
-                                @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
-                                {
-                                    @Html.HiddenFor(m => m.SelectedTab)
-                                    <fieldset class="search-toggle-panel">
-                                        <legend class="visually-hidden">Search by name or reference number</legend>
-                                        <div class="multiple-choice multiple-choice--radio">
-                                            @Html.RadioButtonFor(m => m.SearchType, eSearchType.Text, new { id = "searchtype-name", data_toggle_panel = "#searchby-name-ref" })
-                                            <label for="searchtype-name">
-                                                Name or reference number
-                                            </label>
-                                        </div>
-                                        <div class="panel panel-border-narrow" id="searchby-name-ref">
-                                            @* This alert gets dynamically populated *@
-                                            <div class="warning-message visuallyhidden" role="alert">
-                                                <p class="message-text" aria-live="polite"></p>
-                                            </div>
-                                            @if (Model.NoResultsForName)
-                                            {
-                                                @* Static alert for no search results *@
-                                                <div role="alert" class="warning-message js-trigger-aria-live">
-                                                    <p class="message-text" aria-live="polite">We could not find any establishments matching your search criteria</p>
-                                                </div>
-                                            }
-                                            <label class="form-label" for="TextSearchModel_Text">
-                                                Enter name, <abbr title="Unique Reference Number">URN</abbr>, LAESTAB or UKPRN
-                                                <a href="#name-reference-help" class="tooltip-link js-tooltip">
-                                                    <span class="visuallyhidden">Help with reference numbers</span>
-                                                </a>
-                                            </label>
-                                            <div class="form-group">
-                                                @Html.TextBoxFor(x => x.TextSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggest?text=", aria_describedby="name-reference-help" })
-                                            </div>
-                                            @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
-                                            <div class="form-group">
-                                                <button type="submit" class="button search-button" id="name-search-submit">Search</button>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-
-                                }
-                            </li>
-
-                            <li aria-hidden="true">
-                                <p>or</p>
-                            </li>
-
-                            <li class="search-type-wrapper">
-                                @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
-                                {
-                                    <fieldset class="search-toggle-panel">
-                                        <legend class="visually-hidden">Search all establishments</legend>
-                                        <div class="multiple-choice multiple-choice--radio">
-                                            @Html.HiddenFor(m => m.SelectedTab)
-                                            @Html.RadioButtonFor(m => m.SearchType, eSearchType.EstablishmentAll, new { id = "searchtype-all", data_toggle_panel = "#searchby-all-ref" })
-                                            <label for="searchtype-all">
-                                                All establishments
-                                            </label>
-                                        </div>
-                                        <div class="panel panel-border-narrow" id="searchby-all-ref">
-                                            @if (Model.NoResultsForName)
-                                            {
-                                                <div class="warning-message">
-                                                    <p>We could not find any establishments matching your search criteria</p>
-                                                </div>
-                                            }
-                                            <fieldset class="push--bottom">
-                                                <legend class="visually-hidden">Select the change type</legend>
-
-                                                <div class="multiple-choice">
-                                                    @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED, new {id = "datefiltermode-applied"})
-                                                    <label for="datefiltermode-applied">
-                                                        Applied: The date the change was proposed in GIAS
-                                                    </label>
-                                                </div>
-
-                                                <div class="multiple-choice">
-                                                    @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_APPROVED, new {id = "datefiltermode-approved"})
-                                                    <label for="datefiltermode-approved">
-                                                        Approved: The date the change  was approved
-                                                    </label>
-                                                </div>
-
-                                                <div class="multiple-choice">
-                                                    @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE, new {id = "datefiltermode-effective"})
-                                                    <label for="datefiltermode-effective">
-                                                        Effective: The date the change occurred
-                                                    </label>
-                                                </div>
-                                            </fieldset>
-
-                                            <div class="column-two-thirds push--bottom">
-                                                <div class="date-group-wrap">
-                                                    @Html.EditorFor(x => x.DateFilterFrom, new { title = "From (optional)" })
-                                                </div>
-                                                <div class="date-group-wrap">
-                                                    @Html.EditorFor(x => x.DateFilterTo, new { title = "To (optional)" })
-                                                </div>
-                                            </div>
-                                            @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
-                                            <div class="form-group">
-                                                <button type="submit" class="button search-button" id="all-search-submit">Search</button>
-                                            </div>
-
-                                        </div>
-                                    </fieldset>
-                                }
-                            </li>
-                        </ul>
-                    </fieldset>
-                </div>
-                }
-                @if (Model.SelectedTab == ChangeHistoryViewModel.Tab.Groups)
-                {
-                <div id="groups" class="tab-content">
-                    <fieldset>
-                        <legend>
-                            <h2 class="heading-small flush--top">Search by:</h2>
-                        </legend>
-                        <ul>
-                            <li class="search-type-wrapper">
-                                @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
-                                {
-                                    @Html.HiddenFor(m => m.SelectedTab)
-                                    <fieldset class="search-toggle-panel">
-                                        <div class="multiple-choice multiple-choice--radio">
-                                            @Html.RadioButtonFor(m => m.SearchType, eSearchType.Group, new {id = "searchtype-name-group", data_toggle_panel = "#searchby-group-ref"})
-                                            <label for="searchtype-name-group">
-                                                Name or reference number
-                                            </label>
-
-                                        </div>
-                                        <div class="panel panel-border-narrow" id="searchby-group-ref">
-                                            <div class="edubase-search-element with-typeahead has-typeahead" id="group-search-container">
-                                                @* This alert gets dynamically populated *@
-                                                <div class="warning-message visuallyhidden" role="alert">
-                                                    <p class="message-text" aria-live="polite"></p>
-                                                </div>
-                                                @if (Model.GroupSearchError)
-                                                {
-                                                    @* Static alert for no search results *@
-                                                    <div role="alert" class="warning-message js-trigger-aria-live">
-                                                        <p class="message-text" aria-live="polite">We could not find any establishment groups matching your search criteria</p>
-                                                    </div>
-                                                }
-                                                <label class="form-label" for="GroupSearchModel_Text">
-                                                    Enter name, Companies House number, Group <abbr title="Unique Identifier">UID</abbr>, ID or UKPRN
-                                                    <a href="#group-reference" class="tooltip-link js-tooltip">
-                                                        <span class="visuallyhidden">Help with reference numbers</span>
-                                                    </a>
-                                                </label>
-                                                <div class="form-group">
-                                                    @Html.TextBoxFor(x => x.GroupSearchModel.Text, new {@class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=", aria_describedby="group-reference"})
-                                                </div>
-
-                                                @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
-                                                <div class="form-group">
-                                                    <button type="submit" id="group-search-submit" class="button search-button">Search</button>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </fieldset>
-                                }
-                            </li>
-
-                            <li aria-hidden="true">
-                                <p>or</p>
-                            </li>
-
-                            <li class="search-type-wrapper">
-                                @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
-                                {
-                                    @Html.HiddenFor(m => m.SelectedTab)
-                                    <fieldset class="search-toggle-panel">
-                                        <div class="multiple-choice multiple-choice--radio">
-                                            @Html.RadioButtonFor(m => m.SearchType, eSearchType.GroupAll, new {id = "searchtype-all-groups", data_toggle_panel = "#searchby-allgroups-ref"})
-                                            <label for="searchtype-all-groups">
-                                                All groups
-                                            </label>
-                                        </div>
-                                        <div class="panel panel-border-narrow" id="searchby-allgroups-ref">
-                                            <div class="column-two-thirds">
-                                                <div class="date-group-wrap">
-                                                    @Html.EditorFor(x => x.DateFilterFrom, new {title = "From (optional)"})
-                                                </div>
-                                                <div class="date-group-wrap">
-                                                    @Html.EditorFor(x => x.DateFilterTo, new {title = "To (optional)"})
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <button type="submit" id="all-group-submit" class="button search-button">Search</button>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-                                }
-                            </li>
-                        </ul>
-                    </fieldset>
-                </div>
-                }
+                </ol>
             </div>
         </div>
     </div>
+}
+
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
+
+<h1 class="govuk-heading-xl">Change history</h1>
+
+<div class="govuk-grid-row" id="change-history-app">
+<div class="govuk-grid-column-full">
+    <p>
+        This allows you to find out when establishments (such as schools, colleges and
+        children's centres) and groups (such as multi-academy trusts and federations)
+        made changes to their records and what was changed.
+    </p>
+</div>
+
+<div class="govuk-grid-column-full">
+<div class="gias-tabs-wrapper">
+<div class="tab-wrap search-tabs">
+    <ul class="gias-tabs">
+        <li class="gias-tabs__list-item @Html.Conditional(Model.SelectedTab == ChangeHistoryViewModel.Tab.Establishments, "gias-tabs__list-item--selected")">
+            @Html.RouteLink("Establishment change history", "ChangeHistoryCriteria", new {SelectedTab = SearchViewModel.Tab.Establishments}, new {@class = $"gias-tabs__tab estab"})
+        </li>
+        <li class="gias-tabs__list-item @Html.Conditional(Model.SelectedTab == ChangeHistoryViewModel.Tab.Groups, "gias-tabs__list-item--selected")">
+            @Html.RouteLink("Group change history", "ChangeHistoryCriteria", new {SelectedTab = SearchViewModel.Tab.Groups}, new {@class = $"gias-tabs__tab group"})
+        </li>
+    </ul>
+</div>
+
+<div class="tab-content-wrapper gias-tabs-content">
+@if (Model.SelectedTab == ChangeHistoryViewModel.Tab.Establishments)
+{
+    <div id="establishments" class="tab-content">
+        <h2 class="govuk-heading-s">Search by:</h2>
+        <ul class="search-type-list has-typeahead">
+            <li class="search-type-wrapper">
+                @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
+                {
+                    @Html.HiddenFor(m => m.SelectedTab, new { id="selected-tab2"} )
+                    <fieldset class="govuk-fieldset search-toggle-panel">
+                        <legend class="govuk-visually-hidden">Search by name or reference number</legend>
+                        <div class="govuk-form-group">
+                            <div class="govuk-radios" data-module="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    @Html.RadioButtonFor(m => m.SearchType, eSearchType.Text, new {id = "searchtype-name", @class = "govuk-radios__input", data_toggle_panel = "#searchby-name-ref"})
+                                    <label for="searchtype-name" class="govuk-radios__label">
+                                        Name or reference number
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-border-narrow" id="searchby-name-ref">
+                            @* This alert gets dynamically populated *@
+                            <div class="warning-message govuk-visually-hidden" role="alert">
+                                <p class="message-text" aria-live="polite"></p>
+                            </div>
+                            @if (Model.NoResultsForName)
+                            {
+                                                @* Static alert for no search results *@
+                                <div role="alert" class="warning-message js-trigger-aria-live">
+                                    <p class="message-text" aria-live="polite">We could not find any establishments matching your search criteria</p>
+                                </div>
+                            }
+                            <label class="govuk-label" for="TextSearchModel_Text">
+                                Enter name, <abbr title="Unique Reference Number">URN</abbr>, LAESTAB or UKPRN
+                                <a href="#name-reference-help" class="tooltip-link js-tooltip">
+                                    <span class="govuk-visually-hidden">Help with reference numbers</span>
+                                </a>
+                            </label>
+                            <div class="govuk-form-group">
+                                @Html.TextBoxFor(x => x.TextSearchModel.Text, new {@class = "govuk-input govuk-!-width-one-half", autocomplete = "off", data_suggestion_url = "/search/suggest?text=", aria_describedby = "name-reference-help"})
+                            </div>
+                            @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
+                            <div class="govuk-form-group">
+                                <button type="submit" class="govuk-button search-button" id="name-search-submit">Search</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                }
+            </li>
+
+            <li aria-hidden="true">
+                <p>or</p>
+            </li>
+
+            <li class="search-type-wrapper">
+                @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
+                {
+                    <fieldset class="govuk-fieldset search-toggle-panel">
+                        <legend class="govuk-visually-hidden">Search all establishments</legend>
+                        @Html.HiddenFor(m => m.SelectedTab, new { id="selected-tab3"} )
+                        <div class="govuk-form-group">
+                            <div class="govuk-radio" data-module="govuk-radio">
+                                <div class="govuk-radios__item">
+                                    @Html.RadioButtonFor(m => m.SearchType, eSearchType.EstablishmentAll, new {id = "searchtype-all", data_toggle_panel = "#searchby-all-ref", @class = "govuk-radios__input"})
+                                    <label for="searchtype-all" class="govuk-radios__label">
+                                        All establishments
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-border-narrow" id="searchby-all-ref">
+                            @if (Model.NoResultsForName)
+                            {
+                                <div class="warning-message">
+                                    <p>We could not find any establishments matching your search criteria</p>
+                                </div>
+                            }
+                            <fieldset class="govuk-fieldset">
+                                <legend class="govuk-visually-hidden">Select the change type</legend>
+                                <div class="govuk-form-group govuk-!-padding-top-2">
+
+                                    <div class="govuk-radios" data-module="govuk-radios">
+                                        <div class="govuk-radios__item">
+                                            @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_APPLIED, new {id = "datefiltermode-applied", @class = "govuk-radios__input"})
+                                            <label for="datefiltermode-applied" class="govuk-label govuk-radios__label">
+                                                Applied: The date the change was proposed in GIAS
+                                            </label>
+                                        </div>
+
+                                        <div class="govuk-radios__item">
+                                            @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_APPROVED, new {id = "datefiltermode-approved", @class = "govuk-radios__input"})
+                                            <label for="datefiltermode-approved" class="govuk-label govuk-radios__label">
+                                                Approved: The date the change was approved
+                                            </label>
+                                        </div>
+
+                                        <div class="govuk-radios__item">
+                                            @Html.RadioButtonFor(m => m.DateFilterMode, ChangeHistoryViewModel.DATE_FILTER_MODE_EFFECTIVE, new {id = "datefiltermode-effective", @class = "govuk-radios__input"})
+                                            <label for="datefiltermode-effective" class="govuk-label govuk-radios__label">
+                                                Effective: The date the change occurred
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <div class="govuk-grid-column-one-third">
+                                <div class="date-group-wrap">
+                                    @Html.EditorFor(x => x.DateFilterFrom, new {title = "From (optional)", fieldsetClassName = "edit-date-fieldset"})
+                                </div>
+                            </div>
+                            <div class="govuk-grid-column-one-third">
+                                <div class="date-group-wrap">
+                                    @Html.EditorFor(x => x.DateFilterTo, new {title = "To (optional)", fieldsetClassName = "edit-date-fieldset"})
+                                </div>
+                            </div>
+                            @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
+                            <div class="govuk-grid-column-full">
+                                <div class="button-row">
+                                    <button type="submit" class="govuk-button search-button" id="all-search-submit">Search</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </fieldset>
+                }
+            </li>
+        </ul>
+
+    </div>
+}
+@if (Model.SelectedTab == ChangeHistoryViewModel.Tab.Groups)
+{
+    <div id="groups" class="tab-content">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                <h2 class="govuk-heading-s">Search by:</h2>
+            </legend>
+            <ul class="govuk-list">
+                <li class="search-type-wrapper">
+                    @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
+                    {
+                        @Html.HiddenFor(m => m.SelectedTab, new { id="selected-tab0"} )
+                        <fieldset class="search-toggle-panel govuk-fieldset">
+                             <div class="govuk-form-group">
+                                 <div class="govuk-radio" data-module="govuk-radio">
+                                     <div class="govuk-radios__item">
+                                         @Html.RadioButtonFor(m => m.SearchType, eSearchType.Group, new {id = "searchtype-name-group", data_toggle_panel = "#searchby-group-ref", @class = "govuk-radios__input"})
+                                         <label for="searchtype-name-group" class="govuk-label govuk-radios__label ">
+                                             Name or reference number
+                                         </label>
+
+                                     </div>
+                                 </div>
+                             </div>
+                            <div class="panel panel-border-narrow" id="searchby-group-ref">
+                                <div class="edubase-search-element with-typeahead has-typeahead" id="group-search-container">
+                                    @* This alert gets dynamically populated *@
+                                    <div class="warning-message govuk-visually-hidden" role="alert">
+                                        <p class="message-text" aria-live="polite"></p>
+                                    </div>
+                                    @if (Model.GroupSearchError)
+                                    {
+                                                    @* Static alert for no search results *@
+                                        <div role="alert" class="warning-message js-trigger-aria-live">
+                                            <p class="message-text" aria-live="polite">We could not find any establishment groups matching your search criteria</p>
+                                        </div>
+                                    }
+                                    <label class="govuk-label" for="GroupSearchModel_Text">
+                                        Enter name, Companies House number, Group <abbr title="Unique Identifier">UID</abbr>, ID or UKPRN
+                                        <a href="#group-reference" class="tooltip-link js-tooltip">
+                                            <span class="govuk-visually-hidden">Help with reference numbers</span>
+                                        </a>
+                                    </label>
+                                    <div class="govuk-form-group">
+                                        @Html.TextBoxFor(x => x.GroupSearchModel.Text, new {@class = "govuk-input govuk-!-width-one-half", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=", aria_describedby = "group-reference"})
+                                    </div>
+
+                                    @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
+                                    <div class="govuk-form-group">
+                                        <button type="submit" id="group-search-submit" class="govuk-button search-button">Search</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </fieldset>
+                    }
+                </li>
+
+                <li aria-hidden="true">
+                    <p>or</p>
+                </li>
+
+                <li class="search-type-wrapper">
+                    @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
+                    {
+                        @Html.HiddenFor(m => m.SelectedTab, new { id="selected-tab1"} )
+                        <fieldset class="search-toggle-panel govuk-fieldset">
+                            <div class="govuk-form-group">
+                            <div class="govuk-radio" data-module="govuk-radio">
+                                <div class="govuk-radios__item">
+                                        @Html.RadioButtonFor(m => m.SearchType, eSearchType.GroupAll, new {id = "searchtype-all-groups", data_toggle_panel = "#searchby-allgroups-ref", @class = "govuk-radios__input"})
+                                        <label for="searchtype-all-groups" class="govuk-label govuk-radios__label">
+                                            All groups
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-border-narrow" id="searchby-allgroups-ref">
+                                <div class="govuk-grid-column-one-third">
+                                    <div class="date-group-wrap">
+                                        @Html.EditorFor(x => x.DateFilterFrom, new {title = "From (optional)", fieldsetClassName = "edit-date-fieldset"})
+                                    </div>
+                                </div>
+                                <div class="govuk-grid-column-one-third">
+                                    <div class="date-group-wrap">
+                                        @Html.EditorFor(x => x.DateFilterTo, new {title = "To (optional)", fieldsetClassName = "edit-date-fieldset"})
+                                    </div>
+                                </div>
+                                <div class="govuk-grid-column-full">
+                                    <div class="button-row">
+                                        <button type="submit" id="all-group-submit" class="govuk-button search-button">Search</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    }
+                </li>
+            </ul>
+        </fieldset>
+    </div>
+}
+</div>
+</div>
+</div>
 </div>
 
 
@@ -261,13 +294,6 @@
 
 @section ViewScripts
 {
-    <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
-    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
-
-    <script nonce="@Html.ScriptNonce()">
-        (function() {
-            DfE.Views.schoolSearch.init({ highlightFirstSuggestion: true });
-        }());
-    </script>
+    <script src="/public/assets/scripts/build/change-history-search.js"></script>
 
 }

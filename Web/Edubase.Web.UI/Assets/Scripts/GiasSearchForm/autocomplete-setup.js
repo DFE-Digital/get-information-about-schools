@@ -138,7 +138,7 @@ const autocompleteSetup = (function(){
     });
 
     matNameInput.addEventListener('focus', function () {
-      openSuggestionsOnFocus(schoolNameAutoSuggest);
+      openSuggestionsOnFocus(matNameAutoSuggest);
     });
 
     /* ###################

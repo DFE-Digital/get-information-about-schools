@@ -4,33 +4,45 @@
 @{
     ViewBag.Title = "";
     ViewBag.PageClass = "search-history-results search-results";
+    ViewBag.SiteSection = "tools";
+}
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Change history", "Index", "ChangeHistory", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
 }
 
-<div class="breadcrumbs">
-    <ol>
-        <li>
-            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-        </li>
-        <li>
-            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
-        </li>
-        <li>
-            @Html.ActionLink("Change history", "Index", "ChangeHistory", new { area = ""}, null)
-        </li>
-    </ol>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="govuk-error-summary hidden" aria-labelledby="error-summary-title" role="alert" tabindex="-1" id="js-filter-error-summary">
+            <h2 id="error-summary-title" class="govuk-error-summary__title">Incorrect or missing details</h2>
+            <ul class="error-summary-list">
+                <li class="date-filter-error hidden">
+                    <a href="#date-filter">Please enter the date in the format DD/MM/YYYY</a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
 
-<div class="error-summary hidden" aria-labelledby="error-summary-title" role="alert" tabindex="-1" id="js-filter-error-summary">
-    <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
-    <ul class="error-summary-list">
-        <li class="date-filter-error hidden">
-            <a href="#date-filter">Please enter the date in the format DD/MM/YYYY</a>
-        </li>
-    </ul>
-</div>
 
-<div class="grid-row">
-    <div class="column-full results-heading flush--bottom">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
         @{
             var heading = (Model.SearchType.OneOfThese(eSearchType.Group, eSearchType.GroupAll)) ? "Group change history" : "Establishment change history";
             if (Model.SingleEstablishment && !string.IsNullOrWhiteSpace(Model.EstablishmentName))
@@ -43,20 +55,22 @@
                 heading = Model.GroupName;
             }
         }
-        <h1 class="heading-xlarge">@heading</h1>
-        <a class="download-link @Html.Conditional(Model.Count == 0, "hidden")" href="@($"{Url.RouteUrl("DownloadChangeHistory")}?{Request.QueryString}")">Download change history</a>
+        <h1 class="govuk-heading-xl">@heading</h1>
+        <p class="govuk-body-s establishment-data-download">
+            <a class="download-link @Html.Conditional(Model.Count == 0, "hidden")" href="@($"{Url.RouteUrl("DownloadChangeHistory")}?{Request.QueryString}")">Download change history</a>
+        </p>
     </div>
 </div>
 
-<div class="grid-row">
-    <div class="column-full">
-        <div class="error-summary hidden" id="ajax-error-message">
-            <h2 class="error-summary-heading heading-medium">Something went wrong</h2>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="govuk-error-summary hidden" id="ajax-error-message">
+            <h2 class="govuk-error-summary__title">Something went wrong</h2>
             <p>Please refresh the page to try again</p>
         </div>
         @if (Model.IsEstablishmentSearch)
         {
-            <p class="font-xsmall flush--bottom">To see the 'Suggested from' and 'Approved by' columns, please hide the filters.</p>
+            <p class="govuk-body">To see the 'Suggested from' and 'Approved by' columns, please hide the filters.</p>
         }
         <p>
             <a href="#" class="hide-show-filters" id="filter-toggle">Hide filters</a>
@@ -74,11 +88,11 @@
         @Html.HiddenFor(m=> m.Sortby)
         <input type="hidden" value="true" name="filteropen" id="filters-open-state"/>
 
-        <div class="column-third" id="filter-container">
+        <div class="govuk-grid-column-one-third search-result-filters" id="filter-container">
             <div class="filter-form" id="filter-form">
                 <div id="EditSearchCollapse" class="blanket-container">
-                    <h2 class="visuallyhidden">Search results filters</h2>
-                    <a href="#results-container" class="visually-hidden-focusable">Skip filters</a>
+                    <h2 class="govuk-visually-hidden">Search results filters</h2>
+                    <a href="#results-container" class="govuk-visually-hidden-focusable">Skip filters</a>
 
                     <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="false" id="date-filter" role="search">
                         <div class="container-head js-container-head">
@@ -90,17 +104,17 @@
                         <a href="#" class="clear-selections filter-clear">Clear</a>
                         <div class="options-container" id="">
                             <div class="js-auto-height-inner">
-                                <fieldset>
-                                    <legend class="visuallyhidden">Change history date range and type</legend>
-                                    <label for="date-type-filter" class="visuallyhidden">Change type</label>
+                                <fieldset class="govuk-fieldset">
+                                    <legend class="govuk-visually-hidden">Change history date range and type</legend>
+                                    <label for="date-type-filter" class="govuk-visually-hidden">Change type</label>
                                     @if (Model.IsEstablishmentSearch)
                                     {
-                                        @Html.DropDownListFor(m => m.DateFilterMode, Model.DateFilterOptions, new {@class = "form-control in-filters", id = "date-type-filter"})
+                                        @Html.DropDownListFor(m => m.DateFilterMode, Model.DateFilterOptions, new {@class = "govuk-select sortby-selector", id = "date-type-filter"})
                                     }
-                                    @Html.EditorFor(m => m.DateFilterFrom, new {disableHint = true, labelClass = "form-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date"})
-                                    @Html.EditorFor(m => m.DateFilterTo, new {disableHint = true, labelClass = "form-label", title = "To", inFilters = true, fieldsetClassName = "search-to-date"})
-                                    <div class="form-group soft-half--sides">
-                                        <a href="#" class="button button-secondary filter-button">Apply</a>
+                                    @Html.EditorFor(m => m.DateFilterFrom, new {disableHint = true, labelClass = "govuk-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date"})
+                                    @Html.EditorFor(m => m.DateFilterTo, new {disableHint = true, labelClass = "govuk-label", title = "To", inFilters = true, fieldsetClassName = "search-to-date"})
+                                    <div class="govuk-form-group">
+                                        <a href="#" class="govuk-button govuk-button--secondary filter-button" data-module="govuk-button">Apply</a>
                                     </div>
                                 </fieldset>
                             </div>
@@ -131,9 +145,9 @@
         </div>
     </form>
 
-    <div role="alert" aria-live="assertive" id="results-notification" class="visuallyhidden"></div>
-    <h2 class="visuallyhidden">Search results listing</h2>
-    <div class="column-two-thirds" id="results-container">
+    <div role="alert" aria-live="assertive" id="results-notification" class="govuk-visually-hidden"></div>
+    <h2 class="govuk-visually-hidden">Search results listing</h2>
+    <div class="govuk-grid-column-two-thirds" id="results-container">
         @if (Model.Count == 0)
         {
             <p>There are no results for your search. Please change the filters to adjust your search, or go @Html.ActionLink("back to the search page", "Index", "ChangeHistory", new { area = "", SelectedTab = Model.IsEstablishmentSearch ? "Establishments" : "Groups" }, null) to start again.</p>
@@ -145,42 +159,50 @@
     </div>
 
 </div>
-
 @helper Selector(string label, string name, IEnumerable<LookupItemViewModel> items, List<int> selectedItems, string additionalClassName = "")
 {
-    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false" id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name" role="search">
+
+    <div class="govuk-option-select js-collapsible @additionalClassName" data-closed-on-load="false"
+         id="option-select-@label.ToLower().Replace(" ", "-").Replace("/","-")" data-bind-alias="@name"
+         role="search">
         <div class="container-head js-container-head">
             <div class="option-select-label">@label</div>
             <div class="js-selected-counter">
                 <span class="js-selected-counter-text"></span>
-
             </div>
         </div>
-        @*<a href="#" class="clear-selections filter-clear">Clear</a>*@
+
         <div class="options-container" id="">
+            <div class="suggestion-target"></div>
             <div class="js-auto-height-inner">
-                <fieldset>
-                    <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
-                    <div class="select-all-wrap multiple-choice multiple-choice--smaller multiple-choice--list">
-                        <input id="@(name)_all" class="select-all" type="checkbox" />
-                        <label for="@(name)_all">
-                            All
-                        </label>
-                    </div>
-                    @foreach (var item in items)
-                    {
-                        <div class="multiple-choice multiple-choice--smaller multiple-choice--list">
-                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
-                            <label for="@(name)_@item.Id">
-                                @item
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-visually-hidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
+                    <div class="govuk-checkboxes gias-filter-checkboxes">
+                        <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
+                            <input id="@(name)_all" class="select-all govuk-checkboxes__input" type="checkbox"/>
+                            <label for="@(name)_all" class="js-filter-label govuk-label govuk-checkboxes__label">
+                                All
                             </label>
                         </div>
-                    }
+                    </div>
+                    <div class="govuk-checkboxes gias-filter-checkboxes">
+                        @foreach (var item in items)
+                        {
+
+                            <div class="govuk-checkboxes__item">
+                                <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="js-filter-input trigger-result-update govuk-checkboxes__input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
+                                <label for="@(name)_@item.Id" class="js-filter-label govuk-label govuk-checkboxes__label">
+                                    @item
+                                </label>
+                            </div>
+                        }
+                    </div>
                 </fieldset>
             </div>
         </div>
     </div>
 }
+
 
 @helper Selector(string label, string name, IEnumerable<StringLookupItemViewModel> items, List<string> selectedItems, string additionalClassName = "")
 {
@@ -192,26 +214,31 @@
 
             </div>
         </div>
-        @*<a href="#" class="clear-selections filter-clear">Clear</a>*@
         <div class="options-container" id="">
+            <div class="suggestion-target"></div>
             <div class="js-auto-height-inner">
-                <fieldset>
-                    <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
-                    <div class="select-all-wrap multiple-choice multiple-choice--smaller multiple-choice--list">
-                        <input id="@(name)_all" class="select-all" type="checkbox" />
-                        <label for="@(name)_all">
-                            All
-                        </label>
-                    </div>
-                    @foreach (var item in items)
-                    {
-                        <div class="multiple-choice multiple-choice--smaller multiple-choice--list">
-                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
-                            <label for="@(name)_@item.Id">
-                                @item
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-visually-hidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
+                    <div class="govuk-checkboxes gias-filter-checkboxes">
+                        <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
+                            <input id="@(name)_all" class="select-all govuk-checkboxes__input" type="checkbox"/>
+                            <label for="@(name)_all" class="js-filter-label govuk-label govuk-checkboxes__label">
+                                All
                             </label>
                         </div>
-                    }
+                    </div>
+                    <div class="govuk-checkboxes gias-filter-checkboxes">
+                        @foreach (var item in items)
+                        {
+
+                            <div class="govuk-checkboxes__item">
+                                <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="js-filter-input trigger-result-update govuk-checkboxes__input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
+                                <label for="@(name)_@item.Id" class="js-filter-label govuk-label govuk-checkboxes__label">
+                                    @item
+                                </label>
+                            </div>
+                        }
+                    </div>
                 </fieldset>
             </div>
         </div>
@@ -244,6 +271,7 @@
     <script nonce="@Html.ScriptNonce()">
         var isEstabSearch = @Model.IsEstablishmentSearch.ToString().ToLower()
     </script>
-    <script src="/public/assets/scripts/standalone/search-change-history.js"></script>
+    @* <script src="/public/assets/scripts/standalone/search-change-history.js"></script> *@
+    <script src="/public/assets/scripts/build/change-history-results.js"></script>
 
 }

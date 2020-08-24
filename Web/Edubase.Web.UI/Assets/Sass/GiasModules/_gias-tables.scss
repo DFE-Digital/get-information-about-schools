@@ -178,3 +178,22 @@
     }
   }
 }
+
+.change-history-table {
+  @include govuk-font(14);
+
+  &.table-tight .govuk-table__body {
+    .js-reveal-when-no-filter {
+      word-break: break-word;
+    }
+  }
+
+  .gias-summary-list {
+    @include govuk-font(14)
+  }
+
+  [data-label="Suggested by"],
+  [data-label="Request type"] {
+    word-break: break-word;
+  }
+}
