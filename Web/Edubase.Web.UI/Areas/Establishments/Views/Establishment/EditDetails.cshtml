@@ -321,7 +321,7 @@
                         </div>
                     }
 
-                    @if (Model.EditPolicy.ProprietorName)
+                    @if (Model.EditPolicy.ProprietorName && !Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider))
                     {
                         <div class="form-group">
                             <label for="proprietor" class="form-label">Proprietor's name</label>
