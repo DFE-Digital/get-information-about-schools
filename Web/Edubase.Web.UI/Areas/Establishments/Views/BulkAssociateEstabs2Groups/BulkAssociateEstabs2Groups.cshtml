@@ -73,7 +73,7 @@
     @using (Html.BeginRouteForm("BulkAssociateEstabs2GroupsPost", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         <div class="govuk-grid-column-full">
-            <h2 class="govuk-heading-m">Upload completed template</h2>
+            <h2 class="govuk-heading-m  govuk-!-padding-top-6">Submit completed template</h2>
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.BulkFile)">
                 <label for="BulkFile" class="govuk-label">Upload a file</label>
                 @Html.ValidationMessageFor(x => x.BulkFile, null, new {@class = "govuk-error-message"})
