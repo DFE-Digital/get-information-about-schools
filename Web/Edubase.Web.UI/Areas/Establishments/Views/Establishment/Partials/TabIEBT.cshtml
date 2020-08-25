@@ -102,9 +102,7 @@
             <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.NextActionRequiredByFP?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
         </div>
     }
-</dl>
 
-<dl class="gias-summary-list">
     @if (Model.DisplayPolicy.InspectorateId)
     {
         <div class="gias-summary-list__row">
@@ -136,9 +134,7 @@
             <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.CharityRegistrationNumber?.ToString() ?? "Not recorded")</dd>
         </div>
     }
-</dl>
 
-<dl class="gias-summary-list">
     @if (p.TotalNumberOfFullTimePupils)
     {
         <div class="gias-summary-list__row">
@@ -186,9 +182,7 @@
             <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfPupilsInPublicCare?.ToString() ?? "Not recorded")</dd>
         </div>
     }
-</dl>
 
-<dl class="gias-summary-list">
     @if (p.PTBoysAged2AndUnder)
     {
         <div class="gias-summary-list__row">
@@ -228,10 +222,7 @@
             <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.PTBoysAged4C?.ToString() ?? "Not recorded")</dd>
         </div>
     }
-</dl>
 
-
-<dl class="gias-summary-list">
     @if (p.PTGirlsAged2AndUnder)
     {
         <div class="gias-summary-list__row">
@@ -279,10 +270,7 @@
             <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfGirlsInBoardingSchools?.ToString() ?? "Not recorded")</dd>
         </div>
     }
-</dl>
 
-
-<dl class="gias-summary-list">
     @if (p.TotalNumberOfFullTimeStaff)
     {
         <div class="gias-summary-list__row">
@@ -298,9 +286,7 @@
             <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfPartTimeStaff?.ToString() ?? "Not recorded")</dd>
         </div>
     }
-</dl>
 
-<dl class="gias-summary-list">
     @if (p.LowestAnnualRateForDayPupils)
     {
         <div class="gias-summary-list__row">
@@ -333,9 +319,6 @@
         </div>
     }
 
-</dl>
-
-<dl class="gias-summary-list">
     <div class="gias-summary-list__row">
         <dt class="gias-summary-list__key">Boarding establishment:</dt>
         <dd class="gias-summary-list__value">@(Model.BoardingEstabName ?? "Not recorded")</dd>
@@ -389,9 +372,6 @@
         </div>
     }
 
-</dl>
-
-<dl class="gias-summary-list">
     @if (p.ChairOfProprietorsBodyName)
     {
         <div class="gias-summary-list__row">
@@ -453,7 +433,7 @@
 
 @if (Model.UserCanEdit)
 {
-    <div class="button-row">
+    <div class="button-row govuk-!-padding-top-4">
         @Html.ActionLink("Edit IEBT", "EditIEBT", "Establishment", null, new {@class = "govuk-button govuk-button--secondary"})
     </div>
 }
