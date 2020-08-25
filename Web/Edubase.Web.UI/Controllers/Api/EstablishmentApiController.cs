@@ -1,11 +1,12 @@
 using System.Dynamic;
+using System.Linq;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Edubase.Services.Lookup;
 using Edubase.Web.UI.Filters;
-using Newtonsoft.Json.Linq;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
@@ -13,10 +14,12 @@ namespace Edubase.Web.UI.Controllers.Api
     public class EstablishmentApiController : ApiController
     {
         private readonly IEstablishmentReadService _establishmentReadService;
+        private readonly ICachedLookupService _lookupService;
         
-        public EstablishmentApiController(IEstablishmentReadService establishmentReadService)
+        public EstablishmentApiController(IEstablishmentReadService establishmentReadService, ICachedLookupService lookupService)
         {
             _establishmentReadService = establishmentReadService;
+            _lookupService = lookupService;
         }
 
         [Route("api/establishment/{urn:int}"), HttpGet, EdubaseAuthorize]
@@ -33,7 +36,8 @@ namespace Edubase.Web.UI.Controllers.Api
                     ReturnValue = new EstablishmentApiPayload()
                     {
                         Name = apiResult.Name,
-                        Urn = apiResult.Urn
+                        Urn = apiResult.Urn,
+                        TypeName = await _lookupService.GetNameAsync(() => apiResult.TypeId)
                     }
                 };
                 return Ok(minRes);
@@ -44,6 +48,7 @@ namespace Edubase.Web.UI.Controllers.Api
         {
             public string Name { get; set; }
             public int? Urn { get; set; }
+            public string TypeName { get; set; }
         }
         public class EstbalishmentApiResponse
         {
