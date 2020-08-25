@@ -79,6 +79,15 @@ namespace Edubase.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The age range that the establishment makes provision for..
+        /// </summary>
+        internal static string AgeRangeOnlineProvider {
+            get {
+                return ResourceManager.GetString("AgeRangeOnlineProvider", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The number of pupil places the establishment can accommodate..
         /// </summary>
         internal static string SchoolCapacity {
