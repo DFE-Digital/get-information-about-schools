@@ -55,7 +55,10 @@ new Vue({
   },
   created: function () {
     this.getChangesData();
-    new GiasTextCounter(document.getElementById('reason'), { maxLength: 1024 });
+
+  },
+  mounted: function (){
+    this.counter = new GiasTextCounter(document.getElementById('reason'), {maxLength: 1024});
   },
   computed: {
     pageCount: function () {
@@ -72,8 +75,26 @@ new Vue({
     totalPages: function () {
       return Math.ceil(this.currentCount / this.pageSize);
     },
+    visiblePagination: function () {
+      const maxPages = 5;
+      let paginationStart = 1;
+      let paginationFinish = this.totalPages;
+
+      if (this.totalPages > maxPages) {
+        if (this.currentPage < 4) {
+          paginationFinish = maxPages;
+        } else if (this.currentPage + 3 > this.totalPages) {
+          paginationFinish = this.totalPages;
+          paginationStart = paginationFinish - (maxPages - 1);
+        } else if (this.currentPage >= 4) {
+          paginationFinish = this.currentPage + 2;
+          paginationStart = paginationFinish - (maxPages - 1);
+        }
+      }
+
+      return Array.from({length: 5}, (paginationStart, paginationFinish) => paginationFinish + 1);
+    },
     isZeroItemsSelected: function () {
-      console.log("isZeroItemsSelected");
       return $('#changes-table').find('.govuk-checkboxes__input').filter(':checked').length === 0;
     }
   },
@@ -81,9 +102,9 @@ new Vue({
     showRejectionsModal: function () {
       this.clearErrors();
       this.showRejections = true;
-      window.setTimeout(function(){
+      window.setTimeout(function () {
         $('#modal-label').focus();
-      },0);
+      }, 0);
     },
     selectItem: function () {
       this.noItemsSelected = ($('#changes-table').find('.govuk-checkboxes__input').filter(':checked').length === 0);
@@ -220,14 +241,13 @@ new Vue({
       const selectedItems = $('#changes-table').find('.govuk-checkboxes__input')
         .filter(':checked');
 
-     // this.noneSelectedError = selectedItems.length === 0;
+      // this.noneSelectedError = selectedItems.length === 0;
       if (selectedItems.length === 0) {
         this.errors.push({
           href: '#changes-table',
           message: 'Please select some changes to reject'
         });
       }
-
 
 
       if (this.errors.length > 0) {
@@ -260,9 +280,7 @@ new Vue({
                 href: '#',
                 message: 'responses[i].message'
               });
-              //messages.push(responses[i].message);
             }
-           // self.apiError = messages.join('<br>');
             self.isProcessing = false;
 
             if (jqXHR.hasOwnProperty('responseJSON')) {
@@ -281,19 +299,18 @@ new Vue({
 
       //this.approvalError = (selectedItems.length === 0);
       if (selectedItems.length === 0) {
-         this.errors.push({
-           href: '#changes-table',
-           message: 'Please select some changes to approve'
-         });
+        this.errors.push({
+          href: '#changes-table',
+          message: 'Please select some changes to approve'
+        });
       }
 
       this.itemsConfirmedRejected = false;
       this.itemsConfirmedRemoved = false;
 
 
-
       if (this.errors.length > 0) {
-       this.errorFocus();
+        this.errorFocus();
       } else {
         this.isProcessing = true;
         let removedIds = selectedItems.map(function (n, item) {
@@ -324,7 +341,6 @@ new Vue({
                 message: responses[i].message
               });
             }
-           // self.apiError = messages.join('<br>');
             self.isProcessing = false;
 
             if (jqXHR.hasOwnProperty('responseJSON')) {
@@ -339,12 +355,11 @@ new Vue({
 
       const selectedItems = $('#changes-table').find('.govuk-checkboxes__input')
         .filter(':checked');
-      //this.rejectionError = (selectedItems.length === 0);
       if (selectedItems.length === 0) {
         this.errors.push({
-            href: '#changes-table',
-            message: 'Please select some changes to reject'
-          });
+          href: '#changes-table',
+          message: 'Please select some changes to reject'
+        });
       }
 
       this.errorFocus();
@@ -353,6 +368,8 @@ new Vue({
         return;
       } else {
         this.pendingRejection = true;
+        this.reason = '';
+        this.counter.setCount();
         this.clearErrors();
       }
 
@@ -374,15 +391,8 @@ new Vue({
     clearErrors: function () {
       window.document.title = "Review and approve changes - GOV.UK";
       this.errors = [];
-      //
-      // this.approvalError = false;
-      // this.rejectionError = false;
-      // this.noneSelectedError = false;
       this.invalidReason = false;
       this.reasonLength = false;
-      // this.apiError = false;
-      // this.itemsConfirmedRejected = false;
-      // this.itemsConfirmedRemoved = false;
     }
   }
 
