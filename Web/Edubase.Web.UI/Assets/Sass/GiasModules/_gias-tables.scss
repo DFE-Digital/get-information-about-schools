@@ -45,11 +45,27 @@
     .govuk-table__header,
     .govuk-table__cell {
       word-wrap: break-word;
+      padding-right: 15px;
+
+      &.cell-checkbox {
+        padding-left: 0;
+        padding-right: 0;
+        width: 50px;
+        @include govuk-media-query($until: tablet) {
+          position: relative;
+
+          &::before {
+            position: absolute;
+            top: 20px;
+            left: 50px;
+          }
+        }
+      }
     }
 
-    .govuk-table__body .govuk-table__cell {
-      padding-right: 10px;
-    }
+    //.govuk-table__body .govuk-table__cell {
+    //  padding-right: 10px;
+    //}
   }
 
   @include govuk-media-query($until: tablet) {
