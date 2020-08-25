@@ -91,8 +91,12 @@ new Vue({
           paginationStart = paginationFinish - (maxPages - 1);
         }
       }
+      let paginationItems = [];
+      for (let i = paginationStart; i <= paginationFinish; i++) {
+        paginationItems.push(i);
+      }
 
-      return Array.from({length: 5}, (paginationStart, paginationFinish) => paginationFinish + 1);
+      return paginationItems;
     },
     isZeroItemsSelected: function () {
       return $('#changes-table').find('.govuk-checkboxes__input').filter(':checked').length === 0;
