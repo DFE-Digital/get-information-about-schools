@@ -41,7 +41,7 @@
             }
         </div>
 
-        <div class="govuk-grid-column-full">
+        <div class="govuk-grid-column-two-thirds">
             <ol class="govuk-list govuk-list--number">
                 <li>
                     <p>
@@ -58,9 +58,9 @@
             </ol>
         </div>
 
-        <div class="govuk-grid-column-full">
+        <div class="govuk-grid-column-full govuk-!-padding-top-4">
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.BulkFile)">
-                <label for="BulkFile" class="govuk-label">Upload a file:</label>
+                <label for="BulkFile" class="govuk-label">Upload a file</label>
                 @Html.ValidationMessageFor(x => x.BulkFile, null, new { @class ="govuk-error-message" })
                 @Html.TextBoxFor(x => x.BulkFile, new { type = "file" , @class = "govuk-file-upload"})
             </div>
