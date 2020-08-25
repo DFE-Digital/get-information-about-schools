@@ -80,7 +80,8 @@
   }
 }
 
-.links-estab-search-button {
+.links-estab-search-button,
+.inline-button {
   @include govuk-media-query($until: tablet) {
     margin-top: govuk-spacing(3);
   }

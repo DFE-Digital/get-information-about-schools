@@ -169,7 +169,7 @@
                         <ul class="pagination-links">
                             <li v-if="currentPage > 0  && totalPages > 1"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)" aria-label="Previous page">Previous</a></li>
 
-                            <li v-if="totalPages > 1" v-for="index in 5">
+                            <li v-if="totalPages > 1" v-for="index in visiblePagination">
                                 <a v-show="(index + slicePage - 1) < currentPage" href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index + slicePage - 1)" :aria-label="'Page ' + (index + slicePage)">{{ index + slicePage }}</a>
                                 <span v-show="(index + slicePage - 1) === currentPage" class="numeric-pagination go-nowhere" aria-current="true" :aria-label="'Page ' + (index + slicePage) + ', current page'">{{ index + slicePage }}</span>
                                 <a v-show="(index + slicePage - 1) > currentPage" href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index + slicePage - 1)" :aria-label="'Page ' + (index + slicePage)">{{ index + slicePage }}</a>
