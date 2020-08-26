@@ -5,4 +5,4 @@ iebtRadios.init();
 
 new GiasAttachUnload();
 new GiasTextCounter(document.getElementById('Notes'), { maxLength: 4000 });
-new GiasTextCounter(document.getElementById('Associations'), { maxLength: 4000 });
+new GiasTextCounter(document.getElementById('Associations'), { maxLength: 1000 });
