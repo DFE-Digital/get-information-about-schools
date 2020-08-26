@@ -2,7 +2,7 @@
     'use strict';
     var defaults = {
         maxCharacters: 40,
-        minScreenWidth: '640'
+        minScreenWidth: 640
     };
 
     function TruncateText(el, options) {

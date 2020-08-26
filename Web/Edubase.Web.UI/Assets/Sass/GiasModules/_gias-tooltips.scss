@@ -98,7 +98,11 @@ $pointer-size: 15px;
 
 .truncated-tooltip {
   width: auto;
-  padding-right: 14px;
+  max-width: 90%;
+  word-break: break-word;
+
+  @include govuk-font(16);
+
   .pointer,
   .pointer-shadow {
     right: 15px;

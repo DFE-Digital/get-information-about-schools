@@ -13,6 +13,10 @@
     display: none;
   }
 
+  &:focus {
+    outline: 1px dotted $govuk-border-colour;
+  }
+
 }
 
 .modal-content {
