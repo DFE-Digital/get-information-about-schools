@@ -279,10 +279,10 @@ new Vue({
           error: function (jqXHR, textStatus, errorThrown) {
             const responses = JSON.parse(jqXHR.responseText);
 
-            for (var i = 0, len = responses.length; i < len; i++) {
+            for (let i = 0, len = responses.length; i < len; i++) {
               self.errors.push({
                 href: '#',
-                message: 'responses[i].message'
+                message: responses[i].message
               });
             }
             self.isProcessing = false;

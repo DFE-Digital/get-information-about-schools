@@ -9,16 +9,6 @@
     font-size: 14px;
   }
 
-  //.lower-pagination & {
-  //  p {
-  //    margin-top: em(20, 16);
-  //  }
-  //
-  //  .pagination-links {
-  //    top: em(20, 16);
-  //  }
-  //}
-
   p {
     float: left;
     margin-top: 0;
@@ -81,5 +71,8 @@
       outline: none;
     }
   }
+}
 
+.show-all {
+  margin-left: govuk-spacing(2);
 }

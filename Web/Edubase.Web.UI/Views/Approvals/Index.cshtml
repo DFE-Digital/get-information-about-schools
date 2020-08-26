@@ -27,7 +27,7 @@
 
 <div v-show="Object.keys(apiBork).length> 0" class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-xl">Sorry, something went wrong</h1>
+        <h1 class="govuk-heading-xl">Sorry something went wrong.</h1>
         <p>Please try again later.</p>
         <p>A report of the error has been sent to our technical team.</p>
 
@@ -95,17 +95,20 @@
                             of {{currentCount}}
                         </p>
                         <ul class="pagination-links">
-                            <li v-if="currentPage > 0  && totalPages > 1"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)" aria-label="Previous page">Previous</a></li>
+                            <li v-if="currentPage > 0  && totalPages > 1"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)" aria-label="Previous page">Previous</a>
+                            </li>
 
                             <li v-if="totalPages > 1" v-for="index in visiblePagination">
                                 <a v-show="(index + slicePage - 1) < currentPage" href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index + slicePage - 1)" :aria-label="'Page ' + (index + slicePage)">{{ index + slicePage }}</a>
-                                <span v-show="(index + slicePage - 1) === currentPage && index < totalPages" class="numeric-pagination go-nowhere" aria-current="true" :aria-label="'Page ' + (index + slicePage) + ', current page'">{{ index + slicePage }}</span>
-                                <a v-show="(index + slicePage - 1) > currentPage && index < totalPages" href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index + slicePage - 1)" :aria-label="'Page ' + (index + slicePage)">{{ index + slicePage }}</a>
+                                <span v-show="(index + slicePage - 1) === currentPage" class="numeric-pagination go-nowhere" aria-current="true" :aria-label="'Page ' + (index + slicePage) + ', current page'">{{ index + slicePage }}</span>
+                                <a v-show="(index + slicePage - 1) > currentPage" href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index + slicePage - 1)" :aria-label="'Page ' + (index + slicePage)">{{ index + slicePage }}</a>
                             </li>
 
-                            <li v-if="currentPage +1 < totalPages && totalPages > 1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)" aria-label="Next page">Next</a></li>
+                            <li v-if="currentPage +1 < totalPages && totalPages > 1">
+                                <a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)" aria-label="Next page">Next</a>
+                            </li>
 
-                            <li v-if="totalPages > 1"><a href="#" class="pagination-next" style="margin-left:5px;" v-on:click.prevent="showAll()">Show all</a></li>
+                            <li v-if="totalPages > 1"><a href="#" class="show-all" v-on:click.prevent="showAll()">Show all</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -176,6 +179,7 @@
                             </li>
 
                             <li v-if="currentPage +1 < totalPages && totalPages > 1"><a href="#" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)" aria-label="Next page">Next</a></li>
+                            <li v-if="totalPages > 1"><a href="#" class="show-all" v-on:click.prevent="showAll()">Show all</a></li>
                         </ul>
                     </nav>
                 </div>
