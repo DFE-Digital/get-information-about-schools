@@ -102,7 +102,7 @@
                                     <a v-show="(index + slicePage) > currentPage" href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index + slicePage)" :aria-label="'Page ' + (index + slicePage + 1)">{{ index + slicePage + 1 }}</a>
                                 </li>
                                 <li v-if="currentPage < pages.length -1"><a href="javascript:" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)" aria-label="Next page">Next</a></li>
-                                <li v-if="pages.length > 1"><a href="javascript:" class="pagination-next" style="margin-left:5px;" v-on:click.prevent="showAll()" aria-label="Show all pages">Show all</a></li>
+                                <li v-if="pages.length > 1"><a href="javascript:" class="show-all"  v-on:click.prevent="showAll()" aria-label="Show all pages">Show all</a></li>
                             </ul>
                         </nav>
                     </div>
@@ -159,6 +159,7 @@
                                     <a v-show="(index + slicePage) > currentPage" href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index + slicePage)" :aria-label="'Page ' + (index + slicePage + 1)">{{ index + slicePage + 1 }}</a>
                                 </li>
                                 <li v-if="currentPage < pages.length -1"><a href="javascript:" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)" aria-label="Next page">Next</a></li>
+                                <li v-if="pages.length > 1"><a href="javascript:" class="show-all"  v-on:click.prevent="showAll()" aria-label="Show all pages">Show all</a></li>
                             </ul>
                         </nav>
                     </div>
