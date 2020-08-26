@@ -62,10 +62,6 @@
         }
       }
     }
-
-    //.govuk-table__body .govuk-table__cell {
-    //  padding-right: 10px;
-    //}
   }
 
   @include govuk-media-query($until: desktop) {
@@ -211,5 +207,12 @@
   [data-label="Suggested by"],
   [data-label="Request type"] {
     word-break: break-word;
+  }
+}
+
+.independent-search-results {
+  .govuk-table__header,
+  .govuk-table__cell {
+    @include govuk-font(14);
   }
 }

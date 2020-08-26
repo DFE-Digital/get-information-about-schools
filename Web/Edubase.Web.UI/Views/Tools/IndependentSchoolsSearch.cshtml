@@ -1,24 +1,37 @@
 @using VM = Edubase.Web.UI.Models.Tools.IndSchoolsSearchViewModel;
 @model VM
 @{
-    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "View independent schools’ significant dates");
-    ViewBag.bodyClasses = "";
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "View independent schools' significant dates");
+    ViewBag.bodyClasses = "create-edit";
+    ViewBag.SiteSection = "tools";
 }
 
-<div class="breadcrumbs">
-    <ol>
-        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
-        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-    </ol>
-</div>
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
 <div class="independent-sigdates-search">
 
-    <div class="grid-row">
-        <div class="column-full">
-            <h1 class="heading-xlarge">View independent schools' significant dates</h1>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-xl">View independent schools' significant dates</h1>
             <p>
                 Use this tool to view independent schools' &lsquo;Next general action
                 required&rsquo; or &lsquo;Next action required by welfare&rsquo; date.
@@ -29,28 +42,36 @@
 
     @using (Html.BeginRouteForm("IndSchSearch", FormMethod.Get, new { @class = "has-typeahead" }))
     {
-        <div class="grid-row">
-            <div class="column-full">
-                <h3 class="heading-medium">Select the action you're interested in</h3>
-                <div class="form-group inline @Html.ValidationCssClassFor(x => x.Mode)">
-                    <fieldset>
-                        <legend class="visually-hidden">Select the action you're interested in</legend>
-                        @Html.ValidationMessageFor(x => x.Mode)
-                        @Html.GiasRadioFor(x => x.Mode, VM.SpecifierDateOfActionGeneral, "Next general action required")
-                        @Html.GiasRadioFor(x => x.Mode, VM.SpecifierDateOfActionWelfare, "Next action required by welfare")
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <h3 class="govuk-heading-m">Select the action you're interested in</h3>
+                <div class="govuk-form-group inline @Html.ValidationCssClassFor(x => x.Mode)">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-visually-hidden">Select the action you're interested in</legend>
+                        @Html.ValidationMessageFor(x => x.Mode, null, new { @class = "govuk-error-message" })
+                        <div class="govuk-radios govuk-radios--inline">
+                            <div class="govuk-radios__item">
+                                @Html.GiasRadioFor(x => x.Mode, VM.SpecifierDateOfActionGeneral, "Next general action required", null, new { @class = "govuk-radios__input"})
+                            </div>
+                            <div class="govuk-radios__item">
+                                @Html.GiasRadioFor(x => x.Mode, VM.SpecifierDateOfActionWelfare, "Next action required by welfare", null, new { @class = "govuk-radios__input"})
+                            </div>
+                        </div>
+
+
                 </fieldset>
             </div>
         </div>
-        <div class="column-full">
-            <h2 class="heading-medium">Select local authorities</h2>
-            <div class="form-group @Html.ValidationCssClassFor(x => x.SelectedLocalAuthorityIds)">
-                @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Select a predefined set or individually add local authorities", new { @class = "form-label", @for = "SelectedLocalAuthoritySetId" })
-                @Html.DropDownListFor(x => x.SelectedLocalAuthoritySetId, Model.LocalAuthoritySetSelectList, "Custom", new { @class = "form-control form-control-1-2 push-half--right push-half--bottom" })
+        <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-m">Select local authorities</h2>
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SelectedLocalAuthorityIds)">
+                @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Select a predefined set or individually add local authorities", new { @class = "govuk-label", @for = "SelectedLocalAuthoritySetId" })
+                @Html.DropDownListFor(x => x.SelectedLocalAuthoritySetId, Model.LocalAuthoritySetSelectList, "Custom", new { @class = "govuk-select" })
                 @Html.RouteLink("View predefined sets", "PredefinedLASets", null, new { @class = "inline-button" })
             </div>
 
-            <div class="form-group form-control-1-2">
-                @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Add local authorities", new { @class = "visuallyhidden", @for = "LocalAuthorityToAdd" })
+            <div class="govuk-form-group">
+                @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Add local authorities", new { @class = "govuk-visually-hidden", @for = "LocalAuthorityToAdd" })
                 <div id="la-id-target" class="la-id-target form-control">
                     @foreach (var id in Model.SelectedLocalAuthorityIds)
                     {
@@ -63,26 +84,30 @@
                         }
                     }
                     <div class="floating-text-field-wrap">
-                        <input class="floating-text-field form-control-3-4" id="LocalAuthorityToAdd" autocomplete="off" />
+                        <input class="govuk-input govuk-input--width-20 floating-text-field" id="LocalAuthorityToAdd" autocomplete="off" />
                     </div>
                 </div>
                 <button class="link-button font-xsmall hidden" name="@VM.BindAliasForActionName" value="@VM.ActionSaveSet" id="set-saver">Save as set</button>
             </div>
         </div>
-        <div class="column-two-thirds @Html.ValidationCssClass("date-range")">
-            <h2 class="heading-medium">Date range</h2>
+            <div class="govuk-grid-column-three-quarters">
+                <h2 class="govuk-heading-m">Date range</h2>
+            </div>
+            <div class="govuk-form-group @Html.ValidationCssClass("date-range")">
             @Html.ValidationMessage("date-range")
-            <div class="form-group date-group-wrap">
-                @Html.EditorFor(x => x.MinDate, new { title = "From (optional)" })
+            <div class="govuk-grid-column-one-third-from-desktop">
+                @Html.EditorFor(x => x.MinDate, new { title = "From (optional)", fieldsetClassName = "edit-date-fieldset" })
             </div>
 
-            <div class="form-group date-group-wrap">
-                @Html.EditorFor(x => x.MaxDate, new { title = "To (optional)" })
+            <div class="govuk-grid-column-one-third-from-desktop">
+                @Html.EditorFor(x => x.MaxDate, new { title = "To (optional)", fieldsetClassName = "edit-date-fieldset" })
             </div>
 
-            <div class="form-group push--top">
-                <button type="submit" name="@VM.BindAliasForActionName" class="button" value="@VM.ActionSearch">Continue</button>
-                @Html.ActionLink("Cancel", "Index", "Tools", null, new { @class = "button button-secondary" })
+            <div class="govuk-grid-column-full">
+                <div class="button-row govuk-!-padding-top-8">
+                    <button type="submit" name="@VM.BindAliasForActionName" class="govuk-button" value="@VM.ActionSearch">Continue</button>
+                    @Html.ActionLink("Cancel", "Index", "Tools", null, new { @class = "govuk-button govuk-button--secondary", data_module = "govuk-button" })
+                </div>
             </div>
         </div>
     </div>
@@ -91,7 +116,6 @@
 </div>
 
 @section ViewScripts{
-    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
     <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
     <script nonce="@Html.ScriptNonce()">
         window.localAuthorities = @Html.Json(Model.LocalAuthorities);
