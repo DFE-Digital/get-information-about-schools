@@ -1,4 +1,4 @@
-﻿@model EstablishmentDetailViewModel
+@model EstablishmentDetailViewModel
 @{
     var p = Model.DisplayPolicy.IEBTDetail;
 }
@@ -10,74 +10,74 @@
     }
 
     <div class="detail-summary">
-        @if (p.Notes)
+        @if (Model.DisplayPolicy.IEBTDetail.Notes && p.Notes)
         {
             <h2 class="heading-small">Notes</h2>
             <div>@(Model.Establishment.IEBTModel.Notes ?? "Not recorded")</div>
         }
 
-        @if (p.Associations)
+        @if (Model.DisplayPolicy.IEBTDetail.Associations && p.Associations)
         {
             <h2 class="heading-small">Associations</h2>
             <div>@(Model.Establishment.IEBTModel.Associations ?? "Not recorded")</div>
         }
 
         <dl>
-            @if (p.DateOfTheLastBridgeVisit)
+            @if (Model.DisplayPolicy.IEBTDetail.DateOfTheLastBridgeVisit && p.DateOfTheLastBridgeVisit)
             {
                 <dt>Date of the last Bridge visit:</dt>
                 <dd>@(Model.Establishment.IEBTModel.DateOfTheLastBridgeVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
             }
 
-            @if (p.DateOfLastOfstedVisit)
+            @if (Model.DisplayPolicy.IEBTDetail.DateOfLastOfstedVisit && p.DateOfLastOfstedVisit)
             {
                 <dt>Date of last Ofsted visit:</dt>
                 <dd>@(Model.Establishment.IEBTModel.DateOfLastOfstedVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
             }
 
-            @if (p.DateOfTheLastISIVisit)
+            @if (Model.DisplayPolicy.IEBTDetail.DateOfTheLastISIVisit && p.DateOfTheLastISIVisit)
             {
                 <dt>Date of last ISI visit:</dt>
                 <dd>@(Model.Establishment.IEBTModel.DateOfTheLastISIVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
             }
 
-            @if (p.DateOfTheLastWelfareVisit)
+            @if (Model.DisplayPolicy.IEBTDetail.DateOfTheLastWelfareVisit && p.DateOfTheLastWelfareVisit)
             {
                 <dt>Date of last welfare visit:</dt>
                 <dd>@(Model.Establishment.IEBTModel.DateOfTheLastWelfareVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
             }
 
-            @if (p.DateOfTheLastFPVisit)
+            @if (Model.DisplayPolicy.IEBTDetail.DateOfTheLastFPVisit && p.DateOfTheLastFPVisit)
             {
                 <dt>Date of last FP visit:</dt>
                 <dd>@(Model.Establishment.IEBTModel.DateOfTheLastFPVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
             }
 
-            @if (p.DateOfTheLastSISVisit)
+            @if (Model.DisplayPolicy.IEBTDetail.DateOfTheLastSISVisit && p.DateOfTheLastSISVisit)
             {
                 <dt>Date of last SIS visit:</dt>
                 <dd>@(Model.Establishment.IEBTModel.DateOfTheLastSISVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
             }
 
-            @if (p.NextOfstedVisit)
+            @if (Model.DisplayPolicy.IEBTDetail.NextOfstedVisit && p.NextOfstedVisit)
             {
                 <dt>Next Ofsted visit:</dt>
                 <dd>@(Model.Establishment.IEBTModel.NextOfstedVisit?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
             }
 
-            @if (p.NextGeneralActionRequired)
+            @if (Model.DisplayPolicy.IEBTDetail.NextGeneralActionRequired && p.NextGeneralActionRequired)
             {
                 <dt>Next general action required:</dt>
                 <dd>@(Model.Establishment.IEBTModel.NextGeneralActionRequired?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
             }
 
-            @if (p.NextActionRequiredByWEL)
+            @if (Model.DisplayPolicy.IEBTDetail.NextActionRequiredByWEL && p.NextActionRequiredByWEL)
             {
                 <dt>Next action required by WEL:</dt>
                 <dd>@(Model.Establishment.IEBTModel.NextActionRequiredByWEL?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
             }
 
-            @if (p.NextActionRequiredByFP)
+            @if (Model.DisplayPolicy.IEBTDetail.NextActionRequiredByFP && p.NextActionRequiredByFP)
             {
                 <dt>Next action required by FP:</dt>
                 <dd>@(Model.Establishment.IEBTModel.NextActionRequiredByFP?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
@@ -91,19 +91,19 @@
                 <dd>@Model.InspectorateName</dd>
             }
 
-            @if (p.IndependentSchoolTypeId)
+            @if (Model.DisplayPolicy.IEBTDetail.IndependentSchoolTypeId && p.IndependentSchoolTypeId)
             {
                 <dt>Independent school type:</dt>
                 <dd>@Model.IndependentSchoolTypeName</dd>
             }
 
-            @if (p.CharityOrganisation)
+            @if (Model.DisplayPolicy.IEBTDetail.CharityOrganisation && p.CharityOrganisation)
             {
                 <dt>Charity organisation:</dt>
                 <dd>@(Model.Establishment.IEBTModel.CharityOrganisation ?? "Not recorded")</dd>
             }
 
-            @if (p.CharityRegistrationNumber)
+            @if (Model.DisplayPolicy.IEBTDetail.CharityRegistrationNumber && p.CharityRegistrationNumber)
             {
                 <dt>Charity registration number:</dt>
                 <dd>@(Model.Establishment.IEBTModel.CharityRegistrationNumber?.ToString() ?? "Not recorded")</dd>
@@ -111,19 +111,19 @@
         </dl>
 
         <dl>
-            @if (p.TotalNumberOfFullTimePupils)
+            @if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfFullTimePupils && p.TotalNumberOfFullTimePupils)
             {
                 <dt>Total number of full time pupils:</dt>
                 <dd>@(Model.Establishment.IEBTModel.TotalNumberOfFullTimePupils?.ToString() ?? "Not recorded")</dd>
             }
 
-            @if (p.TotalNumberOfPartTimePupils)
+            @if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfPartTimePupils && p.TotalNumberOfPartTimePupils)
             {
                 <dt>Total number of part time pupils:</dt>
                 <dd>@(Model.Establishment.IEBTModel.TotalNumberOfPartTimePupils?.ToString() ?? "Not recorded")</dd>
             }
 
-            @if (p.TotalNumberOfPupilsOfCompulsorySchoolAge)
+            @if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfPupilsOfCompulsorySchoolAge && p.TotalNumberOfPupilsOfCompulsorySchoolAge)
             {
                 <dt>Total number of pupils of compulsory school age:</dt>
                 <dd>@(Model.Establishment.IEBTModel.TotalNumberOfPupilsOfCompulsorySchoolAge?.ToString() ?? "Not recorded")</dd>
@@ -141,7 +141,7 @@
                 <dd>@(Model.Establishment.SENNoStat?.ToString() ?? "Not recorded")</dd>
             }
 
-            @if (p.TotalNumberOfPupilsInPublicCare)
+            @if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfPupilsInPublicCare && p.TotalNumberOfPupilsInPublicCare)
             {
                 <dt>Total number of pupils in public care:</dt>
                 <dd>@(Model.Establishment.IEBTModel.TotalNumberOfPupilsInPublicCare?.ToString() ?? "Not recorded")</dd>
@@ -149,37 +149,37 @@
         </dl>
 
         <dl>
-            @if (p.PTBoysAged2AndUnder)
+            @if (Model.DisplayPolicy.IEBTDetail.PTBoysAged2AndUnder && p.PTBoysAged2AndUnder)
             {
                 <dt>PT boys (aged 2 and under):</dt>
                 <dd>@(Model.Establishment.IEBTModel.PTBoysAged2AndUnder?.ToString() ?? "Not recorded")</dd>
             }
 
-            @if (p.PTBoysAged3)
+            @if (Model.DisplayPolicy.IEBTDetail.PTBoysAged3 && p.PTBoysAged3)
             {
                 <dt>PT boys (aged 3):</dt>
                 <dd>@(Model.Establishment.IEBTModel.PTBoysAged3?.ToString() ?? "Not recorded")</dd>
             }
 
-            @if (p.PTBoysAged4A)
+            @if (Model.DisplayPolicy.IEBTDetail.PTBoysAged4A && p.PTBoysAged4A)
             {
                 <dt>PT boys (aged 4a):</dt>
                 <dd>@(Model.Establishment.IEBTModel.PTBoysAged4A?.ToString() ?? "Not recorded")</dd>
             }
 
-            @if (p.PTBoysAged4B)
+            @if (Model.DisplayPolicy.IEBTDetail.PTBoysAged4B && p.PTBoysAged4B)
             {
                 <dt>PT boys (aged 4b):</dt>
                 <dd>@(Model.Establishment.IEBTModel.PTBoysAged4B?.ToString() ?? "Not recorded")</dd>
             }
 
-            @if (p.PTBoysAged4C)
+            @if (Model.DisplayPolicy.IEBTDetail.PTBoysAged4C && p.PTBoysAged4C)
             {
                 <dt>PT boys (aged 4c):</dt>
                 <dd>@(Model.Establishment.IEBTModel.PTBoysAged4C?.ToString() ?? "Not recorded")</dd>
             }
 
-            @if (p.TotalNumberOfBoysInBoardingSchools)
+            @if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfBoysInBoardingSchools && p.TotalNumberOfBoysInBoardingSchools)
             {
                 <dt>Total number of boys in boarding schools:</dt>
                 <dd> @(Model.Establishment.IEBTModel.TotalNumberOfBoysInBoardingSchools?.ToString() ?? "Not recorded")</dd>
@@ -187,53 +187,68 @@
         </dl>
 
         <dl>
-            @if (p.PTGirlsAged2AndUnder)
+            @if (Model.DisplayPolicy.IEBTDetail.PTGirlsAged2AndUnder && p.PTGirlsAged2AndUnder)
             {
                 <dt>PT girls (aged 2 and under):</dt>
                 <dd>@(Model.Establishment.IEBTModel.PTGirlsAged2AndUnder?.ToString() ?? "Not recorded")</dd>
             }
 
-            @if (p.PTGirlsAged3)
+            @if (Model.DisplayPolicy.IEBTDetail.PTGirlsAged3 && p.PTGirlsAged3)
             {
                 <dt>PT girls (aged 3):</dt>
                 <dd>@(Model.Establishment.IEBTModel.PTGirlsAged3?.ToString() ?? "Not recorded")</dd>
             }
 
-            @if (p.PTGirlsAged4A)
+            @if (Model.DisplayPolicy.IEBTDetail.PTGirlsAged4A && p.PTGirlsAged4A)
             {
                 <dt>PT girls (aged 4a):</dt>
                 <dd>@(Model.Establishment.IEBTModel.PTGirlsAged4A?.ToString() ?? "Not recorded")</dd>
             }
 
-            @if (p.PTGirlsAged4B)
+            @if (Model.DisplayPolicy.IEBTDetail.PTGirlsAged4B && p.PTGirlsAged4B)
             {
                 <dt>PT girls (aged 4b):</dt>
                 <dd>@(Model.Establishment.IEBTModel.PTGirlsAged4B?.ToString() ?? "Not recorded")</dd>
             }
 
-            @if (p.PTGirlsAged4C)
+            @if (Model.DisplayPolicy.IEBTDetail.PTGirlsAged4C && p.PTGirlsAged4C)
             {
                 <dt>PT girls (aged 4c):</dt>
                 <dd>@(Model.Establishment.IEBTModel.PTGirlsAged4C?.ToString() ?? "Not recorded")</dd>
             }
 
-            @if (p.TotalNumberOfGirlsInBoardingSchools)
+            @if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfGirlsInBoardingSchools && p.TotalNumberOfGirlsInBoardingSchools)
             {
                 <dt>Total number of girls in boarding schools:</dt>
                 <dd>@(Model.Establishment.IEBTModel.TotalNumberOfGirlsInBoardingSchools?.ToString() ?? "Not recorded")</dd>
             }
         </dl>
 
+        @if (Model.DisplayPolicy.IEBTDetail.TotalFTTeachersTutors || Model.DisplayPolicy.IEBTDetail.TotalPTTeachersTutors)
+        {
+            <dl>
+                @if (p.TotalFTTeachersTutors)
+                {
+                    <dt>Total number of full time teachers or tutors:</dt>
+                    <dd>@(Model.Establishment.IEBTModel.TotalFTTeachersTutors?.ToString() ?? "Not recorded")</dd>
+                }
 
+                @if (p.TotalPTTeachersTutors)
+                {
+                    <dt>Total number of part time teachers or tutors:</dt>
+                    <dd>@(Model.Establishment.IEBTModel.TotalPTTeachersTutors?.ToString() ?? "Not recorded")</dd>
+                }
+            </dl>
+        }
 
         <dl>
-            @if (p.TotalNumberOfFullTimeStaff)
+            @if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfFullTimeStaff && p.TotalNumberOfFullTimeStaff)
             {
                 <dt>Total number of full time staff:</dt>
                 <dd>@(Model.Establishment.IEBTModel.TotalNumberOfFullTimeStaff?.ToString() ?? "Not recorded")</dd>
             }
 
-            @if (p.TotalNumberOfPartTimeStaff)
+            @if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfPartTimeStaff && p.TotalNumberOfPartTimeStaff)
             {
                 <dt>Total number of part time staff:</dt>
                 <dd>@(Model.Establishment.IEBTModel.TotalNumberOfPartTimeStaff?.ToString() ?? "Not recorded")</dd>
@@ -241,25 +256,25 @@
         </dl>
 
         <dl>
-            @if (p.LowestAnnualRateForDayPupils)
+            @if (Model.DisplayPolicy.IEBTDetail.LowestAnnualRateForDayPupils && p.LowestAnnualRateForDayPupils)
             {
                 <dt>Lowest annual rate for day pupils:</dt>
                 <dd>@(Model.Establishment.IEBTModel.LowestAnnualRateForDayPupils?.ToString() ?? "Not recorded")</dd>
             }
 
-            @if (p.HighestAnnualRateForDayPupils)
+            @if (Model.DisplayPolicy.IEBTDetail.HighestAnnualRateForDayPupils && p.HighestAnnualRateForDayPupils)
             {
                 <dt>Highest annual rate for day pupils:</dt>
                 <dd>@(Model.Establishment.IEBTModel.HighestAnnualRateForDayPupils?.ToString() ?? "Not recorded")</dd>
             }
 
-            @if (p.LowestAnnualRateForBoardingPupils)
+            @if (Model.DisplayPolicy.IEBTDetail.LowestAnnualRateForBoardingPupils && p.LowestAnnualRateForBoardingPupils)
             {
                 <dt>Lowest annual rate for boarding pupils:</dt>
                 <dd>@(Model.Establishment.IEBTModel.LowestAnnualRateForBoardingPupils?.ToString() ?? "Not recorded")</dd>
             }
 
-            @if (p.HighestAnnualRateForBoardingPupils)
+            @if (Model.DisplayPolicy.IEBTDetail.HighestAnnualRateForBoardingPupils && p.HighestAnnualRateForBoardingPupils)
             {
                 <dt>Highest annual rate for boarding pupils:</dt>
                 <dd>@(Model.Establishment.IEBTModel.HighestAnnualRateForBoardingPupils?.ToString() ?? "Not recorded")</dd>
@@ -268,9 +283,11 @@
         </dl>
 
         <dl>
-            <dt>Boarding establishment:</dt>
-            <dd>@(Model.BoardingEstabName ?? "Not recorded")</dd>
-
+            @if (Model.DisplayPolicy.IEBTDetail.BoardingEstablishmentId)
+            {
+                <dt>Boarding establishment:</dt>
+                <dd>@(Model.BoardingEstabName ?? "Not recorded")</dd>
+            }
 
             @if (Model.DisplayPolicy.ProprietorName)
             {
@@ -291,7 +308,7 @@
                 <dd>@(Model.Establishment.IEBTModel.ProprietorsTelephoneNumber ?? "Not recorded")</dd>
             }
 
-            @if (p.ProprietorsFaxNumber)
+            @if (Model.DisplayPolicy.IEBTDetail.ProprietorsFaxNumber && p.ProprietorsFaxNumber)
             {
                 <dt>Proprietor's fax:</dt>
                 <dd>@(Model.Establishment.IEBTModel.ProprietorsFaxNumber ?? "Not recorded")</dd>
@@ -331,7 +348,7 @@
                 <dd>@(Model.Establishment.IEBTModel.ChairOfProprietorsBodyTelephoneNumber ?? "Not recorded")</dd>
             }
 
-            @if (p.ChairOfProprietorsBodyFaxNumber)
+            @if (Model.DisplayPolicy.IEBTDetail.ChairOfProprietorsBodyFaxNumber && p.ChairOfProprietorsBodyFaxNumber)
             {
                 <dt>Chair of proprietor's fax:</dt>
                 <dd>@(Model.Establishment.IEBTModel.ChairOfProprietorsBodyFaxNumber ?? "Not recorded")</dd>
@@ -350,7 +367,7 @@
                 <dd>@(Model.Establishment.IEBTModel.ChairOfProprietorsBodyPreferredJobTitle ?? "Not recorded")</dd>
             }
 
-            @if (p.AccommodationChangedId)
+            @if (Model.DisplayPolicy.IEBTDetail.AccommodationChangedId && p.AccommodationChangedId)
             {
                 <dt>Accommodation changed:</dt>
                 <dd>@(Model.AccommodationChangedName ?? "Not recorded")</dd>

@@ -234,3 +234,9 @@ $path: $images-path;
         white-space: inherit;
     }
 }
+
+#content a {
+  @include media( mobile) {
+    word-break: break-word;
+  }
+}

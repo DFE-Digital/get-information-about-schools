@@ -1,4 +1,4 @@
-﻿var mergersApp = new Vue({
+var mergersApp = new Vue({
     el: '#mergers-app',
     data: {
         localAuthorities: localAuthorities,
@@ -166,6 +166,17 @@
                 return [this.leadEstab, this.linkedEstab1, this.linkedEstab2, this.linkedEstab3];
             }
             return [this.amalgamatedEstab1, this.amalgamatedEstab2, this.amalgamatedEstab3, this.amalgamatedEstab4];
+        },
+        leadEstablishmentType: function() {
+          var self = this;
+          if (self.validMergeUrns && self.mergerType === 'merger') {
+            var leadType = self.mergerEstabs.filter(function (estab) {
+              return estab.urn === Number(self.leadEstab);
+            })[0].typeName;
+
+            return leadType;
+          }
+          return '';
         }
     },
     methods: {

@@ -1,4 +1,4 @@
-﻿@model Edubase.Web.UI.Areas.Governors.Models.SharedGovernorViewModel
+@model Edubase.Web.UI.Areas.Governors.Models.SharedGovernorViewModel
 @{
     bool disableStartDate;
     if (!bool.TryParse(ViewData["disableStartDate"]?.ToString(), out disableStartDate))
@@ -13,15 +13,15 @@
             @if (Model.MultiSelect)
             {
                 <div class="multiple-choice">
-                    @Html.CheckBoxFor(x => x.Selected, GetCheckboxAttributes(Model.PreExisting, "panel-trigger", @Html.NameFor(x => x.Selected), "#expand-"+Model.Id))
+                    @Html.CheckBoxFor(x => x.Selected, GetCheckboxAttributes(Model.PreExisting, "panel-trigger", @Html.NameFor(x => x.Selected), "#expand-" + Model.Id))
                     <label for="@Html.NameFor(x => x.Selected)">@Model.FullName</label>
                 </div>
             }
             else
             {
                 <div class="multiple-choice">
-                    @Html.RadioButton(Model.Id.ToString(), Model.Id, Model.Selected,
-                    new {Name = "SelectedGovernorId", @class = "panel-trigger", @id = "gov-"+Model.Id, data_toggle_panel = "#expand-"+Model.Id })
+                    @Html.RadioButton("SelectedGovernorId", Model.Id, Model.Selected,
+                        new { Name = "SelectedGovernorId", @class = "panel-trigger", @id = "gov-" + Model.Id, data_toggle_panel = "#expand-" + Model.Id })
                     <label for="gov-@Model.Id">@Model.FullName</label>
                 </div>
             }
@@ -70,7 +70,13 @@
                     @Html.EditorFor(x => x.AppointmentEndDate, new { @readonly = Model.PreExisting })
                 </div>
             }
-
+            else
+            {
+                <div class="hidden">
+                    @Html.EditorFor(x => x.AppointmentStartDate)
+                    @Html.EditorFor(x => x.AppointmentEndDate)
+                </div>
+            }
 
         </div>
     </div>

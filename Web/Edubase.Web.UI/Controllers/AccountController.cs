@@ -15,10 +15,13 @@ using Edubase.Web.UI.Areas.Establishments.Models.Search;
 using Edubase.Services.Exceptions;
 using Edubase.Data.Repositories;
 using Edubase.Services.Texuna;
+using Edubase.Web.UI.Models.Search;
+using Microsoft.Ajax.Utilities;
 
 namespace Edubase.Web.UI.Controllers
 {
     using ET = eLookupEstablishmentType;
+    using ES = eLookupEstablishmentStatus;
     [RoutePrefix("Account")]
     public class AccountController : Controller
     {
@@ -93,9 +96,20 @@ namespace Edubase.Web.UI.Controllers
             }
             else if (principal.IsInRole(EdubaseRoles.IEBT))
             {
-                var searchQueryString = string.Join("&", new[] { ET.NonmaintainedSpecialSchool, ET.BritishSchoolsOverseas, ET.CityTechnologyCollege, ET.OtherIndependentSchool }
-                    .Select(x => $"{EstablishmentSearchViewModel.BIND_ALIAS_TYPEIDS}={(int)x}"));
-                return Redirect(string.Concat(Url.RouteUrl("EstabSearch"), "?", searchQueryString));
+                var selectedTab = string.Concat("SelectedTab=", SearchViewModel.Tab.Establishments);
+                var searchType = string.Concat("SearchType=", eSearchType.EstablishmentAll);
+                var estTypes = string.Join("&", new[] { ET.NonmaintainedSpecialSchool, ET.BritishSchoolsOverseas, ET.CityTechnologyCollege, ET.OtherIndependentSchool, ET.OnlineProvider }.Select(x => $"{EstablishmentSearchViewModel.BIND_ALIAS_TYPEIDS}={(int)x}"));
+                var estStatuses = string.Join("&", new[] { ES.Open, ES.OpenButProposedToClose }.Select(x => $"{EstablishmentSearchViewModel.BIND_ALIAS_STATUSIDS}={(int) x}"));
+                return Redirect(string.Concat(
+                    Url.RouteUrl("EstabSearch"),
+                    "?",
+                    selectedTab,
+                    "&",
+                    searchType,
+                    "&",
+                    estTypes,
+                    "&",
+                    estStatuses));
             }
 
             return RedirectToAction("Index", "Search");

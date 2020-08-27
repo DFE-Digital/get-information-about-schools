@@ -15,6 +15,9 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         [JsonProperty("dateOfLastOfstedVisit")]
         public T DateOfLastOfstedVisit { get; set; }
 
+        [JsonProperty("boardingEstablishmentId")]
+        public T BoardingEstablishmentId { get; set; }
+
         [JsonProperty("dateOfTheLastBridgeVisit")]
         public T DateOfTheLastBridgeVisit { get; set; }
 
@@ -182,6 +185,12 @@ namespace Edubase.Services.Establishments.DisplayPolicies
 
         [JsonProperty("PTGirlsAged2AndUnder")]
         public T PTGirlsAged2AndUnder { get; set; }
+
+        [JsonProperty("totalFTTeachersTutors")]
+        public T TotalFTTeachersTutors { get; set; }
+
+        [JsonProperty("totalPTTeachersTutors")]
+        public T TotalPTTeachersTutors { get; set; }
 
         #endregion
     }

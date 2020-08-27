@@ -337,6 +337,7 @@
     <Compile Include="Controllers\FaqController.cs" />
     <Compile Include="Controllers\GlossaryController.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\ValidateEstablishmentJoinedDateModel.cs" />
+    <Compile Include="Controllers\GuidanceController.cs" />
     <Compile Include="Controllers\SitemapController.cs" />
     <Compile Include="Filters\ModelStateTransfer.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
@@ -533,6 +534,29 @@
     <Content Include="Assets\Scripts\Views\group-details.js" />
     <Content Include="Assets\Scripts\Views\gias-search.js" />
     <Content Include="Assets\Scripts\Elements\search-utils.js" />
+    <Content Include="public\assets\images\guidance\childrens_centre_details_page.png" />
+    <Content Include="public\assets\images\guidance\childrens_centre_details_page_mobile.png" />
+    <Content Include="public\assets\images\guidance\childrens_centre_links_page.png" />
+    <Content Include="public\assets\images\guidance\childrens_centre_links_page_mobile.png" />
+    <Content Include="public\assets\images\guidance\childrens_centre_tools_page.png" />
+    <Content Include="public\assets\images\guidance\childrens_centre_tools_page_ccgroup.png" />
+    <Content Include="public\assets\images\guidance\childrens_centre_tools_page_ccgroup_mobile.png" />
+    <Content Include="public\assets\images\guidance\childrens_centre_tools_page_mobile.png" />
+    <Content Include="public\assets\images\guidance\establishment_bulk_update.png" />
+    <Content Include="public\assets\images\guidance\establishment_bulk_update_mobile.png" />
+    <Content Include="public\assets\images\guidance\establishment_bulk_update_multicolumn.png" />
+    <Content Include="public\assets\images\guidance\establishment_bulk_update_save_spreadsheet.png" />
+    <Content Include="public\assets\images\guidance\establishment_bulk_update_spreadsheet.png" />
+    <Content Include="public\assets\images\guidance\federation_tools_page.png" />
+    <Content Include="public\assets\images\guidance\federation_tools_page_mobile.png" />
+    <Content Include="public\assets\images\guidance\general_user_guide_changes.png" />
+    <Content Include="public\assets\images\guidance\general_user_guide_changes_mobile.png" />
+    <Content Include="public\assets\images\guidance\general_user_guide_establishment_details.png" />
+    <Content Include="public\assets\images\guidance\general_user_guide_establishment_details_mobile.png" />
+    <Content Include="public\assets\images\guidance\general_user_guide_group_edit.png" />
+    <Content Include="public\assets\images\guidance\general_user_guide_group_edit_mobile.png" />
+    <Content Include="public\assets\images\guidance\general_user_guide_search_filters.png" />
+    <Content Include="public\assets\images\guidance\general_user_guide_search_filters_mobile.png" />
     <Content Include="public\assets\images\icons\arrows-vert.png" />
     <Content Include="public\assets\images\icons\black-transparent-X.png" />
     <Content Include="public\assets\images\icons\icon-burger.png" />
@@ -920,6 +944,7 @@
     <Content Include="Areas\Groups\Views\Group\GovernanceChangeHistory.cshtml" />
     <Content Include="App_Code\helpers.cshtml" />
     <Content Include="Assets\Sass\elements\forms\_form-multiple-choice.scss" />
+    <Content Include="Assets\Sass\views\_guidance.scss" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
@@ -1009,7 +1034,7 @@
     <Content Include="Areas\Establishments\Views\Establishment\EditLinks.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\AddEditLink.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressViewModel.cshtml" />
-    <Content Include="Views\Home\Guidance.cshtml" />
+    <Content Include="Views\Guidance\Index.cshtml" />
     <Content Include="Views\Home\Cookies.cshtml" />
     <Content Include="Views\Home\News.cshtml" />
     <Content Include="Views\Shared\FullErrorDetail.cshtml" />
@@ -1041,6 +1066,12 @@
     <Content Include="Views\Home\NewsArchive.cshtml" />
     <Content Include="Views\Home\Responsibilities.cshtml" />
     <Content Include="Views\Downloads\ReadyToDownload.cshtml" />
+    <Content Include="Views\Home\Privacy.cshtml" />
+    <Content Include="Views\Guidance\General.cshtml" />
+    <Content Include="Views\Guidance\EstablishmentBulkUpdate.cshtml" />
+    <Content Include="Views\Guidance\ChildrensCentre.cshtml" />
+    <Content Include="Views\Guidance\Federation.cshtml" />
+    <Content Include="Views\Guidance\Governance.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>

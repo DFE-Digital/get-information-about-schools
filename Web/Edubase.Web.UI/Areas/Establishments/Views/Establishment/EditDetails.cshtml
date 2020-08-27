@@ -1,4 +1,6 @@
 @using System.Linq
+@using Edubase.Common
+@using Edubase.Services.Enums
 @using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
 @model ViewModel
 @{
@@ -36,13 +38,16 @@
                     @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel" })
 
 
-                    <div class="form-group first @Html.ValidationCssClassFor(x => x.Name)">
-                        <label class="form-label" for="Name">
-                            School / College name
-                        </label>
-                        @Html.ValidationMessageFor(x => x.Name)
-                        @Html.TextBoxFor(x => x.Name, new { maxlength = 120, @class = "form-control" })
-                    </div>
+                <div class="form-group first @Html.ValidationCssClassFor(x => x.Name)">
+
+                    @{ var establishmentTitle = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Name of setting" : "School / College name"; }
+                    <label class="form-label" for="Name">
+                        @establishmentTitle
+                    </label>
+
+                    @Html.ValidationMessageFor(x => x.Name)
+                    @Html.TextBoxFor(x => x.Name, new { maxlength = 120, @class = "form-control" })
+                </div>
 
                     <div class="form-group">
                         <label class="form-label" for="urn">Unique Reference Number (URN)</label>
@@ -151,7 +156,7 @@
                         <div class="form-group @Html.ValidationCssClassFor(x => x.HeadEmailAddress)">
                             <label class="form-label" for="HeadEmailAddress">
                                 @(Model.EditPolicy.HeadteacherLabel) email address
-                                <a href="#help-text-headteacher-email-address" class="tooltip-link js-tooltip"><span class="visuallyhidden">Help with headteacher/principal email address field</span></a>
+                                <a href="#help-text-headteacher-email-address" class="tooltip-link js-tooltip"><span class="visuallyhidden">Help with @(Model.EditPolicy.HeadteacherLabel.ToLower()) email address field</span></a>
                             </label>
                             @Html.ValidationMessageFor(x => x.HeadEmailAddress)
                             @Html.TextBoxFor(x => x.HeadEmailAddress, new { maxlength = 120, @class = "form-control", placeholder = "email address", aria_describedby = "help-text-headteacher-email-address" })
@@ -166,7 +171,7 @@
                                 <legend class="bold">
                                     Age range
                                 </legend>
-                                @Html.ValidationMessageFor(x=>x.StatutoryLowAge)
+                                @Html.ValidationMessageFor(x => x.StatutoryLowAge)
                                 @Html.ValidationMessageFor(x => x.StatutoryHighAge)
 
                                 <span class="inline-form-control">
@@ -189,7 +194,7 @@
                     {
                         <div class="form-group @Html.ValidationCssClassFor(x => x.TypeId)">
                             <label class="form-label" for="TypeId">Establishment type</label>
-                            @Html.ValidationMessageFor(x=>x.TypeId)
+                            @Html.ValidationMessageFor(x => x.TypeId)
                             @Html.DropDownListFor(x => x.TypeId, Model.EstablishmentTypes, "", new { @class = "form-control" })
                         </div>
                     }
@@ -316,7 +321,7 @@
                         </div>
                     }
 
-                    @if (Model.EditPolicy.ProprietorName)
+                    @if (Model.EditPolicy.ProprietorName && !Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider))
                     {
                         <div class="form-group">
                             <label for="proprietor" class="form-label">Proprietor's name</label>
@@ -403,7 +408,7 @@
 
                     @if (Model.EditPolicy.OpenDate)
                     {
-                        @Html.EditorFor(x => x.OpenDate, new { title = "Open date" })
+                        @Html.EditorFor(x => x.OpenDate, new { title = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider)? "Accreditation date":"Open date" })
                     }
 
                     @if (Model.EditPolicy.ReasonEstablishmentOpenedId)
@@ -417,7 +422,7 @@
 
                     @if (Model.EditPolicy.CloseDate)
                     {
-                        @Html.EditorFor(x => x.CloseDate, new { title = "Close date" })
+                        @Html.EditorFor(x => x.CloseDate, new { title = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider)? "Accreditation date ended":"Close date" })
                     }
 
                     @if (Model.EditPolicy.ReasonEstablishmentClosedId)
@@ -567,7 +572,7 @@
                                 <a href="#help-text-email-address" class="tooltip-link js-tooltip"><span class="visuallyhidden">Help with email address field</span></a>
                             </label>
                             @Html.ValidationMessageFor(x => x.Contact_EmailAddress)
-                            @Html.TextBoxFor(x => x.Contact_EmailAddress, new {@class = "form-control", aria_describedby="help-text-email-address"})
+                            @Html.TextBoxFor(x => x.Contact_EmailAddress, new { @class = "form-control", aria_describedby = "help-text-email-address" })
                         </div>
                     }
 
@@ -579,7 +584,7 @@
                                 <a href="#help-text-email-address" class="tooltip-link js-tooltip"><span class="visuallyhidden">Help with alternative email address field</span></a>
                             </label>
                             @Html.ValidationMessageFor(x => x.ContactAlt_EmailAddress)
-                            @Html.TextBoxFor(x => x.ContactAlt_EmailAddress, new { @class = "form-control", aria_describedby="help-text-email-address"})
+                            @Html.TextBoxFor(x => x.ContactAlt_EmailAddress, new { @class = "form-control", aria_describedby = "help-text-email-address" })
                         </div>
                     }
 
@@ -588,15 +593,15 @@
                     {
                         <div class="form-group sen-provision">
                             <fieldset>
-                            <legend class="bold-small">Type of SEN provision</legend>
-                            @foreach (var item in Model.SENProvisions)
-                            {
-                                <div class="multiple-choice">
-                                    <input id="@nameof(Model.SENProvisions)_@item.Id" type="checkbox" name="@nameof(Model.SENIds)"
-                                    value="@item.Id" @Html.Conditional(Model.SENIds != null && Model.SENIds.Contains(item.Id), "checked")/>
-                                    <label for="@nameof(Model.SENProvisions)_@item.Id">@item.Name</label>
-                                </div>
-                            }
+                                <legend class="bold-small">Type of SEN provision</legend>
+                                @foreach (var item in Model.SENProvisions)
+                                {
+                                    <div class="multiple-choice">
+                                        <input id="@nameof(Model.SENProvisions)_@item.Id" type="checkbox" name="@nameof(Model.SENIds)"
+                                               value="@item.Id" @Html.Conditional(Model.SENIds != null && Model.SENIds.Contains(item.Id), "checked") />
+                                        <label for="@nameof(Model.SENProvisions)_@item.Id">@item.Name</label>
+                                    </div>
+                                }
                             </fieldset>
                         </div>
                         @* Flags the SEN list has been included in the request - DO NOT REMOVE. *@
@@ -745,6 +750,45 @@
                         @Html.EditorFor(x => x.BSODateOfNextInspectionVisit, new { title = "BSO: Next inspection visit" })
                     }
 
+
+                    <!-- Online Provider content -->
+                    @if (Model.EditPolicy.QualityAssuranceBodyNameId)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.QualityAssuranceBodyNameId)">
+                            @Html.LabelFor(x => x.QualityAssuranceBodyNameId)
+                            @Html.ValidationMessageFor(x => x.QualityAssuranceBodyNameId)
+                            @Html.DropDownListFor(x => x.QualityAssuranceBodyNameId, Model.QualityAssuranceBodyName, "", new { @class = "form-control" })
+                        </div>
+                    }
+
+                    @if (Model.EditPolicy.QualityAssuranceBodyReport)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.QualityAssuranceBodyReport)">
+                            @Html.LabelFor(x => x.QualityAssuranceBodyReport)
+                            @Html.ValidationMessageFor(x => x.QualityAssuranceBodyReport)
+                            @Html.TextBoxFor(x => x.QualityAssuranceBodyReport, new { @class = "form-control" })
+                        </div>
+                    }
+
+                    @if (Model.EditPolicy.CompaniesHouseNumber)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.CompaniesHouseNumber)">
+                            @Html.LabelFor(x => x.CompaniesHouseNumber)
+                            @Html.ValidationMessageFor(x => x.CompaniesHouseNumber)
+                            @Html.TextBoxFor(x => x.CompaniesHouseNumber, new { @class = "form-control" })
+                        </div>
+                    }
+
+                    @if (Model.EditPolicy.EstablishmentAccreditedId)
+                    {
+                        <div class="form-group @Html.ValidationCssClassFor(x => x.EstablishmentAccreditedId)">
+                            @Html.LabelFor(x => x.EstablishmentAccreditedId)
+                            @Html.ValidationMessageFor(x => x.EstablishmentAccreditedId)
+                            @Html.DropDownListFor(x => x.EstablishmentAccreditedId, Model.EstablishmentAccredited, "", new { @class = "form-control" })
+                        </div>
+                    }
+                    <!-- Online Provider content -->
+
                     <button id="save-submit-bottom" type="submit" class="button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, "details")">Save details</button>
                     @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel" })
 
@@ -873,6 +917,6 @@
 
     <div id="help-text-headteacher-email-address">
         <h3 class="heading-small">@(Model.EditPolicy.HeadteacherLabel) email address</h3>
-        <p>The email address added to this field will be treated as personal and will not be visible to the public or included in responses to Freedom of Information Requests. The address will be used for official Departmental use where direct communication with the headteacher/ principal is required.</p>
+        <p>The email address added to this field will be treated as personal and will not be visible to the public or included in responses to Freedom of Information requests. The address will be used for official Departmental use where direct communication with the @(Model.EditPolicy.HeadteacherLabel.ToLower()) is required.</p>
     </div>
 </div>
