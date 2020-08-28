@@ -4,7 +4,7 @@
 @model EstablishmentDetailViewModel
 
 <div id="school-dashboard" class="tab-content">
-    @if (Model.UserCanEdit)
+    @if (Model.UserCanEdit && Model.TabEditPolicy.Details)
     {
         @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary" })
     }
@@ -398,7 +398,7 @@
 
     </div>
 
-    @if (Model.UserCanEdit)
+    @if (Model.UserCanEdit && Model.TabEditPolicy.Details)
     {
         @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary" })
     }

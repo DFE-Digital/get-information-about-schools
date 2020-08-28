@@ -42,6 +42,7 @@ namespace Edubase.Web.UI.Models
         public EstablishmentDisplayEditPolicy DisplayPolicy { get; set; }
 
         public TabDisplayPolicy TabDisplayPolicy { get; set; }
+        public TabEditPolicy TabEditPolicy { get; set; }
 
         public enum GovRole
         {

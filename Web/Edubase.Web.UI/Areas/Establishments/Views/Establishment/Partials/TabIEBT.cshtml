@@ -4,7 +4,7 @@
 }
 
 <div id="school-iebt" class="tab-content">
-    @if (Model.UserCanEdit)
+    @if (Model.UserCanEdit && Model.TabEditPolicy.IEBT)
     {
             @Html.ActionLink("Edit IEBT", "EditIEBT", "Establishment", null,new { @class = "button button-secondary" })
     }
@@ -376,7 +376,7 @@
 
     </div>
 
-@if (Model.UserCanEdit)
+@if (Model.UserCanEdit && Model.TabEditPolicy.IEBT)
 {
     <div class="button-row">
         @Html.ActionLink("Edit IEBT", "EditIEBT", "Establishment", null,new { @class = "button button-secondary" })
