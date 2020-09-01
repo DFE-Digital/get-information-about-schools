@@ -1,4 +1,4 @@
-﻿@model EditGroupCorporateContactViewModel
+@model EditGroupCorporateContactViewModel
 
 @{
     ViewBag.hideLogo = true;
@@ -13,9 +13,9 @@
         {
             @Html.HiddenFor(m => m.GroupUId)
             <div class="edit-governor">
-                <div class="form-group">
+                <div class="form-group @Html.ValidationCssClassFor(x => x.CorporateContact)">
                     @Html.LabelFor(x => x.CorporateContact, new { @class = "form-label" })
-
+                    @Html.ValidationMessageFor(x => x.CorporateContact)
                     @Html.TextBoxFor(x => x.CorporateContact, new { rows = "6", cols = "60", @class = "form-control", maxlength = 15 })
                 </div>
 

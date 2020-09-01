@@ -1,11 +1,13 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.UI;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Areas.Governors.Models.Validators;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
+using Edubase.Web.UI.Validation;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -61,15 +63,20 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     var group = groupResult.ReturnValue;
                     group.CorporateContact = model.CorporateContact;
                     var updatedGroup = new SaveGroupDto(group);
-                    await _groupWriteService.SaveAsync(updatedGroup, User);
+                    var validation = await _groupWriteService.SaveAsync(updatedGroup, User);
+                    if (!validation.HasErrors)
+                    {
+                        var url = Url.RouteUrl("GroupDetails", new { id = model.GroupUId, saved = true });
+                        return Redirect($"{url}#governance");
+                    }
+                    validation.ApplyToModelState(ControllerContext);
                 }
-
-
-                var url = Url.RouteUrl("GroupDetails", new { id = model.GroupUId, saved = true });
-                return Redirect($"{url}#governance");
             }
-
-            result.EduBaseAddToModelState(ModelState, null);
+            else
+            {
+                result.EduBaseAddToModelState(ModelState, null);
+            }
+            
             await _layoutHelper.PopulateLayoutProperties(model, null, model.GroupUId, User);
             return View(model);
         }
