@@ -4,29 +4,43 @@
     ViewBag.bodyClasses = "independent-sigdates-edit";
 }
 
-<div class="breadcrumbs">
-    <ol>
-        <li>@Html.RouteLink("Home", "Homepage")</li>
-        <li>@Html.RouteLink("Tools", "Tools")</li>
-        <li>@Html.RouteLink("View independent schools' significant dates", "IndSchSearch")</li>
-    </ol>
-</div>
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("View independent schools' significant dates","IndependentSchoolsSearch","Tools", new {area = ""},new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-<div class="grid-row">
-    <div class="column-full results-heading">
-        <h1 class="heading-xlarge">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full results-heading">
+        <h1 class="govuk-heading-xl">
             @Model.PageTitle
         </h1>
     </div>
 </div>
-<div class="grid-row">
+<div class="govuk-grid-row">
 
 
         @using (Html.BeginRouteForm((Model.IsNewEntity ? "CreatePredefinedLASetPost" : "EditPredefinedLASetPost"), new { Model.Id }, FormMethod.Post, new { @class = "has-typeahead" }))
         {
-            <div class="column-two-thirds">
+            <div class="govuk-grid-column-two-thirds">
                 @Html.HiddenFor(x => x.Id)
                 @Html.HiddenFor(x=>x.Referrer)
                 @Html.HiddenFor(x=>x.Mode)
@@ -37,12 +51,12 @@
                 <div class="modal-content" id="warning-modal-content-0" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
                     <a href="#" id="warning-exit-overlay-0" class="modal-exit js-allow-exit">Close</a>
                     <div class="modal-inner">
-                        <h3 class="heading-large" tabindex="0" id="modal-label">A set already exists with this name.</h3>
+                        <h3 class="govuk-heading-l" tabindex="0" id="modal-label">A set already exists with this name.</h3>
                         <p tabindex="0" id="model-desc">Saving with this name will overwrite the existing set.</p>
                     </div>
                     <div class="button-row">
-                        <a href="#" class="button" id="overlay-proceed-0">Ok</a>
-                        <a href="#" class="button button-secondary js-allow-exit" id="overlay-cancel-0">Cancel</a>
+                        <a href="#" class="govuk-button" id="overlay-proceed-0">Ok</a>
+                        <a href="#" class="govuk-button govuk-button--secondary js-allow-exit" id="overlay-cancel-0">Cancel</a>
                     </div>
                 </div>
 
@@ -50,14 +64,14 @@
                 <input type="hidden" id="@nameof(Model.SuppressWarning)" name="@nameof(Model.SuppressWarning)" value="false" />
                 }
 
-                <div class="form-group @Html.ValidationCssClassFor(x => x.Title)">
-                    @Html.LabelFor(x => x.Title, "Name", new { @class = "form-label" })
-                    @Html.ValidationMessageFor(x => x.Title)
-                    @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Title)">
+                    @Html.LabelFor(x => x.Title, "Name", new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.Title, null, new { @class = "govuk-error-message"})
+                    @Html.TextBoxFor(x => x.Title, new { @class = "govuk-input" })
                 </div>
 
-                <div class="form-group push--bottom @Html.ValidationCssClassFor(x => x.SelectedLocalAuthorityIds)">
-                    @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Local authorities", new { @id=nameof(Model.SelectedLocalAuthorityIds), @class = "form-label", @for="LocalAuthorityToAdd" })
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SelectedLocalAuthorityIds)">
+                    @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Local authorities", new { @id=nameof(Model.SelectedLocalAuthorityIds), @class = "govuk-label", @for="LocalAuthorityToAdd" })
                     @Html.ValidationMessageFor(x => x.SelectedLocalAuthorityIds)
 
 
@@ -67,17 +81,17 @@
                         {
                             var la = Model.LocalAuthorities.First(x => x.Id == id);
                             <input value="@la.Name" type="hidden" class="form-control user-selected-la" />
-                            <button type="submit" class="link-button font-small remove-suggest-la" name="LocalAuthorityToRemove" data-remove="la-@id" value="@id">@la.Name</button>
+                            <button type="submit" class="link-button remove-suggest-la" name="LocalAuthorityToRemove" data-remove="la-@id" value="@id">@la.Name</button>
                             <input type="hidden" name="d" value="@id" id="la-@id">
                         }
                         <div class="floating-text-field-wrap">
-                            <input class="floating-text-field" id="LocalAuthorityToAdd" autocomplete="off" />
+                            <input class="govuk-input floating-text-field" id="LocalAuthorityToAdd" autocomplete="off" />
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <button id="edit-submit" class="button" type="submit">Save set</button>
-                    @Html.ActionLink("Cancel", "IndependentSchoolsSearch", "Tools", new { @class = "button button-secondary" })
+                <div class="button-row govuk-!-padding-top-4">
+                    <button id="edit-submit" class="govuk-button" type="submit">Save set</button>
+                    @Html.ActionLink("Cancel", "IndependentSchoolsSearch", "Tools", new { @class = "govuk-button govuk-button--secondary", data_module = "govuk-button" })
                 </div>
             </div>
         }
@@ -87,8 +101,6 @@
 </div>
 
 @section ViewScripts{
-    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
-    <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
     <script nonce="@Html.ScriptNonce()">
         window.localAuthorities = @Html.Json(Model.LocalAuthorities);
 
@@ -109,21 +121,15 @@
                 function (e) {
                     console.log('proceed');
                     canProceed = true;
-                    $("#SuppressWarning").val(true);
+                    $('#SuppressWarning').val(true);
                     $('#edit-submit').click();
                 });
-
-
         }());
 
-        DfE.Views.schoolSearch.init();
 
-        $(document).ready(function() {
-            // Focus on main CTA when modal is available
-            if ($('#warning-modal-content-0').length > 0) {
-                $('#overlay-proceed-0').focus();
-            }
-        });
+        if ($('#warning-modal-content-0').length > 0) {
+            $('#overlay-proceed-0').focus();
+        }
     </script>
-
+<script src="/public/assets/scripts/build/independent-schools-sig-search.js"></script>
 }

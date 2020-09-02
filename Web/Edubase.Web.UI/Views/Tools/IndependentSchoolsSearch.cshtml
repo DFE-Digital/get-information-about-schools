@@ -62,17 +62,17 @@
                 </fieldset>
             </div>
         </div>
-        <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-two-thirds">
             <h2 class="govuk-heading-m">Select local authorities</h2>
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SelectedLocalAuthorityIds)">
                 @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Select a predefined set or individually add local authorities", new { @class = "govuk-label", @for = "SelectedLocalAuthoritySetId" })
-                @Html.DropDownListFor(x => x.SelectedLocalAuthoritySetId, Model.LocalAuthoritySetSelectList, "Custom", new { @class = "govuk-select" })
-                @Html.RouteLink("View predefined sets", "PredefinedLASets", null, new { @class = "inline-button" })
+                @Html.DropDownListFor(x => x.SelectedLocalAuthoritySetId, Model.LocalAuthoritySetSelectList, "Custom", new { @class = "govuk-select govuk-input--width-20" })
+                @Html.RouteLink("View predefined sets", "PredefinedLASets", null, new { @class = "inline-button predefined-sets" })
             </div>
 
             <div class="govuk-form-group">
                 @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Add local authorities", new { @class = "govuk-visually-hidden", @for = "LocalAuthorityToAdd" })
-                <div id="la-id-target" class="la-id-target form-control">
+                <div id="la-id-target" class="la-id-target independent-search-field-wrap">
                     @foreach (var id in Model.SelectedLocalAuthorityIds)
                     {
                         var la = Model.LocalAuthorities.SingleOrDefault(x => x.Id == id);
@@ -83,11 +83,11 @@
                             <input type="hidden" name="@VM.BindAliasForSelectedLocalAuthorityIds" value="@id" id="la-@id">
                         }
                     }
-                    <div class="floating-text-field-wrap">
+                    <div class="floating-text-field-wrap ">
                         <input class="govuk-input govuk-input--width-20 floating-text-field" id="LocalAuthorityToAdd" autocomplete="off" />
                     </div>
                 </div>
-                <button class="link-button font-xsmall hidden" name="@VM.BindAliasForActionName" value="@VM.ActionSaveSet" id="set-saver">Save as set</button>
+                <button class="gias-link-button gias-link-button-s hidden" name="@VM.BindAliasForActionName" value="@VM.ActionSaveSet" id="set-saver">Save as set</button>
             </div>
         </div>
             <div class="govuk-grid-column-three-quarters">
@@ -116,69 +116,10 @@
 </div>
 
 @section ViewScripts{
-    <script src="/public/dfeagiledevops-typeahead/dist/typeahead.bundle.min.js"></script>
     <script nonce="@Html.ScriptNonce()">
         window.localAuthorities = @Html.Json(Model.LocalAuthorities);
         window.sets = @Html.Json(Model.LocalAuthoritySets);
 
-        (function() {
-            var laButton =
-                '<a id="button-la-{0}" class="link-button font-small remove-suggest-la" data-remove="la-{0}">{1}</a>';
-            var laInput = '<input name="d" value="{0}" id="la-{0}" type="hidden">';
-
-            var changeFn = function() {
-                $('#la-id-target').find('[name="d"], .remove-suggest-la').remove();
-                var val = this.value;
-                if (val.length === 0) {
-                    return;
-                }
-                var selectedSet = window.sets.filter(function(set) {
-                    if (val === set.id) {
-                        return set;
-                    }
-                })[0];
-
-                var buttons = '';
-                var inputs = '';
-                $(selectedSet.localAuthorityIds).each(function() {
-                    var laId = this;
-                    var laName = window.localAuthorities.filter(function(la) {
-                        if (laId == la.id) {
-                            return true;
-                        }
-                    })[0].name;
-
-                    var input = laInput.replace(/\{0\}/g, laId);
-                    var button = laButton.replace('{1}', laName).replace(/\{0\}/g, laId);
-
-                    buttons += button;
-                    inputs += input;
-                });
-                $('#la-id-target').prepend(buttons);
-                $('#la-id-target').append(inputs);
-
-            };
-
-            if ($('#la-id-target').find('.remove-suggest-la').length > 0) {
-                $('#set-saver').removeClass('hidden');
-            }
-            $(window).on('laSelected',
-                function(e) {
-                    if (e.count === 0) {
-                        $('#set-saver').addClass('hidden');
-                    } else {
-                        $('#set-saver').removeClass('hidden');
-                    }
-                    $('#SelectedLocalAuthoritySetId').off('change');
-                    $('#SelectedLocalAuthoritySetId').val($('#SelectedLocalAuthoritySetId option:first').val());
-                    $('#SelectedLocalAuthoritySetId').on('change', changeFn);
-                });
-
-            $('#SelectedLocalAuthoritySetId').on('change',changeFn);
-
-            DfE.Views.schoolSearch.init();
-
-        }());
-
     </script>
+    <script src="/public/assets/scripts/build/independent-schools-sig-search.js"></script>
 }

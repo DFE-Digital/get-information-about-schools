@@ -5,20 +5,35 @@
 }
 
 
-
-<div class="grid-row">
-    <div class="column-full results-heading">
-        <div class="breadcrumbs">
-            <ol>
-                <li>@Html.RouteLink("Home", "Homepage")</li>
-                <li>@Html.RouteLink("Tools", "Tools")</li>
-                <li>@Html.RouteLink("View independent schools' significant dates", "IndSchSearch")</li>
-            </ol>
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("View independent schools' significant dates","IndependentSchoolsSearch","Tools", new {area = ""},new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
         </div>
-        <h1 class="heading-xlarge">
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">
             Predefined local authority sets
         </h1>
-        <a class="download-link" @*style="margin-right: 0;position: absolute;right: 15px;top: 14px;"*@ href="@Url.RouteUrl("CreatePredefinedLASet")">Create new set</a>
+        <p class="establishment-data-download">
+            <a class="download-link"  href="@Url.RouteUrl("CreatePredefinedLASet")">Create new set</a>
+        </p>
     </div>
 </div>
 
@@ -32,27 +47,27 @@
             @Html.Partial("_GenericPaginationV2", Model.Results)
         </div>
     }
-    <table class="edubase-table">
-        <caption class="visuallyhidden">Predefined local authority sets</caption>
-        <thead>
-            <tr>
-                <th scope="col">Set name</th>
-                <th scope="col">Local authorities</th>
-                <th scope="col"><span class="visuallyhidden">Action links</span></th>
+    <table class="govuk-table gias-table ">
+        <caption class="govuk-visually-hidden">Predefined local authority sets</caption>
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">Set name</th>
+                <th scope="col" class="govuk-table__header">Local authorities</th>
+                <th scope="col" class="govuk-table__header"><span class="visuallyhidden">Action links</span></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="govuk-table__body">
             @foreach (var item in Model.Results.Items)
             {
-                <tr>
-                    <td data-label="Set name">@Html.Field(item.Title)</td>
-                    <td data-label="Local authorities">@Html.Field(Model.GetLANames(item.Ids))</td>
-                    <td nowrap="">
+                <tr class="govuk-table__row">
+                    <td data-label="Set name" class="govuk-table__cell">@Html.Field(item.Title)</td>
+                    <td data-label="Local authorities" class="govuk-table__cell">@Html.Field(Model.GetLANames(item.Ids))</td>
+                    <td nowrap="" class="govuk-table__cell">
                         @using (Html.BeginRouteForm("DeletePredefinedLASet", new { id = item.RowKey }, FormMethod.Post))
                         {
                             <a href="@Url.RouteUrl("IndSchSearch")?@QueryStringHelper.ToQueryString("d", item.Ids)&SelectedLocalAuthoritySetId=@item.RowKey" class="action-link" aria-label="Select set">Select</a>
                             @Html.RouteLink("Edit", "EditPredefinedLASet", new { id = item.RowKey }, new { @class = "action-link", @aria_link = "Edit set" })
-                            <button class="link-button font-xxsmall action-link" type="submit" id="delete" aria-label="Remove set">Remove</button>
+                            <button class="gias-link-button gias-link-button-s action-link" type="submit" id="delete" aria-label="Remove set">Remove</button>
                         }
                     </td>
                 </tr>
@@ -74,28 +89,6 @@ else
 
 
 @section ViewScripts{
-
-    <script nonce="@Html.ScriptNonce()">
-        (function () {
-            var dismissed = false;
-            var form = $('form');
-            form.on('submit', function (e) {
-                if (!dismissed) {
-                    e.preventDefault();
-                    $(this).okCancel({
-                        ok: function () {
-                            dismissed = true;
-                            $(e.target).find("#delete").click();
-                        },
-                        immediate: true,
-                        idPrefix: 'close-continue',
-                        title: 'Are you sure you want to remove this set?',
-                        content: 'You will no longer be able to filter by this set.'
-                    });
-                    $(this).removeData('okCancel');
-                }
-            });
-        }());
-    </script>
+    <script src="/public/assets/scripts/build/independent-schools-predefinedsets.js"></script>
 
 }

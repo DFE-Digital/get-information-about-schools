@@ -8,6 +8,7 @@
   margin-bottom: 3px;
   float: left;
   position: relative;
+  border: 0;
 
 
   &:hover,
@@ -68,6 +69,12 @@
       box-shadow: none;
     }
   }
+
+
+}
+
+.independent-search-field-wrap {
+  max-width: 53ex;
 }
 
 .no-js-remove {

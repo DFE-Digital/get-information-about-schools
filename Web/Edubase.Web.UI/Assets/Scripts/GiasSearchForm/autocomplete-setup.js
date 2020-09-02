@@ -60,86 +60,90 @@ const autocompleteSetup = (function(){
      ################### */
     const schoolNameInput = document.getElementById('TextSearchModel_Text');
 
-    const schoolNameAutoSuggest = new Awesomplete(schoolNameInput, {
-      replace: function(suggestion) {
-        this.input.value = suggestion;
-      },
-      data: function(item, input) {
-        return {
-          label: item.text,
-          value: item.urn
+    if (schoolNameInput) {
+      const schoolNameAutoSuggest = new Awesomplete(schoolNameInput, {
+        replace: function (suggestion) {
+          this.input.value = suggestion;
+        },
+        data: function (item, input) {
+          return {
+            label: item.text,
+            value: item.urn
+          }
+        },
+        filter: function (item, input) {
+          return true;
+        },
+        sort: false,
+        autoFirst: true
+      });
+
+      schoolNameInput.addEventListener('keyup', function (e) {
+        const code = (e.keyCode || e.which);
+        let shouldGetResults = true;
+        clearInterval(intervalId);
+        if (code === 37 || code === 38 || code === 39 || code === 40 || code === 27 || code === 13) {
+          shouldGetResults = false;
         }
-      },
-      filter: function(item, input) {
-        return true;
-      },
-      sort: false,
-      autoFirst: true
-    });
 
-    schoolNameInput.addEventListener('keyup', function (e) {
-      const code = (e.keyCode || e.which);
-      let shouldGetResults = true;
-      clearInterval(intervalId);
-      if (code === 37 || code === 38 || code === 39 || code === 40 || code === 27 || code === 13) {
-        shouldGetResults = false;
-      }
+        if (this.value.length > 2 && shouldGetResults) {
+          getNameSuggestions(this.value, schoolNameAutoSuggest, false);
+        }
+      });
 
-      if (this.value.length > 2 && shouldGetResults) {
-        getNameSuggestions(this.value, schoolNameAutoSuggest,false);
-      }
-    });
+      schoolNameInput.addEventListener('awesomplete-select', function (ev) {
+        document.getElementById('estab-autosuggest-value').value = ev.text.value;
+      });
 
-    schoolNameInput.addEventListener('awesomplete-select', function (ev) {
-      document.getElementById('estab-autosuggest-value').value = ev.text.value;
-    });
+      schoolNameInput.addEventListener('focus', function () {
+        openSuggestionsOnFocus(schoolNameAutoSuggest);
+      });
 
-    schoolNameInput.addEventListener('focus', function () {
-      openSuggestionsOnFocus(schoolNameAutoSuggest);
-    });
-
+    }
     /* ###################
         MAT name
      ################### */
     const matNameInput = document.getElementById('GroupSearchModel_Text');
 
-    const matNameAutoSuggest = new Awesomplete(matNameInput, {
-      replace: function(suggestion) {
-        this.input.value = suggestion;
-      },
-      data: function(item, input) {
-        return {
-          label: item.text,
-          value: item.urn
+    if (matNameInput) {
+      const matNameAutoSuggest = new Awesomplete(matNameInput, {
+        replace: function (suggestion) {
+          this.input.value = suggestion;
+        },
+        data: function (item, input) {
+          return {
+            label: item.text,
+            value: item.urn
+          }
+        },
+        filter: function (item, input) {
+          return true;
+        },
+        sort: false,
+        autoFirst: true
+      });
+
+      matNameInput.addEventListener('keyup', function (e) {
+        const code = (e.keyCode || e.which);
+        let shouldGetResults = true;
+        clearInterval(intervalId);
+        if (code === 37 || code === 38 || code === 39 || code === 40 || code === 27 || code === 13) {
+          shouldGetResults = false;
         }
-      },
-      filter: function(item, input) {
-        return true;
-      },
-      sort: false,
-      autoFirst: true
-    });
 
-    matNameInput.addEventListener('keyup', function (e) {
-      const code = (e.keyCode || e.which);
-      let shouldGetResults = true;
-      clearInterval(intervalId);
-      if (code === 37 || code === 38 || code === 39 || code === 40 || code === 27 || code === 13) {
-        shouldGetResults = false;
-      }
+        if (this.value.length > 2 && shouldGetResults) {
+          getNameSuggestions(this.value, matNameAutoSuggest, true);
+        }
+      });
 
-      if (this.value.length > 2 && shouldGetResults) {
-        getNameSuggestions(this.value, matNameAutoSuggest, true);
-      }
-    });
+      matNameInput.addEventListener('awesomplete-select', function (ev) {
+        document.getElementById('TextSearchModel_AutoSuggestValue').value = ev.text.value;
+      });
 
-    matNameInput.addEventListener('awesomplete-select', function (ev) {
-      document.getElementById('TextSearchModel_AutoSuggestValue').value = ev.text.value;
-    });
-
-    matNameInput.addEventListener('focus', function () {
-      openSuggestionsOnFocus(matNameAutoSuggest);
-    });
+      matNameInput.addEventListener('focus', function () {
+        openSuggestionsOnFocus(matNameAutoSuggest);
+      });
+    }
 
     /* ###################
         School location
@@ -147,100 +151,103 @@ const autocompleteSetup = (function(){
 
     const schoolLocationInput = document.getElementById('LocationSearchModel_Text');
 
-    const schoolLocationAutoSuggest = new Awesomplete(schoolLocationInput, {
-      replace: function (suggestion) {
-        this.input.value = suggestion;
-      },
-      data: function (item, input) {
-        return {label: item.text, value: item.location}
-      },
-      filter: function () {
-        return true;
-      },
-      sort: false,
-      autoFirst: true
-    });
+    if (schoolLocationInput) {
+      const schoolLocationAutoSuggest = new Awesomplete(schoolLocationInput, {
+        replace: function (suggestion) {
+          this.input.value = suggestion;
+        },
+        data: function (item, input) {
+          return {label: item.text, value: item.location}
+        },
+        filter: function () {
+          return true;
+        },
+        sort: false,
+        autoFirst: true
+      });
 
-    schoolLocationInput.addEventListener('keyup', function (e) {
-      let shouldGetResults = true;
-      const code = (e.keyCode || e.which);
-      clearInterval(intervalId);
-      // ensure that if the key stroke should navigate the suggestions, it still works and doesn't refresh the data
-      if (code === 37 || code === 38 || code === 39 || code === 40 || code === 27 || code === 13) {
-        shouldGetResults = false;
-      }
+      schoolLocationInput.addEventListener('keyup', function (e) {
+        let shouldGetResults = true;
+        const code = (e.keyCode || e.which);
+        clearInterval(intervalId);
+        // ensure that if the key stroke should navigate the suggestions, it still works and doesn't refresh the data
+        if (code === 37 || code === 38 || code === 39 || code === 40 || code === 27 || code === 13) {
+          shouldGetResults = false;
+        }
 
-      if (this.value.length >= 2 && shouldGetResults) {
-        getLocationSuggestions(this.value, schoolLocationAutoSuggest);
-      }
-    });
+        if (this.value.length >= 2 && shouldGetResults) {
+          getLocationSuggestions(this.value, schoolLocationAutoSuggest);
+        }
+      });
 
-    schoolLocationInput.addEventListener('awesomplete-select', function (ev) {
-      document.getElementById('LocationSearchModel_AutoSuggestValue').value = ev.text.value;
-    });
+      schoolLocationInput.addEventListener('awesomplete-select', function (ev) {
+        document.getElementById('LocationSearchModel_AutoSuggestValue').value = ev.text.value;
+      });
 
-    schoolLocationInput.addEventListener('focus', function () {
-      openSuggestionsOnFocus(schoolLocationAutoSuggest);
-    });
-
+      schoolLocationInput.addEventListener('focus', function () {
+        openSuggestionsOnFocus(schoolLocationAutoSuggest);
+      });
+    }
     /* ###################
         Local authority
      ################### */
     const laInput = document.getElementById('LocalAuthorityToAdd');
-    let selectedLocalAuthorities = [];
-    const laAutoSuggest = new Awesomplete(laInput, {
-      list: window.localAuthorities,
-      data: function(item, text) {
-        return {
-          label: item.name,
-          value: item.id
+    if (laInput) {
+      let selectedLocalAuthorities = [];
+      const laAutoSuggest = new Awesomplete(laInput, {
+        list: window.localAuthorities,
+        data: function (item, text) {
+          return {
+            label: item.name,
+            value: item.id
+          }
+        },
+        sort: false,
+        autoFirst: true
+      });
+
+      $('#la-id-target').on('click', '.remove-suggest-la', function (e) {
+        e.preventDefault();
+        $('#' + $(this).text().toLowerCase().replace(/\s/g, '-')).remove();
+        $(this).remove();
+      });
+
+      $('#LocalAuthorityToAdd').on('focus', function () {
+        $('#la-id-target').addClass('focused');
+
+      }).on('blur', function () {
+        $('#la-id-target').removeClass('focused');
+
+      });
+
+      laInput.addEventListener('focus', function () {
+        openSuggestionsOnFocus(laAutoSuggest);
+      });
+
+      laInput.addEventListener('awesomplete-selectcomplete', function (e) {
+        let rmButton = `<a href="#" id="button-${e.text.value}" class="remove-suggest-la" data-remove="${e.text.value}" title="Remove ${e.text.label} local authority">${e.text.label}</a>`;
+        let hiddenField = `<input type="hidden" name="d" value="${e.text.value}" id="${e.text.label.toLowerCase().replace(/\s/g, '-')}" />`;
+
+        const buttonTarget = $('.floating-text-field-wrap');
+        const previouslySelected = $.inArray(e.text.value, selectedLocalAuthorities) > -1;
+
+        $('#searchby-la-ref').find('.warning-message').addClass('govuk-visually-hidden');
+
+        if (!previouslySelected) {
+          selectedLocalAuthorities.push(e.text.value);
+
+          //self.addedLaCount++;
+          $(rmButton).insertBefore(buttonTarget);
+          $('#la-id-target').append(hiddenField);
+        } else {
+          const button = $('#button-' + e.text.value).detach();
+
+          button.insertBefore(buttonTarget);
         }
-      },
-      sort: false,
-      autoFirst: true
-    });
 
-    $('#la-id-target').on('click', '.remove-suggest-la', function (e) {
-      e.preventDefault();
-      $('#' + $(this).text().toLowerCase().replace(/\s/g ,'-')).remove();
-      $(this).remove();
-    });
-
-    $('#LocalAuthorityToAdd').on('focus', function () {
-      $('#la-id-target').addClass('focused');
-
-    }).on('blur', function () {
-      $('#la-id-target').removeClass('focused');
-
-    });
-
-    laInput.addEventListener('focus', function (){
-      openSuggestionsOnFocus(laAutoSuggest);
-    });
-
-    laInput.addEventListener('awesomplete-selectcomplete', function (e) {
-      let rmButton = `<a href="#" id="button-${e.text.value}" class="remove-suggest-la" data-remove="${e.text.value}" title="Remove ${e.text.label} local authority">${e.text.label}</a>`;
-      let hiddenField = `<input type="hidden" name="d" value="${e.text.value}" id="${e.text.label.toLowerCase().replace(/\s/g ,'-')}" />`;
-
-      const buttonTarget = $('.floating-text-field-wrap');
-      const previouslySelected = $.inArray(e.text.value, selectedLocalAuthorities) > -1;
-
-      $('#searchby-la-ref').find('.warning-message').addClass('govuk-visually-hidden');
-
-      if (!previouslySelected) {
-        selectedLocalAuthorities.push(e.text.value);
-
-        //self.addedLaCount++;
-        $(rmButton).insertBefore(buttonTarget);
-        $('#la-id-target').append(hiddenField);
-      } else {
-        const button = $('#button-' + e.text.value).detach();
-
-        button.insertBefore(buttonTarget);
-      }
-
-      laInput.value = '';
-    });
+        laInput.value = '';
+      });
+    }
   }
 
   return { setUp };
