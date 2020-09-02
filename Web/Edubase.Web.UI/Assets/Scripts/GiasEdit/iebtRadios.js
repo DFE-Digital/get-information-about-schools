@@ -6,20 +6,20 @@ const iebtRadios = {
 
   okClick: function () {
     this.closeModal();
-    $('#SingleProprietor, #ProprietorBody').find('.form-control').val('');
+    $('#SingleProprietor, #ProprietorBody').find('.govuk-input').val('');
 
     $('#proprietor-radios').find('input').each(function () {
       $(this).data().okCancel.pause(true);
     });
 
 
-    $('#ProprietorBody, #SingleProprietor').on('change, keydown', '.form-control', function () {
+    $('#ProprietorBody, #SingleProprietor').on('change, keydown', '.govuk-input', function () {
 
       $('#proprietor-radios').find('input').each(function () {
         $(this).data().okCancel.pause();
       });
 
-      $('#ProprietorBody, #SingleProprietor').off('change, keydown', '.form-control');
+      $('#ProprietorBody, #SingleProprietor').off('change, keydown', '.govuk-input');
     });
 
     return true;
