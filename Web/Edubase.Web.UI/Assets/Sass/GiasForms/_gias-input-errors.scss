@@ -19,4 +19,12 @@
       box-shadow: none;
     }
   }
+  // LA searches
+  .la-id-target {
+    border: $govuk-border-width-form-element-error solid $govuk-error-colour;
+
+    .govuk-input {
+      border: none;
+    }
+  }
 }

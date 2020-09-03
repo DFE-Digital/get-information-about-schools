@@ -72,7 +72,7 @@
 
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SelectedLocalAuthorityIds)">
                     @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Local authorities", new { @id=nameof(Model.SelectedLocalAuthorityIds), @class = "govuk-label", @for="LocalAuthorityToAdd" })
-                    @Html.ValidationMessageFor(x => x.SelectedLocalAuthorityIds)
+                    @Html.ValidationMessageFor(x => x.SelectedLocalAuthorityIds, null, new { @class = "govuk-error-message"})
 
 
                     <div id="la-id-target" class="la-id-target form-control">
