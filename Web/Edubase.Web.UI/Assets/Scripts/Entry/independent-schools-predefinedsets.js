@@ -17,3 +17,9 @@ import GiasOkCancel from '../GiasModules/GiasModals/GiasOkCancel';
       $(this).removeData('okCancel');
     }
   });
+
+$('#la-id-target').on('click', '.remove-suggest-la', function (e) {
+  e.preventDefault();
+  $('#' + $(this).text().toLowerCase().replace(/\s/g, '-')).remove();
+  $(this).remove();
+});

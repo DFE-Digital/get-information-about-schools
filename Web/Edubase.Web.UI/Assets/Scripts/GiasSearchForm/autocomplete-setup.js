@@ -225,7 +225,7 @@ const autocompleteSetup = (function(){
       });
 
       laInput.addEventListener('awesomplete-selectcomplete', function (e) {
-        let rmButton = `<a href="#" id="button-${e.text.value}" class="remove-suggest-la" data-remove="${e.text.value}" title="Remove ${e.text.label} local authority">${e.text.label}</a>`;
+        let rmButton = `<button id="button-${e.text.value}" class="remove-suggest-la" data-remove="${e.text.value}" title="Remove ${e.text.label} local authority">${e.text.label}</a>`;
         let hiddenField = `<input type="hidden" name="d" value="${e.text.value}" id="${e.text.label.toLowerCase().replace(/\s/g, '-')}" />`;
 
         const buttonTarget = $('.floating-text-field-wrap');

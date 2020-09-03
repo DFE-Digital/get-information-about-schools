@@ -81,8 +81,8 @@
                         {
                             var la = Model.LocalAuthorities.First(x => x.Id == id);
                             <input value="@la.Name" type="hidden" class="form-control user-selected-la" />
-                            <button type="submit" class="link-button remove-suggest-la" name="LocalAuthorityToRemove" data-remove="la-@id" value="@id">@la.Name</button>
-                            <input type="hidden" name="d" value="@id" id="la-@id">
+                            <button type="submit" class="remove-suggest-la" name="LocalAuthorityToRemove" data-remove="@id" value="@id">@la.Name</button>
+                            <input type="hidden" name="d" value="@id" id="@la.Name.ToLower().Replace(" ", "-")">
                         }
                         <div class="floating-text-field-wrap">
                             <input class="govuk-input floating-text-field" id="LocalAuthorityToAdd" autocomplete="off" />
@@ -119,7 +119,6 @@
 
             $modalProceeds.on('click',
                 function (e) {
-                    console.log('proceed');
                     canProceed = true;
                     $('#SuppressWarning').val(true);
                     $('#edit-submit').click();
