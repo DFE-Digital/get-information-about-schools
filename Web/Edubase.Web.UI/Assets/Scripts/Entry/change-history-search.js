@@ -43,6 +43,7 @@ function getNameSuggestions(searchString, autocomplete, isMatSearch) {
 }
 const schoolNameInput = document.getElementById('TextSearchModel_Text');
 if (schoolNameInput) {
+  schoolNameInput.classList.remove('govuk-!-width-one-half');
   const schoolNameAutoSuggest = new Awesomplete(schoolNameInput, {
     replace: function (suggestion) {
       this.input.value = suggestion;
@@ -83,7 +84,7 @@ if (schoolNameInput) {
 }
 const matNameInput = document.getElementById('GroupSearchModel_Text');
 if (matNameInput) {
-
+  matNameInput.classList.remove('govuk-!-width-one-half');
   const matNameAutoSuggest = new Awesomplete(matNameInput, {
     replace: function (suggestion) {
       this.input.value = suggestion;
