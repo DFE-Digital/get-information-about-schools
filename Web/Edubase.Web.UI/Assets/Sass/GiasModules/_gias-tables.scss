@@ -245,6 +245,6 @@
 .independent-search-results {
   .govuk-table__header,
   .govuk-table__cell {
-    @include govuk-font(14);
+    font-size: 14px;
   }
 }
