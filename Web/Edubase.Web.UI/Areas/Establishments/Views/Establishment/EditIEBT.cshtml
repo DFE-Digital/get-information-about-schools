@@ -349,7 +349,7 @@
 
                 @if (Model.EditPolicy.IEBTDetail.AccommodationChangedId)
                 {
-                    <div class="govuk-form-group cloneable @Html.ValidationCssClassFor(x => x.AccommodationChangedId)">
+                    <div class="govuk-form-group govuk-!-padding-top-3 cloneable @Html.ValidationCssClassFor(x => x.AccommodationChangedId)">
                         @Html.LabelFor(x => x.AccommodationChangedId, null, new { @class = "govuk-label" })
                         @Html.ValidationMessageFor(x => x.AccommodationChangedId, null, new { @class = "govuk-error-message" })
                         @Html.DropDownListFor(x => x.AccommodationChangedId, Model.AccommodationChanges, "", new {@class = "govuk-select"})
