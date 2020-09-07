@@ -115,7 +115,7 @@ if (matNameInput) {
   });
 
   matNameInput.addEventListener('awesomplete-select', function (ev) {
-    document.getElementById('TextSearchModel_AutoSuggestValue').value = ev.text.value;
+    document.getElementById('GroupSearchModel_AutoSuggestValue').value = ev.text.value;
   });
 
   matNameInput.addEventListener('focus', function () {

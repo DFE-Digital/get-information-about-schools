@@ -27,6 +27,7 @@
     .options-container {
       overflow-y: hidden;
       border-right: 4px solid govuk-tint(govuk-colour('mid-grey'), 50);
+      max-height: none;
     }
   }
 

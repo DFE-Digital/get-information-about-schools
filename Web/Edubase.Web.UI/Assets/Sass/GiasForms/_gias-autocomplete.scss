@@ -57,3 +57,12 @@
     width: 100%;
   }
 }
+
+.changes-search {
+  .awesomplete {
+    @include govuk-media-query($until: tablet) {
+      width: 240px;
+    }
+    width: 400px;
+  }
+}

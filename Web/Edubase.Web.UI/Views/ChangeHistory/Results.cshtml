@@ -31,11 +31,13 @@
     <div class="govuk-grid-column-full">
         <div class="govuk-error-summary hidden" aria-labelledby="error-summary-title" role="alert" tabindex="-1" id="js-filter-error-summary">
             <h2 id="error-summary-title" class="govuk-error-summary__title">Incorrect or missing details</h2>
-            <ul class="error-summary-list">
-                <li class="date-filter-error hidden">
-                    <a href="#date-filter">Please enter the date in the format DD/MM/YYYY</a>
-                </li>
-            </ul>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    <li class="date-filter-error hidden">
+                        <a href="#date-filter" class="govuk-error-message">Please enter the date in the format DD/MM/YYYY</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
