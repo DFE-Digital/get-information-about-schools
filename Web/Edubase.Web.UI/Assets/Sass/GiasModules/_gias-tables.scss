@@ -199,6 +199,10 @@
       word-break: break-word;
     }
   }
+  .govuk-table__cell,
+  .govuk-table__header {
+    word-break: break-word;
+  }
 
   .gias-summary-list {
     @include govuk-font(14)
