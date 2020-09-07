@@ -1,32 +1,33 @@
 import GiasOkCancel from '../GiasModules/GiasModals/GiasOkCancel';
 const iebtRadios = {
-  radios: $('#proprietor-radios').find('input'),
+  radios: $('#proprietor-radios').find('.govuk-radios__input'),
 
   cloneFields: $('#cloneable-fields-container').find('.cloneable').detach(),
 
   okClick: function () {
+    const self = this;
     this.closeModal();
     $('#SingleProprietor, #ProprietorBody').find('.govuk-input').val('');
 
-    $('#proprietor-radios').find('input').each(function () {
-      $(this).data().okCancel.pause(true);
+    $('#proprietor-radios').find('.govuk-radios__input').each(function () {
+      $('#proprietor-radios').find('.govuk-radios__input').data().okCancel.pause(true);
     });
 
 
-    $('#ProprietorBody, #SingleProprietor').on('change, keydown', '.govuk-input', function () {
+    $('#ProprietorBody, #SingleProprietor').on('change, keydown', '.govuk-input, .govuk-select', function () {
 
-      $('#proprietor-radios').find('input').each(function () {
-        $(this).data().okCancel.pause();
+      $('#proprietor-radios').find('.govuk-radios__input').each(function () {
+        $('#proprietor-radios').find('.govuk-radios__input').data().okCancel.pause();
       });
 
-      $('#ProprietorBody, #SingleProprietor').off('change, keydown', '.govuk-input');
+      $('#ProprietorBody, #SingleProprietor').off('change, keydown', '.govuk-input, .govuk-select');
     });
 
     return true;
   },
   cancelClick: function () {
     this.closeModal();
-    var selectedVal = $('#proprietor-radios').find('input:checked').val();
+    const selectedVal = $('#proprietor-radios').find('.govuk-radios__input:checked').val();
 
     if (selectedVal === 'SingleProprietor') {
       $('#proprietor-type-ProprietorBody').prop('checked', true).change();
@@ -69,7 +70,7 @@ const iebtRadios = {
       }
     });
 
-    self.radios.okCancel({
+   self.radios.okCancel({
       ok: self.okClick,
       cancel: self.cancelClick,
       idPrefix: 'iebt-'

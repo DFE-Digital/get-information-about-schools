@@ -32,7 +32,7 @@ class GiasOkCancel {
   }
 
   bindEscapeKey() {
-    var self = this;
+    const self = this;
     $(document).on('keyup', function (e) {
       e = e || window.event;
       if (e.keyCode === 27) {
