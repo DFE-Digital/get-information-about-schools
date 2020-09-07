@@ -4,27 +4,35 @@
     ViewBag.pageDescription = "";
     ViewBag.pageClass = "error-page";
 }
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
 
-<div class="grid-row">
-    <div class="column-full">
-        <div class="breadcrumbs">
-            <ol>
-                <li>
-                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-                </li>
-            </ol>
+                </ol>
+            </div>
         </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
         @if (ViewBag.ExTypeName == "UsageQuotaExceededException")
         {
-            <h1 class="heading-xlarge">Usage quota exceeded</h1>
+            <h1 class="govuk-heading-xl">Usage quota exceeded</h1>
         }
         else
         {
-            <h1 class="heading-xlarge">Sorry, something went wrong</h1>
+            <h1 class="govuk-heading-xl">Sorry, something went wrong</h1>
         }
 
     </div>
-    <div class="column-two-thirds">
-        @FormatHelpers.HtmlizeNewLines(ViewBag.PublicErrorMessage)
+    <div class="govuk-grid-column-two-thirds">
+        <p>@FormatHelpers.HtmlizeNewLines(ViewBag.PublicErrorMessage)</p>
     </div>
 </div>
