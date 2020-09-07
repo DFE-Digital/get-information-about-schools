@@ -5,6 +5,7 @@ $govuk-global-styles: true;
 @import "node_modules/govuk-frontend/govuk/all";
 @import "GiasGovukOverrides/all";
 @import "GiasHelpers/gias-display";
+@import "GiasHelpers/gias-custom-padding";
 @import "GiasGlobalElements/all";
 @import "GiasModules/all";
 @import "GiasIcons/all";

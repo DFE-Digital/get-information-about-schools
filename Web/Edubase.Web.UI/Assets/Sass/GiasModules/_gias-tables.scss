@@ -243,6 +243,10 @@
 }
 
 .independent-search-results {
+  @include govuk-media-query($from: desktop) {
+    table-layout: fixed;
+  }
+
   .govuk-table__header,
   .govuk-table__cell {
     font-size: 14px;

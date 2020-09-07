@@ -62,7 +62,7 @@
                 </fieldset>
             </div>
         </div>
-        <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-grid-column-two-thirds govuk-!-padding-top-4">
             <h2 class="govuk-heading-m">Select local authorities</h2>
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SelectedLocalAuthorityIds)">
                 @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Select a predefined set or individually add local authorities", new { @class = "govuk-label", @for = "SelectedLocalAuthoritySetId" })
@@ -95,11 +95,11 @@
             </div>
             <div class="govuk-form-group @Html.ValidationCssClass("date-range")">
             @Html.ValidationMessage("date-range")
-            <div class="govuk-grid-column-one-third-from-desktop">
+            <div class="govuk-grid-column-one-third">
                 @Html.EditorFor(x => x.MinDate, new { title = "From (optional)", fieldsetClassName = "edit-date-fieldset" })
             </div>
 
-            <div class="govuk-grid-column-one-third-from-desktop">
+            <div class="govuk-grid-column-one-third gias-padding-top-2-at-mobile">
                 @Html.EditorFor(x => x.MaxDate, new { title = "To (optional)", fieldsetClassName = "edit-date-fieldset" })
             </div>
 
