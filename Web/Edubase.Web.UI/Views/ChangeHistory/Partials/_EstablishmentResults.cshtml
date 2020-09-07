@@ -46,7 +46,7 @@
                 if (tableColumn.Item3 || !Model.SingleEstablishment)
                 {
                     var toggleHide = tableColumn.Item1 == "originatorUserName" || tableColumn.Item1 == "approverUserName";
-                    <th class="govuk-table__header @(toggleHide ? "govuk-visually-hidden js-reveal-when-no-filter" : "")" scope="col">
+                    <th class="govuk-table__header @(toggleHide ? "govuk-visually-hidden js-reveal-when-no-filter" : "") cell-@tableColumn.Item1.ToLower()" scope="col">
                         <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
                         class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
                         aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
