@@ -1,3 +1,4 @@
+@using System.Runtime.ExceptionServices
 @model Edubase.Web.UI.Areas.Governors.Models.SharedGovernorViewModel
 @{
     bool disableStartDate;
@@ -56,19 +57,28 @@
             </dl>
             @if (!Model.PreExisting)
             {
-                <div id="expand-@Model.Id">
-                    <dl class="key-value-list">
-                        <dt><abbr title="Governor ID number">GID</abbr>:</dt>
-                        <dd>@Model.Id</dd>
-                        <dt>Appointed by:</dt>
-                        <dd>@Model.AppointingBodyName</dd>
-                        <dt>Date of birth:</dt>
-                        <dd>@(Model.DOB?.ToString("dd/MM/yyyy"))</dd>
-                    </dl>
+        <div id="expand-@Model.Id">
+            <dl class="key-value-list">
+                <dt><abbr title="Governor ID number">GID</abbr>:</dt>
+                <dd>@Model.Id</dd>
+                <dt>Appointed by:</dt>
+                <dd>@Model.AppointingBodyName</dd>
+                <dt>Date of birth:</dt>
+                <dd>@(Model.DOB?.ToString("dd/MM/yyyy"))</dd>
+            </dl>
 
-                    @Html.EditorFor(x => x.AppointmentStartDate, new { @readonly = Model.PreExisting || disableStartDate, ClassPrefix = "start-date" })
-                    @Html.EditorFor(x => x.AppointmentEndDate, new { @readonly = Model.PreExisting })
-                </div>
+            <div class="@Html.ValidationCssClass("StartDate,endDate")" id="StartDate,endDate">
+                @if (Html.ValidationCssClass("StartDate,endDate").ToString() == "error")
+                {
+                <span class="field-validation-error">
+                    @Html.ViewData.ModelState["StartDate,endDate"].Errors.First().ErrorMessage
+                </span>
+                }
+
+                @Html.EditorFor(x => x.AppointmentStartDate, new { @readonly = Model.PreExisting || disableStartDate, ClassPrefix = "start-date" })
+                @Html.EditorFor(x => x.AppointmentEndDate, new { @readonly = Model.PreExisting })
+            </div>
+        </div>
             }
             else
             {
