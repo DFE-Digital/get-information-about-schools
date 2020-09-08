@@ -265,13 +265,18 @@
                     <div class="form-group @Html.ValidationCssClassFor(x => x.BoardingEstablishmentId)">
                         @Html.LabelFor(x => x.BoardingEstablishmentId)
                         @Html.ValidationMessageFor(x => x.BoardingEstablishmentId)
-                        @Html.DropDownListFor(x => x.BoardingEstablishmentId, Model.BoardingEstablishment, "", new {@class = "form-control"})
+                        @Html.DropDownListFor(x => x.BoardingEstablishmentId, Model.BoardingEstablishment, "", new { @class = "form-control" })
                     </div>
                 }
 
 
-                <fieldset class="toggle-panels inline" id="proprietor-radios">
-                    <legend class="bold-legend">Proprietor</legend>
+                @if (1 == 1 || Model.EditPolicy.IEBTDetail.ProprietorTypeId)
+                {
+                <fieldset class="toggle-panels inline @Html.ValidationCssClassFor(x => x.ProprietorTypeId)" id="proprietor-radios">
+                    <legend class="bold-legend" id="@nameof(Model.EditPolicy.IEBTDetail.ProprietorTypeId)">Proprietor</legend>
+
+                    @Html.ValidationMessageFor(x => x.ProprietorTypeId)
+
                     @foreach (eProprietorType pt in Enum.GetValues(typeof(eProprietorType)))
                     {
                         if (pt.GetAttributeOfType<EnumGiasAttribute>()?.Hidden != true)
@@ -280,72 +285,37 @@
                                 @{
                                     var id = TagBuilder.CreateSanitizedId(string.Format("{0}-{1}", "proprietor-type", pt));
                                 }
-                                @Html.RadioButtonFor(x => x.ProprietorType, pt, new { id, data_toggle_panel = $"#{pt}" })
+                                @Html.RadioButtonFor(x => x.ProprietorTypeId, (int)pt, new { id, data_toggle_panel = $"#{pt}", value=$"{pt}" })
                                 @Html.Label(pt.EnumDisplayNameFor(), new { @for = id, data_toggle_panel = pt })
                             </div>
                         }
                     }
                 </fieldset>
-                <div id="@eProprietorType.SingleProprietor.ToString()" class="panel panel-border-narrow push-half--top">
-                    <h4 class="heading-small">Proprietor details</h4>
-                    <div id="cloneable-fields-container">
-                        @RenderTextBox(x => x.ProprietorsPreferredJobTitle)
-                        @RenderTextBox(x => x.ProprietorName, "cloneable")
-                        @RenderTextBox(x => x.ProprietorsStreet, "cloneable")
-                        @RenderTextBox(x => x.ProprietorsLocality, "cloneable")
-                        @RenderTextBox(x => x.ProprietorsAddress3, "cloneable")
-                        @RenderTextBox(x => x.ProprietorsTown, "cloneable")
-
-                        <div class="form-group cloneable @Html.ValidationCssClassFor(x => x.ProprietorsCountyId)">
-                            @Html.LabelFor(x => x.ProprietorsCountyId)
-                            @Html.ValidationMessageFor(x => x.ProprietorsCountyId)
-                            @Html.DropDownListFor(x => x.ProprietorsCountyId, Model.Counties, "", new { @class = "form-control" })
+                    <div id="proprietor-entry" class="hidden panel panel-border-narrow push-half--top">
+                        <div id="@eProprietorType.IndividualProprietor.ToString()">
+                            <span>
+                                Is a person or group of persons who own an independent school and are not members of a proprietorial body.
+                            </span>
+                        </div>
+                        <div id="@eProprietorType.ProprietorBody.ToString()">
+                            <span>
+                                Is a body, corporate or incorporate, that owns an independent school, for example, a limited company, a charity, a trust or a governing body.
+                            </span>
+                            <h4 class="heading-small">Proprietor body details</h4>
                         </div>
 
-                        @RenderTextBox(x => x.ProprietorsPostcode, "cloneable", "form-control-1-2")
-                        @RenderTextBox(x => x.ProprietorsTelephoneNumber, "cloneable")
-
-                        @if (Model.EditPolicy.IEBTDetail.ProprietorsFaxNumber)
+                        @if (Model.Proprietors.Any())
                         {
-                            @RenderTextBox(x => x.ProprietorsFaxNumber, "cloneable")
+                            Html.RenderPartial(@"Partials\_EditProprietorList");
                         }
 
-                        @RenderTextBox(x => x.ProprietorsEmail, "cloneable")
+                        <div id="@eProprietorType.ProprietorBody.ToString()-chair" class="hidden">
+                            <p></p>
+                            <h4 class="heading-small edu-section-break">Chair of the proprietary body details</h4>
+                            @Html.EditorFor(x => x.ChairOfProprietor)
+                        </div>
                     </div>
-
-
-                </div>
-                <div id="@eProprietorType.ProprietorBody.ToString()" class="panel panel-border-narrow push-half--top">
-                    <h4 class="heading-small">Proprietor body details</h4>
-                    <div id="field-clone-target">
-
-                    </div>
-
-                    <h4 class="heading-small edu-section-break">Chair of the proprietary body details</h4>
-
-                    @RenderTextBox(x => x.ChairOfProprietorsBodyPreferredJobTitle)
-                    @RenderTextBox(x => x.ChairOfProprietorsBodyName)
-                    @RenderTextBox(x => x.ChairOfProprietorsBodyStreet)
-                    @RenderTextBox(x => x.ChairOfProprietorsBodyLocality)
-                    @RenderTextBox(x => x.ChairOfProprietorsBodyAddress3)
-                    @RenderTextBox(x => x.ChairOfProprietorsBodyTown)
-
-                    <div class="form-group cloneable @Html.ValidationCssClassFor(x => x.ChairOfProprietorsBodyCountyId)">
-                        @Html.LabelFor(x => x.ChairOfProprietorsBodyCountyId)
-                        @Html.ValidationMessageFor(x => x.ChairOfProprietorsBodyCountyId)
-                        @Html.DropDownListFor(x => x.ChairOfProprietorsBodyCountyId, Model.Counties, "", new { @class = "form-control" })
-                    </div>
-
-                    @RenderTextBox(x => x.ChairOfProprietorsBodyPostcode, null, "form-control-1-2")
-                    @RenderTextBox(x => x.ChairOfProprietorsBodyTelephoneNumber)
-
-                    @if (Model.EditPolicy.IEBTDetail.ChairOfProprietorsBodyFaxNumber)
-                    {
-                        @RenderTextBox(x => x.ChairOfProprietorsBodyFaxNumber)
-                    }
-
-                    @RenderTextBox(x => x.ChairOfProprietorsBodyEmail)
-                </div>
+                }
 
                 @if (Model.EditPolicy.IEBTDetail.AccommodationChangedId)
                 {

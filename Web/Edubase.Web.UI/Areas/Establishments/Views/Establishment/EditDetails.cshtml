@@ -321,11 +321,11 @@
                         </div>
                     }
 
-                    @if (Model.EditPolicy.ProprietorName && !Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider))
+                    @if (Model.EditPolicy.ProprietorBodyName && !Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider))
                     {
                         <div class="form-group">
-                            <label for="proprietor" class="form-label">Proprietor's name</label>
-                            @Html.TextBoxFor(x => x.ProprietorName, new { maxlength = 120, id = "proprietor", @class = "form-control" })
+                            <label for="proprietor" class="form-label">Proprietor body name</label>
+                            @Html.TextBoxFor(x => x.ProprietorBodyName, new { maxlength = 120, id = "proprietor", @class = "form-control" })
                         </div>
                     }
 

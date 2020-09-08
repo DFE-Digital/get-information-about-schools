@@ -90,68 +90,14 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         [JsonProperty("highestAnnualRateForBoardingPupils")]
         public T HighestAnnualRateForBoardingPupils { get; set; }
 
-        [JsonProperty("proprietorsStreet")]
-        public T ProprietorsStreet { get; set; }
+        [JsonProperty("proprietorTypeId")]
+        public T ProprietorTypeId { get; set; }
 
-        [JsonProperty("proprietorsLocality")]
-        public T ProprietorsLocality { get; set; }
+        [JsonProperty("proprietors")]
+        public T Proprietors { get; set; }
 
-        [JsonProperty("proprietorsAddress3")]
-        public T ProprietorsAddress3 { get; set; }
-
-        [JsonProperty("proprietorsTown")]
-        public T ProprietorsTown { get; set; }
-
-        [JsonProperty("proprietorsCountyId")]
-        public T ProprietorsCountyId { get; set; }
-
-        [JsonProperty("proprietorsPostcode")]
-        public T ProprietorsPostcode { get; set; }
-
-        [JsonProperty("proprietorsTelephoneNumber")]
-        public T ProprietorsTelephoneNumber { get; set; }
-
-        [JsonProperty("proprietorsFaxNumber")]
-        public T ProprietorsFaxNumber { get; set; }
-
-        [JsonProperty("proprietorsEmail")]
-        public T ProprietorsEmail { get; set; }
-
-        [JsonProperty("proprietorsPreferredJobTitle")]
-        public T ProprietorsPreferredJobTitle { get; set; }
-
-        [JsonProperty("chairOfProprietorsBodyName")]
-        public T ChairOfProprietorsBodyName { get; set; }
-
-        [JsonProperty("chairOfProprietorsBodyStreet")]
-        public T ChairOfProprietorsBodyStreet { get; set; }
-
-        [JsonProperty("chairOfProprietorsBodyLocality")]
-        public T ChairOfProprietorsBodyLocality { get; set; }
-
-        [JsonProperty("chairOfProprietorsBodyAddress3")]
-        public T ChairOfProprietorsBodyAddress3 { get; set; }
-
-        [JsonProperty("chairOfProprietorsBodyTown")]
-        public T ChairOfProprietorsBodyTown { get; set; }
-
-        [JsonProperty("chairOfProprietorsBodyCountyId")]
-        public T ChairOfProprietorsBodyCountyId { get; set; }
-
-        [JsonProperty("chairOfProprietorsBodyPostcode")]
-        public T ChairOfProprietorsBodyPostcode { get; set; }
-
-        [JsonProperty("chairOfProprietorsBodyTelephoneNumber")]
-        public T ChairOfProprietorsBodyTelephoneNumber { get; set; }
-
-        [JsonProperty("chairOfProprietorsBodyFaxNumber")]
-        public T ChairOfProprietorsBodyFaxNumber { get; set; }
-
-        [JsonProperty("chairOfProprietorsBodyEmail")]
-        public T ChairOfProprietorsBodyEmail { get; set; }
-
-        [JsonProperty("chairOfProprietorsBodyPreferredJobTitle")]
-        public T ChairOfProprietorsBodyPreferredJobTitle { get; set; }
+        [JsonProperty("chairOfProprietor")]
+        public T ChairOfProprietor { get; set; }
 
         [JsonProperty("accommodationChangedId")]
         public T AccommodationChangedId { get; set; }

@@ -1,0 +1,15 @@
+@model ProprietorViewModel
+
+<dl>
+    <dt>Proprietor's name:</dt>
+    <dd>@(Model.Name ?? "Not recorded")</dd>
+
+    <dt>Proprietor's address:</dt>
+    <dd>@Model.GetAddress()</dd>
+
+    <dt>Proprietor's telephone:</dt>
+    <dd>@(Model.TelephoneNumber ?? "Not recorded")</dd>
+
+    <dt>Proprietor's email:</dt>
+    <dd>@(Model.Email ?? "Not recorded")</dd>
+</dl>
