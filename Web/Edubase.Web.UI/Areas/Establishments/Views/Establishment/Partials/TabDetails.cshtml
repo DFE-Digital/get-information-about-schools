@@ -96,7 +96,7 @@
 
             @if (Model.DisplayPolicy.CloseDate)
             {
-                var closeDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date ended" : "Open date";
+                var closeDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date ended" : "Closed date";
                 <dt>@closeDateTitle / Reason:</dt>
                 <dd>
                     @(Model.Establishment.CloseDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br />
