@@ -28,6 +28,7 @@
         @Html.HiddenFor(x => x.LegalParentGroupToken)
         @Html.HiddenFor(x => x.ChangesInstantCount)
         @Html.HiddenFor(x => x.ChangesRequireApprovalCount)
+        @Html.HiddenFor(x => x.EstablishmentTypeGroupId)
 
         <div class="column-full" style="display:@Html.Conditional(Model.ChangesSummary != null, "none");">
             <div class="grid-row">
@@ -38,16 +39,16 @@
                     @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "button button-secondary cancel" })
 
 
-                <div class="form-group first @Html.ValidationCssClassFor(x => x.Name)">
+                    <div class="form-group first @Html.ValidationCssClassFor(x => x.Name)">
 
-                    @{ var establishmentTitle = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Name of setting" : "School / College name"; }
-                    <label class="form-label" for="Name">
-                        @establishmentTitle
-                    </label>
+                        @{ var establishmentTitle = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Name of setting" : "School / College name"; }
+                        <label class="form-label" for="Name">
+                            @establishmentTitle
+                        </label>
 
-                    @Html.ValidationMessageFor(x => x.Name)
-                    @Html.TextBoxFor(x => x.Name, new { maxlength = 120, @class = "form-control" })
-                </div>
+                        @Html.ValidationMessageFor(x => x.Name)
+                        @Html.TextBoxFor(x => x.Name, new { maxlength = 120, @class = "form-control" })
+                    </div>
 
                     <div class="form-group">
                         <label class="form-label" for="urn">Unique Reference Number (URN)</label>
@@ -408,7 +409,7 @@
 
                     @if (Model.EditPolicy.OpenDate)
                     {
-                        @Html.EditorFor(x => x.OpenDate, new { title = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider)? "Accreditation date":"Open date" })
+                        @Html.EditorFor(x => x.OpenDate, new { title = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date" : "Open date" })
                     }
 
                     @if (Model.EditPolicy.ReasonEstablishmentOpenedId)
@@ -422,7 +423,7 @@
 
                     @if (Model.EditPolicy.CloseDate)
                     {
-                        @Html.EditorFor(x => x.CloseDate, new { title = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider)? "Accreditation date ended":"Close date" })
+                        @Html.EditorFor(x => x.CloseDate, new { title = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date ended" : "Close date" })
                     }
 
                     @if (Model.EditPolicy.ReasonEstablishmentClosedId)
@@ -811,7 +812,7 @@
 
                 <script nonce="@Html.ScriptNonce()">
                     $('#cancel-edit, .requires-conf-to-leave').okCancel({
-                        ok: function() {
+                        ok: function () {
                             window.location = this.el.getAttribute('href');
                         },
                         title: 'Are you sure you want to leave this page?',
