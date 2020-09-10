@@ -252,10 +252,10 @@
                         <h2 class="visuallyhidden">Support links</h2>
                         <ul>
                             <li><a href="https://form.education.gov.uk/fillform.php?self=1&form_id=hGz7nZcsdnX&noLoginPrompt=1" target="_blank" rel="external">Contact <span class="visually-hidden">Opens in new window</span></a></li>
-                            <li>@Html.ActionLink("Cookies", "Cookies", "Home")</li>
+                            <li>@Html.ActionLink("Cookies", "Cookies", "Home", new {area = ""}, null)</li>
                             <li>@Html.RouteLink("Glossary", "Glossary")</li>
-                            <li>@Html.ActionLink("Guidance", "Index", "Guidance")</li>
-                            <li>@Html.ActionLink("Accessibility",  "Accessibility", "Home")</li>
+                            <li>@Html.ActionLink("Guidance", "Index","Guidance", new {area = ""}, null)</li>
+                            <li>@Html.ActionLink("Accessibility", "Accessibility", "Home", new {area = ""}, null)</li>
                             @*<li>@Html.ActionLink("News", "News", "Home")</li>*@
                         </ul>
 
