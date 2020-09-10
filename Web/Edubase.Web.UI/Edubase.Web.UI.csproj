@@ -1075,6 +1075,7 @@
     <Content Include="Views\Guidance\Federation.cshtml" />
     <Content Include="Views\Guidance\Governance.cshtml" />
     <Content Include="public\downloads\20200814_Accessibility_Assurance_Report-Get_Information_About_Schools.pdf" />
+    <Content Include="public\downloads\20200814__Accessibility_Assurance_Report-Get_Information_About_Schools.pdf" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>
