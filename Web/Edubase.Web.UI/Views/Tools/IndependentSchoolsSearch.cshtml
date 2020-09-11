@@ -90,7 +90,7 @@
                 <button class="gias-link-button gias-link-button-s hidden" name="@VM.BindAliasForActionName" value="@VM.ActionSaveSet" id="set-saver">Save as set</button>
             </div>
         </div>
-            <div class="govuk-grid-column-three-quarters">
+            <div class="govuk-grid-column-three-quarters gias-padding-top-2-at-mobile">
                 <h2 class="govuk-heading-m">Date range</h2>
             </div>
             <div class="govuk-form-group @Html.ValidationCssClass("date-range")">
@@ -99,7 +99,7 @@
                 @Html.EditorFor(x => x.MinDate, new { title = "From (optional)", fieldsetClassName = "edit-date-fieldset" })
             </div>
 
-            <div class="govuk-grid-column-one-third gias-padding-top-2-at-mobile">
+            <div class="govuk-grid-column-one-third gias-padding-top-4-at-mobile">
                 @Html.EditorFor(x => x.MaxDate, new { title = "To (optional)", fieldsetClassName = "edit-date-fieldset" })
             </div>
 
