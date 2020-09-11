@@ -1,4 +1,6 @@
 @using System.Linq
+@using Edubase.Common
+@using Edubase.Services.Enums
 @using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
 @model ViewModel
 @{
@@ -54,7 +56,8 @@
 
     <div class="govuk-form-group first @Html.ValidationCssClassFor(x => x.Name)">
         <label class="govuk-label" for="Name">
-            School / College name
+		@{ var establishmentTitle = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Name of setting" : "School / College name"; }
+            @establishmentTitle
         </label>
         @Html.ValidationMessageFor(x => x.Name, null, new {@class = "govuk-error-message"})
         @Html.TextBoxFor(x => x.Name, new {maxlength = 120, @class = "govuk-input"})
@@ -69,6 +72,7 @@
         <label for="school-street" class="govuk-label">Street</label>
         @Html.TextBoxFor(x => x.Address_Line1, new {maxlength = 120, id = "school-street", @class = "govuk-input"})
     </div>
+
 
     <div class="govuk-form-group">
         <label for="school-locality" class="govuk-label">Locality</label>
@@ -334,7 +338,7 @@
         </div>
     }
 
-    @if (Model.EditPolicy.ProprietorName)
+    @if (Model.EditPolicy.ProprietorName && !Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider))
     {
         <div class="govuk-form-group">
             <label for="proprietor" class="govuk-label">Proprietor's name</label>
@@ -349,6 +353,7 @@
             @Html.DropDownListFor(x => x.ReligiousCharacterId, Model.ReligiousCharacters, "", new {@class = "govuk-select", id = "ReligiousCharacterId"})
         </div>
     }
+
 
     @if (Model.EditPolicy.DioceseId)
     {
@@ -434,8 +439,9 @@
 
     @if (Model.EditPolicy.CloseDate)
     {
-        @Html.EditorFor(x => x.CloseDate, new {title = "Close date", fieldsetClassName = "edit-date-fieldset"})
+        @Html.EditorFor(x => x.CloseDate, new {title = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date ended" : "Close date", fieldsetClassName = "edit-date-fieldset"})
     }
+
 
     @if (Model.EditPolicy.ReasonEstablishmentClosedId)
     {
@@ -783,13 +789,13 @@
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.QualityAssuranceBodyReport)">
             @Html.LabelFor(x => x.QualityAssuranceBodyReport, null, new {@class = "govuk-label"})
             @Html.ValidationMessageFor(x => x.QualityAssuranceBodyReport, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.QualityAssuranceBodyReport, new {@class = "form-input"})
+            @Html.TextBoxFor(x => x.QualityAssuranceBodyReport, new {@class = "govuk-input"})
         </div>
     }
 
     @if (Model.EditPolicy.CompaniesHouseNumber)
     {
-        <div class="form-group @Html.ValidationCssClassFor(x => x.CompaniesHouseNumber)">
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CompaniesHouseNumber)">
             @Html.LabelFor(x => x.CompaniesHouseNumber, null, new {@class = "govuk-label"})
             @Html.ValidationMessageFor(x => x.CompaniesHouseNumber, null, new {@class = "govuk-error-message"})
             @Html.TextBoxFor(x => x.CompaniesHouseNumber, new {@class = "govuk-input"})
@@ -798,14 +804,14 @@
 
     @if (Model.EditPolicy.EstablishmentAccreditedId)
     {
-        <div class="form-group @Html.ValidationCssClassFor(x => x.EstablishmentAccreditedId)">
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentAccreditedId)">
             @Html.LabelFor(x => x.EstablishmentAccreditedId, null, new {@class = "govuk-label"})
             @Html.ValidationMessageFor(x => x.EstablishmentAccreditedId, null, new {@class = "govuk-error-message"})
             @Html.DropDownListFor(x => x.EstablishmentAccreditedId, Model.EstablishmentAccredited, "", new {@class = "govuk-select"})
         </div>
     }
     <!-- Online Provider content -->
-    <div class="button-row">
+    <div class="button-row govuk-!-padding-top-8">
         <button id="save-submit-bottom" type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, "details")">Save details</button>
         @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button"})
     </div>
@@ -817,7 +823,7 @@
     {
         Html.RenderPartial("Partials/_ConfirmChanges");
 
-        <div class="button-row">
+        <div class="button-row govuk-!-padding-top-8">
             <button class="govuk-button--secondary govuk-button" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button>
             <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm">Confirm</button>
 
@@ -827,7 +833,8 @@
 @section ViewScripts {
     <script nonce="@Html.ScriptNonce()">var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());</script>
     <script src="/public/assets/scripts/build/edit-details.js"></script>
-}    }
+}
+    }
     else
     {
 @section ViewScripts {
@@ -838,7 +845,8 @@
             var phases = @Html.Json(Model.EducationPhases);
         </script>
     <script src="/public/assets/scripts/build/edit-details.js"></script>
-}    }
+}
+    }
 
     </div>
 }
@@ -871,6 +879,6 @@
 
     <div id="help-text-headteacher-email-address">
         <h3 class="govuk-heading-s">@(Model.EditPolicy.HeadteacherLabel) email address</h3>
-        <p>The email address added to this field will be treated as personal and will not be visible to the public or included in responses to Freedom of Information Requests. The address will be used for official Departmental use where direct communication with the headteacher/ principal is required.</p>
+        <p>The email address added to this field will be treated as personal and will not be visible to the public or included in responses to Freedom of Information requests. The address will be used for official Departmental use where direct communication with the @(Model.EditPolicy.HeadteacherLabel.ToLower()) is required.</p>
     </div>
 </div>

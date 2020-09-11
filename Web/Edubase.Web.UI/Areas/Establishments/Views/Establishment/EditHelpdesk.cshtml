@@ -28,36 +28,45 @@
                 <div class="govuk-grid-column-full">
                     <div class="button-row govuk-!-margin-bottom-4">
                         <button type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveHelpdesk)">Save helpdesk note</button>
-                        @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary", data_module="govuk-button"})
+                        @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary", data_module = "govuk-button"})
                     </div>
                 </div>
             </div>
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
-                    <div class="govuk-form-group">
-                        @Html.LabelFor(x => x.HelpdeskNotes, new {@class = "govuk-label"})
-                        @Html.TextAreaFor(x => x.HelpdeskNotes, new {@class = "govuk-textarea", rows = "10", maxlength = "1000"})
-                    </div>
-
-                    @Html.EditorFor(x => x.HelpdeskLastUpdate, new {fieldsetClassName = "edit-date-fieldset" })
-
-                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousLocalAuthorityId)">
-                        @Html.LabelFor(x => x.HelpdeskPreviousLocalAuthorityId, new { @class = "govuk-label"})
-                        @Html.DropDownListFor(x => x.HelpdeskPreviousLocalAuthorityId, Model.LocalAuthorities, "Please select a local authority", new {@class = "govuk-select"})
-                    </div>
-
-                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousEstablishmentNumber)">
-                        @Html.LabelFor(x => x.HelpdeskPreviousEstablishmentNumber, new { @class = "govuk-label"})
-                        @Html.ValidationMessageFor(x => x.HelpdeskPreviousEstablishmentNumber, null, new { @class = "govuk-error-message"})
-                        @Html.TextBoxFor(x => x.HelpdeskPreviousEstablishmentNumber, new {@class = "govuk-input"})
-                    </div>
+                    @if (Model.EditPolicy.HelpdeskNotes)
+                    {
+                        <div class="govuk-form-group">
+                            @Html.LabelFor(x => x.HelpdeskNotes, new {@class = "govuk-label"})
+                            @Html.TextAreaFor(x => x.HelpdeskNotes, new {@class = "govuk-textarea", rows = "10", maxlength = "1000"})
+                        </div>
+                    }
+                    @if (Model.EditPolicy.HelpdeskLastUpdate)
+                    {
+                        @Html.EditorFor(x => x.HelpdeskLastUpdate, new {fieldsetClassName = "edit-date-fieldset"})
+                    }
+                    @if (Model.EditPolicy.HelpdeskPreviousLocalAuthorityId)
+                    {
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousLocalAuthorityId)">
+                            @Html.LabelFor(x => x.HelpdeskPreviousLocalAuthorityId, new {@class = "govuk-label"})
+                            @Html.DropDownListFor(x => x.HelpdeskPreviousLocalAuthorityId, Model.LocalAuthorities, "Please select a local authority", new {@class = "govuk-select"})
+                        </div>
+                    }
+                    @if (Model.EditPolicy.HelpdeskPreviousEstablishmentNumber)
+                    {
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousEstablishmentNumber)">
+                            @Html.LabelFor(x => x.HelpdeskPreviousEstablishmentNumber, new {@class = "govuk-label"})
+                            @Html.ValidationMessageFor(x => x.HelpdeskPreviousEstablishmentNumber, null, new {@class = "govuk-error-message"})
+                            @Html.TextBoxFor(x => x.HelpdeskPreviousEstablishmentNumber, new {@class = "govuk-input"})
+                        </div>
+                    }
                 </div>
             </div>
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
                     <div class="button-row ">
                         <button type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveHelpdesk)">Save helpdesk note</button>
-                        @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
+                        @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button"})
                     </div>
                 </div>
             </div>
@@ -71,13 +80,11 @@
                 <button class="govuk-button--secondary govuk-button" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button>
                 <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm">Confirm</button>
 
-                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary", id = "cancel-edit", data_module="govuk-button"})
+                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary", id = "cancel-edit", data_module = "govuk-button"})
             </div>
-
-
         }
 
-</div>
+    </div>
 }
 
 @section ViewScripts

@@ -1,4 +1,4 @@
-﻿@model EditGroupCorporateContactViewModel
+@model EditGroupCorporateContactViewModel
 
 @{
     ViewBag.hideLogo = true;
@@ -13,15 +13,15 @@
         {
             @Html.HiddenFor(m => m.GroupUId)
             <div class="edit-governor">
-                <div class="govuk-form-group">
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CorporateContact)">
                     @Html.LabelFor(x => x.CorporateContact, new { @class = "govuk-label" })
-
+                    @Html.ValidationMessageFor(x => x.CorporateContact, null, new { @class = "govuk-error-message" })
                     @Html.TextBoxFor(x => x.CorporateContact, new { @class = "govuk-input govuk-!-width-two-thirds", maxlength = 15 })
                 </div>
 
                 <div class="button-row">
                     <button type="submit" value="Save" class="govuk-button">Save corporate contact</button>
-                    <a href="@Url.RouteUrl("GroupEditGovernance", new {GroupUId = Model.GroupUId})" class="govuk-button govuk-button--secondary">Cancel</a>
+                    <a href="@Url.RouteUrl("GroupEditGovernance", new {GroupUId = Model.GroupUId})" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
                 </div>
             </div>
         }

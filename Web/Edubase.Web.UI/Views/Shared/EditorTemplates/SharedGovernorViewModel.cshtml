@@ -1,4 +1,5 @@
-﻿@model Edubase.Web.UI.Areas.Governors.Models.SharedGovernorViewModel
+@using System.Runtime.ExceptionServices
+@model Edubase.Web.UI.Areas.Governors.Models.SharedGovernorViewModel
 @{
     bool disableStartDate;
     if (!bool.TryParse(ViewData["disableStartDate"]?.ToString(), out disableStartDate))
@@ -80,9 +81,16 @@ else
             </dl>
 
 
-
-            @Html.EditorFor(x => x.AppointmentStartDate, new {@readonly = Model.PreExisting || disableStartDate, ClassPrefix = "start-date", fieldsetClassName = "edit-date-fieldset"})
-            @Html.EditorFor(x => x.AppointmentEndDate, new {@readonly = Model.PreExisting, fieldsetClassName = "edit-date-fieldset"})
+            <div class="@Html.ValidationCssClass("StartDate,endDate")" id="StartDate,endDate">
+                @if (Html.ValidationCssClass("StartDate,endDate").ToString() == "error")
+                {
+                    <span class="field-validation-error">
+                        @Html.ViewData.ModelState["StartDate,endDate"].Errors.First().ErrorMessage
+                    </span>
+                }
+                @Html.EditorFor(x => x.AppointmentStartDate, new {@readonly = Model.PreExisting || disableStartDate, ClassPrefix = "start-date", fieldsetClassName = "edit-date-fieldset"})
+                @Html.EditorFor(x => x.AppointmentEndDate, new {@readonly = Model.PreExisting, fieldsetClassName = "edit-date-fieldset"})
+            </div>
         </div>
     }
     else

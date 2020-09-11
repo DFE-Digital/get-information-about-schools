@@ -97,12 +97,10 @@
              </summary>
               <div class="govuk-details__text">
                   <p>
-                      For a step by step guide to prepare documents for bulk update please download this file.
+                      For a step by step guide to prepare documents for bulk update please reference the
+                      @Html.ActionLink("Establishment bulk update guidance", "EstablishmentBulkUpdate", "Guidance", new {area = ""}, null).
                   </p>
-                  <p>
-                    <a href="https://edubasepr.blob.core.windows.net/guidance/Establishment_Bulk_Update_Guide.pdf" target="_blank" rel="nofollow" class="js-track" data-track="bulkUpdate|establish-bulk-update|download">Establishment bulk update guidance PDF, 353KB <span class="govuk-visually-hidden">Opens in new window</span></a>
-                </p>
-            </div>
+              </div>
         </details>
 
         @if (Model.Result != null)
@@ -201,7 +199,3 @@
     </div>
 
 
-@* *@
-@* @section ViewScripts{ *@
-@*     <script src="/public/assets/scripts/standalone/accessibility.js"></script> *@
-@* } *@

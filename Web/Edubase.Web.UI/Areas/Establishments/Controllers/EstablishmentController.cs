@@ -288,8 +288,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 PopulateEditPermissions(viewModel),
                 PopulateLookupNames(viewModel),
                 PopulateGovernors(viewModel));
+            
+            viewModel.AgeRangeToolTip = viewModel.Establishment.TypeId.OneOfThese(ET.OnlineProvider)
+                ? _resourcesHelper.GetResourceStringForEstablishment("AgeRangeOnlineProvider", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User)
+                : _resourcesHelper.GetResourceStringForEstablishment("AgeRange", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
 
-            viewModel.AgeRangeToolTip = _resourcesHelper.GetResourceStringForEstablishment("AgeRange", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
             viewModel.AgeRangeToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("AgeRangeLink", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
             viewModel.SchoolCapacityToolTip = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacity", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
             viewModel.SchoolCapacityToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacityLink", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
@@ -676,8 +679,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         public bool CanUserDefineAdditionalAddresses(int typeId)
             => typeId.OneOfThese(ET.NonmaintainedSpecialSchool,
                 ET.OtherIndependentSchool,
-                ET.OtherIndependentSpecialSchool,
-                ET.OnlineProvider) && User.InRole(AuthorizedRoles.CanDefineAdditionalAddresses);
+                ET.OtherIndependentSpecialSchool) && User.InRole(AuthorizedRoles.CanDefineAdditionalAddresses);
 
         private async Task<ActionResult> DeleteLinkAsync(EditEstablishmentLinksViewModel deltaViewModel)
         {
@@ -798,6 +800,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private async Task PopulateEditPermissions(EstablishmentDetailViewModel viewModel)
         {
             viewModel.UserCanEdit = await _establishmentReadService.CanEditAsync(viewModel.Establishment.Urn.Value, User);
+            viewModel.TabEditPolicy = new TabEditPolicy(viewModel.Establishment, viewModel.DisplayPolicy, User);
         }
 
         private async Task PopulateEstablishmentPageViewModel(IEstablishmentPageViewModel viewModel, int urn, string selectedTabName)
@@ -845,7 +848,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             vm.BoardingEstabName = await c.GetNameAsync(() => vm.Establishment.IEBTModel.BoardingEstablishmentId, nameof(IEBTModel));
             vm.AccommodationChangedName = await c.GetNameAsync(() => vm.Establishment.IEBTModel.AccommodationChangedId, nameof(IEBTModel));
             vm.QualityAssuranceBodyName = await c.GetNameAsync(() => vm.Establishment.QualityAssuranceBodyNameId);
-            vm.EstablishmentAccredited = await c.GetNameAsync(() => vm.Establishment.EstablishmentAccreditedId);
+            vm.EstablishmentAccreditedName = await c.GetNameAsync(() => vm.Establishment.EstablishmentAccreditedId);
             vm.ProvisionNurseryName = await c.GetNameAsync(() => vm.Establishment.ProvisionNurseryId);
             vm.ProvisionOfficialSixthFormName = await c.GetNameAsync(() => vm.Establishment.ProvisionOfficialSixthFormId);
             vm.Section41ApprovedName = await c.GetNameAsync(() => vm.Establishment.Section41ApprovedId);
@@ -946,7 +949,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.BoardingProvisions = (await _cachedLookupService.ProvisionBoardingGetAllAsync()).ToSelectList(viewModel.ProvisionBoardingId);
             viewModel.BoardingEstablishment = (await _cachedLookupService.BoardingEstablishmentGetAllAsync()).ToSelectList(viewModel.BoardingEstablishmentId);
             viewModel.QualityAssuranceBodyName = (await _cachedLookupService.QualityAssuranceBodyNameGetAllAsync()).ToSelectList(viewModel.QualityAssuranceBodyNameId);
-            viewModel.EstablishmentAccredited = (await _cachedLookupService.BoardingEstablishmentGetAllAsync()).ToSelectList(viewModel.EstablishmentAccreditedId);
+            viewModel.EstablishmentAccredited = (await _cachedLookupService.EstablishmentAccreditedGetAllAsync()).ToSelectList(viewModel.EstablishmentAccreditedId);
             viewModel.NurseryProvisions = (await _cachedLookupService.ProvisionNurseriesGetAllAsync()).ToSelectList(viewModel.ProvisionNurseryId);
             viewModel.OfficialSixthFormProvisions = (await _cachedLookupService.ProvisionOfficialSixthFormsGetAllAsync()).ToSelectList(viewModel.ProvisionOfficialSixthFormId);
             viewModel.Section41ApprovedItems = (await _cachedLookupService.Section41ApprovedGetAllAsync()).ToSelectList(viewModel.Section41ApprovedId);

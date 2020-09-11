@@ -1,0 +1,425 @@
+﻿@{
+    ViewBag.Title = "Get information about schools";
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        <div class="breadcrumbs">
+            <ol>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Help", "Help", "Home", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Guidance", "Index", "Guidance", new { area = "" }, null)
+                </li>
+            </ol>
+        </div>
+        <h1 class="heading-xlarge">Governance guidance</h1>
+    </div>
+</div>
+
+<div class="grid-row">
+    <div class="column-full guidance">
+        <h2 class="heading-medium subheading">Introduction</h2>
+        <p>This document explains how to add or update your organisation’s governance details on Get Information About Schools (GIAS).</p>
+        <p>For more information about the national database of governors, the reasons for establishing it and the requirement to keep it up-to-date please see:</p>
+        <p><a href="https://www.gov.uk/government/news/national-database-of-governors" target="_blank" rel="external">https://www.gov.uk/government/news/national-database-of-governors<span class="visually-hidden"> Opens in new window</span></a></p>
+
+        <h2 class="heading-medium subheading">Access to update your governance information</h2>
+        <p>Governance information can only be updated by DfE Sign In (DSI) account holders in schools, academies and multi academy trusts (MATs). DSI accounts are managed locally by an approver within your organisation. It is the establishment’s responsibility to keep the information up-to-date. We can’t provide access for local authorities and clerking services to update governance details.</p>
+        <ul class="font-small list list-bullet">
+            <li>
+                <h3 class="heading-small subheading">Local authority maintained schools</h3>
+                <p>Sign in and navigate to your school record by using its name or unique reference number (URN). To edit the governance details select the governance tab, then ‘Edit Governance’ and follow the steps in sections 4 and 5.</p>
+            </li>
+            <li>
+                <h3 class="heading-small subheading">Academies including free schools, university technology colleges (UTCs), city technology colleges (CTCs) and studio schools</h3>
+                <p>Sign in and navigate to your academy record by using its name or URN. To edit the governance details select the governance tab, then ‘Edit Governance’ and follow the steps in sections 4 and 5.</p>
+                <p>For academies that are part of a multi academy trust (MAT), governance information and your academy record can also be updated directly by the MAT (see below).</p>
+                <p>For academies that are part of a MAT there is no requirement to add local governor details to your establishment record if you do not have local governors. If you do not have local governors please update the ‘Establishment governance’ flag on your establishment record to ‘This academy is part of a multi academy trust and does not have local governors’.</p>
+            </li>
+            <li>
+                <h3 class="heading-small subheading">Multi academy trusts (MATs)</h3>
+                <p>Sign in and navigate to your ‘My trust’ page by using its name or reference number. This page gives details of your MAT and the school(s) within your MAT. You can edit both.</p>
+                <p>From this page you can edit the governance details for your MAT by selecting the governance tab, then ‘Edit Governance’ and follow the steps in section 4 of this guide. You can also enter details of any shared governance (see section 4.7).</p>
+                <p>Trustee details should only be added to the MAT record, there is no requirement to add them to the individual academy records.</p>
+                <p>To edit the governance details for the academies in your MAT:</p>
+                <ul class="font-small list list-number">
+                    <li>Click on the tab ‘Academies’;</li>
+                    <li>Go to the individual establishment;</li>
+                    <li>Select the governance tab;</li>
+                    <li>Select ‘Edit Governance’;</li>
+                    <li>Follow the steps in section 4 of this guide.</li>
+                </ul>
+                <p>If any of the academies in your MAT do not have local governors then you will need to update the ‘Establishment governance’ flag on the academy record to ‘This academy is part of a multi academy trust and does not have local governors’.</p>
+                <p>You can also suggest changes to details for your academies including headteacher details, address, telephone number, website and email address. Select ‘Edit details’, edit the required field and click ‘Save’.</p>
+                <p>Most changes to academy records are sent for checking, please make sure any changes reflect your current funding agreement.</p>
+                <p>Where a MAT operates a shared governance system, details should be included on the MAT record and will be available to be selected for each individual establishment as required.</p>
+            </li>
+        </ul>
+
+        <h2 class="heading-medium subheading">Information required</h2>
+        <p>We need the information detailed in the table below on the people serving in these roles in your school/academy. You should include all officials currently serving and any officials who have stepped down within the last 12 months. Some of these roles may be described differently within your organisation. If you can’t find a suitable match, please contact us.</p>
+        <p>Only certain information will be publicly available; data that is not publicly available will be encrypted within the system. We need this information for our due diligence work and access is restricted to a small number of users within the department.</p>
+
+        <table class="edubase-table">
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Chair of governors / chair of local governors</th>
+                    <th>Chair of shared local governors</th>
+                    <th>Chair of trustees</th>
+                    <th>Governors / local governors / trustees</th>
+                    <th>Shared local governors</th>
+                    <th>Members</th>
+                    <th>Accounting officer / chief financial officer</th>
+                    <th>Visible to the public?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td data-label="Field">Title</td>
+                    <td data-label="Chair of governors / chair of local governors">Required</td>
+                    <td data-label="Chair of shared local governors">Required</td>
+                    <td data-label="Chair of trustees">Required</td>
+                    <td data-label="Governors / local governors / trustees">Required</td>
+                    <td data-label="Shared local governors">Required</td>
+                    <td data-label="Members">Required</td>
+                    <td data-label="Accounting officer / chief financial officer">Required</td>
+                    <td data-label="Visible to the public?">Yes</td>
+                </tr>
+                <tr>
+                    <td data-label="Field">First name 1</td>
+                    <td data-label="Chair of governors / chair of local governors">Required*</td>
+                    <td data-label="Chair of shared local governors">Required*</td>
+                    <td data-label="Chair of trustees">Required*</td>
+                    <td data-label="Governors / local governors / trustees">Required*</td>
+                    <td data-label="Shared local governors">Required*</td>
+                    <td data-label="Members">Required*</td>
+                    <td data-label="Accounting officer / chief financial officer">Required*</td>
+                    <td data-label="Visible to the public?">Yes</td>
+                </tr>
+                <tr>
+                    <td data-label="Field">First name 2</td>
+                    <td data-label="Chair of governors / chair of local governors">Required</td>
+                    <td data-label="Chair of shared local governors">Required</td>
+                    <td data-label="Chair of trustees">Required</td>
+                    <td data-label="Governors / local governors / trustees">Required</td>
+                    <td data-label="Shared local governors">Required</td>
+                    <td data-label="Members">Required</td>
+                    <td data-label="Accounting officer / chief financial officer">Required</td>
+                    <td data-label="Visible to the public?">Yes</td>
+                </tr>
+                <tr>
+                    <td data-label="Field">Last name</td>
+                    <td data-label="Chair of governors / chair of local governors">Required*</td>
+                    <td data-label="Chair of shared local governors">Required*</td>
+                    <td data-label="Chair of trustees">Required*</td>
+                    <td data-label="Governors / local governors / trustees">Required*</td>
+                    <td data-label="Shared local governors">Required*</td>
+                    <td data-label="Members">Required*</td>
+                    <td data-label="Accounting officer / chief financial officer">Required*</td>
+                    <td data-label="Visible to the public?">Yes</td>
+                </tr>
+                <tr>
+                    <td data-label="Field">Governor id number (GID)</td>
+                    <td data-label="Chair of governors / chair of local governors">Required</td>
+                    <td data-label="Chair of shared local governors">Required</td>
+                    <td data-label="Chair of trustees">Required</td>
+                    <td data-label="Governors / local governors / trustees">Required</td>
+                    <td data-label="Shared local governors">Required</td>
+                    <td data-label="Members">Required</td>
+                    <td data-label="Accounting officer / chief financial officer">Required</td>
+                    <td data-label="Visible to the public?">No</td>
+                </tr>
+                <tr>
+                    <td data-label="Field">Appointing body</td>
+                    <td data-label="Chair of governors / chair of local governors">Required*</td>
+                    <td data-label="Chair of shared local governors">Required*</td>
+                    <td data-label="Chair of trustees">Required*</td>
+                    <td data-label="Governors / local governors / trustees">Required*</td>
+                    <td data-label="Shared local governors">Required*</td>
+                    <td data-label="Members">Required*</td>
+                    <td data-label="Accounting officer / chief financial officer">N/A</td>
+                    <td data-label="Visible to the public?">Yes</td>
+                </tr>
+                <tr>
+                    <td data-label="Field">Date of appointment</td>
+                    <td data-label="Chair of governors / chair of local governors">Required*</td>
+                    <td data-label="Chair of shared local governors">Required*</td>
+                    <td data-label="Chair of trustees">Required*</td>
+                    <td data-label="Governors / local governors / trustees">Required*</td>
+                    <td data-label="Shared local governors">Required*</td>
+                    <td data-label="Members">Required*</td>
+                    <td data-label="Accounting officer / chief financial officer">Required*</td>
+                    <td data-label="Visible to the public?">Yes</td>
+                </tr>
+                <tr>
+                    <td data-label="Field">Date term of office ends</td>
+                    <td data-label="Chair of governors / chair of local governors">Required*1</td>
+                    <td data-label="Chair of shared local governors">Required*</td>
+                    <td data-label="Chair of trustees">Required*1</td>
+                    <td data-label="Governors / local governors / trustees">Required*1</td>
+                    <td data-label="Shared local governors">Required*1</td>
+                    <td data-label="Members">N/A</td>
+                    <td data-label="Accounting officer / chief financial officer">Required*2</td>
+                    <td data-label="Visible to the public?">Yes</td>
+                </tr>
+                <tr>
+                    <td data-label="Field">Home postcode</td>
+                    <td data-label="Chair of governors / chair of local governors">Required</td>
+                    <td data-label="Chair of shared local governors">Required</td>
+                    <td data-label="Chair of trustees">Required</td>
+                    <td data-label="Governors / local governors / trustees">Required</td>
+                    <td data-label="Shared local governors">Required</td>
+                    <td data-label="Members">Required</td>
+                    <td data-label="Accounting officer / chief financial officer">N/A</td>
+                    <td data-label="Visible to the public?">No</td>
+                </tr>
+                <tr>
+                    <td data-label="Field">Email address</td>
+                    <td data-label="Chair of governors / chair of local governors">Required*</td>
+                    <td data-label="Chair of shared local governors">Required</td>
+                    <td data-label="Chair of trustees">Required*</td>
+                    <td data-label="Governors / local governors / trustees">Required</td>
+                    <td data-label="Shared local governors">Required</td>
+                    <td data-label="Members">Required</td>
+                    <td data-label="Accounting officer / chief financial officer">Required*</td>
+                    <td data-label="Visible to the public?">No</td>
+                </tr>
+                <tr>
+                    <td data-label="Field">Date of birth</td>
+                    <td data-label="Chair of governors / chair of local governors">Required</td>
+                    <td data-label="Chair of shared local governors">Required</td>
+                    <td data-label="Chair of trustees">Required</td>
+                    <td data-label="Governors / local governors / trustees">Required</td>
+                    <td data-label="Shared local governors">Required</td>
+                    <td data-label="Members">Required</td>
+                    <td data-label="Accounting officer / chief financial officer">N/A</td>
+                    <td data-label="Visible to the public?">No</td>
+                </tr>
+                <tr>
+                    <td data-label="Field">Previous title</td>
+                    <td data-label="Chair of governors / chair of local governors">Required</td>
+                    <td data-label="Chair of shared local governors">Required</td>
+                    <td data-label="Chair of trustees">Required</td>
+                    <td data-label="Governors / local governors / trustees">Required</td>
+                    <td data-label="Shared local governors">Required</td>
+                    <td data-label="Members">Required</td>
+                    <td data-label="Accounting officer / chief financial officer">N/A</td>
+                    <td data-label="Visible to the public?">No</td>
+                </tr>
+                <tr>
+                    <td data-label="Field">Previous first name 1</td>
+                    <td data-label="Chair of governors / chair of local governors">Required</td>
+                    <td data-label="Chair of shared local governors">Required</td>
+                    <td data-label="Chair of trustees">Required</td>
+                    <td data-label="Governors / local governors / trustees">Required</td>
+                    <td data-label="Shared local governors">Required</td>
+                    <td data-label="Members">Required</td>
+                    <td data-label="Accounting officer / chief financial officer">N/A</td>
+                    <td data-label="Visible to the public?">No </td>
+                </tr>
+                <tr>
+                    <td data-label="Field">Previous first name 2</td>
+                    <td data-label="Chair of governors / chair of local governors">Required</td>
+                    <td data-label="Chair of shared local governors">Required</td>
+                    <td data-label="Chair of trustees">Required</td>
+                    <td data-label="Governors / local governors / trustees">Required</td>
+                    <td data-label="Shared local governors">Required</td>
+                    <td data-label="Members">Required</td>
+                    <td data-label="Accounting officer / chief financial officer">N/A</td>
+                    <td data-label="Visible to the public?">No</td>
+                </tr>
+                <tr>
+                    <td data-label="Field">Previous last name</td>
+                    <td data-label="Chair of governors / chair of local governors">Required</td>
+                    <td data-label="Chair of shared local governors">Required</td>
+                    <td data-label="Chair of trustees">Required</td>
+                    <td data-label="Governors / local governors / trustees">Required</td>
+                    <td data-label="Shared local governors">Required</td>
+                    <td data-label="Members">Required</td>
+                    <td data-label="Accounting officer / chief financial officer">N/A</td>
+                    <td data-label="Visible to the public?">No</td>
+                </tr>
+                <tr>
+                    <td data-label="Field">Telephone number</td>
+                    <td data-label="Chair of governors / chair of local governors">Required*</td>
+                    <td data-label="Chair of shared local governors">Required*</td>
+                    <td data-label="Chair of trustees">N/A</td>
+                    <td data-label="Governors / local governors / trustees">N/A</td>
+                    <td data-label="Shared local governors">N/A</td>
+                    <td data-label="Members">N/A</td>
+                    <td data-label="Accounting officer / chief financial officer">N/A</td>
+                    <td data-label="Visible to the public?">No</td>
+                </tr>
+            </tbody>
+        </table>
+        <p></p>
+
+        <ul class="font-small list list-bullet">
+            <li>1 - ‘Date term of office ends’ is not required for ex-officio appointments (appointments made by virtue of office such as headteacher/principal).</li>
+            <li>2 - This is not editable. The date is populated on replacement with the day before the date of appointment of the replacement chief financial officer/accounting officer.</li>
+            <li>* - This information is required before the record can be saved.</li>
+        </ul>
+        <p>Associate governors – information is not required for associate governors.</p>
+        <p>Corporate members – if you have a corporate member please provide information about the person who acts on behalf of the corporate member.</p>
+
+
+        <h2 class="heading-medium subheading">Add, edit or delete governance information via the governance tab</h2>
+        <p>There are two methods to add or update governance data, either by directly entering information on the governance tab or using the bulk update method.</p>
+        <ul class="font-small list list-bullet">
+            <li>
+                <h3 class="heading-small subheading">Add new records via the governance tab</h3>
+                <ul class="font-small list list-number">
+                    <li>Select ‘Edit governance’ from the governance tab;</li>
+                    <li>
+                        Select the role of the person you want to add, then click the ‘Add’ button.
+                        <p>There can only be one chair of governors, chair of local governors, chair of shared local governors, chair of trustees, accounting officer and chief financial officer. There can be multiple governors, local governors, shared local governors, members and trustees;</p>
+                    </li>
+                    <li>Complete all of the fields required to save the record then select ‘Add</li>
+                </ul>
+            </li>
+            <li>
+                <h3 class="heading-small subheading">Update records via the governance tab</h3>
+                <ul class="font-small list list-number">
+                    <li>Select the governance tab and then ‘Edit governance’;</li>
+                    <li>Select ‘Edit’ below the role you want to edit, the record opens in edit mode;</li>
+                    <li>Make the required changes. Complete all of the fields required to save the record then select ‘Add’.</li>
+                </ul>
+                <p>For accounting officer and chief financial officer the ‘Date term of office ends’ is not editable. The date is populated with the day before the date of appointment of the replacement chief financial officer/accounting officer.</p>
+                <p>If the term of office is extended, please add this as a new appointment and do not change the end date for the historic record.</p>
+            </li>
+            <li>
+                <h3 class="heading-small subheading">Replace a fixed role via the governance tab</h3>
+                <p>Chair of governors, chair of trustees, chair of shared local governors, accounting officer and chief financial officer are fixed roles and should be replaced when a term of office ends</p>
+                <p>To replace a fixed role:</p>
+                <ul class="font-small list list-number">
+                    <li>Select the governance tab and select ‘Edit’;</li>
+                    <li>Select ‘Replace’ opposite the role you want to replace;</li>
+                    <li>A new record opens in edit mode.</li>
+                </ul>
+
+                <p>There are a number of scenarios that need to be considered and depending on the options chosen follow the instructions:</p>
+                <ul class="font-small list list-alpha">
+                    <li>the chair needs to be replaced and not reinstated as a governor;</li>
+                    <li>the chair needs to be replaced and reinstated as a governor;</li>
+                    <li>the chair needs to be replaced by a new governor;</li>
+                    <li>the chair needs to be replaced by a current governor.</li>
+                </ul>
+
+                <p>Please note that if the establishment has shared local governors the option of shared chair of local governors needs to be selected.</p>
+                <p>Complete all of the fields required to save the record then select ‘Save’. The original record for this role will be automatically archived when the save button is clicked.</p>
+                <p>For accounting officer and chief financial officer only the ‘Date term of office ends’ is not editable. The date is populated with the day before the date of appointment of the replacement chief financial officer/accounting officer.</p>
+            </li>
+            <li>
+                <h3 class="heading-small subheading">Editing and closing a record via the governance tab</h3>
+                <p>The ‘Edit person’ option can be used to edit the term of office end date when a governor, local governor, shared local governor, trustee or member have resigned early. Once this has been updated and the date is in the past the record will be moved to the ‘Historic (left within last 12 months)’ section. This option also allows the details to be amended.</p>
+            </li>
+            <li>
+                <h3 class="heading-small subheading">Editing a completed term of office and deleting a record via the governance tab</h3>
+                <p>The ‘Remove person’ option gives two further options:</p>
+                <ul class="font-small list list-number">
+                    <li>
+                        ‘This person has completed their term’. This should be used when a
+                        governor, local governor, shared local governor, trustee or member have
+                        fully completed their term of office. Once this has been updated and the
+                        date is in the past the record will be moved to the ‘Historic (left within last
+                        12 months)’ section.
+                    </li>
+                    <li>
+                        ‘Remove person’. This option should only be used if the record was
+                        created in error. Please note that if this option is selected the details are
+                        removed from the system and there is no record of them retained.
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <h3 class="heading-small subheading">Delegated authority text box (multi academy trusts (MATs) only)</h3>
+                <p>Some MATs operate a governance model where it has delegated certain responsibilities to a single body which may govern 2 or more academies within the MAT. This is known as a shared governance model. This governance information needs to be completed before the individual academy governance information.</p>
+                <p>In the governance tab, you can edit details of the delegated authority of the local governing body (LGB). Select ‘Edit’ and use the text box to provide details of the level of delegated authority that an LGB has, including a shared LGB if applicable. Include in headline terms the role and remit of any LGBs and any governance functions delegated to them.</p>
+                <p>Within a MAT with multiple shared governance bodies, you should add a brief description of how their roles report to the MAT board.</p>
+            </li>
+            <li>
+                <h3 class="heading-small subheading">Create shared chair of local governing body and/or shared local governor</h3>
+                <ul class="font-small list list-bullet">
+                    <li>
+                        <h4 class="heading-small subheading">MAT record</h4>
+                        <p>
+                            In the MAT governance tab under the ‘Add person’ section, using the drop down list option in select a role choose the type of governor(s) required and select ‘Add person’. Complete the record for that person and repeat for however many governor roles that are required.
+                        </p>
+                    </li>
+                    <li>
+                        <h4 class="heading-small subheading">Individual academy record</h4>
+                        <p>To add the relevant shared chair of local governing body and shared local governor to the relevant academy select:</p>
+                        <ul class="font-small list list-number">
+                            <li>The academy record and then go into the governance tab;</li>
+                            <li>Under governor sharing select ‘Edit governor sharing’;</li>
+                            <li>
+                                Select the ‘This establishment has local governors and also shares
+                                governors with other academies in the trust.’ option and then select
+                                ‘Save governor sharing’;
+                            </li>
+                            <li>
+                                To add the relevant shared chair of local governing body and/or shared
+                                local governor into the academy record go to the ‘Add person’ section.
+                                Using the drop down list option in select a role choose the shared chair
+                                of local governing body or shared local governor. You then need to
+                                select ‘Add person’. From the list that appears select either shared chair
+                                of local governing body or shared local governor.
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+
+
+        <h3 class="heading-medium subheading">Add or update governance information via bulk update</h3>
+        <p>‘Governance bulk update’ allows you to download your existing data (if any) and upload new records or amend existing records.</p>
+        <p>If you’re an establishment user, you can only upload governance data for your own establishment.</p>
+        <p>If you’re a MAT user, you can upload governance data for your own MAT plus any academies linked to your MAT.</p>
+        <p>It is not possible to upload or update details of shared governors using bulk update.</p>
+        <p>Here’s a step-by-step guide to the process:</p>
+        <ul class="font-small list list-number">
+            <li>Select ‘Tools’ from the menu at the top of the page;</li>
+            <li>In the ‘Update’ section, select ‘Bulk update governance’;</li>
+            <li>Download the template (XLSX) using the link provided. If you have already provided some governance information the template will be prepopulated with your data;</li>
+            <li>You can edit the existing data by updating the required field within the spreadsheet. Please do not edit the column titled GID;</li>
+            <li>
+                Use blank rows to add new records. You should provide either the
+                unique reference number (URN) for the school or academy or the UID
+                (provided on the trust record) for the MAT and complete all of the
+                required fields (see section 4). For new records including the initial
+                import of records please leave the column titled GID blank;
+            </li>
+            <li>
+                To replace a ‘fixed role’ (chair of governors, chair of trustees, accounting
+                officer or chief financial officer) please add these details to a blank row.
+                The original record for this role will be automatically archived when the
+                template is uploaded;
+            </li>
+            <li>
+                Once you have completed all of the required information save your
+                template, then upload it for validation;
+            </li>
+            <li>
+                If your file is successfully validated you can then complete the upload of
+                your governance data;
+            </li>
+            <li>
+                If your file is not successfully validated please download the results. The
+                fields that failed validation will be highlighted in red. Please correct these
+                entries and return to step 7 above.
+            </li>
+        </ul>
+
+        <h3 class="heading-medium subheading">Historic data</h3>
+        <p>Governance information for any of the governance roles where the term of office has ended within the last 12 months will be automatically archived to the section ‘Historic (left within past 12 months)’.</p>
+        <p>Governance information for any of the governance roles where the term of office ended more than 12 months ago will be automatically archived and removed from public view.</p>
+    </div>
+</div>

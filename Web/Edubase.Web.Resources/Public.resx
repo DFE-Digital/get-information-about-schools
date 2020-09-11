@@ -123,6 +123,9 @@
   <data name="AgeRangeLink" xml:space="preserve">
     <value />
   </data>
+  <data name="AgeRangeOnlineProvider" xml:space="preserve">
+    <value>The age range that the establishment makes provision for.</value>
+  </data>
   <data name="SchoolCapacity" xml:space="preserve">
     <value>The number of pupil places the establishment can accommodate.</value>
   </data>

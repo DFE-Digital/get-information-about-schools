@@ -1,8 +1,8 @@
-﻿@model EstablishmentDetailViewModel
+@model EstablishmentDetailViewModel
 
 <div id="school-location" class="tab-content">
 
-    @if (Model.UserCanEdit)
+    @if (Model.UserCanEdit && Model.TabEditPolicy.Location)
     {
         @Html.ActionLink("Edit location", "EditLocation", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "govuk-button govuk-button--secondary" })
     }
@@ -81,7 +81,7 @@
         }
     }
 
-    @if (Model.UserCanEdit)
+    @if (Model.UserCanEdit && Model.TabEditPolicy.Location)
     {
         @Html.ActionLink("Edit location", "EditLocation", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "govuk-button govuk-button--secondary" })
     }

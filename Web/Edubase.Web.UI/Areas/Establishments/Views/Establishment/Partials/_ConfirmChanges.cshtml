@@ -1,4 +1,6 @@
 @using System.Linq
+@using Edubase.Common
+@using Edubase.Services.Enums
 @using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
 @model ViewModel
 
@@ -9,7 +11,7 @@
     <div class="govuk-grid-column-full">
         <div class="govuk-breadcrumbs">
             <ol class="govuk-breadcrumbs__list">
-                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new { @class = "govuk-breadcrumbs__link"})</li>
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})</li>
                 @if (Model.LegalParentGroup != null)
                 {
                     <li class="govuk-breadcrumbs__list-item">@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new { id = Model.LegalParentGroup.GroupUId, area = "Groups" }, new { @class = "govuk-breadcrumbs__link"})</li>
@@ -24,11 +26,24 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
+        @if (
+            Model.EstablishmentTypeGroupId.OneOfThese(eLookupEstablishmentTypeGroup.IndependentSchools, eLookupEstablishmentTypeGroup.LAMaintainedSchools)
+            && Model.ChangesSummary.Any(x => x.Id.Equals(nameof(Model.StatusId)))
+            && Model.ChangesSummary.First(x => x.Id.Equals(nameof(Model.StatusId))).NewValue.Equals(Model.Statuses.First(x => x.Value.Equals("4")).Text)
+            )
+        {
+            <div class="warning-message js-trigger-aria-live">
+                <p class="message-text">
+                    Once the updates have been confirmed, the system will automatically change the status of the record to closed based on the close date provided
+                </p>
+            </div>
+        }
         <h1 class="govuk-heading-l">Confirm updates to establishment</h1>
     </div>
 </div>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+
         @if (Model.IsAcademy || Model.IsLAMaintained || Model.CCIsDemoting || Model.CCIsPromoting)
         {
             <div class="gias-panel-indent">
@@ -38,7 +53,8 @@
                         Please confirm that in making these changes the academy has:
                     </p>
                     <ul class="govuk-list govuk-list--bullet warning-list">
-                        <li>followed the <a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" rel="external" target="_blank">statutory guidance <span class=" govuk-visually-hidden">Opens in new window</span></a>
+                        <li>
+                            followed the <a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" rel="external" target="_blank">statutory guidance <span class=" govuk-visually-hidden">Opens in new window</span></a>
                         </li>
                         <li>submitted a deed of variation to the funding agreement where required</li>
                     </ul>
@@ -81,6 +97,7 @@
             </div>
         }
 
+<<<<<<< HEAD
         <p>Please confirm updates to the following items for the Establishment @Model.OriginalEstablishmentName. <abbr title="Unique Reference Number">URN</abbr>: @Model.Urn.</p>
     </div>
 </div>

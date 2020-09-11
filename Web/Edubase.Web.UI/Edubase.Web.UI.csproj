@@ -325,6 +325,7 @@
     <Compile Include="Areas\Establishments\Models\AdditionalAddressViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\BulkAssociateEstabs2GroupsViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\BulkCreateFreeSchoolsViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\TabEditPolicy.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\BulkAssociateEstabs2GroupsViewModelValidator.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\BulkCreateFreeSchoolsViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernanceController.cs" />
@@ -337,6 +338,7 @@
     <Compile Include="Controllers\FaqController.cs" />
     <Compile Include="Controllers\GlossaryController.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\ValidateEstablishmentJoinedDateModel.cs" />
+    <Compile Include="Controllers\GuidanceController.cs" />
     <Compile Include="Controllers\SitemapController.cs" />
     <Compile Include="Filters\ModelStateTransfer.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
@@ -521,6 +523,29 @@
     <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Downloads\SelectDataset.cshtml" />
     <Content Include="Areas\Groups\Views\Group\Warnings.cshtml" />
     <Content Include="gulpfile.js" />
+    <Content Include="public\assets\images\guidance\childrens_centre_details_page.png" />
+    <Content Include="public\assets\images\guidance\childrens_centre_details_page_mobile.png" />
+    <Content Include="public\assets\images\guidance\childrens_centre_links_page.png" />
+    <Content Include="public\assets\images\guidance\childrens_centre_links_page_mobile.png" />
+    <Content Include="public\assets\images\guidance\childrens_centre_tools_page.png" />
+    <Content Include="public\assets\images\guidance\childrens_centre_tools_page_ccgroup.png" />
+    <Content Include="public\assets\images\guidance\childrens_centre_tools_page_ccgroup_mobile.png" />
+    <Content Include="public\assets\images\guidance\childrens_centre_tools_page_mobile.png" />
+    <Content Include="public\assets\images\guidance\establishment_bulk_update.png" />
+    <Content Include="public\assets\images\guidance\establishment_bulk_update_mobile.png" />
+    <Content Include="public\assets\images\guidance\establishment_bulk_update_multicolumn.png" />
+    <Content Include="public\assets\images\guidance\establishment_bulk_update_save_spreadsheet.png" />
+    <Content Include="public\assets\images\guidance\establishment_bulk_update_spreadsheet.png" />
+    <Content Include="public\assets\images\guidance\federation_tools_page.png" />
+    <Content Include="public\assets\images\guidance\federation_tools_page_mobile.png" />
+    <Content Include="public\assets\images\guidance\general_user_guide_changes.png" />
+    <Content Include="public\assets\images\guidance\general_user_guide_changes_mobile.png" />
+    <Content Include="public\assets\images\guidance\general_user_guide_establishment_details.png" />
+    <Content Include="public\assets\images\guidance\general_user_guide_establishment_details_mobile.png" />
+    <Content Include="public\assets\images\guidance\general_user_guide_group_edit.png" />
+    <Content Include="public\assets\images\guidance\general_user_guide_group_edit_mobile.png" />
+    <Content Include="public\assets\images\guidance\general_user_guide_search_filters.png" />
+    <Content Include="public\assets\images\guidance\general_user_guide_search_filters_mobile.png" />
     <Content Include="public\assets\images\icons\arrows-vert.png" />
     <Content Include="public\assets\images\icons\black-transparent-X.png" />
     <Content Include="public\assets\images\icons\icon-burger.png" />
@@ -650,6 +675,7 @@
     <Content Include="robots.txt" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="App_offline_x.htm" />
+    <Content Include="Views\Home\Accessibility.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -728,7 +754,7 @@
     <Content Include="Areas\Establishments\Views\Establishment\EditLinks.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\AddEditLink.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AddressViewModel.cshtml" />
-    <Content Include="Views\Home\Guidance.cshtml" />
+    <Content Include="Views\Guidance\Index.cshtml" />
     <Content Include="Views\Home\Cookies.cshtml" />
     <Content Include="Views\Home\News.cshtml" />
     <Content Include="Views\Shared\FullErrorDetail.cshtml" />
@@ -764,6 +790,14 @@
     <Content Include="Views\Home\NewsArchive.cshtml" />
     <Content Include="Views\Home\Responsibilities.cshtml" />
     <Content Include="Views\Downloads\ReadyToDownload.cshtml" />
+    <Content Include="Views\Home\Privacy.cshtml" />
+    <Content Include="Views\Guidance\General.cshtml" />
+    <Content Include="Views\Guidance\EstablishmentBulkUpdate.cshtml" />
+    <Content Include="Views\Guidance\ChildrensCentre.cshtml" />
+    <Content Include="Views\Guidance\Federation.cshtml" />
+    <Content Include="Views\Guidance\Governance.cshtml" />
+    <Content Include="public\downloads\20200814_Accessibility_Assurance_Report-Get_Information_About_Schools.pdf" />
+    <Content Include="public\downloads\20200814__Accessibility_Assurance_Report-Get_Information_About_Schools.pdf" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>

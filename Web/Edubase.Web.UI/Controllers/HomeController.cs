@@ -22,7 +22,7 @@ namespace Edubase.Web.UI.Controllers
         const string NewsBlobNameHtml = "newsblog.html";
         const string ArchiveBlobNameHtml = "archiveblog.html";
         public const string NewsBlobETag = "newsblog-etag";
-        
+
         private readonly ILookupService _lookup;
         private readonly IBlobService _blobService;
         private readonly ICacheAccessor _cacheAccessor;
@@ -33,15 +33,18 @@ namespace Edubase.Web.UI.Controllers
             _blobService = blobService;
             _cacheAccessor = cacheAccessor;
         }
-        
+
+        [Route("~/accessibility")]
+        public ActionResult Accessibility() => View();
+
         [Route("~/cookies")]
         public ActionResult Cookies() => View();
 
-        [Route("~/guidance")]
-        public ActionResult Guidance() => View();
-
         [Route("~/responsibilities")]
         public ActionResult Responsibilities() => View();
+
+        [Route("~/privacy")]
+        public ActionResult Privacy() => View();
 
         [Route("~/news")]
         public async Task<ActionResult> News(bool? refresh)
@@ -89,10 +92,10 @@ namespace Edubase.Web.UI.Controllers
 
         [Route("~/help")]
         public ActionResult Help() => View();
-        
+
         [Route("~/8bg594ghfdgh5t90-throwex"), Filters.EdubaseAuthorize]
         public ActionResult ThrowException() { throw new Exception("Test exception - to test exception reporting"); }
-        
+
         [Route("~/service-wsdl"), Route("~/service.wsdl")]
         public async Task<ActionResult> ServiceWSDL()
         {

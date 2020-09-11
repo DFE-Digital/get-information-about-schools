@@ -42,6 +42,7 @@ namespace Edubase.Web.UI.Models
         public EstablishmentDisplayEditPolicy DisplayPolicy { get; set; }
 
         public TabDisplayPolicy TabDisplayPolicy { get; set; }
+        public TabEditPolicy TabEditPolicy { get; set; }
 
         public enum GovRole
         {
@@ -100,7 +101,7 @@ namespace Edubase.Web.UI.Models
         public string BoardingEstabName { get; set; }
         public string AccommodationChangedName { get; set; }
         public string QualityAssuranceBodyName { get; set; }
-        public string EstablishmentAccredited { get; set; }
+        public string EstablishmentAccreditedName { get; set; }
         public string ProvisionNurseryName { get; set; }
         public string ProvisionOfficialSixthFormName { get; set; }
         public string Section41ApprovedName { get; set; }
