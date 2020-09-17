@@ -636,13 +636,19 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 {
                     var newGovernor = model.SharedGovernors.SingleOrDefault(s => s.Id == model.SelectedGovernorId);
 
-                    await _governorsWriteService.AddSharedGovernorAppointmentAsync(model.SelectedGovernorId,
+                    var validation = await _governorsWriteService.AddSharedGovernorAppointmentAsync(model.SelectedGovernorId,
                         model.Urn.Value,
                         model.DateTermEnds.ToDateTime().Value.AddDays(1),
                         newGovernor.AppointmentEndDate.ToDateTime(), User);
 
-                    var url = $"{Url.RouteUrl("EstabDetails", new {id = model.Urn, saved = true})}#school-governance";
-                    return Redirect(url);
+                    if (!validation.HasErrors)
+                    {
+                        var url =
+                            $"{Url.RouteUrl("EstabDetails", new {id = model.Urn, saved = true})}#school-governance";
+                        return Redirect(url);
+                    }
+
+                    validation.ApplyToModelState(ControllerContext);
                 }
                 else
                 {

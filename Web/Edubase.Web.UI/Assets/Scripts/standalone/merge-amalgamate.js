@@ -583,6 +583,7 @@ var mergersApp = new Vue({
         },
         clearErrors: function(){
             window.document.title = "Amalgamations and mergers tool - GOV.UK";
+            this.apiError = {};
             this.mergerTypeError = false;
             this.nameError = false;
             this.phaseError = false;

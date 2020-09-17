@@ -1,4 +1,6 @@
 @using System.Linq
+@using Edubase.Common
+@using Edubase.Services.Enums
 @using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
 @model ViewModel
 
@@ -22,6 +24,19 @@
 <div class="grid-row">
     <div class="column-full edit-changes-summary">
 
+        @if (
+            Model.EstablishmentTypeGroupId.OneOfThese(eLookupEstablishmentTypeGroup.IndependentSchools, eLookupEstablishmentTypeGroup.LAMaintainedSchools)
+            && Model.ChangesSummary.Any(x => x.Id.Equals(nameof(Model.StatusId)))
+            && Model.ChangesSummary.First(x => x.Id.Equals(nameof(Model.StatusId))).NewValue.Equals(Model.Statuses.First(x => x.Value.Equals("4")).Text)
+            )
+        {
+        <div class="warning-message js-trigger-aria-live">
+            <p class="message-text">
+                Once the updates have been confirmed, the system will automatically change the status of the record to closed based on the close date provided
+            </p>
+        </div>
+        }
+
         <h1 class="heading-large">Confirm updates to establishment</h1>
 
         @if (Model.IsAcademy || Model.IsLAMaintained || Model.CCIsDemoting || Model.CCIsPromoting)
@@ -33,7 +48,8 @@
                         Please confirm that in making these changes the academy has:
                     </p>
                     <ul class="list list-bullet warning-list">
-                        <li>followed the <a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" rel="external" target="_blank">statutory guidance <span class="visually-hidden">Opens in new window</span></a>
+                        <li>
+                            followed the <a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" rel="external" target="_blank">statutory guidance <span class="visually-hidden">Opens in new window</span></a>
                         </li>
                         <li>submitted a deed of variation to the funding agreement where required</li>
                     </ul>
@@ -78,7 +94,7 @@
 
         <p class="text">Please confirm updates to the following items for the Establishment @Model.OriginalEstablishmentName. <abbr title="Unique Reference Number">URN</abbr>: @Model.Urn.</p>
 
-        <p class="table-caption">Showing 1 - @Model.ChangesSummary.Count of  @Model.ChangesSummary.Count</p>
+        <p class="table-caption">Showing 1 - @Model.ChangesSummary.Count of @Model.ChangesSummary.Count</p>
         <table class="edubase-table changes-summary confirm-changes">
             <caption class="visuallyhidden">Establishment updates summary</caption>
             <thead>
@@ -91,22 +107,29 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.ChangesSummary) {
+                @foreach (var item in Model.ChangesSummary)
+                {
                     <tr>
                         <td data-label="Field">@item.Name</td>
                         <td data-label="Old value">@(item.OldValue ?? "<empty>")</td>
                         <td data-label="New value">@(item.NewValue ?? "<empty>")</td>
                         <td data-label="This field requires approval">
-                            @if (item.RequiresApproval) {
+                            @if (item.RequiresApproval)
+                            {
                                 <div class="requires-approval">Yes</div>
-                            } else {
+                            }
+                            else
+                            {
                                 @: No
                             }
                         </td>
                         <td data-label="Approver name">
-                            @if (item.RequiresApproval) {
+                            @if (item.RequiresApproval)
+                            {
                                 @(item.ApproverName ?? "-")
-                            } else {
+                            }
+                            else
+                            {
                                 @: &ndash;
                             }
                         </td>
@@ -114,7 +137,7 @@
                 }
             </tbody>
         </table>
-        <p class="table-caption">Showing 1 - @Model.ChangesSummary.Count of  @Model.ChangesSummary.Count</p>
+        <p class="table-caption">Showing 1 - @Model.ChangesSummary.Count of @Model.ChangesSummary.Count</p>
 
         @Html.EditorFor(x => x.ChangeEffectiveDate, new { title = "Effective date (optional)" })
 
@@ -122,8 +145,8 @@
         {
             <div class="form-group push--bottom">
                 <div class="multiple-choice">
-                    @Html.CheckBoxFor(x => x.OverrideCRProcess, new { @id="override-cr"})
-                    @Html.LabelFor(x => x.OverrideCRProcess, "Override CR", new { @for="override-cr" })
+                    @Html.CheckBoxFor(x => x.OverrideCRProcess, new { @id = "override-cr" })
+                    @Html.LabelFor(x => x.OverrideCRProcess, "Override CR", new { @for = "override-cr" })
                 </div>
             </div>
         }

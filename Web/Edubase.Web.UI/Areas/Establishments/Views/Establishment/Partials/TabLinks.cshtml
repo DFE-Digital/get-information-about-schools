@@ -1,7 +1,7 @@
-﻿@model EstablishmentDetailViewModel
+@model EstablishmentDetailViewModel
 
 <div id="school-links" class="tab-content">
-    @if (Model.UserCanEdit)
+    @if (Model.UserCanEdit && Model.TabEditPolicy.Links)
     {
         <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Establishment.Urn })" class="button button-secondary">Edit links</a>
 
@@ -48,7 +48,7 @@
         <p>There are no linked establishments</p>
     }
 
-    @if (Model.UserCanEdit)
+    @if (Model.UserCanEdit && Model.TabEditPolicy.Links)
     {
         <div class="button-row">
             <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Establishment.Urn })" class="button button-secondary">Edit links</a>

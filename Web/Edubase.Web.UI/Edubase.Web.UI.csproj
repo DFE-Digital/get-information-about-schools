@@ -325,6 +325,7 @@
     <Compile Include="Areas\Establishments\Models\AdditionalAddressViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\BulkAssociateEstabs2GroupsViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\BulkCreateFreeSchoolsViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\TabEditPolicy.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\BulkAssociateEstabs2GroupsViewModelValidator.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\BulkCreateFreeSchoolsViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernanceController.cs" />
@@ -956,6 +957,7 @@
     <Content Include="robots.txt" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="App_offline_x.htm" />
+    <Content Include="Views\Home\Accessibility.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1072,6 +1074,8 @@
     <Content Include="Views\Guidance\ChildrensCentre.cshtml" />
     <Content Include="Views\Guidance\Federation.cshtml" />
     <Content Include="Views\Guidance\Governance.cshtml" />
+    <Content Include="public\downloads\20200814_Accessibility_Assurance_Report-Get_Information_About_Schools.pdf" />
+    <Content Include="public\downloads\20200814__Accessibility_Assurance_Report-Get_Information_About_Schools.pdf" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>
