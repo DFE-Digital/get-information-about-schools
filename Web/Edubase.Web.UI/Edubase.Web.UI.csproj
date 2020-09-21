@@ -535,6 +535,7 @@
     <Content Include="Assets\Scripts\Views\group-details.js" />
     <Content Include="Assets\Scripts\Views\gias-search.js" />
     <Content Include="Assets\Scripts\Elements\search-utils.js" />
+    <Content Include="public\assets\images\accessibility\accessibility_links_misplaced.png" />
     <Content Include="public\assets\images\guidance\childrens_centre_details_page.png" />
     <Content Include="public\assets\images\guidance\childrens_centre_details_page_mobile.png" />
     <Content Include="public\assets\images\guidance\childrens_centre_links_page.png" />
@@ -946,6 +947,7 @@
     <Content Include="App_Code\helpers.cshtml" />
     <Content Include="Assets\Sass\elements\forms\_form-multiple-choice.scss" />
     <Content Include="Assets\Sass\views\_guidance.scss" />
+    <Content Include="Assets\Sass\views\_accessibility-statement.scss" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
@@ -1076,6 +1078,7 @@
     <Content Include="Views\Guidance\Governance.cshtml" />
     <Content Include="public\downloads\20200814_Accessibility_Assurance_Report-Get_Information_About_Schools.pdf" />
     <Content Include="public\downloads\20200814__Accessibility_Assurance_Report-Get_Information_About_Schools.pdf" />
+    <Content Include="Views\Home\AccessibilityReport.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>

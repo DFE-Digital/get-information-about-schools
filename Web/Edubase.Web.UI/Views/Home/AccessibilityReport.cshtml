@@ -1,0 +1,224 @@
+@{
+    ViewBag.Title = "Accessibility assessment report for Get information about schools";
+}
+<div class="grid-row">
+    <div class="column-full">
+        <div class="breadcrumbs">
+            <ol>
+                <li>
+                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
+                </li>
+                <li>
+                    @Html.ActionLink("Accessibility", "Accessibility", "Home")
+                </li>
+            </ol>
+        </div>
+    </div>
+</div>
+<div class="grid-row">
+    <div class="column-two-thirds accessibilityStatement">
+        <h1 class="heading-xlarge">Accessibility assessment report for Get information about schools</h1>
+
+        <h2 class="heading-medium">Testing Scope</h2>
+        <p>
+            Through completing user journeys and automated testing, the team have completed
+            accessibility assurance testing on your service. Testing was completed on 14/08/2020.
+        </p>
+
+        <h3 class="heading-small">Limitations</h3>
+        <p>However, the following limitations of our testing must be noted:</p>
+        <ul class="list-bullet">
+            <li>We cannot test the service on every available internet browser; therefore, we cannot guarantee universal compatibility.</li>
+            <li>We cannot test the service within every operating system.</li>
+            <li>We cannot test the service with every Accessibility software package.</li>
+            <li>We cannot provide mobile app accessibility testing.</li>
+        </ul>
+
+        <h2 class="heading-medium">Testing Standards</h2>
+        <p>
+            The Web Content Accessibility Guidelines (known as WCAG 2.1) are an internationally
+            recognised set of recommendations for improving web accessibility. Our team uses these
+            standards in testing to help determine a service&rsquo;s level of Accessibility.
+        </p>
+        <p>
+            In the UK, the Web Accessibility Regulations 2018 stipulate that public websites and mobile
+            apps must be WCAG 2.1 Level AA compliant. In following with industry best practice and
+            globally recognised standards, we will use the WCAG 2.1 AA standards during our testing.
+        </p>
+
+        <h3 class="heading-small">Devices</h3>
+        <p>
+            The team completed testing on a variety of devices; including:
+        </p>
+        <ul class="list-bullet">
+            <li>A Macbook (2016) device</li>
+            <li>A Microsoft Surface Book (64-bit operating system - DfE Device)</li>
+        </ul>
+        <p><span class="bold-xsmall">Please note: We have not tested on a Chromebook.</span></p>
+
+        <h3 class="heading-small">Operating Systems</h3>
+        <p>
+            The team have tested the following operating systems:
+        </p>
+        <ul class="list-bullet">
+            <li>macOS</li>
+            <li>Windows 10</li>
+        </ul>
+
+        <h3 class="heading-small">Accessibility Software</h3>
+        <p>
+            The team tested using the following:
+        </p>
+        <ul class="list-bullet">
+            <li>
+                <span class="bold-small">JAWS (2020)</span>
+                - a screen reader (text to speech) program developed for users whose
+                vision loss prevents them from seeing screen content or navigating with a mouse.
+                JAWS provides speech and Braille output for the most popular computer
+                applications.
+            </li>
+            <li>
+                <span class="bold-small">Windows Narrator</span>
+                - a screen reader (text to speech) program inbuilt within windows
+                10 operating system for users with vision loss.
+            </li>
+            <li>
+                <span class="bold-small">Voiceover</span>
+                - a screen reader (text to speech) program inbuilt within macOS
+                operating system for users with vision loss.
+            </li>
+        </ul>
+
+        <h2 class="heading-medium">Test Findings</h2>
+        <h3 class="heading-small">Automated Testing General Findings</h3>
+        <h4 class="heading-xsmall">Duplicate ID&rsquo;s Issue</h4>
+        <p>
+            Your service has multiple instances of duplicate IDs. Without correcting these issues
+            user agents, including assistive technologies, may not be able to accurately interpret
+            and parse content. If the content cannot be parsed into a data structure, then
+            different user agents may present it differently or be completely unable to parse it.
+        </p>
+        <p>
+            <a href="https://www.w3.org/WAI/WCAG21/Understanding/parsing.html" target="_blank">Success Criterion 4.1.1 Parsing (Level A):<span class="visually-hidden"> (this link opens in a new window)</span></a>
+            In content implemented using markup
+            languages, elements have complete start and end tags, elements are nested
+            according to their specifications, elements do not contain duplicate attributes, and
+            any IDs are unique, except where the specifications allow these features.
+        </p>
+
+        <h4 class="heading-xsmall">Actions to take:</h4>
+        <ul class="list-bullet">
+            <li>
+                Add this issue to your Accessibility Statement
+            </li>
+            <li>
+                Ensure that the pages below do not have multiple static elements with the
+                same id attribute
+            </li>
+        </ul>
+        <h4 class="heading-xsmall">Page links</h4>
+        <ul class="list-bullet">
+            <li>
+                <a href="https://get-information-schools.service.gov.uk/?SelectedTab=Governors">https://get-information-schools.service.gov.uk/?SelectedTab=Governors</a>
+            </li>
+            <li>
+                <a href="https://get-information-schools.service.gov.uk/?SelectedTab=Establishments">https://get-information-schools.service.gov.uk/?SelectedTab=Establishments</a>
+            </li>
+            <li>
+                <a href="https://get-information-schools.service.gov.uk/?SelectedTab=Groups">https://get-information-schools.service.gov.uk/?SelectedTab=Groups</a>
+            </li>
+        </ul>
+
+
+        <h3 class="heading-small">Manual Testing General Findings</h3>
+        <h4 class="heading-xsmall">Link naming Issue </h4>
+        <p>
+            We have found instances where links within your service&rsquo;s website which are not named
+            correctly and do not have the correct role (see image 1.1). We would suggest the name of
+            the link is changed to something more meaningful (e.g &ldquo;More information on the data
+            available&rdquo;). Screen reader users especially need meaningful link names for when they
+            generate a list of links on the page to navigate the content. A link that is simply named &ldquo;more
+            information&rdquo; is not helpful in these situations.
+        </p>
+        <p>
+            In addition to that, this link is actually more of a collapsed button rather than a link. Users of
+            assistive technology must be able to have an idea of the expected outcome of clicking on an
+            element. If the element does not have an accurate role it can be confusing for users who
+            expect a link to go to another page rather than expand information.
+        </p>
+        <p>
+            Both of these errors mean your service does not meet the stipulations in success criterion
+            2.4.4 and 4.1.2 of the Web Content and Accessibility Guidelines.
+        </p>
+        <p>
+            <a href="https://www.w3.org/TR/UNDERSTANDING-WCAG20/navigation-mechanisms-refs.html" target="_blank">2.4.4 Link Purpose (In Context):<span class="visually-hidden"> (this link opens in a new window)</span></a>
+            The purpose of each link can be determined from the link
+            text alone or from the link text together with its programmatically determined link context,
+            except where the purpose of the link would be ambiguous to users in general. (Level A)
+        </p>
+        <p>
+            <a href="https://www.w3.org/TR/UNDERSTANDING-WCAG20/ensure-compat-rsv.html" target="_blank">4.1.2 Name, Role, Value:<span class="visually-hidden"> (this link opens in a new window)</span></a>
+            For all user interface components (including but not limited to: form
+            elements, links and components generated by scripts), the name and role can be
+            programmatically determined; states, properties, and values that can be set by the user can
+            be programmatically set; and notification of changes to these items is available to user
+            agents, including assistive technologies. (Level A)
+        </p>
+        <p class="text-align-right">
+            <img src="~/public/assets/images/accessibility/accessibility_links_misplaced.png" class="accessibilityImage hard--bottom" alt="example of a misplaced link within the site" /><br />
+            <span class="soft--right font-xsmall">Image 1.1</span>
+        </p>
+
+        <h4 class="heading-xsmall">Code Snippet:</h4>
+        <p>
+            &lt;a href="#" class="expanding-content-trigger" style="display: inline-block;"&gt;
+            More
+            information
+            &lt;/a&gt;
+        </p>
+
+        <h4 class="heading-xsmall">Actions to take:</h4>
+        <ul class="list-bullet">
+            <li>
+                Add this issue to your Accessibility Statement
+            </li>
+            <li>
+                Change the link name to something more meaningful (e.g &ldquo;More information on the
+                core data fields&rdquo; and offer further instructions for users of assistive technology such
+                as &ldquo;information will expand below&rdquo;) or;
+            </li>
+            <li>
+                Change the element to a collapsible button instead of a link with a meaningful name
+                (e.g &ldquo;More information on the core data fields&rdquo; button collapsed)
+            </li>
+        </ul>
+
+        <h2 class="heading-medium">Overall Findings and Recommendations</h2>
+        <p>
+            Although generally the service works well for users of assistive technology , it does
+            not meet all of the WCAG 2.1 level AA criteria. Therefore, in its current form the
+            system is not accessible to users of assistive technology and does not meet WCAG
+            2.1 AA Level of compliance. We suggest these issues are added to your
+            Accessibility Statement immediately (if you do not have one, you must create one by
+            23rd September to comply with regulations) so users are at least aware of them. In
+            addition, the issues in the report should be fixed as soon as there is development
+            time available.
+        </p>
+        <p>
+            Please review the <span class="bold-small">Actions to take</span> and, where the decision is made not to take
+            these forward, strong evidence should be provided if requested.
+        </p>
+        <p>
+            Please use the content of this report to produce an accessibility statement at your
+            earliest convenience. For more information on accessibility statements please visit
+            <a href="https://gds.blog.gov.uk/2019/05/21/accessibility-update-sample-accessibility-statement-monitoring-and-enforcement/" target="_blank">https://gds.blog.gov.uk/2019/05/21/accessibility-update-sample-accessibility-statement-monitoring-and-enforcement/<span class="visually-hidden"> (this link opens in a new window)</span></a>
+        </p>
+
+        <p>
+            <span class="bold-small">Nick Jarvis-Smith</span><br />
+            <span class="bold-small">IT Accessibility Compliance</span><br />
+            Technology Services: End User Computing<br />
+            Technology Directorate
+        </p>
+    </div>
+</div>

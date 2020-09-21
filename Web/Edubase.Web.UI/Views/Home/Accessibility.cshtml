@@ -1,3 +1,4 @@
+@using Edubase.Web.UI.Controllers
 @{
     ViewBag.Title = "Accessibility statement for Get information about schools";
     ViewBag.LastUpdatedDate = "10th September 2020";
@@ -125,10 +126,7 @@
         </p>
 
         <p>
-            You can read the
-            <a href="/public/downloads/20200814__Accessibility_Assurance_Report-Get_Information_About_Schools.pdf" target="_blank">
-                full accessibility audit report <span class="visually-hidden">(this link opens in a new window)</span>
-            </a>.
+            You can @Html.ActionLink("access the full audit report here", nameof(HomeController.AccessibilityReport), "Home", new {area = ""}, null).
         </p>
 
         <h2 class="heading-medium">What we&apos;re doing to improve accessibility</h2>
