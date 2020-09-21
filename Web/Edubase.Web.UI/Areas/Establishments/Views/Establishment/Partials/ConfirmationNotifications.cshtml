@@ -2,9 +2,11 @@
 
 @if (Model.MediumPriorityConfirmationsPending)
 {
-    <div class="up-to-date-confirmations expanding-content-wrapper" data-update-text="false">
-        <a class="expanding-content-trigger" href="#">Confirm records</a>
-        <div class="expanding-content panel-indent">
+    <details class="govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">Confirm records</span>
+        </summary>
+        <div class="govuk-details__text">
             @if (Model.MediumPriorityEstablishmentConfirmationPending)
             {
                 <div class="data-confirmation-panel">
@@ -14,9 +16,9 @@
                             @(Model.Establishment.ConfirmationUpToDate_LastConfirmationDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
                         </span>
                     </p>
-                    @using (Html.BeginRouteForm("EstablishmentConfirmUpToDate", new { urn = Model.Establishment.Urn }, FormMethod.Post))
+                    @using (Html.BeginRouteForm("EstablishmentConfirmUpToDate", new {urn = Model.Establishment.Urn}, FormMethod.Post))
                     {
-                        <label class="confirmation-label" for="estab-data-confirm">
+                        <label class="confirmation-label govuk-body" for="estab-data-confirm">
                             Confirm establishment record is up to date
                         </label>
                         <button class="govuk-button govuk-button--secondary confirmation-button" data-module="govuk-button" id="estab-data-confirm">Confirm</button>
@@ -32,9 +34,9 @@
                             @(Model.Establishment.ConfirmationUpToDateGovernance_LastConfirmationDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
                         </span>
                     </p>
-                    @using (Html.BeginRouteForm("EstablishmentGovernanceConfirmUpToDate", new { urn = Model.Establishment.Urn }, FormMethod.Post))
+                    @using (Html.BeginRouteForm("EstablishmentGovernanceConfirmUpToDate", new {urn = Model.Establishment.Urn}, FormMethod.Post))
                     {
-                        <label class="confirmation-label" for="gov-data-confirm">
+                        <label class="confirmation-label govuk-body" for="gov-data-confirm">
                             Confirm governance record is up to date
                         </label>
                         <button class="govuk-button govuk-button--secondary confirmation-button" data-module="govuk-button" id="gov-data-confirm">Confirm</button>
@@ -42,7 +44,7 @@
                 </div>
             }
         </div>
-    </div>
+    </details>
 }
 
 @if (Model.HighPriorityConfirmationsPending)
