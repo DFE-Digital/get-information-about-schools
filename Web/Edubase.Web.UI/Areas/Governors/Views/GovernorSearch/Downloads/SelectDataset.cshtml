@@ -49,8 +49,12 @@
                                 var inputName = Model.IncludeNonPublicData;
                             }
                             <div class="govuk-radios">
-                                @Html.GiasRadioFor(m => m.IncludeNonPublicData, "false", "Public data", null, new {@checked="checked", @class = "govuk-radios__input"} )
-                                @Html.GiasRadioFor(m => m.IncludeNonPublicData, "true", "Public and non-public data", null, new {@class = "govuk-radios__input"})
+                                <div class="govuk-radios__item">
+                                    @Html.GiasRadioFor(m => m.IncludeNonPublicData, "false", "Public data", null, new {@checked = "checked", @class = "govuk-radios__input"})
+                                </div>
+                                <div class="govuk-radios__item">
+                                    @Html.GiasRadioFor(m => m.IncludeNonPublicData, "true", "Public and non-public data", null, new {@class = "govuk-radios__input"})
+                                </div>
                             </div>
 
                         </fieldset>
