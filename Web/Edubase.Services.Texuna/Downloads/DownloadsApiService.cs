@@ -19,7 +19,7 @@ namespace Edubase.Services.Texuna.Downloads
             _httpClient = httpClient;
         }
 
-        public async Task<FileDownload[]> GetListAsync(IPrincipal principal) => (await _httpClient.GetAsync<FileDownload[]>($"downloads", principal)).Response;
+        public async Task<FileDownload[]> GetListAsync(DateTime filterDate, IPrincipal principal) => (await _httpClient.GetAsync<FileDownload[]>($"downloads?filterDate={filterDate}", principal)).Response;
         
         public async Task<PaginatedResult<ScheduledExtract>> GetScheduledExtractsAsync(int skip, int take, IPrincipal principal)
         {
@@ -35,8 +35,8 @@ namespace Edubase.Services.Texuna.Downloads
             
         }
 
-        public async Task<string> GenerateExtractAsync(string id, IPrincipal principal)
-            => (await _httpClient.PostAsync<string>($"download/generate/{id}", null, principal)).Response;
+        public async Task<string> GenerateExtractAsync(string id, DateTime filterDate, IPrincipal principal)
+            => (await _httpClient.PostAsync<string>($"download/generate/{id}/{filterDate}", null, principal)).Response;
 
         public async Task<ProgressDto> GetProgressOfGeneratedExtractAsync(Guid id, IPrincipal principal)
             => (await _httpClient.GetAsync<ProgressDto>($"download/progress/{id}", principal)).Response;

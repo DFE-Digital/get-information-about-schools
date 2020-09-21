@@ -9,11 +9,11 @@ namespace Edubase.Services.Downloads
 {
     public interface IDownloadsService
     {
-        Task<FileDownload[]> GetListAsync(IPrincipal principal);
+        Task<FileDownload[]> GetListAsync(DateTime filterDate, IPrincipal principal);
         Task<PaginatedResult<ScheduledExtract>> GetScheduledExtractsAsync(int skip, int take, IPrincipal principal);
         Task<string> GenerateScheduledExtractAsync(int id, IPrincipal principal);
         Task<ProgressDto> GetProgressOfScheduledExtractGenerationAsync(Guid id, IPrincipal principal);
-        Task<string> GenerateExtractAsync(string id, IPrincipal principal);
+        Task<string> GenerateExtractAsync(string id, DateTime filterDate, IPrincipal principal);
         Task<ProgressDto> GetProgressOfGeneratedExtractAsync(Guid id, IPrincipal principal);
         Task<bool> IsDownloadAvailable(string path, string id, IPrincipal principal);
     }

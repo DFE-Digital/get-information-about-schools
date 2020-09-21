@@ -4,13 +4,19 @@ using Edubase.Web.Resources;
 using MoreLinq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using Edubase.Services.Enums;
+using Edubase.Web.UI.Models.Search;
 
 namespace Edubase.Web.UI.Models
 {
     public class DownloadsViewModel
     {
+        public eDownloadFilter SearchType { get; set; }
+        public DateTimeViewModel FilterDate { get; set; }
+        public int? Skip { get; set; }
         public class Section
         {
             public string Heading { get; set; }
@@ -51,7 +57,7 @@ namespace Edubase.Web.UI.Models
 
             if (allEstabData.Any() || openAcademiesAndFreeSchoolsData.Any() || openStateFundedSchoolsData.Any() || openChildrensCentresData.Any())
             {
-                var section = new Section { Heading = "Establishments", Paragraph = "You can download the complete record for the speciﬁed establishment types. There's a separate file with links to any predecessor or successor establishments." };
+                var section = new Section { Heading = "Establishments", Paragraph = "You can download the complete record for the specified establishment types. There's a separate file with links to any predecessor or successor establishments." };
 
                 if (allEstabData.Any())
                 {
@@ -190,5 +196,14 @@ namespace Edubase.Web.UI.Models
         }
 
         private string CleanTag(string tag) => tag.Replace(".", "_").Replace("-", "_");
+    }
+
+    public enum eDownloadFilter
+    {
+        [Display(Name = "Latest")]
+        Latest = 1,
+
+        [Display(Name = "Select a date")]
+        DateFilter = 2,
     }
 }
