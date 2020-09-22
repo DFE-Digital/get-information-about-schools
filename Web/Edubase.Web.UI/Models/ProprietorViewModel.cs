@@ -12,7 +12,7 @@ namespace Edubase.Web.UI.Models
     {
         [DisplayName("Id")] public int? Id { get; set; }
 
-        [Display(Name = "Name")] public string Name { get; set; }
+        [DisplayName("Name")] public string Name { get; set; }
 
         [DisplayName("Street")] public string Street { get; set; }
 

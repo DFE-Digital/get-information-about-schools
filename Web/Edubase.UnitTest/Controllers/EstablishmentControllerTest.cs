@@ -100,7 +100,8 @@ namespace Edubase.UnitTest.Controllers
                 Address_PostCode = "postcode",
                 Address_UPRN = "uprn",
                 Northing = 3,
-                Easting = 4
+                Easting = 4,
+                ChairOfProprietor = new ProprietorViewModel()
             };
 
             var replacementAddress = new AddOrReplaceAddressViewModel
