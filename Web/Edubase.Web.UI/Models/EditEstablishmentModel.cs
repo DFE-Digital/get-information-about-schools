@@ -162,9 +162,9 @@ namespace Edubase.Web.UI.Models
 
         public int? ProprietorTypeId { get; set; }
 
-        public List<ProprietorViewModel> Proprietors { get; set; } = new List<ProprietorViewModel> {new ProprietorViewModel()};
+        public List<ProprietorViewModel> Proprietors { get; set; } = new List<ProprietorViewModel>();
 
-        public ProprietorViewModel ChairOfProprietor { get; set; } = new ProprietorViewModel();
+        public ProprietorViewModel ChairOfProprietor { get; set; }
 
         public int? Section41ApprovedId { get; set; }
         public int[] SENIds { get; set; } = new int[0];

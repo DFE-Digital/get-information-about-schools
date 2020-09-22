@@ -288,19 +288,19 @@
                 <dt>Boarding establishment:</dt>
                 <dd>@(Model.BoardingEstabName ?? "Not recorded")</dd>
             }
-
-            @if (Model.DisplayPolicy.Proprietors)
-            {
-                @Html.DisplayFor(x => x.Establishment.IEBTModel.Proprietors)
-            }
         </dl>
 
-        <dl>
-            @if (Model.DisplayPolicy.ChairOfProprietor)
-            {
-                @Html.DisplayFor(x => x.Establishment.IEBTModel.ChairOfProprietor)
-            }
+        @if (Model.DisplayPolicy.Proprietors)
+        {
+            @Html.DisplayFor(x => x.Establishment.IEBTModel.Proprietors)
+        }
 
+        @if (Model.DisplayPolicy.ChairOfProprietor)
+        {
+            @Html.DisplayFor(x => x.Establishment.IEBTModel.ChairOfProprietor, "ProprietorModel", new {prefix = "Chair of the proprietary body"})
+        }
+
+        <dl>
             @if (Model.DisplayPolicy.IEBTDetail.AccommodationChangedId && p.AccommodationChangedId)
             {
                 <dt>Accommodation changed:</dt>

@@ -1,0 +1,18 @@
+@model Edubase.Services.Establishments.Models.ProprietorModel
+@{
+    var labelPrefix = ViewData["prefix"] ?? "Proprietor's";
+}
+
+<dl>
+    <dt>@labelPrefix name:</dt>
+    <dd>@(Model.Name ?? "Not recorded")</dd>
+
+    <dt>@labelPrefix address:</dt>
+    <dd>@Model.GetAddress()</dd>
+
+    <dt>@labelPrefix telephone:</dt>
+    <dd>@(Model.TelephoneNumber ?? "Not recorded")</dd>
+
+    <dt>@labelPrefix email:</dt>
+    <dd>@(Model.Email ?? "Not recorded")</dd>
+</dl>

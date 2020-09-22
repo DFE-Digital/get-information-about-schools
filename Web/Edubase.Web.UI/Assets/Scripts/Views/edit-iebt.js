@@ -10,10 +10,10 @@ DfE.Views.editIebt = {
     this.closeModal();
     var selectedVal = $('#proprietor-radios').find('input:checked').val();
 
-    if (selectedVal === 'IndividualProprietor') {
+    if (selectedVal === '1') {
       $('#proprietor-type-ProprietorBody').prop('checked', true).change();
 
-    } else if (selectedVal === 'ProprietorBody') {
+    } else if (selectedVal === '2') {
       $('#proprietor-type-IndividualProprietor').prop('checked', true).change();
     }
   },
@@ -33,6 +33,29 @@ DfE.Views.editIebt = {
     });
   },
 
+  clearChairProprietor: function() {
+    $('#ProprietorBody-chair').find(':input').each(function () {
+      switch (this.type) {
+      case 'password':
+      case 'text':
+      case 'textarea':
+      case 'file':
+      case 'select-one':
+      case 'select-multiple':
+      case 'date':
+      case 'number':
+      case 'tel':
+      case 'email':
+        $(this).val('');
+        break;
+      case 'checkbox':
+      case 'radio':
+        this.checked = false;
+        break;
+      }
+    });
+  },
+
   refreshDisplay: function () {
     var self = this;
     var radioValue = typeof self.radios.filter(':checked').val() !== 'undefined' ? self.radios.filter(':checked').val() : 'unselected';
@@ -45,6 +68,7 @@ DfE.Views.editIebt = {
       $('#ProprietorBody-chair').addClass('hidden');
 
       self.refreshIndividualProprietors();
+      self.clearChairProprietor();
     }
     if (radioValue === '2') {
       // proprietor body
@@ -54,7 +78,7 @@ DfE.Views.editIebt = {
       $('#ProprietorBody-chair').removeClass('hidden');
 
       // remove all additional Individual Proprietors
-      $(".removeProprietor").slice(1).parent().parent().remove();
+      $(".removeProprietor").slice(1).closest(".proprietorRow").remove();
       self.refreshIndividualProprietors();
     }
 
@@ -79,11 +103,18 @@ DfE.Views.editIebt = {
 
       $(".removeProprietor").on('click', function (e) {
         e.preventDefault();
-        $(this).parent().parent().remove();
+        $(this).closest(".proprietorRow").remove();
         self.refreshIndividualProprietors();
         return false;
       });
 
+      return false;
+    });
+
+    $(".removeProprietor").on('click', function (e) {
+      e.preventDefault();
+      $(this).closest(".proprietorRow").remove();
+      self.refreshIndividualProprietors();
       return false;
     });
 
@@ -93,10 +124,10 @@ DfE.Views.editIebt = {
       if (radioId === 'proprietor-type-ProprietorBody') {
         self.radios.data().okCancel
           .updateModalContent('Are you sure you want to change to a proprietary body?',
-            'All single proprietor details will be lost');
+            'All individual proprietor details will be lost');
       } else {
         self.radios.data().okCancel
-          .updateModalContent('Are you sure you want to change to a single proprietor?',
+          .updateModalContent('Are you sure you want to change to an individual proprietor?',
             'All proprietary body details will be lost');
       }
     });
@@ -106,6 +137,8 @@ DfE.Views.editIebt = {
       cancel: self.cancelClick,
       idPrefix: 'iebt-'
     });
+
+    DfE.Views.editIebt.refreshDisplay();
   }
 };
 

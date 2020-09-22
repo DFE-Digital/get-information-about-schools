@@ -37,6 +37,7 @@ namespace Edubase.Web.UI
         {
             return new ProprietorViewModel
             {
+                Id = source.Id,
                 Locality = source.Locality,
                 Town = source.Town,
                 Postcode = source.Postcode,
@@ -56,6 +57,7 @@ namespace Edubase.Web.UI
         {
             return new ProprietorModel
             {
+                Id = source.Id,
                 Locality = source.Locality,
                 Town = source.Town,
                 Postcode = source.Postcode,

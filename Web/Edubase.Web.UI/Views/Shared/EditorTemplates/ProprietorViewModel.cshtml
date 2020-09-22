@@ -1,6 +1,8 @@
 @using System.Linq.Expressions
 @model ProprietorViewModel
 
+@Html.HiddenFor(x => x.Id)
+
 @RenderTextBox(x => x.Name)
 @RenderTextBox(x => x.Street)
 @RenderTextBox(x => x.Locality)

@@ -1078,7 +1078,7 @@
     <Content Include="Views\Guidance\ChildrensCentre.cshtml" />
     <Content Include="Views\Guidance\Federation.cshtml" />
     <Content Include="Views\Guidance\Governance.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\ProprietorViewModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\ProprietorModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ProprietorViewModel.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
