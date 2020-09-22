@@ -41,7 +41,7 @@
 @if (Model.DisplayPolicy.HeadAppointmentDate)
 {
     <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">@(Model.DisplayPolicy.HeadteacherLabel) appointment date:</dt>
+        <dt class="gias-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadteacherLabel) appointment date:</dt>
         <dd class="gias-summary-list__value">
             @(Model.Establishment.HeadAppointmentDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
         </dd>
@@ -51,7 +51,7 @@
 @if (Model.DisplayPolicy.HeadEmailAddress)
 {
     <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">@(Model.DisplayPolicy.HeadEmailAddressLabel):</dt>
+        <dt class="gias-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadEmailAddressLabel):</dt>
         <dd class="gias-summary-list__value">
             @(Model.Establishment.HeadEmailAddress ?? "Not recorded")
         </dd>
