@@ -12,10 +12,9 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         public bool Any() => Notes || DateOfTheLastBridgeVisit || DateOfTheLastISIVisit || DateOfTheLastWelfareVisit || DateOfTheLastFPVisit || DateOfTheLastSISVisit || NextOfstedVisit || NextGeneralActionRequired
             || NextActionRequiredByWEL || NextActionRequiredByFP || IndependentSchoolTypeId || CharityOrganisation || CharityRegistrationNumber || TotalNumberOfFullTimePupils || TotalNumberOfPartTimePupils || TotalNumberOfPupilsOfCompulsorySchoolAge
             || TotalNumberOfPupilsInPublicCare || TotalNumberOfBoysInBoardingSchools || TotalNumberOfGirlsInBoardingSchools || TotalNumberOfFullTimeStaff
-            || TotalNumberOfPartTimeStaff || LowestAnnualRateForDayPupils || HighestAnnualRateForDayPupils || LowestAnnualRateForBoardingPupils || HighestAnnualRateForBoardingPupils || ProprietorsStreet || ProprietorsLocality || ProprietorsAddress3
-            || ProprietorsTown || ProprietorsCountyId || ProprietorsPostcode || ProprietorsTelephoneNumber || ProprietorsFaxNumber || ProprietorsEmail || ProprietorsPreferredJobTitle || ChairOfProprietorsBodyName || ChairOfProprietorsBodyStreet
-            || ChairOfProprietorsBodyLocality || ChairOfProprietorsBodyAddress3 || ChairOfProprietorsBodyTown || ChairOfProprietorsBodyCountyId || ChairOfProprietorsBodyPostcode || ChairOfProprietorsBodyTelephoneNumber || ChairOfProprietorsBodyFaxNumber
-            || ChairOfProprietorsBodyEmail || ChairOfProprietorsBodyPreferredJobTitle || AccommodationChangedId || PTBoysAged3 || PTBoysAged4B || PTGirlsAged4C || PTBoysAged4A || PTGirlsAged4B || PTGirlsAged4A || PTGirlsAged3 || PTBoysAged4C
+            || TotalNumberOfPartTimeStaff || LowestAnnualRateForDayPupils || HighestAnnualRateForDayPupils || LowestAnnualRateForBoardingPupils || HighestAnnualRateForBoardingPupils
+            || ProprietorTypeId || Proprietors || ChairOfProprietor
+            || AccommodationChangedId || PTBoysAged3 || PTBoysAged4B || PTGirlsAged4C || PTBoysAged4A || PTGirlsAged4B || PTGirlsAged4A || PTGirlsAged3 || PTBoysAged4C
             || PTBoysAged2AndUnder || PTGirlsAged2AndUnder || BoardingEstablishmentId
             || TotalFTTeachersTutors || TotalPTTeachersTutors;
 

@@ -89,27 +89,10 @@ namespace Edubase.Services.Establishments.Models
         public int? LowestAnnualRateForBoardingPupils { get; set; }
         public int? HighestAnnualRateForBoardingPupils { get; set; }
 
-        public string ProprietorsStreet { get; set; }
-        public string ProprietorsLocality { get; set; }
-        public string ProprietorsAddress3 { get; set; }
-        public string ProprietorsTown { get; set; }
-        public int? ProprietorsCountyId { get; set; }
-        public string ProprietorsPostcode { get; set; }
-        public string ProprietorsTelephoneNumber { get; set; }
-        public string ProprietorsFaxNumber { get; set; }
-        public string ProprietorsEmail { get; set; }
-        public string ProprietorsPreferredJobTitle { get; set; }
-        public string ChairOfProprietorsBodyName { get; set; }
-        public string ChairOfProprietorsBodyStreet { get; set; }
-        public string ChairOfProprietorsBodyLocality { get; set; }
-        public string ChairOfProprietorsBodyAddress3 { get; set; }
-        public string ChairOfProprietorsBodyTown { get; set; }
-        public int? ChairOfProprietorsBodyCountyId { get; set; }
-        public string ChairOfProprietorsBodyPostcode { get; set; }
-        public string ChairOfProprietorsBodyTelephoneNumber { get; set; }
-        public string ChairOfProprietorsBodyFaxNumber { get; set; }
-        public string ChairOfProprietorsBodyEmail { get; set; }
-        public string ChairOfProprietorsBodyPreferredJobTitle { get; set; }
+        public int? ProprietorTypeId { get; set; }
+        public List<ProprietorModel> Proprietors { get; set; } = new List<ProprietorModel>();
+        public ProprietorModel ChairOfProprietor { get; set; }
+
         public int? AccommodationChangedId { get; set; }
         public int? BoardingEstablishmentId { get; set; }
         public int? TotalFTTeachersTutors { get; set; }

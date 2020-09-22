@@ -158,15 +158,13 @@ namespace Edubase.Web.UI.Models
         public int? InspectorateId { get; set; }
 
         [Display(Name = "Name")]
-        public string ProprietorName { get; set; }
+        public string ProprietorBodyName { get; set; }
 
         public int? ProprietorTypeId { get; set; }
 
-        public eProprietorType? ProprietorType
-        {
-            get => ProprietorTypeId.HasValue ? (eProprietorType) ProprietorTypeId.Value : null as eProprietorType?;
-            set => ProprietorTypeId = (int?) value;
-        }
+        public List<ProprietorViewModel> Proprietors { get; set; } = new List<ProprietorViewModel>();
+
+        public ProprietorViewModel ChairOfProprietor { get; set; }
 
         public int? Section41ApprovedId { get; set; }
         public int[] SENIds { get; set; } = new int[0];
@@ -422,70 +420,7 @@ namespace Edubase.Web.UI.Models
 
         [DisplayName("Highest annual rate for boarding pupils")]
         public int? HighestAnnualRateForBoardingPupils { get; set; }
-
-        [DisplayName("Street")]
-        public string ProprietorsStreet { get; set; }
-
-        [DisplayName("Locality")]
-        public string ProprietorsLocality { get; set; }
-
-        [DisplayName("Address 3")]
-        public string ProprietorsAddress3 { get; set; }
-
-        [DisplayName("Town")]
-        public string ProprietorsTown { get; set; }
-
-        [DisplayName("County")]
-        public int? ProprietorsCountyId { get; set; }
-
-        [DisplayName("Postcode")]
-        public string ProprietorsPostcode { get; set; }
-
-        [DisplayName("Telephone number")]
-        public string ProprietorsTelephoneNumber { get; set; }
-
-        [DisplayName("Fax number")]
-        public string ProprietorsFaxNumber { get; set; }
-
-        [DisplayName("Email")]
-        public string ProprietorsEmail { get; set; }
-
-        [DisplayName("Preferred job title")]
-        public string ProprietorsPreferredJobTitle { get; set; }
-
-        [DisplayName("Name")]
-        public string ChairOfProprietorsBodyName { get; set; }
-
-        [DisplayName("Street")]
-        public string ChairOfProprietorsBodyStreet { get; set; }
-
-        [DisplayName("Locality")]
-        public string ChairOfProprietorsBodyLocality { get; set; }
-
-        [DisplayName("Address 3")]
-        public string ChairOfProprietorsBodyAddress3 { get; set; }
-
-        [DisplayName("Town")]
-        public string ChairOfProprietorsBodyTown { get; set; }
-
-        [DisplayName("County")]
-        public int? ChairOfProprietorsBodyCountyId { get; set; }
-
-        [DisplayName("Postcode")]
-        public string ChairOfProprietorsBodyPostcode { get; set; }
-
-        [DisplayName("Telephone number")]
-        public string ChairOfProprietorsBodyTelephoneNumber { get; set; }
-
-        [DisplayName("Fax number")]
-        public string ChairOfProprietorsBodyFaxNumber { get; set; }
-
-        [DisplayName("Email")]
-        public string ChairOfProprietorsBodyEmail { get; set; }
-
-        [DisplayName("Preferred job title")]
-        public string ChairOfProprietorsBodyPreferredJobTitle { get; set; }
-        
+       
         [DisplayName("Accommodation changes")]
         public int? AccommodationChangedId { get; set; }
 

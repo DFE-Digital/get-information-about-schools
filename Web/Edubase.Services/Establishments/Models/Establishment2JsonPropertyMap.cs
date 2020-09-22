@@ -60,7 +60,7 @@ namespace Edubase.Services.Establishments.Models
             "ofstedInspectionDate",
             "inspectorateId",
             "section41ApprovedId",
-            "proprietorName",
+            "proprietorBodyName",
             "SENStat",
             "SENNoStat",
             "SENIds",

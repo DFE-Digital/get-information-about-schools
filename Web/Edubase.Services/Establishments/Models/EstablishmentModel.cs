@@ -6,6 +6,7 @@ using Edubase.Services.Enums;
 using Edubase.Services.Lookup;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
@@ -155,9 +156,7 @@ namespace Edubase.Services.Establishments.Models
 
         public int? Section41ApprovedId { get; set; }
 
-        public string ProprietorName { get; set; }
-
-        public int? ProprietorTypeId { get; set; }
+        public string ProprietorBodyName { get; set; }
 
         [DisplayName("Number of special pupils under a SEN statement/EHCP"), JsonProperty("SENStat")]
         public int? SENStat { get; set; }
