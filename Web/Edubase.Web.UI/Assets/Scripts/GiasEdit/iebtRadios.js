@@ -51,7 +51,7 @@ const iebtRadios = {
     } else {
       $('#cloneable-fields-container').append(self.cloneFields);
       $('#proprietor-type-SingleProprietor').prop('checked', true);
-      $('#SingleProprietor').removeClass('hidden');
+      $('#SingleProprietor').removeClass('govuk-radios__conditional--hidden');
     }
 
     self.radios.on('change', function (e) {
@@ -59,11 +59,17 @@ const iebtRadios = {
 
       if (radioId === 'proprietor-type-ProprietorBody') {
         $('#field-clone-target').append(self.cloneFields);
+        $('#SingleProprietor').addClass('govuk-radios__conditional--hidden');
+        $('#ProprietorBody').removeClass('govuk-radios__conditional--hidden');
+
         $('#proprietor-radios').find('input').data().okCancel
           .updateModalContent('Are you sure you want to change to a proprietary body?',
             'All single proprietor details will be lost');
       } else {
         $('#cloneable-fields-container').append(self.cloneFields);
+        $('#SingleProprietor').removeClass('govuk-radios__conditional--hidden');
+        $('#ProprietorBody').addClass('govuk-radios__conditional--hidden');
+
         $('#proprietor-radios').find('input').data().okCancel
           .updateModalContent('Are you sure you want to change to a single proprietor?',
             'All proprietary body details will be lost');
