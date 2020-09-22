@@ -21,7 +21,7 @@
     </dd>
 </div>
 <div class="gias-summary-list__row">
-    <dt class="gias-summary-list__key">@(Model.DisplayPolicy.HeadteacherLabel):</dt>
+    <dt class="gias-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadteacherLabel):</dt>
     <dd class="gias-summary-list__value">
         @if (Model.DisplayPolicy.HeadTitleId)
         {
@@ -172,7 +172,7 @@
             }
             else
             {
-                <a href="@WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)" target="_blank">
+                <a href="@WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)" target="_blank" rel="noreferrer noopener">
                     @WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)
                     <span class="govuk-visually-hidden">Opens in new window</span>
                 </a>
@@ -276,13 +276,13 @@
                 @if (Model.ShowCscp)
                 {
                     <li>
-                        <a href="@Model.CscpURL" rel="external" target="_blank">Compare School and College Performance <span class="govuk-visually-hidden">Opens in new window</span></a>
+                        <a href="@Model.CscpURL" rel="external" target="_blank">Compare school and college performance <span class="govuk-visually-hidden">Opens in new window</span></a>
                     </li>
                 }
                 @if (Model.ShowFinancialBenchmarking)
                 {
                     <li>
-                        <a href="@Model.FinancialBenchmarkingURL" rel="external" target="_blank">Schools Financial Benchmarking <span class="govuk-visually-hidden">Opens in new window</span></a>
+                        <a href="@Model.FinancialBenchmarkingURL" rel="external" target="_blank">Schools financial benchmarking <span class="govuk-visually-hidden">Opens in new window</span></a>
                     </li>
                 }
             </ul>
