@@ -170,7 +170,7 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task<List<ChangeDescriptorDto>> GetModelChangesAsync(EstablishmentModel original, EstablishmentModel model, EstablishmentApprovalsPolicy approvalsPolicy)
         {
-            var changes = ReflectionHelper.DetectChanges(model, original, typeof(IEBTModel));
+            var changes = ReflectionHelper.DetectChanges(model, original, new[]{ typeof(IEBTModel), typeof(ProprietorModel)});
             changes.AddRange(await DetectAdditionalAddressChanges(original, model));
             var retVal = new List<ChangeDescriptorDto>();
 

@@ -83,7 +83,7 @@ namespace Edubase.Services.Lookup
                 { "CountryId", async id => (await NationalitiesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "CountyId", async id => (await CountiesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "OfstedRatingId", async id => (await OfstedRatingsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "ProprietorTypeId", async id => (await Task.Run(() =>
+                { "IEBTModel.ProprietorTypeId", async id => (await Task.Run(() =>
                 {
                     // a little bit overkill, but making use of the existing pattern to display enum choice
                     var pt = (eProprietorType)id;

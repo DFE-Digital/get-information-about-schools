@@ -1,8 +1,11 @@
-﻿using System;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Edubase.Common.Reflection
 {
@@ -97,6 +100,31 @@ namespace Edubase.Common.Reflection
                 if (types.Any(x => x == p.PropertyType))
                 {
                     retVal.AddRange(DetectChanges(p.GetValue(newModel), p2.GetValue(oldModel), propertyName, types));
+                }
+                else if (p.PropertyType.IsGenericType &&
+                         p.PropertyType.GetGenericTypeDefinition() == typeof(List<>) &&
+                         types.Any(x => x == p.PropertyType.GetGenericArguments().Single())
+                        )
+                {
+                    // test for lists containing key property types as well.
+                    IList theNewList = p.GetValue(newModel, null) as IList;
+                    IList theOldList = p2.GetValue(oldModel, null) as IList;
+
+                    for (int i = 0; i < theNewList.Count; i++)
+                    {
+                        if (theNewList.Count > i && theOldList.Count > i)
+                        {
+                            retVal.AddRange(DetectChanges(theNewList[i], theOldList[i], propertyName, types));
+                        }
+                    }
+
+                    if (theNewList.Count != theOldList.Count)
+                    {
+                        // test the count is the same
+                        var v1 = theNewList.Count;
+                        var v2 = theOldList.Count;
+                        retVal.Add(new ChangeDescriptor(prefixer + propertyName, propertyName, v1, v2));
+                    }
                 }
                 else if(p.PropertyType.IsValueType)
                 {
