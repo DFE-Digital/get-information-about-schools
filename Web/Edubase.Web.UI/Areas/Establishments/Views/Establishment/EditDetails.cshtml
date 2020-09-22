@@ -131,7 +131,7 @@
     {
         <div class="govuk-form-group">
             <label class="govuk-label" for="HeadTitleId">
-                @(Model.EditPolicy.HeadteacherLabel) title
+                @Html.Raw(Model.EditPolicy.HeadteacherLabel) title
             </label>
             @Html.DropDownListFor(x => x.HeadTitleId, Model.HeadTitles, "", new {@class = "govuk-select"})
         </div>
@@ -141,7 +141,7 @@
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HeadFirstName)">
             <label class="govuk-label" for="HeadFirstName">
-                @(Model.EditPolicy.HeadteacherLabel) first name
+                @Html.Raw(Model.EditPolicy.HeadteacherLabel) first name
             </label>
             @Html.ValidationMessageFor(x => x.HeadFirstName, null, new {@class = "govuk-error-message"})
             @Html.TextBoxFor(x => x.HeadFirstName, new {maxlength = 120, @class = "govuk-input", placeholder = "First name"})
@@ -153,7 +153,7 @@
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HeadLastName)">
             <label class="govuk-label" for="HeadLastName">
-                @(Model.EditPolicy.HeadteacherLabel) last name
+                @Html.Raw(Model.EditPolicy.HeadteacherLabel) last name
             </label>
             @Html.ValidationMessageFor(x => x.HeadLastName, null, new {@class = "govuk-error-message"})
             @Html.TextBoxFor(x => x.HeadLastName, new {maxlength = 120, @class = "govuk-input", placeholder = "Last name"})
@@ -170,7 +170,7 @@
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HeadEmailAddress)">
             <label class="govuk-label" for="HeadEmailAddress">
-                @(Model.EditPolicy.HeadteacherLabel) email address
+                @Html.Raw(Model.EditPolicy.HeadteacherLabel) email address
                 <a href="#help-text-headteacher-email-address" class="tooltip-link js-tooltip">
                     <span class="govuk-visually-hidden">Help with headteacher/principal email address field</span>
                 </a>
@@ -878,7 +878,7 @@
     </div>
 
     <div id="help-text-headteacher-email-address">
-        <h3 class="govuk-heading-s">@(Model.EditPolicy.HeadteacherLabel) email address</h3>
-        <p>The email address added to this field will be treated as personal and will not be visible to the public or included in responses to Freedom of Information requests. The address will be used for official Departmental use where direct communication with the @(Model.EditPolicy.HeadteacherLabel.ToLower()) is required.</p>
+        <h3 class="govuk-heading-s">@Html.Raw(Model.EditPolicy.HeadteacherLabel) email address</h3>
+        <p>The email address added to this field will be treated as personal and will not be visible to the public or included in responses to Freedom of Information requests. The address will be used for official Departmental use where direct communication with the @Html.Raw(Model.EditPolicy.HeadteacherLabel.ToLower()) is required.</p>
     </div>
 </div>
