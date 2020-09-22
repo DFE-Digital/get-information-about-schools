@@ -44,7 +44,7 @@ class GiasSearchWarnings {
             'Please enter a local authority to start a search');
         } else if (suggestionCount === 0) {
           return showWarning($('#searchby-la-ref'),
-            'We couldn\'t find any local authorities matching your search criteria');
+            'We could not find any local authorities matching your search criteria');
         }
       } else {
 
