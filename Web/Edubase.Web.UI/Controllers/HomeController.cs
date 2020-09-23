@@ -37,6 +37,10 @@ namespace Edubase.Web.UI.Controllers
         [Route("~/accessibility")]
         public ActionResult Accessibility() => View();
 
+
+        [Route("~/accessibility/report")]
+        public ActionResult AccessibilityReport() => View();
+
         [Route("~/cookies")]
         public ActionResult Cookies() => View();
 

@@ -1,0 +1,32 @@
+@using System.Linq.Expressions
+@model ProprietorViewModel
+
+@Html.HiddenFor(x => x.Id)
+
+@RenderTextBox(x => x.Name)
+@RenderTextBox(x => x.Street)
+@RenderTextBox(x => x.Locality)
+@RenderTextBox(x => x.Address3)
+@RenderTextBox(x => x.Town)
+
+<div class="form-group @Html.ValidationCssClassFor(x => x.CountyId)">
+    @Html.LabelFor(x => x.CountyId)
+    @Html.ValidationMessageFor(x => x.CountyId)
+    @Html.DropDownListFor(x => x.CountyId, Model.Counties, "", new { @class = "form-control" })
+</div>
+
+@RenderTextBox(x => x.Postcode,  "form-control-1-2")
+@RenderTextBox(x => x.TelephoneNumber)
+
+@RenderTextBox(x => x.Email)
+
+
+@helper RenderTextBox(Expression<Func<ProprietorViewModel, string>> fnc, string fieldClasses = "")
+{
+    var classes = "form-control " + fieldClasses;
+    <div class="form-group @Html.ValidationCssClassFor(fnc)">
+        @Html.LabelFor(fnc, new { @class = "form-label" })
+        @Html.ValidationMessageFor(fnc)
+        @Html.TextBoxFor(fnc, new { @class = classes })
+    </div>
+}

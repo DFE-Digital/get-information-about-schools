@@ -1,0 +1,24 @@
+@using Edubase.Services.Enums
+@using HtmlHelpers.BeginCollectionItem
+@model ProprietorViewModel
+
+<div class="proprietorRow">
+    @if (ViewBag.ShowCounter != null)
+    {
+        <div class="proprietorRowTitle">
+            <div class="proprietorRowTitleHeader">
+                <h4 class="heading-small">@eProprietorType.IndividualProprietor.EnumDisplayNameFor() details - <span class="proprietorRowCounter">@(ViewBag.ShowCounter)</span></h4>
+            </div>
+            <div class="proprietorRowTitleRemove">
+                <a class="removeProprietor" href="#">Remove</a>
+            </div>
+        </div>
+    }
+
+    @Html.HiddenFor(x => x.Index, new { Name = $"Proprietors.Index", @id = $"Proprietors.Index" })
+
+    @using (Html.BeginCollectionItem("Proprietors"))
+    {
+        @Html.EditorFor(x => x);
+    }
+</div>

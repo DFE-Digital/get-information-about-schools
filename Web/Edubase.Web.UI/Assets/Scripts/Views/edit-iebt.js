@@ -1,69 +1,133 @@
 DfE.Views.editIebt = {
   radios: $('#proprietor-radios').find('input'),
 
-  cloneFields: $('#cloneable-fields-container').find('.cloneable').detach(),
-
   okClick: function () {
     this.closeModal();
-    $('#SingleProprietor, #ProprietorBody').find('.form-control').val('');
-
-    $('#proprietor-radios').find('input').each(function () {
-      $(this).data().okCancel.pause(true);
-    });
-
-
-    $('#ProprietorBody, #SingleProprietor').on('change, keydown', '.form-control', function () {
-
-      $('#proprietor-radios').find('input').each(function () {
-        $(this).data().okCancel.pause();
-      });
-
-      $('#ProprietorBody, #SingleProprietor').off('change, keydown', '.form-control');
-    });
-
+    DfE.Views.editIebt.refreshDisplay();
     return true;
   },
   cancelClick: function () {
     this.closeModal();
     var selectedVal = $('#proprietor-radios').find('input:checked').val();
 
-    if (selectedVal === 'SingleProprietor') {
+    if (selectedVal === '1') {
       $('#proprietor-type-ProprietorBody').prop('checked', true).change();
 
-    } else if (selectedVal === 'ProprietorBody') {
-      $('#proprietor-type-SingleProprietor').prop('checked', true).change();
+    } else if (selectedVal === '2') {
+      $('#proprietor-type-IndividualProprietor').prop('checked', true).change();
+    }
+  },
+
+  refreshIndividualProprietors: function (addedBool) {
+    // we only want to show the 'remove' link if there are multiple individual proprietors
+    var trueLength = $('.proprietorRow').length + (addedBool === true ? 1 : 0);
+    if (trueLength < 2) {
+      $('.removeProprietor').addClass('hidden');
+    } else {
+      $('.removeProprietor').removeClass('hidden');
+    }
+    
+    // re-sequence the numbers
+    $(".proprietorRowCounter").each(function (index) {
+      $(this).text(index + 1);
+    });
+  },
+
+  clearChairProprietor: function() {
+    $('#ProprietorBody-chair').find(':input').each(function () {
+      switch (this.type) {
+      case 'password':
+      case 'text':
+      case 'textarea':
+      case 'file':
+      case 'select-one':
+      case 'select-multiple':
+      case 'date':
+      case 'number':
+      case 'tel':
+      case 'email':
+        $(this).val('');
+        break;
+      case 'checkbox':
+      case 'radio':
+        this.checked = false;
+        break;
+      }
+    });
+  },
+
+  refreshDisplay: function () {
+    var self = this;
+    var radioValue = typeof self.radios.filter(':checked').val() !== 'undefined' ? self.radios.filter(':checked').val() : 'unselected';
+
+    if (radioValue === '1') {
+      // individual proprietor
+      $('#proprietor-type-IndividualProprietor').prop('checked', true);
+      $('.proprietorRowTitle').removeClass('hidden');
+      $('#proprietorAdd').removeClass('hidden');
+      $('#ProprietorBody-chair').addClass('hidden');
+
+      self.refreshIndividualProprietors();
+      self.clearChairProprietor();
+    }
+    if (radioValue === '2') {
+      // proprietor body
+      $('#proprietor-type-ProprietorBody').prop('checked', true);
+      $('.proprietorRowTitle').addClass('hidden');
+      $('#proprietorAdd').addClass('hidden');
+      $('#ProprietorBody-chair').removeClass('hidden');
+
+      // remove all additional Individual Proprietors
+      $(".removeProprietor").slice(1).closest(".proprietorRow").remove();
+      self.refreshIndividualProprietors();
     }
 
+    if (radioValue !== 'unselected') {
+      $("#proprietor-entry").removeClass('hidden');
+    }
   },
   init: function () {
     var self = this;
-    var overlayAttached = false;
     if (self.radios.length === 0) {
       return;
     }
 
-    var radioValue = typeof self.radios.filter(':checked').val() !== 'undefined' ? self.radios.filter(':checked').val() : 'SingleProprietor';
+    $("#addProprietor").click(function (e) {
+      e.preventDefault();
+      $.ajax({
+        url: "/Establishments/Establishment/Proprietor/Add/" + ($('.proprietorRow').length + 1),
+        cache: false,
+        success: function (html) { $("#proprietorList").append(html); }
+      });
+      self.refreshIndividualProprietors(true);
 
-    if (radioValue === 'ProprietorBody') {
-      $('#field-clone-target').append(self.cloneFields);
-    } else {
-      $('#cloneable-fields-container').append(self.cloneFields);
-      $('#proprietor-type-SingleProprietor').prop('checked', true);
-      $('#SingleProprietor').removeClass('hidden');
-    }
+      $(".removeProprietor").on('click', function (e) {
+        e.preventDefault();
+        $(this).closest(".proprietorRow").remove();
+        self.refreshIndividualProprietors();
+        return false;
+      });
+
+      return false;
+    });
+
+    $(".removeProprietor").on('click', function (e) {
+      e.preventDefault();
+      $(this).closest(".proprietorRow").remove();
+      self.refreshIndividualProprietors();
+      return false;
+    });
 
     self.radios.on('change', function (e) {
       var radioId = $(this).prop('id');
 
       if (radioId === 'proprietor-type-ProprietorBody') {
-        $('#field-clone-target').append(self.cloneFields);
-        $('#proprietor-radios').find('input').data().okCancel
+        self.radios.data().okCancel
           .updateModalContent('Are you sure you want to change to a proprietary body?',
-            'All single proprietor details will be lost');
+            'All individual proprietor details will be lost');
       } else {
-        $('#cloneable-fields-container').append(self.cloneFields);
-        $('#proprietor-radios').find('input').data().okCancel
-          .updateModalContent('Are you sure you want to change to a single proprietor?',
+        self.radios.data().okCancel
+          .updateModalContent('Are you sure you want to change to an individual proprietor?',
             'All proprietary body details will be lost');
       }
     });
@@ -73,6 +137,8 @@ DfE.Views.editIebt = {
       cancel: self.cancelClick,
       idPrefix: 'iebt-'
     });
+
+    DfE.Views.editIebt.refreshDisplay();
   }
 };
 

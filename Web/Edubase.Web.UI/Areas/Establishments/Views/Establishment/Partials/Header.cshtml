@@ -253,12 +253,13 @@
     @OtherServicesLinks()
 }
 
-@if (Model.DisplayPolicy.ProprietorName)
+@if (Model.DisplayPolicy.ProprietorBodyName)
 {
     <div class="gias-summary-list__row">
         <dt class="gias-summary-list__key">Proprietor's name:</dt>
-        <dd class="gias-summary-list__value">@Model.Establishment.ProprietorName</dd>
+        <dd class="gias-summary-list__value">@Model.Establishment.ProprietorBodyName</dd>
     </div>
+
 }
 
 @helper OtherServicesLinks()

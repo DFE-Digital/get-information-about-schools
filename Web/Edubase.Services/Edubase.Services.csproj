@@ -194,6 +194,7 @@
     <Compile Include="Establishments\Models\NewAcademyRequest.cs" />
     <Compile Include="Establishments\Models\NewAcademyRequestValidationEnvelope.cs" />
     <Compile Include="Establishments\Models\NewAcademyResult.cs" />
+    <Compile Include="Establishments\Models\ProprietorModel.cs" />
     <Compile Include="Exceptions\RuleViolationEmptyParamException.cs" />
     <Compile Include="Exceptions\TexunaApiNotFoundException.cs" />
     <Compile Include="Exceptions\TexunaApiNotImplementedException.cs" />
