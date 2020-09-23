@@ -55,6 +55,16 @@
     }
   }
 
+  &.gias-summary-list--group-create {
+    margin-bottom: govuk-spacing(6);
+
+    @include govuk-media-query($from: tablet) {
+      .gias-summary-list__key {
+        width: 42%;
+      }
+    }
+  }
+
   a {
     word-break: break-word;
   }
