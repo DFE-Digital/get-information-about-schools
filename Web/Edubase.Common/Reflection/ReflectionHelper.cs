@@ -123,7 +123,7 @@ namespace Edubase.Common.Reflection
                         // test the count is the same
                         var v1 = theNewList.Count;
                         var v2 = theOldList.Count;
-                        retVal.Add(new ChangeDescriptor(prefixer + propertyName, propertyName, v1, v2));
+                        retVal.Add(new ChangeDescriptor(prefixer + propertyName, $"{propertyName} items", v1, v2));
                     }
                 }
                 else if(p.PropertyType.IsValueType)

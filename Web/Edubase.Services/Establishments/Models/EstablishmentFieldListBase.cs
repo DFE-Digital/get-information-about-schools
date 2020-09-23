@@ -112,8 +112,6 @@ namespace Edubase.Services.Establishments.Models
         public virtual T Section41ApprovedId { get; set; }
 
         public virtual T ProprietorBodyName { get; set; }
-        public virtual T Proprietors { get; set; }
-        public virtual T ChairOfProprietor { get; set; }
 
         public virtual T SENStat { get; set; }
 
