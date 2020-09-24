@@ -110,11 +110,22 @@ DfE.Views.editIebt = {
     $(document).on('click', ".removeProprietor", function (e) {
       e.preventDefault();
 
-      if ($(this).closest(".proprietorRow").prev().length) {
-        $(window).scrollTop($(this).closest(".proprietorRow").prev().offset().top);
-      }
-      $(this).closest(".proprietorRow").remove();
-      self.refreshIndividualProprietors();
+      $(this).okCancel({
+        ok: function () {
+          if ($(e.target).closest(".proprietorRow").prev().length) {
+            $(window).scrollTop($(e.target).closest(".proprietorRow").prev().offset().top);
+          }
+          $(e.target).closest(".proprietorRow").remove();
+          self.refreshIndividualProprietors();
+        },
+        okLabel: "Yes",
+        immediate: true,
+        idPrefix: 'close-continue',
+        title: 'Remove individual proprietor',
+        content: 'Agreeing to remove this individual proprietor record will mean that this is removed from the system and cannot be re-instated.<br /><br />Are you sure you want to remove the record?'
+      });
+      
+      $(this).removeData('okCancel');
       return false;
     });
 
