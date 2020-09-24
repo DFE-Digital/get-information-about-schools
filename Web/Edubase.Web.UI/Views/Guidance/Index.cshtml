@@ -1,42 +1,49 @@
 ﻿@{
     ViewBag.Title = "Get information about schools";
 }
-
-<div class="grid-row">
-    <div class="column-full">
-        <div class="breadcrumbs">
-            <ol>
-                <li>
-                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-                </li>
-                <li>
-                    @Html.ActionLink("Help", "Help", "Home", new { area = "" }, null)
-                </li>
-            </ol>
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Help", "Help", "Home", new { area = "" }, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
         </div>
+    </div>
+}
 
-        <h1 class="heading-xlarge">Guidance</h1>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
 
-        <p>Use the download links below for general guidance about Get information about schools and for help with specific areas.  For explanations of terms used on the site, see the @Html.RouteLink("glossary", "Glossary").</p>
+        <h1 class="govuk-heading-xl">Guidance</h1>
+        <p>Use the download links below for general guidance about Get information about schools and for help with specific areas.
+            For explanations of terms used on the site, see the @Html.RouteLink("glossary", "Glossary").</p>
     </div>
 </div>
 
-<div class="grid-row">
-    <div class="column-two-thirds">
-        <ul class="list list-bullet">
-            <li class="list-item">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <ul class="govuk-list govuk-list--bullet govuk-list--spaced">
+            <li>
                 @Html.ActionLink("General guidance", "General", "Guidance", new { area = "" }, null)
             </li>
-            <li class="list-item">
+            <li>
                 @Html.ActionLink("Establishment bulk update guidance", "EstablishmentBulkUpdate", "Guidance", new { area = "" }, null)
             </li>
-            <li class="list-item">
+            <li>
                 @Html.ActionLink("Children's centres guidance", "ChildrensCentre", "Guidance", new { area = "" }, null)
             </li>
-            <li class="list-item">
+            <li>
                 @Html.ActionLink("Federation guidance", "Federation", "Guidance", new { area = "" }, null)
             </li>
-            <li class="list-item">
+            <li>
                 @Html.ActionLink("Governance guidance", "Governance", "Guidance", new { area = "" }, null)
             </li>
         </ul>
