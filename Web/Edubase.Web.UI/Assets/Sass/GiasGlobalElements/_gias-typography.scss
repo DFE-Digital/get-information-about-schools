@@ -1,3 +1,9 @@
 .gias-callout-text {
   @include govuk-font(48, 'bold');
 }
+
+.govuk-main-wrapper {
+  a { // because we have URLs as link text
+    word-break: break-word;
+  }
+}
