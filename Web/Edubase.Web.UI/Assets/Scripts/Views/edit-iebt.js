@@ -97,22 +97,22 @@ DfE.Views.editIebt = {
       $.ajax({
         url: "/Establishments/Establishment/Proprietor/Add/" + ($('.proprietorRow').length + 1),
         cache: false,
-        success: function (html) { $("#proprietorList").append(html); }
+        success: function (html) {
+          var currentPosition = $(window).scrollTop();
+          $("#proprietorList").append(html);
+          $(window).scrollTop(currentPosition);
+        }
       });
       self.refreshIndividualProprietors(true);
-
-      $(".removeProprietor").on('click', function (e) {
-        e.preventDefault();
-        $(this).closest(".proprietorRow").remove();
-        self.refreshIndividualProprietors();
-        return false;
-      });
-
       return false;
     });
 
-    $(".removeProprietor").on('click', function (e) {
+    $(document).on('click', ".removeProprietor", function (e) {
       e.preventDefault();
+
+      if ($(this).closest(".proprietorRow").prev().length) {
+        $(window).scrollTop($(this).closest(".proprietorRow").prev().offset().top);
+      }
       $(this).closest(".proprietorRow").remove();
       self.refreshIndividualProprietors();
       return false;
