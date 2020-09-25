@@ -67,8 +67,7 @@
 {
     <script nonce="@Html.ScriptNonce()">
         (function () {
-            var okDelete = false;
-            $('.entry-content').textCount({ maxLength: 1000 });
+            $('.entry-content').textCount({ maxLength: 4000 });
 
             $('#delete-button').okCancel({
                 ok: function () {
