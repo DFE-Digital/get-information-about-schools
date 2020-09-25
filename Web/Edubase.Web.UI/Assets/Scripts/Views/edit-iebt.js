@@ -1,5 +1,5 @@
 DfE.Views.editIebt = {
-  radios: $('#proprietor-radios').find('input'),
+  radios: $('#proprietor-radios').find('input[type="radio"]'),
 
   okClick: function () {
     this.closeModal();
@@ -26,7 +26,7 @@ DfE.Views.editIebt = {
     } else {
       $('.removeProprietor').removeClass('hidden');
     }
-    
+
     // re-sequence the numbers
     $(".proprietorRowCounter").each(function (index) {
       $(this).text(index + 1);
@@ -109,24 +109,32 @@ DfE.Views.editIebt = {
 
     $(document).on('click', ".removeProprietor", function (e) {
       e.preventDefault();
+      var proprietorHasValues = $(e.target).closest(".proprietorRow").find(':input').filter(function(n, input) {
+        return $(input).attr('type') === 'text' && $.trim($(input).val()) !== '';
+      }).length > 0;
 
-      $(this).okCancel({
-        ok: function () {
-          if ($(e.target).closest(".proprietorRow").prev().length) {
-            $(window).scrollTop($(e.target).closest(".proprietorRow").prev().offset().top);
-          }
-          $(e.target).closest(".proprietorRow").remove();
-          self.refreshIndividualProprietors();
-        },
-        okLabel: "Yes",
-        immediate: true,
-        idPrefix: 'close-continue',
-        title: 'Remove individual proprietor',
-        content: 'Agreeing to remove this individual proprietor record will mean that this is removed from the system and cannot be re-instated.<br /><br />Are you sure you want to remove the record?'
-      });
-      
-      $(this).removeData('okCancel');
-      return false;
+      if (proprietorHasValues) { // the proprietor about to be discarded has some values
+        $(this).okCancel({
+          ok: function () {
+            if ($(e.target).closest(".proprietorRow").prev().length) {
+              $(window).scrollTop($(e.target).closest(".proprietorRow").prev().offset().top);
+            }
+            $(e.target).closest(".proprietorRow").remove();
+            self.refreshIndividualProprietors();
+          },
+          okLabel: "Yes",
+          immediate: true,
+          idPrefix: 'close-continue',
+          title: 'Remove individual proprietor',
+          content: 'Agreeing to remove this individual proprietor record will mean that this is removed from the system and cannot be re-instated.<br /><br />Are you sure you want to remove the record?'
+        });
+
+        $(this).removeData('okCancel');
+        return false;
+      } else {
+        $(e.target).closest(".proprietorRow").remove();
+        self.refreshIndividualProprietors();
+      }
     });
 
     self.radios.on('change', function (e) {
