@@ -1,5 +1,5 @@
 DfE.Views.editIebt = {
-  radios: $('#proprietor-radios').find('input'),
+  radios: $('#proprietor-radios').find('input[type="radio"]'),
 
   okClick: function () {
     this.closeModal();
