@@ -1,6 +1,7 @@
 @using System.Linq
 @using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
 @using System.Linq.Expressions
+@using Edubase.Common.Text
 @using Edubase.Services.Enums
 @model ViewModel
 @{
@@ -286,7 +287,7 @@
                                     var id = TagBuilder.CreateSanitizedId(string.Format("{0}-{1}", "proprietor-type", pt));
                                 }
                                 @Html.RadioButtonFor(x => x.ProprietorTypeId, (int)pt, new { id, data_toggle_panel = $"#{pt}", value=$"{pt}" })
-                                @Html.Label(pt.EnumDisplayNameFor(), new { @for = id, data_toggle_panel = pt })
+                                @Html.Label(pt.EnumDisplayNameFor().ToSentenceCase(), new { @for = id, data_toggle_panel = pt })
                             </div>
                         }
                     }
