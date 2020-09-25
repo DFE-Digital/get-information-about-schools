@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Models
@@ -10,7 +10,7 @@ namespace Edubase.Web.UI.Models
         [Required]
         public string Title { get; set; }
 
-        [Required, MaxLength(1000, ErrorMessage = "The Content field cannot have more than 1000 characters"), AllowHtml]
+        [Required, MaxLength(4000, ErrorMessage = "The Content field cannot have more than 4000 characters"), AllowHtml]
         public string Content { get; set; }
 
         public bool IsDeleting { get; set; }
@@ -23,7 +23,6 @@ namespace Edubase.Web.UI.Models
 
         public FaqItemViewModel()
         {
-
         }
     }
 }
