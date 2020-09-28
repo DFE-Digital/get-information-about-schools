@@ -2,7 +2,7 @@
     var openState = true;
     var resultsContainer = $('#results-container');
     var resultsNotification = $('#results-notification');
-    var filterPanel = $('#filter-container');
+  var filterPanel = $('#download-filters');
     var filterIntent = null;
     var searchParams = '';
     var plsWait = '<div class="progress-indicator"><span class="visually-hidden">Please wait</span></div>';
@@ -12,7 +12,6 @@
         resultsNotification.html('Please wait, loading search results');
         $('#ajax-error-message').addClass('hidden');
         filterPanel.find(':input').prop('disabled', 'disabled');
-
 
         var resultsUrl = '/Downloads/results-js';
         if (GOVUK.support.history()) {
@@ -88,7 +87,7 @@
             window.clearTimeout(filterIntent);
         });
 
-        filterPanel.find('.filter-button').on('click', function (e) {
+        filterPanel.find('.button').on('click', function (e) {
             e.preventDefault();
             window.clearTimeout(filterIntent);
             var canSubmit = DfE.searchUtils.validateDateFilters('date-filter');
