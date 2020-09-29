@@ -36,6 +36,10 @@
   @include govuk-media-query($until: tablet) {
     font-size: 12px;
   }
+
+  a {
+    word-break: normal;
+  }
 }
 
 .gias-tabs__tab:link {
