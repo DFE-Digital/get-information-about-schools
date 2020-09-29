@@ -981,7 +981,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 viewModelProprietor.Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList(viewModelProprietor.CountyId);
             }
-            viewModel.ChairOfProprietor.Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList(viewModel.ChairOfProprietor.CountyId);
+
+            if (viewModel.ChairOfProprietor != null)
+            {
+                viewModel.ChairOfProprietor.Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList(viewModel.ChairOfProprietor.CountyId);
+            }
 
             viewModel.Countries = (await _cachedLookupService.NationalitiesGetAllAsync()).ToSelectList(viewModel.Address_CountryId);
             viewModel.OfstedRatings = (await _cachedLookupService.OfstedRatingsGetAllAsync()).ToSelectList(viewModel.OfstedRatingId);
