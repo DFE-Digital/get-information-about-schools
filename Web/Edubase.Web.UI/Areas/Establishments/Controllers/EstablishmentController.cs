@@ -985,7 +985,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             if (viewModel.ChairOfProprietor != null)
             {
                 viewModel.ChairOfProprietor.Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList(viewModel.ChairOfProprietor.CountyId);
-                viewModel.ChairOfProprietor.CountyIdDefault = (await _cachedLookupService.CountiesGetAllAsync()).Where(x => x.Code.Equals("099")).Select(x => x.Id).First(); // Not recorded
+                if ((await _cachedLookupService.CountiesGetAllAsync()).Any(x => x.CodeAsInt != null))
+                {
+                    viewModel.ChairOfProprietor.CountyIdDefault = (await _cachedLookupService.CountiesGetAllAsync()).FirstOrDefault(x => x.Code.Equals("099"))?.Id; // Not recorded
+                }
             }
 
             viewModel.Countries = (await _cachedLookupService.NationalitiesGetAllAsync()).ToSelectList(viewModel.Address_CountryId);
