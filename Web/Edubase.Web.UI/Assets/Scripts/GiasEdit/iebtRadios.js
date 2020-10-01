@@ -5,23 +5,8 @@ const iebtRadios = {
   cloneFields: $('#cloneable-fields-container').find('.cloneable').detach(),
 
   okClick: function () {
-    const self = this;
     this.closeModal();
-    $('#SingleProprietor, #ProprietorBody').find('.govuk-input').val('');
-
-    $('#proprietor-radios').find('.govuk-radios__input').each(function () {
-      $('#proprietor-radios').find('.govuk-radios__input').data().okCancel.pause(true);
-    });
-
-
-    $('#ProprietorBody, #SingleProprietor').on('change, keydown', '.govuk-input, .govuk-select', function () {
-
-      $('#proprietor-radios').find('.govuk-radios__input').each(function () {
-        $('#proprietor-radios').find('.govuk-radios__input').data().okCancel.pause();
-      });
-
-      $('#ProprietorBody, #SingleProprietor').off('change, keydown', '.govuk-input, .govuk-select');
-    });
+    iebtRadios.refreshDisplay();
 
     return true;
   },
@@ -29,14 +14,88 @@ const iebtRadios = {
     this.closeModal();
     const selectedVal = $('#proprietor-radios').find('.govuk-radios__input:checked').val();
 
-    if (selectedVal === 'SingleProprietor') {
+    if (selectedVal === '1') {
       $('#proprietor-type-ProprietorBody').prop('checked', true).change();
 
-    } else if (selectedVal === 'ProprietorBody') {
-      $('#proprietor-type-SingleProprietor').prop('checked', true).change();
+    } else if (selectedVal === '2') {
+      $('#proprietor-type-IndividualProprietor').prop('checked', true).change();
     }
 
   },
+
+  refreshIndividualProprietors: function(addedBool) {
+    const trueLength = $('.proprietorRow').length + (addedBool === true ? 1 : 0);
+    if (trueLength < 2) {
+      $('.removeProprietor').addClass('hidden');
+    } else {
+      $('.removeProprietor').removeClass('hidden');
+    }
+
+    // re-sequence the numbers
+    $(".proprietorRowCounter").each(function (index) {
+      $(this).text(index + 1);
+    });
+  },
+
+  clearChairProprietor: function() {
+    $('#ProprietorBody-chair').find(':input').each(function () {
+      switch (this.type) {
+        case 'password':
+        case 'text':
+        case 'textarea':
+        case 'file':
+        case 'select-one':
+        case 'select-multiple':
+        case 'date':
+        case 'number':
+        case 'tel':
+        case 'email':
+          $(this).val('');
+          break;
+        case 'checkbox':
+        case 'radio':
+          this.checked = false;
+          break;
+      }
+    });
+  },
+
+  refreshDisplay: function () {
+    const self = this;
+    const radioValue = typeof self.radios.filter(':checked').val() !== 'undefined' ? self.radios.filter(':checked').val() : 'unselected';
+
+
+    if (radioValue === '1') {
+      // individual proprietor
+      $('#proprietor-type-IndividualProprietor').prop('checked', true);
+      $('.proprietorRowTitle').removeClass('hidden');
+      $('#proprietorAdd').removeClass('hidden');
+      $('#ProprietorBody-chair').addClass('hidden');
+      $('#ProprietorBody').addClass('hidden');
+      $('#IndividualProprietor').removeClass('hidden');
+
+      self.refreshIndividualProprietors();
+      self.clearChairProprietor();
+    }
+    if (radioValue === '2') {
+      // proprietor body
+      $('#proprietor-type-ProprietorBody').prop('checked', true);
+      $('.proprietorRowTitle').addClass('hidden');
+      $('#proprietorAdd').addClass('hidden');
+      $('#ProprietorBody-chair').removeClass('hidden');
+      $('#ProprietorBody').removeClass('hidden');
+      $('#IndividualProprietor').addClass('hidden');
+
+      // remove all additional Individual Proprietors
+      $(".removeProprietor").slice(1).closest(".proprietorRow").remove();
+      self.refreshIndividualProprietors();
+    }
+
+    if (radioValue !== 'unselected') {
+      $("#proprietor-entry").removeClass('hidden');
+    }
+  },
+
   init: function () {
     const self = this;
     let overlayAttached = false;
@@ -44,32 +103,69 @@ const iebtRadios = {
       return;
     }
 
+    $("#addProprietor").click(function (e) {
+      e.preventDefault();
+      $.ajax({
+        url: "/Establishments/Establishment/Proprietor/Add/" + ($('.proprietorRow').length + 1),
+        cache: false,
+        success: function (html) {
+          var currentPosition = $(window).scrollTop();
+          $("#proprietorList").append(html);
+          $(window).scrollTop(currentPosition);
+        }
+      });
+      self.refreshIndividualProprietors(true);
+      return false;
+    });
+
+    $(document).on('click', ".removeProprietor", function (e) {
+      e.preventDefault();
+      const proprietorHasValues = $(e.target).closest(".proprietorRow").find(':input').filter(function(n, input) {
+        return $(input).attr('type') === 'text' && $.trim($(input).val()) !== '';
+      }).length > 0;
+
+      if (proprietorHasValues) { // the proprietor about to be discarded has some values
+        $(this).okCancel({
+          ok: function () {
+            if ($(e.target).closest(".proprietorRow").prev().length) {
+              $(window).scrollTop($(e.target).closest(".proprietorRow").prev().offset().top);
+            }
+            $(e.target).closest(".proprietorRow").remove();
+            self.refreshIndividualProprietors();
+          },
+          okLabel: "Yes",
+          immediate: true,
+          idPrefix: 'close-continue',
+          title: 'Remove individual proprietor',
+          content: 'Agreeing to remove this individual proprietor record will mean that this is removed from the system and cannot be re-instated.<br /><br />Are you sure you want to remove the record?'
+        });
+
+        $(this).removeData('okCancel');
+        return false;
+      } else {
+        $(e.target).closest(".proprietorRow").remove();
+        self.refreshIndividualProprietors();
+      }
+    });
+
     const radioValue = typeof self.radios.filter(':checked').val() !== 'undefined' ? self.radios.filter(':checked').val() : 'SingleProprietor';
 
     if (radioValue === 'ProprietorBody') {
       $('#field-clone-target').append(self.cloneFields);
     } else {
       $('#cloneable-fields-container').append(self.cloneFields);
-      $('#proprietor-type-SingleProprietor').prop('checked', true);
-      $('#SingleProprietor').removeClass('govuk-radios__conditional--hidden');
+      $('#proprietor-type-IndividualProprietor').prop('checked', true);
+      $('#SingleProprietor').removeClass('hidden');
     }
 
     self.radios.on('change', function (e) {
       const radioId = $(this).prop('id');
 
       if (radioId === 'proprietor-type-ProprietorBody') {
-        $('#field-clone-target').append(self.cloneFields);
-        $('#SingleProprietor').addClass('govuk-radios__conditional--hidden');
-        $('#ProprietorBody').removeClass('govuk-radios__conditional--hidden');
-
         $('#proprietor-radios').find('input').data().okCancel
           .updateModalContent('Are you sure you want to change to a proprietary body?',
             'All single proprietor details will be lost');
       } else {
-        $('#cloneable-fields-container').append(self.cloneFields);
-        $('#SingleProprietor').removeClass('govuk-radios__conditional--hidden');
-        $('#ProprietorBody').addClass('govuk-radios__conditional--hidden');
-
         $('#proprietor-radios').find('input').data().okCancel
           .updateModalContent('Are you sure you want to change to a single proprietor?',
             'All proprietary body details will be lost');
@@ -81,6 +177,8 @@ const iebtRadios = {
       cancel: self.cancelClick,
       idPrefix: 'iebt-'
     });
+
+   self.refreshDisplay();
   }
 }
 

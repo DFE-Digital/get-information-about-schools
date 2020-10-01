@@ -9,13 +9,13 @@
 @RenderTextBox(x => x.Address3)
 @RenderTextBox(x => x.Town)
 
-<div class="form-group @Html.ValidationCssClassFor(x => x.CountyId)">
-    @Html.LabelFor(x => x.CountyId)
-    @Html.ValidationMessageFor(x => x.CountyId)
-    @Html.DropDownListFor(x => x.CountyId, Model.Counties, "", new { @class = "form-control" })
+<div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CountyId)">
+    @Html.LabelFor(x => x.CountyId, new { @class="govuk-label"})
+    @Html.ValidationMessageFor(x => x.CountyId, null , new {@class = "govuk-error-message"})
+    @Html.DropDownListFor(x => x.CountyId, Model.Counties, "", new { @class = "govuk-select" })
 </div>
 
-@RenderTextBox(x => x.Postcode,  "form-control-1-2")
+@RenderTextBox(x => x.Postcode,  "govuk-input--width-10")
 @RenderTextBox(x => x.TelephoneNumber)
 
 @RenderTextBox(x => x.Email)
@@ -23,9 +23,9 @@
 
 @helper RenderTextBox(Expression<Func<ProprietorViewModel, string>> fnc, string fieldClasses = "")
 {
-    var classes = "form-control " + fieldClasses;
-    <div class="form-group @Html.ValidationCssClassFor(fnc)">
-        @Html.LabelFor(fnc, new { @class = "form-label" })
+    var classes = "govuk-input " + fieldClasses;
+    <div class="govuk-form-group @Html.ValidationCssClassFor(fnc)">
+        @Html.LabelFor(fnc, new { @class = "govuk-label" })
         @Html.ValidationMessageFor(fnc)
         @Html.TextBoxFor(fnc, new { @class = classes })
     </div>
