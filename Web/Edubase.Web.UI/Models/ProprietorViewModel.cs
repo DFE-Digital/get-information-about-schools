@@ -22,7 +22,15 @@ namespace Edubase.Web.UI.Models
 
         [DisplayName("Town")] public string Town { get; set; }
 
-        [DisplayName("County")] public int? CountyId { get; set; }
+        // hack as the backend cant return an empty model although that is what has been saved (43744)
+        public int? CountyIdDefault { get; set; }
+        private int? _countyId;
+        [DisplayName("County")]
+        public int? CountyId
+        {
+            get => _countyId ?? CountyIdDefault;
+            set => _countyId = value;
+        }
 
         [DisplayName("Postcode")] public string Postcode { get; set; }
 
