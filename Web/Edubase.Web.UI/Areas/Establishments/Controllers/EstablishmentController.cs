@@ -736,8 +736,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 domainModel.SENIds = viewModel.SENIds ?? new int[0];
             }
 
-            // --- REMOVED AS NOW HANDLED BY AUTOMAPPER
-            //domainModel.AdditionalAddresses = viewModel.AdditionalAddresses.ToArray();
+            domainModel.AdditionalAddresses = viewModel.AdditionalAddresses.ToArray();
         }
 
         private void MapToDomainModelIEBT(ViewModel viewModel, EstablishmentModel domainModel)
