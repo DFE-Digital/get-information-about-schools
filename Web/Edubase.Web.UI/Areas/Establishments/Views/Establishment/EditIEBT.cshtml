@@ -2,6 +2,7 @@
 @using System.Linq
 @using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
 @using System.Linq.Expressions
+@using Edubase.Common.Text
 @using Edubase.Services.Enums
 @model ViewModel
 @{
@@ -288,7 +289,7 @@
                                             var id = TagBuilder.CreateSanitizedId(string.Format("{0}-{1}", "proprietor-type", pt));
                                         }
                                         @Html.RadioButtonFor(x => x.ProprietorTypeId, (int)pt, new { id, data_aria_controls = $"{pt}", value=$"{pt}", @class = "govuk-radios__input" })
-                                        @Html.Label(pt.EnumDisplayNameFor(), new { @for = id, data_toggle_panel = pt, @class = "govuk-radios__label"})
+                                        @Html.Label(pt.EnumDisplayNameFor().ToSentenceCase(), new { @for = id, data_toggle_panel = pt, @class = "govuk-radios__label"})
                                     </div>
                                 }
                             }
