@@ -60,20 +60,20 @@
 <div v-show="!mergerTypeConfirmed && !validMergeUrns">
     <div class="govuk-grid-column-two-thirds">
         <p>
-            You can use this to amalgamate or merge establishments. This
-            process automatically creates/closes records and creates predecessor/successor links.
+            You can use this  tool to amalgamate or merge establishments.
+            This process automatically creates and closes (where applicable) records and creates predecessor and successor links.
         </p>
 
         <fieldset class="merger-almalgamation govuk-fieldset govuk-!-margin-bottom-8">
             <legend class="govuk-fieldset__legend--s govuk-!-font-weight-bold">Select the process you are interested in</legend>
 
             <p id="almagamation-desc">
-                Amalgamation - a proposal for two or more schools to close and a new
-                school to be established.
+                Amalgamation - a proposal for two or more establishments to close and a new
+                establishment to be established.
             </p>
             <p id="merger-desc">
-                Merger - a proposal for one or more schools to close and the remaining
-                school to be altered.
+                Merger - a proposal for one or more establishments to close and the remaining
+                establishment to be altered.
             </p>
             <div v-bind:class="['govuk-form-group ', mergerTypeError ? 'govuk-form-group--error' : '']">
                 <span v-show="mergerTypeError" class="govuk-error-message">Please select almalgamation or merger.</span>
@@ -114,9 +114,9 @@
             </div>
         </div>
         <div class="govuk-grid-column-two-thirds">
-            <p>You can propose closing two or more schools and establishing a new school</p>
+            <p>You can propose closing two or more establishments and establishing a new establishment</p>
             <h2 class="govuk-heading-s">Select establishments to be amalgamated</h2>
-            <p>Up to 4 establishments can be amalgamated (minimum of 2 establishments)</p>
+            <p>Enter a minimum of 2 establishments and a maximum of 4 establishments</p>
         </div>
         <div class="govuk-grid-column-one-half">
             <div v-bind:class="['field-group govuk-form-group', amalgamatedUrn1Error.length > 0 ? 'govuk-form-group--error' : '' ]">
@@ -169,7 +169,7 @@
             </ol>
 
             <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend--s">New School details</legend>
+                <legend class="govuk-fieldset__legend--s">New establishment details</legend>
                 <div v-bind:class="['govuk-form-group', nameError ? 'govuk-form-group--error' : '' ]">
                     <label class="govuk-label" for="new-establishment-name">Establishment name</label>
                     <span v-show="nameError" class="govuk-error-message">Please enter the establishment name</span>
@@ -261,7 +261,7 @@
 <div v-show="(mergerType ==='merger' && mergerTypeConfirmed) && !isProcessing">
     <div v-show="!validMergeUrns">
         <div class="govuk-grid-column-two-thirds" id="merger-details">
-            <p>You can propose closing one or more schools and altering the remaining school.</p>
+            <p>You can propose closing one or more establishments and altering the remaining establishment.</p>
 
             <h2 class="govuk-heading-s">Select the lead establishment</h2>
             <p>The lead establishment will remain open</p>
@@ -280,7 +280,7 @@
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                     Select establishments to be merged with the lead establishment
                 </legend>
-                <p>Up to 3 establishments can be merged (minimum of 1 establishment)</p>
+                <p>Enter a minimum of 1 establishment and a maximum of 3 establishments</p>
 
                 <div v-bind:class="['govuk-form-group', mergerUrn1Error.length > 0 ? 'govuk-form-group--error' : '' ]">
                     <label for="merger-estab1" class="govuk-label">Establishment 1 URN</label>
