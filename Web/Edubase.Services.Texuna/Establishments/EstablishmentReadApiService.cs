@@ -172,6 +172,7 @@ namespace Edubase.Services.Texuna.Establishments
         {
             var changes = ReflectionHelper.DetectChanges(model, original, new[]{ typeof(IEBTModel), typeof(ProprietorModel)});
             changes.AddRange(await DetectAdditionalAddressChanges(original, model));
+            changes.AddRange(await DetectProprietorsChanges(original, model));
             var retVal = new List<ChangeDescriptorDto>();
 
             var approvalFields = approvalsPolicy.GetFieldsRequiringApproval();
@@ -222,6 +223,178 @@ namespace Edubase.Services.Texuna.Establishments
             }
 
             return (await _httpClient.GetAsync<List<EstablishmentSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}", principal)).GetResponse();
+        }
+
+
+
+        private async Task<IEnumerable<ChangeDescriptor>> DetectProprietorsChanges(EstablishmentModel originalModel, EstablishmentModel newModel)
+        {
+            var retVal = new List<ChangeDescriptor>();
+            var newProprietors  = newModel.IEBTModel.Proprietors?.Where(x => !x.Id.HasValue).ToArray();
+            Func<int, string, string> f = (i, fieldName) => $"{fieldName} ({i + 1})";
+
+            if (newProprietors != null)
+            {
+                for (var i = 0; i < newProprietors.Length; i++)
+                {
+                    var newProprietor = newProprietors[i];
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(newProprietor.Name),
+                        DisplayName = "Name (new)",
+                        NewValue = newProprietor.Name
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(newProprietor.Street),
+                        DisplayName = "Street (new)",
+                        NewValue = newProprietor.Street
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(newProprietor.Locality),
+                        DisplayName = "Locality (new)",
+                        NewValue = newProprietor.Locality
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(newProprietor.Address3),
+                        DisplayName = "Address 3 (new)",
+                        NewValue = newProprietor.Address3
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(newProprietor.Town),
+                        DisplayName = "Town (new)",
+                        NewValue = newProprietor.Town
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(newProprietor.CountyId),
+                        DisplayName = "County (new)",
+                        NewValue = await _cachedLookupService.GetNameAsync("CountyId", newProprietor.CountyId)
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(newProprietor.Postcode),
+                        DisplayName = "Postcode (new)",
+                        NewValue = newProprietor.Postcode
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(newProprietor.TelephoneNumber),
+                        DisplayName = "Telephone number (new)",
+                        NewValue = newProprietor.TelephoneNumber
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(newProprietor.Email),
+                        DisplayName = "Email (new)",
+                        NewValue = newProprietor.Email
+                    });
+                }
+            }
+
+            var editedProprietors = newModel.IEBTModel.Proprietors?.Where(x => x.Id.HasValue).ToArray();
+            if (editedProprietors != null)
+            {
+                for (var i = 0; i < editedProprietors.Length; i++)
+                {
+                    var index = newModel.IEBTModel.Proprietors.ToList().IndexOf(editedProprietors[i]);
+                    var proprietor = editedProprietors[i];
+                    var oldProprietor = originalModel.IEBTModel.Proprietors.FirstOrDefault(x => x.Id == proprietor.Id);
+                    if (oldProprietor != null)
+                    {
+                        var changes = ReflectionHelper.DetectChanges(proprietor, oldProprietor).AsEnumerable();
+                        changes.ForEach(x => x.DisplayName = f(index, PropertyName2Label(x.Name))); // alter the field name so it contains the index of the current address model
+                        retVal.AddRange(changes);
+                    }
+                }
+            }
+
+            var removedProprietors = originalModel.IEBTModel.Proprietors?.Where(x => !newModel.IEBTModel.Proprietors.Select(y => y.Id).Contains(x.Id)).ToArray();
+            if (removedProprietors != null)
+            {
+                for (var i = 0; i < removedProprietors.Length; i++)
+                {
+                    var index = newModel.IEBTModel.Proprietors.ToList().IndexOf(removedProprietors[i]) + 1;
+                    var proprietor = removedProprietors[i];
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(proprietor.Name),
+                        DisplayName = "Name (deleting)",
+                        NewValue = proprietor.Name
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(proprietor.Street),
+                        DisplayName = "Street (deleting)",
+                        NewValue = proprietor.Street
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(proprietor.Locality),
+                        DisplayName = "Locality (deleting)",
+                        NewValue = proprietor.Locality
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(proprietor.Address3),
+                        DisplayName = "Address 3 (deleting)",
+                        NewValue = proprietor.Address3
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(proprietor.Town),
+                        DisplayName = "Town (deleting)",
+                        NewValue = proprietor.Town
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(proprietor.CountyId),
+                        DisplayName = "County (deleting)",
+                        NewValue = await _cachedLookupService.GetNameAsync("CountyId", proprietor.CountyId)
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(proprietor.Postcode),
+                        DisplayName = "Postcode (deleting)",
+                        NewValue = proprietor.Postcode
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(proprietor.TelephoneNumber),
+                        DisplayName = "Telephone number (deleting)",
+                        NewValue = proprietor.TelephoneNumber
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(proprietor.Email),
+                        DisplayName = "Email (deleting)",
+                        NewValue = proprietor.Email
+                    });
+                }
+            }
+
+            retVal.ForEach(x => x.Tag = "proprietors");
+
+            return retVal;
         }
 
         private async Task<IEnumerable<ChangeDescriptor>> DetectAdditionalAddressChanges(EstablishmentModel originalModel, EstablishmentModel newModel)
