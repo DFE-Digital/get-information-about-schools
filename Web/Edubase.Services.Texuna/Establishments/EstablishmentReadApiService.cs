@@ -197,7 +197,9 @@ namespace Edubase.Services.Texuna.Establishments
                     NewValue = change.NewValue.Clean(),
                     OldValue = change.OldValue.Clean(),
                     Tag = change.Tag,
-                    RequiresApproval = (change.Tag == "additionaladdress" && approvalsPolicy.AdditionalAddresses.RequiresApproval) || approvalFields.Contains(change.Name, StringComparer.OrdinalIgnoreCase),
+                    RequiresApproval = (change.Tag == "additionaladdress" && approvalsPolicy.AdditionalAddresses.RequiresApproval) ||
+                                       (change.Tag == "proprietors" && approvalsPolicy.IEBTDetail.Proprietors.RequiresApproval) ||
+                                       approvalFields.Contains(change.Name, StringComparer.OrdinalIgnoreCase),
                     ApproverName = approvalsPolicy.GetApproverName(change.Name)
                 });
             }
@@ -231,79 +233,82 @@ namespace Edubase.Services.Texuna.Establishments
         {
             var retVal = new List<ChangeDescriptor>();
             var newProprietors  = newModel.IEBTModel.Proprietors?.Where(x => !x.Id.HasValue).ToArray();
+            var editedProprietors = newModel.IEBTModel.Proprietors?.Where(x => x.Id.HasValue).ToArray();
+            var removedProprietors = originalModel.IEBTModel.Proprietors?.Where(x => !newModel.IEBTModel.Proprietors.Select(y => y.Id).Contains(x.Id)).ToArray();
+
             Func<int, string, string> f = (i, fieldName) => $"{fieldName} ({i + 1})";
 
             if (newProprietors != null)
             {
                 for (var i = 0; i < newProprietors.Length; i++)
                 {
+                    var index = newModel.IEBTModel.Proprietors.ToList().IndexOf(newProprietors[i]) + 1 + removedProprietors?.Length;
                     var newProprietor = newProprietors[i];
                     retVal.Add(new ChangeDescriptor
                     {
                         Name = nameof(newProprietor.Name),
-                        DisplayName = "Name (new)",
+                        DisplayName = $"Name ({index} - new)",
                         NewValue = newProprietor.Name
                     });
 
                     retVal.Add(new ChangeDescriptor
                     {
                         Name = nameof(newProprietor.Street),
-                        DisplayName = "Street (new)",
+                        DisplayName = $"Street ({index} - new)",
                         NewValue = newProprietor.Street
                     });
 
                     retVal.Add(new ChangeDescriptor
                     {
                         Name = nameof(newProprietor.Locality),
-                        DisplayName = "Locality (new)",
+                        DisplayName = $"Locality ({index} - new)",
                         NewValue = newProprietor.Locality
                     });
 
                     retVal.Add(new ChangeDescriptor
                     {
                         Name = nameof(newProprietor.Address3),
-                        DisplayName = "Address 3 (new)",
+                        DisplayName = $"Address 3 ({index} - new)",
                         NewValue = newProprietor.Address3
                     });
 
                     retVal.Add(new ChangeDescriptor
                     {
                         Name = nameof(newProprietor.Town),
-                        DisplayName = "Town (new)",
+                        DisplayName = $"Town ({index} - new)",
                         NewValue = newProprietor.Town
                     });
 
                     retVal.Add(new ChangeDescriptor
                     {
                         Name = nameof(newProprietor.CountyId),
-                        DisplayName = "County (new)",
+                        DisplayName = $"County ({index} - new)",
                         NewValue = await _cachedLookupService.GetNameAsync("CountyId", newProprietor.CountyId)
                     });
 
                     retVal.Add(new ChangeDescriptor
                     {
                         Name = nameof(newProprietor.Postcode),
-                        DisplayName = "Postcode (new)",
+                        DisplayName = $"Postcode ({index} - new)",
                         NewValue = newProprietor.Postcode
                     });
 
                     retVal.Add(new ChangeDescriptor
                     {
                         Name = nameof(newProprietor.TelephoneNumber),
-                        DisplayName = "Telephone number (new)",
+                        DisplayName = $"Telephone number ({index} - new)",
                         NewValue = newProprietor.TelephoneNumber
                     });
 
                     retVal.Add(new ChangeDescriptor
                     {
                         Name = nameof(newProprietor.Email),
-                        DisplayName = "Email (new)",
+                        DisplayName = $"Email ({index} - new)",
                         NewValue = newProprietor.Email
                     });
                 }
             }
 
-            var editedProprietors = newModel.IEBTModel.Proprietors?.Where(x => x.Id.HasValue).ToArray();
             if (editedProprietors != null)
             {
                 for (var i = 0; i < editedProprietors.Length; i++)
@@ -314,80 +319,79 @@ namespace Edubase.Services.Texuna.Establishments
                     if (oldProprietor != null)
                     {
                         var changes = ReflectionHelper.DetectChanges(proprietor, oldProprietor).AsEnumerable();
-                        changes.ForEach(x => x.DisplayName = f(index, PropertyName2Label(x.Name))); // alter the field name so it contains the index of the current address model
+                        changes.ForEach(x => x.DisplayName = f(index, PropertyName2Label(x.Name))); // alter the field name so it contains the index of the current proprietors model
                         retVal.AddRange(changes);
                     }
                 }
             }
 
-            var removedProprietors = originalModel.IEBTModel.Proprietors?.Where(x => !newModel.IEBTModel.Proprietors.Select(y => y.Id).Contains(x.Id)).ToArray();
             if (removedProprietors != null)
             {
                 for (var i = 0; i < removedProprietors.Length; i++)
                 {
-                    var index = newModel.IEBTModel.Proprietors.ToList().IndexOf(removedProprietors[i]) + 1;
+                    var index = originalModel.IEBTModel.Proprietors?.ToList().IndexOf(removedProprietors[i]) + 1;
                     var proprietor = removedProprietors[i];
                     retVal.Add(new ChangeDescriptor
                     {
                         Name = nameof(proprietor.Name),
-                        DisplayName = "Name (deleting)",
-                        NewValue = proprietor.Name
+                        DisplayName = $"Name ({index} - deleting)",
+                        OldValue = proprietor.Name
                     });
 
                     retVal.Add(new ChangeDescriptor
                     {
                         Name = nameof(proprietor.Street),
-                        DisplayName = "Street (deleting)",
-                        NewValue = proprietor.Street
+                        DisplayName = $"Street ({index} - deleting)",
+                        OldValue = proprietor.Street
                     });
 
                     retVal.Add(new ChangeDescriptor
                     {
                         Name = nameof(proprietor.Locality),
-                        DisplayName = "Locality (deleting)",
-                        NewValue = proprietor.Locality
+                        DisplayName = $"Locality ({index} - deleting)",
+                        OldValue = proprietor.Locality
                     });
 
                     retVal.Add(new ChangeDescriptor
                     {
                         Name = nameof(proprietor.Address3),
-                        DisplayName = "Address 3 (deleting)",
-                        NewValue = proprietor.Address3
+                        DisplayName = $"Address 3 ({index} - deleting)",
+                        OldValue = proprietor.Address3
                     });
 
                     retVal.Add(new ChangeDescriptor
                     {
                         Name = nameof(proprietor.Town),
-                        DisplayName = "Town (deleting)",
-                        NewValue = proprietor.Town
+                        DisplayName = $"Town ({index} - deleting)",
+                        OldValue = proprietor.Town
                     });
 
                     retVal.Add(new ChangeDescriptor
                     {
                         Name = nameof(proprietor.CountyId),
-                        DisplayName = "County (deleting)",
-                        NewValue = await _cachedLookupService.GetNameAsync("CountyId", proprietor.CountyId)
+                        DisplayName = $"County ({index} - deleting)",
+                        OldValue = await _cachedLookupService.GetNameAsync("CountyId", proprietor.CountyId)
                     });
 
                     retVal.Add(new ChangeDescriptor
                     {
                         Name = nameof(proprietor.Postcode),
-                        DisplayName = "Postcode (deleting)",
-                        NewValue = proprietor.Postcode
+                        DisplayName = $"Postcode ({index} - deleting)",
+                        OldValue = proprietor.Postcode
                     });
 
                     retVal.Add(new ChangeDescriptor
                     {
                         Name = nameof(proprietor.TelephoneNumber),
-                        DisplayName = "Telephone number (deleting)",
-                        NewValue = proprietor.TelephoneNumber
+                        DisplayName = $"Telephone number ({index} - deleting)",
+                        OldValue = proprietor.TelephoneNumber
                     });
 
                     retVal.Add(new ChangeDescriptor
                     {
                         Name = nameof(proprietor.Email),
-                        DisplayName = "Email (deleting)",
-                        NewValue = proprietor.Email
+                        DisplayName = $"Email ({index} - deleting)",
+                        OldValue = proprietor.Email
                     });
                 }
             }
