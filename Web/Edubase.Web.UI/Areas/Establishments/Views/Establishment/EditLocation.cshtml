@@ -37,7 +37,7 @@
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.RSCRegionId)">
                         <label for="RSCRegionId" class="govuk-label" title="Regional School Comissioner">
-                            <abbr title="Regional Schools Commissioner">RSC</abbr> region
+                            Regional schools commissioner (RSC) region
                         </label>
                         @Html.ValidationMessageFor(x => x.RSCRegionId, null, new {@class = "govuk-error-message"})
                         @Html.DropDownListFor(x => x.RSCRegionId, Model.RSCRegions, "", new { @class = "govuk-select" })
@@ -47,7 +47,7 @@
                 @if (Model.EditPolicy.GovernmentOfficeRegionId)
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernmentOfficeRegionId)">
-                        <label for="GovernmentOfficeRegionId" class="govuk-label">Government office region</label>
+                        <label for="GovernmentOfficeRegionId" class="govuk-label">Government office region (GOR)</label>
                         @Html.ValidationMessageFor(x => x.GovernmentOfficeRegionId, null, new {@class = "govuk-error-message"})
                         @Html.DropDownListFor(x => x.GovernmentOfficeRegionId, Model.GovernmentOfficeRegions, "", new { @class = "govuk-select" })
                     </div>
@@ -109,7 +109,7 @@
                 @if (Model.EditPolicy.GSSLAId)
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GSSLAId) @Html.ValidationCssClassFor(x => x.GSSLAName)" id="searchby-gssla-ref">
-                        <label class="govuk-label" for="@nameof(Model.GSSLAName)"><abbr title="Government Statistical Service">GSS</abbr> LA code</label>
+                        <label class="govuk-label" for="@nameof(Model.GSSLAName)">Government Statistical Service (GSS) local authority code</label>
                         @Html.ValidationMessageFor(x => x.GSSLAId, null, new {@class = "govuk-error-message"})
                         @Html.ValidationMessageFor(x => x.GSSLAName, null, new {@class = "govuk-error-message"})
 
@@ -157,7 +157,7 @@
                 @if (Model.EditPolicy.MSOACode)
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.MSOAId) @Html.ValidationCssClassFor(x => x.MSOAName)" id="searchby-msoa-ref">
-                        <label class="govuk-label" for="@nameof(Model.MSOAName)">Middle Super Output Area (MSOA)</label>
+                        <label class="govuk-label" for="@nameof(Model.MSOAName)">Middle super output area (MSOA)</label>
                         @Html.ValidationMessageFor(x => x.MSOAId, null, new {@class = "govuk-error-message"})
                         @Html.ValidationMessageFor(x => x.MSOAName, null, new {@class = "govuk-error-message"})
 
@@ -172,7 +172,7 @@
                 @if (Model.EditPolicy.LSOACode)
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LSOAId) @Html.ValidationCssClassFor(x => x.LSOAName)" id="searchby-lsoa-ref">
-                        <label class="govuk-label" for="@nameof(Model.LSOAName)">Lower Super Output Area (LSOA)</label>
+                        <label class="govuk-label" for="@nameof(Model.LSOAName)">Lower super output area (LSOA)</label>
                         @Html.ValidationMessageFor(x => x.LSOAId, null, new {@class = "govuk-error-message"})
                         @Html.ValidationMessageFor(x => x.LSOAName, null, new {@class = "govuk-error-message"})
 
