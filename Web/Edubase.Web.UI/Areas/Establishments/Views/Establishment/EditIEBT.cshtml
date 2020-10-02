@@ -341,14 +341,15 @@
 
         @if (Model.ChangesSummary != null)
         {
-            Html.RenderPartial("Partials/_ConfirmChanges");
-            <div class="button-row">
-                <button class="govuk-button--secondary govuk-button" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button>
-                <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm">Confirm</button>
+            <div class="govuk-grid-column-full">
+                @{ Html.RenderPartial("Partials/_ConfirmChanges"); }
+                <div class="button-row">
+                    <button class="govuk-button--secondary govuk-button" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button>
+                    <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm">Confirm</button>
 
-                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary", data_module="govuk-button", id = "cancel-edit"})
+                    @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary", data_module = "govuk-button", id = "cancel-edit"})
+                </div>
             </div>
-
         }
 
 

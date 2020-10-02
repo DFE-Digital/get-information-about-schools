@@ -54,6 +54,7 @@
       height: 3px;
       top: 14px;
       left: 8px;
+      box-sizing: content-box;
     }
 
     &.partial-selection::after {

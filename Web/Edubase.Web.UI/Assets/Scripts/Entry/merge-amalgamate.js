@@ -678,6 +678,17 @@ const mergersApp = new Vue({
       }
       return '';
     },
+    leadEstablishmentType: function() {
+      const self = this;
+      if (self.validMergeUrns && self.mergerType === 'merger') {
+        const leadType = self.mergerEstabs.filter(function (estab) {
+          return estab.urn === Number(self.leadEstab);
+        })[0].typeName;
+
+        return leadType;
+      }
+      return '';
+    },
     schoolDetailUrl: function () {
       return "/Establishments/Establishment/Details/" + this.mergerEstab0;
     },

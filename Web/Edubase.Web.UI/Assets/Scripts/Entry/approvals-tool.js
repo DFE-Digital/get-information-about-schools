@@ -192,12 +192,13 @@ new Vue({
       this.approvalMessage = 'Items approved. The editor has been notified by email.'
     },
     rejectSuccessCallBack: function () {
+      const self = this;
       this.pendingRejection = false;
       this.itemsConfirmedRejected = true;
       this.rejectionMessage = 'Items rejected. The editor has been notified by email.';
       this.reason = '';
       window.setTimeout(function () {
-        $("#reason").data().textCount.setCount();
+        self.counter.setCount();
       }, 0);
 
     },
