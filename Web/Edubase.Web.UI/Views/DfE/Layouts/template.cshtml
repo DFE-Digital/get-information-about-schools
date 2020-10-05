@@ -23,24 +23,9 @@
 
     @if (!Request.Browser.Browser.Contains("MSIE 8"))
     {
-@*         <!--[if (gte IE 9)|!(IE)]><!--> *@
-@*         <script src="/public/jquery/dist/jquery.min.js"></script> *@
-@*         <script src="/public/jquery-simulate/jquery.simulate.js"></script> *@
-@*         <!--<![endif]--> *@
-
-@*         <script src="/public/dirrty/dist/jquery.dirrty.js"></script> *@
-
-@*         <!--[if IE 9]> *@
-@*         <script src="/public/termi/element.details.ie8.js"></script> *@
-@*         <!--<![endif]--> *@
-@*         <!--[if gt IE 9]> *@
-@*         <script src="/public/termi/element.details.js"></script> *@
-@*         <!--<![endif]--> *@
-
         <script nonce="@Html.ScriptNonce()">
             var azureMapsApiKey = "@(System.Configuration.ConfigurationManager.AppSettings["AzureMapsApiKey"])";
         </script>
-        <script src="/public/assets/scripts/build/leaflet-bundle.js?v=@version"></script>
         <script src="/public/assets/scripts/build/bundle.js?v=@version"></script>
 
 

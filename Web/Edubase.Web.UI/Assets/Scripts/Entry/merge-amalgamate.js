@@ -682,7 +682,7 @@ const mergersApp = new Vue({
       const self = this;
       if (self.validMergeUrns && self.mergerType === 'merger') {
         const leadType = self.mergerEstabs.filter(function (estab) {
-          return estab.urn === Number(self.leadEstab);
+          return estab.urn === Number(self.mergerEstab0);
         })[0].typeName;
 
         return leadType;

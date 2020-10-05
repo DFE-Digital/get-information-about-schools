@@ -1,5 +1,3 @@
-const $ = require('jquery');
-// const path = require('path');
 import giasDismissMessage from "../GiasModules/GiasDismissMessage";
 import giasAriaLive from '../GiasGlobal/giasAriaLive';
 import GiasToolTip from "../GiasGlobal/GiasToolTips";
