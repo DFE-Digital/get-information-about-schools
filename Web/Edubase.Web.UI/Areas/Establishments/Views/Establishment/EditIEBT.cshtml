@@ -312,8 +312,8 @@
                     @if (Model.Proprietors.Any())
                     {
                         Html.RenderPartial(@"Partials\_EditProprietorList");
-                    }
 
+                    }
                     <div id="@eProprietorType.ProprietorBody.ToString()-chair">
                         <h4 class="govuk-heading-s">Chair of the proprietary body details</h4>
                         @Html.EditorFor(x => x.ChairOfProprietor)

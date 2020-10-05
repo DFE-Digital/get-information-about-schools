@@ -98,29 +98,6 @@
         <!--end global-cookie-message-->
 
         <header role="banner" id="global-header" class="govuk-header" data-module="govuk-header">
-
-            @*             @{ *@
-            @*                 switch (envHeader.ToLower()) *@
-            @*                 { *@
-            @*                     case "localdev": *@
-            @*                         <div style='background-color: #68dcde; text-align: center'><span class="bold-xsmall">ATTENTION!</span> This is a <span class="bold-xsmall">Test</span> version, running locally</div> *@
-            @*                         break; *@
-            @* *@
-            @*                     case "dev": *@
-            @*                     case "exp": *@
-            @*                         <div style='background-color: #59f051; text-align: center'><span class="bold-xsmall">ATTENTION!</span> This is a <span class="bold-xsmall">Test</span> version shared with other developers</div> *@
-            @*                         break; *@
-            @* *@
-            @*                     case "stage": *@
-            @*                         <div style='background-color: #FFA500; text-align: center'><span class="bold-xsmall">ATTENTION!</span> This is a <span class="bold-xsmall">Pre-production</span> version used for testing purposes</div> *@
-            @*                         break; *@
-            @* *@
-            @*                     case "prodlcs": *@
-            @*                         <div style='background-color: #FF0000; text-align: center'><span class="bold-xsmall">ATTENTION!</span> This is a <span class="bold-xsmall">Prod LCS</span> version</div> *@
-            @*                             break; *@
-            @*                     } *@
-            @*                 } *@
-
             <div class="govuk-header__container govuk-width-container">
                 <div class="govuk-header__logo">
                     <a href="/" class="govuk-header__link govuk-header__link--homepage">
@@ -204,7 +181,7 @@
                             <li class="govuk-footer__inline-list-item">@Html.ActionLink("Cookies", "Cookies", "Home",new { area =""}, new { @class="govuk-footer__link" })</li>
                             <li class="govuk-footer__inline-list-item">@Html.RouteLink("Glossary", "Glossary", null, new { @class="govuk-footer__link"})</li>
                             <li class="govuk-footer__inline-list-item">@Html.ActionLink("Guidance", "Index", "Guidance",new { area =""}, new { @class="govuk-footer__link" })</li>
-                            <li class="govuk-footer__inline-list-item">@Html.ActionLink("Accessibility", "Accessibility", "Home", new {area = ""}, new { @class="govuk-footer__link" })</li>
+                            <li class="govuk-footer__inline-list-item">@Html.ActionLink("Accessibility statement", "Accessibility", "Home", new {area = ""}, new { @class="govuk-footer__link" })</li>
                                @*<li>@Html.ActionLink("News", "News", "Home")</li>*@
                         </ul>
 

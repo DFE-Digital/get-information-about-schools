@@ -99,7 +99,14 @@ namespace Edubase.Web.UI.Controllers
             {
                 if (model.SearchUrn == null)
                 {
-                    ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a URN");
+                    if (ModelState.ContainsKey(nameof(model.SearchUrn)) &&
+                        ModelState[nameof(model.SearchUrn)].Errors.Any())
+                    {
+                        // remove the existing error, as we'll add a fresh one
+                        ModelState[nameof(model.SearchUrn)].Errors.Clear();
+                    }
+                    
+                    ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a valid URN");
                 }
                 else if (model.ItemsToAdd?.Any(x => x.Urn == model.SearchUrn) == true)
                 {

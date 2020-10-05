@@ -172,6 +172,7 @@ namespace Edubase.Services.Texuna.Establishments
         {
             var changes = ReflectionHelper.DetectChanges(model, original, new[]{ typeof(IEBTModel), typeof(ProprietorModel)});
             changes.AddRange(await DetectAdditionalAddressChanges(original, model));
+            changes.AddRange(await DetectProprietorsChanges(original, model));
             var retVal = new List<ChangeDescriptorDto>();
 
             var approvalFields = approvalsPolicy.GetFieldsRequiringApproval();
@@ -196,7 +197,9 @@ namespace Edubase.Services.Texuna.Establishments
                     NewValue = change.NewValue.Clean(),
                     OldValue = change.OldValue.Clean(),
                     Tag = change.Tag,
-                    RequiresApproval = (change.Tag == "additionaladdress" && approvalsPolicy.AdditionalAddresses.RequiresApproval) || approvalFields.Contains(change.Name, StringComparer.OrdinalIgnoreCase),
+                    RequiresApproval = (change.Tag == "additionaladdress" && approvalsPolicy.AdditionalAddresses.RequiresApproval) ||
+                                       (change.Tag == "proprietors" && approvalsPolicy.IEBTDetail.Proprietors.RequiresApproval) ||
+                                       approvalFields.Contains(change.Name, StringComparer.OrdinalIgnoreCase),
                     ApproverName = approvalsPolicy.GetApproverName(change.Name)
                 });
             }
@@ -222,6 +225,180 @@ namespace Edubase.Services.Texuna.Establishments
             }
 
             return (await _httpClient.GetAsync<List<EstablishmentSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}", principal)).GetResponse();
+        }
+
+
+
+        private async Task<IEnumerable<ChangeDescriptor>> DetectProprietorsChanges(EstablishmentModel originalModel, EstablishmentModel newModel)
+        {
+            var retVal = new List<ChangeDescriptor>();
+            var newProprietors  = newModel.IEBTModel.Proprietors?.Where(x => !x.Id.HasValue).ToArray();
+            var editedProprietors = newModel.IEBTModel.Proprietors?.Where(x => x.Id.HasValue).ToArray();
+            var removedProprietors = originalModel.IEBTModel.Proprietors?.Where(x => !newModel.IEBTModel.Proprietors.Select(y => y.Id).Contains(x.Id)).ToArray();
+
+            Func<int, string, string> f = (i, fieldName) => $"{fieldName} ({i + 1})";
+
+            if (newProprietors != null)
+            {
+                for (var i = 0; i < newProprietors.Length; i++)
+                {
+                    var index = newModel.IEBTModel.Proprietors.ToList().IndexOf(newProprietors[i]) + 1 + removedProprietors?.Length;
+                    var newProprietor = newProprietors[i];
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(newProprietor.Name),
+                        DisplayName = $"Name ({index} - new)",
+                        NewValue = newProprietor.Name
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(newProprietor.Street),
+                        DisplayName = $"Street ({index} - new)",
+                        NewValue = newProprietor.Street
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(newProprietor.Locality),
+                        DisplayName = $"Locality ({index} - new)",
+                        NewValue = newProprietor.Locality
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(newProprietor.Address3),
+                        DisplayName = $"Address 3 ({index} - new)",
+                        NewValue = newProprietor.Address3
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(newProprietor.Town),
+                        DisplayName = $"Town ({index} - new)",
+                        NewValue = newProprietor.Town
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(newProprietor.CountyId),
+                        DisplayName = $"County ({index} - new)",
+                        NewValue = await _cachedLookupService.GetNameAsync("CountyId", newProprietor.CountyId)
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(newProprietor.Postcode),
+                        DisplayName = $"Postcode ({index} - new)",
+                        NewValue = newProprietor.Postcode
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(newProprietor.TelephoneNumber),
+                        DisplayName = $"Telephone number ({index} - new)",
+                        NewValue = newProprietor.TelephoneNumber
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(newProprietor.Email),
+                        DisplayName = $"Email ({index} - new)",
+                        NewValue = newProprietor.Email
+                    });
+                }
+            }
+
+            if (editedProprietors != null)
+            {
+                for (var i = 0; i < editedProprietors.Length; i++)
+                {
+                    var index = newModel.IEBTModel.Proprietors.ToList().IndexOf(editedProprietors[i]);
+                    var proprietor = editedProprietors[i];
+                    var oldProprietor = originalModel.IEBTModel.Proprietors.FirstOrDefault(x => x.Id == proprietor.Id);
+                    if (oldProprietor != null)
+                    {
+                        var changes = ReflectionHelper.DetectChanges(proprietor, oldProprietor).AsEnumerable();
+                        changes.ForEach(x => x.DisplayName = f(index, PropertyName2Label(x.Name))); // alter the field name so it contains the index of the current proprietors model
+                        retVal.AddRange(changes);
+                    }
+                }
+            }
+
+            if (removedProprietors != null)
+            {
+                for (var i = 0; i < removedProprietors.Length; i++)
+                {
+                    var index = originalModel.IEBTModel.Proprietors?.ToList().IndexOf(removedProprietors[i]) + 1;
+                    var proprietor = removedProprietors[i];
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(proprietor.Name),
+                        DisplayName = $"Name ({index} - deleting)",
+                        OldValue = proprietor.Name
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(proprietor.Street),
+                        DisplayName = $"Street ({index} - deleting)",
+                        OldValue = proprietor.Street
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(proprietor.Locality),
+                        DisplayName = $"Locality ({index} - deleting)",
+                        OldValue = proprietor.Locality
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(proprietor.Address3),
+                        DisplayName = $"Address 3 ({index} - deleting)",
+                        OldValue = proprietor.Address3
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(proprietor.Town),
+                        DisplayName = $"Town ({index} - deleting)",
+                        OldValue = proprietor.Town
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(proprietor.CountyId),
+                        DisplayName = $"County ({index} - deleting)",
+                        OldValue = await _cachedLookupService.GetNameAsync("CountyId", proprietor.CountyId)
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(proprietor.Postcode),
+                        DisplayName = $"Postcode ({index} - deleting)",
+                        OldValue = proprietor.Postcode
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(proprietor.TelephoneNumber),
+                        DisplayName = $"Telephone number ({index} - deleting)",
+                        OldValue = proprietor.TelephoneNumber
+                    });
+
+                    retVal.Add(new ChangeDescriptor
+                    {
+                        Name = nameof(proprietor.Email),
+                        DisplayName = $"Email ({index} - deleting)",
+                        OldValue = proprietor.Email
+                    });
+                }
+            }
+
+            retVal.ForEach(x => x.Tag = "proprietors");
+
+            return retVal;
         }
 
         private async Task<IEnumerable<ChangeDescriptor>> DetectAdditionalAddressChanges(EstablishmentModel originalModel, EstablishmentModel newModel)

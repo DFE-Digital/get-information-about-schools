@@ -736,8 +736,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 domainModel.SENIds = viewModel.SENIds ?? new int[0];
             }
 
-            // --- REMOVED AS NOW HANDLED BY AUTOMAPPER
-            //domainModel.AdditionalAddresses = viewModel.AdditionalAddresses.ToArray();
+            domainModel.AdditionalAddresses = viewModel.AdditionalAddresses.ToArray();
         }
 
         private void MapToDomainModelIEBT(ViewModel viewModel, EstablishmentModel domainModel)
@@ -981,7 +980,15 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 viewModelProprietor.Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList(viewModelProprietor.CountyId);
             }
-            viewModel.ChairOfProprietor.Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList(viewModel.ChairOfProprietor.CountyId);
+
+            if (viewModel.ChairOfProprietor != null)
+            {
+                viewModel.ChairOfProprietor.Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList(viewModel.ChairOfProprietor.CountyId);
+                if ((await _cachedLookupService.CountiesGetAllAsync()).Any(x => x.CodeAsInt != null))
+                {
+                    viewModel.ChairOfProprietor.CountyIdDefault = (await _cachedLookupService.CountiesGetAllAsync()).FirstOrDefault(x => x.Code.Equals("099"))?.Id; // Not recorded
+                }
+            }
 
             viewModel.Countries = (await _cachedLookupService.NationalitiesGetAllAsync()).ToSelectList(viewModel.Address_CountryId);
             viewModel.OfstedRatings = (await _cachedLookupService.OfstedRatingsGetAllAsync()).ToSelectList(viewModel.OfstedRatingId);
