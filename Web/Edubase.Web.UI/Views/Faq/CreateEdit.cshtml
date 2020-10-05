@@ -79,27 +79,6 @@
 
 @section ViewScripts
 {
-<<<<<<< HEAD
  <script src="/public/assets/scripts/build/edit-faq-glossary.js"></script>
-=======
-    <script nonce="@Html.ScriptNonce()">
-        (function () {
-            $('.entry-content').textCount({ maxLength: 4000 });
 
-            $('#delete-button').okCancel({
-                ok: function () {
-                    $('#delete-button').data().okCancel.unbind();
-                    $('#delete-button').click();
-                },
-                cancel: function() {
-                    this.closeModal();
-                },
-                title: 'Are you sure you want to delete this FAQ entry?',
-                content: 'The entry will be removed from the FAQ immediately',
-                triggerEvent: 'click'
-            });
-        }());
-
-    </script>
->>>>>>> dev
 }
