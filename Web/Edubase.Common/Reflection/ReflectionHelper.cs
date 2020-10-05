@@ -96,7 +96,7 @@ namespace Edubase.Common.Reflection
 
                 if (types.Any(x => x == p.PropertyType))
                 {
-                    retVal.AddRange(DetectChanges(p.GetValue(newModel), p2.GetValue(oldModel), propertyName, types));
+                    retVal.AddRange(DetectChanges(p.GetValue(newModel), p2.GetValue(oldModel), prefixer + propertyName, types));
                 }
                 else if (p.PropertyType.IsValueType)
                 {
