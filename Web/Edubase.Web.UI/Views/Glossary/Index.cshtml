@@ -30,7 +30,7 @@
     <div class="govuk-grid-column-full">
         @if (Model.UserCanEdit)
         {
-            @Html.RouteLink("New Entry", "CreateGlossaryItem", null, new { @class = "plus-link" })
+            @Html.RouteLink("New entry", "CreateGlossaryItem", null, new { @class = "plus-link" })
         }
         <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
             @foreach (var group in Model.Items)

@@ -30,7 +30,7 @@
     <div class="govuk-grid-column-full">
         @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-        <h1 class="govuk-heading-xl">@(Model.Id == null ? "Create" : "Edit") FAQ entry</h1>
+        <h1 class="govuk-heading-xl">@(Model.Id == null ? "Create a new" : "Edit a") frequently asked questions entry</h1>
     </div>
 </div>
 @using (Html.BeginRouteForm(Model.Id == null ? "PostCreateFaqItem" : "PostEditFaqItem", new {Model.Id}, FormMethod.Post))
