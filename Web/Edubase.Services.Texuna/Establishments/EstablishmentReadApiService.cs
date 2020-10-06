@@ -12,6 +12,8 @@ using Edubase.Services.Texuna.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using MoreLinq;
@@ -235,6 +237,8 @@ namespace Edubase.Services.Texuna.Establishments
             var newProprietors  = newModel.IEBTModel.Proprietors?.Where(x => !x.Id.HasValue).ToArray();
             var editedProprietors = newModel.IEBTModel.Proprietors?.Where(x => x.Id.HasValue).ToArray();
             var removedProprietors = originalModel.IEBTModel.Proprietors?.Where(x => !newModel.IEBTModel.Proprietors.Select(y => y.Id).Contains(x.Id)).ToArray();
+            var namePrefix = $"{nameof(IEBTModel)}.{nameof(IEBTModel.Proprietors)}.";
+
 
             Func<int, string, string> f = (i, fieldName) => $"{fieldName} ({i + 1})";
 
@@ -397,6 +401,7 @@ namespace Edubase.Services.Texuna.Establishments
             }
 
             retVal.ForEach(x => x.Tag = "proprietors");
+            retVal.ForEach(x => x.Name = $"{namePrefix}{x.Name}");
 
             return retVal;
         }
