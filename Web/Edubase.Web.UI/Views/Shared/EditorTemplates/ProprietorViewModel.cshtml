@@ -1,33 +1,52 @@
 @using System.Linq.Expressions
+@using Edubase.Common.Text
 @model ProprietorViewModel
 
 @Html.HiddenFor(x => x.Id)
 @Html.HiddenFor(x => x.CountyIdDefault)
 
-@RenderTextBox(x => x.Name)
-@RenderTextBox(x => x.Street)
-@RenderTextBox(x => x.Locality)
-@RenderTextBox(x => x.Address3)
-@RenderTextBox(x => x.Town)
+@RenderTextBox(x => x.Name, nameof(ProprietorViewModel.Name))
+@RenderTextBox(x => x.Street, nameof(ProprietorViewModel.Street))
+@RenderTextBox(x => x.Locality, nameof(ProprietorViewModel.Locality))
+@RenderTextBox(x => x.Address3, nameof(ProprietorViewModel.Address3))
+@RenderTextBox(x => x.Town, nameof(ProprietorViewModel.Town))
 
-<div class="form-group @Html.ValidationCssClassFor(x => x.CountyId)">
+@{
+    var countyCounter = ViewBag.Counter != null ? $"[{ViewBag.Counter}]" : "";
+    var countyId = $"iebtDetail.{ViewBag.ProprietorType}{countyCounter}.{nameof(ProprietorViewModel.CountyId).ToLowerFirstLetter()}";
+    var countyLink = countyId.Replace(".", "_").Replace("[", "_").Replace("]", "_");
+}
+<div class="form-group @Html.ValidationCssClassFor(x => x.CountyId) @Html.ValidationCssClass(countyId)"
+     id="@countyLink">
     @Html.LabelFor(x => x.CountyId)
     @Html.ValidationMessageFor(x => x.CountyId)
+    @if (Html.ValidationCssClass(countyId).ToString() == "error")
+    {
+        <span class="field-validation-error">@Html.ViewData.ModelState[countyId].Errors.First().ErrorMessage</span>
+    }
     @Html.DropDownListFor(x => x.CountyId, Model.Counties, "", new { @class = "form-control" })
 </div>
 
-@RenderTextBox(x => x.Postcode,  "form-control-1-2")
-@RenderTextBox(x => x.TelephoneNumber)
+@RenderTextBox(x => x.Postcode, nameof(ProprietorViewModel.Postcode), "form-control-1-2")
+@RenderTextBox(x => x.TelephoneNumber, nameof(ProprietorViewModel.TelephoneNumber))
 
-@RenderTextBox(x => x.Email)
+@RenderTextBox(x => x.Email, nameof(ProprietorViewModel.Email))
 
 
-@helper RenderTextBox(Expression<Func<ProprietorViewModel, string>> fnc, string fieldClasses = "")
+@helper RenderTextBox(Expression<Func<ProprietorViewModel, string>> fnc, string fieldName, string fieldClasses = "")
 {
     var classes = "form-control " + fieldClasses;
-    <div class="form-group @Html.ValidationCssClassFor(fnc)">
-        @Html.LabelFor(fnc, new { @class = "form-label" })
-        @Html.ValidationMessageFor(fnc)
-        @Html.TextBoxFor(fnc, new { @class = classes })
-    </div>
+    var validationCounter = ViewBag.Counter != null ? $"[{ViewBag.Counter}]" : "";
+    var validationId = $"iebtDetail.{ViewBag.ProprietorType}{validationCounter}.{fieldName.ToLowerFirstLetter()}";
+    var validationLink = validationId.Replace(".", "_").Replace("[", "_").Replace("]", "_");
+
+<div class="form-group @Html.ValidationCssClassFor(fnc) @Html.ValidationCssClass(validationId)" id="@validationLink">
+    @Html.LabelFor(fnc, new { @class = "form-label" })
+    @Html.ValidationMessageFor(fnc)
+    @if (Html.ValidationCssClass(validationId).ToString() == "error")
+    {
+        <span class="field-validation-error">@Html.ViewData.ModelState[validationId].Errors.First().ErrorMessage</span>
+    }
+    @Html.TextBoxFor(fnc, new { @class = classes })
+</div>
 }
