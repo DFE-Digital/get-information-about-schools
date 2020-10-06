@@ -16,10 +16,10 @@
         </div>
     }
 
-    @Html.HiddenFor(x => x.Index, new { Name = $"Proprietors.Index", @id = $"Proprietors.Index" })
+    @Html.HiddenFor(x => x.Index, new {Name = $"Proprietors.Index", @id = $"Proprietors.Index"})
 
     @using (Html.BeginCollectionItem("Proprietors"))
     {
-        @Html.EditorFor(x => x);
+        @Html.EditorFor(x => x, new {ProprietorType = "proprietors", Counter = ViewBag.ShowCounter - 1});
     }
 </div>
