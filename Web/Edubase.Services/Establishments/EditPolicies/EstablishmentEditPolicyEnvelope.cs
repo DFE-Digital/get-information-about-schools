@@ -28,7 +28,7 @@ namespace Edubase.Services.Establishments.EditPolicies
         {
             // temporary fix while investigate 43808
             if (fieldName.StartsWith("IEBTModel.Proprietors", StringComparison.OrdinalIgnoreCase) ||
-                fieldName.StartsWith("IEBTModel.ChairOfProprietors", StringComparison.OrdinalIgnoreCase))
+                fieldName.StartsWith("IEBTModel.ChairOfProprietor", StringComparison.OrdinalIgnoreCase))
             {
                 fieldName = fieldName.Substring(0, fieldName.LastIndexOf(".", StringComparison.Ordinal));
             }

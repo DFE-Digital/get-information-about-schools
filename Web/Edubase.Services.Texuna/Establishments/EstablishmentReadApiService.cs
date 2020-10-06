@@ -201,6 +201,7 @@ namespace Edubase.Services.Texuna.Establishments
                     Tag = change.Tag,
                     RequiresApproval = (change.Tag == "additionaladdress" && approvalsPolicy.AdditionalAddresses.RequiresApproval) ||
                                        (change.Tag == "proprietors" && approvalsPolicy.IEBTDetail.Proprietors.RequiresApproval) ||
+                                       (change.Name.Contains(nameof(approvalsPolicy.IEBTDetail.ChairOfProprietor)) && approvalsPolicy.IEBTDetail.ChairOfProprietor.RequiresApproval) ||
                                        approvalFields.Contains(change.Name, StringComparer.OrdinalIgnoreCase),
                     ApproverName = approvalsPolicy.GetApproverName(change.Name)
                 });
