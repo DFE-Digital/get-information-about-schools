@@ -426,7 +426,7 @@
 
     @if (Model.EditPolicy.OpenDate)
     {
-        @Html.EditorFor(x => x.OpenDate, new {title = "Open date", fieldsetClassName = "edit-date-fieldset"})
+        @Html.EditorFor(x => x.OpenDate, new { title = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date" : "Open date", fieldsetClassName = "edit-date-fieldset"})
     }
 
     @if (Model.EditPolicy.ReasonEstablishmentOpenedId)
