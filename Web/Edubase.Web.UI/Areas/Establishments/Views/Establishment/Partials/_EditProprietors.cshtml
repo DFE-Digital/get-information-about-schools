@@ -21,6 +21,6 @@
 
     @using (Html.BeginCollectionItem("Proprietors"))
     {
-        @Html.EditorFor(x => x);
+        @Html.EditorFor(x => x, new { ProprietorType = "proprietors" });
     }
 </div>

@@ -316,7 +316,7 @@
                     }
                     <div id="@eProprietorType.ProprietorBody.ToString()-chair">
                         <h4 class="govuk-heading-s">Chair of the proprietary body details</h4>
-                        @Html.EditorFor(x => x.ChairOfProprietor)
+                        @Html.EditorFor(x => x.ChairOfProprietor, new {ProprietorType = "chairOfProprietor"})
                     </div>
                 </div>
                 </fieldset>
