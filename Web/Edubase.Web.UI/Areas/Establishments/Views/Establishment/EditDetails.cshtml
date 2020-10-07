@@ -45,6 +45,7 @@
     @Html.HiddenFor(x => x.LegalParentGroupToken)
     @Html.HiddenFor(x => x.ChangesInstantCount)
     @Html.HiddenFor(x => x.ChangesRequireApprovalCount)
+    @Html.HiddenFor(x => x.EstablishmentTypeGroupId)
 
     <div class="@Html.Conditional(Model.ChangesSummary != null, "hidden")">
     <div class="govuk-grid-row">
