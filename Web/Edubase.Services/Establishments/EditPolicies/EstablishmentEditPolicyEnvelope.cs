@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Edubase.Services.Establishments.DisplayPolicies;
@@ -25,6 +26,13 @@ namespace Edubase.Services.Establishments.EditPolicies
 
         public string GetApproverName(string fieldName)
         {
+            // temporary fix while investigate 43808
+            if (fieldName.StartsWith("IEBTModel.Proprietors", StringComparison.OrdinalIgnoreCase) ||
+                fieldName.StartsWith("IEBTModel.ChairOfProprietor", StringComparison.OrdinalIgnoreCase))
+            {
+                fieldName = fieldName.Substring(0, fieldName.LastIndexOf(".", StringComparison.Ordinal));
+            }
+
             var map = GetApprovalPolicies();
             return map.ContainsKey(fieldName) ? map[fieldName]?.ApproverName : null;
         }

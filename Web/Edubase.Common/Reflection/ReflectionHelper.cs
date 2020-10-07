@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace Edubase.Common.Reflection
         public static string GetProperty(object item, string propertyName)
         {
             Type type = null;
-            if (item is Type) type = (Type)item;
+            if (item is Type) type = (Type) item;
             else type = item.GetType();
             var propInfo = type.GetProperty(propertyName);
             var val = propInfo?.GetValue(item, null);
@@ -21,7 +21,7 @@ namespace Edubase.Common.Reflection
         public static object GetPropertyValue(object item, string propertyName)
         {
             Type type = null;
-            if (item is Type) type = (Type)item;
+            if (item is Type) type = (Type) item;
             else type = item.GetType();
             var propInfo = type.GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
             var val = propInfo?.GetValue(item, null);
@@ -30,13 +30,13 @@ namespace Edubase.Common.Reflection
 
         public static T GetPropertyValue<T>(object item, string propertyName)
         {
-            return (T)(GetPropertyValue(item, propertyName) ?? default(T));
+            return (T) (GetPropertyValue(item, propertyName) ?? default(T));
         }
 
         public static PropInfo GetPropertyInfo(object item, string propertyName)
         {
             Type type = null;
-            if (item is Type) type = (Type)item;
+            if (item is Type) type = (Type) item;
             else type = item.GetType();
             var propInfo = type.GetProperty(propertyName);
             var val = propInfo?.GetValue(item, null);
@@ -48,7 +48,7 @@ namespace Edubase.Common.Reflection
         public static void SetProperty(object item, string propertyName, object value)
         {
             Type type = null;
-            if (item is Type) type = (Type)item;
+            if (item is Type) type = (Type) item;
             else type = item.GetType();
             var propInfo = type.GetProperty(propertyName);
             propInfo.SetValue(item, value, null);
@@ -57,7 +57,7 @@ namespace Edubase.Common.Reflection
         public static List<string> GetProperties(object item, Type ignoreAttributeType = null, bool writeableOnly = false)
         {
             Type type = null;
-            if (item is Type) type = (Type)item;
+            if (item is Type) type = (Type) item;
             else type = item.GetType();
             var props = type.GetProperties();
             return props.Where(x => (ignoreAttributeType == null || !x.CustomAttributes.Any(a => a.AttributeType == ignoreAttributeType))
@@ -65,7 +65,7 @@ namespace Edubase.Common.Reflection
                 .Select(p => p.Name).ToList();
         }
 
-        
+
 
 
 
@@ -74,12 +74,12 @@ namespace Edubase.Common.Reflection
         {
             return DetectChanges(newModel, oldModel, null, types);
         }
-        
+
         public static List<ChangeDescriptor> DetectChanges(object newModel, object oldModel, string prefixer, params Type[] types)
         {
             if (!string.IsNullOrWhiteSpace(prefixer)) prefixer += ".";
             var retVal = new List<ChangeDescriptor>();
-            
+
             var props = GetProperties(newModel);
             foreach (var prop in props)
             {
@@ -89,22 +89,22 @@ namespace Edubase.Common.Reflection
                 var propertyName = p.Name;
                 var displayName = p.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
 
-                if((p.GetCustomAttribute<IgnoreChangesAttribute>() ?? p2.GetCustomAttribute<IgnoreChangesAttribute>()) != null)
+                if ((p.GetCustomAttribute<IgnoreChangesAttribute>() ?? p2.GetCustomAttribute<IgnoreChangesAttribute>()) != null)
                 {
                     continue;
                 }
 
-                if (types.Any(x => x == p.PropertyType))
+                if (types.Any(x => x == p.PropertyType) && p.GetValue(newModel) != null && p2.GetValue(oldModel) != null)
                 {
-                    retVal.AddRange(DetectChanges(p.GetValue(newModel), p2.GetValue(oldModel), propertyName, types));
+                    retVal.AddRange(DetectChanges(p.GetValue(newModel), p2.GetValue(oldModel), prefixer + propertyName, types));
                 }
-                else if(p.PropertyType.IsValueType)
+                else if (p.PropertyType.IsValueType)
                 {
                     var v1 = (ValueType) p.GetValue(newModel);
                     var v2 = (ValueType) p2.GetValue(oldModel);
-                    if ((v1 == null && v2 != null) 
-                        || (v1 != null && v2 == null) 
-                        || (v1 != null && !v1.Equals(v2) 
+                    if ((v1 == null && v2 != null)
+                        || (v1 != null && v2 == null)
+                        || (v1 != null && !v1.Equals(v2)
                         || (v2 != null && !v2.Equals(v1))))
                     {
                         retVal.Add(new ChangeDescriptor(prefixer + propertyName, displayName, v1, v2));

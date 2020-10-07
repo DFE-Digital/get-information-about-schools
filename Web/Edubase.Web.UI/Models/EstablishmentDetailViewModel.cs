@@ -150,8 +150,6 @@ namespace Edubase.Web.UI.Models
         public string OfstedRatingName { get; set; }
         public string HelpdeskPreviousLocalAuthorityName { get; set; }
 
-        public string IEBTProprietorsAddressCountyName { get; set; }
-        public string IEBTChairOfProprietorsBodyAddressCountyName { get; set; }
         #endregion
 
         public string GetAddress() => StringUtil.ConcatNonEmpties(", ",
@@ -163,22 +161,6 @@ namespace Edubase.Web.UI.Models
             Establishment.Address_PostCode);
 
         public IEnumerable<AdditionalAddressViewModel> AdditionalAddressList { get; set; } = Enumerable.Empty<AdditionalAddressViewModel>();
-
-        public string GetProprietorsAddress() => StringUtil.ConcatNonEmpties(", ",
-            Establishment.IEBTModel.ProprietorsStreet,
-            Establishment.IEBTModel.ProprietorsLocality,
-            Establishment.IEBTModel.ProprietorsAddress3,
-            Establishment.IEBTModel.ProprietorsTown,
-            IEBTProprietorsAddressCountyName?.Replace("Not recorded", string.Empty),
-            Establishment.IEBTModel.ProprietorsPostcode);
-
-        public string GetChairOfProprietorsBodyAddress() => StringUtil.ConcatNonEmpties(", ",
-            Establishment.IEBTModel.ChairOfProprietorsBodyStreet,
-            Establishment.IEBTModel.ChairOfProprietorsBodyLocality,
-            Establishment.IEBTModel.ChairOfProprietorsBodyAddress3,
-            Establishment.IEBTModel.ChairOfProprietorsBodyTown,
-            IEBTChairOfProprietorsBodyAddressCountyName?.Replace("Not recorded", string.Empty),
-            Establishment.IEBTModel.ChairOfProprietorsBodyPostcode);
 
         public GovernorsGridViewModel GovernorsGridViewModel { get; set; }
 

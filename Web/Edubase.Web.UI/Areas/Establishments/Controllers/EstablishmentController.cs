@@ -377,6 +377,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View("EditIEBT", viewModel);
         }
 
+        [HttpGet, EdubaseAuthorize, Route("Proprietor/Add/{counter:int}")]
+        public async Task<PartialViewResult> ProprietorAdd(int? counter)
+        {
+            var emptyProprietor = new ProprietorViewModel
+            {
+                Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList(),
+            };
+            ViewBag.ShowCounter = counter;
+            return PartialView("Partials/_EditProprietors", emptyProprietor);
+        }
+
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/IEBT")]
         public async Task<ActionResult> EditIEBT(ViewModel model) => await SaveEstablishment(model);
 
@@ -702,26 +713,22 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         /// <param name="form"></param>
         private void MapToDomainModel(ViewModel viewModel, EstablishmentModel domainModel)
         {
-            var keys = _formKeys.Value;
+            var mappedModel = _mapper.Map<EstablishmentModel>(viewModel);
+            // we would normally rely on automapper here, but because we're not passing the full model back (only the tab data)
+            // it clears the model if we just use automapper.
 
+            // to correct that, we loop through each of the fields returned, and pluck those from the mappedModel into the more populated, historic, domainModel
+
+            var keys = _formKeys.Value;
             var properties = ReflectionHelper.GetProperties(domainModel, writeableOnly: true);
             properties = properties.Where(x => keys.Contains(x)).ToList();
 
-            var viewModelProperties = ReflectionHelper.GetProperties(viewModel);
+            var viewModelProperties = ReflectionHelper.GetProperties(mappedModel);
 
             foreach (var item in properties.Intersect(viewModelProperties))
             {
-                var info = ReflectionHelper.GetPropertyInfo(viewModel, item);
-                if (info.Type == typeof(DateTimeViewModel))
-                {
-                    var value = ReflectionHelper.GetPropertyValue<DateTimeViewModel>(viewModel, item).ToDateTime()?.Date;
-                    ReflectionHelper.SetProperty(domainModel, item, value);
-                }
-                else
-                {
-                    var value = ReflectionHelper.GetPropertyValue(viewModel, item);
-                    ReflectionHelper.SetProperty(domainModel, item, value);
-                }
+                var value = ReflectionHelper.GetPropertyValue(mappedModel, item);
+                ReflectionHelper.SetProperty(domainModel, item, value);
             }
 
             if (keys.Contains("SENList"))
@@ -729,36 +736,27 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 domainModel.SENIds = viewModel.SENIds ?? new int[0];
             }
 
-            if (keys.Contains(nameof(viewModel.ProprietorType)))
-            {
-                domainModel.ProprietorTypeId = viewModel.ProprietorTypeId;
-            }
-
             domainModel.AdditionalAddresses = viewModel.AdditionalAddresses.ToArray();
         }
 
         private void MapToDomainModelIEBT(ViewModel viewModel, EstablishmentModel domainModel)
         {
-            var keys = _formKeys.Value;
+            var mappedModel = _mapper.Map<IEBTModel>(viewModel);
+            // we would normally rely on automapper here, but because we're not passing the full model back (only the tab data)
+            // it clears the model if we just use automapper.
 
+            // to correct that, we loop through each of the fields returned, and pluck those from the mappedModel into the more populated, historic, domainModel
+
+            var keys = _formKeys.Value;
             var properties = ReflectionHelper.GetProperties(domainModel.IEBTModel, writeableOnly: true);
             properties = properties.Where(x => keys.Contains(x)).ToList();
 
-            var viewModelProperties = ReflectionHelper.GetProperties(viewModel);
+            var viewModelProperties = ReflectionHelper.GetProperties(mappedModel);
 
             foreach (var item in properties.Intersect(viewModelProperties))
             {
-                var info = ReflectionHelper.GetPropertyInfo(viewModel, item);
-                if (info.Type == typeof(DateTimeViewModel))
-                {
-                    var value = ReflectionHelper.GetPropertyValue<DateTimeViewModel>(viewModel, item).ToDateTime()?.Date;
-                    ReflectionHelper.SetProperty(domainModel.IEBTModel, item, value);
-                }
-                else
-                {
-                    var value = ReflectionHelper.GetPropertyValue(viewModel, item);
-                    ReflectionHelper.SetProperty(domainModel.IEBTModel, item, value);
-                }
+                var value = ReflectionHelper.GetPropertyValue(mappedModel, item);
+                ReflectionHelper.SetProperty(domainModel.IEBTModel, item, value);
             }
         }
 
@@ -918,9 +916,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }));
             }
 
-            vm.IEBTProprietorsAddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.IEBTModel.ProprietorsCountyId);
-            vm.IEBTChairOfProprietorsBodyAddressCountyName = await c.GetNameAsync("CountyId", vm.Establishment.IEBTModel.ChairOfProprietorsBodyCountyId);
-
             if (vm.Establishment.LocalAuthorityId.HasValue)
             {
                 var las = await c.LocalAuthorityGetAllAsync();
@@ -980,6 +975,21 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.PRUSENOptions = (await _cachedLookupService.PRUSENsGetAllAsync()).ToSelectList(viewModel.PRUSENId);
 
             viewModel.Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList(viewModel.Address_CountyId);
+
+            foreach (var viewModelProprietor in viewModel.Proprietors)
+            {
+                viewModelProprietor.Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList(viewModelProprietor.CountyId);
+            }
+
+            if (viewModel.ChairOfProprietor != null)
+            {
+                viewModel.ChairOfProprietor.Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList(viewModel.ChairOfProprietor.CountyId);
+                if ((await _cachedLookupService.CountiesGetAllAsync()).Any(x => x.CodeAsInt != null))
+                {
+                    viewModel.ChairOfProprietor.CountyIdDefault = (await _cachedLookupService.CountiesGetAllAsync()).FirstOrDefault(x => x.Code.Equals("099"))?.Id; // Not recorded
+                }
+            }
+
             viewModel.Countries = (await _cachedLookupService.NationalitiesGetAllAsync()).ToSelectList(viewModel.Address_CountryId);
             viewModel.OfstedRatings = (await _cachedLookupService.OfstedRatingsGetAllAsync()).ToSelectList(viewModel.OfstedRatingId);
 

@@ -950,9 +950,12 @@
     <Content Include="App_Code\helpers.cshtml" />
     <Content Include="Assets\Sass\elements\forms\_form-multiple-choice.scss" />
     <Content Include="Assets\Sass\views\_guidance.scss" />
+<<<<<<< HEAD
     <Content Include="Assets\Sass\views\_accessibility-statement.scss" />
+=======
     <Content Include="Areas\Establishments\Views\Establishment\Partials\_EditProprietorList.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\Partials\_EditProprietors.cshtml" />
+>>>>>>> feature/42043-more-than-one-single-proprietor
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
@@ -1081,12 +1084,15 @@
     <Content Include="Views\Guidance\ChildrensCentre.cshtml" />
     <Content Include="Views\Guidance\Federation.cshtml" />
     <Content Include="Views\Guidance\Governance.cshtml" />
+<<<<<<< HEAD
     <Content Include="public\downloads\20200814_Accessibility_Assurance_Report-Get_Information_About_Schools.pdf" />
     <Content Include="public\downloads\20200814__Accessibility_Assurance_Report-Get_Information_About_Schools.pdf" />
     <Content Include="Views\Home\AccessibilityReport.cshtml" />
+=======
     <Content Include="Views\Shared\DisplayTemplates\ProprietorModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ProprietorViewModel.cshtml" />
+>>>>>>> feature/42043-more-than-one-single-proprietor
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>

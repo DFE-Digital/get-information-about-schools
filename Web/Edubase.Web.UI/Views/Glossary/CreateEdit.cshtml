@@ -52,8 +52,7 @@
 {
     <script nonce="@Html.ScriptNonce()">
         (function () {
-            var okDelete = false;
-            $('.entry-content').textCount({ maxLength: 1000 });
+            $('.entry-content').textCount({ maxLength: 4000 });
 
             $('#delete-button').okCancel({
                 ok: function () {
@@ -66,12 +65,7 @@
                 title: 'Are you sure you want to delete this glossary entry?',
                 content: 'The entry will be removed from the glossary immediately',
                 triggerEvent: 'click'
-
             });
-
         }());
-
-
-
     </script>
 }
