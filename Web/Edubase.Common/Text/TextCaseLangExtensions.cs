@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -13,6 +13,13 @@ namespace Edubase.Common.Text
         {
             text = text.Clean();
             if (text != null) text = string.Concat(char.ToUpper(text[0]), text.Substring(1).ToLower());
+            return text;
+        }
+
+        public static string ToLowerFirstLetter(this string text)
+        {
+            text = text.Clean();
+            if (text != null) text = string.Concat(char.ToLower(text[0]), text.Substring(1));
             return text;
         }
 

@@ -313,7 +313,7 @@
                         <div id="@eProprietorType.ProprietorBody.ToString()-chair" class="hidden">
                             <p></p>
                             <h4 class="heading-small edu-section-break">Chair of the proprietary body details</h4>
-                            @Html.EditorFor(x => x.ChairOfProprietor)
+                            @Html.EditorFor(x => x.ChairOfProprietor, new {ProprietorType = "chairOfProprietor"})
                         </div>
                     </div>
                 }

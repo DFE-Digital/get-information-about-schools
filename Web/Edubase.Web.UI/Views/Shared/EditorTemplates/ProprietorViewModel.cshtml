@@ -1,33 +1,82 @@
 @using System.Linq.Expressions
+@using Edubase.Common.Text
 @model ProprietorViewModel
+
+@if (ViewBag.ModelState != null)
+{
+    // horrible way of doing it, but the viewstate is wiped when we call the RenderPartial
+    // we cant just create the new viewDataDictionary from the model either because that messes up the repeated sections.
+    var ms = (ModelStateDictionary)ViewBag.ModelState;
+    if (@Html.ViewData.ModelState.IsValid && !ms.IsValid)
+    {
+        foreach (var msKey in ms.Keys)
+        {
+            var value = ms[msKey];
+            foreach (var error in value.Errors)
+            {
+                Html.ViewData.ModelState.AddModelError(msKey, error.ErrorMessage);
+            }
+        }
+    }
+}
 
 @Html.HiddenFor(x => x.Id)
 @Html.HiddenFor(x => x.CountyIdDefault)
 
-@RenderTextBox(x => x.Name)
-@RenderTextBox(x => x.Street)
-@RenderTextBox(x => x.Locality)
-@RenderTextBox(x => x.Address3)
-@RenderTextBox(x => x.Town)
+@RenderTextBox(x => x.Name, nameof(ProprietorViewModel.Name))
+@RenderTextBox(x => x.Street, nameof(ProprietorViewModel.Street))
+@RenderTextBox(x => x.Locality, nameof(ProprietorViewModel.Locality))
+@RenderTextBox(x => x.Address3, nameof(ProprietorViewModel.Address3))
+@RenderTextBox(x => x.Town, nameof(ProprietorViewModel.Town))
 
-<div class="form-group @Html.ValidationCssClassFor(x => x.CountyId)">
+@{
+    var countyCounter = ViewBag.ShowCounter != null ? $"[{ViewBag.ShowCounter - 1}]" : "";
+    var countyId = $"iebtDetail.{ViewBag.ProprietorType}{countyCounter}.{nameof(ProprietorViewModel.CountyId).ToLowerFirstLetter()}";
+    var countyLink = countyId.Replace(".", "_").Replace("[", "_").Replace("]", "_");
+}
+<div class="form-group @Html.ValidationCssClassFor(x => x.CountyId) @ProprietorsValidationCssClass(countyId)"
+     id="@countyLink">
     @Html.LabelFor(x => x.CountyId)
     @Html.ValidationMessageFor(x => x.CountyId)
+    @if (ProprietorsValidationCssClass(countyId) == "error")
+    {
+        <span class="field-validation-error">@Html.ViewData.ModelState[countyId].Errors.First().ErrorMessage</span>
+    }
     @Html.DropDownListFor(x => x.CountyId, Model.Counties, "", new { @class = "form-control" })
 </div>
 
-@RenderTextBox(x => x.Postcode,  "form-control-1-2")
-@RenderTextBox(x => x.TelephoneNumber)
+@RenderTextBox(x => x.Postcode, nameof(ProprietorViewModel.Postcode), "form-control-1-2")
+@RenderTextBox(x => x.TelephoneNumber, nameof(ProprietorViewModel.TelephoneNumber))
 
-@RenderTextBox(x => x.Email)
+@RenderTextBox(x => x.Email, nameof(ProprietorViewModel.Email))
 
 
-@helper RenderTextBox(Expression<Func<ProprietorViewModel, string>> fnc, string fieldClasses = "")
+@helper RenderTextBox(Expression<Func<ProprietorViewModel, string>> fnc, string fieldName, string fieldClasses = "")
 {
     var classes = "form-control " + fieldClasses;
-    <div class="form-group @Html.ValidationCssClassFor(fnc)">
+    var validationCounter = ViewBag.ShowCounter != null ? $"[{ViewBag.ShowCounter - 1}]" : "";
+    var validationId = $"iebtDetail.{ViewBag.ProprietorType}{validationCounter}.{fieldName.ToLowerFirstLetter()}";
+    var validationLink = validationId.Replace(".", "_").Replace("[", "_").Replace("]", "_");
+
+    <div class="form-group @Html.ValidationCssClassFor(fnc) @ProprietorsValidationCssClass(validationId)" id="@validationLink">
         @Html.LabelFor(fnc, new { @class = "form-label" })
         @Html.ValidationMessageFor(fnc)
+        @if (ProprietorsValidationCssClass(validationId) == "error")
+        {
+            <span class="field-validation-error">@Html.ViewData.ModelState[validationId].Errors.First().ErrorMessage</span>
+        }
         @Html.TextBoxFor(fnc, new { @class = classes })
     </div>
 }
+
+@functions {
+    public string ProprietorsValidationCssClass(string validationId)
+    {
+        var state = Html.ViewData.ModelState[validationId];
+        if (state != null && state.Errors.Count > 0)
+        {
+            return "error";
+        }
+        return "";
+    }
+} 
