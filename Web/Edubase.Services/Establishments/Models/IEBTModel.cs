@@ -90,7 +90,7 @@ namespace Edubase.Services.Establishments.Models
         public int? HighestAnnualRateForBoardingPupils { get; set; }
 
         public int? ProprietorTypeId { get; set; }
-        public List<ProprietorModel> Proprietors { get; set; } = new List<ProprietorModel>();
+        public List<ProprietorModel> Proprietors { get; set; } = new List<ProprietorModel>(){new ProprietorModel()};
         public ProprietorModel ChairOfProprietor { get; set; }
 
         public int? AccommodationChangedId { get; set; }
