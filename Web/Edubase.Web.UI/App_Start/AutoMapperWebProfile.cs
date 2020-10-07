@@ -3,6 +3,7 @@ using Edubase.Services.Establishments.Models;
 using Edubase.Web.UI.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Edubase.Web.UI.Areas.Establishments.Models;
 
 namespace Edubase.Web.UI
@@ -19,7 +20,10 @@ namespace Edubase.Web.UI
 
             CreateMap<EditEstablishmentModel, IEBTModel>();
             CreateMap<IEBTModel, EstablishmentModel>();
-            CreateMap<IEBTModel, EditEstablishmentModel>();
+            CreateMap<IEBTModel, EditEstablishmentModel>()
+                .ForMember(dst => dst.Proprietors,
+                    mapping => mapping.MapFrom(src =>
+                        src.Proprietors.Any() ? src.Proprietors : new List<ProprietorModel>() {new ProprietorModel()}));
 
             CreateMap<EstablishmentModel, EditEstablishmentModel>()
                 .ForMember(dst => dst.OldHeadFirstName, mapping => mapping.MapFrom(src => src.HeadFirstName))
