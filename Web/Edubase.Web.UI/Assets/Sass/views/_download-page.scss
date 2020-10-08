@@ -1,7 +1,18 @@
 // styles for the downloads page
 
-
 .multiple-choice-downloads {
+  padding-left: 0px;
   float: none;
   overflow: hidden;
+  label {
+    padding-left: 50px;
+  }
 }
+
+.tab-content {
+  .downloads,
+  .column-two-thirds {
+    clear: none;
+  }
+}
+

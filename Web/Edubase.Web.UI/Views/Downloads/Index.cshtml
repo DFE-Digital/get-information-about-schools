@@ -51,12 +51,12 @@
                 </div>
             }
             <div class="tab-content-wrapper horizontal-tabs-content">
-                <div id="group-data">
-                    <form id="download-filters">
+                <div id="group-data" class="tab-content">
+                    <form id="download-filters" class="column-third downloads">
                         @Html.HiddenFor(m => m.Skip)
                         <input type="hidden" value="true" name="filteropen" id="filters-open-state" />
 
-                        <fieldset class="column-third toggle-panels" id="download-radios">
+                        <fieldset class="toggle-panels" id="download-radios">
                             <legend class="bold-legend">Select an option</legend>
                             <div class="multiple-choice multiple-choice-downloads multiple-choice--radio">
                                 @foreach (eDownloadFilter ft in Enum.GetValues(typeof(eDownloadFilter)))
@@ -70,7 +70,6 @@
                                     </div>
                                 }
                             </div>
-
 
                             <div id="filter-container">
                                 <div class="filter-form" id="filter-form">
@@ -90,12 +89,8 @@
                                                 <div class="options-container" id="">
                                                     <div class="js-auto-height-inner">
                                                         <fieldset>
-                                                            <legend class="visuallyhidden">Change history date range and type</legend>
-                                                            <label for="date-type-filter" class="visuallyhidden">Change type</label>
-                                                            @Html.EditorFor(m => m.FilterDate, new { disableHint = true, labelClass = "form-label", title = "To", inFilters = true, fieldsetClassName = "search-to-date" })
-                                                            <div class="form-group soft-half--sides">
-                                                                <a href="#" class="button button-secondary filter-button">Apply</a>
-                                                            </div>
+                                                            <legend class="visuallyhidden">Change date range</legend>
+                                                            @Html.EditorFor(m => m.FilterDate, new { disableHint = true, labelClass = "form-label", title = "", inFilters = true, fieldsetClassName = "search-to-date" })
                                                         </fieldset>
                                                     </div>
                                                 </div>
@@ -103,6 +98,10 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" name="action" class="button">Update</button>
                             </div>
                         </fieldset>
                     </form>

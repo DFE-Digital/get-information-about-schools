@@ -5,7 +5,7 @@
     var downloadGroups = Model.GetFileDownloadGroups();
 }
 
-@if (Model.Downloads.Any())
+@if (Model.Downloads != null && Model.Downloads.Any())
 {
     foreach (var group in downloadGroups)
     {
