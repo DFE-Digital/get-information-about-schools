@@ -1,4 +1,5 @@
 @using Edubase.Services.Downloads.Models;
+@using Edubase.Services.Enums
 @model DownloadsViewModel
 @{
     ViewBag.Title = "Downloads";
@@ -21,7 +22,7 @@
         <h1 class="heading-xlarge">Downloads</h1>
     </div>
     <div class="column-two-thirds">
-        <p class="@(Model.AreScheduledExtractsAvailable ? "": "flush--bottom")">
+        <p>
             This data is updated daily. The data fields and the order of the data fields can change in these downloads.
             If you need data in a prescribed format you should consider signing up for WebServices by submitting a
             <a href="https://form.education.gov.uk/en/AchieveForms/?form_uri=sandbox-publish://AF-Process-2b61dfcd-9296-4f6a-8a26-4671265cae67/AF-Stage-f3f5200e-e605-4a1b-ae6b-3536bc77305c/definition.json&redirectlink=/en&cancelRedirectLink=/en" target="_blank" rel="external">Service Request <span class="visually-hidden">Opens in new window</span></a>.
@@ -51,10 +52,64 @@
             }
             <div class="tab-content-wrapper horizontal-tabs-content">
                 <div id="group-data" class="tab-content">
-                    <div class="column-two-thirds">
+                    <form id="download-filters" class="column-third downloads">
+                        @Html.HiddenFor(m => m.Skip)
+                        <input type="hidden" value="true" name="filteropen" id="filters-open-state" />
+
+                        <fieldset class="toggle-panels" id="download-radios">
+                            <legend class="bold-legend">Select an option</legend>
+                            <div class="multiple-choice multiple-choice-downloads multiple-choice--radio">
+                                @foreach (eDownloadFilter ft in Enum.GetValues(typeof(eDownloadFilter)))
+                                {
+                                    <div class="multiple-choice multiple-choice-downloads">
+                                        @{
+                                            var id = TagBuilder.CreateSanitizedId(string.Format("{0}-{1}", "search-type", ft));
+                                        }
+                                        @Html.RadioButtonFor(x => x.SearchType, ft, new { id, data_toggle_panel = $"#{ft}" })
+                                        @Html.Label(ft.EnumDisplayNameFor(), new { @for = id })
+                                    </div>
+                                }
+                            </div>
+
+                            <div id="filter-container">
+                                <div class="filter-form" id="filter-form">
+                                    <div id="@eDownloadFilter.Latest.ToString()"></div>
+                                    <div id="@eDownloadFilter.DateFilter.ToString()">
+                                        <div id="EditSearchCollapse" class="blanket-container">
+                                            <h2 class="visuallyhidden">Search results filters</h2>
+                                            <a href="#results-container" class="visually-hidden-focusable">Skip filters</a>
+
+                                            <div class="govuk-option-select date-filters no-scroll" data-closed-on-load="false" id="date-filter">
+                                                <div class="container-head js-container-head">
+                                                    <div class="option-select-label">Date</div>
+                                                    <div class="js-selected-counter">
+                                                        <span class="js-selected-counter-text" id="date-filter-type-label">Select a date</span>
+                                                    </div>
+                                                </div>
+                                                <div class="options-container" id="">
+                                                    <div class="js-auto-height-inner">
+                                                        <fieldset>
+                                                            <legend class="visuallyhidden">Change date range</legend>
+                                                            @Html.EditorFor(m => m.FilterDate, new { disableHint = true, labelClass = "form-label", title = "", inFilters = true, fieldsetClassName = "search-to-date" })
+                                                        </fieldset>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" name="action" class="button">Update</button>
+                            </div>
+                        </fieldset>
+                    </form>
+
+                    <div class="column-two-thirds" id="results-container">
                         @foreach (var group in downloadGroups)
                         {
-                            <h2 class="heading-medium">@group.Heading</h2>
+                            <h2 class="heading-medium flush--top">@group.Heading</h2>
                             <p>@group.Paragraph</p>
                             foreach (var item in group.SubSections)
                             {
@@ -72,7 +127,7 @@
                                                 }
                                                 else
                                                 {
-                                                    <a href="@(file.Item2.AuthenticationRequired ? Url.RouteUrl("DownloadFile", new {id = file.Item2.Tag}) : file.Item2.Url)" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
+                                                    <a href="@(file.Item2.AuthenticationRequired ? Url.RouteUrl("DownloadFile", new {filterDate = DateTime.Today, id = file.Item2.Tag}) : file.Item2.Url)" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
                                                         @file.Item1@Html.Conditional(file.Item2.FileSizeInBytes > 0, ", " + Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes)) <span class="visually-hidden">Opens in new window</span>
                                                     </a>
                                                 }
@@ -135,3 +190,8 @@
         </div>
     </div>
 </div>
+
+
+@section ViewScripts {
+    <script src="/public/assets/scripts/standalone/downloads-index.js"></script>
+}

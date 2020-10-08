@@ -533,6 +533,7 @@
     <Content Include="Assets\Scripts\libs\leaflet\plugins\leaflet.markercluster-src.js" />
     <Content Include="Assets\Scripts\standalone\accessibility.js" />
     <Content Include="Assets\Scripts\standalone\indi-search.js" />
+    <Content Include="Assets\Scripts\standalone\downloads-index.js" />
     <Content Include="Assets\Scripts\standalone\search-map.js" />
     <Content Include="Assets\Scripts\Views\edit-location.js" />
     <Content Include="Assets\Scripts\Views\group-details.js" />
@@ -952,6 +953,7 @@
     <Content Include="Assets\Sass\views\_guidance.scss" />
     <Content Include="Assets\Sass\views\_accessibility-statement.scss" />
     <Content Include="Areas\Establishments\Views\Establishment\Partials\_EditProprietorList.cshtml" />
+    <Content Include="Assets\Sass\views\_download-page.scss" />
     <Content Include="Areas\Establishments\Views\Establishment\Partials\_EditProprietors.cshtml" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
@@ -1085,6 +1087,7 @@
     <Content Include="public\downloads\20200814__Accessibility_Assurance_Report-Get_Information_About_Schools.pdf" />
     <Content Include="Views\Home\AccessibilityReport.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ProprietorModel.cshtml" />
+    <Content Include="Views\Downloads\Partials\_DownloadsResults.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ProprietorViewModel.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
