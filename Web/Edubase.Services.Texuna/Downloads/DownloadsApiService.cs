@@ -35,8 +35,8 @@ namespace Edubase.Services.Texuna.Downloads
             
         }
 
-        public async Task<string> GenerateExtractAsync(string id, DateTime filterDate, IPrincipal principal)
-            => (await _httpClient.PostAsync<string>($"download/generate/{id}/{filterDate}", null, principal)).Response;
+        public async Task<string> GenerateExtractAsync(string id, IPrincipal principal)
+            => (await _httpClient.PostAsync<string>($"download/generate/{id}", null, principal)).Response;
 
         public async Task<ProgressDto> GetProgressOfGeneratedExtractAsync(Guid id, IPrincipal principal)
             => (await _httpClient.GetAsync<ProgressDto>($"download/progress/{id}", principal)).Response;
