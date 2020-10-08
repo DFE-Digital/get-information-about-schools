@@ -1,0 +1,42 @@
+@using Edubase.Web.UI.Helpers
+
+@model DownloadsViewModel
+@{
+    var downloadGroups = Model.GetFileDownloadGroups();
+}
+
+@if (Model.Downloads != null && Model.Downloads.Any())
+{
+    foreach (var group in downloadGroups)
+    {
+        <h2 class="govuk-heading-m">@group.Heading</h2>
+        <p>@group.Paragraph</p>
+        foreach (var item in group.SubSections)
+        {
+            <h3 class="govuk-heading-s">@item.Heading</h3>
+            <ul class="govuk-list govuk-list--spaced">
+                @foreach (var file in item.Files)
+                {
+                    <li>
+                        @if (file.Item2.RequiresGeneration)
+                        {
+                            <a href="@Url.RouteUrl("GenerateDownload", new {id = file.Item2.Tag})" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
+                                @file.Item1@Html.Conditional(file.Item2.FileSizeInBytes > 0, ", " + Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes))
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="@(file.Item2.AuthenticationRequired ? Url.RouteUrl("DownloadFile", new {filterDate = DateTime.Today, id = file.Item2.Tag}) : file.Item2.Url)" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
+                                @file.Item1@Html.Conditional(file.Item2.FileSizeInBytes > 0, ", " + Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes)) <span class="govuk-visually-hidden">Opens in new window</span>
+                            </a>
+                        }
+                    </li>
+                }
+            </ul>
+        }
+    }
+}
+else
+{
+    <p>There are no results for your search. Please change the filters to adjust your search.</p>
+}

@@ -1,0 +1,41 @@
+.govuk-radios--small .gias-conditional--bordered {
+  border: 2px solid $govuk-border-colour;
+  border-top: 0;
+  padding-left: 10px;
+  padding-bottom: 10px;
+  margin-left: 0;
+
+  &.govuk-radios__conditional--hidden {
+    display: block;
+    * {
+      display: none;
+    }
+    min-height: 2px;
+    padding-bottom: 0;
+  }
+}
+
+.gias-radio__item--bordered-filter {
+  border: 2px solid $govuk-border-colour;
+  border-bottom: 0;
+  width: calc(100% - 37px);
+
+  .govuk-radios__input {
+    left: 0;
+  }
+
+  .govuk-radios__label {
+    padding-left: 15px;
+    display: block;
+    float: none;
+
+    &::before {
+      left: 10px;
+    }
+
+    &:after {
+      left: 17px;
+    }
+  }
+
+}

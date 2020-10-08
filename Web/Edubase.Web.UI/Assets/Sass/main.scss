@@ -1,7 +1,6 @@
 $govuk-global-styles: true;
 
 @import "GiasHelpers/all";
-// govuk
 @import "node_modules/govuk-frontend/govuk/all";
 @import "GiasGovukOverrides/all";
 @import "GiasHelpers/gias-display";
@@ -15,3 +14,4 @@ $govuk-global-styles: true;
 @import "GiasSearchResults/all";
 @import "leaflet/leaflet";
 @import "GiasLandingPages/all";
+

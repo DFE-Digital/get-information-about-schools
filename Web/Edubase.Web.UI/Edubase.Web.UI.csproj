@@ -723,6 +723,7 @@
     <Content Include="Views\Guidance\Governance.cshtml" />
     <Content Include="Views\Home\AccessibilityReport.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ProprietorModel.cshtml" />
+    <Content Include="Views\Downloads\Partials\_DownloadsResults.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ProprietorViewModel.cshtml" />
     <Content Include="public\govuk-frontend\fonts\bold-affa96571d-v2.woff" />
@@ -734,6 +735,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Governors\Views\Search\" />
+    <Folder Include="Assets\Sass" />
     <Folder Include="Views\Admin\" />
     <Folder Include="Views\GOVUK\Views\errors\" />
     <Folder Include="Views\UserRoles\" />

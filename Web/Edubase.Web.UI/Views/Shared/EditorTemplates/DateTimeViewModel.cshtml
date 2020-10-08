@@ -7,12 +7,18 @@
     string labelClassName = "";
     string fieldsetClassName = "";
     bool disableHint = false;
+    bool hideLegend = false;
     bool.TryParse(ViewData["disableHint"]?.ToString(), out disableHint);
     string legendPrefix = "";
 
     if (ViewData["labelClass"] != null)
     {
         labelClassName = ViewData["labelClass"].ToString();
+    }
+
+    if (ViewData["hideLegend"] != null)
+    {
+        hideLegend = true;
     }
 
     if (ViewData["fieldsetClassName"] != null)
@@ -59,7 +65,7 @@
             <span class="govuk-error-message hidden">Please check the date(s) you have entered</span>
             <span class="govuk-error-message hidden date-range-error">Please use a valid date range</span>
         }
-        <legend class="govuk-fieldset__legend" id="@legendPrefix@ViewData.ModelMetadata.PropertyName" style="@ViewData["style"]">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
+        <legend class="govuk-fieldset__legend @Html.Conditional(hideLegend, "hidden")" id="@legendPrefix@ViewData.ModelMetadata.PropertyName">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
 
         @{
             var fullFieldId = ViewData.TemplateInfo.GetFullHtmlFieldName(Model?.Label)
