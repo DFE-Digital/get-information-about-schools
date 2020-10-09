@@ -1,0 +1,30 @@
+.environment-message {
+  @include govuk-font(16);
+  padding: govuk-spacing(1);
+  text-align: center;
+  text-shadow: 1px 1px 1px govuk-colour('black');
+}
+
+.environment-message--local {
+  background-color: govuk-colour("dark-blue");
+  background-image: radial-gradient(govuk-colour("dark-blue"), govuk-colour("light-blue"));
+  color: govuk-colour('white');
+}
+
+.environment-message--dev {
+  background-color: govuk-colour("green");
+  background-image: radial-gradient(govuk-colour("green"), govuk-colour("turquoise"));
+  color: govuk-colour('white');
+}
+
+.environment-message--stage {
+  background-color:  govuk-colour("bright-purple");
+  background-image: radial-gradient(govuk-colour("bright-purple"), govuk-colour("light-pink"));
+  color: govuk-colour('white');
+}
+
+.environment-message--preprod {
+  background-color:  govuk-colour("red");
+  background-image: radial-gradient(govuk-colour("red"), govuk-colour("bright-purple"));
+  color: govuk-colour('white');
+}
