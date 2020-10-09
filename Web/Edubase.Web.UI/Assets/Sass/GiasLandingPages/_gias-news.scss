@@ -7,4 +7,5 @@
 .gias-news-heading--date {
   display: block;
   @include govuk-font(19, 'regular');
+  padding-top: govuk-spacing(2);
 }
