@@ -56,7 +56,7 @@ namespace Edubase.Web.UI.Controllers
 
             var viewModel = new DownloadsViewModel
             {
-                Downloads = await _downloadsService.GetListAsync(filterDate?.ToDateTime() ?? DateTime.Today, User),
+                Downloads = await _downloadsService.GetListAsync(dateLookup.ToDateTime() ?? DateTime.Today, User),
                 ScheduledExtracts = await _downloadsService.GetScheduledExtractsAsync(skip.GetValueOrDefault(), 100, User),
                 FilterDate = dateLookup,
                 SearchType = searchType,

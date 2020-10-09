@@ -2,7 +2,10 @@ import supportsHistory from '../GiasHelpers/supportsHistory';
 import GiasFilterValidation from './GiasFilterValidation';
 
 const GiasDownloadFilters = {
+  bannerDefaultText: "Select date of files to download",
+	
   getResults: function(){
+	const pageBanner = $('#downloadsTitle');
     const resultsContainer = $('#results-container');
     const resultsNotification = $('#results-notification');
     const resultsUrl = '/Downloads/results-js';
@@ -20,8 +23,16 @@ const GiasDownloadFilters = {
       data: searchParams,
       success: function (data, status, xhr) {
         resultsContainer.html(data);
+		
+		if (resultsContainer.find('#no-downloads-available').length != 0) {
+			pageBanner.html(GiasDownloadFilters.bannerDefaultText);
+		} else {
+			pageBanner.html("Files available to download from " + $('#FilterDate_Day').val() + "/" + $('#FilterDate_Month').val() + "/" + $('#FilterDate_Year').val());
+		}	    
+		
         resultsContainer.removeClass('pending-results-update');
         resultsNotification.html('');
+		
       },
       error: function () {
         $('#ajax-error-message').removeClass('hidden');
@@ -38,12 +49,14 @@ const GiasDownloadFilters = {
       let today = new Date();
       const errorMessage = $('#date-filter').find('.govuk-error-message').not('.date-range-error').not('.range-error')
       const dateIsValid = GiasFilterValidation.validateDateFilters('date-filter');
+	  const pageBanner = $('#downloadsTitle');
 
       errorMessage.addClass('hidden');
       today.setHours(0,0,0,0);
 
       if (!dateIsValid) {
         errorMessage.removeClass('hidden');
+		pageBanner.html(GiasDownloadFilters.bannerDefaultText);
         return;
       }
 
@@ -54,6 +67,7 @@ const GiasDownloadFilters = {
         GiasDownloadFilters.getResults();
       } else {
         errorMessage.removeClass('hidden');
+		pageBanner.html(GiasDownloadFilters.bannerDefaultText);
       }
     });
   }
