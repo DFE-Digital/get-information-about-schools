@@ -67,9 +67,9 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [Route("Generate", Name = "GenerateDownload")]
-        public async Task<ActionResult> GenerateDownload(string id, DateTime? filterDate)
+        public async Task<ActionResult> GenerateDownload(string id)
         {
-            var response = await _downloadsService.GenerateExtractAsync(id, filterDate ?? DateTime.Today, User);
+            var response = await _downloadsService.GenerateExtractAsync(id, User);
 
             if (response.Contains("fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
             {
