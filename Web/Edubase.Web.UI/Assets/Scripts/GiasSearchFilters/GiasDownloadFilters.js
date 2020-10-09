@@ -10,9 +10,17 @@ const GiasDownloadFilters = {
     const resultsNotification = $('#results-notification');
     const resultsUrl = '/Downloads/results-js';
     const searchParams = $('#download-filters').serialize();
+	let today = new Date();
 
     resultsContainer.html('<div class="progress-indicator"><span class="govuk-visually-hidden">Please wait</span></div>');
     resultsNotification.html('Please wait, loading search results');
+	
+	if ($('input[name=SearchType]:checked').val() == "Latest" ||
+		($('#FilterDate_Day').val() == "" && $('#FilterDate_Month').val() == "" && $('#FilterDate_Year').val() == "")) {
+		$('#FilterDate_Day').val(today.getUTCDate());
+		$('#FilterDate_Month').val(today.getUTCMonth() + 1);
+		$('#FilterDate_Year').val(today.getUTCFullYear());
+	}
 
     if (supportsHistory()) {
       history.pushState({}, null, window.location.href.split('?')[0] + '?' + searchParams);
