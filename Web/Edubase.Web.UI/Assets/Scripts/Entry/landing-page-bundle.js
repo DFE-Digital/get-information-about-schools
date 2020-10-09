@@ -11,7 +11,7 @@ let mapInitialised = false;
 
 $main.find('.gias-tabs-wrapper').giasTabs();
 
-$('#school-governance').find('.sortable-table').giasTableSort();
+$('#school-governance, #governance').find('.sortable-table').giasTableSort();
 
 if ($map.length && $map.css('display') === 'block') {
   new GiasLandingMap();
