@@ -4,9 +4,33 @@
 @{
     var downloadGroups = Model.GetFileDownloadGroups();
 }
-
+<span></span>
 @if (Model.Downloads != null && Model.Downloads.Any())
 {
+    <h2 class="govuk-heading-s">Select all the files you want to download</h2>
+    <details class="govuk-details govuk-!-margin-bottom-9" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+                Why can't I see the files I'm looking for?
+            </span>
+        </summary>
+        <div class="govuk-details__text">
+            <p>Some of the historical downloadable files may not be available for this date.</p>
+            <p>This is normally for one of the following reasons:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>The files were not introduced until a later date</li>
+                <li>A technical issue resulted in the files not being generated on this date</li>
+                <li>The files were only available as public download and not specific scheduled extracts</li>
+            </ul>
+            <p>
+                Please try again tomorrow or if the error continues, raise a
+                <a href="https://form.education.gov.uk/en/AchieveForms/?form_uri=sandbox-publish://AF-Process-2b61dfcd-9296-4f6a-8a26-4671265cae67/AF-Stage-f3f5200e-e605-4a1b-ae6b-3536bc77305c/definition.json&redirectlink=/en&cancelRedirectLink=/en" target="_blank" rel="external">
+                    Service Request <span class="govuk-visually-hidden">Opens in new window</span>
+                </a>.
+            </p>
+        </div>
+    </details>
+
     foreach (var group in downloadGroups)
     {
         <h2 class="govuk-heading-m">@group.Heading</h2>
@@ -26,7 +50,7 @@
                         }
                         else
                         {
-                            <a href="@(file.Item2.AuthenticationRequired ? Url.RouteUrl("DownloadFile", new {filterDate = DateTime.Today, id = file.Item2.Tag}) : file.Item2.Url)" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
+                            <a href="@(file.Item2.AuthenticationRequired ? Url.RouteUrl("DownloadFile", new {filterDate = Model.FilterDate.ToDateTime(), id = file.Item2.Tag}) : file.Item2.Url)" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
                                 @file.Item1@Html.Conditional(file.Item2.FileSizeInBytes > 0, ", " + Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes)) <span class="govuk-visually-hidden">Opens in new window</span>
                             </a>
                         }
@@ -38,5 +62,16 @@
 }
 else
 {
-    <p>There are no results for your search. Please change the filters to adjust your search.</p>
+    <h2 class="govuk-heading-m" id="no-downloads-available">No files available to download for @Model.FilterDate.ToString()</h2>
+    <div>
+        <p>There are no historical version for this date.</p>
+        <p>This is normally for one of the following reasons:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>The service was not available due to maintenance</li>
+            <li>A technical issue resulted in files not being generated on this date</li>
+        </ul>
+        <p>
+            Please choose a different date to find the files you need.
+        </p>
+    </div>
 }
