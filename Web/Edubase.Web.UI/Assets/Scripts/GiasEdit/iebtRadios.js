@@ -148,16 +148,16 @@ const iebtRadios = {
       }
     });
 
-    const radioValue = typeof self.radios.filter(':checked').val() !== 'undefined' ? self.radios.filter(':checked').val() : 'SingleProprietor';
+    // const radioValue = typeof self.radios.filter(':checked').val() !== 'undefined' ? self.radios.filter(':checked').val() : 'SingleProprietor';
 
-    if (radioValue === 'ProprietorBody') {
-      $('#field-clone-target').append(self.cloneFields);
-      $('#proprietor-type-ProprietorBody').prop('checked', true);
-    } else {
-      $('#cloneable-fields-container').append(self.cloneFields);
-      $('#proprietor-type-IndividualProprietor').prop('checked', true);
-      $('#SingleProprietor').removeClass('hidden');
-    }
+    // if (radioValue === 'ProprietorBody') {
+      // $('#field-clone-target').append(self.cloneFields);
+      // $('#proprietor-type-ProprietorBody').prop('checked', true);
+    // } else {
+      // $('#cloneable-fields-container').append(self.cloneFields);
+      // $('#proprietor-type-IndividualProprietor').prop('checked', true);
+      // $('#SingleProprietor').removeClass('hidden');
+    // }
 
     self.radios.on('change', function (e) {
       const radioId = $(this).prop('id');
