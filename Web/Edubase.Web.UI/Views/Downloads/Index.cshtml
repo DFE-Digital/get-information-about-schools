@@ -21,6 +21,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full govuk-!-padding-bottom-6">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState)
         <h1 class="govuk-heading-xl" id="downloadsTitle">@pageHeader</h1>
         <p>
             This data is updated daily. The data fields and the order of the data fields can change in these downloads.
@@ -70,7 +71,7 @@
                                         </div>
                                     }
                                     <div id="@eDownloadFilter.DateFilter.ToString()" class="govuk-radios__conditional govuk-radios__conditional--hidden gias-conditional--bordered">
-                                        <div class="date-filters" id="date-filter">
+                                        <div class="date-filters" id="filterDate">
                                             <p class="govuk-!-padding-right-2">
                                                 Files can be downloaded from<br />
                                                 10 September 2020 to present

@@ -55,8 +55,8 @@ const GiasDownloadFilters = {
     $('#filter-submit').on('click', function(e){
       e.preventDefault();
       let today = new Date();
-      const errorMessage = $('#date-filter').find('.govuk-error-message').not('.date-range-error').not('.range-error')
-      const dateIsValid = GiasFilterValidation.validateDateFilters('date-filter');
+      const errorMessage = $('#filterDate').find('.govuk-error-message').not('.date-range-error').not('.range-error')
+      const dateIsValid = GiasFilterValidation.validateDateFilters('filterDate');
 	  const pageBanner = $('#downloadsTitle');
 
       errorMessage.addClass('hidden');
