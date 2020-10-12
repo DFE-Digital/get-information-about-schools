@@ -109,7 +109,7 @@ const iebtRadios = {
         url: "/Establishments/Establishment/Proprietor/Add/" + ($('.proprietorRow').length + 1),
         cache: false,
         success: function (html) {
-          var currentPosition = $(window).scrollTop();
+          const currentPosition = $(window).scrollTop();
           $("#proprietorList").append(html);
           $(window).scrollTop(currentPosition);
         }
@@ -152,6 +152,7 @@ const iebtRadios = {
 
     if (radioValue === 'ProprietorBody') {
       $('#field-clone-target').append(self.cloneFields);
+      $('#proprietor-type-ProprietorBody').prop('checked', true);
     } else {
       $('#cloneable-fields-container').append(self.cloneFields);
       $('#proprietor-type-IndividualProprietor').prop('checked', true);

@@ -29,7 +29,7 @@ class GiasAttachUnload  {
     let exitUrl;
     let exitElement;
     this.canExit = true;
-    const $escapes = $content.find('[type="submit"], .govuk-error-summary-list a').not('[value="cancel"], .removeProprietor');
+    const $escapes = $content.find('[type="submit"]').not('[value="cancel"], .removeProprietor, .govuk-error-summary a');
 
     $escapes.addClass('js-allow-exit');
 
