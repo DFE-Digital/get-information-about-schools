@@ -21,6 +21,9 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full govuk-!-padding-bottom-6">
+        <div id="js-error-summary">
+            <error-summary :errors="errors" error-title="There is a problem"/>
+        </div>
         @Html.Partial("_ValidationSummary", ViewData.ModelState)
         <h1 class="govuk-heading-xl" id="downloadsTitle">@pageHeader</h1>
         <p>
@@ -160,5 +163,4 @@
 @section ViewScripts
 {
     <script src="/public/assets/scripts/build/downloads.js"></script>
-
 }
