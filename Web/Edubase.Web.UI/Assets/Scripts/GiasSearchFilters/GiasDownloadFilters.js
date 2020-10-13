@@ -26,8 +26,9 @@ const GiasDownloadFilters = {
   bannerDefaultText: "Select date of files to download",
   errorMessages: [
     'Please enter a date',
-    'Please check the date(s) you have entered',
-    'Please enter a valid date'
+    'Please enter a valid date',
+    'Please check the date(s) you have entered'
+
   ],
   getResults: function(){
 	const pageBanner = $('#downloadsTitle');
