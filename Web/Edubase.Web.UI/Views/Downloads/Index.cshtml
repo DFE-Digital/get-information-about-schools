@@ -6,7 +6,7 @@
     ViewBag.HideLogo = true;
     ViewBag.SiteSection = "downloads";
     var downloadGroups = Model.GetFileDownloadGroups();
-    var pageHeader = Model.Downloads.Any() ? $"Files available to download from {Model.FilterDate.ToString()}" : "Select date of files to download";
+    var pageHeader = Model.Downloads != null ? $"Files available to download from {Model.FilterDate.ToString()}" : "Select date of files to download";
 }
 
 @section Head
