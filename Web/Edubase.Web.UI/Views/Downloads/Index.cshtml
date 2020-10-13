@@ -5,6 +5,7 @@
     ViewBag.Title = "Downloads";
     ViewBag.HideLogo = true;
     ViewBag.SiteSection = "downloads";
+    ViewBag.bodyClasses = "search-results"; // leverage the search results breakpoints to support those pesky tablet resolutions
     var downloadGroups = Model.GetFileDownloadGroups();
     var pageHeader = Model.Downloads != null ? $"Files available to download from {Model.FilterDate.ToString()}" : "Select date of files to download";
 }
@@ -73,8 +74,9 @@
                                             @Html.Label(ft.EnumDisplayNameFor(), new {@for = id, @class = "govuk-label govuk-radios__label"})
                                         </div>
                                     }
+
                                     <div id="@eDownloadFilter.DateFilter.ToString()" class="govuk-radios__conditional govuk-radios__conditional--hidden gias-conditional--bordered">
-                                        <div class="date-filters" id="filterDate">
+                                        <div class="date-filters  @Html.ValidationCssClassFor(x => x.FilterDate.Day) @Html.ValidationCssClassFor(x => x.FilterDate.Month) @Html.ValidationCssClassFor(x => x.FilterDate.Year)" id="filterDate">
                                             <p class="govuk-!-padding-right-2">
                                                 Files can be downloaded from<br />
                                                 10 September 2020 to present
@@ -89,16 +91,17 @@
                                                     fieldsetClassName = "search-to-date",
                                                     hideLegend = true
                                                 })
+                                            <div class="js-show-block">
+                                              <button type="submit" name="apply" class="govuk-button govuk-!-margin-bottom-2" id="filter-apply">Apply</button>
+                                            </div>
 
                                         </div>
-                                        <div>
-                                            <button type="submit" name="apply" class="govuk-button no-js-hidden" id="filter-apply">Apply</button>
-                                        </div>
+
                                     </div>
                                 </div>
                             </div>
-                            <div class="govuk-form-group">
-                                <button type="submit" name="action" class="govuk-button js-hidden" id="filter-submit">Update</button>
+                            <div class="govuk-form-group no-js-show-block">
+                                <button type="submit" name="action" class="govuk-button " id="filter-submit">Update</button>
                             </div>
                         </fieldset>
                     </form>

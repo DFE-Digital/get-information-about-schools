@@ -1,5 +1,5 @@
 .js-enabled .js-hidden {
-  display: none;
+  display: none !important;
 }
 
 .js-enabled [v-cloak] {
@@ -8,29 +8,29 @@
 
 .no-js {
   .no-js-show-inline {
-    display: inline-block;
+    display: inline-block !important;
   }
 
   .no-js-show-block {
-    display: block;
+    display: block !important;
   }
   .js-show-inline,
   .js-show-block {
-    display: none;
+    display: none !important;
   }
 }
 
 .js-enabled {
   .js-show-inline {
-    display: inline-block;
+    display: inline-block !important;
   }
   .js-show-block {
-    display: block;
+    display: block !important;
   }
 
   .no-js-show-block,
   .no-js-show-inline {
-    display: none;
+    display: none !important;
   }
 }
 

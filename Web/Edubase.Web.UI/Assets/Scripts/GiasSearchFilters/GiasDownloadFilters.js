@@ -75,7 +75,18 @@ const GiasDownloadFilters = {
     });
   },
   init: function() {
-    $('#filter-submit').on('click', function(e){
+    const $radios = $('#download-radios').find('.govuk-radios__input');
+
+    $radios.on('change', function(){
+      console.log($('#search-type-Latest').is(':checked'));
+      if ($('#search-type-Latest').is(':checked')) {
+
+        GiasDownloadFilters.getResults();
+      }
+    });
+
+
+    $('#filter-apply').on('click', function(e){
       e.preventDefault();
       let today = new Date();
       const dateFilter = $('#filterDate');
@@ -111,7 +122,7 @@ const GiasDownloadFilters = {
         return;
       }
 
-      if (!GiasFilterValidation.validateDate({ day: inputDay, month: inputMonth, year: inputYear})) {
+      if (GiasFilterValidation.validateDate({ day: inputDay, month: inputMonth, year: inputYear})) {
         message = GiasDownloadFilters.errorMessages[1];
         errorMessage.removeClass('hidden').text(message);
         dateFilter.addClass('govuk-form-group--error');

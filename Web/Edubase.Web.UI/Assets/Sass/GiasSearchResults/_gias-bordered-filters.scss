@@ -19,7 +19,8 @@
   &.govuk-radios__conditional--hidden {
     display: block;
     .govuk-form-group,
-    p {
+    p,
+    div:not(.govuk-date-input__item) {
       display: none;
     }
     min-height: 2px;
@@ -36,7 +37,8 @@
     &.govuk-radios__conditional--hidden {
       display: block;
       .govuk-form-group,
-      p {
+      p,
+      div:not(.govuk-date-input__item) {
         display: block;
       }
       min-height: auto;
