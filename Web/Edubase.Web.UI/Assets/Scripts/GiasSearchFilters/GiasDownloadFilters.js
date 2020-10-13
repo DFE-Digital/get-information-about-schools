@@ -78,9 +78,7 @@ const GiasDownloadFilters = {
     const $radios = $('#download-radios').find('.govuk-radios__input');
 
     $radios.on('change', function(){
-      console.log($('#search-type-Latest').is(':checked'));
       if ($('#search-type-Latest').is(':checked')) {
-
         GiasDownloadFilters.getResults();
       }
     });
