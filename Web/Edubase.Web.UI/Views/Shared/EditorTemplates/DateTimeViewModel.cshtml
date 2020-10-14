@@ -80,10 +80,28 @@
 
             foreach (var modelStateKey in ViewData.ModelState.Keys)
             {
-                if (modelStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCultureIgnoreCase) &&
-                    !modelStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCulture))
+                var testStateKey = modelStateKey;
+                var linkStateKey = testStateKey;
+                if (testStateKey.EndsWith(".Day"))
                 {
-                    <div id="@modelStateKey"></div>
+                    testStateKey = testStateKey.Replace(".Day", "");
+                    linkStateKey = linkStateKey.Replace(".Day", "_Day");
+                }
+                if (testStateKey.EndsWith(".Month"))
+                {
+                    testStateKey = testStateKey.Replace(".Month", "");
+                    linkStateKey = linkStateKey.Replace(".Month", "_Month");
+                }
+                if (testStateKey.EndsWith(".Year"))
+                {
+                    testStateKey = testStateKey.Replace(".Year", "");
+                    linkStateKey = linkStateKey.Replace(".Year", "_Year");
+                }
+
+                if (testStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCultureIgnoreCase) &&
+                    !testStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCulture))
+                {
+                    <div id="@linkStateKey"></div>
                 }
             }
         }
@@ -128,6 +146,8 @@
         <div class="govuk-date-input">
             <div class="govuk-date-input__item">
                 <div class="govuk-form-group">
+
+
                     @Html.LabelFor(x => x.Day, new {@class = string.Concat(labelClassName, " govuk-label govuk-date-input__label")})
                     @Html.TextBoxFor(x => x.Day, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, dayCssClasses, 2, ViewData["vueModel"] != null ? String.Concat((string) ViewData["vueModel"], "Day") : null))
                 </div>
