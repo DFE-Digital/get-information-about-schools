@@ -54,3 +54,17 @@
     display: none;
   }
 }
+
+.gias-hidden__from-tablet {
+  @include govuk-media-query($from: tablet) {
+    display: none;
+  }
+}
+
+.gias-visible__from-tablet {
+  display: none;
+  @include govuk-media-query($from: tablet) {
+    display: block;
+  }
+}
+
