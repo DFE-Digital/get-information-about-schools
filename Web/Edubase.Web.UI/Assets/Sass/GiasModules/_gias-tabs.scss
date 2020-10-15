@@ -67,5 +67,10 @@
 
   .gias-tabs__tab {
     text-decoration: none;
+
+    @include govuk-media-query($from: desktop) {
+      position: relative;
+      top: govuk-spacing(1);
+    }
   }
 }
