@@ -216,7 +216,7 @@
                 </div>
             </div>
             <div class="panel panel-border-narrow" id="searchby-all-ref">
-                <div class="govuk-form-group">
+                <div class="govuk-form-group govuk-!-padding-top-2">
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item">
                             <input id="include-open-establishments-all" type="checkbox" checked="checked" name="OpenOnly" value="true" class="govuk-checkboxes__input"/>
@@ -225,7 +225,7 @@
                     </div>
                     </div>
                     @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
-                    <div class="govuk-form-group">
+                    <div class="govuk-form-group ">
                         <button type="submit" class="govuk-button search-button" id="all-search-submit" name="SearchType" value="@eSearchType.EstablishmentAll">Search</button>
                     </div>
 

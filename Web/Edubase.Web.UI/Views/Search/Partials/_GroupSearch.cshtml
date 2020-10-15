@@ -67,7 +67,7 @@
                                 @Html.TextBoxFor(x => x.GroupSearchModel.Text, new {@class = "govuk-input govuk-input--width-20", autocomplete = "off", data_suggestion_url = "/search/suggestgroup?text=", maxlength = "200", aria_describedby = "group-reference"})
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="govuk-form-group">
                             <button type="submit" id="group-search-submit" class="govuk-button  search-button" name="searchtype" value="@eSearchType.Group">Search</button>
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                         </div>
                     </div>
                     <div class="panel panel-border-narrow" id="searchby-allgroups-ref">
-                        <div class="form-group">
+                        <div class="govuk-form-group govuk-!-padding-top-2">
                             <button type="submit" id="group-search-submit-2" class="govuk-button  search-button" name="searchtype" value="@eSearchType.GroupAll">Search</button>
                         </div>
                     </div>
