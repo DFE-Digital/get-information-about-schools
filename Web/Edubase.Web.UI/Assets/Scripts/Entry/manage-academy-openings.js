@@ -316,12 +316,12 @@ const academyOpenings = new Vue({
           href: '#opening-date',
           message: 'Please enter the establishment opening date'
         });
+
+        this.errorFocus();
       }
 
-      this.errorFocus();
-
       if (!this.updateNameError && !this.openDateError) {
-        var urn = this.searchUrn;
+        const urn = this.searchUrn;
         this.searchUrn = '';
         this.presentDetail = false;
         this.editRecord = false;
