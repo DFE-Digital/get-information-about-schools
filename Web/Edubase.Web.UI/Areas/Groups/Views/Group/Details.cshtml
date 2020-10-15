@@ -109,23 +109,23 @@
             <div class="tab-wrap">
                 <ul class="gias-tabs">
                     <li class="gias-tabs__list-item">
-                        <a href="#details" class="horizontal-tab">Details</a>
+                        <a href="#details" class="gias-tabs__tab ">Details</a>
                     </li>
                     <li class="gias-tabs__list-item">
-                        <a href="#list" class="horizontal-tab">@Model.EstablishmentsPluralName (@Model.Establishments.Count)</a>
+                        <a href="#list" class="gias-tabs__tab ">@Model.EstablishmentsPluralName (@Model.Establishments.Count)</a>
                     </li>
 
                     @if (Model.Group.GroupTypeId == (int) eLookupGroupType.MultiacademyTrust)
                     {
                         <li class="gias-tabs__list-item">
-                            <a href="#governance" class="horizontal-tab">Governance</a>
+                            <a href="#governance" class="gias-tabs__tab ">Governance</a>
                         </li>
                     }
 
                     @if (Model.IsUserLoggedOn)
                     {
                         <li class="gias-tabs__list-item">
-                            <a href="#change-history" class="horizontal-tab">Changes</a>
+                            <a href="#change-history" class="gias-tabs__tab ">Changes</a>
                         </li>
                     }
 
