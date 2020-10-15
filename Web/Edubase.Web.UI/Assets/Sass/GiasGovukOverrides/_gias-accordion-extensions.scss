@@ -2,15 +2,6 @@
   padding-bottom: govuk-spacing(2);
   position: relative;
 
-  .spt-back-to-top-linkage {
-    position: absolute;
-    left: 0;
-
-    @include govuk-media-query($until: tablet) {
-      font-size: 14px;
-    }
-  }
-
   @media print {
     display: none;
   }
@@ -22,10 +13,6 @@
   & + .govuk-accordion__controls {
     margin-bottom: govuk-spacing(4);
   }
-}
-
-.govuk-accordion__section-button {
-  font-size: 16px;
 }
 
 .govuk-accordion__section-summary {
