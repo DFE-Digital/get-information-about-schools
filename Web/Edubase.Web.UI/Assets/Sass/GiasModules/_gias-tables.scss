@@ -212,18 +212,20 @@
   .govuk-table__body {
     .govuk-table__cell,
     .govuk-table__header {
-      word-break: break-word;
+      word-break: break-all;
 
       .gias-summary-list__key,
       .gias-summary-list__value {
         font-size: 14px;
+        word-break: normal;
+        display: block;
+        width: auto;
       }
     }
   }
 
-  [data-label="Suggested by"],
-  [data-label="Request type"] {
-    word-break: break-word;
+  [data-label="Suggested by"] {
+    word-break: break-all;
   }
 
   @include govuk-media-query($from: desktop) {
