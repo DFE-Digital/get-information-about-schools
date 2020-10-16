@@ -15,6 +15,10 @@
   }
 }
 
+.govuk-accordion__section-button {
+  @include govuk-font(19, 'bold');
+}
+
 .govuk-accordion__section-summary {
   font-size: 14px;
 }
