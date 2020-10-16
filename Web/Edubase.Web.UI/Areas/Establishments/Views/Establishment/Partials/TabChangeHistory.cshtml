@@ -32,6 +32,14 @@
 }
 <div id="school-change-history" class="tab-content approval-data">
     <h2 class="govuk-heading-s">Change History</h2>
+    @if (User.Identity.IsAuthenticated && Model.GovernorsGridViewModel.DomainModel.HasGovernors)
+    {
+        <div class="gias-governance-history-link-container">
+            <p>
+                @Html.RouteLink("View governance change history", "EstabDetailGovChangeHistory", new {id = Model.GovernorsGridViewModel.EstablishmentUrn})
+            </p>
+        </div>
+    }
 
     @if (!Model.ChangeHistory.Items.Any())
     {
