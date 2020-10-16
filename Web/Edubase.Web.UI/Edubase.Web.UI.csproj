@@ -523,6 +523,7 @@
     <Content Include="404.aspx" />
     <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Downloads\SelectDataset.cshtml" />
     <Content Include="Areas\Groups\Views\Group\Warnings.cshtml" />
+    <Content Include="Assets\Sass\govuk-core.scss" />
     <Content Include="public\assets\images\accessibility\accessibility_links_misplaced.png" />
     <Content Include="public\assets\images\guidance\*.*" />
     <Content Include="public\assets\images\icons\*.*" />
