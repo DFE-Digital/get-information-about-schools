@@ -43,14 +43,14 @@
 
     @if (!Model.ChangeHistory.Items.Any())
     {
-        <p class="govuk-body-s">There are no change records available at the moment</p>
+        <p class="govuk-body">There are no change records available at the moment</p>
     }
     else
     {
-        <p class="govuk-body-s">
+        <p class="govuk-body">
             @Html.ActionLink("Download data in CSV format", "DownloadChangeHistory", "Downloads", new { establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.csv }, null)
         </p>
-        <p class="govuk-body-s">
+        <p class="govuk-body">
             @Html.ActionLink("Download data in XLSX format", "DownloadChangeHistory", "Downloads", new { establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.xlsx }, null)
 
         </p>

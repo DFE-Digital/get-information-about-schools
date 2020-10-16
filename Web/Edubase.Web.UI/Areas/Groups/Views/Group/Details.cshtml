@@ -362,16 +362,24 @@
             {
                 <div id="change-history" class="tab-content">
                     <h2 class="govuk-heading-s">Change History</h2>
+                    @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
+                    {
+                        <div class="gias-governance-history-link-container">
+                            <p>
+                            @Html.RouteLink("View governance change history", "GroupDetailGovChangeHistory", new {id = Model.Group.GroupUId})
+                            </p>
+                        </div>
+                    }
                     @if (!Model.ChangeHistory.Items.Any())
                     {
-                        <p class="govuk-body-s">There are no change records available at the moment</p>
+                        <p class="govuk-body">There are no change records available at the moment</p>
                     }
                     else
                     {
-                        <p class="govuk-body-s">
+                        <p class="govuk-body">
                             @Html.ActionLink("Download data in CSV format", "DownloadChangeHistory", "Downloads", new {groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.csv}, null)
                         </p>
-                        <p class="govuk-body-s">
+                        <p class="govuk-body">
                             @Html.ActionLink("Download data in XLSX format", "DownloadChangeHistory", "Downloads", new {groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.xlsx}, null)
                         </p>
 
