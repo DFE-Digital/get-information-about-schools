@@ -16,10 +16,7 @@
                     <li class="govuk-breadcrumbs__list-item">@Html.RouteLink("Home", "Homepage",new {area = ""}, new { @class = "govuk-breadcrumbs__link"})</li>
                     @foreach (var item in breadcrumbRoutes)
                     {
-                        var routeValues = ViewBag.RouteName == "EstabDataDownload" ?
-                            new {id = ViewContext.RouteData.Values["urn"]} :
-                            new {id = ViewContext.RouteData.Values["uid"]};
-                        <li class="govuk-breadcrumbs__list-item">@Html.RouteLink(item.Label, item.RouteName, routeValues,new { @class = "govuk-breadcrumbs__link"})</li>
+                        <li class="govuk-breadcrumbs__list-item">@Html.RouteLink(item.Label, item.RouteName, item.RouteValues,new Dictionary<string, object>(){{"class", "govuk-breadcrumbs__link"}})</li>
                     }
                 </ol>
             </div>
