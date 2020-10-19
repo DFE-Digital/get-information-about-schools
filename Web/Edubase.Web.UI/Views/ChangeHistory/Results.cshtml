@@ -262,7 +262,7 @@
         <div class="options-container" id="">
             <div class="js-auto-height-inner">
                 <fieldset>
-                    <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
+                    <legend class="govuk-visually-hidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
                     @Html.DropDownListFor(expression, items, "Please select", new { @class = "form-control in-filters trigger-result-update"})
                 </fieldset>
             </div>
@@ -275,7 +275,6 @@
     <script nonce="@Html.ScriptNonce()">
         var isEstabSearch = @Model.IsEstablishmentSearch.ToString().ToLower()
     </script>
-    @* <script src="/public/assets/scripts/standalone/search-change-history.js"></script> *@
     <script src="/public/assets/scripts/build/change-history-results.js"></script>
 
 }

@@ -195,6 +195,11 @@
   @include govuk-font(14);
   table-layout: fixed;
 
+  .govuk-table__cell,
+  .govuk-table__header {
+    padding: 5px 10px !important;
+  }
+
   @include govuk-media-query($until: desktop) {
     table-layout: unset;
     .govuk-table__cell,
@@ -230,16 +235,37 @@
 
   @include govuk-media-query($from: desktop) {
     .cell-requesteddateutc,
-    .cell-uid {
-      width: 80px;
+    .cell-changeddateutc,
+    .cell-effectivedateutc {
+      width: 78px;
+    }
+    .cell-uid,
+    .cell-establishmenturn {
+      width: 40px;
+    }
+
+    .cell-groupname {
+      width: 70px;
     }
 
     .cell-change {
       width: 180px;
     }
 
+    .cell-fieldname {
+      width: 70px;
+    }
+
+    .cell-oldvalue,
+    .cell-newvalue {
+      width: 70px;
+    }
+
     .cell-establishmentname {
-      width: 110px;
+      width: 95px;
+    }
+    .govuk-table__cell[data-label="Group"] a {
+      word-break: break-all;
     }
   }
 }
