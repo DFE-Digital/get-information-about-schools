@@ -62,7 +62,7 @@
                         @Html.HiddenFor(m => m.Skip)
                         <fieldset class="govuk-fieldset" id="download-radios">
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">Select an option</legend>
-                            <div class="govuk-form-group">
+                            <div class="govuk-form-group govuk-!-margin-bottom-2">
                                 <div class="govuk-radios govuk-radios--small govuk-radios--conditional" data-module="govuk-radios">
                                     @foreach (eDownloadFilter ft in Enum.GetValues(typeof(eDownloadFilter)))
                                     {
@@ -86,13 +86,14 @@
                                                 {
                                                     disableHint = false,
                                                     labelClass = "govuk-label",
+                                                    dateHint = "10 09 2020",
                                                     title = "",
                                                     inFilters = false,
                                                     fieldsetClassName = "search-to-date",
                                                     hideLegend = true
                                                 })
                                             <div class="js-show-block">
-                                              <button type="submit" name="apply" class="govuk-button govuk-!-margin-bottom-2" id="filter-apply">Apply</button>
+                                              <button type="submit" name="apply" class="govuk-button downloads-filter-button" id="filter-apply">Apply</button>
                                             </div>
 
                                         </div>

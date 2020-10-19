@@ -138,3 +138,11 @@
   right: 15px;
   top: 0;
 }
+
+.downloads-filter-button {
+  margin-bottom: govuk-spacing(2);
+
+  @include govuk-media-query($until: desktop) {
+    max-width: 90%;
+  }
+}

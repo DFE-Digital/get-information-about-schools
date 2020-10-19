@@ -7,9 +7,15 @@
     string labelClassName = "";
     string fieldsetClassName = "";
     bool disableHint = false;
+    string dateHint = "";
     bool hideLegend = false;
     bool.TryParse(ViewData["disableHint"]?.ToString(), out disableHint);
     string legendPrefix = "";
+
+    if (ViewData["dateHint"] != null)
+    {
+        dateHint = ViewData["dateHint"].ToString();
+    }
 
     if (ViewData["labelClass"] != null)
     {
@@ -108,7 +114,14 @@
 
         @if (!disableHint)
         {
-            <p class="govuk-hint">For example, 20 03 2003</p>
+            if (dateHint != String.Empty)
+            {
+                <p class="govuk-hint">For example, @dateHint</p>
+            }
+            else
+            {
+                <p class="govuk-hint">For example, 20 03 2003</p>
+            }
         }
 
         @if (showReactivationWarning)
