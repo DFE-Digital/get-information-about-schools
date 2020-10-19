@@ -60,7 +60,7 @@
                     @Html.HiddenFor(m => m.SelectedTab, new { id="selected-tab2"} )
                     <fieldset class="govuk-fieldset search-toggle-panel">
                         <legend class="govuk-visually-hidden">Search by name or reference number</legend>
-                        <div class="govuk-form-group">
+                        <div class="govuk-form-group  govuk-!-margin-bottom-3">
                             <div class="govuk-radios" data-module="govuk-radios">
                                 <div class="govuk-radios__item">
                                     @Html.RadioButtonFor(m => m.SearchType, eSearchType.Text, new {id = "searchtype-name", @class = "govuk-radios__input", data_toggle_panel = "#searchby-name-ref"})
@@ -92,7 +92,7 @@
                                 @Html.TextBoxFor(x => x.TextSearchModel.Text, new {@class = "govuk-input govuk-!-width-one-half", autocomplete = "off", data_suggestion_url = "/search/suggest?text=", aria_describedby = "name-reference-help"})
                             </div>
                             @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
-                            <div class="govuk-form-group">
+                            <div class="govuk-form-group govuk-!-margin-bottom-3">
                                 <button type="submit" class="govuk-button search-button" id="name-search-submit">Search</button>
                             </div>
                         </div>
@@ -188,13 +188,13 @@
             <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                 <h2 class="govuk-heading-s">Search by:</h2>
             </legend>
-            <ul class="govuk-list">
+            <ul class="govuk-list search-type-list">
                 <li class="search-type-wrapper">
                     @using (Html.BeginRouteForm("ChangeHistorySearch", FormMethod.Get))
                     {
                         @Html.HiddenFor(m => m.SelectedTab, new { id="selected-tab0"} )
                         <fieldset class="search-toggle-panel govuk-fieldset">
-                             <div class="govuk-form-group">
+                             <div class="govuk-form-group  govuk-!-margin-bottom-3">
                                  <div class="govuk-radio" data-module="govuk-radio">
                                      <div class="govuk-radios__item">
                                          @Html.RadioButtonFor(m => m.SearchType, eSearchType.Group, new {id = "searchtype-name-group", data_toggle_panel = "#searchby-group-ref", @class = "govuk-radios__input"})
@@ -229,7 +229,7 @@
                                     </div>
 
                                     @Html.HiddenFor(x => x.GroupSearchModel.AutoSuggestValue)
-                                    <div class="govuk-form-group">
+                                    <div class="govuk-form-group  govuk-!-margin-bottom-3">
                                         <button type="submit" id="group-search-submit" class="govuk-button search-button">Search</button>
                                     </div>
                                 </div>
@@ -258,7 +258,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel panel-border-narrow" id="searchby-allgroups-ref">
+                            <div class="panel panel-border-narrow govuk-clearfix" id="searchby-allgroups-ref">
                                 <div class="govuk-grid-column-one-third">
                                     <div class="date-group-wrap">
                                         @Html.EditorFor(x => x.DateFilterFrom, new {title = "From (optional)", fieldsetClassName = "edit-date-fieldset"})
