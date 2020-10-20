@@ -1,0 +1,49 @@
+@{
+    ViewBag.Title = "Get information about schools";
+}
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})</li>
+                    <li class="govuk-breadcrumbs__list-item"> @Html.ActionLink("Help", "Help", "Home", new { area = "" }, new {@class = "govuk-breadcrumbs__link"})</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Guidance</h1>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+        <p>Use the download links below for general guidance about Get information about schools and for help with specific areas.  For explanations of terms used on the site, see the @Html.RouteLink("glossary", "Glossary").</p>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <ul class="govuk-list govuk-list--spaced">
+            <li>
+                <a href="https://edubasepr.blob.core.windows.net/guidance/General%20user%20guide.pdf" target="_blank" rel="nofollow" class="js-track" data-track="guidance|general|download">General guidance PDF, 813KB <span class="govuk-visually-hidden">Opens in new window</span></a>
+            </li>
+            <li>
+                <a href="https://edubasepr.blob.core.windows.net/guidance/Establishment_Bulk_Update_Guide.pdf" target="_blank" rel="nofollow" class="js-track" data-track="guidance|establish-bulk-update|download">Establishment bulk update guidance PDF, 353KB <span class="govuk-visually-hidden">Opens in new window</span></a>
+            </li>
+            <li>
+                <a href="https://edubasepr.blob.core.windows.net/guidance/Children%27s%20centres%20user%20guide.pdf" target="_blank" rel="nofollow" class="js-track" data-track="guidance|childrens-centre-guidance|download">Children's centres guidance PDF, 764KB <span class="govuk-visually-hidden">Opens in new window</span></a>
+            </li>
+            <li>
+                <a href="https://edubasepr.blob.core.windows.net/guidance/Federation%20User%20Guide.pdf" target="_blank" rel="nofollow" class="js-track" data-track="guidance|federation|download">Federation guidance PDF, 183KB <span class="govuk-visually-hidden">Opens in new window</span></a>
+            </li>
+            <li>
+                <a href="https://edubasepr.blob.core.windows.net/guidance/Governance%20User%20Guide.pdf" target="_blank" rel="nofollow" class="js-track" data-track="guidance|governance|download">Governance guidance PDF, 118KB <span class="govuk-visually-hidden">Opens in new window</span></a>
+            </li>
+        </ul>
+    </div>
+</div>

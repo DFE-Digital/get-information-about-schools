@@ -11,28 +11,28 @@
             </div>
 
 
-            <table class="edubase-table">
-                <caption class="visuallyhidden">Independent schools search results</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">Establishment name</th>
-                        <th scope="col">Local authority</th>
-                        <th scope="col">Town</th>
-                        <th scope="col">Establishment status</th>
-                        <th scope="col">Establishment type</th>
-                        <th scope="col">Date of action</th>
+            <table class="govuk-table gias-table independent-search-results">
+                <caption class="govuk-visually-hidden">Independent schools search results</caption>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">Establishment name</th>
+                        <th scope="col" class="govuk-table__header">Local authority</th>
+                        <th scope="col" class="govuk-table__header">Town</th>
+                        <th scope="col" class="govuk-table__header">Establishment status</th>
+                        <th scope="col" class="govuk-table__header">Establishment type</th>
+                        <th scope="col" class="govuk-table__header">Date of action</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody  class="govuk-table__body">
                     @foreach (var item in Model.Results.Items)
                     {
-                        <tr>
-                            <td data-label="Establishment name">@(Html.Field(item.Name))</td>
-                            <td data-label="Local authority">@(Html.Field(Model.LocalAuthorities.FirstOrDefault(x => x.Id == item.LocalAuthorityId)))</td>
-                            <td data-label="Town">@(Html.Field(item.Address_CityOrTown))</td>
-                            <td data-label="Establishment status">@(Html.Field(Model.EstablishmentStatuses.FirstOrDefault(x => x.Id == item.StatusId)))</td>
-                            <td data-label="Establishment type">@(Html.Field(Model.EstablishmentTypes.FirstOrDefault(x => x.Id == item.TypeId)))</td>
-                            <td data-label="Date of action">
+                        <tr class="govuk-table__row">
+                            <td data-label="Establishment name" class="govuk-table__cell">@(Html.Field(item.Name))</td>
+                            <td data-label="Local authority" class="govuk-table__cell">@(Html.Field(Model.LocalAuthorities.FirstOrDefault(x => x.Id == item.LocalAuthorityId)))</td>
+                            <td data-label="Town" class="govuk-table__cell">@(Html.Field(item.Address_CityOrTown))</td>
+                            <td data-label="Establishment status" class="govuk-table__cell">@(Html.Field(Model.EstablishmentStatuses.FirstOrDefault(x => x.Id == item.StatusId)))</td>
+                            <td data-label="Establishment type" class="govuk-table__cell">@(Html.Field(Model.EstablishmentTypes.FirstOrDefault(x => x.Id == item.TypeId)))</td>
+                            <td data-label="Date of action" class="govuk-table__cell">
                                 @Html.Conditional(Model.IsGeneralMode, Html.Field(item.NextGeneralActionRequired))
                                 @Html.Conditional(Model.IsWelfareMode, Html.Field(item.NextActionRequiredByWEL))
                             </td>

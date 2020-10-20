@@ -4,64 +4,78 @@
 
     @if (Model.UserCanEdit && Model.TabEditPolicy.Location)
     {
-        @Html.ActionLink("Edit location", "EditLocation", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary" })
+        @Html.ActionLink("Edit location", "EditLocation", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "govuk-button govuk-button--secondary" })
     }
 
     <div class="detail-summary">
-        <dl>
-            <dt><abbr title="Regional Schools Commissioner">RSC</abbr> Region:</dt>
-            <dd>@Model.RSCRegionName</dd>
-
-            <dt>Government Office Region:</dt>
-            <dd>@Model.GovernmentOfficeRegionName</dd>
-
-            <dt>District:</dt>
-            <dd>@Model.AdministrativeDistrictName</dd>
-
-            <dt>Ward:</dt>
-            <dd>@Model.AdministrativeWardName</dd>
-
-            <dt>Parliamentary Constituency:</dt>
-            <dd>@Model.ParliamentaryConstituencyName</dd>
-
-            <dt>Urban/Rural Description:</dt>
-            <dd>@Model.UrbanRuralName</dd>
-
-            <dt><abbr title="Government Statistical Service">GSS</abbr> LA Code:</dt>
-            <dd>@Model.GSSLAName</dd>
-
-            <dt>Easting:</dt>
-            <dd>@Model.Establishment.Easting</dd>
-
-            <dt>Northing:</dt>
-            <dd>@Model.Establishment.Northing</dd>
-
-            <dt>Census Ward: </dt>
-            <dd>@Model.CASWardName</dd>
-
-            <dt>Middle Super Output Area (MSOA): </dt>
-            <dd>@Model.MSOAName</dd>
-
-            <dt>Lower Super Output Area (LSOA):</dt>
-            <dd>@Model.LSOAName</dd>
+        <dl class="gias-summary-list">
+            <div class="gias-summary-list__row">
+                <dt class="gias-summary-list__key">Regional schools commissioner (RSC) region:</dt>
+                <dd class="gias-summary-list__value">@Model.RSCRegionName</dd>
+            </div>
+            <div class="gias-summary-list__row">
+                <dt class="gias-summary-list__key">Government office region (GOR):</dt>
+                <dd class="gias-summary-list__value">@Model.GovernmentOfficeRegionName</dd>
+            </div>
+            <div class="gias-summary-list__row">
+                <dt class="gias-summary-list__key">District:</dt>
+                <dd class="gias-summary-list__value">@Model.AdministrativeDistrictName</dd>
+            </div>
+            <div class="gias-summary-list__row">
+                <dt class="gias-summary-list__key">Ward:</dt>
+                <dd class="gias-summary-list__value">@Model.AdministrativeWardName</dd>
+            </div>
+            <div class="gias-summary-list__row">
+                <dt class="gias-summary-list__key">Parliamentary constituency:</dt>
+                <dd class="gias-summary-list__value">@Model.ParliamentaryConstituencyName</dd>
+            </div>
+            <div class="gias-summary-list__row">
+                <dt class="gias-summary-list__key">Urban/rural description:</dt>
+                <dd class="gias-summary-list__value">@Model.UrbanRuralName</dd>
+            </div>
+            <div class="gias-summary-list__row">
+                <dt class="gias-summary-list__key">Government Statistical Service (GSS) local authority code:</dt>
+                <dd class="gias-summary-list__value">@Model.GSSLAName</dd>
+            </div>
+            <div class="gias-summary-list__row">
+                <dt class="gias-summary-list__key">Easting:</dt>
+                <dd class="gias-summary-list__value">@Model.Establishment.Easting</dd>
+            </div>
+            <div class="gias-summary-list__row">
+                <dt class="gias-summary-list__key">Northing:</dt>
+                <dd class="gias-summary-list__value">@Model.Establishment.Northing</dd>
+            </div>
+            <div class="gias-summary-list__row">
+                <dt class="gias-summary-list__key">Census ward:</dt>
+                <dd class="gias-summary-list__value">@Model.CASWardName</dd>
+            </div>
+            <div class="gias-summary-list__row">
+                <dt class="gias-summary-list__key">Middle super output area (MSOA):</dt>
+                <dd class="gias-summary-list__value">@Model.MSOAName</dd>
+            </div>
+            <div class="gias-summary-list__row">
+                <dt class="gias-summary-list__key">Lower super output area (LSOA):</dt>
+                <dd class="gias-summary-list__value">@Model.LSOAName</dd>
+            </div>
         </dl>
     </div>
 
     <br />
     @if (Model.AdditionalAddressList.Any())
     {
-        <h3 class="font-small">Other sites</h3>
-        <br />
+        <h3 class="govuk-heading-s">Other sites</h3>
         foreach (var address in Model.AdditionalAddressList)
         {
             if (address.SiteName != null)
             {
-                <h4 class="font-small">@address.SiteName</h4>
+                <h4 class="govuk-heading-s">@address.SiteName</h4>
             }
             <div class="detail-summary">
-                <dl>
-                    <dt>Address:</dt>
-                    <dd>@address.GetAddress()</dd>
+                <dl class="gias-summary-list">
+                    <div class="gias-summary-list__row">
+                        <dt class="gias-summary-list__key">Address:</dt>
+                        <dd class="gias-summary-list__value">@address.GetAddress()</dd>
+                    </div>
                 </dl>
             </div>
         }
@@ -69,6 +83,6 @@
 
     @if (Model.UserCanEdit && Model.TabEditPolicy.Location)
     {
-        @Html.ActionLink("Edit location", "EditLocation", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "button button-secondary" })
+        @Html.ActionLink("Edit location", "EditLocation", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "govuk-button govuk-button--secondary" })
     }
 </div>

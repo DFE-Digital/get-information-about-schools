@@ -1,0 +1,19 @@
+.plus-link {
+  position: relative;
+  padding-left: 1em;
+  margin: 20px 0;
+  text-decoration: none;
+
+  @include govuk-font(16);
+
+  &::after {
+    content: '+';
+    position: absolute;
+    left: 0;
+    top: 1px;
+  }
+
+  span {
+    text-decoration: underline;
+  }
+}

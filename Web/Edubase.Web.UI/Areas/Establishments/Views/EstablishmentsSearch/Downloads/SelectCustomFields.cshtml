@@ -13,189 +13,165 @@
     <meta name="robots" content="noindex,nofollow" />
 }
 
-<div class="breadcrumbs">
+@section BackLink
+{
     @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
-    {
-        @Html.ActionLink("Home", "Index", "Search", new { area = "" })
-    }
-    else
-    {
-        <a href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Back to search results</a>
-    }
-</div>
+        {
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class="govuk-back-link" })
+        }
+        else
+        {
+            <a class="govuk-back-link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Back to search results</a>
+        }
+}
+<div id="field-select-app" v-cloak>
+    @* *@
+    @* <div class="govuk-grid-row "> *@
+    @*     <div class="govuk-grid-column-full"> *@
+    @*         <div v-if="showValidationError" class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1"> *@
+    @*             <h2 id="error-summary-title" class="govuk-error-summary__title">Incorrect or missing details</h2> *@
+    @*             <div class="govuk-error-summary__body"> *@
+    @*                 <ul class="govuk-list govuk-error-summary__list"> *@
+    @*                     <li> *@
+    @*                         <a href="#errorOneFieldReq" v-if="errorOneFieldReq">Select at least one field</a> *@
+    @*                         <a href="#search" v-if="errorEmptySearch" @@click="focusOnSearch">Enter a field name to search</a> *@
+    @*                     </li> *@
+    @*                 </ul> *@
+    @*             </div> *@
+    @*         </div> *@
+    @*     </div> *@
+    @* </div> *@
 
-<div id="select-custom" v-cloak>
-    <div v-if="showValidationError" class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
-        <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
-        <ul class="error-summary-list">
-            <li>
-                <a href="#errorOneFieldReq" v-if="errorOneFieldReq">Select at least one field</a>
-                <a href="#search" v-if="errorEmptySearch" @@click="focusOnSearch">Enter a field name to search</a>
-            </li>
-        </ul>
-    </div>
-
-    <h1 class="heading-xlarge">Download data</h1>
-
-    <h2 class="bold-medium push-half--bottom">Download establishment search results</h2>
-    <h2 class="bold-medium js-when-on">Select the data you are interested in</h2>
-    <p class="js-when-off">Sorry, you need to have JavaScript enabled to view this page.</p>
-
-    <div class="grid-row push--top">
-        <div class="horizontal-tabs-wrapper">
-            <div class="column-full">
-                @using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get, new Dictionary<string, object> { ["@submit"] = "validateForm", ["class"] = "hidden" }))
-                {
-                    <div class="download-step">
-                        <fieldset class="stacked-controls">
-                            <legend class="visually-hidden">Search by field name</legend>
-
-                            <div class="form-group push--bottom" :class="[errorEmptySearch ? 'error' : '']">
-                                <label class="form-label" for="search">Search by field name</label>
-                                <span v-if="errorEmptySearch" class="field-validation-error">Enter a field name to search</span>
-                                <input id="search" v-model="search" class="form-control form-control-1-2 push-half--bottom" @@keydown.enter.prevent="doSearch" />
-                                <button class="button inline-button" @@click="doSearch" type="button">Search</button>
-
-                                <div class="switch" v-show="!isFiltered">
-                                    <a href="javascript:" @@click="showAlphabeticalView" v-show="!alphabeticalView">View in alphabetical order</a>
-                                    <a href="javascript:" @@click="showCategorisedView" v-show="!categorisedView">View in sections</a>
-                                </div>
-                            </div>
-                        </fieldset>
-
-                        <fieldset class="stacked-controls">
-                            <legend class="visually-hidden">Select fields to download</legend>
-                            <div>
-                                <input class="button" type="submit" value="Next" />
-                                <div class="switch" v-show="!isFiltered">
-                                    <button href="javascript:" class="link-button font-small push-half--right" @@click="selectAll" type="button">Select all</button>
-                                    <button href="javascript:" class="link-button font-small" @@click="clearAll" type="button">Clear all</button>
-                                </div>
-                            </div>
-
-                            <ul :id="[categorisedView ? 'errorOneFieldReq' : '']" :class="['categorised-list', 'chevron-accordion', categorisedView ? '' : 'hidden', errorOneFieldReq ? 'error' : '']">
-                                <li v-if="errorOneFieldReq">
-                                    <span class="field-validation-error">Select at least one field</span>
-                                </li>
-                                <li class="expander-panel" v-for="(item, index) in fieldsByCategory">
-                                    <a class="panel-trigger" :href="'#target-'+index" aria-expanded="false" :aria-controls="'target-'+index">{{item.category}}</a>
-                                    <div class="expander-panel-content" id="'target-'+index">
-
-                                        <div v-for="(field, i) in item.customFields" class="multiple-choice">
-                                            <input :id="'chk2-'+(index+'_'+i)" type="checkbox" :value="field.id" v-model="selections" />
-                                            <label :for="'chk2-'+(index+'_'+i)">{{ field.name }}</label>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-
-                            <div :id="[alphabeticalView ? 'errorOneFieldReq' : '']" :class="['alphabetical-list', alphabeticalView ? '' : 'hidden', errorOneFieldReq ? 'error' : '']">
-                                <span v-if="errorOneFieldReq" class="field-validation-error">Select at least one field</span>
-                                <div v-for="(item, index) in filteredList" class="multiple-choice">
-                                    <input :id="'chk-'+index" type="checkbox" name="@EstablishmentSearchDownloadViewModel.SelectedCustomFieldsBindAlias" :value="item.id" v-model="selections" />
-                                    <label :for="'chk-'+index">{{ item.name }}</label>
-                                </div>
-                            </div>
-
-                            <p v-show="filteredList.length == 0">No results</p>
-
-                        </fieldset>
-                    </div>
-                    @Html.HiddenFieldsFromQueryString(new[] { EstablishmentSearchDownloadViewModel.SelectedCustomFieldsBindAlias })
-                    <input class="button" type="submit" value="Next" />
-                }
-            </div>
+    <div class="govuk-grid-row js-show-block">
+        <div class="govuk-grid-column-full">
+            <error-summary error-title="There was a problem" :errors="errorMessages"/>
         </div>
     </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-xl">Download data</h1>
+
+            <h2 class="govuk-heading-m">Download establishment search results</h2>
+            <h2 class="govuk-heading-m">Select the data you are interested in</h2>
+        </div>
+    </div>
+    @using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get, new Dictionary<string, object> {["@submit"] = "handleSubmit", ["id"] = "field-selection"}))
+    {
+        <div id="js-field-selection" class="js-show-block">
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <search-by-field-name :fields="fields" :selected-fields="selectedFields"/>
+                </div>
+                <div class="govuk-grid-column-one-third govuk-!-padding-top-6">
+                    <view-switcher :view-as-list="viewAsList"/>
+                </div>
+            </div>
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    <input type="submit" class="govuk-button" value="Next"/>
+                </div>
+                <checkbox-remote-selection :selected-fields="selectedFields"/>
+            </div>
+
+            <div class="govuk-grid-row" v-show="!viewAsList">
+                <div class="govuk-grid-column-full">
+                    <vueaccordion accordion-id="test"
+                                  :panel-data="categoryList"
+                                  :selected-fields="selectedFields"/>
+                </div>
+            </div>
+
+            <div class="govuk-grid-row" v-show="viewAsList">
+                <div class="govuk-grid-column-full">
+                    <div class="govuk-form-group" v-if="searchMatches.length === 0">
+                        <div class="govuk-checkboxes">
+                            <checkbox :input-id="chx.id"
+                                      id-prefix="alpha"
+                                      :label="chx.name"
+                                      :value="chx.id"
+                                      v-model="selectedFields"
+                                      v-for="(chx, i) in fields" :key="i+'_'"></checkbox>
+                        </div>
+                    </div>
+                    <div class="govuk-form-group" v-else>
+                        <checkbox :input-id="chx.id"
+                                  id-prefix="alpha"
+                                  :label="chx.name"
+                                  :value="chx.id"
+                                  v-model="selectedFields"
+                                  v-for="(chx, i) in searchMatches" :key="i+'_'"></checkbox>
+                    </div>
+                </div>
+            </div>
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <input type="submit" class="govuk-button" value="Next"/>
+                </div>
+            </div>
+        </div>
+
+        <div id="no-js-container">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <input type="submit" class="govuk-button" value="Next"/>
+                </div>
+            </div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <div class="govuk-accordion" id="download-fields" data-module="govuk-accordion">
+                        @foreach (var fieldCategory in Model.CustomFieldsByCategory)
+                        {
+                            var panelId = @fieldCategory.Category.ToLower().Replace(" ", "-");
+
+                            <div class="govuk-accordion__section">
+                                <div class="govuk-accordion__section-header">
+                                    <h2 class="govuk-accordion__section-heading">
+                                        <span class="govuk-accordion__section-button" id="@panelId">
+                                            @fieldCategory.Category
+                                        </span>
+                                    </h2>
+                                </div>
+                                <div class="govuk-accordion__section-content" aria-labelledby="@panelId">
+                                    <div class="govuk-checkboxes">
+                                        @foreach (var chx in fieldCategory.CustomFields)
+                                        {
+                                            <div class="govuk-checkboxes__item">
+                                                <input class="govuk-checkboxes__input" id="@chx.Id" name="zm" type="checkbox" value="@chx.Id">
+                                                <label class="govuk-label govuk-checkboxes__label" for="@chx.Id">
+                                                    @chx.Name
+                                                </label>
+                                            </div>
+                                        }
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <input type="submit" class="govuk-button" value="Next"/>
+                </div>
+            </div>
+        </div>
+        @Html.HiddenFieldsFromQueryString(new[] {EstablishmentSearchDownloadViewModel.SelectedCustomFieldsBindAlias})
+    }
 </div>
+
 
 
 @section ViewScripts
 {
     <script nonce="@Html.ScriptNonce()">
-        var fieldList = @Html.Json(Model.CustomFields);
         var fieldListByCat = @Html.Json(Model.CustomFieldsByCategory);
-        var selections = @Html.Json(Model.SelectedCustomFields);
-
-        var app = new Vue({
-            el: "#select-custom",
-            data: {
-                fields: fieldList,
-                fieldsByCategory: fieldListByCat,
-                filteredList: fieldList,
-                selections: selections,
-                showValidationError: false,
-                errorOneFieldReq: false,
-                errorEmptySearch: false,
-                uiMode: "c",
-                search: null,
-                isFiltered: false
-            },
-            methods: {
-                selectAll: function(){
-                    this.selections = [];
-                    [].forEach.call(this.fields, function(item){ this.selections.push(item.id);  }.bind(this));
-                },
-                clearAll: function(){
-                    this.selections = [];
-                },
-                validateForm: function(e) {
-                    if(this.selections.length > 0) return true;
-                    else {
-                        $(window).scrollTop(0);
-                        this.showValidationError = true;
-                        this.errorOneFieldReq = true;
-                        this.errorEmptySearch = false;
-                        e.preventDefault();
-                        this.errorFocus();
-                    }
-                },
-                showAlphabeticalView: function(){
-                    this.uiMode = "a";
-                },
-                showCategorisedView: function(){
-                    this.uiMode = "c";
-                },
-                doSearch: function () {
-                    if (this.search) {
-                        this.showAlphabeticalView();
-                        this.filteredList = this.fields.filter(function (f) { return f.name.toLowerCase().indexOf(this.search.toLowerCase()) > -1; }.bind(this));
-                        this.isFiltered = true;
-                        this.showValidationError = false;
-                        this.errorEmptySearch = false;
-                        this.errorOneFieldReq = false;
-                    } else {
-                        this.filteredList = this.fields;
-                        this.isFiltered = false;
-                        this.showValidationError = true;
-                        this.errorEmptySearch = true;
-                        this.errorOneFieldReq = false;
-                        this.errorFocus();
-                    }
-                },
-                errorFocus: function(){
-                    window.document.title = "Error: Download establishment search results - GOV.UK";
-                    if ($('.error-summary').length) {
-                        $('.error-summary').focus();
-                    } else {
-                        window.setTimeout(function(){
-                            $('.error-summary').focus();
-                        },500);
-                    }
-                },
-                focusOnSearch: function(e){
-                    e.preventDefault();
-                    $('#search').focus();
-                }
-            },
-            computed: {
-                alphabeticalView: function () { return this.uiMode == "a"; },
-                categorisedView: function () { return this.uiMode == "c"; }
-            }
-        });
-
-        $("form").removeClass("hidden");
-        $(".panel-trigger").on("click", function (el) { $(this).parent().toggleClass("open-expander"); });
-
+        var fieldList = @Html.Json(Model.CustomFields);
     </script>
+    <script src="/public/assets/scripts/build/download-select-fields.js"></script>
 }

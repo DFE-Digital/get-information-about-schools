@@ -10,122 +10,99 @@
     @Html.HiddenFor(x => x.ActiveRecord.Id)
     @Html.HiddenFor(x => x.ActiveRecord.Urn)
     @Html.HiddenFor(x => x.StateToken);
-    <div class="tab-content">
-        <div class="attach-link">
-            <div class="column-two-thirds">
-                <h2 class="heading-medium tab-lead">Link to other establishment</h2>
-                <h3 class="heading-small">Establishment to be linked</h3>
-                <ul class="establishment-summary">
-                    <li>@Model.ActiveRecord.EstablishmentName</li>
-                    <li>@Model.ActiveRecord.Address</li>
-                    <li><abbr title="Unique Reference Number">URN</abbr>: @Model.ActiveRecord.Urn</li>
-                </ul>
-                @if (Model.IsNew)
-                {
-                    <a href="@Url.RouteUrl("EditEstabLinks_SearchForEstablishment", new { id = Model.Urn })" class="body-link">Wrong establishment?</a>
-                }
-            </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h2 class="govuk-heading-m">Link to other establishment</h2>
+            <h3 class="govuk-heading-s">Establishment to be linked</h3>
 
-
-            <div class="column-two-thirds">
-                <h3 class="heading-medium">Relationship</h3>
-                <h4 class="bold-small">Relationship of:</h4>
-                <p class="link-relationship">
-                    @Model.Name, <abbr title="Unique Reference Number">URN</abbr>: @Model.Urn
-                    <strong>to</strong>
-                    @Model.ActiveRecord.EstablishmentName, <abbr title="Unique Reference Number">URN</abbr>: @Model.ActiveRecord.Urn
-                </p>
-            </div>
-            <div class="column-half">
-                <div class="form-group @Html.ValidationCssClassFor(x => x.ActiveRecord.LinkTypeId)">
-                    <label for="ActiveRecord_LinkTypeId" class="visuallyhidden">Type of link</label>
-                    @Html.ValidationMessageFor(x => x.ActiveRecord.LinkTypeId)
-                    @Html.DropDownListFor(x => x.ActiveRecord.LinkTypeId, Model.LinkTypes, "", new { @class = "form-control" })
-                </div>
-                @Html.EditorFor(x => x.ActiveRecord.LinkDateEditable, new { title = "Date of link", style = "font-weight:bold;", editorPrefix = nameof(Model.ActiveRecord) })
-            </div>
-
+            <ul class="govuk-list">
+                <li>@Model.ActiveRecord.EstablishmentName</li>
+                <li>@Model.ActiveRecord.Address</li>
+                <li><abbr title="Unique Reference Number">URN</abbr>: @Model.ActiveRecord.Urn</li>
+            </ul>
 
             @if (Model.IsNew)
             {
-                <div class="column-two-thirds">
-                    <div class="form-group push--bottom">
-                        <div class="multiple-choice">
-                            @Html.CheckBoxFor(x => x.ActiveRecord.CreateReverseLink)
-                            @Html.LabelFor(x => x.ActiveRecord.CreateReverseLink, "Add a reverse link to show on new establishments page")
-                        </div>
-                    </div>
-                </div>
-                <div id="create-reserve-link" style="display:@Html.Conditional(!Model.ActiveRecord.CreateReverseLink, "none")">
-                    <div class="column-half">
-                        <h4 class="bold-small">Relationship of:</h4>
-                        <p class="link-relationship">
-                            @Model.ActiveRecord.EstablishmentName, <abbr title="Unique Reference Number">URN</abbr>: @Model.ActiveRecord.Urn
-                            <strong>to</strong>
-                            @Model.Name, <abbr title="Unique Reference Number">URN</abbr>: @Model.Urn
-                        </p>
-                        <div class="form-group @Html.ValidationCssClassFor(x => x.ActiveRecord.ReverseLinkTypeId)">
-                            <label for="ActiveRecord_ReverseLinkTypeId" class="visuallyhidden">Type of link</label>
-                            @Html.ValidationMessageFor(x => x.ActiveRecord.ReverseLinkTypeId)
-                            @Html.DropDownListFor(x => x.ActiveRecord.ReverseLinkTypeId, Model.ReverseLinkTypes, "", new { @class = "form-control" })
-                        </div>
-
-                        @Html.EditorFor(x => x.ActiveRecord.ReverseLinkDateEditable, new { title = "Date of link", style = "font-weight:bold;", editorPrefix = nameof(Model.ActiveRecord), @readonly = Model.ActiveRecord.ReverseLinkSameDate })
-                    </div>
-                    <div class="column-two-thirds">
-                        <div class="form-group push--bottom">
-                            <div class="multiple-choice">
-                                @Html.CheckBoxFor(x => x.ActiveRecord.ReverseLinkSameDate)
-                                @Html.LabelFor(x => x.ActiveRecord.ReverseLinkSameDate, "Use same dates")
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <p class="govuk-body-s">
+                    <a href="@Url.RouteUrl("EditEstabLinks_SearchForEstablishment", new { id = Model.Urn })">Wrong establishment?</a>
+                </p>
             }
-
-            <div class="button-row">
-                <button id="save-submit" name="act" value="save" class="button js-allow-exit">Save link</button>
-                @if (!Model.IsNew)
-                {
-                    <button name="act" value="delete" class="button button-secondary estab-link-delete">Delete</button>
-                }
-                <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Urn })" class="button button-secondary">Cancel</a>
-            </div>
         </div>
     </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h3 class="govuk-heading-m">Relationship</h3>
+            <h4 class="govuk-heading-s">Relationship of:</h4>
+            <p>
+                @Model.Name, <abbr title="Unique Reference Number">URN</abbr>: @Model.Urn
+                <strong>to</strong>
+                @Model.ActiveRecord.EstablishmentName, <abbr title="Unique Reference Number">URN</abbr>: @Model.ActiveRecord.Urn
+            </p>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ActiveRecord.LinkTypeId)">
+                <label for="ActiveRecord_LinkTypeId" class="govuk-visually-hidden">Type of link</label>
+                @Html.ValidationMessageFor(x => x.ActiveRecord.LinkTypeId, null, new { @class = "govuk-error-message"})
+                @Html.DropDownListFor(x => x.ActiveRecord.LinkTypeId, Model.LinkTypes, "", new { @class = "govuk-select" })
+            </div>
+            @Html.EditorFor(x => x.ActiveRecord.LinkDateEditable, new { title = "Date of link", editorPrefix = nameof(Model.ActiveRecord), fieldsetClassName = "edit-date-fieldset" })
+        </div>
+    </div>
+
+
+    if (Model.IsNew)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <div class="govuk-form-group">
+                    <div class="govuk-checkboxes">
+                        @FormHelpers.GiasCheckbox("true", "ActiveRecord.CreateReverseLink","Add a reverse link to show on new establishments page", null, new { id = "ActiveRecord_CreateReverseLink", @class = "govuk-checkboxes__input"})
+                            @* @Html.CheckBoxFor(x => x.ActiveRecord.CreateReverseLink, new {@class = "govuk-checkboxes__input"}) *@
+                            @* @Html.LabelFor(x => x.ActiveRecord.CreateReverseLink, "Add a reverse link to show on new establishments page") *@
+                    </div>
+                </div>
+            </div>
+            <div id="create-reserve-link" class="@Html.Conditional(!Model.ActiveRecord.CreateReverseLink, "hidden")">
+                <div class="govuk-grid-column-one-half">
+                    <h4 class="govuk-heading-s">Relationship of:</h4>
+                    <p class="link-relationship">
+                        @Model.ActiveRecord.EstablishmentName, <abbr title="Unique Reference Number">URN</abbr>: @Model.ActiveRecord.Urn
+                        <strong>to</strong>
+                        @Model.Name, <abbr title="Unique Reference Number">URN</abbr>: @Model.Urn
+                    </p>
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ActiveRecord.ReverseLinkTypeId)">
+                        <label for="ActiveRecord_ReverseLinkTypeId" class="govuk-visually-hidden">Type of link</label>
+                        @Html.ValidationMessageFor(x => x.ActiveRecord.ReverseLinkTypeId, null, new { @class = "govuk-label"})
+                        @Html.DropDownListFor(x => x.ActiveRecord.ReverseLinkTypeId, Model.ReverseLinkTypes, "", new {@class = "govuk-select"})
+                    </div>
+
+                    @Html.EditorFor(x => x.ActiveRecord.ReverseLinkDateEditable, new {title = "Date of link", editorPrefix = nameof(Model.ActiveRecord), @readonly = Model.ActiveRecord.ReverseLinkSameDate, fieldsetClassName = "edit-date-fieldset linked-estab-date" })
+                </div>
+                <div class="govuk-grid-column-two-thirds">
+                    <div class="govuk-form-group">
+                        <div class="govuk-checkboxes">
+                            @FormHelpers.GiasCheckbox("true", "ActiveRecord.ReverseLinkSameDate", "Use same dates", null, new { id = "ActiveRecord_ReverseLinkSameDate" })
+                            @* @Html.CheckBoxFor(x => x.ActiveRecord.ReverseLinkSameDate) *@
+                            @* @Html.LabelFor(x => x.ActiveRecord.ReverseLinkSameDate, "Use same dates") *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+            <div class="button-row">
+                <button id="save-submit" name="act" value="save" class="govuk-button js-allow-exit">Save link</button>
+                @if (!Model.IsNew)
+                {
+                    <button name="act" value="delete" class="govuk-button govuk-button--secondary estab-link-delete">Delete</button>
+                }
+                <a href="@Url.RouteUrl("EditEstabLinks", new { id = Model.Urn })" class="govuk-button govuk-button--secondary">Cancel</a>
+            </div>
 }
 
 @section ViewScripts{
-
-    <script type="text/javascript" nonce="@Html.ScriptNonce()">
-
-        $(function () {
-            $('#ActiveRecord_CreateReverseLink').change(function () {
-                $("#create-reserve-link").toggle();
-            });
-            $('#ActiveRecord_ReverseLinkSameDate').change(function () {
-                if (this.checked) {
-                    $("#ActiveRecord_ReverseLinkDateEditable_Day").prop("disabled", "disabled").val('');
-                    $("#ActiveRecord_ReverseLinkDateEditable_Month").prop("disabled", "disabled").val('');
-                    $("#ActiveRecord_ReverseLinkDateEditable_Year").prop("disabled", "disabled").val('');
-                } else {
-                    $("#ActiveRecord_ReverseLinkDateEditable_Day").prop("disabled", false);
-                    $("#ActiveRecord_ReverseLinkDateEditable_Month").prop("disabled", false);
-                    $("#ActiveRecord_ReverseLinkDateEditable_Year").prop("disabled", false);
-                }
-            });
-
-            var $fields = $('#content').find('.form-control');
-            var exitAttached = false;
-
-            $fields.on('change', function () {
-                if (!exitAttached) {
-                    DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
-                    exitAttached = true;
-                }
-            });
-        });
-
-    </script>
-
+    <script src="/public/assets/scripts/build/edit-establishment-links.js"></script>
 }

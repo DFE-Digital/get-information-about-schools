@@ -1,0 +1,21 @@
+.gias-link-button {
+  border: 0;
+  background-color: transparent;
+  padding: 0;
+  color: $govuk-link-colour;
+  text-decoration: underline;
+  cursor: pointer;
+
+  @include govuk-font(19);
+
+  @extend %govuk-link;
+}
+
+.gias-link-button-s {
+  @include govuk-font(16);
+}
+
+.action-link {
+  display: inline-block;
+  padding: 0 govuk-spacing(1);
+}

@@ -1,0 +1,70 @@
+
+.search-field-wrap {
+  background-color: govuk-tint(govuk-colour('mid-grey'), 50);
+
+  .filter-searchwithin-label {
+    background: transparent url("/public/assets/images/icons/icon-mag-glass.png") no-repeat 12px center;
+    background-size: 15px;
+    padding-left: 35px;
+    width: calc(100% - 60px);
+    display: block;
+    position: relative;
+    padding-bottom: 5px;
+  }
+
+  .js-closed & {
+    display: none;
+  }
+
+  .no-js & {
+    display: none;
+  }
+}
+
+.filter-search {
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1px solid govuk-colour('black');
+  width: 100%;
+  font-size: 16px;
+  padding: 1px;
+  line-height: 1.1;
+  height: 2em;
+
+  &:focus {
+    outline: 0;
+    border-left: 0;
+    border-right: 0;
+    border-top: 0;
+    box-shadow: none;
+  }
+
+  &::-ms-clear {
+    display: none;
+  }
+}
+
+.field-clear {
+  border: 0;
+  background: transparent url('/public/assets/images/icons/black-transparent-X.png') no-repeat center;
+  background-size: 50%;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 0;
+  top: 9px;
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+
+.filter-suggestion {
+  position: relative;
+  background-color: govuk-colour('white');
+  span {
+    font-weight: bold;
+
+  }
+}

@@ -1,0 +1,21 @@
+{
+    "plugins": [
+        "stylelint-scss"
+    ],
+    "ignoreFiles": [
+        "Server/Assets/Sass/prism.scss",
+        "Server/Assets/Sass/elements/_leaflet.scss"
+    ],
+    "extends": "stylelint-config-standard",
+    "rules": {
+        "no-missing-end-of-source-newline": null,
+        "declaration-empty-line-before": "never",
+        "rule-empty-line-before": null,
+        "block-opening-brace-newline-after": "always",
+        "block-opening-brace-space-before": "always",
+        "no-eol-whitespace": null,
+        "at-rule-no-unknown": null,
+        "scss/at-rule-no-unknown": true,
+        "max-nesting-depth": 4
+    }
+}

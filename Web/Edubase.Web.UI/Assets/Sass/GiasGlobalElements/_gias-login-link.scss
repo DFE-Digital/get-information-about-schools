@@ -1,0 +1,11 @@
+.content nav {
+  position: relative;
+}
+
+.login-link {
+  @include govuk-media-query(desktop) {
+    position: absolute;
+    right: 10px;
+    bottom: 15px;
+  }
+}

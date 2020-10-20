@@ -7,51 +7,69 @@
 }
 
 <div id="select-shared-governor" class="tab-content">
-    <div class="grid-row">
-        <div class="column-two-thirds">
-            @using (Html.BeginForm("SelectSharedGovernor", "SharedGovernor", FormMethod.Post))
-            {
-                @Html.HiddenFor(x => x.GovernorType);
-                if (Model.Governors.Any())
+
+    @using (Html.BeginForm("SelectSharedGovernor", "SharedGovernor", FormMethod.Post))
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                @Html.HiddenFor(x => x.GovernorType)
+                @if (Model.Governors.Any())
                 {
-                    <div class="button-row">
-                        <input type="submit" value="Select" class="button" />
-                        <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-secondary">Cancel</a>
-                    </div>
+                <div class="button-row govuk-!-margin-bottom-4">
+                    <input type="submit" value="Select" class="govuk-button"/>
+                    <a href="@Url.RouteUrl("EstabEditGovernance", new {establishmentUrn = Model.Urn.Value})" class="govuk-button govuk-button--secondary">Cancel</a>
+                </div>
                 }
                 else
                 {
-                    <div class="button-row">
-                        <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-secondary">Cancel</a>
-                    </div>
+                <div class="button-row govuk-!-margin-bottom-4">
+                    <a href="@Url.RouteUrl("EstabEditGovernance", new {establishmentUrn = Model.Urn.Value})" class="govuk-button govuk-button--secondary">Cancel</a>
+                </div>
                 }
-                <div style="float:none; clear:both;"></div>
-                <h2 class="bold-medium tab-lead">Select @Model.GovernorType</h2>
-                if (Model.Governors.Any())
-                {
-                    <div class="exapanding-list-wrap">
-                        @Html.HiddenFor(x => x.Urn)
-                        @Html.HiddenFor(x => x.Role)
-
-                        <ul class="js-governor-toggles">
-                            @for (var index = 0; index < Model.Governors.Count; index++)
-                            {
-                                @Html.EditorFor(x => x.Governors[index])
-                            }
-                        </ul>
-                        <div class="button-row">
-                            <input type="submit" value="Select" class="button"/>
-                            <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-secondary">Cancel</a>
-                        </div>
-
-                    </div>
-                }
-                else
-                {
-                    <p>There are no shared governors available for this establishment</p>
-                    <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-secondary">Cancel</a>
-                }
-            }
+            </div>
         </div>
-    </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h2 class="govuk-heading-m">Select @Model.GovernorType</h2>
+                @if (Model.Governors.Any())
+                {
+                <div class="exapanding-list-wrap">
+                    @Html.HiddenFor(x => x.Urn)
+                    @Html.HiddenFor(x => x.Role)
+                    <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+                        @for (var index = 0; index < Model.Governors.Count; index++)
+                        {
+                            @Html.EditorFor(x => x.Governors[index])
+                        }
+                    </div>
+                    <div class="button-row">
+                        <input type="submit" value="Select" class="govuk-button"/>
+                        <a href="@Url.RouteUrl("EstabEditGovernance", new {establishmentUrn = Model.Urn.Value})" class="govuk-button govuk-button--secondary">Cancel</a>
+                    </div>
+
+                </div>
+                }
+                else
+                {
+                <p>There are no shared governors available for this establishment</p>
+                <a href="@Url.RouteUrl("EstabEditGovernance", new {establishmentUrn = Model.Urn.Value})" class="govuk-button govuk-button--secondary">Cancel</a>
+                }
+            </div>
+        </div>
+    }
+
 </div>
+@section ViewScripts
+{
+    <script nonce="@Html.ScriptNonce()">
+    $('.gias-checkboxes__conditional--input').on('change', function(e) {
+        const panel = $('#' + $(this).attr('aria-controls')).parent('.shared-governor');
+        if (this.checked) {
+           panel.addClass('gias-checkboxes__conditional--expanded');
+        } else {
+            panel.removeClass('gias-checkboxes__conditional--expanded');
+        }
+
+    });
+    </script>
+}

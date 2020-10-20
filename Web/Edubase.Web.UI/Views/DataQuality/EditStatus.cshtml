@@ -1,46 +1,56 @@
 @model Edubase.Web.UI.Models.DataQuality.EditDataQualityStatusViewModel
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Update data status");
-    ViewBag.bodyClasses = "data-quality";
+    ViewBag.bodyClasses = "create-edit";
+    ViewBag.SiteSection = "tools";
 }
 
-<div class="breadcrumbs">
-    <ol>
-        <li>
-            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-        </li>
-        <li>
-            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
-        </li>
-        <li>
-            @Html.ActionLink("Data status", "ViewStatus", "DataQuality", new { area = "" }, null)
-        </li>
-    </ol>
-</div>
-
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                         @Html.ActionLink("Data status", "ViewStatus", "DataQuality", new { area = "" }, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-<h1 class="heading-intro">Update data status</h1>
-
-<div class="grid-row">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Update data status</h1>
+    </div>
+</div>
+<div class="govuk-grid-row">
     @using (Html.BeginForm())
     {
-        <div class="column-half">
+        <div class="govuk-grid-column-one-half">
             @for (var index = 0; index < Model.Items.Count(); index++)
             {
-                <div class="form-group data-status-group">
-                    <h2 class="heading-small">Establishment type</h2>
-                    <h3>@Model.Items[index].EstablishmentType.GetEnumMember()</h3>
+                <div class="govuk-form-group data-status-group">
+                    <h2 class="govuk-heading-s">Establishment type</h2>
+                    <p>@Model.Items[index].EstablishmentType.GetEnumMember()</p>
                     @Html.HiddenFor(m => m.Items[index].EstablishmentType)
-                    @Html.EditorFor(m => m.Items[index].LastUpdated, new {title = "Last updated"})
+                    @Html.EditorFor(m => m.Items[index].LastUpdated, new {title = "Last updated", fieldsetClassName = "edit-date-fieldset"})
                 </div>
             }
         </div>
 
-        <div class="column-full">
-            <div class="button-row">
-                <button type="submit" class="button" value="Save" id="save-data-status" aria-label="Save data status last updated date">Save</button>
-                <a href="@Url.Action("ViewStatus", "DataQuality")" class="button button-secondary">Cancel</a>
+        <div class="govuk-grid-column-full">
+            <div class="button-row govuk-!-padding-top-4">
+                <button type="submit" class="govuk-button" value="Save" id="save-data-status" aria-label="Save data status last updated date">Save</button>
+                <a href="@Url.Action("ViewStatus", "DataQuality")" class="govuk-button govuk-button--secondary">Cancel</a>
             </div>
         </div>
     }

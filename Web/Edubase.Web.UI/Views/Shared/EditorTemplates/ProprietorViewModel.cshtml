@@ -34,18 +34,18 @@
     var countyId = $"iebtDetail.{ViewBag.ProprietorType}{countyCounter}.{nameof(ProprietorViewModel.CountyId).ToLowerFirstLetter()}";
     var countyLink = countyId.Replace(".", "_").Replace("[", "_").Replace("]", "_");
 }
-<div class="form-group @Html.ValidationCssClassFor(x => x.CountyId) @ProprietorsValidationCssClass(countyId)"
+<div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CountyId) @ProprietorsValidationCssClass(countyId)"
      id="@countyLink">
-    @Html.LabelFor(x => x.CountyId)
-    @Html.ValidationMessageFor(x => x.CountyId)
+    @Html.LabelFor(x => x.CountyId, null, new { @class = "govuk-label" })
+    @Html.ValidationMessageFor(x => x.CountyId, null,new { @class = "govuk-error-message"})
     @if (ProprietorsValidationCssClass(countyId) == "error")
     {
-        <span class="field-validation-error">@Html.ViewData.ModelState[countyId].Errors.First().ErrorMessage</span>
+        <span class="govuk-error-message">@Html.ViewData.ModelState[countyId].Errors.First().ErrorMessage</span>
     }
-    @Html.DropDownListFor(x => x.CountyId, Model.Counties, "", new { @class = "form-control" })
+    @Html.DropDownListFor(x => x.CountyId, Model.Counties, "", new { @class = "govuk-select" })
 </div>
 
-@RenderTextBox(x => x.Postcode, nameof(ProprietorViewModel.Postcode), "form-control-1-2")
+@RenderTextBox(x => x.Postcode, nameof(ProprietorViewModel.Postcode), "govuk-input--width-10")
 @RenderTextBox(x => x.TelephoneNumber, nameof(ProprietorViewModel.TelephoneNumber))
 
 @RenderTextBox(x => x.Email, nameof(ProprietorViewModel.Email))
@@ -53,19 +53,19 @@
 
 @helper RenderTextBox(Expression<Func<ProprietorViewModel, string>> fnc, string fieldName, string fieldClasses = "")
 {
-    var classes = "form-control " + fieldClasses;
+    var classes = "govuk-input " + fieldClasses;
     var validationCounter = ViewBag.ShowCounter != null ? $"[{ViewBag.ShowCounter - 1}]" : "";
     var validationId = $"iebtDetail.{ViewBag.ProprietorType}{validationCounter}.{fieldName.ToLowerFirstLetter()}";
     var validationLink = validationId.Replace(".", "_").Replace("[", "_").Replace("]", "_");
 
-    <div class="form-group @Html.ValidationCssClassFor(fnc) @ProprietorsValidationCssClass(validationId)" id="@validationLink">
-        @Html.LabelFor(fnc, new { @class = "form-label" })
-        @Html.ValidationMessageFor(fnc)
-        @if (ProprietorsValidationCssClass(validationId) == "error")
+    <div class="govuk-form-group @Html.ValidationCssClassFor(fnc) @ProprietorsValidationCssClass(validationId)">
+        @Html.LabelFor(fnc, new { @class = "govuk-label" })
+        @Html.ValidationMessageFor(fnc, null, new { @class = "govuk-error-message"})
+        @if (ProprietorsValidationCssClass(validationId) == "govuk-form-group--error")
         {
-            <span class="field-validation-error">@Html.ViewData.ModelState[validationId].Errors.First().ErrorMessage</span>
+            <span class="govuk-error-message">@Html.ViewData.ModelState[validationId].Errors.First().ErrorMessage</span>
         }
-        @Html.TextBoxFor(fnc, new { @class = classes })
+        @Html.TextBoxFor(fnc, new { @class = classes , id = validationLink})
     </div>
 }
 
@@ -75,8 +75,8 @@
         var state = Html.ViewData.ModelState[validationId];
         if (state != null && state.Errors.Count > 0)
         {
-            return "error";
+            return "govuk-form-group--error";
         }
         return "";
     }
-} 
+}

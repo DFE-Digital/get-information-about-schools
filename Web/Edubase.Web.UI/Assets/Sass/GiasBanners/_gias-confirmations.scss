@@ -1,0 +1,65 @@
+.up-to-date-confirmations {
+  clear: both;
+
+  &.high-priority {
+    @include govuk-font(16, 'bold');
+    position: relative;
+    background-image: url('/public/assets/images/icons/icon-important-2x.png');
+    background-repeat: no-repeat;
+    background-position: 10px 50%;
+    background-size: 36px;
+    border: $govuk-error-colour 4px solid;
+    min-height: 60px;
+    margin: 0 0 16px 0;
+    padding: 10px 10px 10px 60px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+
+    h2 {
+      font-size: inherit;
+      font-weight: normal;
+      line-height: inherit;
+      margin: 0;
+    }
+
+    h3 {
+      font-weight: bold;
+      margin-right: 75px;
+      font-size: 16px;
+
+      span {
+        font-weight: normal;
+      }
+
+      @include govuk-media-query($until: tablet) {
+        margin-right: 0;
+      }
+    }
+
+    label {
+      display: block;
+      margin: 10px 75px 0 0;
+      font-weight: normal;
+
+      @include govuk-media-query($until: tablet) {
+        margin-right: 0;
+      }
+    }
+
+    .govuk-button {
+      position: absolute;
+      right: 10px;
+      top: 30%;
+      font-size: 16px;
+
+      @include govuk-media-query($until: tablet) {
+        top: auto;
+        position: relative;
+        display: block;
+        margin-top: 12px;
+        margin-bottom:0;
+      }
+    }
+  }
+}

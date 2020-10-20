@@ -38,7 +38,7 @@ namespace Edubase.Web.UI.Helpers
             { // radio button has a defined ID - be sure to use for the label for attr
                 id = attributes["id"].ToString();
             }
-            var viewData = new ViewDataDictionary() { { "id", id } };
+            var viewData = new ViewDataDictionary() { { "id", id} };
 
             if (htmlAttributes != null)
             {
@@ -53,10 +53,10 @@ namespace Edubase.Web.UI.Helpers
 
             var tagBuilder = new TagBuilder("label");
             tagBuilder.MergeAttribute("for", id);
-            tagBuilder.MergeAttribute("class", string.Concat(additionalLabelClasses));
+            tagBuilder.MergeAttribute("class", string.Concat("govuk-label govuk-radios__label", additionalLabelClasses));
             tagBuilder.InnerHtml = labelText;
 
-            return new MvcHtmlString("<div class=\"multiple-choice\">" + radioButton.ToHtmlString() + tagBuilder + "</div>");
+            return new MvcHtmlString(radioButton.ToHtmlString() + tagBuilder);
         }
 
 
@@ -87,7 +87,7 @@ namespace Edubase.Web.UI.Helpers
             var labelBuilder = new TagBuilder("label");
 
             labelBuilder.MergeAttribute("for", id);
-            labelBuilder.MergeAttribute("class", string.Concat(additionalLabelClasses));
+            labelBuilder.MergeAttribute("class", string.Concat("govuk-label govuk-radios__label",additionalLabelClasses));
             labelBuilder.InnerHtml = labelText;
 
             var checkbox = new TagBuilder("input");
@@ -95,6 +95,7 @@ namespace Edubase.Web.UI.Helpers
             checkbox.Attributes["name"] = inputName;
             checkbox.Attributes["value"] = inputValue;
             checkbox.Attributes["id"] = id;
+            checkbox.Attributes["class"] = "govuk-radios__input";
 
             if (htmlAttributes != null)
             {
@@ -105,7 +106,7 @@ namespace Edubase.Web.UI.Helpers
                 }
             }
 
-            return new MvcHtmlString("<div class=\"multiple-choice\">" + checkbox + labelBuilder + "</div>");
+            return new MvcHtmlString("<div class=\"govuk-radios__item\">" + checkbox + labelBuilder + "</div>");
         }
 
         /// <summary>
@@ -148,10 +149,10 @@ namespace Edubase.Web.UI.Helpers
 
             var tagBuilder = new TagBuilder("label");
             tagBuilder.MergeAttribute("for", id);
-            tagBuilder.MergeAttribute("class", string.Concat(additionalLabelClasses));
+            tagBuilder.MergeAttribute("class", string.Concat("govuk-label govuk-checkboxes__label", additionalLabelClasses));
             tagBuilder.InnerHtml = labelText;
 
-            return new MvcHtmlString("<div class=\"multiple-choice\">" + checkbox.ToHtmlString() + tagBuilder + "</div>");
+            return new MvcHtmlString("<div class=\"govuk-checkboxes__item\">" + checkbox.ToHtmlString() + tagBuilder +"</div>" );
         }
 
         /// <summary>
@@ -162,13 +163,15 @@ namespace Edubase.Web.UI.Helpers
         /// <param name="labelText"></param>
         /// <param name="additionalLabelClasses"></param>
         /// <param name="htmlAttributes"></param>
+        /// <param name="isChecked"></param>
         /// <returns></returns>
         public static MvcHtmlString GiasCheckbox(
             string inputValue,
             string inputName,
             string labelText,
             string additionalLabelClasses = "",
-            object htmlAttributes = null
+            object htmlAttributes = null,
+            bool isChecked = false
         )
         {
             var attributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
@@ -177,11 +180,19 @@ namespace Edubase.Web.UI.Helpers
             var labelBuilder = new TagBuilder("label");
 
             labelBuilder.MergeAttribute("for", id);
-            labelBuilder.MergeAttribute("class", string.Concat(additionalLabelClasses));
+            labelBuilder.MergeAttribute("class", string.Concat("govuk-label govuk-checkboxes__label", additionalLabelClasses));
             labelBuilder.InnerHtml = labelText;
 
             var checkbox = new TagBuilder("input");
             checkbox.Attributes["type"] =  "checkbox";
+            checkbox.Attributes["name"] = inputName;
+            checkbox.Attributes["value"] = inputValue;
+            checkbox.Attributes["class"] = "govuk-checkboxes__input";
+
+            if (isChecked)
+            {
+                checkbox.Attributes["checked"] = "checked";
+            }
 
             if (htmlAttributes != null)
             {
@@ -192,7 +203,7 @@ namespace Edubase.Web.UI.Helpers
                 }
             }
 
-            return new MvcHtmlString("<div class=\"multiple-choice\">" + checkbox + labelBuilder + "</div>");
+            return new MvcHtmlString("<div class=\"govuk-checkboxes__item\">" + checkbox + labelBuilder + "</div>");
 
         }
     }

@@ -1,222 +1,239 @@
 @using VM = Edubase.Web.UI.Models.Search.SearchViewModel;
 @using Edubase.Web.UI.Helpers;
 @model VM
+<div class="">
+<h2 class="govuk-heading-s">Search by:</h2>
 
-<fieldset class="search-types-accordion">
-    <legend>
-        <h2 class="heading-small flush--top">Search by:</h2>
-    </legend>
-
-    <ul class="search-type-list has-typeahead">
-        <li class="search-type-wrapper">
-            @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
-            {
-                @Html.HiddenFor(m => m.SelectedTab)
-                <fieldset class="search-toggle-panel">
-                    <legend class="visually-hidden">Search by name or reference number</legend>
-                    <div class="multiple-choice multiple-choice--radio">
-                        @Html.RadioButtonFor(m => m.SearchType, eSearchType.Text, new { id = "searchtype-name", data_toggle_panel = "#searchby-name-ref" })
-                        <label for="searchtype-name">Name or reference number</label>
+<ul class="search-type-list has-typeahead">
+<li class="search-type-wrapper">
+    @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
+    {
+        @Html.HiddenFor(m => m.SelectedTab, new {id = "estab-selected-tab0"})
+        <fieldset class="govuk-fieldset search-toggle-panel">
+            <legend class="govuk-visually-hidden">Search by name or reference number</legend>
+            <div class="govuk-form-group">
+                <div class="govuk-radio" data-module="govuk-radio">
+                    <div class="govuk-radios__item">
+                        @Html.RadioButtonFor(m => m.SearchType, eSearchType.Text, new {id = "searchtype-name", data_toggle_panel = "#searchby-name-ref", @class = "govuk-radios__input"})
+                        <label for="searchtype-name" class="govuk-label govuk-radios__label">Name or reference number</label>
                     </div>
-                    <div class="panel panel-border-narrow" id="searchby-name-ref">
-                        @* This alert gets dynamically populated *@
-                        <div class="warning-message visuallyhidden" role="alert">
-                            <p class="message-text" aria-live="polite"></p>
-                        </div>
-                        @if (Model.SearchType == eSearchType.Text && Model.NoResults)
-                        {
-                            if (Model.TextSearchModel.Text == null)
-                            {
+                </div>
+            </div>
+            <div class="panel panel-border-narrow" id="searchby-name-ref">
+                @* This alert gets dynamically populated *@
+                <div class="warning-message govuk-visually-hidden" role="alert">
+                    <p class="message-text" aria-live="polite"></p>
+                </div>
+                @if (Model.SearchType == eSearchType.Text && Model.NoResults)
+                {
+                    if (Model.TextSearchModel.Text == null)
+                    {
                                 @* Static alert for no search results, where nothing was entered *@
-                                <div role="alert" class="warning-message js-trigger-aria-live">
-                                    <p class="message-text" aria-live="polite">Please enter an establishment name, URN, LAESTAB or UKPRN to start a search</p>
-                                </div>
-                            }
-                            else
-                            {
+                        <div role="alert" class="warning-message js-trigger-aria-live">
+                            <p class="message-text" aria-live="polite">Please enter an establishment name, URN, LAESTAB or UKPRN to start a search</p>
+                        </div>
+                    }
+                    else
+                    {
                                 @* Static alert for no search results *@
-                                <div role="alert" class="warning-message js-trigger-aria-live">
-                                    <p class="message-text" aria-live="polite">We could not find any establishments matching your search criteria</p>
-                                </div>
-                            }
-                        }
-                        <label class="form-label" for="TextSearchModel_Text">
-                            Enter name, <abbr title="Unique Reference Number">URN</abbr>, LAESTAB or UKPRN
-                            <a href="#name-reference-help" class="tooltip-link js-tooltip">
-                                <span class="visuallyhidden">Help with reference numbers</span>
-                            </a>
-                        </label>
-                        <div class="form-group">
-                            @Html.TextBoxFor(x => x.TextSearchModel.Text, new { @class = "form-control", autocomplete = "off", data_suggestion_url = "/search/suggest?text=", maxlength="200", aria_describedby="name-reference-help" })
+                        <div role="alert" class="warning-message js-trigger-aria-live">
+                            <p class="message-text" aria-live="polite">We could not find any establishments matching your search criteria</p>
                         </div>
-                        <div class="form-group">
-                            <div class="multiple-choice">
-                                <input id="include-open-establishments-name" type="checkbox" checked="checked" name="OpenOnly" value="true" />
-                                <label for="include-open-establishments-name">Include open schools only</label>
-                            </div>
+                    }
+                }
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="TextSearchModel_Text">
+                        Enter name, <abbr title="Unique Reference Number">URN</abbr>, LAESTAB or UKPRN
+                        <a href="#name-reference-help" class="tooltip-link js-tooltip">
+                            <span class="govuk-visually-hidden">Help with reference numbers</span>
+                        </a>
+                    </label>
+
+                    @Html.TextBoxFor(x => x.TextSearchModel.Text, new {@class = "govuk-input govuk-input--width-20", autocomplete = "off", data_suggestion_url = "/search/suggest?text=", maxlength = "200", aria_describedby = "name-reference-help"})
+                </div>
+                <div class="govuk-form-group">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input id="include-open-establishments-name" type="checkbox" checked="checked" name="OpenOnly" value="true" class="govuk-checkboxes__input"/>
+                            <label for="include-open-establishments-name" class="govuk-checkboxes__label">Include open schools only</label>
                         </div>
-                        @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
-                        <div class="form-group">
-                            <button type="submit" class="button search-button" id="name-search-submit" name="SearchType" value="@eSearchType.Text">Search</button>
-                        </div>
-                        <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true" />
                     </div>
-                </fieldset>
+                </div>
+                @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue, new {id = "estab-autosuggest-value"})
+                <div class="govuk-form-group">
+                    <button type="submit" class="govuk-button" id="name-search-submit" name="SearchType" value="@eSearchType.Text">Search</button>
+                </div>
+                <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true"/>
+            </div>
+        </fieldset>
+    }
+</li>
 
-            }
-        </li>
-
-        <li class="search-type-wrapper">
-            @using (Html.BeginRouteForm("SearchResults", FormMethod.Get, new { id = "location-search-form" }))
-            {
-                <fieldset class="search-toggle-panel">
-                    <legend class="visually-hidden">Search by location</legend>
-                    <div class="multiple-choice multiple-choice--radio">
+<li class="search-type-wrapper">
+    @using (Html.BeginRouteForm("SearchResults", FormMethod.Get, new {id = "location-search-form"}))
+    {
+        <fieldset class="govuk-fieldset search-toggle-panel">
+            <legend class="govuk-visually-hidden">Search by location</legend>
+            <div class="govuk-form-group">
+                <div class="govuk-radio" data-module="govuk-radio">
+                    <div class="govuk-radios__item">
                         @Html.HiddenFor(m => m.SelectedTab)
-                        @Html.RadioButtonFor(m => m.SearchType, eSearchType.Location, new { id = "searchtype-location", data_toggle_panel = "#searchby-location-ref" })
-                        <label for="searchtype-location">
+                        @Html.RadioButtonFor(m => m.SearchType, eSearchType.Location, new {id = "searchtype-location", data_toggle_panel = "#searchby-location-ref", @class = "govuk-radios__input"})
+                        <label for="searchtype-location" class="govuk-label govuk-radios__label">
                             Location
                         </label>
                     </div>
-                    <div class="panel panel-border-narrow" id="searchby-location-ref">
-                        @* This alert gets dynamically populated *@
-                        <div class="warning-message visuallyhidden" role="alert">
-                            <p class="message-text" aria-live="polite"></p>
-                        </div>
-                        @if (Model.SearchType == eSearchType.Location && Model.NoResults)
-                        {
+                </div>
+            </div>
+            <div class="panel panel-border-narrow" id="searchby-location-ref">
+                @* This alert gets dynamically populated *@
+                <div class="warning-message govuk-visually-hidden" role="alert">
+                    <p class="message-text" aria-live="polite"></p>
+                </div>
+                @if (Model.SearchType == eSearchType.Location && Model.NoResults)
+                {
                             @* Currently not displaying. Redirecting instead *@
-                            <div class="warning-message js-trigger-aria-live" role="alert">
-                                <p class="message-text" aria-live="polite">Please enter a postcode, town or city to start a search</p>
-                            </div>
-                        }
-                        <label class="form-label" for="LocationSearchModel_Text">Enter postcode, town or city</label>
-                        <div class="form-group">
-                            @Html.TextBoxFor(x => x.LocationSearchModel.Text, new { @class = "form-control location-search", autocomplete = "off", maxlength = "200" })
-                        </div>
+                    <div class="warning-message js-trigger-aria-live" role="alert">
+                        <p class="message-text" aria-live="polite">Please enter a postcode, town or city to start a search</p>
+                    </div>
+                }
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="LocationSearchModel_Text">Enter postcode, town or city</label>
+                    @Html.TextBoxFor(x => x.LocationSearchModel.Text, new {@class = "govuk-input govuk-input--width-20 location-search", autocomplete = "off", maxlength = "200"})
+                </div>
 
-                        @Html.HiddenFor(x => x.LocationSearchModel.AutoSuggestValue)
-
-                        <div class="form-group">
-                            <div class="multiple-choice">
-                                <input id="include-open-establishments-location" type="checkbox" checked="checked" name="OpenOnly" value="true" />
-                                <label for="include-open-establishments-location">Include open schools only</label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="button search-button" id="location-search-submit" name="SearchType" value="@eSearchType.Location">Search</button>
+                @Html.HiddenFor(x => x.LocationSearchModel.AutoSuggestValue)
+                <div class="govuk-form-group">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input id="include-open-establishments-location" type="checkbox" checked="checked" name="OpenOnly" value="true" class="govuk-checkboxes__input"/>
+                            <label for="include-open-establishments-location" class="govuk-checkboxes__label">Include open schools only</label>
                         </div>
                     </div>
+                </div>
+                <div class="govuk-form-group">
+                    <button type="submit" class="govuk-button search-button" id="location-search-submit" name="SearchType" value="@eSearchType.Location">Search</button>
+                </div>
+            </div>
 
-                </fieldset>
-
-            }
-        </li>
-        <li class="search-type-wrapper" id="la">
-            <fieldset class="search-toggle-panel">
-                <legend class="visually-hidden">Search by local authority</legend>
-                @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
-                {
-                    <div class="multiple-choice multiple-choice--radio">
-                        @Html.HiddenFor(m => m.SelectedTab)
-                        @Html.RadioButtonFor(m => m.SearchType, eSearchType.ByLocalAuthority, new { id = "searchtype-la", data_toggle_panel = "#searchby-la-ref" })
-                        <label for="searchtype-la">
+        </fieldset>
+    }
+</li>
+<li class="search-type-wrapper" id="la">
+    <fieldset class="govuk-fieldset search-toggle-panel">
+        <legend class="govuk-visually-hidden">Search by local authority</legend>
+        @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
+        {
+            <div class="govuk-form-group">
+                <div class="govuk-radio" data-module="govuk-radio">
+                    <div class="govuk-radios__item">
+                        @Html.HiddenFor(m => m.SelectedTab, new {id = "estab-selected-tab1"})
+                        @Html.RadioButtonFor(m => m.SearchType, eSearchType.ByLocalAuthority, new {id = "searchtype-la", data_toggle_panel = "#searchby-la-ref", @class = "govuk-radios__input"})
+                        <label for="searchtype-la" class="govuk-label govuk-radios__label">
                             Local authority
                         </label>
                     </div>
-                    <div class="panel panel-border-narrow" id="searchby-la-ref">
-                        <div class="warning-message visuallyhidden" role="alert">
-                            <p class="message-text" aria-live="polite"></p>
+                </div>
+            </div>
+            <div class="panel panel-border-narrow" id="searchby-la-ref">
+                <div class="warning-message govuk-visually-hidden" role="alert">
+                    <p class="message-text" aria-live="polite"></p>
+                </div>
+                @if (Model.SearchType == eSearchType.ByLocalAuthority && Model.NoResults)
+                {
+                    if (!Model.SelectedLocalAuthorityIds.Any())
+                    {
+                        <div class="warning-message js-trigger-aria-live" role="alert">
+                            <p class="message-text" aria-live="polite">Please enter a local authority to start a search</p>
                         </div>
-                        @if (Model.SearchType == eSearchType.ByLocalAuthority && Model.NoResults)
-                        {
-                            if (!Model.SelectedLocalAuthorityIds.Any())
-                            {
-                                <div class="warning-message js-trigger-aria-live" role="alert">
-                                    <p class="message-text" aria-live="polite">Please enter a local authority to start a search</p>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="warning-message js-trigger-aria-live" role="alert">
-                                    <p class="message-text" aria-live="polite">We could not find any local authorities matching your search criteria</p>
-                                </div>
-                            }
-                        }
-
-                        <label class="form-label" for="LocalAuthorityToAdd">Enter one or more local authorities (LAs)</label>
-                        <div class="selected-las form-group">
-                            <div id="la-id-target" class="la-id-target form-control">
-
-                                @foreach (var id in Model.SelectedLocalAuthorityIds)
-                                {
-                                    var la = Model.LocalAuthorities.First(x => x.Id == id);
-                                    <input value="@la.Name" type="hidden" class="form-control user-selected-la" />
-                                    <button type="submit" class="link-button font-small remove-suggest-la" name="LocalAuthorityToRemove" data-remove="la-@id" value="@id">@la.Name</button>
-                                }
-                                <div class="floating-text-field-wrap">
-                                    @Html.TextBoxFor(x => x.LocalAuthorityToAdd, new { @class = "floating-text-field", autocomplete = "off" })
-                                </div>
-                            </div>
-                            <button type="submit"
-                                    class="button-secondary button no-js-remove"
-                                    name="SearchType" value="@eSearchType.LocalAuthorityDisambiguation">
-                                Find
-                            </button>
+                    }
+                    else
+                    {
+                        <div class="warning-message js-trigger-aria-live" role="alert">
+                            <p class="message-text" aria-live="polite">We could not find any local authorities matching your search criteria</p>
                         </div>
+                    }
+                }
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="LocalAuthorityToAdd">Enter one or more local authorities (LAs)</label>
+                    <div class="selected-las form-group">
+                        <div id="la-id-target" class="la-id-target">
 
-                        <div class="form-group">
-                            <div class="multiple-choice">
-                                <input id="include-open-establishments-la" type="checkbox" checked="checked" name="OpenOnly" value="true" />
-                                <label for="include-open-establishments-la">Include open schools only</label>
+                            @foreach (var id in Model.SelectedLocalAuthorityIds)
+                            {
+                                var la = Model.LocalAuthorities.First(x => x.Id == id);
+                                <input value="@la.Name" type="hidden" class="form-control user-selected-la"/>
+                                <button type="submit" class="remove-suggest-la" name="LocalAuthorityToRemove" data-remove="@id" value="@id">@la.Name</button>
+                            }
+                            <div class="floating-text-field-wrap">
+                                @Html.TextBoxFor(x => x.LocalAuthorityToAdd, new {@class = "govuk-input govuk-input--width-20 floating-text-field", autocomplete = "off"})
                             </div>
                         </div>
-
-
-                        @Html.HiddenFieldsFromQueryString(new[] { "NoResults", "SearchType" })
-                        <div class="form-group">
-                            <button type="submit" class="button button-below search-button" id="la-search-submit" name="SearchType" value='@eSearchType.ByLocalAuthority'>Search</button>
+                        <button type="submit" class="govuk-button--secondary govuk-button no-js-remove"
+                                name="SearchType" value="@eSearchType.LocalAuthorityDisambiguation">
+                            Find
+                        </button>
+                    </div>
+                </div>
+                <div class="govuk-form-group">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input id="include-open-establishments-la" type="checkbox" checked="checked" name="OpenOnly" value="true" class="govuk-checkboxes__input"/>
+                            <label for="include-open-establishments-la" class="govuk-checkboxes__label">Include open schools only</label>
                         </div>
                     </div>
-                }
+                </div>
 
-            </fieldset>
-        </li>
 
-        <li aria-hidden="true">
-            <p>or</p>
-        </li>
+                @Html.HiddenFieldsFromQueryString(new[] {"NoResults", "SearchType"})
+                <div class="govuk-form-group">
+                    <button type="submit" class="govuk-button" id="la-search-submit" name="SearchType" value='@eSearchType.ByLocalAuthority'>Search</button>
+                </div>
+            </div>
+        }
 
-        <li class="search-type-wrapper">
-            @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
-            {
-                <fieldset class="search-toggle-panel">
-                    <legend class="visually-hidden">Search all establishments</legend>
-                    <div class="multiple-choice multiple-choice--radio">
-                        @Html.HiddenFor(m => m.SelectedTab)
-                        @Html.RadioButtonFor(m => m.SearchType, eSearchType.EstablishmentAll, new { id = "searchtype-all", data_toggle_panel = "#searchby-all-ref" })
-                        <label for="searchtype-all">
+    </fieldset>
+</li>
+
+<li aria-hidden="true">
+    <p>or</p>
+</li>
+
+<li class="search-type-wrapper">
+    @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
+    {
+        <fieldset class="govuk-fieldset search-toggle-panel">
+            <legend class="govuk-visually-hidden">Search all establishments</legend>
+            <div class="govuk-form-group">
+                <div class="govuk-radio" data-module="govuk-radio">
+                    <div class="govuk-radios__item">
+                        @Html.HiddenFor(m => m.SelectedTab, new {id = "estab-selected-tab2"})
+                        @Html.RadioButtonFor(m => m.SearchType, eSearchType.EstablishmentAll, new {id = "searchtype-all", data_toggle_panel = "#searchby-all-ref", @class = "govuk-radios__input"})
+                        <label for="searchtype-all" class="govuk-label govuk-radios__label">
                             All establishments
                         </label>
                     </div>
-                    <div class="panel panel-border-narrow" id="searchby-all-ref">
-                        <div class="form-group">
-                            <div class="multiple-choice">
-                                <input id="include-open-establishments-all" type="checkbox" checked="checked" name="OpenOnly" value="true" />
-                                <label for="include-open-establishments-all">Include open schools only</label>
-                            </div>
+                </div>
+            </div>
+            <div class="panel panel-border-narrow" id="searchby-all-ref">
+                <div class="govuk-form-group govuk-!-padding-top-2">
+                    <div class="govuk-checkboxes">
+                        <div class="govuk-checkboxes__item">
+                            <input id="include-open-establishments-all" type="checkbox" checked="checked" name="OpenOnly" value="true" class="govuk-checkboxes__input"/>
+                            <label for="include-open-establishments-all" class="govuk-checkboxes__label">Include open schools only</label>
                         </div>
-                        @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
-                        <div class="form-group">
-                            <button type="submit" class="button search-button" id="all-search-submit" name="SearchType" value="@eSearchType.EstablishmentAll">Search</button>
-                        </div>
-
-                        <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true" />
                     </div>
-                </fieldset>
+                    </div>
+                    @Html.HiddenFor(x => x.TextSearchModel.AutoSuggestValue)
+                    <div class="govuk-form-group ">
+                        <button type="submit" class="govuk-button search-button" id="all-search-submit" name="SearchType" value="@eSearchType.EstablishmentAll">Search</button>
+                    </div>
 
-            }
-        </li>
-    </ul>
+                    <input type="hidden" name="@VM.BIND_ALIAS_GOONERES" value="true"/>
+            </div>
+        </fieldset>
+    }
+</li>
+</ul>
 
-</fieldset>
+</div>

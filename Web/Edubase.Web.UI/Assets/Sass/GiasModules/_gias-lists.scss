@@ -1,0 +1,14 @@
+.gias-list--number-nested {
+  margin-bottom: govuk-spacing(8);
+
+  li {
+    margin-left: 15px;
+    position: relative;
+
+    &::before {
+      content: attr(data-idx);
+      position: absolute;
+      left: -2em;
+    }
+  }
+}

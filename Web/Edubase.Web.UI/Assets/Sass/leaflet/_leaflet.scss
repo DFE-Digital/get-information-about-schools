@@ -345,8 +345,8 @@
 .leaflet-control-layers label {
     display: inline-block;
     padding: 6px 10px 6px 6px;
-    background-color: $white;
-    border: $grey-2 1px solid;
+    background-color: govuk-colour('white');
+    border: 1px solid govuk-colour('mid-grey');
     border-radius: 2px;
     cursor: pointer;
 
@@ -589,7 +589,7 @@
 
 .leaflet-oldie .marker-cluster-large {
     background-color: rgb(253, 156, 115);
-    color: $white;
+    color: govuk-colour('white');
 }
 
 .leaflet-oldie .marker-cluster-large div {

@@ -21,53 +21,59 @@
     }
 }
 
-<div class="breadcrumbs">
+@section BackLink
+{
     @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
-    {
-        @Html.ActionLink("Home", "Index", "Search", new { area = "" })
-    }
-    else
-    {
-        if (!searchLink.IsNullOrEmpty())
         {
-            <a href=@(searchLink)>Back to search results</a>
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class="govuk-back-link"})
         }
-    }
-</div>
-
+        else
+        {
+            if (Model.SearchSource == eLookupSearchSource.Governors)
+            {
+                <a class="govuk-back-link" href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
+            }
+            else if (Model.SearchSource == eLookupSearchSource.Establishments)
+            {
+                <a class="govuk-back-link"href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Back to search results</a>
+            }
+            else if (Model.SearchSource == eLookupSearchSource.Groups)
+            {
+                <a class="govuk-back-link" href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}")> Back to search results</a>
+            }
+        }
+}
 
 @if (Model.NeedsRegenerating)
 {
-    <div class="grid-row">
-        <div class="column-full">
-            <h1 class="heading-xlarge">Something went wrong</h1>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-xl">Something went wrong</h1>
         </div>
-        <div class="horizontal-tabs-wrapper">
-            <div class="column-two-thirds">
-                <h2 class="bold-medium">The requested file is no longer available for download.</h2>
-                <br />
-                <p class="font-small">Please <a href=@(searchLink)>return to the search results</a> and repeat your request.</p>
-            </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h2 class="govuk-heading-m">The requested file is no longer available for download.</h2>
+            <p class="govuk-body-s">Please <a href=@(searchLink)>return to the search results</a> and repeat your request.</p>
         </div>
     </div>
 }
 else
 {
-    <div class="grid-row">
-        <div class="column-full">
-            <h1 class="heading-xlarge">Download error</h1>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-xl">Download error</h1>
         </div>
-        <div class="horizontal-tabs-wrapper">
-            <div class="column-two-thirds">
-                <h2 class="bold-medium">The file you have requested no longer exists.</h2>
-                <br />
-                <p class="font-small">This may be due to the following factors:</p>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h2 class="govuk-heading-m">The file you have requested no longer exists.</h2>
+            <p>This may be due to the following factors:</p>
 
-                <ul class="list-bullet">
-                    <li>Your file successfully downloaded, but the request was repeated. Please check your browser window.</li>
-                    <li>Your original download request was cancelled. If so, please return to the search results page to repeat your request.</li>
-                </ul>
-            </div>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>Your file successfully downloaded, but the request was repeated. Please check your browser window.</li>
+                <li>Your original download request was cancelled. If so, please return to the search results page to repeat your request.</li>
+            </ul>
         </div>
     </div>
 }

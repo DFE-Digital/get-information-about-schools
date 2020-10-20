@@ -1,4 +1,4 @@
-@using Edubase.Services.Enums
+﻿@using Edubase.Services.Enums
 @using Microsoft.Ajax.Utilities
 @using Edubase.Web.UI.Areas.Governors.Models
 @model GovernorSearchDownloadViewModel
@@ -11,27 +11,27 @@
     <meta name="robots" content="noindex,nofollow" />
 }
 
-<div class="breadcrumbs">
+@section BackLink
+{
     @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
-    {
-        @Html.ActionLink("Home", "Index", "Search", new { area = "" })
-    }
-    else
-    {
-        <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
-    }
-</div>
-
-<div class="grid-row">
-    <div class="column-full">
-        <h1 class="heading-xlarge">Download data</h1>
+        {
+            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, new {@class = "govuk-back-link"})
+        }
+        else
+        {
+            <a class="govuk-back-link" href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
+        }
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Download data</h1>
     </div>
-    <div class="horizontal-tabs-wrapper">
-        <div class="column-full">
-
-            <h2 class="bold-medium">Download governor search results</h2>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-m">Download governor search results</h2>
             <p>1 of 4</p>
-            <h2 class="bold-medium">Select the data you are interested in</h2>
+            <h2 class="govuk-heading-m">Select the data you are interested in</h2>
             <p>
                 Non-public data includes the home postcode, date of birth and previous names of governors.
             </p>
@@ -42,15 +42,20 @@
                 @Html.HiddenFor(x => x.Step)
                 @Html.HiddenFor(x => x.TotalSteps)
                 <div class="download-step">
-                    <div class="form-group">
-                        <fieldset class="stacked-controls">
-                            <legend class="visually-hidden">Select a data set</legend>
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-visually-hidden">Select a data set</legend>
                             @{
                                 var inputName = Model.IncludeNonPublicData;
                             }
-                            @Html.GiasRadioFor(m => m.IncludeNonPublicData, "false", "Public data", null, new { @checked = "checked" })
-
-                            @Html.GiasRadioFor(m => m.IncludeNonPublicData, "true", "Public and non-public data")
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    @Html.GiasRadioFor(m => m.IncludeNonPublicData, "false", "Public data", null, new {@checked = "checked", @class = "govuk-radios__input"})
+                                </div>
+                                <div class="govuk-radios__item">
+                                    @Html.GiasRadioFor(m => m.IncludeNonPublicData, "true", "Public and non-public data", null, new {@class = "govuk-radios__input"})
+                                </div>
+                            </div>
 
                         </fieldset>
                     </div>
@@ -58,10 +63,8 @@
 
                 @Html.HiddenFieldsFromQueryString()
 
-                <input class="button" type="submit" value="Select and continue">
+                <input class="govuk-button" data-module="govuk-button" type="submit" value="Select and continue">
             }
-
-        </div>
     </div>
 </div>
 

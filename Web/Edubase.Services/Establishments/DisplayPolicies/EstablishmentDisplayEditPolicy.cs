@@ -8,12 +8,12 @@ namespace Edubase.Services.Establishments.DisplayPolicies
 {
     public class EstablishmentDisplayEditPolicy : EstablishmentFieldList
     {
-        public string HeadteacherLabel { get; set; } = "Headteacher/Principal";
-        public string HeadPreferredJobTitleLabel { get; set; } = "Headteacher/Principal job title";
-        public string HeadEmailAddressLabel { get; set; } = "Headteacher/Principal email";
+        public string HeadteacherLabel { get; set; } = "Headteacher<span class=\"govuk-visually-hidden\"> </span>/<span class=\"govuk-visually-hidden\"> </span>Principal";
+        public string HeadPreferredJobTitleLabel { get; set; } = "Headteacher<span class=\"govuk-visually-hidden\"> </span>/<span class=\"govuk-visually-hidden\"> </span>Principal job title";
+        public string HeadEmailAddressLabel { get; set; } = "Headteacher<span class=\"govuk-visually-hidden\"> </span>/<span class=\"govuk-visually-hidden\"> </span>Principal email";
         public string EstablishmentTypeLabel { get; set; } = "School type";
         public string MainEmailAddressLabel { get; set; } = "Email";
-        
+
         [JsonProperty("iebtDetail")]
         public IEBTDetailDisplayEditPolicy IEBTDetail { get; set; }
 

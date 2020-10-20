@@ -1,0 +1,78 @@
+.pagination {
+  overflow: hidden;
+  position: relative;
+  font-size: 16px;
+  clear: both;
+  min-height: 48px;
+
+  @include govuk-media-query($until: tablet) {
+    font-size: 14px;
+  }
+
+  p {
+    float: left;
+    margin-top: 0;
+
+    @include govuk-media-query($until: tablet) {
+      float: none;
+    }
+  }
+
+  .pagination-links {
+    clear: left;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+    @include govuk-media-query($until: tablet) {
+      margin-top: 12px;
+    }
+
+    @media (min-width: 640px) {
+      position: absolute;
+      right: 0;
+      margin-bottom: 0;
+    }
+
+    @media(max-width: 940px) {
+      .numeric-pagination {
+        display: none;
+      }
+
+    }
+
+    @media (max-width: 740px) {
+      .pagination-prev {
+        margin-right: 12px;
+      }
+    }
+    .tablet-pagination,
+    .go-nowhere {
+      display: block;
+      @media (max-width: 740px) {
+        display: none;
+      }
+    }
+  }
+  li {
+    float: left;
+    display:block;
+    text-align: center;
+  }
+
+  a,
+  .go-nowhere {
+    display: block;
+    min-width: 28px;
+    margin-bottom: 12px;
+    @include govuk-typography-common();
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.show-all {
+  margin-left: govuk-spacing(2);
+}

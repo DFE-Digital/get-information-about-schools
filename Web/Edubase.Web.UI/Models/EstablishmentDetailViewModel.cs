@@ -23,7 +23,6 @@ namespace Edubase.Web.UI.Models
         public EstablishmentDetailViewModel(IExternalLookupService extService = null)
         {
             this.extService = extService;
-            LegalParentGroupRouteDto = new Lazy<RouteDto>(() => LegalParentGroup != null ? new RouteDto("GroupDetails", new System.Web.Routing.RouteValueDictionary(new { id = LegalParentGroup.GroupUId }), LegalParentGroup.Name) : null);
         }
 
         private static Dictionary<int, string> _groupType2FieldLabelMappings = new Dictionary<int, string>
@@ -68,7 +67,7 @@ namespace Edubase.Web.UI.Models
 
         public GroupModel LegalParentGroup { get; set; }
 
-        public Lazy<RouteDto> LegalParentGroupRouteDto { get; private set; }
+        public RouteDto LegalParentGroupRouteDto => LegalParentGroup == null ? null : new RouteDto("GroupDetails", new System.Web.Routing.RouteValueDictionary(new { id = LegalParentGroup.GroupUId }), LegalParentGroup.Name);
 
         public RouteDto EstabDetailRouteDto => new RouteDto("EstabDetails", new System.Web.Routing.RouteValueDictionary(new { id = Establishment.Urn }), Establishment.Name);
 

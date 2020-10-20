@@ -1,0 +1,30 @@
+// mapping of the input error styling over the razor className
+.input-validation-error {
+  border: $govuk-border-width-form-element-error solid $govuk-error-colour;
+
+  &:focus {
+    border-color: $govuk-input-border-colour;
+    box-shadow: none;
+  }
+}
+
+.govuk-form-group--error {
+  .govuk-input,
+  .govuk-select,
+  .govuk-textarea {
+    border: $govuk-border-width-form-element-error solid $govuk-error-colour;
+
+    &:focus {
+      border-color: $govuk-input-border-colour;
+      box-shadow: none;
+    }
+  }
+  // LA searches
+  .la-id-target {
+    border: $govuk-border-width-form-element-error solid $govuk-error-colour;
+
+    .govuk-input {
+      border: none;
+    }
+  }
+}

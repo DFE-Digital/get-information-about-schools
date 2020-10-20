@@ -1,0 +1,73 @@
+.govuk-radios--small .gias-conditional--bordered {
+  border: 2px solid $govuk-border-colour;
+  border-top: 0;
+  padding-left: 10px;
+  padding-bottom: 10px;
+  margin-left: 0;
+
+
+  .date-filters {
+    border-left: 4px solid $govuk-border-colour;
+    margin-left: 10px;
+    padding-left: 10px;
+
+    &.govuk-form-group--error {
+      border-left-color: $govuk-error-colour;
+    }
+  }
+
+  &.govuk-radios__conditional--hidden {
+    display: block;
+    .govuk-form-group,
+    p,
+    div:not(.govuk-date-input__item) {
+      display: none;
+    }
+    min-height: 2px;
+    padding-bottom: 0;
+  }
+
+  .govuk-error-message {
+    padding-left: 0;
+  }
+}
+
+.no-js {
+  .govuk-radios--small .gias-conditional--bordered {
+    &.govuk-radios__conditional--hidden {
+      display: block;
+      .govuk-form-group,
+      p,
+      div:not(.govuk-date-input__item) {
+        display: block;
+      }
+      min-height: auto;
+      padding-bottom: 10px;
+    }
+  }
+}
+
+.gias-radio__item--bordered-filter {
+  border: 2px solid $govuk-border-colour;
+  border-bottom: 0;
+  width: calc(100% - 38px);
+
+  .govuk-radios__input {
+    left: 0;
+  }
+
+  .govuk-radios__label {
+    padding-left: 15px;
+    display: block;
+    float: none;
+
+    &::before {
+      left: 10px;
+    }
+
+    &:after {
+      left: 17px;
+    }
+  }
+
+}

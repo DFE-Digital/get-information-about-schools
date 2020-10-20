@@ -1,6 +1,8 @@
 @using Edubase.Common.Text
 @model Edubase.Services.Domain.ProgressDto
 @{
+    ViewBag.hideLogo = true;
+    ViewBag.SiteSection = "downloads";
     var isExtract = !(ViewBag.isDownload?? false);
     var areaTitle = isExtract ? "Extract" : "Download";
     var defaultFilename = isExtract ? "Results.zip" : "Extract.zip";
@@ -10,34 +12,33 @@
         ViewBag.hideLogo = true;
     }
 }
-
-<div class="grid-row">
-    <div class="column-full">
-        <div class="breadcrumbs">
-            <ol>
-                <li>
-                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-                </li>
-                <li>
-                    @Html.ActionLink("Downloads", "Index", "Downloads")
-                </li>
-            </ol>
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link"})</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Downloads", "Index", "Downloads", null,new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
         </div>
-        <h1 class="heading-xlarge">@areaTitle.ToTitleCase() generation completed</h1>
     </div>
-    <div class="horizontal-tabs-wrapper">
-        <div class="column-full">
+}
 
-            <h2 class="heading-small">Your @areaTitle.ToLower() is ready</h2>
-            <p>Your requested file is ready to download.</p>
-
-            <ul>
-                <li class="download-list-item">
-                    <span class="icon-link-copy">
-                        <a href="@Model.FileLocationUri" target="_blank" rel="nofollow">@(Model.Name ?? defaultFilename) <span class="visually-hidden">Opens in new window</span></a>
-                    </span>
-                </li>
-            </ul>
-        </div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">@areaTitle.ToTitleCase()  generation completed</h1>
+    </div>
+    <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-s">Your extract is ready</h2>
+        <p>Your requested file is ready to download.</p>
+        <ul class="govuk-list">
+            <li class="download-list-item">
+                <a href="@Model.FileLocationUri" target="_blank" rel="nofollow">
+                    @(Model.Name ?? "Results.zip") <span class="govuk-visually-hidden">Opens in new window</span>
+                </a>
+            </li>
+        </ul>
     </div>
 </div>

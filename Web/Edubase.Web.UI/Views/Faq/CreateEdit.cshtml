@@ -1,87 +1,84 @@
 @model FaqItemViewModel
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "GIAS: FAQ");
+    ViewBag.bodyClasses = "create-edit";
+    ViewBag.SiteSection = "help";
 }
 
-<div class="breadcrumbs">
-    <ol>
-        <li>
-            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-        </li>
-        <li>
-            @Html.ActionLink("Help", "Help", "Home",new { area = "" },null)
-        </li>
-        <li>
-            @Html.RouteLink("FAQs", "Faq")
-        </li>
-    </ol>
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Help", "Help", "Home", new {area = ""}, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.RouteLink("FAQs", "Faq", null, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState)
+
+        <h1 class="govuk-heading-xl">@(Model.Id == null ? "Create a new" : "Edit a") frequently asked questions entry</h1>
+    </div>
 </div>
-
-@Html.Partial("_ValidationSummary", ViewData.ModelState)
-
-<h1 class="heading-xlarge">@(Model.Id == null ? "Create" : "Edit") FAQ entry</h1>
-
-<div class="grid-row">
-    <div class="column-two-thirds">
-
-        @using (Html.BeginRouteForm(Model.Id == null ? "PostCreateFaqItem" : "PostEditFaqItem", new { Model.Id }, FormMethod.Post))
-        {
+@using (Html.BeginRouteForm(Model.Id == null ? "PostCreateFaqItem" : "PostEditFaqItem", new {Model.Id}, FormMethod.Post))
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
             @Html.HiddenFor(x => x.Id)
-            <div class="form-group @Html.ValidationCssClassFor(x => x.Title)">
-                @Html.LabelFor(x => x.Title)
-                @Html.ValidationMessageFor(x => x.Title)
-                @Html.TextBoxFor(x => x.Title, new { @class = "form-control" })
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Title)">
+                @Html.LabelFor(x => x.Title, new { @class = "govuk-label"})
+                @Html.ValidationMessageFor(x => x.Title, null, new { @class = "govuk-error-message"})
+                @Html.TextBoxFor(x => x.Title, new { @class = "govuk-input"})
             </div>
 
-            <div class="form-group @Html.ValidationCssClassFor(x => x.TitleFontSize)">
-                @Html.LabelFor(x => x.TitleFontSize)
-                @Html.ValidationMessageFor(x => x.TitleFontSize)
-                @Html.DropDownListFor(x => x.TitleFontSize, new[] { new SelectListItem { Text = "Small", Value = "small" }, new SelectListItem { Text = "Medium", Value = "medium" }, new SelectListItem { Text = "Large", Value = "large" }, }, new { @class = "form-control" })
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.TitleFontSize)">
+                @Html.LabelFor(x => x.TitleFontSize, new { @class = "govuk-label"})
+                @Html.ValidationMessageFor(x => x.TitleFontSize, null, new { @class = "govuk-error-message"})
+                @Html.DropDownListFor(x => x.TitleFontSize, new[] {new SelectListItem {Text = "Small", Value = "s"}, new SelectListItem {Text = "Medium", Value = "m"}, new SelectListItem {Text = "Large", Value = "l"},}, new { @class = "govuk-select"})
             </div>
 
-            <div class="form-group @Html.ValidationCssClassFor(x => x.Content)">
-                @Html.LabelFor(x => x.Content)
-                @Html.ValidationMessageFor(x => x.Content)
-                @Html.TextAreaFor(x => x.Content, 10, 40, new { @class = "form-control entry-content" })
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Content)">
+                @Html.LabelFor(x => x.Content, new { @class = "govuk-label"})
+                @Html.ValidationMessageFor(x => x.Content, null, new {@class = "govuk-error-message"})
+                @Html.TextAreaFor(x => x.Content, 10, 40, new { @class = "govuk-textarea entry-content"})
             </div>
 
             <div class="form-group @Html.ValidationCssClassFor(x => x.DisplayOrder)">
-                @Html.LabelFor(x => x.DisplayOrder)
-                @Html.ValidationMessageFor(x => x.DisplayOrder)
-                @Html.TextBoxFor(x => x.DisplayOrder, new { @class = "form-control" })
+                @Html.LabelFor(x => x.DisplayOrder, new { @class = "govuk-label" })
+                @Html.ValidationMessageFor(x => x.DisplayOrder, null, new  { @class = "govuk-error-message" })
+                @Html.TextBoxFor(x => x.DisplayOrder, new { @class = "govuk-input" })
             </div>
-
-            <button type="submit" class="button">Save entry</button>
-            if (Model.Id != null)
-            {
-                <button type="submit" class="button button-secondary" name="@nameof(Model.IsDeleting)" id="delete-button" value="true">Delete</button>
-            }
-            @Html.RouteLink("Cancel", "Faq", null, new { @class = "button button-secondary" })
-        }
-
+        </div>
     </div>
-</div>
-
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="button-row govuk-!-padding-top-6">
+                <button type="submit" class="govuk-button">Save entry</button>
+                @if (Model.Id != null)
+                {
+                <button type="submit" class="govuk-button govuk-button--secondary" name="@nameof(Model.IsDeleting)" id="delete-button" value="true">Delete</button>
+                }
+                @Html.RouteLink("Cancel", "Faq", null, new { @class = "govuk-button govuk-button--secondary"})
+            </div>
+        </div>
+    </div>
+}
 
 @section ViewScripts
 {
-    <script nonce="@Html.ScriptNonce()">
-        (function () {
-            $('.entry-content').textCount({ maxLength: 4000 });
+ <script src="/public/assets/scripts/build/edit-faq-glossary.js"></script>
 
-            $('#delete-button').okCancel({
-                ok: function () {
-                    $('#delete-button').data().okCancel.unbind();
-                    $('#delete-button').click();
-                },
-                cancel: function() {
-                    this.closeModal();
-                },
-                title: 'Are you sure you want to delete this FAQ entry?',
-                content: 'The entry will be removed from the FAQ immediately',
-                triggerEvent: 'click'
-            });
-        }());
-
-    </script>
 }

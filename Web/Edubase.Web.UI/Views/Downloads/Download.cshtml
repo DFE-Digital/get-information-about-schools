@@ -7,32 +7,35 @@
 {
     <meta name="robots" content="noindex,nofollow" />
 }
-
-<div class="breadcrumbs">
-    <ol>
-        <li>@Html.RouteLink("Home", "Homepage")</li>
-        @foreach (var item in breadcrumbRoutes)
-        {
-            <li>@Html.RouteLink(item.Label, item.RouteName, item.RouteValues)</li>
-        }
-    </ol>
-</div>
-
-<div class="grid-row">
-    <div class="column-full">
-        <h1 class="heading-xlarge">Download data</h1>
+@section Breadcrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.RouteLink("Home", "Homepage",new {area = ""}, new { @class = "govuk-breadcrumbs__link"})</li>
+                    @foreach (var item in breadcrumbRoutes)
+                    {
+                        <li class="govuk-breadcrumbs__list-item">@Html.RouteLink(item.Label, item.RouteName, item.RouteValues,new Dictionary<string, object>(){{"class", "govuk-breadcrumbs__link"}})</li>
+                    }
+                </ol>
+            </div>
+        </div>
     </div>
-    <div class="horizontal-tabs-wrapper">
-        <div class="column-two-thirds">
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l">Download data</h1>
+    </div>
+    <div class="gias-tabs-wrapper">
+        <div class="govuk-grid-column-two-thirds">
 
-            <p class="font-small">Your requested file is ready to download.</p>
+            <p class="govuk-body">Your requested file is ready to download.</p>
 
-            <ul>
-                <li class="download-list-item">
-                    <span class="icon-link-copy">
-                        <a href="@Url.Current(new { start = true })" target="_blank" rel="nofollow">Data in @(Request.QueryString["downloadtype"]?.ToString().ToUpper()) format <span class="visually-hidden">Opens in new window</span></a>
-                        (will download as a ZIP file: open the ZIP to access its content)
-                    </span>
+            <ul class="govuk-list">
+                <li>
+                    <a href="@Url.Current(new { start = true })" target="_blank" rel="nofollow">Data in @(Request.QueryString["downloadtype"]?.ToString().ToUpper()) format <span class="govuk-visually-hidden">Opens in new window</span></a>
+                    (will download as a ZIP file: open the ZIP to access its content)
 
                 </li>
             </ul>

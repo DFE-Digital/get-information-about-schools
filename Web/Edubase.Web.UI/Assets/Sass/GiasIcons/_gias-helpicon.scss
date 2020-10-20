@@ -1,0 +1,27 @@
+.tooltip-link {
+  position: relative;
+  display: inline-block;
+  top: 4px;
+  width: 28px;
+  height: 25px;
+
+  &:after {
+    position: absolute;
+    content: '?';
+    width: 18px;
+    height: 12px;
+    background-color: $govuk-brand-colour;
+    color: govuk-colour('white');
+    text-align: center;
+    border-radius: 12px;
+    padding: 0 2px 10px;
+    margin-left: 3px;
+    top: 0;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  &:focus {
+    outline-width: 1px;
+  }
+}

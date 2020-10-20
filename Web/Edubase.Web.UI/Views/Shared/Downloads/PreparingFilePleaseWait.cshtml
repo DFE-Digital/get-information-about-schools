@@ -11,53 +11,54 @@
     <meta name="robots" content="noindex,nofollow" />
 }
 
-<div class="breadcrumbs">
+@section BreadCrumbs
+{
     @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
     {
-        @Html.ActionLink("Home", "Index", "Search", new { area = "" })
+        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class="govuk-back-link"})
     }
     else
     {
         if (Model.SearchSource == eLookupSearchSource.Governors)
         {
-            <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
+            <a class="govuk-back-link" href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
         }
         else if (Model.SearchSource == eLookupSearchSource.Establishments)
         {
-            <a href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Back to search results</a>
+            <a class="govuk-back-link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Back to search results</a>
         }
         else if (Model.SearchSource == eLookupSearchSource.Groups)
         {
-            <a href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}")> Back to search results</a>
+            <a class="govuk-back-link" href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}")> Back to search results</a>
         }
     }
-</div>
 
-<div class="grid-row">
-    <div class="column-full">
-        <h1 class="heading-xlarge">Download data</h1>
-    </div>
-    <div class="download-step">
-        <div class="column-two-thirds">
-            <h2 class="bold-medium">Download @Model.DownloadName search results</h2>
+}
 
-            @if (Model.TotalSteps.HasValue)
-            {
-                <p>@Model.Step of @Model.TotalSteps</p>
-            }
-            else
-            {
-                <br />
-            }
-
-            <p class="font-small">Preparing your requested data. Large files may take some time to download.</p>
-
-        </div>
-        <div class="column-full">
-            <div class="progress-indicator">
-                <span class="visually-hidden">Please wait. Your file is being prepared</span>
-            </div>
-        </div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Download data</h1>
     </div>
 </div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-m">Download @Model.DownloadName search results</h2>
 
+
+        @if (Model.TotalSteps.HasValue)
+        {
+            <p>@Model.Step of @Model.TotalSteps</p>
+        }
+
+
+        <p class="govuk-body">Preparing your requested data. Large files may take some time to download.</p>
+
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="progress-indicator">
+            <span class="govuk-visually-hidden">Please wait. Your file is being prepared</span>
+        </div>
+    </div>
+</div>

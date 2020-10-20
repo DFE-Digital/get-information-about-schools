@@ -3,28 +3,37 @@
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Bulk create new free schools");
 }
-
-<div class="breadcrumbs">
-    <ol>
-        <li>@Html.RouteLink("Home", "Homepage")</li>
-        <li>@Html.RouteLink("Tools", "Tools")</li>
-    </ol>
-</div>
-
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
 @using (Html.BeginRouteForm("BulkCreateFreeSchoolsPost", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    <div class="grid-row">
-        <div class="column-full">
-            <h1 class="heading-xlarge">Bulk create new free schools</h1>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-xl">Bulk create new free schools</h1>
             <p>Follow these steps to bulk create new free schools:</p>
         </div>
-        <div class="column-full">
+        <div class="govuk-grid-column-full">
             @if (Model?.Result?.RowErrors > 0)
             {
-                <div class="form-group error" id="error-log">
-                    <p class="error-message">Please download the error log to correct your data before resubmitting</p>
+                <div class="govuk-form-group govuk-form-group--error" id="error-log">
+                    <p class="govuk-error-message">Please download the error log to correct your data before resubmitting</p>
                     <p>
                         <a href="@Model.Result.ErrorLogFile.Url">@Model.Result.ErrorLogFile.Name</a>
                     </p>
@@ -32,8 +41,8 @@
             }
         </div>
 
-        <div class="column-full">
-            <ol class="list list-number">
+        <div class="govuk-grid-column-two-thirds">
+            <ol class="govuk-list govuk-list--number">
                 <li>
                     <p>
                         Download the free schools template using this link:<br />
@@ -49,21 +58,18 @@
             </ol>
         </div>
 
-        <div class="column-full">
-            <div class="form-group push--bottom @Html.ValidationCssClassFor(x => x.BulkFile)">
-                <label for="BulkFile" class="form-label">Upload a file:</label>
-                @Html.ValidationMessageFor(x => x.BulkFile)
-                 @Html.TextBoxFor(x => x.BulkFile, new { type = "file" })
+        <div class="govuk-grid-column-full govuk-!-padding-top-4">
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.BulkFile)">
+                <label for="BulkFile" class="govuk-label">Upload a file</label>
+                @Html.ValidationMessageFor(x => x.BulkFile, null, new { @class ="govuk-error-message" })
+                @Html.TextBoxFor(x => x.BulkFile, new { type = "file" , @class = "govuk-file-upload"})
             </div>
-
-            <div class="form-group">
-                <input type="submit" class="button" value="Submit" />
-                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new { @class = "button button-secondary cancel" })
+        </div>
+        <div class="govuk-grid-column-full">
+            <div class="button-row govuk-!-padding-top-6">
+                <input type="submit" class="govuk-button" value="Submit" />
+                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new { @class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button" })
             </div>
         </div>
     </div>
-}
-
-@section ViewScripts {
-    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
 }

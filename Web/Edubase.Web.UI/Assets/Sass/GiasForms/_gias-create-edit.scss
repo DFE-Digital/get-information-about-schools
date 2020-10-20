@@ -1,0 +1,127 @@
+.gias-fieldset {
+  .govuk-fieldset__legend {
+    @include govuk-font(19, 'bold');
+  }
+}
+
+// date inputs rendered through the editor template in the
+// edit details page
+.date-group .edit-date-fieldset,
+.edit-age-range-fieldset {
+  .govuk-fieldset__legend {
+    font-size: 19px;
+    font-weight: bold;
+    display: block;
+    float: none;
+    margin-left: 0;
+    margin-bottom: govuk-spacing(2);
+    padding-top: 0;
+
+    @include govuk-media-query($until: tablet) {
+      font-size: 16px;
+    }
+  }
+}
+
+.create-edit-form-group .edit-date-fieldset {
+  .govuk-error-message {
+    padding-left: 0;
+  }
+
+  .govuk-label {
+    @include govuk-font(19);
+  }
+}
+
+.create-edit {
+  .govuk-select {
+    width: 100%;
+  }
+}
+
+.gias-confirmation--date-editor {
+  .date-group {
+    .govuk-fieldset__legend {
+      display: block;
+      float: none;
+      padding: 0 0 20px;
+      font-size: 19px;
+      margin-left: 0;
+
+      @include govuk-media-query($until: tablet) {
+        font-size: 16px;
+      }
+    }
+
+    .govuk-error-message {
+      padding-left: 0;
+    }
+  }
+}
+
+.create-edit .range-group .inline-form-control {
+  float: left;
+  margin-left: 0;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.requires-approval {
+  color: govuk-colour('orange');
+  width: 50px;
+  display: inline-block;
+  background-image: url("/public/assets/images/icons/icon-information-2x.png");
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: contain;
+}
+
+.btn-add-person {
+  @include govuk-media-query($until: 840px) {
+    margin-top: govuk-spacing(3);
+  }
+}
+
+.links-estab-search-button,
+.inline-button {
+  @include govuk-media-query($until: tablet) {
+    margin-top: govuk-spacing(3);
+  }
+}
+
+.shared-governor {
+  padding-bottom: govuk-spacing(6);
+
+  &.gias-checkboxes__conditional {
+    padding-left: govuk-spacing(9);
+  }
+
+  &.gias-checkboxes__conditional--expanded {
+    border-left: 4px solid $govuk-border-colour;
+    margin-left: govuk-spacing(3);
+    padding-left: govuk-spacing(7);
+    margin-bottom: govuk-spacing(4);
+
+    @include govuk-media-query($until: tablet) {
+      padding-left: 40px;
+    }
+  }
+}
+
+.replace-address {
+  display: inline-block;
+  padding-left: govuk-spacing(1);
+
+  @include govuk-media-query($until: tablet) {
+    display: block;
+    padding: govuk-spacing(2) 0 0 0;
+  }
+}
+
+.proprietorRowTitleHeader {
+  float: left;
+}
+
+.proprietorRowTitleRemove {
+  float: right;
+}

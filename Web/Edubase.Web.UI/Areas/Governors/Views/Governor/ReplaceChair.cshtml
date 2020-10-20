@@ -6,106 +6,99 @@
     Layout = Model.Layout;
 }
 
-<div id="select-shared-governor" class="tab-content">
-        <div class="column-two-thirds">
-            @using (Html.BeginForm("ReplaceChair", "Governor", FormMethod.Post))
+
+@using (Html.BeginForm("ReplaceChair", "Governor", FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.ExistingGovernorId)
+    @Html.HiddenFor(m => m.GovernorFullName)
+    @Html.HiddenFor(m => m.ExistingChairType)
+    @Html.HiddenFor(m => m.Urn)
+    @Html.HiddenFor(m => m.Name)
+    @Html.HiddenFor(m => m.Role)
+    <div id="select-shared-governor" class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <div class="button-row govuk-!-margin-bottom-4">
+                <input type="submit" value="Save" class="govuk-button"/>
+                <a href="@Url.RouteUrl("EstabEditGovernance", new {establishmentUrn = Model.Urn.Value})" class="govuk-button govuk-button--secondary">Cancel</a>
+            </div>
+            <h2 class="govuk-heading-m">Replace @Model.RoleName</h2>
+            <h3 class="govuk-heading-s">@Model.GovernorFullName</h3>
+
+            @Html.EditorFor(m => m.DateTermEnds, new {fieldsetClassName = "edit-date-fieldset"})
+
+
+            @if (Model.AllowReinstatement)
             {
-                @Html.HiddenFor(m => m.ExistingGovernorId)
-                @Html.HiddenFor(m => m.GovernorFullName)
-                @Html.HiddenFor(m => m.ExistingChairType)
-                @Html.HiddenFor(m => m.Urn)
-                @Html.HiddenFor(m => m.Name)
-                @Html.HiddenFor(m => m.Role)
-
-                <div class="button-row">
-                    <input type="submit" value="Save" class="button" />
-                    <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-secondary">Cancel</a>
+            <div class="govuk-form-group">
+                <div class="govuk-checkboxes">
+                    @FormHelpers.GiasCheckbox("true", "Reinstate", "Re-instate as local governor", null, new {id = "Reinstate"}, @Model.Reinstate)
                 </div>
-                <h2 class="heading-medium tab-lead">Replace @Model.RoleName</h2>
-                <h3 class="heading-small">@Model.GovernorFullName</h3>
-
-                @Html.EditorFor(m => m.DateTermEnds)
-
-
-
-                if (Model.AllowReinstatement)
-                {
-                    <div class="multiple-choice">
-                        @Html.CheckBoxFor(x => x.Reinstate, new { id = nameof(Model.Reinstate) })
-                        @Html.LabelFor(x => x.Reinstate, "Re-instate as local governor", new { @for = nameof(Model.Reinstate) })
-                    </div>
-                }
-
-                <div class="form-group inline toggle-panels">
-                    @Html.GiasRadioFor(m => m.NewChairType,
-                        ReplaceChairViewModel.ChairType.LocalChair,
-                        "New Chair",
-                        null,
-                        new { id = "newChair", @class = "panel-trigger", data_toggle_panel = "#newChairDetails" })
-
-
-                    @Html.GiasRadioFor(m => m.NewChairType,
-                        ReplaceChairViewModel.ChairType.SharedChair,
-                        "Shared Chair",
-                        null,
-                        new { id = "sharedChair", @class = "panel-trigger", data_toggle_panel = "#SharedGovernors" })
-
-                </div>
-                <div id="replacement-chair-details" class="exapanding-list-wrap js-governor-toggles">
-                    <div class="column-two-thirds">
-                        <div id="newChairDetails" class="panel-indent @(Model.NewChairType == ReplaceChairViewModel.ChairType.LocalChair ? "open-expander" : "")">
-                            <div class="replacement-chair-option">
-
-                                @if (Model.ExistingNonChairs.Any())
-                                {
-                                    <div class="form-group js-when-on">
-                                        @Html.LabelFor(x => x.SelectedPreviousExistingNonChairId, "Choose replacement")
-                                        @Html.DropDownListFor(x => x.SelectedPreviousExistingNonChairId, Model.ExistingNonChairs, "New", new { @class = "form-control choose-replacement" })
-                                    </div>
-                                    <br />
-                                }
-
-                                @Html.EditorFor(m => m.NewLocalGovernor, new {disableStartDate = true, editorPrefix = nameof(Model.NewLocalGovernor)})
-                            </div>
-                        </div>
-                        <div id="SharedGovernors" class="panel-indent @(Model.NewChairType == ReplaceChairViewModel.ChairType.SharedChair ? "open-expander" : "")">
-                            <div class="replacement-chair-option">
-                                <div class="shared-governor-list">
-                                    @if (Model.SharedGovernors.Any())
-                                    {
-                                        <ul>
-                                            @for (var index = 0; index < Model.SharedGovernors.Count; index++)
-                                            {
-                                                @Html.EditorFor(x => x.SharedGovernors[index], new { disableStartDate = true })
-                                            }
-                                        </ul>
-                                    }
-                                    else
-                                    {
-                                        <div class="form-group @Html.ValidationCssClass("SharedGovernors")">
-                                            @if (Html.ValidationCssClass("SharedGovernors").ToString() == "error")
-                                            {
-                                                @Html.ValidationMessage("SharedGovernors")
-                                            }
-                                            else
-                                            {
-                                                <p>There are no shared governors available for this establishment</p>
-
-                                            }
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="button-row">
-                    <input type="submit" value="Save" class="button" />
-                    <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" class="button button-secondary">Cancel</a>
-                </div>
+            </div>
             }
+
+            <div class="govuk-form-group">
+                <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                    <div class="govuk-radios__item">
+                        @Html.GiasRadioFor(m => m.NewChairType, ReplaceChairViewModel.ChairType.LocalChair, "New Chair", null, new {id = "newChair", @class = "govuk-radios__input panel-trigger", data_aria_controls = "replacement-chair-details"})
+                    </div>
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="replacement-chair-details" data-module="govuk-radios">
+                        <div class="replacement-chair-option">
+                            @if (Model.ExistingNonChairs.Any())
+                            {
+                                <div class="govuk-form-group js-when-on">
+                                    @Html.LabelFor(x => x.SelectedPreviousExistingNonChairId, "Choose replacement", new {@class = "govuk-label"})
+                                    @Html.DropDownListFor(x => x.SelectedPreviousExistingNonChairId, Model.ExistingNonChairs, "New", new {@class = "govuk-select choose-replacement"})
+                                </div>
+                            }
+
+                            @Html.EditorFor(m => m.NewLocalGovernor, new {disableStartDate = true, editorPrefix = nameof(Model.NewLocalGovernor), fieldsetClassName = "edit-date-fieldset"})
+                        </div>
+                    </div>
+                    <div class="govuk-radios__item">
+                        @Html.GiasRadioFor(m => m.NewChairType, ReplaceChairViewModel.ChairType.SharedChair, "Shared Chair", null, new {id = "sharedChair", @class = "govuk-radios__input panel-trigger", data_aria_controls = "SharedGovernors"})
+                    </div>
+                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="SharedGovernors">
+                        <div class="replacement-chair-option">
+                            <div class="shared-governor-list">
+                                @if (Model.SharedGovernors.Any())
+                                {
+                                    <ul class="govuk-list">
+                                        @for (var index = 0; index < Model.SharedGovernors.Count; index++)
+                                        {
+                                            @Html.EditorFor(x => x.SharedGovernors[index], new {disableStartDate = true, fieldsetClassName = "edit-date-fieldset"})
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <div class="govuk-form-group @Html.ValidationCssClass("SharedGovernors")">
+                                        @if (Html.ValidationCssClass("SharedGovernors").ToString() == "error")
+                                        {
+                                            @Html.ValidationMessage("SharedGovernors")
+                                        }
+                                        else
+                                        {
+                                            <p class="govuk-body-s">There are no shared governors available for this establishment</p>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-</div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="button-row">
+                <input type="submit" value="Save" class="govuk-button"/>
+                <a href="@Url.RouteUrl("EstabEditGovernance", new {establishmentUrn = Model.Urn.Value})" class="govuk-button govuk-button--secondary">Cancel</a>
+            </div>
+
+        </div>
+    </div>
+}
 
 @section ViewScripts
 {
@@ -149,5 +142,16 @@
 
             });
         });
+
+        var $mc = $('#main-content');
+        var $panels = $mc.find('.gias-nested-conditional');
+
+        $panels.addClass('hidden').attr('aria-hidden', true);
+
+        $mc.find('.gias-nested-radio-toggle').on('change', function() {
+            $panels.addClass('hidden').attr('aria-hidden', true);
+            $($(this).data().togglePanel).removeClass('hidden').removeAttr('aria-hidden');
+        });
     </script>
 }
+

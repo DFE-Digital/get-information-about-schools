@@ -1,0 +1,85 @@
+.search-type-toggle {
+  display: inline-block;
+  margin-top: govuk-spacing(3);
+  margin-bottom: govuk-spacing(3);
+}
+
+.school-results-listing {
+  margin: govuk-spacing(3) 0;
+  padding: 0;
+  list-style: none;
+
+  .trust-details {
+    float: none;
+
+    @include govuk-media-query($until: tablet) {
+      width: 100%;
+    }
+  }
+}
+
+.group-establishment-list {
+  .school-results-listing {
+    margin-top: 0;
+    > li {
+      padding-top: govuk-spacing(4);
+    }
+
+    li:first-child {
+      padding-top: 0;
+    }
+
+    h2 {
+      margin-bottom: govuk-spacing(3);
+    }
+  }
+}
+
+.gias-result-tile {
+  margin-bottom: govuk-spacing(4);
+  border-bottom: 1px solid $govuk-border-colour;
+  position: relative;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  dl {
+    @include govuk-typography-common();
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+
+    @include govuk-media-query($from: tablet) {
+      font-size: 14px;
+    }
+  }
+
+  dt, dd {
+    float: left;
+    margin: 0;
+  }
+
+  dt {
+    clear: left;
+    padding-right: 0.5em;
+
+    &.inline-details {
+      clear: none;
+      margin-left: 12px;
+    }
+  }
+
+  .additional-closed {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 12px;
+    color: $govuk-secondary-text-colour;
+
+    @include govuk-media-query($until: tablet) {
+      font-size: 14px;
+    }
+  }
+}

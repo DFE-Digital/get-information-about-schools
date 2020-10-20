@@ -1,0 +1,26 @@
+// keep triangle alignment sensible when using details
+// elements with smaller font sizes
+
+.govuk-details.govuk-\!-font-size-14 {
+  .govuk-details__summary {
+    padding-left: govuk-spacing(4);
+  }
+}
+
+// toggle details text when details element is expanded
+
+.govuk-details {
+  .gias-details-open-text {
+    display: none;
+  }
+
+  &[open] {
+    .gias-details-open-text {
+      display: inline;
+    }
+
+    .gias-details-closed-text {
+      display: none;
+    }
+  }
+}

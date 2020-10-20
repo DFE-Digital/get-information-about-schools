@@ -1,0 +1,13 @@
+@import "icon-helpers";
+
+.icon-map {
+  @extend %icon;
+  margin-left: 27px;
+
+  &:before {
+    background-image: url("/public/assets/images/icons/icon-map.png");
+    left: -27px;
+    top: -5px;
+  }
+}
+

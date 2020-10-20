@@ -1,30 +1,41 @@
 ﻿@{
     ViewBag.Title = "Get information about schools";
+    ViewBag.SiteSection = "help";
 }
 
-<div class="grid-row">
-    <div class="column-full">
-        <div class="breadcrumbs">
-            <ol>
-                <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
+@section BreadCrumbs
+{
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="govuk-breadcrumbs">
+            <ol class="govuk-breadcrumbs__list">
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link"})</li>
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Help", "Help", "Home", new { area = "" }, new {@class = "govuk-breadcrumbs__link"})</li>
             </ol>
         </div>
-        <h1 class="heading-xlarge">Service information and users responsibilities</h1>
+    </div>
+</div>
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">
+            Service information and users responsibilities
+        </h1>
     </div>
 </div>
 
-<div class="grid-row">
-    <div class="column-full">
-        <ul class="list list-number">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <ul class="govuk-list govuk-list--number">
             <li>
-                <h2 class="heading-medium subheading">What is GIAS?</h2>
-                <ul class="list list-number list-number-nested">
+                <h2 class="govuk-heading-m">What is GIAS?</h2>
+                <ul class="govuk-list govuk-list--spaced gias-list--number-nested">
                     <li data-idx="1.1">
                         It is the Department for Education’s (DfE) register of educational establishments in England and Wales. It contains vital information about children’s centres, academies, free schools, maintained schools, independent schools, further education colleges (further education and sixth form corporations, specialist designated colleges and special post 16 institutions) and higher education institutions.
                     </li>
                     <li data-idx="1.2">
                         It is the
-                        <a href="https://www.gov.uk/government/news/national-database-of-governors" target="_blank" rel="external">National Database of Governors<span class="visually-hidden"> Opens in new window</span></a>
+                        <a href="https://www.gov.uk/government/news/national-database-of-governors" target="_blank" rel="external">National Database of Governors<span class="govuk-visually-hidden"> Opens in new window</span></a>
                         (for those establishment types where this applies).
                     </li>
                     <li data-idx="1.3">
@@ -37,17 +48,17 @@
             </li>
 
             <li>
-                <h2 class="heading-medium subheading">Why does GIAS need to be kept up to date?</h2>
-                <ul class="list list-number list-number-nested">
+                <h2 class="govuk-heading-m">Why does GIAS need to be kept up to date?</h2>
+                <ul class="govuk-list govuk-list--spaced gias-list--number-nested">
                     <li data-idx="2.1">
                         It is used by the DfE, other government departments and partners to contact establishments, update systems, perform analysis and inform policy decisions, some of which may carry funding implications.
                     </li>
                     <li data-idx="2.2">
                         Key departmental services, such as
-                        <a href="https://services.signin.education.gov.uk/" target="_blank" rel="external">DfE Sign-in (DSI)<span class="visually-hidden"> Opens in new window</span></a>,
-                        <a href="https://www.gov.uk/school-performance-tables" target="_blank" rel="external">Compare School and College Performance (CSCP) (also known as the School Performance Tables (SPT))<span class="visually-hidden"> Opens in new window</span></a>,
+                        <a href="https://services.signin.education.gov.uk/" target="_blank" rel="external">DfE Sign-in (DSI)<span class="govuk-visually-hidden"> Opens in new window</span></a>,
+                        <a href="https://www.gov.uk/school-performance-tables" target="_blank" rel="external">Compare School and College Performance (CSCP) (also known as the School Performance Tables (SPT))<span class="govuk-visually-hidden"> Opens in new window</span></a>,
                         Analyse School Performance (ASP) and
-                        <a href="https://schools-financial-benchmarking.service.gov.uk/" target="_blank" rel="external">School Financial Benchmarking (SFB)<span class="visually-hidden"> Opens in new window</span></a>
+                        <a href="https://schools-financial-benchmarking.service.gov.uk/" target="_blank" rel="external">School Financial Benchmarking (SFB)<span class="govuk-visually-hidden"> Opens in new window</span></a>
                         use the information in GIAS to directly feed their services. If GIAS information is incorrect establishments (where applicable) may not be represented correctly on these key services that are available to the public and/or individual establishments.
                     </li>
                     <li data-idx="2.3">
@@ -55,7 +66,7 @@
                     </li>
                     <li data-idx="2.4">
                         Other partners, such as the
-                        <a href="https://www.ukrlp.co.uk/" target="_blank" rel="external">UK Register of Learning Providers (UKRLP)<span class="visually-hidden"> Opens in new window</span></a>
+                        <a href="https://www.ukrlp.co.uk/" target="_blank" rel="external">UK Register of Learning Providers (UKRLP)<span class="govuk-visually-hidden"> Opens in new window</span></a>
                         who assign UK provider reference numbers (UKPRNs), also use GIAS information directly so it could affect the issuing of these numbers if GIAS establishment information is incorrect.
                     </li>
                     <li data-idx="2.5">
@@ -69,19 +80,19 @@
                     </li>
                     <li data-idx="2.8">
                         It is the legislative avenue for local authority maintained schools to inform the Secretary of State of changes to establishments made through the prescribed alterations regulation process:
-                        “<a href="https://www.gov.uk/government/publications/school-organisation-maintained-schools" target="_blank" rel="external">Making significant changes (‘prescribed alterations’) to maintained schools<span class="visually-hidden"> Opens in new window</span></a>”. For academies the
-                        “<a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" target="_blank" rel="externa">Making significant changes to an open academy and closure by mutual agreement<span class="visually-hidden"> Opens in new window</span></a>” guidance sets out that GIAS must be kept up to date.
+                        &ldquo;<a href="https://www.gov.uk/government/publications/school-organisation-maintained-schools" target="_blank" rel="external">Making significant changes (‘prescribed alterations’) to maintained schools<span class="govuk-visually-hidden"> Opens in new window</span></a>&rdquo;. For academies the
+                        &ldquo;<a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy" target="_blank" rel="externa">Making significant changes to an open academy and closure by mutual agreement<span class="govuk-visually-hidden"> Opens in new window</span></a>&rdquo; guidance sets out that GIAS must be kept up to date.
                     </li>
                     <li data-idx="2.9">
                         It is also the approved process for schools to inform the Secretary of State of their intention to join or leave a federation. Information on federating can be found within the
-                        <a href="https://www.gov.uk/government/publications/governance-in-federations" target="_blank" rel="external">Governance in federations<span class="visually-hidden"> Opens in new window</span></a>.
+                        <a href="https://www.gov.uk/government/publications/governance-in-federations" target="_blank" rel="external">Governance in federations<span class="govuk-visually-hidden"> Opens in new window</span></a>.
                     </li>
                     <li data-idx="2.10">
                         All governance boards are required to provide information to the Secretary of State about people involved in governance via GIAS which is also the
-                        <a href="https://www.gov.uk/government/news/national-database-of-governors" target="_blank" rel="external">National Database of Governors<span class="visually-hidden"> Opens in new window</span></a>.
-                        <a href="http://www.legislation.gov.uk/ukpga/1996/56/section/538" target="_blank" rel="external">Section 538 of the Education Act 1996<span class="visually-hidden"> Opens in new window</span></a>
+                        <a href="https://www.gov.uk/government/news/national-database-of-governors" target="_blank" rel="external">National Database of Governors<span class="govuk-visually-hidden"> Opens in new window</span></a>.
+                        <a href="http://www.legislation.gov.uk/ukpga/1996/56/section/538" target="_blank" rel="external">Section 538 of the Education Act 1996<span class="govuk-visually-hidden"> Opens in new window</span></a>
                         and the
-                        <a href="https://www.gov.uk/guidance/academies-financial-handbook" target="_blank" rel="external">Academies Financial Handbook<span class="visually-hidden"> Opens in new window</span></a>
+                        <a href="https://www.gov.uk/guidance/academies-financial-handbook" target="_blank" rel="external">Academies Financial Handbook<span class="govuk-visually-hidden"> Opens in new window</span></a>
                         provide further information about establishments responsibilities with regards to GIAS.
                     </li>
                     <li data-idx="2.11">
@@ -91,8 +102,8 @@
             </li>
 
             <li>
-                <h2 class="heading-medium subheading">When should GIAS be updated</h2>
-                <ul class="list list-number list-number-nested">
+                <h2 class="govuk-heading-m">When should GIAS be updated</h2>
+                <ul class="govuk-list govuk-list--spaced gias-list--number-nested">
                     <li data-idx="3.1">
                         It is vital that establishments keep their GIAS record up to date.
                     </li>
@@ -106,21 +117,21 @@
             </li>
 
             <li>
-                <h2 class="heading-medium subheading">How to update GIAS</h2>
-                <ul class="list list-number list-number-nested">
+                <h2 class="govuk-heading-m">How to update GIAS</h2>
+                <ul class="govuk-list govuk-list--spaced gias-list--number-nested">
                     <li data-idx="4.1">
                         Those colleagues within establishments, local authorities and MATs who have access to the establishment record they are associated with do this via their
-                        <a href="https://services.signin.education.gov.uk/" target="_blank" rel="external">DSI<span class="visually-hidden"> Opens in new window</span></a>
+                        <a href="https://services.signin.education.gov.uk/" target="_blank" rel="external">DSI<span class="govuk-visually-hidden"> Opens in new window</span></a>
                         account that allows them to access their establishments GIAS record, access the non-public information and amend the establishment’s record. It is recommended that establishments have nominated members of staff who maintain the establishment’s GIAS record.
                     </li>
                     <li data-idx="4.2">
                         For those colleagues mentioned in 4.1 log into
-                        <a href="https://services.signin.education.gov.uk/" target="_blank" rel="external">DSI<span class="visually-hidden"> Opens in new window</span></a>.
+                        <a href="https://services.signin.education.gov.uk/" target="_blank" rel="external">DSI<span class="govuk-visually-hidden"> Opens in new window</span></a>.
                         If you are a user of other DfE services, you need to select the GIAS option.
                     </li>
                     <li data-idx="4.3">
                         Each establishment has a DSI approver who can grant access to other colleagues within their establishment. It is the approver’s responsibility to keep the users who can access and edit their establishment’s GIAS record up to date (through adding and removing colleagues), taking into account the
-                        <a href="https://www.gov.uk/government/publications/guide-to-the-general-data-protection-regulation" target="_blank" rel="external">General Data Protection Regulation (GDPR)<span class="visually-hidden"> Opens in new window</span></a>.
+                        <a href="https://www.gov.uk/government/publications/guide-to-the-general-data-protection-regulation" target="_blank" rel="external">General Data Protection Regulation (GDPR)<span class="govuk-visually-hidden"> Opens in new window</span></a>.
                         Local authority users and MAT users are given respective access via their own DSI approvers. In some cases, local authority users can make changes and approve and MAT users can suggest changes.
                     </li>
                     <li data-idx="4.4">
@@ -134,7 +145,7 @@
                         @Html.ActionLink("guidance", "Index", "Guidance", new { area = "" }, null) section on the site.
                         @Html.RouteLink("The frequently asked questions (FAQs)", "Faq") may also help.
                         If you cannot find the answer in these help sections you can contact the GIAS Support team using the
-                        <a href="https://form.education.gov.uk/en/AchieveForms/?form_uri=sandbox-publish://AF-Process-2b61dfcd-9296-4f6a-8a26-4671265cae67/AF-Stage-f3f5200e-e605-4a1b-ae6b-3536bc77305c/definition.json&redirectlink=%2Fen&cancelRedirectLink=%2Fen" target="_blank" rel="external">data collections service request form<span class="visually-hidden"> Opens in new window</span></a>
+                        <a href="https://form.education.gov.uk/en/AchieveForms/?form_uri=sandbox-publish://AF-Process-2b61dfcd-9296-4f6a-8a26-4671265cae67/AF-Stage-f3f5200e-e605-4a1b-ae6b-3536bc77305c/definition.json&redirectlink=%2Fen&cancelRedirectLink=%2Fen" target="_blank" rel="external">data collections service request form<span class="govuk-visually-hidden"> Opens in new window</span></a>
                         and choosing the Edubase (GIAS) option for your query. Please note there is a service level agreement (SLA) for responses so they will not be answered immediately.
                     </li>
                     <li data-idx="4.7">

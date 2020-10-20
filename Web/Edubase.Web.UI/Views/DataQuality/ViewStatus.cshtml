@@ -1,50 +1,61 @@
 @model Edubase.Web.UI.Models.DataQuality.FullDataQualityStatusViewModel
     @{
         ViewBag.bodyClasses = "data-quality";
+        ViewBag.SiteSection = "tools";
     }
-<div class="grid-row">
-    <div class="column-full">
-        <div class="breadcrumbs">
-            <ol>
-                <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
-                <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-            </ol>
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
         </div>
+    </div>
+}
 
-
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
         @if (Model.DataUpdated)
         {
             <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
                 <div class="tick"></div>
                 <p class="message-text" aria-live="polite">Data status has been updated.</p>
-                <a href="#" class="cross"><span class="visually-hidden">Dismiss notification</span></a>
+                <a href="#" class="cross"><span class="govuk-visually-hidden">Dismiss notification</span></a>
             </div>
         }
-        <h1 class="heading-xlarge">Data status</h1>
+        <h1 class="govuk-heading-xl">Data status</h1>
 
-        <table class="edubase-table no-pagination">
-            <caption class="table-caption">These dates show when each of our teams last updated their data.</caption>
-            <thead>
-                <tr>
-                    <th scope="col">Establishment type</th>
-                    <th scope="col">Last updated</th>
-                    <th scope="col">Data owner</th>
-                    <th scope="col">Email</th>
+        <p>These dates show when each of our teams last updated their data.</p>
+        <table class="govuk-table gias-table no-pagination">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Establishment type</th>
+                    <th scope="col" class="govuk-table__header">Last updated</th>
+                    <th scope="col" class="govuk-table__header">Data owner</th>
+                    <th scope="col" class="govuk-table__header">Email</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="govuk-table__body">
             @foreach (var item in Model.Items)
             {
                 var hasClause = (item.DataOwner == "Independent Education and Boarding Team");
 
-                <tr>
-                    <td data-label="Establishment type">@item.EstablishmentType.GetEnumMember()</td>
-                    <td data-label="Last updated">@item.LastUpdated.ToString()</td>
-                    <td data-label="Data owner" @Html.Raw(hasClause ? "aria-describedby = 'independent-pending'" : "")>
+                <tr class="govuk-table__row">
+                    <td data-label="Establishment type" class="govuk-table__cell">@item.EstablishmentType.GetEnumMember()</td>
+                    <td data-label="Last updated" class="govuk-table__cell">@item.LastUpdated.ToString()</td>
+                    <td data-label="Data owner" @Html.Raw(hasClause ? "aria-describedby = 'independent-pending'" : "") class="govuk-table__cell">
                         @item.DataOwner
                         @(hasClause ? "*" : "")
                     </td>
-                    <td data-label="Email">
+                    <td data-label="Email"  class="govuk-table__cell">
                         <span class="truncate">
                             @item.Email
                         </span>
@@ -55,17 +66,20 @@
             </tbody>
         </table>
 
-        <p id="independent-pending" class="table-footnote">* All approved changes to schools' registered details are recorded at this date. Changes still pending approval won't appear here yet.</p>
+        <p id="independent-pending" class="govuk-body-s">* All approved changes to establishments' registered details are recorded at this date. Changes still pending approval won't appear here yet.</p>
 
-        <div class="button-row">
+
             @if (Model.UserCanUpdate)
             {
-                @Html.ActionLink("Update", "EditStatus", "DataQuality", new {area = ""}, new { @class = "button button-secondary" })
+                <div class="button-row govuk-!-padding-top-4">
+                    @Html.ActionLink("Update", "EditStatus", "DataQuality", new {area = ""}, new { @class = "govuk-button govuk-button--secondary", data_module = "govuk-button" })
+                </div>
             }
-        </div>
+
     </div>
 </div>
 
-@section ViewScripts {
-    <script src="/public/assets/scripts/standalone/accessibility.js"></script>
+@section ViewScripts
+{
+    <script src="/public/assets/scripts/build/view-data-status.js"></script>
 }

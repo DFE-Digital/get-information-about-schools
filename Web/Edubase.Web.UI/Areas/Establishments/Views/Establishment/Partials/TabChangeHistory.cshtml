@@ -31,27 +31,28 @@
 
 }
 <div id="school-change-history" class="tab-content approval-data">
-
-    <h2 class="bold-small change-history-title">Change History</h2>
-
+    <h2 class="govuk-heading-s">Change History</h2>
     @if (User.Identity.IsAuthenticated && Model.GovernorsGridViewModel.DomainModel.HasGovernors)
     {
-        <div class="school-governance-history">
-            @Html.RouteLink("View governance change history", "EstabDetailGovChangeHistory", new { id = Model.GovernorsGridViewModel.EstablishmentUrn })
-            <br /><br />
+        <div class="gias-governance-history-link-container">
+            <p>
+                @Html.RouteLink("View governance change history", "EstabDetailGovChangeHistory", new {id = Model.GovernorsGridViewModel.EstablishmentUrn})
+            </p>
         </div>
     }
 
     @if (!Model.ChangeHistory.Items.Any())
     {
-        <p>There are no change records available at the moment</p>
+        <p class="govuk-body">There are no change records available at the moment</p>
     }
     else
     {
-        <p>
-            @Html.ActionLink("Download data in CSV format", "DownloadChangeHistory", "Downloads", new {establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.csv}, new {style = "margin-bottom:10px; display:block;"})
-            @Html.ActionLink("Download data in XLSX format", "DownloadChangeHistory", "Downloads", new {establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.xlsx}, null)
-            <br/>
+        <p class="govuk-body">
+            @Html.ActionLink("Download data in CSV format", "DownloadChangeHistory", "Downloads", new { establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.csv }, null)
+        </p>
+        <p class="govuk-body">
+            @Html.ActionLink("Download data in XLSX format", "DownloadChangeHistory", "Downloads", new { establishmentUrn = Model.Establishment.Urn, area = "", downloadType = DownloadType.xlsx }, null)
+
         </p>
         if (Model.ChangeHistory.PageCount > 1)
         {
@@ -59,13 +60,13 @@
                 @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
             </div>
         }
-        <table class="approval-changes edubase-table sortable-table">
-            <caption class="visuallyhidden">Change history</caption>
-            <thead>
-            <tr>
-                @foreach (var tableColumn in tableColumns)
+        <table class="approval-changes govuk-table gias-table sortable-table">
+            <caption class="govuk-visually-hidden">Change history</caption>
+            <thead class="govuk-table__head">
+                <tr class="gocuk-table__row">
+                    @foreach (var tableColumn in tableColumns)
                 {
-                    <th scope="col">
+                    <th scope="col" class="govuk-table__header">
                         <a href="@Url.SortUrl(tableColumn.Item1, "#school-change-history")"
                            class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
                            aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
@@ -73,18 +74,18 @@
                 }
             </tr>
             </thead>
-            <tbody>
+            <tbody class="govuk-table__body">
             @foreach (var item in Model.ChangeHistory.Items)
             {
-                <tr>
-                    <td data-label="Date changed">@(item.ChangedDateUtc?.ToString("dd/MM/yyyy"))</td>
-                    <td data-label="Effective date">@(item.EffectiveDateUtc?.ToString("dd/MM/yyyy"))</td>
-                    <td data-label="Updated field">@item.Name</td>
-                    <td data-label="Old value">@item.OldValue</td>
-                    <td data-label="New value">@item.NewValue</td>
-                    <td data-label="Date requested">@(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))</td>
-                    <td data-label="Suggested from">@item.OriginatorUserName</td>
-                    <td data-label="Approved by">@(item.ApproverUserName ?? "--")</td>
+                <tr class="govuk-table__row">
+                    <td data-label="Date changed" class="govuk-table__cell">@(item.ChangedDateUtc?.ToString("dd/MM/yyyy"))</td>
+                    <td data-label="Effective date" class="govuk-table__cell">@(item.EffectiveDateUtc?.ToString("dd/MM/yyyy"))</td>
+                    <td data-label="Updated field" class="govuk-table__cell">@item.Name</td>
+                    <td data-label="Old value" class="govuk-table__cell">@item.OldValue</td>
+                    <td data-label="New value" class="govuk-table__cell">@item.NewValue</td>
+                    <td data-label="Date requested" class="govuk-table__cell">@(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))</td>
+                    <td data-label="Suggested from" class="govuk-table__cell">@item.OriginatorUserName</td>
+                    <td data-label="Approved by" class="govuk-table__cell">@(item.ApproverUserName ?? "--")</td>
                 </tr>
             }
             </tbody>

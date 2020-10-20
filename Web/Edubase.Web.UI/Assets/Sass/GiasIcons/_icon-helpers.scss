@@ -1,0 +1,15 @@
+%icon {
+  position: relative;
+  &:before {
+    position: absolute;
+    content: "";
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 20px;
+    height: 30px;
+  }
+
+  @include govuk-media-query($until: tablet) {
+    font-size: 14px;
+  }
+}

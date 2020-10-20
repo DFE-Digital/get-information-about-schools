@@ -12,27 +12,30 @@
     <meta name="robots" content="noindex,nofollow" />
 }
 
-<div class="breadcrumbs">
+@section BackLink
+{
     @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
     {
-        @Html.ActionLink("Home", "Index", "Search", new { area = "" })
+        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new { @class="govuk-back-link" })
     }
     else
     {
         if (Model.SearchSource == eLookupSearchSource.Governors)
         {
-            <a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
+            <a class="govuk-back-link" href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
         }
         else if (Model.SearchSource == eLookupSearchSource.Establishments)
         {
-            <a href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Back to search results</a>
+            <a class="govuk-back-link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Back to search results</a>
         }
         else if (Model.SearchSource == eLookupSearchSource.Groups)
         {
-            <a href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}")> Back to search results</a>
+            <a class="govuk-back-link"  href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}")> Back to search results</a>
         }
     }
-</div>
+}
+
+
 
 @using (Html.BeginRouteForm("DownloadExtract", FormMethod.Post))
 {
@@ -41,33 +44,30 @@
     @Html.Hidden("searchSource", Model.SearchSource)
     @Html.Hidden("searchQueryString", Model.SearchQueryString)
 
-    <div class="grid-row">
-        <div class="column-full">
-            <h1 class="heading-xlarge">Download data</h1>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-xl">Download data</h1>
         </div>
-        <div class="horizontal-tabs-wrapper">
-            <div class="column-two-thirds">
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
 
-                <h2 class="bold-medium">Download @Model.DownloadName search results</h2>
-                @if (Model.TotalSteps.HasValue)
-                {
-                    <p>@Model.Step of @Model.TotalSteps</p>
-                }
-                else
-                {
-                    <br />
-                }
-                <p class="font-small">Your requested file is ready to download.</p>
+            <h2 class="govuk-heading-m">Download @Model.DownloadName search results</h2>
+            @if (Model.TotalSteps.HasValue)
+            {
+                <p>@Model.Step of @Model.TotalSteps</p>
+            }
 
-                <ul>
-                    <li class="download-list-item">
-                        <span class="icon-link-copy">
-                            <input type="submit" class="button" value="Data in @Model.FileFormat.ToString() format" /><br />
-                            (will download as a ZIP file: open the ZIP to access its content)
-                        </span>
-                    </li>
-                </ul>
-            </div>
+            <p class="govuk-body">Your requested file is ready to download.</p>
+
+            <ul class="govuk-list">
+                <li>
+                    <span class="icon-link-copy">
+                        <input type="submit" class="govuk-button" data-module="govuk-button" value="Data in @Model.FileFormat.ToString() format"/><br/>
+                        (will download as a ZIP file: open the ZIP to access its content)
+                    </span>
+                </li>
+            </ul>
         </div>
     </div>
 }

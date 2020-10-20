@@ -1,0 +1,95 @@
+.remove-suggest-la {
+  background-color: govuk-colour('light-grey');
+  color: govuk-colour('black');
+  padding: 5px 32px 4px 5px;
+  text-decoration: none;
+  font-size: 14px;
+  margin-right: 3px;
+  margin-bottom: 3px;
+  float: left;
+  position: relative;
+  border: 0;
+
+
+  &:hover,
+  &:visited {
+    color: govuk-colour('black');
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    right: 6px;
+    top: 8px;
+    width: 10px;
+    height: 10px;
+    background-image: url('/public/assets/images/icons/suggest-remove.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
+
+.selected-las {
+  position: relative;
+  width: 50%;
+  @include govuk-media-query($until: tablet) {
+    width: 100%;
+  }
+}
+
+.la-id-target {
+  border: 2px solid govuk-colour('black');
+  padding: 0 5px;
+
+  &.focused {
+    outline: 3px solid $govuk-focus-colour;
+  }
+}
+
+.floating-text-field-wrap {
+  position: relative;
+  width: 100%;
+  min-width: 200px;
+  background-color: govuk-colour('white');
+  clear: both;
+
+  .awesomplete {
+    display: block;
+  }
+
+  .govuk-input {
+    width: 100%;
+    border: 0;
+    padding: 5px 0;
+    background-color: transparent;
+
+    &:focus {
+      outline: 0;
+      border: 0;
+      box-shadow: none;
+    }
+  }
+
+
+}
+
+.independent-search-field-wrap {
+  max-width: 53ex;
+}
+
+.no-js-remove {
+  margin-left: 10px;
+  margin-top: 2px;
+  .js-enabled & {
+    display: none;
+  }
+}
+
+.no-js .la-id-target {
+  float: left;
+  width: 360px;
+
+  @include govuk-media-query($until: tablet) {
+    width: 220px;
+  }
+}

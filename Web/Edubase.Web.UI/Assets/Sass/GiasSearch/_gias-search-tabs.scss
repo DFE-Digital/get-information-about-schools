@@ -1,0 +1,71 @@
+.no-js {
+  .schools-search-page {
+    [data-toggle-panel] {
+      display: none;
+
+      + .govuk-label {
+        &::before,
+        &::after {
+          display: none;
+        }
+      }
+    }
+
+    .search-toggle-panel {
+      .govuk-radios__item {
+        padding-left: 0;
+      }
+
+      .govuk-radios__label {
+        padding-left: 0;
+      }
+    }
+  }
+}
+
+.search-type-list {
+  margin: 0;
+  padding: 0;
+
+  > li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.hidden-tab-content {
+  display: none;
+}
+
+.js-enabled {
+  .search-type-list {
+    .panel {
+      border-left: 5px solid $govuk-border-colour;
+      padding-left: 10px;
+      //overflow: hidden;
+
+      &.hidden {
+        display: none;
+      }
+
+      .govuk-button {
+        margin-bottom: 15px;
+      }
+    }
+  }
+}
+
+.tab-content:focus {
+  outline: none;
+}
+
+.predefined-sets {
+  display: inline-block;
+  margin-left: govuk-spacing(2);
+
+  @include govuk-media-query($until: desktop) {
+    display: block;
+    margin: govuk-spacing(1) 0;
+  }
+}

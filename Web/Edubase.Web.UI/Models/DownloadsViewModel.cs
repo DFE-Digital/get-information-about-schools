@@ -4,13 +4,19 @@ using Edubase.Web.Resources;
 using MoreLinq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using Edubase.Services.Enums;
+using Edubase.Web.UI.Models.Search;
 
 namespace Edubase.Web.UI.Models
 {
     public class DownloadsViewModel
     {
+        public eDownloadFilter SearchType { get; set; }
+        public DateTimeViewModel FilterDate { get; set; }
+        public int? Skip { get; set; }
         public class Section
         {
             public string Heading { get; set; }
@@ -31,27 +37,27 @@ namespace Edubase.Web.UI.Models
         {
             var retVal = new List<Section>();
 
-            var allEstabData = Downloads.Where(x => new[] { "all.edubase.data", "all.edubase.data.links" }.Contains(x.Tag));
-            var openAcademiesAndFreeSchoolsData = Downloads.Where(x => new[] { "all.open.academies.and.free.schools", "all.open.academies.and.free.school.links" }.Contains(x.Tag));
-            var openStateFundedSchoolsData = Downloads.Where(x => new[] { "all.open.state-funded.schools", "all.open.state-funded.school.links" }.Contains(x.Tag));
-            var openChildrensCentresData = Downloads.Where(x => new[] { "all.open.childrens.centres", "all.open.childrens.centres.links" }.Contains(x.Tag));
-            var allGroupData = Downloads.Where(x => new[] { "all.group.records", "all.group.links.records", "all.group.with.links.records", "academies.mat.membership" }.Contains(x.Tag));
-            var openGroupData = Downloads.Where(x => new[] { "academy.sponsor.and.trust.links" }.Contains(x.Tag));
-            var allGovernorData = Downloads.Where(x => new[] { "all.governance.records", "all.mat.governance.records", "all.academy.governance.records", "all.la.maintained.governance.records" }.Contains(x.Tag));
+            var allEstabData = Downloads?.Where(x => new[] { "all.edubase.data", "all.edubase.data.links" }.Contains(x.Tag)) ?? Array.Empty<FileDownload>();
+            var openAcademiesAndFreeSchoolsData = Downloads?.Where(x => new[] { "all.open.academies.and.free.schools", "all.open.academies.and.free.school.links" }.Contains(x.Tag)) ?? Array.Empty<FileDownload>();
+            var openStateFundedSchoolsData = Downloads?.Where(x => new[] { "all.open.state-funded.schools", "all.open.state-funded.school.links" }.Contains(x.Tag)) ?? Array.Empty<FileDownload>();
+            var openChildrensCentresData = Downloads?.Where(x => new[] { "all.open.childrens.centres", "all.open.childrens.centres.links" }.Contains(x.Tag)) ?? Array.Empty<FileDownload>();
+            var allGroupData = Downloads?.Where(x => new[] { "all.group.records", "all.group.links.records", "all.group.with.links.records", "academies.mat.membership" }.Contains(x.Tag)) ?? Array.Empty<FileDownload>();
+            var openGroupData = Downloads?.Where(x => new[] { "academy.sponsor.and.trust.links" }.Contains(x.Tag)) ?? Array.Empty<FileDownload>();
+            var allGovernorData = Downloads?.Where(x => new[] { "all.governance.records", "all.mat.governance.records", "all.academy.governance.records", "all.la.maintained.governance.records" }.Contains(x.Tag)) ?? Array.Empty<FileDownload>();
 
-            var miscData = Downloads.Where(x => !allEstabData.Concat(openAcademiesAndFreeSchoolsData)
+            var miscData = Downloads?.Where(x => !(allEstabData).Concat(openAcademiesAndFreeSchoolsData)
                 .Concat(openStateFundedSchoolsData)
                 .Concat(openChildrensCentresData)
                 .Concat(allGroupData)
                 .Concat(openGroupData)
                 .Concat(allGovernorData)
                 .Select(y => y.Tag)
-                .Contains(x.Tag));
+                .Contains(x.Tag)) ?? Array.Empty<FileDownload>();
 
 
             if (allEstabData.Any() || openAcademiesAndFreeSchoolsData.Any() || openStateFundedSchoolsData.Any() || openChildrensCentresData.Any())
             {
-                var section = new Section { Heading = "Establishments", Paragraph = "You can download the complete record for the speciﬁed establishment types. There's a separate file with links to any predecessor or successor establishments." };
+                var section = new Section { Heading = "Establishments", Paragraph = "You can download the complete record for the specified establishment types. There's a separate file with links to any predecessor or successor establishments." };
 
                 if (allEstabData.Any())
                 {
@@ -189,6 +195,15 @@ namespace Edubase.Web.UI.Models
             return retVal;
         }
 
-        private string CleanTag(string tag) => tag.Replace(".", "_").Replace("-", "_");
+        private string CleanTag(string tag) => tag?.Replace(".", "_").Replace("-", "_");
+    }
+
+    public enum eDownloadFilter
+    {
+        [Display(Name = "Latest")]
+        Latest = 1,
+
+        [Display(Name = "Select a date")]
+        DateFilter = 2,
     }
 }

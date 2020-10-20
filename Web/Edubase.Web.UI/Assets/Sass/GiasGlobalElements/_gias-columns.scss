@@ -1,0 +1,13 @@
+.gias-columns-2 {
+  columns: 2;
+  column-gap: govuk-spacing(6);
+
+  @include govuk-media-query($until: tablet) {
+    columns: 1;
+  }
+
+  li {
+    break-inside: avoid;
+    padding-bottom: govuk-spacing(2);
+  }
+}

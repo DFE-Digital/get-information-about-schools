@@ -4,13 +4,22 @@
 
     @if (Model.UserCanEdit && Model.TabEditPolicy.Governance)
     {
-        @Html.ActionLink("Edit governance", "Edit", "Governor", new { establishmentUrn = Model.Establishment.Urn, area = "Governors" }, new { @class = "button button-secondary" })
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            @Html.ActionLink("Edit governance", "Edit", "Governor", new { establishmentUrn = Model.Establishment.Urn, area = "Governors" }, new { @class = "govuk-button govuk-button--secondary" })
+        </div>
+    </div>
     }
 
     @{Html.RenderAction("View", "Governor", new { viewModel = Model.GovernorsGridViewModel, area = "Governors" });}
 
     @if (Model.UserCanEdit && Model.TabEditPolicy.Governance)
     {
-        @Html.ActionLink("Edit governance", "Edit", "Governor", new { establishmentUrn = Model.Establishment.Urn, area = "Governors" }, new { @class = "button button-secondary" })
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                @Html.ActionLink("Edit governance", "Edit", "Governor", new { establishmentUrn = Model.Establishment.Urn, area = "Governors" }, new { @class = "govuk-button govuk-button--secondary" })
+            </div>
+        </div>
+
     }
 </div>

@@ -1,33 +1,42 @@
 @using Edubase.Services.Enums;
 @model CreateAcademyTrustViewModel
 @{
-    ViewBag.bodyClasses = "create-edit-school create-academy-trust";
+    ViewBag.bodyClasses = "create-edit create-academy-trust";
     ViewBag.hideLogo = true;
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Create new academy trust");
+    ViewBag.SiteSection = "tools";
 }
 
-<div class="breadcrumbs">
-    <ol>
-        <li>
-            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-        </li>
-        <li>
-            @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)
-        </li>
-        <li>
-            @Html.ActionLink("Create new academy trust", "SearchCompaniesHouse", "Group", new { area = "Groups" }, null)
-        </li>
-    </ol>
+@section BreadCrumbs
+{
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="govuk-breadcrumbs">
+            <ol class="govuk-breadcrumbs__list">
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link"})</li>
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new { @class = "govuk-breadcrumbs__link" })</li>
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Create an academy trust", "SearchCompaniesHouse", "Group", new { area = "Groups" }, new { @class = "govuk-breadcrumbs__link" })</li>
+            </ol>
+        </div>
+    </div>
 </div>
 
-@Html.Partial("_ValidationSummary", ViewData.ModelState)
+}
 
-<h1 class="heading-xlarge">Enter academy trust details</h1>
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState)
+        <h1 class="govuk-heading-xl">Enter academy trust details</h1>
+    </div>
+</div>
+
 
 @using (Html.BeginForm("SaveNewAcademyTrust", "Group", new { area = "Groups" }, FormMethod.Post))
 {
-    <div class="grid-row">
-        <div class="column-full">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
 
             @if (Model.TrustExists == true)
             {
@@ -41,32 +50,33 @@
             }
         </div>
     </div>
-    <div class="grid-row">
-        <div class="column-two-thirds">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
             <div id="company">
-                <h2 class="bold-small">Selected company</h2>
+                <h2 class="govuk-heading-s">Selected company</h2>
 
-                <table class="borderless company-result">
-                    <caption class="visuallyhidden">Academy trust details</caption>
-                    <tr>
-                        <th scope="row" class="new-trust-details">Company name:</th>
-                        <td class="new-trust-details">@Model.Name</td>
-                    </tr>
-                    <tr>
-                        <th scope="row" class="new-trust-details">Companies House number:</th>
-                        <td class="new-trust-details"><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.CompaniesHouseNumber" target="_blank">@Model.CompaniesHouseNumber</a></td>
-                    </tr>
-                    <tr>
-                        <th scope="row" class="new-trust-details">Incorporated:</th>
-                        <td class="new-trust-details">@(Model.OpenDate?.ToString("dd/MM/yyyy"))</td>
-                    </tr>
-                    <tr>
-                        <th scope="row" class="new-trust-details">Address:</th>
-                        <td class="new-trust-details">@Model.Address</td>
-                    </tr>
-                </table>
+                <dl class="gias-summary-list">
+                    <div class="gias-summary-list__row">
+                        <dt class="gias-summary-list__key">Company name:</dt>
+                        <dd class="gias-summary-list__value">@Model.Name</dd>
+                    </div>
+                    <div class="gias-summary-list__row">
+                        <dt class="gias-summary-list__key">Companies House number:</dt>
+                        <dd class="gias-summary-list__value">
+                            <a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.CompaniesHouseNumber" target="_blank">@Model.CompaniesHouseNumber</a>
+                        </dd>
+                    </div>
+                    <div class="gias-summary-list__row">
+                        <dt class="gias-summary-list__key">Incorporated:</dt>
+                        <dd class="gias-summary-list__value">@(Model.OpenDate?.ToString("dd/MM/yyyy"))</dd>
+                    </div>
+                    <div class="gias-summary-list__row">
+                        <dt class="gias-summary-list__key">Address:</dt>
+                        <dd class="gias-summary-list__value">@Model.Address</dd>
+                    </div>
+                </dl>
 
-                @Html.ActionLink("Wrong company?", "SearchCompaniesHouse", "Group", new {area = "Groups"}, new { @class = "change-link" })
+                <p>@Html.ActionLink("Wrong company?", "SearchCompaniesHouse", "Group", new {area = "Groups"}, new { @class = "change-link" })</p>
             </div>
 
             @Html.HiddenFor(x => x.CompaniesHouseAddressToken)
@@ -80,81 +90,74 @@
 
         @if (Model.TrustExists == true)
         {
-            <div class="column-two-thirds">
-                <div class="single-group">
-                    <h2 class="bold-small trust-details-header">Trust details</h2>
-                    <table class="borderless company-result">
-                        <caption class="visuallyhidden">Trust details</caption>
-                        <tr>
-                            <th scope="row" class="new-trust-details">Trust name:</th>
-                            <td class="new-trust-details">
-                                @Html.ActionLink(Model.TrustName, "Details", "Group", new {id = Model.GroupUid, area = "groups" }, new {@class = "bold-small"})
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row" class="new-trust-details">Trust type:</th>
-                            <td class="new-trust-details">@Model.GroupTypes.First(x => x.Value.Equals(Model.TypeId?.ToString(), StringComparison.InvariantCultureIgnoreCase)).Text</td>
-                        </tr>
-                        <tr>
-                            <th scope="row" class="new-trust-details">Group ID:</th>
-                            <td class="new-trust-details">@Model.GroupId</td>
-                        </tr>
-                    </table>
+            <div class="govuk-grid-column-two-thirds">
+                <div class="single-group govuk-!-padding-top-6  govuk-!-margin-bottom-4">
+                    <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Trust details</h2>
+                    <dl class="gias-summary-list">
+                        <div class="gias-summary-list__row">
+                            <dt class="gias-summary-list__key">Trust name:</dt>
+                            <dd class="gias-summary-list__value">
+                                @Html.ActionLink(Model.TrustName, "Details", "Group", new {id = Model.GroupUid, area = "groups" },null)
+                            </dd>
+                        </div>
+                        <div class="gias-summary-list__row">
+                            <dt class="gias-summary-list__key">Trust type:</dt>
+                            <dd class="gias-summary-list__value">
+                                @Model.GroupTypes.First(x => x.Value.Equals(Model.TypeId?.ToString(), StringComparison.InvariantCultureIgnoreCase)).Text
+                            </dd>
+                        </div>
+                        <div class="gias-summary-list__row">
+                            <dt class="gias-summary-list__key">Group ID:</dt>
+                            <dd class="gias-summary-list__value">@Model.GroupId</dd>
+                        </div>
+                    </dl>
                 </div>
             </div>
         }
         else
         {
-            <div class="column-half">
-                <div class="single-group">
-                    <h2 class="bold-small trust-details-header">Trust details</h2>
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.TypeId)">
-                        <label for="TypeId" class="form-label bold-small">Trust type</label>
-                        @Html.ValidationMessageFor(x => x.TypeId)
-                        @Html.DropDownListFor(x => x.TypeId, Model.GroupTypes, "", GetAttributes("form-control", Model.TrustExists))
+            <div class="govuk-grid-column-one-half">
+                <div class="single-group govuk-!-padding-top-6 govuk-!-margin-bottom-4">
+                    <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Trust details</h2>
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.TypeId)">
+                        <label for="TypeId" class="govuk-label">Trust type</label>
+                        @Html.ValidationMessageFor(x => x.TypeId, null, new { @class = "govuk-error-message" })
+                        @Html.DropDownListFor(x => x.TypeId, Model.GroupTypes, "", GetAttributes("govuk-select", Model.TrustExists))
                     </div>
-                    <div class="form-group @Html.ValidationCssClassFor(x => x.GroupId)">
-                        @Html.LabelFor(x => x.GroupId)
-                        @Html.ValidationMessageFor(x => x.GroupId)
-                        @Html.TextBoxFor(x => x.GroupId, GetAttributes("form-control", Model.TrustExists, 120))
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GroupId)">
+                        @Html.LabelFor(x => x.GroupId, new { @class = "govuk-label"})
+                        @Html.ValidationMessageFor(x => x.GroupId, null, new { @class = "govuk-error-message" })
+                        @Html.TextBoxFor(x => x.GroupId, GetAttributes("govuk-input", Model.TrustExists, 120))
                     </div>
                 </div>
             </div>
         }
 
     </div>
-    <div class="grid-row">
-        <div class="column-full">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="button-row">
             @if (Model.TrustExists == true)
             {
-                @Html.ActionLink("Back to company search", "SearchCompaniesHouse", "Group", new {area = "Groups"}, new {@class = "button cancel"})
+                @Html.ActionLink("Back to company search", "SearchCompaniesHouse", "Group", new {area = "Groups"}, new {@class = "govuk-button cancel"})
             }
             else
             {
-                @Html.ActionLink(HttpUtility.HtmlDecode("&laquo; Go back"), "SearchCompaniesHouse", "Group", new {area = "Groups"}, new {@class = "button button-secondary cancel"})
+                @Html.ActionLink(HttpUtility.HtmlDecode("&laquo; Go back"), "SearchCompaniesHouse", "Group", new {area = "Groups"}, new {@class = "govuk-button govuk-button--secondary cancel"})
                 if (Model.AllowSave)
                 {
-                    <button type="submit" class="button submit">Create academy trust</button>
+                    <button type="submit" class="govuk-button submit">Create academy trust</button>
                 }
-                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "button button-secondary cancel"})
+                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
             }
+            </div>
         </div>
     </div>
 }
 
 @section ViewScripts
 {
-    <script nonce="@Html.ScriptNonce()">
-        var $fields = $('#content').find('.form-control');
-        var exitAttached = false;
-
-        $fields.on('change', function () {
-            if (!exitAttached) {
-                DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
-                exitAttached = true;
-            }
-        });
-    </script>
+   <script src="/public/assets/scripts/build/bulk-academies.js"></script>
 }
 
 @functions

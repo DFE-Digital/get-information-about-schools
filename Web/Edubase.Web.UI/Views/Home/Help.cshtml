@@ -1,50 +1,56 @@
 @{
     ViewBag.Title = "Get information about schools";
     ViewBag.bodyClasses = "news-page";
+    ViewBag.SiteSection = "help";
 }
 
-<div class="grid-row">
-    <div class="column-full">
-        <div class="breadcrumbs">
-            <ol>
-                <li>
-                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-                </li>
-            </ol>
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new { area = "" }, new {@class = "govuk-breadcrumbs__link"})</li>
+                </ol>
+            </div>
         </div>
-        <h1 class="heading-xlarge">Help using Get information about schools</h1>
     </div>
-</div>
+}
 
-<div class="grid-row">
-    <div class="column-three-quarters">
-        <p class="page-info">Find out about our service, including the cookie policy, usability guides, glossary of terms and news of upcoming features as well as contacting us with any queries.</p>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Help using Get information about schools</h1>
     </div>
 </div>
-<div class="grid-row">
-    <div class="column-full">
-        <h2 class="bold-medium">@Html.RouteLink("FAQs", "Faq")</h2>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+        <p>Find out about our service, including the cookie policy, usability guides, glossary of terms and news of upcoming features as well as contacting us with any queries.</p>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">@Html.RouteLink("Frequently asked questions (FAQs)", "Faq")</h2>
         <p>Frequently asked questions about Get information about schools.</p>
 
-        <h2 class="bold-medium"><a href="https://form.education.gov.uk/fillform.php?self=1&form_id=hGz7nZcsdnX&noLoginPrompt=1" target="_blank" rel="external">Contact <span class="visually-hidden">Opens in new window</span></a></h2>
-        <p>A contact form for local authorities and non-maintained schools who have a query about Get information about schools and our other data collections.</p>
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-2"><a href="https://form.education.gov.uk/fillform.php?self=1&form_id=hGz7nZcsdnX&noLoginPrompt=1" target="_blank" rel="external">Contact <span class="govuk-visually-hidden">Opens in new window</span></a></h2>
+        <p>A contact form for local authorities, academy trusts and establishments who have a query about Get information about schools.</p>
 
-        <h2 class="bold-medium">@Html.ActionLink("Cookies", "Cookies", "Home", new { area = "" }, null)</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">@Html.ActionLink("Cookies", "Cookies", "Home", new {area = ""}, null)</h2>
         <p>How cookies are used on Get information about schools and each cookie's purpose.</p>
 
-        <h2 class="bold-medium">@Html.ActionLink("Glossary", "Index", "Glossary", new { area = "" }, null)</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">@Html.ActionLink("Glossary", "Index", "Glossary", new {area = ""}, null)</h2>
         <p>Specific terms explained with a full description.</p>
 
-        <h2 class="bold-medium">@Html.RouteLink("Guidance", "Guidance")</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">@Html.ActionLink("Guidance", "Index","Guidance", new {area = ""}, null)</h2>
         <p>General guidance about Get information about schools and for help with specific areas.</p>
 
-        <h2 class="bold-medium">@Html.ActionLink("Service information and users responsibilities", "Responsibilities", "Home", new { area = "" }, null)</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">@Html.ActionLink("Service information and users responsibilities", "Responsibilities", "Home", new { area = "" }, null)</h2>
         <p>Information for users about the service and their responsibilities.</p>
 
-        <h2 class="bold-medium">@Html.ActionLink("News", "News", "Home", new { area = "" }, null)</h2>
-        <p>Status report of the system as well as progress of new features.</p>
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">@Html.ActionLink("News", "News", "Home", new {area = ""}, null)</h2>
+        <p>Historic news pages, status of the system and updates on new functionality and features.</p>
 
-        <h2 class="bold-medium">@Html.ActionLink("Privacy notice", "Privacy", "Home", new { area = "" }, null)</h2>
+       <h2 class="govuk-heading-m govuk-!-margin-bottom-2">@Html.ActionLink("Privacy notice", "Privacy", "Home", new { area = "" }, null)</h2>
         <p>Information about how we use your personal data.</p>
     </div>
 </div>

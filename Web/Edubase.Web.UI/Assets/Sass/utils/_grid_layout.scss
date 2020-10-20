@@ -1,5 +1,0 @@
-@mixin grid-row($height) {
-  height: percentage($height);
-  /*padding: 0 $gutter-half;*/
-  @include box-sizing(border-box);
-}

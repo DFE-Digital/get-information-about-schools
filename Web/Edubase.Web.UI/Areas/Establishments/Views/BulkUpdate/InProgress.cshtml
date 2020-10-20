@@ -1,26 +1,39 @@
-﻿@section Head {
+﻿@{
+    ViewBag.SiteSection = "tools";
+}
+@section Head {
     <meta http-equiv="refresh" content="2">
 }
 
-<div class="breadcrumbs">
-    <ol>
-        <li>@Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)</li>
-        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-    </ol>
-</div>
-
-<div class="grid-row">
-    <div class="column-full">
-        <h1 class="heading-xlarge">Establishment bulk update</h1>
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Establishment bulk update</h1>
     </div>
     <div class="download-step">
-        <div class="column-two-thirds">
-            <h2 class="bold-medium">Processing...</h2>
-            <p class="font-small"></p>
+        <div class="govuk-grid-column-two-thirds">
+            <h2 class="govuk-heading-m">Processing...</h2>
+            <p class="govuk-body-s"></p>
         </div>
-        <div class="column-full">
+        <div class="govuk-grid-column-full">
             <div class="progress-indicator">
-                <span class="visually-hidden">Please wait.</span>
+                <span class="govuk-visually-hidden">Please wait.</span>
             </div>
         </div>
     </div>

@@ -2,22 +2,33 @@
 
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Bulk upload academies to trust/sponsor");
+    ViewBag.SiteSection = "tools";
 }
-<div class="breadcrumbs">
-    <ol>
-        <li>@Html.RouteLink("Home", "Homepage")</li>
-        <li>@Html.RouteLink("Tools", "Tools")</li>
-    </ol>
-</div>
-
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-<div class="grid-row">
-    <div class="column-full">
-        <h1 class="heading-xlarge">Bulk upload academies to trust<span class="visually-hidden">&nbsp;</span>/<span class="visually-hidden">&nbsp;</span>sponsor</h1>
-        <p>Use this tool to upload new academies to the relevant trusts<span class="visually-hidden">&nbsp;</span>/<span class="visually-hidden">&nbsp;</span>sponsor.</p>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Bulk upload academies to trust<span class="govuk-visually-hidden">&nbsp;</span>/<span class="govuk-visually-hidden">&nbsp;</span>sponsor</h1>
+        <p>Use this tool to upload new academies to the relevant trusts<span class="govuk-visually-hidden">&nbsp;</span>/<span class="govuk-visually-hidden">&nbsp;</span>sponsor.</p>
     </div>
-    <div class="column-full">
+    <div class="govuk-grid-column-full">
         @if (Model?.Result?.RowErrors > 0)
         {
             var uri = new Uri(Model.Result.ErrorLogFile.Url);
@@ -28,19 +39,19 @@
                 @Html.Hidden("id", @Model.Result.Id)
                 @Html.Hidden("path", path)
 
-                <div class="form-group error" id="error-log">
+                <div class="govuk-form-group govuk-form-group--error" id="error-log">
 
                     @if (Model.Result.CompletedWithErrors())
                     {
-                        <p class="error-message">@Model.Result.RowErrors rows encountered errors during import. Please download the error log to correct your data before resubmitting</p>
+                        <p class="govuk-error-message">@Model.Result.RowErrors rows encountered errors during import. Please download the error log to correct your data before resubmitting</p>
                     }
                     else
                     {
-                        <p class="error-message">Please download the error log to correct your data before resubmitting</p>
+                        <p class="govuk-error-message">Please download the error log to correct your data before resubmitting</p>
                     }
 
-                    <p class="download-list-item">
-                        <input type="submit" class="button inline-button" value="@Model.Result.ErrorLogFile.Name" /><br />
+                    <p>
+                        <input type="submit" class="govuk-button" value="@Model.Result.ErrorLogFile.Name" /><br />
                     </p>
                 </div>
             }
@@ -48,26 +59,31 @@
 
     </div>
 
-    <div class="column-full">
-        <h2 class="heading-medium">Download template</h2>
+    <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-m">Download template</h2>
         <p>
             Please use this template to list the academies.
         </p>
-        <a href="https://edubasepr.blob.core.windows.net/content/academies_bulk_upload.xls" class="download-list-item">Academies_bulk_upload.xls, 25KB</a>
+        <p>
+            <a href="https://edubasepr.blob.core.windows.net/content/academies_bulk_upload.xls" class="download-list-item">Academies_bulk_upload.xls, 25KB</a>
+        </p>
+
     </div>
 
     @using (Html.BeginRouteForm("BulkAssociateEstabs2GroupsPost", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-        <div class="column-full">
-            <h2 class="heading-medium">Upload completed template</h2>
-            <div class="form-group push--bottom @Html.ValidationCssClassFor(x => x.BulkFile)">
-                <label for="BulkFile" class="form-label">Upload a file</label>
-                @Html.ValidationMessageFor(x => x.BulkFile)
-                @Html.TextBoxFor(x => x.BulkFile, new { type = "file" })
+        <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-m  govuk-!-padding-top-6">Submit completed template</h2>
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.BulkFile)">
+                <label for="BulkFile" class="govuk-label">Upload a file</label>
+                @Html.ValidationMessageFor(x => x.BulkFile, null, new {@class = "govuk-error-message"})
+                @Html.TextBoxFor(x => x.BulkFile, new { type = "file", @class = "govuk-file-upload" })
             </div>
-            <div class="form-group">
-                <input type="submit" class="button" value="Submit" />
-                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class="button button-secondary cancel"})
+        </div>
+        <div class="govuk-grid-column-full">
+            <div class="button-row">
+                <input type="submit" class="govuk-button" value="Submit" />
+                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class="govuk-button govuk-button--secondary cancel"})
             </div>
         </div>
     }

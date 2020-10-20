@@ -1,0 +1,76 @@
+.gias-tabs {
+  @include govuk-font(19);
+
+  margin: 0 0 20px 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  justify-content: flex-start;
+  border-bottom: $govuk-border-colour 1px solid;
+
+  @include govuk-media-query($until: desktop) {
+    flex-wrap: wrap;
+    border-bottom: 0;
+    margin-top: govuk-spacing(3);
+  }
+}
+
+.gias-tabs__list-item {
+  position: relative;
+  margin: 0 govuk-spacing(1) 0 0;
+  padding: govuk-spacing(2) govuk-spacing(4);
+  text-align: center;
+  background-color: govuk-colour('light-grey');
+  border: 1px solid govuk-colour('white');
+  border-bottom-width: 5px;
+
+  @include govuk-media-query($until: desktop) {
+    /* stylelint-disable length-zero-no-unit */
+    // IE wants the px
+    flex: 1 1 0px; /* stylelint-enable */
+    margin-bottom: 5px;
+    border-color: $govuk-border-colour;
+    border-bottom-width: 1px;
+  }
+
+  @include govuk-media-query($until: tablet) {
+    font-size: 12px;
+  }
+
+  a {
+    word-break: normal;
+  }
+}
+
+.gias-tabs__tab:link {
+  color: govuk-colour('black');
+}
+
+.gias-tabs__tab:visited {
+  color: govuk-colour('black');
+}
+
+.gias-tabs__list-item--selected {
+  background-color: govuk-colour('white');
+  border-color: $govuk-border-colour;
+  border-bottom-width: 0;
+  margin-bottom: -1px;
+  margin-top: -5px;
+  padding-bottom: govuk-spacing(3);
+
+  @include govuk-media-query($until: desktop) {
+    margin-top: 0;
+    margin-bottom: 5px;
+    border-bottom-width: 1px;
+    padding-bottom: govuk-spacing(2);
+  }
+
+  .gias-tabs__tab {
+    text-decoration: none;
+
+    @include govuk-media-query($from: desktop) {
+      position: relative;
+      top: govuk-spacing(1);
+    }
+  }
+}

@@ -1,31 +1,30 @@
 ﻿@model AgeRangeFilterViewModel
 
 <div class="govuk-option-select age-filter js-collapsible no-scroll additional-search-critera hidden" data-closed-on-load="false" id="@($"option-select-{ViewData.ModelMetadata.PropertyName}")" data-bind-alias="@(ViewData["bindalias"])">
-
     <div class="container-head js-container-head">
         <div class="option-select-label">@(ViewData["title"] ?? "Age range")</div>
-            <div class="js-selected-counter">
-                <span class="js-selected-counter-text">Age selected</span>
-            </div>
+        <div class="js-selected-counter">
+            <span class="js-selected-counter-text">Age selected</span>
+        </div>
     </div>
     <a href="#" class="clear-selections filter-clear">Clear</a>
     <div class="options-container" id="">
         <div class="js-auto-height-inner">
-            <div class="form-group date-group">
-                <fieldset class="range-group">
-                    <span class="error-message hidden">Please check the age(s) you have entered</span>
-                    <span class="inline-form-control">
-                        @Html.LabelFor(m => m.From)
-                        @Html.TextBoxFor(m => m.From, new { @class = "form-control", maxlength="2"})
-                    </span>
-                    <span class="inline-form-control">
-                        @Html.LabelFor(m => m.To)
-                        @Html.TextBoxFor(m => m.To, new { @class = "form-control", maxlength="2"})
-                    </span>
+            <div class="govuk-form-group date-group">
+                <fieldset class="govuk-fieldset range-group">
+                    <span class="govuk-error-message hidden">Please check the age(s) you have entered</span>
+                    <div class="gias-range-input__item">
+                        @Html.LabelFor(m => m.From, new {@class = "govuk-label"})
+                        @Html.TextBoxFor(m => m.From, new {@class = "govuk-input govuk-input--width-5", maxlength = "2"})
+                    </div>
+                    <div class="gias-range-input__item">
+                        @Html.LabelFor(m => m.To, new {@class = "govuk-label"})
+                        @Html.TextBoxFor(m => m.To, new {@class = "govuk-input  govuk-input--width-5", maxlength = "2"})
+                    </div>
                 </fieldset>
             </div>
-            <div class="form-group soft-half--sides">
-                <a href="#" class="button button-secondary filter-button">Apply</a>
+            <div class="govuk-form-group">
+                <a href="#" class="govuk-button govuk-button--secondary filter-button" data-module="govuk-button">Apply</a>
             </div>
         </div>
     </div>

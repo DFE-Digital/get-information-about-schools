@@ -36,15 +36,34 @@ namespace Edubase.Web.UI.Controllers
             _httpClientHelper = httpClientHelper;
         }
 
-        public async Task<ActionResult> Index(int? skip)
+        public async Task<ActionResult> Index(int? skip, DateTimeViewModel filterDate, eDownloadFilter searchType = eDownloadFilter.Latest)
         {
+            var viewModel = await GetDownloads(skip, filterDate, searchType);
+            return View(viewModel);
+        }
+
+        [HttpGet, Route("results-js")]
+        public async Task<PartialViewResult> ResultsPartial(DownloadsViewModel model)
+        {
+            var viewModel = await GetDownloads(model.Skip, model.FilterDate, model.SearchType);
+            return PartialView("Partials/_DownloadsResults", viewModel);
+        }
+
+        private async Task<DownloadsViewModel> GetDownloads(int? skip, DateTimeViewModel filterDate, eDownloadFilter searchType = eDownloadFilter.Latest)
+        {
+            var dateLookup = searchType == eDownloadFilter.Latest ? new DateTimeViewModel(DateTime.Today) :
+                filterDate.IsValid() ? filterDate : new DateTimeViewModel(DateTime.Today);
+
             var viewModel = new DownloadsViewModel
             {
-                Downloads = await _downloadsService.GetListAsync(User),
+                Downloads = await _downloadsService.GetListAsync(dateLookup.ToDateTime() ?? DateTime.Today, User),
                 ScheduledExtracts = await _downloadsService.GetScheduledExtractsAsync(skip.GetValueOrDefault(), 100, User),
+                FilterDate = dateLookup,
+                SearchType = searchType,
+                Skip = skip
             };
 
-            return View(viewModel);
+            return viewModel;
         }
 
         [Route("Generate", Name = "GenerateDownload")]
@@ -158,9 +177,9 @@ namespace Edubase.Web.UI.Controllers
 
         [HttpGet]
         [Route("Download/File", Name = "DownloadFile")]
-        public async Task<ActionResult> DownloadFileAsync(string id)
+        public async Task<ActionResult> DownloadFileAsync(string id, DateTime? filterDate)
         {
-            var file = (await _downloadsService.GetListAsync(User)).FirstOrDefault(x => x.Tag == id);
+            var file = (await _downloadsService.GetListAsync(filterDate ?? DateTime.Today, User)).FirstOrDefault(x => x.Tag == id);
             if (file != null)
             {
                 using (var c = IocConfig.CreateHttpClient())

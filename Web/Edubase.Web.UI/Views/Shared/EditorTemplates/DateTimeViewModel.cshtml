@@ -7,12 +7,24 @@
     string labelClassName = "";
     string fieldsetClassName = "";
     bool disableHint = false;
+    string dateHint = "";
+    bool hideLegend = false;
     bool.TryParse(ViewData["disableHint"]?.ToString(), out disableHint);
     string legendPrefix = "";
+
+    if (ViewData["dateHint"] != null)
+    {
+        dateHint = ViewData["dateHint"].ToString();
+    }
 
     if (ViewData["labelClass"] != null)
     {
         labelClassName = ViewData["labelClass"].ToString();
+    }
+
+    if (ViewData["hideLegend"] != null)
+    {
+        hideLegend = true;
     }
 
     if (ViewData["fieldsetClassName"] != null)
@@ -29,12 +41,12 @@
     {
         showBinding = String.Concat((string)@ViewData["vueModel"], "Error");
         messageBinding = String.Concat((string)@ViewData["vueModel"], "ErrorMessage");
-        classBinding = String.Concat("v-bind:class=\"[", @showBinding, "?'error': '', 'form-group create-edit-form-group date-group']\"");
+        classBinding = String.Concat("v-bind:class=\"[", @showBinding, "?'govuk-form-group--error': '', 'govuk-form-group create-edit-form-group date-group']\"");
     }
     else
     {
-        classBinding = "class=\"form-group create-edit-form-group date-group "
-            + Html.ValidationCssClass(ViewData.ModelMetadata.PropertyName) + " "
+        classBinding = "class=\"govuk-form-group create-edit-form-group date-group "
+            + Html.ValidationGroupCssClass(ViewData.ModelMetadata.PropertyName) + " "
             + Html.ValidationCssClassFor(x => x) + " "
             + Html.ValidationCssClassFor(x => x.Day) + " "
             + Html.ValidationCssClassFor(x => x.Month) + " "
@@ -53,13 +65,13 @@
 
 }
 <div @Html.Raw(classBinding)>
-    <fieldset class="range-group @fieldsetClassName">
+    <fieldset class="govuk-fieldset range-group @fieldsetClassName">
         @if (ViewData["inFilters"] != null)
         {
-            <span class="error-message hidden">Please check the date(s) you have entered</span>
-            <span class="error-message hidden date-range-error">Please use a valid date range</span>
+            <span class="govuk-error-message hidden">Please check the date(s) you have entered</span>
+            <span class="govuk-error-message hidden date-range-error">Please use a valid date range</span>
         }
-        <legend class="bold" id="@legendPrefix@ViewData.ModelMetadata.PropertyName" style="@ViewData["style"]">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
+        <legend class="govuk-fieldset__legend @Html.Conditional(hideLegend, "hidden")" id="@legendPrefix@ViewData.ModelMetadata.PropertyName">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
 
         @{
             var fullFieldId = ViewData.TemplateInfo.GetFullHtmlFieldName(Model?.Label)
@@ -74,17 +86,42 @@
 
             foreach (var modelStateKey in ViewData.ModelState.Keys)
             {
-                if (modelStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCultureIgnoreCase) &&
-                    !modelStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCulture))
+                var testStateKey = modelStateKey;
+                var linkStateKey = testStateKey;
+                if (testStateKey.EndsWith(".Day"))
                 {
-                    <div id="@modelStateKey"></div>
+                    testStateKey = testStateKey.Replace(".Day", "");
+                    linkStateKey = linkStateKey.Replace(".Day", "_Day");
+                }
+                if (testStateKey.EndsWith(".Month"))
+                {
+                    testStateKey = testStateKey.Replace(".Month", "");
+                    linkStateKey = linkStateKey.Replace(".Month", "_Month");
+                }
+                if (testStateKey.EndsWith(".Year"))
+                {
+                    testStateKey = testStateKey.Replace(".Year", "");
+                    linkStateKey = linkStateKey.Replace(".Year", "_Year");
+                }
+
+                if (testStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCultureIgnoreCase) &&
+                    !testStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCulture))
+                {
+                    <div id="@linkStateKey"></div>
                 }
             }
         }
 
         @if (!disableHint)
         {
-            <div class="form-hint">For example, 20 03 2003</div>
+            if (dateHint != String.Empty)
+            {
+                <p class="govuk-hint">For example, @dateHint</p>
+            }
+            else
+            {
+                <p class="govuk-hint">For example, 20 03 2003</p>
+            }
         }
 
         @if (showReactivationWarning)
@@ -98,10 +135,10 @@
             var errContent = new List<MvcHtmlString>()
             {
                 Html.ValidationMessageNested(ViewData.ModelMetadata.PropertyName),
-                Html.ValidationMessageFor(x => x),
-                Html.ValidationMessageFor(x => x.Day),
-                Html.ValidationMessageFor(x => x.Month),
-                Html.ValidationMessageFor(x => x.Year)
+                Html.ValidationMessageFor(x => x, null, new{ @class="govuk-error-message" }),
+                Html.ValidationMessageFor(x => x.Day, null, new{ @class="govuk-error-message" }),
+                Html.ValidationMessageFor(x => x.Month, null, new{ @class="govuk-error-message" }),
+                Html.ValidationMessageFor(x => x.Year, null, new{ @class="govuk-error-message" })
             };
 
             foreach (var mvcHtmlString in errContent.Select(x => x?.ToHtmlString()).Distinct())
@@ -112,21 +149,35 @@
 
         @if (ViewData["vueModel"] != null)
         {
-            <span class="error-message" v-show="@showBinding" v-html="@messageBinding"></span>
+            <span class="govuk-error-message" v-show="@showBinding" v-html="@messageBinding"></span>
         }
+        @{
+            var dayCssClasses = string.Concat(@Html.TextBoxValidationClass(x => x.Day), " govuk-input ", $"{cssClassPrefix}-day");
+            var monthCssClasses = string.Concat(@Html.TextBoxValidationClass(x => x.Month), " govuk-input ", $"{cssClassPrefix}-month");
+            var yearCssClasses = string.Concat(@Html.TextBoxValidationClass(x => x.Year), " govuk-input ", $"{cssClassPrefix}-year");
+        }
+        <div class="govuk-date-input">
+            <div class="govuk-date-input__item">
+                <div class="govuk-form-group">
 
-        <span class="inline-form-control">
-            @Html.LabelFor(x => x.Day, new { @class = labelClassName })
-            @Html.TextBoxFor(x => x.Day, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, $"form-control {cssClassPrefix}-day", 2, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Day") : null))
-        </span>
-        <span class="inline-form-control">
-            @Html.LabelFor(x => x.Month, new { @class = labelClassName })
-            @Html.TextBoxFor(x => x.Month, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, $"form-control {cssClassPrefix}-month", 2, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Month") : null))
-        </span>
-        <span class="inline-form-control">
-            @Html.LabelFor(x => x.Year, new { @class = labelClassName })
-            @Html.TextBoxFor(x => x.Year, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, $"form-control {cssClassPrefix}-year", 4, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Year") : null))
-        </span>
+
+                    @Html.LabelFor(x => x.Day, new {@class = string.Concat(labelClassName, " govuk-label govuk-date-input__label")})
+                    @Html.TextBoxFor(x => x.Day, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, dayCssClasses, 2, ViewData["vueModel"] != null ? String.Concat((string) ViewData["vueModel"], "Day") : null))
+                </div>
+            </div>
+            <div class="govuk-date-input__item">
+                <div class="govuk-form-group">
+                    @Html.LabelFor(x => x.Month, new {@class = string.Concat(labelClassName, " govuk-label govuk-date-input__label")})
+                    @Html.TextBoxFor(x => x.Month, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, monthCssClasses, 2, ViewData["vueModel"] != null ? String.Concat((string) ViewData["vueModel"], "Month") : null))
+                </div>
+            </div>
+            <div class="govuk-date-input__item gias-year-input__item">
+                <div class="govuk-form-group">
+                    @Html.LabelFor(x => x.Year, new {@class = string.Concat(labelClassName, " govuk-label govuk-date-input__label")})
+                    @Html.TextBoxFor(x => x.Year, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, yearCssClasses, 4, ViewData["vueModel"] != null ? String.Concat((string) ViewData["vueModel"], "Year") : null))
+                </div>
+            </div>
+        </div>
         @if (ViewData["readonly"] as bool? ?? false)
         {
             @Html.HiddenFor(x => x.Day)

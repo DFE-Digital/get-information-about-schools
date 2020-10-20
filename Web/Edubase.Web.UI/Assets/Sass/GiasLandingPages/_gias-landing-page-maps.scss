@@ -1,0 +1,10 @@
+.landing-page-map-container {
+  width: 40%;
+  float: right;
+}
+
+.group-establishment-list {
+  @include govuk-media-query($from: tablet) {
+    width: 56%;
+  }
+}

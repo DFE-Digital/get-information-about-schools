@@ -15,7 +15,7 @@ insert_final_newline = true
 charset = utf-8
 # end_of_line = Line endings are normalised by Git (* text=auto in .gitattributes file)
 
-[*.{js,scss}]
+[*.{js,scss,vue}]
 indent_size = 2
 
 ########################################################################################################################

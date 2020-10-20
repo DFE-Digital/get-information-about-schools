@@ -6,23 +6,23 @@
     Layout = Model.Layout;
 }
 
-<div id="" class="tab-content">
-    <div class="column-two-thirds">
-        <h1 class="heading-medium tab-lead">Governance</h1>
+<div id="" class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-m">Governance</h1>
         @using (Html.BeginForm("GroupEditDelegation", "GovernanceDelegation", FormMethod.Post))
         {
             @Html.HiddenFor(m => m.GroupUId)
-            <h2 class="heading-small">Delegated authority of local governing body</h2>
+            <h2 class="govuk-heading-s">Delegated authority of local governing body</h2>
             <div class="edit-governor">
-                <div class="form-group @Html.ValidationCssClassFor(x => x.DelegationInformation)">
-                    @Html.LabelFor(x => x.DelegationInformation, new {@class = "form-label"})
-                    @Html.ValidationMessageFor(x => x.DelegationInformation, "Details must be 1000 characters or less")
-                    @Html.TextAreaFor(x => x.DelegationInformation, new {rows = "6", cols = "60", @class="form-control"})
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.DelegationInformation)">
+                    @Html.LabelFor(x => x.DelegationInformation, new {@class = "govuk-label"})
+                    @Html.ValidationMessageFor(x => x.DelegationInformation, "Details must be 1000 characters or less", new { @class = "govuk-error-message" })
+                    @Html.TextAreaFor(x => x.DelegationInformation, new {rows = "6", cols = "60", @class="govuk-textarea"})
                 </div>
 
                 <div class="button-row">
-                    <button type="submit" value="Save" class="button">Save delegated authority</button>
-                    <a href="@Url.RouteUrl("GroupEditGovernance", new {GroupUId = Model.GroupUId})" class="button button-secondary">Cancel</a>
+                    <button type="submit" value="Save" class="govuk-button">Save delegated authority</button>
+                    <a href="@Url.RouteUrl("GroupEditGovernance", new {GroupUId = Model.GroupUId})" class="govuk-button govuk-button--secondary">Cancel</a>
                 </div>
             </div>
         }
@@ -31,7 +31,8 @@
 
 @section ViewScripts
 {
-    <script nonce="@Html.ScriptNonce()">
-        $('#DelegationInformation').textCount();
-    </script>
+    <script src="/public/assets/scripts/build/delegated-authority.js"></script>
+    @* <script nonce="@Html.ScriptNonce()"> *@
+    @*     $('#DelegationInformation').textCount(); *@
+    @* </script> *@
 }

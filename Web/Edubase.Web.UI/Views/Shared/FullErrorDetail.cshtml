@@ -6,22 +6,30 @@
     ViewBag.pageDescription = "";
     ViewBag.pageClass = "error-page view-logs";
 }
+@section BreadCrumbs
+{
+    @if (!isPartialView)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <div class="govuk-breadcrumbs">
+                    <ol class="govuk-breadcrumbs__list">
+                        <li class="govuk-breadcrumbs__list-item">
+                            @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                        </li>
 
-<div class="grid-row">
-    <div class="column-full">
-        @if (!isPartialView)
-        {
-            <div class="breadcrumbs">
-                <ol>
-                    <li>
-                        @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-                    </li>
-                </ol>
+                    </ol>
+                </div>
             </div>
-        }
-        <h1 class="heading-xlarge">Sorry, something went wrong</h1>
+        </div>
+    }
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+        <h1 class="govuk-heading-xl">Sorry, something went wrong</h1>
     </div>
-    <div class="column-full">
+    <div class="govuk-grid-column-full">
         <p>Please try again later.</p>
         <p>A report of the error has been sent to our technical team.</p>
         @if (ViewBag.ErrorCode != null)
@@ -29,14 +37,14 @@
             <p style="color:#ddd;">Error code: @ViewBag.ErrorCode</p>
         }
         <hr />
-        <h1 class="heading-medium">Details</h1>
+        <h1 class="govuk-heading-m">Details</h1>
         <table>
             <tr>
-                <td class="bold-xsmall" style="width:100px;">Message</td>
+                <td class="govuk-!-font-weight-bold" style="width:100px;">Message</td>
                 <td>@Model.Message</td>
             </tr>
             <tr>
-                <td class="bold-xsmall">Stack trace</td>
+                <td class="govuk-!-font-weight-bold">Stack trace</td>
             </tr>
             <tr>
                 <td colspan="2" class="plain">@FormatHelpers.HtmlizeNewLines(Model.ToString())</td>

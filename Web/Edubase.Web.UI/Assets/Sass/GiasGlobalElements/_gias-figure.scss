@@ -1,0 +1,23 @@
+.gias-figure {
+  margin: govuk-spacing(4) 0 govuk-spacing(4) 10%;
+  width: 80%;
+
+  @include govuk-media-query($until: desktop) {
+    width: 90%;
+    margin-left: 5%;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    box-shadow: 5px 5px 5px rgba(11, 12, 12, 0.25); // rgb $govuk-black
+  }
+
+  .gias-figure__caption {
+    text-align: right;
+    display: block;
+    padding: govuk-spacing(2);
+
+    @include govuk-font(19);
+  }
+}

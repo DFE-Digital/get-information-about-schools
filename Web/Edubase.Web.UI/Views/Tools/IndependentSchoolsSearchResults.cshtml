@@ -3,45 +3,59 @@
 @{
     ViewBag.Title = "View independent schools' significant dates";
     ViewBag.bodyClasses = "search-results";
+    ViewBag.SiteSection = "tools";
 }
 
-<div class="breadcrumbs">
-    <ol>
-        <li>
-            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-        </li>
-        <li>@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, null)</li>
-        <li>
-            @Html.ActionLink("View independent schools' significant dates","IndependentSchoolsSearch","Tools")
-        </li>
-    </ol>
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("View independent schools' significant dates","IndependentSchoolsSearch","Tools", new {area = ""},new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+
+<div class="govuk-error-summary hidden" aria-labelledby="error-summary-title" role="alert" tabindex="-1" id="js-filter-error-summary">
+    <h2 id="error-summary-title" class="govuk-error-summary__title">Incorrect or missing details</h2>
+    <div class="govuk-error-summary__body">
+        <ul class="govuk-list govuk-error-summary__list">
+            <li class="date-filter-error hidden">
+                <a href="#date-filter">Please enter the date in the format DD/MM/YYYY</a>
+            </li>
+        </ul>
+    </div>
 </div>
 
-<div class="error-summary hidden" aria-labelledby="error-summary-title" role="alert" tabindex="-1" id="js-filter-error-summary">
-    <h2 id="error-summary-title" class="heading-medium error-summary-heading">Incorrect or missing details</h2>
-    <ul class="error-summary-list">
-        <li class="date-filter-error hidden">
-            <a href="#date-filter">Please enter the date in the format DD/MM/YYYY</a>
-        </li>
-    </ul>
-</div>
-
-<div class="grid-row">
-    <div class="column-full results-heading">
-        <h1 class="heading-xlarge">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">
             @Html.Conditional(Model.IsGeneralMode, "Next general action required")
             @Html.Conditional(Model.IsWelfareMode, "Next action required by welfare")
         </h1>
-
-         <a class="download-link @Html.Conditional(Model.Results.Count < 1, "hidden")" href="@Url.RouteUrl("IndSchSearchResultsRequestDownload")?@Request.QueryString">Download these results</a>
+        <div class="search-results-download-link-container @Html.Conditional(Model.Results.Count < 1, "hidden")">
+            <a class="search-results-download-link" href="@Url.RouteUrl("IndSchSearchResultsRequestDownload")?@Request.QueryString">Download these results</a>
+        </div>
     </div>
 </div>
 
 
-<div class="grid-row">
-    <div class="column-third" id="indi-filter-form">
-        <h2 class="visuallyhidden">Search results filters</h2>
-        <a href="#results-container" class="visually-hidden-focusable">Skip filters</a>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third govuk-!-padding-bottom-4" id="indi-filter-form">
+        <h2 class="govuk-visually-hidden">Search results filters</h2>
+        <a href="#results-container" class="govuk-visually-hidden-focusable">Skip filters</a>
 
         @using (Html.BeginRouteForm("IndSchSearch", FormMethod.Get, new {id="filter-form-ind"}))
         {
@@ -52,7 +66,7 @@
             @Selector("Local authority", "d", Model.LocalAuthorities.OrderBy(x => x.Name).ToList(), Model.SelectedLocalAuthorityIds, "has-save-set")
 
             <p>
-                <a class="font-xsmall" href="#" id="set-saver">Save as set</a>
+                <a class="govuk-body-s" href="#" id="set-saver">Save as set</a>
             </p>
             <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="false" id="date-filter">
                 <div class="container-head js-container-head">
@@ -68,20 +82,23 @@
                         @Html.EditorFor(x => x.MinDate, new {title = "From", inFilters = true, disableHint = true, fieldsetClassName = "search-from-date" })
                         @Html.EditorFor(x => x.MaxDate, new {title = "To", inFilters = true, disableHint = true, fieldsetClassName = "search-to-date" })
 
-                        <div class="form-group soft-half--sides">
-                            <a href="#" class="button button-secondary filter-button">Apply</a>
+                        <div class="govuk-form-group">
+                            <a href="#" class="govuk-button govuk-button--secondary filter-button" data-module="govuk-button">Apply</a>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="govuk-!-padding-top-4 no-js-show-block">
+                <input type="submit" value="Update" class="govuk-button edubase-filter-submit" id="filter-submit" />
+            </div>
 
-            <input type="submit" value="Update" class="button edubase-filter-submit" id="filter-submit" />
         }
     </div>
 
-    <div role="alert" aria-live="assertive" id="results-notification" class="visuallyhidden"></div>
-    <h2 class="visuallyhidden">Search results listing</h2>
-    <div class="column-two-thirds" id="results-container">
+
+    <div class="govuk-grid-column-two-thirds" id="results-container">
+        <div role="alert" aria-live="assertive" id="results-notification" class="govuk-visually-hidden"></div>
+        <h2 class="govuk-visually-hidden">Search results listing</h2>
         @{Html.RenderPartial("_IndSchSearchResults");}
     </div>
 </div>
@@ -99,20 +116,22 @@
 
             </div>
         </div>
-        <a href="#" class="clear-selections filter-clear">Clear</a>
+        <a href="#" class="clear-selections filter-clear" role="button">Clear</a>
         <div class="options-container" id="">
             <div class="js-auto-height-inner">
-                <fieldset>
-                    <legend class="visuallyhidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
-                    @foreach (var item in items)
-                    {
-                        <div class="multiple-choice multiple-choice--smaller multiple-choice--list">
-                            <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
-                            <label for="@(name)_@item.Id">
-                                @item
-                            </label>
-                        </div>
-                    }
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-visually-hidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
+                    <div class="govuk-checkboxes gias-filter-checkboxes">
+                        @foreach (var item in items)
+                        {
+                            <div class="govuk-checkboxes__item">
+                                <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="trigger-result-update govuk-checkboxes__input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
+                                <label for="@(name)_@item.Id" class="js-filter-label govuk-label govuk-checkboxes__label">
+                                    @item
+                                </label>
+                            </div>
+                        }
+                    </div>
                 </fieldset>
             </div>
         </div>
@@ -122,5 +141,5 @@
 
 @section ViewScripts
 {
-    <script src="/public/assets/scripts/standalone/indi-search.js"></script>
+    <script src="/public/assets/scripts/build/independent-schools-sig-search-results.js"></script>
 }

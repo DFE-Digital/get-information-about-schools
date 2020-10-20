@@ -1,4 +1,4 @@
-call grunt compile-dev-assets
+call npm run gulp build
 @echo off
 echo Exit Code is %errorlevel%
 @echo on

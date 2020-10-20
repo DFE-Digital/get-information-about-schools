@@ -37,16 +37,16 @@
     <div class="top-pagination">
         @Html.Partial("_GenericPaginationV2", Model)
     </div>
-    <table class="edubase-table sortable-table table-tight" id="changes-table">
-        <caption class="visuallyhidden">Establishment change history search results</caption>
-        <thead>
-            <tr>
+    <table class="govuk-table gias-table sortable-table change-history-table" id="changes-table">
+        <caption class="govuk-visually-hidden">Establishment change history search results</caption>
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
             @foreach (var tableColumn in tableColumns)
             {
                 if (tableColumn.Item3 || !Model.SingleEstablishment)
                 {
                     var toggleHide = tableColumn.Item1 == "originatorUserName" || tableColumn.Item1 == "approverUserName";
-                    <th class="@(toggleHide ? "visuallyhidden js-reveal-when-no-filter" : "")" scope="col">
+                    <th class="govuk-table__header @(toggleHide ? "govuk-visually-hidden js-reveal-when-no-filter" : "") cell-@tableColumn.Item1.ToLower()" scope="col">
                         <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
                         class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
                         aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
@@ -55,27 +55,27 @@
             }
             </tr>
         </thead>
-        <tbody>
+        <tbody class="govuk-table__body">
             @foreach (var item in Model.Items)
             {
-            <tr>
-                <td data-label="Date changed">@(item.DateChanged?.ToString("dd/MM/yyyy"))</td>
-                <td data-label="Effective date">@(item.EffectiveDate?.ToString("dd/MM/yyyy"))</td>
+            <tr class="govuk-table__row">
+                <td data-label="Date changed" class="govuk-table__cell">@(item.DateChanged?.ToString("dd/MM/yyyy"))</td>
+                <td data-label="Effective date" class="govuk-table__cell">@(item.EffectiveDate?.ToString("dd/MM/yyyy"))</td>
                 @if (!Model.SingleEstablishment)
                 {
-                    <td data-label="URN">@Html.RouteLink(item.EstablishmentUrn?.ToString() ?? "Unknown", "EstabDetails", new { id = item.EstablishmentUrn })</td>
-                    <td data-label="Establishment" class="table-tight--break-word">@Html.RouteLink(item.EstablishmentName ?? "Unknown", "EstabDetails", new { id = item.EstablishmentUrn })</td>
+                    <td data-label="URN" class="govuk-table__cell">@Html.RouteLink(item.EstablishmentUrn?.ToString() ?? "Unknown", "EstabDetails", new { id = item.EstablishmentUrn })</td>
+                    <td data-label="Establishment" class="govuk-table__cell">@Html.RouteLink(item.EstablishmentName ?? "Unknown", "EstabDetails", new { id = item.EstablishmentUrn })</td>
                 }
-                <td data-label="Updated field" class="table-tight--break-word">@item.FieldName</td>
-                <td data-label="Old value" class="table-tight--break-word">@item.OldValue</td>
-                <td data-label="New value" class="table-tight--break-word">@item.NewValue</td>
-                <td data-label="Suggested by" class="break-word visuallyhidden js-reveal-when-no-filter">@item.SuggesterName</td>
-                <td data-label="Approved by" class="break-word visuallyhidden js-reveal-when-no-filter">@item.ApproverName</td>
+                <td data-label="Updated field" class="govuk-table__cell">@item.FieldName</td>
+                <td data-label="Old value" class="govuk-table__cell">@item.OldValue</td>
+                <td data-label="New value" class="govuk-table__cell">@item.NewValue</td>
+                <td data-label="Suggested by" class="govuk-table__cell govuk-visually-hidden js-reveal-when-no-filter">@item.SuggesterName</td>
+                <td data-label="Approved by" class="govuk-table__cell govuk-visually-hidden js-reveal-when-no-filter">@item.ApproverName</td>
             </tr>
             }
         </tbody>
     </table>
-    <div class="lower-pagination push--bottom">
+    <div class="lower-pagination">
         @Html.Partial("_GenericPaginationV2", Model)
     </div>
     @helpers.BackToTopLink()

@@ -19,7 +19,7 @@ namespace Edubase.Services.Texuna.Downloads
             _httpClient = httpClient;
         }
 
-        public async Task<FileDownload[]> GetListAsync(IPrincipal principal) => (await _httpClient.GetAsync<FileDownload[]>($"downloads", principal)).Response;
+        public async Task<FileDownload[]> GetListAsync(DateTime filterDate, IPrincipal principal) => (await _httpClient.GetAsync<FileDownload[]>($"downloads?filterDate={filterDate.ToString("yyyy-MM-dd")}", principal)).Response;
         
         public async Task<PaginatedResult<ScheduledExtract>> GetScheduledExtractsAsync(int skip, int take, IPrincipal principal)
         {

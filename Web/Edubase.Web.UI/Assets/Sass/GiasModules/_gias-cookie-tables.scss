@@ -1,0 +1,50 @@
+.gias-cookie-table {
+  width: 100%;
+  table-layout: fixed;
+
+  .govuk-table__header,
+  .govuk-table__cell {
+    width: 33.3333%;
+    padding-left: govuk-spacing(1);
+  }
+
+  .govuk-table__head .govuk-table__header {
+    border: 1px solid $govuk-border-colour;
+    font-weight: normal;
+  }
+
+  @include govuk-media-query($until: tablet) {
+    .govuk-table__head {
+      display: none;
+    }
+
+    .govuk-table__body {
+      .govuk-table__cell {
+        clear: left;
+        display: block;
+        float: left;
+        width: 100% !important;
+        max-width: 100%;
+        padding: 12px 0;
+        border: 0;
+
+        &::before {
+          content: attr(data-label);
+          float: left;
+          font-weight: bold;
+          padding-right: 0.5em;
+        }
+      }
+    }
+    .govuk-table__row {
+      border-bottom: 1px solid govuk-colour('black');
+    }
+  }
+
+  @include govuk-media-query($from:tablet, $until: 960px) {
+    .govuk-table__cell,
+    .govuk-table__header {
+      font-size: 16px;
+    }
+  }
+}

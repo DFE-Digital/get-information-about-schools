@@ -1,40 +1,47 @@
-﻿@model IHtmlString
+@model IHtmlString
 @{
     ViewBag.Title = "Get information about schools";
     ViewBag.bodyClasses = "news-page";
+    ViewBag.SiteSection = "news";
 }
-
-<div class="grid-row">
-    <div class="column-full">
-        <div class="breadcrumbs">
-            <ol>
-                <li>
-                    @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-                </li>
+@section BreadCrumbs
+{
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div class="govuk-breadcrumbs">
+            <ol class="govuk-breadcrumbs__list">
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link"})</li>
+                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Help", "Help", "Home", new { area = "" }, new {@class = "govuk-breadcrumbs__link"})</li>
             </ol>
-        </div>
-        <h1 class="heading-xlarge">News</h1>
-        <div class="text-align-right">
-            @Html.ActionLink("News Archive", "NewsArchive", "Home")
         </div>
     </div>
 </div>
-<div class="grid-row news">
+}
 
-    <div class="column-two-thirds news-blog">
-        <hr />
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-0">News</h1>
+        <div class="gias-align-right">
+            @Html.ActionLink("News archive", "NewsArchive", "Home")
+        </div>
+    </div>
+</div>
+<div class="govuk-grid-row news">
+
+    <div class="govuk-grid-column-two-thirds news-blog">
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
         @Model
     </div>
 
-    <div class="column-third about">
-        <hr/>
+    <div class="govuk-grid-column-one-third about">
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible gias-visible__from-tablet"/>
 
-        <h3 class="heading-medium bold-medium push-half--top">About the Get information about schools service</h3>
+        <h3 class="govuk-heading-m">About the Get information about schools service</h3>
         <p>
             Welcome to the Get information about schools service.
         </p>
         <p>
-            This service replaces the previous EduBase system. You can use it to find details about schools, children’s centres, academy trusts and sponsors, and school federations in England.
+            This service replaces the previous EduBase system. You can use it to find details about schools, children's centres, academy trusts and sponsors, and school federations in England.
             Some information about Welsh establishments is also available.
         </p>
         <p>
@@ -45,7 +52,7 @@
             Any personal information that is processed further by any organisation for other purposes will be subject to the terms of data protection legislation.
         </p>
 
-        <hr/>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
 
     </div>
 
