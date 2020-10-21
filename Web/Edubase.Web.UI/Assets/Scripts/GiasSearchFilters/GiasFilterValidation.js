@@ -14,10 +14,18 @@ const GiasFilterValidation = {
     return  /^[0-9]{1,2}(\.[0-9]{1,2})?$/.test(fieldValue);
   },
   validateDate: function(dateObj) {
-    const day = dateObj.day;
-    const month = dateObj.month;
-    const year = dateObj.year;
+    let day = dateObj.day;
+    let month = dateObj.month;
+    let year = dateObj.year;
+
+    if (day.length < 2) {
+		day = "0" + day;
+	}
 	
+	if (month.length < 2) {
+		month = "0" + month;
+	}
+
 	return !moment(month + "/" + day + "/" + year, 'MM/DD/YYYY',true).isValid();
   },
 
@@ -59,7 +67,7 @@ const GiasFilterValidation = {
 
     if (fromDateValues.length === 3 && validFromDate) {
       dateObj.day = fromDateValues[0];
-      dateObj.month = fromDateValues[1] - 1;
+      dateObj.month = fromDateValues[1];
       dateObj.year = fromDateValues[2];
 
       validFromDate = !self.validateDate(dateObj);
@@ -67,7 +75,7 @@ const GiasFilterValidation = {
 
     if (toDateValues.length === 3 && validToDate) {
       dateObj.day = toDateValues[0];
-      dateObj.month = toDateValues[1] - 1;
+      dateObj.month = toDateValues[1];
       dateObj.year = toDateValues[2];
 
       validToDate = !self.validateDate(dateObj);
