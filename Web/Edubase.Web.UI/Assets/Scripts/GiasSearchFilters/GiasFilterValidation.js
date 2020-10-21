@@ -1,3 +1,5 @@
+var moment = require('moment');
+
 const GiasFilterValidation = {
   validateRadiusFilter: function() {
     const errorSummary = $('#js-filter-error-summary');
@@ -15,41 +17,8 @@ const GiasFilterValidation = {
     const day = dateObj.day;
     const month = dateObj.month;
     const year = dateObj.year;
-
-    let dateError = false;
-    const months31 = [0, 2, 4, 6, 7, 9, 11];
-
-    if (isNaN(day) || isNaN(month) || isNaN(year)) {
-      dateError = true;
-    }
-
-    const isLeap = new Date(year, 1, 29).getMonth() === 1;
-
-    if (isLeap && month === 1) {
-      if (day > 29) {
-        dateError = true;
-      }
-    } else if (month === 1) {
-      if (day > 28) {
-        dateError = true;
-      }
-    }
-
-    if (months31.indexOf(month - 1)) {
-      if (day < 1 || day > 31) {
-        dateError = true;
-      }
-    } else {
-      if (day < 1 || day > 30) {
-        dateError = true;
-      }
-    }
-
-    if (month < 0 || month > 11) {
-      dateError = true;
-    }
-
-    return dateError;
+	
+	return !moment(month + "/" + day + "/" + year, 'MM/DD/YYYY',true).isValid();
   },
 
   validateDateFilters: function(dateFilterId) {
