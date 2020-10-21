@@ -12,18 +12,27 @@
 
 @section Head
 {
-    <meta name="robots" content="noindex,nofollow"/>
+    <meta name="robots" content="noindex,nofollow" />
 }
 
-@section BackLink
+
+@section BreadCrumbs
 {
-    @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-back-link"})
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
 }
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full govuk-!-padding-bottom-6">
         <div id="js-error-summary">
-            <error-summary :errors="errors" error-title="There is a problem"/>
+            <error-summary :errors="errors" error-title="There is a problem" />
         </div>
         @Html.Partial("_ValidationSummary", ViewData.ModelState)
         <h1 class="govuk-heading-xl" id="downloadsTitle">@pageHeader</h1>
@@ -70,8 +79,8 @@
                                             @{
                                                 var id = TagBuilder.CreateSanitizedId(string.Format("{0}-{1}", "search-type", ft));
                                             }
-                                            @Html.RadioButtonFor(x => x.SearchType, ft, new {id, data_aria_controls = $"{ft}", @class = "govuk-radios__input"})
-                                            @Html.Label(ft.EnumDisplayNameFor(), new {@for = id, @class = "govuk-label govuk-radios__label"})
+                                            @Html.RadioButtonFor(x => x.SearchType, ft, new { id, data_aria_controls = $"{ft}", @class = "govuk-radios__input" })
+                                            @Html.Label(ft.EnumDisplayNameFor(), new { @for = id, @class = "govuk-label govuk-radios__label" })
                                         </div>
                                     }
 
@@ -93,7 +102,7 @@
                                                     hideLegend = true
                                                 })
                                             <div class="js-show-block">
-                                              <button type="submit" name="apply" class="govuk-button downloads-filter-button" id="filter-apply">Apply</button>
+                                                <button type="submit" name="apply" class="govuk-button downloads-filter-button" id="filter-apply">Apply</button>
                                             </div>
 
                                         </div>
@@ -132,23 +141,23 @@
                         <table class="govuk-table gias-table retain-columns @(Model.ScheduledExtracts.PageCount > 1 ? "" : "no-pagination")">
                             <caption class="govuk-visually-hidden">Scheduled extracts files</caption>
                             <thead class="govuk-table__head">
-                            <tr class="govuk-table__row">
-                                <th scope="col" class="govuk-table__header">File</th>
-                                <th scope="col" class="govuk-table__header govuk-table__header--numeric">ID</th>
-                            </tr>
+                                <tr class="govuk-table__row">
+                                    <th scope="col" class="govuk-table__header">File</th>
+                                    <th scope="col" class="govuk-table__header govuk-table__header--numeric">ID</th>
+                                </tr>
                             </thead>
                             <tbody class="govuk-table__body">
-                            @foreach (var item in Model.ScheduledExtracts.Items)
-                            {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell download-list-item">
-                                        @Html.RouteLink(item.Name, "RequestScheduledExtract", new {id = item.Id}, new {rel = "nofollow"})
-                                    </td>
-                                    <td class="govuk-table__cell govuk-table__cell--numeric">
-                                        @item.Id
-                                    </td>
-                                </tr>
-                            }
+                                @foreach (var item in Model.ScheduledExtracts.Items)
+                                {
+                                    <tr class="govuk-table__row">
+                                        <td class="govuk-table__cell download-list-item">
+                                            @Html.RouteLink(item.Name, "RequestScheduledExtract", new { id = item.Id }, new { rel = "nofollow" })
+                                        </td>
+                                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                                            @item.Id
+                                        </td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                         @if (Model.ScheduledExtracts.PageCount > 1)
