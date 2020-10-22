@@ -22,7 +22,7 @@ const typeToPhase = {
     $phaseSelector.html(optionList);
   },
   bindEvents: function() {
-    if (window.window.type2PhaseMap) {
+    if (window.type2PhaseMap) {
       const $typeSelector = $("#TypeId");
       const self = this;
       this.filterEstablishmentPhases();

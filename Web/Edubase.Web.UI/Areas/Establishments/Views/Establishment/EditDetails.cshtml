@@ -172,7 +172,7 @@
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HeadEmailAddress)">
             <label class="govuk-label" for="HeadEmailAddress">
                 @Html.Raw(Model.EditPolicy.HeadteacherLabel) email address
-                <a href="#help-text-headteacher-email-address" class="tooltip-link js-tooltip">
+                <a href="#help-text-headteacher-email-address" class="help-icon modal-link">
                     <span class="govuk-visually-hidden">Help with headteacher/principal email address field</span>
                 </a>
             </label>
@@ -588,7 +588,7 @@
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Contact_EmailAddress)">
             <label class="govuk-label" for="@nameof(Model.Contact_EmailAddress)">
                 Email address
-                <a href="#help-text-email-address" class="tooltip-link js-tooltip">
+                <a href="#help-text-email-address" class="help-icon modal-link">
                     <span class="govuk-visually-hidden">Help with email address field</span>
                 </a>
             </label>
@@ -602,7 +602,7 @@
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ContactAlt_EmailAddress)">
             <label class="govuk-label" for="@nameof(Model.ContactAlt_EmailAddress)">
                 Alternative email address
-                <a href="#help-text-email-address" class="tooltip-link js-tooltip">
+                <a href="#help-text-email-address" class="help-icon modal-link">
                     <span class="govuk-visually-hidden">Help with alternative email address field</span>
                 </a>
             </label>
@@ -874,12 +874,12 @@
 
 <div class="column-full helptext-container">
     <div id="help-text-email-address">
-        <h3 class="govuk-heading-s">Email address</h3>
+        <h3 class="govuk-heading-s make-modal-header">Email address</h3>
         <p>Please provide your official school email address. This is usually the email address that is displayed on your school website. You should not provide a personal email address in this field as this information may be released in certain circumstances.</p>
     </div>
 
     <div id="help-text-headteacher-email-address">
-        <h3 class="govuk-heading-s">@Html.Raw(Model.EditPolicy.HeadteacherLabel) email address</h3>
+        <h3 class="govuk-heading-s make-modal-header">@Html.Raw(Model.EditPolicy.HeadteacherLabel) email address</h3>
         <p>The email address added to this field will be treated as personal and will not be visible to the public or included in responses to Freedom of Information requests. The address will be used for official Departmental use where direct communication with the @Html.Raw(Model.EditPolicy.HeadteacherLabel.ToLower()) is required.</p>
     </div>
 </div>

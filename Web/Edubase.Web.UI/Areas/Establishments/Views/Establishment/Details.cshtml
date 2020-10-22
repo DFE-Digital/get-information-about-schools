@@ -217,7 +217,7 @@
 <div class="govuk-grid-row">
 <div class="govuk-grid-column-full helptext-container">
     <div id="help-text-age-range">
-        <h3 class="govuk-heading-s">Age range</h3>
+        <h3 class="govuk-heading-s make-modal-header">Age range</h3>
         <p>@Model.AgeRangeToolTip</p>
         @if (!Model.AgeRangeToolTipLink.IsNullOrEmpty())
         {
@@ -226,8 +226,8 @@
     </div>
 
     <div id="help-text-school-capacity">
-        <h3 class="govuk-heading-s">School capacity</h3>
-        <p class="govuk-body-s">@Model.SchoolCapacityToolTip</p>
+        <h3 class="govuk-heading-s make-modal-header">School capacity</h3>
+        <p class="govuk-body">@Model.SchoolCapacityToolTip</p>
         @if (!Model.SchoolCapacityToolTipLink.IsNullOrEmpty())
         {
             <p>Link: <a href="@Model.SchoolCapacityToolTipLink">@Model.SchoolCapacityToolTipLink</a></p>
@@ -235,10 +235,11 @@
     </div>
 
     <div id="help-text-fsm">
-        <h3 class="govuk-heading-s">Free school meals</h3>
-        <p class="govuk-body-s">
-
-            This shows whether a pupil's family have claimed eligibility for free school meals as reported in the annual spring school census. Parents are able to claim free school meals if they receive a qualifying benefit.
+        <h3 class="govuk-heading-s make-modal-header">Free school meals</h3>
+        <p class="govuk-body">
+            This shows whether a pupil's family have claimed eligibility for free school meals as reported in the
+            annual spring school census.
+            Parents are able to claim free school meals if they receive a qualifying benefit.
             This does not show pupils who actually received free school meals but those who are eligible to receive them.
         </p>
     </div>
