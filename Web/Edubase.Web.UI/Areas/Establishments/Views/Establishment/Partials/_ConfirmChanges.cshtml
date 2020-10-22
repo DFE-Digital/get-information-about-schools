@@ -109,7 +109,7 @@
             <th scope="col" class="govuk-table__header">Field</th>
             <th scope="col" class="govuk-table__header">Old value</th>
             <th scope="col" class="govuk-table__header">New value</th>
-            <th scope="col" class="govuk-table__header">This field requires approval</th>
+            <th scope="col" class="govuk-table__header">Approval required</th>
             <th scope="col" class="govuk-table__header">Approver</th>
         </tr>
         </thead>
@@ -120,14 +120,14 @@
                 <td data-label="Field" class="govuk-table__cell">@item.Name</td>
                 <td data-label="Old value" class="govuk-table__cell">@(item.OldValue ?? "<empty>")</td>
                 <td data-label="New value" class="govuk-table__cell">@(item.NewValue ?? "<empty>")</td>
-                <td data-label="This field requires approval" class="govuk-table__cell">
+                <td data-label="Approval required" class="govuk-table__cell">
                     @if (item.RequiresApproval)
                     {
-                        <div class="requires-approval">Yes</div>
+                        <span class="gias-!-uppercase">Yes</span>
                     }
                     else
                     {
-                        @: No
+                        <span class="gias-!-uppercase">No</span>
                     }
                 </td>
                 <td data-label="Approver name" class="govuk-table__cell">
