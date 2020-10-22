@@ -280,3 +280,16 @@
     font-size: 14px;
   }
 }
+
+
+.gias-table--data-status {
+  .govuk-table__cell[data-label="Email"] {
+    @include govuk-media-query($until: desktop) {
+      word-break: break-all;
+      &::before {
+        display: block;
+        float: none;
+      }
+    }
+  }
+}
