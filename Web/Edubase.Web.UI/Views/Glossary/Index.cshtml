@@ -44,18 +44,20 @@
                         </h2>
                     </div>
                     <div id="target-@group.Key" class="govuk-accordion__section-content" aria-labelledby="ctrl-@group.Key">
-                         @foreach (var item in group)
-                         {
+                        @foreach (var item in group)
+                        {
                             <h2 class="govuk-heading-s">@item.Title</h2>
                             <p>@Html.Raw(item.Content)</p>
-                             if (Model.UserCanEdit)
-                             {
-                                 @Html.RouteLink("Edit entry", "EditGlossaryItem", new {id = item.RowKey}, new {@class = "govuk-button govuk-button--secondary glossary-edit-button"})
-                             }
-                         }
+                            if (Model.UserCanEdit)
+                            {
+                                @Html.RouteLink("Edit entry", "EditGlossaryItem", new {id = item.RowKey}, new {@class = "govuk-button govuk-button--secondary glossary-edit-button"})
+                            }
+                        }
                     </div>
                 </div>
             }
         </div>
+
+        <p class="no-js-show-block">@helpers.BackToTopLink()</p>
     </div>
 </div>

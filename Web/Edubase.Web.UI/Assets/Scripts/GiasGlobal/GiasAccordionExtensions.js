@@ -13,7 +13,9 @@ const giasAccordionExtensions = function(){
       .insertAfter(accordion);
 
 
-    const $scrollBtn = $(footerControls).prepend('<button class="gias-scroll-to-top">Back to top</button>');
+    const $scrollBtn = $(footerControls).prepend('<a href="#main-content" class="gias-scroll-to-top back-to-top-link"><svg role="presentation" focusable="false" class="back-to-top-icon" xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17">\n' +
+      '            <path fill="currentColor" d="M6.5 0L0 6.5 1.4 8l4-4v12.7h2V4l4.3 4L13 6.4z"></path>\n' +
+      '        </svg> Back to top</a>');
 
     $(footerControls).find('.govuk-accordion__open-all').on('click', function(e) {
       e.preventDefault();
