@@ -2,7 +2,7 @@ import giasDismissMessage from '../GiasModules/GiasDismissMessage';
 import giasAriaLive from '../GiasGlobal/giasAriaLive';
 import GiasModal from '../GiasModules/GiasModals/GiasModal';
 import GiasOkCancel from "../GiasModules/GiasModals/GiasOkCancel";
-import GiasAccordionExtensions from '../GiasGlobal/GiasAccordionExtensions';
+import giasAccordionExtensions from '../GiasGlobal/GiasAccordionExtensions';
 const checkGiasDataStatus = require('../GiasStandalone/GiasDataStatus');
 const dfeCookieManager = require('../GiasModules/DfeCookieManager');
 
@@ -49,5 +49,5 @@ giasAriaLive();
 $('#main-content').find('.modal-link').each(function(n, el) {
   new GiasModal(el);
 });
-$('.govuk-accordion').giasAccordionExtensions();
+giasAccordionExtensions();
 giasDismissMessage();

@@ -5,6 +5,7 @@ import checkboxRemoteSelection from "../GiasVueComponents/Download/checkboxRemot
 import vueaccordion from "../GiasVueComponents/GovukAccordion";
 import viewSwitcher from "../GiasVueComponents/Download/viewSwitcher";
 import searchByFieldName from "../GiasVueComponents/Download/searchByFieldName";
+import giasAccordionExtensions from '../GiasGlobal/GiasAccordionExtensions';
 
 const app = new Vue({
   el: '#field-select-app',
@@ -20,6 +21,7 @@ const app = new Vue({
   mounted: function(){
     let noJsElem = document.getElementById('no-js-container');
     noJsElem.parentNode.removeChild(noJsElem);
+    giasAccordionExtensions();
 
   },
 
