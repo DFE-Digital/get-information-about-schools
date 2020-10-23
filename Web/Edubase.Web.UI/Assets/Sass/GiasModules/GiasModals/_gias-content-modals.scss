@@ -98,6 +98,10 @@ html.no-scroll {
 
 .gias-modal__content {
   padding: 0.5em 0.5em 2em govuk-spacing(5);
+
+  a {
+    word-break: break-all;
+  }
 }
 
 @include govuk-media-query($until: tablet){
