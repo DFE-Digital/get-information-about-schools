@@ -1,5 +1,54 @@
+/**
+ *  additionalClasses {string}
+ *      classnames to add to the modal
+ *
+ *  headingSize {string}
+ *      any govuk heading size- s, m, l, xl
+ *
+ *  immediate {bool}
+ *      setting this to true disables the open click attachment
+ *      you need to call 'open' yourself
+ *
+ *  remoteContent {bool}
+ *      ajax call to obtain the modal content
+ *
+ *  remoteUrl {string}
+ *      URL for the ajax call
+ *
+ *  contentSelector {string}
+ *      a valid css selector for the parent element of the modal content in the ajax response
+ *
+ *  closeButtonClass {string}
+ *      a valid css selector for elements you want to make additional close buttons
+ *
+ * usage:
+ * DEFAULTS - expects the modal content to be hidden in the page
+ * identified by a local page anchor in the href of the link
+ *
+   $('#main-content').find('.modal-link').each(function(n, el) {
+      new GiasModal(el);
+    });
+
+ * OPEN THE MODAL ONLOAD WITH CONTENT RETRIEVED VIA AJAX
+
+ const modal = new GiasModal(document.body, {
+      remoteContent: true,
+      remoteUrl: '/path/to/your/response,
+      immediate: true,
+      contentSelector: '#data-status-summary',
+    });
+
+ modal.openModal();
+
+ */
 const defaults = {
   additionalClasses: '',
+  headingSize: 'm',
+  immediate: false,
+  remoteContent: false,
+  remoteUrl: null,
+  contentSelector: null,
+  closeButtonClass: null
 };
 
 class GiasModal {
@@ -12,82 +61,120 @@ class GiasModal {
   }
 
   init() {
-
     if (!document.getElementById('app')) {
       const $body = $('body');
       $body.wrapInner('<div id="app"></div>');
     }
 
-    $(this.el).on('click', (e) => {
-      e.preventDefault();
-      this.openModal();
-    });
+    if (!this.opts.immediate) {
+      $(this.el).on('click', (e) => {
+        e.preventDefault();
+        this.openModal();
+      });
+    }
   }
 
   openModal() {
+    const self = this;
     const opts = this.opts;
     const contentTarget = $(this.el).attr('href');
-    const modalContent = $(contentTarget);
     const $appContainer = $('#app');
-    const contentTitle = modalContent.find('.make-modal-header').html();
+    let modalContent;
 
-    let bodyContent = $('<div/>').append(modalContent.clone().children().not('.make-modal-header'));
+    function prepareContent() {
+      const contentTitle = modalContent.find('.make-modal-header').html();
 
-    bodyContent = bodyContent.html();
+      let bodyContent = $('<div/>').append(modalContent.clone().children().not('.make-modal-header'));
 
-    const modal = `
-        <dialog id="gias-modal" open class="gias-modal ${opts.additionalClasses}" aria-labelledby="gias-modal-title" role="dialog">
+      bodyContent = bodyContent.html();
+
+      const modal = `
+        <div id="gias-modal" open class="gias-modal ${opts.additionalClasses}" aria-labelledby="gias-modal-title" role="dialog">
             <div role="document">
                 <div class="gias-modal__close-container">
                     <a href="#" role="button" id="gias-modal-close" class="gias-modal__close-button">Close</a>
                 </div>
                 <div class="gias-modal__content-wrapper" id="gias-modal-content-wrapper">
-                <h1 id="gias-modal-title" class="govuk-heading-m gias-modal__title">${contentTitle}</h1>
+                <h1 id="gias-modal-title" class="govuk-heading-${opts.headingSize} gias-modal__title">${contentTitle}</h1>
                     <div class="gias-modal__content" id="gias-modal-content">
                         ${bodyContent.toString()}
                       </div>
                 </div>
             </div>
-        </dialog>`;
+        </div>`;
 
-    const modalOverlay = `
+      const modalOverlay = `
       <div class="gias-modal__overlay" id="gias-modal-overlay" title="Close modal">
         <div class="govuk-visually-hidden">Dismiss modal and return to page</div>
       </div>`;
 
-    $('html').addClass('no-scroll');
-    $appContainer.attr('aria-hidden', true);
+      insertModal(modal, modalOverlay);
+    }
 
-    $(modalOverlay).insertAfter($appContainer);
-    $(modal).insertAfter($appContainer);
+    function insertModal(modal, modalOverlay) {
+      $('html').addClass('no-scroll');
+      $appContainer.attr('aria-hidden', true);
 
-    $('#gias-modal-close').focus();
+      $(modalOverlay).insertAfter($appContainer);
+      $(modal).insertAfter($appContainer);
 
-    $('body').on('keydown', '#gias-modal', (e)=> {
-      this.manageModalKeyPress(e);
-    });
+      $('#gias-modal-close').focus();
 
-    $('#gias-modal-close, #gias-modal-overlay').on('click', (e)=> {
-      e.preventDefault();
-      this.closeModal();
-    });
+      $('body').on('keydown', '#gias-modal', (e) => {
+        self.manageModalKeyPress(e);
+      });
 
-    document.getElementById('gias-modal-content-wrapper').addEventListener('touchstart', function(){
-      const $appModal = $('#gias-modal');
-      const top = $appModal.scrollTop;
-      const totalScroll = $appModal.scrollHeight;
-      const currentScroll = top + $appModal.offsetHeight ;
-      if(top === 0) {
-        $('#js-modal').scrollTop = 1;
-      } else if(currentScroll === totalScroll) {
-        $('#js-modal').scrollTop = top - 1;
+      $('#gias-modal-close, #gias-modal-overlay').on('click', (e) => {
+        e.preventDefault();
+        self.closeModal();
+      });
+
+      if (opts.closeButtonClass) {
+        $('#gias-modal').find(opts.closeButtonClass).on('click', (e) => {
+          e.preventDefault();
+          self.closeModal();
+        });
       }
-    });
 
-    $(window).trigger({
-      type: 'modal:opened',
-      element: this.el
-    });
+      document.getElementById('gias-modal-content-wrapper').addEventListener('touchstart', function () {
+        const $appModal = $('#gias-modal');
+        const top = $appModal.scrollTop;
+        const totalScroll = $appModal.scrollHeight;
+        const currentScroll = top + $appModal.offsetHeight;
+        if (top === 0) {
+          $('#gias-modal').scrollTop = 1;
+        } else if (currentScroll === totalScroll) {
+          $('#gias-modal').scrollTop = top - 1;
+        }
+      });
+
+      $(window).trigger({
+        type: 'modal:opened',
+        element: self.el
+      });
+    }
+
+    function setModalContent() {
+        return $.ajax({
+          url: opts.remoteUrl,
+          dataType: 'html',
+          success: function (data) {
+            modalContent = $(data).filter(opts.contentSelector);
+          },
+          error: function () {
+            console.error('Error retrieving data status panel');
+          }
+        });
+    }
+
+    if (opts.remoteContent) {
+      $.when(setModalContent()).then(function() {
+        prepareContent();
+      });
+    } else {
+      modalContent = $(contentTarget);
+      prepareContent();
+    }
   }
 
   closeModal() {

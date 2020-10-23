@@ -3,13 +3,13 @@ import giasAriaLive from '../GiasGlobal/giasAriaLive';
 import GiasModal from '../GiasModules/GiasModals/GiasModal';
 import GiasOkCancel from "../GiasModules/GiasModals/GiasOkCancel";
 import giasAccordionExtensions from '../GiasGlobal/GiasAccordionExtensions';
-const checkGiasDataStatus = require('../GiasStandalone/GiasDataStatus');
+import CheckGiasDataStatus from '../GiasStandalone/GiasDataStatus';
 const dfeCookieManager = require('../GiasModules/DfeCookieManager');
 
 window.$ = $;
 
 window.DfECookieManager = dfeCookieManager;
-window.checkGiasDataStatus = checkGiasDataStatus;
+window.checkGiasDataStatus = CheckGiasDataStatus;
 
 
 import { initAll } from 'govuk-frontend';
