@@ -1,7 +1,7 @@
 @using Edubase.Web.UI.Controllers
 @using Microsoft.AspNet.Identity
 @{
-    ViewBag.assetsPath = "/public/govuk-frontend/";
+    ViewBag.assetsPath = "/public/govuk-frontend";
 
     var title = !string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title : "Get information about schools";
     var documentTitle = string.Format("{0} - {1}", title, "GOV.UK");
@@ -10,7 +10,7 @@
     var envHeader = System.Configuration.ConfigurationManager.AppSettings["Environment"] ?? string.Empty;
     var version = typeof(HomeController).Assembly.GetName().Version;
 }
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="govuk-template">
   <head>
     <meta charset="utf-8">
@@ -39,7 +39,7 @@
     <meta name="description" content="@(ViewBag.pageDescription)">
     <meta name="keywords" content="Get information about schools" />
 
-    <script type="text/javascript" nonce="@Html.ScriptNonce()">
+    <script nonce="@Html.ScriptNonce()">
         (function () {
             if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
                 var d = document, c = "appendChild", a = d.createElement("style");
@@ -195,7 +195,7 @@
                     <h2 class="govuk-visually-hidden">Support links</h2>
                     <ul class="govuk-footer__inline-list">
                         <li class="govuk-footer__inline-list-item">
-                            <a href="https://form.education.gov.uk/fillform.php?self=1&form_id=hGz7nZcsdnX&noLoginPrompt=1" target="_blank" rel="external" class="govuk-footer__link">
+                            <a href="https://form.education.gov.uk/fillform.php?self=1&form_id=hGz7nZcsdnX&noLoginPrompt=1" target="_blank" rel="noreferrer noopener" class="govuk-footer__link">
                                 Contact
                                 <span class="govuk-visually-hidden">Opens in new window</span>
                             </a>
