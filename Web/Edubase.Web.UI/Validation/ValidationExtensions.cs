@@ -15,7 +15,11 @@ namespace Edubase.Web.UI.Validation
         private static string BuildFieldName(string errorFields, ControllerContext controllerContext)
         {
             // correct the naming convention by upper casing the first letter
-            var fieldName = string.Concat(errorFields.Substring(0,1).ToUpper(), errorFields.Substring(1, errorFields.Length-1));
+            var fieldName = errorFields;
+            if (fieldName.Length > 0)
+            {
+                fieldName = string.Concat(errorFields.Substring(0, 1).ToUpper(), errorFields.Substring(1, errorFields.Length - 1));
+            }
 
             // as we're adding this - we want to use the same casing as the other properties follow. Because of that - look to see if there are any others which extend the original name
             if (controllerContext.Controller.ViewData.ModelState.Keys.Any(x => x.StartsWith(fieldName, StringComparison.InvariantCultureIgnoreCase)))
