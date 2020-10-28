@@ -18,7 +18,7 @@ namespace Edubase.Web.UI.Filters
     {
         public class SystemErrorMessage
         {
-            public string Message { get; set; } = "Sorry, something went wrong. A report of the error has been sent to our technical team.";
+            public string Message { get; set; } = "Sorry, there is a problem with the service.";
             public string ErrorCode { get; set; }
             public string TechnicalDetails { get; set; }
         }

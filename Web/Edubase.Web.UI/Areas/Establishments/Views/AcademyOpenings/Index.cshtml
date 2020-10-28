@@ -33,9 +33,8 @@
 
     <!-- Error message -->
     <div v-show="Object.keys(apiError).length > 0">
-        <h1 class="govuk-heading-xl">Sorry, something went wrong</h1>
-        <p>Please try again later.</p>
-        <p>A report of the error has been sent to our technical team.</p>
+        <h1 class="govuk-heading-xl">Sorry, there is a problem with the service</h1>
+        <p>Try again later.</p>
 
         <p class="api-error-code" v-show="apiError.hasOwnProperty('errorCode')">Error code: {{apiError.errorCode}}</p>
         <div v-show="apiError.hasOwnProperty('technicalDetails')">

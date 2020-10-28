@@ -5,10 +5,7 @@
 }
 
 @section Head {
-    <!--[if gt IE 8]><!-->
     <link href="/public/assets/stylesheets/main.css?v=@version" rel="stylesheet" type="text/css"><!--<![endif]-->
-    <!--[if lte IE 8]><link href="/public/assets/stylesheets/main-ie8.css" rel="stylesheet" type="text/css"/><![endif]-->
-
     @(RenderSection("Head", required: false))
 }
 
