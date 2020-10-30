@@ -139,7 +139,7 @@
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                <h1 class="govuk-heading-xl">Sorry, there is a problem with the serviceg</h1>
+                <h1 class="govuk-heading-xl">Sorry, there is a problem with the service</h1>
             </div>
             <div class="govuk-grid-column-two-thirds">
                 <p>Try again later.</p>
