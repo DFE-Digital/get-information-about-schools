@@ -8,47 +8,44 @@
 
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width"/>
     <title>Prototype page</title>
 </head>
 <body>
-<div id="data-status-summary" class="data-status-summary" role="dialog" aria-labelledby="modal-label" tabindex="0">
-    <a href="#" id="data-status-close" class="modal-exit">Close</a>
-    <div class="overlay-padder">
-        <h1 class="govuk-heading-l" id="modal-label">@((Model.Urgent) ? "Update your data status" : "Data status")</h1>
-        <table class="govuk-table edubase-table retain-columns">
-            <caption class="govuk-table__caption">These dates show when each of our teams last updated their data.</caption>
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header">Establishment type</th>
-                    <th scope="col" class="govuk-table__header">Last updated</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                @foreach (var data in Model.Items)
-                {
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell">@data.EstablishmentType.GetEnumMember()</td>
-                        <td class="govuk-table__cell">@data.LastUpdated.ToString()</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+<div id="data-status-summary" class="data-status-summary">
+    <h1 class="govuk-heading-l make-modal-header">@((Model.Urgent) ? "Update your data status" : "Data status")</h1>
+    <table class="govuk-table edubase-table retain-columns">
+        <caption class="govuk-table__caption">These dates show when each of our teams last updated their data.</caption>
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Establishment type</th>
+            <th scope="col" class="govuk-table__header">Last updated</th>
+        </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+        @foreach (var data in Model.Items)
+        {
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">@data.EstablishmentType.GetEnumMember()</td>
+                <td class="govuk-table__cell">@data.LastUpdated.ToString()</td>
+            </tr>
+        }
+        </tbody>
+    </table>
 
-        <div class="button-row">
+    <div class="button-row">
         @if (Model.Urgent)
         {
-            <a href="#" class="govuk-button" id="data-status-update">Update</a>
+            @Html.ActionLink("Update", "EditStatus", "DataQuality", new { area = ""}, new {@class="govuk-button", id="data-status-update"})
             <a href="#" class="govuk-button govuk-button--secondary data-status-exit">Exit</a>
         }
         else
         {
-            <a href="#" class="govuk-button" id="data-status-info">More info</a>
-            <a href="#" class="govuk-button govuk-button--secondary data-status-exit">Exit</a>
+            @Html.ActionLink("More info", "ViewStatus", "DataQuality", new { area = ""}, new {@class="govuk-button", id="data-status-update"})
 
+            <a href="#" class="govuk-button govuk-button--secondary data-status-exit">Exit</a>
         }
 
-        </div>
     </div>
 </div>
 

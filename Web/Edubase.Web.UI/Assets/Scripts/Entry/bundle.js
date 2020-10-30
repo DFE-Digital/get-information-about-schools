@@ -1,15 +1,15 @@
-import giasDismissMessage from "../GiasModules/GiasDismissMessage";
+import giasDismissMessage from '../GiasModules/GiasDismissMessage';
 import giasAriaLive from '../GiasGlobal/giasAriaLive';
-import GiasToolTip from "../GiasGlobal/GiasToolTips";
+import GiasModal from '../GiasModules/GiasModals/GiasModal';
 import GiasOkCancel from "../GiasModules/GiasModals/GiasOkCancel";
-import GiasAccordionExtensions from '../GiasGlobal/GiasAccordionExtensions';
-const checkGiasDataStatus = require("../GiasStandalone/GiasDataStatus");
+import giasAccordionExtensions from '../GiasGlobal/GiasAccordionExtensions';
+import CheckGiasDataStatus from '../GiasStandalone/GiasDataStatus';
 const dfeCookieManager = require('../GiasModules/DfeCookieManager');
 
 window.$ = $;
 
 window.DfECookieManager = dfeCookieManager;
-window.checkGiasDataStatus = checkGiasDataStatus;
+window.checkGiasDataStatus = CheckGiasDataStatus;
 
 
 import { initAll } from 'govuk-frontend';
@@ -45,7 +45,9 @@ window.displayNewsDialog = function(myetag, etag) {
 initAll();
 
 giasAriaLive();
-$('#main-content').find('.js-tooltip').giasToolTip();
 
-$('.govuk-accordion').giasAccordionExtensions();
+$('#main-content').find('.modal-link').each(function(n, el) {
+  new GiasModal(el);
+});
+giasAccordionExtensions();
 giasDismissMessage();

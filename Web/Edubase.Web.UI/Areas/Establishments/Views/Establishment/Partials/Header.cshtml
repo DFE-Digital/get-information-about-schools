@@ -63,7 +63,7 @@
     <div class="gias-summary-list__row">
         <dt class="gias-summary-list__key">
             Age range:
-            <a href="#help-text-age-range" class="tooltip-link js-tooltip">
+            <a href="#help-text-age-range" class="help-icon modal-link">
                 <span class="govuk-visually-hidden">Help with age range field</span>
             </a>
         </dt>
@@ -215,7 +215,7 @@
             @if (Model.OfstedRatingReportUrl != null)
             {
                 <br/>
-                <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="external">Ofsted report <span class="govuk-visually-hidden">Opens in new window</span></a>
+                <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="noreferrer noopener">Ofsted report <span class="govuk-visually-hidden">Opens in new window</span></a>
             }
         </dd>
     </div>
@@ -277,13 +277,13 @@
                 @if (Model.ShowCscp)
                 {
                     <li>
-                        <a href="@Model.CscpURL" rel="external" target="_blank">Compare school and college performance <span class="govuk-visually-hidden">Opens in new window</span></a>
+                        <a href="@Model.CscpURL" rel="noreferrer noopener" target="_blank">Compare school and college performance <span class="govuk-visually-hidden">Opens in new window</span></a>
                     </li>
                 }
                 @if (Model.ShowFinancialBenchmarking)
                 {
                     <li>
-                        <a href="@Model.FinancialBenchmarkingURL" rel="external" target="_blank">Schools financial benchmarking <span class="govuk-visually-hidden">Opens in new window</span></a>
+                        <a href="@Model.FinancialBenchmarkingURL" rel="noreferrer noopener" target="_blank">Schools financial benchmarking <span class="govuk-visually-hidden">Opens in new window</span></a>
                     </li>
                 }
             </ul>

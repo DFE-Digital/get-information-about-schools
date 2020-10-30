@@ -1,3 +1,5 @@
+var moment = require('moment');
+
 const GiasFilterValidation = {
   validateRadiusFilter: function() {
     const errorSummary = $('#js-filter-error-summary');
@@ -12,44 +14,19 @@ const GiasFilterValidation = {
     return  /^[0-9]{1,2}(\.[0-9]{1,2})?$/.test(fieldValue);
   },
   validateDate: function(dateObj) {
-    const day = dateObj.day;
-    const month = dateObj.month;
-    const year = dateObj.year;
+    let day = dateObj.day;
+    let month = dateObj.month;
+    let year = dateObj.year;
 
-    let dateError = false;
-    const months31 = [0, 2, 4, 6, 7, 9, 11];
+    if (day.length < 2) {
+		day = "0" + day;
+	}
+	
+	if (month.length < 2) {
+		month = "0" + month;
+	}
 
-    if (isNaN(day) || isNaN(month) || isNaN(year)) {
-      dateError = true;
-    }
-
-    const isLeap = new Date(year, 1, 29).getMonth() === 1;
-
-    if (isLeap && month === 1) {
-      if (day > 29) {
-        dateError = true;
-      }
-    } else if (month === 1) {
-      if (day > 28) {
-        dateError = true;
-      }
-    }
-
-    if (months31.indexOf(month - 1)) {
-      if (day < 1 || day > 31) {
-        dateError = true;
-      }
-    } else {
-      if (day < 1 || day > 30) {
-        dateError = true;
-      }
-    }
-
-    if (month < 0 || month > 11) {
-      dateError = true;
-    }
-
-    return dateError;
+	return !moment(month + "/" + day + "/" + year, 'MM/DD/YYYY',true).isValid();
   },
 
   validateDateFilters: function(dateFilterId) {
@@ -90,7 +67,7 @@ const GiasFilterValidation = {
 
     if (fromDateValues.length === 3 && validFromDate) {
       dateObj.day = fromDateValues[0];
-      dateObj.month = fromDateValues[1] - 1;
+      dateObj.month = fromDateValues[1];
       dateObj.year = fromDateValues[2];
 
       validFromDate = !self.validateDate(dateObj);
@@ -98,7 +75,7 @@ const GiasFilterValidation = {
 
     if (toDateValues.length === 3 && validToDate) {
       dateObj.day = toDateValues[0];
-      dateObj.month = toDateValues[1] - 1;
+      dateObj.month = toDateValues[1];
       dateObj.year = toDateValues[2];
 
       validToDate = !self.validateDate(dateObj);

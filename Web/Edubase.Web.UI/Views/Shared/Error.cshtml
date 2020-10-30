@@ -27,23 +27,12 @@
 }
 
 
-<div class="grid-row">
-    <div class="column-full">
-        @if (!isPartialView)
-        {
-            <div class="breadcrumbs">
-                <ol>
-                    <li>
-                        @Html.ActionLink("Home", "Index", "Search", new { area = "" }, null)
-                    </li>
-                </ol>
-            </div>
-        }
-        <h1 class="govuk-heading-xl">Sorry, something went wrong</h1>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">Sorry, there is a problem with the service</h1>
     </div>
     <div class="govuk-grid-column-two-thirds">
-        <p>Please try again later.</p>
-        <p>A report of the error has been sent to our technical team.</p>
+        <p>Try again later.</p>
         @if (ViewBag.ErrorCode != null)
         {
             <p style="color:#ddd;">Error code: @ViewBag.ErrorCode</p>

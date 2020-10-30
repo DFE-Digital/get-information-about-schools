@@ -66,16 +66,6 @@
   margin-top: 0;
 }
 
-.requires-approval {
-  color: govuk-colour('orange');
-  width: 50px;
-  display: inline-block;
-  background-image: url("/public/assets/images/icons/icon-information-2x.png");
-  background-repeat: no-repeat;
-  background-position: right center;
-  background-size: contain;
-}
-
 .btn-add-person {
   @include govuk-media-query($until: 840px) {
     margin-top: govuk-spacing(3);

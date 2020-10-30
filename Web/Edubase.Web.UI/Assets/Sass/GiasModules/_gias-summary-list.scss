@@ -10,7 +10,7 @@
   display: table;
   margin: 0;
 
-  .tooltip-link {
+  .help-icon {
     top: 2px;
     width: 16px;
     height: 16px;
@@ -18,11 +18,11 @@
     &::after {
       position: absolute;
       content: '?';
-      width: 12px;
-      height: 12px;
+      width: 14px;
+      height: 14px;
       border-radius: 12px;
       padding: 0 2px 5px;
-      margin-left: 3px;
+      margin-left: 0;
       top: 0;
       font-size: 14px;
       line-height: 1.4;

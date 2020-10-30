@@ -34,7 +34,7 @@
         <h1 class="govuk-heading-xl">Data status</h1>
 
         <p>These dates show when each of our teams last updated their data.</p>
-        <table class="govuk-table gias-table no-pagination">
+        <table class="govuk-table gias-table no-pagination gias-table--data-status">
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th scope="col" class="govuk-table__header">Establishment type</th>
@@ -56,9 +56,7 @@
                         @(hasClause ? "*" : "")
                     </td>
                     <td data-label="Email"  class="govuk-table__cell">
-                        <span class="truncate">
-                            @item.Email
-                        </span>
+                        @item.Email
                     </td>
                 </tr>
             }
@@ -79,7 +77,3 @@
     </div>
 </div>
 
-@section ViewScripts
-{
-    <script src="/public/assets/scripts/build/view-data-status.js"></script>
-}
