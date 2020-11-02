@@ -1,3 +1,4 @@
+@using Edubase.Common
 @using VM = Edubase.Web.UI.Models.Search.SearchViewModel;
 @using Edubase.Web.UI.Helpers;
 @model VM
@@ -19,28 +20,11 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-border-narrow" id="searchby-name-ref">
-                @* This alert gets dynamically populated *@
-                <div class="warning-message govuk-visually-hidden" role="alert">
-                    <p class="message-text" aria-live="polite"></p>
-                </div>
-                @if (Model.SearchType == eSearchType.Text && Model.NoResults)
-                {
-                    if (Model.TextSearchModel.Text == null)
-                    {
-                                @* Static alert for no search results, where nothing was entered *@
-                        <div role="alert" class="warning-message js-trigger-aria-live">
-                            <p class="message-text" aria-live="polite">Please enter an establishment name, URN, LAESTAB or UKPRN to start a search</p>
-                        </div>
-                    }
-                    else
-                    {
-                                @* Static alert for no search results *@
-                        <div role="alert" class="warning-message js-trigger-aria-live">
-                            <p class="message-text" aria-live="polite">We could not find any establishments matching your search criteria</p>
-                        </div>
-                    }
-                }
+            <div class="panel panel-border-narrow @Html.Conditional(string.Equals(Model.ErrorPanel, "Name"), "govuk-form-group--error")" id="searchby-name-ref">
+                @* This gets dynamically populated *@
+                <span class="govuk-error-message hidden"></span>
+                @Html.ValidationMessageFor(x => x.TextSearchModel.Text, null, new { @class="govuk-error-message" })
+
                 <div class="govuk-form-group">
                     <label class="govuk-label" for="TextSearchModel_Text">
                         Enter name, <abbr title="Unique Reference Number">URN</abbr>, LAESTAB or UKPRN
@@ -85,18 +69,10 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-border-narrow" id="searchby-location-ref">
+            <div class="panel panel-border-narrow @Html.Conditional(string.Equals(Model.ErrorPanel, "Location"), "govuk-form-group--error")" id="searchby-location-ref">
                 @* This alert gets dynamically populated *@
-                <div class="warning-message govuk-visually-hidden" role="alert">
-                    <p class="message-text" aria-live="polite"></p>
-                </div>
-                @if (Model.SearchType == eSearchType.Location && Model.NoResults)
-                {
-                            @* Currently not displaying. Redirecting instead *@
-                    <div class="warning-message js-trigger-aria-live" role="alert">
-                        <p class="message-text" aria-live="polite">Please enter a postcode, town or city to start a search</p>
-                    </div>
-                }
+                <span class="govuk-error-message hidden"></span>
+                @Html.ValidationMessageFor(x => x.LocationSearchModel.Text, null, new { @class = "govuk-error-message" })
                 <div class="govuk-form-group">
                     <label class="govuk-label" for="LocationSearchModel_Text">Enter postcode, town or city</label>
                     @Html.TextBoxFor(x => x.LocationSearchModel.Text, new {@class = "govuk-input govuk-input--width-20 location-search", autocomplete = "off", maxlength = "200"})
@@ -135,25 +111,10 @@
                     </div>
                 </div>
             </div>
-            <div class="panel panel-border-narrow" id="searchby-la-ref">
-                <div class="warning-message govuk-visually-hidden" role="alert">
-                    <p class="message-text" aria-live="polite"></p>
-                </div>
-                @if (Model.SearchType == eSearchType.ByLocalAuthority && Model.NoResults)
-                {
-                    if (!Model.SelectedLocalAuthorityIds.Any())
-                    {
-                        <div class="warning-message js-trigger-aria-live" role="alert">
-                            <p class="message-text" aria-live="polite">Please enter a local authority to start a search</p>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="warning-message js-trigger-aria-live" role="alert">
-                            <p class="message-text" aria-live="polite">We could not find any local authorities matching your search criteria</p>
-                        </div>
-                    }
-                }
+            <div class="panel panel-border-narrow @Html.Conditional(string.Equals(Model.ErrorPanel, "LocalAuthority"), "govuk-form-group--error")" id="searchby-la-ref">
+                <span class="govuk-error-message hidden"></span>
+                @Html.ValidationMessageFor(x => x.LocalAuthorityToAdd, null, new { @class = "govuk-error-message" })
+
                 <div class="govuk-form-group">
                     <label class="govuk-label" for="LocalAuthorityToAdd">Enter one or more local authorities (LAs)</label>
                     <div class="selected-las form-group">

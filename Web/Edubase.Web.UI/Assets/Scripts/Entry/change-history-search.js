@@ -1,11 +1,9 @@
 const Awesomplete = require('awesomplete');
 import GiasRadioToggles from '../GiasSearchForm/GiasRadioToggles';
-import GiasSearchWarnings from '../GiasSearchForm/GiasSearchWarnings';
 
 $('#main-content').find('.search-toggle-panel').giasRadioToggles({
   untoggle: true
 });
-new GiasSearchWarnings();
 
 const MINCHARS = 2;
 let intervalId;

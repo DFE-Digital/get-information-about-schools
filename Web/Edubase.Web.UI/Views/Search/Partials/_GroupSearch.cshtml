@@ -35,29 +35,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="panel panel-border-narrow" id="searchby-group-ref">
+                    <div class="panel panel-border-narrow @Html.Conditional(string.Equals(Model.ErrorPanel, "Group"), "govuk-form-group--error")" id="searchby-group-ref">
                         <div class="edubase-search-element with-typeahead has-typeahead" id="group-search-container">
                             @* This alert gets dynamically populated *@
-                            <div class="warning-message govuk-visually-hidden" role="alert">
-                                <p class="message-text" aria-live="polite"></p>
-                            </div>
-                            @if (Model.SearchType == eSearchType.Group && Model.NoResults)
-                            {
-                                if (Model.GroupSearchModel.Text.IsNullOrEmpty())
-                                {
-                                    <div role="alert" class="warning-message js-trigger-aria-live">
-                                        <p class="warning-message-text" aria-live="polite">Please enter an establishment group to start a search</p>
-                                    </div>
-                                }
-                                else
-                                {
-                                    @* Static alert for no search results *@
-                                    <div role="alert" class="warning-message js-trigger-aria-live">
-                                        <p class="warning-message-text" aria-live="polite">We could not find any establishment groups matching your search criteria</p>
-                                    </div>
-                                }
-                            }
-                             <div class="govuk-form-group">
+                            <span class="govuk-error-message hidden"></span>
+                            @Html.ValidationMessageFor(x => x.GroupSearchModel.Text, null, new { @class = "govuk-error-message" })
+                            <div class="govuk-form-group">
                             <label class="govuk-label" for="GroupSearchModel_Text">
                                 Enter name, Companies House number, Group <abbr title="Unique Identifier">UID</abbr>, ID or UKPRN
                                 <a href="#group-reference" class="help-icon modal-link">

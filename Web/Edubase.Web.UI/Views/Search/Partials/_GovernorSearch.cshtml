@@ -31,33 +31,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-border-narrow" id="searchtype-gov-namerole-ref">
+                <div class="panel panel-border-narrow @Html.Conditional(string.Equals(Model.ErrorPanel, "Governor"), "govuk-form-group--error")" id="searchtype-gov-namerole-ref">
                     @* This alert gets dynamically populated *@
-                    <div class="warning-message govuk-visually-hidden" role="alert">
-                        <p class="message-text" aria-live="polite"></p>
-                    </div>
-                    @if (Model.SearchType == eSearchType.Governor && Model.NoResults)
-                    {
-                        if (Model.GovernorSearchModel.Forename.IsNullOrEmpty() &&
-                            Model.GovernorSearchModel.Surname.IsNullOrEmpty() &&
-                            Model.GovernorSearchModel.RoleId.Length == 0)
-                        {
-                                @* Static alert for no search results *@
-                            <div role="alert" class="warning-message js-trigger-aria-live">
-                                <p class="warning-message-text" aria-live="polite">Please enter a governor to start a search</p>
-                            </div>
-                        }
-                        else
-                        {
-                                @* Static alert for no search results *@
-                            <div role="alert" class="warning-message js-trigger-aria-live">
-                                <p class="warning-message-text" aria-live="polite">We could not find any governors matching your search criteria</p>
-                            </div>
-                        }
-                    }
+                    <span class="govuk-error-message hidden"></span>
+                    @Html.ValidationMessageFor(x => x.GovernorSearchModel.Forename, null, new { @class = "govuk-error-message" })
                     <div class="govuk-form-group">
-                        <label for="forename" class="govuk-label">First name</label>
-                        @Html.TextBoxFor(x => x.GovernorSearchModel.Forename, new {maxlength = 120, id = "forename", @class = "govuk-input govuk-input--width-20"})
+                        <label for="forename" class="govuk-label">First name</label>@*id = "forename",*@
+                        @Html.TextBoxFor(x => x.GovernorSearchModel.Forename, new {maxlength = 120,  @class = "govuk-input govuk-input--width-20"})
                     </div>
                     <div class="govuk-form-group">
                         <label for="surname" class="govuk-label">Last name</label>
@@ -127,33 +107,15 @@
                         </div>
                     </div>
 
-                    <div class="panel panel-border-narrow" id="searchtype-gov-refno-ref">
+                    <div class="panel panel-border-narrow @Html.ValidationCssClassFor(x => x.GovernorSearchModel.Gid)" id="searchtype-gov-refno-ref">
                         @* This alert gets dynamically populated *@
-                        <div class="warning-message govuk-visually-hidden" role="alert">
-                            <p class="message-text" aria-live="polite"></p>
-                        </div>
-                        @if (Model.SearchType == eSearchType.GovernorReference && Model.NoResults)
-                        {
-                            if (!Model.GovernorSearchModel.Gid.HasValue)
-                            {
-                                @* Static alert for no search results *@
-                                <div role="alert" class="warning-message js-trigger-aria-live">
-                                    <p class="warning-message-text" aria-live="polite">Please enter a governor ID to start a search</p>
-                                </div>
-                            }
-                            else
-                            {
-                                @* Static alert for no search results *@
-                                <div role="alert" class="warning-message js-trigger-aria-live">
-                                    <p class="warning-message-text" aria-live="polite">We could not find any governors matching your search criteria</p>
-                                </div>
-                            }
-                        }
-                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernorSearchModel.Gid)">
+                        <span class="govuk-error-message hidden"></span>
+                        @Html.ValidationMessageFor(x => x.GovernorSearchModel.Gid, null, new { @class = "govuk-error-message"})
+                        <div class="govuk-form-group">
                             <label for="GovernorSearchModel_Gid" class="govuk-label">
                                 Enter governor ID number (GID number)
                             </label>
-                            <span class="govuk-error-message">@Html.ValidationMessageFor(x => x.GovernorSearchModel.Gid)</span>
+
                             @Html.TextBoxFor(x => x.GovernorSearchModel.Gid, new {maxlength = 10, @class = "govuk-input govuk-input--width-20"})
                         </div>
                         <div class="govuk-form-group">
@@ -167,7 +129,6 @@
                         </div>
 
                         <div class="govuk-form-group">
-
                             <button type="submit" id="governor-search-submit-1" class="govuk-button" name="searchtype" value="@eSearchType.GovernorReference">Search</button>
                         </div>
 

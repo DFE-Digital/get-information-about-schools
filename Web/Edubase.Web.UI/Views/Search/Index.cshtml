@@ -12,7 +12,9 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        @Html.Partial("_ValidationSummary", ViewData.ModelState)
+         @Html.Partial("_ValidationSummary", ViewData.ModelState)
+        <div id="js-error-summary"><error-summary :errors="errors" error-title="Please correct the following error" /></div>
+
         @{ Html.RenderPartial("Partials/_SearchHeader"); }
     </div>
 </div>

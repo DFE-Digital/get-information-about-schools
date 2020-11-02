@@ -70,12 +70,14 @@ namespace Edubase.Web.UI.Models.Search
         }
 
         public bool NoResults { get; set; }
+
+        public string ErrorPanel { get; set; }
     }
 
     public class LocalAuthorityIdList : List<int>
     {
         public LocalAuthorityIdList()
-        {    
+        {
         }
 
         public LocalAuthorityIdList(IEnumerable<int> ids)
