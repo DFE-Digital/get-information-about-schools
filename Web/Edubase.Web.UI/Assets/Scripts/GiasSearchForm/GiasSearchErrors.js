@@ -155,7 +155,6 @@ class GiasSearchErrors {
 
     // Governor search
     $('#governor-search-submit').on('click', function (e) {
-      console.log('clickity');
       hideErrorSummary();
       const fName = $.trim($('#GovernorSearchModel_Forename').val());
       const sName = $.trim($('#surname').val());
