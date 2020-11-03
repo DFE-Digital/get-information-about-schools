@@ -31,37 +31,40 @@
 
 <nav role="navigation" aria-label="Pagination" class="pagination">
     <p class="govuk-body-s">Showing @Model.FirstResultIndex - @Model.LastResultIndex of @Model.Count</p>
-    <ul class="pagination-links">
+    @if (Model.PageCount > 1)
+    {
+        <ul class="pagination-links">
 
-        @if (Model.CurrentPageIndex > 1)
-        {
-            <li>
-                <a href="@Url.Current(new {skip = (Model.Skip - Model.Take), Count = Model.Count})" class="pagination-prev" aria-label="Previous page">Previous</a>
-            </li>
-        }
-
-        @for (int i = paginationStart; i <= paginationFinish; i++)
-        {
-            if (i == Model.CurrentPageIndex)
+            @if (Model.CurrentPageIndex > 1)
             {
-                <li><span class="go-nowhere numeric-pagination" aria-current="true" aria-label="Page @i, current page">@i</span></li>
-            }
-            else
-            {
-                var tabletClass = (i >= Model.CurrentPageIndex - 2 && i <= Model.CurrentPageIndex + 2) ? "tablet-pagination" : "";
                 <li>
-                    <a href="@Url.Current(new {skip = ((i - 1) * Model.Take), Count = Model.Count})" class="numeric-pagination @tabletClass" aria-label="Page @i">@i</a>
+                    <a href="@Url.Current(new {skip = (Model.Skip - Model.Take), Count = Model.Count})" class="pagination-prev" aria-label="Previous page">Previous</a>
                 </li>
-
             }
-        }
 
-        @if (Model.CurrentPageIndex < Model.PageCount)
-        {
-            <li>
-                <a href="@Url.Current(new {skip = (Model.Skip + Model.Take), Count = Model.Count})" class="pagination-next" aria-label="Next page">Next</a>
-            </li>
-        }
+            @for (int i = paginationStart; i <= paginationFinish; i++)
+            {
+                if (i == Model.CurrentPageIndex)
+                {
+                    <li><span class="go-nowhere numeric-pagination" aria-current="true" aria-label="Page @i, current page">@i</span></li>
+                }
+                else
+                {
+                    var tabletClass = (i >= Model.CurrentPageIndex - 2 && i <= Model.CurrentPageIndex + 2) ? "tablet-pagination" : "";
+                    <li>
+                        <a href="@Url.Current(new {skip = ((i - 1) * Model.Take), Count = Model.Count})" class="numeric-pagination @tabletClass" aria-label="Page @i">@i</a>
+                    </li>
 
-    </ul>
+                }
+            }
+
+            @if (Model.CurrentPageIndex < Model.PageCount)
+            {
+                <li>
+                    <a href="@Url.Current(new {skip = (Model.Skip + Model.Take), Count = Model.Count})" class="pagination-next" aria-label="Next page">Next</a>
+                </li>
+            }
+
+        </ul>
+    }
 </nav>
