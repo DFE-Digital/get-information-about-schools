@@ -95,7 +95,7 @@ namespace Edubase.Web.UI.Controllers
                 viewModel.SearchType = eSearchType.EstablishmentAll;
             }
 
-            if (viewModel.IsEstablishmentSearch && viewModel.TextSearchModel.Text.IsNullOrEmpty())
+            if (viewModel.IsEstablishmentSearch && viewModel.SearchType == eSearchType.Text && viewModel.TextSearchModel.Text.IsNullOrEmpty())
             {
                 ModelState.AddModelError("TextSearchModel.Text", "Please enter an establishment name, URN, LAESTAB or UKPRN to start a search");
                 return View("Index", viewModel);

@@ -119,9 +119,6 @@
                             @if (Model.NoResultsForName)
                             {
                                 <span class="govuk-error-message">We could not find any establishments matching your search criteria</span>
-                                <div class="warning-message">
-                                    <p>We could not find any establishments matching your search criteria</p>
-                                </div>
                             }
                             <fieldset class="govuk-fieldset">
                                 <legend class="govuk-visually-hidden">Select the change type</legend>
@@ -204,10 +201,6 @@
                              </div>
                             <div class="panel panel-border-narrow @Html.ValidationGroupCssClass("GroupSearchModel.Text")" id="searchby-group-ref">
                                 <div class="edubase-search-element with-typeahead has-typeahead" id="group-search-container">
-                                    @* This alert gets dynamically populated *@
-                                    <div class="warning-message govuk-visually-hidden" role="alert">
-                                        <p class="message-text" aria-live="polite"></p>
-                                    </div>
                                     @Html.ValidationMessageFor(x => x.GroupSearchModel.Text, null , new { @class = "govuk-error-message" })
                                     <label class="govuk-label" for="GroupSearchModel_Text">
                                         Enter name, Companies House number, Group <abbr title="Unique Identifier">UID</abbr>, ID or UKPRN

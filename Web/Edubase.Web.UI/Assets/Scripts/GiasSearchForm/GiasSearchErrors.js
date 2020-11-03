@@ -74,11 +74,12 @@ class GiasSearchErrors {
         e.preventDefault();
         showInlineError($('#searchby-location-ref'),
           'Please enter a postcode, town or city to start a search');
+
+        clientErrorSummary.updateErrors({
+          href: '#LocationSearchModel_Text',
+          message: 'Please enter a postcode, town or city to start a search'
+        });
       }
-      clientErrorSummary.updateErrors({
-        href: '#TextSearchModel_Text',
-        message: 'Please enter a postcode, town or city to start a search'
-      });
     });
 
     // Local Authority search
@@ -154,8 +155,9 @@ class GiasSearchErrors {
 
     // Governor search
     $('#governor-search-submit').on('click', function (e) {
+      console.log('clickity');
       hideErrorSummary();
-      const fName = $.trim($('#forename').val());
+      const fName = $.trim($('#GovernorSearchModel_Forename').val());
       const sName = $.trim($('#surname').val());
       const roles = $('#governor-roles').find(':checkbox').filter(':checked');
       const gId = $.trim($('#GovernorSearchModel_Gid').val());
