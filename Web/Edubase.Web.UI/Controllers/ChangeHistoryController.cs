@@ -249,6 +249,7 @@ namespace Edubase.Web.UI.Controllers
                 else
                 {
                     viewModel.NoResultsForName = true;
+                    ModelState.AddModelError("TextSearchModel.Text", "We could not find any establishments matching your search criteria");
                 }
             }
             else
