@@ -120,6 +120,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (viewModel.Dataset == eDataSet.Custom && !viewModel.SelectedCustomFields.Any())
             {
+                if (viewModel.ViewedCustomFields)
+                {
+                    ModelState.AddModelError("CustomFieldsByCategory", "Select at least one field");
+                }
                 // the SearchQueryString is used for the breadcrumb response. We dont want to retain the Dataset selection as part of that
                 var queryString = new NameValueCollection(Request.QueryString);
                 queryString.Remove("Dataset");

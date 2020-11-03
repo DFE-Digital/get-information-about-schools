@@ -1,0 +1,12 @@
+.gias-download-fields.govuk-form-group--error {
+  border-left: 5px solid $govuk-error-colour;
+  padding-left: govuk-spacing(3);
+}
+
+.gias-download-fields--section {
+  display: block;
+}
+
+.gias-download-fields--section__content {
+  padding-bottom: govuk-spacing(6);
+}

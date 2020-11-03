@@ -43,5 +43,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public string[] SelectedCustomFields { get; set; } = new string[0];
 
         public IEnumerable<CustomFieldGroup> CustomFieldsByCategory => CustomFields.GroupBy(x => x.Category).OrderBy(x => x.Key).Select(x => new CustomFieldGroup { Category = x.FirstOrDefault()?.Category, CustomFields = x.OrderBy(y => y.Name).AsEnumerable() });
+
+        public bool ViewedCustomFields { get; set; } = false;
     }
 }
