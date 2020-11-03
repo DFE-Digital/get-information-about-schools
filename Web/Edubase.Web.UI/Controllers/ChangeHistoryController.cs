@@ -257,6 +257,11 @@ namespace Edubase.Web.UI.Controllers
                 var changes = await _svc.SearchAsync(payload, User);
                 viewModel.Items = new List<ChangeHistorySearchItem>(changes.Items);
                 viewModel.Count = changes.Count;
+
+                if (viewModel.Count == 0)
+                {
+                    viewModel.NoResultsForName = true;
+                }
             }
 
             return viewModel;

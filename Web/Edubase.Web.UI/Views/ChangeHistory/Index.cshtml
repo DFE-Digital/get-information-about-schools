@@ -71,11 +71,6 @@
                             </div>
                         </div>
                         <div class="panel panel-border-narrow @Html.ValidationGroupCssClass("TextSearchModel.Text")" id="searchby-name-ref">
-                            @* This alert gets dynamically populated *@
-                            <div class="warning-message govuk-visually-hidden" role="alert">
-                                <p class="message-text" aria-live="polite"></p>
-                            </div>
-
                             @Html.ValidationMessageFor(x => x.TextSearchModel.Text, null, new { @class = "govuk-error-message" })
                             <label class="govuk-label" for="TextSearchModel_Text">
                                 Enter name, <abbr title="Unique Reference Number">URN</abbr>, LAESTAB or UKPRN
@@ -116,7 +111,7 @@
                             </div>
                         </div>
                         <div class="panel panel-border-narrow " id="searchby-all-ref">
-                            @if (Model.NoResultsForName)
+                            @if (Model.NoResultsForName && Model.SearchType.Equals(eSearchType.EstablishmentAll))
                             {
                                 <span class="govuk-error-message">We could not find any establishments matching your search criteria</span>
                             }
