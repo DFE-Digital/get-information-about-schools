@@ -261,6 +261,7 @@ namespace Edubase.Web.UI.Controllers
 
                 if (viewModel.Count == 0)
                 {
+                    ModelState.AddModelError("searchby-all-ref", "We could not find any establishments matching your search criteria");
                     viewModel.NoResultsForName = true;
                 }
             }

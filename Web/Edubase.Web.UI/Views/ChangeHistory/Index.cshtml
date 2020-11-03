@@ -110,7 +110,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="panel panel-border-narrow " id="searchby-all-ref">
+                        <div class="panel panel-border-narrow @Html.ValidationGroupCssClass("searchby-all-ref")" id="searchby-all-ref">
                             @if (Model.NoResultsForName && Model.SearchType.Equals(eSearchType.EstablishmentAll))
                             {
                                 <span class="govuk-error-message">We could not find any establishments matching your search criteria</span>
