@@ -17,3 +17,9 @@
   @include govuk-font(16, 'bold');
   margin: 0 0 govuk-spacing(1);
 }
+
+.gias-search-results--heading {
+  @include govuk-media-query($until: tablet) {
+    margin-bottom: govuk-spacing(3);
+  }
+}

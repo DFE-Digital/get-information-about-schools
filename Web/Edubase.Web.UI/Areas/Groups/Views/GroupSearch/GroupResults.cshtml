@@ -19,7 +19,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-xl">Search results for establishment groups</h1>
+        <h1 class="govuk-heading-xl gias-search-results--heading">Search results for establishment groups</h1>
         <div class="search-results-download-link-container">
             <a rel="nofollow" class="search-results-download-link" href="@Url.Action("PrepareDownload", "GroupSearch")?@Url.CurrentQueryString()">Download these search results</a>
         </div>
@@ -131,6 +131,9 @@
                             </div>
                         </div>
                     }
+                    <div class="filter-additional-controls">
+                        <a href="#" class="add-clear-filters" id="clear-filters-additional" role="button">Clear all filters</a>
+                    </div>
 
                     <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit" />
                     @Html.HiddenFor(!Model.GroupSearchModel.Text.IsEmpty(), x => x.GroupSearchModel.Text)

@@ -111,14 +111,18 @@
   }
 }
 
-.save-filter-set-link {
-  float: right;
-}
-
 .no-js {
   .save-filter-set-link,
   .add-clear-filter {
     display: none;
+  }
+}
+
+.filter-additional-controls {
+  position: relative;
+  .add-clear-filters {
+    right: 0;
+    top: 10px;
   }
 }
 
