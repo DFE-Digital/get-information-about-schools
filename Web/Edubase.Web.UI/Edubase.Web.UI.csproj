@@ -735,7 +735,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Governors\Views\Search\" />
-    <Folder Include="Assets\Sass\" />
     <Folder Include="Views\Admin\" />
     <Folder Include="Views\GOVUK\Views\errors\" />
     <Folder Include="Views\UserRoles\" />

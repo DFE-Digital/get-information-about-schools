@@ -24,8 +24,7 @@
             var azureMapsApiKey = "@(System.Configuration.ConfigurationManager.AppSettings["AzureMapsApiKey"])";
         </script>
         <script src="/public/assets/scripts/build/bundle.js?v=@version"></script>
-
-
+        <script src="/public/assets/scripts/build/validation-summary.js"></script>
         @(RenderSection("ViewScripts", required: false))
     }
 }
