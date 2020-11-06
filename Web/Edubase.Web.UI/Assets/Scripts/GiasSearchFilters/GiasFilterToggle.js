@@ -39,9 +39,7 @@ class GiasFilterToggle {
       $app.addClass('hidden').attr('aria-hidden', true);
     });
 
-    $(document).on('click', '.gias-mobile-filters__clear',function(e) {
-      $('#clear-filters').click();
-    });
+    $(document).on('click', '.gias-mobile-filters__clear', this.triggerFilterClear);
 
     $(document).on('click', '.gias-mobile-filters__close',function (e){
       e.preventDefault();
@@ -50,11 +48,29 @@ class GiasFilterToggle {
     });
 
     $('.gias-filter-toggle--container').css({ display: 'block' });
+
+    this.initialised = true;
   }
 
+  triggerFilterClear() {
+    $('#clear-filters').click();
+  }
+
+
   destroy() {
-    const filters = $('.gias-mobile-filters__panel').detach();
-    $('#gias-filter-container').append(filters);
+    const filters = $('.gias-mobile-filters__panel').children().detach();
+    $('#gias-filter-container').prepend(filters);
+
+    $('.gias-filter-toggle--container').css({ display: 'none' });
+    $(document).off('click', '.gias-mobile-filters__clear', this.triggerFilterClear);
+    $('#gias-filter-toggle').off('click');
+
+    $('.gias-mobile-filters').remove();
+
+    $('#app').removeClass('hidden').removeAttr('aria-hidden');
+
+    this.initialised = false;
+
   }
 
 }

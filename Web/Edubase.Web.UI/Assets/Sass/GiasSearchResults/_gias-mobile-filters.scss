@@ -1,7 +1,10 @@
 .gias-mobile-filters {
-  position: relative;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
   background-color: govuk-colour(white);
-  z-index: 250;
 
   .gias-heading-xs,
   .add-clear-filters {
@@ -37,8 +40,14 @@
 }
 
 .gias-mobile-filters__panel {
-  padding-top: 30px;
+  padding-top: 60px;
   padding-bottom: 60px;
+
+  .govuk-grid-column-one-third {
+    // these are only ever shown when we need a mobile layout
+    // which some times is a wider screen than the standard mobile breakpoint
+    width: 100% !important;
+  }
 }
 
 .gias-mobile-filters__footer {

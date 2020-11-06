@@ -1,5 +1,5 @@
 const $filterForm = $('#filter-form');
-
+const _throttle = require('lodash.throttle');
 import OptionSelect from "../GiasSearchFilters/OptionSelect";
 import GiasAdditionalFilters from "../GiasSearchFilters/GiasAdditionalFilters";
 import GiasSearchWithin from "../GiasSearchFilters/GiasSearchWithin";
@@ -29,8 +29,25 @@ $filterForm.find('.searchable-filters').giasSearchWithin();
 if (document.getElementById('governors-search-results')) {
   new GiasGovernorsDownloadWarning();
 }
-
-if ($(window).width() < 820 ) {
-  new GiasFilterToggle();
+let popupFilters;
+if ($(window).width() < 835) {
+  popupFilters = new GiasFilterToggle();
 }
 
+window.addEventListener('resize',
+  _throttle(function(){
+    if($(window).width() < 835) {
+      if (typeof popupFilters === 'undefined') {
+        popupFilters = new GiasFilterToggle();
+      } else {
+        console.log(popupFilters.initialised);
+        if(!popupFilters.initialised) {
+          popupFilters.init();
+        }
+      }
+    } else {
+      if (typeof popupFilters !== 'undefined') {
+        popupFilters.destroy()
+      }
+    }
+  }, 250));
