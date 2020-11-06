@@ -282,6 +282,7 @@ class GiasFiltering {
     $form.find('.active-clear').addClass('clear-disabled');
     $form.find('input[type="text"]').prop('disabled', true);
     $('#results-notification').html('Please wait, loading search results');
+
   }
 
   getParams() {
@@ -307,6 +308,8 @@ class GiasFiltering {
     $resultsContainer.html('<div class="progress-indicator"><span class="govuk-visually-hidden">Please wait</span></div>');
 
     this.disableFilters();
+    $('#gias-mobile-filter-submit').find('.mobile-count').remove();
+    $('#gias-mobile-filter-submit').append("<span class='gias-button-loader' id='button-loader'>&nbsp;</span>");
 
     $('.date-filter-warning').addClass('hidden');
 
@@ -334,6 +337,8 @@ class GiasFiltering {
             if (count > 0) {
               $resultsNotification.html('Search results loaded. ' + count + ' ' + self.searchCategory + ' found.');
             }
+            $('#button-loader').remove();
+            $('#gias-mobile-filter-submit').append("<span class='mobile-count'> ("+ count+")</span>");
             $downloadLink.attr('href', downloadBaseUrl + '?tok=' + token);
             $downloadLink.removeClass('hidden');
             $resultsContainer.removeClass('pending-results-update');

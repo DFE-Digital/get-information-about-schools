@@ -6,6 +6,7 @@ class GiasFilterToggle {
   init() {
     const $app = $('#app');
     const filterToggle = $('#gias-filter-toggle');
+    const startingCount = $('#list-count').text();
 
 
     let mobileFilters = $('#filter-form');
@@ -21,7 +22,10 @@ class GiasFilterToggle {
 
             </div>
             <div class="gias-mobile-filters__footer">
-                <button class="govuk-button gias-mobile-filters__close">View results</button>
+                <button class="govuk-button gias-mobile-filters__close" id="gias-mobile-filter-submit">
+                    View results
+                    <span class="mobile-count">(${startingCount})</span>
+                </button>
             </div>
         </div>`);
 

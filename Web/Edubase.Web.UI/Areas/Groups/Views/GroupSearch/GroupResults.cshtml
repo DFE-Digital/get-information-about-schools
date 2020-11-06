@@ -30,6 +30,14 @@
             <p>Establishment groups matching &lsquo;<span class="govuk-!-font-weight-bold">@Model.GroupSearchModel.Text</span>&rsquo;.</p>
         </div>
     }
+    <div class="govuk-grid-column-full">
+        <div class="gias-filter-toggle--container">
+            <span class="gias-filter-toggle--icon">
+                @helpers.FilterIcon()
+            </span>
+            <a href="#gias-filter-container" role="button" id="gias-filter-toggle">Filters</a>
+        </div>
+    </div>
 </div>
 
 <div class="govuk-grid-row">
