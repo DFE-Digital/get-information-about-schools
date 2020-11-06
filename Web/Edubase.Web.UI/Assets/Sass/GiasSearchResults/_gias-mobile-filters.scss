@@ -42,11 +42,13 @@
 .gias-mobile-filters__panel {
   padding-top: 60px;
   padding-bottom: 60px;
+  background-color: govuk-colour(white);
 
   .govuk-grid-column-one-third {
     // these are only ever shown when we need a mobile layout
     // which some times is a wider screen than the standard mobile breakpoint
     width: 100% !important;
+    background-color: govuk-colour(white);
   }
 }
 

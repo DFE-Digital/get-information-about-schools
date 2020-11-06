@@ -40,7 +40,6 @@ window.addEventListener('resize',
       if (typeof popupFilters === 'undefined') {
         popupFilters = new GiasFilterToggle();
       } else {
-        console.log(popupFilters.initialised);
         if(!popupFilters.initialised) {
           popupFilters.init();
         }
