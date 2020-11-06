@@ -48,7 +48,7 @@ const defaults = {
   remoteContent: false,
   remoteUrl: null,
   contentSelector: null,
-  closeButtonClass: null
+  closeButtonClass: null,
 };
 
 class GiasModal {
@@ -84,7 +84,7 @@ class GiasModal {
     function prepareContent() {
       const contentTitle = modalContent.find('.make-modal-header').html();
 
-      let bodyContent = $('<div/>').append(modalContent.clone().children().not('.make-modal-header'));
+      let bodyContent = $('<div/>').append(modalContent.clone(true).children().not('.make-modal-header'));
 
       bodyContent = bodyContent.html();
 

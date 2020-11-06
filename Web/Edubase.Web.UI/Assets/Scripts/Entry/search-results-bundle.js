@@ -8,6 +8,8 @@ import GiasSelectAll from "../GiasSearchFilters/GiasSelectAll";
 import GiasFiltering from "../GiasSearchFilters/GiasFiltering";
 import GiasSearchMap from "../GiasModules/GiasSearchMap";
 import GiasGovernorsDownloadWarning from "../GiasSearchFilters/GiasGovernorsDownloadWarning";
+import GiasFilterToggle from '../GiasSearchFilters/GiasFilterToggle';
+import throttle from '../GiasHelpers/throttle';
 
 new GiasAdditionalFilters();
 $filterForm.find('.govuk-option-select').optionSelect();
@@ -27,3 +29,8 @@ $filterForm.find('.searchable-filters').giasSearchWithin();
 if (document.getElementById('governors-search-results')) {
   new GiasGovernorsDownloadWarning();
 }
+
+if ($(window).width() < 820 ) {
+  new GiasFilterToggle();
+}
+

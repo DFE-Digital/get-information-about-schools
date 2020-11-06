@@ -1,13 +1,7 @@
-@import "icon-helpers";
 
 .icon-map {
-  @extend %icon;
-  margin-left: 27px;
-
-  &:before {
-    background-image: url("/public/assets/images/icons/map-icon-black.png");
-    left: -27px;
-    top: -5px;
+  @include govuk-media-query($until: tablet) {
+    font-size: 14px;
   }
 }
 
