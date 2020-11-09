@@ -8,15 +8,16 @@
 
     var gSearch = Request.QueryString["gsearch"];
 }
+
 @section Head
 {
-    <meta name="robots" content="noindex,nofollow" />
+    <meta name="robots" content="noindex,nofollow"/>
 }
 
 
 @section BackLink
 {
-    @Html.ActionLink("Back to find a governor", "Index", "Search", new { area = "", SelectedTab = SearchViewModel.Tab.Governors, gsearch = gSearch },  new {@class = "govuk-back-link"})
+    @Html.ActionLink("Back to find a governor", "Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Governors, gsearch = gSearch}, new {@class = "govuk-back-link"})
 }
 
 <div class="govuk-grid-row">
@@ -75,11 +76,11 @@
                     <span class="conjunction-text">roles</span>
                     <span class="governor-roles govuk-!-font-weight-bold">@Html.Raw(Model.RoleNames)</span>
                 }
-                    else
-                    {
-                        <text>for </text>
-                    }
-                    <text>roles <span class="governor-roles">@Html.Raw(Model.RoleNames)</span></text>
+                else
+                {
+                    <text>for </text>
+                }
+                <text>roles <span class="governor-roles">@Html.Raw(Model.RoleNames)</span></text>
 
             </p>
         </div>
@@ -87,115 +88,118 @@
 }
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
-        <div class="filter-form" id="filter-form">
-            <div id="EditSearchCollapse" class="search-result-filters blanket-container">
-                <span id='list-count' class="hidden">@Model.Count</span>
-                <h2 class="gias-heading-xs">Filters</h2>
-                <a href="#results-container" class="govuk-skip-link">Skip filters</a>
-                <a href="#" class="add-clear-filters" id="clear-filters" role="button">Clear all filters</a>
-                <form method="get" action="@Url.Action("Index", "GovernorSearch", new {area = "Governors"})">
-                    <input type="hidden" id="client-only-searchtype" value="GovernorsAll"/>
-                    <div class="govuk-option-select js-collapsible"
-                         id="option-select-sort-by" role="search">
-                        <div class="container-head js-container-head">
-                            <div class="option-select-label">Sort by</div>
-                        </div>
-                        <div class="options-container">
-                            <label for="sortBy" class="govuk-visually-hidden">Sort by</label>
-                            <select class="govuk-select trigger-result-update sortby-selector" name="SortBy" id="sortBy">
-                                <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
-                                <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
-                            </select>
-                        </div>
-                    </div>
+    <form method="get" action="@Url.Action("Index", "GovernorSearch", new {area = "Governors"})">
+        <div id="gias-filter-container">
+            <div class="filter-form" id="filter-form">
+                <div class="govuk-grid-column-one-third">
+                    <div id="EditSearchCollapse" class="search-result-filters blanket-container">
+                        <span id='list-count' class="hidden">@Model.Count</span>
+                        <h2 class="gias-heading-xs">Filters</h2>
+                        <a href="#results-container" class="govuk-skip-link">Skip filters</a>
+                        <a href="#" class="add-clear-filters" id="clear-filters" role="button">Clear all filters</a>
 
-                    <div class="govuk-option-select js-collapsible" id="option-select-role-type" role="search">
-                        <div class="container-head js-container-head">
-                            <div class="option-select-label">Role</div>
-                            <div class="js-selected-counter">
-                                <span class="js-selected-counter-text"></span>
+                        <input type="hidden" id="client-only-searchtype" value="GovernorsAll"/>
+                        <div class="govuk-option-select js-collapsible"
+                             id="option-select-sort-by" role="search">
+                            <div class="container-head js-container-head">
+                                <div class="option-select-label">Sort by</div>
+                            </div>
+                            <div class="options-container">
+                                <label for="sortBy" class="govuk-visually-hidden">Sort by</label>
+                                <select class="govuk-select trigger-result-update sortby-selector" name="SortBy" id="sortBy">
+                                    <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
+                                    <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="options-container" id="">
-                            <div class="js-auto-height-inner">
-                                <fieldset class="govuk-fieldset">
-                                    <legend class="govuk-visually-hidden">Select an option below to filter the results</legend>
-                                    <div class="govuk-checkboxes gias-filter-checkboxes">
-                                        <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
-                                            <input id="govrole_all" class="select-all govuk-checkboxes__input" type="checkbox"/>
-                                            <label for="govrole_all" class="govuk-checkboxes__label">
-                                                All
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="govuk-checkboxes gias-filter-checkboxes">
-                                        @foreach (var item in Model.GovernorRoles.OrderBy(x => x.Name))
-                                        {
-                                            <div class="govuk-checkboxes__item">
-                                                <input name="@GovernorSearchViewModel.BIND_ALIAS_ROLE_ID" class="govuk-checkboxes__input trigger-result-update" value="@item.Id" id="role_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedRoleIds.Contains(item.Id), "checked")/>
-                                                <label for="role_@item.Id" class="govuk-checkboxes__label">
-                                                    @item
+
+                        <div class="govuk-option-select js-collapsible" id="option-select-role-type" role="search">
+                            <div class="container-head js-container-head">
+                                <div class="option-select-label">Role</div>
+                                <div class="js-selected-counter">
+                                    <span class="js-selected-counter-text"></span>
+                                </div>
+                            </div>
+                            <div class="options-container" id="">
+                                <div class="js-auto-height-inner">
+                                    <fieldset class="govuk-fieldset">
+                                        <legend class="govuk-visually-hidden">Select an option below to filter the results</legend>
+                                        <div class="govuk-checkboxes gias-filter-checkboxes">
+                                            <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
+                                                <input id="govrole_all" class="select-all govuk-checkboxes__input" type="checkbox"/>
+                                                <label for="govrole_all" class="govuk-checkboxes__label">
+                                                    All
                                                 </label>
                                             </div>
-                                        }
-                                    </div>
-                                </fieldset>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="govuk-option-select js-collapsible" id="option-select-group-type" role="search">
-                        <div class="container-head js-container-head">
-                            <div class="option-select-label">Establishment/group type</div>
-                            <div class="js-selected-counter">
-                                <span class="js-selected-counter-text"></span>
-                            </div>
-                        </div>
-                        <div class="options-container" id="">
-                            <div class="js-auto-height-inner">
-                                <fieldset class="govuk-fieldset">
-                                    <legend class="govuk-visually-hidden">Select an option below to filter the results</legend>
-                                    <div class="govuk-checkboxes gias-filter-checkboxes">
-                                        <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
-                                            <input id="grouptype_all" class="govuk-checkboxes__input select-all" type="checkbox"/>
-                                            <label for="grouptype_all" class="govuk-checkboxes__label">
-                                                All
-                                            </label>
                                         </div>
-                                    </div>
-                                    <div class="govuk-checkboxes gias-filter-checkboxes">
-                                        @foreach (var item in Model.GovernorTypeFlags.OrderBy(x => x.Name))
-                                        {
-                                            <div class="govuk-checkboxes__item">
-                                                <input name="g" class="govuk-checkboxes__input trigger-result-update" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGovernorTypeFlagIds.Contains(item.Id), "checked")/>
-                                                <label for="group-type_@item.Id" class="govuk-checkboxes__label">
-                                                    @item
+                                        <div class="govuk-checkboxes gias-filter-checkboxes">
+                                            @foreach (var item in Model.GovernorRoles.OrderBy(x => x.Name))
+                                            {
+                                                <div class="govuk-checkboxes__item">
+                                                    <input name="@GovernorSearchViewModel.BIND_ALIAS_ROLE_ID" class="govuk-checkboxes__input trigger-result-update" value="@item.Id" id="role_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedRoleIds.Contains(item.Id), "checked")/>
+                                                    <label for="role_@item.Id" class="govuk-checkboxes__label">
+                                                        @item
+                                                    </label>
+                                                </div>
+                                            }
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="govuk-option-select js-collapsible" id="option-select-group-type" role="search">
+                            <div class="container-head js-container-head">
+                                <div class="option-select-label">Establishment/group type</div>
+                                <div class="js-selected-counter">
+                                    <span class="js-selected-counter-text"></span>
+                                </div>
+                            </div>
+                            <div class="options-container" id="">
+                                <div class="js-auto-height-inner">
+                                    <fieldset class="govuk-fieldset">
+                                        <legend class="govuk-visually-hidden">Select an option below to filter the results</legend>
+                                        <div class="govuk-checkboxes gias-filter-checkboxes">
+                                            <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
+                                                <input id="grouptype_all" class="govuk-checkboxes__input select-all" type="checkbox"/>
+                                                <label for="grouptype_all" class="govuk-checkboxes__label">
+                                                    All
                                                 </label>
                                             </div>
-                                        }
-                                    </div>
-                                </fieldset>
+                                        </div>
+                                        <div class="govuk-checkboxes gias-filter-checkboxes">
+                                            @foreach (var item in Model.GovernorTypeFlags.OrderBy(x => x.Name))
+                                            {
+                                                <div class="govuk-checkboxes__item">
+                                                    <input name="g" class="govuk-checkboxes__input trigger-result-update" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGovernorTypeFlagIds.Contains(item.Id), "checked")/>
+                                                    <label for="group-type_@item.Id" class="govuk-checkboxes__label">
+                                                        @item
+                                                    </label>
+                                                </div>
+                                            }
+                                        </div>
+                                    </fieldset>
+                                </div>
                             </div>
+
                         </div>
 
+                        @Selector("Local authority", GovernorSearchViewModel.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds, filterRefine: true, isExtraFilter: true)
+
+                        <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit"/>
+                        @Html.HiddenFor(!Model.GovernorSearchModel.Forename.IsEmpty(), x => x.GovernorSearchModel.Forename)
+                        @Html.HiddenFor(!Model.GovernorSearchModel.Surname.IsEmpty(), x => x.GovernorSearchModel.Surname)
+                        @Html.HiddenFor(Model.GovernorSearchModel.IncludeHistoric, x => x.GovernorSearchModel.IncludeHistoric)
+
+                        <div class="filter-additional-controls">
+                            <a href="#" class="add-clear-filters" id="clear-filters" role="button">Clear all filters</a>
+                        </div>
                     </div>
 
-                    @Selector("Local authority", GovernorSearchViewModel.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds, filterRefine: true, isExtraFilter: true)
-
-                    <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit"/>
-                    @Html.HiddenFor(!Model.GovernorSearchModel.Forename.IsEmpty(), x => x.GovernorSearchModel.Forename)
-                    @Html.HiddenFor(!Model.GovernorSearchModel.Surname.IsEmpty(), x => x.GovernorSearchModel.Surname)
-                    @Html.HiddenFor(Model.GovernorSearchModel.IncludeHistoric, x => x.GovernorSearchModel.IncludeHistoric)
-                </form>
-                <div class="filter-additional-controls">
-                    <a href="#" class="add-clear-filters" id="clear-filters" role="button">Clear all filters</a>
                 </div>
             </div>
-
         </div>
-    </div>
-
+    </form>
     <div role="alert" aria-live="assertive" id="results-notification" class="govuk-visually-hidden"></div>
     <h2 class="govuk-visually-hidden">Search results listing</h2>
     <div class="govuk-grid-column-two-thirds" id="results-container">
