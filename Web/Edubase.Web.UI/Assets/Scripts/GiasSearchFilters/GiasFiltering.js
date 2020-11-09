@@ -222,7 +222,6 @@ class GiasFiltering {
       e.preventDefault();
       window.clearTimeout(this.filterIntent);
       this.$form.find('input[type="text"]').val('');
-      this.$form.find('.clear-selections').click();
       const selectedFilters = this.$form
         .find('.options-container .trigger-result-update')
         .filter(function (n, item) {
@@ -233,7 +232,9 @@ class GiasFiltering {
       this.$form.find('.select-all').prop('checked', false);
       this.$form.find('.filter-group-title').next('label').removeClass('partial-selection');
       this.$form.find('.filter-group-title').prop('checked', false);
-      selectedFilters.slice(0, 1).trigger('change');
+      this.$form.find('.govuk-option-select').each(function(n, container){
+        $(container).find('.trigger-result-update').slice(0, 1).trigger('change');
+      });
     });
 
     const $openSelector = $("#b_1");
