@@ -15,6 +15,10 @@
     top: 12px;
     left: 0;
   }
+
+  .no-js & {
+    display: none;
+  }
 }
 
 .school-results-listing {

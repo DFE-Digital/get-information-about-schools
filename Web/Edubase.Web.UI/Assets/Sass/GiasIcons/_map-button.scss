@@ -3,5 +3,9 @@
   @include govuk-media-query($until: tablet) {
     font-size: 14px;
   }
+
+  .no-js & {
+    display: none;
+  }
 }
 
