@@ -218,7 +218,7 @@ class GiasFiltering {
 
     });
 
-    $('#clear-filters').on('click', (e)=> {
+    $('#clear-filters, #clear-filters-additional').on('click', (e)=> {
       e.preventDefault();
       window.clearTimeout(this.filterIntent);
       this.$form.find('input[type="text"]').val('');
