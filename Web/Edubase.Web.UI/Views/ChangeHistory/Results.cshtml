@@ -57,10 +57,11 @@
                 heading = Model.GroupName;
             }
         }
-        <h1 class="govuk-heading-xl">@heading</h1>
+        <h1 class="govuk-heading-xl gias-search-results--heading">@heading</h1>
         <p class="govuk-body-s establishment-data-download">
             <a class="download-link @Html.Conditional(Model.Count == 0, "hidden")" href="@($"{Url.RouteUrl("DownloadChangeHistory")}?{Request.QueryString}")">Download change history</a>
         </p>
+        <span id='list-count' class="hidden">@Model.Count</span>
     </div>
 </div>
 
@@ -72,78 +73,91 @@
         </div>
         @if (Model.IsEstablishmentSearch)
         {
-            <p class="govuk-body">To see the 'Suggested from' and 'Approved by' columns, please hide the filters.</p>
+            <p class="govuk-body gias-visible__from-tablet">To see the 'Suggested from' and 'Approved by' columns, please hide the filters.</p>
         }
-        <p>
+        <p class="gias-visible__from-tablet">
             <a href="#" class="hide-show-filters" id="filter-toggle">Hide filters</a>
         </p>
+        <div class="gias-filter-toggle--container">
+            <span class="gias-filter-toggle--icon">
+                @helpers.FilterIcon()
+            </span>
+            <a href="#gias-filter-container" role="button" id="gias-filter-toggle">Filters</a>
+        </div>
     </div>
     <form id="change-history-filters">
-        @Html.HiddenFor(m => m.SelectedTab)
-        @Html.HiddenFor(m => m.SearchType)
-        @Html.HiddenFor(m => m.TextSearchModel.Text)
-        @Html.HiddenFor(m => m.TextSearchModel.AutoSuggestValue)
-        @Html.HiddenFor(m => m.TextSearchModel.AutoSuggestValueAsInt)
-        @Html.HiddenFor(m => m.GroupSearchModel.Text)
-        @Html.HiddenFor(m => m.GroupSearchModel.AutoSuggestValue)
-        @Html.HiddenFor(m => m.GroupSearchModel.AutoSuggestValueAsInt)
-        @Html.HiddenFor(m=> m.Sortby)
-        <input type="hidden" value="true" name="filteropen" id="filters-open-state"/>
-
-        <div class="govuk-grid-column-one-third search-result-filters" id="filter-container">
+        <div id="gias-filter-container">
             <div class="filter-form" id="filter-form">
-                <div id="EditSearchCollapse" class="blanket-container">
-                    <h2 class="govuk-visually-hidden">Search results filters</h2>
-                    <a href="#results-container" class="govuk-visually-hidden-focusable">Skip filters</a>
+                @Html.HiddenFor(m => m.SelectedTab)
+                @Html.HiddenFor(m => m.SearchType)
+                @Html.HiddenFor(m => m.TextSearchModel.Text)
+                @Html.HiddenFor(m => m.TextSearchModel.AutoSuggestValue)
+                @Html.HiddenFor(m => m.TextSearchModel.AutoSuggestValueAsInt)
+                @Html.HiddenFor(m => m.GroupSearchModel.Text)
+                @Html.HiddenFor(m => m.GroupSearchModel.AutoSuggestValue)
+                @Html.HiddenFor(m => m.GroupSearchModel.AutoSuggestValueAsInt)
+                @Html.HiddenFor(m => m.Sortby)
+                <input type="hidden" value="true" name="filteropen" id="filters-open-state"/>
 
-                    <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="false" id="date-filter" role="search">
-                        <div class="container-head js-container-head">
-                            <div class="option-select-label">Date changes</div>
-                            <div class="js-selected-counter">
-                                <span class="js-selected-counter-text" id="date-filter-type-label">Date applied</span>
+                <div class="govuk-grid-column-one-third search-result-filters" id="filter-container">
+                    <div id="EditSearchCollapse" class="blanket-container">
+                        <h2 class="govuk-visually-hidden">Search results filters</h2>
+                        <a href="#results-container" class="govuk-visually-hidden-focusable">Skip filters</a>
+                        <div class="change-history-filter-controls">
+                            <a href="#" class="add-clear-filters" id="clear-filters" role="button">Clear all filters</a>
+                        </div>
+                        <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="false" id="date-filter" role="search">
+                            <div class="container-head js-container-head">
+                                <div class="option-select-label">Date changes</div>
+                                <div class="js-selected-counter">
+                                    <span class="js-selected-counter-text" id="date-filter-type-label">Date applied</span>
+                                </div>
+                            </div>
+                            <a href="#" class="clear-selections filter-clear">Clear</a>
+                            <div class="options-container" id="">
+                                <div class="js-auto-height-inner">
+                                    <fieldset class="govuk-fieldset">
+                                        <legend class="govuk-visually-hidden">Change history date range and type</legend>
+                                        <label for="date-type-filter" class="govuk-visually-hidden">Change type</label>
+                                        @if (Model.IsEstablishmentSearch)
+                                        {
+                                            @Html.DropDownListFor(m => m.DateFilterMode, Model.DateFilterOptions, new {@class = "govuk-select sortby-selector", id = "date-type-filter"})
+                                        }
+                                        @Html.EditorFor(m => m.DateFilterFrom, new {disableHint = true, labelClass = "govuk-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date"})
+                                        @Html.EditorFor(m => m.DateFilterTo, new {disableHint = true, labelClass = "govuk-label", title = "To", inFilters = true, fieldsetClassName = "search-to-date"})
+                                        <div class="govuk-form-group">
+                                            <a href="#" class="govuk-button govuk-button--secondary filter-button" data-module="govuk-button">Apply</a>
+                                        </div>
+                                    </fieldset>
+                                </div>
                             </div>
                         </div>
-                        <a href="#" class="clear-selections filter-clear">Clear</a>
-                        <div class="options-container" id="">
-                            <div class="js-auto-height-inner">
-                                <fieldset class="govuk-fieldset">
-                                    <legend class="govuk-visually-hidden">Change history date range and type</legend>
-                                    <label for="date-type-filter" class="govuk-visually-hidden">Change type</label>
-                                    @if (Model.IsEstablishmentSearch)
-                                    {
-                                        @Html.DropDownListFor(m => m.DateFilterMode, Model.DateFilterOptions, new {@class = "govuk-select sortby-selector", id = "date-type-filter"})
-                                    }
-                                    @Html.EditorFor(m => m.DateFilterFrom, new {disableHint = true, labelClass = "govuk-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date"})
-                                    @Html.EditorFor(m => m.DateFilterTo, new {disableHint = true, labelClass = "govuk-label", title = "To", inFilters = true, fieldsetClassName = "search-to-date"})
-                                    <div class="govuk-form-group">
-                                        <a href="#" class="govuk-button govuk-button--secondary filter-button" data-module="govuk-button">Apply</a>
-                                    </div>
-                                </fieldset>
-                            </div>
-                        </div>
-                    </div>
-                    @if (Model.IsEstablishmentSearch)
-                    {
-                        if (!Model.SingleEstablishment)
+                        @if (Model.IsEstablishmentSearch)
                         {
-                            @Selector("Establishment type", ChangeHistoryViewModel.BIND_ALIAS_ESTABTYPEIDS, Model.EstablishmentTypes, Model.SelectedEstablishmentTypeIds, null)
+                            if (!Model.SingleEstablishment)
+                            {
+                                @Selector("Establishment type", ChangeHistoryViewModel.BIND_ALIAS_ESTABTYPEIDS, Model.EstablishmentTypes, Model.SelectedEstablishmentTypeIds, null)
+                            }
+                            @Selector("Updated fields", ChangeHistoryViewModel.BIND_ALIAS_FIELDS, Model.EstablishmentFields, Model.SelectedEstablishmentFields, null)
                         }
-                        @Selector("Updated fields", ChangeHistoryViewModel.BIND_ALIAS_FIELDS, Model.EstablishmentFields, Model.SelectedEstablishmentFields, null)
-                    }
-                    else
-                    {
-                        if (!Model.SingleGroup)
+                        else
                         {
-                            @Selector("Group type", ChangeHistoryViewModel.BIND_ALIAS_GROUPTYPEIDS, Model.GroupTypes, Model.SelectedGroupTypeIds, null)
+                            if (!Model.SingleGroup)
+                            {
+                                @Selector("Group type", ChangeHistoryViewModel.BIND_ALIAS_GROUPTYPEIDS, Model.GroupTypes, Model.SelectedGroupTypeIds, null)
+                            }
                         }
-                    }
-                    @*@DropdownSelector("Suggested By", ChangeHistoryViewModel.BIND_ALIAS_SUGGESTED_BY, Model.SuggesterGroups, m => m.SuggestedBy)
+                        @*@DropdownSelector("Suggested By", ChangeHistoryViewModel.BIND_ALIAS_SUGGESTED_BY, Model.SuggesterGroups, m => m.SuggestedBy)
                     @if (Model.IsEstablishmentSearch)
                     {
                         @DropdownSelector("Approved By", ChangeHistoryViewModel.BIND_ALIAS_APPROVED_BY, Model.ApproverGroups, m => m.ApprovedBy)
                     }*@
+                        <div id="filter-additional-controls" class="filter-additional-controls">
+                            <a href="#" class="add-clear-filters" id="clear-filters-additional" role="button">Clear all filters</a>
+                        </div>
 
-                    <input type="submit" value="Update" class="govuk-button no-js-show-block">
+                        <input type="submit" value="Update" class="govuk-button no-js-show-block">
+                    </div>
                 </div>
             </div>
         </div>
