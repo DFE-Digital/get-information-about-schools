@@ -9,7 +9,7 @@
             @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "govuk-button govuk-button--secondary" })
         }
 
-        @if (User.Identity.IsAuthenticated && !User.InRole(EdubaseRoles.ROLE_BACKOFFICE) && Model.Establishment.CloseDate.HasValue && Model.Establishment.CloseDate?.AddMonths(6) < DateTime.Today)
+        @if ((User.InRole(EdubaseRoles.ESTABLISHMENT) && Model.IsClosed) || (User.InRole(EdubaseRoles.ROLE_PRISM, EdubaseRoles.ROLE_STAKEHOLDER) && Model.Establishment.CloseDate.HasValue && Model.Establishment.CloseDate?.AddMonths(6) < DateTime.Today))
         {
             <div class="gias-establishment-closed-panel">
                 <p class="govuk-heading-s govuk-!-margin-bottom-1">The establishment record is now closed for updates.</p>
