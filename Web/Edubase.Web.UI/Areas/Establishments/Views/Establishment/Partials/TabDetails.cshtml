@@ -1,5 +1,6 @@
 @using Edubase.Common;
 @using Edubase.Services.Enums
+@using Edubase.Services.Security
 @model EstablishmentDetailViewModel
 
     <div id="school-dashboard" class="tab-content">
@@ -8,7 +9,7 @@
             @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "govuk-button govuk-button--secondary" })
         }
 
-        @if (!Model.UserCanEdit && Model.TabEditPolicy.Details && Model.Establishment.CloseDate.HasValue && Model.Establishment.CloseDate?.AddMonths(6) < DateTime.Today)
+        @if (User.Identity.IsAuthenticated && !User.InRole(EdubaseRoles.ROLE_BACKOFFICE) && Model.Establishment.CloseDate.HasValue && Model.Establishment.CloseDate?.AddMonths(6) < DateTime.Today)
         {
             <div class="gias-establishment-closed-panel">
                 <p class="govuk-heading-s govuk-!-margin-bottom-1">The establishment record is now closed for updates.</p>
