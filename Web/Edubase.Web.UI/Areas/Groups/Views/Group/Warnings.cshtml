@@ -3,19 +3,36 @@
 
 @if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND))
 {
+
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND);
+    var isEdit = string.Equals(ViewContext.RouteData.Values["action"], "EditDetails");
 
     <div class="modal-overlay" id="warning-modal-overlay-0"></div>
     <div class="modal-content" id="warning-modal-content-0" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
         @* <a href="#" id="warning-exit-overlay-0" class="modal-exit js-allow-exit">Close</a> *@
-        @Html.ActionLink("Close", "CreateNewGroup", "Group", new {area = "Groups", type = Model.GroupType.ToString().Replace("School", String.Empty)}, new {@class = "modal-exit js-allow-exit"})
+        @if (isEdit)
+        {
+            @Html.ActionLink("Close", "Edit", "Group", new {area = "Groups", type = Model.GroupType.ToString().Replace("School", String.Empty)}, new {@class = "modal-exit js-allow-exit"})
+        }
+        else
+        {
+            @Html.ActionLink("Close", "CreateNewGroup", "Group", new {area = "Groups", type = Model.GroupType.ToString().Replace("School", String.Empty)}, new {@class = "modal-exit js-allow-exit"})
+        }
+
         <div class="modal-inner">
             <h3 class="govuk-heading-m" tabindex="0" id="modal-label">Similar name</h3>
             <p tabindex="0" id="model-desc">There's already a group with a similar name:<br /><strong>@warning.MessageParameters[0]</strong>, <abbr title="Unique Identifier">UID</abbr>: @warning.MessageParameters[1]</p>
         </div>
         <div class="button-row">
             <button type="submit" name="action" value="save" class="govuk-button">Proceed</button>
-            @Html.ActionLink("Cancel", "CreateNewGroup", "Group", new {area = "Groups", type = Model.GroupType.ToString().Replace("School", String.Empty)}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
+            @if (isEdit)
+            {
+                @Html.ActionLink("Cancel", "Edit", "Group", new {area = "Groups", type = Model.GroupType.ToString().Replace("School", String.Empty)}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
+            }
+            else
+            {
+                @Html.ActionLink("Cancel", "CreateNewGroup", "Group", new {area = "Groups", type = Model.GroupType.ToString().Replace("School", String.Empty)}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
+            }
         </div>
     </div>
 
