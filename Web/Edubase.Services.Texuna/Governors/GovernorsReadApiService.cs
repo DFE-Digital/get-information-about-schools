@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Edubase.Services.Enums;
 using Edubase.Services.Governors.DisplayPolicies;
@@ -11,6 +11,7 @@ using System;
 using Edubase.Services.Establishments;
 using MoreLinq;
 using System.Linq;
+using Edubase.Services.Texuna.Models;
 
 namespace Edubase.Services.Texuna.Governors
 {
@@ -41,6 +42,10 @@ namespace Edubase.Services.Texuna.Governors
             await PopulateEstablishmentName(principal, retVal.CurrentGovernors.Concat(retVal.HistoricalGovernors));
             return retVal;
         }
+
+        public async Task<GovernorPermissions> GetGovernorPermissions(int? urn = default(int?), int? groupUId = default(int?), IPrincipal principal = null) 
+            => (await _httpClient.GetAsync<GovernorPermissions>($"governors/permissions?{(groupUId.HasValue ? "uid" : "urn")}={(urn.HasValue ? urn : groupUId)}", principal)).GetResponse();
+
         public async Task<ApiPagedResult<SearchGovernorModel>> SearchAsync(GovernorSearchPayload payload, IPrincipal principal) 
             => (await _httpClient.PostAsync<ApiPagedResult<SearchGovernorModel>>("governor/search", payload, principal)).GetResponse();
 
