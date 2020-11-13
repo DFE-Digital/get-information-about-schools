@@ -33,6 +33,9 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
+            <div class="no-js-show-block">
+                 @Html.Partial("_ValidationSummary", ViewData.ModelState)
+            </div>
             <h1 class="govuk-heading-xl">Download data</h1>
 
             <h2 class="govuk-heading-m">Download establishment search results</h2>
@@ -61,15 +64,17 @@
 
             <div class="govuk-grid-row" v-show="!viewAsList">
                 <div class="govuk-grid-column-full">
-                    <vueaccordion accordion-id="test"
+                    <download-categorised-fields accordion-id="categorised-fields"
                                   :panel-data="categoryList"
-                                  :selected-fields="selectedFields"/>
+                                  :selected-fields="selectedFields"
+                                  :has-error="radioError"/>
                 </div>
             </div>
 
             <div class="govuk-grid-row" v-show="viewAsList">
                 <div class="govuk-grid-column-full">
-                    <div class="govuk-form-group" v-if="searchMatches.length === 0">
+                    <div v-bind:class="['govuk-form-group', radioError? 'govuk-form-group--error' : '']" v-if="searchMatches.length === 0">
+                        <span v-if="radioError" class="govuk-error-message">Select at least one field</span>
                         <div class="govuk-checkboxes">
                             <checkbox :input-id="chx.id"
                                       id-prefix="alpha"
@@ -79,13 +84,17 @@
                                       v-for="(chx, i) in fields" :key="i+'_'"></checkbox>
                         </div>
                     </div>
-                    <div class="govuk-form-group" v-else>
-                        <checkbox :input-id="chx.id"
-                                  id-prefix="alpha"
-                                  :label="chx.name"
-                                  :value="chx.id"
-                                  v-model="selectedFields"
-                                  v-for="(chx, i) in searchMatches" :key="i+'_'"></checkbox>
+                    <div v-bind:class="['govuk-form-group', radioError? 'govuk-form-group--error' : '']" v-else>
+                        <span v-if="radioError" class="govuk-error-message">Select at least one field</span>
+                        <div class="govuk-checkboxes">
+                            <checkbox :input-id="chx.id"
+                                      id-prefix="alpha"
+                                      :label="chx.name"
+                                      :value="chx.id"
+                                      v-model="selectedFields"
+                                      v-for="(chx, i) in searchMatches" :key="i+'_'">
+                            </checkbox>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -98,6 +107,7 @@
         </div>
 
         <div id="no-js-container">
+            <input type="hidden" value="true" name="ViewedCustomFields" />
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
                     <input type="submit" class="govuk-button" value="Next"/>
@@ -105,20 +115,15 @@
             </div>
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
-                    <div class="govuk-accordion" id="download-fields" data-module="govuk-accordion">
+                    <div class="gias-download-fields  @Html.ValidationGroupCssClass("CustomFieldsByCategory")" id="CustomFieldsByCategory">
+                        @Html.ValidationMessageFor(x => x.CustomFieldsByCategory, null, new {@class = "govuk-error-message"})
                         @foreach (var fieldCategory in Model.CustomFieldsByCategory)
                         {
                             var panelId = @fieldCategory.Category.ToLower().Replace(" ", "-");
 
-                            <div class="govuk-accordion__section">
-                                <div class="govuk-accordion__section-header">
-                                    <h2 class="govuk-accordion__section-heading">
-                                        <span class="govuk-accordion__section-button" id="@panelId">
-                                            @fieldCategory.Category
-                                        </span>
-                                    </h2>
-                                </div>
-                                <div class="govuk-accordion__section-content" aria-labelledby="@panelId">
+                            <div class="gias-download-fields--section">
+                                <h2 class="govuk-heading-m">@fieldCategory.Category</h2>
+                                <div class="gias-download-fields--section__content">
                                     <div class="govuk-checkboxes">
                                         @foreach (var chx in fieldCategory.CustomFields)
                                         {
@@ -130,7 +135,6 @@
                                             </div>
                                         }
                                     </div>
-
                                 </div>
                             </div>
                         }

@@ -47,7 +47,7 @@
 
 <div class="govuk-grid-row" id="search-results">
     <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-xl">Search results for establishments</h1>
+        <h1 class="govuk-heading-xl gias-search-results--heading">Search results for establishments</h1>
 
         @if (Model.Count > 0)
         {
@@ -55,6 +55,12 @@
                 <a class="search-results-download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()" rel="nofollow">Download these search results</a>
             </div>
         }
+        <div class="gias-filter-toggle--container">
+            <span class="gias-filter-toggle--icon">
+                @helpers.FilterIcon()
+            </span>
+            <a href="#gias-filter-container" role="button" id="gias-filter-toggle">Filters</a>
+        </div>
     </div>
     @if (Model.SearchType != eSearchType.EstablishmentAll)
     {
@@ -109,10 +115,11 @@
 
 <div class="govuk-grid-row">
     <form method="get" action="@Url.Action("Index", "EstablishmentsSearch", new {area = ""})">
-        <input type="hidden" id="client-only-searchtype" value="@Model.SearchType" />
-        <div class="filter-form" id="filter-form">
+        <div id="gias-filter-container">
+            <div class="filter-form" id="filter-form">
+            <input type="hidden" id="client-only-searchtype" value="@Model.SearchType" />
             <div class="govuk-grid-column-one-third">
-                <h2 class="gias-heading-xs">Filters</h2>
+                <h2 class="gias-heading-xs make-modal-header">Filters</h2>
                 <a href="#results-container" class="govuk-skip-link">Skip filters</a>
                 <a href="#" class="add-clear-filters" id="clear-filters" role="button">Clear all filters</a>
                 <div id="EditSearchCollapse" class="search-result-filters blanket-container">
@@ -214,10 +221,11 @@
 
                     </div>
 
-                    <div id="filter-additional-controls">
+                    <div id="filter-additional-controls" class="filter-additional-controls">
+                        <a href="#" class="add-clear-filters" id="clear-filters-additional" role="button">Clear all filters</a>
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <a href="javascript:" class="save-filter-set-link js-save-set hidden">Save filter set</a>
+                            <a href="javascript:" class="save-filter-set-link js-save-set hidden govuk-button govuk-button--secondary">Save filter set</a>
                         }
                     </div>
 
@@ -240,7 +248,7 @@
                 </div>
 
             </div>
-
+            </div>
             <div role="alert" aria-live="assertive" id="results-notification" class="govuk-visually-hidden"></div>
             <h2 class="govuk-visually-hidden">Search results listing</h2>
             <div class="govuk-grid-column-two-thirds" id="results-container">
@@ -248,6 +256,7 @@
             </div>
 
             @{Html.RenderPartial("Partials/_EstablishmentSearchMap");}
+
         </div>
     </form>
 </div>

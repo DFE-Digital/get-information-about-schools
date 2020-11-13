@@ -1,0 +1,25 @@
+@keyframes spinner {
+  to {transform: rotate(360deg);}
+}
+
+.gias-button-loader {
+  position: relative;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+}
+.gias-button-loader::after {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: auto;
+  width: 20px;
+  height: 20px;
+  margin: 0 0 0 5px;
+  border-radius: 50%;
+  border: 2px solid govuk-colour('light-grey');
+  border-top-color: govuk-tint(govuk-colour('green'), 50);
+  animation: spinner .6s linear infinite;
+  display: inline-block;
+}

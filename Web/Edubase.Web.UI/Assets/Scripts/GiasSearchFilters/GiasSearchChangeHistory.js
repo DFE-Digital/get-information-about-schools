@@ -36,7 +36,8 @@ const giasSearchChangeHistory = (function() {
     $('#ajax-error-message').addClass('hidden');
     filterPanel.find(':input').prop('disabled', 'disabled');
     filterPanel.find('.filter-clear').addClass('clear-disabled');
-
+    $('#gias-mobile-filter-submit').find('.mobile-count').remove();
+    $('#gias-mobile-filter-submit').append("<span class='gias-button-loader' id='button-loader'>&nbsp;</span>");
 
     const resultsUrl = isEstabSearch
       ? '/ChangeHistory/Search/Establishments/results-js'
@@ -75,6 +76,8 @@ const giasSearchChangeHistory = (function() {
         } else if ($('#main-content').find('.download-link').data().hasOwnProperty('okCancel')) {
           $('#main-content').find('.download-link').data().okCancel.unbind();
         }
+        $('#button-loader').remove();
+        $('#gias-mobile-filter-submit').append("<span class='mobile-count'> ("+ count+")</span>");
       },
       error: function () {
         $('#ajax-error-message').removeClass('hidden');
@@ -136,14 +139,14 @@ const giasSearchChangeHistory = (function() {
         if (canSubmit) {
           resultsContainer.addClass('pending-results-update');
           filterIntent = window.setTimeout(function () {
-            searchParams = $('#change-history-filters').serialize();
+            searchParams = $('#filter-form').find(':input').serialize();
             getResults();
           }, 1200);
         }
 
       });
 
-      filterPanel.find('.form-control').on('focus', function () {
+      filterPanel.find('.govuk-input').on('focus', function () {
         window.clearTimeout(filterIntent);
       });
 
@@ -154,7 +157,7 @@ const giasSearchChangeHistory = (function() {
 
         if (canSubmit) {
           resultsContainer.html(plsWait);
-          searchParams = $('#change-history-filters').serialize();
+          searchParams = $('#filter-form').find(':input').serialize();
           getResults();
         }
       });
@@ -163,6 +166,22 @@ const giasSearchChangeHistory = (function() {
       if (resultCount > 19999) {
         attachOkCancel();
       }
+
+      $('#clear-filters, #clear-filters-additional').on('click', (e)=> {
+        e.preventDefault();
+        window.clearTimeout(filterIntent);
+        filterPanel.find('input[type="text"]').val('');
+        const selectedFilters = filterPanel
+          .find('.options-container .trigger-result-update')
+          .filter(function (n, item) {
+            return $(item).prop('checked');
+          });
+        selectedFilters.prop('checked', false);
+
+        filterPanel.find('.govuk-option-select').each(function(n, container){
+          $(container).find('.trigger-result-update').slice(0, 1).trigger('change');
+        });
+      });
     }
 
   }

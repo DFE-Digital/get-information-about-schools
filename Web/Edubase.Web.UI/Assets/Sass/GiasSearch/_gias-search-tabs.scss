@@ -43,10 +43,18 @@
     .panel {
       border-left: 5px solid $govuk-border-colour;
       padding-left: 10px;
-      //overflow: hidden;
 
       &.hidden {
         display: none;
+      }
+
+      &.govuk-form-group--error {
+        border-left-color: $govuk-error-colour;
+
+        .govuk-input,
+        .la-id-target {
+          border-color: $govuk-error-colour;
+        }
       }
 
       .govuk-button {

@@ -218,11 +218,10 @@ class GiasFiltering {
 
     });
 
-    $('#clear-filters').on('click', (e)=> {
+    $('#clear-filters, #clear-filters-additional').on('click', (e)=> {
       e.preventDefault();
       window.clearTimeout(this.filterIntent);
       this.$form.find('input[type="text"]').val('');
-      this.$form.find('.clear-selections').click();
       const selectedFilters = this.$form
         .find('.options-container .trigger-result-update')
         .filter(function (n, item) {
@@ -233,7 +232,9 @@ class GiasFiltering {
       this.$form.find('.select-all').prop('checked', false);
       this.$form.find('.filter-group-title').next('label').removeClass('partial-selection');
       this.$form.find('.filter-group-title').prop('checked', false);
-      selectedFilters.slice(0, 1).trigger('change');
+      this.$form.find('.govuk-option-select').each(function(n, container){
+        $(container).find('.trigger-result-update').slice(0, 1).trigger('change');
+      });
     });
 
     const $openSelector = $("#b_1");
@@ -282,6 +283,7 @@ class GiasFiltering {
     $form.find('.active-clear').addClass('clear-disabled');
     $form.find('input[type="text"]').prop('disabled', true);
     $('#results-notification').html('Please wait, loading search results');
+
   }
 
   getParams() {
@@ -307,6 +309,8 @@ class GiasFiltering {
     $resultsContainer.html('<div class="progress-indicator"><span class="govuk-visually-hidden">Please wait</span></div>');
 
     this.disableFilters();
+    $('#gias-mobile-filter-submit').find('.mobile-count').remove();
+    $('#gias-mobile-filter-submit').append("<span class='gias-button-loader' id='button-loader'>&nbsp;</span>");
 
     $('.date-filter-warning').addClass('hidden');
 
@@ -334,6 +338,8 @@ class GiasFiltering {
             if (count > 0) {
               $resultsNotification.html('Search results loaded. ' + count + ' ' + self.searchCategory + ' found.');
             }
+            $('#button-loader').remove();
+            $('#gias-mobile-filter-submit').append("<span class='mobile-count'> ("+ count+")</span>");
             $downloadLink.attr('href', downloadBaseUrl + '?tok=' + token);
             $downloadLink.removeClass('hidden');
             $resultsContainer.removeClass('pending-results-update');

@@ -111,14 +111,18 @@
   }
 }
 
-.save-filter-set-link {
-  float: right;
-}
-
 .no-js {
   .save-filter-set-link,
   .add-clear-filter {
     display: none;
+  }
+}
+
+.filter-additional-controls {
+  position: relative;
+  .add-clear-filters {
+    right: 0;
+    top: 10px;
   }
 }
 
@@ -144,5 +148,15 @@
 
   @include govuk-media-query($until: desktop) {
     max-width: 90%;
+  }
+}
+
+.change-history-filter-controls {
+  display: block;
+  position: relative;
+  min-height: 30px;
+
+  .add-clear-filters {
+    right: 0;
   }
 }

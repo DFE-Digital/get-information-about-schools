@@ -70,7 +70,85 @@ namespace Edubase.Web.UI.Controllers
                             }
                         }
                     }
+                    else if (viewModel.SearchType == eSearchType.GovernorReference)
+                    {
+                        var fieldError = viewModel.GovernorSearchModel.Gid.HasValue
+                            ? "We could not find any governors matching your search criteria"
+                            : "Please enter a governor ID to start a search";
+
+                        viewModel.ErrorPanel = "GovernorId";
+
+                        ModelState.AddModelError("GovernorSearchModel.Gid", fieldError);
+                    }
                 }
+            }
+            else
+            {
+                var fieldId = "TextSearchModel.Text";
+                var fieldError = "We could not find any establishments matching your search criteria";
+
+                switch (viewModel.SearchType)
+                {
+                    case eSearchType.Text:
+                        if (viewModel.TextSearchModel.Text.IsNullOrEmpty())
+                        {
+                            fieldError = "Please enter an establishment name, URN, LAESTAB or UKPRN to start a search";
+                        }
+
+                        viewModel.ErrorPanel = "Name";
+                        break;
+
+                    case eSearchType.Location:
+                        fieldId = "LocationSearchModel.Text";
+                        fieldError = "Please enter a postcode, town or city to start a search";
+                        viewModel.ErrorPanel = "Location";
+                        break;
+
+                    case eSearchType.ByLocalAuthority:
+                        fieldId = "LocalAuthorityToAdd.Text";
+
+                        fieldError = viewModel.SelectedLocalAuthorityIds.Any() ?
+                            "We could not find any local authorities matching your search criteria" :
+                            "Please enter a local authority to start a search";
+                        viewModel.ErrorPanel = "LocalAuthority";
+
+                        break;
+
+                    case eSearchType.Group:
+                        fieldId = "GroupSearchModel.Text";
+
+                        fieldError = viewModel.GroupSearchModel.Text.IsNullOrEmpty() ?
+                            "Please enter an establishment group to start a search" :
+                            "We could not find any establishment groups matching your search criteria";
+
+                        viewModel.ErrorPanel = "Group";
+                        break;
+
+                    case eSearchType.Governor:
+                        fieldId = "GovernorSearchModel.Forename";
+
+                        fieldError = viewModel.GovernorSearchModel.Forename.IsNullOrEmpty() &&
+                                     viewModel.GovernorSearchModel.Surname.IsNullOrEmpty() &&
+                                     viewModel.GovernorSearchModel.RoleId.Length == 0 ?
+                            "Please enter a governor to start a search" :
+                            "We could not find any governors matching your search criteria";
+
+                        viewModel.ErrorPanel = "Governor";
+
+                        break;
+
+                    case eSearchType.GovernorReference:
+                        fieldId = "GovernorSearchModel.Gid";
+                        fieldError = viewModel.GovernorSearchModel.Gid.HasValue
+                            ? "We could not find any governors matching your search criteria"
+                            : "Please enter a governor ID to start a search";
+
+                        viewModel.ErrorPanel = "GovernorId";
+
+                        break;
+                }
+
+                ModelState.AddModelError(fieldId, fieldError);
             }
 
             viewModel.LocalAuthorities = (await _cachedLookupService.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));

@@ -52,6 +52,17 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route("Search", Name = "ChangeHistorySearch")]
         public async Task<ActionResult> SearchChangeHistory(ChangeHistoryViewModel viewModel)
         {
+            if (viewModel.SearchType == eSearchType.Text  && viewModel.NoResultsForName)
+            {
+                var errorMessage = "We could not find any establishments matching your search criteria";
+                if (viewModel.TextSearchModel.Text == string.Empty)
+                {
+                    errorMessage = "Please enter an establishment name, URN, LAESTAB or UKPRN to start a search";
+                }
+
+                ModelState.AddModelError("TextSearchModel.Text", errorMessage);
+            }
+
             if (!viewModel.NoResultsForName)
             {
                 if (viewModel.SearchType.HasValue)
@@ -83,9 +94,18 @@ namespace Edubase.Web.UI.Controllers
             {
                 viewModel.SearchType = eSearchType.EstablishmentAll;
             }
+
+            if (viewModel.IsEstablishmentSearch && viewModel.SearchType == eSearchType.Text && viewModel.TextSearchModel.Text.IsNullOrEmpty())
+            {
+                ModelState.AddModelError("TextSearchModel.Text", "Please enter an establishment name, URN, LAESTAB or UKPRN to start a search");
+                return View("Index", viewModel);
+            }
+
             viewModel = await ProcessEstablishmentSearch(viewModel);
             if (viewModel.NoResultsForName)
+            {
                 return View("Index", viewModel);
+            }
 
             await PopulateLists(viewModel);
             return View("Results", viewModel);
@@ -106,6 +126,12 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route("Search/Groups", Name = "ChangeHistoryGroups")]
         public async Task<ActionResult> SearchChangeHistoryGroups(ChangeHistoryViewModel viewModel)
         {
+            if (viewModel.SearchType == eSearchType.Group && viewModel.GroupSearchModel.Text.IsNullOrEmpty())
+            {
+                ModelState.AddModelError("GroupSearchModel.Text", "We could not find any establishment groups matching your search criteria");
+                return View("Index", viewModel);
+            }
+
             viewModel = await ProcessGroupSearch(viewModel);
             if (viewModel.GroupSearchError)
                 return View("Index", viewModel);
@@ -204,7 +230,7 @@ namespace Edubase.Web.UI.Controllers
             var progressAll = await _svc.SearchWithDownloadGenerationAsync(payloadAll, User);
             return Redirect(string.Concat(Url.RouteUrl("ChangeHistoryDownload", new {id = progressAll.Id}),
                 "?", Request.QueryString));
-            
+
         }
 
         private async Task<ChangeHistoryViewModel> ProcessEstablishmentSearch(ChangeHistoryViewModel viewModel)
@@ -223,6 +249,7 @@ namespace Edubase.Web.UI.Controllers
                 else
                 {
                     viewModel.NoResultsForName = true;
+                    ModelState.AddModelError("TextSearchModel.Text", "We could not find any establishments matching your search criteria");
                 }
             }
             else
@@ -231,6 +258,12 @@ namespace Edubase.Web.UI.Controllers
                 var changes = await _svc.SearchAsync(payload, User);
                 viewModel.Items = new List<ChangeHistorySearchItem>(changes.Items);
                 viewModel.Count = changes.Count;
+
+                if (viewModel.Count == 0)
+                {
+                    ModelState.AddModelError("searchby-all-ref", "We could not find any establishments matching your search criteria");
+                    viewModel.NoResultsForName = true;
+                }
             }
 
             return viewModel;
@@ -282,6 +315,7 @@ namespace Edubase.Web.UI.Controllers
                     else
                     {
                         viewModel.GroupSearchError = true;
+                        ModelState.AddModelError("GroupSearchModel.Text", "We could not find any establishment groups matching your search criteria");
                     }
 
                     break;
@@ -349,7 +383,7 @@ namespace Edubase.Web.UI.Controllers
                 ? View("ReadyToDownload", new Tuple<ProgressDto, ChangeHistoryViewModel>(progress, vm))
                 : View("PreparingPleaseWait", progress);
         }
-        
+
         private T PopulatePayload<T>(ChangeHistoryViewModel vm, T payload) where T : SearchChangeHistoryPayload
         {
             payload.EstablishmentFieldIds = vm.IsEstablishmentSearch && vm.SelectedEstablishmentFields.Any() ? vm.SelectedEstablishmentFields.ToArray() : null;

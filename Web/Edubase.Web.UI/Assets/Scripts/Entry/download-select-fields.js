@@ -1,11 +1,10 @@
 import Vue from 'vue';
-import errorSummary from "../GiasVueComponents/ErrorSummary";
-import checkbox from "../GiasVueComponents/checkbox";
-import checkboxRemoteSelection from "../GiasVueComponents/Download/checkboxRemoteSelection";
-import vueaccordion from "../GiasVueComponents/GovukAccordion";
+import errorSummary from '../GiasVueComponents/ErrorSummary';
+import checkbox from '../GiasVueComponents/checkbox';
+import checkboxRemoteSelection from '../GiasVueComponents/Download/checkboxRemoteSelection';
+import downloadCategorisedFields from '../GiasVueComponents/DownloadCategorisedFields'
 import viewSwitcher from "../GiasVueComponents/Download/viewSwitcher";
-import searchByFieldName from "../GiasVueComponents/Download/searchByFieldName";
-import giasAccordionExtensions from '../GiasGlobal/GiasAccordionExtensions';
+import searchByFieldName from '../GiasVueComponents/Download/searchByFieldName';
 
 const app = new Vue({
   el: '#field-select-app',
@@ -13,7 +12,7 @@ const app = new Vue({
     errorSummary,
     checkbox,
     checkboxRemoteSelection,
-    vueaccordion,
+    downloadCategorisedFields,
     viewSwitcher,
     searchByFieldName
   },
@@ -21,8 +20,6 @@ const app = new Vue({
   mounted: function(){
     let noJsElem = document.getElementById('no-js-container');
     noJsElem.parentNode.removeChild(noJsElem);
-    giasAccordionExtensions();
-
   },
 
   data: {
@@ -31,7 +28,8 @@ const app = new Vue({
     viewAsList: false,
     selectedFields: [],
     searchMatches: [],
-    errorMessages: []
+    errorMessages: [],
+    radioError: false,
   },
 
   methods: {
@@ -54,6 +52,8 @@ const app = new Vue({
     },
     handleSubmit: function (e) {
       if (this.formIsValid) {
+        this.radioError = false;
+
         let frag = document.createDocumentFragment();
         const input = document.createElement('input');
         input.type = 'hidden';
@@ -70,6 +70,7 @@ const app = new Vue({
           e.preventDefault();
           this.errorMessages = [{href: '#js-field-selection', message: 'Select at least one field'}];
           window.scrollTo(0,0);
+          this.radioError = true;
         }
 
     }
