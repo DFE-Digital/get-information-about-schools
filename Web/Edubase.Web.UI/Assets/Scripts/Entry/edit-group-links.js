@@ -10,9 +10,15 @@ if (document.getElementById('GroupTypeName')) {
 if (groupType === 'Federation') {
   modalTitle = 'Are you sure you want to remove this school?';
   modalContent = 'All school information will be removed.';
-} else if (groupType.indexOf('Children\'s') > -1) {
+
+} else if (groupType === 'Children\'s Centres Group') {
   modalTitle = 'Are you sure you want to remove this children\'s centre?';
   modalContent = 'All children\'s centre information will be removed from this children\'s centre group record.';
+
+} else if (groupType === 'Children\'s Centres Collaboration') {
+  modalTitle = 'Are you sure you want to remove this children\'s centre?';
+  modalContent = 'All children\'s centre information will be removed from this children\'s centre collaboration record.';
+
 } else {
   modalTitle = 'Are you sure you want to remove this academy?';
   modalContent = 'All governor information associated with this academy will be removed too.';
