@@ -9,10 +9,10 @@
 
     <div class="modal-overlay" id="warning-modal-overlay-0"></div>
     <div class="modal-content" id="warning-modal-content-0" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
-        @* <a href="#" id="warning-exit-overlay-0" class="modal-exit js-allow-exit">Close</a> *@
+
         @if (isEdit)
         {
-            @Html.ActionLink("Close", "Edit", "Group", new {area = "Groups", type = Model.GroupType.ToString().Replace("School", String.Empty)}, new {@class = "modal-exit js-allow-exit"})
+            <a href="@Request.Url.AbsoluteUri" id="warning-exit-overlay-0" class="modal-exit js-allow-exit">Close</a>
         }
         else
         {
@@ -27,7 +27,7 @@
             <button type="submit" name="action" value="save" class="govuk-button">Proceed</button>
             @if (isEdit)
             {
-                @Html.ActionLink("Cancel", "Edit", "Group", new {area = "Groups", type = Model.GroupType.ToString().Replace("School", String.Empty)}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
+                <a href="@Request.Url.AbsoluteUri" class="govuk-button govuk-button--secondary cancel" data-module="govuk-button">Cancel</a>
             }
             else
             {
