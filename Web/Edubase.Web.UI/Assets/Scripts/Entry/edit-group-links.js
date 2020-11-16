@@ -10,7 +10,7 @@ if (document.getElementById('GroupTypeName')) {
 if (groupType === 'Federation') {
   modalTitle = 'Are you sure you want to remove this school?';
   modalContent = 'All school information will be removed.';
-} else if (groupType === 'Children\'s Centres Group') {
+} else if (groupType.indexOf('Children\'s') > -1) {
   modalTitle = 'Are you sure you want to remove this children\'s centre?';
   modalContent = 'All children\'s centre information will be removed from this children\'s centre group record.';
 } else {
