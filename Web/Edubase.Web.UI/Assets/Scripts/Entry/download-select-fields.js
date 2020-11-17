@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import errorSummary from '../GiasVueComponents/ErrorSummary';
+import errorSummary from '../GiasVueComponents/errorSummary';
 import checkbox from '../GiasVueComponents/checkbox';
 import checkboxRemoteSelection from '../GiasVueComponents/Download/checkboxRemoteSelection';
 import downloadCategorisedFields from '../GiasVueComponents/DownloadCategorisedFields'

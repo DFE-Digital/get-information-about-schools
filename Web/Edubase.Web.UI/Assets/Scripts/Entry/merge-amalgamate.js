@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import errorSummary from '../GiasVueComponents/ErrorSummary';
+import errorSummary from '../GiasVueComponents/errorSummary';
 import GiasRadio from '../GiasVueComponents/GiasRadio';
 import GiasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
 const mergersApp = new Vue({
