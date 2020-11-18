@@ -63,19 +63,15 @@
   position: absolute;
   right: 5px;
   top: 6px;
+  background-image: url('/public/assets/images/option-select-toggle-child-sprite-2020.png');
+  background-repeat: no-repeat;
+  background-position: 50% 100%;
+  background-size: 28px auto;
+  width: 20px;
+  height: 20px;
+  display: block;
 
-  &:after {
-    content: "";
-    background-image: url('/public/assets/images/option-select-toggle-child-sprite-2020.png');
-    background-repeat: no-repeat;
-    background-position: 50% 100%;
-    background-size: 28px auto;
-    width: 20px;
-    height: 20px;
-    display: block;
-  }
-
-  &.open-children::after {
+  &.open-children {
     background-position: 50% top;
   }
 
@@ -83,10 +79,6 @@
     background-color: transparent;
     box-shadow: none;
     outline: 1px dotted govuk-colour('black');
-
-    &:after {
-      outline: 1px dotted govuk-colour('black');
-    }
   }
 
   .no-js & {
