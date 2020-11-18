@@ -75,13 +75,6 @@ class GiasNestedFilters {
       $(this).attr('aria-expanded', $(this).hasClass('open-children'));
     });
 
-    trigger.on('focus', function(){
-      $(this).css({ outline: '1px dotted #0b0c0c'});
-    });
-
-    trigger.on('blur', function(){
-      $(this).css({ outline: 'none'});
-    });
 
     parent.on('change', function (e) {
       const optSelect = $(this).parents('.govuk-option-select');

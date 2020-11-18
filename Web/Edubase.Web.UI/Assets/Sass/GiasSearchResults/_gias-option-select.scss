@@ -82,7 +82,11 @@
   &:active, &:focus {
     background-color: transparent;
     box-shadow: none;
-    outline: 1px dotted govuk-colour('black')
+    outline: 1px dotted govuk-colour('black');
+
+    &:after {
+      outline: 1px dotted govuk-colour('black');
+    }
   }
 
   .no-js & {
