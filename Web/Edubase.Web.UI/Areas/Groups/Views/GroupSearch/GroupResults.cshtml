@@ -64,6 +64,7 @@
                                     <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
                                     <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
                                 </select>
+                                @helpers.FilterSkipLink()
                             </div>
                         </div>
 
@@ -99,6 +100,7 @@
                                         </div>
                                     </fieldset>
                                 </div>
+                                @helpers.FilterSkipLink()
                             </div>
                         </div>
 
@@ -137,6 +139,7 @@
                                             </div>
                                         </fieldset>
                                     </div>
+                                    @helpers.FilterSkipLink()
                                 </div>
                             </div>
                         }

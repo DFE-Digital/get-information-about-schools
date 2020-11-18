@@ -111,6 +111,7 @@
                                     <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
                                 </select>
                             </div>
+                            @helpers.FilterSkipLink()
                         </div>
 
                         <div class="govuk-option-select js-collapsible" id="option-select-role-type" role="search">
@@ -145,6 +146,7 @@
                                         </div>
                                     </fieldset>
                                 </div>
+                                @helpers.FilterSkipLink()
                             </div>
                         </div>
 
@@ -179,6 +181,7 @@
                                             }
                                         </div>
                                     </fieldset>
+                                    @helpers.FilterSkipLink()
                                 </div>
                             </div>
 
@@ -276,6 +279,7 @@
                     </div>
                 </fieldset>
             </div>
+            @helpers.FilterSkipLink()
         </div>
     </div>
 }

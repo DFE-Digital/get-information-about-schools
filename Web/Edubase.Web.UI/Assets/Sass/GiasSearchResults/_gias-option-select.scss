@@ -124,3 +124,14 @@
     border-color: govuk-colour('black');
   }
 }
+
+// skip links within the filter section
+.gias-filter-skip-link {
+  .no-js & { // no need to skip with no-js as the user will need to tab to the submit button anyway
+    display: none !important;
+  }
+
+  .js-closed & { // hide the skip link on closed filter panels
+    display: none;
+  }
+}
