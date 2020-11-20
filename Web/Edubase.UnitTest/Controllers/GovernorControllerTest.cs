@@ -53,6 +53,7 @@ namespace Edubase.UnitTest.Controllers
             };
 
             GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(null, groupId, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorPermissions(null, groupId, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
             GetMock<ILayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), null, groupId, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
             SetupCachedLookupService();
 
@@ -98,6 +99,7 @@ namespace Edubase.UnitTest.Controllers
             };
 
             GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(establishmentId, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorPermissions(establishmentId, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
             GetMock<ILayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), establishmentId, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
             SetupCachedLookupService();
 
@@ -150,6 +152,7 @@ namespace Edubase.UnitTest.Controllers
             };
 
             GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(null, groupId, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorPermissions(null, groupId, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
             GetMock<ILayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), null, groupId, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
             SetupCachedLookupService();
 
@@ -194,6 +197,7 @@ namespace Edubase.UnitTest.Controllers
             };
 
             GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(null, groupId, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorPermissions(null, groupId, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
             GetMock<ILayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), null, groupId, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
             SetupCachedLookupService();
 
@@ -244,6 +248,7 @@ namespace Edubase.UnitTest.Controllers
             };
 
             GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(null, groupId, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorPermissions(null, groupId, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
             GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorAsync(duplicateId, It.IsAny<IPrincipal>())).ReturnsAsync(() => governor);
             GetMock<ILayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), null, groupId, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
             SetupCachedLookupService();
@@ -290,6 +295,7 @@ namespace Edubase.UnitTest.Controllers
             };
 
             GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(establishmentId, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorPermissions(establishmentId, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
             GetMock<ILayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), establishmentId, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
             SetupCachedLookupService();
 
@@ -353,6 +359,7 @@ namespace Edubase.UnitTest.Controllers
             var groupModel = new GroupModel { DelegationInformation = "delegation info" };
 
             GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(null, groupUId, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorPermissions(null, groupUId, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
             GetMock<IGroupReadService>().Setup(g => g.GetAsync(groupUId, It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<GroupModel>(groupModel));
             SetupCachedLookupService();
 
@@ -389,6 +396,7 @@ namespace Edubase.UnitTest.Controllers
             var establishment = new EstablishmentModel();
 
             GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(establishmentUrn, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorPermissions(establishmentUrn, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
             GetMock<IEstablishmentReadService>().Setup(e => e.GetAsync(establishmentUrn, It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(establishment));
             GetMock<IEstablishmentReadService>().Setup(e => e.GetPermissibleLocalGovernorsAsync(establishmentUrn, It.IsAny<IPrincipal>())).ReturnsAsync(() => new List<LookupDto>());
             SetupCachedLookupService();
@@ -558,6 +566,7 @@ namespace Edubase.UnitTest.Controllers
             };
 
             GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(null, groupId, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorPermissions(null, groupId, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
             SetupCachedLookupService();
 
             GetMock<ICachedLookupService>().Setup(c => c.GovernorRolesGetAllAsync()).ReturnsAsync(() => new List<LookupDto>
@@ -711,6 +720,7 @@ namespace Edubase.UnitTest.Controllers
 
             GetMock<ILayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), estabId, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
             GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorListAsync(estabId, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorPermissions(estabId, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
             GetMock<IGovernorsReadService>().Setup(g => g.GetGovernorAsync(governorId, It.IsAny<IPrincipal>())).ReturnsAsync(() => governor);
             GetMock<IGovernorsWriteService>().Setup(g => g.UpdateSharedGovernorAppointmentAsync(governorId, estabId, It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => error);
             SetupCachedLookupService();

@@ -214,6 +214,7 @@
     <Compile Include="Governors\IGovernorsWriteService.cs" />
     <Compile Include="Governors\Models\GovernorAppointment.cs" />
     <Compile Include="Governors\Models\GovernorBulkUpdateValidationResult.cs" />
+    <Compile Include="Governors\Models\GovernorPermissions.cs" />
     <Compile Include="Governors\Models\GovernorsDetailsDto.cs" />
     <Compile Include="Enums\eSortBy.cs" />
     <Compile Include="Domain\CompaniesHouseNumber.cs" />
