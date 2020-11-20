@@ -1,4 +1,5 @@
 <template>
+  <div>
   <div v-bind:class="['govuk-form-group', filterSearchError ? 'govuk-form-group--error': '']">
         <span class="govuk-error-message" v-show="filterSearchError">
             Enter a field name to search
@@ -10,6 +11,11 @@
            id="field-text-search" v-model="filterSearchText" type="text">
     <button class="govuk-button gias-inline-search__button" v-on:click.prevent="filterFilters">Search</button>
     <a href="#" v-on:click.prevent="resetTextFilter" v-if="showClearButton">Clear search</a>
+  </div>
+    <div v-if="noMatchingFields">
+      <p>There are no results for your search.
+        Please <a href="#" role="button" v-on:click.prevent="resetTextFilter">clear your search</a> and try again.</p>
+    </div>
   </div>
 </template>
 
@@ -31,6 +37,7 @@ export default {
   methods: {
     filterFilters: function () {
       this.filterSearchError = false;
+      this.$root.isFilteringFields = true
       this.$root.errorMessages = [];
       if (!this.isResetting && this.filterSearchText.length === 0) {
         this.filterSearchError = true;
@@ -48,6 +55,13 @@ export default {
       this.filterSearchText = '';
       this.isResetting = true;
       this.filterFilters();
+
+      document.getElementById('field-text-search').focus();
+    }
+  },
+  computed: {
+    noMatchingFields: function () {
+      return this.$root.isFilteringFields && this.$root.searchMatches.length === 0;
     }
   }
 }

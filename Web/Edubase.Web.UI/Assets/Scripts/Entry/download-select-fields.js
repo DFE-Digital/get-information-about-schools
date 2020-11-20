@@ -30,6 +30,8 @@ const app = new Vue({
     searchMatches: [],
     errorMessages: [],
     radioError: false,
+    isFilteringFields: false,
+
   },
 
   methods: {
@@ -45,7 +47,7 @@ const app = new Vue({
     changeViewMode: function () {
       this.viewAsList = !this.viewAsList;
     },
-    filterFilters: function (searchText) {
+    filterFilters: function (searchText) {;
       this.searchMatches = this.fields.filter((fld) => {
         return fld.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
       });
@@ -81,6 +83,9 @@ const app = new Vue({
     },
     hasErrors: function() {
       return this.errorMessages.length > 0;
+    },
+    shouldShowContinue: function() {
+      return !(this.isFilteringFields && this.searchMatches.length === 0);
     }
   }
 
