@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -50,42 +50,42 @@ namespace Edubase.Data.Repositories
                     EstablishmentType = DataQualityStatus.DataQualityEstablishmentType.AcademyOpeners,
                     LastUpdated = new DateTime(1601, 1, 1),
                     DataOwner = "Academies Operation and Strategy",
-                    Email = "academies.data@education.gsi.gov.uk"
+                    Email = "academies.data@education.gov.uk"
                 },
                 new DataQualityStatus
                 {
                     EstablishmentType = DataQualityStatus.DataQualityEstablishmentType.FreeSchoolOpeners,
                     LastUpdated = new DateTime(1601, 1, 1),
                     DataOwner = "Free Schools Delivery 1",
-                    Email = "fsg.edubase@education.gsi.gov.uk"
+                    Email = "freeschools.pre-opening@education.gov.uk"
                 },
                 new DataQualityStatus
                 {
                     EstablishmentType = DataQualityStatus.DataQualityEstablishmentType.OpenAcademiesAndFreeSchools,
                     LastUpdated = new DateTime(1601, 1, 1),
                     DataOwner = "EFA Academies Enquiries Team",
-                    Email = "academy.questions@education.gsi.gov.uk"
+                    Email = "academiesdata.esfa@education.gov.uk"
                 },
                 new DataQualityStatus
                 {
                     EstablishmentType = DataQualityStatus.DataQualityEstablishmentType.LaMaintainedSchools,
                     LastUpdated = new DateTime(1601, 1, 1),
                     DataOwner = "School Organisation Team",
-                    Email = "schoolorganisation.notifications@education.gsi.gov.uk"
+                    Email = "schoolorganisation.notifications@education.gov.uk"
                 },
                 new DataQualityStatus
                 {
                     EstablishmentType = DataQualityStatus.DataQualityEstablishmentType.IndependentSchools,
                     LastUpdated = new DateTime(1601, 1, 1),
                     DataOwner = "Independent Education and Boarding Team",
-                    Email = "registration.enquiries@education.gsi.gov.uk"
+                    Email = "registration.enquiries@education.gov.uk"
                 },
                 new DataQualityStatus
                 {
                     EstablishmentType = DataQualityStatus.DataQualityEstablishmentType.PupilReferralUnits,
                     LastUpdated = new DateTime(1601, 1, 1),
                     DataOwner = "Alternative Provision and Exclusions Team",
-                    Email = "alternativeprovision.pru@education.gsi.gov.uk"
+                    Email = "alternativeprovision.pru@education.gov.uk"
                 },
             };
 
