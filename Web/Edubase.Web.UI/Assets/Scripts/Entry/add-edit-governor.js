@@ -1,8 +1,9 @@
 import GiasAttachUnload from '../GiasModules/GiasModals/GiasAttachUnload';
 import GiasOkCancel from '../GiasModules/GiasModals/GiasOkCancel';
+const $main = $('#main-content');
 
 const unloadHandler = new GiasAttachUnload({
-  fields: $('#main-content').find(':input').not(".choose-governor"),
+  fields: $main.find(':input').not(".choose-governor"),
 });
 
 $("#governorEdit").submit(function() {
@@ -86,3 +87,4 @@ if ($("#remove-shared-governor").length > 0) {
   });
 
 }
+

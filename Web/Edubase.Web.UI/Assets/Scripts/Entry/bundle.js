@@ -3,6 +3,7 @@ import giasAriaLive from '../GiasGlobal/giasAriaLive';
 import GiasModal from '../GiasModules/GiasModals/GiasModal';
 import GiasOkCancel from "../GiasModules/GiasModals/GiasOkCancel";
 import giasAccordionExtensions from '../GiasGlobal/GiasAccordionExtensions';
+import GiasReOrderValidationSummary from '../GiasGlobal/GiasReOrderValidationSummary';
 import CheckGiasDataStatus from '../GiasStandalone/GiasDataStatus';
 const dfeCookieManager = require('../GiasModules/DfeCookieManager');
 
@@ -14,6 +15,7 @@ window.checkGiasDataStatus = CheckGiasDataStatus;
 
 import { initAll } from 'govuk-frontend';
 
+const $main = $('#main-content');
 
 const message = document.getElementById('global-cookie-message');
 const acceptedCookies = (message && dfeCookieManager.cookie('seen_cookie_message') !== null);
@@ -46,8 +48,12 @@ initAll();
 
 giasAriaLive();
 
-$('#main-content').find('.modal-link').each(function(n, el) {
+$main.find('.modal-link').each(function(n, el) {
   new GiasModal(el);
 });
 giasAccordionExtensions();
 giasDismissMessage();
+
+if ($main.find('.govuk-error-summary').length > 0) {
+  GiasReOrderValidationSummary();
+}
