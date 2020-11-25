@@ -66,6 +66,9 @@ class GiasModal {
       $body.wrapInner('<div id="app"></div>');
     }
 
+    console.log('new init');
+    console.log(this.opts);
+
     if (!this.opts.immediate) {
       $(this.el).on('click', (e) => {
         e.preventDefault();
@@ -75,6 +78,8 @@ class GiasModal {
   }
 
   openModal() {
+
+    console.log('open modal');
     const self = this;
     const opts = this.opts;
     const contentTarget = $(this.el).attr('href');
@@ -171,6 +176,12 @@ class GiasModal {
       $.when(setModalContent()).then(function() {
         prepareContent();
       });
+    } else if (typeof opts.content !== 'undefined') { // okCancel...
+      modalContent = '<h3 class="govuk-heading-l" id="' + opts.idPrefix + 'modal-title">' + opts.title + '</h3><p id="' + opts.idPrefix + 'modal-content-area" class="govuk-body">' + opts.content + '</p></div> ' +
+        '<div class="button-row"><a href="#" class="govuk-button js-allow-exit" id="' + opts.idPrefix + 'button-ok">' + (!opts.okLabel ? "OK" : opts.okLabel) + '</a>';
+      if ($.isFunction(opts.cancel)) {
+        modalContent += '<a href="#" class="govuk-button govuk-button--secondary js-allow-exit" id="' + opts.idPrefix + 'button-cancel">Cancel</a>';
+      }
     } else {
       modalContent = $(contentTarget);
       prepareContent();
