@@ -9,7 +9,6 @@ const GiasReOrderValidationSummary = function () {
     return;
   }
   const reorderedMessages = [];
-  const pluckedMessages = [];
   let pluckedMessage
 
   for (let i = 0, len = inPageErrorFields.length; i < len; i++) {
@@ -30,10 +29,7 @@ const GiasReOrderValidationSummary = function () {
       for (let k = 0, len3 = errorMessages.length; k < len3; k++) {
         const errorMessage = errorMessages[k];
         pluckedMessage = errorMessage.innerText;
-        if (pluckedMessages.indexOf(pluckedMessage) === -1) {
-          reorderedMessages.push(`<li>${errorMessage.innerHTML}</li>`);
-          pluckedMessages.push(pluckedMessage);
-        }
+        reorderedMessages.push(`<li>${errorMessage.innerHTML}</li>`);
       }
     }
   }
