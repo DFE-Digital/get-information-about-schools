@@ -5,7 +5,7 @@ const GiasReOrderValidationSummary = function () {
   const summaryMessageItems = $errorSummary.find('li');
   const inPageErrorFields = $('#main-content').find('.govuk-form-group--error');
 
-  if (inPageErrorFields.length < 2) { // single error, no need to shuffle
+  if (inPageErrorFields.length < 2 || window.blockReOrder) {
     return;
   }
   const reorderedMessages = [];
