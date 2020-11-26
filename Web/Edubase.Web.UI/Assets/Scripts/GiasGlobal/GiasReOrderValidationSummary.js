@@ -9,7 +9,6 @@ const GiasReOrderValidationSummary = function () {
     return;
   }
   const reorderedMessages = [];
-  let pluckedMessage
 
   for (let i = 0, len = inPageErrorFields.length; i < len; i++) {
     // get an array of all error field ids within the error group - looking at you date fields
@@ -28,7 +27,6 @@ const GiasReOrderValidationSummary = function () {
 
       for (let k = 0, len3 = errorMessages.length; k < len3; k++) {
         const errorMessage = errorMessages[k];
-        pluckedMessage = errorMessage.innerText;
         reorderedMessages.push(`<li>${errorMessage.innerHTML}</li>`);
       }
     }
