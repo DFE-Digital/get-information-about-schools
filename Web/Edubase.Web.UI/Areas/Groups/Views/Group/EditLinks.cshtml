@@ -187,6 +187,8 @@
     </div>
 }
 </div>
+<script nonce="@Html.ScriptNonce()">window.blockReOrder = true;</script>
+
 @section ViewScripts
 {
     @if (Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
@@ -198,6 +200,8 @@
     @if (Request.HttpMethod == "POST" && Model.Action != "cancel" )
     {
         <script nonce="@Html.ScriptNonce()">var isConfirmingChanges = true;</script>
+
     }
+
     <script src="/public/assets/scripts/build/edit-group-links.js"></script>
 }
