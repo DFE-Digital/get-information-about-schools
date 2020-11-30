@@ -37,3 +37,8 @@
         </g>
     </svg>
 }
+
+@helper FilterSkipLink(string resultsContainerId = "#results-container")
+{
+    <a href="@resultsContainerId" class="govuk-visually-hidden-focusable gias-filter-skip-link">Skip to results</a>
+}

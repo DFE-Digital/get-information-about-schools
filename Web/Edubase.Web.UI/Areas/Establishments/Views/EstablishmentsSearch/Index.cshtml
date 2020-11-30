@@ -138,6 +138,7 @@
                                 <option id="alpha-az" value="a" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
                                 <option id="alpha-za" value="z" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
                             </select>
+                            @helpers.FilterSkipLink()
                         </div>
                     </div>
 
@@ -320,6 +321,7 @@
                 </fieldset>
             </div>
         </div>
+        @helpers.FilterSkipLink()
     </div>
 }
 
@@ -364,29 +366,32 @@
                             <dt class="js-when-on">
                                 <div class="govuk-checkboxes gias-filter-checkboxes">
                                     <div class="govuk-checkboxes__item">
-                                         <input id="@(name)_@item.Id" class="filter-group-title govuk-checkboxes__input" type="checkbox" @Html.Conditional(item.ChildItems.Any(x => selectedItems.Contains(x.Id)), "checked")/>
-                                         <label for="@(name)_@item.Id" class="govuk-label govuk-checkboxes__label">@item</label>
-                                         <a href="#" class="child-option-toggle js-child-option-toggle" aria-expanded="false"><span class="govuk-visually-hidden">Types within @item</span></a>
+                                        <input id="@(name)_@item.Id" class="filter-group-title govuk-checkboxes__input" type="checkbox" @Html.Conditional(item.ChildItems.Any(x => selectedItems.Contains(x.Id)), "checked")/>
+                                        <label for="@(name)_@item.Id" class="govuk-label govuk-checkboxes__label">@item</label>
+                                        <button data-module="govuk-button" class="child-option-toggle js-child-option-toggle" aria-expanded="false">
+                                            <span class="govuk-visually-hidden">Types within @item</span>
+                                        </button>
                                     </div>
                                 </div>
                             </dt>
                             <dd class="filter-group">
                                 <div class="govuk-checkboxes gias-filter-checkboxes">
-                                @foreach (var child in item.ChildItems)
-                                {
-                                    <div class="govuk-checkboxes__item">
-                                        <input name="@name" value="@child.Id" id="@(name)_@(item.Id)_@child.Id" class="govuk-checkboxes__input js-filter-input trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(child.Id), "checked")/>
-                                        <label for="@(name)_@(item.Id)_@child.Id" class="govuk-checkboxes__label govuk-label">
-                                            @child
-                                        </label>
-                                    </div>
-                                }
+                                    @foreach (var child in item.ChildItems)
+                                    {
+                                        <div class="govuk-checkboxes__item">
+                                            <input name="@name" value="@child.Id" id="@(name)_@(item.Id)_@child.Id" class="govuk-checkboxes__input js-filter-input trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(child.Id), "checked")/>
+                                            <label for="@(name)_@(item.Id)_@child.Id" class="govuk-checkboxes__label govuk-label">
+                                                @child
+                                            </label>
+                                        </div>
+                                    }
                                 </div>
                             </dd>
                         </dl>
                     }
                 </fieldset>
             </div>
+            @helpers.FilterSkipLink()
         </div>
     </div>
 }
@@ -411,6 +416,7 @@
                     <a href="#" class="govuk-button govuk-button--secondary filter-button" data-module="govuk-button">Apply</a>
                 </div>
             </div>
+            @helpers.FilterSkipLink()
         </div>
     </div>
 }
@@ -436,6 +442,7 @@
                     <a href="#" class="govuk-button govuk-button--secondary filter-button">Apply</a>
                 </div>
             </div>
+            @helpers.FilterSkipLink()
         </div>
     </div>
 }
@@ -474,8 +481,8 @@
             <div class="js-auto-height-inner">
                 <fieldset class="govuk-fieldset range-group">
                     <div class="govuk-form-group">
-                    <legend class="govuk-visually-hidden">Enter the radius in miles</legend>
-                    <span class="govuk-error-message hidden">Please check the radius you have entered</span>
+                        <legend class="govuk-visually-hidden">Enter the radius in miles</legend>
+                        <span class="govuk-error-message hidden">Please check the radius you have entered</span>
                         <span class="inline-form-control">
                             <label for="RadiusInMiles" class="govuk-visually-hidden">Radius in miles</label>
                             <input type="text" id="RadiusInMiles" name="@M.BIND_ALIAS_RADIUS" value="@Model.GetRadiusOption()" class="govuk-input govuk-input--width-5" maxlength="5"/>
@@ -485,6 +492,7 @@
                     </div>
                 </fieldset>
             </div>
+            @helpers.FilterSkipLink()
         </div>
     </div>
 

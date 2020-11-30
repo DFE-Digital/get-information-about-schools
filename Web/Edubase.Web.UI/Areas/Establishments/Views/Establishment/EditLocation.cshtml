@@ -89,7 +89,7 @@
                         @Html.ValidationMessageFor(x => x.ParliamentaryConstituencyId, null, new {@class = "govuk-error-message"})
                         @Html.ValidationMessageFor(x => x.ParliamentaryConstituencyName, null, new {@class = "govuk-error-message"})
 
-                        <div id="AdministrativeWardId" class="autosuggest form-control">
+                        <div id="ParliamentaryConstituencyId" class="autosuggest form-control">
                             @Html.TextBoxFor(x => x.ParliamentaryConstituencyName, new { @class = "govuk-input", autocomplete = "off" })
                         </div>
 
@@ -202,6 +202,10 @@
                 @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary", id = "cancel-edit", data_module="govuk-button"})
             </div>
         }
+        else
+        {
+            <script nonce="@Html.ScriptNonce()">window.blockReOrder = true;</script>
+        }
 
     </div>
 }
@@ -231,4 +235,5 @@ else
         var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());
     </script>
     <script src="/public/assets/scripts/build/edit-location.js"></script>
-}}
+}
+}

@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import errorSummary from '../GiasVueComponents/ErrorSummary';
+import errorSummary from '../GiasVueComponents/errorSummary';
 import giasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
 import giasRadio from '../GiasVueComponents/GiasRadio';
 import giasApiError from '../GiasVueComponents/GiasApiError';

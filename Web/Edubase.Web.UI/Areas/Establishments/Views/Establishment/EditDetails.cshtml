@@ -679,9 +679,9 @@
     @if (Model.EditPolicy.PlacesPRU)
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PlacesPRU)">
-            @Html.LabelFor(x => x.PlacesPRU)
+            @Html.LabelFor(x => x.PlacesPRU , new { @class= "govuk-label"})
             @Html.ValidationMessageFor(x => x.PlacesPRU, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.PlacesPRU, new {@class = "form-control"})
+            @Html.TextBoxFor(x => x.PlacesPRU, new {@class = "govuk-input"})
         </div>
     }
 

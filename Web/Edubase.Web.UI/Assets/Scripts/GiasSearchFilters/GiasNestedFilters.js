@@ -75,6 +75,7 @@ class GiasNestedFilters {
       $(this).attr('aria-expanded', $(this).hasClass('open-children'));
     });
 
+
     parent.on('change', function (e) {
       const optSelect = $(this).parents('.govuk-option-select');
       optSelect.find('.clear-selections').removeClass('active-clear');

@@ -55,7 +55,7 @@
                 </div>
             </div>
 
-            <div class="govuk-grid-row">
+            <div class="govuk-grid-row" v-if="shouldShowContinue">
                 <div class="govuk-grid-column-one-half">
                     <input type="submit" class="govuk-button" value="Next"/>
                 </div>
@@ -73,7 +73,7 @@
 
             <div class="govuk-grid-row" v-show="viewAsList">
                 <div class="govuk-grid-column-full">
-                    <div v-bind:class="['govuk-form-group', radioError? 'govuk-form-group--error' : '']" v-if="searchMatches.length === 0">
+                    <div v-bind:class="['govuk-form-group', radioError? 'govuk-form-group--error' : '']" v-if="searchMatches.length === 0  && !isFilteringFields">
                         <span v-if="radioError" class="govuk-error-message">Select at least one field</span>
                         <div class="govuk-checkboxes">
                             <checkbox :input-id="chx.id"
@@ -100,7 +100,7 @@
             </div>
 
             <div class="govuk-grid-row">
-                <div class="govuk-grid-column-full  govuk-!-padding-top-4">
+                <div class="govuk-grid-column-full  govuk-!-padding-top-4" v-if="shouldShowContinue">
                     <input type="submit" class="govuk-button" value="Next"/>
                 </div>
             </div>
@@ -119,7 +119,6 @@
                         @Html.ValidationMessageFor(x => x.CustomFieldsByCategory, null, new {@class = "govuk-error-message"})
                         @foreach (var fieldCategory in Model.CustomFieldsByCategory)
                         {
-                            var panelId = @fieldCategory.Category.ToLower().Replace(" ", "-");
 
                             <div class="gias-download-fields--section">
                                 <h2 class="govuk-heading-m">@fieldCategory.Category</h2>

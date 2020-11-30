@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import errorSummary from '../GiasVueComponents/ErrorSummary';
+import errorSummary from '../GiasVueComponents/errorSummary';
 import GiasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
 
 import GiasTextCounter from '../GiasModules/GiasTextCounter';

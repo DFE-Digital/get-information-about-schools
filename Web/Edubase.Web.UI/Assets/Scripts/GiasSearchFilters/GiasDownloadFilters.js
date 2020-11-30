@@ -1,7 +1,7 @@
 import supportsHistory from '../GiasHelpers/supportsHistory';
 import GiasFilterValidation from './GiasFilterValidation'
 import Vue from 'vue';
-import errorSummary from '../GiasVueComponents/ErrorSummary';
+import errorSummary from '../GiasVueComponents/errorSummary';
 
 // 'little' Vue app to manage the error summary
 const clientErrorSummary = new Vue({
