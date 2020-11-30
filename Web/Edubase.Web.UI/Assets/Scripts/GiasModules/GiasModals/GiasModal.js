@@ -38,7 +38,6 @@
       contentSelector: '#data-status-summary',
     });
 
- modal.openModal();
 
  */
 const defaults = {
@@ -49,6 +48,7 @@ const defaults = {
   remoteUrl: null,
   contentSelector: null,
   closeButtonClass: null,
+  triggerEvent: 'click',
 };
 
 class GiasModal {
@@ -65,21 +65,18 @@ class GiasModal {
       const $body = $('body');
       $body.wrapInner('<div id="app"></div>');
     }
-
-    console.log('new init');
-    console.log(this.opts);
-
+    
     if (!this.opts.immediate) {
-      $(this.el).on('click', (e) => {
+      $(this.el).on(this.opts.triggerEvent, (e) => {
         e.preventDefault();
         this.openModal();
       });
+    } else {
+      this.openModal();
     }
   }
 
   openModal() {
-
-    console.log('open modal');
     const self = this;
     const opts = this.opts;
     const contentTarget = $(this.el).attr('href');
@@ -87,11 +84,20 @@ class GiasModal {
     let modalContent;
 
     function prepareContent() {
-      const contentTitle = modalContent.find('.make-modal-header').html();
+      const contentTitle = opts.title ? opts.title :
+          modalContent.find('.make-modal-header').html();
 
-      let bodyContent = $('<div/>').append(modalContent.clone(true).children().not('.make-modal-header'));
+      let bodyContent = opts.content ? $('<div><p>'+ opts.content+ '</p></div>') :
+          $('<div/>').append(modalContent.clone(true).children().not('.make-modal-header'));
 
       bodyContent = bodyContent.html();
+
+      if (typeof opts.ok === 'function') {
+        bodyContent += `<div class="button-row">
+                            <a id="button-ok" class="govuk-button js-allow-exit" href="#">${opts.okLabel}</a>
+                            <a href="#" class="govuk-button govuk-button--secondary js-allow-exit" id="button-cancel">Cancel</a>
+                        </div>`;
+      }
 
       const modal = `
         <div id="gias-modal" open class="gias-modal ${opts.additionalClasses}" aria-labelledby="gias-modal-title" role="dialog">
@@ -102,8 +108,8 @@ class GiasModal {
                 <div class="gias-modal__content-wrapper" id="gias-modal-content-wrapper">
                 <h1 id="gias-modal-title" class="govuk-heading-${opts.headingSize} gias-modal__title">${contentTitle}</h1>
                     <div class="gias-modal__content" id="gias-modal-content">
-                        ${bodyContent.toString()}
-                      </div>
+                      ${bodyContent.toString()}
+                    </div>
                 </div>
             </div>
         </div>`;
@@ -141,6 +147,18 @@ class GiasModal {
         });
       }
 
+      $(document).on('click', '#button-ok', function (e) {
+          e.preventDefault();
+          opts.ok.call(self);
+          self.closeModal();
+        });
+
+      $(document).on('click', '#button-cancel', function (e) {
+        e.preventDefault();
+        opts.cancel.call(self);
+        self.closeModal();
+      });
+
       document.getElementById('gias-modal-content-wrapper').addEventListener('touchstart', function () {
         const $appModal = $('#gias-modal');
         const top = $appModal.scrollTop;
@@ -177,11 +195,7 @@ class GiasModal {
         prepareContent();
       });
     } else if (typeof opts.content !== 'undefined') { // okCancel...
-      modalContent = '<h3 class="govuk-heading-l" id="' + opts.idPrefix + 'modal-title">' + opts.title + '</h3><p id="' + opts.idPrefix + 'modal-content-area" class="govuk-body">' + opts.content + '</p></div> ' +
-        '<div class="button-row"><a href="#" class="govuk-button js-allow-exit" id="' + opts.idPrefix + 'button-ok">' + (!opts.okLabel ? "OK" : opts.okLabel) + '</a>';
-      if ($.isFunction(opts.cancel)) {
-        modalContent += '<a href="#" class="govuk-button govuk-button--secondary js-allow-exit" id="' + opts.idPrefix + 'button-cancel">Cancel</a>';
-      }
+      prepareContent();
     } else {
       modalContent = $(contentTarget);
       prepareContent();

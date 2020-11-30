@@ -39,7 +39,8 @@ window.displayNewsDialog = function(myetag, etag) {
     title: 'The News page has been updated',
     content: 'A new article has been added to the News Page that could help your Get information about schools experience. Click \'Go to news page\' to view the News Page or find the News link in the black header.',
     triggerEvent: 'click',
-    okLabel: "Go to News page"
+    okLabel: "Go to News page",
+    headingSize: 'l',
   });
   DfECookieManager.setCookie(myetag, etag, { days: 365 });
 };

@@ -11,6 +11,7 @@ html.no-scroll {
 
 .gias-modal__title {
   padding-left: govuk-spacing(5);
+  padding-right: govuk-spacing(5);
 }
 
 .gias-modal__overlay {
@@ -101,6 +102,35 @@ html.no-scroll {
 
   a {
     word-break: break-all;
+  }
+  .button-row {
+    padding: 5px 0 0;
+    margin-bottom: 0;
+    overflow: hidden;
+
+    @include govuk-media-query($until: tablet) {
+      padding-bottom: 1em;
+    }
+
+    .govuk-button {
+      min-width: 100px;
+      margin-bottom: 0;
+
+      &:first-of-type {
+        margin-right: 15px;
+
+        @include govuk-media-query($until: tablet) {
+          margin-right: 0;
+          margin-bottom: 10px;
+        }
+      }
+
+      &:focus {
+        background-color: govuk-colour('green');
+        color: govuk-colour('white');
+        box-shadow: none;
+      }
+    }
   }
 }
 
