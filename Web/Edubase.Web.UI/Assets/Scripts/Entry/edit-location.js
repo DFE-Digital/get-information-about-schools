@@ -1,5 +1,6 @@
 import GiasAttachUnload from '../GiasModules/GiasModals/GiasAttachUnload';
 const locationAutoSuggest = require('../GiasEdit/locationAutoSuggests');
+const  $main = $('#main-content');
 
 if (window.isConfimingChanges) {
   new GiasAttachUnload();
@@ -7,6 +8,6 @@ if (window.isConfimingChanges) {
   locationAutoSuggest.setUp();
 
   new GiasAttachUnload({
-    fields: $('#main-content').find(':input')
+    fields: $main.find(':input')
   });
 }
