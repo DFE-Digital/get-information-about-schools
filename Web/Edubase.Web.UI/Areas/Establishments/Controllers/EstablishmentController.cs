@@ -1146,7 +1146,29 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 viewModel.OriginalEstablishmentName = domainModel.Name;
                 viewModel.OriginalTypeName = (await _cachedLookupService.EstablishmentTypesGetAllAsync()).Where(x => x.Id == domainModel.TypeId).Select(x => x.Name).FirstOrDefault();
             }
-
+            else if (viewModel.ActionSpecifierCommand == ViewModel.ASUpdateProprietors)
+            {
+                if (viewModel.ProprietorTypeId.OneOfThese(eProprietorType.ProprietorBody))
+                {
+                    // if going from multiple proprietors to a single proprietor, we need to remove all subsequent proprietors
+                    if (viewModel.Proprietors.Count > 1)
+                    {
+                        viewModel.Proprietors.RemoveRange(1, viewModel.Proprietors.Count - 1);
+                        viewModel.IsDirty = true;
+                    }
+                }
+            } else if (viewModel.ActionSpecifierCommand == ViewModel.ASAddProprietor)
+            {
+                viewModel.Proprietors.Add(new ProprietorViewModel
+                {
+                    Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList(),
+                });
+                viewModel.IsDirty = true;
+            } else if (viewModel.ActionSpecifierCommand == ViewModel.ASRemoveProprietor)
+            {
+                viewModel.Proprietors.RemoveAt(int.Parse(viewModel.ActionSpecifierParam)-1);
+                viewModel.IsDirty = true;
+            }
             return View(viewModel);
         }
 
