@@ -2,6 +2,7 @@
 @using System.Linq
 @using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
 @using System.Linq.Expressions
+@using Edubase.Common
 @using Edubase.Common.Text
 @using Edubase.Services.Enums
 @model ViewModel
@@ -294,27 +295,28 @@
                                 }
                             }
                         </div>
+                        <div class="no-js-show-block">
+                            <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASUpdateProprietors" class="govuk-button--secondary govuk-button govuk-!-margin-top-2 js-hidden">Update</button>
+                        </div>
                     </div>
 
                 <div id="proprietor-entry" class="govuk-radios__conditional">
-                    <div id="@eProprietorType.IndividualProprietor.ToString()">
+                    <div id="@eProprietorType.IndividualProprietor.ToString()" class="@(Model.ProprietorTypeId.OneOfThese(eProprietorType.IndividualProprietor)? "": "hidden")">
                         <p>
                             Is a person or group of persons who own an independent school and are not members of a proprietorial body.
                         </p>
                     </div>
-                    <div id="@eProprietorType.ProprietorBody.ToString()">
+                    <div id="@eProprietorType.ProprietorBody.ToString()" class="@(Model.ProprietorTypeId.OneOfThese(eProprietorType.ProprietorBody)? "": "hidden")">
                         <p>
                             Is a body, corporate or incorporate, that owns an independent school, for example, a limited company, a charity, a trust or a governing body.
                         </p>
                         <h4 class="govuk-heading-s">Proprietor body details</h4>
                     </div>
-
-                    @if (Model.Proprietors.Any())
+                    @if (Model.Proprietors.Any() && Model.ProprietorTypeId.OneOfThese(eProprietorType.IndividualProprietor,eProprietorType.ProprietorBody))
                     {
                         Html.RenderPartial(@"Partials\_EditProprietorList");
-
                     }
-                    <div id="@eProprietorType.ProprietorBody.ToString()-chair">
+                    <div id="@eProprietorType.ProprietorBody.ToString()-chair" class="@(Model.ProprietorTypeId.OneOfThese(eProprietorType.ProprietorBody)? "": "hidden")">
                         <h4 class="govuk-heading-s">Chair of the proprietary body details</h4>
                         @Html.EditorFor(x => x.ChairOfProprietor, new {ProprietorType = "chairOfProprietor"})
                     </div>
