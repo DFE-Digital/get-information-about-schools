@@ -13,7 +13,7 @@
     <p class="js-show-block">
         <a id="addProprietor" href="#">Add another @eProprietorType.IndividualProprietor.EnumDisplayNameFor().ToLower()</a>
     </p>
-    <div class="no-js-show-block @(Model.ProprietorTypeId.OneOfThese(eProprietorType.IndividualProprietor)? "": "hidden")">
+    <div class="@(Model.ProprietorTypeId.OneOfThese(eProprietorType.IndividualProprietor)? "no-js-show-block": "hidden")">
         <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@EditEstablishmentModel.ASAddProprietor" class="govuk-button--secondary govuk-button">Add another @eProprietorType.IndividualProprietor.EnumDisplayNameFor().ToLower()</button>
     </div>
 </div>
