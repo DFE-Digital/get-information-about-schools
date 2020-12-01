@@ -63,7 +63,7 @@ else
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body-s">
-            @if (User.Identity.IsAuthenticated && Model.DomainModel.HasGovernors)
+            @if (User.Identity.IsAuthenticated && Model.GovernorPermissions.Add && Model.DomainModel.HasGovernors)
             {
                 if (Model.EstablishmentUrn.HasValue)
                 {
