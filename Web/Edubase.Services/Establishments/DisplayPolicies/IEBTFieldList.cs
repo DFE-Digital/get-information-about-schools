@@ -94,10 +94,10 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         public T ProprietorTypeId { get; set; }
 
         [JsonProperty("proprietors")]
-        public T Proprietors { get; set; }
+        public ProprietorFieldList<T> Proprietors { get; set; }
 
         [JsonProperty("chairOfProprietor")]
-        public T ChairOfProprietor { get; set; }
+        public ProprietorFieldList<T> ChairOfProprietor { get; set; }
 
         [JsonProperty("accommodationChangedId")]
         public T AccommodationChangedId { get; set; }

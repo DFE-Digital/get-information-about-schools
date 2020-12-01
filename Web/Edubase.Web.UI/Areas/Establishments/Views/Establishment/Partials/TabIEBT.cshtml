@@ -1,4 +1,4 @@
-﻿@model EstablishmentDetailViewModel
+@model EstablishmentDetailViewModel
 @{
     var p = Model.DisplayPolicy.IEBTDetail;
 }
@@ -423,12 +423,12 @@
 }
 
 
-@if (Model.DisplayPolicy.IEBTDetail.Proprietors)
+@if (Model.DisplayPolicy.IEBTDetail.AnyProprietors)
 {
     @Html.DisplayFor(x => x.Establishment.IEBTModel.Proprietors)
 }
 
-@if (Model.DisplayPolicy.IEBTDetail.ChairOfProprietor)
+@if (Model.DisplayPolicy.IEBTDetail.AnyChairOfProprietors)
 {
     @Html.DisplayFor(x => x.Establishment.IEBTModel.ChairOfProprietor, "ProprietorModel", new {prefix = "Chair of the proprietary body"})
 }

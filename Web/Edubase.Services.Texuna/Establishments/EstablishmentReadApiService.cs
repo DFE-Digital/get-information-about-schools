@@ -12,8 +12,6 @@ using Edubase.Services.Texuna.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using MoreLinq;
@@ -200,8 +198,8 @@ namespace Edubase.Services.Texuna.Establishments
                     OldValue = change.OldValue.Clean(),
                     Tag = change.Tag,
                     RequiresApproval = (change.Tag == "additionaladdress" && approvalsPolicy.AdditionalAddresses.RequiresApproval) ||
-                                       (change.Tag == "proprietors" && approvalsPolicy.IEBTDetail.Proprietors.RequiresApproval) ||
-                                       (change.Name.Contains(nameof(approvalsPolicy.IEBTDetail.ChairOfProprietor)) && approvalsPolicy.IEBTDetail.ChairOfProprietor.RequiresApproval) ||
+                                       //(change.Tag == "proprietors" && approvalsPolicy.IEBTDetail.Proprietors.RequiresApproval) ||
+                                       //(change.Name.Contains(nameof(approvalsPolicy.IEBTDetail.ChairOfProprietor)) && approvalsPolicy.IEBTDetail.ChairOfProprietor.RequiresApproval) ||
                                        approvalFields.Contains(change.Name, StringComparer.OrdinalIgnoreCase),
                     ApproverName = approvalsPolicy.GetApproverName(change.Name)
                 });
@@ -253,7 +251,7 @@ namespace Edubase.Services.Texuna.Establishments
                     {
                         Name = nameof(newProprietor.Name),
                         DisplayName = $"Name ({index} - new)",
-                        NewValue = newProprietor.Name
+                        NewValue = newProprietor.Name,
                     });
 
                     retVal.Add(new ChangeDescriptor
