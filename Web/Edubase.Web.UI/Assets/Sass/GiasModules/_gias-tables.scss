@@ -208,16 +208,15 @@
     }
   }
 
-  &.table-tight .govuk-table__body {
-    .js-reveal-when-no-filter {
-      word-break: break-word;
-    }
-  }
+  //&.table-tight .govuk-table__body {
+  //  .js-reveal-when-no-filter {
+  //    word-break: break-word;
+  //  }
+  //}
 
   .govuk-table__body {
     .govuk-table__cell,
     .govuk-table__header {
-      word-break: break-all;
 
       .gias-summary-list__key,
       .gias-summary-list__value {
@@ -229,8 +228,9 @@
     }
   }
 
-  [data-label="Suggested by"] {
-    word-break: break-all;
+  [data-label="Suggested by"],
+  [data-label="Approved by"] {
+    word-wrap: break-word;
   }
 
   @include govuk-media-query($from: desktop) {
@@ -257,15 +257,28 @@
     }
 
     .cell-oldvalue,
-    .cell-newvalue {
+    .cell-newvalue,
+    [data-label="New value"],
+    [data-label="Old value"] {
       width: 70px;
+      overflow-wrap: break-word;
     }
 
     .cell-establishmentname {
       width: 95px;
     }
-    .govuk-table__cell[data-label="Group"] a {
-      word-break: break-all;
+
+    .govuk-table__cell[data-label="Group"] a,
+    .govuk-table__cell[data-label="Establishment"] a {
+      overflow-wrap: break-word;
+    }
+
+    .cell-originatorusername,
+    .cell-approverusername,
+    [data-label="Approved by"],
+    [data-label="Suggested by"] {
+      width: 120px;
+      word-wrap: break-word;
     }
   }
 }

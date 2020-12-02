@@ -89,29 +89,18 @@ const giasSearchChangeHistory = (function() {
   }
 
   function toggleFilters() {
+    const $filterToggle = $('#filter-toggle');
     openState = !openState;
     if (openState) {
-      $('#filter-toggle').text('Hide filters');
-      $('#changes-table').removeClass('table-tight');
+      $filterToggle.text('Hide filters');
     } else {
-      $('#filter-toggle').text('Show filters');
-      $('#changes-table').addClass('table-tight');
+      $filterToggle.text('Show filters');
     }
 
     $('#filters-open-state').val(openState);
 
-    $sortLinks.each(function () {
-      const href = $(this).attr('href');
-      if (href.indexOf('filtersopen=') > -1) {
-        $(this).attr('href', href.substr(0, href.indexOf('filtersopen=')) + 'filtersopen=' + openState);
-      } else {
-        $(this).attr('href', href + '&filtersopen=' + openState);
-      }
-    });
-    $('#filter-toggle').toggleClass('filters-closed');
+    $filterToggle.toggleClass('filters-closed');
     filterPanel.toggleClass('hidden');
-    resultsContainer.toggleClass('govuk-grid-column-full govuk-grid-column-two-thirds');
-    $('.js-reveal-when-no-filter').toggleClass('govuk-visually-hidden');
   }
 
 
@@ -122,9 +111,6 @@ const giasSearchChangeHistory = (function() {
         toggleFilters();
       });
 
-      if (QueryString('filtersopen') === 'false') {
-        $('#filter-toggle').click();
-      }
 
       $('#date-type-filter').on('change', function () {
         $('#date-filter-type-label').text('Date ' + $('#date-type-filter option:selected').text().toLowerCase());

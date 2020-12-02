@@ -1,4 +1,5 @@
 // open date + age range filters
+
 .age-filter {
   .govuk-input {
     min-width: 112px;
@@ -108,5 +109,40 @@
   .govuk-error-message {
     display: block;
     padding-left: 10px;
+  }
+}
+
+.horizontal-filters {
+  @include govuk-media-query($from: tablet , $until: 960px) {
+    .govuk-option-select .options-container {
+      max-height: 350px;
+    }
+
+    .govuk-option-select.date-filters .options-container {
+      max-height: none;
+      min-height: 335px;
+    }
+
+    .date-group {
+      .govuk-fieldset__legend {
+        display: block;
+        float: none;
+        padding-top: 0;
+      }
+
+      .govuk-form-group {
+        margin-top: govuk-spacing(1);
+      }
+
+      .govuk-date-input {
+        margin-left: govuk-spacing(2);
+      }
+    }
+
+    .govuk-button--secondary {
+      float: none;
+      margin-left: govuk-spacing(2);
+      width: 83%;
+    }
   }
 }
