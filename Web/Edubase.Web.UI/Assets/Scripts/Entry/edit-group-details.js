@@ -1,5 +1,4 @@
 import GiasAttachUnload from '../GiasModules/GiasModals/GiasAttachUnload';
-//import GiasOkCancel from '../GiasModules/GiasModals/GiasOkCancel';
 
 new GiasAttachUnload({
   fields: $('#main-content').find(':input')
@@ -41,6 +40,31 @@ if ($closedDateInputs.length && $statusSelector.length) {
 }
 
 if ($("[id|='warning-modal-content']").length > 0) {
-  var idInt = $("[id|='warning-modal-content']").attr('id').split('-').slice(-1);
-  $('#overlay-proceed-'+idInt).focus();
+  $('#app').attr('aria-hidden', true);
+  $('html').addClass('no-scroll');
+  $('.modal-exit').focus();
+
+  $('body').on('keydown', '.modal-content', (e) => {
+    if (e.keyCode === 27) { // esc
+      $('.modal-exit').click();
+      return;
+    }
+    if (e.keyCode === 9) { // tab or maj+tab
+      const focusableItems = $('.modal-content').find('a[href], area[href], input:not([disabled]), button:not([disabled])').filter(':visible');
+      const focusableItemsCount = focusableItems.length;
+
+      const focusedItem = $(document.activeElement);
+
+      const focusedItemIndex = focusableItems.index(focusedItem);
+
+      if (!e.shiftKey && (focusedItemIndex === focusableItemsCount - 1)) {
+        focusableItems.get(0).focus();
+        e.preventDefault();
+      }
+      if (e.shiftKey && focusedItemIndex === 0) {
+        focusableItems.get(focusableItemsCount - 1).focus();
+        e.preventDefault();
+      }
+    }
+  });
 }

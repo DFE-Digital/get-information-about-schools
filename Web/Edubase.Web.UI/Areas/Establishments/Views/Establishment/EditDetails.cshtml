@@ -174,6 +174,7 @@
                 @Html.Raw(Model.EditPolicy.HeadteacherLabel) email address
                 <a href="#help-text-headteacher-email-address" class="help-icon modal-link">
                     <span class="govuk-visually-hidden">Help with headteacher/principal email address field</span>
+                    @helpers.DialogHiddenPrompt()
                 </a>
             </label>
             @Html.ValidationMessageFor(x => x.HeadEmailAddress, null, new {@class = "govuk-error-message"})
@@ -590,6 +591,7 @@
                 Email address
                 <a href="#help-text-email-address" class="help-icon modal-link">
                     <span class="govuk-visually-hidden">Help with email address field</span>
+                    @helpers.DialogHiddenPrompt()
                 </a>
             </label>
             @Html.ValidationMessageFor(x => x.Contact_EmailAddress, null, new {@class = "govuk-error-message"})
@@ -604,6 +606,7 @@
                 Alternative email address
                 <a href="#help-text-email-address" class="help-icon modal-link">
                     <span class="govuk-visually-hidden">Help with alternative email address field</span>
+                    @helpers.DialogHiddenPrompt()
                 </a>
             </label>
             @Html.ValidationMessageFor(x => x.ContactAlt_EmailAddress, null, new {@class = "govuk-error-message"})
