@@ -25,6 +25,8 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Edubase.Services.Governors;
+using Edubase.Services.Governors.Models;
 using static Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
 using static Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModelBase;
 
@@ -40,6 +42,7 @@ namespace Edubase.UnitTest.Controllers
         public async Task Group_Details_WithValidRecord(bool isUserLoggedOn, bool canUserEdit)
         {
             var grs = GetMock<IGroupReadService>();
+            var govrs = GetMock<IGovernorsReadService>();
             var id = GetMock<IIdentity>();
             var estabList = CreateEstabList();
 
@@ -50,7 +53,7 @@ namespace Edubase.UnitTest.Controllers
             grs.Setup(x => x.CanEditGovernanceAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(canUserEdit);
             grs.Setup(x => x.GetChangeHistoryAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<IPrincipal>())).ReturnsAsync(new PaginatedResult<GroupChangeDto>());
             grs.Setup(x => x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), true)).ReturnsAsync(estabList);
-
+            govrs.Setup(x => x.GetGovernorPermissions(null, It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
             var response = (ViewResult)await ObjectUnderTest.Details(1);
 
             if (!isUserLoggedOn)
@@ -680,6 +683,7 @@ namespace Edubase.UnitTest.Controllers
             AddMock<IEstablishmentReadService>();
             AddMock<IGroupReadService>();
             AddMock<IGroupsWriteService>();
+            AddMock<IGovernorsReadService>();
             AddMock<ICachedLookupService>();
             AddMock<ICompaniesHouseService>();
             AddMock<ISecurityService>();
