@@ -65,7 +65,7 @@ class GiasModal {
       const $body = $('body');
       $body.wrapInner('<div id="app"></div>');
     }
-    
+
     if (!this.opts.immediate) {
       $(this.el).on(this.opts.triggerEvent, (e) => {
         e.preventDefault();
@@ -92,10 +92,14 @@ class GiasModal {
 
       bodyContent = bodyContent.html();
 
-      if (typeof opts.ok === 'function') {
+      if (typeof opts.ok === 'function' && typeof opts.cancel === 'function') {
         bodyContent += `<div class="button-row">
                             <a id="button-ok" class="govuk-button js-allow-exit" href="#">${opts.okLabel}</a>
                             <a href="#" class="govuk-button govuk-button--secondary js-allow-exit" id="button-cancel">Cancel</a>
+                        </div>`;
+      } else if (typeof opts.ok === 'function') {
+        bodyContent += `<div class="button-row">
+                            <a id="button-ok" class="govuk-button js-allow-exit" href="#">${opts.okLabel}</a>
                         </div>`;
       }
 
