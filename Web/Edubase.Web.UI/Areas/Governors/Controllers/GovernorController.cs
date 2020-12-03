@@ -794,7 +794,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             try
             {
                 var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, user);
-                var governorPermissions = await _governorsReadService.GetGovernorPermissions(establishmentUrn, groupUId, User);
+                var governorPermissions = await _governorsReadService.GetGovernorPermissions(establishmentUrn, groupUId, user);
 
                 viewModel = new GovernorsGridViewModel(domainModel,
                     false,

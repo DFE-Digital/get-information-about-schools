@@ -63,13 +63,13 @@ else
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body-s">
-            @if (User.Identity.IsAuthenticated && Model.DomainModel.HasGovernors)
+            @if (User.Identity.IsAuthenticated && Model.DomainModel.HasGovernors && Model.GovernorPermissions.Add)
             {
                 if (Model.EstablishmentUrn.HasValue)
                 {
                     @Html.RouteLink("View governance change history", "EstabDetailGovChangeHistory", new {id = Model.EstablishmentUrn})
                 }
-                else if (Model.GovernorPermissions.Add)
+                else
                 {
                     @Html.RouteLink("View governance change history", "GroupDetailGovChangeHistory", new {id = Model.GroupUId})
                 }
