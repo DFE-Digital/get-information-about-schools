@@ -159,4 +159,10 @@
   .add-clear-filters {
     right: 0;
   }
+
+  .no-js & {
+    .add-clear-filters {
+      display: none;
+    }
+  }
 }

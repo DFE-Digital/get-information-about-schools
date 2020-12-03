@@ -71,5 +71,9 @@
   .govuk-option-select .options-container {
     max-height: 310px;
   }
+
+  .govuk-option-select.no-scroll .options-container {
+    max-height: none;
+  }
 }
 
