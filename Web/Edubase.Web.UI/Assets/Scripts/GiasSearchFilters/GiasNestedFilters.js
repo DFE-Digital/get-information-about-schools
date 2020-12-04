@@ -70,7 +70,6 @@ class GiasNestedFilters {
 
     optionsPanel.addClass('hidden');
     actionText.text('Expand ');
-    console.log(actionText);
 
     trigger.on('click', function (e) {
       e.preventDefault();
