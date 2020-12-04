@@ -72,9 +72,16 @@
             <h2 class="govuk-error-summary__title">Something went wrong</h2>
             <p>Please refresh the page to try again</p>
         </div>
+    </div>
+    <div class="govuk-grid-column-one-half">
         <p class="gias-visible__from-tablet">
             <a href="#" class="hide-show-filters" id="filter-toggle">Hide filters</a>
         </p>
+    </div>
+    <div class="govuk-grid-column-one-half">
+        <div class="change-history-filter-controls">
+            <a href="#" class="add-clear-filters" id="clear-filters" role="button">Clear all filters</a>
+        </div>
         <div class="gias-filter-toggle--container">
             <span class="gias-filter-toggle--icon">
                 @helpers.FilterIcon()
@@ -103,9 +110,7 @@
                         <div class="govuk-grid-column-full">
                             <h2 class="govuk-visually-hidden">Search results filters</h2>
                             <a href="#results-container" class="govuk-visually-hidden-focusable">Skip filters</a>
-                            <div class="change-history-filter-controls">
-                                <a href="#" class="add-clear-filters" id="clear-filters" role="button">Clear all filters</a>
-                            </div>
+
                         </div>
                         <div class="govuk-grid-column-one-third">
                             <div class="govuk-option-select js-collapsible date-filters no-scroll" data-closed-on-load="false" id="date-filter" role="search">
