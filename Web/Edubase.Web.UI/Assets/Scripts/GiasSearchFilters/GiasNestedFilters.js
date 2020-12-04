@@ -66,6 +66,9 @@ class GiasNestedFilters {
         parent.next('label').addClass('partial-selection');
       }
     }
+
+    console.log(optionsPanel);
+
     optionsPanel.addClass('hidden');
 
     trigger.on('click', function (e) {

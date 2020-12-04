@@ -89,24 +89,20 @@
   }
 }
 
-.nested-items {
+.filter-group {
   margin: 0;
 
-  .filter-group {
-    margin: 0;
+  .govuk-checkboxes__item {
+    padding-left: 35px;
+  }
 
-    .govuk-checkboxes__item {
-      padding-left: 35px;
+  .govuk-checkboxes__label {
+    &::before {
+      left: 15px;
     }
 
-    .govuk-checkboxes__label {
-      &::before {
-        left: 15px;
-      }
-
-      &::after {
-        left: 18px;
-      }
+    &::after {
+      left: 18px;
     }
   }
 }
