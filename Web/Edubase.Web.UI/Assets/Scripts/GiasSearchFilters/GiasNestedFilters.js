@@ -19,7 +19,8 @@ class GiasNestedFilters {
     const trigger = $el.find(opts.expander);
     const optionsPanel = $el.find('.filter-group');
     const childControls = optionsPanel.find('input');
-    const $clearLinks = $('#filter-form').find('.filter-clear');
+    const $clearLinks = $('#filter-form').find('.filter-clear')
+    const actionText = trigger.find('.filter-action-state');
     const checkedChildren = childControls.filter(function (n, elem) {
       return elem.checked;
     });
@@ -66,14 +67,18 @@ class GiasNestedFilters {
         parent.next('label').addClass('partial-selection');
       }
     }
-    
+
     optionsPanel.addClass('hidden');
+    actionText.text('Expand ');
+    console.log(actionText);
 
     trigger.on('click', function (e) {
       e.preventDefault();
       $(this).toggleClass('open-children');
       optionsPanel.toggleClass('hidden');
       $(this).attr('aria-expanded', $(this).hasClass('open-children'));
+
+      actionText.text($(this).hasClass('open-children') ? 'Hide ' : 'Expand ');
     });
 
 
@@ -97,7 +102,7 @@ class GiasNestedFilters {
 
       const count = buf.length;
 
-      var checkedString = '';
+      let checkedString = '';
       if (count > 0) {
         checkedString = count + ' selected';
         optSelect.find('.clear-selections').addClass('active-clear');
@@ -109,7 +114,7 @@ class GiasNestedFilters {
     });
 
     childControls.on('change', function (e) {
-      var checkedCount = childControls.filter(function (n, ctrl) {
+      const checkedCount = childControls.filter(function (n, ctrl) {
         return ctrl.checked;
       }).length;
 

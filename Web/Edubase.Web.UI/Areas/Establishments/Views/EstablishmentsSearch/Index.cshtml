@@ -369,7 +369,9 @@
                                         <input id="@(name)_@item.Id" class="filter-group-title govuk-checkboxes__input" type="checkbox" @Html.Conditional(item.ChildItems.Any(x => selectedItems.Contains(x.Id)), "checked")/>
                                         <label for="@(name)_@item.Id" class="govuk-label govuk-checkboxes__label">@item</label>
                                         <button data-module="govuk-button" class="child-option-toggle js-child-option-toggle" aria-expanded="false">
-                                            <span class="govuk-visually-hidden">@item.ChildItems.Count sub types of @item</span>
+                                            <span class="govuk-visually-hidden">
+                                                <span class="filter-action-state"></span>
+                                                @item.ChildItems.Count sub types of @item</span>
                                         </button>
                                     </div>
                                 </div>
