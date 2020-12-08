@@ -123,14 +123,17 @@
 
     @Html.HiddenFor(x => x.Address_CountryId)
 
-    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Address_PostCode)">
-        @Html.LabelFor(x => x.Address_PostCode, "Postcode", new {@class = "govuk-label"})
-        @Html.ValidationMessageFor(x => x.Address_PostCode, null, new {@class = "govuk-error-message", @for = "disabled-postcode"})
-        @Html.TextBoxFor(x => x.Address_PostCode, new {maxlength = 120, @class = "govuk-input govuk-input--width-10", disabled = "disabled", id = "disabled-postcode"})
-        @Html.HiddenFor(x => x.Address_PostCode)
-        @Html.RouteLink("Replace this address", "AddOrReplaceEstablishmentAddress", new {urn = Model.Urn, target = "main"}, new {@class = "replace-address"})
-    </div>
-
+    @if (Model.EditPolicy.Address_PostCode)
+    {
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Address_PostCode)">
+            @Html.LabelFor(x => x.Address_PostCode, "Postcode", new {@class = "govuk-label"})
+            @Html.ValidationMessageFor(x => x.Address_PostCode, null, new {@class = "govuk-error-message", @for = "disabled-postcode"})
+            @Html.TextBoxFor(x => x.Address_PostCode, new {maxlength = 120, @class = "govuk-input govuk-input--width-10", disabled = "disabled", id = "disabled-postcode"})
+            @Html.HiddenFor(x => x.Address_PostCode)
+            @Html.RouteLink("Replace this address", "AddOrReplaceEstablishmentAddress", new {urn = Model.Urn, target = "main"}, new {@class = "replace-address"})
+        </div>
+    }
+    
     @Html.HiddenFor(x => x.Address_UPRN)
     @Html.HiddenFor(x => x.Northing)
     @Html.HiddenFor(x => x.Easting)
