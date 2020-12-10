@@ -105,7 +105,7 @@
         </div>
     }
 
-    @if (Model.Address_CountryId == Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
+    @if (Model.EditPolicy.Address_CountyId && Model.Address_CountryId == Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
     {
         <div class="govuk-form-group">
             <label for="Address_CountyId" class="govuk-label">County</label>
@@ -113,7 +113,7 @@
         </div>
     }
 
-    @if (Model.Address_CountryId != Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
+    @if (Model.EditPolicy.Address_CountyId && Model.Address_CountryId != Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
     {
         <div class="govuk-form-group">
             @Html.LabelFor(x => x.Address_CountryId, "Country", new {@class = "govuk-label", @for = "Address_CountryId_select"})
