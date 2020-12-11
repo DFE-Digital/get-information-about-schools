@@ -8,17 +8,17 @@ class GiasPolling {
     const params = window.location.toString().split('?')[1];
     const {pollingUrl} = this.opts;
 
-    const checkStatus = function() {
+    const checkStatus = function () {
       // api responses are { state: bool,  redirect: string }
       // false = not ready yet, redirect = url to go to once we're ready
-       $.ajax({
+      $.ajax({
         url: pollingUrl,
         data: params,
         dataType: 'json',
         error: function () {
           window.location.reload();
         },
-        success:function (data) {
+        success: function (data) {
           data = JSON.parse(data);
           if (data.status === false) {
             window.setTimeout(checkStatus, 2000);
