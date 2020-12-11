@@ -23,7 +23,6 @@ class GiasPolling {
           if (data.status === false) {
             window.setTimeout(checkStatus, 2000);
           } else {
-            console.log('ready', data);
             if (params) {
               window.location = data.redirect + '?' + params;
 

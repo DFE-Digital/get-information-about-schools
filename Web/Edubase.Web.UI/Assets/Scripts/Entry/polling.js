@@ -20,7 +20,7 @@ import GiasPolling from '../GiasModules/GiasPolling';
 
     } else {
       splitText = '/download/';
-      
+
     }
     const start = loc.toLowerCase().indexOf(splitText) + splitLengthModifier;
     const end = loc.indexOf('?') > -1 ? loc.indexOf('?') : loc.length;
@@ -55,6 +55,9 @@ import GiasPolling from '../GiasModules/GiasPolling';
     bulkEstabUpdate: {
       // ooh double guids
       pollingUrl: loc.replace('result', 'resultAjax')
+    },
+    bulkAsscociate: {
+      pollingUrl: restfulUrl('/Establishments/bulk-associate-estabs-to-groups-ajax/', '/bulk-associate-estabs-to-groups/')
     }
   }
 
@@ -82,7 +85,13 @@ import GiasPolling from '../GiasModules/GiasPolling';
 
   } else if (loc.indexOf('/Establishments/BulkUpdate/result/') > -1) {
     options = pollingConfigs.bulkEstabUpdate;
+
+  } else if(loc.indexOf('/Establishments/bulk-associate-estabs-to-groups/') > -1) {
+    options = pollingConfigs.bulkAsscociate;
   }
+
+
+
 
   if (typeof options !== 'undefined') {
     new GiasPolling(options);
