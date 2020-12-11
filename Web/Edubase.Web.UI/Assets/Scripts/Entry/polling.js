@@ -76,16 +76,16 @@ import GiasPolling from '../GiasModules/GiasPolling';
     options = pollingConfigs.governors;
 
   } else if (loc.indexOf('/ChangeHistory/Download/') > -1) {
-    options = pollingConfigs.changeHistoryBulk.pollingUrl;
+    options = pollingConfigs.changeHistoryBulk;
 
   } else if (loc.indexOf('/ChangeHistory/Search/Download/') > -1) {
-    options = pollingConfigs.changeHistoryBulk.pollingUrl();
+    options = pollingConfigs.changeHistoryBulk;
 
   } else if (loc.indexOf('/independent-schools/download/') > -1) {
     options = pollingConfigs.indiSchools;
 
   } else if (loc.indexOf('/bulk-create-free-schools')> -1) {
-    options = pollingConfigs.bulkFree
+    options = pollingConfigs.bulkFree;
 
   } else if (loc.indexOf('/Establishments/BulkUpdate/result/') > -1) {
     options = pollingConfigs.bulkEstabUpdate;

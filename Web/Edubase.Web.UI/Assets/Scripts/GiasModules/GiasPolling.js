@@ -10,7 +10,7 @@ class GiasPolling {
 
     const checkStatus = function () {
       // api responses are { state: bool,  redirect: string }
-      // false = not ready yet, redirect = url to go to once we're ready
+      // state: false = not ready yet, redirect = url to go to once we're ready
       $.ajax({
         url: pollingUrl,
         data: params,
