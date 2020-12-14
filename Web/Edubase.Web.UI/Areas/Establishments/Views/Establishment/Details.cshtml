@@ -221,7 +221,12 @@
         <p>@Model.AgeRangeToolTip</p>
         @if (!Model.AgeRangeToolTipLink.IsNullOrEmpty())
         {
-            <p>Link: <a href="@Model.AgeRangeToolTipLink">@Model.AgeRangeToolTipLink</a></p>
+            <p>Link:
+                <a href="@Model.AgeRangeToolTipLink" target="_blank" rel="noreferrer noopener">
+                    <span class="govuk-visually-hidden">Opens in a new window</span>
+                    @Model.AgeRangeToolTipLink
+                </a>
+            </p>
         }
     </div>
 
@@ -230,7 +235,12 @@
         <p class="govuk-body">@Model.SchoolCapacityToolTip</p>
         @if (!Model.SchoolCapacityToolTipLink.IsNullOrEmpty())
         {
-            <p>Link: <a href="@Model.SchoolCapacityToolTipLink">@Model.SchoolCapacityToolTipLink</a></p>
+            <p>Link:
+                <a href="@Model.SchoolCapacityToolTipLink" target="_blank" rel="noreferrer noopener">
+                <span class="govuk-visually-hidden">Opens in a new window</span>
+                @Model.SchoolCapacityToolTipLink
+                </a>
+            </p>
         }
     </div>
 

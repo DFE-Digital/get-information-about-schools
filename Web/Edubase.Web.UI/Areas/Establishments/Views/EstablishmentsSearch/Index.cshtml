@@ -362,19 +362,21 @@
                     </div>
                     @foreach (var item in items)
                     {
-                        <dl class="nested-items">
-                            <dt class="js-when-on">
+                        <div class="nested-items">
+                            <div class="js-when-on">
                                 <div class="govuk-checkboxes gias-filter-checkboxes">
                                     <div class="govuk-checkboxes__item">
                                         <input id="@(name)_@item.Id" class="filter-group-title govuk-checkboxes__input" type="checkbox" @Html.Conditional(item.ChildItems.Any(x => selectedItems.Contains(x.Id)), "checked")/>
                                         <label for="@(name)_@item.Id" class="govuk-label govuk-checkboxes__label">@item</label>
                                         <button data-module="govuk-button" class="child-option-toggle js-child-option-toggle" aria-expanded="false">
-                                            <span class="govuk-visually-hidden">Types within @item</span>
+                                            <span class="govuk-visually-hidden">
+                                                <span class="filter-action-state"></span>
+                                                @item.ChildItems.Count sub types of @item</span>
                                         </button>
                                     </div>
                                 </div>
-                            </dt>
-                            <dd class="filter-group">
+                            </div>
+                            <div class="filter-group">
                                 <div class="govuk-checkboxes gias-filter-checkboxes">
                                     @foreach (var child in item.ChildItems)
                                     {
@@ -386,8 +388,8 @@
                                         </div>
                                     }
                                 </div>
-                            </dd>
-                        </dl>
+                            </div>
+                        </div>
                     }
                 </fieldset>
             </div>

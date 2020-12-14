@@ -38,7 +38,7 @@
         @if (Model.UserCanEdit)
         {
         <p>
-            @Html.RouteLink("New entry", "CreateFaqItem", null, new { @class = "plus-link" })
+                @Html.RouteLink("Add entry", "CreateFaqItem", null, new { @class = "govuk-button" })
         </p>
 
         }

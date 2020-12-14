@@ -63,7 +63,7 @@ else
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body-s">
-            @if (User.Identity.IsAuthenticated && Model.DomainModel.HasGovernors)
+            @if (User.Identity.IsAuthenticated && Model.DomainModel.HasGovernors && Model.GovernorPermissions.Add)
             {
                 if (Model.EstablishmentUrn.HasValue)
                 {
@@ -216,7 +216,7 @@ else
             }
             if (Model.HistoricGrids.Any(h => h.Rows.Any()))
             {
-                <h2 class="govuk-heading-s">Historic (left within last 12 months)</h2>
+                <h2 class="govuk-heading-m">Historic (left within last 12 months)</h2>
                 <details class="govuk-details  govuk-!-font-size-16" data-module="govuk-details">
                     <summary class="govuk-details__summary">
                         <span class="govuk-details__summary-text">
@@ -248,7 +248,7 @@ else
             {
                 if (Model.HistoricGrids.Any(h => h.Rows.Any()))
                 {
-                    <h2 class="govuk-heading-s">Historic (left within last 12 months)</h2>
+                    <h2 class="govuk-heading-m">Historic (left within last 12 months)</h2>
                     <details class="govuk-details govuk-!-font-size-16" data-module="govuk-details">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
@@ -272,7 +272,7 @@ else
             {
                 if (Model.HistoricGovernors.Any())
                 {
-                    <h2 class="govuk-heading-s">Historic (left within last 12 months)</h2>
+                    <h2 class="govuk-heading-m">Historic (left within last 12 months)</h2>
                     <details class="govuk-details govuk-!-font-size-16" data-module="govuk-details">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
@@ -329,7 +329,7 @@ else
     <div class="governor-list">
         @if (!historic)
         {
-            <h2 class="govuk-heading-s">@grid.Title</h2>
+            <h2 class="govuk-heading-m">@grid.Title</h2>
         }
         @if (grid.Rows.Any())
         {

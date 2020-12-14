@@ -11,7 +11,6 @@
             <div class="govuk-breadcrumbs">
                 <ol class="govuk-breadcrumbs__list">
                     <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
-                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Help", "Help", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
                 </ol>
             </div>
         </div>
@@ -21,6 +20,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-xl govuk-!-margin-bottom-0">News</h1>
+        <br /><br /><p>Historic news pages, status of the system and updates on new functionality and features.</p>
         <div class="gias-align-right">
             @Html.ActionLink("News archive", "NewsArchive", "Home")
         </div>
@@ -30,7 +30,6 @@
 
     <div class="govuk-grid-column-two-thirds news-blog">
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
-        <p>Historic news pages, status of the system and updates on new functionality and features.</p>
         @Model
     </div>
 

@@ -7,7 +7,6 @@ const iebtRadios = {
   okClick: function () {
     this.closeModal();
     iebtRadios.refreshDisplay();
-
     return true;
   },
   cancelClick: function () {
@@ -63,7 +62,6 @@ const iebtRadios = {
   refreshDisplay: function () {
     const self = this;
     const radioValue = typeof self.radios.filter(':checked').val() !== 'undefined' ? self.radios.filter(':checked').val() : 'unselected';
-
 
     if (radioValue === '1') {
       // individual proprietor
@@ -148,16 +146,6 @@ const iebtRadios = {
       }
     });
 
-    // const radioValue = typeof self.radios.filter(':checked').val() !== 'undefined' ? self.radios.filter(':checked').val() : 'SingleProprietor';
-
-    // if (radioValue === 'ProprietorBody') {
-      // $('#field-clone-target').append(self.cloneFields);
-      // $('#proprietor-type-ProprietorBody').prop('checked', true);
-    // } else {
-      // $('#cloneable-fields-container').append(self.cloneFields);
-      // $('#proprietor-type-IndividualProprietor').prop('checked', true);
-      // $('#SingleProprietor').removeClass('hidden');
-    // }
 
     self.radios.on('change', function (e) {
       const radioId = $(this).prop('id');
@@ -173,10 +161,20 @@ const iebtRadios = {
       }
     });
 
-   self.radios.okCancel({
+
+    const initialProprietorValue = $('input[name=\'ProprietorTypeId\']').val();
+
+
+    self.radios.okCancel({
       ok: self.okClick,
       cancel: self.cancelClick,
-      idPrefix: 'iebt-'
+      title: initialProprietorValue === '1' ?
+        'Are you sure you want to change to a proprietary body?' :
+        'Are you sure you want to change to a single proprietor?',
+      content: initialProprietorValue === '1' ?
+        'All single proprietor details will be lost' :
+        'All proprietary body details will be lost',
+      triggerEvent: 'change',
     });
 
    self.refreshDisplay();

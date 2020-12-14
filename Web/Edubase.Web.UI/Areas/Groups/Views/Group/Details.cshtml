@@ -362,7 +362,7 @@
             {
                 <div id="change-history" class="tab-content">
                     <h2 class="govuk-heading-s">Change History</h2>
-                    @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
+                    @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust && Model.GovernorPermissions.Add)
                     {
                         <div class="gias-governance-history-link-container">
                             <p>

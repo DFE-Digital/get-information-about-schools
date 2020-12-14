@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Edubase.Services.Governors;
+using Edubase.Services.Texuna.Governors;
 using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
@@ -42,6 +44,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         private readonly ICachedLookupService _lookup;
         private readonly NomenclatureService _nomenclatureService;
         private readonly ISecurityService _securityService;
+        private readonly IGovernorsReadService _governorsReadService;
         public GroupController(
             ICachedLookupService cachedLookupService,
             ISecurityService securityService,
@@ -49,7 +52,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             IEstablishmentReadService establishmentReadService,
             IGroupsWriteService groupWriteService,
             ICompaniesHouseService companiesHouseService,
-            NomenclatureService nomenclatureService)
+            NomenclatureService nomenclatureService,
+            IGovernorsReadService governorsReadApiService)
         {
             _lookup = cachedLookupService;
             _securityService = securityService;
@@ -58,6 +62,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             _groupWriteService = groupWriteService;
             _companiesHouseService = companiesHouseService;
             _nomenclatureService = nomenclatureService;
+            _governorsReadService = governorsReadApiService;
         }
 
 
@@ -230,11 +235,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 IsClosed = model.StatusId == (int)eLookupGroupStatus.Closed || model.StatusId == (int)eLookupGroupStatus.CreatedInError,
                 IsClosedInError = model.StatusId == (int)eLookupGroupStatus.CreatedInError,
                 CloseDate = model.ClosedDate,
-                UKPRN = model.UKPRN.ToInteger()
+                UKPRN = model.UKPRN.ToInteger(),
             };
 
             if (viewModel.IsUserLoggedOn)
             {
+                viewModel.GovernorPermissions = await _governorsReadService.GetGovernorPermissions(null, id, User);
                 viewModel.ChangeHistory = await _groupReadService.GetChangeHistoryAsync(id, skip, 100, sortBy.Clean() ?? "requestedDateUtc-desc", User);
             }
 

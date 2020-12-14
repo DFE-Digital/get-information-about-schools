@@ -180,12 +180,12 @@ else if (Model.WarningsToProcess.SingleOrDefault(x => x.Code == GroupEditorViewM
         @* <a href="#" id="warning-exit-overlay-6" class="modal-exit">Close</a> *@
          @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "modal-exit js-allow-exit"})
         <div class="modal-inner">
-            <h3 class="heading-medium" tabindex="0" id="modal-label">Are you sure you wish to continue?</h3>
+            <h3 class="govuk-heading-m" tabindex="0" id="modal-label">Are you sure you wish to continue?</h3>
             <p tabindex="0" id="model-desc">@warning.Message</p>
         </div>
         <div class="button-row">
-            <a href="#" class="button" id="overlay-proceed-6">Proceed</a>
-            <a href="#" class="button button-secondary" id="overlay-cancel-6">Cancel</a>
+            <button type="submit" name="action" value="save" class="govuk-button" id="overlay-proceed-6">Proceed</button>
+            @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary js-allow-exit"})
         </div>
     </div>
 }

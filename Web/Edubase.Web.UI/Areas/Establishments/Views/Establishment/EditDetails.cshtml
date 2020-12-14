@@ -1,4 +1,5 @@
 @using System.Linq
+@using AutoMapper.Configuration.Conventions
 @using Edubase.Common
 @using Edubase.Services.Enums
 @using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
@@ -55,42 +56,56 @@
         @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button"})
     </div>
 
-    <div class="govuk-form-group first @Html.ValidationCssClassFor(x => x.Name)">
-        <label class="govuk-label" for="Name">
-		@{ var establishmentTitle = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Name of setting" : "School / College name"; }
-            @establishmentTitle
-        </label>
-        @Html.ValidationMessageFor(x => x.Name, null, new {@class = "govuk-error-message"})
-        @Html.TextBoxFor(x => x.Name, new {maxlength = 120, @class = "govuk-input"})
-    </div>
+    @if (Model.EditPolicy.Name)
+    {
+        <div class="govuk-form-group first @Html.ValidationCssClassFor(x => x.Name)">
+            <label class="govuk-label" for="Name">
+                @{ var establishmentTitle = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Name of setting" : "School / College name"; }
+                @establishmentTitle
+            </label>
+            @Html.ValidationMessageFor(x => x.Name, null, new {@class = "govuk-error-message"})
+            @Html.TextBoxFor(x => x.Name, new {maxlength = 120, @class = "govuk-input"})
+        </div>
+    }
 
     <div class="govuk-form-group">
         <label class="govuk-label" for="urn">Unique Reference Number (URN)</label>
         @Html.TextBoxFor(x => x.Urn, new {id = "urn", @class = "govuk-input", placeholder = "auto-generated", @readonly = true, disabled = "disabled"})
     </div>
+        
+    @if (Model.EditPolicy.Address_Line1)
+    {
+        <div class="govuk-form-group">
+            <label for="school-street" class="govuk-label">Street</label>
+            @Html.TextBoxFor(x => x.Address_Line1, new {maxlength = 120, id = "school-street", @class = "govuk-input"})
+        </div>
+    }
 
-    <div class="govuk-form-group">
-        <label for="school-street" class="govuk-label">Street</label>
-        @Html.TextBoxFor(x => x.Address_Line1, new {maxlength = 120, id = "school-street", @class = "govuk-input"})
-    </div>
+    @if (Model.EditPolicy.Address_Locality)
+    {
+        <div class="govuk-form-group">
+            <label for="school-locality" class="govuk-label">Locality</label>
+            @Html.TextBoxFor(x => x.Address_Locality, new {maxlength = 120, id = "school-locality", @class = "govuk-input"})
+        </div>
+    }
 
+    @if (Model.EditPolicy.Address_Line3)
+    {
+        <div class="govuk-form-group">
+            <label for="school-addressline3" class="govuk-label">Address 3</label>
+            @Html.TextBoxFor(x => x.Address_Line3, new {maxlength = 120, id = "school-addressline3", @class = "govuk-input"})
+        </div>
+    }
 
-    <div class="govuk-form-group">
-        <label for="school-locality" class="govuk-label">Locality</label>
-        @Html.TextBoxFor(x => x.Address_Locality, new {maxlength = 120, id = "school-locality", @class = "govuk-input"})
-    </div>
+    @if (Model.EditPolicy.Address_CityOrTown)
+    {
+        <div class="govuk-form-group">
+            <label for="school-town" class="govuk-label">Town</label>
+            @Html.TextBoxFor(x => x.Address_CityOrTown, new {maxlength = 120, id = "school-town", @class = "govuk-input"})
+        </div>
+    }
 
-    <div class="govuk-form-group">
-        <label for="school-addressline3" class="govuk-label">Address 3</label>
-        @Html.TextBoxFor(x => x.Address_Line3, new {maxlength = 120, id = "school-addressline3", @class = "govuk-input"})
-    </div>
-
-    <div class="govuk-form-group">
-        <label for="school-town" class="govuk-label">Town</label>
-        @Html.TextBoxFor(x => x.Address_CityOrTown, new {maxlength = 120, id = "school-town", @class = "govuk-input"})
-    </div>
-
-    @if (Model.Address_CountryId == Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
+    @if (Model.EditPolicy.Address_CountyId && Model.Address_CountryId == Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
     {
         <div class="govuk-form-group">
             <label for="Address_CountyId" class="govuk-label">County</label>
@@ -98,7 +113,7 @@
         </div>
     }
 
-    @if (Model.Address_CountryId != Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
+    @if (Model.EditPolicy.Address_CountryId && Model.Address_CountryId != Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
     {
         <div class="govuk-form-group">
             @Html.LabelFor(x => x.Address_CountryId, "Country", new {@class = "govuk-label", @for = "Address_CountryId_select"})
@@ -108,14 +123,17 @@
 
     @Html.HiddenFor(x => x.Address_CountryId)
 
-    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Address_PostCode)">
-        @Html.LabelFor(x => x.Address_PostCode, "Postcode", new {@class = "govuk-label"})
-        @Html.ValidationMessageFor(x => x.Address_PostCode, null, new {@class = "govuk-error-message", @for = "disabled-postcode"})
-        @Html.TextBoxFor(x => x.Address_PostCode, new {maxlength = 120, @class = "govuk-input govuk-input--width-10", disabled = "disabled", id = "disabled-postcode"})
-        @Html.HiddenFor(x => x.Address_PostCode)
-        @Html.RouteLink("Replace this address", "AddOrReplaceEstablishmentAddress", new {urn = Model.Urn, target = "main"}, new {@class = "replace-address"})
-    </div>
-
+    @if (Model.EditPolicy.Address_PostCode)
+    {
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Address_PostCode)">
+            @Html.LabelFor(x => x.Address_PostCode, "Postcode", new {@class = "govuk-label"})
+            @Html.ValidationMessageFor(x => x.Address_PostCode, null, new {@class = "govuk-error-message", @for = "disabled-postcode"})
+            @Html.TextBoxFor(x => x.Address_PostCode, new {maxlength = 120, @class = "govuk-input govuk-input--width-10", disabled = "disabled", id = "disabled-postcode"})
+            @Html.HiddenFor(x => x.Address_PostCode)
+            @Html.RouteLink("Replace this address", "AddOrReplaceEstablishmentAddress", new {urn = Model.Urn, target = "main"}, new {@class = "replace-address"})
+        </div>
+    }
+    
     @Html.HiddenFor(x => x.Address_UPRN)
     @Html.HiddenFor(x => x.Northing)
     @Html.HiddenFor(x => x.Easting)
@@ -174,6 +192,7 @@
                 @Html.Raw(Model.EditPolicy.HeadteacherLabel) email address
                 <a href="#help-text-headteacher-email-address" class="help-icon modal-link">
                     <span class="govuk-visually-hidden">Help with headteacher/principal email address field</span>
+                    @helpers.DialogHiddenPrompt()
                 </a>
             </label>
             @Html.ValidationMessageFor(x => x.HeadEmailAddress, null, new {@class = "govuk-error-message"})
@@ -590,6 +609,7 @@
                 Email address
                 <a href="#help-text-email-address" class="help-icon modal-link">
                     <span class="govuk-visually-hidden">Help with email address field</span>
+                    @helpers.DialogHiddenPrompt()
                 </a>
             </label>
             @Html.ValidationMessageFor(x => x.Contact_EmailAddress, null, new {@class = "govuk-error-message"})
@@ -604,6 +624,7 @@
                 Alternative email address
                 <a href="#help-text-email-address" class="help-icon modal-link">
                     <span class="govuk-visually-hidden">Help with alternative email address field</span>
+                    @helpers.DialogHiddenPrompt()
                 </a>
             </label>
             @Html.ValidationMessageFor(x => x.ContactAlt_EmailAddress, null, new {@class = "govuk-error-message"})

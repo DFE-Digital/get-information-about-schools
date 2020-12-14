@@ -34,6 +34,10 @@ namespace Edubase.Web.UI.Models
         public const string ASSaveIEBT = "iebt";
         public const string ASSaveHelpdesk = "helpdesk";
 
+        public const string ASUpdateProprietors = "UpdateProprietors";
+        public const string ASAddProprietor = "AddProprietor";
+        public const string ASRemoveProprietor = "RemoveProprietor";
+
         public enum eLinkType
         {
             Successor,
