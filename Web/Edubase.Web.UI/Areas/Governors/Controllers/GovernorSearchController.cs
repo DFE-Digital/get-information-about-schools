@@ -17,6 +17,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Edubase.Services.Domain;
 using Edubase.Web.UI.Models.Search;
+using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -63,7 +64,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var allowNonPublicDataDownload = User.InRole(EdubaseRoles.EDUBASE, EdubaseRoles.EDUBASE_CMT, EdubaseRoles.EFADO, EdubaseRoles.edubase_ddce, EdubaseRoles.SFC);
             viewModel.TotalSteps = allowNonPublicDataDownload ? 4 : 3;
             viewModel.Step++;
-            
+
             if (allowNonPublicDataDownload && !viewModel.IncludeNonPublicData.HasValue)
                 return View("Downloads/SelectDataset", viewModel);
 
@@ -122,6 +123,44 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             viewModel.Step++;
 
             return View("Downloads/ReadyToDownload", viewModel);
+        }
+
+        [HttpGet, Route("GovernorsDownloadAjax")]
+        public async Task<ActionResult> GovernorsDownloadAjax(Guid id, eFileFormat fileFormat, int step, int totalSteps, string searchQueryString = null, eLookupSearchSource? searchSource = null)
+        {
+            var model = new ProgressDto();
+            try
+            {
+                model = await _governorDownloadService.GetDownloadGenerationProgressAsync(id, User);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.StartsWith("The API returned 404 Not Found"))
+                {
+                    // if the file no longer exists (user refreshes the page post download etc) then the api returns a 404 and throws an error. This allows for a more graceful response
+                    model.Error = "Download process not found for associated id";
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            if (model.HasErrored)
+            {
+                return Json(JsonConvert.SerializeObject(new
+                {
+                    status = "error", redirect = "/Governors/Search/Download"
+                }));
+            }
+            // return View("Downloads/DownloadError", new DownloadErrorViewModel { SearchQueryString = searchQueryString, SearchSource = searchSource, NeedsRegenerating = true });
+
+            //viewModel.Step++;
+
+            return Json(JsonConvert.SerializeObject(new
+            {
+                status = model.IsComplete, redirect = "/Governors/Search/Download"
+            }));
         }
 
         private async Task<ActionResult> SearchGovernors(GovernorSearchViewModel model)

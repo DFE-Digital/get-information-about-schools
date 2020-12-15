@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
@@ -54,6 +55,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return await ResultInternalAsync(id, viewModel, apiResponse);
         }
 
+        [Route("bulk-create-free-schools-ajax/{id}", Name = "BulkCreateFreeSchoolsResultAjax"), HttpGet]
+        public async Task<ActionResult> ResultAsyncAjax(Guid id)
+        {
+            var viewModel = new BulkCreateFreeSchoolsViewModel();
+            var apiResponse = await _establishmentWriteService.BulkCreateFreeSchoolsGetProgressAsync(id, User);
+            return await ResultInternalAjaxAsync(id, viewModel, apiResponse);
+        }
+
         private async Task<ActionResult> ResultInternalAsync(Guid id, BulkCreateFreeSchoolsViewModel viewModel, ApiResponse<BulkCreateFreeSchoolsResult> apiResponse)
         {
             if (apiResponse.Success)
@@ -93,6 +102,49 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 AddApiErrorsToModelState(apiResponse.Errors, nameof(viewModel.BulkFile));
                 return View(ViewName, viewModel);
+            }
+            else throw new Exception("ApiResponse indicated failure, but no errors were supplied");
+        }
+
+        private async Task<ActionResult> ResultInternalAjaxAsync(Guid id, BulkCreateFreeSchoolsViewModel viewModel, ApiResponse<BulkCreateFreeSchoolsResult> apiResponse)
+        {
+            var redirectUrl = string.Concat("/Establishments/bulk-create-free-schools/", id);
+            if (apiResponse.Success)
+            {
+                viewModel.Result = apiResponse.GetResponse();
+                if (viewModel.Result.IsProgressing())
+                {
+                    return Json(JsonConvert.SerializeObject(new
+                    {
+                        status = false, redirect = redirectUrl
+                    }));
+                }
+
+                else if (viewModel.Result.IsCompleted())
+                {
+                    if (viewModel.Result.HasCreatedEstablishments) // NOTE: You _ONLY_ ever get HasCreatedEstablishments==true, when the ENTIRE operation has succeeded.
+                    {
+                        return Json(JsonConvert.SerializeObject(new
+                        {
+                            status = true, redirect = redirectUrl
+                        }));
+                    }
+                    else // no establishments have been created. Show the main upload page with the error detail.
+                    {
+                        return Json(JsonConvert.SerializeObject(new
+                        {
+                            status = true, redirect = redirectUrl
+                        }));
+                    }
+                }
+                else throw new Exception($"The status of task {id} is unclear; the API did not provide a good enough response {Newtonsoft.Json.JsonConvert.SerializeObject(viewModel.Result)}");
+            }
+            else if (apiResponse.HasErrors)
+            {
+                return Json(JsonConvert.SerializeObject(new
+                {
+                    status = true, redirect = redirectUrl
+                }));
             }
             else throw new Exception("ApiResponse indicated failure, but no errors were supplied");
         }

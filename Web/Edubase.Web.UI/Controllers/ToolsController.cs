@@ -51,7 +51,7 @@ namespace Edubase.Web.UI.Controllers
             _localAuthoritySetRepository = localAuthoritySetRepository;
             _establishmentDownloadService = establishmentDownloadService;
         }
-        
+
         [Route(Name = "Tools")]
         public async Task<ActionResult> Index()
         {
@@ -105,7 +105,7 @@ namespace Edubase.Web.UI.Controllers
                         // remove the existing error, as we'll add a fresh one
                         ModelState[nameof(model.SearchUrn)].Errors.Clear();
                     }
-                    
+
                     ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a valid URN");
                 }
                 else if (model.ItemsToAdd?.Any(x => x.Urn == model.SearchUrn) == true)
@@ -139,7 +139,7 @@ namespace Edubase.Web.UI.Controllers
                 {
                     ModelState.AddModelError(nameof(model.FilteredItemTypes), "Please select an establishment type");
                 }
-            } 
+            }
 
             // cancel either an original addition or an edit
             if (action == "cancel")
@@ -366,7 +366,7 @@ namespace Edubase.Web.UI.Controllers
 
             if(viewModel.MinDate.ToDateTime().HasValue && viewModel.MaxDate.ToDateTime().HasValue && viewModel.MinDate.ToDateTime() > viewModel.MaxDate.ToDateTime())
                 ModelState.AddModelError("date-range", "Please use a valid date range");
-            
+
             if (ModelState.IsValid)
             {
                 switch (viewModel.ActionName)
@@ -384,19 +384,19 @@ namespace Edubase.Web.UI.Controllers
                         break;
                 }
             }
-            
+
             viewModel.LocalAuthoritySets = (await _localAuthoritySetRepository.GetAllAsync()).Items
                 .OrderBy(x => x.Title)
                 .Select(x => new IndSchoolsSearchViewModel.LASetViewModel(x));
 
             return View(viewModel);
         }
-        
+
         [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanSearchIndependentSchools), Route("~/independent-schools/results-js", Name = "IndSchSearchResultsPartial")]
         public async Task<ActionResult> IndependentSchoolsSearchResults(IndSchoolsSearchViewModel viewModel)
         {
             await PopulateLookupData(viewModel);
-            viewModel.Results = new PaginatedResult<EstablishmentSearchResultModel>(viewModel.Skip, viewModel.Take, 
+            viewModel.Results = new PaginatedResult<EstablishmentSearchResultModel>(viewModel.Skip, viewModel.Take,
                 await _establishmentReadService.SearchAsync(await CreateIndSchoolSearchPayload(viewModel), User));
             HttpContext.Response.Headers.Add("x-count", viewModel.Results.Count.ToString());
             return PartialView("_IndSchSearchResults", viewModel);
@@ -411,7 +411,7 @@ namespace Edubase.Web.UI.Controllers
                  FileFormat = eFileFormat.XLSX,
                  DataSet = eDataSet.IEBT
             }, User);
-            
+
             return RedirectToRoute("IndSchSearchResultsDownload", new { id, viewModel.Mode });
         }
 
@@ -428,6 +428,28 @@ namespace Edubase.Web.UI.Controllers
                 return View("IndSchoolSearchDownload/PreparingFilePleaseWait", model);
 
             return View("IndSchoolSearchDownload/ReadyToDownload", model);
+        }
+
+        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools),
+         Route("~/independent-schools/downloadAjax/{id}", Name = "IndSchSearchResultsDownloadAjax")]
+        public async Task<ActionResult> IndependentSchoolsSearchDownloadAjax(Guid id, string mode)
+        {
+            var model = await _establishmentDownloadService.GetDownloadGenerationProgressAsync(id, User);
+
+            if (model.HasErrored)
+            {
+                return Json(JsonConvert.SerializeObject(new
+                {
+                    status = "error", redirect = string.Concat("/independent-schools/download/", id)
+                }));
+            }
+
+
+            return Json(
+                JsonConvert.SerializeObject(new
+                {
+                    status = model.IsComplete, redirect = string.Concat("/independent-schools/download/", id)
+                }), JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools), Route("~/independent-schools/predefined-local-authority-sets", Name = "PredefinedLASets")]
@@ -460,14 +482,14 @@ namespace Edubase.Web.UI.Controllers
             });
         }
 
-        [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools), 
+        [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools),
             Route("~/independent-schools/predefined-local-authority-sets/edit/{id}", Name = "EditPredefinedLASetPost"),
             Route("~/independent-schools/predefined-local-authority-sets/create", Name = "CreatePredefinedLASetPost")]
         public async Task<ActionResult> CreateEditPredefinedLASet(PredefinedLASetViewModel viewModel)
         {
             if(ModelState.ContainsKey(nameof(viewModel.SuppressWarning)))
                 ModelState.Remove(nameof(viewModel.SuppressWarning));
-            
+
             if (ModelState.IsValid)
             {
                 var sets = await _localAuthoritySetRepository.GetAllAsync();

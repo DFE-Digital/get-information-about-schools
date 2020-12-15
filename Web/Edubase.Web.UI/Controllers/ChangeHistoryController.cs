@@ -12,6 +12,7 @@ using Edubase.Services.Groups.Downloads;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Groups.Search;
 using Edubase.Web.UI.Models.Search;
+using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -382,6 +383,27 @@ namespace Edubase.Web.UI.Controllers
             return progress.IsComplete
                 ? View("ReadyToDownload", new Tuple<ProgressDto, ChangeHistoryViewModel>(progress, vm))
                 : View("PreparingPleaseWait", progress);
+        }
+
+        [HttpGet, Route("DownloadAjax/{id}", Name = "ChangeHistoryDownloadAjax")]
+        public async Task<ActionResult> SearchChangeHistoryDownloadAjax(Guid id, ChangeHistoryViewModel vm)
+        {
+            var progress = await _svc.GetDownloadGenerationProgressAsync(id, User);
+            if (vm.SingleEstablishment || vm.SingleGroup)
+            {
+                return Json(
+                    JsonConvert.SerializeObject(new
+                    {
+                        status = progress.IsComplete, redirect = "/ChangeHistory/Search/Download/"
+                    }), JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(
+                JsonConvert.SerializeObject(new
+                {
+                    status = progress.IsComplete, redirect = string.Concat("/ChangeHistory/Download/", id)
+                }), JsonRequestBehavior.AllowGet);
+
         }
 
         private T PopulatePayload<T>(ChangeHistoryViewModel vm, T payload) where T : SearchChangeHistoryPayload

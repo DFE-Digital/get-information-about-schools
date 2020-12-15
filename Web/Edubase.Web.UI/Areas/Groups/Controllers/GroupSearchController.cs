@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Edubase.Web.UI.Models.Search;
+using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
@@ -104,6 +105,41 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View("Downloads/ReadyToDownload", viewModel.SetStep(3));
         }
 
+        [HttpGet, Route("GroupDownloadAjax")]
+        public async Task<ActionResult> GroupDownloadAjax(Guid id, eFileFormat fileFormat, string searchQueryString = null, eLookupSearchSource? searchSource = null)
+        {
+            var model = new ProgressDto();
+            try
+            {
+                model = await _groupDownloadService.GetDownloadGenerationProgressAsync(id, User);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.StartsWith("The API returned 404 Not Found"))
+                {
+                    // if the file no longer exists (user refreshes the page post download etc) then the api returns a 404 and throws an error. This allows for a more graceful response
+                    model.Error = "Download process not found for associated id";
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            if (model.HasErrored)
+            {
+                return Json(JsonConvert.SerializeObject(new
+                {
+                    status = "error", redirect = "/Groups/Search/Download"
+                }));
+            }
+
+            return Json(JsonConvert.SerializeObject(new
+            {
+                status = model.IsComplete, redirect = "/Groups/Search/Download"
+            }));
+        }
+
         private async Task<ActionResult> SearchGroups(GroupSearchViewModel model)
         {
             if (model.SearchType == eSearchType.Group &&
@@ -135,7 +171,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     model.Results = results.Items;
                     if (model.StartIndex == 0) model.Count = results.Count;
                 }
-                
+
                 if (model.Count == 1) {return RedirectToDetailPage(model.Results.Single().GroupUId);}
                 if (model.Count == 0) {return RedirectToSearchPage(model);}
 
