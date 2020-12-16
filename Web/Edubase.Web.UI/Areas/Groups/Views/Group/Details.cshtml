@@ -84,7 +84,7 @@
             {
                 <div class="gias-establishment-closed-message">
                     <p>
-                        This @Model.GroupTypeNameForClosureLabel was created in error and subsequently closed on @(Model.CloseDate?.ToString("dd/MM/yyyy")).
+                        This @Model.GroupTypeNameForClosureLabel was created in error and subsequently closed on @(Model.CloseDate?.ToString("dd MMMM yyyy")).
                     </p>
                 </div>
             }
@@ -92,7 +92,7 @@
             {
                 <div class="gias-establishment-closed-message">
                     <p>
-                        This @Model.GroupTypeNameForClosureLabel closed on @(Model.CloseDate?.ToString("dd/MM/yyyy")).
+                        This @Model.GroupTypeNameForClosureLabel closed on @(Model.CloseDate?.ToString("dd MMMM yyyy")).
                     </p>
                 </div>
             }
@@ -162,14 +162,14 @@
                         </div>
                         <div class="gias-summary-list__row">
                             <dt class="gias-summary-list__key">@Model.OpenDateLabel:</dt>
-                            <dd class="gias-summary-list__value">@(Model.Group.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+                            <dd class="gias-summary-list__value">@(Model.Group.OpenDate?.ToString("dd MMMM yyyy") ?? "Not recorded")</dd>
                         </div>
 
                         @if (Model.IsUserLoggedOn)
                         {
                             <div class="gias-summary-list__row">
                                 <dt class="gias-summary-list__key">Closed date:</dt>
-                                <dd class="gias-summary-list__value">@(Model.Group.ClosedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+                                <dd class="gias-summary-list__value">@(Model.Group.ClosedDate?.ToString("dd MMMM yyyy") ?? "Not recorded")</dd>
                             </div>
                             <div class="gias-summary-list__row">
                                 <dt class="gias-summary-list__key">Status:</dt>
@@ -310,7 +310,7 @@
                                             </div>
                                             <div class="gias-summary-list__row">
                                                 <dt class="gias-summary-list__key">Joined date:</dt>
-                                                <dd class="gias-summary-list__value">@(result.JoinedDate?.ToString("dd/MM/yyyy") ?? "Not recorded")</dd>
+                                                <dd class="gias-summary-list__value">@(result.JoinedDate?.ToString("dd MMMM yyyy") ?? "Not recorded")</dd>
                                             </div>
                                         </dl>
 
@@ -411,7 +411,7 @@
                             {
                                 <tr class="govuk-table__row">
                                     <td data-label="Date changed" class="govuk-table__cell">
-                                        @(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))
+                                        @(item.RequestedDateUtc?.ToString("dd MMMM yyyy"))
                                     </td>
                                     <td data-label="Request type" class="govuk-table__cell">
                                         @item.RequestType.GetEnumMember()
@@ -441,7 +441,7 @@
                                                 </div>
                                                 <div class="gias-summary-list__row">
                                                     <dt class="gias-summary-list__key">Link date</dt>
-                                                    <dd class="gias-summary-list__value">@(item.LinkDateUtc?.ToString("dd/MM/yyyy"))</dd>
+                                                    <dd class="gias-summary-list__value">@(item.LinkDateUtc?.ToString("dd MMMM yyyy"))</dd>
                                                 </div>
                                                 <div class="gias-summary-list__row">
                                                     <dt class="gias-summary-list__key">Type</dt>

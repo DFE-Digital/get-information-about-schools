@@ -148,10 +148,10 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                         .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments, role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody))
                         .AddCell(governor.Id, displayPolicy.Id)
                         .AddCell(AppointingBodies.FirstOrDefault(x => x.Id == governor.AppointingBodyId)?.Name, displayPolicy.AppointingBodyId)
-                        .AddCell(startDate?.ToString("dd/MM/yyyy"), displayPolicy.AppointmentStartDate)
-                        .AddCell(endDate?.ToString("dd/MM/yyyy"), includeEndDate)
+                        .AddCell(startDate?.ToString("dd MMMM yyyy"), displayPolicy.AppointmentStartDate)
+                        .AddCell(endDate?.ToString("dd MMMM yyyy"), includeEndDate)
                         .AddCell(governor.PostCode, displayPolicy.PostCode)
-                        .AddCell(governor.DOB?.ToString("dd/MM/yyyy"), displayPolicy.DOB)
+                        .AddCell(governor.DOB?.ToString("dd MMMM yyyy"), displayPolicy.DOB)
                         .AddCell(governor.GetPreviousFullName(), displayPolicy.PreviousFullName)
                         .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
                         .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber);
