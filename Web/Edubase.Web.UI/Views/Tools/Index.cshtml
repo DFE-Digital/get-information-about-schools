@@ -29,7 +29,7 @@
 
 @RenderLinks("Create", creationActions)
 @RenderLinks("Update", updateActions, creationActions.Any())
-@RenderLinks("Administration tools", Model.GetAdminActions(Html), creationActions.Any() || updateActions.Any())
+@RenderLinks("Administration", Model.GetAdminActions(Html), creationActions.Any() || updateActions.Any())
 
 @helper RenderLinks(string label, List<ToolsViewModel.LinkAction> list, bool sectionBreak = false)
 {
