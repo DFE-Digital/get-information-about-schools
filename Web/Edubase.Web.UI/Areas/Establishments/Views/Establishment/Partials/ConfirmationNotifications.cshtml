@@ -1,4 +1,4 @@
-﻿@model EstablishmentDetailViewModel
+@model EstablishmentDetailViewModel
 
 @if (Model.MediumPriorityConfirmationsPending)
 {
@@ -13,7 +13,7 @@
                     <p class="confirmation-statement">
                         Establishment record last confirmed:
                         <span class="confirmation-date">
-                            @(Model.Establishment.ConfirmationUpToDate_LastConfirmationDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
+                            @(Model.Establishment.ConfirmationUpToDate_LastConfirmationDate?.ToString("dd MMMM yyyy") ?? "Not recorded")
                         </span>
                     </p>
                     @using (Html.BeginRouteForm("EstablishmentConfirmUpToDate", new {urn = Model.Establishment.Urn}, FormMethod.Post))
@@ -31,7 +31,7 @@
                     <p class="confirmation-statement">
                         Governance record last confirmed:
                         <span class="confirmation-date">
-                            @(Model.Establishment.ConfirmationUpToDateGovernance_LastConfirmationDate?.ToString("dd/MM/yyyy") ?? "Not recorded")
+                            @(Model.Establishment.ConfirmationUpToDateGovernance_LastConfirmationDate?.ToString("dd MMMM yyyy") ?? "Not recorded")
                         </span>
                     </p>
                     @using (Html.BeginRouteForm("EstablishmentGovernanceConfirmUpToDate", new {urn = Model.Establishment.Urn}, FormMethod.Post))
@@ -51,12 +51,12 @@
 {
     if (Model.HighPriorityEstablishmentConfirmationPending)
     {
-        @RenderHighPriorityBox("Establishment", Model.Establishment.ConfirmationUpToDate_LastConfirmationDate?.ToString("dd/MM/yyyy") ?? "Not recorded", "EstablishmentConfirmUpToDate")
+        @RenderHighPriorityBox("Establishment", Model.Establishment.ConfirmationUpToDate_LastConfirmationDate?.ToString("dd MMMM yyyy") ?? "Not recorded", "EstablishmentConfirmUpToDate")
     }
 
     if (Model.HighPriorityGovernanceConfirmationPending)
     {
-        @RenderHighPriorityBox("Governance", Model.Establishment.ConfirmationUpToDateGovernance_LastConfirmationDate?.ToString("dd/MM/yyyy") ?? "Not recorded", "EstablishmentGovernanceConfirmUpToDate")
+        @RenderHighPriorityBox("Governance", Model.Establishment.ConfirmationUpToDateGovernance_LastConfirmationDate?.ToString("dd MMMM yyyy") ?? "Not recorded", "EstablishmentGovernanceConfirmUpToDate")
     }
 }
 

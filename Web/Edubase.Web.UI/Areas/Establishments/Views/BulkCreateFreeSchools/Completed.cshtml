@@ -1,4 +1,4 @@
-﻿@model BulkCreateFreeSchoolsViewModel
+@model BulkCreateFreeSchoolsViewModel
 @section BreadCrumbs
 {
     <div class="govuk-grid-row">
@@ -51,7 +51,7 @@
                         <td class="govuk-table__cell fixed-width" data-label="Name of establishment">@Html.RouteLink(e.Name, "EstabDetails", new { id = e.Urn })</td>
                         <td class="govuk-table__cell fixed-width" data-label="Phase of education">@e.PhaseOfEducationName</td>
                         <td class="govuk-table__cell fixed-width" data-label="Establishment type">@e.EstablishmentTypeName</td>
-                        <td class="govuk-table__cell fixed-width" data-label="Opening date">@(e.OpenDate.ToString("dd/MM/yyyy"))</td>
+                        <td class="govuk-table__cell fixed-width" data-label="Opening date">@(e.OpenDate.ToString("dd MMMM yyyy"))</td>
                         <td class="govuk-table__cell fixed-width" data-label="Opening reason">@e.ReasonForOpening</td>
                         <td class="govuk-table__cell fixed-width" data-label="Establishment status">@e.EstablishmentStatusName</td>
                     </tr>

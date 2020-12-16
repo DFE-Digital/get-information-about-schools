@@ -35,7 +35,7 @@
                     <td data-label="URN" class="govuk-table__cell">@Html.ActionLink(l.Urn.ToString(), "Details", new {id = l.Urn})</td>
                     <td data-label="Establishment name" class="govuk-table__cell">@Html.ActionLink((l.EstablishmentName ?? "-"), "Details", new {id = l.Urn})</td>
                     <td data-label="Type of link" class="govuk-table__cell">@l.LinkTypeName</td>
-                    <td data-label="Date linked" class="govuk-table__cell">@(l.LinkDate?.ToString("dd/MM/yyyy") ?? "None recorded")</td>
+                    <td data-label="Date linked" class="govuk-table__cell">@(l.LinkDate?.ToString("dd MMMM yyyy") ?? "None recorded")</td>
                 </tr>
             }
             </tbody>

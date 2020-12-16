@@ -111,7 +111,7 @@
 <div class="gias-summary-list__row">
     <dt class="gias-summary-list__key">@openDateTitle<span class="govuk-visually-hidden"> </span>/<span class="govuk-visually-hidden"> </span>Reason:</dt>
     <dd class="gias-summary-list__value">
-        @(Model.Establishment.OpenDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br/>
+        @(Model.Establishment.OpenDate?.ToString("dd MMMM yyyy") ?? "Not recorded")<br/>
         @Model.ReasonEstablishmentOpenedName
     </dd>
 </div>
@@ -122,7 +122,7 @@
     <div class="gias-summary-list__row">
         <dt class="gias-summary-list__key">@closeDateTitle<span class="govuk-visually-hidden"> </span>/<span class="govuk-visually-hidden"> </span>Reason:</dt>
         <dd class="gias-summary-list__value">
-            @(Model.Establishment.CloseDate?.ToString("dd/MM/yyyy") ?? "Not recorded")<br/>
+            @(Model.Establishment.CloseDate?.ToString("dd MMMM yyyy") ?? "Not recorded")<br/>
             @Model.ReasonEstablishmentClosedName
         </dd>
     </div>
@@ -322,7 +322,7 @@
 {
     <div class="gias-summary-list__row">
         <dt class="gias-summary-list__key">Date last changed<span class="govuk-visually-hidden"> </span>/<span class="govuk-visually-hidden"> </span>confirmed:</dt>
-        <dd class="gias-summary-list__value">@(Model.Establishment.LastChangedDate?.ToString("dd/MM/yyyy"))</dd>
+        <dd class="gias-summary-list__value">@(Model.Establishment.LastChangedDate?.ToString("dd MMMM yyyy"))</dd>
     </div>
 }
 
@@ -497,7 +497,7 @@
 {
     <div class="gias-summary-list__row">
         <dt class="gias-summary-list__key">Date of Last Inspection Visit:</dt>
-        <dd class="gias-summary-list__value">@(Model.Establishment.BSODateOfLastInspectionVisit?.ToString("dd/MM/yyyy"))</dd>
+        <dd class="gias-summary-list__value">@(Model.Establishment.BSODateOfLastInspectionVisit?.ToString("dd MMMM yyyy"))</dd>
     </div>
 }
 
@@ -505,7 +505,7 @@
 {
     <div class="gias-summary-list__row">
         <dt class="gias-summary-list__key">Date of Next Inspection Visit:</dt>
-        <dd class="gias-summary-list__value">@(Model.Establishment.BSODateOfNextInspectionVisit?.ToString("dd/MM/yyyy"))</dd>
+        <dd class="gias-summary-list__value">@(Model.Establishment.BSODateOfNextInspectionVisit?.ToString("dd MMMM yyyy"))</dd>
     </div>
 }
 

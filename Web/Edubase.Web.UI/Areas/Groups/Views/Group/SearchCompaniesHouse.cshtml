@@ -87,7 +87,7 @@
                             <tr class="govuk-table__row">
                                 <td data-label="Name" class="govuk-table__cell">@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups" }, null)</td>
                                 <td data-label="Companies House no." class="govuk-table__cell"><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number" target="_blank">@result.Number <span class="govuk-visually-hidden">Opens in new window</span></a></td>
-                                <td data-label="Incorporated" class="govuk-table__cell">@(result.IncorporationDate?.ToString("dd/MM/yyyy"))</td>
+                                <td data-label="Incorporated" class="govuk-table__cell">@(result.IncorporationDate?.ToString("dd MMMM yyyy"))</td>
                                 <td data-label="Address" class="govuk-table__cell">@(result.Address.ToString() ?? "Not recorded")</td>
                             </tr>
                         }

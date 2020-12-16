@@ -203,7 +203,7 @@ namespace Edubase.Web.UI.Helpers
         /// <param name="obj"></param>
         /// <returns></returns>
         public static string Field<TModel>(this HtmlHelper<TModel> htmlHelper, object obj, string dateFormat = null)
-            => (obj is DateTime? ? ((DateTime?)obj)?.ToString(dateFormat ?? "dd/MM/yyyy").Clean() : obj?.ToString().Clean()) ?? "Not recorded";
+            => (obj is DateTime? ? ((DateTime?)obj)?.ToString(dateFormat ?? "dd MMMM yyyy").Clean() : obj?.ToString().Clean()) ?? "Not recorded";
 
 
 

@@ -1,6 +1,6 @@
-﻿@model GroupDetailViewModel
+@model GroupDetailViewModel
 @{
-    var date = Model.Group.ConfirmationUpToDateGovernance_LastConfirmationDate?.ToString("dd/MM/yyyy") ?? "Not recorded";
+    var date = Model.Group.ConfirmationUpToDateGovernance_LastConfirmationDate?.ToString("dd MMMM yyyy") ?? "Not recorded";
 }
 
 @if (Model.Group.UrgentConfirmationUpToDateGovernanceRequired)
