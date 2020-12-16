@@ -55,6 +55,12 @@
                 <a class="search-results-download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()" rel="nofollow">Download these search results</a>
             </div>
         }
+        <div class="gias-filter-toggle--container">
+            <span class="gias-filter-toggle--icon">
+                @helpers.FilterIcon()
+            </span>
+            <a href="#gias-filter-container" role="button" id="gias-filter-toggle">Filters</a>
+        </div>
     </div>
     @if (Model.SearchType != eSearchType.EstablishmentAll)
     {
@@ -109,10 +115,11 @@
 
 <div class="govuk-grid-row">
     <form method="get" action="@Url.Action("Index", "EstablishmentsSearch", new {area = ""})">
-        <input type="hidden" id="client-only-searchtype" value="@Model.SearchType" />
-        <div class="filter-form" id="filter-form">
+        <div id="gias-filter-container">
+            <div class="filter-form" id="filter-form">
+            <input type="hidden" id="client-only-searchtype" value="@Model.SearchType" />
             <div class="govuk-grid-column-one-third">
-                <h2 class="gias-heading-xs">Filters</h2>
+                <h2 class="gias-heading-xs make-modal-header">Filters</h2>
                 <a href="#results-container" class="govuk-skip-link">Skip filters</a>
                 <a href="#" class="add-clear-filters" id="clear-filters" role="button">Clear all filters</a>
                 <div id="EditSearchCollapse" class="search-result-filters blanket-container">
@@ -131,6 +138,7 @@
                                 <option id="alpha-az" value="a" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
                                 <option id="alpha-za" value="z" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
                             </select>
+                            @helpers.FilterSkipLink()
                         </div>
                     </div>
 
@@ -241,7 +249,7 @@
                 </div>
 
             </div>
-
+            </div>
             <div role="alert" aria-live="assertive" id="results-notification" class="govuk-visually-hidden"></div>
             <h2 class="govuk-visually-hidden">Search results listing</h2>
             <div class="govuk-grid-column-two-thirds" id="results-container">
@@ -249,6 +257,7 @@
             </div>
 
             @{Html.RenderPartial("Partials/_EstablishmentSearchMap");}
+
         </div>
     </form>
 </div>
@@ -312,6 +321,7 @@
                 </fieldset>
             </div>
         </div>
+        @helpers.FilterSkipLink()
     </div>
 }
 
@@ -352,33 +362,38 @@
                     </div>
                     @foreach (var item in items)
                     {
-                        <dl class="nested-items">
-                            <dt class="js-when-on">
+                        <div class="nested-items">
+                            <div class="js-when-on">
                                 <div class="govuk-checkboxes gias-filter-checkboxes">
                                     <div class="govuk-checkboxes__item">
-                                         <input id="@(name)_@item.Id" class="filter-group-title govuk-checkboxes__input" type="checkbox" @Html.Conditional(item.ChildItems.Any(x => selectedItems.Contains(x.Id)), "checked")/>
-                                         <label for="@(name)_@item.Id" class="govuk-label govuk-checkboxes__label">@item</label>
-                                         <a href="#" class="child-option-toggle js-child-option-toggle" aria-expanded="false"><span class="govuk-visually-hidden">Types within @item</span></a>
+                                        <input id="@(name)_@item.Id" class="filter-group-title govuk-checkboxes__input" type="checkbox" @Html.Conditional(item.ChildItems.Any(x => selectedItems.Contains(x.Id)), "checked")/>
+                                        <label for="@(name)_@item.Id" class="govuk-label govuk-checkboxes__label">@item</label>
+                                        <button data-module="govuk-button" class="child-option-toggle js-child-option-toggle" aria-expanded="false">
+                                            <span class="govuk-visually-hidden">
+                                                <span class="filter-action-state"></span>
+                                                @item.ChildItems.Count sub types of @item</span>
+                                        </button>
                                     </div>
                                 </div>
-                            </dt>
-                            <dd class="filter-group">
+                            </div>
+                            <div class="filter-group">
                                 <div class="govuk-checkboxes gias-filter-checkboxes">
-                                @foreach (var child in item.ChildItems)
-                                {
-                                    <div class="govuk-checkboxes__item">
-                                        <input name="@name" value="@child.Id" id="@(name)_@(item.Id)_@child.Id" class="govuk-checkboxes__input js-filter-input trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(child.Id), "checked")/>
-                                        <label for="@(name)_@(item.Id)_@child.Id" class="govuk-checkboxes__label govuk-label">
-                                            @child
-                                        </label>
-                                    </div>
-                                }
+                                    @foreach (var child in item.ChildItems)
+                                    {
+                                        <div class="govuk-checkboxes__item">
+                                            <input name="@name" value="@child.Id" id="@(name)_@(item.Id)_@child.Id" class="govuk-checkboxes__input js-filter-input trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(child.Id), "checked")/>
+                                            <label for="@(name)_@(item.Id)_@child.Id" class="govuk-checkboxes__label govuk-label">
+                                                @child
+                                            </label>
+                                        </div>
+                                    }
                                 </div>
-                            </dd>
-                        </dl>
+                            </div>
+                        </div>
                     }
                 </fieldset>
             </div>
+            @helpers.FilterSkipLink()
         </div>
     </div>
 }
@@ -403,6 +418,7 @@
                     <a href="#" class="govuk-button govuk-button--secondary filter-button" data-module="govuk-button">Apply</a>
                 </div>
             </div>
+            @helpers.FilterSkipLink()
         </div>
     </div>
 }
@@ -428,6 +444,7 @@
                     <a href="#" class="govuk-button govuk-button--secondary filter-button">Apply</a>
                 </div>
             </div>
+            @helpers.FilterSkipLink()
         </div>
     </div>
 }
@@ -466,8 +483,8 @@
             <div class="js-auto-height-inner">
                 <fieldset class="govuk-fieldset range-group">
                     <div class="govuk-form-group">
-                    <legend class="govuk-visually-hidden">Enter the radius in miles</legend>
-                    <span class="govuk-error-message hidden">Please check the radius you have entered</span>
+                        <legend class="govuk-visually-hidden">Enter the radius in miles</legend>
+                        <span class="govuk-error-message hidden">Please check the radius you have entered</span>
                         <span class="inline-form-control">
                             <label for="RadiusInMiles" class="govuk-visually-hidden">Radius in miles</label>
                             <input type="text" id="RadiusInMiles" name="@M.BIND_ALIAS_RADIUS" value="@Model.GetRadiusOption()" class="govuk-input govuk-input--width-5" maxlength="5"/>
@@ -477,6 +494,7 @@
                     </div>
                 </fieldset>
             </div>
+            @helpers.FilterSkipLink()
         </div>
     </div>
 

@@ -30,6 +30,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public bool EditMode { get; private set; }
 
+        public GovernorPermissions GovernorPermissions { get; set; }
+
         public string Action { get; set; }
 
         public string Layout { get; set; }
@@ -81,7 +83,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public IEnumerable<LookupDto> Nationalities { get; private set; }
         public IEnumerable<LookupDto> AppointingBodies { get; private set; }
 
-        public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groupUId, int? establishmentUrn, NomenclatureService nomenclatureService, IEnumerable<LookupDto> nationalities, IEnumerable<LookupDto> appointingBodies)
+        public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groupUId, int? establishmentUrn, NomenclatureService nomenclatureService, IEnumerable<LookupDto> nationalities, IEnumerable<LookupDto> appointingBodies, GovernorPermissions governorPermissions)
         {
             _nomenclatureService = nomenclatureService;
             DomainModel = dto;
@@ -90,6 +92,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             Nationalities = nationalities;
             AppointingBodies = appointingBodies;
             EstablishmentUrn = establishmentUrn;
+            GovernorPermissions = governorPermissions;
             CreateGrids(dto, dto.CurrentGovernors, false, groupUId, establishmentUrn);
             CreateGrids(dto, dto.HistoricalGovernors, true, groupUId, establishmentUrn);
         }

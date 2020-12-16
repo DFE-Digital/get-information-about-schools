@@ -30,97 +30,69 @@
             <p>Establishment groups matching &lsquo;<span class="govuk-!-font-weight-bold">@Model.GroupSearchModel.Text</span>&rsquo;.</p>
         </div>
     }
+    <div class="govuk-grid-column-full">
+        <div class="gias-filter-toggle--container">
+            <span class="gias-filter-toggle--icon">
+                @helpers.FilterIcon()
+            </span>
+            <a href="#gias-filter-container" role="button" id="gias-filter-toggle">Filters</a>
+        </div>
+    </div>
 </div>
 
 <div class="govuk-grid-row">
+    <form method="get" action="@Url.Action("Index", "GroupSearch", new {area = "Groups"})">
+        <div id="gias-filter-container">
+            <div class="filter-form" id="filter-form">
+                <div class="govuk-grid-column-one-third">
+                    <div id="EditSearchCollapse" class="search-result-filters blanket-container">
+                        <span id='list-count' class="hidden">@Model.Count</span>
+                        <h2 class="gias-heading-xs">Filters</h2>
+                        <a href="#results-container" class="govuk-skip-link">Skip filters</a>
+                        <a href="#" class="add-clear-filters" id="clear-filters" role="button">Clear all filters</a>
 
-    <div class="govuk-grid-column-one-third">
-        <div class="filter-form" id="filter-form">
 
-            <div id="EditSearchCollapse" class="search-result-filters blanket-container">
-               <h2 class="gias-heading-xs">Filters</h2>
-               <a href="#results-container" class="govuk-skip-link">Skip filters</a>
-               <a href="#" class="add-clear-filters" id="clear-filters" role="button">Clear all filters</a>
+                        <input type="hidden" id="client-only-searchtype" value="EstablishmentGroupsAll"/>
 
-                <form method="get" action="@Url.Action("Index", "GroupSearch", new { area = "Groups" })">
-                    <input type="hidden" id="client-only-searchtype" value="EstablishmentGroupsAll" />
-
-                    <div class="govuk-option-select js-collapsible" id="option-select-sort-by" role="search">
-                        <div class="container-head js-container-head">
-                            <div class="option-select-label">Sort by</div>
-                        </div>
-                        <div class="options-container">
-                            <label for="sortBy" class="govuk-visually-hidden">Sort by</label>
-                            <select class="govuk-select trigger-result-update sortby-selector" name="SortBy" id="sortBy">
-                                <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
-                                <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="govuk-option-select js-collapsible" id="option-select-group-type" role="search">
-                        <div class="container-head js-container-head">
-                            <div class="option-select-label">Group type</div>
-                            <div class="js-selected-counter">
-                                <span class="js-selected-counter-text"></span>
-                            </div>
-                        </div>
-                        <div class="options-container">
-                            <div class="js-auto-height-inner">
-                                <fieldset class="govuk-fieldset">
-                                    <legend class="govuk-visually-hidden">Select an option below to filter the results</legend>
-                                    <div class="govuk-checkboxes gias-filter-checkboxes">
-                                        <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
-                                            <input id="grouptype_all" class="select-all govuk-checkboxes__input" type="checkbox" />
-                                            <label for="grouptype_all" class="govuk-checkboxes__label govuk-label">
-                                                All
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="govuk-checkboxes gias-filter-checkboxes">
-                                    @foreach (var item in Model.GroupTypes)
-                                    {
-                                        <div class="govuk-checkboxes__item">
-                                            <input name="t" value="@item.Id" class="trigger-result-update govuk-checkboxes__input" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupTypeIds.Contains(item.Id), "checked") />
-                                            <label for="group-type_@item.Id" class="govuk-label govuk-checkboxes__label">
-                                                @item
-                                            </label>
-                                        </div>
-                                    }
-                                    </div>
-                                </fieldset>
-                            </div>
-                        </div>
-                    </div>
-
-                     @if (User.Identity.IsAuthenticated)
-                     {
-                        <div class="govuk-option-select js-collapsible" id="option-select-group-status" role="search">
+                        <div class="govuk-option-select js-collapsible" id="option-select-sort-by" role="search">
                             <div class="container-head js-container-head">
-                                <div class="option-select-label">Group status</div>
+                                <div class="option-select-label">Sort by</div>
+                            </div>
+                            <div class="options-container">
+                                <label for="sortBy" class="govuk-visually-hidden">Sort by</label>
+                                <select class="govuk-select trigger-result-update sortby-selector" name="SortBy" id="sortBy">
+                                    <option value="a" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
+                                    <option value="z" @Html.Conditional(Model.SortOption == Edubase.Services.Enums.eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
+                                </select>
+                                @helpers.FilterSkipLink()
+                            </div>
+                        </div>
+
+                        <div class="govuk-option-select js-collapsible" id="option-select-group-type" role="search">
+                            <div class="container-head js-container-head">
+                                <div class="option-select-label">Group type</div>
                                 <div class="js-selected-counter">
                                     <span class="js-selected-counter-text"></span>
                                 </div>
                             </div>
-                            <div class="options-container" id="">
+                            <div class="options-container">
                                 <div class="js-auto-height-inner">
                                     <fieldset class="govuk-fieldset">
-                                        <span class="govuk-visually-hidden">- changing the selection will refresh the results</span>
                                         <legend class="govuk-visually-hidden">Select an option below to filter the results</legend>
                                         <div class="govuk-checkboxes gias-filter-checkboxes">
                                             <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
-                                                <input id="groupstatus_all" class="select-all govuk-checkboxes__input" type="checkbox"/>
-                                                <label for="groupstatus_all" class="govuk-checkboxes__label">
+                                                <input id="grouptype_all" class="select-all govuk-checkboxes__input" type="checkbox"/>
+                                                <label for="grouptype_all" class="govuk-checkboxes__label govuk-label">
                                                     All
                                                 </label>
                                             </div>
                                         </div>
                                         <div class="govuk-checkboxes gias-filter-checkboxes">
-                                            @foreach (var item in Model.GroupStatuses)
+                                            @foreach (var item in Model.GroupTypes)
                                             {
                                                 <div class="govuk-checkboxes__item">
-                                                    <input name="s" value="@item.Id" class="govuk-checkboxes__input trigger-result-update" id="group-status_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupStatusIds.Contains(item.Id), "checked")/>
-                                                    <label for="group-status_@item.Id" class="govuk-label govuk-checkboxes__label">
+                                                    <input name="t" value="@item.Id" class="trigger-result-update govuk-checkboxes__input" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupTypeIds.Contains(item.Id), "checked")/>
+                                                    <label for="group-type_@item.Id" class="govuk-label govuk-checkboxes__label">
                                                         @item
                                                     </label>
                                                 </div>
@@ -128,22 +100,63 @@
                                         </div>
                                     </fieldset>
                                 </div>
+                                @helpers.FilterSkipLink()
                             </div>
                         </div>
-                    }
-                    <div class="filter-additional-controls">
-                        <a href="#" class="add-clear-filters" id="clear-filters-additional" role="button">Clear all filters</a>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="govuk-option-select js-collapsible" id="option-select-group-status" role="search">
+                                <div class="container-head js-container-head">
+                                    <div class="option-select-label">Group status</div>
+                                    <div class="js-selected-counter">
+                                        <span class="js-selected-counter-text"></span>
+                                    </div>
+                                </div>
+                                <div class="options-container" id="">
+                                    <div class="js-auto-height-inner">
+                                        <fieldset class="govuk-fieldset">
+                                            <span class="govuk-visually-hidden">- changing the selection will refresh the results</span>
+                                            <legend class="govuk-visually-hidden">Select an option below to filter the results</legend>
+                                            <div class="govuk-checkboxes gias-filter-checkboxes">
+                                                <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
+                                                    <input id="groupstatus_all" class="select-all govuk-checkboxes__input" type="checkbox"/>
+                                                    <label for="groupstatus_all" class="govuk-checkboxes__label">
+                                                        All
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="govuk-checkboxes gias-filter-checkboxes">
+                                                @foreach (var item in Model.GroupStatuses)
+                                                {
+                                                    <div class="govuk-checkboxes__item">
+                                                        <input name="s" value="@item.Id" class="govuk-checkboxes__input trigger-result-update" id="group-status_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupStatusIds.Contains(item.Id), "checked")/>
+                                                        <label for="group-status_@item.Id" class="govuk-label govuk-checkboxes__label">
+                                                            @item
+                                                        </label>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    @helpers.FilterSkipLink()
+                                </div>
+                            </div>
+                        }
+                        <div class="filter-additional-controls">
+                            <a href="#" class="add-clear-filters" id="clear-filters-additional" role="button">Clear all filters</a>
+                        </div>
+
+                        <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit"/>
+                        @Html.HiddenFor(!Model.GroupSearchModel.Text.IsEmpty(), x => x.GroupSearchModel.Text)
+                        @Html.HiddenFor(!Model.GroupSearchModel.AutoSuggestValue.IsEmpty(), x => x.GroupSearchModel.AutoSuggestValue)
+
                     </div>
 
-                    <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit" />
-                    @Html.HiddenFor(!Model.GroupSearchModel.Text.IsEmpty(), x => x.GroupSearchModel.Text)
-                    @Html.HiddenFor(!Model.GroupSearchModel.AutoSuggestValue.IsEmpty(), x => x.GroupSearchModel.AutoSuggestValue)
-                </form>
+                </div>
             </div>
-
         </div>
-    </div>
-
+    </form>
     <div role="alert" aria-live="assertive" id="results-notification" class="govuk-visually-hidden"></div>
     <h2 class="govuk-visually-hidden">Search results listing</h2>
     <div class="govuk-grid-column-two-thirds" id="results-container">

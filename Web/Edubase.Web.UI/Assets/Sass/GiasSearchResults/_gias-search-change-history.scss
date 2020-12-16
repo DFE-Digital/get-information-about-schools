@@ -1,3 +1,5 @@
+@include mq-add-breakpoint('resultsBp', 835px);
+
 .hide-show-filters {
   position: relative;
   left: 15px;
@@ -23,12 +25,8 @@
     border-bottom: 6px solid transparent;
     border-left: 9px solid $govuk-brand-colour;
   }
-  @include govuk-media-query($until: tablet) {
+  @include govuk-media-query($until: resultsBp) {
     display: none;
   }
 }
 
-
-.table-tight .js-reveal-when-no-filter {
-  display: table-cell ;
-}

@@ -32,7 +32,7 @@
 }
 <div id="school-change-history" class="tab-content approval-data">
     <h2 class="govuk-heading-s">Change History</h2>
-    @if (User.Identity.IsAuthenticated && Model.GovernorsGridViewModel.DomainModel.HasGovernors)
+    @if (User.Identity.IsAuthenticated && Model.GovernorsGridViewModel.DomainModel.HasGovernors && Model.GovernorsGridViewModel.GovernorPermissions.Add)
     {
         <div class="gias-governance-history-link-container">
             <p>

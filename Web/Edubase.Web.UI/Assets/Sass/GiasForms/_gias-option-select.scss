@@ -60,3 +60,20 @@
 .gias-governor-roles {
   max-width: 400px;
 }
+
+.horizontal-filters {
+
+  @include govuk-media-query($from: tablet) {
+    margin-bottom: govuk-spacing(9);
+    overflow: hidden;
+  }
+
+  .govuk-option-select .options-container {
+    max-height: 310px;
+  }
+
+  .govuk-option-select.no-scroll .options-container {
+    max-height: none;
+  }
+}
+

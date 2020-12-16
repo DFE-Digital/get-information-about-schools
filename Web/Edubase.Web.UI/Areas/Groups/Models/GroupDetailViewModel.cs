@@ -1,3 +1,5 @@
+using Edubase.Services.Governors.Models;
+
 namespace Edubase.Web.UI.Areas.Groups.Models
 {
     using Common;
@@ -52,5 +54,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public string GroupTypeNameForClosureLabel => _groupTypes2Name.ContainsKey(GroupTypeId) ? _groupTypes2Name[GroupTypeId] : string.Empty;
 
         public IEnumerable<LinkedGroupModel> Links { get; set; }
+        public GovernorPermissions GovernorPermissions { get; set; }
+
     }
 }

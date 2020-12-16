@@ -63,26 +63,24 @@
   position: absolute;
   right: 5px;
   top: 6px;
+  background-color: govuk-colour('white');
+  background-image: url('/public/assets/images/option-select-toggle-child-sprite-2020.png');
+  background-repeat: no-repeat;
+  background-position: 50% 100%;
+  background-size: 28px auto;
+  width: 20px;
+  height: 20px;
+  display: block;
+  border: 0;
 
-  &:after {
-    content: "";
-    background-image: url('/public/assets/images/option-select-toggle-child-sprite-2020.png');
-    background-repeat: no-repeat;
-    background-position: 50% 100%;
-    background-size: 28px auto;
-    width: 20px;
-    height: 20px;
-    display: block;
-  }
-
-  &.open-children::after {
+  &.open-children {
     background-position: 50% top;
   }
 
   &:active, &:focus {
     background-color: transparent;
     box-shadow: none;
-    outline-width: 0;
+    outline: 1px dotted govuk-colour('black');
   }
 
   .no-js & {
@@ -122,5 +120,16 @@
   &.govuk-option-select .options-container {
     border-width: 1px;
     border-color: govuk-colour('black');
+  }
+}
+
+// skip links within the filter section
+.gias-filter-skip-link {
+  .no-js & { // no need to skip with no-js as the user will need to tab to the submit button anyway
+    display: none !important;
+  }
+
+  .js-closed & { // hide the skip link on closed filter panels
+    display: none;
   }
 }

@@ -251,9 +251,6 @@ Please check the 'Establishment open date'</value>
   <data name="error.code.required_urbanRuralId" xml:space="preserve">
     <value>Please select an urban/rural description</value>
   </data>
-  <data name="error.isEmpty.validate.field.edit.governor_appointingBodyId" xml:space="preserve">
-    <value>Please select the appointing body</value>
-  </data>
   <data name="error.isEmpty.validate.field.edit.governor_appointmentEndDate" xml:space="preserve">
     <value>Please enter the date term ends</value>
   </data>

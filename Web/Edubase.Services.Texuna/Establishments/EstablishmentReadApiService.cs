@@ -560,6 +560,7 @@ namespace Edubase.Services.Texuna.Establishments
                 var newSenNames = StringUtil.SentencifyNoFormating(newSenIds.Select(x => sens.FirstOrDefault(s => s.Id == x)?.Name).ToArray());
                 retVal.Add(new ChangeDescriptorDto
                 {
+                    Id = "Type of SEN provision",
                     Name = "Type of SEN provision",
                     NewValue = newSenNames,
                     OldValue = originalSenNames,

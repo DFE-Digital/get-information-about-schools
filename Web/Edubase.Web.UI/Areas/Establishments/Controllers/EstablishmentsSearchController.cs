@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using System.IO;
 using Edubase.Common;
 using Edubase.Web.UI.Models;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
@@ -43,7 +45,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
 
-        [HttpGet, Route(Name="EstabSearch")]
+        [HttpGet, Route(Name = "EstabSearch")]
         public async Task<ActionResult> Index(EstablishmentSearchViewModel model)
         {
             model.SearchQueryString = Request.QueryString.ToString();
@@ -63,7 +65,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             if (!payload.Success) model.Error = payload.ErrorMessage;
             await ProcessEstablishmentsSearch(model, payload.Object);
             HttpContext.Response.Headers.Add("x-count", model.Count.ToString());
-            HttpContext.Response.Headers.Add("x-show-date-filter-warning", model.ShowDateFilterWarning.ToString().ToLower());
+            HttpContext.Response.Headers.Add("x-show-date-filter-warning",
+                model.ShowDateFilterWarning.ToString().ToLower());
             return PartialView("Partials/_EstablishmentSearchResults", model);
         }
 
@@ -82,23 +85,33 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             HttpContext.Response.Headers.Add("x-count", model.Count.ToString());
 
             var filtered = model.Results
-                                .Select(result => new { Result = result, LA = localAuthorities.SingleOrDefault(la => la.Id == result.LocalAuthorityId) })
-                                .Select(a => new
-            {
-                Name = a.Result.Name,
-                Location = a.Result.Location,
-                Address = StringUtil.ConcatNonEmpties(", ", a.Result.Address_Line1, 
-                                                            a.Result.Address_Locality, 
-                                                            a.Result.Address_Line3, 
-                                                            a.Result.Address_CityOrTown, 
-                                                            counties.FirstOrDefault(c => c.Id == a.Result.Address_CountyId)?.Name,
-                                                            a.Result.Address_PostCode),
-                Urn = a.Result.Urn,
-                LAESTAB = a.LA?.Code != null && a.Result.EstablishmentNumber.HasValue ? $"{a.LA.Code}/{a.Result.EstablishmentNumber.Value:D4}" : string.Empty,
-                Status = model.EstablishmentStatuses.FirstOrDefault(x => x.Id == a.Result.StatusId)?.Name ?? "Not recorded",
-                LocalAuthority = a.LA?.Name ?? "Not recorded",
-                PhaseType = string.Concat(educationPhases.FirstOrDefault(x => x.Id == a.Result.EducationPhaseId)?.Name ?? "Not recorded", ", ", establishmentTypes.FirstOrDefault(x => x.Id == a.Result.TypeId)?.Name ?? "Not recorded"),
-            });
+                .Select(result => new
+                {
+                    Result = result, LA = localAuthorities.SingleOrDefault(la => la.Id == result.LocalAuthorityId)
+                })
+                .Select(a => new
+                {
+                    Name = a.Result.Name,
+                    Location = a.Result.Location,
+                    Address = StringUtil.ConcatNonEmpties(", ", a.Result.Address_Line1,
+                        a.Result.Address_Locality,
+                        a.Result.Address_Line3,
+                        a.Result.Address_CityOrTown,
+                        counties.FirstOrDefault(c => c.Id == a.Result.Address_CountyId)?.Name,
+                        a.Result.Address_PostCode),
+                    Urn = a.Result.Urn,
+                    LAESTAB =
+                        a.LA?.Code != null && a.Result.EstablishmentNumber.HasValue
+                            ? $"{a.LA.Code}/{a.Result.EstablishmentNumber.Value:D4}"
+                            : string.Empty,
+                    Status =
+                        model.EstablishmentStatuses.FirstOrDefault(x => x.Id == a.Result.StatusId)?.Name ??
+                        "Not recorded",
+                    LocalAuthority = a.LA?.Name ?? "Not recorded",
+                    PhaseType = string.Concat(
+                        educationPhases.FirstOrDefault(x => x.Id == a.Result.EducationPhaseId)?.Name ?? "Not recorded",
+                        ", ", establishmentTypes.FirstOrDefault(x => x.Id == a.Result.TypeId)?.Name ?? "Not recorded"),
+                });
 
             return Json(filtered);
         }
@@ -107,10 +120,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         public async Task<ActionResult> PrepareDownload(EstablishmentSearchDownloadViewModel viewModel)
         {
             viewModel.SearchSource = eLookupSearchSource.Establishments;
-            viewModel.AllowIncludeEmailAddresses = User.InRole(R.EDUBASE, R.EDUBASE_CMT, R.APT, R.AP_AOS, R.EFADO, R.FST, R.IEBT, R.ISI, R.OFSTED, R.SOU, R.EDUBASE_CHILDRENS_CENTRE_POLICY, R.EDUBASE_LACCDO, R.EFAHNS, R.edubase_ddce, R.SFC, R.DUGE);
+            viewModel.AllowIncludeEmailAddresses = User.InRole(R.EDUBASE, R.EDUBASE_CMT, R.APT, R.AP_AOS, R.EFADO,
+                R.FST, R.IEBT, R.ISI, R.OFSTED, R.SOU, R.EDUBASE_CHILDRENS_CENTRE_POLICY, R.EDUBASE_LACCDO, R.EFAHNS,
+                R.edubase_ddce, R.SFC, R.DUGE);
             viewModel.AllowIncludeIEBTFields = User.InRole(R.EDUBASE, R.EDUBASE_CMT, R.IEBT, R.ISI, R.OFSTED);
             viewModel.AllowIncludeBringUpFields = User.InRole(R.IEBT);
-            viewModel.AllowIncludeChildrensCentreFields = User.InRole(R.EDUBASE, R.EDUBASE_CMT, R.EDUBASE_CHILDRENS_CENTRE_POLICY, R.EDUBASE_LACCDO);
+            viewModel.AllowIncludeChildrensCentreFields = User.InRole(R.EDUBASE, R.EDUBASE_CMT,
+                R.EDUBASE_CHILDRENS_CENTRE_POLICY, R.EDUBASE_LACCDO);
 
             if (!viewModel.Dataset.HasValue)
             {
@@ -124,11 +140,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {
                     ModelState.AddModelError("CustomFieldsByCategory", "Select at least one field");
                 }
+
                 // the SearchQueryString is used for the breadcrumb response. We dont want to retain the Dataset selection as part of that
                 var queryString = new NameValueCollection(Request.QueryString);
                 queryString.Remove("Dataset");
                 viewModel.SearchQueryString = queryString.ToQueryString();
-                viewModel.CustomFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User)).OrderBy(x => x.Name).ToList();
+                viewModel.CustomFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User))
+                    .OrderBy(x => x.Name).ToList();
                 return View("Downloads/SelectCustomFields", viewModel);
             }
 
@@ -190,6 +208,44 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View("Downloads/ReadyToDownload", viewModel);
         }
 
+        [HttpGet, Route("EstablishmentDownloadAjax")]
+        public async Task<ActionResult> DownloadAjax(Guid id, eFileFormat fileFormat, string searchQueryString = null,
+            eLookupSearchSource? searchSource = null)
+        {
+            var model = new ProgressDto();
+            try
+            {
+                model = await _establishmentDownloadService.GetDownloadGenerationProgressAsync(id, User);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.StartsWith("The API returned 404 Not Found"))
+                {
+                    // if the file no longer exists (user refreshes the page post download etc) then the api returns a 404 and throws an error. This allows for a more graceful response
+                    model.Error = "Download process not found for associated id";
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            if (model.HasErrored)
+            {
+                // reload the current page so the server can prepare the error view and redirect the user
+                return Json(JsonConvert.SerializeObject(new
+                {
+                    status = "error", redirect = "/Establishments/Search/Download"
+                }));
+            }
+
+            return Json(JsonConvert.SerializeObject(new
+            {
+                status = model.IsComplete, redirect = "/Establishments/Search/Download"
+            }));
+
+        }
+
         private async Task<EstablishmentSearchViewModel> PopulateLookups(EstablishmentSearchViewModel vm)
         {
             vm.LocalAuthorities = (await _lookupService.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name)
@@ -239,15 +295,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         private ActionResult RedirectToEstabDetail(int urn)
-            => new RedirectToRouteResult(null, new RouteValueDictionary
-            {
-                { "action", "Details" },
-                { "controller", "Establishment" },
-                { "id", urn },
-                { "area", "Establishments" }
-            });
+            => new RedirectToRouteResult(null,
+                new RouteValueDictionary
+                {
+                    {"action", "Details"}, {"controller", "Establishment"}, {"id", urn}, {"area", "Establishments"}
+                });
 
-        private async Task<Returns<EstablishmentSearchPayload>> GetEstablishmentSearchPayload(EstablishmentSearchViewModel model)
+        private async Task<Returns<EstablishmentSearchPayload>> GetEstablishmentSearchPayload(
+            EstablishmentSearchViewModel model)
         {
             var retVal = new Returns<EstablishmentSearchPayload>();
             var payload = new EstablishmentSearchPayload(model.StartIndex, model.PageSize);
@@ -262,11 +317,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 else if (model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.LAESTAB)
                 {
                     var laestab = LAESTAB.TryParse(model.TextSearchModel.Text).Value;
-                    var localAuthorityId = (await _lookupService.LocalAuthorityGetAllAsync()).FirstOrDefault(x => x.Code == laestab.LocalAuthorityCode)?.Id;
-                    if (localAuthorityId.HasValue) filters.LocalAuthorityIds = new int[] { localAuthorityId.Value };
+                    var localAuthorityId = (await _lookupService.LocalAuthorityGetAllAsync())
+                        .FirstOrDefault(x => x.Code == laestab.LocalAuthorityCode)?.Id;
+                    if (localAuthorityId.HasValue) filters.LocalAuthorityIds = new int[] {localAuthorityId.Value};
                     filters.EstablishmentNumber = laestab.EstablishmentNumber;
                 }
-                else if ((model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.EstablishmentName && model.TextSearchModel.Text != null) || model.SearchType == eSearchType.EstablishmentAll)
+                else if ((model.TextSearchType == EstablishmentSearchViewModel.eTextSearchType.EstablishmentName &&
+                          model.TextSearchModel.Text != null) || model.SearchType == eSearchType.EstablishmentAll)
                 {
                     payload.Text = model.TextSearchModel.Text;
                 }
@@ -282,7 +339,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
                 else retVal.ErrorMessage = "The co-ordinate could not be parsed.";
             }
-            else if (model.SearchType == eSearchType.ByLocalAuthority) {
+            else if (model.SearchType == eSearchType.ByLocalAuthority)
+            {
                 if (!model.SelectedLocalAuthorityIds.Any())
                 {
                     retVal.ErrorMessage = "No local authority was selected";
@@ -351,7 +409,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     routeDictionary.Add("NoResults", true);
                     break;
                 case eSearchType.ByLocalAuthority:
-                    queryStringToAppend = string.Concat("&", QueryStringHelper.ToQueryString(EstablishmentSearchViewModel.BIND_ALIAS_LAIDS, model.SelectedLocalAuthorityIds.ToArray()));
+                    queryStringToAppend = string.Concat("&",
+                        QueryStringHelper.ToQueryString(EstablishmentSearchViewModel.BIND_ALIAS_LAIDS,
+                            model.SelectedLocalAuthorityIds.ToArray()));
                     routeDictionary.Add("NoResults", true);
                     break;
             }
@@ -391,6 +451,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                         var code = localAuthorities.FirstOrDefault(x => x.Id == item.LocalAuthorityId)?.Code;
                         if (code != null) laEstab = string.Concat(code, "/", item.EstablishmentNumber?.ToString("D4"));
                     }
+
                     model.LAESTABs.Add(item, laEstab);
                 }
             }
@@ -403,19 +464,20 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 var establishmentTypes = await _lookupService.EstablishmentTypesGetAllAsync();
                 var establishmentGroupTypes = await _lookupService.EstablishmentTypeGroupsGetAllAsync();
 
-                
-                model.EstablishmentTypes = establishmentGroupTypes.Select(groupType => new HeirarchicalLookupItemViewModel
-                    {
-                        Id = groupType.Id,
-                        Name = groupType.Name,
-                        ChildItems = establishmentTypes.Where(c => c.GroupIds.Contains(groupType.Id))
-                            .Select(e => new HeirarchicalLookupItemViewModel {Id = e.Id, Name = e.Name})
-                            .ToList()
-                    })
+
+                model.EstablishmentTypes = establishmentGroupTypes.Select(groupType =>
+                        new HeirarchicalLookupItemViewModel
+                        {
+                            Id = groupType.Id,
+                            Name = groupType.Name,
+                            ChildItems = establishmentTypes.Where(c => c.GroupIds.Contains(groupType.Id))
+                                .Select(e => new HeirarchicalLookupItemViewModel {Id = e.Id, Name = e.Name})
+                                .ToList()
+                        })
                     .ToList();
 
                 model.EstablishmentTypeLookup = establishmentTypes.ToDictionary(e => e.Id, e => e.Name);
-                
+
                 model.EstablishmentStatuses = (await _lookupService.EstablishmentStatusesGetAllAsync())
                     .Where(x => permittedStatusIds == null || permittedStatusIds.Contains(x.Id))
                     .Select(x => new LookupItemViewModel(x));

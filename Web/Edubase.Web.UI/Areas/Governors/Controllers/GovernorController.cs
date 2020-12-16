@@ -83,9 +83,16 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             Guard.IsTrue(groupUId.HasValue || establishmentUrn.HasValue, () => new InvalidParameterException($"Both parameters '{nameof(groupUId)}' and '{nameof(establishmentUrn)}' are null."));
 
             var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, User);
-            var viewModel = new GovernorsGridViewModel(domainModel, true, groupUId, establishmentUrn, _nomenclatureService,
-                (await _cachedLookupService.NationalitiesGetAllAsync()),
-                (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()));
+            var governorPermissions = await _governorsReadService.GetGovernorPermissions(establishmentUrn, groupUId, User);
+
+            var viewModel = new GovernorsGridViewModel(domainModel,
+                true,
+                groupUId,
+                establishmentUrn,
+                _nomenclatureService,
+                await _cachedLookupService.NationalitiesGetAllAsync(),
+                await _cachedLookupService.GovernorAppointingBodiesGetAllAsync(),
+                governorPermissions);
 
             var applicableRoles = domainModel.ApplicableRoles.Cast<int>();
             viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Where(x => applicableRoles.Contains(x.Id)).Select(x => new LookupItemViewModel(x)).ToList();
@@ -787,8 +794,16 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             try
             {
                 var domainModel = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, user);
-                viewModel = new GovernorsGridViewModel(domainModel, false, groupUId, establishmentUrn, _nomenclatureService,
-                    (await _cachedLookupService.NationalitiesGetAllAsync()), (await _cachedLookupService.GovernorAppointingBodiesGetAllAsync()));
+                var governorPermissions = await _governorsReadService.GetGovernorPermissions(establishmentUrn, groupUId, user);
+
+                viewModel = new GovernorsGridViewModel(domainModel,
+                    false,
+                    groupUId,
+                    establishmentUrn,
+                    _nomenclatureService,
+                    await _cachedLookupService.NationalitiesGetAllAsync(),
+                    await _cachedLookupService.GovernorAppointingBodiesGetAllAsync(),
+                    governorPermissions);
 
                 if (establishmentUrn.HasValue || establishmentModel != null)
                 {

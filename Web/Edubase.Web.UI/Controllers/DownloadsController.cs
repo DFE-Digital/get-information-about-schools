@@ -82,6 +82,17 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
+        [Route("GenerateAjax/{id}", Name = "GenerateAjax")]
+        public async Task<ActionResult> GenerateAjax(Guid id)
+        {
+            var model = await _downloadsService.GetProgressOfGeneratedExtractAsync(id, User);
+            return Json(JsonConvert.SerializeObject(new
+            {
+                status = model.IsComplete, redirect = string.Concat("/Downloads/Generated/", id)
+            }), JsonRequestBehavior.AllowGet);
+
+        }
+
         [Route("Generated/{id}", Name = "DownloadGenerated")]
         public async Task<ActionResult> DownloadGenerated(Guid id)
         {

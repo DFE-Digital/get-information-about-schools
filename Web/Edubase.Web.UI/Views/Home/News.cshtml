@@ -6,21 +6,21 @@
 }
 @section BreadCrumbs
 {
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-        <div class="govuk-breadcrumbs">
-            <ol class="govuk-breadcrumbs__list">
-                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link"})</li>
-                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Help", "Help", "Home", new { area = "" }, new {@class = "govuk-breadcrumbs__link"})</li>
-            </ol>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
         </div>
     </div>
-</div>
 }
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-xl govuk-!-margin-bottom-0">News</h1>
+        <br /><br /><p>Historic news pages, status of the system and updates on new functionality and features.</p>
         <div class="gias-align-right">
             @Html.ActionLink("News archive", "NewsArchive", "Home")
         </div>
@@ -30,12 +30,11 @@
 
     <div class="govuk-grid-column-two-thirds news-blog">
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
-        <p>Historic news pages, status of the system and updates on new functionality and features.</p>
         @Model
     </div>
 
     <div class="govuk-grid-column-one-third about">
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible gias-visible__from-tablet"/>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible gias-visible__from-tablet" />
 
         <h3 class="govuk-heading-m">About the Get information about schools service</h3>
         <p>
@@ -53,7 +52,7 @@
             Any personal information that is processed further by any organisation for other purposes will be subject to the terms of data protection legislation.
         </p>
 
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible"/>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
 
     </div>
 

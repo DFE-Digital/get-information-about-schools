@@ -70,11 +70,42 @@ import GiasAttachUnload from '../GiasModules/GiasModals/GiasAttachUnload';
   $typeSelector.on('change keyup', filterEstablishmentPhaseList);
   new GiasAttachUnload();
 
-
+if (document.getElementById('warning-modal-content-0')) {
   // When the page reloads with a warning modal not opened via JS
   $('.modal-exit, .cancel').on('click', function(e){
     e.preventDefault();
     $('.modal-content , .modal-overlay').addClass('hidden');
   });
+
+  $('#app').attr('aria-hidden', true);
+  $('html').addClass('no-scroll');
+  $('.modal-exit').focus();
+
+  $('body').on('keydown', '.modal-content', (e) => {
+    if (e.keyCode === 27) { // esc
+      $('.modal-exit').click();
+      return;
+    }
+    if (e.keyCode === 9) { // tab or maj+tab
+      const focusableItems = $('.modal-content').find('a[href], area[href], input:not([disabled]), button:not([disabled])').filter(':visible');
+      const focusableItemsCount = focusableItems.length;
+
+      const focusedItem = $(document.activeElement);
+
+      const focusedItemIndex = focusableItems.index(focusedItem);
+
+      if (!e.shiftKey && (focusedItemIndex === focusableItemsCount - 1)) {
+        focusableItems.get(0).focus();
+        e.preventDefault();
+      }
+      if (e.shiftKey && focusedItemIndex === 0) {
+        focusableItems.get(focusableItemsCount - 1).focus();
+        e.preventDefault();
+      }
+    }
+  });
+
+}
+
 
 }());

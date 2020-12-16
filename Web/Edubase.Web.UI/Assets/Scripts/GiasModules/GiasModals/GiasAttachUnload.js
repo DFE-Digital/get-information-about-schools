@@ -29,7 +29,8 @@ class GiasAttachUnload  {
     let exitUrl;
     let exitElement;
     this.canExit = true;
-    const $escapes = $content.find('[type="submit"], .removeProprietor, .govuk-error-summary a, .js-tooltip').not("[value='cancel']");
+    this.exitWarningAttached = false;
+    const $escapes = $content.find('[type="submit"], .removeProprietor, .govuk-error-summary a, .modal-link').not("[value='cancel']");
 
     $escapes.addClass('js-allow-exit');
 
@@ -51,6 +52,7 @@ class GiasAttachUnload  {
           $('<div/>').okCancel({
             title: 'Are you sure you want to leave this page?',
             content: message,
+            headingSize: 'l',
             immediate: true,
             ok: function () {
               self.setExitStatus(true);
@@ -73,7 +75,11 @@ class GiasAttachUnload  {
 
     this.$fields.on('change', ()=> {
       self.canExit = false;
-      bindExitEvents();
+      if (!self.exitWarningAttached) {
+        bindExitEvents();
+        self.exitWarningAttached = true;
+      }
+
     });
 
     if (window.isDirty) {
@@ -90,7 +96,8 @@ class GiasAttachUnload  {
       },
       title: 'Are you sure you want to leave this page?',
       content: 'Any unsaved changes will be lost',
-      triggerEvent: 'click'
+      triggerEvent: 'click',
+      headingSize: 'l'
     });
   }
 

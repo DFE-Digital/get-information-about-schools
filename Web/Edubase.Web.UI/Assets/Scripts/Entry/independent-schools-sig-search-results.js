@@ -1,6 +1,9 @@
 import supportsHistory from '../GiasHelpers/supportsHistory';
 import GiasFilterValidation from '../GiasSearchFilters/GiasFilterValidation';
 import OptionSelect from '../GiasSearchFilters/OptionSelect';
+import GiasFilterToggle from '../GiasSearchFilters/GiasFilterToggle';
+const _throttle = require('lodash.throttle');
+
 (function() {
   const filterForm = $('#indi-filter-form');
   const clearLinks = filterForm.find('.filter-clear');
@@ -20,6 +23,8 @@ import OptionSelect from '../GiasSearchFilters/OptionSelect';
     $resultsNotification.html('Please wait, loading search results');
     filterForm.find('input').prop('disabled', 'disabled');
     clearLinks.addClass('clear-disabled');
+    $('#gias-mobile-filter-submit').find('.mobile-count').remove();
+    $('#gias-mobile-filter-submit').append("<span class='gias-button-loader' id='button-loader'>&nbsp;</span>");
     if (supportsHistory()) {
       history.pushState({}, null, window.location.href.split('?')[0] + '?' + searchParams);
     }
@@ -44,6 +49,8 @@ import OptionSelect from '../GiasSearchFilters/OptionSelect';
           downloadLink.addClass('hidden');
           $resultsNotification.html('Search results loaded. No establishments found.');
         }
+        $('#button-loader').remove();
+        $('#gias-mobile-filter-submit').append("<span class='mobile-count'> ("+ count+")</span>");
       }
     });
   }
@@ -78,25 +85,25 @@ import OptionSelect from '../GiasSearchFilters/OptionSelect';
     if (canSubmit){
       $resultsContainer.addClass('pending-results-update');
       filterIntent = window.setTimeout(function () {
-        searchParams = $('#filter-form-ind').serialize();
+        searchParams = $('#filter-form').find(':input').serialize();
         getResults();
       }, 1200);
     }
 
   });
 
-  filterForm.find('.form-control').on('focus', function() {
+  filterForm.find('.govuk-input').on('focus', function() {
     window.clearTimeout(filterIntent);
   });
 
   filterForm.find('.filter-button').on('click', function(e) {
     e.preventDefault();
     window.clearTimeout(filterIntent);
-    var canSubmit = GiasFilterValidation.validateDateFilters('date-filter');
+    const canSubmit = GiasFilterValidation.validateDateFilters('date-filter');
 
     if (canSubmit) {
       $resultsContainer.html(plsWait);
-      searchParams = $('#filter-form-ind').serialize();
+      searchParams = $('#filter-form').find(':input').serialize();
       getResults();
     }
   });
@@ -107,9 +114,47 @@ import OptionSelect from '../GiasSearchFilters/OptionSelect';
   $('#set-saver').on('click',
     function(e) {
       e.preventDefault();
-      var params = $('#option-select-local-authority').find(':input').serialize() + '&referrer=results&Mode=' + document.getElementById('Mode').value;
+      const params = $('#option-select-local-authority').find(':input').serialize() + '&referrer=results&Mode=' + document.getElementById('Mode').value;
       window.location = '/independent-schools/predefined-local-authority-sets/create?' + params;
 
     });
 
+  $('#clear-filters, #clear-filters-additional').on('click', (e)=> {
+    e.preventDefault();
+    window.clearTimeout(filterIntent);
+    filterForm.find('input[type="text"]').val('');
+    const selectedFilters = filterForm
+      .find('.options-container .trigger-result-update')
+      .filter(function (n, item) {
+        return $(item).prop('checked');
+      });
+    selectedFilters.prop('checked', false);
+
+    filterForm.find('.govuk-option-select').each(function(n, container){
+      $(container).find('.trigger-result-update').slice(0, 1).trigger('change');
+    });
+  });
+
 }());
+
+let popupFilters;
+if ($(window).width() < 835) {
+  popupFilters = new GiasFilterToggle();
+}
+
+window.addEventListener('resize',
+  _throttle(function(){
+    if($(window).width() < 835) {
+      if (typeof popupFilters === 'undefined') {
+        popupFilters = new GiasFilterToggle();
+      } else {
+        if(!popupFilters.initialised) {
+          popupFilters.init();
+        }
+      }
+    } else {
+      if (typeof popupFilters !== 'undefined') {
+        popupFilters.destroy()
+      }
+    }
+  }, 250));

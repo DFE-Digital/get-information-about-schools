@@ -89,24 +89,20 @@
   }
 }
 
-.nested-items {
+.filter-group {
   margin: 0;
 
-  .filter-group {
-    margin: 0;
+  .govuk-checkboxes__item {
+    padding-left: 35px;
+  }
 
-    .govuk-checkboxes__item {
-      padding-left: 35px;
+  .govuk-checkboxes__label {
+    &::before {
+      left: 15px;
     }
 
-    .govuk-checkboxes__label {
-      &::before {
-        left: 15px;
-      }
-
-      &::after {
-        left: 18px;
-      }
+    &::after {
+      left: 18px;
     }
   }
 }
@@ -148,5 +144,21 @@
 
   @include govuk-media-query($until: desktop) {
     max-width: 90%;
+  }
+}
+
+.change-history-filter-controls {
+  display: block;
+  position: relative;
+  min-height: 30px;
+
+  .add-clear-filters {
+    right: 0;
+  }
+
+  .no-js & {
+    .add-clear-filters {
+      display: none;
+    }
   }
 }

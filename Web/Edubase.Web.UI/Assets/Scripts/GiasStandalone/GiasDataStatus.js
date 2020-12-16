@@ -46,7 +46,6 @@ class CheckGiasDataStatus {
       closeButtonClass: '.data-status-exit'
     });
 
-    modal.openModal();
     window.DfECookieManager.setCookie('dataStatusViewed', 'true', { days: opts.cookieExpiresIn });
   }
 }

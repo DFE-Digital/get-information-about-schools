@@ -10,7 +10,7 @@
                 @Html.Partial("_GenericPaginationV2", Model.Results)
             </div>
 
-
+            <span id='list-count' class="hidden">@Model.Results.Count</span>
             <table class="govuk-table gias-table independent-search-results">
                 <caption class="govuk-visually-hidden">Independent schools search results</caption>
                 <thead class="govuk-table__head">

@@ -1,7 +1,8 @@
 import Vue from 'vue';
-import errorSummary from '../GiasVueComponents/ErrorSummary';
+import errorSummary from '../GiasVueComponents/errorSummary';
 import GiasRadio from '../GiasVueComponents/GiasRadio';
 import GiasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
+
 const mergersApp = new Vue({
   el: '#mergers-app',
   components: {
@@ -163,7 +164,7 @@ const mergersApp = new Vue({
 
     errorFocus: function () {
       window.document.title = "Error: Amalgamations and mergers tool - GOV.UK";
-      $('.govuk-error-summary').focus()
+      $('.govuk-error-summary').focus();
     },
     checkIfInvalid: function(component){
       return this[component].length && this[component].length < 5 || isNaN(this[component])
@@ -206,9 +207,7 @@ const mergersApp = new Vue({
             message: 'The establishment '+ index + ' URN was not found',
             href: '#' + self.mergerType + '-estab' + index
           });
-          // self[component + 'Valid'] = false;
-          // self[component + 'NoMatch'] = true;
-          // self[component + 'UrnChecked'] = true;
+
         },
         complete: function () {}
       });
@@ -238,6 +237,7 @@ const mergersApp = new Vue({
           href: '#amalgamation-estab1'
         });
       }
+      this.validateField('amalgamatedEstab1', 'amalgamatedUrn1Error', 'amalgamation-estab1');
 
       if (this.amalgamatedEstab2 === '') {
         this.amalgamatedUrn2Error = 'Enter the establishment 2 URN';
@@ -246,6 +246,8 @@ const mergersApp = new Vue({
           href: '#amalgamation-estab2'
         })
       }
+
+      this.validateField('amalgamatedEstab2','amalgamatedUrn2Error', 'amalgamation-estab2');
 
       const hasDupes = this.hasDuplicateUrn();
       if (hasDupes) {
@@ -272,8 +274,7 @@ const mergersApp = new Vue({
       }
 
 
-      this.validateField('amalgamatedEstab1', 'amalgamatedUrn1Error', 'amalgamation-estab1');
-      this.validateField('amalgamatedEstab2','amalgamatedUrn2Error', 'amalgamation-estab2');
+
       this.validateField('amalgamatedEstab3', 'amalgamatedUrn3Error', 'amalgamation-estab3');
       this.validateField('amalgamatedEstab4', 'amalgamatedUrn4Error', 'amalgamation-estab4');
 
@@ -315,6 +316,7 @@ const mergersApp = new Vue({
           href: '#merger-estab1'
         });
       }
+      this.validateField('mergerEstab0', 'mergerUrn0Error', 'merger-estab0');
 
       if (this.mergerEstab1 === '') {
         this.mergerUrn1Error = 'Enter the establishment 1 URN';
@@ -323,6 +325,7 @@ const mergersApp = new Vue({
           href: '#merger-estab2'
         });
       }
+      this.validateField('mergerEstab1','mergerUrn1Error', 'merger-estab1');
 
       const hasDupes = this.hasDuplicateUrn();
       if (hasDupes) {
@@ -348,8 +351,6 @@ const mergersApp = new Vue({
         }
       }
 
-      this.validateField('mergerEstab0', 'mergerUrn0Error', 'merger-estab0');
-      this.validateField('mergerEstab1','mergerUrn1Error', 'merger-estab1');
       this.validateField('mergerEstab2', 'mergerUrn2Error', 'merger-estab2');
       this.validateField('mergerEstab3', 'mergerUrn3Error', 'merger-estab3');
 

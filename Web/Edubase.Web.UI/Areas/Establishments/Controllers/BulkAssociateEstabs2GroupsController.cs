@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
@@ -55,6 +56,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var viewModel = new BulkAssociateEstabs2GroupsViewModel();
             var apiResponse = await _establishmentWriteService.BulkAssociateEstabs2GroupsGetProgressAsync(id, User);
             return await ResultInternalAsync(id, viewModel, apiResponse);
+        }
+
+        [Route(BaseUri + "-ajax/{id}", Name = "BulkAssociateEstabs2GroupsResultAjax"), HttpGet]
+        public async Task<ActionResult> ResultAsyncAjax(Guid id)
+        {
+            var viewModel = new BulkAssociateEstabs2GroupsViewModel();
+            var apiResponse = await _establishmentWriteService.BulkAssociateEstabs2GroupsGetProgressAsync(id, User);
+            return await ResultInternalAjaxAsync(id, viewModel, apiResponse);
         }
 
         private async Task<ActionResult> ResultInternalAsync(Guid id, BulkAssociateEstabs2GroupsViewModel viewModel, ApiResponse<BulkUpdateProgressModel> apiResponse)
@@ -114,6 +123,31 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 AddApiErrorsToModelState(apiResponse.Errors, ErrorLinkFile);
                 return View(ViewName, viewModel);
+            }
+            else
+            {
+                throw new Exception("ApiResponse indicated failure, but no errors were supplied");
+            }
+        }
+
+         private async Task<ActionResult> ResultInternalAjaxAsync(Guid id, BulkAssociateEstabs2GroupsViewModel viewModel, ApiResponse<BulkUpdateProgressModel> apiResponse)
+        {
+            if (apiResponse.Success)
+            {
+                viewModel.Result = apiResponse.GetResponse();
+
+                return Json(JsonConvert.SerializeObject(new
+                {
+                    status = viewModel.Result.IsCompleted(), redirect = string.Concat("/Establishments/bulk-associate-estabs-to-groups/", id)
+                }));
+            }
+            else if (apiResponse.HasErrors)
+            {
+                // tell the ajax that the request is complete and redirect so the error page loads
+                return Json(JsonConvert.SerializeObject(new
+                {
+                    status = true, redirect = string.Concat("/Establishments/bulk-associate-estabs-to-groups/", id)
+                }));
             }
             else
             {

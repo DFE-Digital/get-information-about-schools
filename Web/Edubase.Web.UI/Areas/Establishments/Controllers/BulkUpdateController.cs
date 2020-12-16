@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
@@ -85,6 +86,18 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 vm.OverrideCRProcess = dto.OverrideCRProcess;
                 return View("Index", vm);
             }
+        }
+
+        [HttpGet, Route("resultAjax/{id}/{state}")]
+        public async Task<ActionResult> ResultAjax(Guid id, string state)
+        {
+            var model = await _establishmentWriteService.BulkUpdateAsync_GetProgressAsync(id, User);
+            return Json(JsonConvert.SerializeObject(new
+            {
+                status = model.IsCompleted(),
+                redirect = string.Concat("/Establishments/BulkUpdate/result/", id,"/", state)
+            }), JsonRequestBehavior.AllowGet);
+
         }
     }
 }
