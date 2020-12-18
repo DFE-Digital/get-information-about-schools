@@ -49,7 +49,7 @@ namespace Edubase.Web.UI.Models
             if (UserCanCreateSchoolTrustGroup) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new school trust", "CreateNewGroup", "Group", new { area = "Groups", type = "Trust" }, null), Description = "Enter the trust's name and select the opening date and status." });
             if (UserCanCreateAcademySponsor) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new academy sponsor", "CreateNewGroup", "Group", new { area = "Groups", type = "Sponsor" }, null), Description = "Enter the sponsor's name and select the open date and status." });
             if (UserCanCreateAcademyTrustGroup) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new academy trust", "SearchCompaniesHouse", "Group", new { area = "Groups" }, null), Description = "Set up a new record for your school trust." });
-            if (UserCanConvertAcademyTrusts) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Convert a single academy trust", "GroupConvertSAT2MAT"), Description = "Convert a single academy trust (SAT) to a multi academy trust (MAT)." });
+            if (UserCanConvertAcademyTrusts) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Convert academy trusts", "GroupConvertSAT2MAT"), Description = "Convert a single-academy trust into a multi-academy trust." });
 
             return retVal;
         }
