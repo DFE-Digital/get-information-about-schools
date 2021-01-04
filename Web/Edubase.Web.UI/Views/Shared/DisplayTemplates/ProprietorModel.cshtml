@@ -1,21 +1,40 @@
+@using Edubase.Services.Establishments.DisplayPolicies
 @model Edubase.Services.Establishments.Models.ProprietorModel
 @{
     var labelPrefix = ViewData["prefix"] ?? "Proprietor's";
+    var displayPolicy = ViewData["displayPolicy"] as ProprietorFieldList<bool> ?? new ProprietorFieldList<bool>();
 }
 
-<div class="gias-summary-list__row">
-    <dt class="gias-summary-list__key">@labelPrefix name:</dt>
-    <dd class="gias-summary-list__value">@(Model.Name ?? "Not recorded")</dd>
-</div>
-<div class="gias-summary-list__row">
-    <dt class="gias-summary-list__key">@labelPrefix address:</dt>
-    <dd class="gias-summary-list__value">@(Model.GetAddress() ?? "Not recorded")</dd>
-</div>
-<div class="gias-summary-list__row">
-    <dt class="gias-summary-list__key">@labelPrefix telephone:</dt>
-    <dd class="gias-summary-list__value">@(Model.TelephoneNumber ?? "Not recorded")</dd>
-</div>
-<div class="gias-summary-list__row">
-    <dt class="gias-summary-list__key">@labelPrefix email:</dt>
-    <dd class="gias-summary-list__value">@(Model.Email ?? "Not recorded")</dd>
-</div>
+
+@if (displayPolicy.Name)
+{
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">@labelPrefix name:</dt>
+        <dd class="gias-summary-list__value">@(Model.Name ?? "Not recorded")</dd>
+    </div>
+}
+
+@if (displayPolicy.Address3)
+{
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">@labelPrefix address:</dt>
+        <dd class="gias-summary-list__value">@(Model.GetAddress() ?? "Not recorded")</dd>
+    </div>
+}
+
+@if (displayPolicy.TelephoneNumber)
+{
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">@labelPrefix telephone:</dt>
+        <dd class="gias-summary-list__value">@(Model.TelephoneNumber ?? "Not recorded")</dd>
+    </div>
+}
+
+@if (displayPolicy.Email)
+{
+    <div class="gias-summary-list__row">
+        <dt class="gias-summary-list__key">@labelPrefix email:</dt>
+        <dd class="gias-summary-list__value">@(Model.Email ?? "Not recorded")</dd>
+    </div>
+}
+

@@ -1,7 +1,12 @@
 @using Edubase.Common.Text
 @using Edubase.Services.Enums
+@using Edubase.Services.Establishments.DisplayPolicies
 @using HtmlHelpers.BeginCollectionItem
 @model ProprietorViewModel
+
+@{
+    var displayPolicy = ViewData["displayPolicy"] as ProprietorFieldList<bool> ?? new ProprietorFieldList<bool>();
+}
 
 <div class="proprietorRow">
     @if (ViewBag.ShowCounter != null && ViewBag.ProprietorTypeId != (int)eProprietorType.ProprietorBody)
@@ -27,6 +32,6 @@
 
     @using (Html.BeginCollectionItem("Proprietors"))
     {
-        @Html.EditorFor(x => x, new { ProprietorType = "proprietors" });
+        @Html.EditorFor(x => x, new { ProprietorType = "proprietors", displayPolicy});
     }
 </div>

@@ -318,7 +318,7 @@
                     }
                     <div id="@eProprietorType.ProprietorBody.ToString()-chair" class="@(Model.ProprietorTypeId.OneOfThese(eProprietorType.ProprietorBody)? "": "hidden")">
                         <h4 class="govuk-heading-s">Chair of the proprietary body details</h4>
-                        @Html.EditorFor(x => x.ChairOfProprietor, new {ProprietorType = "chairOfProprietor"})
+                        @Html.EditorFor(x => x.ChairOfProprietor, new {ProprietorType = "chairOfProprietor", displayPolicy = Model.EditPolicy.IEBTDetail.ChairOfProprietor})
                     </div>
                 </div>
                 </fieldset>
