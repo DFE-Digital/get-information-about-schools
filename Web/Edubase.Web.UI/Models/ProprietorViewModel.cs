@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Web.Mvc;
 using Edubase.Common;
-using Edubase.Services.Establishments.DisplayPolicies;
 
 namespace Edubase.Web.UI.Models
 {
@@ -51,7 +50,5 @@ namespace Edubase.Web.UI.Models
         public string CountyName => Counties.Where(x => x.Value.Equals(CountyId)).Select(x => x.Text).ToString();
 
         public Guid Index  => Guid.NewGuid();
-
-        public ProprietorFieldList<bool> DisplayPolicy { get; set; } 
     }
 }

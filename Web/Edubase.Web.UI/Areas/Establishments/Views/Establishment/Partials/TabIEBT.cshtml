@@ -425,12 +425,12 @@
 
 @if (Model.DisplayPolicy.IEBTDetail.AnyProprietors)
 {
-    @Html.DisplayFor(x => x.Establishment.IEBTModel.Proprietors)
+    @Html.DisplayFor(x => x.Establishment.IEBTModel.Proprietors, new {displayPolicy = Model.DisplayPolicy.IEBTDetail.Proprietors})
 }
 
 @if (Model.DisplayPolicy.IEBTDetail.AnyChairOfProprietors)
 {
-    @Html.DisplayFor(x => x.Establishment.IEBTModel.ChairOfProprietor, "ProprietorModel", new {prefix = "Chair of the proprietary body"})
+    @Html.DisplayFor(x => x.Establishment.IEBTModel.ChairOfProprietor, "ProprietorModel", new {prefix = "Chair of the proprietary body", displayPolicy = Model.DisplayPolicy.IEBTDetail.ChairOfProprietor})
 }
 
 
