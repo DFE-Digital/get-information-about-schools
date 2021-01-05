@@ -96,6 +96,9 @@ namespace Edubase.Services.Texuna.Establishments
         public async Task<EstablishmentEditPolicyEnvelope> GetEditPolicyAsync(EstablishmentModel establishment, IPrincipal user)
                     => (await _httpClient.GetAsync<EstablishmentEditPolicyEnvelope>($"establishment/{establishment.Urn}/edit-policy", user)).GetResponse().Initialise(establishment);
 
+        public async Task<EstablishmentEditPolicyEnvelope> GetEditPolicyByUrnAsync(int urn, IPrincipal user)
+                    => (await _httpClient.GetAsync<EstablishmentEditPolicyEnvelope>($"establishment/{urn}/edit-policy", user)).GetResponse();
+
         public async Task<string> GetEstablishmentNameAsync(int urn, IPrincipal principal) => (await GetAsync(urn, principal)).GetResult().Name;
 
         public Dictionary<ET, EP[]> GetEstabType2EducationPhaseMap()

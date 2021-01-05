@@ -377,14 +377,18 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View("EditIEBT", viewModel);
         }
 
-        [HttpGet, EdubaseAuthorize, Route("Proprietor/Add/{counter:int}")]
-        public async Task<PartialViewResult> ProprietorAdd(int? counter)
+        [HttpGet, EdubaseAuthorize, Route("Proprietor/Add/{urn:int}/{counter:int}")]
+        public async Task<PartialViewResult> ProprietorAdd(int urn, int? counter)
         {
             var emptyProprietor = new ProprietorViewModel
             {
                 Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList(),
             };
             ViewBag.ShowCounter = counter;
+
+            var editPolicy = (await _establishmentReadService.GetEditPolicyByUrnAsync(urn, User)).EditPolicy;
+            ViewData.Add("displayPolicy", editPolicy.IEBTDetail.Proprietors);
+
             return PartialView("Partials/_EditProprietors", emptyProprietor);
         }
 

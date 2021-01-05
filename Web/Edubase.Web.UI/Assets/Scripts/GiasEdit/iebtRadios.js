@@ -104,7 +104,7 @@ const iebtRadios = {
     $("#addProprietor").click(function (e) {
       e.preventDefault();
       $.ajax({
-        url: "/Establishments/Establishment/Proprietor/Add/" + ($('.proprietorRow').length + 1),
+        url: "/Establishments/Establishment/Proprietor/Add/" + ($('#Urn').val()) + "/" + ($('.proprietorRow').length + 1),
         cache: false,
         success: function (html) {
           const currentPosition = $(window).scrollTop();
