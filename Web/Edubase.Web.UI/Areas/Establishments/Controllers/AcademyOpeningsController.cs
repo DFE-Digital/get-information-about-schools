@@ -240,7 +240,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("ManageAcademyOpenings");
         }
 
         [HttpGet, Route("search-academies", Name = "SearchAcademyOpenings")]
