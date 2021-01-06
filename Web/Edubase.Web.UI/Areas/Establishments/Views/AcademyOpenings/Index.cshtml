@@ -1,8 +1,34 @@
-
+@model ManageAcademyOpeningsViewModel
 @{
     ViewBag.Title = "Manage academy openings";
     ViewBag.bodyClasses = "manage-academy-openings";
     ViewBag.SiteSection = "tools";
+    ViewBag.AdditionalDevWarning = "THIS PAGE HAS DIFFERENT BEHAVIOUR WITH JS DISABLED";
+
+    var request = HttpContext.Current.Request;
+    var sortDir = "desc";
+    var sortDirText = "a descending order";
+    var sortField = "OpenDate";
+
+    if (request.QueryString["sortby"] != null)
+    {
+        sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
+        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
+        sortDirText = (request.QueryString["sortby"] ?? "").Contains("asc") ? "an ascending order" : "a descending order";
+    }
+
+    var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";
+    var unsortedDescription = ". Click to sort data by this column.";
+
+    var tableColumns = new List<Tuple<string, string>>
+    {
+        Tuple.Create("OpenDate", "Opening date"),
+        Tuple.Create("Urn", "URN"),
+        Tuple.Create("EstablishmentName", "Establishment name"),
+        Tuple.Create("EstablishmentType", "Establishment type"),
+        Tuple.Create("PredecessorUrn", "Predecessor URN"),
+        Tuple.Create("PredecessorName", "Predecessor name"),
+    };
 }
 
 @section BreadCrumbs
@@ -23,7 +49,9 @@
     </div>
 }
 
-<div id="academy-opening-app" v-cloak>
+
+
+<div id="academy-opening-app"  class="js-show-block " v-cloak>
 <div class="govuk-grid-row">
 <div class="govuk-grid-column-full">
     <!-- Error summary -->
@@ -311,6 +339,81 @@
 </div>
 </div>
 </div>
+
+@* no js *@
+<div class="govuk-grid-row js-hidden">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Manage academy openings</h1>
+    </div>
+    <div class="govuk-grid-column-full">
+        <div class="tab-wrap">
+            <ul class="gias-tabs">
+                <li class="gias-tabs__list-item gias-tabs__list-item--selected">
+                    <a href="#calendar" class="gias-tabs__tab">Opening calendar</a>
+                </li>
+                <li class="gias-tabs__list-item">
+                    @Html.ActionLink("Academy search",
+                        "SearchAcademyOpenings",
+                        "AcademyOpenings",
+                        new {area = "Establishments"},
+                        new {@class = "gias-tabs__tab"})
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="govuk-grid-column-full">
+        <div class="top-pagination">
+            @Html.Partial("_GenericPaginationV2", Model)
+        </div>
+        <table class="govuk-table gias-table academy-openings sortable-table" id="openings-table">
+            <caption class="govuk-visually-hidden">Academy openings</caption>
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                @foreach (var tableColumn in tableColumns)
+                {
+                    <th scope="col" class="govuk-table__header">
+                        <a href="@Url.SortUrl(tableColumn.Item1)"
+                           class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                           aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">
+                            @tableColumn.Item2
+                        </a>
+                    </th>
+                }
+                <th scope="col" class="govuk-table__header cell-edit">
+                    <span class="govuk-visually-hidden">Action links</span>
+                </th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            @{
+                var i = 0;
+            }
+            @foreach (var record in Model.Items)
+            {
+                <tr class="govuk-table__row row-@i">
+                    <td data-label="Opening date" class="govuk-table__cell cell-openingdate">
+                        @record.OpenDate.ToString("dd MMMM yyyy")
+                    </td>
+                    <td data-label="URN" class="govuk-table__cell">
+                        @Html.ActionLink(record.Urn.ToString(), "Details", "Establishment", new {id = record.Urn}, new {@class = "govuk-link"})
+                    </td>
+                    <td data-label="Establishment name" class="govuk-table__cell">@record.EstablishmentName</td>
+                    <td data-label="Establishment type" class="govuk-table__cell">@record.EstablishmentType</td>
+                    <td data-label="Predecessor URN" class="govuk-table__cell">
+                        @Html.ActionLink(record.PredecessorUrn.ToString(), "Details", "Establishment", new {id = record.PredecessorUrn}, new {@class = "govuk-link"})
+                    </td>
+                    <td data-label="Predecessor name" class="govuk-table__cell">@record.PredecessorName</td>
+                    <td class="cell-edit govuk-table__cell">@Html.ActionLink("Edit", "EditAcademyOpening", "AcademyOpenings", new {area = "Establishments", urn = record.Urn}, new {@class = "govuk-link"})</td>
+
+                </tr>
+                i++;
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
 
 @section ViewScripts {
     <script src="/public/assets/scripts/build/manage-academy-openings.js"></script>
