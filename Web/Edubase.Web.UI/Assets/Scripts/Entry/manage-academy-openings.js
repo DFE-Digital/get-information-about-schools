@@ -380,9 +380,9 @@ const academyOpenings = new Vue({
       }
 
       const datePages = this.openingAcademies.filter(function (opening) {
-        const oDateParts = opening.displayDate.split('/');
-        const oDateMonth = parseInt(oDateParts[1], 10) - 1;
-        const oDateYear = parseInt(oDateParts[2], 10);
+        const oDateParts = opening.openingDate.split('-');
+        const oDateMonth = parseInt(oDateParts[1], 10) -1;
+        const oDateYear = parseInt(oDateParts[0], 10);
 
         return oDateMonth === month && oDateYear === year;
 
