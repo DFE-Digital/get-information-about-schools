@@ -251,7 +251,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route("search-academies", Name = "SearchAcademyOpenings")]
-        public async Task<ActionResult> SearchAcademyOpenings(int? urn)
+        public async Task<ActionResult> SearchAcademyOpenings(int? urn, bool? isSearching)
         {
 
             if (urn.HasValue)
@@ -289,6 +289,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     OpeningDate = new UI.Models.DateTimeViewModel(establishment.OpenDate)
                 };
                 return View("SearchAcademyOpenings", viewModel);
+            }
+
+            if (isSearching ?? false)
+            {
+                ModelState.AddModelError("Urn", "Please enter a valid URN");
             }
 
             return View("SearchAcademyOpenings", new EditAcademyOpeningViewModel());

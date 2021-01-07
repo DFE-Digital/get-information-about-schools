@@ -34,6 +34,7 @@
             </div>
         </div>
     </div>
+    @Html.HiddenFor(x=> x.IsSearching, new { Value="true" })
 }
 
 @if (Model.EstablishmentName != null)

@@ -20,5 +20,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
         public DateTimeViewModel OpeningDate { get; set; } = new DateTimeViewModel();
 
         public DateTime OpenDate { get; set; }
+
+        public bool IsSearching { get; set; } = false;
     }
 }
