@@ -401,7 +401,11 @@
                     <td data-label="Establishment name" class="govuk-table__cell">@record.EstablishmentName</td>
                     <td data-label="Establishment type" class="govuk-table__cell">@record.EstablishmentType</td>
                     <td data-label="Predecessor URN" class="govuk-table__cell">
-                        @Html.ActionLink(record.PredecessorUrn.ToString(), "Details", "Establishment", new {id = record.PredecessorUrn}, new {@class = "govuk-link"})
+                        @if (record.PredecessorUrn != 0)
+                        {
+                           @Html.ActionLink(record.PredecessorUrn.ToString(), "Details", "Establishment", new {id = record.PredecessorUrn}, new {@class = "govuk-link"})
+                        }
+
                     </td>
                     <td data-label="Predecessor name" class="govuk-table__cell">@record.PredecessorName</td>
                     <td class="cell-edit govuk-table__cell">@Html.ActionLink("Edit", "EditAcademyOpening", "AcademyOpenings", new {area = "Establishments", urn = record.Urn}, new {@class = "govuk-link"})</td>
