@@ -284,8 +284,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                         establishment.TypeId.HasValue
                             ? estabTypes.FirstOrDefault(t => t.Id == establishment.TypeId)?.Name
                             : null,
-                    PredecessorUrn = link.Urn.GetValueOrDefault().ToString(),
-                    PredecessorName = link.EstablishmentName,
+                    PredecessorUrn = link?.Urn.GetValueOrDefault().ToString(),
+                    PredecessorName = link?.EstablishmentName,
                     OpeningDate = new UI.Models.DateTimeViewModel(establishment.OpenDate),
                     OpenDate = establishment.OpenDate ?? DateTime.Now
                 };

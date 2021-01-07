@@ -67,11 +67,15 @@
             <div class="gias-summary-list__row">
                 <dt class="gias-summary-list__key">Predecessor <abbr title="Unique Reference Number">URN</abbr>:</dt>
                 <dd class="gias-summary-list__value">
-                    @Html.ActionLink(Model.PredecessorUrn.ToString(),
-                        "Details",
-                        "Establishment",
-                        new {id = Model.PredecessorUrn, area = "Establishments"},
-                        new {@class = "govuk-link"})
+                    @if (Model.PredecessorUrn != null)
+                    {
+                        @Html.ActionLink(Model.PredecessorUrn.ToString(),
+                            "Details",
+                            "Establishment",
+                            new {id = Model.PredecessorUrn, area = "Establishments"},
+                            new {@class = "govuk-link"})
+                    }
+                    
                 </dd>
             </div>
             <div class="gias-summary-list__row">
