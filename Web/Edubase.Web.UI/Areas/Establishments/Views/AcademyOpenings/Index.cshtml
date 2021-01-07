@@ -401,7 +401,7 @@
                     <td data-label="Establishment name" class="govuk-table__cell">@record.EstablishmentName</td>
                     <td data-label="Establishment type" class="govuk-table__cell">@record.EstablishmentType</td>
                     <td data-label="Predecessor URN" class="govuk-table__cell">
-                        @if (record.PredecessorUrn != 0)
+                        @if (record.PredecessorUrn.Length > 2)
                         {
                            @Html.ActionLink(record.PredecessorUrn.ToString(), "Details", "Establishment", new {id = record.PredecessorUrn}, new {@class = "govuk-link"})
                         }

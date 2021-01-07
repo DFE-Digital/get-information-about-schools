@@ -12,7 +12,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
 
         public string EstablishmentType { get; set; }
 
-        public int PredecessorUrn { get; set; }
+        public string PredecessorUrn { get; set; }
 
         public string PredecessorName { get; set; }
 
