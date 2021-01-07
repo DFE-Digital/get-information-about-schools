@@ -118,6 +118,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 case "EstablishmentName-desc":
                     academyOpenings.Sort((x, y) => y.EstablishmentName.CompareTo(x.EstablishmentName));
                     break;
+
+                case "EstablishmentType-asc":
+                    academyOpenings.Sort((x, y) => x.EstablishmentType.CompareTo(y.EstablishmentType));
+                    break;
+                case "EstablishmentType-desc":
+                    academyOpenings.Sort((x, y) => y.EstablishmentType.CompareTo(x.EstablishmentType));
+                    break;
                 case "PredecessorUrn-asc":
                     academyOpenings.Sort((x, y) => x.PredecessorUrn.CompareTo(y.PredecessorUrn));
                     break;
