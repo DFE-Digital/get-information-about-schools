@@ -286,7 +286,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                             : null,
                     PredecessorUrn = link.Urn.GetValueOrDefault(),
                     PredecessorName = link.EstablishmentName,
-                    OpeningDate = new UI.Models.DateTimeViewModel(establishment.OpenDate)
+                    OpeningDate = new UI.Models.DateTimeViewModel(establishment.OpenDate),
+                    OpenDate = establishment.OpenDate ?? DateTime.Now
                 };
                 return View("SearchAcademyOpenings", viewModel);
             }
