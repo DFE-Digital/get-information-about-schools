@@ -9,8 +9,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Castle.Components.DictionaryAdapter;
 using Edubase.Services.Governors;
 using Edubase.Services.Texuna.Governors;
+using Edubase.Web.UI.Areas.Establishments.Controllers;
 using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
@@ -106,10 +108,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         [HttpPost, Route("Create/{type}"), EdubaseAuthorize]
         public async Task<ActionResult> Create(GroupEditorViewModel viewModel, string type)
         {
+            await PopulateSelectLists(viewModel);
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);
-
-            await PopulateSelectLists(viewModel);
 
             await ValidateAsync(viewModel);
 
@@ -117,6 +118,55 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 var actionResult = await ProcessCreateEditGroup(viewModel);
                 if (actionResult != null) return actionResult;
+            }
+
+            if (ModelState.IsValid)
+            {
+                ModelState.Remove("ActionName");
+
+                // because some of the lookups contain the action urn as part of the action string, we want to strip that back out for the comparison
+                var actionLookup = viewModel.Action.IndexOf('-') == -1 ? viewModel.Action : string.Concat(viewModel.Action.Split('-').First(),"-");
+
+                // we only want to progress the view if it's successful
+                switch (actionLookup)
+                {
+                    case ActionCcCreate:
+                        viewModel.ActionName = eChildrensCentreActions.Step2;
+                        break;
+                    case ActionSave:
+                        viewModel.ActionName = eChildrensCentreActions.Step3;
+                        break;
+                    case ActionLinkedEstablishmentSearch:
+                        viewModel.ActionName = eChildrensCentreActions.Step4;
+                        break;
+                    case ActionLinkedEstablishmentAdd:
+                        foreach (var msKey in ModelState.Keys.Where(x => x.StartsWith("LinkedEstablishments")).ToList())
+                        {
+                            ModelState.Remove(msKey);
+                        }
+                        viewModel.ActionName = eChildrensCentreActions.Step3;
+                        break;
+                    case ActionLinkedEstablishmentRemove:
+                        foreach (var msKey in ModelState.Keys.Where(x => x.StartsWith("LinkedEstablishments")).ToList())
+                        {
+                            ModelState.Remove(msKey);
+                        }
+                        break;
+                    case ActionLinkedEstablishmentEdit:
+                        foreach (var msKey in ModelState.Keys.Where(x => x.StartsWith("LinkedEstablishments")).ToList())
+                        {
+                            ModelState.Remove(msKey);
+                        }
+                        viewModel.ActionName = eChildrensCentreActions.Step4;
+                        break;
+                    case ActionLinkedEstablishmentCancelEdit:
+                        foreach (var msKey in ModelState.Keys.Where(x => x.StartsWith("LinkedEstablishments")).ToList())
+                        {
+                            ModelState.Remove(msKey);
+                        }
+                        viewModel.ActionName = eChildrensCentreActions.Step3;
+                        break;
+                }
             }
 
             return viewModel.GroupTypeMode == eGroupTypeMode.ChildrensCentre
@@ -516,6 +566,28 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Reset();
         }
 
+        private SaveGroupDto CreateValidateDto(GroupEditorViewModel viewModel)
+        {
+            var dto = new SaveGroupDto
+            {
+                Group = new GroupModel
+                {
+                    GroupTypeId = viewModel.GroupTypeId,
+                    LocalAuthorityId = viewModel.LocalAuthorityId,
+                    Name = viewModel.GroupName,
+                    OpenDate = viewModel.OpenDate.ToDateTime()
+                },
+                LinkedEstablishments = viewModel?.LinkedEstablishments?.Establishments?.Select(e => new LinkedEstablishmentGroup
+                    {
+                        CCIsLeadCentre = e?.CCIsLeadCentre ?? false,
+                        Urn = e?.Urn,
+                        JoinedDate = e?.JoinedDate
+                    })
+                    .ToList()
+            };
+            return dto;
+        }
+
         private SaveGroupDto CreateSaveDto(GroupEditorViewModel viewModel)
         {
             viewModel.SetCCLeadCentreUrn();
@@ -544,6 +616,74 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 CCIsLeadCentre = x.CCIsLeadCentre
             }).ToList();
 
+            List<LinkedEstablishmentGroup> createLinkedEstablishmentFromSearch(bool isSearch = false) => new List<LinkedEstablishmentGroup>
+            {
+                new LinkedEstablishmentGroup
+                {
+                    Urn = viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Urn.ToInteger(),
+                    JoinedDate =
+                        viewModel.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate
+                            .ToDateTime() ?? viewModel.OpenDate.ToDateTime(),
+                    CCIsLeadCentre = isSearch || !createLinksDomainModel().Any(x => x.CCIsLeadCentre)
+                }
+            };
+
+            List<LinkedEstablishmentGroup> createLinkedEstablishmentFromEdit() => new List<LinkedEstablishmentGroup>
+            {
+                new LinkedEstablishmentGroup
+                {
+                    Urn = viewModel.LinkedEstablishments.Establishments.First(x => x.Urn == viewModel.ActionUrn).Urn,
+                    JoinedDate = viewModel.LinkedEstablishments.Establishments.First(x => x.Urn == viewModel.ActionUrn).JoinedDate,
+                    CCIsLeadCentre = true // the validation always needs this to be set to true when in edit
+                }
+            };
+
+            List<LinkedEstablishmentGroup> createLinkedEstablishmentFromAdd()
+            {
+                var domainList = createLinksDomainModel();
+                if (domainList.Any(x => x.Urn == viewModel.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn))
+                {
+                    // edit
+                    domainList.First(x => x.Urn == viewModel.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn)
+                        .JoinedDate = viewModel.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate.ToDateTime();
+
+                    viewModel.LinkedEstablishments.Establishments.First(x =>
+                            viewModel.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn != null &&
+                            x.Urn == viewModel.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn.Value).JoinedDate
+                        = viewModel.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate.ToDateTime();
+                }
+                else
+                {
+                    // add
+                    domainList.AddRange(createLinkedEstablishmentFromSearch(false));
+                    if (viewModel.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn != null)
+                    {
+                        viewModel.LinkedEstablishments.Establishments.Add(new EstablishmentGroupViewModel
+                        {
+                            Name = viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Name,
+                            JoinedDate =
+                                viewModel.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate
+                                    .ToDateTime(),
+                            Urn = viewModel.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn.Value,
+                            CCIsLeadCentre = viewModel.LinkedEstablishments.Establishments.All(x => x.CCIsLeadCentre == false)
+                        });
+                    }
+                }
+                viewModel.LinkedEstablishments.LinkedEstablishmentSearch = new LinkedEstablishmentSearchViewModel();
+                return domainList;
+            }
+
+            List<LinkedEstablishmentGroup> createLinkedEstablishmentRemovedRefresh()
+            {
+                var domainList = createLinksDomainModel();
+                if (domainList.Any() && !domainList.Any(x => x.CCIsLeadCentre))
+                {
+                    domainList.First().CCIsLeadCentre = true;
+                    viewModel.LinkedEstablishments.Establishments.First().CCIsLeadCentre = true;
+                }
+                return domainList;
+            }
+
             SaveGroupDto dto = null;
             if (viewModel.SaveMode == eSaveMode.Details)
             {
@@ -551,7 +691,29 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
             else if (viewModel.SaveMode == eSaveMode.DetailsAndLinks)
             {
-                dto = new SaveGroupDto(createDomainModel(), createLinksDomainModel());
+                if (viewModel.Action == ActionLinkedEstablishmentSearch)
+                {
+                    dto = new SaveGroupDto(createDomainModel(), createLinkedEstablishmentFromSearch(true));
+                    _ = SearchForLinkedEstablishment(viewModel);
+                }
+                else if (viewModel.Action.StartsWith(ActionLinkedEstablishmentEdit))
+                {
+                    dto = new SaveGroupDto(createDomainModel(), createLinkedEstablishmentFromEdit());
+                    _ = EditLinkedEstablishment(viewModel);
+                }
+                else if (viewModel.Action == ActionLinkedEstablishmentAdd)
+                {
+                    dto = new SaveGroupDto(createDomainModel(), createLinkedEstablishmentFromAdd());
+                }
+                else if (viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove))
+                {
+                    viewModel.LinkedEstablishments.Establishments.RemoveAll(x => x.Urn == viewModel.ActionUrn);
+                    dto = new SaveGroupDto(createDomainModel(), createLinkedEstablishmentRemovedRefresh());
+                }
+                else
+                {
+                    dto = new SaveGroupDto(createDomainModel(), createLinksDomainModel());
+                }
             }
             else if (viewModel.SaveMode == eSaveMode.Links)
             {
@@ -620,7 +782,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
             else if (viewModel.Action == ActionLinkedEstablishmentCancelEdit)
             {
-
                 viewModel.LinkedEstablishments.Establishments.ForEach(x => x.EditMode = false);
             }
             else if (viewModel.Action.StartsWith(ActionLinkedEstablishmentEdit, StringComparison.OrdinalIgnoreCase))
@@ -655,6 +816,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     return RedirectToAction(nameof(Details), new { id = viewModel.GroupUId.Value, saved = true });
                 }
             }
+            else if (viewModel.Action == ActionCcCreate)
+            {
+                viewModel.GroupTypeName = viewModel.GroupTypeId.HasValue
+                    ? await _lookup.GetNameAsync(() => viewModel.GroupTypeId)
+                    : null;
+            }
             else
             {
                 throw new InvalidParameterException("The action parameter is invalid");
@@ -680,11 +847,20 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
         }
 
+        private async Task EditLinkedEstablishment(GroupEditorViewModel viewModel)
+        {
+            var model = viewModel.LinkedEstablishments.Establishments.First(x => x.Urn == viewModel.ActionUrn);
+            viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Name = model.Name;
+            viewModel.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn = model.Urn;
+            viewModel.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate = new DateTimeViewModel(model.JoinedDate);
+        }
+
         private async Task SearchForLinkedEstablishment(GroupEditorViewModel viewModel)
         {
             var urn = viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Urn;
             var result = await _establishmentReadService.GetAsync(urn.ToInteger().Value, User);
             var model = result.GetResult();
+            viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Urn = urn;
             viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Name = model?.Name;
             viewModel.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn = model?.Urn;
         }
@@ -694,12 +870,48 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         /// </summary>
         /// <param name="viewModel"></param>
         /// <returns></returns>
-        private async Task ValidateAsync(GroupEditorViewModel viewModel)
+        private async Task  ValidateAsync(GroupEditorViewModel viewModel)
         {
-            if (viewModel.Action == ActionSave && ModelState.IsValid)
+            if ((viewModel.Action == ActionSave
+                || viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove)
+                || viewModel.Action == ActionLinkedEstablishmentSearch
+                || viewModel.Action == ActionLinkedEstablishmentAdd
+                || viewModel.Action.StartsWith(ActionLinkedEstablishmentEdit)
+                || viewModel.Action == ActionLinkedEstablishmentCancelEdit
+                ) && ModelState.IsValid)
             {
                 var dto = CreateSaveDto(viewModel);
                 var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
+
+                if (viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove) ||
+                    viewModel.Action == ActionLinkedEstablishmentSearch ||
+                    viewModel.Action == ActionLinkedEstablishmentAdd ||
+                    viewModel.Action.StartsWith(ActionLinkedEstablishmentEdit) ||
+                    viewModel.Action == ActionLinkedEstablishmentCancelEdit)
+                {
+                    // ignore the message about the number of establishments in the group, as per JS behaviour
+                    for (var i = 0; i < validationEnvelope.Errors.Count; i++)
+                    {
+                        if (validationEnvelope.Errors[i].Code.Equals("error.validation.link.cc.one.linked.school"))
+                        {
+                            validationEnvelope.Errors.RemoveAt(i);
+                        }
+                    }
+                }
+
+                if (viewModel.Action == ActionSave)
+                {
+                    // we want to rebuild the screen once the removal has completed, so set the viewstate back to default
+                    viewModel.ClearWarnings();
+                }
+
+                if (viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove) || viewModel.Action == ActionLinkedEstablishmentCancelEdit)
+                {
+                    // we want to rebuild the screen once the removal has completed, so set the viewstate back to default
+                    viewModel.ClearWarnings();
+                    viewModel.ProcessedWarnings = false;
+                }
+
                 validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields?.Replace("Unmapped field: group.closedDate", nameof(viewModel.ClosedDate)) ?? string.Empty, x.GetMessage()));
                 viewModel.SetWarnings(validationEnvelope);
                 ModelState.Remove(nameof(viewModel.ProcessedWarnings));

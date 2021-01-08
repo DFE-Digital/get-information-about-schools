@@ -30,6 +30,14 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             [eGroupTypeMode.Sponsor] = "academy sponsor"
         };
 
+        public enum eChildrensCentreActions
+        {
+            Step1,
+            Step2,
+            Step3,
+            Step4
+        }
+
         public eGroupTypeMode GroupTypeMode
         {
             get
@@ -42,6 +50,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
                 else throw new NotImplementedException($"GroupTypeId '{GroupTypeId}' is not supported");
             }
         }
+
+        public eChildrensCentreActions ActionName { get; set; }
 
         public string ListOfEstablishmentsPluralName { get; set; }
         public string PageTitle => string.Concat(GroupUId.HasValue ? "Edit " : "Create new ", EntityName);
@@ -57,5 +67,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public int? StatusId { get; set; }
         public int? OriginalStatusId { get; set; }
         public int? UKPRN { get; set; }
+
+        public string CCTypeName => GroupTypeMode == eGroupTypeMode.ChildrensCentre ? GroupTypeName?.Split(' ').Last() ?? string.Empty : string.Empty;
     }
 }
