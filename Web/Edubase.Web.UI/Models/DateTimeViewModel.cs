@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Policy;
-using System.Globalization
+using System.Globalization;
 
 namespace Edubase.Web.UI.Models
 {
