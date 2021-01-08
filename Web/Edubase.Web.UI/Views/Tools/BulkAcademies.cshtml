@@ -162,7 +162,7 @@
                                 <td data-label="URN" class="govuk-table__cell">@est.Urn</td>
                                 <td data-label="Name" class="govuk-table__cell">@est.Name</td>
                                 <td data-label="Establishment type" class="govuk-table__cell">@Model.ItemTypes.FirstOrDefault(x => x.Value.Equals(est.EstablishmentTypeId.ToString(), StringComparison.InvariantCultureIgnoreCase)).Text</td>
-                                <td data-label="Opening date" class="govuk-table__cell">@est.OpeningDateView</td>
+                                <td data-label="Opening date" class="govuk-table__cell">@est.OpeningDateView.ToString()</td>
                                 <td class="govuk-table__cell">
                                     <button name="editUrn" value="@est.Urn" class="gias-link-button gias-link-button-s" aria-label="Edit establishment">Edit</button>
                                 </td>
@@ -218,7 +218,7 @@
                                     @Html.ActionLink(est.Name, "Details", "Establishment", new { id = est.ReplacedUrn, area = "Establishments" }, null)
                                 </td>
                                 <td data-label="Establishment type" class="govuk-table__cell">@Model.ItemTypes.FirstOrDefault(x => x.Value.Equals(est.EstablishmentTypeId.ToString(), StringComparison.InvariantCultureIgnoreCase)).Text</td>
-                                <td data-label="Opening date" class="govuk-table__cell">@est.OpeningDateView</td>
+                                <td data-label="Opening date" class="govuk-table__cell">@est.OpeningDateView.ToString()</td>
                             </tr>
                         }
 
