@@ -47,10 +47,11 @@
             @foreach (var item in Model.Items)
             {
                 var hasClause = (item.DataOwner == "Independent Education and Boarding Team");
+                var updated = new DateTime((int)item.LastUpdated.Year,(int) item.LastUpdated.Month, (int)item.LastUpdated.Day);
 
                 <tr class="govuk-table__row">
                     <td data-label="Establishment type" class="govuk-table__cell">@item.EstablishmentType.GetEnumMember()</td>
-                    <td data-label="Last updated" class="govuk-table__cell">@item.LastUpdated.ToString()</td>
+                    <td data-label="Last updated" class="govuk-table__cell">@updated.ToString("dd MMMM yyyy")</td>
                     <td data-label="Data owner" @Html.Raw(hasClause ? "aria-describedby = 'independent-pending'" : "") class="govuk-table__cell">
                         @item.DataOwner
                         @(hasClause ? "*" : "")
