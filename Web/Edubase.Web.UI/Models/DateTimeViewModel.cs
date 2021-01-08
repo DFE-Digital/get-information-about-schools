@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Policy;
+using System.Globalization
 
 namespace Edubase.Web.UI.Models
 {
@@ -51,8 +52,7 @@ namespace Edubase.Web.UI.Models
 
         public override string ToString()
         {
-            string[] months = { "", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
-            string thisMonth = months[Month ?? 0];
+            var thisMonth = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Month ?? 0);
             return $"{Day} {thisMonth} {Year}";
         } 
     }
