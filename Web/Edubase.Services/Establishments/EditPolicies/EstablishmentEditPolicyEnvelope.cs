@@ -26,26 +26,29 @@ namespace Edubase.Services.Establishments.EditPolicies
 
         public string GetApproverName(string fieldName)
         {
-            // temporary fix while investigate 43808
-            if (fieldName.StartsWith("IEBTModel.Proprietors", StringComparison.OrdinalIgnoreCase) ||
-                fieldName.StartsWith("IEBTModel.ChairOfProprietor", StringComparison.OrdinalIgnoreCase))
-            {
-                fieldName = fieldName.Substring(0, fieldName.LastIndexOf(".", StringComparison.Ordinal));
-            }
-
             var map = GetApprovalPolicies();
             return map.ContainsKey(fieldName) ? map[fieldName]?.ApproverName : null;
         }
 
         private Dictionary<string, ApprovalPolicy> GetApprovalPolicies()
         {
-            var map1 = GetType().GetProperties().Where(x => x.PropertyType == typeof(ApprovalPolicy))
+            var establishmentMap = GetType().GetProperties().Where(x => x.PropertyType == typeof(ApprovalPolicy))
                             .ToDictionary(x => x.Name, x => (ApprovalPolicy) x.GetValue(this, null));
 
-            var map2 = IEBTDetail.GetType().GetProperties().Where(x => x.PropertyType == typeof(ApprovalPolicy))
+            var iebtDetailMap = IEBTDetail.GetType().GetProperties().Where(x => x.PropertyType == typeof(ApprovalPolicy))
                 .ToDictionary(x => $"{nameof(IEBTModel)}.{x.Name}", x => (ApprovalPolicy) x.GetValue(IEBTDetail, null));
 
-            var map = map1.Concat(map2).ToDictionary(x => x.Key, x => x.Value);
+            var iebtProprietorsMap = IEBTDetail.Proprietors.GetType().GetProperties().Where(x => x.PropertyType == typeof(ApprovalPolicy))
+                .ToDictionary(x => $"{nameof(IEBTModel)}.{nameof(IEBTModel.Proprietors)}.{x.Name}", x => (ApprovalPolicy) x.GetValue(IEBTDetail.Proprietors, null));
+
+            var iebtChairOfProprietorsMap = IEBTDetail.ChairOfProprietor.GetType().GetProperties().Where(x => x.PropertyType == typeof(ApprovalPolicy))
+                .ToDictionary(x => $"{nameof(IEBTModel)}.{nameof(IEBTModel.ChairOfProprietor)}.{x.Name}", x => (ApprovalPolicy) x.GetValue(IEBTDetail.ChairOfProprietor, null));
+
+            var iebtMap = iebtDetailMap
+                .Concat(iebtProprietorsMap).ToDictionary(x => x.Key, x => x.Value)
+                .Concat(iebtChairOfProprietorsMap).ToDictionary(x => x.Key, x => x.Value);
+
+            var map = establishmentMap.Concat(iebtMap).ToDictionary(x => x.Key, x => x.Value);
 
             return map;
         }
