@@ -52,8 +52,15 @@ namespace Edubase.Web.UI.Models
 
         public override string ToString()
         {
-            var thisMonth = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Month ?? 0);
-            return $"{Day} {thisMonth} {Year}";
+            if (Day.HasValue && Month.HasValue && Year.HasValue)
+            {
+                try
+                {
+                    return $"{Day} {CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Month ?? 0)} {Year}";
+                }
+                catch { }
+            }
+            return null;
         } 
     }
 }
