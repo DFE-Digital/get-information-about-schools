@@ -58,7 +58,7 @@ namespace Edubase.Web.UI.Models
             var retVal = new List<LinkAction>();
             if (UserCanBulkUpdateEstablishments) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk update establishments", "EstabBulkUpdate"), Description = "Bulk update establishment data collectively rather than individually." });
             if (UserCanBulkUpdateGovernors) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk update governance information", "GovernorsBulkUpdate"), Description = "Bulk update governance information collectively rather than individually." });
-            if (UserCanBulkAssociateEstabs2Groups) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk upload academies to academy sponsors and<span class=\"govuk-visually-hidden\">&nbsp;</span>/<span class=\"govuk-visually-hidden\">&nbsp;</span>or academy trusts", "BulkAssociateEstabs2Groups"), Description = "Bulk upload academies to academy sponsors and<span class=\"visually-hidden\">&nbsp;</span>/<span class=\"visually-hidden\">&nbsp;</span>or academy trusts collectively rather than individually." });
+            if (UserCanBulkAssociateEstabs2Groups) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk upload academies to academy sponsors and<span class=\"govuk-visually-hidden\">&nbsp;</span>/<span class=\"govuk-visually-hidden\">&nbsp;</span>or academy trusts", "BulkAssociateEstabs2Groups"), Description = "Bulk upload academies to academy sponsors and<span class=\"govuk-visually-hidden\">&nbsp;</span>/<span class=\"govuk-visually-hidden\">&nbsp;</span>or academy trusts collectively rather than individually." });
             return retVal;
         }
 
@@ -66,11 +66,11 @@ namespace Edubase.Web.UI.Models
         {
             var retVal = new List<LinkAction>();
 
-            retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("View data owner team's data status", "ViewStatus", "DataQuality"), Description = "See when each team's data was last updated.<br />Data owner teams can also confirm their team's data is up to date." });
+            retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("View data owner teams' data status", "ViewStatus", "DataQuality"), Description = "See when each data owner team's data was last updated.<br />Data owner teams can also confirm their team's data is up to date." });
             if (UserCanApprove) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Manage change requests", "PendingApprovals"), Description = "Review your pending change requests and approve or reject." });
             if (UserCanManageAcademyOpenings) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Manage academy openings", "ManageAcademyOpenings"), Description = "View details of proposed-to-open academies.<br />Edit academy names and opening dates." });
             if (UserCanViewIndependentSchoolsSignificantDates) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View independent schools' next significant action dates", "IndSchSearch"), Description = "View independent schools' next general action required dates and next action required by welfare dates." });
-            if (UserCanDownloadMATClosureReport) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View closed Companies House single academy trusts and multi academy trusts", "DownloadMATClosureReport"), Description = "View a list of closed single academy trusts and multi-academy trusts currently open on GIAS but reported closed by Companies House." });
+            if (UserCanDownloadMATClosureReport) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View closed Companies House single academy trusts and multi academy trusts", "DownloadMATClosureReport"), Description = "View a list of closed single academy trusts and multi academy trusts currently open on GIAS but reported closed by Companies House." });
             retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View establishment and group change history", "ChangeHistoryCriteria"), Description = "View establishment and group data changes." });
 
             return retVal;
