@@ -3,6 +3,8 @@
 @using Edubase.Services.Enums
 @using Edubase.Web.UI.Models.Search
 @using Microsoft.Ajax.Utilities
+@using System.Text.RegularExpressions
+ 
 @model GroupDetailViewModel
 @{
     ViewBag.Title = Model.Group.Name;
@@ -12,6 +14,8 @@
     var sortDir = "desc";
     var sortDirText = "a descending order";
     var sortField = "requestedDateUtc";
+    var RE = new Regex(@"^\d{1,2}\/\d{1,2}\/\d{2,4}$");
+
 
     if (request.QueryString["sortby"] != null)
     {
@@ -426,11 +430,33 @@
                                                 </div>
                                                 <div class="gias-summary-list__row">
                                                     <dt class="gias-summary-list__key">Old value</dt>
-                                                    <dd class="gias-summary-list__value">@item.OldValue</dd>
+                                                    <dd class="gias-summary-list__value">
+                                                        @if (item.OldValue != null && RE.IsMatch(item.OldValue))
+                                                        {
+                                                            var parts = item.OldValue.Split('/').Select(Int32.Parse).ToList();
+                                                            var dt = new DateTime(parts[2], parts[1], parts[0]);
+                                                            @dt.ToString("dd MMMM yyyy");
+                                                        }
+                                                        else
+                                                        {
+                                                            @item.OldValue
+                                                        }
+                                                    </dd>
                                                 </div>
                                                 <div class="gias-summary-list__row">
                                                     <dt class="gias-summary-list__key">New value</dt>
-                                                    <dd class="gias-summary-list__value">@item.NewValue</dd>
+                                                    <dd class="gias-summary-list__value">
+                                                        @if (item.NewValue != null && RE.IsMatch(item.NewValue))
+                                                        {
+                                                            var parts = item.NewValue.Split('/').Select(Int32.Parse).ToList();
+                                                            var dt = new DateTime(parts[2], parts[1], parts[0]);
+                                                            @dt.ToString("dd MMMM yyyy");
+                                                        }
+                                                        else
+                                                        {
+                                                            @item.NewValue
+                                                        }
+                                                    </dd>
                                                 </div>
                                             }
                                             else if (item.RequestType != GroupChangeRequestType.NewGroup)
