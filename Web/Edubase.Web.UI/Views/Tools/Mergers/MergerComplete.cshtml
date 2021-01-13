@@ -1,0 +1,86 @@
+@model MergeEstablishmentsModel
+
+@{
+    ViewBag.Title = "Amalgamations and mergers tool";
+    ViewBag.bodyClasses = "create-edit mergers";
+    ViewBag.SiteSection = "tools";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li id="tertiary-breadcrumb" class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Amalgamations and mergers tool", "MergersTool", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">Merger Complete</h1>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="summary-panel">
+            <h3 class="govuk-heading-s">Closing establishment details</h3>
+            <ol class="govuk-list govuk-list--number linked-establishments">
+                @if (!string.IsNullOrEmpty(Model.Establishment1Name))
+                {
+                    @MergingEstablishment(Model.Establishment1Urn.GetValueOrDefault(), Model.Establishment1Name)
+                }
+                @if (!string.IsNullOrEmpty(Model.Establishment2Name))
+                {
+                    @MergingEstablishment(Model.Establishment2Urn.GetValueOrDefault(), Model.Establishment2Name)
+                }
+                @if (!string.IsNullOrEmpty(Model.Establishment3Name))
+                {
+                    @MergingEstablishment(Model.Establishment3Urn.GetValueOrDefault(), Model.Establishment3Name)
+                }
+            </ol>
+            <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--m"/>
+        </div>
+        <div class="summary-panel">
+            <h3 class="govuk-heading-s">Merged establishment details</h3>
+            <p>
+                @Html.ActionLink(string.Concat(Model.LeadEstablishmentUrn, " - ", Model.LeadEstablishmentName),
+                    "Details",
+                    "Establishment",
+                    new {area = "Establishments", id = Model.LeadEstablishmentUrn},
+                    new {@class = "govuk-link"})
+            </p>
+
+            <ul class="govuk-list amalg-summary">
+                <li>Establishment type: @Model.EstablishmentType</li>
+                <li>Merger date: @Model.MergeDate.ToString()</li>
+            </ul>
+
+            <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--m"/>
+        </div>
+
+        <p>
+            Please update the
+            @Html.ActionLink("merged record", "Details", "Establishment", new { area ="Establishments", id = Model.LeadEstablishmentUrn}, new {@class="govuk-link"})
+            to reflect any changes (for
+            example, establishment name or age range).
+        </p>
+    </div>
+</div>
+
+
+@helper MergingEstablishment(int urn, string name)
+{
+    <li><span>@urn - @name</span></li>
+}

@@ -1,0 +1,95 @@
+@using Edubase.Common
+@model MergeEstablishmentsModel
+
+@{
+    ViewBag.Title = "Amalgamations and mergers tool";
+    ViewBag.bodyClasses = "create-edit mergers";
+    ViewBag.SiteSection = "tools";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li id="tertiary-breadcrumb" class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Amalgamations and mergers tool", "MergersTool", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState)
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">Merger</h1>
+    </div>
+</div>
+
+@using (Html.BeginForm("ProcessMerge", "AmalgamateMerge", FormMethod.Post))
+{
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds" id="merger-summary">
+        <p>You can propose closing one or more schools and altering the remaining school.</p>
+        <h2 class="govuk-heading-s">Establishments to be merged</h2>
+        <p>
+            Lead establishment (remains open)
+            <br/>
+            <span>@Model.LeadEstablishmentUrn</span> @Model.LeadEstablishmentName
+        </p>
+
+        <p>Establishments to be merged</p>
+        <ol class="govuk-list govuk-list--number linked-establishments" id="linked-establishments">
+            @if (!string.IsNullOrEmpty(Model.Establishment1Name))
+            {
+                @MergingEstablishment(Model.Establishment1Urn.GetValueOrDefault(), Model.Establishment1Name)
+            }
+            @if (!string.IsNullOrEmpty(Model.Establishment2Name))
+            {
+                @MergingEstablishment(Model.Establishment2Urn.GetValueOrDefault(), Model.Establishment2Name)
+            }
+            @if (!string.IsNullOrEmpty(Model.Establishment3Name))
+            {
+                @MergingEstablishment(Model.Establishment3Urn.GetValueOrDefault(), Model.Establishment3Name)
+            }
+        </ol>
+
+        @Html.EditorFor(x =>x.MergeDate, new{ fieldsetClassName ="edit-date-fieldset", title="Merge date"})
+
+        @Html.HiddenFor(x=>x.LeadEstablishmentUrn)
+        @Html.HiddenFor(x=>x.LeadEstablishmentName)
+        @Html.HiddenFor(x=>x.Establishment1Urn)
+        @Html.HiddenFor(x=>x.Establishment1Name)
+        @Html.HiddenFor(x=>x.Establishment2Urn)
+        @Html.HiddenFor(x=>x.Establishment2Name)
+        @Html.HiddenFor(x=>x.Establishment3Urn)
+        @Html.HiddenFor(x=>x.Establishment3Name)
+        @Html.HiddenFor(x => x.EstablishmentType)
+    </div>
+    <div class="govuk-grid-column-full">
+        <div class="button-row">
+            @Html.ActionLink(HttpUtility.HtmlDecode("&laquo; Go back"), "MergeEstablishments", "AmalgamateMerge", new { area = ""}, new { @class = "govuk-button govuk-button--secondary"})
+            <button type="submit" class="govuk-button">Process</button>
+            @Html.ActionLink("Cancel", "MergersTool", "Tools", new {area = ""}, new {@class = "govuk-button govuk-button--secondary cancel"})
+        </div>
+    </div>
+</div>
+}
+
+
+
+@helper MergingEstablishment(int urn, string name)
+{
+    <li><span>@urn - @name</span></li>
+}

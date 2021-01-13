@@ -2,6 +2,7 @@
     ViewBag.Title = "Amalgamations and mergers tool";
     ViewBag.bodyClasses = "create-edit mergers";
     ViewBag.SiteSection = "tools";
+    ViewBag.AdditionalDevWarning = "THIS PAGE HAS DIFFERENT BEHAVIOUR WITH JS DISABLED";
 }
 
 @section BreadCrumbs
@@ -24,8 +25,67 @@
         </div>
     </div>
 }
+<div class="no-js-show-block">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState);
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">Amalgamations and mergers tool</h1>
+    </div>
+</div>
+@using (Html.BeginForm("SelectMergerType", "AmalgamateMerge", new {area = ""}, FormMethod.Post))
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <p>
+                You can use this tool to amalgamate or merge establishments.
+                This process automatically creates and closes (where applicable) records and creates predecessor and successor links.
+            </p>
 
-<div id="mergers-app" v-cloak>
+            <fieldset class="merger-almalgamation govuk-fieldset govuk-!-margin-bottom-8">
+                <legend class="govuk-fieldset__legend--s govuk-!-font-weight-bold">Select the process you are interested in</legend>
+
+                <p id="almagamation-desc">
+                    Amalgamation - a proposal for two or more establishments to close and a new
+                    establishment to be established.
+                </p>
+                <p id="merger-desc">
+                    Merger - a proposal for one or more establishments to close and the remaining
+                    establishment to be altered.
+                </p>
+
+
+                <div class="govuk-form-group @Html.ValidationGroupCssClass("MergerType")">
+                    @Html.ValidationMessage("MergerType", "Please select almalgamation or merger.", new { @class="govuk-error-message"})
+                    @* <span v-show="mergerTypeError" class="govuk-error-message">Please select almalgamation or merger.</span> *@
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input id="radio-amalgamation-nojs" class="govuk-radios__input" type="radio" name="MergerType" value="Amalgamation" aria-describedby="almagamation-desc">
+                            <label for="radio-amalgamation-nojs" class="govuk-radios__label">
+                                Amalgamation
+                            </label>
+                        </div>
+
+                        <div class="govuk-radios__item">
+                            <input id="radio-merger-nojs" class="govuk-radios__input" type="radio" name="MergerType" value="Merger" aria-describedby="merger-desc">
+                            <label for="radio-merger-nojs" class="govuk-radios__label">
+                                Merger
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="govuk-grid-column-full">
+            <div class="button-row">
+                <button type="submit" name="action" value="" class="govuk-button" v-on:click.prevent="checkMergeType">Continue</button>
+                <button type="submit" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+}
+</div>
+<div id="mergers-app" class="js-show-block" v-cloak>
 <div v-show="!commitErrors && Object.keys(apiError).length> 0" class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-xl">Sorry, there is a problem with the service</h1>
