@@ -22,8 +22,8 @@
     var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";
     var unsortedDescription = ". Click to sort data by this column.";
 
-     var tableColumns = new List<Tuple<string, string, bool>>
-   {
+    var tableColumns = new List<Tuple<string, string, bool>>
+{
        Tuple.Create("requestedDateUtc", "Date changed", true),
        Tuple.Create("uid", "Group UID", false),
        Tuple.Create("groupName", "Group", false),
@@ -42,17 +42,17 @@
         <caption class="govuk-visually-hidden">Group change history search results</caption>
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-            @foreach (var tableColumn in tableColumns)
-            {
-                if (tableColumn.Item3 || !Model.SingleGroup)
+                @foreach (var tableColumn in tableColumns)
                 {
-                    <th scope="col" class="govuk-table__header cell-@tableColumn.Item1.ToLower()">
-                        <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
-                        class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
-                        aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
-                    </th>
+                    if (tableColumn.Item3 || !Model.SingleGroup)
+                    {
+                        <th scope="col" class="govuk-table__header cell-@tableColumn.Item1.ToLower()">
+                            <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
+                               class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                               aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
+                        </th>
+                    }
                 }
-            }
             </tr>
         </thead>
         <tbody class="govuk-table__body">
