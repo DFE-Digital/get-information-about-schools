@@ -189,7 +189,7 @@
                             </div>
                             <div class="gias-summary-list__row">
                                 <dt class="gias-summary-list__key">Open date:</dt>
-                                <dd id="group-open-date" class="gias-summary-list__value">{{openDate}}</dd>
+                                <dd id="group-open-date" class="gias-summary-list__value">{{openDateDisplay}}</dd>
                             </div>
                             <div class="gias-summary-list__row">
                                 <dt class="gias-summary-list__key">Group status:</dt>
@@ -250,7 +250,7 @@
                                     </td>
 
                                     <td data-label="Name" v-bind:class="['govuk-table__cell', (estab.urn == groupLead)? 'highlight': '']">{{estab.name}}</td>
-                                    <td data-label="Join date" v-bind:class="['govuk-table__cell',(estab.urn == groupLead)? 'highlight': '']">{{ estab.joinDate }}</td>
+                                    <td data-label="Join date" v-bind:class="['govuk-table__cell',(estab.urn == groupLead)? 'highlight': '']">{{ estab.joinDateDisplay }}</td>
                                     <td v-bind:class="['govuk-table__cell',(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="editJoiningEstab(estab.urn); clearErrors()" aria-label="Edit children's centre's join date">Edit</a></td>
                                     <td v-bind:class="['govuk-table__cell',(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="removeJoiningEstab(estab.urn)" aria-label="Remove children's centre">Remove</a></td>
                                 </tr>

@@ -143,8 +143,8 @@
                             <td data-label="DfE Number" class="govuk-table__cell">{{entry.establishmentLAESTAB}}</td>
                             <td data-label="Establishment" class="govuk-table__cell"><a v-bind:href="detailUrl(entry.establishmentUrn)">{{entry.establishmentName}}</a></td>
                             <td data-label="Updated field" class="govuk-table__cell">{{entry.fieldName}}</td>
-                            <td data-label="Old value" class="govuk-table__cell">{{entry.oldValue}}</td>
-                            <td data-label="New value" class="govuk-table__cell">{{entry.newValue}}</td>
+                            <td data-label="Old value" class="govuk-table__cell">{{formatValue(entry.oldValue)}}</td>
+                            <td data-label="New value" class="govuk-table__cell">{{formatValue(entry.newValue)}}</td>
                             <td data-label="Effective date" class="govuk-table__cell">{{formatDate(entry.effectiveDateUtc)}}</td>
                             <td data-label="Date requested" class="govuk-table__cell">{{formatDate(entry.requestedDateUtc)}}</td>
                             <td data-label="Suggested by" class="govuk-table__cell">{{entry.originatorFullName}}</td>

@@ -4,6 +4,8 @@ import GiasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
 
 import GiasTextCounter from '../GiasModules/GiasTextCounter';
 
+const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
 new Vue({
   el: '#change-approvals',
   components: {
@@ -103,6 +105,18 @@ new Vue({
     }
   },
   methods: {
+    formatValue(dateString) {
+      const RE = /^\d{1,2}\/\d{1,2}\/\d{2,4}$/;
+      if (!RE.test(dateString)) {
+        return dateString;
+      }
+
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const dateSplit = dateString.split('/');
+      const monthInt = parseInt(dateSplit[1],10) -1;
+
+      return `${dateSplit[0]} ${monthNames[monthInt]} ${dateSplit[2]}`;
+    },
     showRejectionsModal: function () {
       this.clearErrors();
       this.showRejections = true;
@@ -157,7 +171,7 @@ new Vue({
         return 'unknown';
       }
       var d = new Date(utcDate);
-      return [d.getDate(), d.getMonth() + 1, d.getFullYear()].join('/');
+      return [d.getDate(), monthNames[d.getMonth() + 1], d.getFullYear()].join(' ');
     },
     getChangesData: function (skip, callback) {
       const self = this;

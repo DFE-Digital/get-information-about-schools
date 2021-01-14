@@ -25,9 +25,10 @@
         <tbody class="govuk-table__body">
         @foreach (var data in Model.Items)
         {
+            var updated = new DateTime((int)data.LastUpdated.Year,(int) data.LastUpdated.Month, (int)data.LastUpdated.Day);
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">@data.EstablishmentType.GetEnumMember()</td>
-                <td class="govuk-table__cell">@data.LastUpdated.ToString()</td>
+                <td class="govuk-table__cell">@updated.ToString("dd MMMM yyyy")</td>
             </tr>
         }
         </tbody>

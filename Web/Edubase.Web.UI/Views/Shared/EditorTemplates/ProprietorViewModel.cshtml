@@ -1,6 +1,11 @@
 @using System.Linq.Expressions
 @using Edubase.Common.Text
+@using Edubase.Services.Establishments.DisplayPolicies
 @model ProprietorViewModel
+
+@{
+    var displayPolicy = ViewData["displayPolicy"] as ProprietorFieldList<bool> ?? new ProprietorFieldList<bool>();
+}
 
 @if (ViewBag.ModelState != null)
 {
@@ -23,33 +28,63 @@
 @Html.HiddenFor(x => x.Id)
 @Html.HiddenFor(x => x.CountyIdDefault)
 
-@RenderTextBox(x => x.Name, nameof(ProprietorViewModel.Name))
-@RenderTextBox(x => x.Street, nameof(ProprietorViewModel.Street))
-@RenderTextBox(x => x.Locality, nameof(ProprietorViewModel.Locality))
-@RenderTextBox(x => x.Address3, nameof(ProprietorViewModel.Address3))
-@RenderTextBox(x => x.Town, nameof(ProprietorViewModel.Town))
+@if (displayPolicy.Name)
+{
+    @RenderTextBox(x => x.Name, nameof(ProprietorViewModel.Name))
+}
 
-@{
+@if (displayPolicy.Street)
+{
+    @RenderTextBox(x => x.Street, nameof(ProprietorViewModel.Street))
+}
+
+@if (displayPolicy.Locality)
+{
+    @RenderTextBox(x => x.Locality, nameof(ProprietorViewModel.Locality))
+}
+
+@if (displayPolicy.Address3)
+{
+    @RenderTextBox(x => x.Address3, nameof(ProprietorViewModel.Address3))
+}
+
+@if (displayPolicy.Town)
+{
+    @RenderTextBox(x => x.Town, nameof(ProprietorViewModel.Town))
+}
+
+
+@if (displayPolicy.CountyId)
+{
     var countyCounter = ViewBag.ShowCounter != null ? $"[{ViewBag.ShowCounter - 1}]" : "";
     var countyId = $"iebtDetail.{ViewBag.ProprietorType}{countyCounter}.{nameof(ProprietorViewModel.CountyId).ToLowerFirstLetter()}";
     var countyLink = countyId.Replace(".", "_").Replace("[", "_").Replace("]", "_");
+
+    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CountyId) @ProprietorsValidationCssClass(countyId)" id="@countyLink">
+        @Html.LabelFor(x => x.CountyId, null, new { @class = "govuk-label" })
+        @Html.ValidationMessageFor(x => x.CountyId, null, new { @class = "govuk-error-message" })
+        @if (ProprietorsValidationCssClass(countyId) == "error")
+        {
+            <span class="govuk-error-message">@Html.ViewData.ModelState[countyId].Errors.First().ErrorMessage</span>
+        }
+        @Html.DropDownListFor(x => x.CountyId, Model.Counties, "", new { @class = "govuk-select" })
+    </div>
 }
-<div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CountyId) @ProprietorsValidationCssClass(countyId)"
-     id="@countyLink">
-    @Html.LabelFor(x => x.CountyId, null, new { @class = "govuk-label" })
-    @Html.ValidationMessageFor(x => x.CountyId, null,new { @class = "govuk-error-message"})
-    @if (ProprietorsValidationCssClass(countyId) == "error")
-    {
-        <span class="govuk-error-message">@Html.ViewData.ModelState[countyId].Errors.First().ErrorMessage</span>
-    }
-    @Html.DropDownListFor(x => x.CountyId, Model.Counties, "", new { @class = "govuk-select" })
-</div>
 
-@RenderTextBox(x => x.Postcode, nameof(ProprietorViewModel.Postcode), "govuk-input--width-10")
-@RenderTextBox(x => x.TelephoneNumber, nameof(ProprietorViewModel.TelephoneNumber))
+@if (displayPolicy.Postcode)
+{
+    @RenderTextBox(x => x.Postcode, nameof(ProprietorViewModel.Postcode), "govuk-input--width-10")
+}
 
-@RenderTextBox(x => x.Email, nameof(ProprietorViewModel.Email))
+@if (displayPolicy.TelephoneNumber)
+{
+    @RenderTextBox(x => x.TelephoneNumber, nameof(ProprietorViewModel.TelephoneNumber))
+}
 
+@if (displayPolicy.Email)
+{
+    @RenderTextBox(x => x.Email, nameof(ProprietorViewModel.Email))
+}
 
 @helper RenderTextBox(Expression<Func<ProprietorViewModel, string>> fnc, string fieldName, string fieldClasses = "")
 {
@@ -60,12 +95,12 @@
 
     <div class="govuk-form-group @Html.ValidationCssClassFor(fnc) @ProprietorsValidationCssClass(validationId)">
         @Html.LabelFor(fnc, new { @class = "govuk-label" })
-        @Html.ValidationMessageFor(fnc, null, new { @class = "govuk-error-message"})
+        @Html.ValidationMessageFor(fnc, null, new { @class = "govuk-error-message" })
         @if (ProprietorsValidationCssClass(validationId) == "govuk-form-group--error")
         {
             <span class="govuk-error-message">@Html.ViewData.ModelState[validationId].Errors.First().ErrorMessage</span>
         }
-        @Html.TextBoxFor(fnc, new { @class = classes , id = validationLink})
+        @Html.TextBoxFor(fnc, new { @class = classes, id = validationLink })
     </div>
 }
 

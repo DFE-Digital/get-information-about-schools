@@ -79,12 +79,12 @@
     switch (envHeader.ToLower())
     {
         case "localdev":
-            <div class="environment-message environment-message--local"><span class="govuk-!-font-weight-bold">ATTENTION!</span> This is a <span class="govuk-!-font-weight-bold">Test</span> version, running locally</div>
+            <div class="environment-message environment-message--local"><span class="govuk-!-font-weight-bold">ATTENTION!</span> This is a <span class="govuk-!-font-weight-bold">Test</span> version, running locally @ViewBag.AdditionalDevWarning</div>
             break;
 
         case "dev":
         case "exp":
-            <div class="environment-message environment-message--dev"><span class="govuk-!-font-weight-bold">ATTENTION!</span> This is a <span class="govuk-!-font-weight-bold">Test</span> version shared with other developers</div>
+            <div class="environment-message environment-message--dev"><span class="govuk-!-font-weight-bold">ATTENTION!</span> This is a <span class="govuk-!-font-weight-bold">Test</span> version shared with other developers @ViewBag.AdditionalDevWarning</div>
             break;
 
         case "stage":
@@ -195,7 +195,7 @@
                     <h2 class="govuk-visually-hidden">Support links</h2>
                     <ul class="govuk-footer__inline-list">
                         <li class="govuk-footer__inline-list-item">
-                            <a href="https://form.education.gov.uk/fillform.php?self=1&form_id=hGz7nZcsdnX&noLoginPrompt=1" target="_blank" rel="noreferrer noopener" class="govuk-footer__link">
+                            <a href="https://form.education.gov.uk/service/Data-collections-service-request-form" target="_blank" rel="noreferrer noopener" class="govuk-footer__link">
                                 Contact
                                 <span class="govuk-visually-hidden">Opens in new window</span>
                             </a>

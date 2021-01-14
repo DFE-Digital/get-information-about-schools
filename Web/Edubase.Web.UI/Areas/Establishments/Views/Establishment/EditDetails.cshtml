@@ -232,7 +232,7 @@
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.TypeId)">
             <label class="govuk-label" for="TypeId">Establishment type</label>
             @Html.ValidationMessageFor(x => x.TypeId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.TypeId, Model.EstablishmentTypes, "", new {@class = "govuk-select"})
+            @Html.DropDownListFor(x => x.TypeId, Model.EstablishmentTypes, "Please select", new {@class = "govuk-select"})
         </div>
     }
     else

@@ -380,9 +380,9 @@ const academyOpenings = new Vue({
       }
 
       const datePages = this.openingAcademies.filter(function (opening) {
-        const oDateParts = opening.displayDate.split('/');
-        const oDateMonth = parseInt(oDateParts[1], 10) - 1;
-        const oDateYear = parseInt(oDateParts[2], 10);
+        const oDateParts = opening.openingDate.split('-');
+        const oDateMonth = parseInt(oDateParts[1], 10) -1;
+        const oDateYear = parseInt(oDateParts[0], 10);
 
         return oDateMonth === month && oDateYear === year;
 
@@ -400,12 +400,12 @@ const academyOpenings = new Vue({
       const academy = this.openingAcademies.filter(function (estab) {
         return parseInt(estab.urn, 10) === urn;
       });
-      const openDate = academy[0].displayDate.split('/');
+      const openDate = academy[0].openingDate.split('-');
 
       this.updateName = academy[0].name;
-      this.updateDateDay = openDate[0];
+      this.updateDateDay = openDate[2].replace('T00:00:00', '');
       this.updateDateMonth = openDate[1];
-      this.updateDateYear = openDate[2];
+      this.updateDateYear = openDate[0];
 
       this.selectedOpeningDetails = academy[0];
       return this.selectedOpeningDetails;
@@ -481,7 +481,7 @@ $(window).on('tabChange', function () {
   academyOpenings.clearErrors();
 });
 $('#main-content').find('.gias-tabs-wrapper').giasTabs();
-
+$('#main-content').find('.gias-tabs__tab').eq(0).click();
 function blockExits() {
   $('a').on('click', function (e) {
     if (academyOpenings.isUserEditing()) {

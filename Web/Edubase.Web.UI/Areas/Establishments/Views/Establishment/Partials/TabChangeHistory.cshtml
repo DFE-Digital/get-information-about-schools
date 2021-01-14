@@ -1,4 +1,5 @@
 @using Edubase.Services.Domain
+@using System.Text.RegularExpressions
 @model EstablishmentDetailViewModel
 
 @{
@@ -6,6 +7,7 @@
     var sortDir = "desc";
     var sortDirText = "a descending order";
     var sortField = "changedDateUtc";
+
 
     if (request.QueryString["sortby"] != null)
     {
@@ -16,6 +18,7 @@
 
     var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";
     var unsortedDescription = ". Click to sort data by this column.";
+    var RE = new Regex(@"^\d{1,2}\/\d{1,2}\/\d{2,4}$");
 
     var tableColumns = new List<Tuple<string, string>>
     {
@@ -78,12 +81,34 @@
             @foreach (var item in Model.ChangeHistory.Items)
             {
                 <tr class="govuk-table__row">
-                    <td data-label="Date changed" class="govuk-table__cell">@(item.ChangedDateUtc?.ToString("dd/MM/yyyy"))</td>
-                    <td data-label="Effective date" class="govuk-table__cell">@(item.EffectiveDateUtc?.ToString("dd/MM/yyyy"))</td>
+                    <td data-label="Date changed" class="govuk-table__cell">@(item.ChangedDateUtc?.ToString("dd MMMM yyyy"))</td>
+                    <td data-label="Effective date" class="govuk-table__cell">@(item.EffectiveDateUtc?.ToString("dd MMMM yyyy"))</td>
                     <td data-label="Updated field" class="govuk-table__cell">@item.Name</td>
-                    <td data-label="Old value" class="govuk-table__cell">@item.OldValue</td>
-                    <td data-label="New value" class="govuk-table__cell">@item.NewValue</td>
-                    <td data-label="Date requested" class="govuk-table__cell">@(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))</td>
+                    <td data-label="Old value" class="govuk-table__cell">
+                        @if (item.OldValue != null && RE.IsMatch(item.OldValue))
+                        {
+                            var parts = item.OldValue.Split('/').Select(Int32.Parse).ToList();
+                            var dt = new DateTime(parts[2], parts[1], parts[0]);
+                            @dt.ToString("dd MMMM yyyy");
+                        }
+                        else
+                        {
+                            @item.OldValue
+                        }
+                    </td>
+                    <td data-label="New value" class="govuk-table__cell">
+                        @if (item.NewValue != null && RE.IsMatch(item.NewValue))
+                        {
+                            var parts = item.NewValue.Split('/').Select(Int32.Parse).ToList();
+                            var dt = new DateTime(parts[2], parts[1], parts[0]);
+                            @dt.ToString("dd MMMM yyyy");
+                        }
+                        else
+                        {
+                            @item.NewValue
+                        }
+                    </td>
+                    <td data-label="Date requested" class="govuk-table__cell">@(item.RequestedDateUtc?.ToString("dd MMMM yyyy"))</td>
                     <td data-label="Suggested from" class="govuk-table__cell">@item.OriginatorUserName</td>
                     <td data-label="Approved by" class="govuk-table__cell">@(item.ApproverUserName ?? "--")</td>
                 </tr>

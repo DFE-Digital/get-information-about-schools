@@ -3,6 +3,8 @@ import errorSummary from '../GiasVueComponents/errorSummary';
 import giasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
 import giasRadio from '../GiasVueComponents/GiasRadio';
 import giasApiError from '../GiasVueComponents/GiasApiError';
+
+const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const  ccApp = new Vue({
   el: '#create-childrens-centre',
   components: {
@@ -72,6 +74,18 @@ const  ccApp = new Vue({
     joinDate: function () {
       if (this.joinDateDay !== '' && this.joinDateMonth !== '' && this.joinDateYear !== '') {
         return [this.joinDateDay, this.joinDateMonth, this.joinDateYear].join('/');
+      }
+      return '';
+    },
+    openDateDisplay: function () {
+      if (this.openDateDay !== '' && this.openDateMonth !== '' && this.openDateYear !== '') {
+        return [this.openDateDay, monthNames[this.openDateMonth -1], this.openDateYear].join(' ');
+      }
+      return '';
+    },
+    joinDateDisplay: function () {
+      if (this.joinDateDay !== '' && this.joinDateMonth !== '' && this.joinDateYear !== '') {
+        return [this.joinDateDay, monthNames[this.joinDateMonth -1], this.joinDateYear].join(' ');
       }
       return '';
     },
@@ -357,6 +371,7 @@ const  ccApp = new Vue({
         if (!self.joinDateError) {
 
           self.pendingEstab.joinDate = self.joinDate;
+          self.pendingEstab.joinDateDisplay = self.joinDateDisplay;
 
           self.centresInGroup.push(self.pendingEstab);
           self.pendingEstab = {};

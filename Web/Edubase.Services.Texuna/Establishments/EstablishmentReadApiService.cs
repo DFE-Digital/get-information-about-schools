@@ -12,8 +12,6 @@ using Edubase.Services.Texuna.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using MoreLinq;
@@ -97,6 +95,9 @@ namespace Edubase.Services.Texuna.Establishments
 
         public async Task<EstablishmentEditPolicyEnvelope> GetEditPolicyAsync(EstablishmentModel establishment, IPrincipal user)
                     => (await _httpClient.GetAsync<EstablishmentEditPolicyEnvelope>($"establishment/{establishment.Urn}/edit-policy", user)).GetResponse().Initialise(establishment);
+
+        public async Task<EstablishmentEditPolicyEnvelope> GetEditPolicyByUrnAsync(int urn, IPrincipal user)
+                    => (await _httpClient.GetAsync<EstablishmentEditPolicyEnvelope>($"establishment/{urn}/edit-policy", user)).GetResponse();
 
         public async Task<string> GetEstablishmentNameAsync(int urn, IPrincipal principal) => (await GetAsync(urn, principal)).GetResult().Name;
 
@@ -200,8 +201,8 @@ namespace Edubase.Services.Texuna.Establishments
                     OldValue = change.OldValue.Clean(),
                     Tag = change.Tag,
                     RequiresApproval = (change.Tag == "additionaladdress" && approvalsPolicy.AdditionalAddresses.RequiresApproval) ||
-                                       (change.Tag == "proprietors" && approvalsPolicy.IEBTDetail.Proprietors.RequiresApproval) ||
-                                       (change.Name.Contains(nameof(approvalsPolicy.IEBTDetail.ChairOfProprietor)) && approvalsPolicy.IEBTDetail.ChairOfProprietor.RequiresApproval) ||
+                                       //(change.Tag == "proprietors" && approvalsPolicy.IEBTDetail.Proprietors.RequiresApproval) ||
+                                       //(change.Name.Contains(nameof(approvalsPolicy.IEBTDetail.ChairOfProprietor)) && approvalsPolicy.IEBTDetail.ChairOfProprietor.RequiresApproval) ||
                                        approvalFields.Contains(change.Name, StringComparer.OrdinalIgnoreCase),
                     ApproverName = approvalsPolicy.GetApproverName(change.Name)
                 });
@@ -253,7 +254,7 @@ namespace Edubase.Services.Texuna.Establishments
                     {
                         Name = nameof(newProprietor.Name),
                         DisplayName = $"Name ({index} - new)",
-                        NewValue = newProprietor.Name
+                        NewValue = newProprietor.Name,
                     });
 
                     retVal.Add(new ChangeDescriptor

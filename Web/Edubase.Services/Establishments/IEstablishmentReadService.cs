@@ -45,6 +45,8 @@ namespace Edubase.Services.Establishments
 
         Task<EstablishmentEditPolicyEnvelope> GetEditPolicyAsync(EstablishmentModel establishment, IPrincipal user);
 
+        Task<EstablishmentEditPolicyEnvelope> GetEditPolicyByUrnAsync(int urn, IPrincipal user);
+
         Task<string> GetEstablishmentNameAsync(int urn, IPrincipal principal);
 
         Dictionary<ET, EP[]> GetEstabType2EducationPhaseMap();

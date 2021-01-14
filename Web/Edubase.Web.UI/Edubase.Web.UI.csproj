@@ -327,6 +327,8 @@
     <Compile Include="Areas\Establishments\Models\AdditionalAddressViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\BulkAssociateEstabs2GroupsViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\BulkCreateFreeSchoolsViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\EditAcademyOpeningViewModel.cs" />
+    <Compile Include="Areas\Establishments\Models\ManageAcademyOpeningsViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\TabEditPolicy.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\BulkAssociateEstabs2GroupsViewModelValidator.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\BulkCreateFreeSchoolsViewModelValidator.cs" />
@@ -521,6 +523,8 @@
     <Content Include="500.html" />
     <Content Include="404.html" />
     <Content Include="404.aspx" />
+    <Content Include="Areas\Establishments\Views\AcademyOpenings\EditAcademyOpening.cshtml" />
+    <Content Include="Areas\Establishments\Views\AcademyOpenings\SearchAcademyOpenings.cshtml" />
     <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Downloads\SelectDataset.cshtml" />
     <Content Include="Areas\Groups\Views\Group\Warnings.cshtml" />
     <Content Include="Assets\Sass\govuk-core.scss" />

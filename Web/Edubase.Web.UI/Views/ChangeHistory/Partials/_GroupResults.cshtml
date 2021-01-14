@@ -1,3 +1,4 @@
+@using System.Text.RegularExpressions
 @using Edubase.Services.Enums
 @model ChangeHistoryViewModel
 
@@ -6,6 +7,8 @@
     var sortDir = "desc";
     var sortDirText = "a descending order";
     var sortField = "requestedDateUtc";
+
+    var RE = new Regex(@"^\d{1,2}\/\d{1,2}\/\d{2,4}$");
 
     if (request.QueryString["sortby"] != null)
     {
@@ -19,8 +22,8 @@
     var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";
     var unsortedDescription = ". Click to sort data by this column.";
 
-     var tableColumns = new List<Tuple<string, string, bool>>
-   {
+    var tableColumns = new List<Tuple<string, string, bool>>
+{
        Tuple.Create("requestedDateUtc", "Date changed", true),
        Tuple.Create("uid", "Group UID", false),
        Tuple.Create("groupName", "Group", false),
@@ -39,24 +42,24 @@
         <caption class="govuk-visually-hidden">Group change history search results</caption>
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-            @foreach (var tableColumn in tableColumns)
-            {
-                if (tableColumn.Item3 || !Model.SingleGroup)
+                @foreach (var tableColumn in tableColumns)
                 {
-                    <th scope="col" class="govuk-table__header cell-@tableColumn.Item1.ToLower()">
-                        <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
-                        class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
-                        aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
-                    </th>
+                    if (tableColumn.Item3 || !Model.SingleGroup)
+                    {
+                        <th scope="col" class="govuk-table__header cell-@tableColumn.Item1.ToLower()">
+                            <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
+                               class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                               aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
+                        </th>
+                    }
                 }
-            }
             </tr>
         </thead>
         <tbody class="govuk-table__body">
             @foreach (var item in Model.Items)
             {
                 <tr class="govuk-table__row">
-                    <td data-label="Date changed" class="govuk-table__cell">@(item.RequestedDate?.ToString("dd/MM/yyyy"))</td>
+                    <td data-label="Date changed" class="govuk-table__cell">@(item.RequestedDate?.ToString("dd MMMM yyyy"))</td>
                     @if (!Model.SingleGroup)
                     {
                         <td data-label="Group UID" class="govuk-table__cell">@Html.RouteLink(item.GroupUId.ToString(), "GroupDetails", new { id = item.GroupUId })</td>
@@ -74,11 +77,35 @@
                                 <div class="gias-summary-list__row">
 
                                     <dt class="gias-summary-list__key">Old value</dt>
-                                    <dd class="gias-summary-list__value">@item.OldValue</dd>
+                                    <dd class="gias-summary-list__value">
+                                        @if (item.OldValue != null && RE.IsMatch(item.OldValue))
+                                        {
+                                            var parts = item.OldValue.Split('/').Select(Int32.Parse).ToList();
+                                            var dt = new DateTime(parts[2], parts[1], parts[0]);
+
+                                            @dt.ToString("dd MMMM yyyy");
+                                        }
+                                        else
+                                        {
+                                            @item.OldValue
+                                        }
+                                    </dd>
                                 </div>
                                 <div class="gias-summary-list__row">
                                     <dt class="gias-summary-list__key">New value</dt>
-                                    <dd class="gias-summary-list__value">@item.NewValue</dd>
+                                    <dd class="gias-summary-list__value">
+                                        @if (item.NewValue != null && RE.IsMatch(item.NewValue))
+                                        {
+                                            var parts = item.NewValue.Split('/').Select(Int32.Parse).ToList();
+                                            var dt = new DateTime(parts[2], parts[1], parts[0]);
+
+                                            @dt.ToString("dd MMMM yyyy");
+                                        }
+                                        else
+                                        {
+                                            @item.NewValue
+                                        }
+                                    </dd>
                                 </div>
                             }
                             else
@@ -89,7 +116,7 @@
                                 </div>
                                 <div class="gias-summary-list__row">
                                     <dt class="gias-summary-list__key">Link date</dt>
-                                    <dd class="gias-summary-list__value">@(item.LinkDateUtc?.ToString("dd/MM/yyyy"))</dd>
+                                    <dd class="gias-summary-list__value">@(item.LinkDateUtc?.ToString("dd MMMM yyyy"))</dd>
                                 </div>
                                 <div class="gias-summary-list__row">
                                     <dt class="gias-summary-list__key">Type</dt>

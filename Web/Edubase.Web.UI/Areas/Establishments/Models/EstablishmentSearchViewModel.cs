@@ -20,7 +20,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
             { 7, eTextSearchType.LAESTAB },
             { 8, eTextSearchType.UKPRN }
         };
-        
+
         private Dictionary<char, eSortBy> _sortByMap = new Dictionary<char, eSortBy>
         {
             { 'd', eSortBy.Distance },
@@ -43,7 +43,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public const string BIND_ALIAS_GENDER = "l";
         public const string BIND_ALIAS_GOR = "m";
         public const string BIND_ALIAS_NURSERY = "n";
-        public const string BIND_ALIAS_RATING = "o"; 
+        public const string BIND_ALIAS_RATING = "o";
         public const string BIND_ALIAS_PARLCONST = "p";
         public const string BIND_ALIAS_RELETHOS = "q";
         public const string BIND_ALIAS_RSCREG = "r";
@@ -100,7 +100,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 
         public string SearchQueryString { get; set; }
         public eLookupSearchSource? SearchSource { get; set; }
-        
+
         [BindAlias(BIND_ALIAS_RADIUS)]
         public double? RadiusInMiles { get; set; }
 
@@ -127,10 +127,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         {
             _coordinate = new Lazy<LatLon>(() => LatLon.Parse(LocationSearchModel.AutoSuggestValue));
         }
-        
+
         public SearchPayloadViewModel TextSearchModel { get; set; } = new SearchPayloadViewModel();
         public SearchPayloadViewModel LocationSearchModel { get; set; } = new SearchPayloadViewModel();
-        
+
         public eSearchType SearchType { get; set; }
 
         #region Filters / bind aliases
@@ -163,7 +163,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 
         [BindAlias(BIND_ALIAS_RELICHARIDS)]
         public List<int> SelectedReligiousCharacterIds { get; set; } = new List<int>();
-        
+
         public IEnumerable<LookupItemViewModel> GovernorRoles { get; set; }
 
 

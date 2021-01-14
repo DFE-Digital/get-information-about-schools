@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Policy;
+using System.Globalization;
 
 namespace Edubase.Web.UI.Models
 {
@@ -51,7 +52,15 @@ namespace Edubase.Web.UI.Models
 
         public override string ToString()
         {
-            return $"{Day}/{Month}/{Year}";
-        }
+            if (Day.HasValue && Month.HasValue && Year.HasValue)
+            {
+                try
+                {
+                    return $"{Day} {CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(Month ?? 0)} {Year}";
+                }
+                catch { }
+            }
+            return null;
+        } 
     }
 }

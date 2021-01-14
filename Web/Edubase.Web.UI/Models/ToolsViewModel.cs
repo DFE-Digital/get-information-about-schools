@@ -39,26 +39,26 @@ namespace Edubase.Web.UI.Models
         {
             var retVal = new List<LinkAction>();
 
-            if (UserCanConvertAcademyTrusts) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Convert academy trusts", "GroupConvertSAT2MAT"), Description = "Convert a single-academy trust into a multi-academy trust." });
-            if (UserCanCreateAcademyTrustGroup) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new academy trust", "SearchCompaniesHouse", "Group", new { area = "Groups" }, null), Description = "Set up a new record for your school trust." });
-            if (UserCanCreateEstablishment) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Create a new establishment", "CreateEstablishment"), Description = "Set up a new establishment record." });
-            if (UserCanCreateSchoolTrustGroup) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new school trust", "CreateNewGroup", "Group", new { area = "Groups", type = "Trust" }, null), Description = "Enter the trust's name and select the opening date and status." });
-            if (UserCanMergeOrAmalgamateEstablishments) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Amalgamate & merge establishments", "MergersTool", "Tools"), Description = "Carry out amalgamations and mergers." });
+            if (UserCanCreateEstablishment) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Create new establishments", "CreateEstablishment"), Description = "Set up a new establishment record." });
+            if (UserCanBulkCreateAcademies) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Bulk create new academies", "BulkAcademies", "Tools"), Description = "Bulk create new academy records collectively and not individually." });
+            if (UserCanBulkCreateFreeSchools) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk create new free schools", "BulkCreateFreeSchools"), Description = "Bulk create new free school records collectively rather than individually." });
+            if (UserCanMergeOrAmalgamateEstablishments) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Amalgamate or merge establishments", "MergersTool", "Tools"), Description = "Carry out an amalgamation or merger for establishments." });
+            if (UserCanCreateChildrensCentreGroup) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new children's centre groups or children's centre collaborations", "CreateNewGroup", "Group", new { area = "Groups", type = "ChildrensCentre" }, null), Description = "Set up a new children's centre group or children's centre collaboration record." });
+            if (UserCanCreateFederationGroup) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new federations", "CreateNewGroup", "Group", new { area = "Groups", type = "Federation" }, null), Description = "Set up a new federation record." });
+            if (UserCanCreateSchoolTrustGroup) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new trusts", "CreateNewGroup", "Group", new { area = "Groups", type = "Trust" }, null), Description = "Set up a new trust record." });
+            if (UserCanCreateAcademySponsor) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new academy sponsors", "CreateNewGroup", "Group", new { area = "Groups", type = "Sponsor" }, null), Description = "Set up a new academy sponsor record." });
+            if (UserCanCreateAcademyTrustGroup) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new academy trusts", "SearchCompaniesHouse", "Group", new { area = "Groups" }, null), Description = "Set up a new academy trust record." });
+            if (UserCanConvertAcademyTrusts) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Convert a single academy trust", "GroupConvertSAT2MAT"), Description = "Convert a single academy trust (SAT) to a multi academy trust (MAT)." });
 
-            if (UserCanBulkCreateAcademies) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Bulk create new academies", "BulkAcademies", "Tools"), Description = "Create records for multi-academy and single-academy trusts using information from Companies House." });
-            if (UserCanCreateChildrensCentreGroup) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new children's centre group or collaboration", "CreateNewGroup", "Group", new { area = "Groups", type = "ChildrensCentre" }, null), Description = "Create records for children's centre groups and children's centre collaborations for your local authority." });
-            if (UserCanCreateFederationGroup) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new federation", "CreateNewGroup", "Group", new { area = "Groups", type = "Federation" }, null), Description = "Enter the federation's name and select its status and opening date." });
-            if (UserCanCreateAcademySponsor) retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new academy sponsor", "CreateNewGroup", "Group", new { area = "Groups", type = "Sponsor" }, null), Description = "Enter the sponsor's name and select the open date and status." });
-            if (UserCanBulkCreateFreeSchools) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk create new free schools", "BulkCreateFreeSchools"), Description = "Set up a new free schools records as a collection, rather than by individual entries." });
             return retVal;
         }
 
         public List<LinkAction> GetUpdateActions(HtmlHelper htmlHelper)
         {
             var retVal = new List<LinkAction>();
-            if (UserCanBulkUpdateEstablishments) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk update establishments", "EstabBulkUpdate"), Description = "Update establishment data as a collection, rather than by individual entries." });
-            if (UserCanBulkAssociateEstabs2Groups) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk upload academies to trust<span class=\"govuk-visually-hidden\">&nbsp;</span>/<span class=\"govuk-visually-hidden\">&nbsp;</span>sponsor", "BulkAssociateEstabs2Groups"), Description = "Use this tool to upload new academies to the relevant trusts<span class=\"visually-hidden\">&nbsp;</span>/<span class=\"visually-hidden\">&nbsp;</span>sponsor" });
-            if (UserCanBulkUpdateGovernors) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk update governance", "GovernorsBulkUpdate"), Description = "Update your governance data as a collection, rather than by individual entries." });
+            if (UserCanBulkUpdateEstablishments) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk update establishments", "EstabBulkUpdate"), Description = "Bulk update establishment data collectively rather than individually." });
+            if (UserCanBulkUpdateGovernors) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk update governance information", "GovernorsBulkUpdate"), Description = "Bulk update governance information collectively rather than individually." });
+            if (UserCanBulkAssociateEstabs2Groups) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Bulk upload academies to academy sponsors and<span class=\"govuk-visually-hidden\">&nbsp;</span>/<span class=\"govuk-visually-hidden\">&nbsp;</span>or academy trusts", "BulkAssociateEstabs2Groups"), Description = "Bulk upload academies to academy sponsors and<span class=\"govuk-visually-hidden\">&nbsp;</span>/<span class=\"govuk-visually-hidden\">&nbsp;</span>or academy trusts collectively rather than individually." });
             return retVal;
         }
 
@@ -66,12 +66,13 @@ namespace Edubase.Web.UI.Models
         {
             var retVal = new List<LinkAction>();
 
-            if (UserCanApprove) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Approvals", "PendingApprovals"), Description = "View your pending changes and approve or reject." });
-            if (UserCanManageAcademyOpenings) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Manage academy openings", "ManageAcademyOpenings"), Description = "View details of proposed-to-open academies. Edit academy names and opening dates." });
-            retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("View data status", "ViewStatus", "DataQuality"), Description = "See when each team’s data was last updated. You can also confirm that your team's data is up to date." });
-            retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Change history", "ChangeHistoryCriteria"), Description = "View changes in the data relating to establishments and groups." });
-            if (UserCanViewIndependentSchoolsSignificantDates) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View independent schools' significant dates", "IndSchSearch"), Description = "View independent schools' &lsquo;Next general action required&rsquo; or &lsquo;Next action required by welfare&rsquo; dates." });
-            if (UserCanDownloadMATClosureReport) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View closed single academy trust and multi academy trust details", "DownloadMATClosureReport"), Description = "This is a list of single academy trusts and multi-academy trusts that are currently open on GIAS but reported closed by Companies House." });
+            retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("View data owner teams' data status", "ViewStatus", "DataQuality"), Description = "See when each data owner team's data was last updated.<br />Data owner teams can also confirm their team's data is up to date." });
+            if (UserCanApprove) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Manage change requests", "PendingApprovals"), Description = "Review your pending change requests and approve or reject." });
+            if (UserCanManageAcademyOpenings) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Manage academy openings", "ManageAcademyOpenings"), Description = "View details of proposed-to-open academies.<br />Edit academy names and opening dates." });
+            if (UserCanViewIndependentSchoolsSignificantDates) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View independent schools' next significant action dates", "IndSchSearch"), Description = "View independent schools' next general action required dates and next action required by welfare dates." });
+            if (UserCanDownloadMATClosureReport) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View closed Companies House single academy trusts and multi academy trusts", "DownloadMATClosureReport"), Description = "View a list of closed single academy trusts and multi academy trusts currently open on GIAS but reported closed by Companies House." });
+            retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View establishment and group change history", "ChangeHistoryCriteria"), Description = "View establishment and group data changes." });
+
             return retVal;
         }
 

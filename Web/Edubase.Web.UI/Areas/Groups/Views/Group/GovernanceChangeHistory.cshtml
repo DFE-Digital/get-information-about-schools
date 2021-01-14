@@ -1,5 +1,7 @@
 @using Edubase.Common
 @using Edubase.Services.Domain
+@using System.Text.RegularExpressions
+
 @model GroupDetailViewModel
 @{
     ViewBag.Title = Model.Group.Name;
@@ -9,6 +11,7 @@
     var sortDir = "desc";
     var sortDirText = "a descending order";
     var sortField = "requestedDateUtc";
+    var RE = new Regex(@"^\d{1,2}\/\d{1,2}\/\d{2,4}$");
 
     if (request.QueryString["sortby"] != null)
     {
@@ -21,7 +24,7 @@
     var unsortedDescription = ". Click to sort data by this column.";
 
     var tableColumns = new List<Tuple<string, string>>
-    {
+{
         Tuple.Create("effectiveDateUtc", "Date changed"),
         Tuple.Create("fieldName", "Updated field"),
         Tuple.Create("oldValue", "Old value"),
@@ -36,16 +39,16 @@
 
 @section BreadCrumbs
 {
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-        <div class="govuk-breadcrumbs">
-            <ol class="govuk-breadcrumbs__list">
-                <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new {area = ""}, new { @class = "govuk-breadcrumbs__link"})</li>
-                <li class="govuk-breadcrumbs__list-item">@Html.RouteLink(Model.Group.Name, "GroupDetails", new {id = Model.Group.GroupUId}, new { @class = "govuk-breadcrumbs__link"})</li>
-            </ol>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.RouteLink(Model.Group.Name, "GroupDetails", new { id = Model.Group.GroupUId }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
         </div>
     </div>
-</div>
 }
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
@@ -61,8 +64,8 @@
 </div>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-    <div class="gias-tabs-wrapper">
-        <div class="tab-wrap">
+        <div class="gias-tabs-wrapper">
+            <div class="tab-wrap">
                 <ul class="gias-tabs">
                     @if (Model.IsUserLoggedOn)
                     {
@@ -82,7 +85,7 @@
 
                         <div class="gias-governance-history-link-container">
                             <p>
-                                @Html.RouteLink("View group change history", "GroupDetails", null, null, "change-history", new {id = Model.Group.GroupUId}, null)
+                                @Html.RouteLink("View group change history", "GroupDetails", null, null, "change-history", new { id = Model.Group.GroupUId }, null)
                             </p>
                         </div>
                         @if (!Model.ChangeHistory.Items.Any())
@@ -92,10 +95,10 @@
                         else
                         {
                             <p class="govuk-body">
-                                @Html.RouteLink("Download data in CSV format", "DownloadGroupGovernanceChangeHistory", new {groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.csv})
+                                @Html.RouteLink("Download data in CSV format", "DownloadGroupGovernanceChangeHistory", new { groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.csv })
                             </p>
                             <p class="govuk-body">
-                                @Html.RouteLink("Download data in XLSX format", "DownloadGroupGovernanceChangeHistory", new {groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.xlsx})
+                                @Html.RouteLink("Download data in XLSX format", "DownloadGroupGovernanceChangeHistory", new { groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.xlsx })
 
                             </p>
 
@@ -111,25 +114,47 @@
                                 <thead class="govuk-table__head">
                                     <tr class="govuk-table__row">
 
-                                    @foreach (var tableColumn in tableColumns)
-                                    {
-                                        <th scope="col" class="govuk-table__header">
-                                            <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
-                                               class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
-                                               aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
-                                        </th>
-                                    }
-                                </tr>
+                                        @foreach (var tableColumn in tableColumns)
+                                        {
+                                            <th scope="col" class="govuk-table__header">
+                                                <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
+                                                   class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                                                   aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
+                                            </th>
+                                        }
+                                    </tr>
                                 </thead>
                                 <tbody class="govuk-table__body">
                                     @foreach (var item in Model.ChangeHistory.Items)
                                     {
                                         <tr class="govuk-table__row">
-                                            <td data-label="Date changed" class="govuk-table__cell">@(item.EffectiveDateUtc?.ToString("dd/MM/yyyy"))</td>
+                                            <td data-label="Date changed" class="govuk-table__cell">@(item.EffectiveDateUtc?.ToString("dd MMMM yyyy"))</td>
                                             <td data-label="Updated field" class="govuk-table__cell">@item.Name</td>
-                                            <td data-label="Old value" class="govuk-table__cell">@item.OldValue</td>
-                                            <td data-label="New value" class="govuk-table__cell">@item.NewValue</td>
-                                            <td data-label="Date requested" class="govuk-table__cell">@(item.RequestedDateUtc?.ToString("dd/MM/yyyy"))</td>
+                                            <td data-label="Old value" class="govuk-table__cell">
+                                                @if (item.OldValue != null && RE.IsMatch(item.OldValue))
+                                                {
+                                                    var parts = item.OldValue.Split('/').Select(Int32.Parse).ToList();
+                                                    var dt = new DateTime(parts[2], parts[1], parts[0]);
+                                                    @dt.ToString("dd MMMM yyyy");
+                                                }
+                                                else
+                                                {
+                                                    @item.OldValue
+                                                }
+                                            </td>
+                                            <td data-label="New value" class="govuk-table__cell">
+                                                @if (item.NewValue != null && RE.IsMatch(item.NewValue))
+                                                {
+                                                    var parts = item.NewValue.Split('/').Select(Int32.Parse).ToList();
+                                                    var dt = new DateTime(parts[2], parts[1], parts[0]);
+                                                    @dt.ToString("dd MMMM yyyy");
+                                                }
+                                                else
+                                                {
+                                                    @item.NewValue
+                                                }
+                                            </td>
+                                            <td data-label="Date requested" class="govuk-table__cell">@(item.RequestedDateUtc?.ToString("dd MMMM yyyy"))</td>
                                             <td data-label="Suggested from" class="govuk-table__cell">@item.OriginatorUserName</td>
                                             <td data-label="Approved by" class="govuk-table__cell">@(item.ApproverUserName ?? "--")</td>
                                         </tr>
