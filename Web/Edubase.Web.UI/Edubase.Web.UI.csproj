@@ -338,6 +338,7 @@
     <Compile Include="Areas\Governors\Controllers\SharedGovernorController.cs" />
     <Compile Include="Areas\Governors\Models\HistoricGovernorViewModel.cs" />
     <Compile Include="Areas\Groups\Models\ConvertSATViewModel.cs" />
+    <Compile Include="Controllers\AmalgamateMergeController.cs" />
     <Compile Include="Controllers\Api\UtilApiController.cs" />
     <Compile Include="Controllers\FaqController.cs" />
     <Compile Include="Controllers\GlossaryController.cs" />
@@ -471,8 +472,10 @@
     <Compile Include="Models\PaginationViewModel.cs" />
     <Compile Include="Models\Search\DownloadErrorViewModel.cs" />
     <Compile Include="Models\Search\LocationDisambiguationViewModel.cs" />
+    <Compile Include="Models\Tools\AmalgamateEstablishmentsModel.cs" />
     <Compile Include="Models\Tools\BulkAcademiesCreateViewModel.cs" />
     <Compile Include="Models\Tools\IndSchoolsSearchViewModel.cs" />
+    <Compile Include="Models\Tools\MergeEstablishmentsModel.cs" />
     <Compile Include="Models\Tools\PredefinedLASetViewModel.cs" />
     <Compile Include="Models\Tools\PredefinedLASetsViewModel.cs" />
     <Compile Include="Models\UserRolesViewModel.cs" />
@@ -609,6 +612,12 @@
     <Content Include="robots.txt" />
     <Content Include="App_offline_x.htm" />
     <Content Include="Views\Home\Accessibility.cshtml" />
+    <Content Include="Views\Tools\Mergers\AmalgamateEstablishments.cshtml" />
+    <Content Include="Views\Tools\Mergers\AmalgamationComplete.cshtml" />
+    <Content Include="Views\Tools\Mergers\ConfirmAmalgamation.cshtml" />
+    <Content Include="Views\Tools\Mergers\ConfirmMerger.cshtml" />
+    <Content Include="Views\Tools\Mergers\MergeEstablishments.cshtml" />
+    <Content Include="Views\Tools\Mergers\MergerComplete.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
