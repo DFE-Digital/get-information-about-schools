@@ -290,7 +290,10 @@ namespace Edubase.Web.UI.Controllers
             if (!model.Establishment1Urn.HasValue && !model.Establishment2Urn.HasValue &&
                 !model.Establishment3Urn.HasValue)
             {
-                ModelState.AddModelError(nameof(model.Establishment1Urn), "Enter the establishment 2 URN");
+                if (!estab1HasErrors)
+                {
+                    ModelState.AddModelError(nameof(model.Establishment1Urn), "Enter the establishment 2 URN");
+                }
             }
 
             if (model.Establishment0Urn.HasValue)
