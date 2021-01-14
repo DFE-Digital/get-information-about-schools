@@ -434,6 +434,12 @@ namespace Edubase.Web.UI.Controllers
                 ViewData.ModelState.AddModelError("LocalAuthorityId", "Please select a local authority");
             }
 
+            model.EstablishmentPhases = (await _lookupService.EducationPhasesGetAllAsync()).ToSelectList();
+
+            model.EstablishmentTypes = (await _lookupService.EstablishmentTypesGetAllAsync()).ToSelectList();
+
+            model.LocalAuthorities = (await _lookupService.LocalAuthorityGetAllAsync()).ToSelectList();
+
             if (!ModelState.IsValid)
             {
                 return View("~/Views/Tools/Mergers/ConfirmAmalgamation.cshtml", model);
@@ -463,7 +469,7 @@ namespace Edubase.Web.UI.Controllers
             var establishmentTypeId = int.TryParse(model.EstablishmentType, out var i) ? i : (int?) null;
             var localAuthorityId = int.TryParse(model.LocalAuthorityId, out var j) ? j : (int?) null;
 
-            model.LocalAuthorities = (await _lookupService.LocalAuthorityGetAllAsync()).ToSelectList();
+
 
             var result = await _establishmentWriteService.AmalgamateOrMergeAsync(
                 new AmalgamateMergeRequest()
@@ -484,12 +490,13 @@ namespace Edubase.Web.UI.Controllers
                 model.LocalAuthorityName =
                     model.LocalAuthorities.FirstOrDefault(x => x.Value == model.LocalAuthorityId)?.Text;
 
+                model.EstablishmentType = model.EstablishmentTypes
+                    .FirstOrDefault(x => x.Value == model.EstablishmentType)?.Text;
+
                 return View("~/Views/Tools/Mergers/AmalgamationComplete.cshtml", model);
             }
 
-            model.EstablishmentPhases = (await _lookupService.EducationPhasesGetAllAsync()).ToSelectList();
 
-            model.EstablishmentTypes = (await _lookupService.EstablishmentTypesGetAllAsync()).ToSelectList();
 
 
             foreach (var err in result.Errors)

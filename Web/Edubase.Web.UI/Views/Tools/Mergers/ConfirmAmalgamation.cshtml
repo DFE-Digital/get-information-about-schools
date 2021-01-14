@@ -81,10 +81,7 @@
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentPhase)">
                     @Html.LabelFor(x => x.EstablishmentPhase, "Establishment phase", new {@class = "govuk-label"})
                     @Html.ValidationMessageFor(x => x.EstablishmentPhase, null, new {@class = "govuk-error-message"})
-                    @* <label class="govuk-label" for="new-establishment-phase">Establishment phase</label> *@
-                    @* <span v-show="phaseError" class="govuk-error-message">Please select an establishment phase</span> *@
                     @Html.DropDownListFor(x => x.EstablishmentPhase, Model.EstablishmentPhases, new {@class = "govuk-select govuk-input--width-20"})
-                    @* <select id="new-establishment-phase" class="govuk-select govuk-input--width-20" v-model="phaseId"></select> *@
                 </div>
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
                     @Html.LabelFor(x => x.LocalAuthorityId, "Local Authority", new {@class = "govuk-label"})
@@ -99,9 +96,9 @@
         </div>
         <div class="govuk-grid-column-full">
             <div class="button-row govuk-!-padding-top-6">
-                <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="validMergeUrns=false; clearErrors();">&laquo; Go back</a>
-                <button type="submit" name="action" value="" class="govuk-button" v-on:click.prevent="processAmalgamation">Process</button>
-                <button type="submit" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
+                @Html.ActionLink(HttpUtility.HtmlDecode("&laquo; Go back"), "AmalgamateEstablishments", "AmalgamateMerge", new { area = ""}, new { @class = "govuk-button govuk-button--secondary"})
+                <button type="submit" class="govuk-button">Process</button>
+               @Html.ActionLink("Cancel", "MergersTool", "Tools", new {area = ""}, new {@class = "govuk-button govuk-button--secondary cancel"})
             </div>
         </div>
     </div>
