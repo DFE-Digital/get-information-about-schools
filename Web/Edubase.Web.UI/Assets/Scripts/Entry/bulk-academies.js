@@ -1,4 +1,5 @@
 import GiasAttachUnload from '../GiasModules/GiasModals/GiasAttachUnload';
+import GiasWaitMask from '../GiasModules/GiasWaitMask';
 
 const $mc = $('#main-content');
 const $fields = $mc.find(':input');
@@ -17,3 +18,5 @@ $mc.find('.remove-urn').okCancel({
     $(this.el).click();
   }
 });
+
+new GiasWaitMask();

@@ -102,7 +102,7 @@
                 @Html.EditorFor(x => x.FoundItem.OpeningDateView, new { title = "Opening date", fieldsetClassName = "edit-date-fieldset" })
 
                 <div class="button-row">
-                    <button type="submit" name="action" value="add" class="govuk-button" id="find-urn">@(ViewBag.ButtonText ?? "Add establishment")</button>
+                    <button type="submit" name="action" value="add" class="govuk-button gias-wait-mask-trigger" id="find-urn">@(ViewBag.ButtonText ?? "Add establishment")</button>
                     <button name="action" value="cancel" class="govuk-button govuk-button--secondary">Cancel</button>
                 </div>
             </div>
@@ -122,7 +122,7 @@
                     </label>
                     @Html.ValidationMessageFor(x => x.SearchUrn, null, new { @class = "govuk-error-message"})
                     @Html.TextBoxFor(x => x.SearchUrn, null, new { @class = "govuk-input govuk-!-width-one-half" })
-                    <button type="submit" name="action" value="search" class="govuk-button links-estab-search-button" id="find-urn">Search URN</button>
+                    <button type="submit" name="action" value="search" class="govuk-button links-estab-search-button gias-wait-mask-trigger" id="find-urn">Search URN</button>
                 </div>
             </div>
         </div>
@@ -164,7 +164,7 @@
                                 <td data-label="Establishment type" class="govuk-table__cell">@Model.ItemTypes.FirstOrDefault(x => x.Value.Equals(est.EstablishmentTypeId.ToString(), StringComparison.InvariantCultureIgnoreCase)).Text</td>
                                 <td data-label="Opening date" class="govuk-table__cell">@est.OpeningDateView.ToString()</td>
                                 <td class="govuk-table__cell">
-                                    <button name="editUrn" value="@est.Urn" class="gias-link-button gias-link-button-s" aria-label="Edit establishment">Edit</button>
+                                    <button name="editUrn" value="@est.Urn" class="gias-link-button gias-link-button-s gias-wait-mask-trigger" aria-label="Edit establishment">Edit</button>
                                 </td>
                                 <td class="govuk-table__cell">
                                     <button id="removeUrn" name="removeUrn" value="@est.Urn" class="remove-urn gias-link-button gias-link-button-s" aria-label="Remove establishment">Remove</button>
@@ -183,7 +183,7 @@
                 }
 
                 <div class="button-row">
-                    <button type="submit" name="action" value="create" id="go-create" class="govuk-button">Create academies</button>
+                    <button type="submit" name="action" value="create" id="go-create" class="govuk-button gias-wait-mask-trigger">Create academies</button>
                     @Html.ActionLink("Cancel", "Index", "Tools", null, new { @class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button" })
                 </div>
             </div>
@@ -229,8 +229,10 @@
     }
 }
 
-
-
+<div class="gias-wait-mask hidden" id="gias-content-mask">
+    @helpers.CssSpinner()
+    <span class="govuk-visually-hidden">Please wait.</span>
+</div>
 @section ViewScripts
 {
     <script src="/public/assets/scripts/build/bulk-academies.js"></script>
