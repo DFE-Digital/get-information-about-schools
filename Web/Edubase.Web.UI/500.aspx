@@ -160,7 +160,7 @@
                     <h2 class="govuk-visually-hidden">Support links</h2>
                     <ul class="govuk-footer__inline-list">
                         <li class="govuk-footer__inline-list-item">
-                            <a href="https://form.education.gov.uk/fillform.php?self=1&form_id=hGz7nZcsdnX&noLoginPrompt=1" target="_blank" rel="noreferrer noopener" class="govuk-footer__link">
+                            <a href="https://form.education.gov.uk/service/Data-collections-service-request-form" target="_blank" rel="noreferrer noopener" class="govuk-footer__link">
                                 Contact
                                 <span class="govuk-visually-hidden">Opens in new window</span>
                             </a>
