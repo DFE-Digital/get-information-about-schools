@@ -67,7 +67,7 @@ namespace Edubase.Web.UI.Controllers
 
         [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanMergeEstablishments),
          Route("Tools/MergersTool/MergeEstablishments")]
-        public async Task<ActionResult> ProcessMergeEstablishments(MergeEstablishmentsModel model)
+        public async Task<ActionResult> ProcessMergeEstablishmentsAsync(MergeEstablishmentsModel model)
         {
             var viewModel = new MergeEstablishmentsModel();
 
@@ -163,7 +163,7 @@ namespace Edubase.Web.UI.Controllers
 
         [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanMergeEstablishments),
          Route("Tools/MergersTool/ConfirmMerger")]
-        public async Task<ActionResult> ProcessMerge(MergeEstablishmentsModel model)
+        public async Task<ActionResult> ProcessMergeAsync(MergeEstablishmentsModel model)
         {
             if (model.MergeDate.IsEmpty() || model.MergeDate == null || !model.MergeDate.IsValid())
             {
@@ -213,7 +213,7 @@ namespace Edubase.Web.UI.Controllers
 
         [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanMergeEstablishments),
          Route("Tools/MergersTool/AmalgamateEstablishments")]
-        public async Task<ActionResult> ProcessAmalgamationEstablishments(AmalgamateEstablishmentsModel model)
+        public async Task<ActionResult> ProcessAmalgamationEstablishmentsAsync(AmalgamateEstablishmentsModel model)
         {
             var viewModel = new AmalgamateEstablishmentsModel();
 
