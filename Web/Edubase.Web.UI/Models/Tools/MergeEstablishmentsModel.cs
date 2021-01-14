@@ -4,12 +4,16 @@ namespace Edubase.Web.UI.Models.Tools
 {
     public class MergeEstablishmentsModel
     {
+        [Display(Name = "Lead establishment URN")]
         public int? LeadEstablishmentUrn { get; set; }
 
+        [Display(Name = "Establishment 1 URN")]
         public int? Establishment1Urn { get; set; }
 
+        [Display(Name = "Establishment 2 URN")]
         public int? Establishment2Urn { get; set; }
 
+        [Display(Name = "Establishment 3 URN")]
         public int? Establishment3Urn { get; set; }
 
         public string LeadEstablishmentName { get; set; }

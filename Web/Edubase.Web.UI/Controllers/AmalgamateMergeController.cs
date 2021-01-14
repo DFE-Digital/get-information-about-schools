@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Edubase.Common;
@@ -33,7 +34,7 @@ namespace Edubase.Web.UI.Controllers
         {
             if (string.IsNullOrEmpty(mergerType))
             {
-                ModelState.AddModelError("MergerType", "Please select \"amalgamation\" or \"merger\"");
+                ModelState.AddModelError("MergerType", "Please select \"Amalgamation\" or \"Merger\"");
                 return View("~/Views/Tools/MergersTool.cshtml");
             }
 
@@ -70,15 +71,21 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> ProcessMergeEstablishmentsAsync(MergeEstablishmentsModel model)
         {
             var viewModel = new MergeEstablishmentsModel();
+            var submittedUrns = new List<int>();
 
-            // check for empty required fields
-            if (!model.LeadEstablishmentUrn.HasValue)
+            var leadHasErrors = ModelState.Keys.Where(k => k == "LeadEstablishmentUrn")
+                .Select(k => ModelState[k].Errors).First().Select(e => e.ErrorMessage).Any();
+
+            var estab1HasErrors = ModelState.Keys.Where(k => k == "Establishment1Urn")
+                .Select(k => ModelState[k].Errors).First().Select(e => e.ErrorMessage).Any();
+
+            if (!model.LeadEstablishmentUrn.HasValue && !leadHasErrors)
             {
                 ModelState.AddModelError(nameof(model.LeadEstablishmentUrn), "Enter the lead establishment URN");
             }
 
             if (!model.Establishment1Urn.HasValue && !model.Establishment2Urn.HasValue &&
-                !model.Establishment3Urn.HasValue)
+                !model.Establishment3Urn.HasValue && !estab1HasErrors)
             {
                 ModelState.AddModelError(nameof(model.Establishment1Urn), "Enter the establishment 1 URN");
             }
@@ -88,7 +95,8 @@ namespace Edubase.Web.UI.Controllers
             {
                 var leadEstab =
                     await _establishmentReadService.GetAsync(model.LeadEstablishmentUrn.GetValueOrDefault(), User);
-                if (leadEstab == null)
+
+                if (leadEstab.GetResult() == null)
                 {
                     ViewData.ModelState.AddModelError(nameof(model.LeadEstablishmentUrn),
                         "The lead establishment URN is invalid");
@@ -101,6 +109,7 @@ namespace Edubase.Web.UI.Controllers
                     viewModel.LeadEstablishmentName = leadEstab.GetResult().Name;
                     viewModel.EstablishmentType =
                         estabTypes.FirstOrDefault(t => t.Id == leadEstab.GetResult().TypeId)?.Name;
+                    submittedUrns.Add(model.LeadEstablishmentUrn.GetValueOrDefault());
                 }
             }
 
@@ -108,15 +117,23 @@ namespace Edubase.Web.UI.Controllers
             {
                 var estab1 =
                     await _establishmentReadService.GetAsync(model.Establishment1Urn.GetValueOrDefault(), User);
-                if (estab1 == null)
+
+                var hasErrors = ModelState.Keys.Where(k => k == "Establishment1Urn")
+                    .Select(k => ModelState[k].Errors).First().Select(e => e.ErrorMessage).Any();
+
+                if (estab1.GetResult() == null)
                 {
-                    ViewData.ModelState.AddModelError(nameof(model.Establishment1Urn),
-                        "The establishment 1 URN is invalid");
+                    if (!hasErrors)
+                    {
+                        ViewData.ModelState.AddModelError(nameof(model.Establishment1Urn),
+                            "The establishment 1 URN is invalid");
+                    }
                 }
                 else
                 {
                     viewModel.Establishment1Urn = model.Establishment1Urn;
                     viewModel.Establishment1Name = estab1.GetResult().Name;
+                    submittedUrns.Add(model.Establishment1Urn.GetValueOrDefault());
                 }
             }
 
@@ -124,15 +141,22 @@ namespace Edubase.Web.UI.Controllers
             {
                 var estab2 =
                     await _establishmentReadService.GetAsync(model.Establishment2Urn.GetValueOrDefault(), User);
-                if (estab2 == null)
+                var hasErrors = ModelState.Keys.Where(k => k == "Establishment2Urn")
+                    .Select(k => ModelState[k].Errors).First().Select(e => e.ErrorMessage).Any();
+
+                if (estab2.GetResult() == null)
                 {
-                    ViewData.ModelState.AddModelError(nameof(model.Establishment2Urn),
-                        "The establishment 2 URN is invalid");
+                    if (!hasErrors)
+                    {
+                        ViewData.ModelState.AddModelError(nameof(model.Establishment2Urn),
+                            "The establishment 2 URN is invalid");
+                    }
                 }
                 else
                 {
                     viewModel.Establishment2Urn = model.Establishment2Urn;
                     viewModel.Establishment2Name = estab2.GetResult().Name;
+                    submittedUrns.Add(model.Establishment2Urn.GetValueOrDefault());
                 }
             }
 
@@ -140,17 +164,51 @@ namespace Edubase.Web.UI.Controllers
             {
                 var estab3 =
                     await _establishmentReadService.GetAsync(model.Establishment3Urn.GetValueOrDefault(), User);
-                if (estab3 == null)
+
+                var hasErrors = ModelState.Keys.Where(k => k == "Establishment3Urn")
+                    .Select(k => ModelState[k].Errors).First().Select(e => e.ErrorMessage).Any();
+
+                if (estab3.GetResult() == null)
                 {
-                    ViewData.ModelState.AddModelError(nameof(model.Establishment3Urn),
-                        "The establishment 3 URN is invalid");
+                    if (!hasErrors)
+                    {
+                        ViewData.ModelState.AddModelError(nameof(model.Establishment3Urn),
+                            "The establishment 3 URN is invalid");
+                    }
                 }
                 else
                 {
                     viewModel.Establishment3Urn = model.Establishment3Urn;
                     viewModel.Establishment3Name = estab3.GetResult().Name;
+                    submittedUrns.Add(model.Establishment3Urn.GetValueOrDefault());
                 }
             }
+
+            var duplicates = submittedUrns.GroupBy(x => x)
+                .Where(g => g.Count() > 1)
+                .ToDictionary(x => x.Key, x => x.Count());
+
+
+            if (duplicates.ContainsKey(model.LeadEstablishmentUrn.GetValueOrDefault()))
+            {
+                ViewData.ModelState.AddModelError("LeadEstablishmentUrn", "Duplicate URN. Please correct the URN.");
+            }
+
+            if (duplicates.ContainsKey(model.Establishment1Urn.GetValueOrDefault()))
+            {
+                ViewData.ModelState.AddModelError("Establishment1Urn", "Duplicate URN. Please correct the URN.");
+            }
+
+            if (duplicates.ContainsKey(model.Establishment2Urn.GetValueOrDefault()))
+            {
+                ViewData.ModelState.AddModelError("Establishment2Urn", "Duplicate URN. Please correct the URN.");
+            }
+
+            if (duplicates.ContainsKey(model.Establishment3Urn.GetValueOrDefault()))
+            {
+                ViewData.ModelState.AddModelError("Establishment3Urn", "Duplicate URN. Please correct the URN.");
+            }
+
 
             if (!ModelState.IsValid)
             {
@@ -217,8 +275,14 @@ namespace Edubase.Web.UI.Controllers
         {
             var viewModel = new AmalgamateEstablishmentsModel();
 
-            // check for empty required fields
-            if (!model.Establishment0Urn.HasValue)
+            var submittedUrns = new List<int>();
+            var estab0HasErrors = ModelState.Keys.Where(k => k == "Establishment0Urn")
+                .Select(k => ModelState[k].Errors).First().Select(e => e.ErrorMessage).Any();
+
+            var estab1HasErrors = ModelState.Keys.Where(k => k == "Establishment1Urn")
+                .Select(k => ModelState[k].Errors).First().Select(e => e.ErrorMessage).Any();
+
+            if (!model.Establishment0Urn.HasValue &&!estab0HasErrors)
             {
                 ModelState.AddModelError(nameof(model.Establishment0Urn), "Enter the establishment 1 URN");
             }
@@ -229,22 +293,21 @@ namespace Edubase.Web.UI.Controllers
                 ModelState.AddModelError(nameof(model.Establishment1Urn), "Enter the establishment 2 URN");
             }
 
-            // validate the establishments exist
             if (model.Establishment0Urn.HasValue)
             {
-                var leadEstab =
+                var estab =
                     await _establishmentReadService.GetAsync(model.Establishment0Urn.GetValueOrDefault(), User);
-                if (leadEstab == null)
+                if (estab.GetResult() == null && !estab1HasErrors)
                 {
                     ViewData.ModelState.AddModelError(nameof(model.Establishment0Urn),
                         "The establishment 1 URN is invalid");
                 }
                 else
                 {
-
                     viewModel.Establishment0Urn = model.Establishment0Urn;
-                    viewModel.Establishment0Name = leadEstab.GetResult().Name;
+                    viewModel.Establishment0Name = estab.GetResult().Name;
 
+                    submittedUrns.Add(model.Establishment0Urn.GetValueOrDefault());
                 }
             }
 
@@ -252,7 +315,7 @@ namespace Edubase.Web.UI.Controllers
             {
                 var estab1 =
                     await _establishmentReadService.GetAsync(model.Establishment1Urn.GetValueOrDefault(), User);
-                if (estab1 == null)
+                if (estab1.GetResult() == null)
                 {
                     ViewData.ModelState.AddModelError(nameof(model.Establishment1Urn),
                         "The establishment 1 URN is invalid");
@@ -261,6 +324,8 @@ namespace Edubase.Web.UI.Controllers
                 {
                     viewModel.Establishment1Urn = model.Establishment1Urn;
                     viewModel.Establishment1Name = estab1.GetResult().Name;
+
+                    submittedUrns.Add(model.Establishment1Urn.GetValueOrDefault());
                 }
             }
 
@@ -268,7 +333,7 @@ namespace Edubase.Web.UI.Controllers
             {
                 var estab2 =
                     await _establishmentReadService.GetAsync(model.Establishment2Urn.GetValueOrDefault(), User);
-                if (estab2 == null)
+                if (estab2.GetResult() == null)
                 {
                     ViewData.ModelState.AddModelError(nameof(model.Establishment2Urn),
                         "The establishment 2 URN is invalid");
@@ -277,6 +342,8 @@ namespace Edubase.Web.UI.Controllers
                 {
                     viewModel.Establishment2Urn = model.Establishment2Urn;
                     viewModel.Establishment2Name = estab2.GetResult().Name;
+
+                    submittedUrns.Add(model.Establishment2Urn.GetValueOrDefault());
                 }
             }
 
@@ -284,7 +351,7 @@ namespace Edubase.Web.UI.Controllers
             {
                 var estab3 =
                     await _establishmentReadService.GetAsync(model.Establishment3Urn.GetValueOrDefault(), User);
-                if (estab3 == null)
+                if (estab3.GetResult() == null)
                 {
                     ViewData.ModelState.AddModelError(nameof(model.Establishment3Urn),
                         "The establishment 3 URN is invalid");
@@ -293,8 +360,36 @@ namespace Edubase.Web.UI.Controllers
                 {
                     viewModel.Establishment3Urn = model.Establishment3Urn;
                     viewModel.Establishment3Name = estab3.GetResult().Name;
+
+                    submittedUrns.Add(model.Establishment3Urn.GetValueOrDefault());
                 }
             }
+
+            var duplicates = submittedUrns.GroupBy(x => x)
+                .Where(g => g.Count() > 1)
+                .ToDictionary(x => x.Key, x => x.Count());
+
+
+            if (duplicates.ContainsKey(model.Establishment0Urn.GetValueOrDefault()))
+            {
+                ViewData.ModelState.AddModelError("Establishment0Urn", "Duplicate URN. Please correct the URN.");
+            }
+
+            if (duplicates.ContainsKey(model.Establishment1Urn.GetValueOrDefault()))
+            {
+                ViewData.ModelState.AddModelError("Establishment1Urn", "Duplicate URN. Please correct the URN.");
+            }
+
+            if (duplicates.ContainsKey(model.Establishment2Urn.GetValueOrDefault()))
+            {
+                ViewData.ModelState.AddModelError("Establishment2Urn", "Duplicate URN. Please correct the URN.");
+            }
+
+            if (duplicates.ContainsKey(model.Establishment3Urn.GetValueOrDefault()))
+            {
+                ViewData.ModelState.AddModelError("Establishment3Urn", "Duplicate URN. Please correct the URN.");
+            }
+
 
             if (!ModelState.IsValid)
             {
@@ -365,8 +460,8 @@ namespace Edubase.Web.UI.Controllers
                 model.MergeDate.Month.GetValueOrDefault(), model.MergeDate.Day.GetValueOrDefault());
 
 
-            var establishmentTypeId = int.TryParse(model.EstablishmentType, out var i) ? i : (int?)null;
-            var localAuthorityId = int.TryParse(model.LocalAuthorityId, out var j) ? j : (int?)null;
+            var establishmentTypeId = int.TryParse(model.EstablishmentType, out var i) ? i : (int?) null;
+            var localAuthorityId = int.TryParse(model.LocalAuthorityId, out var j) ? j : (int?) null;
 
             model.LocalAuthorities = (await _lookupService.LocalAuthorityGetAllAsync()).ToSelectList();
 
@@ -381,7 +476,6 @@ namespace Edubase.Web.UI.Controllers
                     NewEstablishmentTypeId = establishmentTypeId,
                     NewEstablishmentName = model.NewEstablishmentName,
                     NewEstablishmentLocalAuthorityId = localAuthorityId,
-
                 }, User);
 
             if (!result.HasErrors)
@@ -398,14 +492,12 @@ namespace Edubase.Web.UI.Controllers
             model.EstablishmentTypes = (await _lookupService.EstablishmentTypesGetAllAsync()).ToSelectList();
 
 
-
             foreach (var err in result.Errors)
             {
                 ViewData.ModelState.AddModelError(err.Fields, err.Message);
             }
 
             return View("~/Views/Tools/Mergers/ConfirmAmalgamation.cshtml", model);
-
         }
     }
 }
