@@ -193,7 +193,7 @@
                             </div>
                             <div class="gias-summary-list__row">
                                 <dt class="gias-summary-list__key">Open date:</dt>
-                                <dd id="group-open-date" class="gias-summary-list__value">{{openDate}}</dd>
+                                <dd id="group-open-date" class="gias-summary-list__value">{{openDateDisplay}}</dd>
                             </div>
                             <div class="gias-summary-list__row">
                                 <dt class="gias-summary-list__key">Group status:</dt>
@@ -246,6 +246,21 @@
                                                     </label>
                                                 </div>
                                             </div>
+<<<<<<< HEAD
+                                        </div>
+                                    </td>
+
+                                    <td data-label="URN" v-bind:class="['govuk-table__cell', (estab.urn == groupLead)? 'highlight': '']">
+                                        <input type="hidden" :value="estab.urn" name="estab-in-group"/> <!-- :value is deliberate - vue js attribute bind. visual studio likes to remove : when reformatting!!! -->
+                                        {{estab.urn}}
+                                    </td>
+
+                                    <td data-label="Name" v-bind:class="['govuk-table__cell', (estab.urn == groupLead)? 'highlight': '']">{{estab.name}}</td>
+                                    <td data-label="Join date" v-bind:class="['govuk-table__cell',(estab.urn == groupLead)? 'highlight': '']">{{ estab.joinDateDisplay }}</td>
+                                    <td v-bind:class="['govuk-table__cell',(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="editJoiningEstab(estab.urn); clearErrors()" aria-label="Edit children's centre's join date">Edit</a></td>
+                                    <td v-bind:class="['govuk-table__cell',(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="removeJoiningEstab(estab.urn)" aria-label="Remove children's centre">Remove</a></td>
+                                </tr>
+=======
                                         </td>
 
                                         <td data-label="URN" v-bind:class="['govuk-table__cell', (estab.urn == groupLead)? 'highlight': '']">
@@ -258,6 +273,7 @@
                                         <td v-bind:class="['govuk-table__cell',(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="editJoiningEstab(estab.urn); clearErrors()" aria-label="Edit children's centre's join date">Edit</a></td>
                                         <td v-bind:class="['govuk-table__cell',(estab.urn == groupLead)? 'highlight': '']"><a href="#" v-on:click.prevent="removeJoiningEstab(estab.urn)" aria-label="Remove children's centre">Remove</a></td>
                                     </tr>
+>>>>>>> feature/40724-childrens-centre-non-js
                                 </tbody>
                             </table>
                             <p class="table-caption">{{tableCount}}</p>
@@ -425,7 +441,7 @@
                 </div>
                 <div class="govuk-grid-column-full">
                     <div class="button-row">
-                        <button type="submit" name="action" class="govuk-button" value="@GroupEditorViewModel.ActionDetails">Continue</button>
+                        <button type="submit" name="action" class="govuk-button" value="@GroupEditorViewModel.ActionSave">Continue</button>
                         @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary", data_module = "govuk-button" })
                     </div>
                 </div>
@@ -516,7 +532,7 @@
                     <div class="govuk-grid-column-full">
                         <!-- JB: list of "added" centres here -->
                         <div>
-                            <h2 class="govuk-heading-m">Children's centres to add to the @(Model.CCTypeName.ToLower())</h2>
+                            <h2 class="govuk-heading-m">Children's centres to add to the @(Model.GroupName)</h2>
                             <p class="table-caption">1 - @(Model.LinkedEstablishments.Establishments.Count) of @(Model.LinkedEstablishments.Establishments.Count)</p>
                             <table class="govuk-table gias-table childrens-centre-listing">
                                 <caption class="govuk-visually-hidden">Children's centres added</caption>
