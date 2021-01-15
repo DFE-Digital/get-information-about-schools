@@ -504,7 +504,11 @@ namespace Edubase.Web.UI.Controllers
 
             foreach (var err in result.Errors)
             {
-                ViewData.ModelState.AddModelError(err.Fields, err.Message);
+                if (err.Fields != null)
+                {
+                    ViewData.ModelState.AddModelError(err.Fields, err.Message);
+                }
+
             }
 
             return View("~/Views/Tools/Mergers/ConfirmAmalgamation.cshtml", model);
