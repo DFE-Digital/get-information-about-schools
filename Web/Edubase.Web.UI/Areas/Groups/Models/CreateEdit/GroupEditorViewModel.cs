@@ -4,7 +4,9 @@ using Edubase.Web.UI.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Web.Http.Controllers;
 using System.Web.Mvc;
+using Castle.Components.DictionaryAdapter;
 
 namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 {
@@ -31,6 +33,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 
         public const string ActionSave = "save";
         public const string ActionSaveLinks = "savelinks";
+        public const string ActionCcCreate = "continue";
         public const string ActionLinkedEstablishmentAdd = "add";
         public const string ActionLinkedEstablishmentRemove = "remove-";
         public const string ActionLinkedEstablishmentEdit = "edit-";
@@ -50,7 +53,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         };
         
         public string Action { get; set; }
-        public int ActionUrn => int.Parse(Action.Split('-')[1]);
+        public int ActionUrn => Action.Split('-').Last().ToInteger() ?? 0;
         public eSaveMode SaveMode { get; set; }
         public string FieldNamePrefix => _fieldNamePrefixers.Get(GroupTypeMode);
         public bool InEditMode => GroupUId.HasValue;
@@ -145,6 +148,11 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
                     WarningsToProcess.Add(new ApiWarning { Code = UIWarningCodeSatClosureAreYouSure, Message = "Are you sure you want to close this single-academy trust?" });
                 }
             }
+        }
+
+        public void ClearWarnings()
+        {
+            WarningsToProcess = new EditableList<ApiWarning>();
         }
 
         public GroupEditorViewModel()
