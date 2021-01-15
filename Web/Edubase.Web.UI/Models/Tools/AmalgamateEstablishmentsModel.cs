@@ -7,16 +7,16 @@ namespace Edubase.Web.UI.Models.Tools
 {
     public class AmalgamateEstablishmentsModel
     {
-        [Display(Name = "Establishment 0 URN")]
+        [Display(Name = "Establishment 1 URN")]
         public int? Establishment0Urn { get; set; }
 
-        [Display(Name = "Establishment 1 URN")]
+        [Display(Name = "Establishment 2 URN")]
         public int? Establishment1Urn { get; set; }
 
-        [Display(Name = "Establishment 2 URN")]
+        [Display(Name = "Establishment 3 URN")]
         public int? Establishment2Urn { get; set; }
 
-        [Display(Name = "Establishment 3 URN")]
+        [Display(Name = "Establishment 4 URN")]
         public int? Establishment3Urn { get; set; }
 
         public string Establishment0Name { get; set; }
