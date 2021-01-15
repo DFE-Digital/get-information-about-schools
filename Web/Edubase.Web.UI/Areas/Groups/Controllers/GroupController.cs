@@ -114,26 +114,26 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             await ValidateAsync(viewModel);
 
-            if (ModelState.IsValid && !viewModel.WarningsToProcess.Any())
+            if (viewModel.Action == ActionSave && ModelState.IsValid && !viewModel.WarningsToProcess.Any())
             {
                 var actionResult = await ProcessCreateEditGroup(viewModel);
                 if (actionResult != null) return actionResult;
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid || viewModel.Action == ActionLinkedEstablishmentCancelEdit)
             {
                 ModelState.Remove("ActionName");
 
                 // because some of the lookups contain the action urn as part of the action string, we want to strip that back out for the comparison
                 var actionLookup = viewModel.Action.IndexOf('-') == -1 ? viewModel.Action : string.Concat(viewModel.Action.Split('-').First(),"-");
 
-                // we only want to progress the view if it's successful
                 switch (actionLookup)
                 {
                     case ActionCcCreate:
                         viewModel.ActionName = eChildrensCentreActions.Step2;
                         break;
                     case ActionSave:
+                    case ActionDetails:
                         viewModel.ActionName = eChildrensCentreActions.Step3;
                         break;
                     case ActionLinkedEstablishmentSearch:
@@ -769,6 +769,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.LocalAuthorities = (await _lookup.LocalAuthorityGetAllAsync()).ToSelectList(viewModel.LocalAuthorityId);
             viewModel.CCGroupTypes = (await _lookup.GroupTypesGetAllAsync())
                     .Where(x => x.Id.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)).OrderBy(x => x.Id).ToSelectList(viewModel.GroupTypeId);
+            if (viewModel.GroupTypeId.HasValue)
+            {
+                viewModel.GroupTypeName = await _lookup.GetNameAsync(() => viewModel.GroupTypeId);
+            }
             return viewModel;
         }
 
@@ -803,7 +807,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 await SearchForLinkedEstablishment(viewModel);
             }
-            else if (viewModel.Action == ActionSave)
+            else if (viewModel.Action == ActionSave || viewModel.Action == ActionDetails)
             {
                 suppressClearModelState = true;
                 var apiResponse = await SaveGroup(viewModel);
@@ -873,11 +877,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         private async Task  ValidateAsync(GroupEditorViewModel viewModel)
         {
             if ((viewModel.Action == ActionSave
-                || viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove)
-                || viewModel.Action == ActionLinkedEstablishmentSearch
-                || viewModel.Action == ActionLinkedEstablishmentAdd
-                || viewModel.Action.StartsWith(ActionLinkedEstablishmentEdit)
-                || viewModel.Action == ActionLinkedEstablishmentCancelEdit
+                 || viewModel.Action == ActionDetails
+                 || viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove)
+                 || viewModel.Action == ActionLinkedEstablishmentSearch
+                 || viewModel.Action == ActionLinkedEstablishmentAdd
+                 || viewModel.Action.StartsWith(ActionLinkedEstablishmentEdit)
+                 || viewModel.Action == ActionLinkedEstablishmentCancelEdit
                 ) && ModelState.IsValid)
             {
                 var dto = CreateSaveDto(viewModel);
@@ -899,7 +904,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     }
                 }
 
-                if (viewModel.Action == ActionSave)
+                if (viewModel.Action == ActionSave || viewModel.Action == ActionDetails)
                 {
                     // we want to rebuild the screen once the removal has completed, so set the viewstate back to default
                     viewModel.ClearWarnings();
