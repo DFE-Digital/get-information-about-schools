@@ -72,7 +72,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
             });
 
             // On saving the group record....
-            When(x => x.Action == ActionSave, () =>
+            When(x => x.Action == ActionSave || x.Action == ActionDetails, () =>
             {
                 When(m => m.GroupTypeMode == eGroupTypeMode.ChildrensCentre, () =>
                 {

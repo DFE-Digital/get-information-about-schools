@@ -106,7 +106,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         }
 
         [HttpPost, Route("Create/{type}"), EdubaseAuthorize]
-        public async Task<ActionResult> Create(GroupEditorViewModel viewModel, string type)
+        public async Task<ActionResult> Create(GroupEditorViewModel viewModel, string type, bool? jsDisabled = false)
         {
             await PopulateSelectLists(viewModel);
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
@@ -168,6 +168,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                         break;
                 }
             }
+
+            ViewBag.JsDisabled = jsDisabled;
 
             return viewModel.GroupTypeMode == eGroupTypeMode.ChildrensCentre
                 ? View("CreateChildrensCentre", viewModel)
