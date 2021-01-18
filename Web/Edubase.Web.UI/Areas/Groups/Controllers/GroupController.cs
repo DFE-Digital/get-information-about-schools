@@ -565,29 +565,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Reset();
         }
-
-        private SaveGroupDto CreateValidateDto(GroupEditorViewModel viewModel)
-        {
-            var dto = new SaveGroupDto
-            {
-                Group = new GroupModel
-                {
-                    GroupTypeId = viewModel.GroupTypeId,
-                    LocalAuthorityId = viewModel.LocalAuthorityId,
-                    Name = viewModel.GroupName,
-                    OpenDate = viewModel.OpenDate.ToDateTime()
-                },
-                LinkedEstablishments = viewModel?.LinkedEstablishments?.Establishments?.Select(e => new LinkedEstablishmentGroup
-                    {
-                        CCIsLeadCentre = e?.CCIsLeadCentre ?? false,
-                        Urn = e?.Urn,
-                        JoinedDate = e?.JoinedDate
-                    })
-                    .ToList()
-            };
-            return dto;
-        }
-
+        
         private SaveGroupDto CreateSaveDto(GroupEditorViewModel viewModel)
         {
             viewModel.SetCCLeadCentreUrn();
@@ -608,13 +586,23 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 UKPRN = viewModel.UKPRN.ToString()
             };
 
-            List<LinkedEstablishmentGroup> createLinksDomainModel() => viewModel.LinkedEstablishments.Establishments.Select(x => new LinkedEstablishmentGroup
+            List<LinkedEstablishmentGroup> createLinksDomainModel()
             {
-                Urn = x.Urn,
-                Id = x.Id,
-                JoinedDate = x.JoinedDate ?? x.JoinedDateEditable.ToDateTime(),
-                CCIsLeadCentre = x.CCIsLeadCentre
-            }).ToList();
+                var domainList = viewModel.LinkedEstablishments.Establishments.Select(x => new LinkedEstablishmentGroup
+                    {
+                        Urn = x.Urn,
+                        Id = x.Id,
+                        JoinedDate = x.JoinedDate ?? x.JoinedDateEditable.ToDateTime(),
+                        CCIsLeadCentre = x.CCIsLeadCentre
+                    }).ToList();
+
+                if (domainList.Any() && !domainList.Any(x => x.CCIsLeadCentre))
+                {
+                    domainList.First().CCIsLeadCentre = true;
+                    viewModel.LinkedEstablishments.Establishments.First().CCIsLeadCentre = true;
+                }
+                return domainList;
+            }
 
             List<LinkedEstablishmentGroup> createLinkedEstablishmentFromSearch(bool isSearch = false) => new List<LinkedEstablishmentGroup>
             {
@@ -673,17 +661,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 return domainList;
             }
 
-            List<LinkedEstablishmentGroup> createLinkedEstablishmentRemovedRefresh()
-            {
-                var domainList = createLinksDomainModel();
-                if (domainList.Any() && !domainList.Any(x => x.CCIsLeadCentre))
-                {
-                    domainList.First().CCIsLeadCentre = true;
-                    viewModel.LinkedEstablishments.Establishments.First().CCIsLeadCentre = true;
-                }
-                return domainList;
-            }
-
             SaveGroupDto dto = null;
             if (viewModel.SaveMode == eSaveMode.Details)
             {
@@ -708,7 +685,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 else if (viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove))
                 {
                     viewModel.LinkedEstablishments.Establishments.RemoveAll(x => x.Urn == viewModel.ActionUrn);
-                    dto = new SaveGroupDto(createDomainModel(), createLinkedEstablishmentRemovedRefresh());
+                    dto = new SaveGroupDto(createDomainModel(), createLinksDomainModel());
                 }
                 else
                 {
@@ -731,6 +708,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 dto.Group.StatusId = (int) GS.CreatedInError;
             }
 
+            viewModel.DeriveCCLeadCentreUrn();
+            
             return dto;
         }
 
@@ -796,7 +775,16 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             else if (viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove, StringComparison.OrdinalIgnoreCase))
             {
                 var index = viewModel.LinkedEstablishments.Establishments.FindIndex(x => x.Urn == viewModel.ActionUrn);
-                if (index >= 0) viewModel.LinkedEstablishments.Establishments.RemoveAt(index);
+                if (index >= 0)
+                {
+                    viewModel.LinkedEstablishments.Establishments.RemoveAt(index);
+                }
+
+                if (viewModel.LinkedEstablishments.Establishments.Any() && !viewModel.LinkedEstablishments.Establishments.Any(x => x.CCIsLeadCentre))
+                {
+                    viewModel.LinkedEstablishments.Establishments.First().CCIsLeadCentre = true;
+                    viewModel.DeriveCCLeadCentreUrn();
+                }
             }
             else if (viewModel.Action == ActionLinkedEstablishmentSave)
             {
