@@ -208,12 +208,6 @@
     }
   }
 
-  //&.table-tight .govuk-table__body {
-  //  .js-reveal-when-no-filter {
-  //    word-break: break-word;
-  //  }
-  //}
-
   .govuk-table__body {
     .govuk-table__cell,
     .govuk-table__header {
@@ -237,7 +231,7 @@
     .cell-requesteddateutc,
     .cell-changeddateutc,
     .cell-effectivedateutc {
-      width: 78px;
+      width: 60px;
     }
     .cell-uid,
     .cell-establishmenturn {
@@ -253,7 +247,7 @@
     }
 
     .cell-fieldname {
-      width: 70px;
+      width: 90px;
     }
 
     .cell-oldvalue,
@@ -277,7 +271,7 @@
     .cell-approverusername,
     [data-label="Approved by"],
     [data-label="Suggested by"] {
-      width: 120px;
+      width: 110px;
       word-wrap: break-word;
     }
   }
