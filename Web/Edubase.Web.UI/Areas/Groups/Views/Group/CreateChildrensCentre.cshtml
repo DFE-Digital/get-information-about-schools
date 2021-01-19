@@ -507,11 +507,12 @@
                     </div>
                     <div class="govuk-grid-column-two-thirds">
                         <h2 class="govuk-heading-m">Add children's centres</h2>
-                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)">
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn) @Html.ValidationCssClassFor(x => x.LinkedEstablishments.Establishments)">
                             <label class="govuk-label" for="LinkedEstablishments_LinkedEstablishmentSearch_Urn">
                                 Establishment <abbr title="Unique Reference Number">URN</abbr>
                             </label>
                             @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, null, new { @class = "govuk-error-message" })
+                            @Html.ValidationMessageFor(x => x.LinkedEstablishments.Establishments, null, new { @class = "govuk-error-message", @id="LinkedEstablishments_Establishments" })
                             @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "govuk-input govuk-!-width-two-thirds", v_model = "searchUrn" })
                             <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" class="govuk-button btn-add-person">Search URN</button>
                         </div>
