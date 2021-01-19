@@ -139,7 +139,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                 When(m => m.GroupTypeMode == eGroupTypeMode.ChildrensCentre, () =>
                 {
                     RuleFor(x => x.LinkedEstablishments.Establishments)
-                        .Must(x => x.Count > 2)
+                        .Must(x => x.Count >= 2)
                         .WithMessage("Add more centres to the group")
                         .WithSummaryMessage("You need to add at least two centres");
                 });
