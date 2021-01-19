@@ -121,7 +121,7 @@
                     var openDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date" : "Open date";
                 }
                 <div class="gias-summary-list__row">
-                    <dt class="gias-summary-list__key">@openDateTitle<br />Reason establishment opened</dt>
+                    <dt class="gias-summary-list__key">@openDateTitle<br />Reason establishment opened:</dt>
                     <dd class="gias-summary-list__value">
                         @(Model.Establishment.OpenDate?.ToString("dd MMMM yyyy") ?? "Not recorded")<br />
                         @Model.ReasonEstablishmentOpenedName
@@ -132,7 +132,7 @@
                 {
                     var closeDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date ended" : "Closed date";
                     <div class="gias-summary-list__row">
-                        <dt class="gias-summary-list__key">@closeDateTitle<br />Reason establishment closed</dt>
+                        <dt class="gias-summary-list__key">@closeDateTitle<br />Reason establishment closed:</dt>
                         <dd class="gias-summary-list__value">
                             @(Model.Establishment.CloseDate?.ToString("dd MMMM yyyy") ?? "Not recorded")<br />
                             @Model.ReasonEstablishmentClosedName
