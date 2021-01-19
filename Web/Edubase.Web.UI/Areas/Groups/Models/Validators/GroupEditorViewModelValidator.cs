@@ -71,8 +71,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .WithMessage(x => $"The join date you entered is before the {x.GroupType}'s open date of {x.OpenDate}. Please enter a later date.");
             });
 
-            // On getting to the details page....
-            When(x => x.Action == ActionDetails, () =>
+            // On getting to the save page....
+            When(x => x.Action == ActionSave || x.Action == ActionDetails, () =>
             {
                 When(m => m.GroupTypeMode == eGroupTypeMode.ChildrensCentre, () =>
                 {
@@ -133,71 +133,16 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                 });
             });
 
-            // On saving the group record....
+            // Specific addition only triggered upon Saving ChildrensCentres
             When(x => x.Action == ActionSave, () =>
             {
                 When(m => m.GroupTypeMode == eGroupTypeMode.ChildrensCentre, () =>
                 {
-                    RuleFor(x => x.LocalAuthorityId).NotNull()
-                        .WithMessage("This field is mandatory")
-                        .WithSummaryMessage("Please select a local authority for the group")
-                        .When(x => x.SaveGroupDetail);
+                    RuleFor(x => x.LinkedEstablishments.Establishments)
+                        .Must(x => x.Count > 2)
+                        .WithMessage("Add more centres to the group")
+                        .WithSummaryMessage("You need to add at least two centres");
                 });
-
-                RuleFor(x => x.GroupTypeId).NotNull().WithMessage("Group Type must be supplied");
-
-                RuleFor(x => x.OpenDate)
-                    .Must(x => !x.IsEmpty())
-                    .WithMessage(x => $"{x.OpenDateLabel} missing. Please enter the date")
-                    .When(x => !x.GroupUId.HasValue, ApplyConditionTo.CurrentValidator)
-                    .Must(x => x.IsValid() || x.IsEmpty())
-                    .WithMessage(x => $"{x.OpenDateLabel} is invalid. Please enter a valid date");
-
-                When(x => x.CanUserEditClosedDate
-                    && x.GroupType == eLookupGroupType.MultiacademyTrust
-                    && x.OriginalStatusId != (int) eLookupGroupStatus.Closed
-                    && x.StatusId == (int) eLookupGroupStatus.Closed
-                    && x.SaveGroupDetail, () =>
-                {
-                    RuleFor(x => x.ClosedDate)
-                    .Must(x => !x.IsEmpty())
-                    .WithMessage("Please enter a date for the closure of this multi-academy trust")
-                    .Must(x => x.IsValid() || x.IsEmpty())
-                    .WithMessage("Closed date is invalid. Please enter a valid date.");
-                });
-
-                RuleFor(x => x.GroupName)
-                    .Cascade(CascadeMode.StopOnFirstFailure)
-                    .NotEmpty()
-                    .WithMessage(x => $"Please enter the {x.FieldNamePrefix.ToLower()} name")
-                    .When(x => x.SaveGroupDetail);
-
-                RuleFor(x => x.GroupId)
-                    .Cascade(CascadeMode.StopOnFirstFailure)
-                    .NotEmpty()
-                    .WithMessage("Please enter a Group ID")
-                    .WithSummaryMessage("Please enter a Group ID")
-                    .MustAsync(async (model, groupId, ct) => !(await _groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), groupId: groupId, existingGroupUId: model.GroupUId)))
-                    .WithMessage("Group ID already exists. Enter a different group ID.")
-                    .When(x => x.GroupTypeMode.OneOfThese(eGroupTypeMode.AcademyTrust, eGroupTypeMode.Sponsor) && x.SaveGroupDetail, ApplyConditionTo.AllValidators);
-
-                When(x => x.OpenDate.ToDateTime().HasValue, () =>
-                {
-                    RuleForEach(x => x.LinkedEstablishments.Establishments)
-                        .Must((model, estab) => VerifyJoinedDate(estab.JoinedDateEditable.ToDateTime() ?? estab.JoinedDate, model))
-                        .When(x => x.OpenDate.ToDateTime().GetValueOrDefault().Date == DateTime.Now.Date)
-                        .WithMessage("The join date you entered is before today. Please enter a later date.")
-                        .WithSummaryMessage("The join date you entered is before today. Please enter a later date.")
-
-                        .Must((model, estab) => VerifyJoinedDate(estab.JoinedDateEditable.ToDateTime() ?? estab.JoinedDate, model))
-                        .When(x => x.OpenDate.ToDateTime().GetValueOrDefault().Date != DateTime.Now.Date)
-                        .WithMessage(x => $"The join date you entered is before the {x.GroupType}'s open date of {x.OpenDate}. Please enter a later date.");
-                });
-
-                RuleFor(x => x.LinkedEstablishments.Establishments)
-                    .Must(x => x.Count > 2)
-                    .WithMessage("Add more centres to the group")
-                    .WithSummaryMessage("You need to add at least two centres");
             });
         }
 
