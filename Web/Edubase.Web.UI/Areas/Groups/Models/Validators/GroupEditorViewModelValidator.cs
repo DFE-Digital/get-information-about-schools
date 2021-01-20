@@ -133,8 +133,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                 });
             });
 
-            // Specific addition only triggered upon Saving ChildrensCentres
-            When(x => x.Action == ActionSave, () =>
+            // Specific addition only triggered upon Saving ChildrensCentres through the creation tool
+            When(x => x.Action == ActionSave && x.ActionName == eChildrensCentreActions.Step3, () =>
             {
                 When(m => m.GroupTypeMode == eGroupTypeMode.ChildrensCentre, () =>
                 {
