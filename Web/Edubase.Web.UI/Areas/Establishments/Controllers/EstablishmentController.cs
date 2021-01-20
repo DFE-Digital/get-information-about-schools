@@ -410,17 +410,18 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View("EditLinks", viewModel);
         }
 
-        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Location")]
-        public async Task<ActionResult> EditLocation(int? id)
+        [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Location/{locationField?}")]
+        public async Task<ActionResult> EditLocation(int? id, string locationField = null)
         {
             if (!id.HasValue) return HttpNotFound();
             var viewModel = await CreateEditViewModel(id);
             if (!viewModel.TabDisplayPolicy.Location) throw new PermissionDeniedException();
             viewModel.SelectedTab = "location";
+            viewModel.LocationEditField = locationField?? string.Empty;
             return View(viewModel);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/Location")]
+        [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Edit/{id:int}/Location/")]
         public async Task<ActionResult> EditLocation(ViewModel model)
         {
             var targetViewModel = await CreateEditViewModel(model.Urn);
@@ -633,6 +634,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.EditPolicy, User);
             viewModel.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin);
             viewModel.SENIds = viewModel.SENIds ?? new int[0];
+            viewModel.LocationEditField = string.Empty;
 
             preprocessViewModel?.Invoke(viewModel);
 
@@ -789,7 +791,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {
                     // KHD: Texuna will sometimes return an API error.  I have been asked to ignore it.
                 }
-                
             }
         }
 
@@ -956,7 +957,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.ReasonsEstablishmentOpened = (await _cachedLookupService.ReasonEstablishmentOpenedGetAllAsync()).ToSelectList(viewModel.ReasonEstablishmentOpenedId);
             viewModel.ReasonsEstablishmentClosed = (await _cachedLookupService.ReasonEstablishmentClosedGetAllAsync()).ToSelectList(viewModel.ReasonEstablishmentClosedId);
             viewModel.SpecialClassesProvisions = (await _cachedLookupService.ProvisionSpecialClassesGetAllAsync()).ToSelectList(viewModel.ProvisionSpecialClassesId);
-            
+
             viewModel.MSOAs = (await _cachedLookupService.MSOAsGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, $"{x.Name} [{x.Code}]")).ToList();
             viewModel.LSOAs = (await _cachedLookupService.LSOAsGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, $"{x.Name} [{x.Code}]")).ToList();
 
@@ -1146,7 +1147,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 RemoveAdditionalAddress(viewModel);
             }
             else if (viewModel.ActionSpecifierCommand == ViewModel.ASCancel)
-            {   
+            {
                 viewModel.OriginalEstablishmentName = domainModel.Name;
                 viewModel.OriginalTypeName = (await _cachedLookupService.EstablishmentTypesGetAllAsync()).Where(x => x.Id == domainModel.TypeId).Select(x => x.Name).FirstOrDefault();
             }
@@ -1252,9 +1253,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
                         if (fieldName == null || !ModelState.ContainsKey(fieldName) || !ModelState[fieldName].Errors.Any())
                         {
-                            ModelState.AddModelError(fieldName ?? string.Empty, validationEnvelopeError.GetMessage()); 
+                            ModelState.AddModelError(fieldName ?? string.Empty, validationEnvelopeError.GetMessage());
                         }
-                        
+
                     }
                 }
 
