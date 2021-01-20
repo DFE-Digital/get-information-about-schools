@@ -58,7 +58,7 @@
                         <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">The <abbr title="Unique Reference Number">URN</abbr> is a duplicate</a>
                     </li>
                     <li v-show="apiErrors.length>0" v-for="err in apiErrors">
-                        <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">{{err.field}} : {{err.message}}</a>
+                        <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">{{err.field?.concat(" : ")}}{{err.message}}</a>
                     </li>
                     <li v-show="joinDateError">
                         <a href="#JoinedDate">Please check the joined date you have entered</a>
