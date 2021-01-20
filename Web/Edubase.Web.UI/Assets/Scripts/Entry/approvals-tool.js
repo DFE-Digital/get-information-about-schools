@@ -171,7 +171,7 @@ new Vue({
         return 'unknown';
       }
       var d = new Date(utcDate);
-      return [d.getDate(), monthNames[d.getMonth() + 1], d.getFullYear()].join(' ');
+      return [d.getDate(), monthNames[d.getMonth()], d.getFullYear()].join(' ');
     },
     getChangesData: function (skip, callback) {
       const self = this;
