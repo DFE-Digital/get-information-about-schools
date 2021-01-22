@@ -1,0 +1,85 @@
+@model MergeEstablishmentsModel
+@{
+    ViewBag.Title = "Amalgamations and mergers tool";
+    ViewBag.bodyClasses = "create-edit mergers";
+    ViewBag.SiteSection = "tools";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li id="tertiary-breadcrumb" class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Amalgamations and mergers tool", "MergersTool", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState)
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">Merger</h1>
+    </div>
+</div>
+
+@using (Html.BeginForm("ProcessMergeEstablishmentsAsync", "AmalgamateMerge", FormMethod.Post))
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <p>You can propose closing one or more establishments and altering the remaining establishment.</p>
+            <h2 class="govuk-heading-s">Select the lead establishment</h2>
+            <p>The lead establishment will remain open</p>
+
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LeadEstablishmentUrn)">
+                @Html.LabelFor(x => x.LeadEstablishmentUrn, "Lead establishment URN", new {@class = "govuk-label"})
+                @Html.ValidationMessageFor(x => x.LeadEstablishmentUrn, null, new {@class = "govuk-error-message"})
+                @Html.TextBoxFor(x => x.LeadEstablishmentUrn, new {@class = "govuk-input  govuk-input--width-20"})
+            </div>
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                    Select establishments to be merged with the lead establishment
+                </legend>
+                <p>Enter a minimum of 1 establishment and a maximum of 3 establishments</p>
+
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Establishment1Urn)">
+                    @Html.LabelFor(x => x.Establishment1Urn, "Establishment 1 URN", new {@class = "govuk-label"})
+                    @Html.ValidationMessageFor(x => x.Establishment1Urn, null, new {@class = "govuk-error-message"})
+                    @Html.TextBoxFor(x => x.Establishment1Urn, new {@class = "govuk-input  govuk-input--width-20"})
+                </div>
+
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Establishment2Urn)">
+                    @Html.LabelFor(x => x.Establishment2Urn, "Establishment 2 URN", new {@class = "govuk-label"})
+                    @Html.ValidationMessageFor(x => x.Establishment2Urn, null, new {@class = "govuk-error-message"})
+                    @Html.TextBoxFor(x => x.Establishment2Urn, new {@class = "govuk-input  govuk-input--width-20"})
+                </div>
+
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Establishment3Urn)">
+                    @Html.LabelFor(x => x.Establishment3Urn, "Establishment 3 URN", new {@class = "govuk-label"})
+                    @Html.ValidationMessageFor(x => x.Establishment3Urn, null, new {@class = "govuk-error-message"})
+                    @Html.TextBoxFor(x => x.Establishment3Urn, new {@class = "govuk-input  govuk-input--width-20"})
+                </div>
+            </fieldset>
+
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="button-row">
+                <button type="submit" value="" class="govuk-button">Continue</button>
+                @Html.ActionLink("Cancel", "MergersTool", "Tools", new {area = ""}, new {@class = "govuk-button govuk-button--secondary cancel"})
+            </div>
+        </div>
+    </div>
+}

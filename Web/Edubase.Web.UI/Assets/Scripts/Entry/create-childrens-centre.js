@@ -338,7 +338,7 @@ const  ccApp = new Vue({
               let o = {};
               // ensure that only URN errors are included
               // and ignore the message about the number of establishments in the group - this validation of a single URN
-              if (/\d/.test(error.Fields) && error.Message.indexOf('must have more than one linked') === -1) {
+			  if (/\d/.test(error.Fields) && error.Code !== "error.validation.link.cc.one.linked.school") {				  
                 const est = self.pendingEstab;
                 o.field = est.name + ' (' + est.urn + ')';
                 o.message = error.Message;

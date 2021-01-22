@@ -59,6 +59,7 @@ function setUp() {
       const _hiddenInput = document.getElementById(config.hiddenFieldId);
 
       _input.dataset.storedValue = _input.value;
+      _input.removeAttribute('disabled');
 
       const awe = new Awesomplete(_input, {
         list: config.suggestions.map((k) => {

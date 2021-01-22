@@ -118,10 +118,10 @@
                     </div>
                 }
                 @{
-                    var openDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date" : "Open date";
+                    var openDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date:" : "Open date:";
                 }
                 <div class="gias-summary-list__row">
-                    <dt class="gias-summary-list__key">@openDateTitle<span class="govuk-visually-hidden"> </span>/<span class="govuk-visually-hidden"> </span>Reason:</dt>
+                    <dt class="gias-summary-list__key">@openDateTitle<br />Reason establishment opened:</dt>
                     <dd class="gias-summary-list__value">
                         @(Model.Establishment.OpenDate?.ToString("dd MMMM yyyy") ?? "Not recorded")<br />
                         @Model.ReasonEstablishmentOpenedName
@@ -130,9 +130,9 @@
 
                 @if (Model.DisplayPolicy.CloseDate)
                 {
-                    var closeDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date ended" : "Closed date";
+                    var closeDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date ended:" : "Closed date:";
                     <div class="gias-summary-list__row">
-                        <dt class="gias-summary-list__key">@closeDateTitle<span class="govuk-visually-hidden"> </span>/<span class="govuk-visually-hidden"> </span>Reason:</dt>
+                        <dt class="gias-summary-list__key">@closeDateTitle<br />Reason establishment closed:</dt>
                         <dd class="gias-summary-list__value">
                             @(Model.Establishment.CloseDate?.ToString("dd MMMM yyyy") ?? "Not recorded")<br />
                             @Model.ReasonEstablishmentClosedName
@@ -302,7 +302,7 @@
                 @if (Model.DisplayPolicy.SENStat)
                 {
                     <div class="gias-summary-list__row">
-                        <dt class="gias-summary-list__key">Number of Special Pupils Under a SEN Statement/EHCP:</dt>
+                        <dt class="gias-summary-list__key">Number of Special Pupils Under a Special Educational Needs (SEN) Statement/Education, Health and Care Plans (ECHP):</dt>
                         <dd class="gias-summary-list__value">@Model.Establishment.SENStat</dd>
                     </div>
                 }
@@ -310,7 +310,7 @@
                 @if (Model.DisplayPolicy.SENNoStat)
                 {
                     <div class="gias-summary-list__row">
-                        <dt class="gias-summary-list__key">Number of Special Pupils Not Under a SEN Statement/EHCP:</dt>
+                        <dt class="gias-summary-list__key">Number of Special Pupils NOT Under a Special Educational Needs (SEN) Statement/Education, Health and Care Plans (ECHP):</dt>
                         <dd class="gias-summary-list__value">@Model.Establishment.SENNoStat</dd>
                     </div>
                 }
@@ -344,7 +344,7 @@
                 @if (Model.DisplayPolicy.QualityAssuranceBodyNameId)
                 {
                     <div class="gias-summary-list__row">
-                        <dt class="gias-summary-list__key">Quality assurance Body name:</dt>
+                        <dt class="gias-summary-list__key">Quality assurance body name:</dt>
                         <dd class="gias-summary-list__value">@(Model.QualityAssuranceBodyName ?? "Not recorded")</dd>
                     </div>
                 }
@@ -352,7 +352,7 @@
                 @if (Model.DisplayPolicy.QualityAssuranceBodyReport)
                 {
                     <div class="gias-summary-list__row">
-                        <dt class="gias-summary-list__key">Quality assurance Body report:</dt>
+                        <dt class="gias-summary-list__key">Quality assurance body report:</dt>
                         <dd class="gias-summary-list__value">@(Model.Establishment.QualityAssuranceBodyReport ?? "Not recorded")</dd>
                     </div>
                 }
@@ -477,7 +477,7 @@
                 @if (Model.DisplayPolicy.SenUnitOnRoll)
                 {
                     <div class="gias-summary-list__row">
-                        <dt class="gias-summary-list__key">SEN Unit number on roll:</dt>
+                        <dt class="gias-summary-list__key">Special Educational Needs (SEN) unit number on roll:</dt>
                         <dd class="gias-summary-list__value">@Model.Establishment.SenUnitOnRoll</dd>
                     </div>
                 }
@@ -485,7 +485,7 @@
                 @if (Model.DisplayPolicy.SenUnitCapacity)
                 {
                     <div class="gias-summary-list__row">
-                        <dt class="gias-summary-list__key">SEN Unit capacity:</dt>
+                        <dt class="gias-summary-list__key">Special Educational Needs (SEN) unit capacity:</dt>
                         <dd class="gias-summary-list__value">@Model.Establishment.SenUnitCapacity</dd>
                     </div>
                 }

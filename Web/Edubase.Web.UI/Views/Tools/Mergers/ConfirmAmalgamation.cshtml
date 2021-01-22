@@ -1,0 +1,110 @@
+@model AmalgamateEstablishmentsModel
+@{
+    ViewBag.Title = "Amalgamations and mergers tool";
+    ViewBag.bodyClasses = "create-edit mergers";
+    ViewBag.SiteSection = "tools";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li id="tertiary-breadcrumb" class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Amalgamations and mergers tool", "MergersTool", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState)
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">Amalgamation</h1>
+    </div>
+</div>
+@using (Html.BeginForm("ProcessAmalgamationAsync", "AmalgamateMerge", FormMethod.Post))
+{
+    @Html.HiddenFor(x=>x.Establishment0Urn)
+    @Html.HiddenFor(x=>x.Establishment0Name);
+    @Html.HiddenFor(x=>x.Establishment1Urn)
+    @Html.HiddenFor(x=>x.Establishment1Name);
+    @Html.HiddenFor(x=>x.Establishment2Urn)
+    @Html.HiddenFor(x=>x.Establishment2Name);
+    @Html.HiddenFor(x=>x.Establishment3Urn)
+    @Html.HiddenFor(x=>x.Establishment3Name);
+
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h3 class="govuk-heading-s">Closing establishment details</h3>
+            <ol class="govuk-list govuk-list--number linked-establishments">
+                @if (!string.IsNullOrEmpty(Model.Establishment0Name))
+                {
+                    @MergingEstablishment(Model.Establishment0Urn.GetValueOrDefault(), Model.Establishment0Name)
+                }
+                @if (!string.IsNullOrEmpty(Model.Establishment1Name))
+                {
+                    @MergingEstablishment(Model.Establishment1Urn.GetValueOrDefault(), Model.Establishment1Name)
+                }
+                @if (!string.IsNullOrEmpty(Model.Establishment2Name))
+                {
+                    @MergingEstablishment(Model.Establishment2Urn.GetValueOrDefault(), Model.Establishment2Name)
+                }
+                @if (!string.IsNullOrEmpty(Model.Establishment3Name))
+                {
+                    @MergingEstablishment(Model.Establishment3Urn.GetValueOrDefault(), Model.Establishment3Name)
+                }
+            </ol>
+
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend--s">New establishment details</legend>
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.NewEstablishmentName)">
+                    @Html.LabelFor(x => x.NewEstablishmentName, "Establishment name", new {@class = "govuk-label"})
+                    @Html.ValidationMessageFor(x => x.NewEstablishmentName, null, new {@class = "govuk-error-message"})
+                    @Html.TextBoxFor(x => x.NewEstablishmentName, new {@class = "govuk-input govuk-input--width-20"})
+                </div>
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentType)">
+                    @Html.LabelFor(x => x.EstablishmentType, "Establishment type", new {@class = "govuk-label"})
+                    @Html.ValidationMessageFor(x => x.EstablishmentType, null, new {@class = "govuk-error-message"})
+                    @Html.DropDownListFor(x => x.EstablishmentType, Model.EstablishmentTypes, new {@class = "govuk-select govuk-input--width-20"})
+                </div>
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentPhase)">
+                    @Html.LabelFor(x => x.EstablishmentPhase, "Establishment phase", new {@class = "govuk-label"})
+                    @Html.ValidationMessageFor(x => x.EstablishmentPhase, null, new {@class = "govuk-error-message"})
+                    @Html.DropDownListFor(x => x.EstablishmentPhase, Model.EstablishmentPhases, new {@class = "govuk-select govuk-input--width-20"})
+                </div>
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
+                    @Html.LabelFor(x => x.LocalAuthorityId, "Local Authority", new {@class = "govuk-label"})
+                    @Html.ValidationMessageFor(x => x.LocalAuthorityId, "Please select a local authority", new {@class = "govuk-error-message"})
+                    @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, new {@class = "govuk-select govuk-input--width-20"})
+                </div>
+            </fieldset>
+
+            @Html.EditorFor(x => x.MergeDate, new { fieldsetClassName ="edit-date-fieldset", title="Amalgamation date"})
+
+
+        </div>
+        <div class="govuk-grid-column-full">
+            <div class="button-row govuk-!-padding-top-6">
+                @Html.ActionLink(HttpUtility.HtmlDecode("&laquo; Go back"), "AmalgamateEstablishments", "AmalgamateMerge", new { area = ""}, new { @class = "govuk-button govuk-button--secondary"})
+                <button type="submit" class="govuk-button">Process</button>
+               @Html.ActionLink("Cancel", "MergersTool", "Tools", new {area = ""}, new {@class = "govuk-button govuk-button--secondary cancel"})
+            </div>
+        </div>
+    </div>
+}
+
+@helper MergingEstablishment(int urn, string name)
+{
+    <li><span>@urn - @name</span></li>
+}

@@ -1,0 +1,93 @@
+@model AmalgamateEstablishmentsModel
+@{
+    ViewBag.Title = "Amalgamations and mergers tool";
+    ViewBag.bodyClasses = "create-edit mergers";
+    ViewBag.SiteSection = "tools";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li id="tertiary-breadcrumb" class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Amalgamations and mergers tool", "MergersTool", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState)
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">Amalgamation complete</h1>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds almalgamation-summary" v-show="completeAmalgamation">
+        <div class="summary-panel">
+            <h3 class="govuk-heading-s">Closing establishment details</h3>
+
+            <ol class="govuk-list govuk-list--number linked-establishments">
+                @if (!string.IsNullOrEmpty(Model.Establishment0Name))
+                {
+                    @MergingEstablishment(Model.Establishment0Urn.GetValueOrDefault(), Model.Establishment0Name)
+                }
+                @if (!string.IsNullOrEmpty(Model.Establishment1Name))
+                {
+                    @MergingEstablishment(Model.Establishment1Urn.GetValueOrDefault(), Model.Establishment1Name)
+                }
+                @if (!string.IsNullOrEmpty(Model.Establishment2Name))
+                {
+                    @MergingEstablishment(Model.Establishment2Urn.GetValueOrDefault(), Model.Establishment2Name)
+                }
+                @if (!string.IsNullOrEmpty(Model.Establishment3Name))
+                {
+                    @MergingEstablishment(Model.Establishment3Urn.GetValueOrDefault(), Model.Establishment3Name)
+                }
+            </ol>
+
+        </div>
+
+        <div class="summary-panel">
+            <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--m"/>
+            <h3 class="govuk-heading-s">New establishment details</h3>
+            <ul class="govuk-list govuk-list--spaced amalg-summary">
+                <li>
+                    @Html.ActionLink(string.Concat(Model.NewEstablishmentUrn.ToString(), " ", Model.NewEstablishmentName),
+                        "Details",
+                        "Establishment",
+                        new { area = "Establishments", id = Model.NewEstablishmentUrn},
+                        new { @class = "govuk-link"})
+                </li>
+                <li>Establishment type: @Model.EstablishmentType</li>
+                <li>Amalgamation date: @Model.MergeDate.ToString()</li>
+            </ul>
+            <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--m"/>
+        </div>
+        <p>
+            Please complete the new
+            @Html.ActionLink("establishment record",
+                "Details",
+                "Establishment",
+                new { area = "Establishments", id = Model.NewEstablishmentUrn},
+                new { @class = "govuk-link"})
+        </p>
+    </div>
+</div>
+
+
+@helper MergingEstablishment(int urn, string name)
+{
+    <li><span>@urn - @name</span></li>
+}

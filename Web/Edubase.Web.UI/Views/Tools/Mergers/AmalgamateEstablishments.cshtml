@@ -1,0 +1,79 @@
+@model AmalgamateEstablishmentsModel
+@{
+    ViewBag.Title = "Amalgamations and mergers tool";
+    ViewBag.bodyClasses = "create-edit mergers";
+    ViewBag.SiteSection = "tools";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li id="tertiary-breadcrumb" class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Amalgamations and mergers tool", "MergersTool", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState)
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">Amalgamation</h1>
+    </div>
+</div>
+
+@using (Html.BeginForm("ProcessAmalgamationEstablishmentsAsync", "AmalgamateMerge", FormMethod.Post))
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <p>You can propose closing two or more establishments and establishing a new establishment</p>
+            <h2 class="govuk-heading-s">Select establishments to be amalgamated</h2>
+            <p>Enter a minimum of 2 establishments and a maximum of 4 establishments</p>
+        </div>
+        <div class="govuk-grid-column-one-half">
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Establishment0Urn)">
+                @Html.LabelFor(x => x.Establishment0Urn, "Establishment 1 URN", new {@class = "govuk-label"})
+                @Html.ValidationMessageFor(x => x.Establishment0Urn, null, new {@class = "govuk-error-message"})
+                @Html.TextBoxFor(x => x.Establishment0Urn, new {@class = "govuk-input  govuk-input--width-20"})
+            </div>
+
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Establishment1Urn)">
+                @Html.LabelFor(x => x.Establishment1Urn, "Establishment 2 URN", new {@class = "govuk-label"})
+                @Html.ValidationMessageFor(x => x.Establishment1Urn, null, new {@class = "govuk-error-message"})
+                @Html.TextBoxFor(x => x.Establishment1Urn, new {@class = "govuk-input  govuk-input--width-20"})
+            </div>
+
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Establishment2Urn)">
+                @Html.LabelFor(x => x.Establishment2Urn, "Establishment 3 URN", new {@class = "govuk-label"})
+                @Html.ValidationMessageFor(x => x.Establishment2Urn, null, new {@class = "govuk-error-message"})
+                @Html.TextBoxFor(x => x.Establishment2Urn, new {@class = "govuk-input  govuk-input--width-20"})
+            </div>
+
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Establishment3Urn)">
+                @Html.LabelFor(x => x.Establishment3Urn, "Establishment 4 URN", new {@class = "govuk-label"})
+                @Html.ValidationMessageFor(x => x.Establishment3Urn, null, new {@class = "govuk-error-message"})
+                @Html.TextBoxFor(x => x.Establishment3Urn, new {@class = "govuk-input  govuk-input--width-20"})
+            </div>
+
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="button-row">
+                <button type="submit" value="" class="govuk-button">Continue</button>
+                @Html.ActionLink("Cancel", "MergersTool", "Tools", new {area = ""}, new {@class = "govuk-button govuk-button--secondary cancel"})
+            </div>
+        </div>
+    </div>
+}

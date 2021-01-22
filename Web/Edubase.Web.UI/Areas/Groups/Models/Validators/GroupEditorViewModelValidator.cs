@@ -71,8 +71,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .WithMessage(x => $"The join date you entered is before the {x.GroupType}'s open date of {x.OpenDate}. Please enter a later date.");
             });
 
-            // On saving the group record....
-            When(x => x.Action == ActionSave, () =>
+            // On getting to the save page....
+            When(x => x.Action == ActionSave || x.Action == ActionDetails, () =>
             {
                 When(m => m.GroupTypeMode == eGroupTypeMode.ChildrensCentre, () =>
                 {
@@ -96,13 +96,13 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     && x.OriginalStatusId != (int) eLookupGroupStatus.Closed
                     && x.StatusId == (int) eLookupGroupStatus.Closed
                     && x.SaveGroupDetail, () =>
-                {
-                    RuleFor(x => x.ClosedDate)
-                    .Must(x => !x.IsEmpty())
-                    .WithMessage("Please enter a date for the closure of this multi-academy trust")
-                    .Must(x => x.IsValid() || x.IsEmpty())
-                    .WithMessage("Closed date is invalid. Please enter a valid date.");
-                });
+                    {
+                        RuleFor(x => x.ClosedDate)
+                        .Must(x => !x.IsEmpty())
+                        .WithMessage("Please enter a date for the closure of this multi-academy trust")
+                        .Must(x => x.IsValid() || x.IsEmpty())
+                        .WithMessage("Closed date is invalid. Please enter a valid date.");
+                    });
 
                 RuleFor(x => x.GroupName)
                     .Cascade(CascadeMode.StopOnFirstFailure)
@@ -130,6 +130,18 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                         .Must((model, estab) => VerifyJoinedDate(estab.JoinedDateEditable.ToDateTime() ?? estab.JoinedDate, model))
                         .When(x => x.OpenDate.ToDateTime().GetValueOrDefault().Date != DateTime.Now.Date)
                         .WithMessage(x => $"The join date you entered is before the {x.GroupType}'s open date of {x.OpenDate}. Please enter a later date.");
+                });
+            });
+
+            // Specific addition only triggered upon Saving ChildrensCentres through the creation tool
+            When(x => x.Action == ActionSave && x.ActionName == eChildrensCentreActions.Step3, () =>
+            {
+                When(m => m.GroupTypeMode == eGroupTypeMode.ChildrensCentre, () =>
+                {
+                    RuleFor(x => x.LinkedEstablishments.Establishments)
+                        .Must(x => x.Count >= 2)
+                        .WithMessage("Add more centres to the group")
+                        .WithSummaryMessage("You need to add at least two centres");
                 });
             });
         }

@@ -199,6 +199,8 @@ namespace Edubase.Web.UI.Models
         public string LSOAName { get; set; }
         public int? LSOAId { get; set; }
 
+        public string LocationEditField { get; set; }
+
         [Display(Name = "Quality assurance body report")]
         public string QualityAssuranceBodyReport { get; set; }
 
