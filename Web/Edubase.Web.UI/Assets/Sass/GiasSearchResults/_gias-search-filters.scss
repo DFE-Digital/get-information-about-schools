@@ -72,7 +72,7 @@
   .govuk-checkboxes__input {
     &:focus,
     &:active {
-       + .govuk-checkboxes__label::before {
+      + .govuk-checkboxes__label::before {
         outline-width: 1px;
         border-width: 2px;
       }

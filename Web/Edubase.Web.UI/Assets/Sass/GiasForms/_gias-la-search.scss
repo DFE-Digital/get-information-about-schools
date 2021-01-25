@@ -10,13 +10,12 @@
   position: relative;
   border: 0;
 
-
   &:hover,
   &:visited {
     color: govuk-colour('black');
   }
 
-  &:after {
+  &::after {
     content: '';
     position: absolute;
     right: 6px;
@@ -32,6 +31,7 @@
 .selected-las {
   position: relative;
   width: 50%;
+
   @include govuk-media-query($until: tablet) {
     width: 100%;
   }
@@ -69,8 +69,6 @@
       box-shadow: none;
     }
   }
-
-
 }
 
 .independent-search-field-wrap {

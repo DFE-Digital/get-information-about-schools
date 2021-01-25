@@ -30,8 +30,7 @@
   left: 25%;
   overflow: auto;
 
-
-  @include govuk-media-query($until: tablet){
+  @include govuk-media-query($until: tablet) {
     width: 90%;
     max-height: 50%;
     top: 25%;
@@ -44,7 +43,6 @@
     margin-left: -240px;
   }
 
-
   &.hidden {
     display: none;
   }
@@ -52,9 +50,9 @@
   .heading-large:focus {
     outline: none;
   }
-  #modal-inner, .modal-inner {
+  #modal-inner,
+  .modal-inner {
     padding: 2em 2em 0;
-
   }
 
   .button-row {
@@ -125,6 +123,7 @@
 
   .button-row {
     overflow: hidden;
+
     @include govuk-media-query($from: tablet) {
       padding: 5px;
 
@@ -132,7 +131,6 @@
         margin-right: 15px;
       }
     }
-
   }
 
   .overlay-padder {

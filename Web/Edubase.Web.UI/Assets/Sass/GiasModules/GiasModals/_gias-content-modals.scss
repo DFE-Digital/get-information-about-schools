@@ -56,7 +56,7 @@ html.no-scroll {
 .gias-modal__close-container {
   display: block;
   text-align: right;
-  padding: 0.5em 0.5em 0.8em
+  padding: 0.5em 0.5em 0.8em;
 }
 
 .gias-modal__content-wrapper {
@@ -134,7 +134,7 @@ html.no-scroll {
   }
 }
 
-@include govuk-media-query($until: tablet){
+@include govuk-media-query($until: tablet) {
   .gias-modal__content-wrapper {
     .button-row .govuk-button {
       width: 90%;

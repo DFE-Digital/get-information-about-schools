@@ -5,7 +5,7 @@
   width: 28px;
   height: 25px;
 
-  &:after {
+  &::after {
     position: absolute;
     content: '?';
     width: 18px;

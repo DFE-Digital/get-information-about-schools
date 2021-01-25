@@ -4,7 +4,7 @@
   height: 100%;
   top: 0;
   left: 0;
-  background-color: govuk-colour(white);
+  background-color: govuk-colour('white');
 
   .gias-heading-xs,
   .add-clear-filters {
@@ -20,11 +20,12 @@
   justify-content: space-between;
   padding: 5px 0;
   border-bottom: 2px solid $govuk-border-colour;
-  background-color: govuk-colour(white);
+  background-color: govuk-colour('white');
   z-index: 250;
   text-align: center;
 
-  a, h2 {
+  a,
+  h2 {
     width: 33.333%;
   }
 
@@ -42,13 +43,13 @@
 .gias-mobile-filters__panel {
   padding-top: 60px;
   padding-bottom: 60px;
-  background-color: govuk-colour(white);
+  background-color: govuk-colour('white');
 
   .govuk-grid-column-one-third {
     // these are only ever shown when we need a mobile layout
     // which some times is a wider screen than the standard mobile breakpoint
     width: 100% !important;
-    background-color: govuk-colour(white);
+    background-color: govuk-colour('white');
   }
 }
 
@@ -57,7 +58,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: govuk-colour(white);
+  background-color: govuk-colour('white');
   z-index: 250;
   padding: 10px 0;
   text-align: center;

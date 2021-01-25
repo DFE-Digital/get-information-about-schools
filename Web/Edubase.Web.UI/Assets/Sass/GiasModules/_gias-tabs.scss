@@ -1,6 +1,5 @@
 .gias-tabs {
   @include govuk-font(19);
-
   margin: 0 0 20px 0;
   padding: 0;
   list-style: none;
@@ -27,7 +26,7 @@
   @include govuk-media-query($until: desktop) {
     /* stylelint-disable length-zero-no-unit */
     // IE wants the px
-    flex: 1 1 0px; /* stylelint-enable */
+    flex: 1 1 0; /* stylelint-enable */
     margin-bottom: 5px;
     border-color: $govuk-border-colour;
     border-bottom-width: 1px;

@@ -51,6 +51,8 @@
         padding-left: 0;
         padding-right: 0;
         width: 50px;
+
+        /* stylelint-disable  max-nesting-depth */
         @include govuk-media-query($until: desktop) {
           position: relative;
 
@@ -60,6 +62,7 @@
             left: 50px;
           }
         }
+        /* stylelint-enable  max-nesting-depth */
       }
     }
   }
@@ -108,8 +111,7 @@
         font-size: 12px;
       }
 
-
-      &:before {
+      &::before {
         content: attr(data-label);
         float: left;
         font-weight: bold;
@@ -121,8 +123,8 @@
       }
 
       &.fixed-width {
-        &:before {
-          width:150px;
+        &::before {
+          width: 150px;
         }
       }
     }
@@ -147,6 +149,7 @@
     display: table-cell;
     float: none;
     width: auto !important;
+
     @include govuk-font(19);
 
     @include govuk-media-query($until: desktop) {
@@ -287,7 +290,6 @@
     font-size: 14px;
   }
 }
-
 
 .gias-table--data-status {
   .govuk-table__cell[data-label="Email"] {
