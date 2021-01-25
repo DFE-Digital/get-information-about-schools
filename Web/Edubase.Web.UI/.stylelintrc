@@ -3,8 +3,7 @@
         "stylelint-scss"
     ],
     "ignoreFiles": [
-        "Server/Assets/Sass/prism.scss",
-        "Server/Assets/Sass/elements/_leaflet.scss"
+        "Assets/Sass/leaflet/_leaflet.scss"
     ],
     "extends": "stylelint-config-standard",
     "rules": {
@@ -16,6 +15,7 @@
         "no-eol-whitespace": null,
         "at-rule-no-unknown": null,
         "scss/at-rule-no-unknown": true,
-        "max-nesting-depth": 4
+        "max-nesting-depth": 4,
+        "no-descending-specificity": null
     }
 }
