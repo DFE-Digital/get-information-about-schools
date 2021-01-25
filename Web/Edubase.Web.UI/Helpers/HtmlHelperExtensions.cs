@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -206,6 +207,25 @@ namespace Edubase.Web.UI.Helpers
             => (obj is DateTime? ? ((DateTime?)obj)?.ToString(dateFormat ?? "d MMMM yyyy").Clean() : obj?.ToString().Clean()) ?? "Not recorded";
 
 
+        private const string assetsPath = "public/assets/scripts/build";
+        /// <summary>
+        /// Outputs the path to the requested js by name (ignoring file hash)
+        /// </summary>
+        /// <param name="helper"></param>
+        /// <param name="expression"></param>
+        /// <param name="path"></param>
+        /// <returns>path to js file</returns>
+        public static string GetWebpackScriptUrl(this HtmlHelper helper, string expression, string path = null)
+        {
+            if (path == null)
+            {
+                path = HttpRuntime.AppDomainAppPath;
+            }
+
+            var files = Directory.GetFiles(Path.Combine(path, assetsPath), expression).Select(Path.GetFileName).ToList();
+
+            return files.Count == 1 ? $"/{assetsPath}/{files[0]}" : "";
+        }
 
     }
 }

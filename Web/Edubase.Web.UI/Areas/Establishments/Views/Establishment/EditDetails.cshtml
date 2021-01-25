@@ -854,7 +854,7 @@
 
 @section ViewScripts {
     <script nonce="@Html.ScriptNonce()">var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());</script>
-    <script src="/public/assets/scripts/build/edit-details.js"></script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-details.*.js"))"></script>
 }
     }
     else
@@ -866,7 +866,7 @@
             var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);
             var phases = @Html.Json(Model.EducationPhases);
         </script>
-    <script src="/public/assets/scripts/build/edit-details.js"></script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-details.*.js"))"></script>
 }
     }
 

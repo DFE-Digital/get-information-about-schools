@@ -4,7 +4,7 @@
 @using Edubase.Web.UI.Models.Search
 @using Microsoft.Ajax.Utilities
 @using System.Text.RegularExpressions
- 
+
 @model GroupDetailViewModel
 @{
     ViewBag.Title = Model.Group.Name;
@@ -503,6 +503,6 @@
 @section ViewScripts
 {
     <script nonce="@Html.ScriptNonce()">var mapMode = 'group';</script>
-    <script src="/public/assets/scripts/build/landing-page-bundle.js"></script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("landing-page-bundle.*.js"))"></script>
 }
 

@@ -310,6 +310,6 @@
     <script nonce="@Html.ScriptNonce()">
         var isEstabSearch = @Model.IsEstablishmentSearch.ToString().ToLower()
     </script>
-    <script src="/public/assets/scripts/build/change-history-results.js"></script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("change-history-results.*.js"))"></script>
 
 }

@@ -263,5 +263,5 @@
     var estabOpen = @((Model.Establishment.CloseDate == null).ToString().ToLower());
     var mapMode = 'establishment';
 </script>
-<script src="/public/assets/scripts/build/landing-page-bundle.js"></script>
+<script src="@Html.Raw(Html.GetWebpackScriptUrl("landing-page-bundle.*.js"))"></script>
 }

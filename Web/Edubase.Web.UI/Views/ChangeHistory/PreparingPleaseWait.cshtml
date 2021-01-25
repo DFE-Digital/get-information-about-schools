@@ -56,5 +56,5 @@
 
 @section ViewScripts
 {
-    <script src="/public/assets/scripts/build/polling.js"></script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("polling.*.js"))"></script>
 }

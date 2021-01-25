@@ -31,8 +31,6 @@
 
 @section ViewScripts
 {
-    <script src="/public/assets/scripts/build/delegated-authority.js"></script>
-    @* <script nonce="@Html.ScriptNonce()"> *@
-    @*     $('#DelegationInformation').textCount(); *@
-    @* </script> *@
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("delegated-authority.*.js"))"></script>
+
 }

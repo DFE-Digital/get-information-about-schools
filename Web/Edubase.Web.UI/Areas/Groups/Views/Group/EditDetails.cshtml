@@ -205,5 +205,5 @@
     </div>
 @section ViewScripts
 {
-    <script src="/public/assets/scripts/build/edit-group-details.js"></script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-group-details.*.js"))"></script>
 }

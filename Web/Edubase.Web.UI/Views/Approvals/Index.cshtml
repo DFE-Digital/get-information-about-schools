@@ -225,6 +225,6 @@
 
 @section ViewScripts
 {
-<script src="/public/assets/scripts/build/approvals-tool.js"></script>
+<script src="@Html.Raw(Html.GetWebpackScriptUrl("approvals-tool.*.js"))"></script>
 
 }

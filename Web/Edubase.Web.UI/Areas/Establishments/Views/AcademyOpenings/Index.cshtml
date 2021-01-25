@@ -420,5 +420,5 @@
 
 
 @section ViewScripts {
-    <script src="/public/assets/scripts/build/manage-academy-openings.js"></script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("manage-academy-openings.*.js"))"></script>
 }
