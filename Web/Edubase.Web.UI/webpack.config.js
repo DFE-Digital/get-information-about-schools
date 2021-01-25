@@ -126,7 +126,6 @@ module.exports = (env, argv) => {
     delete config.devtool;
   }
 
-  console.log(config.devtool);
   return config;
 };
 
