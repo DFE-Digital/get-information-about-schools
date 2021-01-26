@@ -119,7 +119,7 @@
                             {
                                 <div class="gias-summary-list__row">
                                     <dt class="gias-summary-list__key">Joined date:</dt>
-                                    <dd class="gias-summary-list__value">@(e.JoinedDate?.ToString("dd MMMM yyyy") ?? "Not recorded")</dd>
+                                    <dd class="gias-summary-list__value">@(e.JoinedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
                                     @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].JoinedDate)
                                 </div>
                             }
