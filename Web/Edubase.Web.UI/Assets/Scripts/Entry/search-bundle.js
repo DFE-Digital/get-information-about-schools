@@ -1,8 +1,8 @@
-const autocompletes = require('../GiasSearchForm/autocomplete-setup');
-import GiasRadioToggles from "../GiasSearchForm/GiasRadioToggles";
-import GiasSearchErrors from "../GiasSearchForm/GiasSearchErrors";
+import autocompleteSetup from '../GiasSearchForm/autocomplete-setup';
+import GiasRadioToggles from '../GiasSearchForm/GiasRadioToggles';
+import GiasSearchErrors from '../GiasSearchForm/GiasSearchErrors';
 
-autocompletes.setUp();
+autocompleteSetup.setUp();
 
 $('#main-content').find('.search-toggle-panel').giasRadioToggles({
   untoggle: true

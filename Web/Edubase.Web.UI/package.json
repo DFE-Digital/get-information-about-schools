@@ -10,6 +10,9 @@
     "build": "webpack --mode=production --progress",
     "buildCi": "webpack --mode=production --progress --env=ci"
   },
+  "browserslist": [
+    "ie 11"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
@@ -19,6 +22,7 @@
     "babel-loader": "^8.1.0",
     "babel-preset-env": "^1.7.0",
     "clean-webpack-plugin": "^3.0.0",
+    "core-js": "^3.8.3",
     "css-loader": "^5.0.1",
     "leaflet": "^1.7.1",
     "leaflet.markercluster": "^1.4.1",

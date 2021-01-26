@@ -5,11 +5,11 @@ import GiasOkCancel from "../GiasModules/GiasModals/GiasOkCancel";
 import giasAccordionExtensions from '../GiasGlobal/GiasAccordionExtensions';
 import GiasReOrderValidationSummary from '../GiasGlobal/GiasReOrderValidationSummary';
 import CheckGiasDataStatus from '../GiasStandalone/GiasDataStatus';
-const dfeCookieManager = require('../GiasModules/DfeCookieManager');
 
+import DfECookieManager from '../GiasModules/DfeCookieManager';
 window.$ = $;
 
-window.DfECookieManager = dfeCookieManager;
+window.DfECookieManager = new DfECookieManager();
 window.checkGiasDataStatus = CheckGiasDataStatus;
 
 
@@ -18,7 +18,7 @@ import { initAll } from 'govuk-frontend';
 const $main = $('#main-content');
 
 const message = document.getElementById('global-cookie-message');
-const acceptedCookies = (message && dfeCookieManager.cookie('seen_cookie_message') !== null);
+const acceptedCookies = (message && window.DfECookieManager.cookie('seen_cookie_message') !== null);
 
 if (!acceptedCookies) {
   message.style.display = 'block';
@@ -26,7 +26,7 @@ if (!acceptedCookies) {
   document.getElementById('button-accept-cookies').addEventListener('click', function (e) {
     e.preventDefault();
     message.style.display = 'none';
-    dfeCookieManager.cookie('seen_cookie_message', 'yes', {days: 28});
+    window.DfECookieManager.cookie('seen_cookie_message', 'yes', {days: 28});
   });
 }
 
@@ -42,7 +42,7 @@ window.displayNewsDialog = function(myetag, etag) {
     okLabel: "Go to News page",
     headingSize: 'l',
   });
-  DfECookieManager.setCookie(myetag, etag, { days: 365 });
+  window.DfECookieManager.setCookie(myetag, etag, { days: 365 });
 };
 
 initAll();

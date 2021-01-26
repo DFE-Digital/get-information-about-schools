@@ -253,4 +253,4 @@ const autocompleteSetup = (function(){
   return { setUp };
 }());
 
-module.exports = autocompleteSetup;
+export default autocompleteSetup;

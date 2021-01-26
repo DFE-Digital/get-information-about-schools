@@ -52,4 +52,4 @@ class DfECookieManager {
 
 }
 
-module.exports = new DfECookieManager();
+export default DfECookieManager;
