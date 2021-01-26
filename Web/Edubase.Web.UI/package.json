@@ -46,7 +46,7 @@
   "dependencies": {
     "awesomplete": "^1.1.5",
     "glob": "^7.1.6",
-    "govuk-frontend": "^3.9.1",
+    "govuk-frontend": "^3.10.2",
     "jquery": "^3.5.1",
     "moment": "^2.29.1"
   }
