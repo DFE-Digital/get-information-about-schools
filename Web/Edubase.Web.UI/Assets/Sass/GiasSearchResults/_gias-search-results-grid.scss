@@ -1,6 +1,6 @@
-@include mq-add-breakpoint('resultsBp', 835px)
+@include mq-add-breakpoint('resultsBp', 835px);
 
-  .search-results {
+.search-results {
   .govuk-grid-column-one-third {
     position: relative;
   }
