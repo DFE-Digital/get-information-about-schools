@@ -98,5 +98,5 @@ function setUp() {
 return { setUp };
 }());
 
-module.exports = locationAutoSuggest;
+export default locationAutoSuggest;
 
