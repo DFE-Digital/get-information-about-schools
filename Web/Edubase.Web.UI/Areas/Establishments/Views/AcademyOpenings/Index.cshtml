@@ -393,7 +393,7 @@
             {
                 <tr class="govuk-table__row row-@i">
                     <td data-label="Opening date" class="govuk-table__cell cell-openingdate">
-                        @record.OpenDate.ToString("dd MMMM yyyy")
+                        @record.OpenDate.ToString("d MMMM yyyy")
                     </td>
                     <td data-label="URN" class="govuk-table__cell">
                         @Html.ActionLink(record.Urn.ToString(), "Details", "Establishment", new {id = record.Urn}, new {@class = "govuk-link"})

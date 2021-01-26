@@ -59,7 +59,7 @@
             @foreach (var item in Model.Items)
             {
                 <tr class="govuk-table__row">
-                    <td data-label="Date changed" class="govuk-table__cell">@(item.RequestedDate?.ToString("dd MMMM yyyy"))</td>
+                    <td data-label="Date changed" class="govuk-table__cell">@(item.RequestedDate?.ToString("d MMMM yyyy"))</td>
                     @if (!Model.SingleGroup)
                     {
                         <td data-label="Group UID" class="govuk-table__cell">@Html.RouteLink(item.GroupUId.ToString(), "GroupDetails", new { id = item.GroupUId })</td>
@@ -83,7 +83,7 @@
                                             var parts = item.OldValue.Split('/').Select(Int32.Parse).ToList();
                                             var dt = new DateTime(parts[2], parts[1], parts[0]);
 
-                                            @dt.ToString("dd MMMM yyyy");
+                                            @dt.ToString("d MMMM yyyy");
                                         }
                                         else
                                         {
@@ -99,7 +99,7 @@
                                             var parts = item.NewValue.Split('/').Select(Int32.Parse).ToList();
                                             var dt = new DateTime(parts[2], parts[1], parts[0]);
 
-                                            @dt.ToString("dd MMMM yyyy");
+                                            @dt.ToString("d MMMM yyyy");
                                         }
                                         else
                                         {
@@ -116,7 +116,7 @@
                                 </div>
                                 <div class="gias-summary-list__row">
                                     <dt class="gias-summary-list__key">Link date</dt>
-                                    <dd class="gias-summary-list__value">@(item.LinkDateUtc?.ToString("dd MMMM yyyy"))</dd>
+                                    <dd class="gias-summary-list__value">@(item.LinkDateUtc?.ToString("d MMMM yyyy"))</dd>
                                 </div>
                                 <div class="gias-summary-list__row">
                                     <dt class="gias-summary-list__key">Type</dt>

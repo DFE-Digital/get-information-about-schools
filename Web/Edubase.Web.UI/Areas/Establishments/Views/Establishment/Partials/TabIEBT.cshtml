@@ -40,7 +40,7 @@
     {
         <div class="gias-summary-list__row">
             <dt class="gias-summary-list__key">Date of the last Bridge visit:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastBridgeVisit?.ToString("dd MMMM yyyy") ?? "Not recorded")</dd>
+            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastBridgeVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 
@@ -48,7 +48,7 @@
     {
         <div class="gias-summary-list__row">
             <dt class="gias-summary-list__key">Date of last Ofsted visit:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.DateOfLastOfstedVisit?.ToString("dd MMMM yyyy") ?? "Not recorded")</dd>
+            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.DateOfLastOfstedVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 
@@ -56,7 +56,7 @@
     {
         <div class="gias-summary-list__row">
             <dt class="gias-summary-list__key">Date of last ISI visit:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastISIVisit?.ToString("dd MMMM yyyy") ?? "Not recorded")</dd>
+            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastISIVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 
@@ -64,7 +64,7 @@
     {
         <div class="gias-summary-list__row">
             <dt class="gias-summary-list__key">Date of last welfare visit:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastWelfareVisit?.ToString("dd MMMM yyyy") ?? "Not recorded")</dd>
+            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastWelfareVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 
@@ -72,7 +72,7 @@
     {
         <div class="gias-summary-list__row">
             <dt class="gias-summary-list__key">Date of last FP visit:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastFPVisit?.ToString("dd MMMM yyyy") ?? "Not recorded")</dd>
+            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastFPVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 
@@ -80,7 +80,7 @@
     {
         <div class="gias-summary-list__row">
             <dt class="gias-summary-list__key">Date of last SIS visit:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastSISVisit?.ToString("dd MMMM yyyy") ?? "Not recorded")</dd>
+            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastSISVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 
@@ -88,7 +88,7 @@
     {
         <div class="gias-summary-list__row">
             <dt class="gias-summary-list__key">Next Ofsted visit:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.NextOfstedVisit?.ToString("dd MMMM yyyy") ?? "Not recorded")</dd>
+            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.NextOfstedVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 
@@ -96,7 +96,7 @@
     {
         <div class="gias-summary-list__row">
             <dt class="gias-summary-list__key">Next general action required:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.NextGeneralActionRequired?.ToString("dd MMMM yyyy") ?? "Not recorded")</dd>
+            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.NextGeneralActionRequired?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 
@@ -104,7 +104,7 @@
     {
         <div class="gias-summary-list__row">
             <dt class="gias-summary-list__key">Next action required by WEL:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.NextActionRequiredByWEL?.ToString("dd MMMM yyyy") ?? "Not recorded")</dd>
+            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.NextActionRequiredByWEL?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 
@@ -112,7 +112,7 @@
     {
         <div class="gias-summary-list__row">
             <dt class="gias-summary-list__key">Next action required by FP:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.NextActionRequiredByFP?.ToString("dd MMMM yyyy") ?? "Not recorded")</dd>
+            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.NextActionRequiredByFP?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 }

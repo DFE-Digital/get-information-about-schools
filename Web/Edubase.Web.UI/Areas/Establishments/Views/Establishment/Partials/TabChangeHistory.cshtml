@@ -81,15 +81,15 @@
             @foreach (var item in Model.ChangeHistory.Items)
             {
                 <tr class="govuk-table__row">
-                    <td data-label="Date changed" class="govuk-table__cell">@(item.ChangedDateUtc?.ToString("dd MMMM yyyy"))</td>
-                    <td data-label="Effective date" class="govuk-table__cell">@(item.EffectiveDateUtc?.ToString("dd MMMM yyyy"))</td>
+                    <td data-label="Date changed" class="govuk-table__cell">@(item.ChangedDateUtc?.ToString("d MMMM yyyy"))</td>
+                    <td data-label="Effective date" class="govuk-table__cell">@(item.EffectiveDateUtc?.ToString("d MMMM yyyy"))</td>
                     <td data-label="Updated field" class="govuk-table__cell">@item.Name</td>
                     <td data-label="Old value" class="govuk-table__cell">
                         @if (item.OldValue != null && RE.IsMatch(item.OldValue))
                         {
                             var parts = item.OldValue.Split('/').Select(Int32.Parse).ToList();
                             var dt = new DateTime(parts[2], parts[1], parts[0]);
-                            @dt.ToString("dd MMMM yyyy");
+                            @dt.ToString("d MMMM yyyy");
                         }
                         else
                         {
@@ -101,14 +101,14 @@
                         {
                             var parts = item.NewValue.Split('/').Select(Int32.Parse).ToList();
                             var dt = new DateTime(parts[2], parts[1], parts[0]);
-                            @dt.ToString("dd MMMM yyyy");
+                            @dt.ToString("d MMMM yyyy");
                         }
                         else
                         {
                             @item.NewValue
                         }
                     </td>
-                    <td data-label="Date requested" class="govuk-table__cell">@(item.RequestedDateUtc?.ToString("dd MMMM yyyy"))</td>
+                    <td data-label="Date requested" class="govuk-table__cell">@(item.RequestedDateUtc?.ToString("d MMMM yyyy"))</td>
                     <td data-label="Suggested from" class="govuk-table__cell">@item.OriginatorUserName</td>
                     <td data-label="Approved by" class="govuk-table__cell">@(item.ApproverUserName ?? "--")</td>
                 </tr>

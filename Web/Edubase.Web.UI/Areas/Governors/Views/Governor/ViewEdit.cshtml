@@ -309,8 +309,8 @@ else
                                         <td data-label="Name" class="govuk-table__cell">@governor.FullName</td>
                                         <td data-label="Role" class="govuk-table__cell">@governor.RoleName</td>
                                         <td data-label="Appointed by" class="govuk-table__cell">@governor.AppointingBody</td>
-                                        <td data-label="From" class="govuk-table__cell">@(governor.AppointmentStartDate.ToDateTime()?.ToString("dd MMMM yyyy"))</td>
-                                        <td data-label="To" class="govuk-table__cell">@(governor.AppointmentEndDate.ToDateTime()?.ToString("dd MMMM yyyy"))</td>
+                                        <td data-label="From" class="govuk-table__cell">@(governor.AppointmentStartDate.ToDateTime()?.ToString("d MMMM yyyy"))</td>
+                                        <td data-label="To" class="govuk-table__cell">@(governor.AppointmentEndDate.ToDateTime()?.ToString("d MMMM yyyy"))</td>
                                     </tr>
                                 }
                                 </tbody>

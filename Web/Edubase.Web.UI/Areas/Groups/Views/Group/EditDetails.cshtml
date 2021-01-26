@@ -74,7 +74,7 @@
                     {
                         <div class="govuk-form-group">
                             <label for="openDate" class="govuk-label">@Model.OpenDateLabel</label>
-                            <input value="@(Model.OpenDate.ToDateTime()?.ToString("dd MMMM yyyy") ?? "Not recorded")" disabled="disabled" class="govuk-input" id="openDate" />
+                            <input value="@(Model.OpenDate.ToDateTime()?.ToString("d MMMM yyyy") ?? "Not recorded")" disabled="disabled" class="govuk-input" id="openDate" />
                             @Html.HiddenFor(x => x.OpenDate.Day)
                             @Html.HiddenFor(x => x.OpenDate.Month)
                             @Html.HiddenFor(x => x.OpenDate.Year)

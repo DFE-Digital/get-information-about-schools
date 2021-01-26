@@ -43,7 +43,7 @@
     <div class="gias-summary-list__row">
         <dt class="gias-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadteacherLabel) appointment date:</dt>
         <dd class="gias-summary-list__value">
-            @(Model.Establishment.HeadAppointmentDate?.ToString("dd MMMM yyyy") ?? "Not recorded")
+            @(Model.Establishment.HeadAppointmentDate?.ToString("d MMMM yyyy") ?? "Not recorded")
         </dd>
     </div>
 }
@@ -211,7 +211,7 @@
 
             @if (Model.Establishment.OfstedInspectionDate.HasValue)
             {
-                <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("dd MMMM yyyy")))</span>
+                <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("d MMMM yyyy")))</span>
             }
             @if (Model.OfstedRatingReportUrl != null)
             {
