@@ -108,6 +108,7 @@ const config = {
 module.exports = (env, argv) => {
   if (argv.mode === 'development') {
     config.devtool = 'source-map';
+    config.optimization.minimize = false;
   }
   if (argv.mode === 'production') {
     config.devtool = 'source-map';
