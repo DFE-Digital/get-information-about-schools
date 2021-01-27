@@ -78,7 +78,7 @@ namespace Edubase.Web.UI.Controllers.Api
                     x.Name,
                     EstablishmentType = x.TypeId.HasValue ? estabTypes.FirstOrDefault(t => t.Id == x.TypeId)?.Name : null,
                     OpeningDate = x.OpenDate,
-                    DisplayDate = x.OpenDate?.ToString("dd MMMM yyyy"),
+                    DisplayDate = x.OpenDate?.ToString("d MMMM yyyy"),
                     x.PredecessorName,
                     x.PredecessorUrn,
                 }).OrderBy(x=> x.OpeningDate),

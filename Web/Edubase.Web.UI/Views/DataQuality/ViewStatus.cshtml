@@ -51,7 +51,7 @@
 
                 <tr class="govuk-table__row">
                     <td data-label="Establishment type" class="govuk-table__cell">@item.EstablishmentType.GetEnumMember()</td>
-                    <td data-label="Last updated" class="govuk-table__cell">@updated.ToString("dd MMMM yyyy")</td>
+                    <td data-label="Last updated" class="govuk-table__cell">@updated.ToString("d MMMM yyyy")</td>
                     <td data-label="Data owner" @Html.Raw(hasClause ? "aria-describedby = 'independent-pending'" : "") class="govuk-table__cell">
                         @item.DataOwner
                         @(hasClause ? "*" : "")

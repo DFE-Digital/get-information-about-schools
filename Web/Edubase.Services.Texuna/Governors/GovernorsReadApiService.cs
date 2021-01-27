@@ -7,11 +7,7 @@ using Edubase.Services.Governors.Search;
 using System.Security.Principal;
 using Edubase.Services.Domain;
 using Edubase.Services.Governors;
-using System;
 using Edubase.Services.Establishments;
-using MoreLinq;
-using System.Linq;
-using Edubase.Services.Texuna.Models;
 
 namespace Edubase.Services.Texuna.Governors
 {
@@ -32,14 +28,12 @@ namespace Edubase.Services.Texuna.Governors
         public async Task<GovernorModel> GetGovernorAsync(int gid, IPrincipal principal)
         {
             var retVal = (await _httpClient.GetAsync<GovernorModel>($"governor/{gid}", principal)).GetResponse();
-            await PopulateEstablishmentName(principal, retVal);
             return retVal;
         }
         
         public async Task<GovernorsDetailsDto> GetGovernorListAsync(int? urn = default(int?), int? groupUId = default(int?), IPrincipal principal = null)
         {
             var retVal = (await _httpClient.GetAsync<GovernorsDetailsTexunaDto>($"governors?{(groupUId.HasValue ? "uid" : "urn")}={(urn.HasValue ? urn : groupUId)}", principal)).GetResponse();
-            await PopulateEstablishmentName(principal, retVal.CurrentGovernors.Concat(retVal.HistoricalGovernors));
             return retVal;
         }
 
@@ -52,28 +46,8 @@ namespace Edubase.Services.Texuna.Governors
         public async Task<IEnumerable<GovernorModel>> GetSharedGovernorsAsync(int establishmentUrn, IPrincipal principal)
         {
             var retVal = (await _httpClient.GetAsync<GovernorModel[]>($"governors/shared/{establishmentUrn}", principal)).GetResponse();
-            await PopulateEstablishmentName(principal, retVal);
             return retVal;
         }
         public async Task<string> GetGovernorBulkUpdateTemplateUri(IPrincipal principal) => (await _httpClient.GetAsync<FileDownloadDto>($"governor/bulk-update/template", principal)).GetResponse().Url;
-
-        private async Task PopulateEstablishmentName(IPrincipal principal, IEnumerable<GovernorModel> governors)
-        {
-            if (governors != null && governors.Any())
-            {
-                foreach (var item in governors)
-                {
-                    await PopulateEstablishmentName(principal, item);
-                }
-            }
-        }
-
-        private async Task PopulateEstablishmentName(IPrincipal principal, GovernorModel governor)
-        {
-            foreach (var appt in governor.Appointments ?? Enumerable.Empty<GovernorAppointment>())
-            {
-                appt.EstablishmentName = await _establishmentReadService.GetEstablishmentNameAsync(appt.EstablishmentUrn.Value, principal);
-            }
-        }
     }
 }
