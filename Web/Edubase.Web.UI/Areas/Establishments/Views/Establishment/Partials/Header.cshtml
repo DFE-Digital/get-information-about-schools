@@ -175,8 +175,8 @@
             {
                 <a href="@WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)" target="_blank" rel="noreferrer noopener">
                     @WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)
-                    <span class="govuk-visually-hidden">Opens in new window</span>
                 </a>
+                 (opens in new window)
             }
         </dd>
     </div>
@@ -216,8 +216,11 @@
             @if (Model.OfstedRatingReportUrl != null)
             {
                 <br/>
-                <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="noreferrer noopener">Ofsted report <span class="govuk-visually-hidden">Opens in new window</span></a>
-            }
+                <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="noreferrer noopener">
+                    Ofsted report
+                </a>
+                (opens in new window)
+              }
         </dd>
     </div>
 }
@@ -277,15 +280,19 @@
                 }
                 @if (Model.ShowCscp)
                 {
-                    <li>
-                        <a href="@Model.CscpURL" rel="noreferrer noopener" target="_blank">Compare school and college performance <span class="govuk-visually-hidden">Opens in new window</span></a>
-                    </li>
+            <li>
+                <a href="@Model.CscpURL" rel="noreferrer noopener" target="_blank">
+                    Compare school and college performance
+                </a> (opens in new window)
+            </li>
                 }
                 @if (Model.ShowFinancialBenchmarking)
                 {
-                    <li>
-                        <a href="@Model.FinancialBenchmarkingURL" rel="noreferrer noopener" target="_blank">Schools financial benchmarking <span class="govuk-visually-hidden">Opens in new window</span></a>
-                    </li>
+            <li>
+                <a href="@Model.FinancialBenchmarkingURL" rel="noreferrer noopener" target="_blank">
+                    Schools financial benchmarking
+                </a> (opens in new window)
+            </li>
                 }
             </ul>
         </dd>

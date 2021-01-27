@@ -36,7 +36,8 @@ else if (Model.Results.Count > 0)
                     <dd>
                         @if (result.CompaniesHouseNumber != null)
                         {
-                            <a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.CompaniesHouseNumber" target="_blank" rel="noopener noreferrer">@result.CompaniesHouseNumber<span class="govuk-visually-hidden"> Opens in new window</span></a>
+                        <a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.CompaniesHouseNumber" target="_blank" rel="noopener noreferrer">
+                            @result.CompaniesHouseNumber</a> (opens in new window)
                         }
                     </dd>
                 }

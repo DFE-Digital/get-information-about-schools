@@ -63,7 +63,9 @@
                     <div class="gias-summary-list__row">
                         <dt class="gias-summary-list__key">Companies House number:</dt>
                         <dd class="gias-summary-list__value">
-                            <a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.CompaniesHouseNumber" target="_blank">@Model.CompaniesHouseNumber</a>
+                            <a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.CompaniesHouseNumber" target="_blank" rel="noreferrer noopener">
+                                @Model.CompaniesHouseNumber
+                            </a> (opens in new window)
                         </dd>
                     </div>
                     <div class="gias-summary-list__row">
