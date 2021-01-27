@@ -36,7 +36,7 @@ const academyOpenings = new Vue({
     apiError: {},
     sortKey: 'openingDate',
     sortAscending: true,
-    recordUpdateErrors: {},
+    recordUpdateErrors: [],
     anchorTarget: '',
     tableColumns: {
       openingDate: 'Opening date',
@@ -327,7 +327,7 @@ const academyOpenings = new Vue({
         this.editRecord = false;
         this.isProcessing = true;
         this.userHasEdited = false;
-        this.recordUpdateErrors = {};
+        this.recordUpdateErrors = [];
 
         $(window).off('beforeunload');
 
@@ -341,7 +341,6 @@ const academyOpenings = new Vue({
             name: this.updateName
           }),
           success: function (data) {
-
             self.loadData();
           },
           error: function (jqxhr) {
@@ -353,8 +352,8 @@ const academyOpenings = new Vue({
             self.userHasEdited = true;
 
             if (jqxhr.hasOwnProperty('responseJSON')) {
-              self.recordUpdateErrors = jqxhr.responseJSON;
-              for (let i = 0, len = Object.keys(self.recordUpdateErrors).length; i , len; i++) {
+              self.recordUpdateErrors = jqxhr.responseJSON.errors;
+              for (let i = 0, len = Object.keys(self.recordUpdateErrors).length; i < len; i++) {
                 self.errors.push({
                   href: '#',
                   message: self.recordUpdateErrors[i].message
@@ -411,7 +410,7 @@ const academyOpenings = new Vue({
       return this.selectedOpeningDetails;
     },
     cancelEditClick: function () {
-      this.recordUpdateErrors = {};
+      this.recordUpdateErrors = [];
       if (this.userHasEdited) {
         window.setTimeout(function () {
           $('#button-ok').focus();
