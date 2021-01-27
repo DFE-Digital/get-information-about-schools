@@ -1,6 +1,6 @@
-const autocompletes = require('../GiasSearchForm/autocomplete-setup');
+import autocompleteSetup from '../GiasSearchForm/autocomplete-setup';
 
-autocompletes.setUp();
+autocompleteSetup.setUp();
 
 const laButton = '<a id="button-la-{0}" class="link-button font-small remove-suggest-la" data-remove="la-{0}">{1}</a>';
 const laInput = '<input name="d" value="{0}" id="la-{0}" type="hidden">';
