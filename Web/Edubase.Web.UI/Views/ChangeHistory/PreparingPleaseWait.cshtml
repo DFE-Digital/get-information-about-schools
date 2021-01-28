@@ -43,8 +43,9 @@
             <h2 class="govuk-heading-s">Download change history data</h2>
             <p>Preparing your requested data. Large files may take some time to generate.</p>
 
-            <div class="progress-indicator">
-                <span class="govuk-visually-hidden">Please wait. Your file is being prepared</span>
+            <div aria-live="polite" class="gias-wait-mask gias-wait-mask--inline">
+                <p class="govuk-visually-hidden">Please wait</p>
+                @helpers.CssSpinner()
             </div>
         </div>
     </div>

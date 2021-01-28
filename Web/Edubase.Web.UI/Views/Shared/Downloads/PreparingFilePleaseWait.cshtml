@@ -60,8 +60,9 @@
 </div>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        <div class="progress-indicator">
-            <span class="govuk-visually-hidden">Please wait. Your file is being prepared</span>
+        <div aria-live="polite" class="gias-wait-mask gias-wait-mask--inline">
+            <p class="govuk-visually-hidden">Please wait</p>
+            @helpers.CssSpinner()
         </div>
     </div>
 </div>

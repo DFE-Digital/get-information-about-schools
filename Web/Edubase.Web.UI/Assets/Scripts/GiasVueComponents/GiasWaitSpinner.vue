@@ -1,6 +1,7 @@
 <template>
-  <div aria-live="polite" class="wait-spinner" v-show="isProcessing">
+    <div aria-live="polite" class="gias-wait-mask gias-wait-mask--inline" v-show="isProcessing">
     <p class="govuk-visually-hidden">Please wait</p>
+      <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
   </div>
 </template>
 

@@ -40,7 +40,7 @@ const GiasDownloadFilters = {
     const searchParams = $('#download-filters').serialize();
     let today = new Date();
 
-    resultsContainer.html('<div class="progress-indicator"><span class="govuk-visually-hidden">Please wait</span></div>');
+    resultsContainer.html('<div class="gias-wait-mask gias-wait-mask--inline"><div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div><span class="govuk-visually-hidden">Please wait</span></div>');
     resultsNotification.html('Please wait, loading search results');
 
     if ($('input[name=SearchType]:checked').val() === "Latest" ||

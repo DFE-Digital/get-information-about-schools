@@ -11,6 +11,10 @@
   text-align: center;
 }
 
+.gias-wait-mask--inline {
+  position: relative;
+}
+
 .lds-spinner {
   color: govuk-colour('black');
   display: inline-block;
@@ -18,6 +22,10 @@
   width: 80px;
   height: 80px;
   top: 50vh;
+}
+
+.gias-wait-mask--inline .lds-spinner {
+  top: auto;
 }
 
 .lds-spinner div {

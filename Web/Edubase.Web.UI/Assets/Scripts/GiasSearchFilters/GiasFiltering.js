@@ -101,13 +101,11 @@ class GiasFiltering {
         const $filter = $('.radius-filter');
         const errorSummary = $('#js-filter-error-summary');
         errorSummary.addClass('hidden');
-        //$filter.find('.govuk-form-group').removeClass('govuk-form-group--error');
         $filter.find('.govuk-error-message').addClass('hidden');
         $filter.find('.govuk-input').removeClass('govuk-input--error');
 
         const isValid = GiasFilterValidation.validateRadiusFilter();
         if (!isValid) {
-         // $filter.find('.govuk-form-group').addClass('govuk-form-group--error');
           $filter.find('.govuk-error-message').removeClass('hidden');
           $filter.find('.govuk-input').addClass('govuk-input--error');
           $filter.removeClass('hidden');
@@ -155,19 +153,14 @@ class GiasFiltering {
     $('.date-filters').find('.filter-button').on('click',
       function (e) {
         e.preventDefault();
-        //resetGlobalError();
         const $filter = $(this).closest('.date-filters');
         const dateFilterId = $filter.attr('id');
         const canSubmit =  GiasFilterValidation.validateDateFilters(dateFilterId);
-        //$filter.find('.govuk-input').removeClass('govuk-input--error');
-        //$filter.find('.govuk-error-message').addClass('hidden');
 
         if (canSubmit) {
           self.setParams();
           self.getResults();
         } else {
-          //$filter.find('.govuk-input').addClass('govuk-input--error');
-          //$filter.find('.govuk-error-message').not('.date-range-error').removeClass('hidden');
           window.setTimeout(function(){
             self.enableFilters();
           },0);
@@ -306,7 +299,7 @@ class GiasFiltering {
     const downloadBaseUrl = $downloadLink.attr('href').split('?')[0];
     const $resultsNotification = $('#results-notification');
     let token;
-    $resultsContainer.html('<div class="progress-indicator"><span class="govuk-visually-hidden">Please wait</span></div>');
+    $resultsContainer.html('<div class="gias-wait-mask gias-wait-mask--inline"><div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div><span class="govuk-visually-hidden">Please wait</span></div>');
 
     this.disableFilters();
     $('#gias-mobile-filter-submit').find('.mobile-count').remove();

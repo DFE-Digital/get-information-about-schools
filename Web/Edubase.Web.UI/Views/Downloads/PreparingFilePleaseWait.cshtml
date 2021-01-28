@@ -40,8 +40,9 @@
             <h2 class="govuk-heading-s">Please wait while your file is being generated</h2>
             <p>Generating your requested data. Large files may take some time to generate.</p>
 
-            <div aria-live="polite" class="wait-spinner">
+            <div aria-live="polite" class="gias-wait-mask gias-wait-mask--inline">
                 <p class="govuk-visually-hidden">Please wait</p>
+                @helpers.CssSpinner()
             </div>
         </div>
     </div>

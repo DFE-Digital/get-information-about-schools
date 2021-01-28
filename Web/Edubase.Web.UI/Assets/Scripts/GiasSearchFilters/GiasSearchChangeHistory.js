@@ -13,7 +13,7 @@ const giasSearchChangeHistory = (function() {
   const downloadBaseUrl = '/ChangeHistory/Search/Download/?';
   let filterIntent = null;
   let searchParams = '';
-  const plsWait = '<div class="progress-indicator"><span class="govuk-visually-hidden">Please wait</span></div>';
+  const plsWait = '<div class="gias-wait-mask gias-wait-mask--inline"><div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div><span class="govuk-visually-hidden">Please wait</span></div>';
   const $sortLinks = $('#changes-table thead').find('a');
 
   function okClick() {

@@ -122,16 +122,6 @@
   }
 }
 
-.progress-indicator {
-  min-width: 100%;
-  min-height: 100px;
-  background: transparent url(/public/assets/images/icons/icon-loading.gif) no-repeat center;
-
-  &.padded-indicator {
-    padding-top: 80px;
-  }
-}
-
 .add-clear-filters {
   @include govuk-font(16);
   position: absolute;
