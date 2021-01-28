@@ -50,8 +50,10 @@
                         }
                         else
                         {
-                    <a href="@(file.Item2.AuthenticationRequired ? Url.RouteUrl("DownloadFile", new {filterDate = Model.FilterDate.ToDateTime(), id = file.Item2.Tag}) : file.Item2.Url)" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
-                        @file.Item1@Html.Conditional(file.Item2.FileSizeInBytes > 0, ", " + Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes))</a> (opens in new window)
+                            <a href="@(file.Item2.AuthenticationRequired ? Url.RouteUrl("DownloadFile", new {filterDate = Model.FilterDate.ToDateTime(), id = file.Item2.Tag}) : file.Item2.Url)" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
+                                @file.Item1@Html.Conditional(file.Item2.FileSizeInBytes > 0, ", " + Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes))
+                            </a>
+                            <text>(opens in new window)</text>
                         }
                     </li>
                 }
