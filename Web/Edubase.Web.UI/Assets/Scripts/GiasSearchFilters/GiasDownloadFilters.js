@@ -63,7 +63,7 @@ const GiasDownloadFilters = {
         if (resultsContainer.find('#no-downloads-available').length !== 0) {
           pageBanner.html(GiasDownloadFilters.bannerDefaultText);
         } else {
-          pageBanner.html("Files available to download from " + $('#FilterDate_Day').val() + " " + monthNames[$('#FilterDate_Month').val() - 1] + " " + $('#FilterDate_Year').val());
+          pageBanner.html("Files available to download from " + parseInt($('#FilterDate_Day').val(), 10) + " " + monthNames[$('#FilterDate_Month').val() - 1] + " " + $('#FilterDate_Year').val());
         }
 
         resultsContainer.removeClass('pending-results-update');
