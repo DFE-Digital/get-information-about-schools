@@ -23,7 +23,7 @@ new Vue({
     initialCount: 0,
     currentCount: 0,
     startIndex: 0,
-    pageSize: 100,
+    pageSize: 10,
     invalidReason: false,
     reasonLength: false,
     pendingRejection: false,
@@ -85,14 +85,17 @@ new Vue({
       if (this.totalPages > maxPages) {
         if (this.currentPage < 4) {
           paginationFinish = maxPages;
-        } else if (this.currentPage + 3 > this.totalPages) {
-          paginationFinish = this.totalPages;
-          paginationStart = paginationFinish - (maxPages - 1);
-        } else if (this.currentPage >= 4) {
+        }
+        else if (this.currentPage >= 4 && !(this.currentPage + 3 > this.totalPages)) {
           paginationFinish = this.currentPage + 2;
           paginationStart = paginationFinish - (maxPages - 1);
         }
+        else if (this.currentPage + 3 > this.totalPages) {
+          paginationFinish = this.totalPages;
+          paginationStart = this.totalPages - (maxPages - 1);
+        }
       }
+
       let paginationItems = [];
       for (let i = paginationStart; i <= paginationFinish; i++) {
         paginationItems.push(i);
@@ -222,15 +225,7 @@ new Vue({
     setCurrentPage: function (pageIndex) {
       this.currentPage = pageIndex;
       this.getChangesData(pageIndex * this.pageSize);
-      if (this.currentPage < 3) {
-        this.slicePage = 0;
-      } else {
-        if (this.currentPage > this.totalPages - 3) {
-          this.slicePage = this.totalPages - 5;
-        } else {
-          this.slicePage = this.currentPage - 2;
-        }
-      }
+
     },
     showAll: function () {
       this.currentPage = 0;
