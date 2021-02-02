@@ -23,7 +23,7 @@ new Vue({
     initialCount: 0,
     currentCount: 0,
     startIndex: 0,
-    pageSize: 10,
+    pageSize: 100,
     invalidReason: false,
     reasonLength: false,
     pendingRejection: false,
