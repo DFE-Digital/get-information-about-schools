@@ -7,8 +7,8 @@
 <span></span>
 @if (Model.Downloads != null && Model.Downloads.Any())
 {
-    <h2 class="govuk-heading-s">Select all the files you want to download</h2>
-    <details class="govuk-details govuk-!-margin-bottom-9" data-module="govuk-details">
+    <p>Select the files you want to download then click 'Download selected files'.</p>
+    <details class="govuk-details govuk-!-margin-bottom-4" data-module="govuk-details">
         <summary class="govuk-details__summary">
             <span class="govuk-details__summary-text">
                 Why can't I see the files I'm looking for?
@@ -31,34 +31,53 @@
         </div>
     </details>
 
-    foreach (var group in downloadGroups)
+    <div class="govuk-details govuk-!-margin-bottom-4 js-show-block">
+        <a href="#" class="govuk-!-margin-right-4" id="select-all" role="button">Select all</a>
+        <a href="#" id="clear-all" role="button">Clear all</a>
+    </div>
+
+    using (Html.BeginRouteForm("CollateDownloads", FormMethod.Post))
     {
-        <h2 class="govuk-heading-m">@group.Heading</h2>
-        <p>@group.Paragraph</p>
-        foreach (var item in group.SubSections)
+        var i = 0;
+
+        @Html.HiddenFor(x => x.Skip)
+        @Html.HiddenFor(x => x.SearchType)
+        @Html.Hidden($"{nameof(Model.FilterDate)}.Day", Model.FilterDate.Day)
+        @Html.Hidden($"{nameof(Model.FilterDate)}.Month", Model.FilterDate.Month)
+        @Html.Hidden($"{nameof(Model.FilterDate)}.Year", Model.FilterDate.Year)
+
+        foreach (var group in downloadGroups)
         {
-            <h3 class="govuk-heading-s">@item.Heading</h3>
-            <ul class="govuk-list govuk-list--spaced">
-                @foreach (var file in item.Files)
-                {
-                    <li>
-                        @if (file.Item2.RequiresGeneration)
+            <h2 class="govuk-heading-m">@group.Heading</h2>
+            <p>@group.Paragraph</p>
+            foreach (var item in group.SubSections)
+            {
+                <div class="govuk-form-group">
+                    <h3 class="govuk-heading-s">@item.Heading</h3>
+                    <div class="govuk-checkboxes">
+                        @foreach (var file in item.Files)
                         {
-                            <a href="@Url.RouteUrl("GenerateDownload", new {id = file.Item2.Tag})" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
-                                @file.Item1@Html.Conditional(file.Item2.FileSizeInBytes > 0, ", " + Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes))
-                            </a>
+
+                            var itemPrefix = $"{nameof(Model.Downloads)}[{i}].";
+                            var checkboxName = $"{itemPrefix}{nameof(file.Item2.Selected)}";
+                            var checkboxLabel = file.Item1 + @Html.Conditional(file.Item2.FileSizeInBytes > 0, ", " + Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes));
+
+                            <div class="govuk-checkboxes__item">
+                                @Html.Hidden($"{itemPrefix}{nameof(file.Item2.Tag)}", file.Item2.Tag)
+                                @Html.Hidden($"{itemPrefix}{nameof(file.Item2.FileGeneratedDate)}", file.Item2.FileGeneratedDate)
+                                <input id="@checkboxName" type="checkbox" name="@checkboxName" class="govuk-checkboxes__input" value="true" />
+                                <label for="@checkboxName" class="govuk-checkboxes__label">@checkboxLabel</label>
+                            </div>
+
+                            i += 1;
                         }
-                        else
-                        {
-                            <a href="@(file.Item2.AuthenticationRequired ? Url.RouteUrl("DownloadFile", new {filterDate = Model.FilterDate.ToDateTime(), id = file.Item2.Tag}) : file.Item2.Url)" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
-                                @file.Item1@Html.Conditional(file.Item2.FileSizeInBytes > 0, ", " + Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes))
-                            </a>
-                            <text>(opens in new window)</text>
-                        }
-                    </li>
-                }
-            </ul>
+                    </div>
+                </div>
+            }
         }
+        <p>
+            <input type="submit" id="downloadSelected" class="govuk-button" value="Download selected files" /><br />
+        </p>
     }
 }
 else

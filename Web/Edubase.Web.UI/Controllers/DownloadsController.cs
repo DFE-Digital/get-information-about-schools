@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using Edubase.Services.Downloads;
 using System.Threading.Tasks;
@@ -14,7 +15,10 @@ using Edubase.Common;
 using Edubase.Web.UI.Helpers;
 using System.Linq;
 using System.Net.Http;
+using System.Web.Routing;
+using Castle.Components.DictionaryAdapter;
 using Edubase.Services;
+using Edubase.Services.Downloads.Models;
 using Edubase.Web.UI.Models.Search;
 using MoreLinq;
 
@@ -64,6 +68,40 @@ namespace Edubase.Web.UI.Controllers
             };
 
             return viewModel;
+        }
+
+        [Route("Collate", Name = "CollateDownloads")]
+        public async Task<ActionResult> CollateDownloads(DownloadsViewModel model)
+        {
+            var collection = new FileDownloadRequestArray();
+            foreach (var fileDownload in model.Downloads.Where(x => x.Selected))
+            {
+                collection.Files.Add(new FileDownloadRequest(fileDownload.Tag, fileDownload.FileGeneratedDate));
+            }
+
+            if (!collection.Files.Any())
+            {
+                var routeValuesDictionary = new RouteValueDictionary
+                {
+                    { nameof(model.Skip), model.Skip },
+                    { $"{nameof(model.FilterDate)}.{nameof(model.FilterDate.Day)}", model.FilterDate.Day },
+                    { $"{nameof(model.FilterDate)}.{nameof(model.FilterDate.Month)}", model.FilterDate.Month },
+                    { $"{nameof(model.FilterDate)}.{nameof(model.FilterDate.Year)}", model.FilterDate.Year },
+                    { nameof(model.SearchType), model.SearchType },
+                };
+                return RedirectToAction(nameof(Index), routeValuesDictionary);
+            }
+
+            var response = await _downloadsService.CollateDownloadsAsync(collection, User);
+            if (response.Contains("fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
+            {
+                ViewBag.isDownload = true;
+                return View("ReadyToDownload", JsonConvert.DeserializeObject<ProgressDto>(response));
+            }
+            else
+            {
+                return RedirectToAction(nameof(DownloadGenerated), new { id = JsonConvert.DeserializeObject<ApiResultDto<Guid>>(response).Value });
+            }
         }
 
         [Route("Generate", Name = "GenerateDownload")]
