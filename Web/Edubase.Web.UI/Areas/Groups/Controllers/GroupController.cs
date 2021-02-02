@@ -98,6 +98,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 }
                 else
                 {
+                    TempData["ShowSaved"] = "saved";
                     return RedirectToRoute("GroupDetails", new { id = apiResponse.GetResponse().Value });
                 }
             }
@@ -268,6 +269,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Groups, int skip = 0, string sortBy = null, bool saved = false)
         {
             ViewBag.ShowSaved = saved;
+            if (TempData["showSaved"] != null)
+            {
+                ViewBag.ShowSaved = true;
+            }
 
             var model = (await _groupReadService.GetAsync(id, User)).GetResult();
 
@@ -567,7 +572,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Reset();
         }
-        
+
         private SaveGroupDto CreateSaveDto(GroupEditorViewModel viewModel)
         {
             viewModel.SetCCLeadCentreUrn();
@@ -711,7 +716,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
 
             viewModel.DeriveCCLeadCentreUrn();
-            
+
             return dto;
         }
 
