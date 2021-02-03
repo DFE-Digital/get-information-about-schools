@@ -667,8 +667,9 @@ const mergersApp = new Vue({
 
     displayDate: function () {
       const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const datecur = parseInt(this.mergeDateDay, 10);
 
-      return `${this.mergeDateDay}   ${ monthNames[this.mergeDateMonth -1]} ${this.mergeDateYear}`;
+      return `${datecur}   ${ monthNames[this.mergeDateMonth -1]} ${this.mergeDateYear}`;
     },
     leadEstablishmentName: function () {
       const self = this;
