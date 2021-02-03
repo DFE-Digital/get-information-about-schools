@@ -6,7 +6,6 @@ using Polly;
 using System;
 using System.Configuration;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Text.RegularExpressions;
@@ -19,7 +18,7 @@ namespace Edubase.Services.IntegrationEndPoints.OSPlaces
         private static readonly string _apiKey = ConfigurationManager.AppSettings["OSPlacesApiKey"];
         private static readonly HttpClient _osApiClient = new HttpClient
         {
-            BaseAddress = new Uri("https://api.ordnancesurvey.co.uk/")
+            BaseAddress = new Uri("https://api.os.uk/")
         };
         private static readonly Policy RetryPolicy = Policy
                 .Handle<HttpRequestException>()
@@ -40,8 +39,7 @@ namespace Edubase.Services.IntegrationEndPoints.OSPlaces
             {
                 using (var message = await RetryPolicy.ExecuteAsync(async () =>
                     {
-                        return await _osApiClient.GetAsync(
-                            $"places/v1/addresses/postcode?postcode={text}&key={_apiKey}&output_srs=WGS84&dataset=DPA,LPI");
+                        return await _osApiClient.GetAsync($"search/places/v1/postcode?postcode={text}&key={_apiKey}&output_srs=WGS84&dataset=DPA,LPI");
                     }))
                 {
                     if (!message.IsSuccessStatusCode)
