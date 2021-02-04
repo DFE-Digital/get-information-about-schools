@@ -123,16 +123,11 @@ else
 @helper ShowDelegationInformation()
 {
     <h2 class="govuk-heading-s">Delegated authority of local governing body</h2>
-    <details class="govuk-details govuk-!-font-size-16" data-module="govuk-details">
-        <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">
-                More details
-            </span>
-        </summary>
-        <div class="govuk-details__text">
+    <div>
+        <p class="govuk-body-s">
             @(Model.DelegationInformation ?? "Not recorded")
-        </div>
-    </details>
+        </p>
+    </div>
     if (Model.EditMode)
     {
         <div class="govuk-grid-row">
