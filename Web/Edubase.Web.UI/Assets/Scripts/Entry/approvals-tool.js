@@ -116,7 +116,7 @@ new Vue({
 
       const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
       const dateSplit = dateString.split('/');
-	    const curdate = parseInt(datesplit[0], 10);
+	  const curdate = parseInt(dateSplit[0], 10);
       const monthInt = parseInt(dateSplit[1],10) -1;
 
       return `${curdate} ${monthNames[monthInt]} ${dateSplit[2]}`;
