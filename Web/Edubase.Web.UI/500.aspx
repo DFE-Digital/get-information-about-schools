@@ -162,7 +162,7 @@
                         <li class="govuk-footer__inline-list-item">
                             <a href="https://form.education.gov.uk/service/Data-collections-service-request-form" target="_blank" rel="noreferrer noopener" class="govuk-footer__link">
                                 Contact
-                            </a> (opens in new window)
+                            </a> (opens in new tab)
                         </li>
                         <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="/cookies">Cookies</a></li>
                         <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="/glossary">Glossary</a></li>

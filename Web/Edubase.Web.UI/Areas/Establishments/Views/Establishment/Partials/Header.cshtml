@@ -176,7 +176,7 @@
                 <a href="@WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)" target="_blank" rel="noreferrer noopener">
                     @WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)
                 </a>
-                <text>(opens in new window)</text>
+                <text>(opens in new tab)</text>
             }
         </dd>
     </div>
@@ -215,12 +215,12 @@
             }
             @if (Model.OfstedRatingReportUrl != null)
             {
-                <br/>
+                <br />
                 <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="noreferrer noopener">
                     Ofsted report
                 </a>
-                <text>(opens in new window)</text>
-              }
+                <text>(opens in new tab)</text>
+            }
         </dd>
     </div>
 }
@@ -283,7 +283,7 @@
             <li>
                 <a href="@Model.CscpURL" rel="noreferrer noopener" target="_blank">
                     Compare school and college performance
-                </a> (opens in new window)
+                </a> (opens in new tab)
             </li>
                 }
                 @if (Model.ShowFinancialBenchmarking)
@@ -291,7 +291,7 @@
             <li>
                 <a href="@Model.FinancialBenchmarkingURL" rel="noreferrer noopener" target="_blank">
                     Schools financial benchmarking
-                </a> (opens in new window)
+                </a> (opens in new tab)
             </li>
                 }
             </ul>
