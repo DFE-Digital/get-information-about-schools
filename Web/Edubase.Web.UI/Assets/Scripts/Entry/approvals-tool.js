@@ -23,7 +23,7 @@ new Vue({
     initialCount: 0,
     currentCount: 0,
     startIndex: 0,
-    pageSize: 10,
+    pageSize: 100,
     invalidReason: false,
     reasonLength: false,
     pendingRejection: false,
@@ -116,9 +116,10 @@ new Vue({
 
       const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
       const dateSplit = dateString.split('/');
+	  const curdate = parseInt(dateSplit[0], 10);
       const monthInt = parseInt(dateSplit[1],10) -1;
 
-      return `${dateSplit[0]} ${monthNames[monthInt]} ${dateSplit[2]}`;
+      return `${curdate} ${monthNames[monthInt]} ${dateSplit[2]}`;
     },
     showRejectionsModal: function () {
       this.clearErrors();

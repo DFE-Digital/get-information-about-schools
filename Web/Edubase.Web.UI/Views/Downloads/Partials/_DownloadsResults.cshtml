@@ -25,8 +25,7 @@
             <p>
                 Please try again tomorrow or if the error continues, raise a
                 <a href="https://form.education.gov.uk/en/AchieveForms/?form_uri=sandbox-publish://AF-Process-2b61dfcd-9296-4f6a-8a26-4671265cae67/AF-Stage-f3f5200e-e605-4a1b-ae6b-3536bc77305c/definition.json&redirectlink=/en&cancelRedirectLink=/en" target="_blank" rel="noreferrer noopener">
-                    Service Request <span class="govuk-visually-hidden">Opens in new window</span>
-                </a>.
+                    Service Request (opens in new tab)</a>.
             </p>
         </div>
     </details>
@@ -41,21 +40,20 @@
             <ul class="govuk-list govuk-list--spaced">
                 @foreach (var file in item.Files)
                 {
-                    <li>
-                        @if (file.Item2.RequiresGeneration)
-                        {
-                            <a href="@Url.RouteUrl("GenerateDownload", new {id = file.Item2.Tag})" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
-                                @file.Item1@Html.Conditional(file.Item2.FileSizeInBytes > 0, ", " + Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes))
-                            </a>
-                        }
-                        else
-                        {
-                            <a href="@(file.Item2.AuthenticationRequired ? Url.RouteUrl("DownloadFile", new {filterDate = Model.FilterDate.ToDateTime(), id = file.Item2.Tag}) : file.Item2.Url)" target="_blank" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
-                                @file.Item1@Html.Conditional(file.Item2.FileSizeInBytes > 0, ", " + Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes))
-                            </a>
-                            <text>(opens in new window)</text>
-                        }
-                    </li>
+                <li>
+                    @if (file.Item2.RequiresGeneration)
+                    {
+                        <a href="@Url.RouteUrl("GenerateDownload", new {id = file.Item2.Tag})" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
+                            @file.Item1@Html.Conditional(file.Item2.FileSizeInBytes > 0, ", " + Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes))
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@(file.Item2.AuthenticationRequired ? Url.RouteUrl("DownloadFile", new {filterDate = Model.FilterDate.ToDateTime(), id = file.Item2.Tag}) : file.Item2.Url)" rel="nofollow" class="js-track" data-track="download-data-page|@file.Item2.Description)|download">
+                            @file.Item1@Html.Conditional(file.Item2.FileSizeInBytes > 0, ", " + Html.FileSizeInMegabytes(file.Item2.FileSizeInBytes))
+                        </a>
+                    }
+                </li>
                 }
             </ul>
         }

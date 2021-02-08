@@ -173,10 +173,9 @@
             }
             else
             {
-                <a href="@WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)" target="_blank" rel="noreferrer noopener">
-                    @WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)
-                </a>
-                <text>(opens in new window)</text>
+            <a href="@WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)" target="_blank" rel="noreferrer noopener">
+                @WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress) (opens in new tab)
+            </a>
             }
         </dd>
     </div>
@@ -215,12 +214,11 @@
             }
             @if (Model.OfstedRatingReportUrl != null)
             {
-                <br/>
+                <br />
                 <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="noreferrer noopener">
-                    Ofsted report
+                    Ofsted report (opens in new tab)
                 </a>
-                <text>(opens in new window)</text>
-              }
+            }
         </dd>
     </div>
 }
@@ -282,16 +280,14 @@
                 {
             <li>
                 <a href="@Model.CscpURL" rel="noreferrer noopener" target="_blank">
-                    Compare school and college performance
-                </a> (opens in new window)
+                    Compare school and college performance (opens in new tab)</a>
             </li>
                 }
                 @if (Model.ShowFinancialBenchmarking)
                 {
             <li>
                 <a href="@Model.FinancialBenchmarkingURL" rel="noreferrer noopener" target="_blank">
-                    Schools financial benchmarking
-                </a> (opens in new window)
+                    Schools financial benchmarking (opens in new tab)</a> 
             </li>
                 }
             </ul>
