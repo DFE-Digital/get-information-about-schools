@@ -53,6 +53,7 @@
   p {
     margin: 0;
     color: govuk-colour('white');
+
     @include govuk-font(16);
   }
 

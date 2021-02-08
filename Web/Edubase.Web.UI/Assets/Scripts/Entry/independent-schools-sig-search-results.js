@@ -12,7 +12,7 @@ const _throttle = require('lodash.throttle');
   let filterIntent;
   const downloadLink = $('.download-link');
   const downloadBaseUrl = '/independent-schools/download?';
-  const plsWait = '<div class="progress-indicator"><span class="govuk-visually-hidden">Please wait</span></div>';
+  const plsWait = '<div class="gias-wait-mask gias-wait-mask--inline"><div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div><span class="govuk-visually-hidden">Please wait</span></div>';
   let searchParams;
   let filterError = false;
 

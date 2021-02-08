@@ -123,5 +123,5 @@
         window.sets = @Html.Json(Model.LocalAuthoritySets);
 
     </script>
-    <script src="/public/assets/scripts/build/independent-schools-sig-search.js"></script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("independent-schools-sig-search.*.js"))"></script>
 }

@@ -61,8 +61,8 @@
             @foreach (var item in Model.Items)
             {
             <tr class="govuk-table__row">
-                <td data-label="Date changed" class="govuk-table__cell">@(item.DateChanged?.ToString("dd MMMM yyyy"))</td>
-                <td data-label="Effective date" class="govuk-table__cell">@(item.EffectiveDate?.ToString("dd MMMM yyyy"))</td>
+                <td data-label="Date changed" class="govuk-table__cell">@(item.DateChanged?.ToString("d MMMM yyyy"))</td>
+                <td data-label="Effective date" class="govuk-table__cell">@(item.EffectiveDate?.ToString("d MMMM yyyy"))</td>
                 @if (!Model.SingleEstablishment)
                 {
                     <td data-label="URN" class="govuk-table__cell">@Html.RouteLink(item.EstablishmentUrn?.ToString() ?? "Unknown", "EstabDetails", new { id = item.EstablishmentUrn })</td>
@@ -75,7 +75,7 @@
                         var parts = item.OldValue.Split('/').Select(Int32.Parse).ToList();
                         var dt = new DateTime(parts[2], parts[1], parts[0]);
 
-                        @dt.ToString("dd MMMM yyyy");
+                        @dt.ToString("d MMMM yyyy");
                     }
                     else
                     {
@@ -88,7 +88,7 @@
                         var parts = item.NewValue.Split('/').Select(Int32.Parse).ToList();
                         var dt = new DateTime(parts[2], parts[1], parts[0]);
 
-                        @dt.ToString("dd MMMM yyyy");
+                        @dt.ToString("d MMMM yyyy");
                     }
                     else
                     {

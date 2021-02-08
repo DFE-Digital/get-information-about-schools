@@ -11,6 +11,10 @@
   text-align: center;
 }
 
+.gias-wait-mask--inline {
+  position: relative;
+}
+
 .lds-spinner {
   color: govuk-colour('black');
   display: inline-block;
@@ -20,12 +24,16 @@
   top: 50vh;
 }
 
+.gias-wait-mask--inline .lds-spinner {
+  top: auto;
+}
+
 .lds-spinner div {
   transform-origin: 40px 40px;
   animation: lds-spinner 1.2s linear infinite;
 }
 
-.lds-spinner div:after {
+.lds-spinner div::after {
   content: " ";
   display: block;
   position: absolute;

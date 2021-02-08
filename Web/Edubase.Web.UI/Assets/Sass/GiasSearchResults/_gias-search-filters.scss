@@ -72,7 +72,7 @@
   .govuk-checkboxes__input {
     &:focus,
     &:active {
-       + .govuk-checkboxes__label::before {
+      + .govuk-checkboxes__label::before {
         outline-width: 1px;
         border-width: 2px;
       }
@@ -119,16 +119,6 @@
   .add-clear-filters {
     right: 0;
     top: 10px;
-  }
-}
-
-.progress-indicator {
-  min-width: 100%;
-  min-height: 100px;
-  background: transparent url(/public/assets/images/icons/icon-loading.gif) no-repeat center;
-
-  &.padded-indicator {
-    padding-top: 80px;
   }
 }
 

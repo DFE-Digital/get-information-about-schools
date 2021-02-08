@@ -1,5 +1,5 @@
 import GiasAttachUnload from '../GiasModules/GiasModals/GiasAttachUnload';
-const locationAutoSuggest = require('../GiasEdit/locationAutoSuggests');
+import locationAutoSuggest from '../GiasEdit/locationAutoSuggests';
 const  $main = $('#main-content');
 
 if (window.isConfimingChanges) {

@@ -7,14 +7,14 @@
   }
 }
 .search-results-download-link {
-  display:block;
+  display: block;
   margin-top: 0;
   margin-right: govuk-spacing(2);
   outline: none;
   padding: 0 govuk-spacing(1) govuk-spacing(1) 0;
   font-size: 14px;
 
-  @include govuk-media-query($from: desktop){
+  @include govuk-media-query($from: desktop) {
     margin-right: 0;
     position: absolute;
     right: 0;

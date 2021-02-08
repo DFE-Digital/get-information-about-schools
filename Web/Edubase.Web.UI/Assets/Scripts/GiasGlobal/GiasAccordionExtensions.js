@@ -40,4 +40,4 @@ const giasAccordionExtensions = function(){
   });
 };
 
-module.exports = giasAccordionExtensions;
+export default giasAccordionExtensions;

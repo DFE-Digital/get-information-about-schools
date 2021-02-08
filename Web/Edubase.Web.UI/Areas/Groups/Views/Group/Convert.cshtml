@@ -1,4 +1,4 @@
-﻿@model ConvertSATViewModel
+@model ConvertSATViewModel
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Convert single-academy trusts to multi-academy trusts");
     ViewBag.SiteSection = "tools";
@@ -88,11 +88,10 @@ else
                         <dt class="gias-summary-list__key">Companies House number:</dt>
                         @if (Model.Details.CompaniesHouseNumber != null)
                         {
-                            <dd class="gias-summary-list__value">
-                                <a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.Details.CompaniesHouseNumber" target="_blank">
-                                    @Model.Details.CompaniesHouseNumber <span class="govuk-visually-hidden">Opens in new window</span>
-                                </a>
-                            </dd>
+                    <dd class="gias-summary-list__value">
+                        <a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.Details.CompaniesHouseNumber" target="_blank">
+                            @Model.Details.CompaniesHouseNumber (opens in new tab)</a>
+                    </dd>
                         }
                         else
                         {

@@ -43,7 +43,7 @@
     <div class="gias-summary-list__row">
         <dt class="gias-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadteacherLabel) appointment date:</dt>
         <dd class="gias-summary-list__value">
-            @(Model.Establishment.HeadAppointmentDate?.ToString("dd MMMM yyyy") ?? "Not recorded")
+            @(Model.Establishment.HeadAppointmentDate?.ToString("d MMMM yyyy") ?? "Not recorded")
         </dd>
     </div>
 }
@@ -173,10 +173,9 @@
             }
             else
             {
-                <a href="@WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)" target="_blank" rel="noreferrer noopener">
-                    @WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)
-                    <span class="govuk-visually-hidden">Opens in new window</span>
-                </a>
+            <a href="@WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)" target="_blank" rel="noreferrer noopener">
+                @WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress) (opens in new tab)
+            </a>
             }
         </dd>
     </div>
@@ -211,12 +210,14 @@
 
             @if (Model.Establishment.OfstedInspectionDate.HasValue)
             {
-                <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("dd MMMM yyyy")))</span>
+                <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("d MMMM yyyy")))</span>
             }
             @if (Model.OfstedRatingReportUrl != null)
             {
-                <br/>
-                <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="noreferrer noopener">Ofsted report <span class="govuk-visually-hidden">Opens in new window</span></a>
+                <br />
+                <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="noreferrer noopener">
+                    Ofsted report (opens in new tab)
+                </a>
             }
         </dd>
     </div>
@@ -277,15 +278,17 @@
                 }
                 @if (Model.ShowCscp)
                 {
-                    <li>
-                        <a href="@Model.CscpURL" rel="noreferrer noopener" target="_blank">Compare school and college performance <span class="govuk-visually-hidden">Opens in new window</span></a>
-                    </li>
+            <li>
+                <a href="@Model.CscpURL" rel="noreferrer noopener" target="_blank">
+                    Compare school and college performance (opens in new tab)</a>
+            </li>
                 }
                 @if (Model.ShowFinancialBenchmarking)
                 {
-                    <li>
-                        <a href="@Model.FinancialBenchmarkingURL" rel="noreferrer noopener" target="_blank">Schools financial benchmarking <span class="govuk-visually-hidden">Opens in new window</span></a>
-                    </li>
+            <li>
+                <a href="@Model.FinancialBenchmarkingURL" rel="noreferrer noopener" target="_blank">
+                    Schools financial benchmarking (opens in new tab)</a> 
+            </li>
                 }
             </ul>
         </dd>

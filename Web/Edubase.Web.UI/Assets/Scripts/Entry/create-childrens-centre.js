@@ -79,13 +79,13 @@ const  ccApp = new Vue({
     },
     openDateDisplay: function () {
       if (this.openDateDay !== '' && this.openDateMonth !== '' && this.openDateYear !== '') {
-        return [this.openDateDay, monthNames[this.openDateMonth -1], this.openDateYear].join(' ');
+        return [parseInt(this.openDateDay, 10), monthNames[this.openDateMonth -1], this.openDateYear].join(' ');
       }
       return '';
     },
     joinDateDisplay: function () {
       if (this.joinDateDay !== '' && this.joinDateMonth !== '' && this.joinDateYear !== '') {
-        return [this.joinDateDay, monthNames[this.joinDateMonth -1], this.joinDateYear].join(' ');
+        return [parseInt(this.joinDateDay, 10), monthNames[this.joinDateMonth -1], this.joinDateYear].join(' ');
       }
       return '';
     },

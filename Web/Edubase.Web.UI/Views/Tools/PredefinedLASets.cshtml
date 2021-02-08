@@ -89,6 +89,5 @@ else
 
 
 @section ViewScripts{
-    <script src="/public/assets/scripts/build/independent-schools-predefinedsets.js"></script>
-
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("independent-schools-predefinedsets.*.js"))"></script>
 }

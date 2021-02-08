@@ -62,7 +62,6 @@
 }
 
 .horizontal-filters {
-
   @include govuk-media-query($from: tablet) {
     margin-bottom: govuk-spacing(9);
     overflow: hidden;
@@ -76,4 +75,3 @@
     max-height: none;
   }
 }
-

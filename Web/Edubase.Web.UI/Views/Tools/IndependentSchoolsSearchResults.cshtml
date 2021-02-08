@@ -158,5 +158,5 @@
 
 @section ViewScripts
 {
-    <script src="/public/assets/scripts/build/independent-schools-sig-search-results.js"></script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("independent-schools-sig-search-results.*.js"))"></script>
 }

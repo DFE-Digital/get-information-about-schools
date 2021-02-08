@@ -112,7 +112,7 @@
             {
                 <div class="gias-establishment-closed-message">
                     <p>
-                        This establishment closed on @(Model.Establishment.CloseDate?.ToString("dd MMMM yyyy")).
+                        This establishment closed on @(Model.Establishment.CloseDate?.ToString("d MMMM yyyy")).
                         View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
                     </p>
                 </div>
@@ -221,12 +221,12 @@
         <p>@Model.AgeRangeToolTip</p>
         @if (!Model.AgeRangeToolTipLink.IsNullOrEmpty())
         {
-            <p>Link:
-                <a href="@Model.AgeRangeToolTipLink" target="_blank" rel="noreferrer noopener">
-                    <span class="govuk-visually-hidden">Opens in a new window</span>
-                    @Model.AgeRangeToolTipLink
-                </a>
-            </p>
+    <p>
+        Link:
+        <a href="@Model.AgeRangeToolTipLink" target="_blank" rel="noreferrer noopener">
+            @Model.AgeRangeToolTipLink
+            (opens in new tab)</a>
+    </p>
         }
     </div>
 
@@ -235,12 +235,12 @@
         <p class="govuk-body">@Model.SchoolCapacityToolTip</p>
         @if (!Model.SchoolCapacityToolTipLink.IsNullOrEmpty())
         {
-            <p>Link:
-                <a href="@Model.SchoolCapacityToolTipLink" target="_blank" rel="noreferrer noopener">
-                <span class="govuk-visually-hidden">Opens in a new window</span>
-                @Model.SchoolCapacityToolTipLink
-                </a>
-            </p>
+    <p>
+        Link:
+        <a href="@Model.SchoolCapacityToolTipLink" target="_blank" rel="noreferrer noopener">
+            @Model.SchoolCapacityToolTipLink
+            (opens in new tab)</a>
+    </p>
         }
     </div>
 
@@ -262,5 +262,5 @@
     var estabOpen = @((Model.Establishment.CloseDate == null).ToString().ToLower());
     var mapMode = 'establishment';
 </script>
-<script src="/public/assets/scripts/build/landing-page-bundle.js"></script>
+<script src="@Html.Raw(Html.GetWebpackScriptUrl("landing-page-bundle.*.js"))"></script>
 }

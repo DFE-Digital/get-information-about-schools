@@ -1,5 +1,6 @@
 .detail-summary {
   padding-right: govuk-spacing(2);
+
   @include govuk-media-query($until: tablet) {
     clear: both;
   }
@@ -127,7 +128,6 @@
     font-weight: bold;
   }
 }
-
 
 .gias-summary-list--bold-keys {
   .gias-summary-list__key {

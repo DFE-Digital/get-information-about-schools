@@ -360,7 +360,7 @@
 @section ViewScripts
 {
     <script nonce="@Html.ScriptNonce()">var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());</script>
-    <script src="/public/assets/scripts/build/edit-iebt.js"></script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-iebt.*.js"))"></script>
 }
 
 @helper RenderTextBox(Expression<Func<ViewModel, string>> fnc, string wrapperClass = "", string fieldClasses = "")

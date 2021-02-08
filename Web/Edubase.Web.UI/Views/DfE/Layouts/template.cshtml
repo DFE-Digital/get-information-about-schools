@@ -23,7 +23,8 @@
         <script nonce="@Html.ScriptNonce()">
             var azureMapsApiKey = "@(System.Configuration.ConfigurationManager.AppSettings["AzureMapsApiKey"])";
         </script>
-        <script src="/public/assets/scripts/build/bundle.js?v=@version"></script>
+
+        <script src="@Html.Raw(Html.GetWebpackScriptUrl("bundle.*.js"))"></script>
         @(RenderSection("ViewScripts", required: false))
     }
 }

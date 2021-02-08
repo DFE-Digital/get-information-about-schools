@@ -5,7 +5,7 @@
   left: 15px;
   font-size: 16px;
 
-  &:before {
+  &::before {
     content: "";
     position: absolute;
     top: 7px;
@@ -18,15 +18,15 @@
     border-top: 9px solid $govuk-brand-colour;
   }
 
-  &.filters-closed:before {
+  &.filters-closed::before {
     top: 5px;
     left: -15px;
     border-top: 6px solid transparent;
     border-bottom: 6px solid transparent;
     border-left: 9px solid $govuk-brand-colour;
   }
+
   @include govuk-media-query($until: resultsBp) {
     display: none;
   }
 }
-

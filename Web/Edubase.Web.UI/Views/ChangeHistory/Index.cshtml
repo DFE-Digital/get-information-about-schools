@@ -276,6 +276,6 @@
 
 @section ViewScripts
 {
-    <script src="/public/assets/scripts/build/change-history-search.js"></script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("change-history-search.*.js"))"></script>
 
 }

@@ -85,14 +85,17 @@ new Vue({
       if (this.totalPages > maxPages) {
         if (this.currentPage < 4) {
           paginationFinish = maxPages;
-        } else if (this.currentPage + 3 > this.totalPages) {
-          paginationFinish = this.totalPages;
-          paginationStart = paginationFinish - (maxPages - 1);
-        } else if (this.currentPage >= 4) {
+        }
+        else if (this.currentPage >= 4 && !(this.currentPage + 3 > this.totalPages)) {
           paginationFinish = this.currentPage + 2;
           paginationStart = paginationFinish - (maxPages - 1);
         }
+        else if (this.currentPage + 3 > this.totalPages) {
+          paginationFinish = this.totalPages;
+          paginationStart = this.totalPages - (maxPages - 1);
+        }
       }
+
       let paginationItems = [];
       for (let i = paginationStart; i <= paginationFinish; i++) {
         paginationItems.push(i);
@@ -113,9 +116,10 @@ new Vue({
 
       const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
       const dateSplit = dateString.split('/');
+	  const curdate = parseInt(dateSplit[0], 10);
       const monthInt = parseInt(dateSplit[1],10) -1;
 
-      return `${dateSplit[0]} ${monthNames[monthInt]} ${dateSplit[2]}`;
+      return `${curdate} ${monthNames[monthInt]} ${dateSplit[2]}`;
     },
     showRejectionsModal: function () {
       this.clearErrors();
@@ -222,15 +226,7 @@ new Vue({
     setCurrentPage: function (pageIndex) {
       this.currentPage = pageIndex;
       this.getChangesData(pageIndex * this.pageSize);
-      if (this.currentPage < 3) {
-        this.slicePage = 0;
-      } else {
-        if (this.currentPage > this.totalPages - 3) {
-          this.slicePage = this.totalPages - 5;
-        } else {
-          this.slicePage = this.currentPage - 2;
-        }
-      }
+
     },
     showAll: function () {
       this.currentPage = 0;

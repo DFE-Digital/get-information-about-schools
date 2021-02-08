@@ -9,7 +9,8 @@
   position: relative;
   min-height: 48px;
 
-  a:active, a:focus {
+  a:active,
+  a:focus {
     outline: none;
   }
 }
@@ -23,7 +24,8 @@
   float: left;
   overflow: hidden;
 
-  .form-label, .form-control {
+  .form-label,
+  .form-control {
     display: inline-block;
   }
 
@@ -62,11 +64,10 @@
   .warning-text {
     max-width: 70%;
     font-weight: normal;
-    padding-top:4px;
+    padding-top: 4px;
     display: inline-block;
   }
   p {
     padding-left: 46px;
   }
 }
-

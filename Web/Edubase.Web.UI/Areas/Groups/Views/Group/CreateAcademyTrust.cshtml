@@ -63,12 +63,13 @@
                     <div class="gias-summary-list__row">
                         <dt class="gias-summary-list__key">Companies House number:</dt>
                         <dd class="gias-summary-list__value">
-                            <a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.CompaniesHouseNumber" target="_blank">@Model.CompaniesHouseNumber</a>
+                            <a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.CompaniesHouseNumber" target="_blank" rel="noreferrer noopener">
+                                @Model.CompaniesHouseNumber (opens in new tab)</a>
                         </dd>
                     </div>
                     <div class="gias-summary-list__row">
                         <dt class="gias-summary-list__key">Incorporated:</dt>
-                        <dd class="gias-summary-list__value">@(Model.OpenDate?.ToString("dd MMMM yyyy"))</dd>
+                        <dd class="gias-summary-list__value">@(Model.OpenDate?.ToString("d MMMM yyyy"))</dd>
                     </div>
                     <div class="gias-summary-list__row">
                         <dt class="gias-summary-list__key">Address:</dt>
@@ -157,7 +158,7 @@
 
 @section ViewScripts
 {
-   <script src="/public/assets/scripts/build/bulk-academies.js"></script>
+   <script src="@Html.Raw(Html.GetWebpackScriptUrl("bulk-academies.*.js"))"></script>
 }
 
 @functions

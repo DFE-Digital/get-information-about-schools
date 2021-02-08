@@ -8,7 +8,7 @@
 }
 
 .gias-inline-search__field {
-  @include govuk-media-query($from: tablet){
+  @include govuk-media-query($from: tablet) {
     max-width: 38ex + 3ex;
     width: calc(100% - 100px);
   }

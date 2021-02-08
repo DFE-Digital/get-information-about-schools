@@ -70,5 +70,5 @@
         window.localAuthorities = @Html.Json(Model.LocalAuthorities);
     </script>
 
-    <script src="/public/assets/scripts/build/search-bundle.js?v=@version"></script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("search-bundle.*.js"))"></script>
 }

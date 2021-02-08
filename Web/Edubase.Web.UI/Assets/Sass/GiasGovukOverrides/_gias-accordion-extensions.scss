@@ -10,10 +10,8 @@
   margin-bottom: govuk-spacing(1);
 }
 
-
 .gias-scroll-to-top {
   @include govuk-font($size: 16);
-
   position: relative;
   z-index: 1;
   margin: 0;

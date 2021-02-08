@@ -475,5 +475,5 @@
         var types = @Html.Raw(ViewBag.TypesJson);
         var phases = @Html.Raw(ViewBag.PhasesJson);
     </script>
-    <script src="/public/assets/scripts/build/merge-amalgamate.js"></script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("merge-amalgamate.*.js"))"></script>
 }

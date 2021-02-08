@@ -502,5 +502,5 @@
 
 @section ViewScripts
 {
-    <script src="/public/assets/scripts/build/search-results-bundle.js"></script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("search-results-bundle.*.js"))"></script>
 }

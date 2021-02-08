@@ -1,4 +1,4 @@
-call npm run gulp build
+call npm run buildCi
 @echo off
 echo Exit Code is %errorlevel%
 @echo on

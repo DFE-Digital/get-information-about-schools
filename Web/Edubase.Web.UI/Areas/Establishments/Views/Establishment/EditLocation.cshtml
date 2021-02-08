@@ -405,7 +405,7 @@
         window.gsslas = @Html.Json(Model.GSSLALookup);
 
     </script>
-    <script src="/public/assets/scripts/build/edit-location.js"></script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-location.*.js"))"></script>
 }
 }
 else
@@ -415,6 +415,6 @@ else
     <script nonce="@Html.ScriptNonce()">
         var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());
     </script>
-    <script src="/public/assets/scripts/build/edit-location.js"></script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-location.*.js"))"></script>
 }
 }

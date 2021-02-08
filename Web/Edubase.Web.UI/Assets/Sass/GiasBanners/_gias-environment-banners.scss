@@ -18,13 +18,13 @@
 }
 
 .environment-message--stage {
-  background-color:  govuk-colour("bright-purple");
+  background-color: govuk-colour("bright-purple");
   background-image: radial-gradient(govuk-colour("bright-purple"), govuk-colour("light-pink"));
   color: govuk-colour('white');
 }
 
 .environment-message--preprod {
-  background-color:  govuk-colour("red");
+  background-color: govuk-colour("red");
   background-image: radial-gradient(govuk-colour("red"), govuk-colour("bright-purple"));
   color: govuk-colour('white');
 }

@@ -1,4 +1,4 @@
-﻿@model Edubase.Web.UI.Models.DataQuality.DataQualityStatusViewModel
+@model Edubase.Web.UI.Models.DataQuality.DataQualityStatusViewModel
 
 @{
     Layout = null;
@@ -28,7 +28,7 @@
             var updated = new DateTime((int)data.LastUpdated.Year,(int) data.LastUpdated.Month, (int)data.LastUpdated.Day);
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">@data.EstablishmentType.GetEnumMember()</td>
-                <td class="govuk-table__cell">@updated.ToString("dd MMMM yyyy")</td>
+                <td class="govuk-table__cell">@updated.ToString("d MMMM yyyy")</td>
             </tr>
         }
         </tbody>

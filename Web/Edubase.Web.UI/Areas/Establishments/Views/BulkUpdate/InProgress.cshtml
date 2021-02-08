@@ -35,8 +35,9 @@
             <p class="govuk-body-s"></p>
         </div>
         <div class="govuk-grid-column-full">
-            <div class="progress-indicator">
-                <span class="govuk-visually-hidden">Please wait.</span>
+            <div aria-live="polite" class="gias-wait-mask gias-wait-mask--inline">
+                <p class="govuk-visually-hidden">Please wait</p>
+                @helpers.CssSpinner()
             </div>
         </div>
     </div>
@@ -45,5 +46,5 @@
 
 @section ViewScripts
 {
-    <script src="/public/assets/scripts/build/polling.js"></script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("polling.*.js"))"></script>
 }

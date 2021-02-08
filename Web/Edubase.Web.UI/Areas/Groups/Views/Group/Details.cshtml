@@ -4,7 +4,7 @@
 @using Edubase.Web.UI.Models.Search
 @using Microsoft.Ajax.Utilities
 @using System.Text.RegularExpressions
- 
+
 @model GroupDetailViewModel
 @{
     ViewBag.Title = Model.Group.Name;
@@ -73,7 +73,10 @@
 }
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-l gias-landing-heading">@Model.Group.Name</h1>
+        <h1 class="govuk-heading-l gias-landing-heading">
+            <span class="heading-preamble">Establishment group</span>
+            @Model.Group.Name
+        </h1>
 
         <p class="urn establishment-fine-detail"><abbr title="Unique Identifier">UID</abbr>: @Model.Group.GroupUId</p>
         <p class="group-type establishment-fine-detail">@Model.GroupTypeName</p>
@@ -88,7 +91,7 @@
             {
                 <div class="gias-establishment-closed-message">
                     <p>
-                        This @Model.GroupTypeNameForClosureLabel was created in error and subsequently closed on @(Model.CloseDate?.ToString("dd MMMM yyyy")).
+                        This @Model.GroupTypeNameForClosureLabel was created in error and subsequently closed on @(Model.CloseDate?.ToString("d MMMM yyyy")).
                     </p>
                 </div>
             }
@@ -96,7 +99,7 @@
             {
                 <div class="gias-establishment-closed-message">
                     <p>
-                        This @Model.GroupTypeNameForClosureLabel closed on @(Model.CloseDate?.ToString("dd MMMM yyyy")).
+                        This @Model.GroupTypeNameForClosureLabel closed on @(Model.CloseDate?.ToString("d MMMM yyyy")).
                     </p>
                 </div>
             }
@@ -155,7 +158,9 @@
                                     }
                                     else
                                     {
-                                    <a href="@Model.CompaniesHouseUrl" target="_blank" rel="noopener noreferrer">@Model.Group.CompaniesHouseNumber<span class="govuk-visually-hidden"> Opens in new window</span></a>
+                                        <a href="@Model.CompaniesHouseUrl" target="_blank" rel="noopener noreferrer">
+                                            @Model.Group.CompaniesHouseNumber
+                                        <text>(opens in new tab)</text></a>
                                     }
                                 </dd>
                             </div>
@@ -166,14 +171,14 @@
                         </div>
                         <div class="gias-summary-list__row">
                             <dt class="gias-summary-list__key">@Model.OpenDateLabel:</dt>
-                            <dd class="gias-summary-list__value">@(Model.Group.OpenDate?.ToString("dd MMMM yyyy") ?? "Not recorded")</dd>
+                            <dd class="gias-summary-list__value">@(Model.Group.OpenDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
                         </div>
 
                         @if (Model.IsUserLoggedOn)
                         {
                             <div class="gias-summary-list__row">
                                 <dt class="gias-summary-list__key">Closed date:</dt>
-                                <dd class="gias-summary-list__value">@(Model.Group.ClosedDate?.ToString("dd MMMM yyyy") ?? "Not recorded")</dd>
+                                <dd class="gias-summary-list__value">@(Model.Group.ClosedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
                             </div>
                             <div class="gias-summary-list__row">
                                 <dt class="gias-summary-list__key">Status:</dt>
@@ -314,7 +319,7 @@
                                             </div>
                                             <div class="gias-summary-list__row">
                                                 <dt class="gias-summary-list__key">Joined date:</dt>
-                                                <dd class="gias-summary-list__value">@(result.JoinedDate?.ToString("dd MMMM yyyy") ?? "Not recorded")</dd>
+                                                <dd class="gias-summary-list__value">@(result.JoinedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
                                             </div>
                                         </dl>
 
@@ -415,7 +420,7 @@
                             {
                                 <tr class="govuk-table__row">
                                     <td data-label="Date changed" class="govuk-table__cell">
-                                        @(item.RequestedDateUtc?.ToString("dd MMMM yyyy"))
+                                        @(item.RequestedDateUtc?.ToString("d MMMM yyyy"))
                                     </td>
                                     <td data-label="Request type" class="govuk-table__cell">
                                         @item.RequestType.GetEnumMember()
@@ -435,7 +440,7 @@
                                                         {
                                                             var parts = item.OldValue.Split('/').Select(Int32.Parse).ToList();
                                                             var dt = new DateTime(parts[2], parts[1], parts[0]);
-                                                            @dt.ToString("dd MMMM yyyy");
+                                                            @dt.ToString("d MMMM yyyy");
                                                         }
                                                         else
                                                         {
@@ -450,7 +455,7 @@
                                                         {
                                                             var parts = item.NewValue.Split('/').Select(Int32.Parse).ToList();
                                                             var dt = new DateTime(parts[2], parts[1], parts[0]);
-                                                            @dt.ToString("dd MMMM yyyy");
+                                                            @dt.ToString("d MMMM yyyy");
                                                         }
                                                         else
                                                         {
@@ -467,7 +472,7 @@
                                                 </div>
                                                 <div class="gias-summary-list__row">
                                                     <dt class="gias-summary-list__key">Link date</dt>
-                                                    <dd class="gias-summary-list__value">@(item.LinkDateUtc?.ToString("dd MMMM yyyy"))</dd>
+                                                    <dd class="gias-summary-list__value">@(item.LinkDateUtc?.ToString("d MMMM yyyy"))</dd>
                                                 </div>
                                                 <div class="gias-summary-list__row">
                                                     <dt class="gias-summary-list__key">Type</dt>
@@ -502,6 +507,6 @@
 @section ViewScripts
 {
     <script nonce="@Html.ScriptNonce()">var mapMode = 'group';</script>
-    <script src="/public/assets/scripts/build/landing-page-bundle.js"></script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("landing-page-bundle.*.js"))"></script>
 }
 
