@@ -35,8 +35,8 @@
         <p>Your requested file is ready to download.</p>
         <ul class="govuk-list">
             <li class="download-list-item">
-                <a href="@Model.FileLocationUri" target="_blank" rel="nofollow">
-                    @(Model.Name ?? "Results.zip") (opens in new tab)</a>
+                <a href="@Model.FileLocationUri" rel="nofollow">
+                    @(Model.Name ?? "Results.zip")</a>
             </li>
         </ul>
     </div>
