@@ -33,12 +33,34 @@
     <div class="govuk-grid-column-full">
         <h2 class="govuk-heading-s">Your extract is ready</h2>
         <p>Your requested file is ready to download.</p>
-        <ul class="govuk-list">
-            <li class="download-list-item">
-                <a href="@Model.FileLocationUri" target="_blank" rel="nofollow">
-                    @(Model.Name ?? "Results.zip")
-                </a> (opens in new window)
-            </li>
-        </ul>
+
+        @if (isExtract)
+        {
+            <ul class="govuk-list">
+                <li class="download-list-item">
+                    <a href="@Model.FileLocationUri" target="_blank" rel="nofollow">
+                        @(Model.Name ?? "Results.zip")
+                    </a> (opens in new window)
+                </li>
+            </ul>
+        }
+        else
+        {
+            var uri = new Uri(Model.FileLocationUri);
+            var path = uri.GetLeftPart(UriPartial.Path);
+            var name = Model.Name ?? "Results.zip";
+            using (Html.BeginRouteForm("DownloadExtract", FormMethod.Post))
+            {
+                @Html.Hidden("id", Model.Id)
+                @Html.Hidden("path", path)
+
+                <div class="govuk-form-group">
+                    <p>
+                        <input type="submit" class="govuk-button" data-module="govuk-button" value="@name" /><br />
+                    </p>
+                </div>
+            }
+        }
+
     </div>
 </div>
