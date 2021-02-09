@@ -157,6 +157,7 @@
     <Compile Include="Domain\ApiWarning.cs" />
     <Compile Include="Downloads\IDownloadsService.cs" />
     <Compile Include="Downloads\Models\FileDownload.cs" />
+    <Compile Include="Downloads\Models\FileDownloadRequest.cs" />
     <Compile Include="Downloads\Models\ScheduledExtract.cs" />
     <Compile Include="Downloads\Models\ScheduledExtractsResult.cs" />
     <Compile Include="Enums\eFileFormat.cs" />

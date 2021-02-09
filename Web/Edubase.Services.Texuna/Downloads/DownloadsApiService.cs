@@ -3,6 +3,7 @@ using Edubase.Services.Domain;
 using Edubase.Services.Downloads;
 using Edubase.Services.Downloads.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -33,6 +34,11 @@ namespace Edubase.Services.Texuna.Downloads
                 return new PaginatedResult<ScheduledExtract>(skip, take, 0, Enumerable.Empty<ScheduledExtract>().ToList());
             }
             
+        }
+
+        public async Task<string> CollateDownloadsAsync(List<FileDownloadRequest> collection, IPrincipal principal)
+        {
+            return (await _httpClient.PostAsync<string>($"download/collate", collection, principal)).Response;
         }
 
         public async Task<string> GenerateExtractAsync(string id, IPrincipal principal)

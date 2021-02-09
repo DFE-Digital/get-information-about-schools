@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using Edubase.Services.Enums;
 using Edubase.Web.UI.Models.Search;
 
@@ -32,7 +33,7 @@ namespace Edubase.Web.UI.Models
         public int ScheduledExtractsCount => (ScheduledExtracts?.Count).GetValueOrDefault();
 
         public bool AreScheduledExtractsAvailable => ScheduledExtractsCount > 0;
-
+        
         public IEnumerable<Section> GetFileDownloadGroups()
         {
             var retVal = new List<Section>();
@@ -57,7 +58,7 @@ namespace Edubase.Web.UI.Models
 
             if (allEstabData.Any() || openAcademiesAndFreeSchoolsData.Any() || openStateFundedSchoolsData.Any() || openChildrensCentresData.Any())
             {
-                var section = new Section { Heading = "Establishments", Paragraph = "You can download the complete record for the specified establishment types. There's a separate file with links to any predecessor or successor establishments." };
+                var section = new Section { Heading = "Establishment downloads", Paragraph = "You can download the complete record for the specified establishment types. There's a separate file with links to any predecessor or successor establishments." };
 
                 if (allEstabData.Any())
                 {
