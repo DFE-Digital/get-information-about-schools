@@ -36,7 +36,7 @@ namespace Edubase.Services.Texuna.Downloads
             
         }
 
-        public async Task<string> CollateDownloadsAsync(FileDownloadRequestArray collection, IPrincipal principal)
+        public async Task<string> CollateDownloadsAsync(List<FileDownloadRequest> collection, IPrincipal principal)
         {
             return (await _httpClient.PostAsync<string>($"download/collate", collection, principal)).Response;
         }

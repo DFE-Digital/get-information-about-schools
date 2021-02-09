@@ -73,13 +73,13 @@ namespace Edubase.Web.UI.Controllers
         [Route("Collate", Name = "CollateDownloads")]
         public async Task<ActionResult> CollateDownloads(DownloadsViewModel model)
         {
-            var collection = new FileDownloadRequestArray();
+            var collection = new List<FileDownloadRequest>();
             foreach (var fileDownload in model.Downloads.Where(x => x.Selected))
             {
-                collection.Files.Add(new FileDownloadRequest(fileDownload.Tag, fileDownload.FileGeneratedDate));
+                collection.Add(new FileDownloadRequest(fileDownload.Tag, fileDownload.FileGeneratedDate));
             }
 
-            if (!collection.Files.Any())
+            if (!collection.Any())
             {
                 var routeValuesDictionary = new RouteValueDictionary
                 {

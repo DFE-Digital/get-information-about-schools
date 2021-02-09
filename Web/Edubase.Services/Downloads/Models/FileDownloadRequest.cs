@@ -1,13 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Edubase.Services.Downloads.Models
 {
-    public class FileDownloadRequestArray
-    {
-        public List<FileDownloadRequest> Files { get; set; } = new List<FileDownloadRequest>();
-    }
-
     public class FileDownloadRequest
     {
         public FileDownloadRequest(string tag, DateTime? generated)
@@ -16,6 +12,8 @@ namespace Edubase.Services.Downloads.Models
             FileGeneratedDate = generated;
         }
         public string Id { get; set; }
+
+        [JsonConverter(typeof(CustomDateTimeConverter))]
         public DateTime? FileGeneratedDate { get; set; }
     }
 }
