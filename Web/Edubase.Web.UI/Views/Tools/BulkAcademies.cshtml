@@ -3,32 +3,34 @@
 @model BulkAcademiesViewModel
 
 @{
-    ViewBag.Title = "Bulk create new academies";
-    ViewBag.Subtitle = "Create new academies from the predecessor school record";
-    ViewBag.bodyClasses = "bulk-academy-create";
-    ViewBag.SiteSection = "tools";
+        ViewBag.Title = "Bulk create new academies";
+        ViewBag.Subtitle = new string[] { "Set up a new academy from the predecessor establishment record by adding the predecessor URN into the field below and selecting search URN.",
+                "This process automatically closes records where applicable and creates predecessor and successor links between relevant establishments." };
 
-    if (Model?.FoundItem != null)
-    {
-        ViewBag.Title = "Enter new academy details";
-        ViewBag.Subtitle = "Verify this is the correct establishment and enter the type and opening date.";
+        ViewBag.bodyClasses = "bulk-academy-create";
+        ViewBag.SiteSection = "tools";
+
+        if (Model?.FoundItem != null)
+        {
+            ViewBag.Title = "Enter new academy details";
+            ViewBag.Subtitle = "Verify this is the correct establishment and enter the type and opening date.";
+        }
+
+        if (Model?.FoundItem != null && Model?.ItemsToAdd?.Count(x => x.Urn == Model?.FoundItem?.Urn) > 0)
+        {
+            ViewBag.Title = "Edit details";
+            ViewBag.Subtitle = "Verify this is the correct establishment and enter the type and opening date.";
+        }
+
+        if (Model?.IsComplete == true)
+        {
+            ViewBag.Title = "Academies created";
+            ViewBag.Subtitle = "The following new academies have been created. All predecessor record and links have been updated automatically";
+        }
     }
 
-    if (Model?.FoundItem != null && Model?.ItemsToAdd?.Count(x => x.Urn == Model?.FoundItem?.Urn) > 0)
+    @section BreadCrumbs
     {
-        ViewBag.Title = "Edit details";
-        ViewBag.Subtitle = "Verify this is the correct establishment and enter the type and opening date.";
-    }
-
-    if (Model?.IsComplete == true)
-    {
-        ViewBag.Title = "Academies created";
-        ViewBag.Subtitle = "The following new academies have been created. All predecessor record and links have been updated automatically";
-    }
-}
-
-@section BreadCrumbs
-{
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <div class="govuk-breadcrumbs">
@@ -45,7 +47,10 @@
     <div class="govuk-grid-column-full">
         @Html.Partial("_ValidationSummary", ViewData.ModelState)
         <h1 class="govuk-heading-xl">@ViewBag.Title</h1>
-        <p>@ViewBag.Subtitle</p>
+        @foreach (string partialtext in ViewBag.Subtitle)
+        {
+            <p>@partialtext</p>
+        }
     </div>
 </div>
 
@@ -68,7 +73,7 @@
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
-                <h2 class="govuk-heading-s">Predecessor school</h2>
+                <h2 class="govuk-heading-s">Predecessor establishment</h2>
                 <dl class="gias-summary-list gias-summary-list-l gias-summary-list--inline">
                     <div class="gias-summary-list__row">
                         <dt class="gias-summary-list__key">School name:</dt>
@@ -115,7 +120,7 @@
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                <h2 class="govuk-heading-s">Predecessor school</h2>
+                <h2 class="govuk-heading-s">Predecessor establishment</h2>
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SearchUrn)">
                     <label class="govuk-label" for="SearchUrn">
                         Establishment <abbr title="Unique Reference Number">URN</abbr>

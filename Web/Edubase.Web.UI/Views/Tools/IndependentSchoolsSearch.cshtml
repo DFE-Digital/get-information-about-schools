@@ -33,9 +33,10 @@
         <div class="govuk-grid-column-full">
             <h1 class="govuk-heading-xl">View independent schools' significant dates</h1>
             <p>
-                Use this tool to view independent schools' &lsquo;Next general action
-                required&rsquo; or &lsquo;Next action required by welfare&rsquo; date.
-                Local authorities can be added manually or with custom predefined sets.
+                View independent schools' next general action dates and next action required by welfare dates.
+            </p>
+            <p>
+                Custom filters can be created and added (pre-defined sets) under the local authorities section, or a local authority can be manually added and searched for.
             </p>
         </div>
     </div>
@@ -44,10 +45,10 @@
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
-                <h3 class="govuk-heading-m">Select the action you're interested in</h3>
+                <h3 class="govuk-heading-m">Select the next option action you need to review, complete the remaining fields as required and select continue.</h3>
                 <div class="govuk-form-group inline @Html.ValidationCssClassFor(x => x.Mode)">
                     <fieldset class="govuk-fieldset">
-                        <legend class="govuk-visually-hidden">Select the action you're interested in</legend>
+                        <legend class="govuk-visually-hidden">Select the next option action you need to review, complete the remaining fields as required and select continue.</legend>
                         @Html.ValidationMessageFor(x => x.Mode, null, new { @class = "govuk-error-message" })
                         <div class="govuk-radios govuk-radios--inline">
                             <div class="govuk-radios__item">
@@ -63,7 +64,7 @@
             </div>
         </div>
         <div class="govuk-grid-column-two-thirds govuk-!-padding-top-4">
-            <h2 class="govuk-heading-m">Select local authorities</h2>
+            <h2 class="govuk-heading-m">Local authorities</h2>
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SelectedLocalAuthorityIds)">
                 @Html.LabelFor(x => x.SelectedLocalAuthorityIds, "Select a predefined set or individually add local authorities", new { @class = "govuk-label", @for = "SelectedLocalAuthoritySetId" })
                 @Html.DropDownListFor(x => x.SelectedLocalAuthoritySetId, Model.LocalAuthoritySetSelectList, "Custom", new { @class = "govuk-select govuk-input--width-20" })
