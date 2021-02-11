@@ -134,10 +134,26 @@ namespace Edubase.Web.UI.Controllers
         [Route("Generated/{id}", Name = "DownloadGenerated")]
         public async Task<ActionResult> DownloadGenerated(Guid id)
         {
-            var model = await _downloadsService.GetProgressOfGeneratedExtractAsync(id, User);
+            var model = new ProgressDto();
+            try
+            {
+                model = await _downloadsService.GetProgressOfGeneratedExtractAsync(id, User);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.StartsWith("The API returned 404 Not Found"))
+                {
+                    // if the file no longer exists (user refreshes the page post download etc) then the api returns a 404 and throws an error. This allows for a more graceful response
+                    model.Error = "Download process not found for associated id";
+                }
+                else
+                {
+                    throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
+                }
+            }
 
             if (model.HasErrored)
-                throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
+                return View("Downloads/DownloadError", new DownloadErrorViewModel { FromDownloads = true, NeedsRegenerating = true });
 
             ViewBag.isDownload = true;
             if (!model.IsComplete)
@@ -247,8 +263,9 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        [HttpPost, Route("Download/Extract", Name="DownloadExtract")]
-        public async Task<ActionResult> DownloadExtractAsync(string path, string id, string searchQueryString = null, eLookupSearchSource? searchSource = null)
+        [HttpPost, Route("Download/Extract", Name = "DownloadExtract")]
+        public async Task<ActionResult> DownloadExtractAsync(string path, string id, string searchQueryString = null,
+            eLookupSearchSource? searchSource = null, bool fromDownloads = false)
         {
             var uri = new Uri(path);
             var downloadAvailable = await _downloadsService.IsDownloadAvailable($"/{uri.Segments.Last()}", id, User);
@@ -262,7 +279,8 @@ namespace Edubase.Web.UI.Controllers
                 var view = new DownloadErrorViewModel
                 {
                     SearchQueryString = searchQueryString,
-                    SearchSource = searchSource
+                    SearchSource = searchSource,
+                    FromDownloads = fromDownloads
                 };
                 return View("Downloads/DownloadError", view);
             }
