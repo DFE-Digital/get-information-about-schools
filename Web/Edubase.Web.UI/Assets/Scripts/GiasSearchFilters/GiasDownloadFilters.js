@@ -24,6 +24,47 @@ const clientErrorSummary = new Vue({
   }
 });
 
+const GiasDownloadResults = {
+	init: function () {
+		$('#select-all').on('click', (e)=> {
+			e.preventDefault();
+			check(true);
+		});
+
+		$('#clear-all').on('click', (e)=> {
+			e.preventDefault();
+			check(false);
+		});
+
+		$('#downloadSelected').on('click', (e)=> {
+			var anyChecked = false;
+			$('input:checkbox').each(function(){
+			  if (this.checked) {
+				anyChecked = true;	
+			  }
+			});
+
+			if (anyChecked == false) {
+			  e.preventDefault();
+			  $(this).okCancel({
+				ok: function(){
+				  this.closeModal();
+				},
+				cancel: null,
+				title: 'No files selected',
+				content: 'Please select at least one file to download.',
+				immediate: true
+			  });
+			  $(this).removeData('okCancel');
+			}
+		});
+
+		function check(source) {
+		  $('input:checkbox').prop('checked',source);
+		}		
+	}
+}
+
 const GiasDownloadFilters = {
   bannerDefaultText: "Select date of files to download",
   errorMessages: [
@@ -68,7 +109,7 @@ const GiasDownloadFilters = {
 
         resultsContainer.removeClass('pending-results-update');
         resultsNotification.html('');
-
+		GiasDownloadResults.init();
       },
       error: function () {
         $('#ajax-error-message').removeClass('hidden');
@@ -76,6 +117,7 @@ const GiasDownloadFilters = {
         resultsNotification.html('');
       }
     });
+
   },
   init: function () {
     const $radios = $('#download-radios').find('.govuk-radios__input');
@@ -85,7 +127,6 @@ const GiasDownloadFilters = {
         GiasDownloadFilters.getResults();
       }
     });
-
 
     $('#filter-apply').on('click', function (e) {
       e.preventDefault();
@@ -152,6 +193,8 @@ const GiasDownloadFilters = {
         });
       }
     });
+	
+	GiasDownloadResults.init();
   }
 }
 
