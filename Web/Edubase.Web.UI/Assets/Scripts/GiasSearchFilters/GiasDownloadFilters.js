@@ -63,7 +63,9 @@ const GiasDownloadResults = {
 		function check(source) {
 		  $('input:checkbox').prop('checked',source);
 		}
-
+	}
+	
+	reload: function() {
 		const $updatedSection = document.getElementById('results-container');
 		initAll({scope: $updatedSection });
 	}
@@ -114,6 +116,7 @@ const GiasDownloadFilters = {
         resultsContainer.removeClass('pending-results-update');
         resultsNotification.html('');
 		GiasDownloadResults.init();
+		GiasDownloadResults.reload();
       },
       error: function () {
         $('#ajax-error-message').removeClass('hidden');
