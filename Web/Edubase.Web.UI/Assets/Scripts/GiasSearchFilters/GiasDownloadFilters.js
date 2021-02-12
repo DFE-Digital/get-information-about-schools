@@ -63,7 +63,7 @@ const GiasDownloadResults = {
 		function check(source) {
 		  $('input:checkbox').prop('checked',source);
 		}
-	}
+	},
 	
 	reload: function() {
 		const $updatedSection = document.getElementById('results-container');
