@@ -2,6 +2,7 @@ import supportsHistory from '../GiasHelpers/supportsHistory';
 import GiasFilterValidation from './GiasFilterValidation'
 import Vue from 'vue';
 import errorSummary from '../GiasVueComponents/errorSummary';
+import { initAll } from 'govuk-frontend';
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -61,7 +62,10 @@ const GiasDownloadResults = {
 
 		function check(source) {
 		  $('input:checkbox').prop('checked',source);
-		}		
+		}
+
+		const $updatedSection = document.getElementById('results-container');
+		initAll({scope: $updatedSection });
 	}
 }
 
