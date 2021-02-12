@@ -42,13 +42,14 @@ namespace Edubase.Web.UI.Controllers
         [Route("~/accessibility/report")]
         public ActionResult AccessibilityReport() => View();
 
-        [Route("~/content")]
+
+        [Route("~/content"), Filters.EdubaseAuthorize]
         public async Task<ActionResult> Container(string file)
         {
             return await GetFileFromContainer("content", file);
         }
 
-        [Route("~/content/guidance")]
+        [Route("~/content/guidance"), Filters.EdubaseAuthorize]
         public async Task<ActionResult> Guidance(string file)
         {
             return await GetFileFromContainer("guidance", file);
@@ -59,8 +60,7 @@ namespace Edubase.Web.UI.Controllers
             var blob = _blobService.GetBlobReference(container, file);
             if (await blob.ExistsAsync())
             {
-                var stream = new MemoryStream();
-                blob.DownloadToStream(stream);
+                var stream = await blob.OpenReadAsync();
                 return new FileStreamResult(stream, blob.Properties.ContentType)
                 {
                     FileDownloadName = blob.Name
