@@ -294,7 +294,7 @@ namespace Edubase.UnitTest.Controllers
             Assert.That(vm.OpenDate.ToDateTime().GetValueOrDefault().Date, Is.EqualTo(domainModel.OpenDate.GetValueOrDefault().Date));
             Assert.That(vm.ClosedDate.ToDateTime().GetValueOrDefault().Date, Is.EqualTo(domainModel.ClosedDate.GetValueOrDefault().Date));
             Assert.That(vm.OpenDateLabel, Is.EqualTo("Open date"));
-            Assert.That(vm.PageTitle, Is.EqualTo("Edit school federation"));
+            Assert.That(vm.PageTitle, Is.EqualTo("Edit federations"));
             Assert.That(vm.StatusId, Is.EqualTo((int)eLookupGroupStatus.Open));
             Assert.That(vm.Address, Is.EqualTo(domainModel.Address.ToString()));
             Assert.That(vm.CanUserCloseMATAndMarkAsCreatedInError, Is.False);
@@ -357,7 +357,7 @@ namespace Edubase.UnitTest.Controllers
             Assert.That(vm.ListOfEstablishmentsPluralName, Is.EqualTo("Schools"));
             Assert.That(vm.SelectedTabName, Is.EqualTo("links"));
             Assert.That(vm.OpenDateLabel, Is.EqualTo("Open date"));
-            Assert.That(vm.PageTitle, Is.EqualTo("Edit school federation"));
+            Assert.That(vm.PageTitle, Is.EqualTo("Edit federations"));
             Assert.That(vm.CanUserCloseMATAndMarkAsCreatedInError, Is.False);
         }
 
