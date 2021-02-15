@@ -56,9 +56,9 @@
             <div>
                 <gias-wait-spinner :is-processing="isProcessing" />
             </div>
-            <h1 class="govuk-heading-xl" v-show="!isProcessing">Items for approval</h1>
+            <h1 class="govuk-heading-xl" v-show="!isProcessing">Manage change requests</h1>
             <p v-show="!isProcessing">
-                You have <span class="count">{{currentCount}}</span> items that require your approval.
+                As a data owner you have <span class="count">{{currentCount}}</span> chagne requests that require your review for approval or rejection.
             </p>
 
             <div class="approve-reject" v-show="!isProcessing">
@@ -115,7 +115,7 @@
 
                 <div class="changes-list-wrapper" v-show="!isProcessing">
                     <table class="govuk-table gias-table approval-changes sortable-table" id="changes-table">
-                        <caption class="govuk-visually-hidden">Items for approval</caption>
+                        <caption class="govuk-visually-hidden">Manage change requests</caption>
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th class="cell-checkbox govuk-table__header"><span class="govuk-visually-hidden">Checkbox</span></th>
