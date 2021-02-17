@@ -93,7 +93,7 @@
                         <div class="govuk-grid-column-two-thirds">
                             <p>Set up a new children's centre group or children's centre collaboration record.</p>
                             <fieldset class="govuk-fieldset">
-                                <legend class="govuk-fieldset__legend--m">Select the option below you wish to undertake and select continue.</legend>
+                                <legend class="govuk-body">Select the option below you wish to undertake and select continue.</legend>
                                 <div class="govuk-form-group">
                                     <div class="govuk-radios">
                                         @foreach (var groupType in Model.CCGroupTypes)
@@ -102,7 +102,7 @@
                                             <div class="govuk-radios__item">
                                                 @Html.RadioButtonFor(x => x.GroupTypeId, groupType.Value, new { id = inputId, v_model = "groupType", @class = "govuk-radios__input" })
                                                 <label for="@inputId" class="govuk-radios__label">
-                                                    @FormatHelpers.FirstCharToUpper(@groupType.Text.ToLower())
+                                                    @FormatHelpers.FirstCharToUpper(@groupType.Text.ToLower().Replace("centres", "centre"))
                                                 </label>
                                             </div>
                                         }
