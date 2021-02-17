@@ -150,7 +150,7 @@ const mergersApp = new Vue({
       }
     },
     clearErrors: function () {
-      window.document.title = "Amalgamations and mergers tool - GOV.UK";
+      window.document.title = "Amalgamate or merge establishments - GOV.UK";
       this.errors = [];
       this.amalgamatedUrn1Error = '';
       this.amalgamatedUrn2Error = '';
@@ -163,7 +163,7 @@ const mergersApp = new Vue({
     },
 
     errorFocus: function () {
-      window.document.title = "Error: Amalgamations and mergers tool - GOV.UK";
+      window.document.title = "Error: Amalgamate or merge establishments - GOV.UK";
       $('.govuk-error-summary').focus();
     },
     checkIfInvalid: function(component){
@@ -655,7 +655,7 @@ const mergersApp = new Vue({
       } else if (this.completeAmalgamation) {
         return 'Amalgamation complete';
       } else {
-        return 'Amalgamations and mergers tool';
+        return 'Amalgamate or merge establishments';
       }
     },
     addedUrns: function() {
