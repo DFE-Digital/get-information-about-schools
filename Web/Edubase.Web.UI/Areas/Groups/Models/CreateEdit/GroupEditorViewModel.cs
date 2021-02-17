@@ -21,7 +21,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             Links,
             DetailsAndLinks
         }
-        
+
         private static readonly Dictionary<eGroupTypeMode, string> _fieldNamePrefixers = new Dictionary<eGroupTypeMode, string>
         {
             [eGroupTypeMode.ChildrensCentre] = "Group",
@@ -42,7 +42,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public const string ActionLinkedEstablishmentSave = "savejoineddate";
         public const string ActionLinkedEstablishmentSearch = "search";
 
-        public string[] RecognisedWarningCodes { get; set; } = new[] 
+        public string[] RecognisedWarningCodes { get; set; } = new[]
         {
             ApiWarningCodes.CONFIRMATION_CC_CLOSE,
             ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND,
@@ -52,7 +52,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             ApiWarningCodes.CONFIRMATION_MAT_CLOSE_LINKS,
             ApiWarningCodes.CONFIRMATION_SAT_CLOSE_LINKS
         };
-        
+
         public string Action { get; set; }
         public int ActionUrn => Action.Split('-').Last().ToInteger() ?? 0;
         public eSaveMode SaveMode { get; set; }
@@ -108,20 +108,20 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         /// Whether the UI mode requires the Establishment links are saved.
         /// </summary>
         public bool SaveEstabLinks => SaveMode == eSaveMode.DetailsAndLinks || SaveMode == eSaveMode.Links;
-        
+
 
         /// <summary>
         /// Whether the UI mode requires the Group detail is saved.
         /// </summary>
         public bool SaveGroupDetail => SaveMode == eSaveMode.DetailsAndLinks || SaveMode == eSaveMode.Details;
-        
+
         public GroupLinkedEstablishmentsViewModel LinkedEstablishments { get; set; } = new GroupLinkedEstablishmentsViewModel();
 
         /// <summary>
         /// Children's centre group types
         /// </summary>
         public IEnumerable<SelectListItem> CCGroupTypes { get; set; }
-        
+
         public IEnumerable<SelectListItem> LocalAuthorities { get; set; }
 
         public const string UIWarningCodeMatClosureAreYouSure = "mat_closure_are_you_sure";
@@ -160,7 +160,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         {
 
         }
-        
+
         public GroupEditorViewModel(eSaveMode saveMode)
         {
             SaveMode = SaveMode;
