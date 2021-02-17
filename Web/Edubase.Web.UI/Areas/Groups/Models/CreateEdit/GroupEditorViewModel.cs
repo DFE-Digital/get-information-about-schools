@@ -25,7 +25,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         private static readonly Dictionary<eGroupTypeMode, string> _fieldNamePrefixers = new Dictionary<eGroupTypeMode, string>
         {
             [eGroupTypeMode.ChildrensCentre] = "Group",
-            [eGroupTypeMode.Trust] = "Trust",
+            [eGroupTypeMode.Trust] = "Foundation trust",
             [eGroupTypeMode.Federation] = "Federation",
             [eGroupTypeMode.AcademyTrust] = "Trust",
             [eGroupTypeMode.Sponsor] = "Academy sponsor"

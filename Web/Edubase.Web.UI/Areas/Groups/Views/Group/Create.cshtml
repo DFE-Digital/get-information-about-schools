@@ -43,30 +43,43 @@
 <div class="govuk-grid-row">
     @if (Model.EntityName.ToLower() == "children's centre groups or children's centre collaborations")
     {
-    <div class="govuk-grid-column-two-thirds">
-        <p>Set up a new children's centre group or children's centre collaboration record.</p>
-    </div>
+        <div class="govuk-grid-column-two-thirds">
+            <p>Set up a new children's centre group or children's centre collaboration record.</p>
+        </div>
     }
-    @if (Model.EntityName.ToLower() == "federations")
+    @if (Model.EntityName.ToLower() == "foundation trust")
     {
-    <div class="govuk-grid-column-two-thirds">
-        <p>Set up a new federation record by completing the fields below and selecting create federation.</p>
-    </div>
+        <div class="govuk-grid-column-two-thirds">
+            <p>Set up a new foundation trust record by completing the fields below and selecting create foundation trust.</p>
+        </div>
+    }
+    @if (Model.EntityName.ToLower() == "federation")
+    {
+        <div class="govuk-grid-column-two-thirds">
+            <p>Set up a new federation record by completing the fields below and selecting create federation.</p>
+        </div>
     }
     @if (Model.EntityName.ToLower() == "academy trusts")
     {
-    <div class="govuk-grid-column-two-thirds">
-        <p>Use this tool to create a new @Model.EntityName</p>
-    </div>
+        <div class="govuk-grid-column-two-thirds">
+            <p>Use this tool to create a new @Model.EntityName</p>
+        </div>
     }
     @if (Model.EntityName.ToLower() == "academy sponsors")
     {
-    <div class="govuk-grid-column-two-thirds">
-        <p>Set up a new academy sponsor record by completing the fields below and selecting create academy sponsor.</p>
-    </div>
+        <div class="govuk-grid-column-two-thirds">
+            <p>Set up a new academy sponsor record by completing the fields below and selecting create academy sponsor.</p>
+        </div>
     }
     <div class="govuk-grid-column-one-half">
-        <h2 class="govuk-heading-m">@Model.EntityName.ToSentenceCase() details</h2>
+        @if (Model.EntityName.ToLower() == "federation")
+        {
+            <h2 class="govuk-heading-m">New @Model.EntityName.ToLower() details</h2>
+        }
+        else
+        {
+            <h2 class="govuk-heading-m">@Model.EntityName.ToSentenceCase() details</h2>
+        }
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GroupName)">
             <label for="GroupName" class="govuk-label">@Model.FieldNamePrefix name</label>
             @Html.ValidationMessageFor(x => x.GroupName, null, new { @class = "govuk-error-message" })
@@ -77,21 +90,21 @@
 
         @if (Model.GroupUId.HasValue)
         {
-        <div class="govuk-form-group">
-            <label class="govuk-label">
-                <abbr title="Unique Identifier">UID</abbr>
-            </label>
-            <input value="@Model.GroupUId" disabled="disabled" class="govuk-input" />
-        </div>
+            <div class="govuk-form-group">
+                <label class="govuk-label">
+                    <abbr title="Unique Identifier">UID</abbr>
+                </label>
+                <input value="@Model.GroupUId" disabled="disabled" class="govuk-input" />
+            </div>
         }
 
         @if (Model.GroupType.Equals(L.SchoolSponsor))
         {
-        <div class="govuk-form-group  @Html.ValidationCssClassFor(x => x.GroupId)">
-            <label for="GroupId" class="govuk-label">Group ID</label>
-            @Html.ValidationMessageFor(x => x.GroupId, null, new { @class = "govuk-error-message" })
-            @Html.TextBoxFor(x => x.GroupId, new { @class = "govuk-input", maxlength = 120 })
-        </div>
+            <div class="govuk-form-group  @Html.ValidationCssClassFor(x => x.GroupId)">
+                <label for="GroupId" class="govuk-label">Group ID</label>
+                @Html.ValidationMessageFor(x => x.GroupId, null, new { @class = "govuk-error-message" })
+                @Html.TextBoxFor(x => x.GroupId, new { @class = "govuk-input", maxlength = 120 })
+            </div>
         }
     </div>
 </div>
