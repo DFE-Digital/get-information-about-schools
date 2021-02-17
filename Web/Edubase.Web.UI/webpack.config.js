@@ -111,6 +111,8 @@ const config = {
 
       new VueLoaderPlugin(),
 
+      new CleanWebpackPlugin(),
+
       new webpack.ProvidePlugin({
         $: "jquery",
         jQuery: "jquery"
