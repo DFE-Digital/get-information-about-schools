@@ -27,8 +27,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         @Html.Partial("_ValidationSummary", ViewData.ModelState)
-
-        <h1 class="govuk-heading-xl">@Model.PageTitle</h1>
+        <h1 class="govuk-heading-xl">@string.Concat(Model.PageTitle, "s")</h1>
     </div>
 </div>
 
