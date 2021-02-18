@@ -558,7 +558,6 @@
     <Content Include="Areas\Governors\Views\SharedGovernor\EditSharedGovernor.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\ReplaceChair.cshtml" />
     <Content Include="Areas\Governors\Views\GovernanceDelegation\GroupEditDelegation.cshtml" />
-    <Content Include="App_Data\wildcard-dfe.pfx" />
     <Content Include="Areas\Establishments\Views\BulkUpdate\Index.cshtml" />
     <Content Include="Areas\Establishments\Views\AcademyOpenings\Index.cshtml" />
     <Content Include="Areas\Governors\Views\GovernorsBulkUpdate\Index.cshtml" />
@@ -747,8 +746,8 @@
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="Areas\Governors\Views\Search\" />
-	<Folder Include="Assets\Sass\" />
     <Folder Include="Views\Admin\" />
     <Folder Include="Views\GOVUK\Views\errors\" />
     <Folder Include="Views\UserRoles\" />
