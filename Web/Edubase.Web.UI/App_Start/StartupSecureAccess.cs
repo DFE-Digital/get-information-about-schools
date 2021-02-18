@@ -84,12 +84,6 @@ namespace Edubase.Web.UI
                 MinIncomingSigningAlgorithm = "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
             };
 
-            spOptions.ServiceCertificates.Add(new ServiceCertificate
-            {
-                Use = CertificateUse.Signing,
-                Certificate = GetSPCertificateFromAppData()
-            });
-
             var authServicesOptions = new Saml2AuthenticationOptions(false) { SPOptions = spOptions };
 
             var idp = new IdentityProvider(new EntityId(MetadataLocation.AbsoluteUri), spOptions)
@@ -103,7 +97,5 @@ namespace Edubase.Web.UI
             authServicesOptions.IdentityProviders.Add(idp);
             return authServicesOptions;
         }
-
-        private static X509Certificate2 GetSPCertificateFromAppData() => new X509Certificate2(HostingEnvironment.MapPath($"~/app_data/wildcard-dfe.pfx"), "test", X509KeyStorageFlags.MachineKeySet);
     }
 }
