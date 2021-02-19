@@ -22,7 +22,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         @Html.Partial("_ValidationSummary", ViewData.ModelState)
-        <h1 class="govuk-heading-xl" id="title">Create a new establishment</h1>
+        <h1 class="govuk-heading-xl" id="title">Create new establishments</h1>
     </div>
 </div>
 
@@ -42,111 +42,113 @@
             </div>
 
             <div class="govuk-grid-column-one-half">
-                <h2 class="govuk-heading-m">New establishment</h2>
+                <p>Set up a new establishment record by completing the fields below and selecting create establishment.</p>
+
+                <h2 class="govuk-heading-m">New establishment details</h2>
 
                 @* NAME, LA and TYPE  *@
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Name)">
-                    @Html.LabelFor(x => x.Name, "Establishment name", new { @class = "govuk-label"})
-                    @Html.ValidationMessageFor(x => x.Name, null, new { @class="govuk-error-message"})
+                    @Html.LabelFor(x => x.Name, "Establishment name", new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.Name, null, new { @class = "govuk-error-message" })
                     @Html.TextBoxFor(x => x.Name, new { @class = "govuk-input" })
                 </div>
 
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
                     @Html.LabelFor(x => x.LocalAuthorityId, "Local authority", new { @class = "govuk-label" })
-                    @Html.ValidationMessageFor(x => x.LocalAuthorityId, null, new { @class = "govuk-error-message"})
+                    @Html.ValidationMessageFor(x => x.LocalAuthorityId, null, new { @class = "govuk-error-message" })
                     @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "Please select", new { @class = "govuk-select" })
                 </div>
 
                 <div id="establishment-type-form-group" class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentTypeId)">
                     @Html.LabelFor(x => x.EstablishmentTypeId, "Establishment type", new { @class = "govuk-label" })
-                    @Html.ValidationMessageFor(x => x.EstablishmentTypeId, null, new { @class = "govuk-error-message"})
+                    @Html.ValidationMessageFor(x => x.EstablishmentTypeId, null, new { @class = "govuk-error-message" })
                     @Html.DropDownListFor(x => x.EstablishmentTypeId, Model.EstablishmentTypes, "Please select", new { @class = "govuk-select" })
                 </div>
 
                 @* PHASE *@
                 <div id="establishment-phase-form-group" class="govuk-form-group hidden @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
                     @Html.LabelFor(x => x.EducationPhaseId, "Phase of education", new { @class = "govuk-label" })
-                    @Html.ValidationMessageFor(x => x.EducationPhaseId, null, new { @class = "govuk-error-message"})
+                    @Html.ValidationMessageFor(x => x.EducationPhaseId, null, new { @class = "govuk-error-message" })
                     @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "Please select", new { @class = "govuk-select" })
                 </div>
 
                 @* CHILDRENS CENTRE *@
                 <div class="childrens-centre-fields hidden">
-                    @Html.EditorFor(m => m.OpenDate, new { title = "Open date (required to save record)", fieldsetClassName = "edit-date-fieldset"})
+                    @Html.EditorFor(m => m.OpenDate, new { title = "Open date (required to save record)", fieldsetClassName = "edit-date-fieldset" })
 
                     @Html.EditorFor(m => m.Address)
 
                     <h2 class="govuk-heading-m">Contact details</h2>
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ManagerFirstName)">
-                        @Html.LabelFor(x => x.ManagerFirstName, new { @class = "govuk-label"})
-                        @Html.ValidationMessageFor(x => x.ManagerFirstName, null, new { @class = "govuk-error-message"})
+                        @Html.LabelFor(x => x.ManagerFirstName, new { @class = "govuk-label" })
+                        @Html.ValidationMessageFor(x => x.ManagerFirstName, null, new { @class = "govuk-error-message" })
                         @Html.TextBoxFor(x => x.ManagerFirstName, new { @class = "govuk-input" })
                     </div>
 
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ManagerLastName)">
-                        @Html.LabelFor(x => x.ManagerLastName, new { @class = "govuk-label"})
-                        @Html.ValidationMessageFor(x => x.ManagerLastName, null, new { @class = "govuk-error-message"})
+                        @Html.LabelFor(x => x.ManagerLastName, new { @class = "govuk-label" })
+                        @Html.ValidationMessageFor(x => x.ManagerLastName, null, new { @class = "govuk-error-message" })
                         @Html.TextBoxFor(x => x.ManagerLastName, new { @class = "govuk-input" })
                     </div>
 
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CentreEmail)">
-                        @Html.LabelFor(x => x.CentreEmail, new { @class = "govuk-label"})
-                        @Html.ValidationMessageFor(x => x.CentreEmail, null, new { @class = "govuk-error-message"})
+                        @Html.LabelFor(x => x.CentreEmail, new { @class = "govuk-label" })
+                        @Html.ValidationMessageFor(x => x.CentreEmail, null, new { @class = "govuk-error-message" })
                         @Html.TextBoxFor(x => x.CentreEmail, new { @class = "govuk-input" })
                     </div>
 
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Telephone)">
-                        @Html.LabelFor(x => x.Telephone, new { @class = "govuk-label"})
-                        @Html.ValidationMessageFor(x => x.Telephone, null, new { @class = "govuk-error-message"})
+                        @Html.LabelFor(x => x.Telephone, new { @class = "govuk-label" })
+                        @Html.ValidationMessageFor(x => x.Telephone, null, new { @class = "govuk-error-message" })
                         @Html.TextBoxFor(x => x.Telephone, new { @class = "govuk-input" })
                     </div>
 
                     <h2 class="govuk-heading-m">Further details</h2>
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.OperationalHoursId)">
                         @Html.LabelFor(x => x.OperationalHoursId, new { @class = "govuk-label" })
-                        @Html.ValidationMessageFor(x => x.OperationalHoursId, null, new { @class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.OperationalHoursId, null, new { @class = "govuk-error-message" })
                         @Html.DropDownListFor(x => x.OperationalHoursId, Model.OperationalHoursOptions, "Please select", new { @class = "govuk-select" })
                     </div>
 
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.NumberOfUnderFives)">
-                        @Html.LabelFor(x => x.NumberOfUnderFives, new { @class = "govuk-label"})
-                        @Html.ValidationMessageFor(x => x.NumberOfUnderFives, null, new { @class = "govuk-error-message"})
+                        @Html.LabelFor(x => x.NumberOfUnderFives, new { @class = "govuk-label" })
+                        @Html.ValidationMessageFor(x => x.NumberOfUnderFives, null, new { @class = "govuk-error-message" })
                         @Html.TextBoxFor(x => x.NumberOfUnderFives, new { @class = "govuk-input" })
                     </div>
 
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernanceId)">
                         @Html.LabelFor(x => x.GovernanceId, new { @class = "govuk-label" })
-                        @Html.ValidationMessageFor(x => x.GovernanceId, null, new { @class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.GovernanceId, null, new { @class = "govuk-error-message" })
                         @Html.DropDownListFor(x => x.GovernanceId, Model.GovernanceOptions, "Please select", new { @class = "govuk-select" })
                     </div>
 
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernanceDetail)">
-                        @Html.LabelFor(x => x.GovernanceDetail, new { @class = "govuk-label"})
-                        @Html.ValidationMessageFor(x => x.GovernanceDetail, null, new { @class = "govuk-error-message"})
+                        @Html.LabelFor(x => x.GovernanceDetail, new { @class = "govuk-label" })
+                        @Html.ValidationMessageFor(x => x.GovernanceDetail, null, new { @class = "govuk-error-message" })
                         @Html.TextBoxFor(x => x.GovernanceDetail, new { @class = "govuk-input" })
                     </div>
 
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PhaseId)">
-                        @Html.LabelFor(x => x.PhaseId, new { @class = "govuk-label"})
-                        @Html.ValidationMessageFor(x => x.PhaseId, null, new { @class = "govuk-error-message"})
-                        @Html.DropDownListFor(x => x.PhaseId, Model.Phases, "Please select", new { @class = "govuk-select", disabled="disabled" })
+                        @Html.LabelFor(x => x.PhaseId, new { @class = "govuk-label" })
+                        @Html.ValidationMessageFor(x => x.PhaseId, null, new { @class = "govuk-error-message" })
+                        @Html.DropDownListFor(x => x.PhaseId, Model.Phases, "Please select", new { @class = "govuk-select", disabled = "disabled" })
                     </div>
 
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.DisadvantagedAreaId)">
                         @Html.LabelFor(x => x.DisadvantagedAreaId, new { @class = "govuk-label" })
-                        @Html.ValidationMessageFor(x => x.DisadvantagedAreaId, null, new { @class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.DisadvantagedAreaId, null, new { @class = "govuk-error-message" })
                         @Html.DropDownListFor(x => x.DisadvantagedAreaId, Model.DisadvantagedAreaOptions, "Please select", new { @class = "govuk-select" })
                     </div>
 
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.DirectProvisionOfEarlyYears)">
                         @Html.LabelFor(x => x.DirectProvisionOfEarlyYears, new { @class = "govuk-label" })
-                        @Html.ValidationMessageFor(x => x.DirectProvisionOfEarlyYears, null, new { @class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.DirectProvisionOfEarlyYears, null, new { @class = "govuk-error-message" })
                         @Html.DropDownListFor(x => x.DirectProvisionOfEarlyYears, Model.DirectProvisionOfEarlyYearsOptions, "Please select", new { @class = "govuk-select" })
                     </div>
 
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentStatusId)">
                         @Html.LabelFor(x => x.EstablishmentStatusId, new { @class = "govuk-label" })
-                        @Html.ValidationMessageFor(x => x.EstablishmentStatusId, null, new { @class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.EstablishmentStatusId, null, new { @class = "govuk-error-message" })
                         @Html.DropDownListFor(x => x.EstablishmentStatusId, Model.EstablishmentStatusOptions, "Please select", new { @class = "govuk-select" })
                     </div>
                 </div>

@@ -14,7 +14,7 @@
                     <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new { @class = "govuk-breadcrumbs__link" })</li>
                     @if (Model.Details != null)
                     {
-                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Convert to multi-academy trust", "Convert", "Group", new {area = "Groups"},new { @class = "govuk-breadcrumbs__link"})</li>
+                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Convert single academy trusts (SATs)", "Convert", "Group", new {area = "Groups"},new { @class = "govuk-breadcrumbs__link"})</li>
                     }
                 </ol>
             </div>
@@ -25,15 +25,14 @@
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-<h1 class="govuk-heading-xl">Convert to multi-academy trust</h1>
+<h1 class="govuk-heading-xl">Convert single academy trusts (SATs)</h1>
 
 @if (Model.Details == null)
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <p>Convert single-academy trusts into multi-academy trusts using either the current company record or a new one from Companies House</p>
-            <h2 class="govuk-heading-m">Current single-academy trust</h2>
-
+            <p>Convert a single-academy trust (SAT) record to a multi-academy trust (MAT) record by completing the field below and selecting continue.</p>
+            <h2 class="govuk-heading-m">Single academy trust details</h2>
         </div>
     </div>
 
@@ -43,7 +42,7 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Text)">
-                    @Html.LabelFor(x => x.Text, "Companies House number, Group UID or ID", new { @class = "govuk-label" })
+                    @Html.LabelFor(x => x.Text, "Companies House number, group UID or group ID", new { @class = "govuk-label" })
                     @Html.ValidationMessageFor(x => x.Text, null, new { @class = "govuk-error-message"})
                     @Html.TextBoxFor(x => x.Text, new { @class = "govuk-input govuk-!-width-one-half" })
                 </div>

@@ -20,13 +20,13 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             AcademyTrust, // MATs and SATs,
             Sponsor // Academy sponsor
         }
-        
+
         private static readonly Dictionary<eGroupTypeMode, string> _entityNames = new Dictionary<eGroupTypeMode, string>
         {
-            [eGroupTypeMode.ChildrensCentre] = "children's centre group or collaboration",
-            [eGroupTypeMode.Trust] = "school trust",
-            [eGroupTypeMode.Federation] = "school federation",
-            [eGroupTypeMode.AcademyTrust] = "academy trust",
+            [eGroupTypeMode.ChildrensCentre] = "children's centre groups or children's centre collaborations",
+            [eGroupTypeMode.Trust] = "foundation trust",
+            [eGroupTypeMode.Federation] = "federation",
+            [eGroupTypeMode.AcademyTrust] = "academy trusts",
             [eGroupTypeMode.Sponsor] = "academy sponsor"
         };
 

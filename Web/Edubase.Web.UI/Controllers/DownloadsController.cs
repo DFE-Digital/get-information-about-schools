@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using Edubase.Services.Downloads;
 using System.Threading.Tasks;
@@ -14,7 +15,10 @@ using Edubase.Common;
 using Edubase.Web.UI.Helpers;
 using System.Linq;
 using System.Net.Http;
+using System.Web.Routing;
+using Castle.Components.DictionaryAdapter;
 using Edubase.Services;
+using Edubase.Services.Downloads.Models;
 using Edubase.Web.UI.Models.Search;
 using MoreLinq;
 
@@ -66,6 +70,40 @@ namespace Edubase.Web.UI.Controllers
             return viewModel;
         }
 
+        [Route("Collate", Name = "CollateDownloads")]
+        public async Task<ActionResult> CollateDownloads(DownloadsViewModel model)
+        {
+            var collection = new List<FileDownloadRequest>();
+            foreach (var fileDownload in model.Downloads.Where(x => x.Selected))
+            {
+                collection.Add(new FileDownloadRequest(fileDownload.Tag, fileDownload.FileGeneratedDate));
+            }
+
+            if (!collection.Any())
+            {
+                var routeValuesDictionary = new RouteValueDictionary
+                {
+                    { nameof(model.Skip), model.Skip },
+                    { $"{nameof(model.FilterDate)}.{nameof(model.FilterDate.Day)}", model.FilterDate.Day },
+                    { $"{nameof(model.FilterDate)}.{nameof(model.FilterDate.Month)}", model.FilterDate.Month },
+                    { $"{nameof(model.FilterDate)}.{nameof(model.FilterDate.Year)}", model.FilterDate.Year },
+                    { nameof(model.SearchType), model.SearchType },
+                };
+                return RedirectToAction(nameof(Index), routeValuesDictionary);
+            }
+
+            var response = await _downloadsService.CollateDownloadsAsync(collection, User);
+            if (response.Contains("fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
+            {
+                ViewBag.isDownload = true;
+                return View("ReadyToDownload", JsonConvert.DeserializeObject<ProgressDto>(response));
+            }
+            else
+            {
+                return RedirectToAction(nameof(DownloadGenerated), new { id = JsonConvert.DeserializeObject<ApiResultDto<Guid>>(response).Value });
+            }
+        }
+
         [Route("Generate", Name = "GenerateDownload")]
         public async Task<ActionResult> GenerateDownload(string id)
         {
@@ -96,10 +134,26 @@ namespace Edubase.Web.UI.Controllers
         [Route("Generated/{id}", Name = "DownloadGenerated")]
         public async Task<ActionResult> DownloadGenerated(Guid id)
         {
-            var model = await _downloadsService.GetProgressOfGeneratedExtractAsync(id, User);
+            var model = new ProgressDto();
+            try
+            {
+                model = await _downloadsService.GetProgressOfGeneratedExtractAsync(id, User);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.StartsWith("The API returned 404 Not Found"))
+                {
+                    // if the file no longer exists (user refreshes the page post download etc) then the api returns a 404 and throws an error. This allows for a more graceful response
+                    model.Error = "Download process not found for associated id";
+                }
+                else
+                {
+                    throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
+                }
+            }
 
             if (model.HasErrored)
-                throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
+                return View("Downloads/DownloadError", new DownloadErrorViewModel { FromDownloads = true, NeedsRegenerating = true });
 
             ViewBag.isDownload = true;
             if (!model.IsComplete)
@@ -209,8 +263,9 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        [HttpPost, Route("Download/Extract", Name="DownloadExtract")]
-        public async Task<ActionResult> DownloadExtractAsync(string path, string id, string searchQueryString = null, eLookupSearchSource? searchSource = null)
+        [HttpPost, Route("Download/Extract", Name = "DownloadExtract")]
+        public async Task<ActionResult> DownloadExtractAsync(string path, string id, string searchQueryString = null,
+            eLookupSearchSource? searchSource = null, bool fromDownloads = false)
         {
             var uri = new Uri(path);
             var downloadAvailable = await _downloadsService.IsDownloadAvailable($"/{uri.Segments.Last()}", id, User);
@@ -224,7 +279,8 @@ namespace Edubase.Web.UI.Controllers
                 var view = new DownloadErrorViewModel
                 {
                     SearchQueryString = searchQueryString,
-                    SearchSource = searchSource
+                    SearchSource = searchSource,
+                    FromDownloads = fromDownloads
                 };
                 return View("Downloads/DownloadError", view);
             }

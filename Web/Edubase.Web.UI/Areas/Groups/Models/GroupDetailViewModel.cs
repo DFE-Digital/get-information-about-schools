@@ -16,8 +16,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models
     {
         private Dictionary<int, string> _groupTypes2Name = new Dictionary<int, string>
         {
-            [(int)GT.ChildrensCentresCollaboration] = "children's centres collaboration",
-            [(int)GT.ChildrensCentresGroup] = "children's centres group",
+            [(int)GT.ChildrensCentresCollaboration] = "children's centre collaboration",
+            [(int)GT.ChildrensCentresGroup] = "children's centre group",
             [(int)GT.Federation] = "federation",
             [(int)GT.MultiacademyTrust] = "multi-academy trust",
             [(int)GT.SchoolSponsor] = "school sponsor",

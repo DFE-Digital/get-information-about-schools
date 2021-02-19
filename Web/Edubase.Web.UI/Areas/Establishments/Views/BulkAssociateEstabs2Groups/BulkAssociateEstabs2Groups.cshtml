@@ -1,7 +1,7 @@
 @model BulkAssociateEstabs2GroupsViewModel
 
 @{
-    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Bulk upload academies to trust/sponsor");
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Bulk upload academies to academy sponsors and/or academy trusts");
     ViewBag.SiteSection = "tools";
 }
 @section BreadCrumbs
@@ -25,7 +25,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-xl">Bulk upload academies to trust<span class="govuk-visually-hidden">&nbsp;</span>/<span class="govuk-visually-hidden">&nbsp;</span>sponsor</h1>
+        <h1 class="govuk-heading-xl">Bulk upload academies to academy sponsors and<span class="govuk-visually-hidden">&nbsp;</span>/<span class="govuk-visually-hidden">&nbsp;</span>or academy trusts</h1>
         <p>Use this tool to upload new academies to the relevant trusts<span class="govuk-visually-hidden">&nbsp;</span>/<span class="govuk-visually-hidden">&nbsp;</span>sponsor.</p>
     </div>
     <div class="govuk-grid-column-full">
@@ -65,7 +65,7 @@
             Please use this template to list the academies.
         </p>
         <p>
-            <a href="https://edubasepr.blob.core.windows.net/content/academies_bulk_upload.xls" class="download-list-item">Academies_bulk_upload.xls, 25KB</a>
+            @Html.ActionLink("Academies_bulk_upload.xls, 25KB", "Container", "Home", new { area = "", file = "academies_bulk_upload.xls" }, new {@class="download-list-item"})
         </p>
 
     </div>

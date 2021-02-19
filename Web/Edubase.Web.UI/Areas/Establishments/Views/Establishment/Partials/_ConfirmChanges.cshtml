@@ -77,7 +77,9 @@
                     <h3 class="govuk-heading-s">I confirm that:</h3>
                     <ul class="govuk-list govuk-list--bullet">
                         <li>
-                            I have read the <a href="https://edubasepr.blob.core.windows.net/guidance/DfE%20Short%20Guide%20for%20LAs.docx" rel="noreferrer noopener" target="_blank">DfE's short guide for LAs (opens in new tab)</a> document, and
+                            I have read the
+                            @Html.ActionLink("DfE's short guide for LAs", "Guidance", "Home", new { area = "", file = "DfE Short Guide for LAs.docx" }, null)
+                            document, and
                         </li>
                         <li>I have demoted this children's centre record because it's no longer a children's centre in its own right but continues to contribute to our children's centre provision.</li>
                     </ul>
@@ -88,7 +90,11 @@
                 {
                     <h3 class="govuk-heading-s">I confirm that:</h3>
                     <ul class="govuk-list govuk-list--bullet warning-list">
-                        <li>I have read the <a href="https://edubasepr.blob.core.windows.net/guidance/DfE%20Short%20Guide%20for%20LAs.docx" rel="noreferrer noopener" target="_blank">DfE's short guide for LAs (opens in new tab)</a> document, and</li>
+                        <li>
+                            I have read the
+                            @Html.ActionLink("DfE's short guide for LAs", "Guidance", "Home", new { area = "", file = "DfE Short Guide for LAs.docx" }, null)
+                            document, and
+                        </li>
                         <li>I have promoted this linked site record because it fulfils the legal definition of a children's centre in its own right.</li>
                     </ul>
                 }

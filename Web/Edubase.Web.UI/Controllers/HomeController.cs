@@ -4,6 +4,7 @@ using Edubase.Services.Lookup;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
@@ -40,6 +41,33 @@ namespace Edubase.Web.UI.Controllers
 
         [Route("~/accessibility/report")]
         public ActionResult AccessibilityReport() => View();
+
+
+        [Route("~/content"), Filters.EdubaseAuthorize]
+        public async Task<ActionResult> Container(string file)
+        {
+            return await GetFileFromContainer("content", file);
+        }
+
+        [Route("~/content/guidance"), Filters.EdubaseAuthorize]
+        public async Task<ActionResult> Guidance(string file)
+        {
+            return await GetFileFromContainer("guidance", file);
+        }
+
+        private async Task<ActionResult> GetFileFromContainer(string container, string file)
+        {
+            var blob = _blobService.GetBlobReference(container, file);
+            if (await blob.ExistsAsync())
+            {
+                var stream = await blob.OpenReadAsync();
+                return new FileStreamResult(stream, blob.Properties.ContentType)
+                {
+                    FileDownloadName = blob.Name
+                };
+            }
+            throw new Exception("File not available");
+        }
 
         [Route("~/cookies")]
         public ActionResult Cookies() => View();

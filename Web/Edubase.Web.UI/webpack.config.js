@@ -11,6 +11,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
+const base64 = require('postcss-base64');
 
 const config = {
     entry: () => {
@@ -80,6 +81,20 @@ const config = {
               },
             },
             { loader: 'css-loader?url=false' },
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: [
+                    base64({
+                      excludeAtFontFace: false,
+                      replaceValues: true,
+                      extensions: ['.woff2', '.woff']
+                    }),
+                  ]
+                }
+              }
+            },
             { loader: 'sass-loader' }
           ],
         },
@@ -95,6 +110,8 @@ const config = {
       }),
 
       new VueLoaderPlugin(),
+
+      new CleanWebpackPlugin(),
 
       new webpack.ProvidePlugin({
         $: "jquery",

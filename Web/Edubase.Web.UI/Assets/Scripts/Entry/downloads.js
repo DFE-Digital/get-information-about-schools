@@ -1,3 +1,4 @@
+import GiasOkCancel from "../GiasModules/GiasModals/GiasOkCancel";
 import GiasTabs from '../GiasModules/GiasTabs';
 import GiasDownloadFilters from '../GiasSearchFilters/GiasDownloadFilters';
 
