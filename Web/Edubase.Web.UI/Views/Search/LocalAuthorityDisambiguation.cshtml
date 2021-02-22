@@ -23,7 +23,7 @@
             <ul class="govuk-list">
                 @foreach (var item in Model.MatchingLocalAuthorities)
                 {
-                    <li><a href="/?@QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.AddUnique(item.Id).ToArray())#la">@item.Name</a></li>
+                    <li><a href="/?SearchType=ByLocalAuthority&@QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.AddUnique(item.Id).ToArray())#la">@item.Name</a></li>
                 }
             </ul>
             <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="govuk-button govuk-button--secondary js-show-inline">Back to search</a>
