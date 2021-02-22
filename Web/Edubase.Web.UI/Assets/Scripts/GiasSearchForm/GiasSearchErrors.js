@@ -84,11 +84,12 @@ class GiasSearchErrors {
 
     // Local Authority search
     $('#la-search-submit').on('click', function (e) {
+      console.log('la-click');
       hideErrorSummary();
       const suggestionCount = $('#LocalAuthorityToAdd').next('ul').find('li').length;
       const addedLaCount = $('.remove-suggest-la').length;
 
-      if (addedLaCount === 0) {
+      if (addedLaCount === 0 && $.trim($('#LocalAuthorityToAdd').val()) === '') {
         e.preventDefault();
 
         if ($.trim($('#LocalAuthorityToAdd').val()) === '') {
@@ -110,20 +111,21 @@ class GiasSearchErrors {
           return showInlineError($('#searchby-la-ref'),
             'We could not find any local authorities matching your search criteria');
         }
-      } else {
-
-        if (suggestionCount === 0 && $.trim($('#LocalAuthorityToAdd').val()).length > 0) {
-          e.preventDefault();
-
-          clientErrorSummary.updateErrors({
-            href: '#LocalAuthorityToAdd',
-            message: 'We don\'t recognise this local authority. Amend it or clear it to continue searching.'
-          });
-
-          return showInlineError($('#searchby-la-ref'),
-            'We don\'t recognise this local authority. Amend it or clear it to continue searching.');
-        }
       }
+      // else {
+      //
+      //   if (suggestionCount === 0 && $.trim($('#LocalAuthorityToAdd').val()).length > 0) {
+      //     e.preventDefault();
+      //
+      //     clientErrorSummary.updateErrors({
+      //       href: '#LocalAuthorityToAdd',
+      //       message: 'We don\'t recognise this local authority. Amend it or clear it to continue searching.'
+      //     });
+      //
+      //     return showInlineError($('#searchby-la-ref'),
+      //       'We don\'t recognise this local authority. Amend it or clear it to continue searching.');
+      //   }
+      // }
     });
 
     // Group search
