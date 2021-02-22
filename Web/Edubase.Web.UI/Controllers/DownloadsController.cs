@@ -162,10 +162,10 @@ namespace Edubase.Web.UI.Controllers
             return View("ReadyToDownload", model);
         }
 
-        [Route("RequestScheduledExtract/{id}", Name = "RequestScheduledExtract")]
-        public async Task<ActionResult> RequestScheduledExtract(int id)
+        [Route("RequestScheduledExtract/{eid}", Name = "RequestScheduledExtract")]
+        public async Task<ActionResult> RequestScheduledExtract(int eid)
         {
-            var response = await _downloadsService.GenerateScheduledExtractAsync(id, User);
+            var response = await _downloadsService.GenerateScheduledExtractAsync(eid, User);
 
             if (response.Contains("fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
             {

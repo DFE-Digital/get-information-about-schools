@@ -34,23 +34,22 @@
         <h2 class="govuk-heading-s">Your extract is ready</h2>
         <p>Your requested file is ready to download.</p>
 
-        @if (isExtract)
-        {
-            <ul class="govuk-list">
-                <li class="download-list-item">
-                <a href="@Model.FileLocationUri" rel="nofollow">
-                    @(Model.Name ?? "Results.zip")</a>
-                </li>
-            </ul>
-        }
-        else
-        {
+        @{
             var uri = new Uri(Model.FileLocationUri);
             var path = uri.GetLeftPart(UriPartial.Path);
             var name = Model.Name ?? "Results.zip";
+
+            var id = Model.Id.ToString();
+
+            if (isExtract)
+            {
+                var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+                id = query["id"];
+            }
+
             using (Html.BeginRouteForm("DownloadExtract", FormMethod.Post))
             {
-                @Html.Hidden("id", Model.Id)
+                @Html.Hidden("id", id)
                 @Html.Hidden("path", path)
                 @Html.Hidden("fromDownloads", true)
 
