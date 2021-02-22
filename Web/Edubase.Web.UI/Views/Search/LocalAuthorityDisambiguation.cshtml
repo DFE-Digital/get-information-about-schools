@@ -33,7 +33,7 @@
         else if (Model.MatchingLocalAuthorities.Count == 1)
         {
             <p>Did you mean
-                <a href="/?@QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.AddUnique(Model.MatchingLocalAuthorities[0].Id).ToArray())#la">
+                <a href="/?SearchType=ByLocalAuthority&@QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.AddUnique(Model.MatchingLocalAuthorities[0].Id).ToArray())#la">
                     @Model.MatchingLocalAuthorities[0].Name
                 </a>?
             </p>
