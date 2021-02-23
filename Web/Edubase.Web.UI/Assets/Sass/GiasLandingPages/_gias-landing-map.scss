@@ -31,4 +31,8 @@
     height: 320px;
     display: none;
   }
+
+  .no-js & {
+    display: none;
+  }
 }
