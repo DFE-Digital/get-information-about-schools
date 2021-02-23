@@ -3,9 +3,8 @@
 @{
     ViewBag.hideLogo = true;
     ViewBag.SiteSection = "downloads";
-    var isExtract = !(ViewBag.isDownload?? false);
+    var isExtract = ViewBag.isExtract ?? false;
     var areaTitle = isExtract ? "Extract" : "Download";
-    var defaultFilename = isExtract ? "Results.zip" : "Extract.zip";
     if (isExtract)
     {
         ViewBag.bodyClasses = "schools-search-page search-page";

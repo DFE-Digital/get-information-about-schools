@@ -99,7 +99,7 @@ namespace Edubase.Web.UI.Controllers
             var response = await _downloadsService.CollateDownloadsAsync(collection, User);
             if (response.Contains("fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
             {
-                return RedirectToAction(nameof(DownloadGenerated), new { id = getIdFromFileLocationUri(JsonConvert.DeserializeObject<ProgressDto>(response)), isScheduledExtract = true });
+                return RedirectToAction(nameof(DownloadGenerated), new { id = getIdFromFileLocationUri(JsonConvert.DeserializeObject<ProgressDto>(response)), isExtract = true });
             }
             else
             {
@@ -114,7 +114,7 @@ namespace Edubase.Web.UI.Controllers
 
             if (response.Contains("fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
             {
-                return RedirectToAction(nameof(DownloadGenerated), new { id = getIdFromFileLocationUri(JsonConvert.DeserializeObject<ProgressDto>(response)), isScheduledExtract = true });
+                return RedirectToAction(nameof(DownloadGenerated), new { id = getIdFromFileLocationUri(JsonConvert.DeserializeObject<ProgressDto>(response)), isExtract = true });
             }
             else
             {
@@ -134,12 +134,12 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [Route("Generated/{id}", Name = "DownloadGenerated")]
-        public async Task<ActionResult> DownloadGenerated(Guid id, bool isScheduledExtract = false)
+        public async Task<ActionResult> DownloadGenerated(Guid id, bool isExtract = false)
         {
             var model = new ProgressDto();
             try
             {
-                model = isScheduledExtract
+                model = isExtract
                     ? await _downloadsService.GetProgressOfScheduledExtractGenerationAsync(id, User)
                     : await _downloadsService.GetProgressOfGeneratedExtractAsync(id, User);
             }
@@ -159,7 +159,7 @@ namespace Edubase.Web.UI.Controllers
             if (model.HasErrored)
                 return View("Downloads/DownloadError", new DownloadErrorViewModel { FromDownloads = true, NeedsRegenerating = true });
 
-            ViewBag.isDownload = true;
+            ViewBag.isExtract = isExtract;
             if (!model.IsComplete)
                 return View("PreparingFilePleaseWait", model);
 
@@ -173,7 +173,7 @@ namespace Edubase.Web.UI.Controllers
 
             if (response.Contains("fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
             {
-                return RedirectToAction(nameof(DownloadGenerated), new { id = getIdFromFileLocationUri(JsonConvert.DeserializeObject<ProgressDto>(response)), isScheduledExtract = true });
+                return RedirectToAction(nameof(DownloadGenerated), new { id = getIdFromFileLocationUri(JsonConvert.DeserializeObject<ProgressDto>(response)), isExtract = true });
             }
             else
             {
