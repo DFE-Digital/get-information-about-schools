@@ -86,7 +86,7 @@ namespace Edubase.Web.UI.Controllers
             {
                 var fieldId = "TextSearchModel.Text";
                 var fieldError = "We could not find any establishments matching your search criteria";
-
+                var la = Request.QueryString["LocalAuthorityToAdd"];
                 switch (viewModel.SearchType)
                 {
                     case eSearchType.Text:
@@ -105,7 +105,11 @@ namespace Edubase.Web.UI.Controllers
                         break;
 
                     case eSearchType.ByLocalAuthority:
-                        fieldId = "LocalAuthorityToAdd.Text";
+                        if (!string.IsNullOrEmpty(viewModel.LocalAuthorityToAdd))
+                        {
+                            return await ProcessLocalAuthorityDisambiguation(viewModel);
+                        }
+                        fieldId = "LocalAuthorityToAdd";
 
                         fieldError = viewModel.SelectedLocalAuthorityIds.Any() ?
                             "We could not find any local authorities matching your search criteria" :
@@ -175,6 +179,12 @@ namespace Edubase.Web.UI.Controllers
                     if (viewModel.SearchType == eSearchType.LocalAuthorityDisambiguation)
                     {
                         return await ProcessLocalAuthorityDisambiguation(viewModel);
+                    }
+
+                    if (viewModel.SearchType == eSearchType.ByLocalAuthority &&
+                        !string.IsNullOrEmpty(viewModel.LocalAuthorityToAdd))
+                    {
+                       return await ProcessLocalAuthorityDisambiguation(viewModel);
                     }
 
                     if (ModelState.IsValid)
@@ -257,7 +267,7 @@ namespace Edubase.Web.UI.Controllers
         {
             var localAuthorities = await _cachedLookupService.LocalAuthorityGetAllAsync();
             var localAuthority = localAuthorities.FirstOrDefault(x => x.Name.Equals(model.LocalAuthorityToAdd, StringComparison.OrdinalIgnoreCase));
-            if (localAuthority != null) return Redirect("/?" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
+            if (localAuthority != null) return Redirect("/?SearchType=ByLocalAuthority&" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
                 model.AddLocalAuthorityId(localAuthority.Id).SelectedLocalAuthorityIds.ToArray()) + "#la");
             else
             {
