@@ -3,7 +3,7 @@
 @{
     ViewBag.hideLogo = true;
     ViewBag.SiteSection = "downloads";
-    var isExtract = ViewBag.isExtract ?? false;
+    bool isExtract = ViewBag.isExtract ?? false;
     var areaTitle = isExtract ? "Extract" : "Download";
     if (isExtract)
     {
@@ -51,6 +51,7 @@
                 @Html.Hidden("id", id)
                 @Html.Hidden("path", path)
                 @Html.Hidden("fromDownloads", true)
+                @Html.Hidden("fromExtracts", isExtract)
 
                 <div class="govuk-form-group">
                     <p>

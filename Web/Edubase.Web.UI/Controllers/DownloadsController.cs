@@ -157,7 +157,7 @@ namespace Edubase.Web.UI.Controllers
             }
 
             if (model.HasErrored)
-                return View("Downloads/DownloadError", new DownloadErrorViewModel { FromDownloads = true, NeedsRegenerating = true });
+                return View("Downloads/DownloadError", new DownloadErrorViewModel { FromDownloads = true, FromExtracts = isExtract, NeedsRegenerating = true });
 
             ViewBag.isExtract = isExtract;
             if (!model.IsComplete)
@@ -255,7 +255,7 @@ namespace Edubase.Web.UI.Controllers
 
         [HttpPost, Route("Download/Extract", Name = "DownloadExtract")]
         public async Task<ActionResult> DownloadExtractAsync(string path, string id, string searchQueryString = null,
-            eLookupSearchSource? searchSource = null, bool fromDownloads = false)
+            eLookupSearchSource? searchSource = null, bool fromDownloads = false, bool fromExtracts = false)
         {
             var uri = new Uri(path);
             var downloadAvailable = await _downloadsService.IsDownloadAvailable($"/{uri.Segments.Last()}", id, User);
@@ -270,7 +270,8 @@ namespace Edubase.Web.UI.Controllers
                 {
                     SearchQueryString = searchQueryString,
                     SearchSource = searchSource,
-                    FromDownloads = fromDownloads
+                    FromDownloads = fromDownloads,
+                    FromExtracts = fromExtracts
                 };
                 return View("Downloads/DownloadError", view);
             }
