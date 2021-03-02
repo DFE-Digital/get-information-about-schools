@@ -42,7 +42,7 @@ namespace Edubase.UnitTest.Controllers
             var subject = new SearchController(ers, cls.Object, grs, gps);
             var result = (RedirectResult) await subject.Index(new SearchViewModel { SearchType = eSearchType.LocalAuthorityDisambiguation, LocalAuthorityToAdd = "TESTLA", SelectedLocalAuthorityIds = new LocalAuthorityIdList(new[] { 1 }) });
 
-            Assert.That(result.Url, Is.EqualTo($"/?{SearchViewModel.BIND_ALIAS_LAIDS}=1&{SearchViewModel.BIND_ALIAS_LAIDS}=2#la"));
+            Assert.That(result.Url, Is.EqualTo($"/?SearchType=ByLocalAuthority&{SearchViewModel.BIND_ALIAS_LAIDS}=1&{SearchViewModel.BIND_ALIAS_LAIDS}=2#la"));
         }
 
         [Test]

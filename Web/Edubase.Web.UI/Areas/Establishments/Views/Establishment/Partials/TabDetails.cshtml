@@ -22,13 +22,14 @@
         @if (Model.Establishment.Location != null)
         {
             <a href="#details-summary" class="govuk-skip-link">Skip map</a>
+
             <div class="landing-page-map-container">
+                <a href="#map" id="map-toggle" class="map-toggle" role="button">Show map</a>
                 <div id="map" class="school-detail-map"
                      data-latlng="[@(Model.Establishment.Location?.Longitude),@(Model.Establishment.Location?.Latitude)]"
                      data-school-name="@Model.Establishment.Name"
                      data-school-address="@Model.GetAddress()">
                 </div>
-                <a href="#map" id="map-toggle" class="map-toggle">Show map</a>
             </div>
         }
 

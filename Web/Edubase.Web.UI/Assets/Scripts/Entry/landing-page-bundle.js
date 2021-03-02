@@ -6,7 +6,7 @@ import GiasLandingMap from "../GiasLandingPages/GiasLandingMap";
 const $main = $('#main-content');
 
 const $map = $('#map, #group-map');
-const mobileToggleSwitch = $('#map-toggle');
+const mapToggleSwitch = $('#map-toggle');
 let mapInitialised = false;
 
 $main.find('.gias-tabs-wrapper').giasTabs();
@@ -17,21 +17,21 @@ if ($map.length && $map.css('display') === 'block') {
   new GiasLandingMap();
   mapInitialised = true;
 } else {
-  mobileToggleSwitch.on('click', function(e) {
+  mapToggleSwitch.on('click', function(e) {
     e.preventDefault();
-    if (mobileToggleSwitch.hasClass('trigger-open')) {
+    if (mapToggleSwitch.hasClass('trigger-open')) {
       $map.css({ display: 'none' });
       $(this).text('Show map');
 
     } else {
       $map.css({ display: 'block' });
-      $(this).text('Close map');
+      $(this).text('Hide map');
       if (!mapInitialised) {
         new GiasLandingMap();
         mapInitialised = true;
       }
     }
-    mobileToggleSwitch.toggleClass('trigger-open');
+    mapToggleSwitch.toggleClass('trigger-open');
   });
 }
 

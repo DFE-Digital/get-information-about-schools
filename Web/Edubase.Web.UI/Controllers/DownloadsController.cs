@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using Edubase.Services.Downloads;
 using System.Threading.Tasks;
-using System.Web.Http.Results;
 using Edubase.Web.UI.Models;
 using Newtonsoft.Json;
 using Edubase.Services.Domain;
@@ -16,11 +15,9 @@ using Edubase.Web.UI.Helpers;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Routing;
-using Castle.Components.DictionaryAdapter;
 using Edubase.Services;
 using Edubase.Services.Downloads.Models;
 using Edubase.Web.UI.Models.Search;
-using MoreLinq;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -70,6 +67,13 @@ namespace Edubase.Web.UI.Controllers
             return viewModel;
         }
 
+        private Guid getIdFromFileLocationUri(ProgressDto response)
+        {
+            var uri = new Uri(response.FileLocationUri);
+            var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+            return Guid.Parse(query["id"]);
+        }
+
         [Route("Collate", Name = "CollateDownloads")]
         public async Task<ActionResult> CollateDownloads(DownloadsViewModel model)
         {
@@ -95,8 +99,7 @@ namespace Edubase.Web.UI.Controllers
             var response = await _downloadsService.CollateDownloadsAsync(collection, User);
             if (response.Contains("fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
             {
-                ViewBag.isDownload = true;
-                return View("ReadyToDownload", JsonConvert.DeserializeObject<ProgressDto>(response));
+                return RedirectToAction(nameof(DownloadGenerated), new { id = getIdFromFileLocationUri(JsonConvert.DeserializeObject<ProgressDto>(response)), isExtract = true });
             }
             else
             {
@@ -111,8 +114,7 @@ namespace Edubase.Web.UI.Controllers
 
             if (response.Contains("fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
             {
-                ViewBag.isDownload = true;
-                return View("ReadyToDownload", JsonConvert.DeserializeObject<ProgressDto>(response));
+                return RedirectToAction(nameof(DownloadGenerated), new { id = getIdFromFileLocationUri(JsonConvert.DeserializeObject<ProgressDto>(response)), isExtract = true });
             }
             else
             {
@@ -132,16 +134,18 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [Route("Generated/{id}", Name = "DownloadGenerated")]
-        public async Task<ActionResult> DownloadGenerated(Guid id)
+        public async Task<ActionResult> DownloadGenerated(Guid id, bool isExtract = false)
         {
             var model = new ProgressDto();
             try
             {
-                model = await _downloadsService.GetProgressOfGeneratedExtractAsync(id, User);
+                model = isExtract
+                    ? await _downloadsService.GetProgressOfScheduledExtractGenerationAsync(id, User)
+                    : await _downloadsService.GetProgressOfGeneratedExtractAsync(id, User);
             }
             catch (Exception ex)
             {
-                if (ex.Message.StartsWith("The API returned 404 Not Found"))
+                if (ex.Message.StartsWith("The API returned 404 Not Found") || ex.Message.StartsWith("The API returned an 'Internal Server Error'"))
                 {
                     // if the file no longer exists (user refreshes the page post download etc) then the api returns a 404 and throws an error. This allows for a more graceful response
                     model.Error = "Download process not found for associated id";
@@ -153,42 +157,28 @@ namespace Edubase.Web.UI.Controllers
             }
 
             if (model.HasErrored)
-                return View("Downloads/DownloadError", new DownloadErrorViewModel { FromDownloads = true, NeedsRegenerating = true });
+                return View("Downloads/DownloadError", new DownloadErrorViewModel { FromDownloads = true, FromExtracts = isExtract, NeedsRegenerating = true });
 
-            ViewBag.isDownload = true;
+            ViewBag.isExtract = isExtract;
             if (!model.IsComplete)
                 return View("PreparingFilePleaseWait", model);
 
             return View("ReadyToDownload", model);
         }
 
-        [Route("RequestScheduledExtract/{id}", Name = "RequestScheduledExtract")]
-        public async Task<ActionResult> RequestScheduledExtract(int id)
+        [Route("RequestScheduledExtract/{eid}", Name = "RequestScheduledExtract")]
+        public async Task<ActionResult> RequestScheduledExtract(int eid)
         {
-            var response = await _downloadsService.GenerateScheduledExtractAsync(id, User);
+            var response = await _downloadsService.GenerateScheduledExtractAsync(eid, User);
 
             if (response.Contains("fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
             {
-                return View("ReadyToDownload", JsonConvert.DeserializeObject<ProgressDto>(response));
+                return RedirectToAction(nameof(DownloadGenerated), new { id = getIdFromFileLocationUri(JsonConvert.DeserializeObject<ProgressDto>(response)), isExtract = true });
             }
             else
             {
-                return RedirectToAction(nameof(Download), new { id = JsonConvert.DeserializeObject<ApiResultDto<Guid>>(response).Value });
+                return RedirectToAction(nameof(DownloadGenerated), new { id = JsonConvert.DeserializeObject<ApiResultDto<Guid>>(response).Value });
             }
-        }
-
-        [Route("Download/{id}", Name = "DownloadScheduledExtract")]
-        public async Task<ActionResult> Download(Guid id)
-        {
-            var model = await _downloadsService.GetProgressOfScheduledExtractGenerationAsync(id, User);
-
-            if (model.HasErrored)
-                throw new Exception($"Download generation failed; Underlying error: '{model.Error}'");
-
-            if (!model.IsComplete)
-                return View("PreparingFilePleaseWait", model);
-
-            return View("ReadyToDownload", model);
         }
 
         [HttpGet, Route("Download/Establishment/{urn}", Name = "EstabDataDownload")]
@@ -265,7 +255,7 @@ namespace Edubase.Web.UI.Controllers
 
         [HttpPost, Route("Download/Extract", Name = "DownloadExtract")]
         public async Task<ActionResult> DownloadExtractAsync(string path, string id, string searchQueryString = null,
-            eLookupSearchSource? searchSource = null, bool fromDownloads = false)
+            eLookupSearchSource? searchSource = null, bool fromDownloads = false, bool fromExtracts = false)
         {
             var uri = new Uri(path);
             var downloadAvailable = await _downloadsService.IsDownloadAvailable($"/{uri.Segments.Last()}", id, User);
@@ -280,7 +270,8 @@ namespace Edubase.Web.UI.Controllers
                 {
                     SearchQueryString = searchQueryString,
                     SearchSource = searchSource,
-                    FromDownloads = fromDownloads
+                    FromDownloads = fromDownloads,
+                    FromExtracts = fromExtracts
                 };
                 return View("Downloads/DownloadError", view);
             }

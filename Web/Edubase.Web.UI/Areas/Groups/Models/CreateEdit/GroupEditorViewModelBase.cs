@@ -27,7 +27,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             [eGroupTypeMode.Trust] = "foundation trust",
             [eGroupTypeMode.Federation] = "federation",
             [eGroupTypeMode.AcademyTrust] = "academy trusts",
-            [eGroupTypeMode.Sponsor] = "academy sponsors"
+            [eGroupTypeMode.Sponsor] = "academy sponsor"
         };
 
         public enum eChildrensCentreActions

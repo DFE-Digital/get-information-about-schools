@@ -258,8 +258,9 @@
                         @if (Model.Establishments.Count > 0)
                         {
                             <div class="landing-page-map-container">
+                                <a href="#map" id="map-toggle" class="map-toggle" role="button">Show map</a>
                                 <div id="group-map" class="school-detail-map"></div>
-                                <a href="#map" id="map-toggle" class="map-toggle">Show map</a>
+
                             </div>
                         }
                         <script type="text/javascript" nonce="@Html.ScriptNonce()">

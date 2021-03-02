@@ -7,29 +7,35 @@
     ViewBag.hideLogo = true;
 
     var backLink = $"{Url.Action("Index", "Search", new {area = ""})}";
+    var backAnchor = "";
+    var backText = "search results";
+
     if (Model.FromDownloads)
     {
         backLink = $"{Url.Action("Index", "Downloads", new { area = "" })}";
-    }
-    if (Model.SearchSource == eLookupSearchSource.Governors)
-    {
-        backLink = $"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}";
-    }
-    else if (Model.SearchSource == eLookupSearchSource.Establishments)
-    {
-        backLink = $"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}";
-    }
-    else if (Model.SearchSource == eLookupSearchSource.Groups)
-    {
-        backLink = $"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}";
+        backAnchor = Model.FromExtracts ? "#scheduled-extracts" : "";
+        backText = Model.FromExtracts ? "scheduled extract page" : "downloads page";
     }
 
-    var searchOrDownload = Model.FromDownloads ? "downloads page" : "search results";
+    switch (Model.SearchSource)
+    {
+        case eLookupSearchSource.Governors:
+            backLink = $"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}";
+            break;
+        case eLookupSearchSource.Establishments:
+            backLink = $"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}";
+            break;
+        case eLookupSearchSource.Groups:
+            backLink = $"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}";
+            break;
+        default:
+            break;
+    }
 }
 
 @section BackLink
-{
-    @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
+    {
+        @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
     {
         @Html.ActionLink("Home", "Index", "Search", new { area = "" }, new { @class="govuk-back-link"})
     }
@@ -40,11 +46,11 @@
             <a class="govuk-back-link" href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
         }
         else if (Model.SearchSource == eLookupSearchSource.Establishments)
-        {
+    {
             <a class="govuk-back-link"href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Back to search results</a>
         }
         else if (Model.SearchSource == eLookupSearchSource.Groups)
-        {
+    {
             <a class="govuk-back-link" href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}")> Back to search results</a>
         }
     }
@@ -60,12 +66,12 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h2 class="govuk-heading-m">The requested file is no longer available for download.</h2>
-            <p class="govuk-body-s">Please <a href=@(backLink)>return to the @searchOrDownload</a> and repeat your request.</p>
+            <p class="govuk-body-s">Please <a href="@backLink@backAnchor">return to the @backText</a> and repeat your request.</p>
         </div>
     </div>
 }
 else
-{
+    {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <h1 class="govuk-heading-xl">Download error</h1>
@@ -78,7 +84,7 @@ else
 
             <ul class="govuk-list govuk-list--bullet">
                 <li>Your file successfully downloaded, but the request was repeated. Please check your browser window.</li>
-                <li>Your original download request was cancelled. If so, please return to the @searchOrDownload to repeat your request.</li>
+                <li>Your original download request was cancelled. If so, please <a href="@backLink@backAnchor">return to the @backText</a> and repeat your request.</li>
             </ul>
         </div>
     </div>

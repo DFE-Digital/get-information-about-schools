@@ -209,11 +209,11 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Sustainsys.Saml2, Version=2.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sustainsys.Saml2.2.6.0\lib\net47\Sustainsys.Saml2.dll</HintPath>
+    <Reference Include="Sustainsys.Saml2, Version=2.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sustainsys.Saml2.2.8.0\lib\net47\Sustainsys.Saml2.dll</HintPath>
     </Reference>
-    <Reference Include="Sustainsys.Saml2.Owin, Version=2.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sustainsys.Saml2.Owin.2.6.0\lib\net461\Sustainsys.Saml2.Owin.dll</HintPath>
+    <Reference Include="Sustainsys.Saml2.Owin, Version=2.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sustainsys.Saml2.Owin.2.8.0\lib\net461\Sustainsys.Saml2.Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -558,7 +558,6 @@
     <Content Include="Areas\Governors\Views\SharedGovernor\EditSharedGovernor.cshtml" />
     <Content Include="Areas\Governors\Views\Governor\ReplaceChair.cshtml" />
     <Content Include="Areas\Governors\Views\GovernanceDelegation\GroupEditDelegation.cshtml" />
-    <Content Include="App_Data\wildcard-dfe.pfx" />
     <Content Include="Areas\Establishments\Views\BulkUpdate\Index.cshtml" />
     <Content Include="Areas\Establishments\Views\AcademyOpenings\Index.cshtml" />
     <Content Include="Areas\Governors\Views\GovernorsBulkUpdate\Index.cshtml" />
@@ -747,8 +746,8 @@
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="Areas\Governors\Views\Search\" />
-	<Folder Include="Assets\Sass\" />
     <Folder Include="Views\Admin\" />
     <Folder Include="Views\GOVUK\Views\errors\" />
     <Folder Include="Views\UserRoles\" />

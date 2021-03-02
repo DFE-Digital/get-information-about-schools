@@ -231,12 +231,9 @@ const autocompleteSetup = (function(){
         const buttonTarget = $('.floating-text-field-wrap');
         const previouslySelected = $.inArray(e.text.value, selectedLocalAuthorities) > -1;
 
-        $('#searchby-la-ref').find('.warning-message').addClass('govuk-visually-hidden');
-
         if (!previouslySelected) {
           selectedLocalAuthorities.push(e.text.value);
 
-          //self.addedLaCount++;
           $(rmButton).insertBefore(buttonTarget);
           $('#la-id-target').append(hiddenField);
         } else {
