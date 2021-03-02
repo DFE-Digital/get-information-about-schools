@@ -41,7 +41,7 @@
                 This process automatically closes records where applicable and creates predecessor and successor links between relevant establishments.
             </p>
 
-            <fieldset class="merger-almalgamation govuk-fieldset govuk-!-margin-bottom-8">
+            <fieldset class="merger-amalgamation govuk-fieldset govuk-!-margin-bottom-8">
                 <legend class="govuk-fieldset__legend--s govuk-!-font-weight-bold">Select the option below you wish to undertake and select continue</legend>
                 <p>For information:</p>
 
@@ -54,8 +54,8 @@
 
 
                 <div class="govuk-form-group @Html.ValidationGroupCssClass("MergerType")">
-                    @Html.ValidationMessage("MergerType", "Please select almalgamation or merger.", new { @class="govuk-error-message"})
-                    @* <span v-show="mergerTypeError" class="govuk-error-message">Please select almalgamation or merger.</span> *@
+                    @Html.ValidationMessage("MergerType", "Please select amalgamation or merger.", new { @class="govuk-error-message"})
+                    @* <span v-show="mergerTypeError" class="govuk-error-message">Please select amalgamation or merger.</span> *@
                     <div class="govuk-radios">
                         <div class="govuk-radios__item">
                             <input id="radio-amalgamation-nojs" class="govuk-radios__input" type="radio" name="MergerType" value="Amalgamation" aria-describedby="almagamation-desc">
@@ -122,7 +122,7 @@
             This process automatically creates and closes (where applicable) records and creates predecessor and successor links.
         </p>
 
-        <fieldset class="merger-almalgamation govuk-fieldset govuk-!-margin-bottom-8">
+        <fieldset class="merger-amalgamation govuk-fieldset govuk-!-margin-bottom-8">
             <legend class="govuk-fieldset__legend--s govuk-!-font-weight-bold">Select the process you are interested in</legend>
 
             <p id="almagamation-desc">
@@ -132,7 +132,7 @@
                 A merger is when two or more establishments merge and only one establishment remains open but is altered, for example enlarging and/or extending the age range.  It retains its legal entity status.
             </p>
             <div v-bind:class="['govuk-form-group ', mergerTypeError ? 'govuk-form-group--error' : '']">
-                <span v-show="mergerTypeError" class="govuk-error-message">Please select almalgamation or merger.</span>
+                <span v-show="mergerTypeError" class="govuk-error-message">Please select amalgamation or merger.</span>
                 <div class="govuk-radios">
                     <div class="govuk-radios__item">
                         <input id="radio-amalgamation" class="govuk-radios__input" type="radio" name="radio-group" value="amalgamation" aria-describedby="almagamation-desc" v-model="mergerType">
@@ -285,7 +285,7 @@
         </div>
     </div>
 
-    <div class="govuk-grid-column-two-thirds almalgamation-summary" v-show="completeAmalgamation">
+    <div class="govuk-grid-column-two-thirds amalgamation-summary" v-show="completeAmalgamation">
         <div class="summary-panel">
            <h3 class="govuk-heading-s">Closing establishment details</h3>
 
