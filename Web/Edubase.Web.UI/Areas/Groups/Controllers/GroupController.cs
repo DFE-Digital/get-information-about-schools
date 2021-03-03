@@ -7,6 +7,7 @@ using FluentValidation.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Castle.Components.DictionaryAdapter;
@@ -366,21 +367,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 viewModel.GroupTypeName = await _lookup.GetNameAsync(() => viewModel.GroupTypeId);
             }
 
-            viewModel.CanUserCloseMATAndMarkAsCreatedInError = viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust)
-                && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed)
-                && User.InRole(AuthorizedRoles.IsAdmin);
-
-            viewModel.IsLocalAuthorityEditable = viewModel.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)
-                && viewModel.LinkedEstablishments.Establishments.Count == 0 && User.InRole(AuthorizedRoles.IsAdmin);
-
-
-            if(User.InRole(AuthorizedRoles.CanBulkAssociateEstabs2Groups) && viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust))
-            {
-                viewModel.CanUserEditClosedDate = true;
-                viewModel.CanUserEditStatus = true;
-                PopulateStatusSelectList(viewModel);
-            }
-
+            await SetEditPermissions(viewModel);
+            
             return View("EditDetails", viewModel);
         }
 
@@ -420,6 +408,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
 
             viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT) viewModel.GroupTypeId.Value);
+            await SetEditPermissions(viewModel);
 
             return View("EditDetails", viewModel);
         }
@@ -759,6 +748,32 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 viewModel.GroupTypeName = await _lookup.GetNameAsync(() => viewModel.GroupTypeId);
             }
+            return viewModel;
+        }
+
+        private async Task<GroupEditorViewModel> SetEditPermissions(GroupEditorViewModel viewModel)
+        {
+            viewModel.CanUserCloseMATAndMarkAsCreatedInError = viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust)
+                                                               && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed)
+                                                               && User.InRole(AuthorizedRoles.IsAdmin);
+
+            viewModel.IsLocalAuthorityEditable = viewModel.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)
+                                                 && viewModel.LinkedEstablishments.Establishments.Count == 0 && User.InRole(AuthorizedRoles.IsAdmin);
+
+
+            if (User.InRole(AuthorizedRoles.CanBulkAssociateEstabs2Groups) && viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust))
+            {
+                viewModel.CanUserEditClosedDate = true;
+                viewModel.CanUserEditStatus = true;
+                PopulateStatusSelectList(viewModel);
+            }
+
+            if (User.InRole(AuthorizedRoles.IsAdmin) &&
+                viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust))
+            {
+                viewModel.CanUserEditUkprn = true;
+            }
+
             return viewModel;
         }
 

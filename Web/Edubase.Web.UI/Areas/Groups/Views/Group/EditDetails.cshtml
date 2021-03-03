@@ -15,7 +15,6 @@
         @using (Html.BeginForm("EditDetails", "Group", new { area = "Groups" }, FormMethod.Post, new { @id = "edit-group-details" }))
         {
             @Html.HiddenFor(x => x.GroupUId)
-            @Html.HiddenFor(x => x.UKPRN)
             @Html.HiddenFor(x => x.GroupTypeMode)
             @Html.HiddenFor(x => x.SaveMode)
             @Html.HiddenFor(x => x.SelectedTabName)
@@ -155,12 +154,24 @@
                         </div>
                     }
 
-                    @if (Model.UKPRN.HasValue)
+                    @if (Model.CanUserEditUkprn)
                     {
                         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.UKPRN)">
                             <label class="govuk-label" for="UKPRN">UK provider reference number (UKPRN)</label>
-                            <input value="@Model.UKPRN.Value" disabled="disabled" class="govuk-input" id="UKPRN" />
+                            @Html.ValidationMessageFor(x => x.UKPRN, null, new { @class = "govuk-error-message" })
+                            @Html.TextBoxFor(x => x.UKPRN, new { @class = "govuk-input" })
                         </div>
+                    }
+                    else
+                    {
+                        @Html.HiddenFor(x => x.UKPRN)
+                        if (Model.UKPRN.HasValue)
+                        {
+                            <div class="govuk-form-group">
+                                <label class="govuk-label" for="UKPRN">UK provider reference number (UKPRN)</label>
+                                <input value="@Model.UKPRN.Value" disabled="disabled" class="govuk-input" />
+                            </div>
+                        }
                     }
 
                     @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.SchoolSponsor))
@@ -175,11 +186,11 @@
                     @if (Model.CanUserCloseMATAndMarkAsCreatedInError)
                     {
                         <div class="govuk-form-group">
-                           @FormHelpers.GiasCheckbox("true",
-                                "CloseMATAndMarkAsCreatedInError",
-                                "Close this trust and mark as created in error",
-                                string.Empty,
-                                new { id = "close-created-in-error" })
+                            @FormHelpers.GiasCheckbox("true",
+                                 "CloseMATAndMarkAsCreatedInError",
+                                 "Close this trust and mark as created in error",
+                                 string.Empty,
+                                 new { id = "close-created-in-error" })
                         </div>
                     }
 
