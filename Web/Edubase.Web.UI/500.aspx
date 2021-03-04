@@ -159,10 +159,7 @@
                 <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
                     <h2 class="govuk-visually-hidden">Support links</h2>
                     <ul class="govuk-footer__inline-list">
-                        <li class="govuk-footer__inline-list-item">
-                            <a href="https://form.education.gov.uk/service/Data-collections-service-request-form" target="_blank" rel="noreferrer noopener" class="govuk-footer__link">
-                                Contact (opens in new tab)</a>
-                        </li>
+                        <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="/Contact">Contact</a></li>
                         <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="/cookies">Cookies</a></li>
                         <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="/glossary">Glossary</a></li>
                         <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="/Guidance">Guidance</a></li>

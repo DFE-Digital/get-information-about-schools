@@ -138,6 +138,9 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
+        [Route("~/Contact")]
+        public ActionResult Contact() => View();
+
         public static string GetNewsPageETag()
         {
             var cache = DependencyResolver.Current.GetService<ICacheAccessor>();
