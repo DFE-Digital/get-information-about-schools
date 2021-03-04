@@ -8,5 +8,6 @@ namespace Edubase.Web.UI.Models.Search
         public eLookupSearchSource? SearchSource { get; set; }
         public bool NeedsRegenerating { get; set; }
         public bool FromDownloads { get; set; }
+        public bool FromExtracts { get; set; }
     }
 }

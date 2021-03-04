@@ -3,7 +3,7 @@
 @{
     ViewBag.hideLogo = true;
     ViewBag.SiteSection = "downloads";
-    var isExtract = !(ViewBag.isDownload?? false);
+    var isExtract = ViewBag.isExtract ?? false;
     var areaTitle = isExtract ? "Extract" : "Download";
     if (isExtract)
     {
