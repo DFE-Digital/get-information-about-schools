@@ -611,6 +611,7 @@
     <Content Include="robots.txt" />
     <Content Include="App_offline_x.htm" />
     <Content Include="Views\Home\Accessibility.cshtml" />
+    <Content Include="Views\Tools\DownloadClosedTrustsInformation.cshtml" />
     <Content Include="Views\Tools\Mergers\AmalgamateEstablishments.cshtml" />
     <Content Include="Views\Tools\Mergers\AmalgamationComplete.cshtml" />
     <Content Include="Views\Tools\Mergers\ConfirmAmalgamation.cshtml" />
