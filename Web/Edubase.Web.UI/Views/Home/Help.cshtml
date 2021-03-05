@@ -32,9 +32,8 @@
         <h2 class="govuk-heading-m govuk-!-margin-bottom-2">@Html.RouteLink("Frequently asked questions (FAQs)", "Faq")</h2>
         <p>Frequently asked questions about Get information about schools.</p>
 
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">
-            <a href="https://form.education.gov.uk/service/Data-collections-service-request-form" target="_blank" rel="noreferrer noopener">Contact (opens in new tab)</a>.</h2>
-        <p>A contact form for local authorities, academy trusts and establishments who have a query about Get information about schools.</p>
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, null)</h2>
+        <p>Contact us if you are an establishment, local authority, academy trust or member of the public who has a query about Get Information about Schools.</p>
 
         <h2 class="govuk-heading-m govuk-!-margin-bottom-2">@Html.ActionLink("Cookies", "Cookies", "Home", new { area = "" }, null)</h2>
         <p>How cookies are used on Get information about schools and each cookie's purpose.</p>
