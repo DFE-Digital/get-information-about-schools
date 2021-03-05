@@ -45,7 +45,7 @@
                 <legend class="govuk-fieldset__legend--s govuk-!-font-weight-bold">Select the option below you wish to undertake and select continue</legend>
                 <p>For information:</p>
 
-                <p id="almagamation-desc">
+                <p id="amalgamation-desc">
                     An amalgamation is when two or more establishments close and a new establishment is created and operated as a new legal entity.
                 </p>
                 <p id="merger-desc">
@@ -58,7 +58,7 @@
                     @* <span v-show="mergerTypeError" class="govuk-error-message">Please select amalgamation or merger.</span> *@
                     <div class="govuk-radios">
                         <div class="govuk-radios__item">
-                            <input id="radio-amalgamation-nojs" class="govuk-radios__input" type="radio" name="MergerType" value="Amalgamation" aria-describedby="almagamation-desc">
+                            <input id="radio-amalgamation-nojs" class="govuk-radios__input" type="radio" name="MergerType" value="Amalgamation" aria-describedby="amalgamation-desc">
                             <label for="radio-amalgamation-nojs" class="govuk-radios__label">
                                 Amalgamation
                             </label>
@@ -125,7 +125,7 @@
         <fieldset class="merger-amalgamation govuk-fieldset govuk-!-margin-bottom-8">
             <legend class="govuk-fieldset__legend--s govuk-!-font-weight-bold">Select the process you are interested in</legend>
 
-            <p id="almagamation-desc">
+            <p id="amalgamation-desc">
                 An amalgamation is when two or more establishments close and a new establishment is created and operated as a new legal entity.
             </p>
             <p id="merger-desc">
@@ -135,7 +135,7 @@
                 <span v-show="mergerTypeError" class="govuk-error-message">Please select amalgamation or merger.</span>
                 <div class="govuk-radios">
                     <div class="govuk-radios__item">
-                        <input id="radio-amalgamation" class="govuk-radios__input" type="radio" name="radio-group" value="amalgamation" aria-describedby="almagamation-desc" v-model="mergerType">
+                        <input id="radio-amalgamation" class="govuk-radios__input" type="radio" name="radio-group" value="amalgamation" aria-describedby="amalgamation-desc" v-model="mergerType">
                         <label for="radio-amalgamation" class="govuk-radios__label">
                             Amalgamation
                         </label>
