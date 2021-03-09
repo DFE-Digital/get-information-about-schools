@@ -78,39 +78,38 @@ else
 
                 <h2 class="govuk-heading-s">Existing trust details</h2>
 
-                <dl class="gias-summary-list gias-summary-list-l">
-                    <div class="gias-summary-list__row">
-                        <dt class="gias-summary-list__key">Trust name:</dt>
-                        <dd class="gias-summary-list__value">@Model.Details.Name</dd>
+                <dl class="govuk-summary-list">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Trust name</dt>
+                        <dd class="govuk-summary-list__value">@Model.Details.Name</dd>
                     </div>
-                    <div class="gias-summary-list__row">
-                        <dt class="gias-summary-list__key">Companies House number:</dt>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Companies House number</dt>
                         @if (Model.Details.CompaniesHouseNumber != null)
                         {
-                    <dd class="gias-summary-list__value">
+                    <dd class="govuk-summary-list__value">
                         <a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.Details.CompaniesHouseNumber" target="_blank">
                             @Model.Details.CompaniesHouseNumber (opens in new tab)</a>
                     </dd>
                         }
                         else
                         {
-                            <dd class="gias-summary-list__value">Not recorded</dd>
+                            <dd class="govuk-summary-list__value">Not recorded</dd>
                         }
                     </div>
-                    <div class="gias-summary-list__row">
-                        <dt class="gias-summary-list__key">Address:</dt>
-                        <dd class="gias-summary-list__value">@Model.GetAddress()</dd>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Address</dt>
+                        <dd class="govuk-summary-list__value">@Model.GetAddress()</dd>
                     </div>
-                    <div class="gias-summary-list__row">
-                        <dt class="gias-summary-list__key">Group <abbr title="Unique Identifier">UID</abbr>:</dt>
-                        <dd class="gias-summary-list__value">@Model.Details.GroupUId</dd>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Group <abbr title="Unique Identifier">UID</abbr></dt>
+                        <dd class="govuk-summary-list__value">@Model.Details.GroupUId</dd>
                     </div>
-                    <div class="gias-summary-list__row">
-                        <dt class="gias-summary-list__key">Group ID:</dt>
-                        <dd class="gias-summary-list__value">@(Model.Details.GroupId ?? "Not recorded")</dd>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Group ID</dt>
+                        <dd class="govuk-summary-list__value">@(Model.Details.GroupId ?? "Not recorded")</dd>
                     </div>
                 </dl>
-
             </div>
         </div>
         <div class="govuk-grid-row">

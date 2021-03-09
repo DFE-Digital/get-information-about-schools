@@ -189,22 +189,22 @@
                             <div class="warning-message" v-show="groupNameWarningMessage.length >0">
                                 <p v-html="groupNameWarningMessage"></p>
                             </div>
-                            <dl class="gias-summary-list gias-summary-list--group-create">
-                                <div class="gias-summary-list__row">
-                                    <dt class="gias-summary-list__key">Group name:</dt>
-                                    <dd id="group-name" class="gias-summary-list__value">{{groupName}}</dd>
+                            <dl class="govuk-summary-list">
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">Group name</dt>
+                                    <dd id="group-name" class="govuk-summary-list__value">{{groupName}}</dd>
                                 </div>
-                                <div class="gias-summary-list__row">
-                                    <dt class="gias-summary-list__key">Open date:</dt>
-                                <dd id="group-open-date" class="gias-summary-list__value">{{openDateDisplay}}</dd>
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">Open date</dt>
+                                <dd id="group-open-date" class="govuk-summary-list__value">{{openDateDisplay}}</dd>
                                 </div>
-                                <div class="gias-summary-list__row">
-                                    <dt class="gias-summary-list__key">Group status:</dt>
-                                    <dd id="group-status" class="gias-summary-list__value">{{groupStatus}}</dd>
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">Group status</dt>
+                                    <dd id="group-status" class="govuk-summary-list__value">{{groupStatus}}</dd>
                                 </div>
-                                <div class="gias-summary-list__row">
-                                    <dt class="gias-summary-list__key">Local authority:</dt>
-                                    <dd id="group-la" class="gias-summary-list__value">{{laName}}</dd>
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">Local authority</dt>
+                                    <dd id="group-la" class="govuk-summary-list__value">{{laName}}</dd>
                                 </div>
                             </dl>
                         </div>
@@ -487,21 +487,21 @@
                         }
 
                         <dl class="gias-summary-list gias-summary-list--group-create">
-                            <div class="gias-summary-list__row">
-                                <dt class="gias-summary-list__key">Group name:</dt>
-                                <dd class="gias-summary-list__value">@(Model.GroupName)</dd>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">Group name</dt>
+                                <dd class="govuk-summary-list__value">@(Model.GroupName)</dd>
                             </div>
-                            <div class="gias-summary-list__row">
-                                <dt class="gias-summary-list__key">Open date:</dt>
-                                <dd class="gias-summary-list__value">@(Model.OpenDate)</dd>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">Open date</dt>
+                                <dd class="govuk-summary-list__value">@(Model.OpenDate)</dd>
                             </div>
-                            <div class="gias-summary-list__row">
-                                <dt class="gias-summary-list__key">Group status:</dt>
-                                <dd class="gias-summary-list__value">Open</dd> <!-- Hard coded as per JS -->
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">Group status</dt>
+                                <dd class="govuk-summary-list__value">Open</dd> <!-- Hard coded as per JS -->
                             </div>
-                            <div class="gias-summary-list__row">
-                                <dt class="gias-summary-list__key">Local authority:</dt>
-                                <dd class="gias-summary-list__value">@(Model.LocalAuthorities.First(x => x.Selected == true).Text)</dd>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">Local authority</dt>
+                                <dd class="govuk-summary-list__value">@(Model.LocalAuthorities.First(x => x.Selected == true).Text)</dd>
                             </div>
                         </dl>
                     </div>

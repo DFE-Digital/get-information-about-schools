@@ -68,21 +68,21 @@
                         {
                             <div id="gov-id-@row.Model.Id" class="governor-edit-panel @Html.DuplicateCssClassFor(row.Model.Id)">
                                 <h3 class="govuk-heading-s govuk-!-margin-bottom-2" id="gid-@row.Model.Id">@row.Cells[0].Text</h3>
-                                <dl class="gias-summary-list gias-summary-list--inline">
+                                <dl class="govuk-summary-list">
                                     @if (Model.IsHistoricRole)
                                     {
-                                        <div class="gias-summary-list__row">
-                                            <dt class="gias-summary-list__key">Role:</dt>
-                                            <dd class="gias-summary-list__value">@Model.RoleName</dd>
+                                        <div class="govuk-summary-list__row">
+                                            <dt class="govuk-summary-list__key">Role:</dt>
+                                            <dd class="govuk-summary-list__value">@Model.RoleName</dd>
                                         </div>
                                     }
                                     @foreach (var cell in row.Cells.Skip(1))
                                     {
                                         if (cell.Parent != null)
                                         {
-                                            <div class="gias-summary-list__row">
-                                                <dt class="gias-summary-list__key">@cell.Parent.Text:</dt>
-                                                <dd class="gias-summary-list__value">@(cell.Text ?? "Not recorded")</dd>
+                                            <div class="govuk-summary-list__row">
+                                                <dt class="govuk-summary-list__key">@cell.Parent.Text:</dt>
+                                                <dd class="govuk-summary-list__value">@(cell.Text ?? "Not recorded")</dd>
                                             </div>
 
                                         }

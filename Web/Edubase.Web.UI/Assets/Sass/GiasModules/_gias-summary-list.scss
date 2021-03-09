@@ -10,65 +10,6 @@
   @include govuk-font(16);
   display: table;
   margin: 0;
-
-  .help-icon {
-    top: 2px;
-    width: 16px;
-    height: 16px;
-
-    &::after {
-      position: absolute;
-      content: '?';
-      width: 14px;
-      height: 14px;
-      border-radius: 12px;
-      padding: 0 2px 5px;
-      margin-left: 0;
-      top: 0;
-      font-size: 14px;
-      line-height: 1.4;
-    }
-  }
-
-  &.gias-summary-list--inline {
-    .gias-summary-list__key {
-      width: auto;
-      display: block;
-      float: left;
-      margin-right: 5px;
-    }
-
-    .gias-summary-list__value {
-      float: left;
-      display: block;
-    }
-  }
-
-  &.gias-summary-list--70 {
-    @include govuk-media-query($from: tablet) {
-      width: 70%;
-    }
-  }
-
-  &.gias-summary-list--40 {
-    @include govuk-media-query($from: tablet) {
-      width: 40%;
-    }
-  }
-
-  &.gias-summary-list--group-create {
-    margin-bottom: govuk-spacing(6);
-
-    @include govuk-media-query($from: tablet) {
-      .gias-summary-list__key {
-        width: 42%;
-      }
-    }
-  }
-
-  a {
-    word-break: break-word;
-  }
 }
 
 .gias-summary-list__row {
@@ -84,53 +25,16 @@
 }
 
 .gias-summary-list__key {
-  display: table-cell;
+  display: block;
+  font-weight: bold;
   margin: 0;
-  padding: 0 5px 0 0;
-  width: 34%;
-
-  @include govuk-media-query($until: tablet) {
-    display: block;
-    clear: both;
-    font-weight: bold;
-    width: 100%;
-  }
 }
 
 .gias-summary-list__value {
-  display: table-cell;
+  display: block;
   margin: 0;
-  padding: 0 10px 0 0;
 
-  @include govuk-media-query($until: tablet) {
-    display: block;
-
-    a {
-      word-break: break-word;
-    }
-  }
-}
-
-.shared-governor {
-  @include govuk-media-query($from: tablet) {
-    .gias-summary-list--inline .gias-summary-list__key {
-      width: 100px;
-    }
-  }
-}
-
-.gias-summary-list-l {
-  @include govuk-font(19);
-}
-
-.change-history {
-  .gias-summary-list__key {
-    font-weight: bold;
-  }
-}
-
-.gias-summary-list--bold-keys {
-  .gias-summary-list__key {
-    font-weight: bold;
+  a {
+    word-break: break-word;
   }
 }

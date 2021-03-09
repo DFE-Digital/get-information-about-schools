@@ -12,33 +12,33 @@
         <h2 class="govuk-heading-s">Helpdesk notes:</h2>
         <div class="govuk-body">@(Model.Establishment.HelpdeskNotes.Clean() ?? "Not recorded")</div>
 
-        <dl class="gias-summary-list">
+        <dl class="govuk-summary-list">
             @if (Model.DisplayPolicy.HelpdeskLastUpdate)
             {
-                <div class="gias-summary-list__row">
-                    <dt class="gias-summary-list__key">EduBase last update:</dt>
-                    <dd class="gias-summary-list__value">@(Model.Establishment.HelpdeskLastUpdate?.ToString("d MMMM yyyy"))</dd>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">EduBase last update</dt>
+                    <dd class="govuk-summary-list__value">@(Model.Establishment.HelpdeskLastUpdate?.ToString("d MMMM yyyy"))</dd>
                 </div>
             }
             @if (Model.DisplayPolicy.HelpdeskTrigger1)
             {
-                <div class="gias-summary-list__row">
-                    <dt class="gias-summary-list__key">EduBase trigger 1:</dt>
-                    <dd class="gias-summary-list__value">@Model.Establishment.HelpdeskTrigger1</dd>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">EduBase trigger 1</dt>
+                    <dd class="govuk-summary-list__value">@Model.Establishment.HelpdeskTrigger1</dd>
                 </div>
             }
             @if (Model.DisplayPolicy.HelpdeskPreviousLocalAuthorityId)
             {
-                <div class="gias-summary-list__row">
-                    <dt class="gias-summary-list__key">Previous local authority:</dt>
-                    <dd class="gias-summary-list__value">@Model.HelpdeskPreviousLocalAuthorityName</dd>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">Previous local authority</dt>
+                    <dd class="govuk-summary-list__value">@Model.HelpdeskPreviousLocalAuthorityName</dd>
                 </div>
             }
             @if (Model.DisplayPolicy.HelpdeskPreviousEstablishmentNumber)
             {
-                <div class="gias-summary-list__row">
-                    <dt class="gias-summary-list__key">Previous establishment number:</dt>
-                    <dd class="gias-summary-list__value">@Model.Establishment.HelpdeskPreviousEstablishmentNumber</dd>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">Previous establishment number</dt>
+                    <dd class="govuk-summary-list__value">@Model.Establishment.HelpdeskPreviousEstablishmentNumber</dd>
                 </div>
             }
 

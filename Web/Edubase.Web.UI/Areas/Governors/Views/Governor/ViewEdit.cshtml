@@ -211,7 +211,7 @@ else
             if (Model.HistoricGrids.Any(h => h.Rows.Any()))
             {
                 <h2 class="govuk-heading-m">Historic (left within last 12 months)</h2>
-                <details class="govuk-details  govuk-!-font-size-16" data-module="govuk-details">
+                <details class="govuk-details  govuk-!-font-size-16 gias-details--noborder" data-module="govuk-details">
                     <summary class="govuk-details__summary">
                         <span class="govuk-details__summary-text">
                             <span class="gias-details-closed-text">More details</span>
@@ -243,7 +243,7 @@ else
                 if (Model.HistoricGrids.Any(h => h.Rows.Any()))
                 {
                     <h2 class="govuk-heading-m">Historic (left within last 12 months)</h2>
-                    <details class="govuk-details govuk-!-font-size-16" data-module="govuk-details">
+                    <details class="govuk-details govuk-!-font-size-16 gias-details--noborder" data-module="govuk-details">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
                                 <span class="gias-details-closed-text">More details</span>
@@ -267,7 +267,7 @@ else
                 if (Model.HistoricGovernors.Any())
                 {
                     <h2 class="govuk-heading-m">Historic (left within last 12 months)</h2>
-                    <details class="govuk-details govuk-!-font-size-16" data-module="govuk-details">
+                    <details class="govuk-details govuk-!-font-size-16 gias-details--noborder" data-module="govuk-details">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
                                 <span class="gias-details-closed-text">More details</span>
@@ -331,19 +331,19 @@ else
             {
                 <div id="gov-id-@row.Model.Id" class="governor-edit-panel @Html.DuplicateCssClassFor(row.Model.Id)">
                     <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="gid-@row.Model.Id">@row.Cells[0].Text</h3>
-                    <dl class="gias-summary-list gias-summary-list--inline gias-governors-list">
+                    <dl class="govuk-summary-list">
                         @if (historic)
                         {
-                            <div class="gias-summary-list__row">
-                                <dt class="gias-summary-list__key">Role:</dt>
-                                <dd class="gias-summary-list__value">@grid.RoleName</dd>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">Role</dt>
+                                <dd class="govuk-summary-list__value">@grid.RoleName</dd>
                             </div>
                         }
                         @foreach (var cell in row.Cells.Skip(1))
                         {
-                            <div class="gias-summary-list__row">
-                                <dt class="gias-summary-list__key">@cell.Parent.Text:</dt>
-                                <dd class="gias-summary-list__value">@(cell.Text ?? "Not recorded")</dd>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">@cell.Parent.Text</dt>
+                                <dd class="govuk-summary-list__value">@(cell.Text ?? "Not recorded")</dd>
                             </div>
                         }
                     </dl>
@@ -510,6 +510,6 @@ else
     }
 }
 
-@section ViewScripts{
+@section ViewScripts {
     <script src="@Html.Raw(Html.GetWebpackScriptUrl("add-edit-governor.*.js"))"></script>
 }

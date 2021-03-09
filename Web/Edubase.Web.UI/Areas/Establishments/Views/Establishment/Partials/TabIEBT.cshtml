@@ -22,7 +22,7 @@
     <div class="govuk-body">@(Model.Establishment.IEBTModel.Associations ?? "Not recorded")</div>
 }
 
-<dl class="gias-summary-list">
+<dl class="govuk-summary-list">
 @if (
     (Model.DisplayPolicy.IEBTDetail.DateOfTheLastBridgeVisit && p.DateOfTheLastBridgeVisit) ||
     (Model.DisplayPolicy.IEBTDetail.DateOfLastOfstedVisit && p.DateOfLastOfstedVisit) ||
@@ -38,81 +38,81 @@
 {
     if (Model.DisplayPolicy.IEBTDetail.DateOfTheLastBridgeVisit && p.DateOfTheLastBridgeVisit)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Date of the last Bridge visit:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastBridgeVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Date of the last Bridge visit</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastBridgeVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.DateOfLastOfstedVisit && p.DateOfLastOfstedVisit)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Date of last Ofsted visit:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.DateOfLastOfstedVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Date of last Ofsted visit</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.DateOfLastOfstedVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.DateOfTheLastISIVisit && p.DateOfTheLastISIVisit)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Date of last ISI visit:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastISIVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Date of last ISI visit</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastISIVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.DateOfTheLastWelfareVisit && p.DateOfTheLastWelfareVisit)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Date of last welfare visit:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastWelfareVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Date of last welfare visit</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastWelfareVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.DateOfTheLastFPVisit && p.DateOfTheLastFPVisit)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Date of last FP visit:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastFPVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Date of last FP visit</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastFPVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.DateOfTheLastSISVisit && p.DateOfTheLastSISVisit)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Date of last SIS visit:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastSISVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Date of last SIS visit</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.DateOfTheLastSISVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.NextOfstedVisit && p.NextOfstedVisit)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Next Ofsted visit:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.NextOfstedVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Next Ofsted visit</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.NextOfstedVisit?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.NextGeneralActionRequired && p.NextGeneralActionRequired)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Next general action required:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.NextGeneralActionRequired?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Next general action required</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.NextGeneralActionRequired?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.NextActionRequiredByWEL && p.NextActionRequiredByWEL)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Next action required by WEL:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.NextActionRequiredByWEL?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Next action required by WEL</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.NextActionRequiredByWEL?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.NextActionRequiredByFP && p.NextActionRequiredByFP)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Next action required by FP:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.NextActionRequiredByFP?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Next action required by FP</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.NextActionRequiredByFP?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
         </div>
     }
 }
@@ -126,33 +126,33 @@
 {
     if (Model.DisplayPolicy.InspectorateId)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Inspectorate:</dt>
-            <dd class="gias-summary-list__value">@Model.InspectorateName</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Inspectorate</dt>
+            <dd class="govuk-summary-list__value">@Model.InspectorateName</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.IndependentSchoolTypeId && p.IndependentSchoolTypeId)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Independent school type:</dt>
-            <dd class="gias-summary-list__value">@Model.IndependentSchoolTypeName</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Independent school type</dt>
+            <dd class="govuk-summary-list__value">@Model.IndependentSchoolTypeName</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.CharityOrganisation && p.CharityOrganisation)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Charity organisation:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.CharityOrganisation ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Charity organisation</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.CharityOrganisation ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.CharityRegistrationNumber && p.CharityRegistrationNumber)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Charity registration number:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.CharityRegistrationNumber?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Charity registration number</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.CharityRegistrationNumber?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 }
@@ -168,49 +168,49 @@
 {
     if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfFullTimePupils && p.TotalNumberOfFullTimePupils)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Total number of full time pupils:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfFullTimePupils?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of full time pupils</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfFullTimePupils?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfPartTimePupils && p.TotalNumberOfPartTimePupils)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Total number of part time pupils:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfPartTimePupils?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of part time pupils</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfPartTimePupils?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfPupilsOfCompulsorySchoolAge && p.TotalNumberOfPupilsOfCompulsorySchoolAge)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Total number of pupils of compulsory school age:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfPupilsOfCompulsorySchoolAge?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of pupils of compulsory school age</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfPupilsOfCompulsorySchoolAge?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.SENStat)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Total number of special pupils under a SEN statement/ECHP:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.SENStat?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of special pupils under a SEN statement/ECHP</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.SENStat?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.SENNoStat)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Number of special pupils not under a SEN statement/EHCP:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.SENNoStat?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Number of special pupils not under a SEN statement/EHCP</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.SENNoStat?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfPupilsInPublicCare && p.TotalNumberOfPupilsInPublicCare)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Total number of pupils in public care:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfPupilsInPublicCare?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of pupils in public care</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfPupilsInPublicCare?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 }
@@ -226,49 +226,49 @@
 {
     if (Model.DisplayPolicy.IEBTDetail.PTBoysAged2AndUnder && p.PTBoysAged2AndUnder)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">PT boys (aged 2 and under):</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.PTBoysAged2AndUnder?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT boys (aged 2 and under)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTBoysAged2AndUnder?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.PTBoysAged3 && p.PTBoysAged3)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">PT boys (aged 3):</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.PTBoysAged3?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT boys (aged 3)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTBoysAged3?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.PTBoysAged4A && p.PTBoysAged4A)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">PT boys (aged 4a):</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.PTBoysAged4A?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT boys (aged 4a)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTBoysAged4A?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.PTBoysAged4B && p.PTBoysAged4B)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">PT boys (aged 4b):</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.PTBoysAged4B?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT boys (aged 4b)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTBoysAged4B?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.PTBoysAged4C && p.PTBoysAged4C)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">PT boys (aged 4c):</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.PTBoysAged4C?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT boys (aged 4c)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTBoysAged4C?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfBoysInBoardingSchools && p.TotalNumberOfBoysInBoardingSchools)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Total number of boys in boarding schools:</dt>
-            <dd class="gias-summary-list__value"> @(Model.Establishment.IEBTModel.TotalNumberOfBoysInBoardingSchools?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of boys in boarding schools</dt>
+            <dd class="govuk-summary-list__value"> @(Model.Establishment.IEBTModel.TotalNumberOfBoysInBoardingSchools?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 }
@@ -284,49 +284,49 @@
 {
     if (Model.DisplayPolicy.IEBTDetail.PTGirlsAged2AndUnder && p.PTGirlsAged2AndUnder)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">PT girls (aged 2 and under):</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.PTGirlsAged2AndUnder?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT girls (aged 2 and under)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTGirlsAged2AndUnder?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.PTGirlsAged3 && p.PTGirlsAged3)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">PT girls (aged 3):</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.PTGirlsAged3?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT girls (aged 3)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTGirlsAged3?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.PTGirlsAged4A && p.PTGirlsAged4A)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">PT girls (aged 4a):</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.PTGirlsAged4A?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT girls (aged 4a)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTGirlsAged4A?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.PTGirlsAged4B && p.PTGirlsAged4B)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">PT girls (aged 4b):</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.PTGirlsAged4B?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT girls (aged 4b)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTGirlsAged4B?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.PTGirlsAged4C && p.PTGirlsAged4C)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">PT girls (aged 4c):</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.PTGirlsAged4C?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">PT girls (aged 4c)</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.PTGirlsAged4C?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfGirlsInBoardingSchools && p.TotalNumberOfGirlsInBoardingSchools)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Total number of girls in boarding schools:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfGirlsInBoardingSchools?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of girls in boarding schools</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfGirlsInBoardingSchools?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 }
@@ -336,17 +336,17 @@
 {
     if (p.TotalFTTeachersTutors)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Total number of full time teachers or tutors:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.TotalFTTeachersTutors?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of full time teachers or tutors</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.TotalFTTeachersTutors?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (p.TotalPTTeachersTutors)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Total number of part time teachers or tutors:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.TotalPTTeachersTutors?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of part time teachers or tutors</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.TotalPTTeachersTutors?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 }
@@ -358,17 +358,17 @@
 {
     if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfFullTimeStaff && p.TotalNumberOfFullTimeStaff)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Total number of full time staff:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfFullTimeStaff?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of full time staff</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfFullTimeStaff?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.TotalNumberOfPartTimeStaff && p.TotalNumberOfPartTimeStaff)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Total number of part time staff:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfPartTimeStaff?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Total number of part time staff</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.TotalNumberOfPartTimeStaff?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 }
@@ -382,33 +382,33 @@
 {
     if (Model.DisplayPolicy.IEBTDetail.LowestAnnualRateForDayPupils && p.LowestAnnualRateForDayPupils)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Lowest annual rate for day pupils:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.LowestAnnualRateForDayPupils?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Lowest annual rate for day pupils</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.LowestAnnualRateForDayPupils?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.HighestAnnualRateForDayPupils && p.HighestAnnualRateForDayPupils)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Highest annual rate for day pupils:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.HighestAnnualRateForDayPupils?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Highest annual rate for day pupils</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.HighestAnnualRateForDayPupils?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.LowestAnnualRateForBoardingPupils && p.LowestAnnualRateForBoardingPupils)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Lowest annual rate for boarding pupils:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.LowestAnnualRateForBoardingPupils?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Lowest annual rate for boarding pupils</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.LowestAnnualRateForBoardingPupils?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 
     if (Model.DisplayPolicy.IEBTDetail.HighestAnnualRateForBoardingPupils && p.HighestAnnualRateForBoardingPupils)
     {
-        <div class="gias-summary-list__row">
-            <dt class="gias-summary-list__key">Highest annual rate for boarding pupils:</dt>
-            <dd class="gias-summary-list__value">@(Model.Establishment.IEBTModel.HighestAnnualRateForBoardingPupils?.ToString() ?? "Not recorded")</dd>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Highest annual rate for boarding pupils</dt>
+            <dd class="govuk-summary-list__value">@(Model.Establishment.IEBTModel.HighestAnnualRateForBoardingPupils?.ToString() ?? "Not recorded")</dd>
         </div>
     }
 }
@@ -416,9 +416,9 @@
 
 @if (Model.DisplayPolicy.IEBTDetail.BoardingEstablishmentId)
 {
-    <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">Boarding establishment:</dt>
-        <dd class="gias-summary-list__value">@(Model.BoardingEstabName ?? "Not recorded")</dd>
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Boarding establishment</dt>
+        <dd class="govuk-summary-list__value">@(Model.BoardingEstabName ?? "Not recorded")</dd>
     </div>
 }
 
@@ -436,9 +436,9 @@
 
 @if (Model.DisplayPolicy.IEBTDetail.AccommodationChangedId && p.AccommodationChangedId)
 {
-    <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">Accommodation changed:</dt>
-        <dd class="gias-summary-list__value">@(Model.AccommodationChangedName ?? "Not recorded")</dd>
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Accommodation changed</dt>
+        <dd class="govuk-summary-list__value">@(Model.AccommodationChangedName ?? "Not recorded")</dd>
     </div>
 }
 
