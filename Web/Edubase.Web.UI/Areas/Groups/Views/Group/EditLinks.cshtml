@@ -83,43 +83,43 @@
                              </div>
 
                          }
-                        <dl class="gias-summary-list gias-summary-list--inline">
-                            <div class="gias-summary-list__row">
-                                <dt class="gias-summary-list__key">Address:</dt>
-                                <dd class="gias-summary-list__value">@e.Address</dd>
+                        <dl class="govuk-summary-list">
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">Address</dt>
+                                <dd class="govuk-summary-list__value">@e.Address</dd>
                             </div>
-                            <div class="gias-summary-list__row">
-                                <dt class="gias-summary-list__key">Phase / type:</dt>
-                                <dd class="gias-summary-list__value">
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">Phase / type</dt>
+                                <dd class="govuk-summary-list__value">
                                     @(e.PhaseName ?? "Not recorded"),
                                     @(e.TypeName ?? "Not recorded")
                                 </dd>
                             </div>
-                            <div class="gias-summary-list__row">
-                                <dt class="gias-summary-list__key"><abbr title="Unique Reference Number">URN</abbr>:</dt>
-                                <dd class="gias-summary-list__value">@e.Urn</dd>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key"><abbr title="Unique Reference Number">URN</abbr></dt>
+                                <dd class="govuk-summary-list__value">@e.Urn</dd>
                             </div>
-                            <div class="gias-summary-list__row">
-                                <dt class="gias-summary-list__key">
-                                    <abbr title="Local authority - Establishment number">LAESTAB</abbr>:
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+                                    <abbr title="Local authority - Establishment number">LAESTAB</abbr>
                                 </dt>
-                                <dd class="gias-summary-list__value">@(e.LAESTAB ?? "Not recorded")</dd>
+                                <dd class="govuk-summary-list__value">@(e.LAESTAB ?? "Not recorded")</dd>
                             </div>
-                            <div class="gias-summary-list__row">
-                                <dt class="gias-summary-list__key">Status:</dt>
-                                <dd class="gias-summary-list__value">@(e.StatusName ?? "Not recorded")</dd>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">Status</dt>
+                                <dd class="govuk-summary-list__value">@(e.StatusName ?? "Not recorded")</dd>
                             </div>
-                            <div class="gias-summary-list__row">
-                                <dt class="gias-summary-list__key">Local authority name:</dt>
-                                <dd class="gias-summary-list__value">@(e.LocalAuthorityName ?? "Not recorded")</dd>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">Local authority name</dt>
+                                <dd class="govuk-summary-list__value">@(e.LocalAuthorityName ?? "Not recorded")</dd>
                             </div>
 
 
                             @if (!Model.LinkedEstablishments.Establishments[i].EditMode)
                             {
-                                <div class="gias-summary-list__row">
-                                    <dt class="gias-summary-list__key">Joined date:</dt>
-                                    <dd class="gias-summary-list__value">@(e.JoinedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">Joined date</dt>
+                                    <dd class="govuk-summary-list__value">@(e.JoinedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
                                     @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].JoinedDate)
                                 </div>
                             }
