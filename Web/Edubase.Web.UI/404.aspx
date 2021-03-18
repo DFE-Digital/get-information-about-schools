@@ -190,7 +190,7 @@
         <div class="breadcrumbs">
             <ol>
                 <li>
-                    <a href="/">Home</a>
+                    <a href="/">Search</a>
                 </li>
             </ol>
 

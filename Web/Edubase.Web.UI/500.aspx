@@ -126,7 +126,7 @@
                 <div class="govuk-grid-column-full">
                     <div class="govuk-breadcrumbs">
                         <ol class="govuk-breadcrumbs__list">
-                            <li class="govuk-breadcrumbs__list-item"><a href="/" class="govuk-breadcrumbs__link">Home</a></li>
+                            <li class="govuk-breadcrumbs__list-item"><a href="/" class="govuk-breadcrumbs__link">Search</a></li>
                         </ol>
                     </div>
                 </div>
