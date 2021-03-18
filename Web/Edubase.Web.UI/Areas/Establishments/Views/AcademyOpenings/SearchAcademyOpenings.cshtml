@@ -34,60 +34,63 @@
             </div>
         </div>
     </div>
-    @Html.HiddenFor(x=> x.IsSearching, new { Value="true" })
+    @Html.HiddenFor(x => x.IsSearching, new {Value = "true"})
 }
 
 @if (Model.EstablishmentName != null)
 {
-    <h2 class="govuk-heading-s">Establishment found</h2>
-
-    <div class="urn-result">
-        <h3 class="govuk-heading-s">Opening date: @Model.OpenDate.ToString("d MMMM yyyy")</h3>
-        <dl class="gias-summary-list gias-summary-list--inline">
-            <div class="gias-summary-list__row">
-                <dt class="gias-summary-list__key">
-                    <abbr title="Unique Reference Number">URN</abbr>:
-                </dt>
-                <dd class="gias-summary-list__value">
-                    @Html.ActionLink(Model.Urn.ToString(),
-                        "Details",
-                        "Establishment",
-                        new {id = Model.Urn, area = "Establishments"},
-                        new {@class = "govuk-link"})
-                </dd>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h2 class="govuk-heading-s">Establishment found</h2>
+            <div class="urn-result">
+                <h3 class="govuk-heading-s">Opening date: @Model.OpenDate.ToString("d MMMM yyyy")</h3>
+                <dl class="govuk-summary-list">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            <abbr title="Unique Reference Number">URN</abbr>
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Html.ActionLink(Model.Urn.ToString(),
+                                "Details",
+                                "Establishment",
+                                new {id = Model.Urn, area = "Establishments"},
+                                new {@class = "govuk-link"})
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Establishment name</dt>
+                        <dd class="govuk-summary-list__value">@Model.EstablishmentName</dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Establishment type</dt>
+                        <dd class="govuk-summary-list__value">@Model.EstablishmentType</dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Predecessor <abbr title="Unique Reference Number">URN</abbr></dt>
+                        <dd class="govuk-summary-list__value">
+                            @if (Model.PredecessorUrn != null)
+                            {
+                                @Html.ActionLink(Model.PredecessorUrn.ToString(),
+                                    "Details",
+                                    "Establishment",
+                                    new {id = Model.PredecessorUrn, area = "Establishments"},
+                                    new {@class = "govuk-link"})
+                            }
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Predecessor name</dt>
+                        <dd class="govuk-summary-list__value">@Model.PredecessorName</dd>
+                    </div>
+                </dl>
+                <div class="govuk-form-group">
+                    @Html.ActionLink("Edit opening details",
+                        "EditAcademyOpening",
+                        "AcademyOpenings",
+                        new {urn = Model.Urn, area = "Establishments"},
+                        new {@class = "govuk-button"})
+                </div>
             </div>
-            <div class="gias-summary-list__row">
-                <dt class="gias-summary-list__key">Establishment name:</dt>
-                <dd class="gias-summary-list__value">@Model.EstablishmentName</dd>
-            </div>
-            <div class="gias-summary-list__row">
-                <dt class="gias-summary-list__key">Establishment type:</dt>
-                <dd class="gias-summary-list__value">@Model.EstablishmentType</dd>
-            </div>
-            <div class="gias-summary-list__row">
-                <dt class="gias-summary-list__key">Predecessor <abbr title="Unique Reference Number">URN</abbr>:</dt>
-                <dd class="gias-summary-list__value">
-                    @if (Model.PredecessorUrn != null)
-                    {
-                        @Html.ActionLink(Model.PredecessorUrn.ToString(),
-                            "Details",
-                            "Establishment",
-                            new {id = Model.PredecessorUrn, area = "Establishments"},
-                            new {@class = "govuk-link"})
-                    }
-                    
-                </dd>
-            </div>
-            <div class="gias-summary-list__row">
-                <dt class="gias-summary-list__key">Predecessor name:</dt>
-                <dd class="gias-summary-list__value">@Model.PredecessorName</dd>
-            </div>
-        </dl>
-
-        @Html.ActionLink("Edit opening details",
-            "EditAcademyOpening",
-            "AcademyOpenings",
-            new {urn = Model.Urn, area = "Establishments"},
-            new {@class = "govuk-button"})
+        </div>
     </div>
 }

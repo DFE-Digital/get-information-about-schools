@@ -1,0 +1,19 @@
+// this applies common GDS typography styles to user content on the glossary and FAQ items
+
+.gias-user-content {
+  ul {
+    @extend %govuk-list;
+    padding-left: govuk-spacing(4);
+    list-style-type: disc;
+  }
+
+  li {
+    margin-bottom: 0;
+
+    @include govuk-media-query($from: tablet) {
+      margin-bottom: govuk-spacing(1);
+    }
+  }
+
+  @extend %govuk-body-m;
+}

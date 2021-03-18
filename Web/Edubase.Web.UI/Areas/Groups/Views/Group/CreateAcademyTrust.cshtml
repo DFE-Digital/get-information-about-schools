@@ -55,25 +55,25 @@
             <div id="company">
                 <h2 class="govuk-heading-s">Selected company</h2>
 
-                <dl class="gias-summary-list">
-                    <div class="gias-summary-list__row">
-                        <dt class="gias-summary-list__key">Company name:</dt>
-                        <dd class="gias-summary-list__value">@Model.Name</dd>
+                <dl class="govuk-summary-list">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Company name</dt>
+                        <dd class="govuk-summary-list__value">@Model.Name</dd>
                     </div>
-                    <div class="gias-summary-list__row">
-                        <dt class="gias-summary-list__key">Companies House number:</dt>
-                        <dd class="gias-summary-list__value">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Companies House number</dt>
+                        <dd class="govuk-summary-list__value">
                             <a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.CompaniesHouseNumber" target="_blank" rel="noreferrer noopener">
                                 @Model.CompaniesHouseNumber (opens in new tab)</a>
                         </dd>
                     </div>
-                    <div class="gias-summary-list__row">
-                        <dt class="gias-summary-list__key">Incorporated:</dt>
-                        <dd class="gias-summary-list__value">@(Model.OpenDate?.ToString("d MMMM yyyy"))</dd>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Incorporated</dt>
+                        <dd class="govuk-summary-list__value">@(Model.OpenDate?.ToString("d MMMM yyyy"))</dd>
                     </div>
-                    <div class="gias-summary-list__row">
-                        <dt class="gias-summary-list__key">Address:</dt>
-                        <dd class="gias-summary-list__value">@Model.Address</dd>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Address</dt>
+                        <dd class="govuk-summary-list__value">@Model.Address</dd>
                     </div>
                 </dl>
 
@@ -94,22 +94,22 @@
             <div class="govuk-grid-column-two-thirds">
                 <div class="single-group govuk-!-padding-top-6  govuk-!-margin-bottom-4">
                     <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Trust details</h2>
-                    <dl class="gias-summary-list">
-                        <div class="gias-summary-list__row">
-                            <dt class="gias-summary-list__key">Trust name:</dt>
-                            <dd class="gias-summary-list__value">
+                    <dl class="govuk-summary-list">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Trust name</dt>
+                            <dd class="govuk-summary-list__value">
                                 @Html.ActionLink(Model.TrustName, "Details", "Group", new {id = Model.GroupUid, area = "groups" },null)
                             </dd>
                         </div>
-                        <div class="gias-summary-list__row">
-                            <dt class="gias-summary-list__key">Trust type:</dt>
-                            <dd class="gias-summary-list__value">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Trust type</dt>
+                            <dd class="govuk-summary-list__value">
                                 @Model.GroupTypes.First(x => x.Value.Equals(Model.TypeId?.ToString(), StringComparison.InvariantCultureIgnoreCase)).Text
                             </dd>
                         </div>
-                        <div class="gias-summary-list__row">
-                            <dt class="gias-summary-list__key">Group ID:</dt>
-                            <dd class="gias-summary-list__value">@Model.GroupId</dd>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Group ID</dt>
+                            <dd class="govuk-summary-list__value">@Model.GroupId</dd>
                         </div>
                     </dl>
                 </div>

@@ -4,13 +4,13 @@
 @using ET = Edubase.Services.Enums.eLookupEstablishmentType;
 @model EstablishmentDetailViewModel
 
-<div class="gias-summary-list__row">
-    <dt class="gias-summary-list__key">Address:</dt>
-    <dd class="gias-summary-list__value">@Model.GetAddress()</dd>
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">Address</dt>
+    <dd class="govuk-summary-list__value">@Model.GetAddress()</dd>
 </div>
-<div class="gias-summary-list__row">
-    <dt class="gias-summary-list__key">Local authority:</dt>
-    <dd class="gias-summary-list__value">
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">Local authority</dt>
+    <dd class="govuk-summary-list__value">
         @if (Model.Establishment.LocalAuthorityId.HasValue)
         {
             <a href="@Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})?searchtype=ByLocalAuthority&@EstablishmentSearchViewModel.BIND_ALIAS_LAIDS=@Model.Establishment.LocalAuthorityId">
@@ -20,9 +20,9 @@
         }
     </dd>
 </div>
-<div class="gias-summary-list__row">
-    <dt class="gias-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadteacherLabel):</dt>
-    <dd class="gias-summary-list__value">
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadteacherLabel)</dt>
+    <dd class="govuk-summary-list__value">
         @if (Model.DisplayPolicy.HeadTitleId)
         {
             <text>@Model.HeadTitleName.Replace("Not recorded", string.Empty)</text>
@@ -40,9 +40,9 @@
 
 @if (Model.DisplayPolicy.HeadAppointmentDate)
 {
-    <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadteacherLabel) appointment date:</dt>
-        <dd class="gias-summary-list__value">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadteacherLabel) appointment date</dt>
+        <dd class="govuk-summary-list__value">
             @(Model.Establishment.HeadAppointmentDate?.ToString("d MMMM yyyy") ?? "Not recorded")
         </dd>
     </div>
@@ -50,9 +50,9 @@
 
 @if (Model.DisplayPolicy.HeadEmailAddress)
 {
-    <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadEmailAddressLabel):</dt>
-        <dd class="gias-summary-list__value">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadEmailAddressLabel)</dt>
+        <dd class="govuk-summary-list__value">
             @(Model.Establishment.HeadEmailAddress ?? "Not recorded")
         </dd>
     </div>
@@ -60,15 +60,15 @@
 
 @if (Model.DisplayPolicy.AgeRange)
 {
-    <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">
-            Age range:
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Age range
             <a href="#help-text-age-range" class="help-icon modal-link">
                 <span class="govuk-visually-hidden">Help with age range field</span>
                 @helpers.DialogHiddenPrompt()
             </a>
         </dt>
-        <dd class="gias-summary-list__value">
+        <dd class="govuk-summary-list__value">
             @if (Model.Establishment.StatutoryLowAge.HasValue && Model.Establishment.StatutoryHighAge.HasValue)
             {
                 <text>@(Model.Establishment.StatutoryLowAge) to @(Model.Establishment.StatutoryHighAge)</text>
@@ -77,17 +77,17 @@
     </div>
 }
 
-<div class="gias-summary-list__row">
-    <dt class="gias-summary-list__key">Phase of education:</dt>
-    <dd class="gias-summary-list__value">
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">Phase of education</dt>
+    <dd class="govuk-summary-list__value">
         @Model.EducationPhaseName
     </dd>
 </div>
 @if (Model.DisplayPolicy.TypeId)
 {
-    <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">@(Model.DisplayPolicy.EstablishmentTypeLabel):</dt>
-        <dd class="gias-summary-list__value">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">@(Model.DisplayPolicy.EstablishmentTypeLabel)</dt>
+        <dd class="govuk-summary-list__value">
             @Model.TypeName
         </dd>
     </div>
@@ -95,9 +95,9 @@
 
 @if (Model.DisplayPolicy.FurtherEducationTypeId)
 {
-    <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">Further education type:</dt>
-        <dd class="gias-summary-list__value">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Further education type</dt>
+        <dd class="govuk-summary-list__value">
             @Model.FurtherEducationTypeName
         </dd>
     </div>
@@ -105,9 +105,9 @@
 
 @foreach (var group in Model.Groups.OrderByDescending(g => Model.GetGroupFieldLabel(g)))
 {
-    <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">@(Model.GetGroupFieldLabel(group)):</dt>
-        <dd class="gias-summary-list__value">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">@(Model.GetGroupFieldLabel(group))</dt>
+        <dd class="govuk-summary-list__value">
             @Html.ActionLink(group.Name, "Details", "Group", new {id = group.GroupUId, area = "Groups"}, null)
         </dd>
     </div>
@@ -115,17 +115,17 @@
 
 @if (Model.DisplayPolicy.GenderId)
 {
-    <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">Gender of entry:</dt>
-        <dd class="gias-summary-list__value">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Gender of entry</dt>
+        <dd class="govuk-summary-list__value">
             @Model.GenderName
         </dd>
     </div>
 }
-<div class="gias-summary-list__row">
+<div class="govuk-summary-list__row">
 
-    <dt class="gias-summary-list__key">ID:</dt>
-    <dd class="gias-summary-list__value">
+    <dt class="govuk-summary-list__key">ID</dt>
+    <dd class="govuk-summary-list__value">
         <abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn,
         @if (Model.DisplayPolicy.EstablishmentNumber)
         {
@@ -137,9 +137,9 @@
         }
     </dd>
 </div>
-<div class="gias-summary-list__row">
-    <dt class="gias-summary-list__key">Establishment status:</dt>
-    <dd class="gias-summary-list__value">
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">Establishment status</dt>
+    <dd class="govuk-summary-list__value">
         @if (Model.IsClosed)
         {
             <span class="pending-closure">
@@ -154,9 +154,9 @@
 </div>
 @if (Model.DisplayPolicy.AdmissionsPolicyId)
 {
-    <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">Admissions policy:</dt>
-        <dd class="gias-summary-list__value">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Admissions policy</dt>
+        <dd class="govuk-summary-list__value">
             @Model.AdmissionsPolicyName
         </dd>
     </div>
@@ -164,9 +164,9 @@
 
 @if (Model.DisplayPolicy.Contact_WebsiteAddress)
 {
-    <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">Website:</dt>
-        <dd class="gias-summary-list__value">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Website</dt>
+        <dd class="govuk-summary-list__value">
             @if (Model.Establishment.Contact_WebsiteAddress == null)
             {
                 <text>Not recorded</text>
@@ -183,9 +183,9 @@
 
 @if (Model.DisplayPolicy.Contact_TelephoneNumber)
 {
-    <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">Telephone:</dt>
-        <dd class="gias-summary-list__value">@(Model.Establishment.Contact_TelephoneNumber ?? "Not recorded")</dd>
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Telephone</dt>
+        <dd class="govuk-summary-list__value">@(Model.Establishment.Contact_TelephoneNumber ?? "Not recorded")</dd>
     </div>
 }
 
@@ -196,9 +196,9 @@
 
 @if (Model.DisplayPolicy.OfstedRatingId)
 {
-    <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">Ofsted rating:</dt>
-        <dd class="gias-summary-list__value">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Ofsted rating</dt>
+        <dd class="govuk-summary-list__value">
             @if (Model.Establishment.OfstedRatingId.HasValue)
             {
                 <span class="highlighted-ofsted-rating">@Model.OfstedRatingName</span>
@@ -238,9 +238,9 @@
 
 @if (Model.DisplayPolicy.InspectorateId)
 {
-    <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">Inspectorate name:</dt>
-        <dd class="gias-summary-list__value">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Inspectorate name</dt>
+        <dd class="govuk-summary-list__value">
             @Model.InspectorateName
         </dd>
     </div>
@@ -257,19 +257,19 @@
 
 @if (Model.DisplayPolicy.ProprietorBodyName)
 {
-    <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">Proprietor's name:</dt>
-        <dd class="gias-summary-list__value">@Model.Establishment.ProprietorBodyName</dd>
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Proprietor's name</dt>
+        <dd class="govuk-summary-list__value">@Model.Establishment.ProprietorBodyName</dd>
     </div>
 
 }
 
 @helper OtherServicesLinks()
 {
-    <div class="gias-summary-list__row">
-        <dt class="gias-summary-list__key">Data from other services:</dt>
-        <dd class="gias-summary-list__value">
-            <ul class="govuk-list govuk-body-s">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Data from other services</dt>
+        <dd class="govuk-summary-list__value">
+            <ul class="govuk-list">
                 @if (!Model.ShowCscp && !Model.ShowFinancialBenchmarking)
                 {
                     <li>
@@ -287,7 +287,7 @@
                 {
             <li>
                 <a href="@Model.FinancialBenchmarkingURL" rel="noreferrer noopener" target="_blank">
-                    Schools financial benchmarking (opens in new tab)</a> 
+                    Schools financial benchmarking (opens in new tab)</a>
             </li>
                 }
             </ul>

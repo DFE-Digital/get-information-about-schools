@@ -82,6 +82,10 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
+        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyTrusts)]
+        [Route("DownloadClosedTrustsInformation", Name = "DownloadClosedTrustsInformation")]
+        public ActionResult DownloadClosedTrustsInformation() => View();
+
         [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanBulkCreateAcademies)]
         public ActionResult BulkAcademies() => View();
 

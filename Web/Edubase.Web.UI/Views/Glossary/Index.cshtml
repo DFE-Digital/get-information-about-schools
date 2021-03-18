@@ -47,7 +47,7 @@
                         @foreach (var item in group)
                         {
                             <h2 class="govuk-heading-s">@item.Title</h2>
-                            <p>@Html.Raw(item.Content)</p>
+                            <div class="gias-user-content">@Html.Raw(item.Content)</div>
                             if (Model.UserCanEdit)
                             {
                                 @Html.RouteLink("Edit entry", "EditGlossaryItem", new {id = item.RowKey}, new {@class = "govuk-button govuk-button--secondary glossary-edit-button"})

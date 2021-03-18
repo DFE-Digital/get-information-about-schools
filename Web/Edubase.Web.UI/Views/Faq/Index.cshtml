@@ -63,11 +63,13 @@
                 headingModifer = "s";
             }
             <h2 class="govuk-heading-@headingModifer">@item.Title</h2>
+            <div class="gias-user-content">
             <p>@Html.Raw(item.Content.Replace("\n","<br/>"))</p>
-            if (Model.UserCanEdit)
+            @if (Model.UserCanEdit)
             {
                 @Html.RouteLink("Edit entry", "EditFaqItem", new { id = item.RowKey }, new { @class = "govuk-button govuk-button--secondary Faq-edit-button" })
             }
+            </div>
         }
     </div>
 </div>

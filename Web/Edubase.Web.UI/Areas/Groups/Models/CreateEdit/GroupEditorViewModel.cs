@@ -79,6 +79,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public bool CanUserCloseMATAndMarkAsCreatedInError { get; set; }
         public bool CanUserEditStatus { get; set; }
         public bool CanUserEditClosedDate { get; set; }
+        public bool CanUserEditUkprn { get; set; }
 
         public IEnumerable<SelectListItem> Statuses { get; set; }
 

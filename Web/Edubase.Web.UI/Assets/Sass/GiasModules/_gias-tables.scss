@@ -37,9 +37,14 @@
     table-layout: fixed;
     font-size: 13px;
 
+    .gias-summary-list__key {
+      font-weight: bold;
+    }
+
     .gias-summary-list__key,
     .gias-summary-list__value {
       font-size: 13px;
+      display: block;
     }
 
     .govuk-table__header,

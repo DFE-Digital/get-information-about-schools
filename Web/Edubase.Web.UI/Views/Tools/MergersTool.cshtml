@@ -43,11 +43,11 @@
                 This process automatically closes records where applicable and creates predecessor and successor links between relevant establishments.
             </p>
 
-            <fieldset class="merger-almalgamation govuk-fieldset govuk-!-margin-bottom-8">
-                <legend class="govuk-body">Select the option below you wish to undertake and select continue.</legend>
+            <fieldset class="merger-amalgamation govuk-fieldset govuk-!-margin-bottom-8">
+                <legend class="govuk-body">Select the option below you wish to undertake and select continue</legend>
                 <p>For information:</p>
 
-                <p id="almagamation-desc">
+                <p id="amalgamation-desc">
                     An amalgamation is when two or more establishments close and a new establishment is created and opened as a new legal entity.
                 </p>
                 <p id="merger-desc">
@@ -58,11 +58,11 @@
 
 
                 <div class="govuk-form-group @Html.ValidationGroupCssClass("MergerType")">
-                    @Html.ValidationMessage("MergerType", "Please select almalgamation or merger.", new { @class = "govuk-error-message" })
-                    @* <span v-show="mergerTypeError" class="govuk-error-message">Please select almalgamation or merger.</span> *@
+                    @Html.ValidationMessage("MergerType", "Please select amalgamation or merger.", new { @class="govuk-error-message"})
+                    @* <span v-show="mergerTypeError" class="govuk-error-message">Please select amalgamation or merger.</span> *@
                     <div class="govuk-radios">
                         <div class="govuk-radios__item">
-                            <input id="radio-amalgamation-nojs" class="govuk-radios__input" type="radio" name="MergerType" value="Amalgamation" aria-describedby="almagamation-desc">
+                            <input id="radio-amalgamation-nojs" class="govuk-radios__input" type="radio" name="MergerType" value="Amalgamation" aria-describedby="amalgamation-desc">
                             <label for="radio-amalgamation-nojs" class="govuk-radios__label">
                                 Amalgamation
                             </label>
@@ -127,11 +127,11 @@
         <p>
             This process automatically closes records where applicable and creates predecessor and successor links between relevant establishments.
         </p>
-            <fieldset class="merger-almalgamation govuk-fieldset govuk-!-margin-bottom-8">
+            <fieldset class="merger-amalgamation govuk-fieldset govuk-!-margin-bottom-8">
                 <legend class="govuk-body">Select the option below you wish to undertake and select continue.</legend>
                 <p>For information:</p>
 
-                <p id="almagamation-desc">
+                <p id="amagamation-desc">
                     An amalgamation is when two or more establishments close and a new establishment is created and opened as a new legal entity.
                 </p>
                 <p id="merger-desc">
@@ -139,10 +139,10 @@
                     for example enlarging and<span class="govuk-visually-hidden"> </span>/<span class="govuk-visually-hidden"> </span>or extending the age range.  It retains its legal entity status.
                 </p>
                 <div v-bind:class="['govuk-form-group ', mergerTypeError ? 'govuk-form-group--error' : '']">
-                    <span v-show="mergerTypeError" class="govuk-error-message">Please select almalgamation or merger.</span>
+                    <span v-show="mergerTypeError" class="govuk-error-message">Please select amalgamation or merger.</span>
                     <div class="govuk-radios">
                         <div class="govuk-radios__item">
-                            <input id="radio-amalgamation" class="govuk-radios__input" type="radio" name="radio-group" value="amalgamation" aria-describedby="almagamation-desc" v-model="mergerType">
+                            <input id="radio-amalgamation" class="govuk-radios__input" type="radio" name="radio-group" value="amalgamation" aria-describedby="amalgamation-desc" v-model="mergerType">
                             <label for="radio-amalgamation" class="govuk-radios__label">
                                 Amalgamation
                             </label>
@@ -292,7 +292,7 @@
         </div>
     </div>
 
-    <div class="govuk-grid-column-two-thirds almalgamation-summary" v-show="completeAmalgamation">
+    <div class="govuk-grid-column-two-thirds amalgamation-summary" v-show="completeAmalgamation">
         <div class="summary-panel">
            <h3 class="govuk-heading-s">Closing establishment details</h3>
 
