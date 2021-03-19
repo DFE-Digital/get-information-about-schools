@@ -6,6 +6,16 @@ new GiasAttachUnload({
 
 if (document.getElementById('close-created-in-error')) {
   const form = $('#edit-group-details');
+  const $groupTypeName = $("#GroupTypeName").val();
+  
+  let $groupTypeShortName = $groupTypeName.split(" ").pop().toLowerCase();
+  let $groupTypeLinks = "academies and shared governors";
+ 
+  if ($groupTypeShortName !== "trust") { 
+	$groupTypeShortName = $groupTypeName.toLowerCase();
+	$groupTypeLinks = "academies and/or free schools";
+  };
+  
   let canCloseImmediately = false;
   const closeCheckbox = document.getElementById('close-created-in-error');
 
@@ -19,9 +29,8 @@ if (document.getElementById('close-created-in-error')) {
         },
         immediate: true,
         idPrefix: 'close-continue',
-        title: 'Are you sure you want to close this trust?',
-        content:
-          'All academies and shared governors will be removed on closure.'
+        title: 'Are you sure you want to close this ' + $groupTypeShortName + ' record ?',
+        content: 'All ' + $groupTypeLinks + ' will be removed on closure.'
       });
       $(this).removeData('okCancel');
     }

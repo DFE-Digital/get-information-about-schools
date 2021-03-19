@@ -297,7 +297,7 @@ namespace Edubase.UnitTest.Controllers
             Assert.That(vm.PageTitle, Is.EqualTo("Edit federation"));
             Assert.That(vm.StatusId, Is.EqualTo((int)eLookupGroupStatus.Open));
             Assert.That(vm.Address, Is.EqualTo(domainModel.Address.ToString()));
-            Assert.That(vm.CanUserCloseMATAndMarkAsCreatedInError, Is.False);
+            Assert.That(vm.CanUserCloseAndMarkAsCreatedInError, Is.False);
             Assert.That(vm.CCLeadCentreUrn, Is.EqualTo(estabList.Single(x => x.CCIsLeadCentre == true).Urn));
         }
 
@@ -358,7 +358,7 @@ namespace Edubase.UnitTest.Controllers
             Assert.That(vm.SelectedTabName, Is.EqualTo("links"));
             Assert.That(vm.OpenDateLabel, Is.EqualTo("Open date"));
             Assert.That(vm.PageTitle, Is.EqualTo("Edit federation"));
-            Assert.That(vm.CanUserCloseMATAndMarkAsCreatedInError, Is.False);
+            Assert.That(vm.CanUserCloseAndMarkAsCreatedInError, Is.False);
         }
 
         [Test]

@@ -697,8 +697,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 throw new NotImplementedException($"SaveMode '{viewModel.SaveMode}' is not supported");
             }
 
-            if (viewModel.CanUserCloseMATAndMarkAsCreatedInError
-                && viewModel.CloseMATAndMarkAsCreatedInError
+            if (viewModel.CanUserCloseAndMarkAsCreatedInError
+                && viewModel.CloseAndMarkAsCreatedInError
                 && dto.Group != null)
             {
                 dto.Group.StatusId = (int) GS.CreatedInError;
@@ -753,7 +753,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
         private async Task<GroupEditorViewModel> SetEditPermissions(GroupEditorViewModel viewModel)
         {
-            viewModel.CanUserCloseMATAndMarkAsCreatedInError = viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust)
+            viewModel.CanUserCloseAndMarkAsCreatedInError = viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor)
                                                                && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed)
                                                                && User.InRole(AuthorizedRoles.IsAdmin);
 
