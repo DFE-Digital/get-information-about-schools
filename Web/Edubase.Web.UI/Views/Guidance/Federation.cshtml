@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "Get information about schools";
     ViewBag.imageMQ = "(max-width: 768px)";
     ViewBag.SiteSection = "help";
@@ -11,7 +11,7 @@
             <div class="govuk-breadcrumbs">
                 <ol class="govuk-breadcrumbs__list">
                     <li class="govuk-breadcrumbs__list-item">
-                        @Html.ActionLink("Home", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                        @Html.ActionLink("Search", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
                     </li>
                     <li class="govuk-breadcrumbs__list-item">
                         @Html.ActionLink("Help", "Help", "Home", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
