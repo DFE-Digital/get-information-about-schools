@@ -42,7 +42,7 @@
 
     @if (Model.SearchQueryString.IsNullOrWhiteSpace())
     {
-        @Html.ActionLink("Home", "Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Groups}, new {@class = "govuk-back-link"})
+        @Html.ActionLink("Search", "Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Groups}, new {@class = "govuk-back-link"})
     }
     else
     {
