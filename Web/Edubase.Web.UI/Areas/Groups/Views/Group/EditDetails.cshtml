@@ -22,7 +22,7 @@
             @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
             @Html.HiddenFor(x => x.AddressJsonToken)
             @Html.HiddenFor(x => x.ProcessedWarnings)
-            @Html.HiddenFor(x => x.CanUserCloseMATAndMarkAsCreatedInError)
+            @Html.HiddenFor(x => x.CanUserCloseAndMarkAsCreatedInError)
             @Html.HiddenFor(x => x.CanUserEditClosedDate)
             @Html.HiddenFor(x => x.CanUserEditStatus)
             @Html.HiddenFor(x => x.OriginalStatusId)
@@ -183,12 +183,14 @@
                         </div>
                     }
 
-                    @if (Model.CanUserCloseMATAndMarkAsCreatedInError)
+                    @if (Model.CanUserCloseAndMarkAsCreatedInError)
                     {
+                        var groupTypeShortName = Model.GroupTypeId == 5 ? Model.GroupTypeName.ToLower() : "trust";
+
                         <div class="govuk-form-group">
                             @FormHelpers.GiasCheckbox("true",
-                                 "CloseMATAndMarkAsCreatedInError",
-                                 "Close this trust and mark as created in error",
+                                 nameof(Model.CloseAndMarkAsCreatedInError),
+                                 $"Close this {groupTypeShortName} and mark as created in error",
                                  string.Empty,
                                  new { id = "close-created-in-error" })
                         </div>
