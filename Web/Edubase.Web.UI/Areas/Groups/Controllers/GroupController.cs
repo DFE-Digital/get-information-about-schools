@@ -368,7 +368,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
 
             await SetEditPermissions(viewModel);
-            
+
             return View("EditDetails", viewModel);
         }
 
@@ -816,6 +816,20 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             else if (viewModel.Action == ActionLinkedEstablishmentSearch)
             {
                 await SearchForLinkedEstablishment(viewModel);
+            }
+            else if (viewModel.Action == ActionSaveLinks)
+            {
+                suppressClearModelState = true;
+                var apiResponse = await SaveGroup(viewModel);
+                if (apiResponse.HasErrors)
+                {
+                    apiResponse.Errors.ForEach(x => ModelState.AddModelError(x.Fields, x.GetMessage()));
+                }
+                else
+                {
+                    return new RedirectResult(Url.Action(nameof(Details)) + "#list");
+                    //return RedirectToAction(nameof(Details) , new { id = viewModel.GroupUId.Value, saved = true } );
+                }
             }
             else if (viewModel.Action == ActionSave || viewModel.Action == ActionDetails)
             {
