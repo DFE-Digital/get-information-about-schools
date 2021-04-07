@@ -1,4 +1,4 @@
-﻿@using Edubase.Services.Enums
+@using Edubase.Services.Enums
 @using Microsoft.Ajax.Utilities
 @using Edubase.Web.UI.Areas.Governors.Models
 @model GovernorSearchDownloadViewModel
@@ -15,7 +15,7 @@
 {
     @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
         {
-            @Html.ActionLink("Home", "Index", "Search", new { area = "" }, new {@class = "govuk-back-link"})
+            @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new {@class = "govuk-back-link"})
         }
         else
         {

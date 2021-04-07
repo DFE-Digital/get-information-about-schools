@@ -42,7 +42,7 @@
 
     @if (Model.SearchQueryString.IsNullOrWhiteSpace())
     {
-        @Html.ActionLink("Home", "Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Groups}, new {@class = "govuk-back-link"})
+        @Html.ActionLink("Search", "Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Groups}, new {@class = "govuk-back-link"})
     }
     else
     {
@@ -297,11 +297,11 @@
                                                 <dd class="govuk-summary-list__value">@result.Urn</dd>
                                             </div>
 
-                                            @if (Model.UKPRN.HasValue)
+                                            @if (result.UKPRN.HasValue)
                                             {
                                                 <div class="govuk-summary-list__row">
                                                     <dt class="govuk-summary-list__key"><abbr title="UK provider reference number (UKPRN)">UKPRN</abbr></dt>
-                                                    <dd class="govuk-summary-list__value">@Model.UKPRN</dd>
+                                                    <dd class="govuk-summary-list__value">@result.UKPRN</dd>
                                                 </div>
                                             }
 

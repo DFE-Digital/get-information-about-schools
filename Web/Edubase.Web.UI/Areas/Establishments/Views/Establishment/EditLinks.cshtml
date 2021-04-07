@@ -10,7 +10,15 @@
     <div class="tab-content">
         <div class="links-list">
             <div class="button-row govuk-!-margin-bottom-4">
-                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "govuk-button govuk-button--secondary", data_module="govuk-button" })
+                @Html.ActionLink(
+                    "Cancel",
+                    "Details",
+                    "Establishment",
+                    null,
+                    null,
+                    "school-links",
+                    new { id = Model.Urn },
+                    new { @class = "govuk-button govuk-button--secondary", data_module="govuk-button" })
             </div>
 
             <p>
@@ -49,7 +57,15 @@
                 </a>
             </p>
             <div class="button-row  govuk-!-padding-top-4">
-                @Html.ActionLink("Cancel", "Details", "Establishment", new { id = Model.Urn }, new { @class = "govuk-button govuk-button--secondary", data_module="govuk-button" })
+                @Html.ActionLink(
+                    "Cancel",
+                    "Details",
+                    "Establishment",
+                    null,
+                    null,
+                    "school-links",
+                    new {id = Model.Urn},
+                    new {@class = "govuk-button govuk-button--secondary", data_module = "govuk-button"})
             </div>
 
         </div>

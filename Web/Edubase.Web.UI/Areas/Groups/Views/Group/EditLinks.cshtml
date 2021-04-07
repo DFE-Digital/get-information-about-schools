@@ -26,9 +26,17 @@
             <div class="button-row govuk-!-margin-bottom-4">
                 @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                 {
-                    <button type="submit" name="action" class="govuk-button" value="@VM.ActionSave">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
+                    <button type="submit" name="action" class="govuk-button" value="@VM.ActionSaveLinks">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
                 }
-                @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button" })
+                @Html.ActionLink(
+                    "Cancel",
+                    "Details",
+                    "Group",
+                    null,
+                    null,
+                    "list",
+                    new {area = "Groups", id = Model.GroupUId},
+                    new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button"})
             </div>
         </div>
     </div>
@@ -179,9 +187,17 @@
             <div class="button-row">
                 @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                 {
-                    <button type="submit" name="action" class="govuk-button" value="@VM.ActionSave">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
+                    <button type="submit" name="action" class="govuk-button" value="@VM.ActionSaveLinks">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
                 }
-                @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
+                @Html.ActionLink(
+                    "Cancel",
+                    "Details",
+                    "Group",
+                    null,
+                    null,
+                    "list",
+                    new {area = "Groups", id = Model.GroupUId},
+                    new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
             </div>
         </div>
     </div>
