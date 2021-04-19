@@ -16,6 +16,10 @@
         ViewBag.bodyClasses = "create-edit school-details";
         ViewBag.hideLogo = true;
         ViewBag.Title = "Edit establishment";
+        if (Model.HasEmptyEmailFields.GetValueOrDefault())
+        {
+            Layout = "_EditLayoutPage.cshtml";
+        }
     }
 }
 
@@ -48,11 +52,11 @@
     @Html.HiddenFor(x => x.ChangesRequireApprovalCount)
     @Html.HiddenFor(x => x.EstablishmentTypeGroupId)
 
-    <div class="@Html.Conditional(Model.ChangesSummary != null, "hidden")">
+    <div class="@Html.Conditional(Model.ChangesSummary != null || Model.IsUpdatingEmailFields.GetValueOrDefault(), "hidden")">
     <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
     <div class="button-row govuk-!-padding-bottom-4">
-        <button id="save-submit-top" type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASSave">Save details</button>
+        <button id="save-submit-top" type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASSave">Continue</button>
         @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button"})
     </div>
 
@@ -72,7 +76,7 @@
         <label class="govuk-label" for="urn">Unique Reference Number (URN)</label>
         @Html.TextBoxFor(x => x.Urn, new {id = "urn", @class = "govuk-input", placeholder = "auto-generated", @readonly = true, disabled = "disabled"})
     </div>
-        
+
     @if (Model.EditPolicy.Address_Line1)
     {
         <div class="govuk-form-group">
@@ -133,7 +137,7 @@
             @Html.RouteLink("Replace this address", "AddOrReplaceEstablishmentAddress", new {urn = Model.Urn, target = "main"}, new {@class = "replace-address"})
         </div>
     }
-    
+
     @Html.HiddenFor(x => x.Address_UPRN)
     @Html.HiddenFor(x => x.Northing)
     @Html.HiddenFor(x => x.Easting)
@@ -185,7 +189,7 @@
         @Html.EditorFor(x => x.HeadAppointmentDate, new {title = "Headteacher date of appointment", fieldsetClassName = "edit-date-fieldset"})
     }
 
-    @if (Model.EditPolicy.HeadEmailAddress)
+    @if (Model.EditPolicy.HeadEmailAddress && !Model.IsUpdatingEmailFields.GetValueOrDefault())
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HeadEmailAddress)">
             <label class="govuk-label" for="HeadEmailAddress">
@@ -196,7 +200,7 @@
                 </a>
             </label>
             @Html.ValidationMessageFor(x => x.HeadEmailAddress, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.HeadEmailAddress, new {maxlength = 120, @class = "govuk-input", placeholder = "email address", aria_describedby = "help-text-headteacher-email-address"})
+            @Html.TextBoxFor(x => x.HeadEmailAddress, new {maxlength = 120, @class = "govuk-input", aria_describedby = "help-text-headteacher-email-address"})
         </div>
     }
 
@@ -602,7 +606,7 @@
         </div>
     }
 
-    @if (Model.EditPolicy.Contact_EmailAddress)
+    @if (Model.EditPolicy.Contact_EmailAddress && !Model.IsUpdatingEmailFields.GetValueOrDefault())
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Contact_EmailAddress)">
             <label class="govuk-label" for="@nameof(Model.Contact_EmailAddress)">
@@ -617,7 +621,7 @@
         </div>
     }
 
-    @if (Model.EditPolicy.ContactAlt_EmailAddress)
+    @if (Model.EditPolicy.ContactAlt_EmailAddress && !Model.IsUpdatingEmailFields.GetValueOrDefault())
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ContactAlt_EmailAddress)">
             <label class="govuk-label" for="@nameof(Model.ContactAlt_EmailAddress)">
@@ -834,7 +838,7 @@
     }
     <!-- Online Provider content -->
     <div class="button-row govuk-!-padding-top-4">
-        <button id="save-submit-bottom" type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, "details")">Save details</button>
+        <button id="save-submit-bottom" type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, "details")">Continue</button>
         @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button"})
     </div>
     </div>
@@ -843,33 +847,40 @@
 
     @if (Model.ChangesSummary != null)
     {
-        Html.RenderPartial("Partials/_ConfirmChanges");
+        if (Model.HasEmptyEmailFields.GetValueOrDefault())
+        {
+            Html.RenderPartial("Partials/_UpdateConfirmEmails");
+        }
+        else
+        {
+            Html.RenderPartial("Partials/_ConfirmChanges");
 
-        <div class="button-row govuk-!-padding-top-8">
-            <button class="govuk-button--secondary govuk-button" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button>
-            <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm">Confirm</button>
+            <div class="button-row govuk-!-padding-top-8">
+                <button class="govuk-button--secondary govuk-button" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button>
+                <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm">Accept and save</button>
 
-            @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary", id = "cancel-edit", data_module = "govuk-button"})
-        </div>
+                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary", id = "cancel-edit", data_module = "govuk-button"})
+            </div>
 
-@section ViewScripts {
-    <script nonce="@Html.ScriptNonce()">var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());</script>
-    <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-details.*.js"))"></script>
-}
+            @section ViewScripts {
+                <script nonce="@Html.ScriptNonce()">var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());</script>
+                <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-details.*.js"))"></script>
+            }
+        }
     }
     else
     {
-@section ViewScripts {
-    <script nonce="@Html.ScriptNonce()">
-            var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());
-            var isDirty = @(Model.IsDirty.ToString().ToLower());
-            var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);
-            var phases = @Html.Json(Model.EducationPhases);
-        </script>
-    <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-details.*.js"))"></script>
-}
+        @section ViewScripts
+        {
+        <script nonce="@Html.ScriptNonce()">
+                var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());
+                var isDirty = @(Model.IsDirty.ToString().ToLower());
+                var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);
+                var phases = @Html.Json(Model.EducationPhases);
+            </script>
+        <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-details.*.js"))"></script>
+        }
     }
-
     </div>
 }
 

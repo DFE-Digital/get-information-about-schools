@@ -288,7 +288,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 PopulateEditPermissions(viewModel),
                 PopulateLookupNames(viewModel),
                 PopulateGovernors(viewModel));
-            
+
             viewModel.AgeRangeToolTip = viewModel.Establishment.TypeId.OneOfThese(ET.OnlineProvider)
                 ? _resourcesHelper.GetResourceStringForEstablishment("AgeRangeOnlineProvider", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User)
                 : _resourcesHelper.GetResourceStringForEstablishment("AgeRange", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
@@ -635,6 +635,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin);
             viewModel.SENIds = viewModel.SENIds ?? new int[0];
             viewModel.LocationEditField = string.Empty;
+            viewModel.EmptyEmailFields = new List<string>();
 
             preprocessViewModel?.Invoke(viewModel);
 
@@ -1083,6 +1084,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var domainModel = (await _establishmentReadService.GetAsync(viewModel.Urn.Value, User)).GetResult();
             var editPolicyEnvelope = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
             viewModel.EditPolicy = editPolicyEnvelope.EditPolicy;
+            viewModel.EmptyEmailFields = new List<string>();
 
             var canEditAdditionalAddresses = editPolicyEnvelope.EditPolicy.AdditionalAddresses;
             if (domainModel.AdditionalAddresses != null &&
@@ -1105,12 +1107,53 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
             }
 
-            if (viewModel.ActionSpecifierCommand == ViewModel.ASSave || viewModel.ActionSpecifierCommand == ViewModel.ASConfirm)
+            if (viewModel.ActionSpecifierCommand == ViewModel.ASSave || viewModel.ActionSpecifierCommand == ViewModel.ASConfirm ||
+                viewModel.ActionSpecifierCommand == ViewModel.ASSaveEmails || viewModel.ActionSpecifierCommand == ViewModel.ASAmendEmails)
             {
                 var originalEstabTypeId = (ET) domainModel.TypeId;
                 var originalName = domainModel.Name;
 
                 await ValidateAsync(viewModel, domainModel, (ModelState.IsValid || viewModel.ActionSpecifierCommand == ViewModel.ASConfirm));
+
+                if (viewModel.ActionSpecifierCommand == ViewModel.ASAmendEmails && viewModel.IsUpdatingEmailFields.GetValueOrDefault())
+                {
+                    viewModel.HasEmptyEmailFields = true;
+                }
+
+                if (viewModel.ActionSpecifierCommand == ViewModel.ASSaveEmails)
+                {
+                    viewModel.IsUpdatingEmailFields = !ModelState.IsValid;
+                    viewModel.HasEmptyEmailFields = !ModelState.IsValid;
+                }
+
+                if ((viewModel.Contact_EmailAddress == null || viewModel.HeadEmailAddress == null) && viewModel.ActionSpecifierCommand != ViewModel.ASSaveEmails)
+                {
+                    viewModel.HasEmptyEmailFields = true;
+
+                    if ((viewModel.HeadEmailAddress == null || !ViewData.ModelState.IsValidField( "HeadEmailAddress"))
+                        && viewModel.EditPolicy.HeadEmailAddress)
+                    {
+                        viewModel.EmptyEmailFields.Add("HeadEmailAddress");
+                    }
+
+                    if ((viewModel.Contact_EmailAddress == null || !ViewData.ModelState.IsValidField( "Contact_EmailAddress"))
+                        && viewModel.EditPolicy.Contact_EmailAddress)
+                    {
+                        viewModel.EmptyEmailFields.Add("Contact_EmailAddress");
+                    }
+
+                    if ((viewModel.ContactAlt_EmailAddress == null || !ViewData.ModelState.IsValidField( "ContactAlt_EmailAddress"))
+                        && viewModel.EditPolicy.ContactAlt_EmailAddress)
+                    {
+                        viewModel.EmptyEmailFields.Add("ContactAlt_EmailAddress");
+                    }
+                }
+
+                if (viewModel.ActionSpecifierCommand == ViewModel.ASAmendEmails && !viewModel.IsUpdatingEmailFields.GetValueOrDefault())
+                {
+                    viewModel.HasEmptyEmailFields = false;
+                }
+
                 var newEstabTypeId = (ET?) domainModel.TypeId;
 
                 if (ModelState.IsValid || viewModel.ActionSpecifierCommand == ViewModel.ASConfirm)
@@ -1136,6 +1179,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {
                     viewModel.OriginalEstablishmentName = originalName;
                     viewModel.OriginalTypeName = (await _cachedLookupService.EstablishmentTypesGetAllAsync()).Where(x => x.Id == (int)originalEstabTypeId).Select(x => x.Name).FirstOrDefault();
+                    if (viewModel.IsUpdatingEmailFields.GetValueOrDefault())
+                    {
+                        var changes = await _establishmentReadService.GetModelChangesAsync(domainModel, editPolicyEnvelope.ApprovalsPolicy, User);
+                        viewModel.ChangesSummary = changes;
+                    }
                 }
             }
             else if (viewModel.ActionSpecifierCommand == ViewModel.ASAddAddress)

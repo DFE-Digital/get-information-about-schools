@@ -1,0 +1,198 @@
+@using System.Linq.Expressions
+@using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel
+@model ViewModel
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})</li>
+                    @if (Model.LegalParentGroup != null)
+                    {
+                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new {id = Model.LegalParentGroup.GroupUId, area = "Groups"}, new {@class = "govuk-breadcrumbs__link"})</li>
+                    }
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink(Model.OriginalEstablishmentName ?? Model.Name, "Details", "Establishment", new {@class = "requires-conf-to-leave govuk-breadcrumbs__link"})</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+@if (!Model.IsUpdatingEmailFields.GetValueOrDefault())
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-three-quarters">
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <p class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    All establishment records should hold an up-to-date, valid and actively monitored main
+                    establishment email address, @Html.Raw(Model.EditPolicy.HeadteacherLabel) personal establishment
+                    email address and a main establishment alternative email address (if one exists).
+                    <br>
+                    This information is very important as it allows the Department for Education to share important
+                    information and messages with establishments, especially during the Coronavirus pandemic.
+                </p>
+                <details class="govuk-details govuk-!-margin-bottom-0" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                            How this email address information is used
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <p>
+                            The @Html.Raw(Model.EditPolicy.HeadteacherLabel) personal establishment email
+                            address must be completed. This information is not publicly displayed on the website's interface and is
+                            classed as personal data, therefore it cannot be shared publicly, for example, through a Freedom of
+                            Information (FOI) request.
+                            Under the conditions of Article 6(1)(e) of the UK-GDPR this information can be shared with other
+                            government departments, non-departmental public bodies, arm's length bodies and partners for official
+                            functions and tasks within the public interest to be performed.
+                        </p>
+                        <p>
+                            No personal email addresses or personal establishment email addresses should be added to the main
+                            establishment email address field or the alternative establishment email address field. Although these
+                            fields are not publicly displayed on the website's interface they are not classed as personal data,
+                            therefore under certain circumstances GIAS must share this information, for example, if the Department
+                            is requested to do so under a Freedom of Information (FOI) request. This data can be used by the DfE
+                            and other government departments, non-departmental public bodies, arm's length bodies and partners for
+                            official functions and tasks within the public interest.
+                        </p>
+                    </div>
+                </details>
+            </div>
+
+            <p>The following email adddresses are currently missing:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                @foreach (var fieldName in Model.EmptyEmailFields)
+                {
+                    if (fieldName == "HeadEmailAddress")
+                    {
+                        <li>@Html.Raw(Model.EditPolicy.HeadteacherLabel) personal establishment email address</li>
+                    }
+                    else if (fieldName == "Contact_EmailAddress")
+                    {
+                        <li>Main establishment email address</li>
+                    }
+                    else
+                    {
+                        <li>Alternative establishment email address</li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                    <h2 class="govuk-fieldset__heading">
+                        Do you want to add any of these missing email addresses now?
+                    </h2>
+                </legend>
+                <div class="govuk-radios">
+                    <div class="govuk-radios__item">
+                        @Html.RadioButtonFor(x => x.IsUpdatingEmailFields,
+                            true,
+                            new {@class = "govuk-radios__input", id = string.Concat(nameof(Model.IsUpdatingEmailFields), "-true"), @checked = "checked"})
+                        <label class="govuk-label govuk-radios__label" for="@(string.Concat(nameof(Model.IsUpdatingEmailFields), "-true"))">Yes</label>
+
+                    </div>
+                    <div class="govuk-radios__item">
+                        @Html.RadioButtonFor(x => x.IsUpdatingEmailFields,
+                            false,
+                            new {@class = "govuk-radios__input", id = string.Concat(nameof(Model.IsUpdatingEmailFields), "-false")})
+                        <label class="govuk-label govuk-radios__label" for="@(string.Concat(nameof(Model.IsUpdatingEmailFields), "-false"))">No</label>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="govuk-grid-column-full">
+            <div class="button-row govuk-!-padding-top-8">
+                <button id="save-submit-bottom" type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASAmendEmails, "details")">Continue</button>
+                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button"})
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    @Html.HiddenFor(x => x.IsUpdatingEmailFields)
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h2 class="govuk-heading-m">Please add missing email addresses below</h2>
+            <p>
+                If you already have email addresses present please review them.
+                If they are no longer up-to-date, valid or actively monitored please amend accordingly.
+            </p>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            @if (Model.EditPolicy.HeadEmailAddress)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HeadEmailAddress)">
+                    <label class="govuk-label" for="HeadEmailAddress">
+                        @Html.Raw(Model.EditPolicy.HeadteacherLabel) email address
+                        <a href="#help-text-headteacher-email-address" class="help-icon modal-link">
+                            <span class="govuk-visually-hidden">Help with headteacher/principal email address field</span>
+                            @helpers.DialogHiddenPrompt()
+                        </a>
+                    </label>
+                    @Html.ValidationMessageFor(x => x.HeadEmailAddress, null, new {@class = "govuk-error-message"})
+                    @Html.TextBoxFor(x => x.HeadEmailAddress, new {maxlength = 120, @class = "govuk-input", aria_describedby = "help-text-headteacher-email-address"})
+                </div>
+            }
+            @if (Model.EditPolicy.Contact_EmailAddress)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Contact_EmailAddress)">
+                    <label class="govuk-label" for="@nameof(Model.Contact_EmailAddress)">
+                        Email address
+                        <a href="#help-text-email-address" class="help-icon modal-link">
+                            <span class="govuk-visually-hidden">Help with email address field</span>
+                            @helpers.DialogHiddenPrompt()
+                        </a>
+                    </label>
+                    @Html.ValidationMessageFor(x => x.Contact_EmailAddress, null, new {@class = "govuk-error-message"})
+                    @Html.TextBoxFor(x => x.Contact_EmailAddress, new {@class = "govuk-input", aria_describedby = "help-text-email-address"})
+                </div>
+            }
+
+            @if (Model.EditPolicy.ContactAlt_EmailAddress)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ContactAlt_EmailAddress)">
+                    <label class="govuk-label" for="@nameof(Model.ContactAlt_EmailAddress)">
+                        Alternative email address
+                        <a href="#help-text-email-address" class="help-icon modal-link">
+                            <span class="govuk-visually-hidden">Help with alternative email address field</span>
+                            @helpers.DialogHiddenPrompt()
+                        </a>
+                    </label>
+                    @Html.ValidationMessageFor(x => x.ContactAlt_EmailAddress, null, new {@class = "govuk-error-message"})
+                    @Html.TextBoxFor(x => x.ContactAlt_EmailAddress, new {@class = "govuk-input", aria_describedby = "help-text-email-address"})
+                </div>
+            }
+
+        </div>
+        <div class="govuk-grid-column-full">
+            <div class="button-row govuk-!-padding-top-4">
+                <button id="save-submit-bottom" type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSaveEmails, "details")">Continue</button>
+                @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button"})
+            </div>
+        </div>
+    </div>
+}
+
+@functions
+{
+    private static object GetPropertyValue(object m, string propertyName)
+    {
+        return m.GetType().GetProperties()
+            .Single(pi => pi.Name == propertyName)
+            .GetValue(m, null);
+    }
+}
