@@ -191,13 +191,33 @@
 
     @if (Model.EditPolicy.HeadEmailAddress && !Model.IsUpdatingEmailFields.GetValueOrDefault())
     {
+        <details class="govuk-details govuk-!-margin-bottom-2" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    How this email address information is used
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                <p>
+                    The @Html.Raw(Model.EditPolicy.HeadteacherLabel) personal establishment email
+                    address must be added here. This must be an up-to-date, valid and actively monitored email address.
+                    This information is not publicly displayed on the website&apos;s interface and is classed as personal data,
+                    therefore it cannot be shared publicly, for example, through a Freedom of Information (FOI)
+                    request. Under the conditions of Article 6(1)(e) of the UK-GDPR this information can be shared with
+                    other government departments, non-departmental public bodies, arm&apos;s length bodies and
+                    partners for official functions and tasks within the public interest to be performed.
+                </p>
+                <p>
+                    This information is very important as it allows the Department for Education to share important
+                    information and messages with headteachers/principals/managers and establishments, especially during
+                    the Coronavirus pandemic.
+                </p>
+            </div>
+        </details>
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HeadEmailAddress)">
             <label class="govuk-label" for="HeadEmailAddress">
                 @Html.Raw(Model.EditPolicy.HeadteacherLabel) email address
-                <a href="#help-text-headteacher-email-address" class="help-icon modal-link">
-                    <span class="govuk-visually-hidden">Help with headteacher/principal email address field</span>
-                    @helpers.DialogHiddenPrompt()
-                </a>
+
             </label>
             @Html.ValidationMessageFor(x => x.HeadEmailAddress, null, new {@class = "govuk-error-message"})
             @Html.TextBoxFor(x => x.HeadEmailAddress, new {maxlength = 120, @class = "govuk-input", aria_describedby = "help-text-headteacher-email-address"})
@@ -608,13 +628,33 @@
 
     @if (Model.EditPolicy.Contact_EmailAddress && !Model.IsUpdatingEmailFields.GetValueOrDefault())
     {
+        <details class="govuk-details govuk-!-margin-bottom-2" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    How this email address information is used
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                <p>
+                    The main establishment email address and the alternative establishment email address (if one exists for
+                    your establishment) should be added here respectively. These must be up-to-date, valid and actively
+                    monitored email addresses. No personal email addresses or personal establishment email addresses should
+                    be added to these fields. Although these fields are not publicly displayed on the website&apos;s
+                    interface they are not classed as personal data, therefore under certain circumstances GIAS must s
+                    hare this information, for example, if the Department is requested to do so under a Freedom of
+                    Information (FOI) request. This data can be used by the DfE and other government departments,
+                    non-departmental public bodies, arm&apos;s length bodies and partners for official functions and tasks within
+                    the public interest.
+                </p>
+                <p>
+                    This information is very important as it allows the Department for Education to share important
+                    information and messages with establishments, especially during the Coronavirus pandemic.
+                </p>
+            </div>
+        </details>
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Contact_EmailAddress)">
             <label class="govuk-label" for="@nameof(Model.Contact_EmailAddress)">
                 Email address
-                <a href="#help-text-email-address" class="help-icon modal-link">
-                    <span class="govuk-visually-hidden">Help with email address field</span>
-                    @helpers.DialogHiddenPrompt()
-                </a>
             </label>
             @Html.ValidationMessageFor(x => x.Contact_EmailAddress, null, new {@class = "govuk-error-message"})
             @Html.TextBoxFor(x => x.Contact_EmailAddress, new {@class = "govuk-input", aria_describedby = "help-text-email-address"})
@@ -626,10 +666,6 @@
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ContactAlt_EmailAddress)">
             <label class="govuk-label" for="@nameof(Model.ContactAlt_EmailAddress)">
                 Alternative email address
-                <a href="#help-text-email-address" class="help-icon modal-link">
-                    <span class="govuk-visually-hidden">Help with alternative email address field</span>
-                    @helpers.DialogHiddenPrompt()
-                </a>
             </label>
             @Html.ValidationMessageFor(x => x.ContactAlt_EmailAddress, null, new {@class = "govuk-error-message"})
             @Html.TextBoxFor(x => x.ContactAlt_EmailAddress, new {@class = "govuk-input", aria_describedby = "help-text-email-address"})
@@ -902,16 +938,3 @@
     </div>
 }
 }
-
-
-<div class="column-full helptext-container">
-    <div id="help-text-email-address">
-        <h3 class="govuk-heading-s make-modal-header">Email address</h3>
-        <p>Please provide your official school email address. This is usually the email address that is displayed on your school website. You should not provide a personal email address in this field as this information may be released in certain circumstances.</p>
-    </div>
-
-    <div id="help-text-headteacher-email-address">
-        <h3 class="govuk-heading-s make-modal-header">@Html.Raw(Model.EditPolicy.HeadteacherLabel) email address</h3>
-        <p>The email address added to this field will be treated as personal and will not be visible to the public or included in responses to Freedom of Information requests. The address will be used for official Departmental use where direct communication with the @Html.Raw(Model.EditPolicy.HeadteacherLabel.ToLower()) is required.</p>
-    </div>
-</div>
