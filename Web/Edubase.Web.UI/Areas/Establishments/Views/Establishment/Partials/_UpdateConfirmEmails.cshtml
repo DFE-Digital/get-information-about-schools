@@ -21,9 +21,20 @@
     </div>
 }
 
-@if (!Model.IsUpdatingEmailFields.GetValueOrDefault())
+@helper ExitMailEditBackLink()
 {
     <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <button type="submit" class="govuk-back-link gias-back-link--button" name="@nameof(Model.ActionSpecifier)"
+                    value="@ViewModel.GetActionSpecifier(ViewModel.ASEmailBack, "details")">Back</button>
+        </div>
+    </div>
+}
+@if (!Model.IsUpdatingEmailFields.GetValueOrDefault())
+{
+  @ExitMailEditBackLink()
+
+  <div class="govuk-grid-row">
         <div class="govuk-grid-column-three-quarters">
             <div class="govuk-warning-text">
                 <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
@@ -123,6 +134,7 @@
 else
 {
     @Html.HiddenFor(x => x.IsUpdatingEmailFields)
+    @ExitMailEditBackLink()
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">

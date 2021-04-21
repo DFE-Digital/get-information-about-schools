@@ -1,0 +1,11 @@
+.gias-back-link--button {
+  background: transparent;
+  border: 0;
+  text-decoration: underline;
+
+  &:focus,
+  &:active {
+    box-shadow: none;
+    text-decoration: underline;
+  }
+}

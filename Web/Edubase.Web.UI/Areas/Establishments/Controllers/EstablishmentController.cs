@@ -1107,6 +1107,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
             }
 
+            if (viewModel.ActionSpecifierCommand == ViewModel.ASEmailBack)
+            {
+                viewModel.IsUpdatingEmailFields = false;
+                return View(viewModel);
+            }
+
             if (viewModel.ActionSpecifierCommand == ViewModel.ASSave || viewModel.ActionSpecifierCommand == ViewModel.ASConfirm ||
                 viewModel.ActionSpecifierCommand == ViewModel.ASSaveEmails || viewModel.ActionSpecifierCommand == ViewModel.ASAmendEmails)
             {

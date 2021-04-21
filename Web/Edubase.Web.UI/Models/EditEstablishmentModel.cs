@@ -35,6 +35,7 @@ namespace Edubase.Web.UI.Models
         public const string ASSaveHelpdesk = "helpdesk";
         public const string ASSaveEmails = "SaveEmails";
         public const string ASAmendEmails = "AmendEmails";
+        public const string ASEmailBack = "AmendEmailsCancel";
 
         public const string ASUpdateProprietors = "UpdateProprietors";
         public const string ASAddProprietor = "AddProprietor";
