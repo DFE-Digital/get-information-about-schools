@@ -1132,7 +1132,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     viewModel.HasEmptyEmailFields = !ModelState.IsValid;
                 }
 
-                if ((viewModel.Contact_EmailAddress == null || viewModel.HeadEmailAddress == null) && viewModel.ActionSpecifierCommand != ViewModel.ASSaveEmails)
+                if (((viewModel.EditPolicy.Contact_EmailAddress && viewModel.Contact_EmailAddress == null) ||
+                     (viewModel.EditPolicy.HeadEmailAddress && viewModel.HeadEmailAddress == null)) && viewModel.ActionSpecifierCommand != ViewModel.ASSaveEmails)
                 {
                     viewModel.HasEmptyEmailFields = true;
 
