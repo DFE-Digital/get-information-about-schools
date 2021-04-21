@@ -55,9 +55,9 @@
     <div class="@Html.Conditional(Model.ChangesSummary != null || Model.IsUpdatingEmailFields.GetValueOrDefault(), "hidden")">
     <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
+
     <div class="button-row govuk-!-padding-bottom-4">
-        <button id="save-submit-top" type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASSave">Continue</button>
-        @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button"})
+        @Html.ActionLink("Back", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-back-link"})
     </div>
 
     @if (Model.EditPolicy.Name)
