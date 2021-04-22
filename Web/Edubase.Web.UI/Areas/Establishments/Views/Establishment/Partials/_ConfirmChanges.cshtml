@@ -27,7 +27,12 @@
     </div>
 }
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
-
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <button type="submit" class="govuk-back-link gias-back-link--button" name="@nameof(Model.ActionSpecifier)"
+                value="@ViewModel.GetActionSpecifier(ViewModel.ASEmailBack, "details")">Back</button>
+    </div>
+</div>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         @if (
