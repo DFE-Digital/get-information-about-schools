@@ -29,7 +29,7 @@ namespace Edubase.Services.Groups.Models
         public int? LocalAuthorityId { get; set; }
         public string CorporateContact { get; set; }
 
-        [JsonProperty("UKPRN")]
+        [DisplayName("UKPRN"), JsonProperty("UKPRN")]
         public string UKPRN { get; set; }
 
         [IgnoreChangesAttribute]
