@@ -54,7 +54,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         };
         public string[] RecognisedBreakerCodes { get; set; } = new[]
         {
-            "error.group.edit.close.mat.with.links"
+            ApiBreakerCodes.ERROR_GROUP_MAT_WITH_LINKS,
+            ApiBreakerCodes.ERROR_GROUP_SAT_WITH_LINKS
         };
 
         public string Action { get; set; }
