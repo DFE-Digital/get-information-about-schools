@@ -472,6 +472,8 @@ namespace Edubase.UnitTest.Controllers
             GetMock<IGroupReadService>().Setup(x => x.GetModelChangesAsync(It.IsAny<GroupModel>(), It.IsAny<IPrincipal>())).ReturnsAsync(new List<ChangeDescriptorDto>());
             GetMock<ISecurityService>().Setup(x => x.CreateAnonymousPrincipal()).Returns(new GenericPrincipal(new GenericIdentity(""), new string[0]));
             GetMock<IGroupsWriteService>().Setup(x => x.SaveAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ApiResponse(true));
+            GetMock<IGroupReadService>().Setup(x =>
+                x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), It.IsAny<bool>())).ReturnsAsync(new List<EstablishmentGroupModel>());
             InjectBasicLAsAndGroupTypes();
 
             var viewModel = new GroupEditorViewModel
