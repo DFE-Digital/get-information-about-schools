@@ -107,6 +107,13 @@
                                 <dt class="govuk-summary-list__key"><abbr title="Unique Reference Number">URN</abbr></dt>
                                 <dd class="govuk-summary-list__value">@e.Urn</dd>
                             </div>
+                            @if (e.UKPRN.HasValue)
+                            {
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key"><abbr title="UK provider reference number (UKPRN)">UKPRN</abbr></dt>
+                                    <dd class="govuk-summary-list__value">@e.UKPRN</dd>
+                                </div>
+                            }
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">
                                     <abbr title="Local authority - Establishment number">LAESTAB</abbr>
