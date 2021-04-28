@@ -7,7 +7,7 @@
 <html lang="en">
 <!--<![endif]-->
 <head>
-    <title>Get information about schools - GOV.UK</title>
+    <title>Get Information about Schools - GOV.UK</title>
     <meta name="google-site-verification" content="uRt7CAkfClOB8Jig6Pw2-DELUWuuyG2kYKip0UThxhg" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -137,7 +137,7 @@
                     <div class="content">
                         <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
                         <nav id="proposition-menu">
-                            <a href="/" id="proposition-name">Get information about schools</a>
+                            <a href="/" id="proposition-name">Get Information about Schools</a>
 
                             <ul id="proposition-links">
                                 <li><a href="/">Search</a></li>
