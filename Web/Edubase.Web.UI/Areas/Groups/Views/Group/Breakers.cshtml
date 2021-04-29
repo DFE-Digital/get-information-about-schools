@@ -19,17 +19,13 @@
                 <li>Return to the details tab and start the procedure for closing the @Model.GroupTypeName.ToLower() again.</li>
                 <li>Make sure the establishment record(s) removed from the @Model.GroupTypeName.ToLower() is/are updated to reflect any changes.</li>
             </ul>
-
-            @if (Model.LinkedEstablishments.Establishments.Any())
-            {
-                <h4 class="govuk-heading-s">Attached establishment(s)</h4>
-                <p>
-                    @foreach (var est in Model.LinkedEstablishments.Establishments.OrderBy(x => x.Name))
-                    {
-                        @Html.ActionLink(est.Name, "Details", "Establishment", new { id = est.Urn, area = "Establishments" }, null)
-                    }
-                </p>
-            }
+            <h4 class="govuk-heading-s">Attached establishment(s)</h4>
+            <p>
+                @foreach (var est in Model.LinkedEstablishments.Establishments.OrderBy(x => x.Name))
+                {
+                    @Html.ActionLink(est.Name, "Details", "Establishment", new { id = est.Urn, area = "Establishments" }, null)
+                }
+            </p>
         </div>
     }
 
@@ -46,17 +42,13 @@
                 <li>Return to the details tab and start the procedure for closing the @Model.GroupTypeName.ToLower() again.</li>
                 <li>Make sure the establishment record removed from the @Model.GroupTypeName.ToLower() is updated to reflect any changes.</li>
             </ul>
-
-            @if (Model.LinkedEstablishments.Establishments.Any())
-            {
-                <h4 class="govuk-heading-s">Attached establishment</h4>
-                <p>
-                    @foreach (var est in Model.LinkedEstablishments.Establishments.OrderBy(x => x.Name))
-                    {
-                        @Html.ActionLink(est.Name, "Details", "Establishment", new {id = est.Urn, area = "Establishments"}, null)
-                    }
-                </p>
-            }
+            <h4 class="govuk-heading-s">Attached establishment</h4>
+            <p>
+                @foreach (var est in Model.LinkedEstablishments.Establishments.OrderBy(x => x.Name))
+                {
+                    @Html.ActionLink(est.Name, "Details", "Establishment", new { id = est.Urn, area = "Establishments" }, null)
+                }
+            </p>
         </div>
     }
 }
