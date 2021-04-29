@@ -136,7 +136,6 @@
     <Compile Include="Domain\AddressBaseResult.cs" />
     <Compile Include="Domain\AddressDto.cs" />
     <Compile Include="Domain\AddressLookupResult.cs" />
-    <Compile Include="Domain\ApiBreakerCodes.cs" />
     <Compile Include="Domain\ApiResponse.cs" />
     <Compile Include="Domain\ApiPagedResult.cs" />
     <Compile Include="Domain\ApiResultDto.cs" />

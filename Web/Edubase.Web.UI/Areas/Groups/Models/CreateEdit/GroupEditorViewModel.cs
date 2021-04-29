@@ -52,11 +52,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             ApiWarningCodes.CONFIRMATION_MAT_CLOSE_LINKS,
             ApiWarningCodes.CONFIRMATION_SAT_CLOSE_LINKS
         };
-        public string[] RecognisedBreakerCodes { get; set; } = new[]
-        {
-            ApiBreakerCodes.ERROR_GROUP_MAT_WITH_LINKS,
-            ApiBreakerCodes.ERROR_GROUP_SAT_WITH_LINKS
-        };
 
         public string Action { get; set; }
         public int ActionUrn => Action.Split('-').Last().ToInteger() ?? 0;
@@ -134,7 +129,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public const string UIWarningCodeSatClosureAreYouSure = "sat_closure_are_you_sure";
 
         public List<ApiWarning> WarningsToProcess { get; private set; } = new List<ApiWarning>();
-        public List<ApiError> BreakersToProcess { get; private set; } = new List<ApiError>();
 
         public bool ProcessedWarnings { get; set; }
 
@@ -154,21 +148,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
                 if (OriginalStatusId != (int) eLookupGroupStatus.Closed && StatusId == (int) eLookupGroupStatus.Closed && GroupTypeId == (int) GT.SingleacademyTrust)
                 {
                     WarningsToProcess.Add(new ApiWarning { Code = UIWarningCodeSatClosureAreYouSure, Message = "Are you sure you want to close this single-academy trust?" });
-                }
-            }
-        }
-
-        public void SetBreakers(ValidationEnvelopeDto envelope)
-        {
-            if (envelope.Errors.Any())
-            {
-                if (OriginalStatusId != (int) eLookupGroupStatus.Closed &&
-                    StatusId == (int) eLookupGroupStatus.Closed &&
-                    GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust))
-                {
-                    BreakersToProcess = envelope.Errors ?? new List<ApiError>();
-                    BreakersToProcess = BreakersToProcess.Where(x => RecognisedBreakerCodes.Contains(x.Code)).ToList();
-                    envelope.Errors.RemoveAll(x => RecognisedBreakerCodes.Contains(x.Code));
                 }
             }
         }
