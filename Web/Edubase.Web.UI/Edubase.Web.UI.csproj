@@ -605,7 +605,6 @@
     <Content Include="App_Code\helpers.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\Partials\_EditProprietorList.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\Partials\_EditProprietors.cshtml" />
-    <Content Include="Areas\Groups\Views\Group\Breakers.cshtml" />
     <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />

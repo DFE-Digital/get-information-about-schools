@@ -378,7 +378,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
             result.AddToModelState(ModelState, string.Empty);
 
-            await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, (int) viewModel.GroupUId, true);
             await PopulateSelectLists(viewModel);
 
             if (viewModel.CanUserEditStatus)
@@ -393,7 +392,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             await ValidateAsync(viewModel);
 
-            if (ModelState.IsValid && !viewModel.WarningsToProcess.Any() && !viewModel.BreakersToProcess.Any())
+            if (ModelState.IsValid && !viewModel.WarningsToProcess.Any())
             {
                 var actionResult = await ProcessCreateEditGroup(viewModel);
                 if (actionResult != null) return actionResult;
@@ -942,21 +941,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     viewModel.ProcessedWarnings = false;
                 }
 
-                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(RenameValidationFields(x.Fields, viewModel), x.GetMessage()));
+                validationEnvelope.Errors.ForEach(x => ModelState.AddModelError(x.Fields?.Replace("Unmapped field: group.closedDate", nameof(viewModel.ClosedDate)) ?? string.Empty, x.GetMessage()));
                 viewModel.SetWarnings(validationEnvelope);
-                viewModel.SetBreakers(validationEnvelope);
                 ModelState.Remove(nameof(viewModel.ProcessedWarnings));
-
-                foreach (var apiError in viewModel.BreakersToProcess.Where(apiError => ModelState.ContainsKey(RenameValidationFields(apiError.Fields, viewModel))))
-                {
-                    ModelState[RenameValidationFields(apiError.Fields, viewModel)].Errors.Clear();
-                }
             }
-        }
-
-        private static string RenameValidationFields(string field, GroupEditorViewModel viewModel)
-        {
-            return field?.Replace("Unmapped field: group.closedDate", nameof(viewModel.ClosedDate)) ?? string.Empty;
         }
     }
 }
