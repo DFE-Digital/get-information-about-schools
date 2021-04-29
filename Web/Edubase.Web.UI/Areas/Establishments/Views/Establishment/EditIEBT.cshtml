@@ -36,16 +36,15 @@
             <div class="govuk-grid-column-one-half">
 
                 <div class="button-row govuk-!-padding-bottom-4">
-                    <button type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveIEBT)">Save IEBT</button>
                     @Html.ActionLink(
-                        "Cancel",
+                        "Back",
                         "Details",
                         "Establishment",
                         null,
                         null,
                         "school-iebt",
                         new { id = Model.Urn },
-                        new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+                        new { @class = "govuk-back-link gias-back-link--button cancel", data_module = "govuk-button" })
                 </div>
 
                 @if (Model.EditPolicy.IEBTDetail.Notes)
@@ -343,15 +342,6 @@
 
                 <div class="button-row govuk-!-padding-top-4">
                     <button type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveIEBT)">Save IEBT</button>
-                    @Html.ActionLink(
-                        "Cancel",
-                        "Details",
-                        "Establishment",
-                        null,
-                        null,
-                        "school-iebt",
-                        new {id = Model.Urn},
-                        new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button"})
                 </div>
 
             </div>
@@ -362,18 +352,7 @@
             <div class="govuk-grid-column-full">
                 @{ Html.RenderPartial("Partials/_ConfirmChanges"); }
                 <div class="button-row">
-                    <button class="govuk-button--secondary govuk-button" name="@nameof(Model.ActionSpecifier)" type="submit" value="@ViewModel.ASCancel">&laquo; Back</button>
-                    <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm">Confirm</button>
-
-                    @Html.ActionLink(
-                        "Cancel",
-                        "Details",
-                        "Establishment",
-                        null,
-                        null,
-                        "school-iebt",
-                        new {id = Model.Urn},
-                        new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button"})
+                    <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm">Accept and save</button>
                 </div>
             </div>
         }

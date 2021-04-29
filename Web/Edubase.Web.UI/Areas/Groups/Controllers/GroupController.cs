@@ -394,8 +394,19 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             if (ModelState.IsValid && !viewModel.WarningsToProcess.Any())
             {
-                var actionResult = await ProcessCreateEditGroup(viewModel);
-                if (actionResult != null) return actionResult;
+                var dto = CreateSaveDto(viewModel).Group;
+                var changes = await _groupReadService.GetModelChangesAsync(dto, User);
+
+                if (changes.Any() && viewModel.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust) && !viewModel.ChangesAcknowledged)
+                {
+                    viewModel.ChangesSummary = changes;
+                    return View("EditDetails", viewModel);
+                }
+                else
+                {
+                    var actionResult = await ProcessCreateEditGroup(viewModel);
+                    if (actionResult != null) return actionResult;
+                }
             }
             else
             {
@@ -579,7 +590,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 ClosedDate = viewModel.ClosedDate.ToDateTime(),
                 Address = UriHelper.TryDeserializeUrlToken<AddressDto>(viewModel.AddressJsonToken),
                 StatusId = viewModel.StatusId,
-                UKPRN = viewModel.UKPRN.ToString()
+                UKPRN = viewModel.UKPRN?.ToString()
             };
 
             List<LinkedEstablishmentGroup> createLinksDomainModel()

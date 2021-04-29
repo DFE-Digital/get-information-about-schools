@@ -152,6 +152,9 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             }
         }
 
+        public List<ChangeDescriptorDto> ChangesSummary { get; set; }
+        public bool ChangesAcknowledged { get; set; }
+
         public void ClearWarnings()
         {
             WarningsToProcess = new EditableList<ApiWarning>();
