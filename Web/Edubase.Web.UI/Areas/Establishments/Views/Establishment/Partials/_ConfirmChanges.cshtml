@@ -27,7 +27,12 @@
     </div>
 }
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
-
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <button type="submit" class="govuk-back-link gias-back-link--button" name="@nameof(Model.ActionSpecifier)"
+                value="@ViewModel.GetActionSpecifier(ViewModel.ASEmailBack, "details")">Back</button>
+    </div>
+</div>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         @if (
@@ -188,7 +193,6 @@
             <div class="govuk-form-group">
                 <div class="govuk-checkboxes">
                     @FormHelpers.GiasCheckbox("true", "OverrideCRProcess", "Override change request", null, new { @id = "override-cr", @class = "govuk-checkboxes__input" })
-                    @* @Html.LabelFor(x => x.OverrideCRProcess, "Override change request", new {@for = "override-cr"}) *@
                 </div>
             </div>
         }

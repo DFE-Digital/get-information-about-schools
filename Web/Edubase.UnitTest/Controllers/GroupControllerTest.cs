@@ -25,6 +25,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.UI;
 using Edubase.Services.Governors;
 using Edubase.Services.Governors.Models;
 using static Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
@@ -297,7 +298,7 @@ namespace Edubase.UnitTest.Controllers
             Assert.That(vm.PageTitle, Is.EqualTo("Edit federation"));
             Assert.That(vm.StatusId, Is.EqualTo((int)eLookupGroupStatus.Open));
             Assert.That(vm.Address, Is.EqualTo(domainModel.Address.ToString()));
-            Assert.That(vm.CanUserCloseMATAndMarkAsCreatedInError, Is.False);
+            Assert.That(vm.CanUserCloseAndMarkAsCreatedInError, Is.False);
             Assert.That(vm.CCLeadCentreUrn, Is.EqualTo(estabList.Single(x => x.CCIsLeadCentre == true).Urn));
         }
 
@@ -358,7 +359,7 @@ namespace Edubase.UnitTest.Controllers
             Assert.That(vm.SelectedTabName, Is.EqualTo("links"));
             Assert.That(vm.OpenDateLabel, Is.EqualTo("Open date"));
             Assert.That(vm.PageTitle, Is.EqualTo("Edit federation"));
-            Assert.That(vm.CanUserCloseMATAndMarkAsCreatedInError, Is.False);
+            Assert.That(vm.CanUserCloseAndMarkAsCreatedInError, Is.False);
         }
 
         [Test]
@@ -468,8 +469,11 @@ namespace Edubase.UnitTest.Controllers
         {
             GetMock<IGroupsWriteService>().Setup(x => x.ValidateAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ValidationEnvelopeDto());
             GetMock<IGroupReadService>().Setup(x => x.ExistsAsync(It.IsAny<IPrincipal>(), It.IsAny<CompaniesHouseNumber?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>())).ReturnsAsync(false);
+            GetMock<IGroupReadService>().Setup(x => x.GetModelChangesAsync(It.IsAny<GroupModel>(), It.IsAny<IPrincipal>())).ReturnsAsync(new List<ChangeDescriptorDto>());
             GetMock<ISecurityService>().Setup(x => x.CreateAnonymousPrincipal()).Returns(new GenericPrincipal(new GenericIdentity(""), new string[0]));
             GetMock<IGroupsWriteService>().Setup(x => x.SaveAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ApiResponse(true));
+            GetMock<IGroupReadService>().Setup(x =>
+                x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), It.IsAny<bool>())).ReturnsAsync(new List<EstablishmentGroupModel>());
             InjectBasicLAsAndGroupTypes();
 
             var viewModel = new GroupEditorViewModel

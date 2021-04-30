@@ -1,6 +1,6 @@
 @model FaqViewModel
 @{
-    ViewBag.Title = "GIAS: Frequently asked questions";
+    ViewBag.Title = "Get Information about Schools: Frequently asked questions";
     ViewBag.SiteSection = "help";
 }
 
@@ -26,7 +26,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full govuk-!-padding-bottom-6">
         <h1 class="govuk-heading-xl">Frequently asked questions (FAQs)</h1>
-        <p>Answers to commonly asked questions about Get information about schools.</p>
+        <p>Answers to commonly asked questions about Get Information about Schools.</p>
 
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
     </div>
@@ -63,7 +63,7 @@
                 headingModifer = "s";
             }
             <h2 class="govuk-heading-@headingModifer">@item.Title</h2>
-            <div class="gias-user-content">
+            <div class="gias-user-content govuk-!-padding-bottom-3">
             <p>@Html.Raw(item.Content.Replace("\n","<br/>"))</p>
             @if (Model.UserCanEdit)
             {

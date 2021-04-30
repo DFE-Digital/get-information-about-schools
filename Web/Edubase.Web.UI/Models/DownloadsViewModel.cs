@@ -33,7 +33,7 @@ namespace Edubase.Web.UI.Models
         public int ScheduledExtractsCount => (ScheduledExtracts?.Count).GetValueOrDefault();
 
         public bool AreScheduledExtractsAvailable => ScheduledExtractsCount > 0;
-        
+
         public IEnumerable<Section> GetFileDownloadGroups()
         {
             var retVal = new List<Section>();
@@ -133,7 +133,7 @@ namespace Edubase.Web.UI.Models
 
             if (allGovernorData.Any())
             {
-                var section = new Section { Heading = "Governors", Paragraph = "You can download the complete record for all governors listed within edubase." };
+                var section = new Section { Heading = "Governors", Paragraph = "You can download the complete record for all governors listed within GIAS." };
                 section.SubSections.Add(new Section
                 {
                     Heading = "All governor data",
@@ -159,20 +159,20 @@ namespace Edubase.Web.UI.Models
             /*
              tag=all.edubase.data
              tag=all.edubase.data.links
-             
+
              tag=all.open.academies.and.free.schools
              tag=all.open.academies.and.free.school.links
-             
+
              tag=all.open.state-funded.schools
              tag=all.open.state-funded.school.links
-             
+
              tag=academy.sponsor.and.trust.links
              tag=all.open.childrens.centres
              tag=all.governance.records
              tag=all.mat.governance.records
              tag=all.academy.governance.records
              tag=all.la.maintained.governance.records
-             
+
              --
              tag=all.edubase.data
              tag=all.edubase.data.links
