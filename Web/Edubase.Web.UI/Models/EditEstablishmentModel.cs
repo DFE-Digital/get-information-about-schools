@@ -33,6 +33,9 @@ namespace Edubase.Web.UI.Models
         public const string ASSaveLocation = "location";
         public const string ASSaveIEBT = "iebt";
         public const string ASSaveHelpdesk = "helpdesk";
+        public const string ASSaveEmails = "SaveEmails";
+        public const string ASAmendEmails = "AmendEmails";
+        public const string ASEmailBack = "AmendEmailsCancel";
 
         public const string ASUpdateProprietors = "UpdateProprietors";
         public const string ASAddProprietor = "AddProprietor";
@@ -295,7 +298,10 @@ namespace Edubase.Web.UI.Models
         public string OriginalEstablishmentName { get; set; }
         public string OriginalTypeName { get; set; }
 
+        [DisplayName("Email address")]
         public string Contact_EmailAddress { get; set; }
+
+        [DisplayName("Alternative email address")]
         public string ContactAlt_EmailAddress { get; set; }
 
         [DisplayName("Number of pupils eligible for free school meals")]
@@ -426,7 +432,7 @@ namespace Edubase.Web.UI.Models
 
         [DisplayName("Highest annual rate for boarding pupils")]
         public int? HighestAnnualRateForBoardingPupils { get; set; }
-       
+
         [DisplayName("Accommodation changes")]
         public int? AccommodationChangedId { get; set; }
 
@@ -460,6 +466,11 @@ namespace Edubase.Web.UI.Models
         [DisplayName("Previous establishment number")]
         public int? HelpdeskPreviousEstablishmentNumber { get; set; }
 
+        public bool? HasEmptyEmailFields { get; set; }
+
+        public bool? IsUpdatingEmailFields { get; set; }
+
+        public List<string> EmptyEmailFields { get; set; }
 
         #region Children's Centre fields
         public int? CCOperationalHoursId { get; set; }
