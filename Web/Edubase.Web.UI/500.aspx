@@ -6,7 +6,7 @@
 <html lang="en" class="govuk-template">
 <head>
     <meta charset="utf-8">
-    <title>Get information about schools - GOV.UK</title>
+    <title>Get Information about Schools - GOV.UK</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="blue">
 
@@ -29,7 +29,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:image" content="/public/govuk-frontend/images/opengraph-image.png?0.12.0">
     <meta name="description">
-    <meta name="keywords" content="Get information about schools"/>
+    <meta name="keywords" content="Get Information about Schools"/>
 
     <script nonce="x8k8v9r9MFNM3BVGnKMrUv5gDSq4YEES6RLQirxVw+8=">
         (function () {
@@ -84,7 +84,7 @@
             </div>
 
             <div class="govuk-header__content">
-                <a class="govuk-header__link govuk-header__link--service-name" href="/" id="proposition-name">Get information about schools</a>
+                <a class="govuk-header__link govuk-header__link--service-name" href="/" id="proposition-name">Get Information about Schools</a>
                 <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
                 <nav>
                     <ul id="navigation" class="govuk-header__navigation " aria-label="Top Level Navigation">
