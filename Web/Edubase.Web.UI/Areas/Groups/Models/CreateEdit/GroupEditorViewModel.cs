@@ -75,8 +75,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public string Address { get; set; }
         public DateTimeViewModel OpenDate { get; set; } = new DateTimeViewModel();
         public string AddressJsonToken { get; set; }
-        public bool CloseMATAndMarkAsCreatedInError { get; set; }
-        public bool CanUserCloseMATAndMarkAsCreatedInError { get; set; }
+        public bool CloseAndMarkAsCreatedInError { get; set; }
+        public bool CanUserCloseAndMarkAsCreatedInError { get; set; }
         public bool CanUserEditStatus { get; set; }
         public bool CanUserEditClosedDate { get; set; }
         public bool CanUserEditUkprn { get; set; }
@@ -151,6 +151,9 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
                 }
             }
         }
+
+        public List<ChangeDescriptorDto> ChangesSummary { get; set; }
+        public bool ChangesAcknowledged { get; set; }
 
         public void ClearWarnings()
         {

@@ -3,7 +3,7 @@
 @{
     ViewBag.assetsPath = "/public/govuk-frontend";
 
-    var title = !string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title : "Get information about schools";
+    var title = !string.IsNullOrEmpty(ViewBag.Title) ? ViewBag.Title : "Get Information about Schools";
     var documentTitle = string.Format("{0} - {1}", title, "GOV.UK");
     var gtmKey = System.Configuration.ConfigurationManager.AppSettings["GoogleTagManagerKey"];
 
@@ -37,7 +37,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:image" content="@(ViewBag.assetsPath)/images/opengraph-image.png?0.12.0">
     <meta name="description" content="@(ViewBag.pageDescription)">
-    <meta name="keywords" content="Get information about schools" />
+    <meta name="keywords" content="Get Information about Schools" />
 
     <script nonce="@Html.ScriptNonce()">
         (function () {
@@ -136,7 +136,7 @@
             </div>
 
             <div class="govuk-header__content">
-                @Html.ActionLink("Get information about schools", "Index", "Search", new {area = ""}, new {id = "proposition-name", @class = "govuk-header__link govuk-header__link--service-name"})
+                @Html.ActionLink("Get Information about Schools", "Index", "Search", new {area = ""}, new {id = "proposition-name", @class = "govuk-header__link govuk-header__link--service-name"})
                 <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
                 <nav>
                     <ul id="navigation" class="govuk-header__navigation " aria-label="Top Level Navigation">
