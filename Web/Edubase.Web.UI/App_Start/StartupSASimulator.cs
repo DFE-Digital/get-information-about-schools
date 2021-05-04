@@ -84,7 +84,7 @@ namespace Edubase.Web.UI
             {
                 AllowUnsolicitedAuthnResponse = true,
                 Binding = Saml2BindingType.HttpRedirect,
-                SingleSignOnServiceUrl = new Uri("http://dfe-sign-in-simulator.azurewebsites.net/")
+                SingleSignOnServiceUrl = new Uri("https://dfe-sign-in-simulator.azurewebsites.net/" + AppSettings["SimulatorGuid"])
             };
 
             authServicesOptions.IdentityProviders.Add(idp);
