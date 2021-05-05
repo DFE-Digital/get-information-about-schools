@@ -22,3 +22,4 @@ jobs:
       uses: zricethezav/gitleaks-action@master
       with: 
         config-path: gitleaks.config
+        commit-since: '2021-04-23'
