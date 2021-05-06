@@ -112,25 +112,29 @@
     <!--end global-header-bar-->
 
     <div class="govuk-width-container govuk-width-container">
-            <div class="govuk-phase-banner">
-                <p class="govuk-phase-banner__content">
-                    <strong class="govuk-tag govuk-phase-banner__content__tag">
-                        beta
-                    </strong>
-                    <span class="govuk-phase-banner__text">
-                        This is a new service. Our feedback survey is currently closed. We plan to re-open it soon.
-                    </span>
-                </p>
-            </div>
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-full">
-                    <div class="govuk-breadcrumbs">
-                        <ol class="govuk-breadcrumbs__list">
-                            <li class="govuk-breadcrumbs__list-item"><a href="/" class="govuk-breadcrumbs__link">Search</a></li>
-                        </ol>
-                    </div>
+        <div class="govuk-phase-banner">
+            <p class="govuk-phase-banner__content">
+                <strong class="govuk-tag govuk-phase-banner__content__tag">
+                    beta
+                </strong>
+                <span class="govuk-phase-banner__text">
+                    This is a new service. Your
+                    <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=yXfS-grGoU2187O4s0qC-ZYZAR7wa5FMmFGoqFTjsw5UREJBVlAxSTBKWFdOMEcwTTU1M0gyVVJKRCQlQCN0PWcu">
+                        feedback
+                    </a>
+                    will help us improve it.
+                </span>
+            </p>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <div class="govuk-breadcrumbs">
+                    <ol class="govuk-breadcrumbs__list">
+                        <li class="govuk-breadcrumbs__list-item"><a href="/" class="govuk-breadcrumbs__link">Search</a></li>
+                    </ol>
                 </div>
             </div>
+        </div>
 
 
 
