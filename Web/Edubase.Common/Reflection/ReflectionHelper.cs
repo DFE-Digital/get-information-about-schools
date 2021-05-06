@@ -65,11 +65,10 @@ namespace Edubase.Common.Reflection
                 .Select(p => p.Name).ToList();
         }
 
-        
-        public static List<ChangeDescriptor> DetectGroupChanges(object newModel, object oldModel, params Type[] types)
-        {
-            return DetectChanges(newModel, oldModel, "Group", types);
-        }
+
+
+
+
 
         public static List<ChangeDescriptor> DetectChanges(object newModel, object oldModel, params Type[] types)
         {

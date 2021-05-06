@@ -165,16 +165,10 @@
                 <div class="column-full">
                     <div class="phase-banner">
                         <div class="phase-banner-beta">
-        <strong class="govuk-tag govuk-phase-banner__content__tag">
-            beta
-        </strong>
-        <span class="govuk-phase-banner__text">
-            This is a new service. Your
-            <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=yXfS-grGoU2187O4s0qC-ZYZAR7wa5FMmFGoqFTjsw5UREJBVlAxSTBKWFdOMEcwTTU1M0gyVVJKRCQlQCN0PWcu">
-                feedback
-            </a>
-            will help us improve it.
-        </span>
+    <p>
+        <strong class="phase-tag">BETA</strong>
+        <span>This is a new service. Our feedback survey is currently closed. We plan to re-open it soon.</span>
+    </p>
 </div>
                     </div>
 

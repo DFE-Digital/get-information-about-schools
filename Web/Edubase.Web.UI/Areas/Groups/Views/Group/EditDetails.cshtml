@@ -9,9 +9,6 @@
     ViewBag.OriginalGroupName = Model.OriginalGroupName;
     ViewBag.OriginalGroupTypeName = Model.OriginalGroupTypeName;
     Layout = "_EditLayoutPage.cshtml";
-    var buttonSaveText = Model.InEditMode ?
-        Model.GroupTypeId.OneOfThese(L.SingleacademyTrust, L.MultiacademyTrust)? "Continue": "Save details"
-        : "Create new " + Model.FieldNamePrefix.ToLower();
 }
     <div class="tab-content">
 
@@ -25,35 +22,16 @@
             @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
             @Html.HiddenFor(x => x.AddressJsonToken)
             @Html.HiddenFor(x => x.ProcessedWarnings)
-            @Html.HiddenFor(x => x.CanUserCloseAndMarkAsCreatedInError)
+            @Html.HiddenFor(x => x.CanUserCloseMATAndMarkAsCreatedInError)
             @Html.HiddenFor(x => x.CanUserEditClosedDate)
             @Html.HiddenFor(x => x.CanUserEditStatus)
             @Html.HiddenFor(x => x.OriginalStatusId)
-        @Html.HiddenFor(x => x.LocalAuthorityId)
 
-
-        if (Model.ChangesSummary != null)
-        {
-            @Html.HiddenFor(x => x.CloseAndMarkAsCreatedInError)
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-full">
-                    @Html.Partial("Partials/_ConfirmChanges")
-                    @Html.Hidden(nameof(Model.ChangesAcknowledged), true)
-
-                    <div class="button-row govuk-!-padding-top-8">
-                        <button type="submit" name="action" class="govuk-button" id="edit-submit" value="@VM.ActionSave">Accept and save</button>
-                        @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button"})
-                    </div>
-                </div>
-            </div>
-        }
-
-        <div class="@Html.Conditional(Model.ChangesSummary != null, "hidden")">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
                     <div class="button-row govuk-!-margin-bottom-4">
-                        <button type="submit" name="action" class="govuk-button" id="edit-submit" value="@VM.ActionSave">@buttonSaveText</button>
-                        @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button"})
+                        <button type="submit" name="action" class="govuk-button" id="edit-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Save details" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
+                        @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
                     </div>
                 </div>
             </div>
@@ -61,15 +39,15 @@
                 <div class="govuk-grid-column-one-half">
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GroupName)">
                         <label for="name" class="govuk-label">@Model.FieldNamePrefix name</label>
-                        @Html.ValidationMessageFor(x => x.GroupName, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.GroupName, null, new { @class = "govuk-error-message"})
                         @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
                         {
-                            <input value="@Model.GroupName" disabled="disabled" class="govuk-input" id="@nameof(Model.GroupName)"/>
+                            <input value="@Model.GroupName" disabled="disabled" class="govuk-input" id="@nameof(Model.GroupName)" />
                             @Html.HiddenFor(x => x.GroupName)
                         }
                         else
                         {
-                            @Html.TextBoxFor(x => x.GroupName, new {@class = "govuk-input"})
+                            @Html.TextBoxFor(x => x.GroupName, new { @class = "govuk-input" })
                         }
                     </div>
 
@@ -78,7 +56,7 @@
                     {
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="companiesHouseNumber">Companies House number</label>
-                            <input type="text" value="@Model.CompaniesHouseNumber" class="govuk-input" disabled="disabled" id="companiesHouseNumber"/>
+                            <input type="text" value="@Model.CompaniesHouseNumber" class="govuk-input" disabled="disabled" id="companiesHouseNumber" />
 
                             @Html.HiddenFor(x => x.CompaniesHouseNumber)
                         </div>
@@ -86,7 +64,7 @@
 
                     <div class="govuk-form-group">
                         <label class="govuk-label" for="groupTypeName">@Model.FieldNamePrefix type</label>
-                        <input type="text" value="@Model.GroupTypeName" class="govuk-input" disabled="disabled" id="groupTypeName"/>
+                        <input type="text" value="@Model.GroupTypeName" class="govuk-input" disabled="disabled" id="groupTypeName" />
                         @Html.HiddenFor(x => x.GroupTypeId)
                     </div>
 
@@ -95,7 +73,7 @@
                     {
                         <div class="govuk-form-group">
                             <label for="openDate" class="govuk-label">@Model.OpenDateLabel</label>
-                            <input value="@(Model.OpenDate.ToDateTime()?.ToString("d MMMM yyyy") ?? "Not recorded")" disabled="disabled" class="govuk-input" id="openDate"/>
+                            <input value="@(Model.OpenDate.ToDateTime()?.ToString("d MMMM yyyy") ?? "Not recorded")" disabled="disabled" class="govuk-input" id="openDate" />
                             @Html.HiddenFor(x => x.OpenDate.Day)
                             @Html.HiddenFor(x => x.OpenDate.Month)
                             @Html.HiddenFor(x => x.OpenDate.Year)
@@ -103,7 +81,7 @@
                     }
                     else
                     {
-                        @Html.EditorFor(x => x.OpenDate, new {title = @Model.OpenDateLabel, fieldsetClassName = "edit-date-fieldset"})
+                        @Html.EditorFor(x => x.OpenDate, new { title = @Model.OpenDateLabel, fieldsetClassName = "edit-date-fieldset" })
                     }
 
                     @* STATUS *@
@@ -111,7 +89,7 @@
                     {
                         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.StatusId)">
                             <label for="StatusId" class="govuk-label">Status</label>
-                            @Html.DropDownListFor(x => x.StatusId, Model.Statuses, "", new {@class = "govuk-select"})
+                            @Html.DropDownListFor(x => x.StatusId, Model.Statuses, "", new { @class = "govuk-select" })
                         </div>
                     }
                     else
@@ -122,7 +100,7 @@
                     @* CLOSED DATE *@
                     @if (!Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust) || Model.CanUserEditClosedDate)
                     {
-                        @Html.EditorFor(x => x.ClosedDate, new {title = "Closed date", fieldsetClassName = "closed-date edit-date-fieldset"})
+                        @Html.EditorFor(x => x.ClosedDate, new { title = "Closed date", fieldsetClassName = "closed-date edit-date-fieldset" })
                     }
                     else
                     {
@@ -135,7 +113,7 @@
                     {
                         <div class="govuk-form-group">
                             <label for="address" class="govuk-label">Address</label>
-                            <input type="text" value="@Model.Address" class="govuk-input" disabled="disabled" id="address"/>
+                            <input type="text" value="@Model.Address" class="govuk-input" disabled="disabled" id="address" />
                             @Html.HiddenFor(x => x.Address)
                         </div>
                     }
@@ -144,8 +122,8 @@
                     {
                         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ManagerEmailAddress)">
                             <label for="ManagerEmailAddress" class="govuk-label">Group manager email</label>
-                            @Html.ValidationMessageFor(x => x.ManagerEmailAddress, null, new {@class = "govuk-error-message"})
-                            @Html.TextBoxFor(x => x.ManagerEmailAddress, new {@class = "govuk-input"})
+                            @Html.ValidationMessageFor(x => x.ManagerEmailAddress, null, new { @class = "govuk-error-message"})
+                            @Html.TextBoxFor(x => x.ManagerEmailAddress, new { @class = "govuk-input" })
                         </div>
                     }
 
@@ -156,28 +134,23 @@
                             @Html.ValidationMessageFor(x => x.LocalAuthorityId)
                             @if (Model.IsLocalAuthorityEditable)
                             {
-                                @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new {@class = "govuk-select", id = "localAuthorityId"})
+                                @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new { @class = "govuk-select", id = "localAuthorityId" })
                             }
                             else
                             {
-                                <input value="@(Model.LocalAuthorityName)" disabled="disabled" class="govuk-input" id="localAuthorityId"/>
+                                <input value="@(Model.LocalAuthorityName)" disabled="disabled" class="govuk-input" id="localAuthorityId" />
                                 @Html.HiddenFor(x => x.LocalAuthorityName)
                                 @Html.HiddenFor(x => x.LocalAuthorityId)
                             }
                             @Html.HiddenFor(x => x.IsLocalAuthorityEditable)
                         </div>
                     }
-                    else
-                    {
-                        @Html.HiddenFor(x => x.LocalAuthorityName)
-                        @Html.HiddenFor(x => x.LocalAuthorityId)
-                    }
 
                     @if (Model.GroupUId.HasValue)
                     {
                         <div class="govuk-form-group">
                             <label for="groupUID" class="govuk-label"><abbr title="Unique Identifier">UID</abbr></label>
-                            <input value="@Model.GroupUId" disabled="disabled" class="govuk-input" id="groupUID"/>
+                            <input value="@Model.GroupUId" disabled="disabled" class="govuk-input" id="groupUID" />
                         </div>
                     }
 
@@ -185,8 +158,8 @@
                     {
                         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.UKPRN)">
                             <label class="govuk-label" for="UKPRN">UK provider reference number (UKPRN)</label>
-                            @Html.ValidationMessageFor(x => x.UKPRN, null, new {@class = "govuk-error-message"})
-                            @Html.TextBoxFor(x => x.UKPRN, new {@class = "govuk-input"})
+                            @Html.ValidationMessageFor(x => x.UKPRN, null, new { @class = "govuk-error-message" })
+                            @Html.TextBoxFor(x => x.UKPRN, new { @class = "govuk-input" })
                         </div>
                     }
                     else
@@ -196,7 +169,7 @@
                         {
                             <div class="govuk-form-group">
                                 <label class="govuk-label" for="UKPRN">UK provider reference number (UKPRN)</label>
-                                <input value="@Model.UKPRN.Value" disabled="disabled" class="govuk-input"/>
+                                <input value="@Model.UKPRN.Value" disabled="disabled" class="govuk-input" />
                             </div>
                         }
                     }
@@ -204,22 +177,20 @@
                     @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.SchoolSponsor))
                     {
                         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GroupId)">
-                            @Html.LabelFor(x => x.GroupId, new {@class = "govuk-label"})
-                            @Html.ValidationMessageFor(x => x.GroupId, null, new {@class = "govuk-error-message"})
-                            @Html.TextBoxFor(x => x.GroupId, new {@class = "govuk-input", maxlength = 120})
+                            @Html.LabelFor(x => x.GroupId, new { @class = "govuk-label" })
+                            @Html.ValidationMessageFor(x => x.GroupId, null, new { @class = "govuk-error-message"})
+                            @Html.TextBoxFor(x => x.GroupId, new { @class = "govuk-input", maxlength = 120 })
                         </div>
                     }
 
-                    @if (Model.CanUserCloseAndMarkAsCreatedInError)
+                    @if (Model.CanUserCloseMATAndMarkAsCreatedInError)
                     {
-                        var groupTypeShortName = Model.GroupTypeId == 5 ? Model.GroupTypeName.ToLower() : "trust";
-
                         <div class="govuk-form-group">
                             @FormHelpers.GiasCheckbox("true",
-                                nameof(Model.CloseAndMarkAsCreatedInError),
-                                $"Close this {groupTypeShortName} and mark as created in error",
-                                string.Empty,
-                                new {id = "close-created-in-error"})
+                                 "CloseMATAndMarkAsCreatedInError",
+                                 "Close this trust and mark as created in error",
+                                 string.Empty,
+                                 new { id = "close-created-in-error" })
                         </div>
                     }
 
@@ -229,8 +200,8 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
                     <div class="button-row govuk-!-padding-top-4">
-                        <button type="submit" name="action" class="govuk-button" id="edit-submit" value="@VM.ActionSave">@buttonSaveText</button>
-                        @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button"})
+                        <button type="submit" name="action" class="govuk-button" id="edit-submit" value="@VM.ActionSave">@(Model.InEditMode ? "Save details" : "Create new " + Model.FieldNamePrefix.ToLower())</button>
+                        @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
                     </div>
 
                 </div>
@@ -241,10 +212,8 @@
                     @Html.Partial("Warnings")
                 </div>
             </div>
-        </div>
         }
     </div>
-
 @section ViewScripts
 {
     <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-group-details.*.js"))"></script>

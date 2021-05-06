@@ -11,8 +11,6 @@ using System.Linq;
 using Edubase.Services.Core;
 using Newtonsoft.Json;
 using Edubase.Common;
-using Edubase.Common.Reflection;
-using Edubase.Services.Lookup;
 
 namespace Edubase.Services.Texuna.Groups
 {
@@ -20,12 +18,10 @@ namespace Edubase.Services.Texuna.Groups
     {
         private const string ApiSuggestPath = "suggest/group";
         private readonly HttpClientWrapper _httpClient;
-        private readonly ICachedLookupService _cachedLookupService;
 
-        public GroupReadApiService(HttpClientWrapper httpClient, ICachedLookupService cachedLookupService)
+        public GroupReadApiService(HttpClientWrapper httpClient)
         {
             _httpClient = httpClient;
-            _cachedLookupService = cachedLookupService;
         }
 
         public async Task<bool> ExistsAsync(IPrincipal principal, CompaniesHouseNumber? companiesHouseNumber = null, string groupId = null, int? existingGroupUId = null, string name = null, int? localAuthorityId = null)
@@ -114,56 +110,6 @@ namespace Edubase.Services.Texuna.Groups
             }
 
             return suggestions;
-        }
-
-        public async Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel model, IPrincipal principal)
-        {
-            var originalModel = (await GetAsync(model.GroupUId.Value, principal)).GetResult();
-            return await GetModelChangesAsync(originalModel, model);
-        }
-
-        public async Task<List<ChangeDescriptorDto>> GetModelChangesAsync(GroupModel original, GroupModel model)
-        {
-            var changes = ReflectionHelper.DetectGroupChanges(model, original);
-            var retVal = new List<ChangeDescriptorDto>();
-
-            foreach (var change in changes)
-            {
-                if (_cachedLookupService.IsLookupField(change.Name))
-                {
-                    change.OldValue = await _cachedLookupService.GetNameAsync(change.Name, change.OldValue.ToInteger());
-                    change.NewValue = await _cachedLookupService.GetNameAsync(change.Name, change.NewValue.ToInteger());
-                }
-
-                if (change.DisplayName == null)
-                {
-                    change.DisplayName = PropertyName2Label(change.Name);
-                }
-
-                retVal.Add(new ChangeDescriptorDto
-                {
-                    Id = change.Name,
-                    Name = change.DisplayName ?? change.Name,
-                    NewValue = change.NewValue.Clean(),
-                    OldValue = change.OldValue.Clean(),
-                    Tag = change.Tag,
-                    RequiresApproval = false
-                });
-            }
-
-            return retVal;
-        }
-
-        private string PropertyName2Label(string name)
-        {
-            if (name.EndsWith("Id", StringComparison.Ordinal))
-            {
-                name = name.Substring(0, name.Length - 2);
-            }
-
-            name = name.Replace("_", "").Replace("Group.", string.Empty);
-            name = name.ToProperCase(true);
-            return name;
         }
     }
 }
