@@ -173,7 +173,6 @@
             </a>
             will help us improve it.
         </span>
-    </p>
 </div>
 
 

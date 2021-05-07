@@ -529,6 +529,7 @@
     <Content Include="Areas\Establishments\Views\AcademyOpenings\EditAcademyOpening.cshtml" />
     <Content Include="Areas\Establishments\Views\AcademyOpenings\SearchAcademyOpenings.cshtml" />
     <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Downloads\SelectDataset.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\Partials\_UpdateConfirmEmails.cshtml" />
     <Content Include="Areas\Groups\Views\Group\Warnings.cshtml" />
     <Content Include="Assets\Sass\govuk-core.scss" />
     <Content Include="public\assets\images\accessibility\accessibility_links_misplaced.png" />
@@ -605,7 +606,7 @@
     <Content Include="App_Code\helpers.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\Partials\_EditProprietorList.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\Partials\_EditProprietors.cshtml" />
-    <None Include="Properties\PublishProfiles\dfe-edubase-dev - Web Deploy.pubxml" />
+    <Content Include="Areas\Groups\Views\Group\Partials\_ConfirmChanges.cshtml" />
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
     <Content Include="robots.txt" />
@@ -750,6 +751,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Governors\Views\Search\" />
+    <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Views\Admin\" />
     <Folder Include="Views\GOVUK\Views\errors\" />
     <Folder Include="Views\UserRoles\" />

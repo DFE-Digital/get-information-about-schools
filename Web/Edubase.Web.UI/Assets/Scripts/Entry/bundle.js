@@ -36,10 +36,10 @@ window.displayNewsDialog = function(myetag, etag) {
     ok: function () {
       location.href = "/news";
     },
-    title: 'The News page has been updated',
-    content: 'A new article has been added to the News Page that could help your Get information about schools experience. Click \'Go to news page\' to view the News Page or find the News link in the black header.',
+    title: 'The news page has been updated',
+    content: 'A new news item has been added to the news page.  We recommend you view this so you are aware of the recent development release to Get Information about Schools (GIAS). When applicable other non-development information is recorded here. Viewing the news items could improve your user experience of the service. Select the button,  \'Go to news page\' to view the news page or select the news tab on the main GIAS header on each page.',
     triggerEvent: 'click',
-    okLabel: "Go to News page",
+    okLabel: "Go to news page",
     headingSize: 'l',
   });
   window.DfECookieManager.setCookie(myetag, etag, { days: 365 });
