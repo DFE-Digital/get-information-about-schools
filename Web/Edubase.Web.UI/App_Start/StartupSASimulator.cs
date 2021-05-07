@@ -80,7 +80,7 @@ namespace Edubase.Web.UI
                 SPOptions = spOptions
             };
 
-            var stubGuid = AppSettings["SASimulatorGuid"] ?? "e73d98ff-0f1c-4cc2-8808-6d1bf028a8a9"; // Kentor stub idp has this default guid if none is used
+            var stubGuid = AppSettings["SASimulatorGuid"];
             var idpUrl = AppSettings["SASimulatorUri"] + stubGuid;
 
             var idp = new IdentityProvider(new EntityId(idpUrl + "/Metadata"), spOptions)
