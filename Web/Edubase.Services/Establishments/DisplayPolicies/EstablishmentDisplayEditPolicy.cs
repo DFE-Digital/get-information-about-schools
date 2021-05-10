@@ -23,7 +23,6 @@ namespace Edubase.Services.Establishments.DisplayPolicies
             {
                 HeadteacherLabel = "Manager";
                 HeadEmailAddressLabel = "Manager email";
-                MainEmailAddressLabel = "Centre email";
                 EstablishmentTypeLabel = "Provider type";
             }
 
