@@ -112,7 +112,7 @@ namespace Edubase.Web.UI.Controllers
                         fieldId = "LocalAuthorityToAdd";
 
                         fieldError = viewModel.SelectedLocalAuthorityIds.Any() ?
-                            "We could not find any local authorities matching your search criteria" :
+                            "We could not find any establishments for this local authority" :
                             "Please enter a local authority to start a search";
                         viewModel.ErrorPanel = "LocalAuthority";
 
