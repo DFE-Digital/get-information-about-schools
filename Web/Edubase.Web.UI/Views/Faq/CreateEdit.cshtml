@@ -44,10 +44,8 @@
                 @Html.TextBoxFor(x => x.Title, new { @class = "govuk-input"})
             </div>
 
-            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.TitleFontSize)">
-                @Html.LabelFor(x => x.TitleFontSize, new { @class = "govuk-label"})
-                @Html.ValidationMessageFor(x => x.TitleFontSize, null, new { @class = "govuk-error-message"})
-                @Html.DropDownListFor(x => x.TitleFontSize, new[] {new SelectListItem {Text = "Small", Value = "s"}, new SelectListItem {Text = "Medium", Value = "m"}, new SelectListItem {Text = "Large", Value = "l"},}, new { @class = "govuk-select"})
+            <div>
+                @Html.HiddenFor( x => x.TitleFontSize, new { Value = "m" } )
             </div>
 
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Content)">
