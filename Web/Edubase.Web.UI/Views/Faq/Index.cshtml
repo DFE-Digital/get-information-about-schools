@@ -34,41 +34,25 @@
 
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
+    <div class=".govuk-grid-column-two-thirds">
         @if (Model.UserCanEdit)
         {
-        <p>
+            <p>
                 @Html.RouteLink("Add entry", "CreateFaqItem", null, new { @class = "govuk-button" })
-        </p>
+            </p>
 
         }
 
 
         @foreach (var item in Model.Items)
         {
-            // GDS migration. If at some point the FAQs only contain new content
-            // created after this page has been released, this can go
-            // old content has small/medium/ large, but these are removed in favour of s/m/l in the new front end
-            var headingModifer = item.TitleFontSize;
-            if (item.TitleFontSize == "large")
-            {
-                headingModifer = "xl";
-            }
-            else if (item.TitleFontSize == "medium")
-            {
-                headingModifer = "l";
-            }
-            else if (item.TitleFontSize == "small")
-            {
-                headingModifer = "m";
-            }
-            <h2 class="govuk-heading-@headingModifer">@item.Title</h2>
+            <h2 class="govuk-heading-m">@item.Title</h2>
             <div class="gias-user-content govuk-!-padding-bottom-4">
-            <p>@Html.Raw(item.Content.Replace("\n","<br/>"))</p>
-            @if (Model.UserCanEdit)
-            {
-                @Html.RouteLink("Edit entry", "EditFaqItem", new { id = item.RowKey }, new { @class = "govuk-button govuk-button--secondary Faq-edit-button" })
-            }
+                <p>@Html.Raw(item.Content.Replace("\n", "<br/>"))</p>
+                @if (Model.UserCanEdit)
+                {
+                    @Html.RouteLink("Edit entry", "EditFaqItem", new { id = item.RowKey }, new { @class = "govuk-button govuk-button--secondary Faq-edit-button" })
+                }
             </div>
         }
     </div>
