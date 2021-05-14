@@ -80,15 +80,18 @@ namespace Edubase.Web.UI
                 SPOptions = spOptions
             };
 
-            var idp = new IdentityProvider(new EntityId("http://dfe-sign-in-simulator.azurewebsites.net/Metadata"), spOptions)
+            var stubGuid = AppSettings["SASimulatorGuid"];
+            var idpUrl = AppSettings["SASimulatorUri"] + stubGuid;
+
+            var idp = new IdentityProvider(new EntityId(idpUrl + "/Metadata"), spOptions)
             {
                 AllowUnsolicitedAuthnResponse = true,
                 Binding = Saml2BindingType.HttpRedirect,
-                SingleSignOnServiceUrl = new Uri("http://dfe-sign-in-simulator.azurewebsites.net/")
+                SingleSignOnServiceUrl = new Uri(idpUrl)
             };
 
             authServicesOptions.IdentityProviders.Add(idp);
-            new Federation("http://dfe-sign-in-simulator.azurewebsites.net/Federation", true, authServicesOptions);
+            new Federation(idpUrl + "/Federation", true, authServicesOptions);
             return authServicesOptions;
         }
 

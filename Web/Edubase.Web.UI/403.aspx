@@ -7,7 +7,7 @@
 <html lang="en">
 <!--<![endif]-->
 <head>
-    <title>Get information about schools - GOV.UK</title>
+    <title>Get Information about Schools - GOV.UK</title>
     <meta name="google-site-verification" content="uRt7CAkfClOB8Jig6Pw2-DELUWuuyG2kYKip0UThxhg" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -138,7 +138,7 @@
                     <div class="content">
                         <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
                         <nav id="proposition-menu">
-                            <a href="/" id="proposition-name">Get information about schools</a>
+                            <a href="/" id="proposition-name">Get Information about Schools</a>
 
                             <ul id="proposition-links">
                                 <li><a href="/">Search</a></li>
@@ -161,22 +161,19 @@
         </div>
         <!--end global-header-bar-->
 
-        <div class="side-width-wrapper">
-            <div class="grid-row">
-                <div class="column-full">
-                    <div class="phase-banner">
-                        <div class="phase-banner-beta">
-    <p>
-        <strong class="phase-tag">BETA</strong>
-        <span>This is a new service. Our feedback survey is currently closed. We plan to re-open it soon.</span>
-    </p>
+<div class="govuk-phase-banner">
+    <p class="govuk-phase-banner__content">
+        <strong class="govuk-tag govuk-phase-banner__content__tag">
+            beta
+        </strong>
+        <span class="govuk-phase-banner__text">
+            This is a new service. Your
+            <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=yXfS-grGoU2187O4s0qC-ZYZAR7wa5FMmFGoqFTjsw5UREJBVlAxSTBKWFdOMEcwTTU1M0gyVVJKRCQlQCN0PWcu">
+                feedback
+            </a>
+            will help us improve it.
+        </span>
 </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
 
 
 
