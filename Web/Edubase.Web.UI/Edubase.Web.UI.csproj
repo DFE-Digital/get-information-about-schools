@@ -529,6 +529,7 @@
     <Content Include="Areas\Establishments\Views\AcademyOpenings\EditAcademyOpening.cshtml" />
     <Content Include="Areas\Establishments\Views\AcademyOpenings\SearchAcademyOpenings.cshtml" />
     <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Downloads\SelectDataset.cshtml" />
+    <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Partials\_UserFilterSets.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\Partials\_UpdateConfirmEmails.cshtml" />
     <Content Include="Areas\Groups\Views\Group\Warnings.cshtml" />
     <Content Include="Assets\Sass\govuk-core.scss" />

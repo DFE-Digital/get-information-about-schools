@@ -121,8 +121,16 @@
             <div class="govuk-grid-column-one-third">
                 <h2 class="gias-heading-xs make-modal-header">Filters</h2>
                 <a href="#results-container" class="govuk-skip-link">Skip filters</a>
-                <a href="#" class="add-clear-filters" id="clear-filters" role="button">Clear all filters</a>
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <a href="#" class="add-clear-filters" id="clear-filters" role="button">Clear all filters</a>
+                }
                 <div id="EditSearchCollapse" class="search-result-filters blanket-container">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @Html.Partial("Partials/_UserFilterSets")
+                        @Html.HiddenFor(x=>x.SavedFilterToken)
+                    }
 
                     <div class="govuk-option-select js-collapsible no-scroll" id="option-select-sort-by" role="search">
                         <div class="container-head js-container-head">
@@ -224,10 +232,10 @@
 
                     <div id="filter-additional-controls" class="filter-additional-controls">
                         <a href="#" class="add-clear-filters" id="clear-filters-additional" role="button">Clear all filters</a>
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <a href="javascript:" class="save-filter-set-link js-save-set hidden govuk-button govuk-button--secondary">Save filter set</a>
-                        }
+                        @* @if (User.Identity.IsAuthenticated) *@
+                        @* { *@
+                        @*     <a href="javascript:" class="save-filter-set-link js-save-set hidden govuk-button govuk-button--secondary">Save filter set</a> *@
+                        @* } *@
                     </div>
 
                     <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit"/>

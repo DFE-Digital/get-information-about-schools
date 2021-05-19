@@ -1,0 +1,86 @@
+.gias-savefiltersetoptions {
+  border: govuk-tint(govuk-colour('mid-grey'), 50) 4px solid;
+  margin-bottom: 10px;
+
+  .govuk-form-group {
+    margin-bottom: 0;
+  }
+
+  .no-js & {
+    display: none;
+  }
+}
+
+.gias-savefiltersetoptions--header {
+  @include govuk-font(16, 'bold');
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-bottom: -1px;
+  padding: 5px 0 5px 10px;
+  background-color: govuk-tint(govuk-colour('mid-grey'), 50);
+  border: 1px solid govuk-tint(govuk-colour('mid-grey'), 50);
+}
+
+.gias-savefiltersetoptions--inner {
+  padding: govuk-spacing(2);
+
+  .govuk-radios__item {
+    float: none;
+    padding-left: govuk-spacing(5);
+
+    &:last-of-type {
+      margin-bottom: govuk-spacing(1);
+    }
+  }
+
+  .govuk-radios__label {
+    font-size: 16px;
+
+    &::before {
+      width: 18px;
+      height: 18px;
+      top: 10px;
+    }
+
+    &::after {
+      top: 14px;
+      left: 4px;
+    }
+  }
+
+  .govuk-button--secondary,
+  .gias-link-button {
+    font-size: 16px;
+    margin-bottom: 0;
+  }
+
+  .gias-savefilterset--save-container .controls-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .govuk-radios__input:focus + .govuk-radios__label::before {
+    border-width: $govuk-border-width-form-element;
+  }
+
+  .govuk-radios--small:hover .govuk-radios__input:not(:disabled) + .govuk-radios__label {
+    &::before {
+      box-shadow: none;
+    }
+  }
+}
+
+.gias-savefilterset--controls {
+  min-height: 35px;
+}
+
+.gias-filter-save--alert__container {
+  min-height: 1.6em;
+}
+
+.gias-filter-save--alert {
+  @include govuk-font(16);
+  margin: 0;
+  padding: 0 0 govuk-spacing(1);
+}

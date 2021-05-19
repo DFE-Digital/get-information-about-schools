@@ -13,6 +13,7 @@ class GiasFiltering {
     this.searchParams = this.getParams();
     this.$form = $('#filter-form');
     this.seenOpenDateWarning = false;
+    this.$filterSetradios = $('#save-filter-options').find('input')
 
     if ($cos) {
       this.searchType = $cos.val();
@@ -90,9 +91,38 @@ class GiasFiltering {
   }
   bindEvents() {
     const self = this;
-    $(".js-save-set").on("click", (e) => {
+    $("#gias-filterset--save-button").on("click", (e) => {
       e.preventDefault();
       this.saveFilterSelection();
+    });
+
+    $('#gias-filterset--delete-button').on('click', (e)=>{
+      e.preventDefault();
+      const messagePanel = $('#gias-filterset--delete-container').find('.gias-filter-save--alert');
+      messagePanel.removeClass('hidden');
+      window.setTimeout(function (){
+        messagePanel.addClass('hidden');
+        $('#gias-filterset--delete-container').addClass('hidden');
+      }, 4000);
+
+      $('#SavedFilterToken').val('');
+      $('#filter-set-saved').prop('disabled', 'disabled');
+      $('#filter-set-custom').prop('checked', true);
+
+      $.ajax({
+        url: '/api/save-search-token',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        method: 'post',
+        data: JSON.stringify({
+          token: null
+        }),
+        success: function (data) {
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          console.log(errorThrown);
+        }
+      });
     });
 
     $('.radius-filter').find('.filter-button').on('click',
@@ -247,6 +277,10 @@ class GiasFiltering {
         $groupOpenClosedSelector.prop('checked', true);
       }
     });
+
+    self.$filterSetradios.on('change',()=>{
+      self.handleFilterSetChange()
+    });
   }
 
   deDupeParams(qs) {
@@ -292,13 +326,58 @@ class GiasFiltering {
   }
 
 
-  getResults() {
+  getResults(_token) {
     const $resultsContainer = $('#results-container');
     const self = this;
     const $downloadLink = $('.search-results-download-link');
     const downloadBaseUrl = $downloadLink.attr('href').split('?')[0];
     const $resultsNotification = $('#results-notification');
-    let token;
+    let token = _token;
+
+    function requestResults(token){
+      $.ajax({
+        url: 'Search/results-js',
+        data: "tok=" + token,
+        dataType: 'html',
+        success: function (results, status, xhr) {
+          let count;
+          if (xhr.getResponseHeader("x-count")) {
+            count = xhr.getResponseHeader("x-count");
+          }
+          $resultsContainer.html(results);
+          if (count > 0) {
+            $resultsNotification.html('Search results loaded. ' + count + ' ' + self.searchCategory + ' found.');
+          }
+          $('#button-loader').remove();
+          $('#gias-mobile-filter-submit').append("<span class='mobile-count'> ("+ count+")</span>");
+          $downloadLink.attr('href', downloadBaseUrl + '?tok=' + token);
+          $downloadLink.removeClass('hidden');
+          $resultsContainer.removeClass('pending-results-update');
+
+          if (Number(xhr.getResponseHeader("x-count")) === 0) {
+            $downloadLink.addClass('hidden');
+            $resultsNotification.html('Search results loaded. No ' + self.searchCategory + ' found.');
+          }
+
+          $(window).trigger({
+            type: 'ajaxResultLoad',
+            count: count
+          });
+
+          if (xhr.getResponseHeader("x-show-date-filter-warning") === "true") {
+            $('.date-filter-warning').removeClass('hidden');
+            if (!self.seenOpenDateWarning) {
+              window.scrollTo(0, 0);
+              self.seenOpenDateWarning = true;
+            }
+          }
+
+          $('.js-save-set').removeClass('hidden');
+          self.enableFilters();
+          window.gMap.refreshMap();
+        }
+      });
+    }
     $resultsContainer.html('<div class="gias-wait-mask gias-wait-mask--inline"><div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div><span class="govuk-visually-hidden">Please wait</span></div>');
 
     this.disableFilters();
@@ -307,65 +386,28 @@ class GiasFiltering {
 
     $('.date-filter-warning').addClass('hidden');
 
-    $.ajax({
-      type: "POST",
-      url: '/api/tokenize',
+    if (token) {
+      requestResults(token);
 
-      data: self.searchParams,
-      success: function (data, status, xhr) {
-        token = data.token;
-        if (supportsHistory()) {
-          history.pushState({}, null, window.location.href.split('?')[0] + '?tok=' + token);
-        }
+    } else {
+      $.ajax({
+        type: "POST",
+        url: '/api/tokenize',
 
-        $.ajax({
-          url: 'Search/results-js',
-          data: "tok=" + token,
-          dataType: 'html',
-          success: function (results, status, xhr) {
-            let count;
-            if (xhr.getResponseHeader("x-count")) {
-              count = xhr.getResponseHeader("x-count");
-            }
-            $resultsContainer.html(results);
-            if (count > 0) {
-              $resultsNotification.html('Search results loaded. ' + count + ' ' + self.searchCategory + ' found.');
-            }
-            $('#button-loader').remove();
-            $('#gias-mobile-filter-submit').append("<span class='mobile-count'> ("+ count+")</span>");
-            $downloadLink.attr('href', downloadBaseUrl + '?tok=' + token);
-            $downloadLink.removeClass('hidden');
-            $resultsContainer.removeClass('pending-results-update');
-
-            if (Number(xhr.getResponseHeader("x-count")) === 0) {
-              $downloadLink.addClass('hidden');
-              $resultsNotification.html('Search results loaded. No ' + self.searchCategory + ' found.');
-            }
-
-
-            $(window).trigger({
-              type: 'ajaxResultLoad',
-              count: count
-            });
-
-            if (xhr.getResponseHeader("x-show-date-filter-warning") === "true") {
-              $('.date-filter-warning').removeClass('hidden');
-              if (!self.seenOpenDateWarning) {
-                window.scrollTo(0, 0);
-                self.seenOpenDateWarning = true;
-              }
-            }
-
-            $('.js-save-set').removeClass('hidden');
-            self.enableFilters();
-            window.gMap.refreshMap();
+        data: self.searchParams,
+        success: function (data, status, xhr) {
+          token = data.token;
+          if (supportsHistory()) {
+            history.pushState({}, null, window.location.href.split('?')[0] + '?tok=' + token);
           }
-        });
-      },
-      error: function (xhr) {
-        self.enableFilters();
-      }
-    });
+
+          requestResults(token);
+        },
+        error: function (xhr) {
+          self.enableFilters();
+        }
+      });
+    }
   }
 
   saveFilterSelection() {
@@ -375,7 +417,14 @@ class GiasFiltering {
     if (filterCount > 0){
       token = QueryString('tok')
     }
+    document.getElementById('SavedFilterToken').value = token;
+    document.getElementById('filter-set-saved').removeAttribute('disabled');
 
+    const messagePanel = $('#gias-filterset--save-container').find('.gias-filter-save--alert');
+    messagePanel.removeClass('hidden');
+    window.setTimeout(function (){
+      messagePanel.addClass('hidden');
+    }, 4000);
 
     $.ajax({
       url: "/api/save-search-token",
@@ -391,6 +440,36 @@ class GiasFiltering {
         console.log(errorThrown);
       }
     });
+  }
+
+  handleFilterSetChange() {
+      const radioValue = this.$filterSetradios.filter(':checked').val();
+      const savePanel = $('#gias-filterset--save-container');
+      const deletePanel = $('#gias-filterset--delete-container');
+      const  $clearBtn =  $('#clear-filters');
+
+      savePanel.addClass('hidden');
+      deletePanel.addClass('hidden');
+
+      switch (radioValue) {
+        case 'all':
+          $clearBtn.click();
+          break;
+
+        case 'open' :
+          $clearBtn.click();
+          $("#b_1").prop('checked', true).trigger('change');
+          break;
+
+        case 'custom':
+          savePanel.removeClass('hidden');
+          break;
+
+        case 'saved':
+          this.getResults(document.getElementById('SavedFilterToken').value);
+          deletePanel.removeClass('hidden');
+          break;
+      }
   }
 
   showPreviousAdditionalFilterSelections() {
