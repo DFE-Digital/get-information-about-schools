@@ -35,7 +35,7 @@
         <a href="#" id="clear-all" role="button">Clear all</a>
     </div>
 
-    using (Html.BeginRouteForm("CollateDownloads", FormMethod.Post))
+    using (Html.BeginRouteForm("CollateDownloads", FormMethod.Post, new {id="download-list-form"}))
     {
         var i = 0;
 
