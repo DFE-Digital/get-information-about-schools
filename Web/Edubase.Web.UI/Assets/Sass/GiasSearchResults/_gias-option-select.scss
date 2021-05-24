@@ -34,6 +34,10 @@
       background-image: none;
       color: inherit;
     }
+
+    &:active {
+      color: govuk-colour('black');
+    }
   }
 
   &.js-closed {
