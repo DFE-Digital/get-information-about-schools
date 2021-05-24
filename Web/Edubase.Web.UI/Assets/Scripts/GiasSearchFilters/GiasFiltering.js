@@ -98,16 +98,19 @@ class GiasFiltering {
 
     $('#gias-filterset--delete-button').on('click', (e)=>{
       e.preventDefault();
-      const messagePanel = $('#gias-filterset--delete-container').find('.gias-filter-save--alert');
+      const messagePanel = $('#gias-filterset--delete-container').find('.gias-filter-save--alert')
+      messagePanel.innerHTML = "Filter set deleted"; // trigger aria-live
       messagePanel.removeClass('hidden');
       window.setTimeout(function (){
         messagePanel.addClass('hidden');
         $('#gias-filterset--delete-container').addClass('hidden');
+        $('#gias-filterset--save-container').removeClass('hidden');
       }, 4000);
 
       $('#SavedFilterToken').val('');
       $('#filter-set-saved').prop('disabled', 'disabled');
       $('#filter-set-custom').prop('checked', true);
+
 
       $.ajax({
         url: '/api/save-search-token',
@@ -421,6 +424,7 @@ class GiasFiltering {
     document.getElementById('filter-set-saved').removeAttribute('disabled');
 
     const messagePanel = $('#gias-filterset--save-container').find('.gias-filter-save--alert');
+    messagePanel.innerHTML = "Filter set saved";
     messagePanel.removeClass('hidden');
     window.setTimeout(function (){
       messagePanel.addClass('hidden');

@@ -29,20 +29,23 @@
             </div>
             <div class="gias-savefiltersetoptions--inner">
                 <div class="govuk-radios govuk-radios--small">
-                    <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="filter-set-all" name="filter-set" type="radio" value="all"
-                               @Html.Conditional(checkedItem == "all", "checked=\"checked\"")>
-                        <label class="govuk-label govuk-radios__label" for="filter-set-all">
-                            All establishments
-                        </label>
-                    </div>
-                    <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="filter-set-open" name="filter-set" type="radio" value="open"
-                               @Html.Conditional(checkedItem == "open", "checked=\"checked\"")>
-                        <label class="govuk-label govuk-radios__label" for="filter-set-open">
-                            Open establishments
-                        </label>
-                    </div>
+                    @if (isAllEstablishments)
+                    {
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="filter-set-all" name="filter-set" type="radio" value="all"
+                                   @Html.Conditional(checkedItem == "all", "checked=\"checked\"")>
+                            <label class="govuk-label govuk-radios__label" for="filter-set-all">
+                                All establishments
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="filter-set-open" name="filter-set" type="radio" value="open"
+                                   @Html.Conditional(checkedItem == "open", "checked=\"checked\"")>
+                            <label class="govuk-label govuk-radios__label" for="filter-set-open">
+                                Open establishments
+                            </label>
+                        </div>
+                    }
                     <div class="govuk-radios__item">
                         <input class="govuk-radios__input" id="filter-set-custom" name="filter-set" type="radio" value="custom">
                         <label class="govuk-label govuk-radios__label" for="filter-set-custom">
