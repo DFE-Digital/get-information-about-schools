@@ -275,7 +275,13 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 ViewBag.ShowSaved = true;
             }
 
-            var model = (await _groupReadService.GetAsync(id, User)).GetResult();
+            var result = await _groupReadService.GetAsync(id, User);
+            if (result.ReturnValue == null)
+            {
+                return HttpNotFound();
+            }
+
+            var model = result.ReturnValue;
 
             var viewModel = new GroupDetailViewModel
             {
