@@ -84,7 +84,6 @@ class GiasSearchErrors {
 
     // Local Authority search
     $('#la-search-submit').on('click', function (e) {
-      console.log('la-click');
       hideErrorSummary();
       const suggestionCount = $('#LocalAuthorityToAdd').next('ul').find('li').length;
       const addedLaCount = $('.remove-suggest-la').length;
