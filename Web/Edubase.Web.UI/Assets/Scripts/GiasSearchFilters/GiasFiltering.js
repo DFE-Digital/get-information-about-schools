@@ -102,7 +102,7 @@ class GiasFiltering {
     $('#gias-filterset--delete-button').on('click', (e)=>{
       e.preventDefault();
       const messagePanel = $('#gias-filterset--delete-container').find('.gias-filter-save--alert')
-      messagePanel.innerHTML = "Filter set deleted"; // trigger aria-live
+      messagePanel.html('Filter set deleted'); // trigger aria-live
       messagePanel.removeClass('hidden');
       window.setTimeout(function (){
         messagePanel.addClass('hidden');
@@ -424,6 +424,17 @@ class GiasFiltering {
     const filterCount = this.$form.find(':checkbox, select').filter(':checked, :selected').length;
     let token = null;
     this.savedSelections = this.$form.find(':input').serializeArray();
+    const messagePanel = $('#gias-filterset--save-container').find('.gias-filter-save--alert');
+
+    if (filterCount === 0) {
+      messagePanel.html('Choose filters');
+      messagePanel.removeClass('hidden');
+      window.setTimeout(function (){
+        messagePanel.addClass('hidden');
+      }, 4000);
+
+      return true;
+    }
 
     if (filterCount > 0) {
       token = QueryString('tok')
@@ -431,8 +442,7 @@ class GiasFiltering {
     document.getElementById('SavedFilterToken').value = token;
     document.getElementById('filter-set-saved').removeAttribute('disabled');
 
-    const messagePanel = $('#gias-filterset--save-container').find('.gias-filter-save--alert');
-    messagePanel.innerHTML = "Filter set saved";
+    messagePanel.html('Filter set saved');
     messagePanel.removeClass('hidden');
     window.setTimeout(function (){
       messagePanel.addClass('hidden');
