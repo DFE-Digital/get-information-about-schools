@@ -147,7 +147,8 @@ class GiasNestedFilters {
     } else if (checkedChildren.length < childControls.length) {
       parent.prop('checked', true);
       parent.next('label').addClass('partial-selection');
-
+    } else if(checkedChildren.length === childControls.length) {
+      parent.prop('checked', true);
     }
   }
 }

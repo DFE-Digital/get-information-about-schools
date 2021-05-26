@@ -1,6 +1,7 @@
 import QueryString from "../GiasHelpers/QueryString";
 import supportsHistory from "../GiasHelpers/supportsHistory";
 import GiasFilterValidation from "./GiasFilterValidation";
+import {cons} from "@most/prelude";
 class GiasFiltering {
   constructor() {
     this.init()
@@ -14,6 +15,8 @@ class GiasFiltering {
     this.$form = $('#filter-form');
     this.seenOpenDateWarning = false;
     this.$filterSetradios = $('#save-filter-options').find('input')
+    this.savedSelections = this.$form.find(':input').serializeArray();
+    this.pauseAutoSelection = false;
 
     if ($cos) {
       this.searchType = $cos.val();
@@ -108,6 +111,7 @@ class GiasFiltering {
       }, 4000);
 
       $('#SavedFilterToken').val('');
+      this.savedSelections = this.$form.find(':input').serializeArray();
       $('#filter-set-saved').prop('disabled', 'disabled');
       $('#filter-set-custom').prop('checked', true);
 
@@ -230,6 +234,9 @@ class GiasFiltering {
         return ele.value !== '';
       }).serialize());
 
+      if (!self.pauseAutoSelection) {
+        $('#filter-set-custom').prop('checked', true).trigger('change');
+      }
 
       self.filterIntent = window.setTimeout(function () {
         self.getResults();
@@ -416,8 +423,9 @@ class GiasFiltering {
   saveFilterSelection() {
     const filterCount = this.$form.find(':checkbox, select').filter(':checked, :selected').length;
     let token = null;
+    this.savedSelections = this.$form.find(':input').serializeArray();
 
-    if (filterCount > 0){
+    if (filterCount > 0) {
       token = QueryString('tok')
     }
     document.getElementById('SavedFilterToken').value = token;
@@ -446,34 +454,66 @@ class GiasFiltering {
     });
   }
 
-  handleFilterSetChange() {
-      const radioValue = this.$filterSetradios.filter(':checked').val();
-      const savePanel = $('#gias-filterset--save-container');
-      const deletePanel = $('#gias-filterset--delete-container');
-      const  $clearBtn =  $('#clear-filters');
+  restoreFilterSelections() {
+    const self = this;
+    const len = self.savedSelections.length;
+    $.each(self.savedSelections, function(n, selection) {
+      const _input = self.$form.find('[name="'+ selection.name+'"][value="'+selection.value+'"]');
 
-      savePanel.addClass('hidden');
-      deletePanel.addClass('hidden');
-
-      switch (radioValue) {
-        case 'all':
-          $clearBtn.click();
-          break;
-
-        case 'open' :
-          $clearBtn.click();
-          $("#b_1").prop('checked', true).trigger('change');
-          break;
-
-        case 'custom':
-          savePanel.removeClass('hidden');
-          break;
-
-        case 'saved':
-          this.getResults(document.getElementById('SavedFilterToken').value);
-          deletePanel.removeClass('hidden');
-          break;
+      if (_input.attr('type') === 'checkbox') {
+        _input.prop('checked', true);
+      } else {
+        _input.value = selection.value;
       }
+
+      $('.nested-items').each(function() {
+        $(this).data().giasNestedFilters.setPartialState();
+      });
+    });
+  }
+
+  handleFilterSetChange() {
+    this.pauseAutoSelection = true;
+    const radioValue = this.$filterSetradios.filter(':checked').val();
+    const savePanel = $('#gias-filterset--save-container');
+    const deletePanel = $('#gias-filterset--delete-container');
+    const $clearBtn = $('#clear-filters');
+    const self = this;
+
+    savePanel.addClass('hidden');
+    deletePanel.addClass('hidden');
+    switch (radioValue) {
+      case 'all':
+        $clearBtn.click();
+        if (this.searchType === 'ByLocalAuthority') {
+          $('#d_all').prop('checked', true).trigger('change');
+        }
+        break;
+
+      case 'open' :
+        $clearBtn.click();
+        if (this.searchType === 'ByLocalAuthority') {
+          $('#d_all').prop('checked', true).trigger('change');
+        }
+
+        $("#b_1").prop('checked', true).trigger('change');
+
+        break;
+
+      case 'custom':
+        savePanel.removeClass('hidden');
+        break;
+
+      case 'saved':
+        this.getResults(document.getElementById('SavedFilterToken').value);
+        this.restoreFilterSelections();
+        deletePanel.removeClass('hidden');
+        break;
+    }
+    window.setTimeout(function(){
+      self.pauseAutoSelection = false;
+    },1000);
+
   }
 
   showPreviousAdditionalFilterSelections() {

@@ -29,7 +29,7 @@
             </div>
             <div class="gias-savefiltersetoptions--inner">
                 <div class="govuk-radios govuk-radios--small">
-                    @if (isAllEstablishments)
+                    @if (isAllEstablishments || Model.SearchType == eSearchType.ByLocalAuthority)
                     {
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="filter-set-all" name="filter-set" type="radio" value="all"
