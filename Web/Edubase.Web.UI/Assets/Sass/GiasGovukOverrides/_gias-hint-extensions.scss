@@ -1,0 +1,17 @@
+.govuk-hint-xs {
+  font-size: 12px;
+  font-size: 0.75rem;
+}
+
+@media (min-width: 40.0625em) {
+  .govuk-hint-xs {
+    font-size: 14px;
+    font-size: 0.875rem;
+  }
+}
+
+@media print {
+  .govuk-hint-xs {
+    font-size: 12pt;
+  }
+}

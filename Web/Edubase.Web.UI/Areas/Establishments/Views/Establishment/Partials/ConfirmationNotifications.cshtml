@@ -1,73 +1,39 @@
 @model EstablishmentDetailViewModel
 
-@if (Model.MediumPriorityConfirmationsPending)
+@if (Model.MediumPriorityConfirmationsPending || Model.HighPriorityConfirmationsPending)
 {
-    <details class="govuk-details" data-module="govuk-details">
-        <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">Confirm records</span>
-        </summary>
-        <div class="govuk-details__text">
-            @if (Model.MediumPriorityEstablishmentConfirmationPending)
+    if (Model.MediumPriorityEstablishmentConfirmationPending || Model.HighPriorityEstablishmentConfirmationPending)
+    {
+        @RenderWarningBox("Establishment", Model.Establishment.ConfirmationUpToDate_LastConfirmationDate?.ToString("d MMMM yyyy") ?? "Not recorded", "EstablishmentConfirmUpToDate")
+    }
+
+    if (Model.MediumPriorityGovernanceConfirmationPending || Model.HighPriorityGovernanceConfirmationPending)
+    {
+        @RenderWarningBox("Governance", Model.Establishment.ConfirmationUpToDateGovernance_LastConfirmationDate?.ToString("d MMMM yyyy") ?? "Not recorded", "EstablishmentGovernanceConfirmUpToDate")
+    }
+}
+
+@helper RenderWarningBox(string type, string date, string route)
+{
+    <div class="govuk-notification-banner govuk-notification-banner--warning" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+        <div class="govuk-notification-banner__header">
+            <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                Very Important!
+            </h2>
+        </div>
+        <div class="govuk-notification-banner__content">
+            @using (Html.BeginRouteForm(route, new { Model.Establishment.Urn }, FormMethod.Post))
             {
-                <div class="data-confirmation-panel">
-                    <p class="confirmation-statement">
-                        Establishment record last confirmed:
-                        <span class="confirmation-date">
-                            @(Model.Establishment.ConfirmationUpToDate_LastConfirmationDate?.ToString("d MMMM yyyy") ?? "Not recorded")
-                        </span>
-                    </p>
-                    @using (Html.BeginRouteForm("EstablishmentConfirmUpToDate", new {urn = Model.Establishment.Urn}, FormMethod.Post))
-                    {
-                        <label class="confirmation-label govuk-body" for="estab-data-confirm">
-                            Confirm establishment record is up to date
-                        </label>
-                        <button class="govuk-button govuk-button--secondary confirmation-button" data-module="govuk-button" id="estab-data-confirm">Confirm</button>
-                    }
-                </div>
-            }
-            @if (Model.MediumPriorityGovernanceConfirmationPending)
-            {
-                <div class="data-confirmation-panel">
-                    <p class="confirmation-statement">
-                        Governance record last confirmed:
-                        <span class="confirmation-date">
-                            @(Model.Establishment.ConfirmationUpToDateGovernance_LastConfirmationDate?.ToString("d MMMM yyyy") ?? "Not recorded")
-                        </span>
-                    </p>
-                    @using (Html.BeginRouteForm("EstablishmentGovernanceConfirmUpToDate", new {urn = Model.Establishment.Urn}, FormMethod.Post))
-                    {
-                        <label class="confirmation-label govuk-body" for="gov-data-confirm">
-                            Confirm governance record is up to date
-                        </label>
-                        <button class="govuk-button govuk-button--secondary confirmation-button" data-module="govuk-button" id="gov-data-confirm">Confirm</button>
-                    }
-                </div>
+                <p class="govuk-notification-banner__heading">
+                    <label for="estab-data-confirm">Confirm your @type.ToLower() details are correct.</label>
+                    <button class="govuk-button" data-module="govuk-button" id="estab-data-confirm">Confirm</button>
+                </p>
+
+                <p>
+                    If they are not correct, edit and save your @type.ToLower() details below<br />
+                    <span class="govuk-hint govuk-hint-xs">Last updated or confirmed: @date</span>
+                </p>
             }
         </div>
-    </details>
-}
-
-@if (Model.HighPriorityConfirmationsPending)
-{
-    if (Model.HighPriorityEstablishmentConfirmationPending)
-    {
-        @RenderHighPriorityBox("Establishment", Model.Establishment.ConfirmationUpToDate_LastConfirmationDate?.ToString("d MMMM yyyy") ?? "Not recorded", "EstablishmentConfirmUpToDate")
-    }
-
-    if (Model.HighPriorityGovernanceConfirmationPending)
-    {
-        @RenderHighPriorityBox("Governance", Model.Establishment.ConfirmationUpToDateGovernance_LastConfirmationDate?.ToString("d MMMM yyyy") ?? "Not recorded", "EstablishmentGovernanceConfirmUpToDate")
-    }
-}
-
-@helper RenderHighPriorityBox(string type, string date, string route)
-{
-    <div class="up-to-date-confirmations high-priority">
-        <h2>@type record last confirmed: <span>@date</span></h2>
-        @using (Html.BeginRouteForm(route, new { Model.Establishment.Urn }, FormMethod.Post))
-        {
-            <label for="estab-data-confirm">Confirm @type.ToLower() record is up to date</label>
-            <button class="govuk-button govuk-button--secondary" data-module="govuk-button" id="estab-data-confirm">Confirm</button>
-        }
     </div>
 }
