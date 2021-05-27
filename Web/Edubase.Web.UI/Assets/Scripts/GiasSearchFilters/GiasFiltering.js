@@ -116,7 +116,8 @@ class GiasFiltering {
       this.savedSelections = this.$form.find(':input').serializeArray();
       $('#filter-set-saved').prop('disabled', 'disabled');
       if (document.getElementById('filter-set-all')) {
-        $('#filter-set-all').prop('checked', true);
+        $('#filter-set-all').prop('checked', true).trigger('change');
+        return;
       } else {
         $('#filter-set-custom').prop('checked', true);
       }
@@ -521,17 +522,19 @@ class GiasFiltering {
 
       case 'saved':
         const token = document.getElementById('SavedFilterToken').value;
+        const windowToken = QueryString('tok');
         function replaceQueryParam(param, newval, search) {
           const regex = new RegExp("([?;&])" + param + "[^&;]*[;&]?");
           const query = search.replace(regex, "$1").replace(/&$/, '');
 
           return (query.length > 2 ? query + "&" : "?") + (newval ? param + "=" + newval : '');
         }
-        if (token) {
+        console.log(token, ' ', windowToken);
+        if (token !== windowToken) {
           const q = replaceQueryParam('tok', token, window.location.search);
           window.location.search = q;
         } else {
-          this.getResults(document.getElementById('SavedFilterToken').value);
+          //this.getResults(document.getElementById('SavedFilterToken').value);
           this.restoreFilterSelections();
           deletePanel.removeClass('hidden');
         }

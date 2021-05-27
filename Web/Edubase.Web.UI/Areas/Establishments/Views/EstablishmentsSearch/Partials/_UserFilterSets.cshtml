@@ -54,7 +54,8 @@
                     </div>
                     <div class="govuk-radios__item">
                         <input class="govuk-radios__input" id="filter-set-saved" name="filter-set" type="radio" value="saved"
-                               @Html.Conditional(checkedItem == "saved", "checked=\"checked\"")>
+                               @Html.Conditional(checkedItem == "saved", "checked=\"checked\"")
+                               @Html.Conditional(string.IsNullOrEmpty(Model.SavedFilterToken),  "disabled=\"disabled\"")>
                         <label class="govuk-label govuk-radios__label" for="filter-set-saved">
                             My saved filter set
                         </label>
