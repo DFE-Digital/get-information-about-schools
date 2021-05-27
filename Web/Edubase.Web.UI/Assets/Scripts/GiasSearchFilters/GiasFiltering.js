@@ -101,8 +101,10 @@ class GiasFiltering {
 
     $('#gias-filterset--delete-button').on('click', (e)=>{
       e.preventDefault();
+      const $savedTokenInput = $('#SavedFilterToken');
       const messagePanel = $('#gias-filterset--delete-container').find('.gias-filter-save--alert')
-      messagePanel.html('Filter set deleted'); // trigger aria-live
+      const message =  $savedTokenInput.val() === '' ? 'You have no saved filter set': 'Filter set deleted';
+      messagePanel.html(message);
       messagePanel.removeClass('hidden');
       window.setTimeout(function (){
         messagePanel.addClass('hidden');
@@ -110,7 +112,7 @@ class GiasFiltering {
         $('#gias-filterset--save-container').removeClass('hidden');
       }, 5000);
 
-      $('#SavedFilterToken').val('');
+      $savedTokenInput.val('');
       this.savedSelections = this.$form.find(':input').serializeArray();
       $('#filter-set-saved').prop('disabled', 'disabled');
       if (document.getElementById('filter-set-all')) {
