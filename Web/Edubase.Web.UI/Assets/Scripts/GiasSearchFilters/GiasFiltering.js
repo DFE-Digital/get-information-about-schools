@@ -1,6 +1,7 @@
 import QueryString from "../GiasHelpers/QueryString";
 import supportsHistory from "../GiasHelpers/supportsHistory";
 import GiasFilterValidation from "./GiasFilterValidation";
+import {cons} from "@most/prelude";
 class GiasFiltering {
   constructor() {
     this.init()
@@ -13,6 +14,9 @@ class GiasFiltering {
     this.searchParams = this.getParams();
     this.$form = $('#filter-form');
     this.seenOpenDateWarning = false;
+    this.$filterSetradios = $('#save-filter-options').find('input')
+    this.savedSelections = this.$form.find(':input').serializeArray();
+    this.pauseAutoSelection = false;
 
     if ($cos) {
       this.searchType = $cos.val();
@@ -90,9 +94,47 @@ class GiasFiltering {
   }
   bindEvents() {
     const self = this;
-    $(".js-save-set").on("click", (e) => {
+    $("#gias-filterset--save-button").on("click", (e) => {
       e.preventDefault();
       this.saveFilterSelection();
+    });
+
+    $('#gias-filterset--delete-button').on('click', (e)=>{
+      e.preventDefault();
+      const $savedTokenInput = $('#SavedFilterToken');
+      const messagePanel = $('#gias-filterset--delete-container').find('.gias-filter-save--alert')
+      const message =  $savedTokenInput.val() === '' ? 'You have no saved filter set': 'Filter set deleted';
+      messagePanel.html(message);
+      messagePanel.removeClass('hidden');
+      window.setTimeout(function (){
+        messagePanel.addClass('hidden');
+        $('#gias-filterset--delete-container').addClass('hidden');
+        $('#gias-filterset--save-container').removeClass('hidden');
+      }, 5000);
+
+      $savedTokenInput.val('');
+      this.savedSelections = this.$form.find(':input').serializeArray();
+      $('#filter-set-saved').prop('disabled', 'disabled');
+      if (document.getElementById('filter-set-all')) {
+        $('#filter-set-all').prop('checked', true);
+      } else {
+        $('#filter-set-custom').prop('checked', true);
+      }
+
+      $.ajax({
+        url: '/api/save-search-token',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        method: 'post',
+        data: JSON.stringify({
+          token: null
+        }),
+        success: function (data) {
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          console.log(errorThrown);
+        }
+      });
     });
 
     $('.radius-filter').find('.filter-button').on('click',
@@ -197,6 +239,9 @@ class GiasFiltering {
         return ele.value !== '';
       }).serialize());
 
+      if (!self.pauseAutoSelection) {
+        $('#filter-set-custom').prop('checked', true).trigger('change');
+      }
 
       self.filterIntent = window.setTimeout(function () {
         self.getResults();
@@ -247,6 +292,10 @@ class GiasFiltering {
         $groupOpenClosedSelector.prop('checked', true);
       }
     });
+
+    self.$filterSetradios.on('change',()=>{
+      self.handleFilterSetChange()
+    });
   }
 
   deDupeParams(qs) {
@@ -292,13 +341,58 @@ class GiasFiltering {
   }
 
 
-  getResults() {
+  getResults(_token) {
     const $resultsContainer = $('#results-container');
     const self = this;
     const $downloadLink = $('.search-results-download-link');
     const downloadBaseUrl = $downloadLink.attr('href').split('?')[0];
     const $resultsNotification = $('#results-notification');
-    let token;
+    let token = _token;
+
+    function requestResults(token){
+      $.ajax({
+        url: 'Search/results-js',
+        data: "tok=" + token,
+        dataType: 'html',
+        success: function (results, status, xhr) {
+          let count;
+          if (xhr.getResponseHeader("x-count")) {
+            count = xhr.getResponseHeader("x-count");
+          }
+          $resultsContainer.html(results);
+          if (count > 0) {
+            $resultsNotification.html('Search results loaded. ' + count + ' ' + self.searchCategory + ' found.');
+          }
+          $('#button-loader').remove();
+          $('#gias-mobile-filter-submit').append("<span class='mobile-count'> ("+ count+")</span>");
+          $downloadLink.attr('href', downloadBaseUrl + '?tok=' + token);
+          $downloadLink.removeClass('hidden');
+          $resultsContainer.removeClass('pending-results-update');
+
+          if (Number(xhr.getResponseHeader("x-count")) === 0) {
+            $downloadLink.addClass('hidden');
+            $resultsNotification.html('Search results loaded. No ' + self.searchCategory + ' found.');
+          }
+
+          $(window).trigger({
+            type: 'ajaxResultLoad',
+            count: count
+          });
+
+          if (xhr.getResponseHeader("x-show-date-filter-warning") === "true") {
+            $('.date-filter-warning').removeClass('hidden');
+            if (!self.seenOpenDateWarning) {
+              window.scrollTo(0, 0);
+              self.seenOpenDateWarning = true;
+            }
+          }
+
+          $('.js-save-set').removeClass('hidden');
+          self.enableFilters();
+          window.gMap.refreshMap();
+        }
+      });
+    }
     $resultsContainer.html('<div class="gias-wait-mask gias-wait-mask--inline"><div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div><span class="govuk-visually-hidden">Please wait</span></div>');
 
     this.disableFilters();
@@ -307,75 +401,57 @@ class GiasFiltering {
 
     $('.date-filter-warning').addClass('hidden');
 
-    $.ajax({
-      type: "POST",
-      url: '/api/tokenize',
+    if (token) {
+      requestResults(token);
 
-      data: self.searchParams,
-      success: function (data, status, xhr) {
-        token = data.token;
-        if (supportsHistory()) {
-          history.pushState({}, null, window.location.href.split('?')[0] + '?tok=' + token);
-        }
+    } else {
+      $.ajax({
+        type: "POST",
+        url: '/api/tokenize',
 
-        $.ajax({
-          url: 'Search/results-js',
-          data: "tok=" + token,
-          dataType: 'html',
-          success: function (results, status, xhr) {
-            let count;
-            if (xhr.getResponseHeader("x-count")) {
-              count = xhr.getResponseHeader("x-count");
-            }
-            $resultsContainer.html(results);
-            if (count > 0) {
-              $resultsNotification.html('Search results loaded. ' + count + ' ' + self.searchCategory + ' found.');
-            }
-            $('#button-loader').remove();
-            $('#gias-mobile-filter-submit').append("<span class='mobile-count'> ("+ count+")</span>");
-            $downloadLink.attr('href', downloadBaseUrl + '?tok=' + token);
-            $downloadLink.removeClass('hidden');
-            $resultsContainer.removeClass('pending-results-update');
-
-            if (Number(xhr.getResponseHeader("x-count")) === 0) {
-              $downloadLink.addClass('hidden');
-              $resultsNotification.html('Search results loaded. No ' + self.searchCategory + ' found.');
-            }
-
-
-            $(window).trigger({
-              type: 'ajaxResultLoad',
-              count: count
-            });
-
-            if (xhr.getResponseHeader("x-show-date-filter-warning") === "true") {
-              $('.date-filter-warning').removeClass('hidden');
-              if (!self.seenOpenDateWarning) {
-                window.scrollTo(0, 0);
-                self.seenOpenDateWarning = true;
-              }
-            }
-
-            $('.js-save-set').removeClass('hidden');
-            self.enableFilters();
-            window.gMap.refreshMap();
+        data: self.searchParams,
+        success: function (data, status, xhr) {
+          token = data.token;
+          if (supportsHistory()) {
+            history.pushState({}, null, window.location.href.split('?')[0] + '?tok=' + token);
           }
-        });
-      },
-      error: function (xhr) {
-        self.enableFilters();
-      }
-    });
+
+          requestResults(token);
+        },
+        error: function (xhr) {
+          self.enableFilters();
+        }
+      });
+    }
   }
 
   saveFilterSelection() {
     const filterCount = this.$form.find(':checkbox, select').filter(':checked, :selected').length;
     let token = null;
+    this.savedSelections = this.$form.find(':input').serializeArray();
+    const messagePanel = $('#gias-filterset--save-container').find('.gias-filter-save--alert');
 
-    if (filterCount > 0){
-      token = QueryString('tok')
+    if (filterCount === 0) {
+      messagePanel.html('Choose filters');
+      messagePanel.removeClass('hidden');
+      window.setTimeout(function (){
+        messagePanel.addClass('hidden');
+      }, 4000);
+
+      return true;
     }
 
+    if (filterCount > 0) {
+      token = QueryString('tok')
+    }
+    document.getElementById('SavedFilterToken').value = token;
+    document.getElementById('filter-set-saved').removeAttribute('disabled');
+
+    messagePanel.html('Filter set saved');
+    messagePanel.removeClass('hidden');
+    window.setTimeout(function (){
+      messagePanel.addClass('hidden');
+    }, 5000);
 
     $.ajax({
       url: "/api/save-search-token",
@@ -391,6 +467,81 @@ class GiasFiltering {
         console.log(errorThrown);
       }
     });
+  }
+
+  restoreFilterSelections() {
+    const self = this;
+    const len = self.savedSelections.length;
+    $.each(self.savedSelections, function(n, selection) {
+      const _input = self.$form.find('[name="'+ selection.name+'"][value="'+selection.value+'"]');
+
+      if (_input.attr('type') === 'checkbox') {
+        _input.prop('checked', true);
+      } else {
+        _input.value = selection.value;
+      }
+
+      $('.nested-items').each(function() {
+        $(this).data().giasNestedFilters.setPartialState();
+      });
+    });
+  }
+
+  handleFilterSetChange() {
+    this.pauseAutoSelection = true;
+    const radioValue = this.$filterSetradios.filter(':checked').val();
+    const savePanel = $('#gias-filterset--save-container');
+    const deletePanel = $('#gias-filterset--delete-container');
+    const $clearBtn = $('#clear-filters');
+    const self = this;
+
+    savePanel.addClass('hidden');
+    deletePanel.addClass('hidden');
+    switch (radioValue) {
+      case 'all':
+        $clearBtn.click();
+        if (this.searchType === 'ByLocalAuthority') {
+          $('#d_all').prop('checked', true).trigger('change');
+        }
+        break;
+
+      case 'open' :
+        $clearBtn.click();
+        if (this.searchType === 'ByLocalAuthority') {
+          $('#d_all').prop('checked', true).trigger('change');
+        }
+
+        $("#b_1").prop('checked', true).trigger('change');
+
+        break;
+
+      case 'custom':
+        savePanel.removeClass('hidden');
+        break;
+
+      case 'saved':
+        const token = document.getElementById('SavedFilterToken').value;
+        function replaceQueryParam(param, newval, search) {
+          const regex = new RegExp("([?;&])" + param + "[^&;]*[;&]?");
+          const query = search.replace(regex, "$1").replace(/&$/, '');
+
+          return (query.length > 2 ? query + "&" : "?") + (newval ? param + "=" + newval : '');
+        }
+        if (token) {
+          const q = replaceQueryParam('tok', token, window.location.search);
+          window.location.search = q;
+        } else {
+          this.getResults(document.getElementById('SavedFilterToken').value);
+          this.restoreFilterSelections();
+          deletePanel.removeClass('hidden');
+        }
+
+        break;
+    }
+    window.setTimeout(function(){
+      self.pauseAutoSelection = false;
+    },1000);
+
   }
 
   showPreviousAdditionalFilterSelections() {

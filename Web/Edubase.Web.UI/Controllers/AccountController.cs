@@ -42,7 +42,7 @@ namespace Edubase.Web.UI.Controllers
         public ActionResult Login(string returnUrl)
         {
             return new ChallengeResult(AuthenticationManager.GetExternalAuthenticationTypes()
-                .First().AuthenticationType, 
+                .First().AuthenticationType,
                 Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl.Clean() ?? "/" }));
         }
 
@@ -69,7 +69,7 @@ namespace Edubase.Web.UI.Controllers
             var principal = new ClaimsPrincipal(id);
             var roles = await _securityService.GetRolesAsync(principal);
             id.AddClaims(roles.Select(x => new Claim(ClaimTypes.Role, x)));
-            
+
             AuthenticationManager.SignIn(id);
 
             return await GetLandingPage(principal);
@@ -81,6 +81,8 @@ namespace Edubase.Web.UI.Controllers
             var searchToken = (await _userPreferenceRepository.GetAsync(principal.GetUserId()))?.SavedSearchToken;
             if (searchToken != null && (await _tokenRepository.GetAsync(searchToken)) != null)
             {
+                TempData["SavedToken"] = searchToken;
+                TempData["UserId"] = principal.GetUserId();
                 return Redirect(string.Concat(Url.RouteUrl("EstabSearch"), "?tok=", searchToken));
             }
 
@@ -121,8 +123,8 @@ namespace Edubase.Web.UI.Controllers
             AuthenticationManager.SignOut(new AuthenticationProperties { RedirectUri = "/" });
             return Redirect("/");
         }
-        
+
         private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
-        
+
     }
 }
