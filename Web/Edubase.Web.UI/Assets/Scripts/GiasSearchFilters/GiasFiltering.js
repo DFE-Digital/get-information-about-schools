@@ -116,7 +116,6 @@ class GiasFiltering {
       $('#filter-set-saved').prop('disabled', 'disabled');
       if (document.getElementById('filter-set-all')) {
         $('#filter-set-all').prop('checked', true).trigger('change');
-        return;
       } else {
         $('#filter-set-custom').prop('checked', true);
       }
