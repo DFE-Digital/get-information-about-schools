@@ -108,13 +108,16 @@ class GiasFiltering {
         messagePanel.addClass('hidden');
         $('#gias-filterset--delete-container').addClass('hidden');
         $('#gias-filterset--save-container').removeClass('hidden');
-      }, 4000);
+      }, 5000);
 
       $('#SavedFilterToken').val('');
       this.savedSelections = this.$form.find(':input').serializeArray();
       $('#filter-set-saved').prop('disabled', 'disabled');
-      $('#filter-set-custom').prop('checked', true);
-
+      if (document.getElementById('filter-set-all')) {
+        $('#filter-set-all').prop('checked', true);
+      } else {
+        $('#filter-set-custom').prop('checked', true);
+      }
 
       $.ajax({
         url: '/api/save-search-token',
@@ -446,7 +449,7 @@ class GiasFiltering {
     messagePanel.removeClass('hidden');
     window.setTimeout(function (){
       messagePanel.addClass('hidden');
-    }, 4000);
+    }, 5000);
 
     $.ajax({
       url: "/api/save-search-token",
