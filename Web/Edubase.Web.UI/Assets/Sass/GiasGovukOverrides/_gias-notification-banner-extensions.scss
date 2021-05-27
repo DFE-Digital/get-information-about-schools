@@ -1,6 +1,6 @@
 .govuk-notification-banner--warning {
-  border-color: #d4351c;
-  background-color: #d4351c;
+  border-color: govuk-colour("red");
+  background-color: govuk-colour("red");
 }
 
 .govuk-notification-banner {
