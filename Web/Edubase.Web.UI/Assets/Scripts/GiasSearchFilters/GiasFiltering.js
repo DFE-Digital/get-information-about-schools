@@ -520,9 +520,22 @@ class GiasFiltering {
         break;
 
       case 'saved':
-        this.getResults(document.getElementById('SavedFilterToken').value);
-        this.restoreFilterSelections();
-        deletePanel.removeClass('hidden');
+        const token = document.getElementById('SavedFilterToken').value;
+        function replaceQueryParam(param, newval, search) {
+          const regex = new RegExp("([?;&])" + param + "[^&;]*[;&]?");
+          const query = search.replace(regex, "$1").replace(/&$/, '');
+
+          return (query.length > 2 ? query + "&" : "?") + (newval ? param + "=" + newval : '');
+        }
+        if (token) {
+          const q = replaceQueryParam('tok', token, window.location.search);
+          window.location.search = q;
+        } else {
+          this.getResults(document.getElementById('SavedFilterToken').value);
+          this.restoreFilterSelections();
+          deletePanel.removeClass('hidden');
+        }
+
         break;
     }
     window.setTimeout(function(){
