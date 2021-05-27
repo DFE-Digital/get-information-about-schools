@@ -35,7 +35,7 @@
         <a href="#" id="clear-all" role="button">Clear all</a>
     </div>
 
-    using (Html.BeginRouteForm("CollateDownloads", FormMethod.Post, new {id="download-list-form"}))
+    using (Html.BeginRouteForm("CollateDownloads", FormMethod.Post))
     {
         var i = 0;
 
@@ -64,7 +64,8 @@
                             <div class="govuk-checkboxes__item">
                                 @Html.Hidden($"{itemPrefix}{nameof(file.Item2.Tag)}", file.Item2.Tag)
                                 @Html.Hidden($"{itemPrefix}{nameof(file.Item2.FileGeneratedDate)}", file.Item2.FileGeneratedDate)
-                                <input id="@checkboxName" type="checkbox" name="@checkboxName" class="govuk-checkboxes__input" value="true" />
+                                <input id="@checkboxName" type="checkbox" name="@checkboxName" class="govuk-checkboxes__input" value="true"
+                                       data-trackinglabel="@string.Concat(file.Item2.Tag,"|", file.Item2.FileGeneratedDate, "|", file.Item2.FileGeneratedDate < DateTime.Today)" />
                                 <label for="@checkboxName" class="govuk-checkboxes__label">@checkboxLabel</label>
                             </div>
 
