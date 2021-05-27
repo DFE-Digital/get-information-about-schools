@@ -109,7 +109,6 @@ class GiasFiltering {
       window.setTimeout(function (){
         messagePanel.addClass('hidden');
         $('#gias-filterset--delete-container').addClass('hidden');
-        $('#gias-filterset--save-container').removeClass('hidden');
       }, 5000);
 
       $savedTokenInput.val('');
