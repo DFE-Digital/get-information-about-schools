@@ -529,12 +529,15 @@ class GiasFiltering {
 
           return (query.length > 2 ? query + "&" : "?") + (newval ? param + "=" + newval : '');
         }
-        console.log(token, ' ', windowToken);
+
         if (token !== windowToken) {
-          const q = replaceQueryParam('tok', token, window.location.search);
-          window.location.search = q;
+          if (windowToken !== null){
+            window.location.search = replaceQueryParam('tok', token, window.location.search);
+          } else {
+            window.location.search = `tok=${token}`;
+          }
+
         } else {
-          //this.getResults(document.getElementById('SavedFilterToken').value);
           this.restoreFilterSelections();
           deletePanel.removeClass('hidden');
         }
