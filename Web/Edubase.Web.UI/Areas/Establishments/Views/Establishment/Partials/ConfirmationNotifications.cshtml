@@ -25,14 +25,14 @@
             @using (Html.BeginRouteForm(route, new { Model.Establishment.Urn }, FormMethod.Post))
             {
                 <p class="govuk-notification-banner__heading govuk-!-margin-bottom-1">
-                    <label for="estab-data-confirm">Confirm your @type.ToLower() details are correct.</label>
+                    <label for="estab-data-confirm">Review and confirm if the @type.ToLower() details are correct.</label>
                     <button class="govuk-button" data-module="govuk-button" id="estab-data-confirm">Confirm</button>
                 </p>
 
                 <p class="govuk-!-margin-bottom-1">
-                    If they are not correct, edit and save your @type.ToLower() details below<br />
+                    If they are not correct, edit your @type.ToLower() details below<br />
                 </p>
-                <p class="govuk-hint govuk-!-font-size-14 govuk-!-margin-bottom-1">Last updated or confirmed: @date</p>
+                <p class="govuk-hint govuk-!-font-size-14 govuk-!-margin-bottom-1">Date record last confirmed or updated: @date</p>
             }
         </div>
     </div>
