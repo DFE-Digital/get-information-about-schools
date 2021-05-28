@@ -14,7 +14,7 @@
 
 @section BackLink
 {
-    @Html.ActionLink("Back to find an establishment group", "Index", new { controller = "Search", area = "", SelectedTab = SearchViewModel.Tab.Groups }, new {@class="govuk-back-link"})
+    @Html.ActionLink("Search", "Index", new { controller = "Search", area = "", SelectedTab = SearchViewModel.Tab.Groups }, new { @class = "govuk-back-link" })
 }
 
 <div class="govuk-grid-row">
@@ -52,7 +52,7 @@
                         <a href="#" class="add-clear-filters" id="clear-filters" role="button">Clear all filters</a>
 
 
-                        <input type="hidden" id="client-only-searchtype" value="EstablishmentGroupsAll"/>
+                        <input type="hidden" id="client-only-searchtype" value="EstablishmentGroupsAll" />
 
                         <div class="govuk-option-select js-collapsible" id="option-select-sort-by" role="search">
                             <div class="container-head js-container-head">
@@ -81,7 +81,7 @@
                                         <legend class="govuk-visually-hidden">Select an option below to filter the results</legend>
                                         <div class="govuk-checkboxes gias-filter-checkboxes">
                                             <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
-                                                <input id="grouptype_all" class="select-all govuk-checkboxes__input" type="checkbox"/>
+                                                <input id="grouptype_all" class="select-all govuk-checkboxes__input" type="checkbox" />
                                                 <label for="grouptype_all" class="govuk-checkboxes__label govuk-label">
                                                     All
                                                 </label>
@@ -91,7 +91,7 @@
                                             @foreach (var item in Model.GroupTypes)
                                             {
                                                 <div class="govuk-checkboxes__item">
-                                                    <input name="t" value="@item.Id" class="trigger-result-update govuk-checkboxes__input" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupTypeIds.Contains(item.Id), "checked")/>
+                                                    <input name="t" value="@item.Id" class="trigger-result-update govuk-checkboxes__input" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupTypeIds.Contains(item.Id), "checked") />
                                                     <label for="group-type_@item.Id" class="govuk-label govuk-checkboxes__label">
                                                         @item
                                                     </label>
@@ -120,7 +120,7 @@
                                             <legend class="govuk-visually-hidden">Select an option below to filter the results</legend>
                                             <div class="govuk-checkboxes gias-filter-checkboxes">
                                                 <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
-                                                    <input id="groupstatus_all" class="select-all govuk-checkboxes__input" type="checkbox"/>
+                                                    <input id="groupstatus_all" class="select-all govuk-checkboxes__input" type="checkbox" />
                                                     <label for="groupstatus_all" class="govuk-checkboxes__label">
                                                         All
                                                     </label>
@@ -130,7 +130,7 @@
                                                 @foreach (var item in Model.GroupStatuses)
                                                 {
                                                     <div class="govuk-checkboxes__item">
-                                                        <input name="s" value="@item.Id" class="govuk-checkboxes__input trigger-result-update" id="group-status_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupStatusIds.Contains(item.Id), "checked")/>
+                                                        <input name="s" value="@item.Id" class="govuk-checkboxes__input trigger-result-update" id="group-status_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGroupStatusIds.Contains(item.Id), "checked") />
                                                         <label for="group-status_@item.Id" class="govuk-label govuk-checkboxes__label">
                                                             @item
                                                         </label>
@@ -147,7 +147,7 @@
                             <a href="#" class="add-clear-filters" id="clear-filters-additional" role="button">Clear all filters</a>
                         </div>
 
-                        <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit"/>
+                        <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit" />
                         @Html.HiddenFor(!Model.GroupSearchModel.Text.IsEmpty(), x => x.GroupSearchModel.Text)
                         @Html.HiddenFor(!Model.GroupSearchModel.AutoSuggestValue.IsEmpty(), x => x.GroupSearchModel.AutoSuggestValue)
 

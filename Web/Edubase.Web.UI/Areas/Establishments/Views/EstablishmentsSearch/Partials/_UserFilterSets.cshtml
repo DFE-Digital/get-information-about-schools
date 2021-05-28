@@ -1,0 +1,95 @@
+@using Edubase.Web.UI.Models.Search
+@model EstablishmentSearchViewModel
+@{
+    var openOnly = Request.QueryString.GetValues("OpenOnly")?.FirstOrDefault() == "true";
+    var isAllEstablishments = Model.SearchType == eSearchType.EstablishmentAll;
+    var isOnSavedSet = !string.IsNullOrEmpty(Request.QueryString["tok"]) &&
+                       Request.QueryString.GetValues("tok")?.FirstOrDefault() == Model.SavedFilterToken;
+    var checkedItem = "";
+
+    if (isOnSavedSet)
+    {
+        checkedItem = "saved";
+    }
+    else if (isAllEstablishments && openOnly)
+    {
+        checkedItem = "open";
+    }
+    else if (isAllEstablishments)
+    {
+        checkedItem = "all";
+    }
+
+}
+<div class="gias-savefiltersetoptions" id="save-filter-options">
+    <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+            <div class="gias-savefiltersetoptions--header govuk-fieldset__legend govuk-fieldset__legend--s">
+                Filter sets
+            </div>
+            <div class="gias-savefiltersetoptions--inner">
+                <div class="govuk-radios govuk-radios--small">
+                    @if (isAllEstablishments || Model.SearchType == eSearchType.ByLocalAuthority)
+                    {
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="filter-set-all" name="filter-set" type="radio" value="all"
+                                   @Html.Conditional(checkedItem == "all", "checked=\"checked\"")>
+                            <label class="govuk-label govuk-radios__label" for="filter-set-all">
+                                All establishments
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="filter-set-open" name="filter-set" type="radio" value="open"
+                                   @Html.Conditional(checkedItem == "open", "checked=\"checked\"")>
+                            <label class="govuk-label govuk-radios__label" for="filter-set-open">
+                                Open establishments
+                            </label>
+                        </div>
+                    }
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="filter-set-custom" name="filter-set" type="radio" value="custom">
+                        <label class="govuk-label govuk-radios__label" for="filter-set-custom">
+                            Custom set (choose filters below)
+                        </label>
+                    </div>
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="filter-set-saved" name="filter-set" type="radio" value="saved"
+                               @Html.Conditional(checkedItem == "saved", "checked=\"checked\"")
+                               @Html.Conditional(string.IsNullOrEmpty(Model.SavedFilterToken),  "disabled=\"disabled\"")>
+                        <label class="govuk-label govuk-radios__label" for="filter-set-saved">
+                            My saved filter set
+                        </label>
+                    </div>
+                </div>
+
+                <div class="gias-savefilterset--controls">
+                    <div class="govuk-form-group hidden gias-savefilterset--save-container" id="gias-filterset--save-container">
+                        <div class="gias-filter-save--alert__container">
+                            <p class="gias-filter-save--alert hidden" aria-live="assertive">
+                                Filter set saved
+                            </p>
+                        </div>
+                        <div class="controls-container">
+                            <button class="govuk-button govuk-button--secondary" data-module="govuk-button"
+                                    id="gias-filterset--save-button">
+                                Save filter set
+                            </button>
+                            <button class="gias-link-button" data-module="govuk-button" id="clear-filters">Clear all filters</button>
+                        </div>
+                    </div>
+                    <div class="govuk-form-group @Html.Conditional(checkedItem != "saved", "hidden")" id="gias-filterset--delete-container">
+                        <div class="gias-filter-save--alert__container">
+                            <p class="gias-filter-save--alert hidden" aria-live="assertive">
+                                Filter set deleted
+                            </p>
+                        </div>
+                        <button class="govuk-button govuk-button--secondary" data-module="govuk-button"
+                                id="gias-filterset--delete-button">
+                            Delete my saved filter set
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>

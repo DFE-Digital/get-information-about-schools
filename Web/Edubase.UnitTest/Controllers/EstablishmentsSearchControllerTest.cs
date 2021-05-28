@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Edubase.Data.Entity;
+using Edubase.Data.Repositories;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Downloads;
@@ -29,6 +31,7 @@ namespace Edubase.UnitTest.Controllers
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
             var cls = new Mock<ICachedLookupService>(MockBehavior.Loose);
+            var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
             var mockUrlHelper = new Mock<UrlHelper>();
@@ -36,6 +39,7 @@ namespace Edubase.UnitTest.Controllers
             request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
             context.SetupGet(x => x.Request).Returns(request.Object);
             context.SetupGet(x => x.User).Returns(null as IPrincipal);
+            context.SetupGet(x => x.Request.IsAuthenticated).Returns(false);
             cls.Setup(x => x.LocalAuthorityGetAllAsync()).ReturnsAsync(new[] { new LookupDto { Id = 2, Name = "TESTLA" }, new LookupDto { Id = 3, Name = "BOB" } });
             cls.Setup(x => x.EstablishmentStatusesGetAllAsync()).ReturnsAsync(new[] { new LookupDto { Id = 1, Name = "status1" }, new LookupDto { Id = 2, Name = "status2" } });
             cls.Setup(x => x.GetNameAsync(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>())).ReturnsAsync("bob");
@@ -53,7 +57,7 @@ namespace Edubase.UnitTest.Controllers
                 }
             }));
 
-            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object);
+            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
 
@@ -74,6 +78,7 @@ namespace Edubase.UnitTest.Controllers
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
             var cls = new Mock<ICachedLookupService>(MockBehavior.Loose);
+            var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
             var mockUrlHelper = new Mock<UrlHelper>();
@@ -81,6 +86,7 @@ namespace Edubase.UnitTest.Controllers
             request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
             context.SetupGet(x => x.Request).Returns(request.Object);
             context.SetupGet(x => x.User).Returns(null as IPrincipal);
+            context.SetupGet(x => x.Request.IsAuthenticated).Returns(false);
             cls.Setup(x => x.LocalAuthorityGetAllAsync()).ReturnsAsync(new[] { new LookupDto { Id = 2, Name = "TESTLA" }, new LookupDto { Id = 3, Name = "BOB" } });
             cls.Setup(x => x.EstablishmentStatusesGetAllAsync()).ReturnsAsync(new[] { new LookupDto { Id = 1, Name = "status1" }, new LookupDto { Id = 2, Name = "status2" } });
             cls.Setup(x => x.GetNameAsync(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>())).ReturnsAsync("bob");
@@ -98,7 +104,7 @@ namespace Edubase.UnitTest.Controllers
                 }
             }));
 
-            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object);
+            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
 
@@ -127,6 +133,7 @@ namespace Edubase.UnitTest.Controllers
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
             var cls = new Mock<ICachedLookupService>(MockBehavior.Loose);
+            var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
             var mockUrlHelper = new Mock<UrlHelper>();
@@ -135,6 +142,7 @@ namespace Edubase.UnitTest.Controllers
             request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
             context.SetupGet(x => x.Request).Returns(request.Object);
             context.SetupGet(x => x.User).Returns(null as IPrincipal);
+            context.SetupGet(x => x.Request.IsAuthenticated).Returns(false);
             cls.Setup(x => x.LocalAuthorityGetAllAsync()).ReturnsAsync(new[] { new LookupDto { Id = 2, Name = "TESTLA" }, new LookupDto { Id = 3, Name = "BOB" } });
             cls.Setup(x => x.EstablishmentStatusesGetAllAsync()).ReturnsAsync(new[] { new LookupDto { Id = 1, Name = "status1" }, new LookupDto { Id = 2, Name = "status2" } });
             cls.Setup(x => x.GetNameAsync(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>())).ReturnsAsync("bob");
@@ -149,7 +157,7 @@ namespace Edubase.UnitTest.Controllers
                 }
             }));
 
-            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object);
+            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
 
@@ -177,6 +185,7 @@ namespace Edubase.UnitTest.Controllers
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
             var cls = new Mock<ICachedLookupService>(MockBehavior.Loose);
+            var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
             var mockUrlHelper = new Mock<UrlHelper>();
@@ -185,6 +194,7 @@ namespace Edubase.UnitTest.Controllers
             request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
             context.SetupGet(x => x.Request).Returns(request.Object);
             context.SetupGet(x => x.User).Returns(null as IPrincipal);
+            context.SetupGet(x => x.Request.IsAuthenticated).Returns(false);
             cls.Setup(x => x.LocalAuthorityGetAllAsync()).ReturnsAsync(new[] { new LookupDto { Id = 2, Name = "TESTLA" }, new LookupDto { Id = 3, Name = "BOB" } });
             cls.Setup(x => x.EstablishmentStatusesGetAllAsync()).ReturnsAsync(new[] { new LookupDto { Id = 1, Name = "status1" }, new LookupDto { Id = 2, Name = "status2" } });
             cls.Setup(x => x.GetNameAsync(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>())).ReturnsAsync("bob");
@@ -201,7 +211,8 @@ namespace Edubase.UnitTest.Controllers
                 }
             }));
 
-            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object);
+            upr.Setup(x => x.Get(It.IsAny<string>())).Returns(new UserPreference());
+            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
 
@@ -222,6 +233,7 @@ namespace Edubase.UnitTest.Controllers
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
             var cls = new Mock<ICachedLookupService>(MockBehavior.Strict);
+            var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
             var mockUrlHelper = new Mock<UrlHelper>();
@@ -231,10 +243,11 @@ namespace Edubase.UnitTest.Controllers
             request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
             context.SetupGet(x => x.Request).Returns(request.Object);
             context.SetupGet(x => x.User).Returns(null as IPrincipal);
+            context.SetupGet(x => x.Request.IsAuthenticated).Returns(false);
             ers.Setup(x => x.CanAccess(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<bool>(false));
             ers.Setup(x => x.SearchAsync(It.IsAny<EstablishmentSearchPayload>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiPagedResult<EstablishmentSearchResultModel>(0, new List<EstablishmentSearchResultModel>()));
 
-            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object);
+            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
 
@@ -252,6 +265,7 @@ namespace Edubase.UnitTest.Controllers
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
             var cls = new Mock<ICachedLookupService>(MockBehavior.Strict);
+            var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
 
@@ -260,7 +274,7 @@ namespace Edubase.UnitTest.Controllers
             context.SetupGet(x => x.User).Returns(null as IPrincipal);
             ers.Setup(x => x.CanAccess(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<bool>(true));
 
-            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object);
+            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
 
             var vm = new EstablishmentSearchViewModel();
@@ -280,6 +294,7 @@ namespace Edubase.UnitTest.Controllers
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
             var cls = new Mock<ICachedLookupService>(MockBehavior.Loose);
+            var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
             var mockUrlHelper = new Mock<UrlHelper>();
@@ -291,7 +306,7 @@ namespace Edubase.UnitTest.Controllers
             context.SetupGet(x => x.User).Returns(principal.Object);
             principal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(true);
 
-            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object);
+            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
             var viewModel = new EstablishmentSearchDownloadViewModel();
@@ -311,6 +326,7 @@ namespace Edubase.UnitTest.Controllers
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
             var cls = new Mock<ICachedLookupService>(MockBehavior.Loose);
+            var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
             var mockUrlHelper = new Mock<UrlHelper>();
@@ -322,7 +338,7 @@ namespace Edubase.UnitTest.Controllers
             context.SetupGet(x => x.User).Returns(principal.Object);
             principal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(false);
 
-            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object);
+            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
             var viewModel = new EstablishmentSearchDownloadViewModel();
@@ -342,6 +358,7 @@ namespace Edubase.UnitTest.Controllers
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
             var cls = new Mock<ICachedLookupService>(MockBehavior.Loose);
+            var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
             var mockUrlHelper = new Mock<UrlHelper>();
@@ -353,7 +370,7 @@ namespace Edubase.UnitTest.Controllers
             context.SetupGet(x => x.User).Returns(principal.Object);
             principal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(true);
 
-            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object);
+            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
             var viewModel = new EstablishmentSearchDownloadViewModel() { Dataset = eDataSet.Full };
@@ -373,6 +390,7 @@ namespace Edubase.UnitTest.Controllers
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
             var eds = new Mock<IEstablishmentDownloadService>(MockBehavior.Strict);
             var cls = new Mock<ICachedLookupService>(MockBehavior.Loose);
+            var upr = new Mock<IUserPreferenceRepository>(MockBehavior.Loose);
             var request = new Mock<HttpRequestBase>(MockBehavior.Strict);
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
             var mockUrlHelper = new Mock<UrlHelper>();
@@ -386,7 +404,7 @@ namespace Edubase.UnitTest.Controllers
             principal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(true);
             eds.Setup(x => x.SearchWithDownloadGenerationAsync(It.IsAny<EstablishmentSearchDownloadPayload>(), It.IsAny<IPrincipal>())).ReturnsAsync(guid);
 
-            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object);
+            var subject = new EstablishmentsSearchController(ers.Object, eds.Object, cls.Object, upr.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
             var viewModel = new EstablishmentSearchDownloadViewModel() { Dataset = eDataSet.Full, FileFormat = Edubase.Services.Enums.eFileFormat.XLSX };

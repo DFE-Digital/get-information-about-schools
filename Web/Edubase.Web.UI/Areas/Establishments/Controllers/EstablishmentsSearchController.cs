@@ -1,10 +1,18 @@
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using Edubase.Common;
 using Edubase.Web.UI.Models;
 using System.Linq;
+using System.Security.Claims;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Edubase.Data.Repositories;
+using Edubase.Services.Security.ClaimsIdentityConverters;
+using Edubase.Services.Texuna;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
 using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
@@ -34,16 +42,20 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IEstablishmentDownloadService _establishmentDownloadService;
         private readonly ICachedLookupService _lookupService;
+        private readonly IUserPreferenceRepository _userPreferenceRepository;
 
         public EstablishmentsSearchController(IEstablishmentReadService establishmentReadService,
             IEstablishmentDownloadService establishmentDownloadService,
-            ICachedLookupService lookupService)
+            ICachedLookupService lookupService,
+            IUserPreferenceRepository userPreferenceRepository)
         {
             _establishmentReadService = establishmentReadService;
             _establishmentDownloadService = establishmentDownloadService;
             _lookupService = lookupService;
+            _userPreferenceRepository = userPreferenceRepository;
         }
 
+        private IAuthenticationManager AuthenticationManager => HttpContext.GetOwinContext().Authentication;
 
         [HttpGet, Route(Name = "EstabSearch")]
         public async Task<ActionResult> Index(EstablishmentSearchViewModel model)
@@ -52,6 +64,15 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             var retVal = await SearchByUrnAsync(model);
             if (retVal != null) return retVal;
+
+            model.SavedFilterToken = TempData["SavedToken"]?.ToString();
+
+            // if the user navigates back to or reloads the search results => look up saved results token
+            if (Request.IsAuthenticated && string.IsNullOrEmpty(model.SavedFilterToken))
+            {
+                var userId = User.Identity.GetUserId();
+                model.SavedFilterToken = (await _userPreferenceRepository.GetAsync(userId))?.SavedSearchToken;
+            }
 
             var payload = await GetEstablishmentSearchPayload(model);
             if (!payload.Success) model.Error = payload.ErrorMessage;

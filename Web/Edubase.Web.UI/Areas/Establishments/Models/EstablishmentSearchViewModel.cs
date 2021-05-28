@@ -133,6 +133,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
 
         public eSearchType SearchType { get; set; }
 
+        public string SavedFilterToken { get; set; }
+
         #region Filters / bind aliases
 
         [BindAlias(BIND_ALIAS_SELECTED_SEARCH_FILTERS)]
