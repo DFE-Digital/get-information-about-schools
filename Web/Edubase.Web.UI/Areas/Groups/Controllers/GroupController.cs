@@ -318,7 +318,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         [HttpGet, Route("Details/{id:int}/Governance/Changes", Name = "GroupDetailGovChangeHistory"), EdubaseAuthorize]
         public async Task<ActionResult> GovernanceChangeHistoryAsync(int id, int skip = 0, string sortBy = null)
         {
-            var model = (await _groupReadService.GetAsync(id, User)).GetResult();
+            var result = await _groupReadService.GetAsync(id, User);
+            if (result.ReturnValue == null)
+            {
+                return HttpNotFound();
+            }
+            var model = result.ReturnValue;
 
             var viewModel = new GroupDetailViewModel
             {
