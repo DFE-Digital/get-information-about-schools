@@ -14,7 +14,7 @@
                     <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new { @class = "govuk-breadcrumbs__link" })</li>
                     @if (Model.Details != null)
                     {
-                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Convert single academy trusts (SATs)", "Convert", "Group", new {area = "Groups"},new { @class = "govuk-breadcrumbs__link"})</li>
+                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Convert single-academy trusts (SATs)", "Convert", "Group", new {area = "Groups"},new { @class = "govuk-breadcrumbs__link"})</li>
                     }
                 </ol>
             </div>
@@ -25,14 +25,14 @@
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
-<h1 class="govuk-heading-xl">Convert single academy trusts (SATs)</h1>
+<h1 class="govuk-heading-xl">Convert single-academy trusts (SATs)</h1>
 
 @if (Model.Details == null)
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <p>Convert a single-academy trust (SAT) record to a multi-academy trust (MAT) record by completing the field below and selecting continue.</p>
-            <h2 class="govuk-heading-m">Single academy trust details</h2>
+            <h2 class="govuk-heading-m">Single-academy trust details</h2>
         </div>
     </div>
 
