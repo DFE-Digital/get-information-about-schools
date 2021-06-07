@@ -270,9 +270,12 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route("BannersPartial")]
         public ActionResult BannersPartial()
         {
-            var result = Task.Run(() => _BannerRepository.GetAllAsync(1000).Result.Items.Where(x => x.Visible == true && x.Start < DateTime.Now && x.End > DateTime.Now));
-            var model = new NotificationsBannersViewModel(result.Result);
-            return PartialView("_NotificationsBannersPartial", model);
+            return Task.Run(async () =>
+            {
+                var result = await _BannerRepository.GetAllAsync(1000);
+                var model = new NotificationsBannersViewModel(result.Items.Where(x => x.Visible == true && x.Start < DateTime.Now && x.End > DateTime.Now));
+                return PartialView("_NotificationsBannersPartial", model);
+            }).Result;
         }
     }
 }
