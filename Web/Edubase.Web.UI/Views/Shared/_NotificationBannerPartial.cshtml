@@ -1,0 +1,21 @@
+@using Edubase.Common
+@model Edubase.Data.Entity.NotificationBanner
+@{
+    var importanceEnum = (eNotificationBannerImportance) Model.Importance;
+    var importantClass = importanceEnum == eNotificationBannerImportance.VeryImportant ? "govuk-notification-banner--warning" : "";
+    var previewClass = ViewData["bannerPreview"]?.ToString() == true.ToString() ? "govuk-notification-banner-preview" : "";
+    var finalBannerClass = ViewData["finalBanner"]?.ToString() == true.ToString() ? "govuk-notification-banner-preview" : "";
+}
+
+<div class="govuk-notification-banner govuk-notification-banner-global @previewClass @finalBannerClass @importantClass" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+    <div class="govuk-notification-banner__header">
+        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+            @importanceEnum.EnumDisplayNameFor()
+        </h2>
+    </div>
+    <div class="govuk-notification-banner__content">
+        <p class="govuk-notification-banner__heading govuk-!-margin-bottom-1">
+            @Model.Content
+        </p>
+    </div>
+</div>

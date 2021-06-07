@@ -1,0 +1,55 @@
+@model Edubase.Web.UI.Models.Notifications.NotificationsBannerViewModel
+@{
+    ViewBag.Title = "Get Information about Schools";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Notifications", "Index", "Notifications", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Manage visibility of notification banners</h1>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-m">Delete banner</h2>
+    </div>
+</div>
+
+<div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+        <span class="govuk-warning-text__assistive">Warning</span>
+        Are you sure you want to delete this banner? This will take immediate effect.
+    </strong>
+</div>
+
+@{ Html.RenderPartial("_NotificationBannerPartial", Model.ToBanner()); }
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        @Html.RouteLink("Yes, delete this banner", "DeleteBannerConfirmed", new { id = Model.Id }, new { @class = "govuk-button govuk-button--warning" })
+        @Html.ActionLink("Cancel", "Banners", "Notifications", new { area = "" }, new { @class = "govuk-button govuk-button--secondary" })
+    </div>
+</div>
+

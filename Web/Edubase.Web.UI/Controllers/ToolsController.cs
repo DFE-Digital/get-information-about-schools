@@ -76,7 +76,8 @@ namespace Edubase.Web.UI.Controllers
                 UserCanViewIndependentSchoolsSignificantDates = User.InRole(AuthorizedRoles.CanSearchIndependentSchools),
                 UserCanBulkCreateFreeSchools = User.InRole(AuthorizedRoles.CanBulkCreateFreeSchools),
                 UserCanBulkAssociateEstabs2Groups = User.InRole(AuthorizedRoles.CanBulkAssociateEstabs2Groups),
-                UserCanDownloadMATClosureReport = User.InRole(AuthorizedRoles.CanManageAcademyTrusts)
+                UserCanDownloadMATClosureReport = User.InRole(AuthorizedRoles.CanManageAcademyTrusts),
+                UserCanManageNotifications = User.InRole(AuthorizedRoles.IsAdmin)
             };
 
             return View(viewModel);

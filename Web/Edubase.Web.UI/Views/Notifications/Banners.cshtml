@@ -1,0 +1,87 @@
+@model Edubase.Web.UI.Models.Notifications.NotificationsBannersViewModel
+@{
+    ViewBag.Title = "Get Information about Schools";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Notifications", "Index", "Notifications", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Manage visibility of notification banners</h1>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-m">Current status for all notification banners</h2>
+    </div>
+</div>
+
+@if (Model.Banners.Count() < 2)
+{
+    <div class="govuk-warning-text">
+        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <strong class="govuk-warning-text__text">
+            <span class="govuk-warning-text__assistive">Warning</span>
+            Only add a notification banner where necessary - and absolutely necessary for a second one.
+        </strong>
+    </div>
+
+    @Html.RouteLink("Add banner", "CreateBanner", null, new { @class = "govuk-button" })
+}
+
+@if (Model.Banners.Any())
+{
+    var bannerCounter = 1;
+    foreach (var banner in Model.Banners)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h3 class="govuk-heading-s">Notification banner @bannerCounter</h3>
+            </div>
+        </div>
+
+        {
+            Html.RenderPartial("_NotificationBannerPartial", banner, new ViewDataDictionary(this.ViewData) { { "bannerPreview", true } });
+        }
+
+        <div class="govuk-grid-column-one-third">
+            <p class="govuk-body-s govuk-notification-banner-summary">Show banner: @(banner.Visible == true ? "Yes" : "No")</p>
+        </div>
+        <div class="govuk-grid-column-one-third">
+            <p class="govuk-body-s govuk-notification-banner-summary">Visibility start: @banner.Start</p>
+        </div>
+        <div class="govuk-grid-column-one-third">
+            <p class="govuk-body-s govuk-notification-banner-summary">Visibility end: @banner.End</p>
+        </div>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                @Html.RouteLink("Edit banner " + bannerCounter, "EditBanner", new { id = banner.RowKey }, new { @class = "govuk-button govuk-button--secondary" })
+                @Html.RouteLink("Delete banner " + bannerCounter, "DeleteBanner", new { id = banner.RowKey }, new { @class = "govuk-button govuk-button--warning" })
+            </div>
+        </div>
+
+        bannerCounter++;
+    }
+}
+

@@ -344,6 +344,7 @@
     <Compile Include="Controllers\GlossaryController.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\ValidateEstablishmentJoinedDateModel.cs" />
     <Compile Include="Controllers\GuidanceController.cs" />
+    <Compile Include="Controllers\NotificationsController.cs" />
     <Compile Include="Controllers\SitemapController.cs" />
     <Compile Include="Filters\ModelStateTransfer.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
@@ -357,6 +358,11 @@
     <Compile Include="Helpers\LayoutHelper.cs" />
     <Compile Include="Helpers\NonceHelper.cs" />
     <Compile Include="Helpers\RouteDto.cs" />
+    <Compile Include="Models\Notifications\NotificationsBannerViewModel.cs" />
+    <Compile Include="Models\Notifications\NotificationsBannersViewModel.cs" />
+    <Compile Include="Models\Notifications\NotificationsTemplateViewModel.cs" />
+    <Compile Include="Models\Notifications\NotificationsTemplatesViewModel.cs" />
+    <Compile Include="Models\Notifications\Validators\NotificationsBannerValidator.cs" />
     <Compile Include="Models\ProprietorViewModel.cs" />
     <Compile Include="Models\SiteMapNode.cs" />
     <Compile Include="Helpers\ValueProviders\TokenValueProviderFactory.cs" />
@@ -480,6 +486,7 @@
     <Compile Include="Models\Tools\PredefinedLASetsViewModel.cs" />
     <Compile Include="Models\UserRolesViewModel.cs" />
     <Compile Include="Models\Validators\ChangeHistoryViewModelValidator.cs" />
+    <Compile Include="Models\ViewModelBase.cs" />
     <Compile Include="Validation\AutofacValidationModule.cs" />
     <Compile Include="Validation\AutofacValidatorFactory.cs" />
     <Compile Include="Helpers\FormatHelpers.cs" />
@@ -746,6 +753,16 @@
     <Content Include="public\govuk-frontend\fonts\light-94a07e06a1-v2.woff2" />
     <Content Include="public\govuk-frontend\fonts\light-f591b13f7d-v2.woff" />
     <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Shared\_NotificationsBannersPartial.cshtml" />
+    <Content Include="Views\Notifications\Index.cshtml" />
+    <Content Include="Views\Notifications\Banners.cshtml" />
+    <Content Include="Views\Notifications\Templates.cshtml" />
+    <Content Include="Views\Notifications\EditBanner.cshtml" />
+    <Content Include="Views\Notifications\EditTemplate.cshtml" />
+    <Content Include="Views\Shared\_NotificationBannerPartial.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DateTimeViewModelExtended.cshtml" />
+    <Content Include="Views\Notifications\ConfirmDeleteBanner.cshtml" />
+    <Content Include="Views\Notifications\ConfirmDeleteTemplate.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>

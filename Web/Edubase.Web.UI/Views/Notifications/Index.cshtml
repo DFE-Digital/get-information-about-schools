@@ -1,0 +1,52 @@
+@model Edubase.Web.UI.Models.Notifications.NotificationsBannersViewModel
+@{
+    ViewBag.Title = "Get Information about Schools";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">Manage notification banners</h1>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <ul class="govuk-list">
+            <li>
+                <h3 class="govuk-heading-s">
+                    @Html.ActionLink("Manage visibility of notification banners", "Banners", "Notifications")
+                </h3>
+                <p>
+                    Create a notification banner, view an existing notification banner and/or edit one or more existing notification banner messages, alert levels or scheduling.
+                </p>
+            </li>
+
+            <li>
+                <h3 class="govuk-heading-s">
+                    @Html.ActionLink("Manage templated messages for notification banners", "Templates", "Notifications")
+                </h3>
+                <p>
+                    Add, edit or delete templated messages for notification banners.
+                </p>
+            </li>
+        </ul>
+    </div>
+</div>

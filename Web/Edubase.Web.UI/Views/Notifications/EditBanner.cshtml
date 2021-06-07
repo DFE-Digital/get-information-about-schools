@@ -1,0 +1,208 @@
+@using Edubase.Common
+@using Edubase.Web.UI.Models.Notifications
+@model Edubase.Web.UI.Models.Notifications.NotificationsBannerViewModel
+@{
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "GIAS: FAQ");
+    ViewBag.bodyClasses = "create-edit";
+    ViewBag.SiteSection = "help";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Notifications", "Index", "Notifications", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState)
+
+        <h1 class="govuk-heading-xl">@(Model.Id == null ? "Create a new" : "Edit a") banner entry</h1>
+    </div>
+</div>
+@using (Html.BeginRouteForm(Model.Id == null ? "PostCreateBanner" : "PostEditBanner", new { Model.Id }, FormMethod.Post))
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            @Html.HiddenFor(x => x.Id)
+            @Html.HiddenFor(x => x.Action)
+            @Html.HiddenFor(x => x.TotalBanners)
+
+            @if (Model.Action == eNotificationBannerAction.Step1)
+            {
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
+
+                        @if (!string.IsNullOrEmpty(Model.Id))
+                        {
+                            if (Model.Visible == true)
+                            {
+                                <span>This banner is currently active. Any changes will take immediate effect.</span>
+                            }
+                            else
+                            {
+                                <span>This banner is currently inactive.</span>
+                            }
+                        }
+                        else if (Model.TotalBanners > 0)
+                        {
+                            <span>There is already a notification banner. Only show additional notification banners if absolutely necessary.</span>
+                        }
+                        else
+                        {
+                            <span>Only show a notification banner if absolutely necessary.</span>
+                        }
+
+                    </strong>
+                </div>
+            }
+
+            @if (Model.Action == eNotificationBannerAction.Step2)
+            {
+                <h2 class="govuk-heading-m">Show notification banner</h2>
+
+                <div class="govuk-form-group">
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            @Html.GiasRadioFor(x => x.Visible, true, "Yes", null, new { id = "active", @class = "govuk-radios__input panel-trigger" })
+                        </div>
+                        <div class="govuk-radios__item">
+                            @Html.GiasRadioFor(x => x.Visible, false, "No", null, new { id = "inactive", @class = "govuk-radios__input panel-trigger" })
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                @Html.HiddenFor(x => x.Visible)
+            }
+
+            @if (Model.Action == eNotificationBannerAction.Step3)
+            {
+                <h2 class="govuk-heading-m">Notification banner message (template or custom)</h2>
+                <div class="govuk-form-group">
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            @Html.GiasRadioFor(x => x.TemplateSelected, "", "OTHER (write custom message)", null, new { @checked = "checked", id = "customcontent", @class = "govuk-radios__input panel-trigger" })
+                        </div>
+                        @foreach (var template in Model.Templates)
+                        {
+                            <div class="govuk-radios__item">
+                                @Html.GiasRadioFor(x => x.TemplateSelected, template.RowKey, string.Concat('"', template.Content, '"'), null, new { id = "customtemplate-" + template.RowKey, @class = "govuk-radios__input panel-trigger" })
+                            </div>
+                        }
+                    </div>
+                </div>
+
+
+                <h2 class="govuk-heading-m">Notification banner alert level</h2>
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Importance)">
+                    @Html.ValidationMessageFor(x => x.Importance, null, new { @class = "govuk-error-message" })
+
+                    <div class="govuk-radios">
+                        @foreach (eNotificationBannerImportance importance in Enum.GetValues(typeof(eNotificationBannerImportance)))
+                        {
+                            <div class="govuk-radios__item">
+                                @Html.GiasRadioFor(x => x.Importance, importance, importance.EnumDisplayNameFor(), null, new { id = "importance-" + (int)importance, @class = "govuk-radios__input panel-trigger" })
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            }
+            else
+            {
+                @Html.HiddenFor(x => x.Importance)
+            }
+
+            @if (Model.Action == eNotificationBannerAction.Step4)
+            {
+                <h2 class="govuk-heading-m">Message</h2>
+                <p>Keep the message concise and user focused. The maximum number of characters permitted is 500. This included spaces.</p>
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Content)">
+                    @Html.ValidationMessageFor(x => x.Content, null, new { @class = "govuk-error-message" })
+                    @Html.TextAreaFor(x => x.Content, 6, 40, new { @class = "govuk-textarea entry-content" })
+                </div>
+            }
+            else
+            {
+                @Html.HiddenFor(x => x.Content)
+            }
+
+            @if (Model.Action == eNotificationBannerAction.Step5)
+            {
+                <h2 class="govuk-heading-m">Schedule notification banner visibility</h2>
+                <p>Choose the start date and time and end date and time for the notification banner to be visible on the site.</p>
+
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Start)">
+                    @Html.EditorFor(x => x.Start, "DateTimeViewModelExtended", new { title = "Start date", fieldsetClassName = "edit-date-fieldset" })
+                </div>
+
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.End)">
+                    @Html.EditorFor(x => x.End, "DateTimeViewModelExtended", new { title = "End date", fieldsetClassName = "edit-date-fieldset" })
+                </div>
+            }
+            else
+            {
+                @Html.HiddenFor(x => x.Start.Day)
+                @Html.HiddenFor(x => x.Start.Month)
+                @Html.HiddenFor(x => x.Start.Year)
+                @Html.HiddenFor(x => x.Start.Hour)
+                @Html.HiddenFor(x => x.Start.Minute)
+                @Html.HiddenFor(x => x.End.Day)
+                @Html.HiddenFor(x => x.End.Month)
+                @Html.HiddenFor(x => x.End.Year)
+                @Html.HiddenFor(x => x.End.Hour)
+                @Html.HiddenFor(x => x.End.Minute)
+            }
+        </div>
+
+
+        @if (Model.Action == eNotificationBannerAction.Step6)
+        {
+            <div class="govuk-grid-column-two-thirds">
+                <h2 class="govuk-heading-m">Proposed status for notification banner</h2>
+                <p>Check the details are correct for both notification banners before saving</p>
+            </div>
+            <div class="govuk-grid-column-full">
+                @{
+                    Html.RenderPartial("_NotificationBannerPartial", Model.ToBanner(), new ViewDataDictionary(this.ViewData) { { "bannerPreview", true } });
+                }
+            </div>
+            <div class="govuk-grid-column-one-third">
+                <p class="govuk-body-s govuk-notification-banner-summary">Show banner: @(Model.Visible == true ? "Yes" : "No")</p>
+            </div>
+            <div class="govuk-grid-column-one-third">
+                <p class="govuk-body-s govuk-notification-banner-summary">Visibility start: @Model.Start</p>
+            </div>
+            <div class="govuk-grid-column-one-third">
+                <p class="govuk-body-s govuk-notification-banner-summary">Visibility end: @Model.End</p>
+            </div>
+        }
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="button-row govuk-!-padding-top-6">
+                <button type="submit" class="govuk-button">@(Model.Action == eNotificationBannerAction.Step6 ? "Save" : "Continue")</button>
+                @Html.ActionLink("Cancel", "Banners", "Notifications", new { area = "" }, new { @class = "govuk-button govuk-button--secondary" })
+            </div>
+        </div>
+    </div>
+}

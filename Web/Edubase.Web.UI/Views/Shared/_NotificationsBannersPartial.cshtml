@@ -1,0 +1,7 @@
+@model Edubase.Web.UI.Models.Notifications.NotificationsBannersViewModel
+
+@foreach (var banner in Model.Banners)
+{
+    {Html.RenderPartial("_NotificationBannerPartial", banner, new ViewDataDictionary(this.ViewData) { { "finalBanner", banner.RowKey == Model.Banners.Last().RowKey } });}
+}
+
