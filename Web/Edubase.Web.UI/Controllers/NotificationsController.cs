@@ -25,13 +25,13 @@ namespace Edubase.Web.UI.Controllers
             _BannerRepository = BannerRepository;
         }
 
-        [Route(Name = "Notifications")]
+        [Route(Name = "Notifications"), EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public ActionResult Index()
         {
             return View();
         }
 
-        [Route("Banners")]
+        [Route("Banners"), EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> Banners()
         {
             var result = await _BannerRepository.GetAllAsync(2);
@@ -165,7 +165,7 @@ namespace Edubase.Web.UI.Controllers
 
 
 
-        [Route("Templates")]
+        [Route("Templates"), EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> Templates()
         {
             var result = await _TemplateRepository.GetAllAsync(1000);
