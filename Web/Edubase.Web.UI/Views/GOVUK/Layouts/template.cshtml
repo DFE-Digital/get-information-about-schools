@@ -9,6 +9,7 @@
 
     var envHeader = System.Configuration.ConfigurationManager.AppSettings["Environment"] ?? string.Empty;
     var version = typeof(HomeController).Assembly.GetName().Version;
+    var acceptsAnalytics = HttpContext.Current.Request.Cookies["analytics_preferences"]?.Value.ToString();
 }
 <!doctype html>
 <html lang="en" class="govuk-template">
@@ -19,8 +20,11 @@
     <title>@documentTitle</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link href="/public/assets/stylesheets/main.css?v=@version" rel="stylesheet" type="text/css">
+
     <!-- Google Tag Manager -->
-    <script nonce="@Html.ScriptNonce()">
+    @if(acceptsAnalytics == "True")
+    {
+        <script nonce="@Html.ScriptNonce()">
         (function (w, d, s, l, i) {
             w[l] = w[l] || []; w[l].push({
                 'gtm.start':
@@ -30,7 +34,9 @@
                     'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', '@gtmKey'); //
     </script>
+    }
     <!-- End Google Tag Manager -->
+
 
     <meta name="google-site-verification" content="uRt7CAkfClOB8Jig6Pw2-DELUWuuyG2kYKip0UThxhg" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
@@ -61,10 +67,13 @@
 
 </head>
 <body class="govuk-template__body @(ViewBag.bodyClasses) no-js">
- <!-- Google Tag Manager (noscript) -->
-<noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id=@gtmKey" height="0" width="0" style="display:none;visibility:hidden"></iframe>
-</noscript>
+<!-- Google Tag Manager (noscript) -->
+@if (acceptsAnalytics == "True")
+{
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=@gtmKey" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+}
 <!-- End Google Tag Manager (noscript) -->
 
 @if (!Request.Browser.Browser.Contains("MSIE 8"))
@@ -97,25 +106,75 @@
     }
 }
 <div id="app">
-
-
     @RenderSection("bodyStart", required: false)
 
     <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
 
-    <div class="app-cookie-banner js-cookie-banner" id="global-cookie-message">
-        @if (string.IsNullOrEmpty(ViewBag.cookieMessage) == false)
-        {
-            @(ViewBag.cookieMessage)
-        }
-        else
-        {
-            <p class="govuk-width-container">
-                GOV.UK uses cookies which are essential for the site to work. We also use non-essential cookies to help us improve government digital services. Any data collected is anonymised. By continuing to use this site, you agree to our use of cookies. @Html.ActionLink("Find out more about cookies", "Cookies", "Home", new {area = ""}, new {@class = "govuk-link"})<br/>
-                <button class="govuk-button" id="button-accept-cookies">Accept cookies</button>
-            </p>
-        }
-    </div>
+    @if (acceptsAnalytics == null)
+    {
+        <div class="govuk-cookie-banner " data-nosnippet role="region" aria-label="Cookies on Get Information about schools" id="cookie-banner">
+            <div class="govuk-cookie-banner__message govuk-width-container">
+
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-two-thirds">
+                        <h2 class="govuk-cookie-banner__heading govuk-heading-m">Cookies on Get Information about schools</h2>
+
+                        <div class="govuk-cookie-banner__content">
+                            <p>We use some essential cookies to make this service work.</p>
+                            <p>We&apos;d also like to use analytics cookies so we can understand how you use the service and make improvements.</p>
+                        </div>
+                        @using (Html.BeginForm("CookieChoices", "Home", new {area=""}, FormMethod.Post))
+                        {
+                            <input type="hidden" name="OriginatingPage" value="@Request.Url.ToString()"/>
+                            <div class="govuk-button-group">
+                                <button value="true" type="submit" name="acceptAnalyticsCookies" class="govuk-button" data-module="govuk-button">
+                                    Accept analytics cookies
+                                </button>
+                                <button value="false" type="submit" name="acceptAnalyticsCookies" class="govuk-button" data-module="govuk-button">
+                                    Reject analytics cookies
+                                </button>
+                                @Html.ActionLink(
+                                    "View cookies",
+                                    "Cookies",
+                                    "Home",
+                                    new {area = ""},
+                                    new {@class = "govuk-link"})
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (TempData["CookiesPrefsSaved"] != null)
+    {
+        <div class="govuk-cookie-banner" role="region" aria-label="Cookies on Get Information about schools" id="cookie-banner">
+            <div class="govuk-cookie-banner__message govuk-width-container">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-two-thirds">
+                        <p>
+                            You have @((bool)TempData["CookiesPrefsSaved"] == true ? "accepted" : "rejected") additional cookies.
+                            You can
+                            @Html.ActionLink(
+                                "change your cookie settings",
+                                "Cookies",
+                                "Home",
+                                null, null,
+                                "set-analytics-prefs",
+                                new {area = ""},
+                                new {@class = "govuk-link"})
+
+                            at any time.
+
+                        </p>
+                        <div class="govuk-button-group js-show-block">
+                            <button class="gias-cookie-banner__hide-button govuk-button" id="gias-dismiss-cookie-banner">Hide this message</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 
     <!--end global-cookie-message-->
 
@@ -194,11 +253,11 @@
                 <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
                     <h2 class="govuk-visually-hidden">Support links</h2>
                     <ul class="govuk-footer__inline-list">
-                        <li class="govuk-footer__inline-list-item">@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "govuk-footer__link" })</li>
-                        <li class="govuk-footer__inline-list-item">@Html.ActionLink("Cookies", "Cookies", "Home", new { area = "" }, new { @class = "govuk-footer__link" })</li>
-                        <li class="govuk-footer__inline-list-item">@Html.RouteLink("Glossary", "Glossary", null, new { @class = "govuk-footer__link" })</li>
-                        <li class="govuk-footer__inline-list-item">@Html.ActionLink("Guidance", "Index", "Guidance", new { area = "" }, new { @class = "govuk-footer__link" })</li>
-                        <li class="govuk-footer__inline-list-item">@Html.ActionLink("Accessibility statement", "Accessibility", "Home", new { area = "" }, new { @class = "govuk-footer__link" })</li>
+                        <li class="govuk-footer__inline-list-item">@Html.ActionLink("Contact", "Contact", "Home", new {area = ""}, new {@class = "govuk-footer__link"})</li>
+                        <li class="govuk-footer__inline-list-item">@Html.ActionLink("Cookies", "Cookies", "Home", new {area = ""}, new {@class = "govuk-footer__link"})</li>
+                        <li class="govuk-footer__inline-list-item">@Html.RouteLink("Glossary", "Glossary", null, new {@class = "govuk-footer__link"})</li>
+                        <li class="govuk-footer__inline-list-item">@Html.ActionLink("Guidance", "Index", "Guidance", new {area = ""}, new {@class = "govuk-footer__link"})</li>
+                        <li class="govuk-footer__inline-list-item">@Html.ActionLink("Accessibility statement", "Accessibility", "Home", new {area = ""}, new {@class = "govuk-footer__link"})</li>
                         @*<li>@Html.ActionLink("News", "News", "Home")</li>*@
                     </ul>
 
@@ -207,7 +266,7 @@
                     </svg>
                     <span class="govuk-footer__licence-description">
                         All content is available under the
-                        <a class="govuk-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated<br />
+                        <a class="govuk-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated<br/>
                         v @version
                     </span>
                 </div>
@@ -249,5 +308,4 @@
     }
 </div>
 </body>
-
 </html>
