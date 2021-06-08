@@ -78,7 +78,7 @@ namespace Edubase.Web.UI.Controllers
         {
             var returnTo = Request.Form["OriginatingPage"];
             var cookieDomain = string.Concat(".", Request.Url.Host);
-            Response.Cookies.Set(new HttpCookie(UserPrefsCookieName, acceptAnalyticsCookies.ToString()) { Expires = DateTime.Today.AddDays(28), SameSite = SameSiteMode.Strict, Domain = cookieDomain });
+            Response.Cookies.Set(new HttpCookie(UserPrefsCookieName, acceptAnalyticsCookies.ToString()) { Expires = DateTime.Today.AddDays(28), SameSite = SameSiteMode.Lax, Domain = cookieDomain });
             TempData["CookiesPrefsSaved"] = acceptAnalyticsCookies;
             if (returnTo != null)
             {
@@ -91,7 +91,7 @@ namespace Edubase.Web.UI.Controllers
         public ActionResult CookieChoicesAjax(bool acceptAnalyticsCookies)
         {
             var cookieDomain = string.Concat(".", Request.Url.Host);
-            Response.Cookies.Set(new HttpCookie(UserPrefsCookieName, acceptAnalyticsCookies.ToString()) { Expires = DateTime.Today.AddDays(28), SameSite = SameSiteMode.Strict, Domain = cookieDomain});
+            Response.Cookies.Set(new HttpCookie(UserPrefsCookieName, acceptAnalyticsCookies.ToString()) { Expires = DateTime.Today.AddDays(28), SameSite = SameSiteMode.Lax, Domain = cookieDomain});
             return Json(new { success = true , analyticsPref = acceptAnalyticsCookies}, JsonRequestBehavior.AllowGet);
         }
 
