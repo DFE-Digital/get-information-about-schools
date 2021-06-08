@@ -47,4 +47,7 @@ if ($main.find('.govuk-error-summary').length > 0) {
 
 if ($('#cookie-banner').length > 0) {
   GiasCookieBanner.bindEvents();
+  // this line removes the cookie associated with the old cookie banner
+  // if you are reading this after 1st July 2021, delete this comment and the next line
+  window.DfECookieManager.cookie('seen_cookie_message');
 }
