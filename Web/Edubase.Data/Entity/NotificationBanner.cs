@@ -14,6 +14,14 @@ namespace Edubase.Data.Entity
         Current,
         Archive
     }
+
+    public enum eNotificationBannerEvent
+    {
+        Create,
+        Update,
+        Delete
+    }
+
     public class NotificationBanner : TableEntity
     {
         public int Importance { get; set; }
@@ -23,6 +31,9 @@ namespace Edubase.Data.Entity
         public bool Visible { get; set; }
         public int Version { get; set; } = 1;
         public string Tracker { get; set; }
+        public string AuditUser { get; set; }
+        public string AuditEvent { get; set; }
+        public DateTime AuditTimestamp { get; set; }
 
         public NotificationBanner()
         {

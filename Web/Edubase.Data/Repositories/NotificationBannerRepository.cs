@@ -57,16 +57,15 @@ namespace Edubase.Data.Repositories
             return results.FirstOrDefault();
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(string id, string auditUser)
         {
-            // archive the existing one first so we have a snapshot
-            await ArchiveAsync(id);
+            await ArchiveAsync(id, auditUser);
 
             var item = await GetAsync(id);
             await Table.ExecuteAsync(TableOperation.Delete(item));
         }
 
-        private async Task ArchiveAsync(string id)
+        private async Task ArchiveAsync(string id, string auditUser = "")
         {
             var item = await GetAsync(id);
             item.PartitionKey = eNotificationBannerPartition.Archive.ToString();
@@ -75,6 +74,18 @@ namespace Edubase.Data.Repositories
                 item.RowKey = Guid.NewGuid().ToString("N").Substring(0, 8);
             }
             await CreateAsync(item);
+
+
+            if (!string.IsNullOrEmpty(auditUser))
+            {
+                // if this is triggered as part of a delete, once we've ported the original entry over to the audit, we want to create a final one which is the delete entry
+                item.Version++;
+                item.AuditEvent = eNotificationBannerEvent.Delete.ToString();
+                item.AuditUser = auditUser;
+                item.AuditTimestamp = DateTime.Now;
+                item.RowKey = Guid.NewGuid().ToString("N").Substring(0, 8);
+                await CreateAsync(item);
+            }
         }
 
         public async Task UpdateAsync(NotificationBanner item)

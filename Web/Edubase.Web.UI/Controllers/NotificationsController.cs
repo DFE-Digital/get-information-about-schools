@@ -6,6 +6,7 @@ using System.Web.UI;
 using Edubase.Common;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
+using Edubase.Services.Texuna;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
@@ -123,11 +124,17 @@ namespace Edubase.Web.UI.Controllers
                     if (string.IsNullOrEmpty(viewModel.Id))
                     {
                         var item = viewModel.ToBanner();
+                        item.AuditTimestamp = DateTime.Now;
+                        item.AuditUser = User.GetUserId();
+                        item.AuditEvent = eNotificationBannerEvent.Create.ToString();
                         await _BannerRepository.CreateAsync(item);
                     }
                     else
                     {
                         var item = viewModel.ToBanner(originalBanner);
+                        item.AuditTimestamp = DateTime.Now;
+                        item.AuditUser = User.GetUserId();
+                        item.AuditEvent = eNotificationBannerEvent.Update.ToString();
                         await _BannerRepository.UpdateAsync(item);
                     }
                     return RedirectToAction(nameof(Banners));
@@ -158,7 +165,7 @@ namespace Edubase.Web.UI.Controllers
                 return HttpNotFound();
             }
 
-            await _BannerRepository.DeleteAsync(viewModel.Id);
+            await _BannerRepository.DeleteAsync(viewModel.Id, User.GetUserId());
             return RedirectToAction(nameof(Banners));
         }
 
