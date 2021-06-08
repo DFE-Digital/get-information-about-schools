@@ -30,7 +30,7 @@ const GiasCookieBanner = {
   bindEvents: function() {
     $('#cookie-banner').find('.govuk-button').on('click', function(e){
       e.preventDefault();
-      GiasCookieBanner.setPreference($(this).val());
+      GiasCookieBanner.setPreference($(this).val() === 'true');
     });
 
     // dismiss with delgation as this content will be loaded in after the pref has been set
