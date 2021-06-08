@@ -17,7 +17,7 @@ const GiasCookieBanner = {
       `<div class="govuk-grid-column-two-thirds">
           <p>
               You have ${ accept === true ? "accepted" : "rejected"} additional cookies.
-              You can <a href="/cookies">change your cookie settings</a> at any time.
+              You can <a href="/cookies#set-analytics-prefs">change your cookie settings</a> at any time.
           </p>
           <div class="govuk-button-group">
               <button class="gias-cookie-banner__hide-button govuk-button" id="gias-dismiss-cookie-banner">Hide this message</button>
