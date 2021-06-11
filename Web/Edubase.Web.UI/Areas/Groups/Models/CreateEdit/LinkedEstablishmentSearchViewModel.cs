@@ -1,9 +1,7 @@
-﻿using Edubase.Web.UI.Models;
+using Edubase.Web.UI.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 {
@@ -23,6 +21,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         /// The URN that was found
         /// </summary>
         public int? FoundUrn { get; set; }
+        public string Address { get; set; }
 
         public bool HasResult => FoundUrn.HasValue;
 

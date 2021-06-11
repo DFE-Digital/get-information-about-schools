@@ -41,6 +41,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public const string ActionLinkedEstablishmentCancelEdit = "cancel";
         public const string ActionLinkedEstablishmentSave = "savejoineddate";
         public const string ActionLinkedEstablishmentSearch = "search";
+        public const string ActionLinkedEstablishmentStartSearch = "startsearch";
 
         public string[] RecognisedWarningCodes { get; set; } = new[]
         {

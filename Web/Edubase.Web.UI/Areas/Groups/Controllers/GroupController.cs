@@ -835,6 +835,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 var model = viewModel.LinkedEstablishments.Establishments.First(x => x.EditMode == true);
                 model.SetEditMode(false).JoinedDate = model.JoinedDateEditable.ToDateTime();
             }
+            else if (viewModel.Action == ActionLinkedEstablishmentStartSearch)
+            {
+                viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Reset();
+                return null;
+            }
             else if (viewModel.Action == ActionLinkedEstablishmentSearch)
             {
                 await SearchForLinkedEstablishment(viewModel);
@@ -913,6 +918,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Urn = urn;
             viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Name = model?.Name;
             viewModel.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn = model?.Urn;
+            viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Address = await model?.GetAddressAsync(_lookup);
         }
 
         /// <summary>
