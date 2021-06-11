@@ -96,23 +96,6 @@ namespace Edubase.Web.UI.Controllers
                 var uid = await _securityService.GetMyMATUId(principal);
                 if (uid.HasValue) return RedirectToRoute("GroupDetails", new { id = uid });
             }
-            else if (principal.IsInRole(EdubaseRoles.IEBT))
-            {
-                var selectedTab = string.Concat("SelectedTab=", SearchViewModel.Tab.Establishments);
-                var searchType = string.Concat("SearchType=", eSearchType.EstablishmentAll);
-                var estTypes = string.Join("&", new[] { ET.NonmaintainedSpecialSchool, ET.BritishSchoolsOverseas, ET.CityTechnologyCollege, ET.OtherIndependentSchool, ET.OnlineProvider }.Select(x => $"{EstablishmentSearchViewModel.BIND_ALIAS_TYPEIDS}={(int)x}"));
-                var estStatuses = string.Join("&", new[] { ES.Open, ES.OpenButProposedToClose }.Select(x => $"{EstablishmentSearchViewModel.BIND_ALIAS_STATUSIDS}={(int) x}"));
-                return Redirect(string.Concat(
-                    Url.RouteUrl("EstabSearch"),
-                    "?",
-                    selectedTab,
-                    "&",
-                    searchType,
-                    "&",
-                    estTypes,
-                    "&",
-                    estStatuses));
-            }
 
             return RedirectToAction("Index", "Search");
         }
