@@ -1,0 +1,19 @@
+.govuk-notification-banner--warning {
+  border-color: govuk-colour("red");
+  background-color: govuk-colour("red");
+}
+
+.govuk-notification-banner {
+  .govuk-notification-banner__content > * {
+    max-width: 100%;
+  }
+  
+  .govuk-button {
+    float: right;
+    margin-bottom: govuk-spacing(1);
+	
+    @include govuk-media-query($until: tablet) {
+      margin-top: govuk-spacing(1);
+    }
+  }
+}

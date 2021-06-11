@@ -1,6 +1,8 @@
 @{
     ViewBag.Title = "Get Information about Schools";
     ViewBag.SiteSection = "help";
+    var acceptsAnalytics = HttpContext.Current.Request.Cookies["analytics_preferences"]?.Value.ToString();
+    var declinedAnalytics = acceptsAnalytics == "False";
 }
 @section BreadCrumbs
 {
@@ -116,6 +118,43 @@
                         </tbody>
                     </table>
                 </div>
+                @using (Html.BeginForm("CookieChoices", "Home", new {area=""}, FormMethod.Post))
+                {
+                    <div class=" govuk-!-padding-top-4">
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset" id="set-analytics-prefs">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                <h2 class="govuk-fieldset__heading govuk-!-margin-bottom-4">
+                                    Set your analytics preferences for Get Information about Schools
+                                </h2>
+                            </legend>
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input"
+                                           @Html.Conditional(!declinedAnalytics, "checked=\"checked\"")
+                                           id="acceptAnalyticsCookies-true" name="acceptAnalyticsCookies" type="radio" value="true">
+                                    <label class="govuk-label govuk-radios__label" for="acceptAnalyticsCookies-true">
+                                        Use cookies that measure my website use
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input"
+                                           @Html.Conditional(declinedAnalytics, "checked=\"checked\"")
+                                           id="acceptAnalyticsCookies-false" name="acceptAnalyticsCookies" type="radio" value="false">
+                                    <label class="govuk-label govuk-radios__label" for="acceptAnalyticsCookies-false">
+                                        Do not use cookies that measure my website use
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                        <div class="govuk-button-group">
+                            <button  type="submit" class="govuk-button" data-module="govuk-button">
+                                Save cookie settings
+                            </button>
+                        </div>
+                    </div>
+                }
 
                 <p>
                     You can
@@ -125,41 +164,6 @@
             </section>
             <section class="gias-readability">
                 <h2 class="govuk-heading-m">Essential cookies</h2>
-
-                <h3 class="govuk-heading-s">Our introductory message</h3>
-
-                <p>You may see a pop-up welcome message when you first visit GOV.UK. We&apos;ll store a cookie so that your computer knows you&apos;ve seen it and knows not to show it again.</p>
-
-                <div class="table-wrapper">
-                    <table class="govuk-table gias-cookie-table">
-                        <caption class="govuk-visually-hidden">GOV.UK cookies</caption>
-                        <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th scope="col" role="columnheader" class="govuk-table__header">
-                                Name
-                            </th>
-                            <th scope="col" role="columnheader" class="govuk-table__header">
-                                Purpose
-                            </th>
-                            <th scope="col" role="columnheader" class="govuk-table__header">
-                                Expires
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody class="govuk-table__body">
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell" data-label="Name">seen_cookie_message</td>
-                            <td class="govuk-table__cell" data-label="Purpose">Saves a message to let us know that you&apos;ve seen our cookie message</td>
-                            <td class="govuk-table__cell" data-label="Expires">1 month</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-            <section class="gias-readability">
-
-                <h3 class="govuk-heading-s">Get Information about Schools</h3>
-
                 <div class="table-wrapper">
                     <table class="govuk-table gias-cookie-table">
                         <caption class="govuk-visually-hidden">Get Information about Schools</caption>
@@ -178,6 +182,14 @@
                         </thead>
                         <tbody class="govuk-table__body">
                         <tr class="govuk-table__row">
+                            <td class="govuk-table__cell" data-label="Name">analytics_preferences</td>
+                            <td class="govuk-table__cell" data-label="Purpose">
+                                Lets us know whether you agree to the use of analytics cookies to help us understand how you
+                                use the service so we can make improvements
+                            </td>
+                            <td class="govuk-table__cell" data-label="Expires">28 days</td>
+                        </tr>
+                        <tr class="govuk-table__row">
                             <td class="govuk-table__cell" data-label="Name">AspNet.ApplicationCookie</td>
                             <td class="govuk-table__cell" data-label="Purpose">One of the ways that we manage the user access to the service</td>
                             <td class="govuk-table__cell" data-label="Expires">When you close your browser</td>
@@ -191,11 +203,6 @@
                             <td class="govuk-table__cell" data-label="Name">__RequestVerificationToken</td>
                             <td class="govuk-table__cell" data-label="Purpose">One of the ways that we manage the user access to the service</td>
                             <td class="govuk-table__cell" data-label="Expires">When you close your browser</td>
-                        </tr>
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell" data-label="Name">AcceptedTermsOfUse</td>
-                            <td class="govuk-table__cell" data-label="Purpose">Records your acceptance of the website's terms and conditions so you do not have to accept them on every visit</td>
-                            <td class="govuk-table__cell" data-label="Expires">12 months</td>
                         </tr>
                         <tr class="govuk-table__row">
                             <td class="govuk-table__cell" data-label="Name">seen-news-banner</td>
