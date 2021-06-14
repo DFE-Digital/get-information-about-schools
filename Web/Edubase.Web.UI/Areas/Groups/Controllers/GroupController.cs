@@ -460,7 +460,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         }
 
         [HttpPost, Route("Edit/{id:int}/Links"), EdubaseAuthorize]
-        public async Task<ActionResult> EditLinks(GroupEditorViewModel viewModel)
+        public async Task<ActionResult> EditLinks(GroupEditorViewModel viewModel, string returnAction = null)
         {
             var model = (await _groupReadService.GetAsync(viewModel.GroupUId.Value, User)).GetResult();
             viewModel.OpenDate = new DateTimeViewModel(model.OpenDate);
@@ -474,7 +474,15 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 var actionResult = await ProcessCreateEditGroup(viewModel);
                 if (actionResult != null) return actionResult;
             }
+            else
+            {
+                if (returnAction != null)
+                {
+                    viewModel.Action = returnAction;
+                }
+            }
 
+            ModelState.Remove("ReturnAction");
             return View(viewModel);
         }
 
