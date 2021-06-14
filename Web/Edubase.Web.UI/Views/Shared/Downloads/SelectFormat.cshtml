@@ -23,15 +23,15 @@
     {
         if (Model.SearchSource == eLookupSearchSource.Governors)
         {
-            <a class="govuk-back-link" href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
+            <a class="govuk-back-link" href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Search</a>
         }
         else if (Model.SearchSource == eLookupSearchSource.Establishments)
         {
-            <a class="govuk-back-link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Back to search results</a>
+            <a class="govuk-back-link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")>Search</a>
         }
         else if (Model.SearchSource == eLookupSearchSource.Groups)
         {
-            <a class="govuk-back-link" href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}")> Back to search results</a>
+            <a class="govuk-back-link" href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}")>Search</a>
         }
     }
 }
