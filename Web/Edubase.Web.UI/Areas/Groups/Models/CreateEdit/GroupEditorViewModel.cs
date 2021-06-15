@@ -36,6 +36,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public const string ActionCcCreate = "continue";
         public const string ActionDetails = "continueToDetails";
         public const string ActionLinkedEstablishmentAdd = "add";
+        public const string ActionLinkedEstablishmentCancelAdd = "canceladd";
         public const string ActionLinkedEstablishmentRemove = "remove-";
         public const string ActionLinkedEstablishmentEdit = "edit-";
         public const string ActionLinkedEstablishmentCancelEdit = "cancel";
