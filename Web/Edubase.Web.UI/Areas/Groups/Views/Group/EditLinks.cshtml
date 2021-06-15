@@ -20,7 +20,6 @@
         @Html.HiddenFor(x => x.GroupTypeName)
         @Html.HiddenFor(x => x.SelectedTabName)
         @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
-        @Html.Hidden("ReturnAction", @Model.Action)
 
         for (int i = 0; i < Model.LinkedEstablishments.Establishments.Count; i++)
         {
@@ -43,7 +42,9 @@
             }
         }
 
-        if (Model.Action == VM.ActionLinkedEstablishmentSearch || Model.Action == VM.ActionLinkedEstablishmentStartSearch)
+        if (Model.Action == VM.ActionLinkedEstablishmentSearch ||
+            Model.Action == VM.ActionLinkedEstablishmentStartSearch ||
+            (Model.Action == VM.ActionLinkedEstablishmentAdd && Model.LinkedEstablishments.LinkedEstablishmentSearch.HasResult))
         {
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
@@ -88,17 +89,10 @@
                     else
                     {
                         <div class="button-row govuk-!-margin-bottom-4">
-                            @Html.ActionLink(
-                                "Back",
-                                "EditLinks",
-                                "Group",
-                                null,
-                                null,
-                                "",
-                                new { id = Model.GroupId },
-                                new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
+                            <button type="submit" class="govuk-back-link gias-back-link--button" name="action" value="@VM.ActionLinkedEstablishmentCancelAdd">
+                                Back
+                            </button>
                         </div>
-
 
                         <h3 class="govuk-heading-s">Search for an establishment to add</h3>
 
