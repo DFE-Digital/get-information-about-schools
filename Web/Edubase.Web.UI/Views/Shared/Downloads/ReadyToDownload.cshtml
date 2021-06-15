@@ -16,23 +16,51 @@
 {
     @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
     {
-        @Html.ActionLink("Search", "Index", "Search", new {area = ""}, new { @class="govuk-back-link" })
+        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-back-link" })
     }
     else
     {
         if (Model.SearchSource == eLookupSearchSource.Governors)
         {
-            <a class="govuk-back-link" href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <div class="govuk-breadcrumbs">
+                        <ol class="govuk-breadcrumbs__list">
+                            <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                            <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Back to search results", "Index", "GovernorSearch", new { area = "Governors" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
         }
         else if (Model.SearchSource == eLookupSearchSource.Establishments)
         {
-            <a class="govuk-back-link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Back to search results</a>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <div class="govuk-breadcrumbs">
+                        <ol class="govuk-breadcrumbs__list">
+                            <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                            <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Back to search results", "Index", "EstablishmentsSearch", new { area = "Establishments" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
         }
         else if (Model.SearchSource == eLookupSearchSource.Groups)
         {
-            <a class="govuk-back-link"  href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}")> Back to search results</a>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <div class="govuk-breadcrumbs">
+                        <ol class="govuk-breadcrumbs__list">
+                            <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                            <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Back to search results", "Index", "GroupSearch", new { area = "Groups" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
         }
     }
+}
 }
 
 
@@ -63,7 +91,7 @@
             <ul class="govuk-list">
                 <li>
                     <span class="icon-link-copy">
-                        <input type="submit" class="govuk-button" data-module="govuk-button" value="Data in @Model.FileFormat.ToString() format"/><br/>
+                        <input type="submit" class="govuk-button" data-module="govuk-button" value="Data in @Model.FileFormat.ToString() format" /><br />
                         (will download as a ZIP file: open the ZIP to access its content)
                     </span>
                 </li>
