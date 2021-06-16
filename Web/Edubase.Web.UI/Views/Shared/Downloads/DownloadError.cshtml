@@ -2,91 +2,114 @@
 @using Edubase.Services.Enums
 @using Microsoft.Ajax.Utilities
 @model DownloadErrorViewModel
-@{
-    ViewBag.bodyClasses = "schools-search-page search-page";
-    ViewBag.hideLogo = true;
+@{ ViewBag.bodyClasses = "schools-search-page search-page";
+                ViewBag.hideLogo = true;
 
-    var backLink = $"{Url.Action("Index", "Search", new {area = ""})}";
-    var backAnchor = "";
-    var backText = "search results";
+                var backLink = $"{Url.Action("Index", "Search", new { area = "" })}";
+                var backAnchor = "";
+                var backText = "search results";
 
-    if (Model.FromDownloads)
-    {
-        backLink = $"{Url.Action("Index", "Downloads", new { area = "" })}";
-        backAnchor = Model.FromExtracts ? "#scheduled-extracts" : "";
-        backText = Model.FromExtracts ? "scheduled extract page" : "downloads page";
-    }
+                if (Model.FromDownloads)
+                {
+                    backLink = $"{Url.Action("Index", "Downloads", new { area = "" })}";
+                    backAnchor = Model.FromExtracts ? "#scheduled-extracts" : "";
+                    backText = Model.FromExtracts ? "scheduled extract page" : "downloads page";
+                }
 
-    switch (Model.SearchSource)
-    {
-        case eLookupSearchSource.Governors:
-            backLink = $"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}";
-            break;
-        case eLookupSearchSource.Establishments:
-            backLink = $"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}";
-            break;
-        case eLookupSearchSource.Groups:
-            backLink = $"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}";
-            break;
-        default:
-            break;
-    }
-}
+                switch (Model.SearchSource)
+                {
+                    case eLookupSearchSource.Governors:
+                        backLink = $"{Url.Action("Index", "GovernorSearch", new { area = "Governors" })}?{Model.SearchQueryString}";
+                        break;
+                    case eLookupSearchSource.Establishments:
+                        backLink = $"{Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" })}?{Model.SearchQueryString}";
+                        break;
+                    case eLookupSearchSource.Groups:
+                        backLink = $"{Url.Action("Index", "GroupSearch", new { area = "Groups" })}?{Model.SearchQueryString}";
+                        break;
+                    default:
+                        break;
+                } }
 
-@section BackLink
+@section breadcrumbs
+{
+    @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
     {
-        @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
-    {
-        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class="govuk-back-link"})
+        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-back-link" })
     }
     else
     {
         if (Model.SearchSource == eLookupSearchSource.Governors)
         {
-            <a class="govuk-back-link" href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Back to search results</a>
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <div class="govuk-breadcrumbs">
+                        <ol class="govuk-breadcrumbs__list">
+                            <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                            <li class="govuk-breadcrumbs__list-item"><a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Search results</a></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
         }
         else if (Model.SearchSource == eLookupSearchSource.Establishments)
-    {
-            <a class="govuk-back-link"href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")> Back to search results</a>
+        {
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <div class="govuk-breadcrumbs">
+                        <ol class="govuk-breadcrumbs__list">
+                            <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                            <li class="govuk-breadcrumbs__list-item"><a href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")>Search results</a></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
         }
         else if (Model.SearchSource == eLookupSearchSource.Groups)
-    {
-            <a class="govuk-back-link" href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}")> Back to search results</a>
+        {
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <div class="govuk-breadcrumbs">
+                        <ol class="govuk-breadcrumbs__list">
+                            <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                            <li class="govuk-breadcrumbs__list-item"><a href=@($"{Url.Action("Index", "GroupSearch", new {area = "Groups"})}?{Model.SearchQueryString}")>Search results</a></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
         }
     }
 }
 
 @if (Model.NeedsRegenerating)
 {
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-            <h1 class="govuk-heading-xl">Something went wrong</h1>
-        </div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Something went wrong</h1>
     </div>
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <h2 class="govuk-heading-m">The requested file is no longer available for download.</h2>
-            <p class="govuk-body-s">Please <a href="@backLink@backAnchor">return to the @backText</a> and repeat your request.</p>
-        </div>
-    </div>
-}
-else
-    {
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-            <h1 class="govuk-heading-xl">Download error</h1>
-        </div>
-    </div>
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <h2 class="govuk-heading-m">The file you have requested no longer exists.</h2>
-            <p>This may be due to the following factors:</p>
+</div>
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-two-thirds">
+                        <h2 class="govuk-heading-m">The requested file is no longer available for download.</h2>
+                        <p class="govuk-body-s">Please <a href="@backLink@backAnchor">return to the @backText</a> and repeat your request.</p>
+                    </div>
+                </div> }
+                            else
+                            {
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <h1 class="govuk-heading-xl">Download error</h1>
+                    </div>
+                </div>
+                                <div class="govuk-grid-row">
+                                    <div class="govuk-grid-column-two-thirds">
+                                        <h2 class="govuk-heading-m">The file you have requested no longer exists.</h2>
+                                        <p>This may be due to the following factors:</p>
 
-            <ul class="govuk-list govuk-list--bullet">
-                <li>Your file successfully downloaded, but the request was repeated. Please check your browser window.</li>
-                <li>Your original download request was cancelled. If so, please <a href="@backLink@backAnchor">return to the @backText</a> and repeat your request.</li>
-            </ul>
-        </div>
-    </div>
-}
+                                        <ul class="govuk-list govuk-list--bullet">
+                                            <li>Your file successfully downloaded, but the request was repeated. Please check your browser window.</li>
+                                            <li>Your original download request was cancelled. If so, please <a href="@backLink@backAnchor">return to the @backText</a> and repeat your request.</li>
+                                        </ul>
+                                    </div>
+                                </div>}
 
