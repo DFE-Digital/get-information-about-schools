@@ -64,33 +64,33 @@
 
 @using (Html.BeginRouteForm("DownloadExtract", FormMethod.Post))
 {
-@Html.Hidden("id", Model.Progress.Id)
-                @Html.Hidden("path", path)
-                                @Html.Hidden("searchSource", Model.SearchSource)
-                                                @Html.Hidden("searchQueryString", Model.SearchQueryString)
+    @Html.Hidden("id", Model.Progress.Id)
+    @Html.Hidden("path", path)
+    @Html.Hidden("searchSource", Model.SearchSource)
+    @Html.Hidden("searchQueryString", Model.SearchQueryString)
 
-                                                                <div class="govuk-grid-row">
-                                                                    <div class="govuk-grid-column-full">
-                                                                        <h1 class="govuk-heading-xl">Download data</h1>
-                                                                    </div>
-                                                                </div>
-                                                                                <div class="govuk-grid-row">
-                                                                                    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-xl">Download data</h1>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
 
-                                                                                        <h2 class="govuk-heading-m">Download @Model.DownloadName search results</h2>
-                                                                                        @if (Model.TotalSteps.HasValue)
-                                                                                        {
-                                                                        <p>@Model.Step of @Model.TotalSteps</p>}
+            <h2 class="govuk-heading-m">Download @Model.DownloadName search results</h2>
+            @if (Model.TotalSteps.HasValue)
+            {
+                <p>@Model.Step of @Model.TotalSteps</p>}
 
-                                                                                        <p class="govuk-body">Your requested file is ready to download.</p>
+            <p class="govuk-body">Your requested file is ready to download.</p>
 
-                                                                                        <ul class="govuk-list">
-                                                                                            <li>
-                                                                                                <span class="icon-link-copy">
-                                                                                                    <input type="submit" class="govuk-button" data-module="govuk-button" value="Data in @Model.FileFormat.ToString() format" /><br />
-                                                                                                    (will download as a ZIP file: open the ZIP to access its content)
-                                                                                                </span>
-                                                                                            </li>
-                                                                                        </ul>
-                                                                                    </div>
-                                                                                </div>}
+            <ul class="govuk-list">
+                <li>
+                    <span class="icon-link-copy">
+                        <input type="submit" class="govuk-button" data-module="govuk-button" value="Data in @Model.FileFormat.ToString() format" /><br />
+                        (will download as a ZIP file: open the ZIP to access its content)
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>}
