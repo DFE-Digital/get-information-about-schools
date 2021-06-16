@@ -82,6 +82,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpGet, Route("results-js")]
         public async Task<PartialViewResult> ResultsPartial(EstablishmentSearchViewModel model)
         {
+            model.SearchQueryString = Request.QueryString.ToString();
             var payload = await GetEstablishmentSearchPayload(model);
             if (!payload.Success) model.Error = payload.ErrorMessage;
             await ProcessEstablishmentsSearch(model, payload.Object);

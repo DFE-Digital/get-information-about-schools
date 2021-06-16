@@ -23,6 +23,7 @@ namespace Edubase.Web.UI.Controllers
         const string NewsBlobNameHtml = "newsblog.html";
         const string ArchiveBlobNameHtml = "archiveblog.html";
         public const string NewsBlobETag = "newsblog-etag";
+        private const string UserPrefsCookieName = "analytics_preferences";
 
         private readonly ILookupService _lookup;
         private readonly IBlobService _blobService;
@@ -71,6 +72,28 @@ namespace Edubase.Web.UI.Controllers
 
         [Route("~/cookies")]
         public ActionResult Cookies() => View();
+
+        [HttpPost, Route("~/CookieChoices")]
+        public ActionResult CookieChoices(bool acceptAnalyticsCookies)
+        {
+            var returnTo = Request.Form["OriginatingPage"];
+            var cookieDomain = string.Concat(".", Request.Url.Host);
+            Response.Cookies.Set(new HttpCookie(UserPrefsCookieName, acceptAnalyticsCookies.ToString()) { Expires = DateTime.Today.AddDays(28), SameSite = SameSiteMode.Lax, Domain = cookieDomain });
+            TempData["CookiesPrefsSaved"] = acceptAnalyticsCookies;
+            if (returnTo != null)
+            {
+                return Redirect(returnTo);
+            }
+            return RedirectToAction("cookies");
+        }
+
+        [HttpPost, Route("~/CookieChoicesAjax")]
+        public ActionResult CookieChoicesAjax(bool acceptAnalyticsCookies)
+        {
+            var cookieDomain = string.Concat(".", Request.Url.Host);
+            Response.Cookies.Set(new HttpCookie(UserPrefsCookieName, acceptAnalyticsCookies.ToString()) { Expires = DateTime.Today.AddDays(28), SameSite = SameSiteMode.Lax, Domain = cookieDomain});
+            return Json(new { success = true , analyticsPref = acceptAnalyticsCookies}, JsonRequestBehavior.AllowGet);
+        }
 
         [Route("~/responsibilities")]
         public ActionResult Responsibilities() => View();

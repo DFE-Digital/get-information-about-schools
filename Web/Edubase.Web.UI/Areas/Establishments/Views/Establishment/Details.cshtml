@@ -31,13 +31,6 @@
                            </li>
                        }
                    }
-
-                   @if (Model.LegalParentGroup != null)
-                   {
-                       <li class="govuk-breadcrumbs__list-item">
-                           @Html.RouteLink(Model.LegalParentGroupRouteDto.Label, Model.LegalParentGroupRouteDto.RouteName, Model.LegalParentGroupRouteDto.RouteValues, HtmlHelper.AnonymousObjectToHtmlAttributes(new { @class = "govuk-breadcrumbs__link"}))
-                       </li>
-                   }
                </ol>
            </div>
        </div>
@@ -103,8 +96,16 @@
         <p class="urn establishment-fine-detail"><abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn</p>
         <p class="establishment-type establishment-fine-detail">@Model.TypeName</p>
         <p class="establishment-data-download">
-            @Html.RouteLink("Download establishment data", "EstabDataDownload", new {Model.Establishment.Urn, state = UriHelper.SerializeToUrlToken(RouteDto.Create(Model.LegalParentGroupRouteDto, Model.EstabDetailRouteDto))}, new {rel = "nofollow"})
+            @Html.RouteLink("Download establishment data", "EstabDataDownload", new { Model.Establishment.Urn, state = UriHelper.SerializeToUrlToken(RouteDto.Create(Model.LegalParentGroupRouteDto, Model.EstabDetailRouteDto)) }, new { rel = "nofollow" })
         </p>
+
+        @if (Model.LegalParentGroup != null)
+        {
+        <div>
+            <p class="establishment-fine-detail">@Model.GetGroupFieldLabel(Model.LegalParentGroup): @Html.RouteLink(Model.LegalParentGroupRouteDto.Label, Model.LegalParentGroupRouteDto.RouteName, Model.LegalParentGroupRouteDto.RouteValues, HtmlHelper.AnonymousObjectToHtmlAttributes(new { @class = "govuk-breadcrumbs__link" }))</p>
+        </div>
+            
+        }
 
         @if (Model.IsClosed)
         {
