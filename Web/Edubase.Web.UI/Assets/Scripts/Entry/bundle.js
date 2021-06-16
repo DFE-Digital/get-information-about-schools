@@ -5,30 +5,16 @@ import GiasOkCancel from "../GiasModules/GiasModals/GiasOkCancel";
 import giasAccordionExtensions from '../GiasGlobal/GiasAccordionExtensions';
 import GiasReOrderValidationSummary from '../GiasGlobal/GiasReOrderValidationSummary';
 import CheckGiasDataStatus from '../GiasStandalone/GiasDataStatus';
-
+import GiasCookieBanner from '../GiasGlobal/GiasCookieBanner';
 import DfECookieManager from '../GiasModules/DfeCookieManager';
 window.$ = $;
 
 window.DfECookieManager = new DfECookieManager();
 window.checkGiasDataStatus = CheckGiasDataStatus;
 
-
 import { initAll } from 'govuk-frontend';
 
 const $main = $('#main-content');
-
-const message = document.getElementById('global-cookie-message');
-const acceptedCookies = (message && window.DfECookieManager.cookie('seen_cookie_message') !== null);
-
-if (!acceptedCookies) {
-  message.style.display = 'block';
-
-  document.getElementById('button-accept-cookies').addEventListener('click', function (e) {
-    e.preventDefault();
-    message.style.display = 'none';
-    window.DfECookieManager.cookie('seen_cookie_message', 'yes', {days: 28});
-  });
-}
 
 window.displayNewsDialog = function(myetag, etag) {
   $("<p/>").okCancel({
@@ -57,4 +43,11 @@ giasDismissMessage();
 
 if ($main.find('.govuk-error-summary').length > 0) {
   GiasReOrderValidationSummary();
+}
+
+if ($('#cookie-banner').length > 0) {
+  GiasCookieBanner.bindEvents();
+  // this line removes the cookie associated with the old cookie banner
+  // if you are reading this after 1st July 2021, delete this comment and the next line
+  window.DfECookieManager.cookie('seen_cookie_message');
 }

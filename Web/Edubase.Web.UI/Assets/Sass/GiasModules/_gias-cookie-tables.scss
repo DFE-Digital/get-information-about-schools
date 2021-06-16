@@ -8,11 +8,6 @@
     padding-left: govuk-spacing(1);
   }
 
-  .govuk-table__head .govuk-table__header {
-    border: 1px solid $govuk-border-colour;
-    font-weight: normal;
-  }
-
   @include govuk-media-query($until: tablet) {
     .govuk-table__head {
       display: none;

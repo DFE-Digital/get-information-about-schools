@@ -462,6 +462,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         [HttpPost, Route("Edit/{id:int}/Links"), EdubaseAuthorize]
         public async Task<ActionResult> EditLinks(GroupEditorViewModel viewModel)
         {
+            if (viewModel.Action == ActionLinkedEstablishmentStartSearch)
+            {
+                ModelState.Clear();
+            }
+
             var model = (await _groupReadService.GetAsync(viewModel.GroupUId.Value, User)).GetResult();
             viewModel.OpenDate = new DateTimeViewModel(model.OpenDate);
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
@@ -807,6 +812,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 await AddLinkedEstablishment(viewModel);
             }
+            else if (viewModel.Action == ActionLinkedEstablishmentCancelAdd)
+            {
+                return null;
+            }
             else if (viewModel.Action == ActionLinkedEstablishmentCancelEdit)
             {
                 viewModel.LinkedEstablishments.Establishments.ForEach(x => x.EditMode = false);
@@ -834,6 +843,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 var model = viewModel.LinkedEstablishments.Establishments.First(x => x.EditMode == true);
                 model.SetEditMode(false).JoinedDate = model.JoinedDateEditable.ToDateTime();
+            }
+            else if (viewModel.Action == ActionLinkedEstablishmentStartSearch)
+            {
+                viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Reset();
+                return null;
             }
             else if (viewModel.Action == ActionLinkedEstablishmentSearch)
             {
@@ -913,6 +927,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Urn = urn;
             viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Name = model?.Name;
             viewModel.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn = model?.Urn;
+            viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Address = await model?.GetAddressAsync(_lookup);
         }
 
         /// <summary>
@@ -927,6 +942,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                  || viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove)
                  || viewModel.Action == ActionLinkedEstablishmentSearch
                  || viewModel.Action == ActionLinkedEstablishmentAdd
+                 || viewModel.Action == ActionLinkedEstablishmentCancelAdd
                  || viewModel.Action.StartsWith(ActionLinkedEstablishmentEdit)
                  || viewModel.Action == ActionLinkedEstablishmentCancelEdit
                 ) && ModelState.IsValid)
@@ -937,6 +953,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 if (viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove) ||
                     viewModel.Action == ActionLinkedEstablishmentSearch ||
                     viewModel.Action == ActionLinkedEstablishmentAdd ||
+                    viewModel.Action == ActionLinkedEstablishmentCancelAdd ||
                     viewModel.Action.StartsWith(ActionLinkedEstablishmentEdit) ||
                     viewModel.Action == ActionLinkedEstablishmentCancelEdit)
                 {
@@ -956,7 +973,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     viewModel.ClearWarnings();
                 }
 
-                if (viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove) || viewModel.Action == ActionLinkedEstablishmentCancelEdit)
+                if (viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove) || viewModel.Action == ActionLinkedEstablishmentCancelEdit || viewModel.Action == ActionLinkedEstablishmentCancelAdd)
                 {
                     // we want to rebuild the screen once the removal has completed, so set the viewstate back to default
                     viewModel.ClearWarnings();
