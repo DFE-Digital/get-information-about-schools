@@ -13,7 +13,7 @@
     <meta name="robots" content="noindex,nofollow" />
 }
 
-@section BackLink
+@section BreadCrumbs
 {
     @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
     {
@@ -33,6 +33,7 @@
         </div>
     }
 }
+
 <div id="field-select-app" v-cloak>
     <div class="govuk-grid-row js-show-block">
         <div class="govuk-grid-column-full">
