@@ -12,15 +12,24 @@
     <meta name="robots" content="noindex,nofollow" />
 }
 
-@section BackLink
+@section BreadCrumbs
 {
     @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
     {
-        @Html.ActionLink("Search", "Index", "Search", new {area = ""}, new {@class = "govuk-back-link"})
+        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-back-link" })
     }
     else
     {
-        <a class="govuk-back-link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")>Search</a>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <div class="govuk-breadcrumbs">
+                    <ol class="govuk-breadcrumbs__list">
+                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search results", "Index", "EstablishmentsSearch", new { area = "Establishments", Model.SearchQueryString }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
     }
 
 }
@@ -73,7 +82,7 @@
                                 @DataOptions()
                             </div>
                             <div class="govuk-radios__item">
-                                @Html.GiasRadioFor(m => m.Dataset, "custom", "Choose a specific set of data", null, new {@class = "govuk-radios__input  custom-fields"})
+                                @Html.GiasRadioFor(m => m.Dataset, "custom", "Choose a specific set of data", null, new { @class = "govuk-radios__input  custom-fields" })
                             </div>
                         </div>
                     </fieldset>
@@ -95,25 +104,25 @@
         <div class="govuk-checkboxes">
             @if (Model.AllowIncludeEmailAddresses)
             {
-                @FormHelpers.GiasCheckbox("true", "IncludeEmailAddresses", "Email addresses", null, new {id = "IncludeEmailAddresses", @class = "govuk-checkboxes__input"})
+                @FormHelpers.GiasCheckbox("true", "IncludeEmailAddresses", "Email addresses", null, new { id = "IncludeEmailAddresses", @class = "govuk-checkboxes__input" })
             }
 
             @if (Model.AllowIncludeIEBTFields)
             {
-                @FormHelpers.GiasCheckbox("true", "IncludeIEBTFields","IEBT fields", null, new {id = "IncludeIEBTFields", @class = "govuk-checkboxes__input"})
+                @FormHelpers.GiasCheckbox("true", "IncludeIEBTFields", "IEBT fields", null, new { id = "IncludeIEBTFields", @class = "govuk-checkboxes__input" })
             }
 
             @if (Model.AllowIncludeBringUpFields)
             {
-                @FormHelpers.GiasCheckbox("true", "IncludeBringUpFields", "Bring up fields", null, new {id = "IncludeBringUpFields", @class = "govuk-checkboxes__input"})
+                @FormHelpers.GiasCheckbox("true", "IncludeBringUpFields", "Bring up fields", null, new { id = "IncludeBringUpFields", @class = "govuk-checkboxes__input" })
             }
 
             @if (Model.AllowIncludeChildrensCentreFields)
             {
-                @FormHelpers.GiasCheckbox("true", "IncludeChildrensCentreFields","Children's centre fields" ,null, new {id = "IncludeChildrensCentreFields", @class = "govuk-checkboxes__input"})
+                @FormHelpers.GiasCheckbox("true", "IncludeChildrensCentreFields", "Children's centre fields", null, new { id = "IncludeChildrensCentreFields", @class = "govuk-checkboxes__input" })
             }
 
-            @FormHelpers.GiasCheckbox("true", "IncludeLinks", "Links", null,new {id = "IncludeLinks", @class = "govuk-checkboxes__input"})
+            @FormHelpers.GiasCheckbox("true", "IncludeLinks", "Links", null, new { id = "IncludeLinks", @class = "govuk-checkboxes__input" })
         </div>
     </div>
 }
