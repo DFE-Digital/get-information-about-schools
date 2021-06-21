@@ -31,6 +31,15 @@
     </div>
 </div>
 
+<div class="button-row govuk-!-margin-bottom-4">
+    @Html.ActionLink(
+        "Back",
+        "Templates",
+        "Notifications",
+        null,
+        new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
+</div>
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h2 class="govuk-heading-m">Delete templated message</h2>
@@ -54,7 +63,6 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         @Html.RouteLink("Yes, delete this templated message", "DeleteTemplateConfirmed", new { id = Model.Id }, new { @class = "govuk-button govuk-button--warning" })
-        @Html.ActionLink("Cancel", "Templates", "Notifications", new { area = "" }, new { @class = "govuk-button govuk-button--secondary" })
     </div>
 </div>
 

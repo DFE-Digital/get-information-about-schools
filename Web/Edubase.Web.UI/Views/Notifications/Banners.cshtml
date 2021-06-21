@@ -1,3 +1,4 @@
+@using System.Globalization
 @model Edubase.Web.UI.Models.Notifications.NotificationsBannersViewModel
 @{
     ViewBag.Title = "Get Information about Schools";
@@ -31,23 +32,39 @@
     </div>
 </div>
 
+<div class="button-row govuk-!-margin-bottom-4">
+    @Html.ActionLink(
+        "Back",
+        "Index",
+        "Notifications",
+        null,
+        new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
+</div>
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        <h2 class="govuk-heading-m">Current status for all notification banners</h2>
+        <h2 class="govuk-heading-m">Current status for notification banners</h2>
     </div>
+</div>
+
+<div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+        <span class="govuk-warning-text__assistive">Warning</span>
+        GIAS can have a maximum of two notification banners showing.
+
+        @if (Model.Banners.Count() < 2)
+        {
+            <span>
+                Only add a notification banner where necessary - and absolutely necessary for a second one.
+            </span>
+        }
+    </strong>
 </div>
 
 @if (Model.Banners.Count() < 2)
 {
-    <div class="govuk-warning-text">
-        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-        <strong class="govuk-warning-text__text">
-            <span class="govuk-warning-text__assistive">Warning</span>
-            Only add a notification banner where necessary - and absolutely necessary for a second one.
-        </strong>
-    </div>
-
-    @Html.RouteLink("Add banner", "CreateBanner", null, new { @class = "govuk-button" })
+    @Html.RouteLink("Add notification banner " + (Model.Banners.Count()+1), "CreateBanner", null, new { @class = "govuk-button" })
 }
 
 @if (Model.Banners.Any())
@@ -65,20 +82,25 @@
             Html.RenderPartial("_NotificationBannerPartial", banner, new ViewDataDictionary(this.ViewData) { { "bannerPreview", true } });
         }
 
-        <div class="govuk-grid-column-one-third">
-            <p class="govuk-body-s govuk-notification-banner-summary">Show banner: @(banner.Visible == true ? "Yes" : "No")</p>
-        </div>
-        <div class="govuk-grid-column-one-third">
-            <p class="govuk-body-s govuk-notification-banner-summary">Visibility start: @banner.Start</p>
-        </div>
-        <div class="govuk-grid-column-one-third">
-            <p class="govuk-body-s govuk-notification-banner-summary">Visibility end: @banner.End</p>
-        </div>
+        <dl class="govuk-summary-list govuk-!-margin-top-4">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Publish status:</dt>
+                <dd class="govuk-summary-list__value">@(banner.Status.EnumDisplayNameFor())</dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Visibility start:</dt>
+                <dd class="govuk-summary-list__value">@banner.Start.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower() <span class="govuk-!-margin-right-2"></span> @banner.Start.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Visibility end:</dt>
+                <dd class="govuk-summary-list__value">@banner.End.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower() <span class="govuk-!-margin-right-2"></span> @banner.End.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</dd>
+            </div>
+        </dl>
 
-        <div class="govuk-grid-row">
+        <div class="govuk-grid-row govuk-!-margin-bottom-6">
             <div class="govuk-grid-column-two-thirds">
-                @Html.RouteLink("Edit banner " + bannerCounter, "EditBanner", new { id = banner.RowKey }, new { @class = "govuk-button govuk-button--secondary" })
-                @Html.RouteLink("Delete banner " + bannerCounter, "DeleteBanner", new { id = banner.RowKey }, new { @class = "govuk-button govuk-button--warning" })
+                @Html.RouteLink("Edit notification banner " + bannerCounter, "EditBanner", new { id = banner.RowKey, counter = bannerCounter }, new { @class = "govuk-button govuk-button--secondary" })
+                @Html.RouteLink("Remove notification banner " + bannerCounter, "DeleteBanner", new { id = banner.RowKey, counter = bannerCounter }, new { @class = "govuk-button govuk-button--secondary govuk-!-margin-left-4" })
             </div>
         </div>
 

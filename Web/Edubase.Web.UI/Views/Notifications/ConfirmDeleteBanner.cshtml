@@ -31,9 +31,18 @@
     </div>
 </div>
 
+<div class="button-row govuk-!-margin-bottom-4">
+    @Html.ActionLink(
+        "Back",
+        "Banners",
+        "Notifications",
+        null,
+        new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
+</div>
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        <h2 class="govuk-heading-m">Delete banner</h2>
+        <h2 class="govuk-heading-m">Delete notification banner @Model.Counter</h2>
     </div>
 </div>
 
@@ -41,7 +50,7 @@
     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
     <strong class="govuk-warning-text__text">
         <span class="govuk-warning-text__assistive">Warning</span>
-        Are you sure you want to delete this banner? This will take immediate effect.
+        Are you sure you want to delete this notification banner? This will take immediate effect.
     </strong>
 </div>
 
@@ -49,8 +58,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        @Html.RouteLink("Yes, delete this banner", "DeleteBannerConfirmed", new { id = Model.Id }, new { @class = "govuk-button govuk-button--warning" })
-        @Html.ActionLink("Cancel", "Banners", "Notifications", new { area = "" }, new { @class = "govuk-button govuk-button--secondary" })
+        @Html.RouteLink("Yes, delete notification banner " + Model.Counter, "DeleteBannerConfirmed", new { id = Model.Id, counter = Model.Counter }, new { @class = "govuk-button govuk-button--warning" })
     </div>
 </div>
 

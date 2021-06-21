@@ -8,13 +8,27 @@
     string fieldsetClassName = "";
     bool disableHint = false;
     string dateHint = "";
+    string hintSpacer = "<span class='govuk-!-margin-right-2'></span>";
+    bool disableHintSpacer = false;
+    string dateHintAdditional = "";
     bool hideLegend = false;
     bool.TryParse(ViewData["disableHint"]?.ToString(), out disableHint);
+    bool.TryParse(ViewData["disableHintSpacer"]?.ToString(), out disableHintSpacer);
     string legendPrefix = "";
 
     if (ViewData["dateHint"] != null)
     {
         dateHint = ViewData["dateHint"].ToString();
+
+        if (!disableHintSpacer)
+        {
+            dateHint = dateHint.Insert(dateHint.LastIndexOf(' '), hintSpacer);
+        }
+    }
+
+    if (ViewData["dateHintAdditional"] != null)
+    {
+        dateHintAdditional = ViewData["dateHintAdditional"].ToString();
     }
 
     if (ViewData["labelClass"] != null)
@@ -128,11 +142,16 @@
         {
             if (dateHint != String.Empty)
             {
-                <p class="govuk-hint">For example, @dateHint</p>
+                <p class="govuk-hint @Html.Conditional(dateHintAdditional != string.Empty, "govuk-!-margin-bottom-0")">For example, @Html.Raw(dateHint)</p>
             }
             else
             {
-                <p class="govuk-hint">For example, 20 03 2003 - 23:59</p>
+                <p class="govuk-hint @Html.Conditional(dateHintAdditional != string.Empty, "govuk-!-margin-bottom-0")">For example, 20 03 2003 @Html.Raw(hintSpacer) 23:59</p>
+            }
+
+            if (dateHintAdditional != String.Empty)
+            {
+                <p class="govuk-hint">@dateHintAdditional</p>
             }
         }
 
@@ -196,7 +215,11 @@
         <div class="govuk-date-input__item gias-hour-input__item">
             <div class="govuk-form-group">
                 @Html.LabelFor(x => x.Hour, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
-                @Html.TextBoxFor(x => x.Hour, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, hourCssClasses, 4, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Hour") : null))
+                @{
+                    var hourAttribute = new Dictionary<string,object>();
+                    hourAttribute.Add("Value", string.Format("{0:D2}", Model.Hour));
+                }
+                @Html.TextBoxFor(m => m.Hour, Html.GetHtmlAttributes(GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, hourCssClasses, 4, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Hour") : null), hourAttribute))
             </div>
         </div>
         <div class="govuk-date-input__item gias-time-spacer__item">
@@ -207,7 +230,11 @@
         <div class="govuk-date-input__item gias-minute-input__item">
             <div class="govuk-form-group">
                 @Html.LabelFor(x => x.Minute, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
-                @Html.TextBoxFor(x => x.Minute, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, minuteCssClasses, 4, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Minute") : null))
+                @{
+                    var minuteAttribute = new Dictionary<string, object>();
+                    minuteAttribute.Add("Value", string.Format("{0:D2}", Model.Minute));
+                }
+                @Html.TextBoxFor(m => m.Minute, Html.GetHtmlAttributes(GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, minuteCssClasses, 4, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Minute") : null), minuteAttribute))
             </div>
         </div>
     </div>

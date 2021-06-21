@@ -1,10 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Edubase.Common;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Edubase.Data.Entity
@@ -22,13 +17,33 @@ namespace Edubase.Data.Entity
         Delete
     }
 
+    public enum eNotificationBannerStatus
+    {
+        [Display(Name = "Currently showing")]
+        Live,
+        [Display(Name = "Scheduled to show in the future")]
+        Future,
+        [Display(Name = "Expired")]
+        Expired
+    }
+
     public class NotificationBanner : TableEntity
     {
         public int Importance { get; set; }
         public string Content { get; set; }
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
-        public bool Visible { get; set; }
+
+        private DateTime _start;
+        public DateTime Start
+        {
+            get => _start.ToLocalTime(); set => _start = value;
+        }
+
+        private DateTime _end;
+        public DateTime End
+        {
+            get => _end.ToLocalTime(); set => _end = value;
+        }
+
         public int Version { get; set; } = 1;
         public string Tracker { get; set; }
         public string AuditUser { get; set; }
@@ -40,6 +55,26 @@ namespace Edubase.Data.Entity
             PartitionKey = eNotificationBannerPartition.Current.ToString();
             RowKey = Guid.NewGuid().ToString("N").Substring(0, 8);
             Tracker = RowKey;
+        }
+
+        [IgnoreProperty]
+        public bool Visible => Status == eNotificationBannerStatus.Live;
+
+        public eNotificationBannerStatus Status
+        {
+            get
+            {
+                if (Start <= DateTime.Now && End > DateTime.Now)
+                {
+                    return eNotificationBannerStatus.Live;
+                }
+                else if (Start > DateTime.Now)
+                {
+                    return eNotificationBannerStatus.Future;
+                }
+
+                return eNotificationBannerStatus.Expired;
+            }
         }
     }
 }

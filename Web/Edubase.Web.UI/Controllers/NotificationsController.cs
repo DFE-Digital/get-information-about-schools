@@ -48,7 +48,9 @@ namespace Edubase.Web.UI.Controllers
             var banners = await _BannerRepository.GetAllAsync(1000);
             var newBanner = new NotificationsBannerViewModel
             {
-                TotalBanners = banners.Items.Count()
+                TotalBanners = banners.Items.Count(),
+                TotalLiveBanners = banners.Items.Count(x => x.Visible),
+                Counter = banners.Items.Count() + 1
             };
             return View("EditBanner", newBanner);
         } 
@@ -60,8 +62,8 @@ namespace Edubase.Web.UI.Controllers
             return await ProcessEditBanner(viewModel);
         }
 
-        [Route("Banner/{id}", Name = "EditBanner"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
-        public async Task<ActionResult> EditBannerAsync(string id)
+        [Route("Banner/{counter}/{id}", Name = "EditBanner"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        public async Task<ActionResult> EditBannerAsync(string id, int counter)
         {
             var item = await _BannerRepository.GetAsync(id);
             if (item == null) return HttpNotFound();
@@ -71,16 +73,17 @@ namespace Edubase.Web.UI.Controllers
             return View("EditBanner", new NotificationsBannerViewModel
             {
                 Id = id,
+                Counter = counter,
                 Start = new DateTimeViewModel(item.Start, item.Start),
                 End = new DateTimeViewModel(item.End, item.End),
-                Visible = item.Visible,
                 Importance = (eNotificationBannerImportance)item.Importance,
                 Content = item.Content,
-                TotalBanners = banners.Items.Count()
+                TotalBanners = banners.Items.Count(),
+                TotalLiveBanners = banners.Items.Count(x => x.Visible)
             });
         }
 
-        [Route("Banner/{id}", Name = "PostEditBanner"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Banner/{counter}/{id}", Name = "PostEditBanner"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> EditBannerAsync(NotificationsBannerViewModel viewModel)
         {
             var item = await _BannerRepository.GetAsync(viewModel.Id);
@@ -91,24 +94,27 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task<ActionResult> ProcessEditBanner(NotificationsBannerViewModel viewModel, NotificationBanner originalBanner = null)
         {
+            if (viewModel.GoBack)
+            {
+                viewModel.Action = (eNotificationBannerAction) ((int) viewModel.Action - 1);
+
+                // if we're going back, we dont really care about any validation errors
+                foreach (var modelValue in ModelState.Values)
+                {
+                    modelValue.Errors.Clear();
+                }
+            }
+
             if (ModelState.IsValid)
             {
-                if (viewModel.Action == eNotificationBannerAction.Step2)
+                if (viewModel.Action == eNotificationBannerAction.Start || viewModel.Action == eNotificationBannerAction.TypeChoice)
                 {
-                    // skip straight to the final review if it's being switched off - but only for an existing banner.
-                    if (viewModel.Visible == false && !string.IsNullOrEmpty(viewModel.Id))
-                    {
-                        ModelState.Remove(nameof(viewModel.Action));
-                        viewModel.Action = eNotificationBannerAction.Step6;
-                        return View("EditBanner", viewModel);
-                    }
-
-                    // populate the templates
+                    // populate the templates, we need to do this the usual route through, and also if they have clicked the back button
                     var result = await _TemplateRepository.GetAllAsync(1000);
                     viewModel.Templates = result.Items;
                 }
 
-                if (viewModel.Action == eNotificationBannerAction.Step3)
+                if (viewModel.Action == eNotificationBannerAction.TypeChoice)
                 {
                     if (!string.IsNullOrEmpty(viewModel.TemplateSelected))
                     {
@@ -119,7 +125,7 @@ namespace Edubase.Web.UI.Controllers
                     }
                 }
 
-                if (viewModel.Action == eNotificationBannerAction.Step6)
+                if (viewModel.Action == eNotificationBannerAction.Review)
                 {
                     if (string.IsNullOrEmpty(viewModel.Id))
                     {
@@ -141,22 +147,25 @@ namespace Edubase.Web.UI.Controllers
                 }
 
                 ModelState.Remove(nameof(viewModel.Action));
-                viewModel.Action = (eNotificationBannerAction) ((int) viewModel.Action + 1);
+                if (!viewModel.GoBack)
+                {
+                    viewModel.Action = (eNotificationBannerAction) ((int) viewModel.Action + 1);
+                }
             }
 
             return View("EditBanner", viewModel);
         }
 
 
-        [Route("Banner/{id}/Delete", Name = "DeleteBanner"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Banner/{counter}/{id}/Delete", Name = "DeleteBanner"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> DeleteBannerAsync(NotificationsBannerViewModel viewModel)
         {
             var item = await _BannerRepository.GetAsync(viewModel.Id);
             if (item == null) return HttpNotFound();
-            return View("ConfirmDeleteBanner", new NotificationsBannerViewModel(item));
+            return View("ConfirmDeleteBanner", viewModel.Set(item));
         }
 
-        [Route("Banner/{id}/Delete/Confirm", Name = "DeleteBannerConfirmed"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Banner/{counter}/{id}/Delete/Confirm", Name = "DeleteBannerConfirmed"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> DeleteBannerConfirmedAsync(NotificationsBannerViewModel viewModel)
         {
             var item = await _BannerRepository.GetAsync(viewModel.Id);
@@ -220,9 +229,20 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task<ActionResult> ProcessEditTemplate(NotificationsTemplateViewModel viewModel, NotificationTemplate oldModel = null)
         {
+            if (viewModel.GoBack)
+            {
+                viewModel.Action = (eNotificationsTemplateAction) ((int) viewModel.Action - 1);
+
+                // if we're going back, we dont really care about any validation errors
+                foreach (var modelValue in ModelState.Values)
+                {
+                    modelValue.Errors.Clear();
+                }
+            }
+
             if (ModelState.IsValid)
             {
-                if (viewModel.Action == eNotificationsTemplateAction.Step2)
+                if (viewModel.Action == eNotificationsTemplateAction.Review)
                 {
                     if (string.IsNullOrEmpty(viewModel.Id))
                     {
@@ -242,7 +262,10 @@ namespace Edubase.Web.UI.Controllers
                 }
 
                 ModelState.Remove(nameof(viewModel.Action));
-                viewModel.Action = (eNotificationsTemplateAction) ((int) viewModel.Action + 1);
+                if (!viewModel.GoBack)
+                {
+                    viewModel.Action = (eNotificationsTemplateAction) ((int) viewModel.Action + 1);
+                }
             }
 
             return View("EditTemplate", viewModel);
@@ -274,13 +297,13 @@ namespace Edubase.Web.UI.Controllers
         }
 
 
-        [HttpGet, Route("BannersPartial")]
+        [Route("BannersPartial")]
         public ActionResult BannersPartial()
         {
             return Task.Run(async () =>
             {
                 var result = await _BannerRepository.GetAllAsync(1000);
-                var model = new NotificationsBannersViewModel(result.Items.Where(x => x.Visible == true && x.Start < DateTime.Now && x.End > DateTime.Now));
+                var model = new NotificationsBannersViewModel(result.Items.Where(x => x.Visible));
                 return PartialView("_NotificationsBannersPartial", model);
             }).Result;
         }

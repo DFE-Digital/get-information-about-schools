@@ -7,7 +7,7 @@
 
 @if (ViewContext.Controller.GetType().Name != nameof(NotificationsController))
 {
-    Html.RenderAction("BannersPartial", "Notifications", new {area=""});
+    Html.RenderAction("BannersPartial", "Notifications", new { area = "" });
 }
 
 @section Head {

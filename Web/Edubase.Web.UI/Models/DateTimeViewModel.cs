@@ -34,10 +34,10 @@ namespace Edubase.Web.UI.Models
         [DisplayName("Year"), Range(1800, 2100)]
         public int? Year { get; set; }
 
-        [DisplayName("Hour"), Range(0, 23)]
+        [DisplayName("Hour"), Range(0, 23), DisplayFormat(DataFormatString = "{0:D2}", ApplyFormatInEditMode = true)]
         public int? Hour { get; set; }
 
-        [DisplayName("Minute"), Range(0, 59)]
+        [DisplayName("Minute"), Range(0, 59), DisplayFormat(DataFormatString = "{0:D2}", ApplyFormatInEditMode = true)]
         public int? Minute { get; set; }
 
         public string Label { get; set; }

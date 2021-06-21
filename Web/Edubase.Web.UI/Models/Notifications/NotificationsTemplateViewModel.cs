@@ -5,8 +5,8 @@ namespace Edubase.Web.UI.Models.Notifications
 {
     public enum eNotificationsTemplateAction
     {
-        Step1,
-        Step2
+        Message,
+        Review
     }
 
     public class NotificationsTemplateViewModel
@@ -18,6 +18,7 @@ namespace Edubase.Web.UI.Models.Notifications
         public string Content { get; set; }
 
         public string OriginalContent { get; set; }
-        
+
+        public bool GoBack { get; set; }
     }
 }

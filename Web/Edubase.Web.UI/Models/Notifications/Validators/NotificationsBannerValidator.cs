@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using FluentValidation;
 
 namespace Edubase.Web.UI.Models.Notifications.Validators
@@ -11,15 +9,18 @@ namespace Edubase.Web.UI.Models.Notifications.Validators
         {
             RuleFor(x => x.Content)
                 .NotNull().WithMessage("The Content field cannot be empty")
-                .When(x => x.Action == eNotificationBannerAction.Step4);
+                .When(x => x.Action == eNotificationBannerAction.Message);
 
             RuleFor(x => x.Start)
                 .Must(x => x.IsValid()).WithMessage("Set a valid date")
-                .When(x => x.Action == eNotificationBannerAction.Step5);
+                .When(x => x.Action == eNotificationBannerAction.Schedule)
+                .Must(x => x.ToDateTime().GetValueOrDefault() > DateTime.Now.ToLocalTime()).WithMessage("Start date and time must be in the future")
+                .When(x => x.Action == eNotificationBannerAction.Schedule && x.Id == null);
 
             RuleFor(x => x.End)
                 .Must(x => x.IsValid()).WithMessage("Set a valid date")
-                .When(x => x.Action == eNotificationBannerAction.Step5);
+                .Must((v, dt) => v.End.ToDateTime().GetValueOrDefault() > v.Start.ToDateTime().GetValueOrDefault()).WithMessage("End date must be after the start date")
+                .When(x => x.Action == eNotificationBannerAction.Schedule);
         }
     }
 }
