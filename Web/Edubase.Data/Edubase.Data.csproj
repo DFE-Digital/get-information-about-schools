@@ -131,6 +131,8 @@
   <ItemGroup>
     <Compile Include="DbGeographyConverter.cs" />
     <Compile Include="Entity\FaqItem.cs" />
+    <Compile Include="Entity\NotificationBanner.cs" />
+    <Compile Include="Entity\NotificationTemplate.cs" />
     <Compile Include="Entity\Token.cs" />
     <Compile Include="Entity\LocalAuthoritySet.cs" />
     <Compile Include="Entity\GlossaryItem.cs" />
@@ -143,6 +145,8 @@
     <Compile Include="Repositories\ILocalAuthoritySetRepository.cs" />
     <Compile Include="Repositories\ITokenRepository.cs" />
     <Compile Include="Repositories\IUserPreferenceRepository.cs" />
+    <Compile Include="Repositories\NotificationBannerRepository.cs" />
+    <Compile Include="Repositories\NotificationTemplateRepository.cs" />
     <Compile Include="Repositories\UserPreferenceRepository.cs" />
     <Compile Include="Repositories\TokenRepository.cs" />
     <Compile Include="Repositories\LocalAuthoritySetRepository.cs" />

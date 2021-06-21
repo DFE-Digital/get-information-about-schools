@@ -1,0 +1,68 @@
+@model Edubase.Web.UI.Models.Notifications.NotificationsTemplateViewModel
+@{
+    ViewBag.Title = "Get Information about Schools";
+    ViewBag.SiteSection = "tools";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Notifications", "Index", "Notifications", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Manage templated messages for notifications banner</h1>
+    </div>
+</div>
+
+<div class="button-row govuk-!-margin-bottom-4">
+    @Html.ActionLink(
+        "Back",
+        "Templates",
+        "Notifications",
+        null,
+        new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-m">Delete templated message</h2>
+    </div>
+</div>
+
+<div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+        <span class="govuk-warning-text__assistive">Warning</span>
+        Are you sure you want to delete the following templated message?
+    </strong>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p>"@Model.Content"</p>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        @Html.RouteLink("Yes, delete this templated message", "DeleteTemplateConfirmed", new { id = Model.Id }, new { @class = "govuk-button govuk-button--warning" })
+    </div>
+</div>
+

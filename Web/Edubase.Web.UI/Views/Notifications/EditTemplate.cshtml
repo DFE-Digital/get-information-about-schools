@@ -1,0 +1,121 @@
+@using Edubase.Web.UI.Models.Notifications
+@model Edubase.Web.UI.Models.Notifications.NotificationsTemplateViewModel
+@{
+    ViewBag.Title = "Get Information about Schools";
+    ViewBag.SiteSection = "tools";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Notifications", "Index", "Notifications", new {area = ""}, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState)
+        <h1 class="govuk-heading-xl">Manage templated messages for notification banners</h1>
+    </div>
+</div>
+
+
+@using (Html.BeginRouteForm(Model.Id == null ? "PostCreateTemplate" : "PostEditTemplate", new { Model.Id }, FormMethod.Post))
+{
+    <div class="button-row govuk-!-margin-bottom-4">
+        @if (Model.Action == eNotificationsTemplateAction.Message)
+        {
+            @Html.ActionLink(
+                "Back",
+                "Templates",
+                "Notifications",
+                null,
+                new {@class = "govuk-back-link gias-back-link--button", data_module = "govuk-button"})
+        }
+        else
+        {
+            <button type="submit" class="govuk-back-link gias-back-link--button" name="@nameof(Model.GoBack)" value="true">
+                Back
+            </button>
+        }
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-s">@(Model.Id == null ? "Add" : "Edit") templated message</h2>
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+
+        @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.Action)
+        @Html.HiddenFor(x => x.OriginalContent)
+
+        @if (Model.Action == eNotificationsTemplateAction.Message)
+        {
+            <div class="govuk-grid-column-two-thirds">
+                <p>Keep the message concise and user focused. The maximum number of characters permitted is 400. This includes spaces.</p>
+
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Content)">
+                    @Html.ValidationMessageFor(x => x.Content, null, new { @class = "govuk-error-message" })
+                    @Html.TextAreaFor(x => x.Content, 6, 40, new { @class = "govuk-textarea entry-content" })
+                </div>
+            </div>
+        }
+        else
+        {
+            @Html.HiddenFor(x => x.Content)
+        }
+
+        @if (Model.Action == eNotificationsTemplateAction.Review)
+        {
+            <div class="govuk-grid-column-full">
+                <p>Check this new templated message is correct before saving.</p>
+
+                <table class="govuk-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" colspan="2" class="govuk-table__header">
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        @if (!string.IsNullOrEmpty(Model.OriginalContent))
+                        {
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">Old templated message</th>
+                                <td class="govuk-table__cell">@Model.OriginalContent</td>
+                            </tr>
+                        }
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">New templated message</th>
+                            <td class="govuk-table__cell">@Model.Content</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="button-row govuk-!-padding-top-6">
+                <button type="submit" class="govuk-button">@(Model.Id != null || Model.Action == eNotificationsTemplateAction.Review ? "Save" : "Continue")</button>
+            </div>
+        </div>
+    </div>
+}

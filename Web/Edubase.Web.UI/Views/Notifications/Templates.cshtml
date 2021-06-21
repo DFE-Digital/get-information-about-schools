@@ -1,0 +1,80 @@
+@using Edubase.Data.Entity
+@model Edubase.Web.UI.Models.Notifications.NotificationsTemplatesViewModel
+@{
+    ViewBag.Title = "Get Information about Schools";
+    ViewBag.SiteSection = "tools";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Notifications", "Index", "Notifications", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Manage templated messages for notification banners</h1>
+    </div>
+</div>
+
+<div class="button-row govuk-!-margin-bottom-4">
+    @Html.ActionLink(
+        "Back",
+        "Index",
+        "Notifications",
+        null,
+        new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p>Add, edit or delete templated messages for notification banners.</p>
+    </div>
+</div>
+
+
+<table class="govuk-table">
+    <caption class="govuk-table__caption govuk-table__caption--m">List of templated messages</caption>
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" colspan="2" class="govuk-table__header">
+                @Html.RouteLink("Add templated message", "CreateTemplate", null, new { @class = "govuk-button" })
+            </th>
+        </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+        @foreach (var template in Model.Templates)
+        {
+            @RenderTemplate(template)
+        }
+    </tbody>
+</table>
+
+
+@helper RenderTemplate(NotificationTemplate template)
+{
+    <tr class="govuk-table__row">
+        <td class="govuk-table__cell">@template.Content</td>
+        <td class="govuk-table__cell">
+            @Html.RouteLink("Edit", "EditTemplate", new { id = template.RowKey }, new { @class = "govuk-button govuk-button--secondary" })
+            @Html.RouteLink("Delete", "DeleteTemplate", new { id = template.RowKey }, new { @class = "govuk-button govuk-button--warning" })
+        </td>
+    </tr>
+}
+
+
