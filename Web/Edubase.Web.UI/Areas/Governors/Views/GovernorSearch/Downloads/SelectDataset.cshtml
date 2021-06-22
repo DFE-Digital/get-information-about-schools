@@ -1,6 +1,7 @@
 @using Edubase.Services.Enums
 @using Microsoft.Ajax.Utilities
 @using Edubase.Web.UI.Areas.Governors.Models
+@using Edubase.Web.UI.Models.Search
 @model GovernorSearchDownloadViewModel
 @{
     ViewBag.bodyClasses = "schools-search-page search-page";
@@ -23,7 +24,7 @@
             <div class="govuk-grid-column-full">
                 <div class="govuk-breadcrumbs">
                     <ol class="govuk-breadcrumbs__list">
-                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "", SelectedTab = "Governors" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "", SelectedTab = SearchViewModel.Tab.Governors }, new { @class = "govuk-breadcrumbs__link" })</li>
                         <li class="govuk-breadcrumbs__list-item"><a href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Search results</a></li>
                     </ol>
                 </div>
