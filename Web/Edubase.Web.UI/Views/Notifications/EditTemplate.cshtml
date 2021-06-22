@@ -73,7 +73,7 @@
 
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Content)">
                     @Html.ValidationMessageFor(x => x.Content, null, new { @class = "govuk-error-message" })
-                    @Html.TextAreaFor(x => x.Content, 6, 40, new { @class = "govuk-textarea entry-content" })
+                    @Html.TextAreaFor(x => x.Content, new { @class = "govuk-textarea entry-content", rows = "6", cols = "40", maxlength = "400" })
                 </div>
             </div>
         }
@@ -98,12 +98,12 @@
                         @if (!string.IsNullOrEmpty(Model.OriginalContent))
                         {
                             <tr class="govuk-table__row">
-                                <th scope="row" class="govuk-table__header">Old templated message</th>
+                                <th scope="row" class="govuk-table__header govuk-!-width-one-quarter">Old templated message</th>
                                 <td class="govuk-table__cell">@Model.OriginalContent</td>
                             </tr>
                         }
                         <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table__header">New templated message</th>
+                            <th scope="row" class="govuk-table__header govuk-!-width-one-quarter">New templated message</th>
                             <td class="govuk-table__cell">@Model.Content</td>
                         </tr>
                     </tbody>
