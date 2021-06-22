@@ -42,13 +42,19 @@ namespace Edubase.Web.UI.Models
 
         public string Label { get; set; }
 
-        public DateTime? ToDateTime()
+        public DateTime? ToDateTime(DateTimeKind? dtKind = null)
         {
             if (Day.HasValue && Month.HasValue && Year.HasValue && Hour.HasValue && Minute.HasValue)
             {
                 try
                 {
-                    return new DateTime(Year.Value, Month.Value, Day.Value, Hour.Value, Minute.Value, 0);
+                    var dt = new DateTime(Year.Value, Month.Value, Day.Value, Hour.Value, Minute.Value, 0);
+                    var response = dt;
+                    if (dtKind.HasValue)
+                    {
+                        response = DateTime.SpecifyKind(dt, dtKind.Value);
+                    }
+                    return response;
                 }
                 catch { }
             }
@@ -56,7 +62,13 @@ namespace Edubase.Web.UI.Models
             {
                 try
                 {
-                    return new DateTime(Year.Value, Month.Value, Day.Value);
+                    var dt = new DateTime(Year.Value, Month.Value, Day.Value);
+                    var response = dt;
+                    if (dtKind.HasValue)
+                    {
+                        response = DateTime.SpecifyKind(dt, dtKind.Value);
+                    }
+                    return response;
                 }
                 catch { }
             }
