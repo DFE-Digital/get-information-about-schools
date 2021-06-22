@@ -28,6 +28,7 @@ namespace Edubase.Web.UI.Models.Notifications
         [MaxLength(500, ErrorMessage = "The Content field cannot have more than 500 characters"), AllowHtml]
         public string Content { get; set; }
         public DateTimeViewModel Start { get; set; }
+        public DateTime? StartOriginal { get; set; }
         public DateTimeViewModel End { get; set; }
         public bool GoBack { get; set; }
 
