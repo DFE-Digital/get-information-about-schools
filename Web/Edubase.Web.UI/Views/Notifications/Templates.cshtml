@@ -70,7 +70,7 @@
 {
     <tr class="govuk-table__row">
         <td class="govuk-table__cell">@template.Content</td>
-        <td class="govuk-table__cell">
+        <td class="govuk-table__cell govuk-!-width-one-quarter">
             @Html.RouteLink("Edit", "EditTemplate", new { id = template.RowKey }, new { @class = "govuk-button govuk-button--secondary" })
             @Html.RouteLink("Delete", "DeleteTemplate", new { id = template.RowKey }, new { @class = "govuk-button govuk-button--warning" })
         </td>

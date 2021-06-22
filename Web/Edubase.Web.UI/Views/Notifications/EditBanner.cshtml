@@ -173,7 +173,7 @@
                 </details>
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Content)">
                     @Html.ValidationMessageFor(x => x.Content, null, new { @class = "govuk-error-message" })
-                    @Html.TextAreaFor(x => x.Content, 6, 40, new { @class = "govuk-textarea entry-content" })
+                    @Html.TextAreaFor(x => x.Content, new { @class = "govuk-textarea entry-content", rows="6", cols="40", maxlength="500" })
                 </div>
             }
             else
