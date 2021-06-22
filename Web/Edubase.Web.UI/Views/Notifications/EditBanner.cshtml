@@ -63,6 +63,7 @@
             @Html.HiddenFor(x => x.Action)
             @Html.HiddenFor(x => x.TotalBanners)
             @Html.HiddenFor(x => x.TotalLiveBanners)
+            @Html.HiddenFor(x => x.StartOriginal)
 
 
             @if (Model.Action == eNotificationBannerAction.Start)
@@ -155,7 +156,7 @@
                 <details class="govuk-details govuk-!-margin-bottom-4" data-module="govuk-details">
                     <summary class="govuk-details__summary">
                         <span class="govuk-details__summary-text">
-                            Guidance for writing public messages involving 'time'
+                            Guidance for writing public messages involving time
                         </span>
                     </summary>
                     <div class="govuk-details__text">
@@ -166,8 +167,8 @@
                             <li>midday (not 12 noon, noon or 12pm)</li>
                             <li>6 hours 30 minutes</li>
                         </ul>
-                        <p>Midnight is the first minute of the day, not the last. You should consider using "11:59pm" to avoid confusion about a single, specific time</p>
-                        <p>For example, "System will be back up by 11:59pm on Tuesday 14 June." can only be read one way, but "System will be back up by midnight on Tuesday 14 June." can be read two ways (the end of Monday 13, or end of Tuesday 14)</p>
+                        <p>Midnight is the first minute of the day, not the last. You should consider using "11:59pm" to avoid confusion about a single, specific time.</p>
+                        <p>For example, "System will be back up by 11:59pm on Tuesday 14 June." can only be read one way, but "System will be back up by midnight on Tuesday 14 June." can be read two ways (the end of Monday 13, or end of Tuesday 14).</p>
                     </div>
                 </details>
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Content)">

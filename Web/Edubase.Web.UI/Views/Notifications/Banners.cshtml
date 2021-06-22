@@ -51,7 +51,7 @@
     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
     <strong class="govuk-warning-text__text">
         <span class="govuk-warning-text__assistive">Warning</span>
-        GIAS can have a maximum of two notification banners showing.
+        Get Information about Schools can have a maximum of two notification banners showing.
 
         @if (Model.Banners.Count() < 2)
         {
@@ -100,7 +100,7 @@
         <div class="govuk-grid-row govuk-!-margin-bottom-6">
             <div class="govuk-grid-column-two-thirds">
                 @Html.RouteLink("Edit notification banner " + bannerCounter, "EditBanner", new { id = banner.RowKey, counter = bannerCounter }, new { @class = "govuk-button govuk-button--secondary" })
-                @Html.RouteLink("Remove notification banner " + bannerCounter, "DeleteBanner", new { id = banner.RowKey, counter = bannerCounter }, new { @class = "govuk-button govuk-button--secondary govuk-!-margin-left-4" })
+                @Html.RouteLink("Delete notification banner " + bannerCounter, "DeleteBanner", new { id = banner.RowKey, counter = bannerCounter }, new { @class = "govuk-button govuk-button--secondary govuk-!-margin-left-4" })
             </div>
         </div>
 

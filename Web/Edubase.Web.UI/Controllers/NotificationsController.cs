@@ -75,6 +75,7 @@ namespace Edubase.Web.UI.Controllers
                 Id = id,
                 Counter = counter,
                 Start = new DateTimeViewModel(item.Start, item.Start),
+                StartOriginal = item.Start,
                 End = new DateTimeViewModel(item.End, item.End),
                 Importance = (eNotificationBannerImportance)item.Importance,
                 Content = item.Content,
