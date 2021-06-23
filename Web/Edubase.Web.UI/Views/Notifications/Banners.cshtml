@@ -26,6 +26,21 @@
     </div>
 }
 
+@if (ViewBag.ShowSaved != null && ViewBag.ShowSaved)
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
+                <div class="tick"></div>
+                <p class="message-text" aria-live="polite">Your changes have been saved</p>
+                <a class="cross" href="#">
+                    <span class="govuk-visually-hidden">Dismiss notification</span>
+                </a>
+            </div>
+        </div>
+    </div>
+}
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-xl">Manage visibility of notification banners</h1>
@@ -64,7 +79,7 @@
 
 @if (Model.Banners.Count() < 2)
 {
-    @Html.RouteLink("Add notification banner " + (Model.Banners.Count()+1), "CreateBanner", null, new { @class = "govuk-button" })
+    @Html.RouteLink("Add notification banner " + (Model.Banners.Count() + 1), "CreateBanner", null, new { @class = "govuk-button" })
 }
 
 @if (Model.Banners.Any())
@@ -100,7 +115,7 @@
         <div class="govuk-grid-row govuk-!-margin-bottom-6">
             <div class="govuk-grid-column-two-thirds">
                 @Html.RouteLink("Edit notification banner " + bannerCounter, "EditBanner", new { id = banner.RowKey, counter = bannerCounter }, new { @class = "govuk-button govuk-button--secondary" })
-                @Html.RouteLink("Delete notification banner " + bannerCounter, "DeleteBanner", new { id = banner.RowKey, counter = bannerCounter }, new { @class = "govuk-button govuk-button--secondary govuk-!-margin-left-4" })
+                @Html.RouteLink("Delete notification banner " + bannerCounter, "DeleteBanner", new { id = banner.RowKey, counter = bannerCounter }, new { @class = "govuk-button govuk-button--secondary gias-banner-delete-button" })
             </div>
         </div>
 

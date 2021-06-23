@@ -33,7 +33,6 @@
     </div>
 </div>
 
-
 @using (Html.BeginRouteForm(Model.Id == null ? "PostCreateTemplate" : "PostEditTemplate", new { Model.Id }, FormMethod.Post))
 {
     <div class="button-row govuk-!-margin-bottom-4">
@@ -87,28 +86,20 @@
             <div class="govuk-grid-column-full">
                 <p>Check this new templated message is correct before saving.</p>
 
-                <table class="govuk-table">
-                    <thead class="govuk-table__head">
-                    <tr class="govuk-table__row">
-                        <th scope="col" colspan="2" class="govuk-table__header">
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                        @if (!string.IsNullOrEmpty(Model.OriginalContent))
-                        {
-                            <tr class="govuk-table__row">
-                                <th scope="row" class="govuk-table__header govuk-!-width-one-quarter">Old templated message</th>
-                                <td class="govuk-table__cell">@Model.OriginalContent</td>
-                            </tr>
-                        }
-                        <tr class="govuk-table__row">
-                            <th scope="row" class="govuk-table__header govuk-!-width-one-quarter">New templated message</th>
-                            <td class="govuk-table__cell">@Model.Content</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <dl class="govuk-summary-list gias-summary-top-border">
+                    @if (!string.IsNullOrEmpty(Model.OriginalContent)) {
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Old templated message</dt>
+                            <dd class="govuk-summary-list__value">@Model.OriginalContent</dd>
+                        </div>
+                    }
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">New templated message</dt>
+                        <dd class="govuk-summary-list__value">@Model.Content</dd>
+                    </div>
+                </dl>
             </div>
+                    
         }
     </div>
     <div class="govuk-grid-row">
