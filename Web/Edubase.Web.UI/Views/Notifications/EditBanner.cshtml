@@ -167,7 +167,7 @@
                             <li>midday (not 12 noon, noon or 12pm)</li>
                             <li>6 hours 30 minutes</li>
                         </ul>
-                        <p>Midnight is the first minute of the day, not the last. You should consider using "11:59pm" to avoid confusion about a single, specific time.</p>
+                        <p>Midnight is the first minute of the day, not the last. You should consider using '11:59pm' to avoid confusion about a single, specific time.</p>
                         <p>For example, "System will be back up by 11:59pm on Tuesday 14 June." can only be read one way, but "System will be back up by midnight on Tuesday 14 June." can be read two ways (the end of Monday 13, or end of Tuesday 14).</p>
                     </div>
                 </details>
@@ -184,14 +184,14 @@
             @if (Model.Action == eNotificationBannerAction.Schedule)
             {
                 <h2 class="govuk-heading-m">Schedule notification banner visibility</h2>
-                <p>Choose the start date and time and the end date and time for the notification banner to be visible on the site.</p>
+                <p>Choose the start date and start time and the end date and end time for the notification banner to be visible on the site.</p>
 
                 <div class="govuk-form-group">
-                    @Html.EditorFor(x => x.Start, "DateTimeViewModelExtended", new { title = "Start date and time", fieldsetClassName = "edit-date-fieldset", dateHint = $"{DateTime.Now:dd MM yyyy} 14:30", dateHintAdditional = "The time will be UK local time, taking into account daylight savings" })
+                    @Html.EditorFor(x => x.Start, "DateTimeViewModelExtended", new { title = "Start date and start time", fieldsetClassName = "edit-date-fieldset", dateHint = $"{DateTime.Now:dd MM yyyy} 14:30", dateHintAdditional = "The time will be UK local time, taking into account daylight savings" })
                 </div>
 
                 <div class="govuk-form-group">
-                    @Html.EditorFor(x => x.End, "DateTimeViewModelExtended", new { title = "End date and time", fieldsetClassName = "edit-date-fieldset", dateHint = $"{DateTime.Now.AddDays(5):dd MM yyyy} 17:00", dateHintAdditional = "The time will be UK local time, taking into account daylight savings" })
+                    @Html.EditorFor(x => x.End, "DateTimeViewModelExtended", new { title = "End date and end time", fieldsetClassName = "edit-date-fieldset", dateHint = $"{DateTime.Now.AddDays(5):dd MM yyyy} 17:00", dateHintAdditional = "The time will be UK local time, taking into account daylight savings" })
                 </div>
             }
             else

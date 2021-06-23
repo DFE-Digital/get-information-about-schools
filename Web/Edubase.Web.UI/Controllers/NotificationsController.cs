@@ -38,6 +38,12 @@ namespace Edubase.Web.UI.Controllers
             var result = await _BannerRepository.GetAllAsync(2);
 
             var model = new NotificationsBannersViewModel(result.Items);
+
+            if (TempData["ShowSaved"] != null)
+            {
+                ViewBag.ShowSaved = true;
+                TempData.Remove("ShowSaved");
+            }
             return View(model);
         }
 
@@ -144,6 +150,7 @@ namespace Edubase.Web.UI.Controllers
                         item.AuditEvent = eNotificationBannerEvent.Update.ToString();
                         await _BannerRepository.UpdateAsync(item);
                     }
+                    TempData["ShowSaved"] = true;
                     return RedirectToAction(nameof(Banners));
                 }
 
@@ -176,6 +183,7 @@ namespace Edubase.Web.UI.Controllers
             }
 
             await _BannerRepository.DeleteAsync(viewModel.Id, User.GetUserId());
+            TempData["ShowSaved"] = true;
             return RedirectToAction(nameof(Banners));
         }
 
@@ -188,6 +196,12 @@ namespace Edubase.Web.UI.Controllers
             var result = await _TemplateRepository.GetAllAsync(1000);
 
             var model = new NotificationsTemplatesViewModel(result.Items);
+
+            if (TempData["ShowSaved"] != null)
+            {
+                ViewBag.ShowSaved = true;
+                TempData.Remove("ShowSaved");
+            }
             return View(model);
         }
 
@@ -259,6 +273,7 @@ namespace Edubase.Web.UI.Controllers
                         item.Content = viewModel.Content;
                         await _TemplateRepository.UpdateAsync(item);
                     }
+                    TempData["ShowSaved"] = true;
                     return RedirectToAction(nameof(Templates));
                 }
 
@@ -294,6 +309,7 @@ namespace Edubase.Web.UI.Controllers
             }
 
             await _TemplateRepository.DeleteAsync(viewModel.Id);
+            TempData["ShowSaved"] = true;
             return RedirectToAction(nameof(Templates));
         }
 
