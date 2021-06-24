@@ -1,0 +1,5 @@
+.gias-banner-delete-button {
+  @include govuk-media-query($from: desktop) {
+    margin-left: govuk-spacing(4);
+  }
+}

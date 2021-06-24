@@ -40,6 +40,20 @@ namespace Edubase.Web.UI.Helpers
 
             return displayName;
         }
+        public static string EnumDisplayDescriptionFor(this Enum en)
+        {
+            var type = en.GetType();
+            var member = type.GetMember(en.ToString());
+            var displayDescription = en.ToString();
+
+            var attributes = member.Select(e => e.GetCustomAttributes(typeof(DisplayAttribute), false)).FirstOrDefault();
+            if (attributes != null && attributes.Length > 0)
+            {
+                displayDescription = ((DisplayAttribute) attributes[0]).Description;
+            }
+
+            return displayDescription;
+        }
 
         public static T GetAttributeOfType<T>(this Enum enumVal) where T : Attribute
         {

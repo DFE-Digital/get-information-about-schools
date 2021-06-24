@@ -34,6 +34,7 @@ namespace Edubase.Web.UI.Models
         public bool UserCanBulkCreateFreeSchools { get; internal set; }
         public bool UserCanBulkAssociateEstabs2Groups { get; internal set; }
         public bool UserCanDownloadMATClosureReport { get; internal set; }
+        public bool UserCanManageNotifications { get; internal set; }
 
         public List<LinkAction> GetCreateActions(HtmlHelper htmlHelper)
         {
@@ -72,12 +73,9 @@ namespace Edubase.Web.UI.Models
             if (UserCanViewIndependentSchoolsSignificantDates) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View independent schools' next significant action dates", "IndSchSearch"), Description = "View independent schools' next general action required dates and next action required by welfare dates." });
             if (UserCanDownloadMATClosureReport) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View closed Companies House single-academy trusts (SATs) and multi-academy trusts (MATs)", "DownloadClosedTrustsInformation"), Description = "View a list of closed single-academy trusts (SATs) and multi-academy trusts (MATs) currently open on GIAS but reported closed by Companies House." });
             retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View establishment and group change history", "ChangeHistoryCriteria"), Description = "View establishment and group data changes." });
+            if (UserCanManageNotifications) retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Manage notification banners", "Notifications"), Description = "Create a notification banner, view an existing notification banner and/or edit one or more existing notification banner messages, alert levels or scheduling. Add, edit or delete templated messages for notification banners." });
 
             return retVal;
         }
-
-
-
-
     }
 }

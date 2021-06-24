@@ -1,0 +1,264 @@
+@model DateTimeViewModel
+@{
+    string cssClassPrefix = "";
+    string showBinding = null;
+    string messageBinding = null;
+    string classBinding = null;
+    string labelClassName = "";
+    string fieldsetClassName = "";
+    bool disableHint = false;
+    string dateHint = "";
+    string hintSpacer = "<span class='govuk-!-margin-right-2'></span>";
+    bool disableHintSpacer = false;
+    string dateHintAdditional = "";
+    bool hideLegend = false;
+    bool.TryParse(ViewData["disableHint"]?.ToString(), out disableHint);
+    bool.TryParse(ViewData["disableHintSpacer"]?.ToString(), out disableHintSpacer);
+    string legendPrefix = "";
+
+    if (ViewData["dateHint"] != null)
+    {
+        dateHint = ViewData["dateHint"].ToString();
+
+        if (!disableHintSpacer)
+        {
+            dateHint = dateHint.Insert(dateHint.LastIndexOf(' '), hintSpacer);
+        }
+    }
+
+    if (ViewData["dateHintAdditional"] != null)
+    {
+        dateHintAdditional = ViewData["dateHintAdditional"].ToString();
+    }
+
+    if (ViewData["labelClass"] != null)
+    {
+        labelClassName = ViewData["labelClass"].ToString();
+    }
+
+    if (ViewData["hideLegend"] != null)
+    {
+        hideLegend = true;
+    }
+
+    if (ViewData["fieldsetClassName"] != null)
+    {
+        fieldsetClassName = ViewData["fieldsetClassName"].ToString();
+    }
+    bool showReactivationWarning;
+    if (!bool.TryParse(ViewData["showReactivationWarning"]?.ToString(), out showReactivationWarning))
+    {
+        showReactivationWarning = false;
+    }
+
+    if (ViewData["vueModel"] != null)
+    {
+        showBinding = String.Concat((string)@ViewData["vueModel"], "Error");
+        messageBinding = String.Concat((string)@ViewData["vueModel"], "ErrorMessage");
+        classBinding = String.Concat("v-bind:class=\"[", @showBinding, "?'govuk-form-group--error': '', 'govuk-form-group create-edit-form-group date-group']\"");
+    }
+    else
+    {
+        classBinding = "class=\"govuk-form-group create-edit-form-group date-group "
+            + Html.ValidationGroupCssClass(ViewData.ModelMetadata.PropertyName) + " "
+            + Html.ValidationCssClassFor(x => x) + " "
+            + Html.ValidationCssClassFor(x => x.Day) + " "
+            + Html.ValidationCssClassFor(x => x.Month) + " "
+            + Html.ValidationCssClassFor(x => x.Year) + " "
+            + Html.ValidationCssClassFor(x => x.Hour) + " "
+            + Html.ValidationCssClassFor(x => x.Minute) + "\"";
+    }
+
+    if (ViewData["ClassPrefix"] != null)
+    {
+        cssClassPrefix = ViewData["ClassPrefix"].ToString();
+    }
+
+    if (ViewData["editorPrefix"] != null)
+    {
+        legendPrefix = ViewData["editorPrefix"].ToString() + "_";
+    }
+
+}
+<div @Html.Raw(classBinding)>
+    <fieldset class="govuk-fieldset range-group @fieldsetClassName">
+        @if (ViewData["inFilters"] != null)
+        {
+            <span class="govuk-error-message hidden">Please check the date(s) you have entered</span>
+            <span class="govuk-error-message hidden date-range-error">Please use a valid date range</span>
+        }
+        <legend class="govuk-fieldset__legend @Html.Conditional(hideLegend, "hidden")" id="@legendPrefix@ViewData.ModelMetadata.PropertyName">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
+
+        @{
+            var fullFieldId = ViewData.TemplateInfo.GetFullHtmlFieldName(Model?.Label)
+                .Replace(".", "_")
+                .Replace("[", "_")
+                .Replace("]", "_");
+
+            if (fullFieldId != string.Empty && !string.Concat(legendPrefix, ViewData.ModelMetadata.PropertyName).Equals(fullFieldId))
+            {
+                <div id="@fullFieldId"></div>
+            }
+
+            foreach (var modelStateKey in ViewData.ModelState.Keys)
+            {
+                var testStateKey = modelStateKey;
+                var linkStateKey = testStateKey;
+                if (testStateKey.EndsWith(".Day"))
+                {
+                    testStateKey = testStateKey.Replace(".Day", "");
+                    linkStateKey = linkStateKey.Replace(".Day", "_Day");
+                }
+                if (testStateKey.EndsWith(".Month"))
+                {
+                    testStateKey = testStateKey.Replace(".Month", "");
+                    linkStateKey = linkStateKey.Replace(".Month", "_Month");
+                }
+                if (testStateKey.EndsWith(".Year"))
+                {
+                    testStateKey = testStateKey.Replace(".Year", "");
+                    linkStateKey = linkStateKey.Replace(".Year", "_Year");
+                }
+                if (testStateKey.EndsWith(".Hour"))
+                {
+                    testStateKey = testStateKey.Replace(".Hour", "");
+                    linkStateKey = linkStateKey.Replace(".Hour", "_Hour");
+                }
+                if (testStateKey.EndsWith(".Minute"))
+                {
+                    testStateKey = testStateKey.Replace(".Minute", "");
+                    linkStateKey = linkStateKey.Replace(".Minute", "_Minute");
+                }
+
+                if (testStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCultureIgnoreCase) &&
+                    !testStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCulture))
+                {
+                    <div id="@linkStateKey"></div>
+                }
+            }
+        }
+
+        @if (!disableHint)
+        {
+            if (dateHint != String.Empty)
+            {
+                <p class="govuk-hint @Html.Conditional(dateHintAdditional != string.Empty, "govuk-!-margin-bottom-0")">For example, @Html.Raw(dateHint)</p>
+            }
+            else
+            {
+                <p class="govuk-hint @Html.Conditional(dateHintAdditional != string.Empty, "govuk-!-margin-bottom-0")">For example, 20 03 2003 @Html.Raw(hintSpacer) 23:59</p>
+            }
+
+            if (dateHintAdditional != String.Empty)
+            {
+                <p class="govuk-hint">@dateHintAdditional</p>
+            }
+        }
+
+        @if (showReactivationWarning)
+        {
+            <div class="warning-message">
+                <p>Changing this date may reactivate the record</p>
+            </div>
+        }
+
+        @{
+            var errContent = new List<MvcHtmlString>()
+            {
+                Html.ValidationMessageNested(ViewData.ModelMetadata.PropertyName),
+                Html.ValidationMessageFor(x => x, null, new{ @class="govuk-error-message" }),
+                Html.ValidationMessageFor(x => x.Day, null, new{ @class="govuk-error-message" }),
+                Html.ValidationMessageFor(x => x.Month, null, new{ @class="govuk-error-message" }),
+                Html.ValidationMessageFor(x => x.Year, null, new{ @class="govuk-error-message" }),
+                Html.ValidationMessageFor(x => x.Hour, null, new{ @class="govuk-error-message" }),
+                Html.ValidationMessageFor(x => x.Minute, null, new{ @class="govuk-error-message" })
+            };
+
+            foreach (var mvcHtmlString in errContent.Select(x => x?.ToHtmlString()).Distinct())
+            {
+                @Html.Raw(mvcHtmlString)
+            }
+        }
+
+        @if (ViewData["vueModel"] != null)
+        {
+            <span class="govuk-error-message" v-show="@showBinding" v-html="@messageBinding"></span>
+        }
+        @{
+            var dayCssClasses = string.Concat(@Html.TextBoxValidationClass(x => x.Day), " govuk-input ", $"{cssClassPrefix}-day");
+            var monthCssClasses = string.Concat(@Html.TextBoxValidationClass(x => x.Month), " govuk-input ", $"{cssClassPrefix}-month");
+            var yearCssClasses = string.Concat(@Html.TextBoxValidationClass(x => x.Year), " govuk-input ", $"{cssClassPrefix}-year");
+            var hourCssClasses = string.Concat(@Html.TextBoxValidationClass(x => x.Year), " govuk-input ", $"{cssClassPrefix}-hour");
+            var minuteCssClasses = string.Concat(@Html.TextBoxValidationClass(x => x.Year), " govuk-input ", $"{cssClassPrefix}-minute");
+        }
+    <div class="govuk-date-input">
+        <div class="govuk-date-input__item">
+            <div class="govuk-form-group">
+
+
+                @Html.LabelFor(x => x.Day, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
+                @Html.TextBoxFor(x => x.Day, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, dayCssClasses, 2, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Day") : null))
+            </div>
+        </div>
+        <div class="govuk-date-input__item">
+            <div class="govuk-form-group">
+                @Html.LabelFor(x => x.Month, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
+                @Html.TextBoxFor(x => x.Month, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, monthCssClasses, 2, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Month") : null))
+            </div>
+        </div>
+        <div class="govuk-date-input__item gias-year-input__item">
+            <div class="govuk-form-group">
+                @Html.LabelFor(x => x.Year, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
+                @Html.TextBoxFor(x => x.Year, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, yearCssClasses, 4, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Year") : null))
+            </div>
+        </div>
+        <div class="govuk-date-input__item gias-hour-input__item">
+            <div class="govuk-form-group">
+                @Html.LabelFor(x => x.Hour, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
+                @{
+                    var hourAttribute = new Dictionary<string,object>();
+                    hourAttribute.Add("Value", string.Format("{0:D2}", Model.Hour));
+                }
+                @Html.TextBoxFor(m => m.Hour, Html.GetHtmlAttributes(GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, hourCssClasses, 4, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Hour") : null), hourAttribute))
+            </div>
+        </div>
+        <div class="govuk-date-input__item gias-time-spacer__item">
+            <div class="govuk-form-group">
+                <p class="govuk-heading-m">:</p>
+            </div>
+        </div>
+        <div class="govuk-date-input__item gias-minute-input__item">
+            <div class="govuk-form-group">
+                @Html.LabelFor(x => x.Minute, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
+                @{
+                    var minuteAttribute = new Dictionary<string, object>();
+                    minuteAttribute.Add("Value", string.Format("{0:D2}", Model.Minute));
+                }
+                @Html.TextBoxFor(m => m.Minute, Html.GetHtmlAttributes(GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, minuteCssClasses, 4, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Minute") : null), minuteAttribute))
+            </div>
+        </div>
+    </div>
+        @if (ViewData["readonly"] as bool? ?? false)
+        {
+            @Html.HiddenFor(x => x.Day)
+            @Html.HiddenFor(x => x.Month)
+            @Html.HiddenFor(x => x.Year)
+            @Html.HiddenFor(x => x.Hour)
+            @Html.HiddenFor(x => x.Minute)
+        }
+    </fieldset>
+</div>
+
+@functions
+{
+    object GetCheckboxAttributes(bool? readOnly, string cssClasses, int maxlength, string vueModel)
+    {
+        if (readOnly.HasValue && readOnly.Value)
+            return new { @class = cssClasses, @disabled = "disabled", maxlength = maxlength };
+
+        if (vueModel != null)
+            return new { @class = cssClasses, maxlength = maxlength, v_model = vueModel };
+
+        return new { @class = cssClasses, maxlength = maxlength };
+    }
+}

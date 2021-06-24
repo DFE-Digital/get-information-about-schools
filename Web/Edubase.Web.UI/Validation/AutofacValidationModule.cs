@@ -8,6 +8,8 @@ using Edubase.Web.UI.Areas.Groups.Models.Validators;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.DataQuality;
 using Edubase.Web.UI.Models.DataQuality.Validators;
+using Edubase.Web.UI.Models.Notifications;
+using Edubase.Web.UI.Models.Notifications.Validators;
 using Edubase.Web.UI.Models.Validators;
 using FluentValidation;
 
@@ -79,6 +81,10 @@ namespace Edubase.Web.UI.Validation
 
             builder.RegisterType<ValidateChildrensCentreStep2Validator>()
                 .Keyed<IValidator>(typeof(IValidator<ValidateChildrensCentreStep2>))
+                .As<IValidator>();
+
+            builder.RegisterType<NotificationsBannerValidator>()
+                .Keyed<IValidator>(typeof(IValidator<NotificationsBannerViewModel>))
                 .As<IValidator>();
         }
     }

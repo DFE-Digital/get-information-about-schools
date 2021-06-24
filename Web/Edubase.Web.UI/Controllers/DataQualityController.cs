@@ -111,7 +111,7 @@ namespace Edubase.Web.UI.Controllers
                 foreach (var item in model.Items)
                 {
                     await dataQualityWriteService.UpdateDataQualityDate(item.EstablishmentType,
-                        item.LastUpdated.ToDateTime().Value);
+                        item.LastUpdated.ToDateTime(DateTimeKind.Utc).Value);
                 }
 
                 return RedirectToAction("ViewStatus", new {dataUpdated = true});
