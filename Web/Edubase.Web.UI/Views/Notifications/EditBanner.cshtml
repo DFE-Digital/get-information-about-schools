@@ -65,15 +65,14 @@
             @Html.HiddenFor(x => x.TotalLiveBanners)
             @Html.HiddenFor(x => x.StartOriginal)
 
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <span class="govuk-caption-m">@(Model.Id == null ? "Add " : "Edit ") notification banner @Model.Counter</span>
+                </div>
+            </div>
 
             @if (Model.Action == eNotificationBannerAction.Start)
             {
-                <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-full">
-                        <h2 class="govuk-heading-m">@(Model.Id == null ? "Add " : "Edit ") notification banner @Model.Counter</h2>
-                    </div>
-                </div>
-
                 <div class="govuk-warning-text">
                     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                     <strong class="govuk-warning-text__text">
@@ -119,7 +118,7 @@
             {
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-full">
-                        <h2 class="govuk-heading-m">Notification banner @Model.Counter</h2>
+                        <h2 class="govuk-heading-m">Message and alert level</h2>
                     </div>
                 </div>
 
@@ -165,11 +164,10 @@
             {
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-full">
-                        <h2 class="govuk-heading-m">Notification banner @Model.Counter</h2>
+                        <h2 class="govuk-heading-m">Message</h2>
                     </div>
                 </div>
 
-                <h3 class="govuk-heading-s">Message</h3>
                 <p>Keep the message clear, concise and user focused. The maximum number of characters permitted is 500. This includes spaces.</p>
                 <details class="govuk-details govuk-!-margin-bottom-4" data-module="govuk-details">
                     <summary class="govuk-details__summary">
@@ -203,11 +201,10 @@
             {
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-full">
-                        <h2 class="govuk-heading-m">Notification banner @Model.Counter</h2>
+                        <h2 class="govuk-heading-m">Schedule notification banner visibility</h2>
                     </div>
                 </div>
 
-                <h3 class="govuk-heading-s">Schedule notification banner visibility</h3>
                 <p>Choose the start date and start time and the end date and end time for the notification banner to be visible on the site.</p>
 
                 <div class="govuk-form-group">
