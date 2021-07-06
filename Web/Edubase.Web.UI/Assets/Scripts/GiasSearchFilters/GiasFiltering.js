@@ -75,9 +75,9 @@ class GiasFiltering {
       });
       selectedGovRoles = selectedGovRoles.join(', ');
       const lastComma = selectedGovRoles.lastIndexOf(',');
-      selectedGovRoles = selectedGovRoles.substring(0, lastComma) +
+      selectedGovRoles = selectedRoles.length > 1 ? selectedGovRoles.substring(0, lastComma) +
         ' and ' +
-        selectedGovRoles.substring(lastComma + 1, selectedGovRoles.length);
+        selectedGovRoles.substring(lastComma + 1, selectedGovRoles.length) : selectedGovRoles;
 
       $('.conjunction-text').removeClass('hidden');
     } else {

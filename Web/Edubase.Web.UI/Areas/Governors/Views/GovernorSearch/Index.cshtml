@@ -65,7 +65,8 @@
 
                 @if (Model.SelectedRoleIds.Any())
                 {
-                    if (Model.GovernorSearchModel.Surname.Clean() != null || Model.GovernorSearchModel.Forename.Clean() != null)
+                    if (!string.IsNullOrEmpty(Model.GovernorSearchModel.Surname.Clean())  || !string.IsNullOrEmpty(Model.GovernorSearchModel.Forename.Clean())
+                        && Model.SelectedRoleIds.Count() > 1)
                     {
                         <span class="conjunction-text">and </span>
                     }
@@ -81,7 +82,7 @@
                     <text>for </text>
                     <text>roles <span class="governor-roles">@Html.Raw(Model.RoleNames)</span></text>
                 }
-                
+
             </p>
         </div>
     </div>
