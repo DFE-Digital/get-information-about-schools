@@ -85,7 +85,8 @@ class GiasFiltering {
       $('.conjunction-text').addClass('hidden');
     }
 
-    $('.governor-roles').html(selectedGovRoles);
+    $('.governor-roles').eq(0).html(selectedGovRoles);
+    $('.governor-roles').slice(1).addClass('hidden');
 
     $('#gov-la-warning').addClass('hidden');
     if (this.shouldShowGovWarning()) {
