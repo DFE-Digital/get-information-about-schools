@@ -9,7 +9,6 @@
 {
     <meta name="robots" content="noindex,nofollow" />
 }
-
 @section BreadCrumbs
 {
     @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
@@ -59,8 +58,6 @@
         }
     }
 }
-
-
 
 @using (Html.BeginRouteForm("DownloadExtract", FormMethod.Post))
 {

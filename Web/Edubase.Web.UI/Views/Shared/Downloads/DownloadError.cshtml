@@ -9,12 +9,30 @@
     var backAnchor = "";
     var backText = "search results";
 
-    if (Model.FromDownloads)
+    switch (Model.ReturnSource)
     {
-        backLink = $"{Url.Action("Index", "Downloads", new { area = "" })}";
-        backAnchor = Model.FromExtracts ? "#scheduled-extracts" : "";
-        backText = Model.FromExtracts ? "scheduled extract page" : "downloads page";
+        case eDownloadReturnSource.Downloads:
+            backLink = $"{Url.Action("Index", "Downloads", new { area = "" })}";
+            backText = "downloads page";
+            break;
+
+        case eDownloadReturnSource.Extracts:
+            backLink = $"{Url.Action("Index", "Downloads", new { area = "" })}";
+            backAnchor = "#scheduled-extracts";
+            backText = "scheduled extract page";
+            break;
+
+        case eDownloadReturnSource.ChangeHistory:
+            backLink = $"{Url.Action("Index", "ChangeHistory", new { area = "" })}";
+            backText = "establishment and group change history";
+            break;
+
+        case eDownloadReturnSource.IndependentSchoolDates:
+            backLink = $"{Url.Action("IndependentSchoolsSearch", "Tools", new { area = "" })}";
+            backText = "independent schools' next significant action dates";
+            break;
     }
+
 
     switch (Model.SearchSource)
     {
