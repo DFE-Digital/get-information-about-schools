@@ -763,6 +763,7 @@
     <Content Include="Views\Shared\EditorTemplates\DateTimeViewModelExtended.cshtml" />
     <Content Include="Views\Notifications\ConfirmDeleteBanner.cshtml" />
     <Content Include="Views\Notifications\ConfirmDeleteTemplate.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\EditDetailsEmpty.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>

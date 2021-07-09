@@ -32,7 +32,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         @Html.Partial("_ValidationSummary", ViewData.ModelState)
-        <h1 class="govuk-heading-xl">@(Model.Id == null ? "Add " : "Edit ") notification banner @Model.Counter</h1>
+        <h1 class="govuk-heading-xl">Manage visibility of notification banners</h1>
     </div>
 </div>
 
@@ -65,6 +65,11 @@
             @Html.HiddenFor(x => x.TotalLiveBanners)
             @Html.HiddenFor(x => x.StartOriginal)
 
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <span class="govuk-caption-m">@(Model.Id == null ? "Add " : "Edit ") notification banner @Model.Counter</span>
+                </div>
+            </div>
 
             @if (Model.Action == eNotificationBannerAction.Start)
             {
@@ -111,9 +116,15 @@
 
             @if (Model.Action == eNotificationBannerAction.TypeChoice)
             {
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <h2 class="govuk-heading-m">Message and alert level</h2>
+                    </div>
+                </div>
+
                 if (string.IsNullOrEmpty(Model.Id))
                 {
-                    <h2 class="govuk-heading-m">Notification banner message (template or custom)</h2>
+                    <h3 class="govuk-heading-s">Notification banner message (template or custom)</h3>
                     <div class="govuk-form-group">
                         <div class="govuk-radios">
                             <div class="govuk-radios__item">
@@ -129,7 +140,7 @@
                     </div>
                 }
 
-                <h2 class="govuk-heading-m">Notification banner alert level</h2>
+                <h3 class="govuk-heading-s">Notification banner alert level</h3>
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Importance)">
                     @Html.ValidationMessageFor(x => x.Importance, null, new { @class = "govuk-error-message" })
 
@@ -151,7 +162,12 @@
 
             @if (Model.Action == eNotificationBannerAction.Message)
             {
-                <h2 class="govuk-heading-m">Message</h2>
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <h2 class="govuk-heading-m">Message</h2>
+                    </div>
+                </div>
+
                 <p>Keep the message clear, concise and user focused. The maximum number of characters permitted is 500. This includes spaces.</p>
                 <details class="govuk-details govuk-!-margin-bottom-4" data-module="govuk-details">
                     <summary class="govuk-details__summary">
@@ -173,7 +189,7 @@
                 </details>
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Content)">
                     @Html.ValidationMessageFor(x => x.Content, null, new { @class = "govuk-error-message" })
-                    @Html.TextAreaFor(x => x.Content, new { @class = "govuk-textarea entry-content", rows="6", cols="40", maxlength="500" })
+                    @Html.TextAreaFor(x => x.Content, new { @class = "govuk-textarea entry-content", rows = "6", cols = "40", maxlength = "500" })
                 </div>
             }
             else
@@ -183,7 +199,12 @@
 
             @if (Model.Action == eNotificationBannerAction.Schedule)
             {
-                <h2 class="govuk-heading-m">Schedule notification banner visibility</h2>
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <h2 class="govuk-heading-m">Schedule notification banner visibility</h2>
+                    </div>
+                </div>
+
                 <p>Choose the start date and start time and the end date and end time for the notification banner to be visible on the site.</p>
 
                 <div class="govuk-form-group">

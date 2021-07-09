@@ -52,10 +52,10 @@
             </button>
         }
     </div>
-
+    
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            <h2 class="govuk-heading-s">@(Model.Id == null ? "Add" : "Edit") templated message</h2>
+            <span class="govuk-caption-m">@(Model.Id == null ? "Add" : "Edit") templated message</span>
         </div>
     </div>
 
@@ -67,6 +67,10 @@
 
         @if (Model.Action == eNotificationsTemplateAction.Message)
         {
+            <div class="govuk-grid-column-full">
+                <h2 class="govuk-heading-m">Message</h2>
+            </div>
+
             <div class="govuk-grid-column-two-thirds">
                 <p>Keep the message concise and user focused. The maximum number of characters permitted is 400. This includes spaces.</p>
 
@@ -84,10 +88,13 @@
         @if (Model.Action == eNotificationsTemplateAction.Review)
         {
             <div class="govuk-grid-column-full">
-                <p>Check this new templated message is correct before saving.</p>
+                <h2 class="govuk-heading-m">Check this new templated message is correct before saving.</h2>
+            </div>
 
+            <div class="govuk-grid-column-full">
                 <dl class="govuk-summary-list gias-summary-top-border">
-                    @if (!string.IsNullOrEmpty(Model.OriginalContent)) {
+                    @if (!string.IsNullOrEmpty(Model.OriginalContent))
+                    {
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">Old templated message</dt>
                             <dd class="govuk-summary-list__value">@Model.OriginalContent</dd>
@@ -99,7 +106,7 @@
                     </div>
                 </dl>
             </div>
-                    
+
         }
     </div>
     <div class="govuk-grid-row">

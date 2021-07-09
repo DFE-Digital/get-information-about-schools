@@ -1180,7 +1180,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                         ModelState.Remove(nameof(viewModel.ChangesRequireApprovalCount));
                         ModelState.Remove(nameof(viewModel.ChangesInstantCount));
                     }
-                    else return Redirect(Url.RouteUrl("EstabDetails", new { id = viewModel.Urn.Value }) + viewModel.SelectedTab2DetailPageTabNameMapping[viewModel.SelectedTab]);
+                    else
+                    {
+                        return View("EditDetailsEmpty", viewModel);
+                    }
                 }
                 else
                 {
