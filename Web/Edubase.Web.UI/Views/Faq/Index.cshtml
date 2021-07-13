@@ -1,3 +1,4 @@
+@using Edubase.Data.Entity
 @model FaqViewModel
 @{
     ViewBag.Title = "Get Information about Schools: Frequently asked questions";
@@ -22,7 +23,6 @@
     </div>
 }
 
-
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full govuk-!-padding-bottom-6">
         <h1 class="govuk-heading-xl">Frequently asked questions (FAQs)</h1>
@@ -32,7 +32,6 @@
     </div>
 </div>
 
-
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         @if (Model.UserCanEdit)
@@ -40,20 +39,27 @@
             <p>
                 @Html.RouteLink("Add entry", "CreateFaqItem", null, new { @class = "govuk-button" })
             </p>
-
         }
 
-
-        @foreach (var item in Model.Items)
-        {
-            <h2 class="govuk-heading-m">@item.Title</h2>
-            <div class="gias-user-content govuk-!-padding-bottom-4">
-                <p>@Html.Raw(item.Content.Replace("\n", "<br/>"))</p>
-                @if (Model.UserCanEdit)
+        @{
+            var currentSection = FaqSection.General;
+            foreach (var item in Model.Items)
+            {
+                if (item.Section != currentSection && !string.IsNullOrEmpty(item.Section.EnumDisplayDescriptionFor()))
                 {
-                    @Html.RouteLink("Edit entry", "EditFaqItem", new { id = item.RowKey }, new { @class = "govuk-button govuk-button--secondary Faq-edit-button" })
+                    <h2 class="govuk-heading-l">@item.Section.EnumDisplayDescriptionFor()</h2>
+                    currentSection = item.Section;
                 }
-            </div>
+
+                <h2 class="govuk-heading-m">@item.Title</h2>
+                <div class="gias-user-content govuk-!-padding-bottom-4">
+                    <p>@Html.Raw(item.Content.Replace("\n", "<br/>"))</p>
+                    @if (Model.UserCanEdit)
+                    {
+                        @Html.RouteLink("Edit entry", "EditFaqItem", new { id = item.RowKey }, new { @class = "govuk-button govuk-button--secondary Faq-edit-button" })
+                    }
+                </div>
+            }
         }
     </div>
 </div>

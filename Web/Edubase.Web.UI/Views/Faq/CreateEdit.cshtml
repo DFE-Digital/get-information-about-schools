@@ -1,3 +1,5 @@
+@using Edubase.Common
+@using Edubase.Data.Entity
 @model FaqItemViewModel
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "GIAS: FAQ");
@@ -33,6 +35,7 @@
         <h1 class="govuk-heading-xl">@(Model.Id == null ? "Create a new" : "Edit a") frequently asked questions entry</h1>
     </div>
 </div>
+
 @using (Html.BeginRouteForm(Model.Id == null ? "PostCreateFaqItem" : "PostEditFaqItem", new {Model.Id}, FormMethod.Post))
 {
     <div class="govuk-grid-row">
@@ -44,14 +47,23 @@
                 @Html.TextBoxFor(x => x.Title, new { @class = "govuk-input"})
             </div>
 
-            <div>
-                @Html.HiddenFor( x => x.TitleFontSize, new { Value = "m" } )
-            </div>
-
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Content)">
                 @Html.LabelFor(x => x.Content, new { @class = "govuk-label"})
                 @Html.ValidationMessageFor(x => x.Content, null, new {@class = "govuk-error-message"})
                 @Html.TextAreaFor(x => x.Content, 10, 40, new { @class = "govuk-textarea entry-content"})
+            </div>
+
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Section)">
+                @Html.ValidationMessageFor(x => x.Section, null, new { @class = "govuk-error-message" })
+
+                <div class="govuk-radios">
+                    @foreach (FaqSection section in Enum.GetValues(typeof(FaqSection)))
+                    {
+                        <div class="govuk-radios__item">
+                            @Html.GiasRadioFor(x => x.Section, section, section.EnumDisplayDescriptionFor(), null, new { id = "section-" + (int)section, @class = "govuk-radios__input panel-trigger" })
+                        </div>
+                    }
+                </div>
             </div>
 
             <div class="form-group @Html.ValidationCssClassFor(x => x.DisplayOrder)">
