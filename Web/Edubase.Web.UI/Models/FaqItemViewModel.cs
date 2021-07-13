@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using Edubase.Data.Entity;
 
 namespace Edubase.Web.UI.Models
 {
@@ -18,8 +19,7 @@ namespace Edubase.Web.UI.Models
         [Required, Display(Name = "Display order")]
         public int DisplayOrder { get; set; }
 
-        [Required, Display(Name = "Title font size")]
-        public string TitleFontSize { get; set; }
+        public FaqSection Section { get; set; }
 
         public FaqItemViewModel()
         {
