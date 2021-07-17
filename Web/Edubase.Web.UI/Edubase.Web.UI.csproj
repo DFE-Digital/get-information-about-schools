@@ -479,6 +479,7 @@
     <Compile Include="Models\Search\DownloadErrorViewModel.cs" />
     <Compile Include="Models\Search\LocationDisambiguationViewModel.cs" />
     <Compile Include="Models\Tools\AmalgamateEstablishmentsModel.cs" />
+    <Compile Include="Models\Tools\ApprovalsViewModel.cs" />
     <Compile Include="Models\Tools\BulkAcademiesCreateViewModel.cs" />
     <Compile Include="Models\Tools\IndSchoolsSearchViewModel.cs" />
     <Compile Include="Models\Tools\MergeEstablishmentsModel.cs" />
@@ -619,6 +620,8 @@
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
     <Content Include="robots.txt" />
     <Content Include="App_offline_x.htm" />
+    <Content Include="Views\Approvals\ExplainRejections.cshtml" />
+    <Content Include="Views\Approvals\Partials\_ApprovalsTable.cshtml" />
     <Content Include="Views\Home\Accessibility.cshtml" />
     <Content Include="Views\Tools\DownloadClosedTrustsInformation.cshtml" />
     <Content Include="Views\Tools\Mergers\AmalgamateEstablishments.cshtml" />
