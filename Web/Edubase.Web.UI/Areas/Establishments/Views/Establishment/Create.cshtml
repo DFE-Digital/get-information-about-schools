@@ -315,13 +315,7 @@
 
                     @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step3)
                     {
-                        <p>A new number has been generated for this establishment: [entry]</p>
-                        <div class="govuk-grid-column-full">
-                            <div class="button-row">
-                                <button type="submit" name="action" value="" class="govuk-button" id="create-submit">Create establishment</button>
-                                @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
-                            </div>
-                        </div>
+                        <p>A new number has been generated for this establishment: </p>
                     }
 
 
@@ -330,7 +324,7 @@
                         <div class="govuk-grid-column-full" id="number-entry">
                             <fieldset class="govuk-fieldset inline create-estab-number-gen">
                                 <legend id="GenerateEstabNumber" class="govuk-fieldset__legend--s govuk-!-margin-bottom-2">Establishment number</legend>
-                                <div id="enter-number">
+                                <div id="enter-number-nonjs">
                                     <div id="enter-number-form-group" class="govuk-form-group panel panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
                                         @Html.LabelFor(x => x.EstablishmentNumber, "Enter the establishment number", new { @class = "govuk-label" })
                                         @Html.ValidationMessageFor(x => x.EstablishmentNumber, null, new { @class = "govuk-error-message" })
@@ -338,12 +332,6 @@
                                     </div>
                                 </div>
                             </fieldset>
-                        </div>
-                        <div class="govuk-grid-column-full">
-                            <div class="button-row">
-                                <button type="submit" name="action" value="" class="govuk-button" id="create-submit">Create establishment</button>
-                                @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
-                            </div>
                         </div>
                     }
                     else
@@ -473,26 +461,26 @@
                     }
                 </div>
 
-                        if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND))
-                        {
-                            var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND);
-                            <div class="modal-overlay" id="warning-modal-overlay-0"></div>
-                            <div class="modal-content" id="warning-modal-content-0" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
-                                @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "modal-exit js-allow-exit", data_module = "govuk-button" })
-                                <div class="modal-inner">
-                                    <h3 class="govuk-heading-l" tabindex="0" id="modal-label">Duplicate record</h3>
-                                    <p tabindex="0" id="model-desc">The record you are creating for <strong>@(warning.MessageParameters[0])</strong> in <strong>@(warning.MessageParameters[1])</strong> may duplicate existing record(s): <strong>@(warning.MessageParameters[2])</strong>
-                                </div>
-                                <div class="button-row">
-                                    <button type="submit" name="action" value="" class="govuk-button">Proceed</button>
-                                    @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
-                                </div>
-                            </div>
-                        }
+                if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND))
+                {
+                    var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND);
+                    <div class="modal-overlay" id="warning-modal-overlay-0"></div>
+                    <div class="modal-content" id="warning-modal-content-0" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
+                        @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "modal-exit js-allow-exit", data_module = "govuk-button" })
+                        <div class="modal-inner">
+                            <h3 class="govuk-heading-l" tabindex="0" id="modal-label">Duplicate record</h3>
+                            <p tabindex="0" id="model-desc">The record you are creating for <strong>@(warning.MessageParameters[0])</strong> in <strong>@(warning.MessageParameters[1])</strong> may duplicate existing record(s): <strong>@(warning.MessageParameters[2])</strong>
+                        </div>
+                        <div class="button-row">
+                            <button type="submit" name="action" value="" class="govuk-button">Proceed</button>
+                            @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+                        </div>
+                    </div>
+                }
 
 
-                    }
-                </div>
+            }
+        </div>
     </div>
 </div>
 

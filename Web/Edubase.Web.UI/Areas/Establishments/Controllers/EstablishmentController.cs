@@ -202,13 +202,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
             viewModel.jsDisabled = jsDisabled;
 
+
+
             if (viewModel.EstablishmentTypeId == 41 && jsDisabled == false)
                 return await CreateChildrensCentre(viewModel);
 
             if (viewModel.EstablishmentTypeId == 41 && viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step5)
+            {
                 viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step5;
                 //need to escape here to redraw the screen and collect additional data
-            return View(viewModel);
+                return View(viewModel);
+            }
 
             //ME code - for development
             if (viewModel.jsDisabled == true && viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step3)
@@ -240,7 +244,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                         // we only need to do anything here if the user opted to enter an establishment number.
                         if (viewModel.GenerateEstabNumber == false)
                         {
-                            viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step3;
+                            viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step4;
                             return View(viewModel);
                         }
 
