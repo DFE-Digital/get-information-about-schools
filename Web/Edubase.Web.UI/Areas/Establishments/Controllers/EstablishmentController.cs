@@ -207,6 +207,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (viewModel.EstablishmentTypeId == 41 && viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step5)
                 viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step5;
+                //need to escape here to redraw the screen and collect additional data
+            return View(viewModel);
 
             //ME code - for development
             if (viewModel.jsDisabled == true && viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step3)

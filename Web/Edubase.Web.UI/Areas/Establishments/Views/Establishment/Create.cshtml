@@ -263,6 +263,12 @@
                             </div>
                         </div>
                     }
+                    else
+                    {
+                        @Html.HiddenFor(x => x.Name)
+                        @Html.HiddenFor(x => x.LocalAuthorityId)
+                        @Html.HiddenFor(x => x.EstablishmentTypeId)
+                    }
 
 
                     @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step2)
@@ -300,6 +306,11 @@
                         </div>
 
                     }
+                    else
+                    {
+                        @Html.HiddenFor(x => x.EducationPhaseId)
+                        @Html.HiddenFor(x => x.GenerateEstabNumber)
+                    }
 
 
                     @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step3)
@@ -335,7 +346,10 @@
                             </div>
                         </div>
                     }
-
+                    else
+                    {
+                        @Html.HiddenFor(x => x.EstablishmentNumber)
+                    }
 
                     @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step5)
                     {
@@ -420,6 +434,29 @@
                             </div>
                         </div>
                     }
+                    else
+                    {
+                        @Html.HiddenFor(x => x.OpenDate)
+                        @Html.HiddenFor(x => x.Address.CityOrTown)
+                        @Html.HiddenFor(x => x.Address.Country)
+                        @Html.HiddenFor(x => x.Address.County)
+                        @Html.HiddenFor(x => x.Address.Line1)
+                        @Html.HiddenFor(x => x.Address.Line2)
+                        @Html.HiddenFor(x => x.Address.Line3)
+                        @Html.HiddenFor(x => x.Address.PostCode)
+                        @Html.HiddenFor(x => x.ManagerFirstName)
+                        @Html.HiddenFor(x => x.ManagerLastName)
+                        @Html.HiddenFor(x => x.CentreEmail)
+                        @Html.HiddenFor(x => x.Telephone)
+                        @Html.HiddenFor(x => x.OperationalHoursId)
+                        @Html.HiddenFor(x => x.NumberOfUnderFives)
+                        @Html.HiddenFor(x => x.GovernanceId)
+                        @Html.HiddenFor(x => x.GovernanceDetail)
+                        @Html.HiddenFor(x => x.PhaseId)
+                        @Html.HiddenFor(x => x.DisadvantagedAreaId)
+                        @Html.HiddenFor(x => x.DirectProvisionOfEarlyYears)
+                        @Html.HiddenFor(x => x.EstablishmentStatusId)
+                    }
 
                     @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step3 ||
                         Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step4 ||
@@ -436,26 +473,26 @@
                     }
                 </div>
 
-                if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND))
-                {
-                    var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND);
-                    <div class="modal-overlay" id="warning-modal-overlay-0"></div>
-                    <div class="modal-content" id="warning-modal-content-0" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
-                        @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "modal-exit js-allow-exit", data_module = "govuk-button" })
-                        <div class="modal-inner">
-                            <h3 class="govuk-heading-l" tabindex="0" id="modal-label">Duplicate record</h3>
-                            <p tabindex="0" id="model-desc">The record you are creating for <strong>@(warning.MessageParameters[0])</strong> in <strong>@(warning.MessageParameters[1])</strong> may duplicate existing record(s): <strong>@(warning.MessageParameters[2])</strong>
-                        </div>
-                        <div class="button-row">
-                            <button type="submit" name="action" value="" class="govuk-button">Proceed</button>
-                            @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
-                        </div>
-                    </div>
-                }
+                        if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND))
+                        {
+                            var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND);
+                            <div class="modal-overlay" id="warning-modal-overlay-0"></div>
+                            <div class="modal-content" id="warning-modal-content-0" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
+                                @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "modal-exit js-allow-exit", data_module = "govuk-button" })
+                                <div class="modal-inner">
+                                    <h3 class="govuk-heading-l" tabindex="0" id="modal-label">Duplicate record</h3>
+                                    <p tabindex="0" id="model-desc">The record you are creating for <strong>@(warning.MessageParameters[0])</strong> in <strong>@(warning.MessageParameters[1])</strong> may duplicate existing record(s): <strong>@(warning.MessageParameters[2])</strong>
+                                </div>
+                                <div class="button-row">
+                                    <button type="submit" name="action" value="" class="govuk-button">Proceed</button>
+                                    @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+                                </div>
+                            </div>
+                        }
 
 
-            }
-        </div>
+                    }
+                </div>
     </div>
 </div>
 
