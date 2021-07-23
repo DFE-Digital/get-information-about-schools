@@ -140,7 +140,7 @@
                         </div>
                     }
 
-                    @if (Model.GroupType == L.ChildrensCentresGroup)
+                    @if (User.IsInRole(AuthorizedRoles.CanSeeChildrensCentreGroupManagerEmail) && Model.GroupType == L.ChildrensCentresGroup)
                     {
                         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ManagerEmailAddress)">
                             <label for="ManagerEmailAddress" class="govuk-label">Group manager email</label>
