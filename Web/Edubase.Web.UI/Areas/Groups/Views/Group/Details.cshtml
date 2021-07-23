@@ -206,7 +206,7 @@
                                 </div>
                             }
 
-                            @if (User.IsInRole(AuthorizedRoles.CanSeeChildrensCentreGroupManagerEmail))
+                            @if (User.InRole(AuthorizedRoles.CanSeeChildrensCentreGroupManagerEmail))
                             {
                                 if (Model.Group.GroupTypeId == (int)eLookupGroupType.ChildrensCentresGroup)
                                 {
