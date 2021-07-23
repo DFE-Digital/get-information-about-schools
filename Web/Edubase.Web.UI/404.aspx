@@ -216,6 +216,7 @@
                             <li><a href="/cookies">Cookies</a></li>
                             <!--<li><a href="#">Contact</a></li>-->
                             <li><a href="/guidance">Guidance</a></li>
+                            <li><a href="/Privacy">Privacy</a></li>
                             <li><a href="/news">News</a></li>
                         </ul>
 

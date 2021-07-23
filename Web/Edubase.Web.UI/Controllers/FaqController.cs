@@ -1,6 +1,5 @@
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
-using Edubase.Services.Security;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Models;
 using System.Threading.Tasks;
@@ -40,7 +39,7 @@ namespace Edubase.Web.UI.Controllers
                 Content = item.Content,
                 Title = item.Title,
                 DisplayOrder = item.DisplayOrder,
-                TitleFontSize = item.TitleFontSize
+                Section = item.Section
             });
         }
 
@@ -61,7 +60,7 @@ namespace Edubase.Web.UI.Controllers
                 item.Title = viewModel.Title;
                 item.Content = viewModel.Content;
                 item.DisplayOrder = viewModel.DisplayOrder;
-                item.TitleFontSize = viewModel.TitleFontSize;
+                item.Section = viewModel.Section;
                 await _FaqRepository.UpdateAsync(item);
                 return RedirectToAction(nameof(Index));
             }
@@ -78,7 +77,7 @@ namespace Edubase.Web.UI.Controllers
                     Title = viewModel.Title,
                     Content = viewModel.Content,
                     DisplayOrder = viewModel.DisplayOrder,
-                    TitleFontSize = viewModel.TitleFontSize
+                    Section = viewModel.Section
                 };
                 await _FaqRepository.CreateAsync(item);
                 return RedirectToAction(nameof(Index));

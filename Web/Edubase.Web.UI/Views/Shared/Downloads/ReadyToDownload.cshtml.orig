@@ -9,7 +9,12 @@
 {
     <meta name="robots" content="noindex,nofollow" />
 }
+<<<<<<< HEAD
+
 @section BreadCrumbs
+=======
+@section BackLink
+>>>>>>> feature/45860-download-errors-change-history-view
 {
     @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
     {

@@ -37,6 +37,10 @@
     table-layout: fixed;
     font-size: 13px;
 
+    .cell-establishmentName {
+      width: 120px;
+    }
+
     .gias-summary-list__key {
       font-weight: bold;
     }

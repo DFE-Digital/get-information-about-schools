@@ -1,0 +1,124 @@
+@model ApprovalsViewModel
+
+@{
+    var sortTypes = new Dictionary<string, string>()
+    {
+        {"establishmentUrn", "URN"},
+        {"establishmentLAESTAB", "DfE Number"},
+        {"establishmentName", "Establishment"},
+        {"fieldName", "Updated field"},
+        {"oldValue", "Old value"},
+        {"newValue", "New value"},
+        {"effectiveDateUtc", "Effective date"},
+        {"requestedDateUtc", "Date requested"},
+        {"originatorFullName", "Suggested by"}
+    };
+}
+
+
+@helper SortHeader(Dictionary<string, string> headerDictionary)
+{
+    <text>
+        @foreach (var hd in headerDictionary)
+        {
+            var sortKey = hd.Key;
+            var sortLabel = hd.Value;
+            var isAscending = Model.SortedAscending;
+            var sortModifier = isAscending ? "-desc" : "-asc";
+            var isSelectedSort = Model.SortBy.Contains(sortKey);
+            var sortDescription = isAscending ? "ascending" : "descending";
+
+            var url = string.Concat("/Approvals?skip=0&sortBy=", sortKey, sortModifier);
+            var className = isSelectedSort ? "selected-sort" : string.Empty;
+            className = isAscending ? string.Concat(className, " sorted-asc") : string.Concat(className, " sorted-desc");
+
+            var label = string.Concat("Sort the data by ", sortLabel);
+            if (isSelectedSort)
+            {
+                label = string.Concat(sortLabel, " is sorted in a ", sortDescription, " order. Use this link to change the order. All other columns are sortable");
+            }
+            <th class="govuk-table__header cell-@sortKey">
+                <a href="@url" class="@className" aria-label="@label">@sortLabel</a>
+            </th>
+        }
+    </text>
+}
+
+<table class="govuk-table gias-table approval-changes sortable-table" id="changes-table-nojs">
+    <caption class="govuk-visually-hidden">Manage change requests</caption>
+    <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+        <th class="cell-checkbox govuk-table__header">
+            <span class="govuk-visually-hidden">Checkbox</span>
+        </th>
+        @SortHeader(sortTypes)
+    </tr>
+    </thead>
+
+    @if (Model.ApprovalItems.Items.Any())
+    {
+        <tbody class="govuk-table__body">
+        @foreach (var change in Model.ApprovalItems.Items)
+        {
+            <tr class="govuk-tabel__row">
+                <td class="cell-checkbox govuk-table__cell" data-label="Select item">
+                    <div class="govuk-checkboxes__item">
+                        <input id="change-@change.Id-nojs" name="ids" value="@change.Id" type="checkbox" class="govuk-checkboxes__input">
+                        <label class="govuk-checkboxes__label" for="change-@change.Id-nojs">
+                            <span class="govuk-visually-hidden">Select this change for approval or rejection</span>
+                        </label>
+                    </div>
+                </td>
+                <td data-label="URN" class="govuk-table__cell">
+                    @Html.ActionLink(change.EstablishmentUrn.ToString(), "Details", "Establishment", new {area = "Establishments", id = change.EstablishmentUrn}, new {@class = "govuk-link"})
+                </td>
+                <td data-label="DfE Number" class="govuk-table__cell">@change.EstablishmentLAESTAB</td>
+                <td data-label="Establishment" class="govuk-table__cell">
+                    @Html.ActionLink(change.EstablishmentName, "Details", "Establishment", new { area = "Establishments", id = change.EstablishmentUrn}, new {@class = "govuk-link"})
+                </td>
+                <td data-label="Updated field" class="govuk-table__cell">@change.FieldName</td>
+                <td data-label="Old value" class="govuk-table__cell">@change.OldValue</td>
+                <td data-label="New value" class="govuk-table__cell">@change.NewValue</td>
+                <td data-label="Effective date" class="govuk-table__cell">
+                    @{
+                        if (change.EffectiveDateUtc.HasValue)
+                        {
+                            @(change.EffectiveDateUtc?.ToString("d MMMM yyyy"))
+                        }
+                        else
+                        {
+                            <text>Unknown</text>
+                        }
+                    }
+                </td>
+                <td data-label="Date requested" class="govuk-table__cell">
+                    @{
+                        if (change.RequestedDateUtc.HasValue)
+                        {
+                            @(change.RequestedDateUtc?.ToString("d MMMM yyyy"))
+                        }
+                        else
+                        {
+                            <text>Unknown</text>
+                        }
+                    }
+
+                </td>
+                <td data-label="Suggested by" class="govuk-table__cell">@change.OriginatorFullName</td>
+            </tr>
+        }
+
+        </tbody>
+    }
+    else
+    {
+        <tbody v-else class="govuk-table__body">
+        <tr class="govuk-table__row">
+            <td colspan="10" class="govuk-table__cell">
+                <p> You have no items requiring approval.</p>
+            </td>
+        </tr>
+        </tbody>
+    }
+
+</table>

@@ -1,11 +1,14 @@
+@using Edubase.Services.Enums
 @model Edubase.Services.Domain.ProgressDto
-
 @{
     ViewBag.bodyClasses = "schools-search-page search-page";
     ViewBag.hideLogo = true;
     ViewBag.SiteSection = "tools";
 }
-
+@section Head
+{
+    <meta name="robots" content="noindex,nofollow" />
+}
 @section BreadCrumbs
 {
     <div class="govuk-grid-row">
@@ -13,13 +16,13 @@
             <div class="govuk-breadcrumbs">
                 <ol class="govuk-breadcrumbs__list">
                     <li class="govuk-breadcrumbs__list-item">
-                        @Html.ActionLink("Search", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
                     </li>
                     <li class="govuk-breadcrumbs__list-item">
-                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                        @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
                     </li>
                     <li class="govuk-breadcrumbs__list-item">
-                        @Html.ActionLink("View independent schools' significant dates","IndependentSchoolsSearch","Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                        @Html.ActionLink("View independent schools' significant dates", "IndependentSchoolsSearch", "Tools", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
                     </li>
                 </ol>
             </div>
@@ -27,34 +30,50 @@
     </div>
 }
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-xl">Download data</h1>
-    </div>
-</div>
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <h2 class="govuk-heading-m">@ViewBag.Subtitle</h2>
-        <p>Your requested file is ready to download.</p>
+@{
+    var uri = new Uri(Model.FileLocationUri);
+    var path = uri.GetLeftPart(UriPartial.Path);
+    var name = Model.Name ?? "Data in XLSX format";
+    var id = Model.Id.ToString();
 
-        <p>
-            <a href="@Model.FileLocationUri" rel="nofollow">Data in XLSX format</a>
-            (will download as a ZIP file: open the ZIP to access its content)
-        </p>
-    </div>
-    <div class="govuk-grid-column-full">
-        <div class="button-row govuk-!-padding-top-4">
-            @Html.RouteLink(HttpUtility.HtmlDecode("&laquo; Go back"), "IndSchSearch", null, new { @class = "govuk-button govuk-button--secondary back-to-indi", data_module = "govuk-button" })
+    using (Html.BeginRouteForm("DownloadExtract", FormMethod.Post))
+    {
+        @Html.Hidden("id", id)
+        @Html.Hidden("path", path)
+        @Html.Hidden("returnSource", eDownloadReturnSource.IndependentSchoolDates)
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <h1 class="govuk-heading-xl">Download data</h1>
+            </div>
         </div>
-    </div>
-</div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h2 class="govuk-heading-m">@ViewBag.Subtitle</h2>
+                <p>Your requested file is ready to download.</p>
+
+                <p>
+                    <input type="submit" class="govuk-button" data-module="govuk-button" value="@name" /><br />
+                    (will download as a ZIP file: open the ZIP to access its content)
+                </p>
+            </div>
+            <div class="govuk-grid-column-full">
+                <div class="button-row govuk-!-padding-top-4">
+                    @Html.RouteLink(HttpUtility.HtmlDecode("&laquo; Go back"), "IndSchSearch", null, new { @class = "govuk-button govuk-button--secondary back-to-indi", data_module = "govuk-button" })
+                </div>
+            </div>
+        </div>
+    }
+}
+
 
 @section ViewScripts
 {
     <script nonce="@Html.ScriptNonce()">
-        $('.back-to-indi').on('click', function (e) {
-            e.preventDefault();
-            window.history.go(-1);
-        })
+        $('.back-to-indi').on('click',
+            function (e) {
+                e.preventDefault();
+                window.history.go(-1);
+            })
     </script>
 }
