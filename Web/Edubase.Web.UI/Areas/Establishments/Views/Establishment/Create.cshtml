@@ -220,7 +220,6 @@
                 @Html.HiddenFor(x => x.ProcessedWarnings)
                 @Html.HiddenFor(x => x.StepName)
                 @Html.Hidden("jsDisabled", true)
-                @Html.Hidden("routeComplete", false)
 
                 <div class="govuk-grid-column-full gias-hidden__from-tablet">
                     <div class="button-row govuk-!-margin-bottom-4">
@@ -315,7 +314,7 @@
 
                     @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step3)
                     {
-                        <p>A new number has been generated for this establishment: </p>
+                        <p>A new number will be generated for this establishment.</p>
                     }
 
 
@@ -451,7 +450,7 @@
                         Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step5)    //Not sure whether to segregate this into an additional step or add the create control to the three journey ends
                                                                                                    //Might be better to do this bit if StepName is (3,4,5).
                     {
-                        @Html.Hidden("routeComplete", true) //Not sure if we can toggle this at run-time; to check
+                        @Html.Hidden("routeComplete", true)
                         <div class="govuk-grid-column-full">
                             <div class="button-row">
                                 <button type="submit" name="action" value="" class="govuk-button" id="create-submit">Create establishment</button>

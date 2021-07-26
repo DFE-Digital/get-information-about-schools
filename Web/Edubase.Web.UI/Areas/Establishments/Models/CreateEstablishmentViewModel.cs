@@ -44,7 +44,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
         }
 
         public bool jsDisabled { get; set; } = false;
-        public bool routeComplete { get; set; } = false;
 
         public eEstabCreateSteps StepName { get; set; } = eEstabCreateSteps.Step1;
 

@@ -196,18 +196,19 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Create")]
-        public async Task<ActionResult> Create(CreateChildrensCentreViewModel viewModel, bool jsDisabled, bool routeComplete)
+        public async Task<ActionResult> Create(CreateChildrensCentreViewModel viewModel, bool jsDisabled, bool routeComplete = false )
         {
             viewModel.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
             viewModel.jsDisabled = jsDisabled;
-
-
+            await PopulateCCSelectLists(viewModel);
 
             if (viewModel.EstablishmentTypeId == 41 && jsDisabled == false)
+            {
                 return await CreateChildrensCentre(viewModel);
+            }
 
-            if (viewModel.EstablishmentTypeId == 41 && viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step5)
+            if (viewModel.EstablishmentTypeId == 41 && viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step5 && !routeComplete)
             {
                 viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step5;
                 //need to escape here to redraw the screen and collect additional data
@@ -215,7 +216,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
 
             //ME code - for development
-            if (viewModel.jsDisabled == true && viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step3)
+            if (viewModel.jsDisabled == true && viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step3 && !routeComplete)
             {
                 // we can actively ignore step3, as there is no re-render to the screen we just need to ensure the model is correct as per usual.
                 ModelState.Remove(nameof(viewModel.StepName));
@@ -247,14 +248,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                             viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step4;
                             return View(viewModel);
                         }
-
-                        // if they opted to generate a number, we dont need to re-render the screen, we can just continue to process below
-                        break;
+                        else
+                        {
+                            viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step3;
+                            // if they opted to generate a number, we dont need to re-render the screen, we can just continue to process below
+                            break;
+                        }
                 }
             }
             //
 
-            if (routeComplete == true)  //attempt to prevent end of route processing until final control is posted
+            if (routeComplete)  //attempt to prevent end of route processing until final control is posted
             {
                 if (ModelState.IsValid)
                 {
@@ -304,8 +308,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     }
                 }
             }
-
-            await PopulateCCSelectLists(viewModel);
 
             return View(viewModel);
         }
