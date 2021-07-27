@@ -27,12 +27,6 @@ const locationAutoSuggest = (function() {
       maxItems: 30
     },
     {
-      textFieldId: 'GSSLAName',
-      suggestions: window.gsslas,
-      hiddenFieldId: 'GSSLAIdHidden',
-      maxItems: 10
-    },
-    {
       textFieldId: 'LSOAName',
       suggestions: window.lsoas,
       hiddenFieldId: 'LSOAIdHidden',
