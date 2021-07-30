@@ -213,11 +213,12 @@
                     <div class="footer-meta-inner">
                         <h2 class="visuallyhidden">Support links</h2>
                         <ul>
-                            <li><a href="/cookies">Cookies</a></li>
-                            <!--<li><a href="#">Contact</a></li>-->
+                            <li><a href="/Contact">Contact</a></li>
+                            <li><a href="/glossary">Glossary</a></li>
                             <li><a href="/guidance">Guidance</a></li>
                             <li><a href="/Privacy">Privacy</a></li>
-                            <li><a href="/news">News</a></li>
+                            <li><a href="/cookies">Cookies</a></li>
+                            <li><a href="/Accessibility">Accessibility statement</a></li>
                         </ul>
 
                         <div class="open-government-licence">
