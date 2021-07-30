@@ -200,38 +200,34 @@
         <p>Sorry, you do not have access to this part of the site.</p>
     </div>
 </div>
-
-
-
 </main>
 
+<footer class="group js-footer" id="footer" role="contentinfo">
+    <div class="footer-wrapper">
+        <div class="footer-meta">
+            <div class="footer-meta-inner">
+                <h2 class="visuallyhidden">Support links</h2>
+                <ul>
+                    <li><a href="/Contact">Contact</a></li>
+                    <li><a href="/glossary">Glossary</a></li>
+                    <li><a href="/guidance">Guidance</a></li>
+                    <li><a href="/Privacy">Privacy</a></li>
+                    <li><a href="/cookies">Cookies</a></li>
+                    <li><a href="/Accessibility">Accessibility statement</a></li>
+                </ul>
 
-
-        <footer class="group js-footer" id="footer" role="contentinfo">
-            <div class="footer-wrapper">
-                <div class="footer-meta">
-                    <div class="footer-meta-inner">
-                        <h2 class="visuallyhidden">Support links</h2>
-                        <ul>
-                            <li><a href="/cookies">Cookies</a></li>
-                            <!--<li><a href="#">Contact</a></li>-->
-                            <li><a href="/guidance">Guidance</a></li>
-                            <li><a href="/Privacy">Privacy</a></li>
-                            <li><a href="/news">News</a></li>
-                        </ul>
-
-                        <div class="open-government-licence">
-                            <p class="logo"><a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence</a></p>
-                            <p>All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated</p>
-                        </div>
-                    </div>
-                    <div class="copyright">
-                        <a href="https://www.nationalarchives.gov.uk/information-management/our-services/crown-copyright.htm">&copy; Crown copyright</a>
-                    </div>
+                <div class="open-government-licence">
+                    <p class="logo"><a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence</a></p>
+                    <p>All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated</p>
                 </div>
             </div>
-        </footer>
-        <!--end footer-->
+            <div class="copyright">
+                <a href="https://www.nationalarchives.gov.uk/information-management/our-services/crown-copyright.htm">&copy; Crown copyright</a>
+            </div>
+        </div>
+    </div>
+</footer>
+<!--end footer-->
 
         <div id="global-app-error" class="app-error hidden"></div>
         <script src="/public/govuk_template/assets/javascripts/govuk-template.js?0.13.0" type="text/javascript"></script>
