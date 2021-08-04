@@ -99,6 +99,13 @@ const autocompleteSetup = (function(){
         openSuggestionsOnFocus(schoolNameAutoSuggest);
       });
 
+      schoolNameInput.addEventListener('paste', function (event) {
+        const pastedValue = (event.clipboardData || window.clipboardData).getData('text');
+        if (pastedValue.length > 2) {
+          getNameSuggestions(pastedValue, schoolNameAutoSuggest, false);
+        }
+      });
+
     }
     /* ###################
         MAT name
@@ -143,6 +150,13 @@ const autocompleteSetup = (function(){
       matNameInput.addEventListener('focus', function () {
         openSuggestionsOnFocus(matNameAutoSuggest);
       });
+
+      matNameInput.addEventListener('paste', function (event) {
+        const pastedValue = (event.clipboardData || window.clipboardData).getData('text');
+        if (pastedValue.length > 2) {
+          getNameSuggestions(pastedValue, matNameAutoSuggest, true);
+        }
+      });
     }
 
     /* ###################
@@ -186,6 +200,13 @@ const autocompleteSetup = (function(){
 
       schoolLocationInput.addEventListener('focus', function () {
         openSuggestionsOnFocus(schoolLocationAutoSuggest);
+      });
+
+      schoolLocationInput.addEventListener('paste', function(event) {
+        const pastedValue = (event.clipboardData || window.clipboardData).getData('text');
+        if (pastedValue.length > 2) {
+          getLocationSuggestions(pastedValue, schoolLocationAutoSuggest);
+        }
       });
     }
     /* ###################
