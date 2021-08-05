@@ -1,4 +1,5 @@
 @using Edubase.Common;
+@using Edubase.Services.Security
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
 @using L = Edubase.Services.Enums.eLookupGroupType;
 @using S = Edubase.Services.Enums.eLookupGroupStatus;
@@ -140,7 +141,7 @@
                         </div>
                     }
 
-                    @if (Model.GroupType == L.ChildrensCentresGroup)
+                    @if (User.InRole(AuthorizedRoles.CanSeeChildrensCentreGroupManagerEmail) && Model.GroupType == L.ChildrensCentresGroup)
                     {
                         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ManagerEmailAddress)">
                             <label for="ManagerEmailAddress" class="govuk-label">Group manager email</label>

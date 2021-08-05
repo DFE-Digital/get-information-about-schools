@@ -99,9 +99,20 @@ namespace Edubase.Web.UI.Controllers
                         break;
 
                     case eSearchType.Location:
-                        fieldId = "LocationSearchModel.Text";
-                        fieldError = "Please enter a postcode, town or city to start a search";
-                        viewModel.ErrorPanel = "Location";
+                        if (viewModel.LocationSearchModel.Text.IsNullOrEmpty())
+                        {
+                            fieldId = "LocationSearchModel.Text";
+                            fieldError = "Please enter a postcode, town or city to start a search";
+                            viewModel.ErrorPanel = "Location";
+
+                        }
+                        else
+                        {
+                            fieldId = "LocationSearchModel.Text";
+                            fieldError = "We couldn't find any establishments at that location";
+                            viewModel.ErrorPanel = "Location";
+                        }
+
                         break;
 
                     case eSearchType.ByLocalAuthority:
