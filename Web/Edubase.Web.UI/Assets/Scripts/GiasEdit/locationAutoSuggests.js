@@ -11,7 +11,7 @@ const locationAutoSuggest = (function() {
     {
       textFieldId: 'AdministrativeWardName',
       suggestions: window.wards,
-      hiddenFieldId: 'AdministrativeDistrictIdHidden',
+      hiddenFieldId: 'AdministrativeWardIdHidden',
       maxItems: 30
     },
     {
