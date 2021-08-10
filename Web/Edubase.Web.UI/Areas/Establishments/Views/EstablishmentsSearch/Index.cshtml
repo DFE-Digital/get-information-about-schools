@@ -12,37 +12,46 @@
 
 @section Head
  {
-     <meta name="robots" content="noindex,nofollow" />
- }
+    <meta name="robots" content="noindex,nofollow" />
+}
 
-@section BackLink
+
+@section BreadCrumbs
 {
-    <a class="govuk-back-link" href="@Url.Action("Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Establishments, SearchType = Model.SearchType})">Search</a>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "", SelectedTab = SearchViewModel.Tab.Establishments }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
 }
 
 <div class="govuk-error-summary hidden" id="js-filter-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
-  <h2 class="govuk-error-summary__title" id="error-summary-title">
-    Incorrect or missing details
-  </h2>
-  <div class="govuk-error-summary__body">
-      <ul class="govuk-list govuk-error-summary__list">
-          <li class="open-date-filter-error hidden">
-              <a href="#open-date-filter">Please enter the open date in the format DD/MM/YYYY</a>
-          </li>
-          <li class="close-date-filter-error hidden">
-              <a href="#close-date-filter">Please enter the close date in the format DD/MM/YYYY</a>
-          </li>
-          <li class="option-select-AgeRangeLow-error hidden">
-              <a href="#option-select-AgeRangeLow">Please enter the low age range in the correct format, for example 5 to 11</a>
-          </li>
-          <li class="option-select-AgeRangeHigh-error hidden">
-              <a href="#option-select-AgeRangeHigh">Please enter the high age range in the correct format, for example 5 to 11</a>
-          </li>
-          <li class="summary-radius-error hidden">
-              <a href="#option-select-radius">Please enter a radius between 0 and 99.99</a>
-          </li>
-      </ul>
-  </div>
+    <h2 class="govuk-error-summary__title" id="error-summary-title">
+        Incorrect or missing details
+    </h2>
+    <div class="govuk-error-summary__body">
+        <ul class="govuk-list govuk-error-summary__list">
+            <li class="open-date-filter-error hidden">
+                <a href="#open-date-filter">Please enter the open date in the format DD/MM/YYYY</a>
+            </li>
+            <li class="close-date-filter-error hidden">
+                <a href="#close-date-filter">Please enter the close date in the format DD/MM/YYYY</a>
+            </li>
+            <li class="option-select-AgeRangeLow-error hidden">
+                <a href="#option-select-AgeRangeLow">Please enter the low age range in the correct format, for example 5 to 11</a>
+            </li>
+            <li class="option-select-AgeRangeHigh-error hidden">
+                <a href="#option-select-AgeRangeHigh">Please enter the high age range in the correct format, for example 5 to 11</a>
+            </li>
+            <li class="summary-radius-error hidden">
+                <a href="#option-select-radius">Please enter a radius between 0 and 99.99</a>
+            </li>
+        </ul>
+    </div>
 </div>
 
 <div class="govuk-grid-row" id="search-results">
@@ -117,146 +126,146 @@
     <form method="get" action="@Url.Action("Index", "EstablishmentsSearch", new {area = ""})">
         <div id="gias-filter-container">
             <div class="filter-form" id="filter-form">
-            <input type="hidden" id="client-only-searchtype" value="@Model.SearchType" />
-            <div class="govuk-grid-column-one-third">
-                <h2 class="gias-heading-xs make-modal-header">Filters</h2>
-                <a href="#results-container" class="govuk-skip-link">Skip filters</a>
-                @if (!User.Identity.IsAuthenticated)
-                {
-                    <a href="#" class="add-clear-filters" id="clear-filters" role="button">Clear all filters</a>
-                }
-                <div id="EditSearchCollapse" class="search-result-filters blanket-container">
-                    @if (User.Identity.IsAuthenticated)
+                <input type="hidden" id="client-only-searchtype" value="@Model.SearchType" />
+                <div class="govuk-grid-column-one-third">
+                    <h2 class="gias-heading-xs make-modal-header">Filters</h2>
+                    <a href="#results-container" class="govuk-skip-link">Skip filters</a>
+                    @if (!User.Identity.IsAuthenticated)
                     {
-                        @Html.Partial("Partials/_UserFilterSets")
-                        @Html.HiddenFor(x=>x.SavedFilterToken)
+                        <a href="#" class="add-clear-filters" id="clear-filters" role="button">Clear all filters</a>
                     }
+                    <div id="EditSearchCollapse" class="search-result-filters blanket-container">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @Html.Partial("Partials/_UserFilterSets")
+                            @Html.HiddenFor(x => x.SavedFilterToken)
+                        }
 
-                    <div class="govuk-option-select js-collapsible no-scroll" id="option-select-sort-by" role="search">
-                        <div class="container-head js-container-head">
-                            <div class="option-select-label">Sort by</div>
-                        </div>
-                        <div class="options-container">
-                            <label for="sortby-selector" class="govuk-visually-hidden">Sort by</label>
-                            <select class="govuk-select trigger-result-update sortby-selector" name="@M.BIND_ALIAS_SORT_BY" id="sortby-selector">
-                                @if (Model.SearchType == eSearchType.Location)
-                                {
-                                    <option id="distance" value="d" @Html.Conditional(Model.GetSortOption() == eSortBy.Distance, "selected")>Distance</option>
-                                }
-                                <option id="alpha-az" value="a" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
-                                <option id="alpha-za" value="z" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
-                            </select>
-                            @helpers.FilterSkipLink()
-                        </div>
-                    </div>
-
-                    @if (Model.SearchType == eSearchType.Location)
-                    {
-                        @RadiusFilter()
-                    }
-
-                    @SelectorNested("Establishment type", M.BIND_ALIAS_TYPEIDS, Model.EstablishmentTypes.OrderBy(e => e.Name), Model.SelectedEstablishmentTypeIds)
-
-                    @Selector("Status", M.BIND_ALIAS_STATUSIDS, Model.EstablishmentStatuses.OrderBy(x => x.Name), Model.SelectedEstablishmentStatusIds)
-
-                    @Selector("Phase of education", M.BIND_ALIAS_PHASEIDS, Model.EducationPhases.OrderBy(x => x.Name), Model.SelectedEducationPhaseIds)
-
-                    @Selector("Local authority", M.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds, filterRefine: true)
-
-                    @Selector("Religious character", M.BIND_ALIAS_RELICHARIDS, Model.ReligiousCharacters.OrderBy(x => x.Name), Model.SelectedReligiousCharacterIds, filterRefine: true)
-
-                    <!-- begin opted in filters -->
-                    @OpenDateFilter()
-
-                    @CloseDateFilter()
-
-                    @Html.EditorFor(x => x.AgeRangeLow, new {title = "Age range low", id = "age-range-low-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_LOW_FROM})
-
-                    @Html.EditorFor(x => x.AgeRangeHigh, new {title = "Age range high", id = "age-range-high-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_HIGH_FROM})
-
-                    @Selector("Admissions policy", M.BIND_ALIAS_ADMPOL, Model.AdmissionsPolicies.OrderBy(x => x.Name), Model.SelectedAdmissionsPolicyIds, "additional-search-critera hidden", true)
-
-                    @Selector("Boarding provision", M.BIND_ALIAS_BOARDPOL, Model.BoardingProvisions.OrderBy(x => x.Name), Model.SelectedBoardingProvisionIds, "additional-search-critera hidden", true)
-
-
-                    @Selector("Diocese", M.BIND_ALIAS_DIOCESE, Model.Dioceses.OrderBy(x => x.Name), Model.SelectedDioceseIds, "additional-search-critera hidden", true, true)
-
-                    @Selector("District", M.BIND_ALIAS_DISTRICT, Model.Districts.OrderBy(x => x.Name), Model.SelectedDistrictIds, "additional-search-critera hidden", true, true)
-
-                    @Selector("Further Education type", M.BIND_ALIAS_FETYPE, Model.FurtherEducationTypes.OrderBy(x => x.Name), Model.SelectedFETypeIds, "additional-search-critera hidden", true)
-
-                    @Selector("Gender of entry", M.BIND_ALIAS_GENDER, Model.Genders.OrderBy(x => x.Name), Model.SelectedGenderIds, "additional-search-critera hidden", true)
-
-                    @Selector("Government Office Region", M.BIND_ALIAS_GOR, Model.GORs.OrderBy(x => x.Name), Model.SelectedGORIds, "additional-search-critera hidden", true)
-
-
-                    @Selector("Nursery provision", M.BIND_ALIAS_NURSERY, Model.NurseryProvisions.OrderBy(x => x.Name), Model.SelectedNurseryProvisionIds, "additional-search-critera hidden", true)
-
-                    @Selector("Ofsted rating", M.BIND_ALIAS_OFSTEDRATINGS, Model.OfstedRatings.OrderBy(x => x.Name), Model.SelectedOfstedRatingIds, "additional-search-critera hidden", true)
-
-                    @Selector("Parliamentary constituency", M.BIND_ALIAS_PARLCONST, Model.ParliamentaryConstituencies.OrderBy(x => x.Name), Model.SelectedParliamentaryConstituencyIds, "additional-search-critera hidden", true, true)
-
-                    @Selector("Religious ethos", M.BIND_ALIAS_RELETHOS, Model.ReligiousEthoses.OrderBy(x => x.Name), Model.SelectedReligiousEthosIds, "additional-search-critera hidden", true, true)
-
-                    @Selector("RSC region", M.BIND_ALIAS_RSCREG, Model.RSCRegions.OrderBy(x => x.Name), Model.SelectedRSCRegionIds, "additional-search-critera hidden", true)
-
-                    @Selector("Section 41 approved", M.BIND_ALIAS_SECT41, Model.Section41Designations.OrderBy(x => x.Name), Model.SelectedSection41Ids, "additional-search-critera hidden", true)
-
-                    @Selector("Sixth form provision", M.BIND_ALIAS_SIXTHFORM, Model.SixthFormProvisions.OrderBy(x => x.Name), Model.SelectedSixthFormProvisionIds, "additional-search-critera hidden", true)
-
-                    @Selector("Special classes", M.BIND_ALIAS_SPECLASS, Model.SpecialClassesProvisions.OrderBy(x => x.Name), Model.SelectedSpecialClassesProvisionIds, "additional-search-critera hidden", true)
-
-                    @Selector("Type of SEN provision", M.BIND_ALIAS_TYPEOFSENPRV, Model.TypeOfSENProvisions.OrderBy(x => x.Name), Model.SelectedTypeOfSENProvisionIds, "additional-search-critera hidden", true)
-
-                    @Selector("Urban/Rural description", M.BIND_ALIAS_URBRUR, Model.UrbanRuralDesignations.OrderBy(x => x.Name), Model.SelectedUrbanRuralIds, "additional-search-critera hidden", true)
-
-                    <div id="additional-filter-wrap">
-                        <div class="govuk-option-select js-collapsible searchable-filters" data-closed-on-load="true" id="option-select-additional-filters" role="search">
+                        <div class="govuk-option-select js-collapsible no-scroll" id="option-select-sort-by" role="search">
                             <div class="container-head js-container-head">
-                                <div class="option-select-label">More filters</div>
-                                <div class="js-selected-counter">
-                                    <span class="js-selected-counter-text"></span>
-                                </div>
+                                <div class="option-select-label">Sort by</div>
                             </div>
-                            @* <a href="#" class="clear-selections filter-clear">Clear</a> *@
-                            @SearchWithin("more")
-                            <div class="options-container" id="">
-                                <div class="js-auto-height-inner">
-                                    <div class="suggestion-target"></div>
-                                    <fieldset class="govuk-fieldset" id="filter-type-target"></fieldset>
-                                </div>
+                            <div class="options-container">
+                                <label for="sortby-selector" class="govuk-visually-hidden">Sort by</label>
+                                <select class="govuk-select trigger-result-update sortby-selector" name="@M.BIND_ALIAS_SORT_BY" id="sortby-selector">
+                                    @if (Model.SearchType == eSearchType.Location)
+                                    {
+                                        <option id="distance" value="d" @Html.Conditional(Model.GetSortOption() == eSortBy.Distance, "selected")>Distance</option>
+                                    }
+                                    <option id="alpha-az" value="a" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalAZ, "selected")>Alphabetical A-Z</option>
+                                    <option id="alpha-za" value="z" @Html.Conditional(Model.GetSortOption() == eSortBy.NameAlphabeticalZA, "selected")>Alphabetical Z-A</option>
+                                </select>
+                                @helpers.FilterSkipLink()
                             </div>
                         </div>
 
+                        @if (Model.SearchType == eSearchType.Location)
+                        {
+                            @RadiusFilter()
+                        }
+
+                        @SelectorNested("Establishment type", M.BIND_ALIAS_TYPEIDS, Model.EstablishmentTypes.OrderBy(e => e.Name), Model.SelectedEstablishmentTypeIds)
+
+                        @Selector("Status", M.BIND_ALIAS_STATUSIDS, Model.EstablishmentStatuses.OrderBy(x => x.Name), Model.SelectedEstablishmentStatusIds)
+
+                        @Selector("Phase of education", M.BIND_ALIAS_PHASEIDS, Model.EducationPhases.OrderBy(x => x.Name), Model.SelectedEducationPhaseIds)
+
+                        @Selector("Local authority", M.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds, filterRefine: true)
+
+                        @Selector("Religious character", M.BIND_ALIAS_RELICHARIDS, Model.ReligiousCharacters.OrderBy(x => x.Name), Model.SelectedReligiousCharacterIds, filterRefine: true)
+
+                        <!-- begin opted in filters -->
+                        @OpenDateFilter()
+
+                        @CloseDateFilter()
+
+                        @Html.EditorFor(x => x.AgeRangeLow, new { title = "Age range low", id = "age-range-low-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_LOW_FROM })
+
+                        @Html.EditorFor(x => x.AgeRangeHigh, new { title = "Age range high", id = "age-range-high-filter", bindalias = M.BIND_ALIAS_AGE_RANGE_HIGH_FROM })
+
+                        @Selector("Admissions policy", M.BIND_ALIAS_ADMPOL, Model.AdmissionsPolicies.OrderBy(x => x.Name), Model.SelectedAdmissionsPolicyIds, "additional-search-critera hidden", true)
+
+                        @Selector("Boarding provision", M.BIND_ALIAS_BOARDPOL, Model.BoardingProvisions.OrderBy(x => x.Name), Model.SelectedBoardingProvisionIds, "additional-search-critera hidden", true)
+
+
+                        @Selector("Diocese", M.BIND_ALIAS_DIOCESE, Model.Dioceses.OrderBy(x => x.Name), Model.SelectedDioceseIds, "additional-search-critera hidden", true, true)
+
+                        @Selector("District", M.BIND_ALIAS_DISTRICT, Model.Districts.OrderBy(x => x.Name), Model.SelectedDistrictIds, "additional-search-critera hidden", true, true)
+
+                        @Selector("Further Education type", M.BIND_ALIAS_FETYPE, Model.FurtherEducationTypes.OrderBy(x => x.Name), Model.SelectedFETypeIds, "additional-search-critera hidden", true)
+
+                        @Selector("Gender of entry", M.BIND_ALIAS_GENDER, Model.Genders.OrderBy(x => x.Name), Model.SelectedGenderIds, "additional-search-critera hidden", true)
+
+                        @Selector("Government Office Region", M.BIND_ALIAS_GOR, Model.GORs.OrderBy(x => x.Name), Model.SelectedGORIds, "additional-search-critera hidden", true)
+
+
+                        @Selector("Nursery provision", M.BIND_ALIAS_NURSERY, Model.NurseryProvisions.OrderBy(x => x.Name), Model.SelectedNurseryProvisionIds, "additional-search-critera hidden", true)
+
+                        @Selector("Ofsted rating", M.BIND_ALIAS_OFSTEDRATINGS, Model.OfstedRatings.OrderBy(x => x.Name), Model.SelectedOfstedRatingIds, "additional-search-critera hidden", true)
+
+                        @Selector("Parliamentary constituency", M.BIND_ALIAS_PARLCONST, Model.ParliamentaryConstituencies.OrderBy(x => x.Name), Model.SelectedParliamentaryConstituencyIds, "additional-search-critera hidden", true, true)
+
+                        @Selector("Religious ethos", M.BIND_ALIAS_RELETHOS, Model.ReligiousEthoses.OrderBy(x => x.Name), Model.SelectedReligiousEthosIds, "additional-search-critera hidden", true, true)
+
+                        @Selector("RSC region", M.BIND_ALIAS_RSCREG, Model.RSCRegions.OrderBy(x => x.Name), Model.SelectedRSCRegionIds, "additional-search-critera hidden", true)
+
+                        @Selector("Section 41 approved", M.BIND_ALIAS_SECT41, Model.Section41Designations.OrderBy(x => x.Name), Model.SelectedSection41Ids, "additional-search-critera hidden", true)
+
+                        @Selector("Sixth form provision", M.BIND_ALIAS_SIXTHFORM, Model.SixthFormProvisions.OrderBy(x => x.Name), Model.SelectedSixthFormProvisionIds, "additional-search-critera hidden", true)
+
+                        @Selector("Special classes", M.BIND_ALIAS_SPECLASS, Model.SpecialClassesProvisions.OrderBy(x => x.Name), Model.SelectedSpecialClassesProvisionIds, "additional-search-critera hidden", true)
+
+                        @Selector("Type of SEN provision", M.BIND_ALIAS_TYPEOFSENPRV, Model.TypeOfSENProvisions.OrderBy(x => x.Name), Model.SelectedTypeOfSENProvisionIds, "additional-search-critera hidden", true)
+
+                        @Selector("Urban/Rural description", M.BIND_ALIAS_URBRUR, Model.UrbanRuralDesignations.OrderBy(x => x.Name), Model.SelectedUrbanRuralIds, "additional-search-critera hidden", true)
+
+                        <div id="additional-filter-wrap">
+                            <div class="govuk-option-select js-collapsible searchable-filters" data-closed-on-load="true" id="option-select-additional-filters" role="search">
+                                <div class="container-head js-container-head">
+                                    <div class="option-select-label">More filters</div>
+                                    <div class="js-selected-counter">
+                                        <span class="js-selected-counter-text"></span>
+                                    </div>
+                                </div>
+                                @* <a href="#" class="clear-selections filter-clear">Clear</a> *@
+                                @SearchWithin("more")
+                                <div class="options-container" id="">
+                                    <div class="js-auto-height-inner">
+                                        <div class="suggestion-target"></div>
+                                        <fieldset class="govuk-fieldset" id="filter-type-target"></fieldset>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div id="filter-additional-controls" class="filter-additional-controls">
+                            <a href="#" class="add-clear-filters" id="clear-filters-additional" role="button">Clear all filters</a>
+                            @* @if (User.Identity.IsAuthenticated) *@
+                            @* { *@
+                            @*     <a href="javascript:" class="save-filter-set-link js-save-set hidden govuk-button govuk-button--secondary">Save filter set</a> *@
+                            @* } *@
+                        </div>
+
+                        <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit" />
+
+                        @if (Model.SearchType == eSearchType.Text)
+                        {
+                            @Html.HiddenFor(!Model.TextSearchModel.Text.IsEmpty(), x => x.TextSearchModel.Text)
+                            @Html.HiddenFor(!Model.TextSearchModel.AutoSuggestValue.IsEmpty(), x => x.TextSearchModel.AutoSuggestValue)
+                        }
+                        else if (Model.SearchType == eSearchType.Location)
+                        {
+                            @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.Text)
+                            @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.AutoSuggestValue)
+                        }
+
+                        <input type="hidden" id="selected-search-filters" name="@M.BIND_ALIAS_SELECTED_SEARCH_FILTERS" value="@Model.SelectedExtraSearchFilters" />
+
+                        @Html.HiddenFor(x => x.SearchType)
                     </div>
 
-                    <div id="filter-additional-controls" class="filter-additional-controls">
-                        <a href="#" class="add-clear-filters" id="clear-filters-additional" role="button">Clear all filters</a>
-                        @* @if (User.Identity.IsAuthenticated) *@
-                        @* { *@
-                        @*     <a href="javascript:" class="save-filter-set-link js-save-set hidden govuk-button govuk-button--secondary">Save filter set</a> *@
-                        @* } *@
-                    </div>
-
-                    <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit"/>
-
-                    @if (Model.SearchType == eSearchType.Text)
-                    {
-                        @Html.HiddenFor(!Model.TextSearchModel.Text.IsEmpty(), x => x.TextSearchModel.Text)
-                        @Html.HiddenFor(!Model.TextSearchModel.AutoSuggestValue.IsEmpty(), x => x.TextSearchModel.AutoSuggestValue)
-                    }
-                    else if (Model.SearchType == eSearchType.Location)
-                    {
-                        @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.Text)
-                        @Html.HiddenFor(!Model.LocationSearchModel.Text.IsEmpty(), x => x.LocationSearchModel.AutoSuggestValue)
-                    }
-
-                    <input type="hidden" id="selected-search-filters" name="@M.BIND_ALIAS_SELECTED_SEARCH_FILTERS" value="@Model.SelectedExtraSearchFilters"/>
-
-                    @Html.HiddenFor(x => x.SearchType)
                 </div>
-
-            </div>
             </div>
             <div role="alert" aria-live="assertive" id="results-notification" class="govuk-visually-hidden"></div>
             <h2 class="govuk-visually-hidden">Search results listing</h2>
@@ -308,7 +317,7 @@
                     <legend class="govuk-visually-hidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
                     <div class="govuk-checkboxes gias-filter-checkboxes">
                         <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
-                            <input id="@(name)_all" class="select-all govuk-checkboxes__input" type="checkbox"/>
+                            <input id="@(name)_all" class="select-all govuk-checkboxes__input" type="checkbox" />
                             <label for="@(name)_all" class="js-filter-label govuk-label govuk-checkboxes__label">
                                 All
                             </label>
@@ -319,7 +328,7 @@
                         {
 
                             <div class="govuk-checkboxes__item">
-                                <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="js-filter-input trigger-result-update govuk-checkboxes__input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
+                                <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="js-filter-input trigger-result-update govuk-checkboxes__input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
                                 <label for="@(name)_@item.Id" class="js-filter-label govuk-label govuk-checkboxes__label">
                                     @item
                                 </label>
@@ -362,7 +371,7 @@
                     <legend class="govuk-visually-hidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
                     <div class="govuk-checkboxes gias-filter-checkboxes">
                         <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
-                            <input id="@(name)_all" class="select-all govuk-checkboxes__input" type="checkbox"/>
+                            <input id="@(name)_all" class="select-all govuk-checkboxes__input" type="checkbox" />
                             <label for="@(name)_all" class="js-filter-label govuk-label govuk-checkboxes__label">
                                 All
                             </label>
@@ -374,12 +383,13 @@
                             <div class="js-when-on">
                                 <div class="govuk-checkboxes gias-filter-checkboxes">
                                     <div class="govuk-checkboxes__item">
-                                        <input id="@(name)_@item.Id" class="filter-group-title govuk-checkboxes__input" type="checkbox" @Html.Conditional(item.ChildItems.Any(x => selectedItems.Contains(x.Id)), "checked")/>
+                                        <input id="@(name)_@item.Id" class="filter-group-title govuk-checkboxes__input" type="checkbox" @Html.Conditional(item.ChildItems.Any(x => selectedItems.Contains(x.Id)), "checked") />
                                         <label for="@(name)_@item.Id" class="govuk-label govuk-checkboxes__label">@item</label>
                                         <button data-module="govuk-button" class="child-option-toggle js-child-option-toggle" aria-expanded="false">
                                             <span class="govuk-visually-hidden">
                                                 <span class="filter-action-state"></span>
-                                                @item.ChildItems.Count sub types of @item</span>
+                                                @item.ChildItems.Count sub types of @item
+                                            </span>
                                         </button>
                                     </div>
                                 </div>
@@ -389,7 +399,7 @@
                                     @foreach (var child in item.ChildItems)
                                     {
                                         <div class="govuk-checkboxes__item">
-                                            <input name="@name" value="@child.Id" id="@(name)_@(item.Id)_@child.Id" class="govuk-checkboxes__input js-filter-input trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(child.Id), "checked")/>
+                                            <input name="@name" value="@child.Id" id="@(name)_@(item.Id)_@child.Id" class="govuk-checkboxes__input js-filter-input trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(child.Id), "checked") />
                                             <label for="@(name)_@(item.Id)_@child.Id" class="govuk-checkboxes__label govuk-label">
                                                 @child
                                             </label>
@@ -419,7 +429,7 @@
         <a href="#" class="clear-selections filter-clear">Clear</a>
         <div class="options-container" id="">
             <div class="js-auto-height-inner">
-                @Html.EditorFor(m => m.CloseDateFrom, new { disableHint = true, labelClass= "govuk-label" , title="From", inFilters = true, fieldsetClassName = "search-from-date" })
+                @Html.EditorFor(m => m.CloseDateFrom, new { disableHint = true, labelClass = "govuk-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date" })
                 @Html.EditorFor(m => m.CloseDateTo, new { disableHint = true, labelClass = "govuk-label", title = "To", inFilters = true, fieldSetClassName = "search-to-date" })
 
                 <div class="govuk-form-group">
@@ -445,8 +455,8 @@
         <div class="options-container" id="">
             <div class="js-auto-height-inner">
 
-                @Html.EditorFor(m => m.OpenDateFrom, new {disableHint = true, labelClass = "govuk-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date" })
-                @Html.EditorFor(m => m.OpenDateTo, new {disableHint = true, labelClass = "govuk-label", title = "To", inFilters = true, fieldsetClassName = "search-to-date" })
+                @Html.EditorFor(m => m.OpenDateFrom, new { disableHint = true, labelClass = "govuk-label", title = "From", inFilters = true, fieldsetClassName = "search-from-date" })
+                @Html.EditorFor(m => m.OpenDateTo, new { disableHint = true, labelClass = "govuk-label", title = "To", inFilters = true, fieldsetClassName = "search-to-date" })
 
                 <div class="govuk-form-group">
                     <a href="#" class="govuk-button govuk-button--secondary filter-button">Apply</a>
@@ -495,7 +505,7 @@
                         <span class="govuk-error-message hidden">Please check the radius you have entered</span>
                         <span class="inline-form-control">
                             <label for="RadiusInMiles" class="govuk-visually-hidden">Radius in miles</label>
-                            <input type="text" id="RadiusInMiles" name="@M.BIND_ALIAS_RADIUS" value="@Model.GetRadiusOption()" class="govuk-input govuk-input--width-5" maxlength="5"/>
+                            <input type="text" id="RadiusInMiles" name="@M.BIND_ALIAS_RADIUS" value="@Model.GetRadiusOption()" class="govuk-input govuk-input--width-5" maxlength="5" />
                             &nbsp;miles
                             <a href="#" class="govuk-button govuk-button--secondary filter-button" data-module="govuk-button">Apply</a>
                         </span>

@@ -36,7 +36,7 @@
 {
     @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
     {
-        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-back-link" })
+        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
     }
     else
     {
