@@ -51,7 +51,16 @@
 
 }
 
-@section BackLink
+@section BreadCrumbs
 {
-    <a class="govuk-back-link" href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.Location})">Search</a>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item"><a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.Location})" class="govuk-breadcrumbs__link">Search</a></li>
+                </ol>
+            </div>
+        </div>
+    </div>
 }
+
