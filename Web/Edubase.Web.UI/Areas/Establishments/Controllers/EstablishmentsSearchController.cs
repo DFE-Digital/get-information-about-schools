@@ -74,7 +74,18 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 model.SavedFilterToken = (await _userPreferenceRepository.GetAsync(userId))?.SavedSearchToken;
             }
 
+            if (Request.QueryString["OpenOnly"] == "true")
+            {
+                if (model.SearchType.OneOfThese(eSearchType.ByLocalAuthority, eSearchType.Location,
+                    eSearchType.Text, eSearchType.EstablishmentAll))
+                {
+                    model.SelectedEstablishmentStatusIds.Add((int)eLookupEstablishmentStatus.Open);
+                    model.SelectedEstablishmentStatusIds.Add((int)eLookupEstablishmentStatus.OpenButProposedToClose);
+                }
+            }
+
             var payload = await GetEstablishmentSearchPayload(model);
+
             if (!payload.Success) model.Error = payload.ErrorMessage;
             return await ProcessEstablishmentsSearch(model, payload.Object);
         }
