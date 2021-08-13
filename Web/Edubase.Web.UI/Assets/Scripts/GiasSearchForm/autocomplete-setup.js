@@ -1,6 +1,6 @@
 const Awesomplete = require('awesomplete');
 
-const autocompleteSetup = (function(){
+const autocompleteSetup = (function (){
   const MINCHARS = 2;
   let intervalId;
 
@@ -13,7 +13,7 @@ const autocompleteSetup = (function(){
         url: url,
         dataType: 'json',
         success: function(response) {
-          autocomplete.list = response.filter((school)=> {
+          const _list = response.filter((school) => {
             if (openOnly && openOnly.checked) {
               return !school.closed;
             }
@@ -24,6 +24,7 @@ const autocompleteSetup = (function(){
             obj.urn = school.urn;
             return obj;
           });
+          autocomplete.list = _list;
         }
       });
     }, 200);
@@ -59,6 +60,7 @@ const autocompleteSetup = (function(){
         School name
      ################### */
     const schoolNameInput = document.getElementById('TextSearchModel_Text');
+    const schoolNameOpenChx = document.getElementById('include-open-establishments-name');
 
     if (schoolNameInput) {
       const schoolNameAutoSuggest = new Awesomplete(schoolNameInput, {
@@ -103,6 +105,23 @@ const autocompleteSetup = (function(){
         const pastedValue = (event.clipboardData || window.clipboardData).getData('text');
         if (pastedValue.length > 2) {
           getNameSuggestions(pastedValue, schoolNameAutoSuggest, false);
+        }
+      });
+
+      schoolNameOpenChx.addEventListener('change', function (event) {
+        if (schoolNameInput.value.length > MINCHARS) {
+          schoolNameAutoSuggest.close();
+          schoolNameAutoSuggest.ul.innerHTML = '';
+
+          let fauxKeyStroke = new Event('keyup');
+          schoolNameInput.dispatchEvent(fauxKeyStroke);
+
+          setTimeout(function(){
+            schoolNameAutoSuggest.evaluate();
+            if (schoolNameAutoSuggest.ul.childNodes.length > 0) {
+              schoolNameAutoSuggest.open();
+            }
+          }, 1000);
         }
       });
 
