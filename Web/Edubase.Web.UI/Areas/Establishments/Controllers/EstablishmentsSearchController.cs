@@ -544,10 +544,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                           ? model.TextSearchModel.Text.ToInteger()
                           : null);
 
-            if (urn.HasValue)
+            if (urn.HasValue && (await _establishmentReadService.CanAccess(urn.Value, User)).ReturnValue)
             {
-                if ((await _establishmentReadService.CanAccess(urn.Value, User)).ReturnValue)
-                    return RedirectToEstabDetail(urn.Value);
+                if (!model.SelectedEstablishmentStatusIds.Any() ||
+                    model.SelectedEstablishmentStatusIds.Contains((await _establishmentReadService.GetAsync(urn.Value, User)).GetResult().StatusId.GetValueOrDefault()))
+                        {
+                            return RedirectToEstabDetail(urn.Value);
+                        }
             }
 
             return null;
