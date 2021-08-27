@@ -26,7 +26,7 @@
     </div>
 </div>
 
-@if (ViewBag.JsDisabled != null && false)
+@if (ViewBag.JsDisabled != null)
 {
     @Html.Hidden("jsDisabled", false)
     <div id="create-establishment">
@@ -211,7 +211,7 @@
 }
 
 @* no js - similar to the createchildrenscentre functionality - should be  class="js-hidden" *@
-<div>
+<div class="js-hidden">
     <div id="create-establishment">
         <div class="govuk-grid-row">
             @using (Html.BeginForm())
