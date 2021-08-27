@@ -202,7 +202,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
             viewModel.jsDisabled = jsDisabled;
 
-            var canproceed = viewModel.LocalAuthorityId != null;
+            var canproceed = viewModel.LocalAuthorityId != null && viewModel.Name != null && viewModel.EstablishmentTypeId != 0;
 
             await PopulateCCSelectLists(viewModel);
 
