@@ -234,7 +234,7 @@
                     <h2 class="govuk-heading-m">New establishment details</h2>
 
                     @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step1)
-                    {
+                            {
                         <div class="govuk-grid-column-one-half">
                             @* NAME, LA and TYPE  *@
                             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Name)">
@@ -262,7 +262,7 @@
                             </div>
                         </div>
                     }
-                    else
+                            else
                     {
                         @Html.HiddenFor(x => x.Name)
                         @Html.HiddenFor(x => x.LocalAuthorityId)
@@ -424,6 +424,9 @@
                     else
                     {
                         @Html.HiddenFor(x => x.OpenDate)
+                        @Html.HiddenFor(x => x.OpenDate.Day)
+                        @Html.HiddenFor(x => x.OpenDate.Month)
+                        @Html.HiddenFor(x => x.OpenDate.Year)
                         @Html.HiddenFor(x => x.Address.CityOrTown)
                         @Html.HiddenFor(x => x.Address.Country)
                         @Html.HiddenFor(x => x.Address.County)

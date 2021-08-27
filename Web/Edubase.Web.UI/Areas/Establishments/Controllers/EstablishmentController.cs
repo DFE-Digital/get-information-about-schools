@@ -201,14 +201,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
             viewModel.jsDisabled = jsDisabled;
+
+            var canproceed = viewModel.LocalAuthorityId != null;
+
             await PopulateCCSelectLists(viewModel);
 
-            if (viewModel.EstablishmentTypeId == 41 && jsDisabled == false)
+            if (viewModel.EstablishmentTypeId == 41 && (jsDisabled == false || routeComplete) && canproceed)
             {
                 return await CreateChildrensCentre(viewModel);
             }
 
-            if (viewModel.EstablishmentTypeId == 41 && viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step5 && !routeComplete)
+            if (viewModel.EstablishmentTypeId == 41 && viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step5 && !routeComplete && canproceed)
             {
                 viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step5;
                 //need to escape here to redraw the screen and collect additional data
@@ -216,7 +219,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
 
             //ME code - for development
-            if (viewModel.jsDisabled == true && viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step3 && !routeComplete)
+            if (viewModel.jsDisabled == true && viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step3 && !routeComplete && canproceed)
             {
                 // we can actively ignore step3, as there is no re-render to the screen we just need to ensure the model is correct as per usual.
                 ModelState.Remove(nameof(viewModel.StepName));
