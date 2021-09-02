@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Edubase.Data.Entity;
+using Edubase.Web.UI.Models.Faq;
 
 namespace Edubase.Web.UI.Models
 {
@@ -16,13 +18,17 @@ namespace Edubase.Web.UI.Models
 
         public bool IsDeleting { get; set; }
 
-        [Required, Display(Name = "Display order")]
-        public int DisplayOrder { get; set; }
+        public string GroupId { get; set; }
 
-        public FaqSection Section { get; set; }
+        public IEnumerable<FaqGroup> Groups { get; set; }
 
         public FaqItemViewModel()
         {
+            
+        }
+        public FaqItemViewModel(IEnumerable<FaqGroup> groups)
+        {
+            Groups = groups;
         }
     }
 }

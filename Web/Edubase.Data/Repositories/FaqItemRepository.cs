@@ -1,4 +1,4 @@
-﻿using Edubase.Data.Entity;
+using Edubase.Data.Entity;
 using Edubase.Data.Repositories.TableStorage;
 using Microsoft.WindowsAzure.Storage.Table;
 using System.Threading.Tasks;
@@ -10,9 +10,9 @@ using Microsoft.WindowsAzure.Storage.Table.Queryable;
 
 namespace Edubase.Data.Repositories
 {
-    public class FaqRepository : TableStorageBase<FaqItem>
+    public class FaqItemRepository : TableStorageBase<FaqItem>
     {
-        public FaqRepository()
+        public FaqItemRepository()
             : base("DataConnectionString")
         {
         }
