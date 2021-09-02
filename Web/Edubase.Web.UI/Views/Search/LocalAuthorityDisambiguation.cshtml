@@ -32,14 +32,16 @@
         }
         else if (Model.MatchingLocalAuthorities.Count == 1)
         {
-            <p>Did you mean
+            <p>
+                Did you mean
                 <a href="/?SearchType=ByLocalAuthority&@QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.AddUnique(Model.MatchingLocalAuthorities[0].Id).ToArray())#la">
                     @Model.MatchingLocalAuthorities[0].Name
                 </a>?
             </p>
             <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="govuk-button govuk-button--secondary js-show-inline">Back to search</a>
             <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments"})" class="govuk-button govuk-button--secondary no-js-show-inline">Back to search</a>
-        }else
+        }
+        else
         {
             <p><strong>No results were found. Please refine your search criteria.</strong><br /></p>
             <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="govuk-button govuk-button--secondary js-show-inline">Back to search</a>
@@ -48,7 +50,16 @@
     </div>
 </div>
 
-@section BackLink {
-    <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="govuk-back-link js-show-inline">Search</a>
-    <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments"})" class="govuk-back-link no-js-show-inline">Search</a>
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item"><a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="govuk-breadcrumbs__link">Search</a></li>
+                </ol>
+            </div>
+        </div>
+    </div>
 }
+

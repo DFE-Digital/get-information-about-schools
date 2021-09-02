@@ -40,7 +40,7 @@ namespace Edubase.Common
             stringsToRemove.ForEach(x => data = data.Replace(x, string.Empty));
             return data;
         }
-        
+
 
 
         public static int? ToInteger(this string text)
@@ -239,7 +239,7 @@ namespace Edubase.Common
                 @"([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})",
                 RegexOptions.IgnoreCase);
         }
-        
+
 
         public static string GetPart(this string data, string separator, int index = 0)
         {
@@ -310,7 +310,7 @@ namespace Edubase.Common
             text = text.Clean();
 
             if (text == null) return null;
-            
+
             int len = text.Length;
             bool prevdash = false;
             var sb = new StringBuilder(len);
@@ -319,7 +319,7 @@ namespace Edubase.Common
             for (int i = 0; i < len; i++)
             {
                 c = text[i];
-                if ((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9'))
+                if ((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || (c == '\''))
                 {
                     sb.Append(c);
                     prevdash = false;
