@@ -259,11 +259,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
         [HttpGet, Route("Details/{id:int}", Name = "EstabDetails")]
         public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments,
-            int approved = 0, int pending = 0, int skip = 0, string sortBy = null, bool saved = false)
+            int approved = 0, int pending = 0, int skip = 0, string sortBy = null, bool saved = false, string confirmed = null)
         {
             ViewBag.ApprovedCount = approved;
             ViewBag.PendingApprovalCount = pending;
             ViewBag.ShowSaved = saved;
+            ViewBag.Confirmed = confirmed;
 
             var viewModel = new EstablishmentDetailViewModel(_externalLookupService)
             {
@@ -455,10 +456,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpPost, EdubaseAuthorize, Route("Confirm/{urn:int}", Name = "EstablishmentConfirmUpToDate")]
-        public async Task<ActionResult> EstablishmentConfirmUpToDateAsync(int urn)
+        public async Task<ActionResult> EstablishmentConfirmUpToDateAsync(int urn, bool showBanner = false)
         {
             await _establishmentWriteService.ConfirmAsync(urn, User);
-            return RedirectToRoute("EstabDetails", new { id = urn });
+            return RedirectToRoute("EstabDetails", new { id = urn, saved = showBanner, confirmed = "Details" });
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{urn:int}/Address/{target}", Name = "AddOrReplaceEstablishmentAddress")]
