@@ -3,6 +3,7 @@ const Awesomplete = require('awesomplete');
 const autocompleteSetup = (function (){
   const MINCHARS = 2;
   let intervalId;
+  let nameSuggestions;
 
   function getNameSuggestions(searchString, autocomplete, isMatSearch) {
     const url =  isMatSearch ? `/search/suggestgroup?text=${searchString}`: `/search/suggest?text=${searchString}`;
@@ -13,18 +14,22 @@ const autocompleteSetup = (function (){
         url: url,
         dataType: 'json',
         success: function(response) {
-          const _list = response.filter((school) => {
+          const suggestions = response.map((school) => {
+            const obj = {};
+            obj.text = school.text;
+            obj.urn  = school.urn;
+            obj.closed = school.closed;
+            return obj;
+          });
+
+          nameSuggestions = suggestions;
+
+          autocomplete.list = suggestions.filter((school) => {
             if (openOnly && openOnly.checked) {
               return !school.closed;
             }
             return true;
-          }).map((school) => {
-            let obj = {};
-            obj.text = school.text;
-            obj.urn = school.urn;
-            return obj;
           });
-          autocomplete.list = _list;
         }
       });
     }, 200);
@@ -110,21 +115,20 @@ const autocompleteSetup = (function (){
 
       schoolNameOpenChx.addEventListener('change', function (event) {
         if (schoolNameInput.value.length > MINCHARS) {
-          schoolNameAutoSuggest.close();
           schoolNameAutoSuggest.ul.innerHTML = '';
+          if (!schoolNameOpenChx.checked) {
+            schoolNameAutoSuggest.list = nameSuggestions;
+          } else {
+            const openSchools = nameSuggestions.filter(school => {
+              return !school.closed
+            });
 
-          let fauxKeyStroke = new Event('keyup');
-          schoolNameInput.dispatchEvent(fauxKeyStroke);
+            schoolNameAutoSuggest.list = openSchools;
+          }
 
-          setTimeout(function(){
-            schoolNameAutoSuggest.evaluate();
-            if (schoolNameAutoSuggest.ul.childNodes.length > 0) {
-              schoolNameAutoSuggest.open();
-            }
-          }, 1000);
+          schoolNameAutoSuggest.evaluate();
         }
       });
-
     }
     /* ###################
         MAT name
