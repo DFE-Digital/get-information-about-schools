@@ -245,7 +245,7 @@
                                 </div>
                             }
 
-                            @if (Model.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust))
+                            @if (Model.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor))
                             {
                                 @OtherServicesLinks()
                             }
