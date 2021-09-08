@@ -129,8 +129,8 @@ namespace Edubase.UnitTest.Controllers
             GetMock<IPrincipal>().Setup(p => p.IsInRole(It.IsAny<string>())).Returns(true);
             GetMock<ICSCPService>().Setup(x => x.CheckExists(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>())).ReturnsAsync(true);
             GetMock<ICSCPService>().Setup(x => x.PublicURL(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>())).Returns("https://cscp.azurewebsites.net/school/123456");
-            GetMock<IFBService>().Setup(x => x.CheckExists(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
-            GetMock<IFBService>().Setup(x => x.PublicURL(It.IsAny<int>(), It.IsAny<string>())).Returns("https://sfb.azurewebsites.net/school/detail?urn=123456");
+            GetMock<IFBService>().Setup(x => x.CheckExists(It.IsAny<int>(), It.IsAny<FbType>())).ReturnsAsync(true);
+            GetMock<IFBService>().Setup(x => x.PublicURL(It.IsAny<int>(), It.IsAny<FbType>())).Returns("https://sfb.azurewebsites.net/school/detail?urn=123456");
 
             SetupCachedLookupService();
 

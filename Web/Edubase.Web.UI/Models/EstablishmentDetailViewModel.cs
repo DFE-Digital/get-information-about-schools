@@ -192,7 +192,7 @@ namespace Edubase.Web.UI.Models
             }
         }
 
-        public string FinancialBenchmarkingURL => extService.SfbURL(Establishment.Urn, string.Empty);
+        public string FinancialBenchmarkingURL => extService.SfbURL(Establishment.Urn, FbType.School);
 
         private bool? showFinancialBenchmarking;
         public bool ShowFinancialBenchmarking
@@ -201,7 +201,7 @@ namespace Edubase.Web.UI.Models
             {
                 if (!showFinancialBenchmarking.HasValue)
                 {
-                    showFinancialBenchmarking = extService != null && Task.Run(() => extService.SfbCheckExists(Establishment.Urn, string.Empty)).Result;
+                    showFinancialBenchmarking = extService != null && Task.Run(() => extService.SfbCheckExists(Establishment.Urn, FbType.School)).Result;
                 }
                 return showFinancialBenchmarking.Value;
             }

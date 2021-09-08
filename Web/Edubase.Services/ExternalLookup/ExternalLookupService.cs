@@ -23,14 +23,14 @@ namespace Edubase.Services.ExternalLookup
             return _cscpService.PublicURL(urn, name, mat);
         }
 
-        public async Task<bool> SfbCheckExists(int? urn, string companiesHouse)
+        public async Task<bool> SfbCheckExists(int? lookupId, FbType lookupType)
         {
-            return await _fbService.CheckExists(urn, companiesHouse);
+            return await _fbService.CheckExists(lookupId, lookupType);
         }
 
-        public string SfbURL(int? urn, string companiesHouse)
+        public string SfbURL(int? lookupId, FbType lookupType)
         {
-            return _fbService.PublicURL(urn, companiesHouse);
+            return _fbService.PublicURL(lookupId, lookupType);
         }
     }
 }

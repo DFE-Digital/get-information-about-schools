@@ -9,6 +9,13 @@ using Polly;
 
 namespace Edubase.Services.ExternalLookup
 {
+    public enum FbType
+    {
+        School,
+        Federation,
+        Trust
+    }
+
     public class FBService : IFBService
     {
         private static HttpClient _client = new HttpClient
@@ -29,24 +36,35 @@ namespace Edubase.Services.ExternalLookup
             _client = client;
         }
 
-        public string PublicURL(int? urn, string companiesHouse)
+        public string PublicURL(int? lookupId, FbType lookupType)
         {
-            return companiesHouse.IsNullOrEmpty() ?
-                $"{_client.BaseAddress.AbsoluteUri}school/detail?urn={urn}" :
-                $"{_client.BaseAddress.AbsoluteUri}Trust?companyNo={companiesHouse.ToInteger()}";
+            return $"{_client.BaseAddress.AbsoluteUri}{UrlPath(lookupId, lookupType)}";
         }
 
-        private HttpRequestMessage HeadRestRequest(int? urn, string companiesHouse)
+        private string UrlPath(int? lookupId, FbType lookupType)
         {
-            return companiesHouse.IsNullOrEmpty() ?
-                new HttpRequestMessage(HttpMethod.Head, $"school/status?urn={urn}") :
-                new HttpRequestMessage(HttpMethod.Head, $"Trust?companyNo={companiesHouse.ToInteger()}");
+            var url = $"school/detail?urn={lookupId}";
+            switch (lookupType)
+            {
+                case FbType.Trust:
+                    url = $"Trust?companyNo={lookupId}";
+                    break;
+                case FbType.Federation:
+                    url = $"federation?fuid={lookupId}";
+                    break;
+            }
+
+            return url;
         }
 
-        public async Task<bool> CheckExists(int? urn, string companiesHouse)
+        private HttpRequestMessage HeadRestRequest(int? lookupId, FbType lookupType)
         {
-            var collection = companiesHouse.IsNullOrEmpty() ? "school" : "mat";
-            var key = $"sfb-{collection}-{urn}";
+            return new HttpRequestMessage(HttpMethod.Head, UrlPath(lookupId, lookupType));
+        }
+
+        public async Task<bool> CheckExists(int? lookupId, FbType lookupType)
+        {
+            var key = $"sfb-{lookupType.ToString()}-{lookupId}";
             var value = MemoryCache.Default.Get(key);
             if (value != null)
             {
@@ -55,7 +73,7 @@ namespace Edubase.Services.ExternalLookup
             else
             {
                 var cacheTime = ConfigurationManager.AppSettings["FinancialBenchmarkingCacheHours"].ToInteger() ?? 8;
-                var request = HeadRestRequest(urn, companiesHouse);
+                var request = HeadRestRequest(lookupId, lookupType);
 
                 try
                 {

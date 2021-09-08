@@ -79,7 +79,26 @@ namespace Edubase.Web.UI.Areas.Groups.Models
             }
         }
 
-        public string FinancialBenchmarkingURL => extService.SfbURL(Group.GroupUId, Group.CompaniesHouseNumber);
+        private Tuple<int?, FbType> FinancialBenchmarkingLookups
+        {
+            get
+            {
+                var lookupId = Group.GroupUId;
+                var lookupType = FbType.Federation;
+
+                if (Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust))
+                {
+                    lookupId = Group.CompaniesHouseNumber.ToInteger();
+                    lookupType = FbType.Trust;
+                }
+
+                return new Tuple<int?, FbType>(lookupId, lookupType);
+            }
+        }
+
+        public string FinancialBenchmarkingURL => extService.SfbURL(FinancialBenchmarkingLookups.Item1, FinancialBenchmarkingLookups.Item2);
+
+
 
         private bool? showFinancialBenchmarking;
         public bool ShowFinancialBenchmarking
@@ -88,7 +107,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
             {
                 if (!showFinancialBenchmarking.HasValue)
                 {
-                    showFinancialBenchmarking = extService != null && Task.Run(() => extService.SfbCheckExists(Group.GroupUId, Group.CompaniesHouseNumber)).Result;
+                    showFinancialBenchmarking = extService != null && Task.Run(() => extService.SfbCheckExists(FinancialBenchmarkingLookups.Item1, FinancialBenchmarkingLookups.Item2)).Result;
                 }
                 return showFinancialBenchmarking.Value;
             }
