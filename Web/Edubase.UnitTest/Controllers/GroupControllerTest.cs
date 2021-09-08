@@ -14,6 +14,7 @@ using Edubase.Web.UI.Areas.Groups.Controllers;
 using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Exceptions;
+using Edubase.Services.ExternalLookup;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
@@ -691,6 +692,7 @@ namespace Edubase.UnitTest.Controllers
             AddMock<ICachedLookupService>();
             AddMock<ICompaniesHouseService>();
             AddMock<ISecurityService>();
+            AddMock<IExternalLookupService>();
             RealObjects.Add(new NomenclatureService());
             base.InitialiseMocks();
         }
