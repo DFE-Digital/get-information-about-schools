@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+using Edubase.Services.ExternalLookup;
 using Edubase.Services.Governors.Models;
 
 namespace Edubase.Web.UI.Areas.Groups.Models
@@ -14,6 +16,13 @@ namespace Edubase.Web.UI.Areas.Groups.Models
 
     public class GroupDetailViewModel
     {
+        private readonly IExternalLookupService extService;
+
+        public GroupDetailViewModel(IExternalLookupService extService = null)
+        {
+            this.extService = extService;
+        }
+
         private Dictionary<int, string> _groupTypes2Name = new Dictionary<int, string>
         {
             [(int)GT.ChildrensCentresCollaboration] = "children's centre collaboration",
@@ -55,6 +64,35 @@ namespace Edubase.Web.UI.Areas.Groups.Models
 
         public IEnumerable<LinkedGroupModel> Links { get; set; }
         public GovernorPermissions GovernorPermissions { get; set; }
+
+        public string CscpURL => extService.CscpURL(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust));
+        private bool? showCscp;
+        public bool ShowCscp
+        {
+            get
+            {
+                if (!showCscp.HasValue)
+                {
+                    showCscp = extService != null && Task.Run(() => extService.CscpCheckExists(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust))).Result;
+                }
+                return showCscp.Value;
+            }
+        }
+
+        public string FinancialBenchmarkingURL => extService.SfbURL(Group.GroupUId, Group.CompaniesHouseNumber);
+
+        private bool? showFinancialBenchmarking;
+        public bool ShowFinancialBenchmarking
+        {
+            get
+            {
+                if (!showFinancialBenchmarking.HasValue)
+                {
+                    showFinancialBenchmarking = extService != null && Task.Run(() => extService.SfbCheckExists(Group.GroupUId, Group.CompaniesHouseNumber)).Result;
+                }
+                return showFinancialBenchmarking.Value;
+            }
+        }
 
     }
 }

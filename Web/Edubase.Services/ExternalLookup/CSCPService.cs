@@ -12,6 +12,8 @@ namespace Edubase.Services.ExternalLookup
     public class CSCPService : ICSCPService
     {
         private static HttpClient _client;
+        private string _matAddress = "multi-academy-trust";
+        private string _schoolAddress = "school";
 
         private static readonly Policy RetryPolicy = Policy.TimeoutAsync(1).Wrap(Policy
             .Handle<HttpRequestException>()
@@ -25,21 +27,29 @@ namespace Edubase.Services.ExternalLookup
             _client = client;
         }
 
-        public string SchoolURL(int? urn, string name)
+        private string GetCollection(bool mat)
         {
+            var collection = mat ? _matAddress : _schoolAddress;
+            return collection;
+        }
+        
+        public string PublicURL(int? urn, string name, bool mat = false)
+        {
+            var collection = GetCollection(mat);
             var safeName = UriHelper.SchoolNameUrl(name);
-            return $"{_client.BaseAddress.AbsoluteUri}school/{urn}/{safeName}";
+            return $"{_client.BaseAddress.AbsoluteUri}{collection}/{urn}/{safeName}";
         }
 
-        private HttpRequestMessage HeadSchoolRestRequest(int? urn, string name)
+        private HttpRequestMessage HeadRestRequest(int? urn, string name, string collection)
         {
             var safeName = UriHelper.SchoolNameUrl(name);
-            return new HttpRequestMessage(HttpMethod.Head, $"school/{urn}/{safeName}");
+            return new HttpRequestMessage(HttpMethod.Head, $"{collection}/{urn}/{safeName}");
         }
 
-        public async Task<bool> CheckExists(int? urn, string name)
+        public async Task<bool> CheckExists(int? urn, string name, bool mat = false)
         {
-            var key = $"cscp-{urn}";
+            var collection = GetCollection(mat);
+            var key = $"cscp-{collection}-{urn}";
             var value = MemoryCache.Default.Get(key);
             if (value != null)
             {
@@ -48,7 +58,7 @@ namespace Edubase.Services.ExternalLookup
             else
             {
                 var cacheTime = ConfigurationManager.AppSettings["CscpCacheHours"].ToInteger() ?? 8;
-                var request = HeadSchoolRestRequest(urn, name);
+                var request = HeadRestRequest(urn, name, collection);
 
                 try
                 {

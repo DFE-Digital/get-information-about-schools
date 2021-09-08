@@ -245,6 +245,11 @@
                                 </div>
                             }
 
+                            @if (Model.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust))
+                            {
+                                @OtherServicesLinks()
+                            }
+
                         </dl>
                     </div>
 
@@ -521,6 +526,38 @@
         </div>
     </div>
 </div>
+
+
+@helper OtherServicesLinks()
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Data from other services</dt>
+        <dd class="govuk-summary-list__value">
+            <ul class="govuk-list">
+                @if (!Model.ShowCscp && !Model.ShowFinancialBenchmarking)
+                {
+                    <li>
+                        Not applicable
+                    </li>
+                }
+                @if (Model.ShowCscp)
+                {
+                    <li>
+                        <a href="@Model.CscpURL" rel="noreferrer noopener" target="_blank">
+                            Compare school and college performance (opens in new tab)</a>
+                    </li>
+                }
+                @if (Model.ShowFinancialBenchmarking)
+                {
+                    <li>
+                        <a href="@Model.FinancialBenchmarkingURL" rel="noreferrer noopener" target="_blank">
+                            Schools financial benchmarking (opens in new tab)</a>
+                    </li>
+                }
+            </ul>
+        </dd>
+    </div>
+}
 
 @section ViewScripts
 {

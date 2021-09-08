@@ -127,10 +127,10 @@ namespace Edubase.UnitTest.Controllers
             GetMock<IMapper>().Setup(m => m.Map(It.IsAny<IEBTModel>(), editEstabModel)).Returns(editEstabModel);
             GetMock<IEstablishmentReadService>().Setup(e => e.GetEditPolicyAsync(establishment, It.IsAny<IPrincipal>())).ReturnsAsync(() => new EstablishmentEditPolicyEnvelope { EditPolicy = new EstablishmentDisplayEditPolicy { IEBTDetail = new IEBTDetailDisplayEditPolicy() } });
             GetMock<IPrincipal>().Setup(p => p.IsInRole(It.IsAny<string>())).Returns(true);
-            GetMock<ICSCPService>().Setup(x => x.CheckExists(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
-            GetMock<ICSCPService>().Setup(x => x.SchoolURL(It.IsAny<int>(), It.IsAny<string>())).Returns("https://cscp.azurewebsites.net/school/123456");
-            GetMock<IFBService>().Setup(x => x.CheckExists(It.IsAny<int>())).ReturnsAsync(true);
-            GetMock<IFBService>().Setup(x => x.SchoolURL(It.IsAny<int>())).Returns("https://sfb.azurewebsites.net/school/detail?urn=123456");
+            GetMock<ICSCPService>().Setup(x => x.CheckExists(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>())).ReturnsAsync(true);
+            GetMock<ICSCPService>().Setup(x => x.PublicURL(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>())).Returns("https://cscp.azurewebsites.net/school/123456");
+            GetMock<IFBService>().Setup(x => x.CheckExists(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(true);
+            GetMock<IFBService>().Setup(x => x.PublicURL(It.IsAny<int>(), It.IsAny<string>())).Returns("https://sfb.azurewebsites.net/school/detail?urn=123456");
 
             SetupCachedLookupService();
 

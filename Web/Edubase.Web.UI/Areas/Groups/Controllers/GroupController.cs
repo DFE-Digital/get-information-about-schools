@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Castle.Components.DictionaryAdapter;
+using Edubase.Services.ExternalLookup;
 using Edubase.Services.Governors;
 using Edubase.Services.Texuna.Governors;
 using Edubase.Web.UI.Areas.Establishments.Controllers;
@@ -48,6 +49,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         private readonly NomenclatureService _nomenclatureService;
         private readonly ISecurityService _securityService;
         private readonly IGovernorsReadService _governorsReadService;
+        private readonly IExternalLookupService _externalLookupService;
+
         public GroupController(
             ICachedLookupService cachedLookupService,
             ISecurityService securityService,
@@ -56,7 +59,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             IGroupsWriteService groupWriteService,
             ICompaniesHouseService companiesHouseService,
             NomenclatureService nomenclatureService,
-            IGovernorsReadService governorsReadApiService)
+            IGovernorsReadService governorsReadApiService,
+            IExternalLookupService externalLookupService)
         {
             _lookup = cachedLookupService;
             _securityService = securityService;
@@ -66,6 +70,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             _companiesHouseService = companiesHouseService;
             _nomenclatureService = nomenclatureService;
             _governorsReadService = governorsReadApiService;
+            _externalLookupService = externalLookupService;
         }
 
 
@@ -283,7 +288,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             var model = result.ReturnValue;
 
-            var viewModel = new GroupDetailViewModel
+            var viewModel = new GroupDetailViewModel(_externalLookupService)
             {
                 SearchQueryString = searchQueryString,
                 SearchSource = searchSource,
@@ -325,7 +330,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
             var model = result.ReturnValue;
 
-            var viewModel = new GroupDetailViewModel
+            var viewModel = new GroupDetailViewModel(_externalLookupService)
             {
                 Group = model,
                 GroupTypeName = model.GroupTypeId.HasValue ? await _lookup.GetNameAsync(() => model.GroupTypeId) : null,

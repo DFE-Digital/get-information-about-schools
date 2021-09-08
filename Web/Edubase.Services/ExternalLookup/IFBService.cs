@@ -4,7 +4,7 @@ namespace Edubase.Services.ExternalLookup
 {
     public interface IFBService
     {
-        Task<bool> CheckExists(int? urn);
-        string SchoolURL(int? urn);
+        Task<bool> CheckExists(int? urn, string companiesHouse);
+        string PublicURL(int? urn, string companiesHouse);
     }
 }

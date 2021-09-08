@@ -212,7 +212,7 @@ namespace Edubase.Web.UI
             var apiUsername = ConfigurationManager.AppSettings["CscpUsername"];
             var apiPassword = ConfigurationManager.AppSettings["CscpPassword"];
 
-            if (apiUsername != null && apiPassword != null)
+            if (!apiUsername.IsNullOrEmpty() && !apiPassword.IsNullOrEmpty())
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());
 
             return client;
@@ -229,9 +229,14 @@ namespace Edubase.Web.UI
             var apiUsername = ConfigurationManager.AppSettings["FinancialBenchmarkingUsername"];
             var apiPassword = ConfigurationManager.AppSettings["FinancialBenchmarkingPassword"];
 
-            if (apiUsername != null && apiPassword != null)
+            if (!apiUsername.IsNullOrEmpty() && !apiPassword.IsNullOrEmpty())
+            {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());
+            }
 
+            var header = new ProductHeaderValue("GIAS", Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            var userAgent = new ProductInfoHeaderValue(header);
+            client.DefaultRequestHeaders.UserAgent.Add(userAgent);
             return client;
         }
     }

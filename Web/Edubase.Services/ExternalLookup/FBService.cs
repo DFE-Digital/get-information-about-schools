@@ -29,19 +29,24 @@ namespace Edubase.Services.ExternalLookup
             _client = client;
         }
 
-        public string SchoolURL(int? urn)
+        public string PublicURL(int? urn, string companiesHouse)
         {
-            return $"{_client.BaseAddress.AbsoluteUri}school/detail?urn={urn}";
+            return companiesHouse.IsNullOrEmpty() ?
+                $"{_client.BaseAddress.AbsoluteUri}school/detail?urn={urn}" :
+                $"{_client.BaseAddress.AbsoluteUri}Trust?companyNo={companiesHouse.ToInteger()}";
         }
 
-        private HttpRequestMessage HeadSchoolRestRequest(int? urn)
+        private HttpRequestMessage HeadRestRequest(int? urn, string companiesHouse)
         {
-            return new HttpRequestMessage(HttpMethod.Head, $"school/status?urn={urn}");
+            return companiesHouse.IsNullOrEmpty() ?
+                new HttpRequestMessage(HttpMethod.Head, $"school/status?urn={urn}") :
+                new HttpRequestMessage(HttpMethod.Head, $"Trust?companyNo={companiesHouse.ToInteger()}");
         }
 
-        public async Task<bool> CheckExists(int? urn)
+        public async Task<bool> CheckExists(int? urn, string companiesHouse)
         {
-            var key = $"sfb-{urn}";
+            var collection = companiesHouse.IsNullOrEmpty() ? "school" : "mat";
+            var key = $"sfb-{collection}-{urn}";
             var value = MemoryCache.Default.Get(key);
             if (value != null)
             {
@@ -50,7 +55,7 @@ namespace Edubase.Services.ExternalLookup
             else
             {
                 var cacheTime = ConfigurationManager.AppSettings["FinancialBenchmarkingCacheHours"].ToInteger() ?? 8;
-                var request = HeadSchoolRestRequest(urn);
+                var request = HeadRestRequest(urn, companiesHouse);
 
                 try
                 {
