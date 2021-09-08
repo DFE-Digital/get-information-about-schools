@@ -10,7 +10,7 @@
                 
                 @if (!Model.MediumPriorityGovernanceConfirmationPending && !Model.HighPriorityGovernanceConfirmationPending)
                 {
-                    using (Html.BeginRouteForm("EstablishmentGovernanceConfirmUpToDate", new {Model.Establishment.Urn, showBanner = true}, FormMethod.Post, new {@class = "action-link"}))
+                    using (Html.BeginRouteForm("EstablishmentGovernanceConfirmUpToDate", new {Model.Establishment.Urn, showBanner = true}, FormMethod.Post, new {@class = "gias-action-form" }))
                     {
                     <button class="govuk-button" data-module="govuk-button" id="estab-data-confirm">Confirm governance information</button>
                     }
