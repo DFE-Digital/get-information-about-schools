@@ -10,53 +10,58 @@
     ViewBag.HideLogo = true;
 }
 @section BreadCrumbs {
-   <div class="govuk-grid-row">
-       <div class="govuk-grid-column-full">
-           <div class="govuk-breadcrumbs">
-               <ol class="govuk-breadcrumbs__list">
-                   <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new {area = ""}, new { @class = "govuk-breadcrumbs__link"})</li>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
 
-                   @if (!Model.SearchQueryString.IsNullOrWhiteSpace())
-                   {
-                       if (Model.SearchSource == eLookupSearchSource.Governors)
-                       {
-                           <li class="govuk-breadcrumbs__list-item">
-                               <a class="govuk-breadcrumbs__link" href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Search results</a>
-                           </li>
-                       }
-                       else
-                       {
-                           <li class="govuk-breadcrumbs__list-item">
-                               <a class="govuk-breadcrumbs__link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")>Establishments</a>
-                           </li>
-                       }
-                   }
-               </ol>
-           </div>
-       </div>
-   </div>
+                    @if (!Model.SearchQueryString.IsNullOrWhiteSpace())
+                    {
+                        if (Model.SearchSource == eLookupSearchSource.Governors)
+                        {
+                            <li class="govuk-breadcrumbs__list-item">
+                                <a class="govuk-breadcrumbs__link" href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Search results</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="govuk-breadcrumbs__list-item">
+                                <a class="govuk-breadcrumbs__link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")>Establishments</a>
+                            </li>
+                        }
+                    }
+                </ol>
+            </div>
+        </div>
+    </div>
 }
 
 @if (ViewBag.ShowSaved != null && ViewBag.ShowSaved)
 {
+    var description = "Your changes have been saved";
+    if (!((string) ViewBag.Confirmed).IsNullOrEmpty())
+    {
+        description = ViewBag.Confirmed == "Governance" ? "Governance information confirmed" : "Details confirmed";
+    }
+    
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
                 <div class="tick"></div>
-                <p class="message-text" aria-live="polite">Your changes have been saved</p>
+                <p class="message-text" aria-live="polite">@description</p>
                 <a class="cross" href="#">
                     <span class="govuk-visually-hidden">Dismiss notification</span>
                 </a>
             </div>
         </div>
     </div>
-
 }
 
 @if ((ViewBag.ApprovedCount != null && ViewBag.ApprovedCount > 0) || (ViewBag.PendingApprovalCount != null && ViewBag.PendingApprovalCount > 0))
 {
-    var approvedCount = (int) ViewBag.ApprovedCount;
-    var pendingCount = (int) ViewBag.PendingApprovalCount;
+    var approvedCount = (int)ViewBag.ApprovedCount;
+    var pendingCount = (int)ViewBag.PendingApprovalCount;
     var pendingTickClass = approvedCount > 0 ? "tickNotTop" : "tick";
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
@@ -65,12 +70,12 @@
                     @if (approvedCount > 0)
                     {
                         <div class="tick"></div>
-                        <p>@approvedCount change@(Html.Conditional(approvedCount > 1, "s")) to establishment details @(approvedCount > 1 ? "have" : "has") been instantly updated.</p>
-                    }
+                    <p>@approvedCount change@(Html.Conditional(approvedCount > 1, "s")) to establishment details @(approvedCount > 1 ? "have" : "has") been instantly updated.</p>
+                }
                     @if (approvedCount > 0 && pendingCount > 0)
                     {
                         <p>
-                            <br/>
+                            <br />
                         </p>
                     }
                     @if (pendingCount > 0)
@@ -78,14 +83,14 @@
                         <div class="@pendingTickClass"></div>
                         <p>@pendingCount change@(Html.Conditional(pendingCount > 1, "s")) to establishment details require DfE approval. You do not need to take any action now and changes will be made soon. If the DfE need more information they will contact you.</p>
                     }
-                </p>
-                <a class="cross" href="#">
-                    <span class="govuk-visually-hidden">Dismiss notification</span>
-                </a>
+                    </p>
+                    <a class="cross" href="#">
+                        <span class="govuk-visually-hidden">Dismiss notification</span>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-}
+    }
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-l gias-landing-heading">
@@ -101,10 +106,10 @@
 
         @if (Model.LegalParentGroup != null)
         {
-        <div>
-            <p class="establishment-fine-detail">@Model.GetGroupFieldLabel(Model.LegalParentGroup): @Html.RouteLink(Model.LegalParentGroupRouteDto.Label, Model.LegalParentGroupRouteDto.RouteName, Model.LegalParentGroupRouteDto.RouteValues, HtmlHelper.AnonymousObjectToHtmlAttributes(new { @class = "govuk-breadcrumbs__link" }))</p>
-        </div>
-            
+            <div>
+                <p class="establishment-fine-detail">@Model.GetGroupFieldLabel(Model.LegalParentGroup): @Html.RouteLink(Model.LegalParentGroupRouteDto.Label, Model.LegalParentGroupRouteDto.RouteName, Model.LegalParentGroupRouteDto.RouteValues, HtmlHelper.AnonymousObjectToHtmlAttributes(new { @class = "govuk-breadcrumbs__link" }))</p>
+            </div>
+
         }
 
         @if (Model.IsClosed)
@@ -262,9 +267,9 @@
 </div>
 
 @section ViewScripts {
-<script nonce="@Html.ScriptNonce()">
+    <script nonce="@Html.ScriptNonce()">
     var estabOpen = @((Model.Establishment.CloseDate == null).ToString().ToLower());
     var mapMode = 'establishment';
-</script>
-<script src="@Html.Raw(Html.GetWebpackScriptUrl("landing-page-bundle.*.js"))"></script>
+    </script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("landing-page-bundle.*.js"))"></script>
 }
