@@ -4,9 +4,9 @@ namespace Edubase.Services.ExternalLookup
 {
     public interface IExternalLookupService
     {
-        Task<bool> CscpCheckExists(int? urn, string name);
-        string CscpSchoolURL(int? urn, string name);
-        Task<bool> SfbCheckExists(int? urn);
-        string SfbSchoolURL(int? urn);
+        Task<bool> CscpCheckExists(int? urn, string name, bool mat = false);
+        string CscpURL(int? urn, string name, bool mat = false);
+        Task<bool> SfbCheckExists(int? lookupId, FbType lookupType);
+        string SfbURL(int? lookupId, FbType lookupType);
     }
 }
