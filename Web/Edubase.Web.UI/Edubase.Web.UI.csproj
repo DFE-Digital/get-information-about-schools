@@ -358,6 +358,8 @@
     <Compile Include="Helpers\LayoutHelper.cs" />
     <Compile Include="Helpers\NonceHelper.cs" />
     <Compile Include="Helpers\RouteDto.cs" />
+    <Compile Include="Models\Faq\FaqGroupsViewModel.cs" />
+    <Compile Include="Models\Faq\FaqGroupViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsBannerViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsBannersViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsTemplateViewModel.cs" />
@@ -466,9 +468,9 @@
     <Compile Include="Areas\Establishments\Models\Validators\CreateEstablishmentViewModelValidator.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\SearchForEstablishmentViewModelValidator.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\EditEstablishmentLinksViewModelValidator.cs" />
-    <Compile Include="Models\FaqItemViewModel.cs" />
+    <Compile Include="Models\Faq\FaqItemViewModel.cs" />
     <Compile Include="Models\GlossaryItemViewModel.cs" />
-    <Compile Include="Models\FaqViewModel.cs" />
+    <Compile Include="Models\Faq\FaqViewModel.cs" />
     <Compile Include="Models\GlossaryViewModel.cs" />
     <Compile Include="Models\Grid\GovernorGridViewModel.cs" />
     <Compile Include="Models\Grid\GridCellViewModel.cs" />
@@ -767,6 +769,8 @@
     <Content Include="Views\Notifications\ConfirmDeleteBanner.cshtml" />
     <Content Include="Views\Notifications\ConfirmDeleteTemplate.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\EditDetailsEmpty.cshtml" />
+    <Content Include="Views\Faq\Groups.cshtml" />
+    <Content Include="Views\Faq\EditGroup.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>

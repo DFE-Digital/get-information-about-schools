@@ -8,9 +8,11 @@ namespace Edubase.Web.UI.Models
     {   
         public bool UserCanEdit { get; set; }
         public IEnumerable<FaqItem> Items { get; }
-        public FaqViewModel(IEnumerable<FaqItem> items)
+        public IEnumerable<FaqGroup> Groups { get; }
+        public FaqViewModel(IEnumerable<FaqItem> items, IEnumerable<FaqGroup> groups)
         {
-            Items = items.OrderBy(x => x.Section).ThenBy(x => x.DisplayOrder);
+            Items = items.OrderBy(x => x.GroupId).ThenBy(x => x.DisplayOrder);
+            Groups = groups.OrderBy(x => x.DisplayOrder);
         }
     }
 }
