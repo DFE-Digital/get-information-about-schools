@@ -57,11 +57,21 @@
                 @Html.ValidationMessageFor(x => x.GroupId, null, new { @class = "govuk-error-message" })
 
                 <div class="govuk-radios">
-                    @foreach (FaqGroup group in Model.Groups.OrderBy(x => x.DisplayOrder))
-                    {
-                        <div class="govuk-radios__item">
-                            @Html.GiasRadioFor(x => x.GroupId, group.RowKey, group.GroupName, null, new { id = "group-" + group.RowKey, @class = "govuk-radios__input panel-trigger" })
-                        </div>
+                    @{
+                        var groupItem = 0;
+                        foreach (FaqGroup group in Model.Groups.OrderBy(x => x.DisplayOrder))
+                        {
+                            var elementId = nameof(Model.GroupId);
+                            groupItem += 1;
+                            if (groupItem > 1)
+                            {
+                                elementId = $"{nameof(Model.GroupId)}-{group.RowKey}";
+                            }
+
+                            <div class="govuk-radios__item">
+                                @Html.GiasRadioFor(x => x.GroupId, group.RowKey, group.GroupName, null, new {id = elementId, @class = "govuk-radios__input panel-trigger"})
+                            </div>
+                        }
                     }
                 </div>
             </div>
