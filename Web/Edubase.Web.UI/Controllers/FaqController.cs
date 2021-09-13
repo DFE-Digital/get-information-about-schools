@@ -135,6 +135,8 @@ namespace Edubase.Web.UI.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            var groups = await _FaqGroupRepository.GetAllAsync(1000);
+            viewModel.Groups = groups.Items;
             return View("CreateEdit", viewModel);
         }
 

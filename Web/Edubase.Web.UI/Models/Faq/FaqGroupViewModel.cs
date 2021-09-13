@@ -6,7 +6,7 @@ namespace Edubase.Web.UI.Models.Faq
     {
         public string Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Please enter a Group Name")]
         public string GroupName { get; set; }
         public int DisplayOrder { get; set; }
 

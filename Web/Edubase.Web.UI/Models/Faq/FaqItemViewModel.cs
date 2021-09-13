@@ -18,6 +18,7 @@ namespace Edubase.Web.UI.Models
 
         public bool IsDeleting { get; set; }
 
+        [Required(ErrorMessage = "Please select a Group")]
         public string GroupId { get; set; }
 
         public IEnumerable<FaqGroup> Groups { get; set; }
