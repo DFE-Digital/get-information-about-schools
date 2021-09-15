@@ -33,41 +33,39 @@
 </div>
 
 @{
-    var columnSize = "two-thirds";
+    var columnSize = "govuk-grid-column-full";
     if (Model.UserCanEdit)
     {
-        columnSize = "full";
+        columnSize = "govuk-grid-column-two-thirds";
+
+        <div class="govuk-grid-row">
+            <div class="@columnSize">
+                @Html.RouteLink("Add group", "CreateGroup", null, new {@class = "govuk-button"})
+                @Html.RouteLink("Add entry", "CreateItem", null, new {@class = "govuk-button"})
+            </div>
+        </div>
     }
 }
-
-
-@if (Model.UserCanEdit)
-{
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            @Html.RouteLink("Add group", "CreateGroup", null, new { @class = "govuk-button" })
-            @Html.RouteLink("Add entry", "CreateItem", null, new { @class = "govuk-button" })
-        </div>
-    </div>
-}
-
 
 <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
     @foreach (var group in Model.Groups.OrderBy(x => x.DisplayOrder))
     {
         <div class="govuk-accordion__section ">
-            <div class="govuk-accordion__section-header">
-                <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-grid-row">
+                <div class="@columnSize @Html.Conditional(Model.UserCanEdit, "govuk-!-padding-right-0")">
+                    <div class="govuk-accordion__section-header">
                         <h2 class="govuk-accordion__section-heading">
                             <span class="govuk-accordion__section-button" id="ctrl-@group.GroupName.Replace(" ", "-")">
                                 @group.GroupName
                             </span>
                         </h2>
                     </div>
-                    @if (Model.UserCanEdit)
-                    {
-                        <div class="govuk-grid-column-one-third">
+                </div>
+
+                @if (Model.UserCanEdit)
+                {
+                    <div class="govuk-grid-column-one-third govuk-!-padding-left-0">
+                        <div class="govuk-accordion__section-header-buttons">
                             @Html.RouteLink("Edit", "EditGroup", new { id = group.RowKey }, new { @class = "govuk-button govuk-button--secondary Faq-edit-button govuk-accordion__buttons" })
 
                             @if (group.DisplayOrder < Model.Groups.Last().DisplayOrder)
@@ -88,8 +86,8 @@
                                 <button class="govuk-button govuk-button--secondary govuk-accordion__buttons" disabled>Up</button>
                             }
                         </div>
-                    }
-                </div>
+                    </div>
+                }
             </div>
 
             <div id="target-@group.GroupName.Replace(" ", "-")" class="govuk-accordion__section-content" aria-labelledby="ctrl-@group.GroupName.Replace(" ", "-")">
@@ -104,7 +102,7 @@
                                     <p>@Html.Raw(item.Content.Replace("\n", "<br/>"))</p>
                                 </div>
                             </div>
-                            
+
                             @if (Model.UserCanEdit)
                             {
                                 <div class="govuk-grid-column-one-third govuk-accordion-user-content">
@@ -139,5 +137,4 @@
 </div>
 
 <p class="no-js-show-block">@helpers.BackToTopLink()</p>
-    
 
