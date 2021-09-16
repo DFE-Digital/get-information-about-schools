@@ -8,7 +8,23 @@
     {
         @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "govuk-button govuk-button--secondary" })
 
-        if (!Model.MediumPriorityEstablishmentConfirmationPending && !Model.HighPriorityEstablishmentConfirmationPending)
+        if (!Model.MediumPriorityEstablishmentConfirmationPending &&
+            !Model.HighPriorityEstablishmentConfirmationPending &&
+            !Model.Establishment.TypeId.OneOfThese(
+                eLookupEstablishmentType.ChildrensCentre,
+                eLookupEstablishmentType.ChildrensCentreLinkedSite,
+                eLookupEstablishmentType.FurtherEducation,
+                eLookupEstablishmentType.SixthFormCentres,
+                eLookupEstablishmentType.BritishSchoolsOverseas,
+                eLookupEstablishmentType.InstitutionFundedByOtherGovernmentDepartment,
+                eLookupEstablishmentType.Miscellaneous,
+                eLookupEstablishmentType.OffshoreSchools,
+                eLookupEstablishmentType.SecureUnits,
+                eLookupEstablishmentType.ServiceChildrensEducation,
+                eLookupEstablishmentType.HigherEducationInstitutions,
+                eLookupEstablishmentType.WelshEstablishment
+                )
+        )
         {
             using (Html.BeginRouteForm("EstablishmentConfirmUpToDate", new { Model.Establishment.Urn, showBanner = true }, FormMethod.Post, new { @class = "gias-action-form" }))
             {
