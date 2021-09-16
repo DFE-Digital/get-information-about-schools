@@ -1,3 +1,6 @@
+@using System.Activities.Statements
+@using Edubase.Common
+@using Edubase.Services.Enums
 @model EstablishmentDetailViewModel
 
 <div id="school-governance" class="tab-content">
@@ -8,7 +11,23 @@
             <div class="govuk-grid-column-full">
                 @Html.ActionLink("Edit governance", "Edit", "Governor", new { establishmentUrn = Model.Establishment.Urn, area = "Governors" }, new { @class = "govuk-button govuk-button--secondary" })
                 
-                @if (!Model.MediumPriorityGovernanceConfirmationPending && !Model.HighPriorityGovernanceConfirmationPending)
+                @if (!Model.MediumPriorityGovernanceConfirmationPending &&
+                     !Model.HighPriorityGovernanceConfirmationPending &&
+                     !Model.Establishment.TypeId.OneOfThese(
+                         eLookupEstablishmentType.ChildrensCentre,
+                         eLookupEstablishmentType.ChildrensCentreLinkedSite,
+                         eLookupEstablishmentType.FurtherEducation,
+                         eLookupEstablishmentType.SixthFormCentres,
+                         eLookupEstablishmentType.BritishSchoolsOverseas,
+                         eLookupEstablishmentType.InstitutionFundedByOtherGovernmentDepartment,
+                         eLookupEstablishmentType.Miscellaneous,
+                         eLookupEstablishmentType.OffshoreSchools,
+                         eLookupEstablishmentType.SecureUnits,
+                         eLookupEstablishmentType.ServiceChildrensEducation,
+                         eLookupEstablishmentType.HigherEducationInstitutions,
+                         eLookupEstablishmentType.WelshEstablishment
+                         )
+                )
                 {
                     using (Html.BeginRouteForm("EstablishmentGovernanceConfirmUpToDate", new {Model.Establishment.Urn, showBanner = true}, FormMethod.Post, new {@class = "gias-action-form" }))
                     {
