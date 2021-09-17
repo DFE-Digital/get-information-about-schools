@@ -1,0 +1,71 @@
+@using Edubase.Web.UI.Models.Faq
+@model Edubase.Web.UI.Models.Faq.FaqGroupViewModel
+@{
+    ViewBag.Title = "Get Information about Schools";
+    ViewBag.SiteSection = "help";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Help", "Help", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("FAQs", "Index", "Faq", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState)
+        <h1 class="govuk-heading-xl">@(Model.Id == null ? "Create a new" : "Edit a") FAQ group</h1>
+    </div>
+</div>
+
+@using (Html.BeginRouteForm(Model.Id == null ? "PostCreateGroup" : "PostEditGroup", new { Model.Id }, FormMethod.Post))
+{
+    <div class="govuk-grid-row">
+        @Html.HiddenFor(x => x.Id)
+
+        <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-m">Group</h2>
+        </div>
+
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GroupName)">
+                @Html.ValidationMessageFor(x => x.GroupName, null, new {@class = "govuk-error-message"})
+                @Html.TextBoxFor(x => x.GroupName, new {@class = "govuk-input" })
+            </div>
+        </div>
+
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="button-row govuk-!-padding-top-6">
+                <button type="submit" class="govuk-button">Save group</button>
+                @if (Model.CanDelete)
+                {
+                    <button type="submit" class="govuk-button govuk-button--secondary" name="@nameof(Model.IsDeleting)" id="delete-button" value="true">Delete</button>
+                }
+                @Html.RouteLink("Cancel", "Faq", null, new { @class = "govuk-button govuk-button--secondary"})
+            </div>
+        </div>
+    </div>
+}
+
+@section ViewScripts
+{
+    <script nonce="@Html.ScriptNonce()">window.isFaqGroupEdit = true;</script>
+    <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-faq-glossary.*.js"))"></script>
+}

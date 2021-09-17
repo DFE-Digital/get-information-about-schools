@@ -14,10 +14,10 @@
             <div class="govuk-breadcrumbs">
                 <ol class="govuk-breadcrumbs__list">
                     <li class="govuk-breadcrumbs__list-item">
-                        @Html.ActionLink("Search", "Index", "Search", new {area = ""}, new { @class = "govuk-breadcrumbs__link" })
+                        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
                     </li>
                     <li class="govuk-breadcrumbs__list-item">
-                        @Html.ActionLink("Help", "Help", "Home", new {area = ""}, new { @class = "govuk-breadcrumbs__link" })
+                        @Html.ActionLink("Help", "Help", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
                     </li>
                     <li class="govuk-breadcrumbs__list-item">
                         @Html.RouteLink("FAQs", "Faq", null, new { @class = "govuk-breadcrumbs__link" })
@@ -36,7 +36,7 @@
     </div>
 </div>
 
-@using (Html.BeginRouteForm(Model.Id == null ? "PostCreateFaqItem" : "PostEditFaqItem", new {Model.Id}, FormMethod.Post))
+@using (Html.BeginRouteForm(Model.Id == null ? "PostCreateItem" : "PostEditItem", new {Model.Id}, FormMethod.Post))
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
@@ -53,23 +53,27 @@
                 @Html.TextAreaFor(x => x.Content, 10, 40, new { @class = "govuk-textarea entry-content"})
             </div>
 
-            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Section)">
-                @Html.ValidationMessageFor(x => x.Section, null, new { @class = "govuk-error-message" })
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GroupId)">
+                @Html.ValidationMessageFor(x => x.GroupId, null, new { @class = "govuk-error-message" })
 
                 <div class="govuk-radios">
-                    @foreach (FaqSection section in Enum.GetValues(typeof(FaqSection)))
-                    {
-                        <div class="govuk-radios__item">
-                            @Html.GiasRadioFor(x => x.Section, section, section.EnumDisplayDescriptionFor(), null, new { id = "section-" + (int)section, @class = "govuk-radios__input panel-trigger" })
-                        </div>
+                    @{
+                        var groupItem = 0;
+                        foreach (FaqGroup group in Model.Groups.OrderBy(x => x.DisplayOrder))
+                        {
+                            var elementId = nameof(Model.GroupId);
+                            groupItem += 1;
+                            if (groupItem > 1)
+                            {
+                                elementId = $"{nameof(Model.GroupId)}-{group.RowKey}";
+                            }
+
+                            <div class="govuk-radios__item">
+                                @Html.GiasRadioFor(x => x.GroupId, group.RowKey, group.GroupName, null, new {id = elementId, @class = "govuk-radios__input panel-trigger"})
+                            </div>
+                        }
                     }
                 </div>
-            </div>
-
-            <div class="form-group @Html.ValidationCssClassFor(x => x.DisplayOrder)">
-                @Html.LabelFor(x => x.DisplayOrder, new { @class = "govuk-label" })
-                @Html.ValidationMessageFor(x => x.DisplayOrder, null, new  { @class = "govuk-error-message" })
-                @Html.TextBoxFor(x => x.DisplayOrder, new { @class = "govuk-input" })
             </div>
         </div>
     </div>
@@ -90,5 +94,4 @@
 @section ViewScripts
 {
  <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-faq-glossary.*.js"))"></script>
-
 }

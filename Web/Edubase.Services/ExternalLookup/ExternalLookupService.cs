@@ -13,24 +13,24 @@ namespace Edubase.Services.ExternalLookup
             _fbService = fbService;
         }
 
-        public async Task<bool> CscpCheckExists(int? urn, string name)
+        public async Task<bool> CscpCheckExists(int? urn, string name, bool mat = false)
         {
-            return await _cscpService.CheckExists(urn, name);
+            return await _cscpService.CheckExists(urn, name, mat);
         }
 
-        public string CscpSchoolURL(int? urn, string name)
+        public string CscpURL(int? urn, string name, bool mat = false)
         {
-            return _cscpService.SchoolURL(urn, name);
+            return _cscpService.PublicURL(urn, name, mat);
         }
 
-        public async Task<bool> SfbCheckExists(int? urn)
+        public async Task<bool> SfbCheckExists(int? lookupId, FbType lookupType)
         {
-            return await _fbService.CheckExists(urn);
+            return await _fbService.CheckExists(lookupId, lookupType);
         }
 
-        public string SfbSchoolURL(int? urn)
+        public string SfbURL(int? lookupId, FbType lookupType)
         {
-            return _fbService.SchoolURL(urn);
+            return _fbService.PublicURL(lookupId, lookupType);
         }
     }
 }
