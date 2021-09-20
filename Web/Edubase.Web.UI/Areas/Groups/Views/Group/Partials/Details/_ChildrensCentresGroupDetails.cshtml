@@ -1,0 +1,46 @@
+@using Edubase.Services.Security
+
+@model GroupDetailViewModel
+
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key"><abbr title="Unique Identifier">Unique group identifier (UID)</abbr></dt>
+    <dd class="govuk-summary-list__value">@Model.Group.GroupUId</dd>
+</div>
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">Address</dt>
+    <dd class="govuk-summary-list__value">@(Model.Address ?? "Not recorded")</dd>
+</div>
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">Local authority (LA)</dt>
+    <dd class="govuk-summary-list__value">@(Model.LocalAuthorityName ?? "Not recorded")</dd>
+</div>
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">Group type</dt>
+    <dd class="govuk-summary-list__value">@Model.GroupTypeName</dd>
+</div>
+@if (Model.IsUserLoggedOn)
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Status</dt>
+        <dd class="govuk-summary-list__value">@(Model.GroupStatusName ?? "Not recorded")</dd>
+    </div>
+}
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">@Model.OpenDateLabel</dt>
+    <dd class="govuk-summary-list__value">@(Model.Group.OpenDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+</div>
+@if (Model.IsUserLoggedOn)
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Close date</dt>
+        <dd class="govuk-summary-list__value">@(Model.Group.ClosedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+    </div>
+}
+@if (User.InRole(AuthorizedRoles.CanSeeChildrensCentreGroupManagerEmail))
+{
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Children's centres group manager email</dt>
+        <dd class="govuk-summary-list__value">@(Model.Group.ManagerEmailAddress ?? "Not recorded")</dd>
+    </div>
+}
+
