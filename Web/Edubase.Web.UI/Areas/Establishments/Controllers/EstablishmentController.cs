@@ -202,16 +202,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
             viewModel.jsDisabled = jsDisabled;
 
-            var canproceed = viewModel.LocalAuthorityId != null && viewModel.Name != null && viewModel.EstablishmentTypeId != 0;
+            var step1OK = viewModel.LocalAuthorityId != null && viewModel.Name != null && viewModel.EstablishmentTypeId != 0;
+            var step2OK = viewModel.EducationPhaseId != null && viewModel.GenerateEstabNumber != null;
 
             await PopulateCCSelectLists(viewModel);
 
-            if (viewModel.EstablishmentTypeId == 41 && (jsDisabled == false || routeComplete) && canproceed)
+            if (viewModel.EstablishmentTypeId == 41 && (jsDisabled == false || routeComplete) && step1OK)
             {
                 return await CreateChildrensCentre(viewModel);
             }
 
-            if (viewModel.EstablishmentTypeId == 41 && viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step5 && !routeComplete && canproceed)
+            if (viewModel.EstablishmentTypeId == 41 && viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step5 && !routeComplete && step1OK)
             {
                 viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step5;
                 //need to escape here to redraw the screen and collect additional data
@@ -219,44 +220,40 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
 
             //ME code - for development
-            if (viewModel.jsDisabled == true && viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step3 && !routeComplete && canproceed)
+            if (viewModel.jsDisabled == true && viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step3 && !routeComplete)
             {
                 // we can actively ignore step3, as there is no re-render to the screen we just need to ensure the model is correct as per usual.
                 ModelState.Remove(nameof(viewModel.StepName));
                 ViewBag.JsDisabled = viewModel.jsDisabled;
 
-                switch (viewModel.StepName)
+                if (viewModel.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step5)
                 {
-                    case CreateEstablishmentViewModel.eEstabCreateSteps.Step5:
-                        //need to handle this before step1 due to journey logic
-                        return await CreateChildrensCentre(viewModel);
+                    return await CreateChildrensCentre(viewModel);
+                }
 
-                    case CreateEstablishmentViewModel.eEstabCreateSteps.Step1:
-                        // here we need to see what the user entered in the establishment type,
-                        // then use that to propagate the phase list based on suitable
-                        // options filered by the estabtype2phasemap
+                if (viewModel.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step1 && step1OK)
+                {
+                    var phaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[viewModel.EstablishmentTypeId];
+                    viewModel.EducationPhases = (await _cachedLookupService.EducationPhasesGetAllAsync()).Where(x => phaseMap.Contains(x.Id)).ToSelectList(viewModel.EducationPhaseId);
+                    viewModel.StepName = viewModel.EstablishmentTypeId != 41
+                        ? CreateEstablishmentViewModel.eEstabCreateSteps.Step2
+                        : CreateEstablishmentViewModel.eEstabCreateSteps.Step5;
+                }
 
-                        var phaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[viewModel.EstablishmentTypeId];
-                        viewModel.EducationPhases = (await _cachedLookupService.EducationPhasesGetAllAsync()).Where(x => phaseMap.Contains(x.Id)).ToSelectList(viewModel.EducationPhaseId);
-                        viewModel.StepName = viewModel.EstablishmentTypeId != 41
-                            ? CreateEstablishmentViewModel.eEstabCreateSteps.Step2
-                            : CreateEstablishmentViewModel.eEstabCreateSteps.Step5;
-
-                        return View(viewModel);
-
-                    case CreateEstablishmentViewModel.eEstabCreateSteps.Step2:
-                        // we only need to do anything here if the user opted to enter an establishment number.
-                        if (viewModel.GenerateEstabNumber == false)
-                        {
-                            viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step4;
-                            return View(viewModel);
-                        }
-                        else
-                        {
+                if (viewModel.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step2 && step2OK)
+                {
+                    switch (viewModel.GenerateEstabNumber)
+                    {
+                        case true:
                             viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step3;
                             // if they opted to generate a number, we dont need to re-render the screen, we can just continue to process below
                             break;
-                        }
+                        case false:
+                            viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step4;
+                            return View(viewModel);
+                        default:
+                            break;
+                    };
                 }
             }
             //
