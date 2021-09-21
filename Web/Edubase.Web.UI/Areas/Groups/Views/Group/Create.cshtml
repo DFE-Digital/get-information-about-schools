@@ -80,7 +80,7 @@
             <h2 class="govuk-heading-m">@Model.EntityName.ToSentenceCase() details</h2>
         }
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GroupName)">
-            <label for="GroupName" class="govuk-label">@Model.FieldNamePrefix name</label>
+            <label for="GroupName" class="govuk-label">@Model.GroupTypeLabelPrefix name</label>
             @Html.ValidationMessageFor(x => x.GroupName, null, new { @class = "govuk-error-message" })
             @Html.TextBoxFor(x => x.GroupName, new { @class = "govuk-input" })
         </div>
