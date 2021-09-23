@@ -260,6 +260,7 @@
                         <div class="govuk-grid-column-full">
                             <div class="button-row">
                                 <button type="submit" name="action" value="" class="govuk-button" id="create-submit">Continue</button>
+                                @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
                             </div>
                         </div>
                     }
@@ -302,6 +303,7 @@
                         <div class="govuk-grid-column-full">
                             <div class="button-row">
                                 <button type="submit" name="action" value="" class="govuk-button" id="create-submit">Continue</button>
+                                @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
                             </div>
                         </div>
 
