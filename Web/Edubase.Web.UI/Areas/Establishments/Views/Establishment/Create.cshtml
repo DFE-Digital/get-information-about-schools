@@ -12,8 +12,8 @@
         <div class="govuk-grid-column-full">
             <div class="govuk-breadcrumbs">
                 <ol class="govuk-breadcrumbs__list">
-                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})</li>
-                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
                 </ol>
             </div>
         </div>
@@ -26,190 +26,469 @@
     </div>
 </div>
 
-
-<div id="create-establishment">
-    <div class="govuk-grid-row">
-        @using (Html.BeginForm())
-        {
-            @Html.AntiForgeryToken()
-            @Html.HiddenFor(x => x.ProcessedWarnings)
-
-            <div class="govuk-grid-column-full gias-hidden__from-tablet">
-                <div class="button-row govuk-!-margin-bottom-4">
-                    <button type="submit" name="action" value="" class="govuk-button">Create establishment</button>
-                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button" })
-                </div>
-            </div>
-
-            <div class="govuk-grid-column-one-half">
-                <p>Set up a new establishment record by completing the fields below and selecting create establishment.</p>
-
-                <h2 class="govuk-heading-m">New establishment details</h2>
-
-                @* NAME, LA and TYPE  *@
-                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Name)">
-                    @Html.LabelFor(x => x.Name, "Establishment name", new { @class = "govuk-label" })
-                    @Html.ValidationMessageFor(x => x.Name, null, new { @class = "govuk-error-message" })
-                    @Html.TextBoxFor(x => x.Name, new { @class = "govuk-input" })
-                </div>
-
-                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
-                    @Html.LabelFor(x => x.LocalAuthorityId, "Local authority", new { @class = "govuk-label" })
-                    @Html.ValidationMessageFor(x => x.LocalAuthorityId, null, new { @class = "govuk-error-message" })
-                    @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "Please select", new { @class = "govuk-select" })
-                </div>
-
-                <div id="establishment-type-form-group" class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentTypeId)">
-                    @Html.LabelFor(x => x.EstablishmentTypeId, "Establishment type", new { @class = "govuk-label" })
-                    @Html.ValidationMessageFor(x => x.EstablishmentTypeId, null, new { @class = "govuk-error-message" })
-                    @Html.DropDownListFor(x => x.EstablishmentTypeId, Model.EstablishmentTypes, "Please select", new { @class = "govuk-select" })
-                </div>
-
-                @* PHASE *@
-                <div id="establishment-phase-form-group" class="govuk-form-group hidden @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
-                    @Html.LabelFor(x => x.EducationPhaseId, "Phase of education", new { @class = "govuk-label" })
-                    @Html.ValidationMessageFor(x => x.EducationPhaseId, null, new { @class = "govuk-error-message" })
-                    @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "Please select", new { @class = "govuk-select" })
-                </div>
-
-                @* CHILDRENS CENTRE *@
-                <div class="childrens-centre-fields hidden">
-                    @Html.EditorFor(m => m.OpenDate, new { title = "Open date (required to save record)", fieldsetClassName = "edit-date-fieldset" })
-
-                    @Html.EditorFor(m => m.Address)
-
-                    <h2 class="govuk-heading-m">Contact details</h2>
-                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ManagerFirstName)">
-                        @Html.LabelFor(x => x.ManagerFirstName, new { @class = "govuk-label" })
-                        @Html.ValidationMessageFor(x => x.ManagerFirstName, null, new { @class = "govuk-error-message" })
-                        @Html.TextBoxFor(x => x.ManagerFirstName, new { @class = "govuk-input" })
-                    </div>
-
-                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ManagerLastName)">
-                        @Html.LabelFor(x => x.ManagerLastName, new { @class = "govuk-label" })
-                        @Html.ValidationMessageFor(x => x.ManagerLastName, null, new { @class = "govuk-error-message" })
-                        @Html.TextBoxFor(x => x.ManagerLastName, new { @class = "govuk-input" })
-                    </div>
-
-                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CentreEmail)">
-                        @Html.LabelFor(x => x.CentreEmail, new { @class = "govuk-label" })
-                        @Html.ValidationMessageFor(x => x.CentreEmail, null, new { @class = "govuk-error-message" })
-                        @Html.TextBoxFor(x => x.CentreEmail, new { @class = "govuk-input" })
-                    </div>
-
-                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Telephone)">
-                        @Html.LabelFor(x => x.Telephone, new { @class = "govuk-label" })
-                        @Html.ValidationMessageFor(x => x.Telephone, null, new { @class = "govuk-error-message" })
-                        @Html.TextBoxFor(x => x.Telephone, new { @class = "govuk-input" })
-                    </div>
-
-                    <h2 class="govuk-heading-m">Further details</h2>
-                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.OperationalHoursId)">
-                        @Html.LabelFor(x => x.OperationalHoursId, new { @class = "govuk-label" })
-                        @Html.ValidationMessageFor(x => x.OperationalHoursId, null, new { @class = "govuk-error-message" })
-                        @Html.DropDownListFor(x => x.OperationalHoursId, Model.OperationalHoursOptions, "Please select", new { @class = "govuk-select" })
-                    </div>
-
-                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.NumberOfUnderFives)">
-                        @Html.LabelFor(x => x.NumberOfUnderFives, new { @class = "govuk-label" })
-                        @Html.ValidationMessageFor(x => x.NumberOfUnderFives, null, new { @class = "govuk-error-message" })
-                        @Html.TextBoxFor(x => x.NumberOfUnderFives, new { @class = "govuk-input" })
-                    </div>
-
-                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernanceId)">
-                        @Html.LabelFor(x => x.GovernanceId, new { @class = "govuk-label" })
-                        @Html.ValidationMessageFor(x => x.GovernanceId, null, new { @class = "govuk-error-message" })
-                        @Html.DropDownListFor(x => x.GovernanceId, Model.GovernanceOptions, "Please select", new { @class = "govuk-select" })
-                    </div>
-
-                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernanceDetail)">
-                        @Html.LabelFor(x => x.GovernanceDetail, new { @class = "govuk-label" })
-                        @Html.ValidationMessageFor(x => x.GovernanceDetail, null, new { @class = "govuk-error-message" })
-                        @Html.TextBoxFor(x => x.GovernanceDetail, new { @class = "govuk-input" })
-                    </div>
-
-                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PhaseId)">
-                        @Html.LabelFor(x => x.PhaseId, new { @class = "govuk-label" })
-                        @Html.ValidationMessageFor(x => x.PhaseId, null, new { @class = "govuk-error-message" })
-                        @Html.DropDownListFor(x => x.PhaseId, Model.Phases, "Please select", new { @class = "govuk-select", disabled = "disabled" })
-                    </div>
-
-                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.DisadvantagedAreaId)">
-                        @Html.LabelFor(x => x.DisadvantagedAreaId, new { @class = "govuk-label" })
-                        @Html.ValidationMessageFor(x => x.DisadvantagedAreaId, null, new { @class = "govuk-error-message" })
-                        @Html.DropDownListFor(x => x.DisadvantagedAreaId, Model.DisadvantagedAreaOptions, "Please select", new { @class = "govuk-select" })
-                    </div>
-
-                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.DirectProvisionOfEarlyYears)">
-                        @Html.LabelFor(x => x.DirectProvisionOfEarlyYears, new { @class = "govuk-label" })
-                        @Html.ValidationMessageFor(x => x.DirectProvisionOfEarlyYears, null, new { @class = "govuk-error-message" })
-                        @Html.DropDownListFor(x => x.DirectProvisionOfEarlyYears, Model.DirectProvisionOfEarlyYearsOptions, "Please select", new { @class = "govuk-select" })
-                    </div>
-
-                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentStatusId)">
-                        @Html.LabelFor(x => x.EstablishmentStatusId, new { @class = "govuk-label" })
-                        @Html.ValidationMessageFor(x => x.EstablishmentStatusId, null, new { @class = "govuk-error-message" })
-                        @Html.DropDownListFor(x => x.EstablishmentStatusId, Model.EstablishmentStatusOptions, "Please select", new { @class = "govuk-select" })
-                    </div>
-                </div>
-
-            </div>
-            <div class="govuk-grid-column-full hidden" id="number-gen-options">
-                <fieldset class="govuk-fieldset inline create-estab-number-gen">
-                    <legend id="GenerateEstabNumber" class="govuk-fieldset__legend--s govuk-!-margin-bottom-2">Establishment number</legend>
-                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GenerateEstabNumber)">
-                        @Html.ValidationMessageFor(x => x.GenerateEstabNumber, null, new { @class = "govuk-error-message"})
-                        <div class="govuk-radios">
-                            <div class="govuk-radios__item">
-                                @Html.GiasRadioFor(x => x.GenerateEstabNumber, true, "Generate number",null,  new { id="generate-number-radio", @class="govuk-radios__input"})
-                            </div>
-                            <div class="govuk-radios__item">
-                                @Html.GiasRadioFor(x => x.GenerateEstabNumber, false, "Enter number", null, new { id = "enter-number-radio", @class="govuk-radios__input" })
-                            </div>
-                        </div>
-                    </div>
-                    <div id="enter-number" class="hidden">
-                        <div id="enter-number-form-group" class="govuk-form-group panel panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
-                            @Html.LabelFor(x => x.EstablishmentNumber, "Enter the establishment number", new {@class="govuk-label"})
-                            @Html.ValidationMessageFor(x => x.EstablishmentNumber, null, new { @class = "govuk-error-message"})
-                            @Html.TextBoxFor(x => x.EstablishmentNumber, new { @class = "govuk-input govuk-!-width-one-half" })
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-
-            <div class="govuk-grid-column-full">
-                <div class="button-row">
-                    <button type="submit" name="action" value="" class="govuk-button" id="create-submit">Create establishment</button>
-                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button" })
-                </div>
-            </div>
-
-            if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND))
+@if (ViewBag.JsDisabled != true && ViewBag.JsDisabled != null)
+{
+    @Html.Hidden("jsDisabled", false)
+    <div id="create-establishment">
+        <div class="govuk-grid-row">
+            @using (Html.BeginForm())
             {
-                var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND);
-                <div class="modal-overlay" id="warning-modal-overlay-0"></div>
-                <div class="modal-content" id="warning-modal-content-0" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
-                    @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "modal-exit js-allow-exit" , data_module="govuk-button"})
-                    <div class="modal-inner">
-                        <h3 class="govuk-heading-l" tabindex="0" id="modal-label">Duplicate record</h3>
-                        <p tabindex="0" id="model-desc">The record you are creating for <strong>@(warning.MessageParameters[0])</strong> in <strong>@(warning.MessageParameters[1])</strong> may duplicate existing record(s): <strong>@(warning.MessageParameters[2])</strong>
-                    </div>
-                    <div class="button-row">
-                        <button type="submit" name="action" value="" class="govuk-button">Proceed</button>
-                        @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button" })
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(x => x.ProcessedWarnings)
+                @Html.Hidden("routeComplete", true)
+
+                <div class="govuk-grid-column-full gias-hidden__from-tablet">
+                    <div class="button-row govuk-!-margin-bottom-4">
+                        <button type="submit" name="action" value="" class="govuk-button">Create establishment</button>
+                        @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
                     </div>
                 </div>
-            }
-        }
 
+                <div class="govuk-grid-column-one-half">
+                    <p>Set up a new establishment record by completing the fields below and selecting create establishment.</p>
+
+                    <h2 class="govuk-heading-m">New establishment details</h2>
+
+                    @* NAME, LA and TYPE  *@
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Name)">
+                        @Html.LabelFor(x => x.Name, "Establishment name", new { @class = "govuk-label" })
+                        @Html.ValidationMessageFor(x => x.Name, null, new { @class = "govuk-error-message" })
+                        @Html.TextBoxFor(x => x.Name, new { @class = "govuk-input" })
+                    </div>
+
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
+                        @Html.LabelFor(x => x.LocalAuthorityId, "Local authority", new { @class = "govuk-label" })
+                        @Html.ValidationMessageFor(x => x.LocalAuthorityId, null, new { @class = "govuk-error-message" })
+                        @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "Please select", new { @class = "govuk-select" })
+                    </div>
+
+                    <div id="establishment-type-form-group" class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentTypeId)">
+                        @Html.LabelFor(x => x.EstablishmentTypeId, "Establishment type", new { @class = "govuk-label" })
+                        @Html.ValidationMessageFor(x => x.EstablishmentTypeId, null, new { @class = "govuk-error-message" })
+                        @Html.DropDownListFor(x => x.EstablishmentTypeId, Model.EstablishmentTypes, "Please select", new { @class = "govuk-select" })
+                    </div>
+
+                    @* PHASE *@
+                    <div id="establishment-phase-form-group" class="govuk-form-group hidden @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
+                        @Html.LabelFor(x => x.EducationPhaseId, "Phase of education", new { @class = "govuk-label" })
+                        @Html.ValidationMessageFor(x => x.EducationPhaseId, null, new { @class = "govuk-error-message" })
+                        @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "Please select", new { @class = "govuk-select" })
+                    </div>
+
+                    @* CHILDRENS CENTRE *@
+                    <div class="childrens-centre-fields hidden">
+                        @Html.EditorFor(m => m.OpenDate, new { title = "Open date (required to save record)", fieldsetClassName = "edit-date-fieldset" })
+
+                        @Html.EditorFor(m => m.Address)
+
+                        <h2 class="govuk-heading-m">Contact details</h2>
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ManagerFirstName)">
+                            @Html.LabelFor(x => x.ManagerFirstName, new { @class = "govuk-label" })
+                            @Html.ValidationMessageFor(x => x.ManagerFirstName, null, new { @class = "govuk-error-message" })
+                            @Html.TextBoxFor(x => x.ManagerFirstName, new { @class = "govuk-input" })
+                        </div>
+
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ManagerLastName)">
+                            @Html.LabelFor(x => x.ManagerLastName, new { @class = "govuk-label" })
+                            @Html.ValidationMessageFor(x => x.ManagerLastName, null, new { @class = "govuk-error-message" })
+                            @Html.TextBoxFor(x => x.ManagerLastName, new { @class = "govuk-input" })
+                        </div>
+
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CentreEmail)">
+                            @Html.LabelFor(x => x.CentreEmail, new { @class = "govuk-label" })
+                            @Html.ValidationMessageFor(x => x.CentreEmail, null, new { @class = "govuk-error-message" })
+                            @Html.TextBoxFor(x => x.CentreEmail, new { @class = "govuk-input" })
+                        </div>
+
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Telephone)">
+                            @Html.LabelFor(x => x.Telephone, new { @class = "govuk-label" })
+                            @Html.ValidationMessageFor(x => x.Telephone, null, new { @class = "govuk-error-message" })
+                            @Html.TextBoxFor(x => x.Telephone, new { @class = "govuk-input" })
+                        </div>
+
+                        <h2 class="govuk-heading-m">Further details</h2>
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.OperationalHoursId)">
+                            @Html.LabelFor(x => x.OperationalHoursId, new { @class = "govuk-label" })
+                            @Html.ValidationMessageFor(x => x.OperationalHoursId, null, new { @class = "govuk-error-message" })
+                            @Html.DropDownListFor(x => x.OperationalHoursId, Model.OperationalHoursOptions, "Please select", new { @class = "govuk-select" })
+                        </div>
+
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.NumberOfUnderFives)">
+                            @Html.LabelFor(x => x.NumberOfUnderFives, new { @class = "govuk-label" })
+                            @Html.ValidationMessageFor(x => x.NumberOfUnderFives, null, new { @class = "govuk-error-message" })
+                            @Html.TextBoxFor(x => x.NumberOfUnderFives, new { @class = "govuk-input" })
+                        </div>
+
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernanceId)">
+                            @Html.LabelFor(x => x.GovernanceId, new { @class = "govuk-label" })
+                            @Html.ValidationMessageFor(x => x.GovernanceId, null, new { @class = "govuk-error-message" })
+                            @Html.DropDownListFor(x => x.GovernanceId, Model.GovernanceOptions, "Please select", new { @class = "govuk-select" })
+                        </div>
+
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernanceDetail)">
+                            @Html.LabelFor(x => x.GovernanceDetail, new { @class = "govuk-label" })
+                            @Html.ValidationMessageFor(x => x.GovernanceDetail, null, new { @class = "govuk-error-message" })
+                            @Html.TextBoxFor(x => x.GovernanceDetail, new { @class = "govuk-input" })
+                        </div>
+
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PhaseId)">
+                            @Html.LabelFor(x => x.PhaseId, new { @class = "govuk-label" })
+                            @Html.ValidationMessageFor(x => x.PhaseId, null, new { @class = "govuk-error-message" })
+                            @Html.DropDownListFor(x => x.PhaseId, Model.Phases, "Please select", new { @class = "govuk-select", disabled = "disabled" })
+                        </div>
+
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.DisadvantagedAreaId)">
+                            @Html.LabelFor(x => x.DisadvantagedAreaId, new { @class = "govuk-label" })
+                            @Html.ValidationMessageFor(x => x.DisadvantagedAreaId, null, new { @class = "govuk-error-message" })
+                            @Html.DropDownListFor(x => x.DisadvantagedAreaId, Model.DisadvantagedAreaOptions, "Please select", new { @class = "govuk-select" })
+                        </div>
+
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.DirectProvisionOfEarlyYears)">
+                            @Html.LabelFor(x => x.DirectProvisionOfEarlyYears, new { @class = "govuk-label" })
+                            @Html.ValidationMessageFor(x => x.DirectProvisionOfEarlyYears, null, new { @class = "govuk-error-message" })
+                            @Html.DropDownListFor(x => x.DirectProvisionOfEarlyYears, Model.DirectProvisionOfEarlyYearsOptions, "Please select", new { @class = "govuk-select" })
+                        </div>
+
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentStatusId)">
+                            @Html.LabelFor(x => x.EstablishmentStatusId, new { @class = "govuk-label" })
+                            @Html.ValidationMessageFor(x => x.EstablishmentStatusId, null, new { @class = "govuk-error-message" })
+                            @Html.DropDownListFor(x => x.EstablishmentStatusId, Model.EstablishmentStatusOptions, "Please select", new { @class = "govuk-select" })
+                        </div>
+                    </div>
+
+                </div>
+                <div class="govuk-grid-column-full hidden" id="number-gen-options">
+                    <fieldset class="govuk-fieldset inline create-estab-number-gen">
+                        <legend id="GenerateEstabNumber" class="govuk-fieldset__legend--s govuk-!-margin-bottom-2">Establishment number</legend>
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GenerateEstabNumber)">
+                            @Html.ValidationMessageFor(x => x.GenerateEstabNumber, null, new { @class = "govuk-error-message" })
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    @Html.GiasRadioFor(x => x.GenerateEstabNumber, true, "Generate number", null, new { id = "generate-number-radio", @class = "govuk-radios__input" })
+                                </div>
+                                <div class="govuk-radios__item">
+                                    @Html.GiasRadioFor(x => x.GenerateEstabNumber, false, "Enter number", null, new { id = "enter-number-radio", @class = "govuk-radios__input" })
+                                </div>
+                            </div>
+                        </div>
+                        <div id="enter-number" class="hidden">
+                            <div id="enter-number-form-group" class="govuk-form-group panel panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
+                                @Html.LabelFor(x => x.EstablishmentNumber, "Enter the establishment number", new { @class = "govuk-label" })
+                                @Html.ValidationMessageFor(x => x.EstablishmentNumber, null, new { @class = "govuk-error-message" })
+                                @Html.TextBoxFor(x => x.EstablishmentNumber, new { @class = "govuk-input govuk-!-width-one-half" })
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="govuk-grid-column-full">
+                    <div class="button-row">
+                        <button type="submit" name="action" value="" class="govuk-button" id="create-submit">Create establishment</button>
+                        @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+                    </div>
+                </div>
+
+                if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND))
+                {
+                    var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND);
+                    <div class="modal-overlay" id="warning-modal-overlay-0"></div>
+                    <div class="modal-content" id="warning-modal-content-0" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
+                        @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "modal-exit js-allow-exit", data_module = "govuk-button" })
+                        <div class="modal-inner">
+                            <h3 class="govuk-heading-l" tabindex="0" id="modal-label">Duplicate record</h3>
+                            <p tabindex="0" id="model-desc">The record you are creating for <strong>@(warning.MessageParameters[0])</strong> in <strong>@(warning.MessageParameters[1])</strong> may duplicate existing record(s): <strong>@(warning.MessageParameters[2])</strong>
+                        </div>
+                        <div class="button-row">
+                            <button type="submit" name="action" value="" class="govuk-button">Proceed</button>
+                            @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+                        </div>
+                    </div>
+                }
+            }
+
+        </div>
+    </div>
+}
+
+@*no js - similar to the createchildrenscentre functionality -should be  class="js-hidden" *@
+@*Note - not too certain about this; leaving as-is for now as doesn't display properly otherwise.*@
+<div>
+    <div id="create-establishment">
+        <div class="govuk-grid-row">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(x => x.ProcessedWarnings)
+                @Html.HiddenFor(x => x.StepName)
+                @Html.Hidden("jsDisabled", true)
+
+                <div class="govuk-grid-column-full gias-hidden__from-tablet">
+                    <div class="button-row govuk-!-margin-bottom-4">
+                        <button type="submit" name="action" value="" class="govuk-button">Create establishment</button>
+                        @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+                    </div>
+                </div>
+
+                <div class="govuk-grid-column-one-half">
+                    <p>Set up a new establishment record by completing the fields below and selecting create establishment.</p>
+
+                    <h2 class="govuk-heading-m">New establishment details</h2>
+
+                    @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step1)
+                    {
+                        <div class="govuk-grid-column-one-half">
+                            @* NAME, LA and TYPE  *@
+                            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Name)">
+                                @Html.LabelFor(x => x.Name, "Establishment name", new { @class = "govuk-label" })
+                                @Html.ValidationMessageFor(x => x.Name, null, new { @class = "govuk-error-message" })
+                                @Html.TextBoxFor(x => x.Name, new { @class = "govuk-input" })
+                            </div>
+
+                            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
+                                @Html.LabelFor(x => x.LocalAuthorityId, "Local authority", new { @class = "govuk-label" })
+                                @Html.ValidationMessageFor(x => x.LocalAuthorityId, null, new { @class = "govuk-error-message" })
+                                @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "Please select", new { @class = "govuk-select" })
+                            </div>
+
+                            <div id="establishment-type-form-group" class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentTypeId)">
+                                @Html.LabelFor(x => x.EstablishmentTypeId, "Establishment type", new { @class = "govuk-label" })
+                                @Html.ValidationMessageFor(x => x.EstablishmentTypeId, null, new { @class = "govuk-error-message" })
+                                @Html.DropDownListFor(x => x.EstablishmentTypeId, Model.EstablishmentTypes, "Please select", new { @class = "govuk-select" })
+                            </div>
+                        </div>
+
+                        <div class="govuk-grid-column-full">
+                            <div class="button-row">
+                                <button type="submit" name="action" value="" class="govuk-button" id="create-submit">Continue</button>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.HiddenFor(x => x.Name)
+                        @Html.HiddenFor(x => x.LocalAuthorityId)
+                        @Html.HiddenFor(x => x.EstablishmentTypeId)
+                    }
+
+
+                    @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step2)
+                    {
+                        <div class="govuk-grid-column-one-half">
+                            @* PHASE *@
+                            <div id="establishment-phase-form-group" class="govuk-form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
+                                @Html.LabelFor(x => x.EducationPhaseId, "Phase of education", new { @class = "govuk-label" })
+                                @Html.ValidationMessageFor(x => x.EducationPhaseId, null, new { @class = "govuk-error-message" })
+                                @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "Please select", new { @class = "govuk-select" })
+                            </div>
+
+                            <div class="govuk-grid-column-full" id="number-gen-options">
+                                <fieldset class="govuk-fieldset inline create-estab-number-gen">
+                                    <legend id="GenerateEstabNumber" class="govuk-fieldset__legend--s govuk-!-margin-bottom-2">Establishment number</legend>
+                                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GenerateEstabNumber)">
+                                        @Html.ValidationMessageFor(x => x.GenerateEstabNumber, null, new { @class = "govuk-error-message" })
+                                        <div class="govuk-radios">
+                                            <div class="govuk-radios__item">
+                                                @Html.GiasRadioFor(x => x.GenerateEstabNumber, true, "Generate number", null, new { id = "generate-number-radio", @class = "govuk-radios__input" })
+                                            </div>
+                                            <div class="govuk-radios__item">
+                                                @Html.GiasRadioFor(x => x.GenerateEstabNumber, false, "Enter number", null, new { id = "enter-number-radio", @class = "govuk-radios__input" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <div class="govuk-grid-column-full">
+                            <div class="button-row">
+                                <button type="submit" name="action" value="" class="govuk-button" id="create-submit">Continue</button>
+                            </div>
+                        </div>
+
+                    }
+                    else
+                    {
+                        @Html.HiddenFor(x => x.EducationPhaseId)
+                        @Html.HiddenFor(x => x.GenerateEstabNumber)
+                    }
+
+
+                    @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step3)
+                    {
+                        <p>A new number will be generated for this establishment.</p>
+                    }
+
+
+                    @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step4)
+                    {
+                        <div class="govuk-grid-column-full" id="number-entry">
+                            <fieldset class="govuk-fieldset inline create-estab-number-gen">
+                                <legend id="GenerateEstabNumber" class="govuk-fieldset__legend--s govuk-!-margin-bottom-2">Establishment number</legend>
+                                <div id="enter-number-nonjs">
+                                    <div id="enter-number-form-group" class="govuk-form-group panel panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
+                                        @Html.LabelFor(x => x.EstablishmentNumber, "Enter the establishment number", new { @class = "govuk-label" })
+                                        @Html.ValidationMessageFor(x => x.EstablishmentNumber, null, new { @class = "govuk-error-message" })
+                                        @Html.TextBoxFor(x => x.EstablishmentNumber, new { @class = "govuk-input govuk-!-width-one-half" })
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.HiddenFor(x => x.EstablishmentNumber)
+                    }
+
+                    @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step5)
+                    {
+                        @* CHILDRENS CENTRE *@
+                        <div class="childrens-centre-fields">
+                            @Html.EditorFor(m => m.OpenDate, new { title = "Open date (required to save record)", fieldsetClassName = "edit-date-fieldset" })
+
+                            @Html.EditorFor(m => m.Address)
+
+                            <h2 class="govuk-heading-m">Contact details</h2>
+                            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ManagerFirstName)">
+                                @Html.LabelFor(x => x.ManagerFirstName, new { @class = "govuk-label" })
+                                @Html.ValidationMessageFor(x => x.ManagerFirstName, null, new { @class = "govuk-error-message" })
+                                @Html.TextBoxFor(x => x.ManagerFirstName, new { @class = "govuk-input" })
+                            </div>
+
+                            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ManagerLastName)">
+                                @Html.LabelFor(x => x.ManagerLastName, new { @class = "govuk-label" })
+                                @Html.ValidationMessageFor(x => x.ManagerLastName, null, new { @class = "govuk-error-message" })
+                                @Html.TextBoxFor(x => x.ManagerLastName, new { @class = "govuk-input" })
+                            </div>
+
+                            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CentreEmail)">
+                                @Html.LabelFor(x => x.CentreEmail, new { @class = "govuk-label" })
+                                @Html.ValidationMessageFor(x => x.CentreEmail, null, new { @class = "govuk-error-message" })
+                                @Html.TextBoxFor(x => x.CentreEmail, new { @class = "govuk-input" })
+                            </div>
+
+                            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Telephone)">
+                                @Html.LabelFor(x => x.Telephone, new { @class = "govuk-label" })
+                                @Html.ValidationMessageFor(x => x.Telephone, null, new { @class = "govuk-error-message" })
+                                @Html.TextBoxFor(x => x.Telephone, new { @class = "govuk-input" })
+                            </div>
+
+                            <h2 class="govuk-heading-m">Further details</h2>
+                            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.OperationalHoursId)">
+                                @Html.LabelFor(x => x.OperationalHoursId, new { @class = "govuk-label" })
+                                @Html.ValidationMessageFor(x => x.OperationalHoursId, null, new { @class = "govuk-error-message" })
+                                @Html.DropDownListFor(x => x.OperationalHoursId, Model.OperationalHoursOptions, "Please select", new { @class = "govuk-select" })
+                            </div>
+
+                            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.NumberOfUnderFives)">
+                                @Html.LabelFor(x => x.NumberOfUnderFives, new { @class = "govuk-label" })
+                                @Html.ValidationMessageFor(x => x.NumberOfUnderFives, null, new { @class = "govuk-error-message" })
+                                @Html.TextBoxFor(x => x.NumberOfUnderFives, new { @class = "govuk-input" })
+                            </div>
+
+                            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernanceId)">
+                                @Html.LabelFor(x => x.GovernanceId, new { @class = "govuk-label" })
+                                @Html.ValidationMessageFor(x => x.GovernanceId, null, new { @class = "govuk-error-message" })
+                                @Html.DropDownListFor(x => x.GovernanceId, Model.GovernanceOptions, "Please select", new { @class = "govuk-select" })
+                            </div>
+
+                            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernanceDetail)">
+                                @Html.LabelFor(x => x.GovernanceDetail, new { @class = "govuk-label" })
+                                @Html.ValidationMessageFor(x => x.GovernanceDetail, null, new { @class = "govuk-error-message" })
+                                @Html.TextBoxFor(x => x.GovernanceDetail, new { @class = "govuk-input" })
+                            </div>
+
+                            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PhaseId)">
+                                @Html.LabelFor(x => x.PhaseId, new { @class = "govuk-label" })
+                                @Html.ValidationMessageFor(x => x.PhaseId, null, new { @class = "govuk-error-message" })
+                                @Html.DropDownListFor(x => x.PhaseId, Model.Phases, "Please select", new { @class = "govuk-select", disabled = "disabled" })
+                            </div>
+
+                            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.DisadvantagedAreaId)">
+                                @Html.LabelFor(x => x.DisadvantagedAreaId, new { @class = "govuk-label" })
+                                @Html.ValidationMessageFor(x => x.DisadvantagedAreaId, null, new { @class = "govuk-error-message" })
+                                @Html.DropDownListFor(x => x.DisadvantagedAreaId, Model.DisadvantagedAreaOptions, "Please select", new { @class = "govuk-select" })
+                            </div>
+
+                            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.DirectProvisionOfEarlyYears)">
+                                @Html.LabelFor(x => x.DirectProvisionOfEarlyYears, new { @class = "govuk-label" })
+                                @Html.ValidationMessageFor(x => x.DirectProvisionOfEarlyYears, null, new { @class = "govuk-error-message" })
+                                @Html.DropDownListFor(x => x.DirectProvisionOfEarlyYears, Model.DirectProvisionOfEarlyYearsOptions, "Please select", new { @class = "govuk-select" })
+                            </div>
+
+                            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentStatusId)">
+                                @Html.LabelFor(x => x.EstablishmentStatusId, new { @class = "govuk-label" })
+                                @Html.ValidationMessageFor(x => x.EstablishmentStatusId, null, new { @class = "govuk-error-message" })
+                                @Html.DropDownListFor(x => x.EstablishmentStatusId, Model.EstablishmentStatusOptions, "Please select", new { @class = "govuk-select" })
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.HiddenFor(x => x.OpenDate)
+                        @Html.HiddenFor(x => x.OpenDate.Day)
+                        @Html.HiddenFor(x => x.OpenDate.Month)
+                        @Html.HiddenFor(x => x.OpenDate.Year)
+                        @Html.HiddenFor(x => x.Address.CityOrTown)
+                        @Html.HiddenFor(x => x.Address.Country)
+                        @Html.HiddenFor(x => x.Address.County)
+                        @Html.HiddenFor(x => x.Address.Line1)
+                        @Html.HiddenFor(x => x.Address.Line2)
+                        @Html.HiddenFor(x => x.Address.Line3)
+                        @Html.HiddenFor(x => x.Address.PostCode)
+                        @Html.HiddenFor(x => x.ManagerFirstName)
+                        @Html.HiddenFor(x => x.ManagerLastName)
+                        @Html.HiddenFor(x => x.CentreEmail)
+                        @Html.HiddenFor(x => x.Telephone)
+                        @Html.HiddenFor(x => x.OperationalHoursId)
+                        @Html.HiddenFor(x => x.NumberOfUnderFives)
+                        @Html.HiddenFor(x => x.GovernanceId)
+                        @Html.HiddenFor(x => x.GovernanceDetail)
+                        @Html.HiddenFor(x => x.PhaseId)
+                        @Html.HiddenFor(x => x.DisadvantagedAreaId)
+                        @Html.HiddenFor(x => x.DirectProvisionOfEarlyYears)
+                        @Html.HiddenFor(x => x.EstablishmentStatusId)
+                    }
+
+                    @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step3 ||
+                        Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step4 ||
+                        Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step5)    //Not sure whether to segregate this into an additional step or add the create control to the three journey ends
+                                                                                                   //Might be better to do this bit if StepName is (3,4,5).
+                    {
+                        @Html.Hidden("routeComplete", true)
+                        <div class="govuk-grid-column-full">
+                            <div class="button-row">
+                                <button type="submit" name="action" value="" class="govuk-button" id="create-submit">Create establishment</button>
+                                @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND))
+                {
+                    var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND);
+                    <div class="modal-overlay" id="warning-modal-overlay-0"></div>
+                    <div class="modal-content" id="warning-modal-content-0" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
+                        @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "modal-exit js-allow-exit", data_module = "govuk-button" })
+                        <div class="modal-inner">
+                            <h3 class="govuk-heading-l" tabindex="0" id="modal-label">Duplicate record</h3>
+                            <p tabindex="0" id="model-desc">The record you are creating for <strong>@(warning.MessageParameters[0])</strong> in <strong>@(warning.MessageParameters[1])</strong> may duplicate existing record(s): <strong>@(warning.MessageParameters[2])</strong>
+                        </div>
+                        <div class="button-row">
+                            <button type="submit" name="action" value="" class="govuk-button">Proceed</button>
+                            @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+                        </div>
+                    </div>
+                }
+
+
+            }
+        </div>
     </div>
 </div>
 
 
-
 @section ViewScripts {
-
     <script type="text/javascript" nonce="@Html.ScriptNonce()">
         var type2PhaseMap = @Html.Json(Model.Type2PhaseMap);
         var phases = @Html.Json(Model.EducationPhases);

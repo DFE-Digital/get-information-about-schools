@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using Edubase.Services.Domain;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
         public int? LocalAuthorityId { get; set; }
         public int? EducationPhaseId { get; set; }
         public int EstablishmentTypeId { get; set; }
-        
+
         public IEnumerable<SelectListItem> LocalAuthorities { get; set; }
         public IEnumerable<SelectListItem> EstablishmentTypes { get; set; }
         public IEnumerable<SelectListItem> EducationPhases { get; set; }
@@ -42,5 +42,19 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
                 ProcessedWarnings = true;
             }
         }
+
+        public bool jsDisabled { get; set; } = false;
+
+        public eEstabCreateSteps StepName { get; set; } = eEstabCreateSteps.Step1;
+
+        public enum eEstabCreateSteps
+        {
+            Step1,
+            Step2,
+            Step3,
+            Step4,
+            Step5
+        }
+
     }
 }
