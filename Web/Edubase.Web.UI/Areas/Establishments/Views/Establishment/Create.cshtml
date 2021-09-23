@@ -26,7 +26,7 @@
     </div>
 </div>
 
-@if (ViewBag.JsDisabled != null && false)
+@if (ViewBag.JsDisabled != true && ViewBag.JsDisabled != null)
 {
     @Html.Hidden("jsDisabled", false)
     <div id="create-establishment">
@@ -210,7 +210,8 @@
     </div>
 }
 
-@* no js - similar to the createchildrenscentre functionality - should be  class="js-hidden" *@
+@*no js - similar to the createchildrenscentre functionality -should be  class="js-hidden" *@
+@*Note - not too certain about this; leaving as-is for now as doesn't display properly otherwise.*@
 <div>
     <div id="create-establishment">
         <div class="govuk-grid-row">
@@ -234,7 +235,7 @@
                     <h2 class="govuk-heading-m">New establishment details</h2>
 
                     @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step1)
-                            {
+                    {
                         <div class="govuk-grid-column-one-half">
                             @* NAME, LA and TYPE  *@
                             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Name)">
@@ -262,7 +263,7 @@
                             </div>
                         </div>
                     }
-                            else
+                    else
                     {
                         @Html.HiddenFor(x => x.Name)
                         @Html.HiddenFor(x => x.LocalAuthorityId)
