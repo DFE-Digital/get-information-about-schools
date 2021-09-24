@@ -52,7 +52,7 @@
   .gias-year-input__item {
     margin-right: 0;
   }
-  
+
   .gias-hour-input__item {
     margin-left: 40px;
     margin-right: 10px;
@@ -61,7 +61,7 @@
   .gias-time-spacer__item {
     margin-right: 0;
   }
-  
+
   .gias-minute-input__item {
     margin-left: 10px;
     margin-right: 0;
@@ -94,6 +94,7 @@
 
 .govuk-option-select {
   position: relative;
+  overflow: hidden;
 }
 
 .clear-selections {
