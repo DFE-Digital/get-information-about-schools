@@ -213,18 +213,23 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             var step1OK = viewModel.LocalAuthorityId != null && viewModel.Name != null && viewModel.EstablishmentTypeId != 0;
             var step2OK = viewModel.EducationPhaseId != null && viewModel.GenerateEstabNumber != null;
-            var step5OK = ModelState.IsValid && routeComplete;
 
             await PopulateCCSelectLists(viewModel);
-            var phaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[viewModel.EstablishmentTypeId];
-            viewModel.EducationPhases = (await _cachedLookupService.EducationPhasesGetAllAsync()).Where(x => phaseMap.Contains(x.Id)).ToSelectList(viewModel.EducationPhaseId);
+            if (viewModel.EstablishmentTypeId != 0)
+            {
+                //Bugfix - ensures repopulation of available phases on step 2
+                var phaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[viewModel.EstablishmentTypeId];
+                viewModel.EducationPhases = (await _cachedLookupService.EducationPhasesGetAllAsync()).Where(x => phaseMap.Contains(x.Id)).ToSelectList(viewModel.EducationPhaseId);
+            }
 
             if (viewModel.EstablishmentTypeId == 41 && (jsDisabled == false || routeComplete) && step1OK)
             {
+                //Bugfix - otherwise user gets bounced to start of journey
+                viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step5;
                 return await CreateChildrensCentre(viewModel);
             }
 
-            if (viewModel.EstablishmentTypeId == 41 && viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step5 && !routeComplete && step1OK)
+            if (viewModel.EstablishmentTypeId == 41 && viewModel.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step1 && !routeComplete && step1OK)
             {
                 viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step5;
                 //need to escape here to redraw the screen and collect additional data
@@ -236,11 +241,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 // we can actively ignore step3, as there is no re-render to the screen we just need to ensure the model is correct as per usual.
                 ModelState.Remove(nameof(viewModel.StepName));
                 ViewBag.JsDisabled = viewModel.jsDisabled;
-
-                if (viewModel.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step5)
-                {
-                    return await CreateChildrensCentre(viewModel);
-                }
 
                 if (viewModel.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step2 && step2OK)
                 {
@@ -266,7 +266,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
             }
 
-            if (step5OK)  //attempt to prevent end of route processing until final control is posted
+            if (routeComplete && ModelState.IsValid)  //attempt to prevent end of route processing until final control is posted
             {
                 var apiModel = new EstablishmentModel
                 {
