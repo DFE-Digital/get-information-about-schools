@@ -107,7 +107,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 viewModel.Links = (await _establishmentReadService.GetLinkedEstablishmentsAsync(urn, User)).Select(x => new LinkedEstabViewModel(x)).ToList();
                 viewModel.ActiveRecord = viewModel.Links.First(x => x.Id == linkId);
-                viewModel.ActiveRecord.Address = await ((await _establishmentReadService.GetAsync(viewModel.ActiveRecord.Urn.Value, User)).GetResult()).GetAddressAsync(_cachedLookupService);
+                viewModel.ActiveRecord.Address = await (await _establishmentReadService.GetAsync(viewModel.ActiveRecord.Urn.Value, User)).GetResult().GetAddressAsync(_cachedLookupService);
             }
             else
             {
@@ -130,7 +130,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             Route("Edit/{urn:int}/Link/Create/{urnToLink:int}")]
         public async Task<ActionResult> AddEditLinkAsync(EditEstablishmentLinksViewModel deltaViewModel)
         {
-            if (deltaViewModel.Act == "delete") return await DeleteLinkAsync(deltaViewModel);
+            if (deltaViewModel.Act == "delete")
+            {
+                return await DeleteLinkAsync(deltaViewModel);
+            }
             else
             {
                 var viewModel = UriHelper.DeserializeUrlToken<EditEstablishmentLinksViewModel>(deltaViewModel.StateToken); // avoids more API calls, which are very slow.
@@ -157,11 +160,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     link.LinkDate = viewModel.ActiveRecord.LinkDateEditable.ToDateTime();
                     link.Urn = viewModel.ActiveRecord.Urn;
 
-                    if (!link.Id.HasValue) set.Add(link);
+                    if (!link.Id.HasValue)
+                    {
+                        set.Add(link);
+                    }
 
                     var apiResponse = await _establishmentWriteService.SaveLinkedEstablishmentsAsync(deltaViewModel.Urn.Value, set.ToArray(), User);
 
-                    if (apiResponse.HasErrors) apiResponse.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.GetMessage()));
+                    if (apiResponse.HasErrors)
+                    {
+                        apiResponse.Errors.ForEach(x => ModelState.AddModelError(x.Fields ?? string.Empty, x.GetMessage()));
+                    }
                     else
                     {
                         if (viewModel.ActiveRecord.CreateReverseLink)
@@ -204,6 +213,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             var step1OK = viewModel.LocalAuthorityId != null && viewModel.Name != null && viewModel.EstablishmentTypeId != 0;
             var step2OK = viewModel.EducationPhaseId != null && viewModel.GenerateEstabNumber != null;
+            var step5OK = ModelState.IsValid && routeComplete;
 
             await PopulateCCSelectLists(viewModel);
 
@@ -219,7 +229,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 return View(viewModel);
             }
 
-            //ME code - for development
             if (viewModel.jsDisabled == true && viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step3 && !routeComplete)
             {
                 // we can actively ignore step3, as there is no re-render to the screen we just need to ensure the model is correct as per usual.
@@ -229,15 +238,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 if (viewModel.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step5)
                 {
                     return await CreateChildrensCentre(viewModel);
-                }
-
-                if (viewModel.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step1 && step1OK)
-                {
-                    var phaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[viewModel.EstablishmentTypeId];
-                    viewModel.EducationPhases = (await _cachedLookupService.EducationPhasesGetAllAsync()).Where(x => phaseMap.Contains(x.Id)).ToSelectList(viewModel.EducationPhaseId);
-                    viewModel.StepName = viewModel.EstablishmentTypeId != 41
-                        ? CreateEstablishmentViewModel.eEstabCreateSteps.Step2
-                        : CreateEstablishmentViewModel.eEstabCreateSteps.Step5;
                 }
 
                 if (viewModel.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step2 && step2OK)
@@ -255,55 +255,60 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                             break;
                     };
                 }
-            }
-            //
 
-            if (routeComplete)  //attempt to prevent end of route processing until final control is posted
+                if (viewModel.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step1 && step1OK)
+                {
+                    var phaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[viewModel.EstablishmentTypeId];
+                    viewModel.EducationPhases = (await _cachedLookupService.EducationPhasesGetAllAsync()).Where(x => phaseMap.Contains(x.Id)).ToSelectList(viewModel.EducationPhaseId);
+                    viewModel.StepName = viewModel.EstablishmentTypeId != 41
+                        ? CreateEstablishmentViewModel.eEstabCreateSteps.Step2
+                        : CreateEstablishmentViewModel.eEstabCreateSteps.Step5;
+                }
+            }
+
+            if (step5OK)  //attempt to prevent end of route processing until final control is posted
             {
+                var apiModel = new EstablishmentModel
+                {
+                    Name = viewModel.Name,
+                    EstablishmentNumber = viewModel.EstablishmentNumber.ToInteger(),
+                    EducationPhaseId = viewModel.EducationPhaseId,
+                    TypeId = viewModel.EstablishmentTypeId,
+                    LocalAuthorityId = viewModel.LocalAuthorityId,
+                    CCLAContactDetail = new ChildrensCentreLocalAuthorityDto(),
+                    IEBTModel = new IEBTModel(),
+                    StatusId = (int) eLookupEstablishmentStatus.ProposedToOpen
+                };
+
+                if (viewModel.EstablishmentTypeId == (int) ET.SixthFormCentres) // story: 25821
+                {
+                    apiModel.StatutoryLowAge = 0;
+                    apiModel.StatutoryHighAge = 0;
+                }
+
+                var validation = await _establishmentWriteService.ValidateCreateAsync(apiModel, true, User);
+
+                ApplyCreateEstabValidationErrors(validation);
+
                 if (ModelState.IsValid)
                 {
-                    var apiModel = new EstablishmentModel
-                    {
-                        Name = viewModel.Name,
-                        EstablishmentNumber = viewModel.EstablishmentNumber.ToInteger(),
-                        EducationPhaseId = viewModel.EducationPhaseId,
-                        TypeId = viewModel.EstablishmentTypeId,
-                        LocalAuthorityId = viewModel.LocalAuthorityId,
-                        CCLAContactDetail = new ChildrensCentreLocalAuthorityDto(),
-                        IEBTModel = new IEBTModel(),
-                        StatusId = (int) eLookupEstablishmentStatus.ProposedToOpen
-                    };
+                    viewModel.SetWarnings(validation);
+                    ModelState.Remove(nameof(viewModel.ProcessedWarnings));
+                }
 
-                    if (viewModel.EstablishmentTypeId == (int) ET.SixthFormCentres) // story: 25821
+                if (ModelState.IsValid && !viewModel.WarningsToProcess.Any())
+                {
+                    var response = await _establishmentWriteService.CreateNewAsync(apiModel, viewModel.GenerateEstabNumber.GetValueOrDefault(), User);
+
+                    if (response.Success)
                     {
-                        apiModel.StatutoryLowAge = 0;
-                        apiModel.StatutoryHighAge = 0;
+                        return RedirectToAction(nameof(Details), new { id = response.Response });
                     }
-
-                    var validation = await _establishmentWriteService.ValidateCreateAsync(apiModel, true, User);
-
-                    ApplyCreateEstabValidationErrors(validation);
-
-                    if (ModelState.IsValid)
+                    else
                     {
-                        viewModel.SetWarnings(validation);
-                        ModelState.Remove(nameof(viewModel.ProcessedWarnings));
-                    }
-
-                    if (ModelState.IsValid && !viewModel.WarningsToProcess.Any())
-                    {
-                        var response = await _establishmentWriteService.CreateNewAsync(apiModel, viewModel.GenerateEstabNumber.GetValueOrDefault(), User);
-
-                        if (response.Success)
+                        foreach (var error in response.Errors)
                         {
-                            return RedirectToAction(nameof(Details), new { id = response.Response });
-                        }
-                        else
-                        {
-                            foreach (var error in response.Errors)
-                            {
-                                ModelState.AddModelError(error.Fields, error.GetMessage());
-                            }
+                            ModelState.AddModelError(error.Fields, error.GetMessage());
                         }
                     }
                 }
@@ -389,7 +394,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             Response.Headers.Add("Access-Control-Allow-Origin", "*");
             var result = await _establishmentReadService.GetAsync(urn, User);
-            if (result.ReturnValue == null) return HttpNotFound();
+            if (result.ReturnValue == null)
+            {
+                return HttpNotFound();
+            }
             return new HttpStatusCodeResult(200);
         }
 
@@ -532,18 +540,26 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (viewModel.ActionName == null)
             {
-                if (viewModel.CountryId == Constants.COUNTRY_ID_UK) viewModel.Step = "enterpostcode";
-                else viewModel.Step = "editaddress";
+                viewModel.Step = viewModel.CountryId == Constants.COUNTRY_ID_UK ? "enterpostcode" : "editaddress";
             }
             else if (viewModel.ActionName == "find-address")
             {
                 if (viewModel.CountryId == Constants.COUNTRY_ID_UK)
                 {
                     viewModel.LookupAddresses = await _establishmentReadService.GetAddressesByPostCodeAsync(viewModel.PostCode, User);
-                    if (viewModel.LookupAddresses.Any()) viewModel.Step = "selectaddress";
-                    else ModelState.AddModelError("PostCode", "We could not find any addresses matching that postcode");
+                    if (viewModel.LookupAddresses.Any())
+                    {
+                        viewModel.Step = "selectaddress";
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("PostCode", "We could not find any addresses matching that postcode");
+                    }
                 }
-                else viewModel.Step = "editaddress";
+                else
+                {
+                    viewModel.Step = "editaddress";
+                }
             }
             else if (viewModel.ActionName == "address-selected" && viewModel.SelectedUPRN != null)
             {
@@ -672,7 +688,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     ModelState.AddModelError(nameof(model.LocalAuthorityId), "Please enter a different local authority");
                     ModelState.AddModelError("Address.PostCode", "Please enter a different postcode");
                 }
-                else response.ApplyToModelState(ControllerContext);
+                else
+                {
+                    response.ApplyToModelState(ControllerContext);
+                }
             }
 
             await PopulateCCSelectLists(model);
@@ -1127,8 +1146,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
                     var p = addressViewModel.Target.GetPart("-", 1);
                     var index = p.ToInteger().GetValueOrDefault();
-                    if (index > (viewModel.AdditionalAddresses.Count - 1) || p == "new") viewModel.AdditionalAddresses.Add(map(addressViewModel, new AdditionalAddressModel()));
-                    else map(addressViewModel, viewModel.AdditionalAddresses[index]);
+                    if (index > (viewModel.AdditionalAddresses.Count - 1) || p == "new")
+                    {
+                        viewModel.AdditionalAddresses.Add(map(addressViewModel, new AdditionalAddressModel()));
+                    }
+                    else
+                    {
+                        map(addressViewModel, viewModel.AdditionalAddresses[index]);
+                    }
                 }
                 viewModel.IsDirty = true;
             }
@@ -1174,7 +1199,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 var originalEstabTypeId = (ET) domainModel.TypeId;
                 var originalName = domainModel.Name;
 
-                await ValidateAsync(viewModel, domainModel, (ModelState.IsValid || viewModel.ActionSpecifierCommand == ViewModel.ASConfirm));
+                await ValidateAsync(viewModel, domainModel, ModelState.IsValid || viewModel.ActionSpecifierCommand == ViewModel.ASConfirm);
 
                 if (viewModel.ActionSpecifierCommand == ViewModel.ASAmendEmails && viewModel.IsUpdatingEmailFields.GetValueOrDefault())
                 {
