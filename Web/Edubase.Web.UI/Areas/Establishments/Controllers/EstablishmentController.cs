@@ -216,6 +216,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var step5OK = ModelState.IsValid && routeComplete;
 
             await PopulateCCSelectLists(viewModel);
+            var phaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[viewModel.EstablishmentTypeId];
+            viewModel.EducationPhases = (await _cachedLookupService.EducationPhasesGetAllAsync()).Where(x => phaseMap.Contains(x.Id)).ToSelectList(viewModel.EducationPhaseId);
 
             if (viewModel.EstablishmentTypeId == 41 && (jsDisabled == false || routeComplete) && step1OK)
             {
@@ -258,8 +260,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
                 if (viewModel.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step1 && step1OK)
                 {
-                    var phaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[viewModel.EstablishmentTypeId];
-                    viewModel.EducationPhases = (await _cachedLookupService.EducationPhasesGetAllAsync()).Where(x => phaseMap.Contains(x.Id)).ToSelectList(viewModel.EducationPhaseId);
                     viewModel.StepName = viewModel.EstablishmentTypeId != 41
                         ? CreateEstablishmentViewModel.eEstabCreateSteps.Step2
                         : CreateEstablishmentViewModel.eEstabCreateSteps.Step5;
@@ -287,7 +287,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
 
                 var validation = await _establishmentWriteService.ValidateCreateAsync(apiModel, true, User);
-
                 ApplyCreateEstabValidationErrors(validation);
 
                 if (ModelState.IsValid)
@@ -299,7 +298,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 if (ModelState.IsValid && !viewModel.WarningsToProcess.Any())
                 {
                     var response = await _establishmentWriteService.CreateNewAsync(apiModel, viewModel.GenerateEstabNumber.GetValueOrDefault(), User);
-
                     if (response.Success)
                     {
                         return RedirectToAction(nameof(Details), new { id = response.Response });
@@ -313,7 +311,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     }
                 }
             }
-
             return View(viewModel);
         }
 
