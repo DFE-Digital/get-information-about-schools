@@ -16,8 +16,6 @@ namespace Edubase.Services.Lookup
         Task<IEnumerable<LookupDto>> AdmissionsPoliciesGetAllAsync();
         IEnumerable<LookupDto> BoardingEstablishmentGetAll();
         Task<IEnumerable<LookupDto>> BoardingEstablishmentGetAllAsync();
-        IEnumerable<LookupDto> CASWardsGetAll();
-        Task<IEnumerable<LookupDto>> CASWardsGetAllAsync();
         IEnumerable<LookupDto> CCDeliveryModelsGetAll();
         Task<IEnumerable<LookupDto>> CCDeliveryModelsGetAllAsync();
         IEnumerable<LookupDto> CCDisadvantagedAreasGetAll();

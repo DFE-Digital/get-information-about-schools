@@ -21,12 +21,6 @@ const locationAutoSuggest = (function() {
       maxItems: 10
     },
     {
-      textFieldId: 'CASWardName',
-      suggestions: window.caswards,
-      hiddenFieldId: 'CASWardIdHidden',
-      maxItems: 30
-    },
-    {
       textFieldId: 'LSOAName',
       suggestions: window.lsoas,
       hiddenFieldId: 'LSOAIdHidden',

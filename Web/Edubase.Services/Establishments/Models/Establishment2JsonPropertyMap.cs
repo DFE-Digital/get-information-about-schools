@@ -81,7 +81,6 @@ namespace Edubase.Services.Establishments.Models
             "parliamentaryConstituencyId",
             "urbanRuralId",
             "GSSLAId",
-            "casWardId",
             "MSOAId",
             "LSOAId",
             "furtherEducationTypeId",
