@@ -205,11 +205,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Create")]
-        public async Task<ActionResult> Create(CreateChildrensCentreViewModel viewModel, bool jsDisabled, bool routeComplete = false )
+        public async Task<ActionResult> Create(CreateChildrensCentreViewModel viewModel, bool JsDisabled = false, bool routeComplete = false )
         {
             viewModel.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
-            viewModel.jsDisabled = jsDisabled;
 
             var step1OK = viewModel.LocalAuthorityId != null && viewModel.Name != null && viewModel.EstablishmentTypeId != 0;
             var step2OK = viewModel.EducationPhaseId != null && viewModel.GenerateEstabNumber != null;
@@ -222,7 +221,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 viewModel.EducationPhases = (await _cachedLookupService.EducationPhasesGetAllAsync()).Where(x => phaseMap.Contains(x.Id)).ToSelectList(viewModel.EducationPhaseId);
             }
 
-            if (viewModel.EstablishmentTypeId == 41 && (jsDisabled == false || routeComplete) && step1OK)
+            if (viewModel.EstablishmentTypeId == 41 && routeComplete && step1OK)
             {
                 //Bugfix - otherwise user gets bounced to start of journey
                 viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step5;
@@ -236,11 +235,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 return View(viewModel);
             }
 
-            if (viewModel.jsDisabled == true && viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step3 && !routeComplete)
+            if (viewModel.StepName != CreateEstablishmentViewModel.eEstabCreateSteps.Step3 && !routeComplete)
             {
                 // we can actively ignore step3, as there is no re-render to the screen we just need to ensure the model is correct as per usual.
                 ModelState.Remove(nameof(viewModel.StepName));
-                ViewBag.JsDisabled = viewModel.jsDisabled;
 
                 if (viewModel.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step2 && step2OK)
                 {

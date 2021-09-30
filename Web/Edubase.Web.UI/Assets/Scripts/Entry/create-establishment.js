@@ -1,3 +1,7 @@
+import Vue from 'vue';
+const ceApp = new Vue({
+  el: '#create-establishment'
+});
 import GiasAttachUnload from '../GiasModules/GiasModals/GiasAttachUnload';
 (function () {
   const $radios = $('#number-gen-options').find(':radio');

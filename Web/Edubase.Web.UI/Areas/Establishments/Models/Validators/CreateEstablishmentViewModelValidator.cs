@@ -36,7 +36,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
 
             //First block: JS journey
 
-            When(x => x.jsDisabled == false, () =>
+            When(x => x.jsDisabled == null, () =>
             {
 
                 RuleFor(x => x.Name).NotEmpty().WithMessage("Please enter an establishment name");
