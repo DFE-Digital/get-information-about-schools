@@ -500,8 +500,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             SetProperty(targetViewModel, model, m => m.GSSLAName);
             SetProperty(targetViewModel, model, m => m.Easting);
             SetProperty(targetViewModel, model, m => m.Northing);
-            SetProperty(targetViewModel, model, m => m.CASWardId);
-            SetProperty(targetViewModel, model, m => m.CASWardName);
             SetProperty(targetViewModel, model, m => m.MSOAName);
             SetProperty(targetViewModel, model, m => m.MSOAId);
             SetProperty(targetViewModel, model, m => m.LSOAName);
@@ -736,13 +734,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 viewModel.ParliamentaryConstituencyId = domainModel.ParliamentaryConstituencyId;
             }
 
-            if (domainModel.CASWardId.HasValue)
-            {
-                var lookup = (await _cachedLookupService.CASWardsGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.CASWardId.Value);
-                viewModel.CASWardName = $"{lookup?.Name} [{lookup?.Code}]";
-                viewModel.CASWardId = domainModel.CASWardId;
-            }
-
             if (domainModel.GSSLAId.HasValue)
             {
                 var lookup = (await _cachedLookupService.GSSLAGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.GSSLAId.Value);
@@ -955,7 +946,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             vm.ParliamentaryConstituencyName = await c.GetNameAsync(() => vm.Establishment.ParliamentaryConstituencyId);
             vm.UrbanRuralName = await c.GetNameAsync(() => vm.Establishment.UrbanRuralId);
             vm.GSSLAName = await c.GetNameAsync(() => vm.Establishment.GSSLAId);
-            vm.CASWardName = await c.GetNameAsync(() => vm.Establishment.CASWardId);
             vm.MSOAName = await c.GetNameAsync(() => vm.Establishment.MSOAId);
             vm.LSOAName = await c.GetNameAsync(() => vm.Establishment.LSOAId);
             vm.HeadTitleName = await c.GetNameAsync(() => vm.Establishment.HeadTitleId);
@@ -1046,7 +1036,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.ParliamentaryConstituencies = (await _cachedLookupService.ParliamentaryConstituenciesGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, x.Name)).ToList();
             viewModel.UrbanRuralLookup = (await _cachedLookupService.UrbanRuralGetAllAsync()).ToSelectList(viewModel.UrbanRuralId);
             viewModel.GSSLALookup = (await _cachedLookupService.GSSLAGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, x.Name)).ToList();
-            viewModel.CASWards = (await _cachedLookupService.CASWardsGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, $"{x.Name} [{x.Code}]")).ToList();
             viewModel.PruFulltimeProvisionOptions = (await _cachedLookupService.PruFulltimeProvisionsGetAllAsync()).ToSelectList(viewModel.PruFulltimeProvisionId);
             viewModel.PruEducatedByOthersOptions = (await _cachedLookupService.PruEducatedByOthersGetAllAsync()).ToSelectList(viewModel.PruEducatedByOthersId);
             viewModel.PRUEBDOptions = (await _cachedLookupService.PRUEBDsGetAllAsync()).ToSelectList(viewModel.PRUEBDId);

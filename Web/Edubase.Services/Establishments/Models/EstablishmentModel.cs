@@ -211,9 +211,6 @@ namespace Edubase.Services.Establishments.Models
         [DisplayName("GSS LA code"), JsonProperty("GSSLAId")]
         public int? GSSLAId { get; set; }
 
-        [DisplayName("Census ward"), JsonProperty("casWardId")]
-        public int? CASWardId { get; set; }
-
         [DisplayName("Middle Super Output Area (MSOA)"), JsonProperty("MSOAId")]
         public int? MSOAId { get; set; }
 
