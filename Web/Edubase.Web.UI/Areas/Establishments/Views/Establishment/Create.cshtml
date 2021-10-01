@@ -64,7 +64,7 @@
                     @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "Please select", new { @class = "govuk-select" })
                 </div>
 
-                <div id="establishment-type-form-group" class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentTypeId)">
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentTypeId)">
                     @Html.LabelFor(x => x.EstablishmentTypeId, "Establishment type", new { @class = "govuk-label" })
                     @Html.ValidationMessageFor(x => x.EstablishmentTypeId, null, new { @class = "govuk-error-message" })
                     @Html.DropDownListFor(x => x.EstablishmentTypeId, Model.EstablishmentTypes, "Please select", new { @class = "govuk-select" })
