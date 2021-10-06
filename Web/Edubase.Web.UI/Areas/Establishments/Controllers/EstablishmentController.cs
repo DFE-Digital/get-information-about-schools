@@ -210,22 +210,26 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
 
-            var step1OK = viewModel.LocalAuthorityId != null && viewModel.Name != null && viewModel.EstablishmentTypeId != 0;
+
+
+            var step1OK = viewModel.LocalAuthorityId != null && viewModel.Name != null && viewModel.EstablishmentTypeId != null;
             var step2OK = viewModel.EducationPhaseId != null && viewModel.GenerateEstabNumber != null;
 
             await PopulateCCSelectLists(viewModel);
-            if (viewModel.EstablishmentTypeId != 0)
+            if (viewModel.EstablishmentTypeId != null)
             {
                 //Bugfix - ensures repopulation of available phases on step 2
-                var phaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[viewModel.EstablishmentTypeId];
+                var phaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[viewModel.EstablishmentTypeId.Value];
                 viewModel.EducationPhases = (await _cachedLookupService.EducationPhasesGetAllAsync()).Where(x => phaseMap.Contains(x.Id)).ToSelectList(viewModel.EducationPhaseId);
             }
 
             if (viewModel.EstablishmentTypeId == 41 && routeComplete && step1OK)
             {
-                //Bugfix - otherwise user gets bounced to start of journey
                 viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step5;
-                return await CreateChildrensCentre(viewModel);
+                var result = await new CreateChildrensCentreViewModelValidator(_establishmentReadService).ValidateAsync(viewModel);
+                result.AddToModelState(ModelState, string.Empty);
+
+                return ModelState.IsValid ? await CreateChildrensCentre(viewModel) : View(viewModel);
             }
 
             if (viewModel.EstablishmentTypeId == 41 && viewModel.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step1 && !routeComplete && step1OK)

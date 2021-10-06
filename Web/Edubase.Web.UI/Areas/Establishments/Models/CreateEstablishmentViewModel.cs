@@ -12,7 +12,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
         public string EstablishmentNumber { get; set; }
         public int? LocalAuthorityId { get; set; }
         public int? EducationPhaseId { get; set; }
-        public int EstablishmentTypeId { get; set; }
+        public int? EstablishmentTypeId { get; set; }
 
         public IEnumerable<SelectListItem> LocalAuthorities { get; set; }
         public IEnumerable<SelectListItem> EstablishmentTypes { get; set; }
