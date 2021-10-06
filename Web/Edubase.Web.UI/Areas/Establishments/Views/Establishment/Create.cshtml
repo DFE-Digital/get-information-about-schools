@@ -277,22 +277,20 @@
                             @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "Please select", new { @class = "govuk-select" })
                         </div>
 
-                        <div class="govuk-grid-column-full" id="number-gen-options">
-                            <fieldset class="govuk-fieldset inline create-estab-number-gen">
-                                <legend id="GenerateEstabNumber" class="govuk-fieldset__legend--s govuk-!-margin-bottom-2">Establishment number</legend>
-                                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GenerateEstabNumber)">
-                                    @Html.ValidationMessageFor(x => x.GenerateEstabNumber, null, new { @class = "govuk-error-message" })
-                                    <div class="govuk-radios">
-                                        <div class="govuk-radios__item">
-                                            @Html.GiasRadioFor(x => x.GenerateEstabNumber, true, "Generate number", null, new { id = "generate-number-radio", @class = "govuk-radios__input" })
-                                        </div>
-                                        <div class="govuk-radios__item">
-                                            @Html.GiasRadioFor(x => x.GenerateEstabNumber, false, "Enter number", null, new { id = "enter-number-radio", @class = "govuk-radios__input" })
-                                        </div>
+                        <fieldset class="govuk-fieldset inline create-estab-number-gen">
+                            <legend id="GenerateEstabNumber" class="govuk-fieldset__legend--s govuk-!-margin-bottom-2">Establishment number</legend>
+                            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GenerateEstabNumber)">
+                                @Html.ValidationMessageFor(x => x.GenerateEstabNumber, null, new { @class = "govuk-error-message" })
+                                <div class="govuk-radios">
+                                    <div class="govuk-radios__item">
+                                        @Html.GiasRadioFor(x => x.GenerateEstabNumber, true, "Generate number", null, new { id = "generate-number-radio", @class = "govuk-radios__input" })
+                                    </div>
+                                    <div class="govuk-radios__item">
+                                        @Html.GiasRadioFor(x => x.GenerateEstabNumber, false, "Enter number", null, new { id = "enter-number-radio", @class = "govuk-radios__input" })
                                     </div>
                                 </div>
-                            </fieldset>
-                        </div>
+                            </div>
+                        </fieldset>
 
                         <div class="button-row">
                             <button type="submit" name="action" value="" class="govuk-button" id="create-submit">Continue</button>
@@ -313,18 +311,16 @@
 
                     @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step4)
                     {
-                        <div class="govuk-grid-column-full" id="number-entry">
-                            <fieldset class="govuk-fieldset inline create-estab-number-gen">
-                                <legend id="GenerateEstabNumber" class="govuk-fieldset__legend--s govuk-!-margin-bottom-2">Establishment number</legend>
-                                <div id="enter-number-nonjs">
-                                    <div id="enter-number-form-group" class="govuk-form-group panel panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
-                                        @Html.LabelFor(x => x.EstablishmentNumber, "Enter the establishment number", new { @class = "govuk-label" })
-                                        @Html.ValidationMessageFor(x => x.EstablishmentNumber, null, new { @class = "govuk-error-message" })
-                                        @Html.TextBoxFor(x => x.EstablishmentNumber, new { @class = "govuk-input govuk-!-width-one-half" })
-                                    </div>
+                        <fieldset class="govuk-fieldset inline create-estab-number-gen">
+                            <legend id="GenerateEstabNumber" class="govuk-fieldset__legend--s govuk-!-margin-bottom-2">Establishment number</legend>
+                            <div id="enter-number-nonjs">
+                                <div id="enter-number-form-group" class="govuk-form-group panel panel-border-narrow estab-number-wrap @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
+                                    @Html.LabelFor(x => x.EstablishmentNumber, "Enter the establishment number", new { @class = "govuk-label" })
+                                    @Html.ValidationMessageFor(x => x.EstablishmentNumber, null, new { @class = "govuk-error-message" })
+                                    @Html.TextBoxFor(x => x.EstablishmentNumber, new { @class = "govuk-input govuk-!-width-one-half" })
                                 </div>
-                            </fieldset>
-                        </div>
+                            </div>
+                        </fieldset>
                     }
                     else
                     {
