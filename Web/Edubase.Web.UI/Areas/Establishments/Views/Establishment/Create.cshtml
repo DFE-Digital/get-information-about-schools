@@ -222,13 +222,13 @@
                 @Html.HiddenFor(x => x.StepName)
                 @Html.Hidden("jsDisabled", true)
 
-//Disabled - fix for mobile devices.
-//                <div class="govuk-grid-column-full gias-hidden__from-tablet">
-//                    <div class="button-row govuk-!-margin-bottom-4">
-//                        <button type="submit" name="action" value="" class="govuk-button">Create establishment</button>
-//                       @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
-//                    </div>
-//                </div>
+                //Disabled - fix for mobile devices.
+                //                <div class="govuk-grid-column-full gias-hidden__from-tablet">
+                //                    <div class="button-row govuk-!-margin-bottom-4">
+                //                        <button type="submit" name="action" value="" class="govuk-button">Create establishment</button>
+                //                       @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+                //                    </div>
+                //                </div>
 
                 <div class="govuk-grid-column-one-half">
                     <p>Set up a new establishment record by completing the fields below and selecting create establishment.</p>
@@ -445,8 +445,8 @@
                     @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step3 ||
                         Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step4 ||
                         Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step5)
-                        //Not sure whether to segregate this into an additional step or add the create control to the three journey ends
-                        //Might be better to do this bit if StepName is (3,4,5).
+                    //Not sure whether to segregate this into an additional step or add the create control to the three journey ends
+                    //Might be better to do this bit if StepName is (3,4,5).
                     {
                         @Html.Hidden("routeComplete", true)
                         <div class="button-row">
