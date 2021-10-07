@@ -132,7 +132,6 @@ namespace Edubase.Web.UI.Models
         public string ParliamentaryConstituencyName { get; set; }
         public string UrbanRuralName { get; set; }
         public string GSSLAName { get; set; }
-        public string CASWardName { get; set; }
         public string MSOAName { get; set; }
         public string LSOAName { get; set; }
         public string LocalAuthorityName { get; set; }
@@ -178,7 +177,7 @@ namespace Edubase.Web.UI.Models
         public bool HighPriorityEstablishmentConfirmationPending => (Establishment?.UrgentConfirmationUpToDateRequired).GetValueOrDefault();
         public bool HighPriorityGovernanceConfirmationPending => (Establishment?.UrgentConfirmationUpToDateGovernanceRequired).GetValueOrDefault();
 
-        public string CscpURL => extService.CscpSchoolURL(Establishment.Urn, Establishment.Name);
+        public string CscpURL => extService.CscpURL(Establishment.Urn, Establishment.Name, Establishment.TypeId.OneOfThese(eLookupGroupType.MultiacademyTrust));
         private bool? showCscp;
         public bool ShowCscp
         {
@@ -186,13 +185,13 @@ namespace Edubase.Web.UI.Models
             {
                 if (!showCscp.HasValue)
                 {
-                    showCscp = extService != null && Task.Run(() => extService.CscpCheckExists(Establishment.Urn, Establishment.Name)).Result;
+                    showCscp = extService != null && Task.Run(() => extService.CscpCheckExists(Establishment.Urn, Establishment.Name, Establishment.TypeId.OneOfThese(eLookupGroupType.MultiacademyTrust))).Result;
                 }
                 return showCscp.Value;
             }
         }
 
-        public string FinancialBenchmarkingURL => extService.SfbSchoolURL(Establishment.Urn);
+        public string FinancialBenchmarkingURL => extService.SfbURL(Establishment.Urn, FbType.School);
 
         private bool? showFinancialBenchmarking;
         public bool ShowFinancialBenchmarking
@@ -201,7 +200,7 @@ namespace Edubase.Web.UI.Models
             {
                 if (!showFinancialBenchmarking.HasValue)
                 {
-                    showFinancialBenchmarking = extService != null && Task.Run(() => extService.SfbCheckExists(Establishment.Urn)).Result;
+                    showFinancialBenchmarking = extService != null && Task.Run(() => extService.SfbCheckExists(Establishment.Urn, FbType.School)).Result;
                 }
                 return showFinancialBenchmarking.Value;
             }

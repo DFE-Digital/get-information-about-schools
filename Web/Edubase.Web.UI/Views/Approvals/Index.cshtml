@@ -1,3 +1,5 @@
+@using Edubase.Services.Approvals.Models
+@model ApprovalsViewModel
 @{
     ViewBag.Title = "Review and approve changes";
     ViewBag.bodyClasses = "change-approvals";
@@ -20,6 +22,55 @@
         </div>
     </div>
 }
+@* begin no-js HTML *@
+<div class="js-hidden">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            @if (TempData["ShowSuccess"] != null)
+            {
+                <div class="pending-updates-message js-dismiss-message" role="alert">
+                    <div class="tick"></div>
+                    <p>@TempData["ShowSuccess"]</p>
+                </div>
+            }
+            @Html.Partial("_ValidationSummary", ViewData.ModelState)
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-xl">Manage change requests</h1>
+            <p>
+                As a data owner you have
+                <span class="count">@Model.ApprovalItems.Count</span>
+                change requests that require your review for approval or rejection.
+            </p>
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        @using (Html.BeginRouteForm("PendingApprovalsPost", FormMethod.Post))
+        {
+            <div class="govuk-grid-column-full">
+                <div class="button-row">
+                    <button type="submit" value="@ePendingChangeRequestAction.Approve" name="action" class="govuk-button">Approve</button>
+                    <button type="submit" value="@ePendingChangeRequestAction.Reject" name="action" class="govuk-button">Reject</button>
+                </div>
+            </div>
+            <div class="govuk-grid-column-full govuk-!-padding-top-6">
+                @Html.Partial("_GenericPaginationV2", Model)
+            </div>
+            <div class="govuk-grid-column-full">
+                @Html.Partial("Partials/_ApprovalsTable", Model)
+            </div>
+        }
+        <div class="govuk-grid-column-full govuk-!-padding-top-6">
+            @Html.Partial("_GenericPaginationV2", Model)
+            @helpers.BackToTopLink()
+        </div>
+    </div>
+</div>
+
+@* #### ### JS view starts #### ###  *@
 <div id="change-approvals" v-cloak>
 <div>
     <error-summary :errors="errors" error-title="Incorrect or missing details" />

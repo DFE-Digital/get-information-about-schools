@@ -8,17 +8,17 @@
 }
 
 @section BreadCrumbs {
-   <div class="govuk-grid-row">
-       <div class="govuk-grid-column-full">
-           <div class="govuk-breadcrumbs">
-               <ol class="govuk-breadcrumbs__list">
-                   <li class="govuk-breadcrumbs__list-item">
-                       @Html.ActionLink("Search", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
-                   </li>
-               </ol>
-           </div>
-       </div>
-   </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
 }
 
 <div class="govuk-grid-row">
@@ -66,3 +66,9 @@
 
     }
 }
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @helpers.BackToTopLink()
+    </div>
+</div>

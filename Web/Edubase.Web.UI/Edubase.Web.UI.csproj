@@ -344,6 +344,7 @@
     <Compile Include="Controllers\GlossaryController.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\ValidateEstablishmentJoinedDateModel.cs" />
     <Compile Include="Controllers\GuidanceController.cs" />
+    <Compile Include="Controllers\NotificationsController.cs" />
     <Compile Include="Controllers\SitemapController.cs" />
     <Compile Include="Filters\ModelStateTransfer.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
@@ -357,6 +358,13 @@
     <Compile Include="Helpers\LayoutHelper.cs" />
     <Compile Include="Helpers\NonceHelper.cs" />
     <Compile Include="Helpers\RouteDto.cs" />
+    <Compile Include="Models\Faq\FaqGroupsViewModel.cs" />
+    <Compile Include="Models\Faq\FaqGroupViewModel.cs" />
+    <Compile Include="Models\Notifications\NotificationsBannerViewModel.cs" />
+    <Compile Include="Models\Notifications\NotificationsBannersViewModel.cs" />
+    <Compile Include="Models\Notifications\NotificationsTemplateViewModel.cs" />
+    <Compile Include="Models\Notifications\NotificationsTemplatesViewModel.cs" />
+    <Compile Include="Models\Notifications\Validators\NotificationsBannerValidator.cs" />
     <Compile Include="Models\ProprietorViewModel.cs" />
     <Compile Include="Models\SiteMapNode.cs" />
     <Compile Include="Helpers\ValueProviders\TokenValueProviderFactory.cs" />
@@ -460,9 +468,9 @@
     <Compile Include="Areas\Establishments\Models\Validators\CreateEstablishmentViewModelValidator.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\SearchForEstablishmentViewModelValidator.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\EditEstablishmentLinksViewModelValidator.cs" />
-    <Compile Include="Models\FaqItemViewModel.cs" />
+    <Compile Include="Models\Faq\FaqItemViewModel.cs" />
     <Compile Include="Models\GlossaryItemViewModel.cs" />
-    <Compile Include="Models\FaqViewModel.cs" />
+    <Compile Include="Models\Faq\FaqViewModel.cs" />
     <Compile Include="Models\GlossaryViewModel.cs" />
     <Compile Include="Models\Grid\GovernorGridViewModel.cs" />
     <Compile Include="Models\Grid\GridCellViewModel.cs" />
@@ -473,6 +481,7 @@
     <Compile Include="Models\Search\DownloadErrorViewModel.cs" />
     <Compile Include="Models\Search\LocationDisambiguationViewModel.cs" />
     <Compile Include="Models\Tools\AmalgamateEstablishmentsModel.cs" />
+    <Compile Include="Models\Tools\ApprovalsViewModel.cs" />
     <Compile Include="Models\Tools\BulkAcademiesCreateViewModel.cs" />
     <Compile Include="Models\Tools\IndSchoolsSearchViewModel.cs" />
     <Compile Include="Models\Tools\MergeEstablishmentsModel.cs" />
@@ -480,6 +489,7 @@
     <Compile Include="Models\Tools\PredefinedLASetsViewModel.cs" />
     <Compile Include="Models\UserRolesViewModel.cs" />
     <Compile Include="Models\Validators\ChangeHistoryViewModelValidator.cs" />
+    <Compile Include="Models\ViewModelBase.cs" />
     <Compile Include="Validation\AutofacValidationModule.cs" />
     <Compile Include="Validation\AutofacValidatorFactory.cs" />
     <Compile Include="Helpers\FormatHelpers.cs" />
@@ -612,6 +622,8 @@
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
     <Content Include="robots.txt" />
     <Content Include="App_offline_x.htm" />
+    <Content Include="Views\Approvals\ExplainRejections.cshtml" />
+    <Content Include="Views\Approvals\Partials\_ApprovalsTable.cshtml" />
     <Content Include="Views\Home\Accessibility.cshtml" />
     <Content Include="Views\Tools\DownloadClosedTrustsInformation.cshtml" />
     <Content Include="Views\Tools\Mergers\AmalgamateEstablishments.cshtml" />
@@ -746,6 +758,21 @@
     <Content Include="public\govuk-frontend\fonts\light-94a07e06a1-v2.woff2" />
     <Content Include="public\govuk-frontend\fonts\light-f591b13f7d-v2.woff" />
     <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Shared\_NotificationsBannersPartial.cshtml" />
+    <Content Include="Views\Notifications\Index.cshtml" />
+    <Content Include="Views\Notifications\Banners.cshtml" />
+    <Content Include="Views\Notifications\Templates.cshtml" />
+    <Content Include="Views\Notifications\EditBanner.cshtml" />
+    <Content Include="Views\Notifications\EditTemplate.cshtml" />
+    <Content Include="Views\Shared\_NotificationBannerPartial.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\DateTimeViewModelExtended.cshtml" />
+    <Content Include="Views\Notifications\ConfirmDeleteBanner.cshtml" />
+    <Content Include="Views\Notifications\ConfirmDeleteTemplate.cshtml" />
+    <Content Include="Areas\Establishments\Views\Establishment\EditDetailsEmpty.cshtml" />
+    <Content Include="Views\Faq\Groups.cshtml" />
+    <Content Include="Views\Faq\EditGroup.cshtml" />
+    <Content Include="Areas\Groups\Views\Group\Partials\Details\_ChildrensCentresGroupDetails.cshtml" />
+    <Content Include="Areas\Groups\Views\Group\Partials\Details\_GenericGroupDetails.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>

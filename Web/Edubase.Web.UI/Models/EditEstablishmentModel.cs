@@ -195,8 +195,6 @@ namespace Edubase.Web.UI.Models
         public int? UrbanRuralId { get; set; }
         public int? GSSLAId { get; set; }
         public string GSSLAName { get; set; }
-        public int? CASWardId { get; set; }
-        public string CASWardName { get; set; }
         public string MSOAName { get; set; }
         public int? MSOAId { get; set; }
         public string LSOAName { get; set; }
@@ -256,7 +254,6 @@ namespace Edubase.Web.UI.Models
         public IEnumerable<LookupItemViewModel> ParliamentaryConstituencies { get; internal set; }
         public IEnumerable<SelectListItem> UrbanRuralLookup { get; internal set; }
         public IEnumerable<LookupItemViewModel> GSSLALookup { get; internal set; }
-        public IEnumerable<LookupItemViewModel> CASWards { get; internal set; }
         public IEnumerable<LookupItemViewModel> MSOAs { get; set; }
         public IEnumerable<LookupItemViewModel> LSOAs { get; set; }
 

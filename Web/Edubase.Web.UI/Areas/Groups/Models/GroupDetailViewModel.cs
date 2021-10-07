@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+using Edubase.Services.ExternalLookup;
 using Edubase.Services.Governors.Models;
 
 namespace Edubase.Web.UI.Areas.Groups.Models
@@ -14,6 +16,13 @@ namespace Edubase.Web.UI.Areas.Groups.Models
 
     public class GroupDetailViewModel
     {
+        private readonly IExternalLookupService extService;
+
+        public GroupDetailViewModel(IExternalLookupService extService = null)
+        {
+            this.extService = extService;
+        }
+
         private Dictionary<int, string> _groupTypes2Name = new Dictionary<int, string>
         {
             [(int)GT.ChildrensCentresCollaboration] = "children's centre collaboration",
@@ -55,6 +64,54 @@ namespace Edubase.Web.UI.Areas.Groups.Models
 
         public IEnumerable<LinkedGroupModel> Links { get; set; }
         public GovernorPermissions GovernorPermissions { get; set; }
+
+        public string CscpURL => extService.CscpURL(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor));
+        private bool? showCscp;
+        public bool ShowCscp
+        {
+            get
+            {
+                if (!showCscp.HasValue)
+                {
+                    showCscp = extService != null && Task.Run(() => extService.CscpCheckExists(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor))).Result;
+                }
+                return showCscp.Value;
+            }
+        }
+
+        private Tuple<int?, FbType> FinancialBenchmarkingLookups
+        {
+            get
+            {
+                var lookupId = Group.GroupUId;
+                var lookupType = FbType.Federation;
+
+                if (Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust))
+                {
+                    lookupId = Group.CompaniesHouseNumber.ToInteger();
+                    lookupType = FbType.Trust;
+                }
+
+                return new Tuple<int?, FbType>(lookupId, lookupType);
+            }
+        }
+
+        public string FinancialBenchmarkingURL => extService.SfbURL(FinancialBenchmarkingLookups.Item1, FinancialBenchmarkingLookups.Item2);
+
+
+
+        private bool? showFinancialBenchmarking;
+        public bool ShowFinancialBenchmarking
+        {
+            get
+            {
+                if (!showFinancialBenchmarking.HasValue)
+                {
+                    showFinancialBenchmarking = extService != null && Task.Run(() => extService.SfbCheckExists(FinancialBenchmarkingLookups.Item1, FinancialBenchmarkingLookups.Item2)).Result;
+                }
+                return showFinancialBenchmarking.Value;
+            }
+        }
 
     }
 }

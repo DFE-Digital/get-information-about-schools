@@ -1,0 +1,99 @@
+@using Edubase.Data.Entity
+@model Edubase.Web.UI.Models.Notifications.NotificationsTemplatesViewModel
+@{
+    ViewBag.Title = "Get Information about Schools";
+    ViewBag.SiteSection = "tools";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Notifications", "Index", "Notifications", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+@if (ViewBag.ShowSaved != null && ViewBag.ShowSaved)
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
+                <div class="tick"></div>
+                <p class="message-text" aria-live="polite">Your changes have been saved</p>
+                <a class="cross" href="#">
+                    <span class="govuk-visually-hidden">Dismiss notification</span>
+                </a>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Manage templated messages for notification banners</h1>
+    </div>
+</div>
+
+<div class="button-row govuk-!-margin-bottom-4">
+    @Html.ActionLink(
+        "Back",
+        "Index",
+        "Notifications",
+        null,
+        new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <p>Add, edit or delete templated messages for notification banners.</p>
+    </div>
+
+    <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-m">List of templated messages</h2>
+    </div>
+
+    <div class="govuk-grid-column-full">
+        @Html.RouteLink("Add templated message", "CreateTemplate", null, new { @class = "govuk-button" })
+    </div>
+
+    <div class="govuk-grid-column-full">
+        <dl class="govuk-summary-list gias-summary-top-border">
+            @foreach (var template in Model.Templates)
+            {
+                @RenderTemplate(template)
+            }
+        </dl>
+    </div>
+</div>
+
+
+
+@helper RenderTemplate(NotificationTemplate template)
+{
+    <div class="govuk-summary-list__row">
+        <dd class="govuk-summary-list__value">
+            <div class="govuk-grid-column-three-quarters">
+                <p>@template.Content</p>
+            </div>
+            <div class="govuk-grid-column-one-quarter">
+                @Html.RouteLink("Edit", "EditTemplate", new { id = template.RowKey }, new { @class = "govuk-button govuk-button--secondary" })
+                @Html.RouteLink("Delete", "DeleteTemplate", new { id = template.RowKey }, new { @class = "govuk-button govuk-button--secondary" })
+            </div>
+        </dd>
+    </div>
+}
+
+

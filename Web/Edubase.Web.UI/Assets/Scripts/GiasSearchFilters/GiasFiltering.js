@@ -75,9 +75,9 @@ class GiasFiltering {
       });
       selectedGovRoles = selectedGovRoles.join(', ');
       const lastComma = selectedGovRoles.lastIndexOf(',');
-      selectedGovRoles = selectedGovRoles.substring(0, lastComma) +
+      selectedGovRoles = selectedRoles.length > 1 ? selectedGovRoles.substring(0, lastComma) +
         ' and ' +
-        selectedGovRoles.substring(lastComma + 1, selectedGovRoles.length);
+        selectedGovRoles.substring(lastComma + 1, selectedGovRoles.length) : selectedGovRoles;
 
       $('.conjunction-text').removeClass('hidden');
     } else {
@@ -85,7 +85,8 @@ class GiasFiltering {
       $('.conjunction-text').addClass('hidden');
     }
 
-    $('.governor-roles').html(selectedGovRoles);
+    $('.governor-roles').eq(0).html(selectedGovRoles);
+    $('.governor-roles').slice(1).addClass('hidden');
 
     $('#gov-la-warning').addClass('hidden');
     if (this.shouldShowGovWarning()) {

@@ -130,7 +130,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbGeographyConverter.cs" />
+    <Compile Include="Entity\FaqGroup.cs" />
     <Compile Include="Entity\FaqItem.cs" />
+    <Compile Include="Entity\NotificationBanner.cs" />
+    <Compile Include="Entity\NotificationTemplate.cs" />
     <Compile Include="Entity\Token.cs" />
     <Compile Include="Entity\LocalAuthoritySet.cs" />
     <Compile Include="Entity\GlossaryItem.cs" />
@@ -139,10 +142,13 @@
     <Compile Include="Entity\UserPreference.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DataQualityStatusRepository.cs" />
-    <Compile Include="Repositories\FaqRepository.cs" />
+    <Compile Include="Repositories\FaqGroupRepository.cs" />
+    <Compile Include="Repositories\FaqItemRepository.cs" />
     <Compile Include="Repositories\ILocalAuthoritySetRepository.cs" />
     <Compile Include="Repositories\ITokenRepository.cs" />
     <Compile Include="Repositories\IUserPreferenceRepository.cs" />
+    <Compile Include="Repositories\NotificationBannerRepository.cs" />
+    <Compile Include="Repositories\NotificationTemplateRepository.cs" />
     <Compile Include="Repositories\UserPreferenceRepository.cs" />
     <Compile Include="Repositories\TokenRepository.cs" />
     <Compile Include="Repositories\LocalAuthoritySetRepository.cs" />

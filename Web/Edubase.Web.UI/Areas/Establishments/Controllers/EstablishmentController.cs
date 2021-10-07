@@ -318,11 +318,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
         [HttpGet, Route("Details/{id:int}", Name = "EstabDetails")]
         public async Task<ActionResult> Details(int id, string searchQueryString = "", eLookupSearchSource searchSource = eLookupSearchSource.Establishments,
-            int approved = 0, int pending = 0, int skip = 0, string sortBy = null, bool saved = false)
+            int approved = 0, int pending = 0, int skip = 0, string sortBy = null, bool saved = false, string confirmed = null)
         {
             ViewBag.ApprovedCount = approved;
             ViewBag.PendingApprovalCount = pending;
             ViewBag.ShowSaved = saved;
+            ViewBag.Confirmed = confirmed;
 
             var viewModel = new EstablishmentDetailViewModel(_externalLookupService)
             {
@@ -501,8 +502,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             SetProperty(targetViewModel, model, m => m.GSSLAName);
             SetProperty(targetViewModel, model, m => m.Easting);
             SetProperty(targetViewModel, model, m => m.Northing);
-            SetProperty(targetViewModel, model, m => m.CASWardId);
-            SetProperty(targetViewModel, model, m => m.CASWardName);
             SetProperty(targetViewModel, model, m => m.MSOAName);
             SetProperty(targetViewModel, model, m => m.MSOAId);
             SetProperty(targetViewModel, model, m => m.LSOAName);
@@ -517,10 +516,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpPost, EdubaseAuthorize, Route("Confirm/{urn:int}", Name = "EstablishmentConfirmUpToDate")]
-        public async Task<ActionResult> EstablishmentConfirmUpToDateAsync(int urn)
+        public async Task<ActionResult> EstablishmentConfirmUpToDateAsync(int urn, bool showBanner = false)
         {
             await _establishmentWriteService.ConfirmAsync(urn, User);
-            return RedirectToRoute("EstabDetails", new { id = urn });
+            return RedirectToRoute("EstabDetails", new { id = urn, saved = showBanner, confirmed = "Details" });
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{urn:int}/Address/{target}", Name = "AddOrReplaceEstablishmentAddress")]
@@ -737,13 +736,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 viewModel.ParliamentaryConstituencyId = domainModel.ParliamentaryConstituencyId;
             }
 
-            if (domainModel.CASWardId.HasValue)
-            {
-                var lookup = (await _cachedLookupService.CASWardsGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.CASWardId.Value);
-                viewModel.CASWardName = $"{lookup?.Name} [{lookup?.Code}]";
-                viewModel.CASWardId = domainModel.CASWardId;
-            }
-
             if (domainModel.GSSLAId.HasValue)
             {
                 var lookup = (await _cachedLookupService.GSSLAGetAllAsync()).FirstOrDefault(x => x.Id == domainModel.GSSLAId.Value);
@@ -956,7 +948,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             vm.ParliamentaryConstituencyName = await c.GetNameAsync(() => vm.Establishment.ParliamentaryConstituencyId);
             vm.UrbanRuralName = await c.GetNameAsync(() => vm.Establishment.UrbanRuralId);
             vm.GSSLAName = await c.GetNameAsync(() => vm.Establishment.GSSLAId);
-            vm.CASWardName = await c.GetNameAsync(() => vm.Establishment.CASWardId);
             vm.MSOAName = await c.GetNameAsync(() => vm.Establishment.MSOAId);
             vm.LSOAName = await c.GetNameAsync(() => vm.Establishment.LSOAId);
             vm.HeadTitleName = await c.GetNameAsync(() => vm.Establishment.HeadTitleId);
@@ -1047,7 +1038,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.ParliamentaryConstituencies = (await _cachedLookupService.ParliamentaryConstituenciesGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, x.Name)).ToList();
             viewModel.UrbanRuralLookup = (await _cachedLookupService.UrbanRuralGetAllAsync()).ToSelectList(viewModel.UrbanRuralId);
             viewModel.GSSLALookup = (await _cachedLookupService.GSSLAGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, x.Name)).ToList();
-            viewModel.CASWards = (await _cachedLookupService.CASWardsGetAllAsync()).Select(x => new LookupItemViewModel(x.Id, $"{x.Name} [{x.Code}]")).ToList();
             viewModel.PruFulltimeProvisionOptions = (await _cachedLookupService.PruFulltimeProvisionsGetAllAsync()).ToSelectList(viewModel.PruFulltimeProvisionId);
             viewModel.PruEducatedByOthersOptions = (await _cachedLookupService.PruEducatedByOthersGetAllAsync()).ToSelectList(viewModel.PruEducatedByOthersId);
             viewModel.PRUEBDOptions = (await _cachedLookupService.PRUEBDsGetAllAsync()).ToSelectList(viewModel.PRUEBDId);
@@ -1259,7 +1249,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                         ModelState.Remove(nameof(viewModel.ChangesRequireApprovalCount));
                         ModelState.Remove(nameof(viewModel.ChangesInstantCount));
                     }
-                    else return Redirect(Url.RouteUrl("EstabDetails", new { id = viewModel.Urn.Value }) + viewModel.SelectedTab2DetailPageTabNameMapping[viewModel.SelectedTab]);
+                    else
+                    {
+                        return View("EditDetailsEmpty", viewModel);
+                    }
                 }
                 else
                 {

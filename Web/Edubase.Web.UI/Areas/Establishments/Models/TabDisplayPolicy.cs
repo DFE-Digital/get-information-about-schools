@@ -54,7 +54,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
             Location = new[]
             {
                 policy.RSCRegionId, policy.GovernmentOfficeRegionId, policy.AdministrativeDistrictId, policy.AdministrativeWardId, policy.ParliamentaryConstituencyId,
-                policy.UrbanRuralId, policy.GSSLAId, policy.Easting, policy.Northing, policy.CASWardId, policy.MSOAId, policy.LSOAId
+                policy.UrbanRuralId, policy.GSSLAId, policy.Easting, policy.Northing, policy.MSOAId, policy.LSOAId
             }.Any(x => x == true);
         }
 

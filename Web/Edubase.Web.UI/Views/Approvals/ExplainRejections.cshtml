@@ -1,0 +1,58 @@
+@model Edubase.Services.Approvals.Models.PendingChangeRequestAction
+
+@{
+    ViewBag.Title = "Explain why these requests are being rejected";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Search", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState)
+        <h1 class="govuk-heading-xl">
+            Manage change requests
+        </h1>
+    </div>
+    @using (Html.BeginRouteForm("PendingApprovalsPost", FormMethod.Post))
+    {
+        <div class="govuk-grid-column-full">
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.RejectionReason)">
+                @Html.LabelFor(x => x.RejectionReason, "Reason for rejecting updates", new { @class = "govuk-label"})
+                @Html.ValidationMessageFor(x => x.RejectionReason, null, new {@class = "govuk-error-message"})
+                <div id="more-detail-hint" class="govuk-hint">
+                    Character limit: 1024
+                </div>
+                @Html.TextAreaFor(x => x.RejectionReason, new {@class = "govuk-textarea", rows = "7"})
+
+                @foreach (var rejection in Model.Ids)
+                {
+                    @Html.Hidden("ids", rejection.ToString())
+                }
+               @Html.HiddenFor(x => x.Action)
+            </div>
+        </div>
+
+        <div class="govuk-grid-column-full">
+            <div class="button-row">
+                <button type="submit" name="ActionSpecifier" value="setRejection" class="govuk-button">Submit</button>
+                @Html.ActionLink("Cancel", "Index", "Approvals", new {area = ""}, new {@class = "govuk-button govuk-button--secondary"})
+            </div>
+        </div>
+    }
+</div>

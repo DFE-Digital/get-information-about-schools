@@ -79,6 +79,13 @@ if (schoolNameInput) {
   schoolNameInput.addEventListener('focus', function () {
     openSuggestionsOnFocus(schoolNameAutoSuggest);
   });
+
+  schoolNameInput.addEventListener('paste', function (event) {
+    const pastedValue = (event.clipboardData || window.clipboardData).getData('text');
+    if (pastedValue.length > 2) {
+      getNameSuggestions(pastedValue, schoolNameAutoSuggest, false);
+    }
+  });
 }
 const matNameInput = document.getElementById('GroupSearchModel_Text');
 if (matNameInput) {
@@ -119,5 +126,12 @@ if (matNameInput) {
 
   matNameInput.addEventListener('focus', function () {
     openSuggestionsOnFocus(matNameAutoSuggest);
+  });
+
+  matNameInput.addEventListener('paste', function (event) {
+    const pastedValue = (event.clipboardData || window.clipboardData).getData('text');
+    if (pastedValue.length > 2) {
+      getNameSuggestions(pastedValue, matNameAutoSuggest, true);
+    }
   });
 }

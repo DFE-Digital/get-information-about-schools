@@ -1,8 +1,9 @@
 const Awesomplete = require('awesomplete');
 
-const autocompleteSetup = (function(){
+const autocompleteSetup = (function (){
   const MINCHARS = 2;
   let intervalId;
+  let nameSuggestions;
 
   function getNameSuggestions(searchString, autocomplete, isMatSearch) {
     const url =  isMatSearch ? `/search/suggestgroup?text=${searchString}`: `/search/suggest?text=${searchString}`;
@@ -13,16 +14,21 @@ const autocompleteSetup = (function(){
         url: url,
         dataType: 'json',
         success: function(response) {
-          autocomplete.list = response.filter((school)=> {
+          const suggestions = response.map((school) => {
+            const obj = {};
+            obj.text = school.text;
+            obj.urn  = school.urn;
+            obj.closed = school.closed;
+            return obj;
+          });
+
+          nameSuggestions = suggestions;
+
+          autocomplete.list = suggestions.filter((school) => {
             if (openOnly && openOnly.checked) {
               return !school.closed;
             }
             return true;
-          }).map((school) => {
-            let obj = {};
-            obj.text = school.text;
-            obj.urn = school.urn;
-            return obj;
           });
         }
       });
@@ -59,6 +65,7 @@ const autocompleteSetup = (function(){
         School name
      ################### */
     const schoolNameInput = document.getElementById('TextSearchModel_Text');
+    const schoolNameOpenChx = document.getElementById('include-open-establishments-name');
 
     if (schoolNameInput) {
       const schoolNameAutoSuggest = new Awesomplete(schoolNameInput, {
@@ -99,6 +106,29 @@ const autocompleteSetup = (function(){
         openSuggestionsOnFocus(schoolNameAutoSuggest);
       });
 
+      schoolNameInput.addEventListener('paste', function (event) {
+        const pastedValue = (event.clipboardData || window.clipboardData).getData('text');
+        if (pastedValue.length > 2) {
+          getNameSuggestions(pastedValue, schoolNameAutoSuggest, false);
+        }
+      });
+
+      schoolNameOpenChx.addEventListener('change', function (event) {
+        if (schoolNameInput.value.length > MINCHARS) {
+          schoolNameAutoSuggest.ul.innerHTML = '';
+          if (!schoolNameOpenChx.checked) {
+            schoolNameAutoSuggest.list = nameSuggestions;
+          } else {
+            const openSchools = nameSuggestions.filter(school => {
+              return !school.closed
+            });
+
+            schoolNameAutoSuggest.list = openSchools;
+          }
+
+          schoolNameAutoSuggest.evaluate();
+        }
+      });
     }
     /* ###################
         MAT name
@@ -143,6 +173,13 @@ const autocompleteSetup = (function(){
       matNameInput.addEventListener('focus', function () {
         openSuggestionsOnFocus(matNameAutoSuggest);
       });
+
+      matNameInput.addEventListener('paste', function (event) {
+        const pastedValue = (event.clipboardData || window.clipboardData).getData('text');
+        if (pastedValue.length > 2) {
+          getNameSuggestions(pastedValue, matNameAutoSuggest, true);
+        }
+      });
     }
 
     /* ###################
@@ -186,6 +223,13 @@ const autocompleteSetup = (function(){
 
       schoolLocationInput.addEventListener('focus', function () {
         openSuggestionsOnFocus(schoolLocationAutoSuggest);
+      });
+
+      schoolLocationInput.addEventListener('paste', function(event) {
+        const pastedValue = (event.clipboardData || window.clipboardData).getData('text');
+        if (pastedValue.length > 2) {
+          getLocationSuggestions(pastedValue, schoolLocationAutoSuggest);
+        }
       });
     }
     /* ###################

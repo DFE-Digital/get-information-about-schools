@@ -11,25 +11,13 @@ const locationAutoSuggest = (function() {
     {
       textFieldId: 'AdministrativeWardName',
       suggestions: window.wards,
-      hiddenFieldId: 'AdministrativeDistrictIdHidden',
+      hiddenFieldId: 'AdministrativeWardIdHidden',
       maxItems: 30
     },
     {
       textFieldId: 'ParliamentaryConstituencyName',
       suggestions: window.constituencies,
       hiddenFieldId: 'ParliamentaryConstituencyIdHidden',
-      maxItems: 10
-    },
-    {
-      textFieldId: 'CASWardName',
-      suggestions: window.caswards,
-      hiddenFieldId: 'CASWardIdHidden',
-      maxItems: 30
-    },
-    {
-      textFieldId: 'GSSLAName',
-      suggestions: window.gsslas,
-      hiddenFieldId: 'GSSLAIdHidden',
       maxItems: 10
     },
     {

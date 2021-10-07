@@ -14,6 +14,7 @@ using Edubase.Web.UI.Areas.Groups.Controllers;
 using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Exceptions;
+using Edubase.Services.ExternalLookup;
 using Moq;
 using NUnit.Framework;
 using Shouldly;
@@ -300,6 +301,68 @@ namespace Edubase.UnitTest.Controllers
             Assert.That(vm.Address, Is.EqualTo(domainModel.Address.ToString()));
             Assert.That(vm.CanUserCloseAndMarkAsCreatedInError, Is.False);
             Assert.That(vm.CCLeadCentreUrn, Is.EqualTo(estabList.Single(x => x.CCIsLeadCentre == true).Urn));
+        }
+
+        [Test]
+        [TestCase(eLookupGroupType.SingleacademyTrust, "Single-academy trust name", "Close this single-academy trust and mark as created in error", TestName = "Group_EditDetails_DynamicLabels_SingleacademyTrust")]
+        [TestCase(eLookupGroupType.MultiacademyTrust, "Multi-academy trust name", "Close this multi-academy trust and mark as created in error", TestName = "Group_EditDetails_DynamicLabels_MultiacademyTrust")]
+        [TestCase(eLookupGroupType.ChildrensCentresCollaboration, "Children's centres collaboration name", "", TestName = "Group_EditDetails_DynamicLabels_ChildrensCentresCollaboration")]
+        [TestCase(eLookupGroupType.ChildrensCentresGroup, "Children's centres group name", "", TestName = "Group_EditDetails_DynamicLabels_ChildrensCentresGroup")]
+        [TestCase(eLookupGroupType.Federation, "Federation name", "", TestName = "Group_EditDetails_DynamicLabels_Federation")]
+        [TestCase(eLookupGroupType.Trust, "Foundation trust name", "", TestName = "Group_EditDetails_DynamicLabels_Trust")]
+        [TestCase(eLookupGroupType.SchoolSponsor, "Academy sponsor name", "Close this academy sponsor and mark as created in error", TestName = "Group_EditDetails_DynamicLabels_SchoolSponsor")]
+        public async Task Group_EditDetails_DynamicLabels(eLookupGroupType groupType, string groupNameLabelText, string closeAndMarkAsCreatedInErrorLabelText)
+        {
+            var grs = GetMock<IGroupReadService>();
+            var estabList = CreateEstabList();
+
+            GetMock<IPrincipal>().Setup(x => x.IsInRole(It.IsAny<string>())).Returns(true);
+
+            InjectBasicLAsAndGroupTypes();
+
+            var domainModel = new GroupModel
+            {
+                Address = new AddressDto
+                {
+                    CityOrTown = Faker.Address.City(),
+                    Line1 = Faker.Address.StreetAddress(),
+                    Line2 = Faker.Address.SecondaryAddress(),
+                    Line3 = Faker.Address.UkCounty(),
+                    PostCode = Faker.Address.UkPostCode()
+                },
+                ClosedDate = DateTime.Now,
+                CompaniesHouseNumber = "67829662",
+                ConfirmationUpToDateGovernanceRequired = true,
+                ConfirmationUpToDateGovernance_LastConfirmationDate = DateTime.Now,
+                DelegationInformation = "delinf",
+                GroupId = "123",
+                GroupTypeId = (int) groupType,
+                GroupUId = 123,
+                HeadFirstName = Faker.Name.First(),
+                HeadLastName = Faker.Name.Last(),
+                HeadTitleId = 1,
+                LocalAuthorityId = 1,
+                ManagerEmailAddress = Faker.Internet.Email(),
+                Name = "I am a Group",
+                OpenDate = DateTime.Now.Subtract(TimeSpan.FromDays(10)),
+                StatusId = (int) eLookupGroupStatus.Open
+            };
+
+            grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(domainModel));
+            grs.Setup(x => x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), true)).ReturnsAsync(estabList);
+
+            var response = (ViewResult) await ObjectUnderTest.EditDetails(123);
+            var vm = (GroupEditorViewModel) response.Model;
+
+            Assert.That(vm.GroupNameLabel, Is.EqualTo(groupNameLabelText));
+            if (vm.CanUserCloseAndMarkAsCreatedInError)
+            {
+                Assert.That(vm.CloseAndMarkAsCreatedInErrorLabel, Is.EqualTo(closeAndMarkAsCreatedInErrorLabelText));
+            }
+            else
+            {
+                Assert.That(vm.CloseAndMarkAsCreatedInErrorLabel, Is.Null);
+            }
         }
 
 
@@ -675,6 +738,7 @@ namespace Edubase.UnitTest.Controllers
         }
 
 
+
         [SetUp]
         public void SetUpTest() => SetupObjectUnderTest();
 
@@ -691,6 +755,7 @@ namespace Edubase.UnitTest.Controllers
             AddMock<ICachedLookupService>();
             AddMock<ICompaniesHouseService>();
             AddMock<ISecurityService>();
+            AddMock<IExternalLookupService>();
             RealObjects.Add(new NomenclatureService());
             base.InitialiseMocks();
         }

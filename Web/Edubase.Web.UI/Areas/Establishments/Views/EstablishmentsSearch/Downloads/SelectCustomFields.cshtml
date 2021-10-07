@@ -2,6 +2,7 @@
 @using Microsoft.Ajax.Utilities
 @using Edubase.Web.UI.Areas.Establishments.Models.Search
 @model EstablishmentSearchDownloadViewModel
+@using Edubase.Web.UI.Models.Search
 @using Edubase.Web.UI.Helpers
 @{
     ViewBag.Title = string.Format("Download establishment search results");
@@ -13,28 +14,38 @@
     <meta name="robots" content="noindex,nofollow" />
 }
 
-@section BackLink
+@section BreadCrumbs
 {
     @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
-        {
-            @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class="govuk-back-link" })
-        }
-        else
-        {
-            <a class="govuk-back-link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")>Search</a>
-        }
+    {
+        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-back-link" })
+    }
+    else
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <div class="govuk-breadcrumbs">
+                    <ol class="govuk-breadcrumbs__list">
+                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "", SelectedTab = SearchViewModel.Tab.Establishments }, new { @class = "govuk-breadcrumbs__link" })</li>
+                        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")>Search results</a></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    }
 }
+
 <div id="field-select-app" v-cloak>
     <div class="govuk-grid-row js-show-block">
         <div class="govuk-grid-column-full">
-            <error-summary error-title="There was a problem" :errors="errorMessages"/>
+            <error-summary error-title="There was a problem" :errors="errorMessages" />
         </div>
     </div>
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <div class="no-js-show-block">
-                 @Html.Partial("_ValidationSummary", ViewData.ModelState)
+                @Html.Partial("_ValidationSummary", ViewData.ModelState)
             </div>
             <h1 class="govuk-heading-xl">Download data</h1>
 
@@ -42,32 +53,32 @@
             <h2 class="govuk-heading-m">Select the data you are interested in</h2>
         </div>
     </div>
-    @using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get, new Dictionary<string, object> {["@submit"] = "handleSubmit", ["id"] = "field-selection"}))
+    @using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get, new Dictionary<string, object> { ["@submit"] = "handleSubmit", ["id"] = "field-selection" }))
     {
         <div id="js-field-selection" class="js-show-block">
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <search-by-field-name :fields="fields" :selected-fields="selectedFields"/>
+                    <search-by-field-name :fields="fields" :selected-fields="selectedFields" />
                 </div>
                 <div class="govuk-grid-column-one-third govuk-!-padding-top-6">
-                    <view-switcher :view-as-list="viewAsList"/>
+                    <view-switcher :view-as-list="viewAsList" />
                 </div>
             </div>
 
             <div class="govuk-grid-row" v-if="shouldShowContinue">
                 <div class="govuk-grid-column-one-half">
-                    <input type="submit" class="govuk-button" value="Next"/>
+                    <input type="submit" class="govuk-button" value="Next" />
                 </div>
-                <checkbox-remote-selection :selected-fields="selectedFields"/>
+                <checkbox-remote-selection :selected-fields="selectedFields" />
             </div>
 
             <div class="govuk-grid-row" v-show="!viewAsList">
                 <div class="govuk-grid-column-full">
                     <download-categorised-fields accordion-id="categorised-fields"
-                                  :panel-data="categoryList"
-                                  :selected-fields="selectedFields"
-                                  :has-error="radioError"/>
+                                                 :panel-data="categoryList"
+                                                 :selected-fields="selectedFields"
+                                                 :has-error="radioError" />
                 </div>
             </div>
 
@@ -101,7 +112,7 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full  govuk-!-padding-top-4" v-if="shouldShowContinue">
-                    <input type="submit" class="govuk-button" value="Next"/>
+                    <input type="submit" class="govuk-button" value="Next" />
                 </div>
             </div>
         </div>
@@ -110,13 +121,13 @@
             <input type="hidden" value="true" name="ViewedCustomFields" />
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
-                    <input type="submit" class="govuk-button" value="Next"/>
+                    <input type="submit" class="govuk-button" value="Next" />
                 </div>
             </div>
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
                     <div class="gias-download-fields  @Html.ValidationGroupCssClass("CustomFieldsByCategory")" id="CustomFieldsByCategory">
-                        @Html.ValidationMessageFor(x => x.CustomFieldsByCategory, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.CustomFieldsByCategory, null, new { @class = "govuk-error-message" })
                         @foreach (var fieldCategory in Model.CustomFieldsByCategory)
                         {
 
@@ -145,11 +156,11 @@
             </div>
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full govuk-!-padding-top-4">
-                    <input type="submit" class="govuk-button" value="Next"/>
+                    <input type="submit" class="govuk-button" value="Next" />
                 </div>
             </div>
         </div>
-        @Html.HiddenFieldsFromQueryString(new[] {EstablishmentSearchDownloadViewModel.SelectedCustomFieldsBindAlias})
+        @Html.HiddenFieldsFromQueryString(new[] { EstablishmentSearchDownloadViewModel.SelectedCustomFieldsBindAlias })
     }
 </div>
 

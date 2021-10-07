@@ -66,7 +66,6 @@ namespace Edubase.Services.Lookup
                 { "ParliamentaryConstituencyId", async id => (await ParliamentaryConstituenciesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "UrbanRuralId", async id => (await UrbanRuralGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "GSSLAId", async id => (await GSSLAGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "CASWardId", async id => (await CASWardsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "MSOAId", async id => (await MSOAsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "LSOAId", async id => (await LSOAsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "FurtherEducationTypeId", async id => (await FurtherEducationTypesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
@@ -221,8 +220,8 @@ namespace Edubase.Services.Lookup
 
         public async Task<IEnumerable<LookupDto>> GSSLAGetAllAsync() => await AutoAsync(_lookupService.GSSLAGetAllAsync);
         public IEnumerable<LookupDto> GSSLAGetAll() => Auto(_lookupService.GSSLAGetAll);
-        public async Task<IEnumerable<LookupDto>> CASWardsGetAllAsync() => await AutoAsync(_lookupService.CASWardsGetAllAsync);
-        public IEnumerable<LookupDto> CASWardsGetAll() => Auto(_lookupService.CASWardsGetAll);
+        // public async Task<IEnumerable<LookupDto>> CASWardsGetAllAsync() => await AutoAsync(_lookupService.CASWardsGetAllAsync);
+        // public IEnumerable<LookupDto> CASWardsGetAll() => Auto(_lookupService.CASWardsGetAll);
 
 
         public async Task<IEnumerable<LookupDto>> MSOAsGetAllAsync() => await AutoAsync(_lookupService.MSOAsGetAllAsync);

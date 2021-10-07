@@ -4,6 +4,7 @@
 @using Edubase.Web.UI.Models.Search
 @using Microsoft.Ajax.Utilities
 @using System.Text.RegularExpressions
+@using Edubase.Services.Security
 
 @model GroupDetailViewModel
 @{
@@ -157,368 +158,334 @@
                     <div class="detail-summary">
                         @* <dl class="gias-summary-list gias-summary-list--70 @Html.Conditional(Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.SchoolSponsor, eLookupGroupType.Federation, eLookupGroupType.Trust), "gias-summary-list--40")"> *@
                         <dl class="govuk-summary-list">
-                            @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
+                            @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup))
                             {
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">Companies House number</dt>
-                                    <dd class="govuk-summary-list__value">
-                                        @if (Model.Group.CompaniesHouseNumber.IsNullOrEmpty())
-                                        {
-                                            <text>Not recorded</text>
-                                        }
-                                        else
-                                        {
-                                            <a href="@Model.CompaniesHouseUrl" target="_blank" rel="noopener noreferrer">
-                                                @Model.Group.CompaniesHouseNumber
-                                                <text>(opens in new tab)</text>
-                                            </a>
-                                        }
-                                    </dd>
-                                </div>
+                                Html.RenderPartial(@"Partials\Details\_ChildrensCentresGroupDetails");
                             }
-                            <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key">Type</dt>
-                                <dd class="govuk-summary-list__value">@Model.GroupTypeName</dd>
-                            </div>
-                            <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key">@Model.OpenDateLabel</dt>
-                                <dd class="govuk-summary-list__value">@(Model.Group.OpenDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
-                            </div>
-
-                            @if (Model.IsUserLoggedOn)
+                            else
                             {
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">Closed date</dt>
-                                    <dd class="govuk-summary-list__value">@(Model.Group.ClosedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
-                                </div>
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">Status</dt>
-                                    <dd class="govuk-summary-list__value">@(Model.GroupStatusName ?? "Not recorded")</dd>
-                                </div>
+                                Html.RenderPartial(@"Partials\Details\_GenericGroupDetails");
+                            }
+                            @if (Model.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor, eLookupGroupType.Federation))
+                            {
+                                @OtherServicesLinks()
                             }
 
-                            @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.SingleacademyTrust, eLookupGroupType.MultiacademyTrust))
-                            {
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">Address</dt>
-                                    <dd class="govuk-summary-list__value">@(Model.Address ?? "Not recorded")</dd>
-                                </div>
-                            }
-
-                            @if (Model.Group.GroupTypeId == (int)eLookupGroupType.ChildrensCentresGroup)
-                            {
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">Group manager email</dt>
-                                    <dd class="govuk-summary-list__value">@(Model.Group.ManagerEmailAddress ?? "Not recorded")</dd>
-                                </div>
-                            }
-
-                            @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.ChildrensCentresCollaboration))
-                            {
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">Local authority</dt>
-                                    <dd class="govuk-summary-list__value">@(Model.LocalAuthorityName ?? "Not recorded")</dd>
-                                </div>
-                            }
-
-                            @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor))
-                            {
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">Group ID</dt>
-                                    <dd class="govuk-summary-list__value">@(Model.Group.GroupId.Clean() ?? "Not recorded")</dd>
-                                </div>
-                            }
-                            <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key"><abbr title="Unique Identifier">UID</abbr></dt>
-                                <dd class="govuk-summary-list__value">@Model.Group.GroupUId</dd>
-                            </div>
-
-                            @if (Model.UKPRN.HasValue)
-                            {
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key"><abbr title="UK provider reference number (UKPRN)">UKPRN</abbr></dt>
-                                    <dd class="govuk-summary-list__value">@Model.UKPRN</dd>
-                                </div>
-                            }
 
                         </dl>
+                        </div>
+
+                        @if (Model.CanUserEdit)
+                        {
+                            <div class="govuk-!-padding-top-4">
+                                @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "govuk-button govuk-button--secondary" })
+                            </div>
+
+                        }
+
                     </div>
 
-                    @if (Model.CanUserEdit)
-                    {
-                        <div class="govuk-!-padding-top-4">
-                            @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "govuk-button govuk-button--secondary" })
-                        </div>
+                    <div id="list" class="tab-content">
 
-                    }
-
-                </div>
-
-                <div id="list" class="tab-content">
-
-                    @if (Model.CanUserEdit)
-                    {
+                        @if (Model.CanUserEdit)
+                        {
+                            <div class="govuk-grid-row">
+                                <div class="govuk-grid-column-full">
+                                    @Html.ActionLink($"Edit {Model.EstablishmentsPluralName.ToLower()}", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "govuk-button govuk-button--secondary" })
+                                </div>
+                            </div>
+                        }
                         <div class="govuk-grid-row">
                             <div class="govuk-grid-column-full">
-                                @Html.ActionLink($"Edit {Model.EstablishmentsPluralName.ToLower()}", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "govuk-button govuk-button--secondary" })
-                            </div>
-                        </div>
-                    }
-                    <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-full">
-                            @if (Model.Establishments.Count > 0)
-                            {
-                                <div class="landing-page-map-container">
-                                    <a href="#map" id="map-toggle" class="map-toggle" role="button">Show map</a>
-                                    <div id="group-map" class="school-detail-map"></div>
+                                @if (Model.Establishments.Count > 0)
+                                {
+                                    <div class="landing-page-map-container">
+                                        <a href="#map" id="map-toggle" class="map-toggle" role="button">Show map</a>
+                                        <div id="group-map" class="school-detail-map"></div>
 
-                                </div>
-                            }
-                            <script type="text/javascript" nonce="@Html.ScriptNonce()">
+                                    </div>
+                                }
+                                <script type="text/javascript" nonce="@Html.ScriptNonce()">
                             var establishmentsList = @Html.Json(Model.Establishments);
-                            </script>
-                            <div class="group-establishment-list">
-                                <ul class="school-results-listing">
-                                    @foreach (var result in Model.Establishments)
-                                    {
-                                        <li>
-                                            <h2 class="govuk-heading-s">
-                                                @Html.ActionLink(result.Name, "Details", "Establishment", new { id = result.Urn, area = "Establishments" }, null)
-                                                @if (result.CCIsLeadCentre)
-                                                {
-                                                    <text>(Lead centre)</text>
-                                                }
-                                            </h2>
+                                </script>
+                                <div class="group-establishment-list">
+                                    <ul class="school-results-listing">
+                                        @foreach (var result in Model.Establishments)
+                                        {
+                                            <li>
+                                                <h2 class="govuk-heading-s">
+                                                    @Html.ActionLink(result.Name, "Details", "Establishment", new { id = result.Urn, area = "Establishments" }, null)
+                                                    @if (result.CCIsLeadCentre)
+                                                    {
+                                                        <text>(Lead centre)</text>
+                                                    }
+                                                </h2>
 
-                                            <dl class="govuk-summary-list">
-                                                <div class="govuk-summary-list__row">
+                                                <dl class="govuk-summary-list">
+                                                    <div class="govuk-summary-list__row">
                                                     <dt class="govuk-summary-list__key">Address</dt>
                                                     <dd class="govuk-summary-list__value">@result.Address</dd>
-                                                </div>
-                                                <div class="govuk-summary-list__row">
-                                                    <dt class="govuk-summary-list__key">Phase / type</dt>
-                                                    <dd class="govuk-summary-list__value">
-                                                        @(result.PhaseName ?? "Not recorded"),
-                                                        @(result.TypeName ?? "Not recorded")
-                                                    </dd>
-                                                </div>
-                                                <div class="govuk-summary-list__row">
-                                                    <dt class="govuk-summary-list__key"><abbr title="Unique Reference Number">URN</abbr></dt>
-                                                    <dd class="govuk-summary-list__value">@result.Urn</dd>
-                                                </div>
+                                    </div>
+                                    <div class="govuk-summary-list__row">
+                                        <dt class="govuk-summary-list__key">Phase / type</dt>
+                                        <dd class="govuk-summary-list__value">
+                                            @(result.PhaseName ?? "Not recorded"),
+                                            @(result.TypeName ?? "Not recorded")
+                                        </dd>
+                                    </div>
+                                    <div class="govuk-summary-list__row">
+                                        <dt class="govuk-summary-list__key"><abbr title="Unique Reference Number">URN</abbr></dt>
+                                        <dd class="govuk-summary-list__value">@result.Urn</dd>
+                                    </div>
 
-                                                @if (result.UKPRN.HasValue)
+                                    @if (result.UKPRN.HasValue)
+                                    {
+                                        <div class="govuk-summary-list__row">
+                                            <dt class="govuk-summary-list__key"><abbr title="UK provider reference number (UKPRN)">UKPRN</abbr></dt>
+                                            <dd class="govuk-summary-list__value">@result.UKPRN</dd>
+                                        </div>
+                                    }
+
+                                    <div class="govuk-summary-list__row">
+                                        <dt class="govuk-summary-list__key">
+                                            <abbr title="Local authority - Establishment number">LAESTAB</abbr>
+                                        </dt>
+                                        <dd class="govuk-summary-list__value">@(result.LAESTAB ?? "Not recorded")</dd>
+                                    </div>
+                                    <div class="govuk-summary-list__row">
+                                        <dt class="govuk-summary-list__key">Status</dt>
+                                        <dd class="govuk-summary-list__value">@(result.StatusName ?? "Not recorded")</dd>
+                                    </div>
+                                    <div class="govuk-summary-list__row">
+                                        <dt class="govuk-summary-list__key">Local authority name</dt>
+                                        <dd class="govuk-summary-list__value">@(result.LocalAuthorityName ?? "Not recorded")</dd>
+                                    </div>
+                                    <div class="govuk-summary-list__row">
+                                        <dt class="govuk-summary-list__key">Joined date</dt>
+                                        <dd class="govuk-summary-list__value">@(result.JoinedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+                                    </div>
+                                    </dl>
+
+                                    </li>
+                                }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (Model.CanUserEdit && Model.Establishments.Count > 0)
+                            {
+                                <div class="govuk-grid-row">
+                                    <div class="govuk-grid-column-full">
+                                        @Html.ActionLink($"Edit {Model.EstablishmentsPluralName.ToLower()}", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "govuk-button govuk-button--secondary lower" })
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+
+                        @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
+                        {
+                            <div id="governance" class="tab-content">
+
+                                @if (Model.CanUserEditGovernance)
+                                {
+                                    <div class="govuk-grid-row">
+                                        <div class="govuk-grid-column-full">
+                                            @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "govuk-button govuk-button--secondary" })
+                                        </div>
+                                    </div>
+                                }
+
+                                @{Html.RenderAction("View", "Governor", new { groupUId = Model.Group.GroupUId, viewModel = null as Edubase.Web.UI.Areas.Governors.Models.GovernorsGridViewModel, area = "Governors" });}
+
+                                @if (Model.CanUserEditGovernance)
+                                {
+                                    <div class="govuk-grid-row">
+                                        <div class="govuk-grid-column-full">
+                                            @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "govuk-button govuk-button--secondary" })
+                                        </div>
+                                    </div>
+                                }
+
+                                @helpers.BackToTopLink()
+                            </div>
+                        }
+
+                        @if (Model.IsUserLoggedOn)
+                        {
+                            <div id="change-history" class="tab-content">
+                                <h2 class="govuk-heading-s">Change History</h2>
+                                @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust && Model.GovernorPermissions.Add)
+                                {
+                                    <div class="gias-governance-history-link-container">
+                                        <p>
+                                            @Html.RouteLink("View governance change history", "GroupDetailGovChangeHistory", new { id = Model.Group.GroupUId })
+                                        </p>
+                                    </div>
+                                }
+                                @if (!Model.ChangeHistory.Items.Any())
+                                {
+                                    <p class="govuk-body">There are no change records available at the moment</p>
+                                }
+                                else
+                                {
+                                    <p class="govuk-body">
+                                        @Html.ActionLink("Download data in CSV format", "DownloadChangeHistory", "Downloads", new { groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.csv }, null)
+                                    </p>
+                                    <p class="govuk-body">
+                                        @Html.ActionLink("Download data in XLSX format", "DownloadChangeHistory", "Downloads", new { groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.xlsx }, null)
+                                    </p>
+
+                                    if (Model.ChangeHistory.PageCount > 1)
+                                    {
+                                        <div class="top-pagination">
+                                            @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
+                                        </div>
+                                    }
+
+                                    <table class="approval-changes gias-table govuk-table sortable-table">
+                                        <caption class="govuk-visually-hidden">Change history</caption>
+                                        <thead class="govuk-table__head">
+                                            <tr class="govuk-table__row">
+                                                @foreach (var tableColumn in tableColumns)
                                                 {
-                                                    <div class="govuk-summary-list__row">
-                                                        <dt class="govuk-summary-list__key"><abbr title="UK provider reference number (UKPRN)">UKPRN</abbr></dt>
-                                                        <dd class="govuk-summary-list__value">@result.UKPRN</dd>
-                                                    </div>
+                                                    <th scope="col" class="govuk-table__header">
+                                                        <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
+                                                           class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                                                           aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">
+                                                            @tableColumn.Item2
+                                                        </a>
+                                                    </th>
                                                 }
+                                            </tr>
+                                        </thead>
+                                        <tbody class="govuk-table__body">
+                                            @foreach (var item in Model.ChangeHistory.Items.Where(x => x.RequestType != GroupChangeRequestType.NewGroupLink))
+                                            {
+                                                <tr class="govuk-table__row">
+                                                    <td data-label="Date changed" class="govuk-table__cell">
+                                                        @(item.RequestedDateUtc?.ToString("d MMMM yyyy"))
+                                                    </td>
+                                                    <td data-label="Request type" class="govuk-table__cell">
+                                                        @item.RequestType.GetEnumMember()
+                                                    </td>
+                                                    <td data-label="Changes" class="govuk-table__cell gias-table__mobile-block-label">
+                                                        <dl class="gias-summary-list">
+                                                            @if (item.RequestType == GroupChangeRequestType.GroupChange)
+                                                            {
+                                                                <div class="gias-summary-list__row">
+                                                                <dt class="gias-summary-list__key">Field</dt>
+                                                                <dd class="gias-summary-list__value">@item.Name</dd>
+                                        </div>
+                                        <div class="gias-summary-list__row">
+                                            <dt class="gias-summary-list__key">Old value</dt>
+                                            <dd class="gias-summary-list__value">
+                                                @if (item.OldValue != null && RE.IsMatch(item.OldValue))
+                                                {
+                                                    var parts = item.OldValue.Split('/').Select(Int32.Parse).ToList();
+                                                    var dt = new DateTime(parts[2], parts[1], parts[0]);
+                                                    @dt.ToString("d MMMM yyyy");
+                                                }
+                                                else
+                                                {
+                                                    @item.OldValue
+                                                }
+                                            </dd>
+                                        </div>
+                                        <div class="gias-summary-list__row">
+                                            <dt class="gias-summary-list__key">New value</dt>
+                                            <dd class="gias-summary-list__value">
+                                                @if (item.NewValue != null && RE.IsMatch(item.NewValue))
+                                                {
+                                                    var parts = item.NewValue.Split('/').Select(Int32.Parse).ToList();
+                                                    var dt = new DateTime(parts[2], parts[1], parts[0]);
+                                                    @dt.ToString("d MMMM yyyy");
+                                                }
+                                                else
+                                                {
+                                                    @item.NewValue
+                                                }
+                                            </dd>
+                                        </div>
+                                    }
+                                    else if (item.RequestType != GroupChangeRequestType.NewGroup)
+                                    {
+                                        <div class="gias-summary-list__row">
+                                            <dt class="gias-summary-list__key">Establishment</dt>
+                                            <dd class="gias-summary-list__value">@item.LinkUrn @item.LinkEstablishmentName</dd>
+                                        </div>
+                                        <div class="gias-summary-list__row">
+                                            <dt class="gias-summary-list__key">Link date</dt>
+                                            <dd class="gias-summary-list__value">@(item.LinkDateUtc?.ToString("d MMMM yyyy"))</dd>
+                                        </div>
+                                        <div class="gias-summary-list__row">
+                                            <dt class="gias-summary-list__key">Type</dt>
+                                            <dd class="gias-summary-list__value">@(item.LinkType?.ToString() ?? "Not recorded")</dd>
+                                        </div>
+                                    }
+                                                            </dl>
+                                                            </td>
+                                                            <td data-label="Suggested by" class="govuk-table__cell">
+                                                                @item.OriginatorUserName
+                                                            </td>
+                                                            </tr>
+                                                        }
+                                            </tbody>
+                                            </table>
 
-                                                <div class="govuk-summary-list__row">
-                                                    <dt class="govuk-summary-list__key">
-                                                        <abbr title="Local authority - Establishment number">LAESTAB</abbr>
-                                                    </dt>
-                                                    <dd class="govuk-summary-list__value">@(result.LAESTAB ?? "Not recorded")</dd>
+                                            if (Model.ChangeHistory.PageCount > 1)
+                                            {
+                                                <div class="lower-pagination push--bottom">
+                                                    @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
                                                 </div>
-                                                <div class="govuk-summary-list__row">
-                                                    <dt class="govuk-summary-list__key">Status</dt>
-                                                    <dd class="govuk-summary-list__value">@(result.StatusName ?? "Not recorded")</dd>
-                                                </div>
-                                                <div class="govuk-summary-list__row">
-                                                    <dt class="govuk-summary-list__key">Local authority name</dt>
-                                                    <dd class="govuk-summary-list__value">@(result.LocalAuthorityName ?? "Not recorded")</dd>
-                                                </div>
-                                                <div class="govuk-summary-list__row">
-                                                    <dt class="govuk-summary-list__key">Joined date</dt>
-                                                    <dd class="govuk-summary-list__value">@(result.JoinedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
-                                                </div>
-                                            </dl>
+                                                @helpers.BackToTopLink()
+                                            }
+                                        }
+                            </div>
+                        }
+                    </div>
+                    </div>
+                    </div>
+                    </div>
 
+
+                    @helper OtherServicesLinks()
+                    {
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Data from other services</dt>
+                            <dd class="govuk-summary-list__value">
+                                <ul class="govuk-list">
+                                    @if (!Model.ShowCscp && !Model.ShowFinancialBenchmarking)
+                                    {
+                                        <li>
+                                            Not applicable
+                                        </li>
+                                    }
+                                    @if (Model.ShowCscp)
+                                    {
+                                        <li>
+                                            <a href="@Model.CscpURL" rel="noreferrer noopener" target="_blank">
+                                                Compare school and college performance (opens in new tab)
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (Model.ShowFinancialBenchmarking)
+                                    {
+                                        <li>
+                                            <a href="@Model.FinancialBenchmarkingURL" rel="noreferrer noopener" target="_blank">
+                                                Schools financial benchmarking (opens in new tab)
+                                            </a>
                                         </li>
                                     }
                                 </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    @if (Model.CanUserEdit && Model.Establishments.Count > 0)
-                    {
-                        <div class="govuk-grid-row">
-                            <div class="govuk-grid-column-full">
-                                @Html.ActionLink($"Edit {Model.EstablishmentsPluralName.ToLower()}", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "govuk-button govuk-button--secondary lower" })
-                            </div>
+                            </dd>
                         </div>
                     }
 
-                </div>
-
-                @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
-                {
-                    <div id="governance" class="tab-content">
-
-                        @if (Model.CanUserEditGovernance)
-                        {
-                            <div class="govuk-grid-row">
-                                <div class="govuk-grid-column-full">
-                                    @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "govuk-button govuk-button--secondary" })
-                                </div>
-                            </div>
-                        }
-
-                        @{Html.RenderAction("View", "Governor", new { groupUId = Model.Group.GroupUId, viewModel = null as Edubase.Web.UI.Areas.Governors.Models.GovernorsGridViewModel, area = "Governors" });}
-
-                        @if (Model.CanUserEditGovernance)
-                        {
-                            <div class="govuk-grid-row">
-                                <div class="govuk-grid-column-full">
-                                    @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "govuk-button govuk-button--secondary" })
-                                </div>
-                            </div>
-                        }
-                    </div>
-                }
-
-                @if (Model.IsUserLoggedOn)
-                {
-                    <div id="change-history" class="tab-content">
-                        <h2 class="govuk-heading-s">Change History</h2>
-                        @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust && Model.GovernorPermissions.Add)
-                        {
-                            <div class="gias-governance-history-link-container">
-                                <p>
-                                    @Html.RouteLink("View governance change history", "GroupDetailGovChangeHistory", new { id = Model.Group.GroupUId })
-                                </p>
-                            </div>
-                        }
-                        @if (!Model.ChangeHistory.Items.Any())
-                        {
-                            <p class="govuk-body">There are no change records available at the moment</p>
-                        }
-                        else
-                        {
-                            <p class="govuk-body">
-                                @Html.ActionLink("Download data in CSV format", "DownloadChangeHistory", "Downloads", new { groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.csv }, null)
-                            </p>
-                            <p class="govuk-body">
-                                @Html.ActionLink("Download data in XLSX format", "DownloadChangeHistory", "Downloads", new { groupId = Model.Group.GroupUId, area = "", downloadType = DownloadType.xlsx }, null)
-                            </p>
-
-                            if (Model.ChangeHistory.PageCount > 1)
-                            {
-                                <div class="top-pagination">
-                                    @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
-                                </div>
-                            }
-
-                            <table class="approval-changes gias-table govuk-table sortable-table">
-                                <caption class="govuk-visually-hidden">Change history</caption>
-                                <thead class="govuk-table__head">
-                                    <tr class="govuk-table__row">
-                                        @foreach (var tableColumn in tableColumns)
-                                        {
-                                            <th scope="col" class="govuk-table__header">
-                                                <a href="@Url.SortUrl(tableColumn.Item1, "#change-history")"
-                                                   class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
-                                                   aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">
-                                                    @tableColumn.Item2
-                                                </a>
-                                            </th>
-                                        }
-                                    </tr>
-                                </thead>
-                                <tbody class="govuk-table__body">
-                                    @foreach (var item in Model.ChangeHistory.Items.Where(x => x.RequestType != GroupChangeRequestType.NewGroupLink))
-                                    {
-                                        <tr class="govuk-table__row">
-                                            <td data-label="Date changed" class="govuk-table__cell">
-                                                @(item.RequestedDateUtc?.ToString("d MMMM yyyy"))
-                                            </td>
-                                            <td data-label="Request type" class="govuk-table__cell">
-                                                @item.RequestType.GetEnumMember()
-                                            </td>
-                                            <td data-label="Changes" class="govuk-table__cell gias-table__mobile-block-label">
-                                                <dl class="gias-summary-list">
-                                                    @if (item.RequestType == GroupChangeRequestType.GroupChange)
-                                                    {
-                                                        <div class="gias-summary-list__row">
-                                                            <dt class="gias-summary-list__key">Field</dt>
-                                                            <dd class="gias-summary-list__value">@item.Name</dd>
-                                                        </div>
-                                                        <div class="gias-summary-list__row">
-                                                            <dt class="gias-summary-list__key">Old value</dt>
-                                                            <dd class="gias-summary-list__value">
-                                                                @if (item.OldValue != null && RE.IsMatch(item.OldValue))
-                                                                {
-                                                                    var parts = item.OldValue.Split('/').Select(Int32.Parse).ToList();
-                                                                    var dt = new DateTime(parts[2], parts[1], parts[0]);
-                                                                    @dt.ToString("d MMMM yyyy");
-                                                                }
-                                                                else
-                                                                {
-                                                                    @item.OldValue
-                                                                }
-                                                            </dd>
-                                                        </div>
-                                                        <div class="gias-summary-list__row">
-                                                            <dt class="gias-summary-list__key">New value</dt>
-                                                            <dd class="gias-summary-list__value">
-                                                                @if (item.NewValue != null && RE.IsMatch(item.NewValue))
-                                                                {
-                                                                    var parts = item.NewValue.Split('/').Select(Int32.Parse).ToList();
-                                                                    var dt = new DateTime(parts[2], parts[1], parts[0]);
-                                                                    @dt.ToString("d MMMM yyyy");
-                                                                }
-                                                                else
-                                                                {
-                                                                    @item.NewValue
-                                                                }
-                                                            </dd>
-                                                        </div>
-                                                    }
-                                                    else if (item.RequestType != GroupChangeRequestType.NewGroup)
-                                                    {
-                                                        <div class="gias-summary-list__row">
-                                                            <dt class="gias-summary-list__key">Establishment</dt>
-                                                            <dd class="gias-summary-list__value">@item.LinkUrn @item.LinkEstablishmentName</dd>
-                                                        </div>
-                                                        <div class="gias-summary-list__row">
-                                                            <dt class="gias-summary-list__key">Link date</dt>
-                                                            <dd class="gias-summary-list__value">@(item.LinkDateUtc?.ToString("d MMMM yyyy"))</dd>
-                                                        </div>
-                                                        <div class="gias-summary-list__row">
-                                                            <dt class="gias-summary-list__key">Type</dt>
-                                                            <dd class="gias-summary-list__value">@(item.LinkType?.ToString() ?? "Not recorded")</dd>
-                                                        </div>
-                                                    }
-                                                </dl>
-                                            </td>
-                                            <td data-label="Suggested by" class="govuk-table__cell">
-                                                @item.OriginatorUserName
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-
-                            if (Model.ChangeHistory.PageCount > 1)
-                            {
-                                <div class="lower-pagination push--bottom">
-                                    @Html.Partial("_GenericPaginationV2", Model.ChangeHistory)
-                                </div>
-                                @helpers.BackToTopLink()
-                            }
-                        }
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
-</div>
-
-@section ViewScripts
+                    @section ViewScripts
 {
-    <script nonce="@Html.ScriptNonce()">var mapMode = 'group';</script>
-    <script src="@Html.Raw(Html.GetWebpackScriptUrl("landing-page-bundle.*.js"))"></script>
-}
+                        <script nonce="@Html.ScriptNonce()">var mapMode = 'group';</script>
+                        <script src="@Html.Raw(Html.GetWebpackScriptUrl("landing-page-bundle.*.js"))"></script>
+                    }
 

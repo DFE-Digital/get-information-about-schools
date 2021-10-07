@@ -33,3 +33,27 @@
     border: 0;
   }
 }
+
+.govuk-accordion__buttons {
+  @include govuk-media-query($until: tablet) {
+    margin-top: govuk-spacing(2);
+  }
+  margin-bottom: 0;
+}
+
+.govuk-accordion__section-header-buttons {
+  padding: govuk-spacing(3);
+  padding-right: 0;
+  
+  @include govuk-media-query($from: tablet) {
+    border-top: 1px solid #b1b4b6;
+    padding-right: govuk-spacing(3);
+  }
+}
+ 
+.govuk-accordion-user-content {
+  @include govuk-media-query($until: tablet) {
+    padding-bottom: govuk-spacing(8);
+    margin-top: 0;
+  }
+}

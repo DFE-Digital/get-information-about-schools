@@ -11,3 +11,17 @@
     padding-bottom: govuk-spacing(2);
   }
 }
+
+.gias-columns-3 {
+  columns: 3;
+  column-gap: govuk-spacing(6);
+
+  @include govuk-media-query($until: tablet) {
+    columns: 1;
+  }
+
+  li {
+    break-inside: avoid;
+    padding-bottom: govuk-spacing(2);
+  }
+}

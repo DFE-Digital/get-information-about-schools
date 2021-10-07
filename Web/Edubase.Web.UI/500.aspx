@@ -164,9 +164,10 @@
                     <h2 class="govuk-visually-hidden">Support links</h2>
                     <ul class="govuk-footer__inline-list">
                         <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="/Contact">Contact</a></li>
-                        <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="/cookies">Cookies</a></li>
                         <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="/glossary">Glossary</a></li>
                         <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="/Guidance">Guidance</a></li>
+                        <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="/Privacy">Privacy</a></li>
+                        <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="/cookies">Cookies</a></li>
                         <li class="govuk-footer__inline-list-item"><a class="govuk-footer__link" href="/accessibility">Accessibility statement</a></li>
 
                     </ul>

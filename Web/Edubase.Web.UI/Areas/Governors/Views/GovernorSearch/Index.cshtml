@@ -11,13 +11,20 @@
 
 @section Head
 {
-    <meta name="robots" content="noindex,nofollow"/>
+    <meta name="robots" content="noindex,nofollow" />
 }
 
-
-@section BackLink
+@section BreadCrumbs
 {
-    @Html.ActionLink("Search", "Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Governors, gsearch = gSearch}, new {@class = "govuk-back-link"})
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "", SelectedTab = SearchViewModel.Tab.Governors, gsearch = gSearch }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
 }
 
 <div class="govuk-grid-row">
@@ -65,7 +72,8 @@
 
                 @if (Model.SelectedRoleIds.Any())
                 {
-                    if (Model.GovernorSearchModel.Surname.Clean() != null || Model.GovernorSearchModel.Forename.Clean() != null)
+                    if (!string.IsNullOrEmpty(Model.GovernorSearchModel.Surname.Clean())  || !string.IsNullOrEmpty(Model.GovernorSearchModel.Forename.Clean())
+                        && Model.SelectedRoleIds.Count() > 1)
                     {
                         <span class="conjunction-text">and </span>
                     }
@@ -79,8 +87,8 @@
                 else
                 {
                     <text>for </text>
+                    <text>roles <span class="governor-roles">@Html.Raw(Model.RoleNames)</span></text>
                 }
-                <text>roles <span class="governor-roles">@Html.Raw(Model.RoleNames)</span></text>
 
             </p>
         </div>
@@ -98,7 +106,7 @@
                         <a href="#results-container" class="govuk-skip-link">Skip filters</a>
                         <a href="#" class="add-clear-filters" id="clear-filters" role="button">Clear all filters</a>
 
-                        <input type="hidden" id="client-only-searchtype" value="GovernorsAll"/>
+                        <input type="hidden" id="client-only-searchtype" value="GovernorsAll" />
                         <div class="govuk-option-select js-collapsible"
                              id="option-select-sort-by" role="search">
                             <div class="container-head js-container-head">
@@ -127,7 +135,7 @@
                                         <legend class="govuk-visually-hidden">Select an option below to filter the results</legend>
                                         <div class="govuk-checkboxes gias-filter-checkboxes">
                                             <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
-                                                <input id="govrole_all" class="select-all govuk-checkboxes__input" type="checkbox"/>
+                                                <input id="govrole_all" class="select-all govuk-checkboxes__input" type="checkbox" />
                                                 <label for="govrole_all" class="govuk-checkboxes__label">
                                                     All
                                                 </label>
@@ -137,7 +145,7 @@
                                             @foreach (var item in Model.GovernorRoles.OrderBy(x => x.Name))
                                             {
                                                 <div class="govuk-checkboxes__item">
-                                                    <input name="@GovernorSearchViewModel.BIND_ALIAS_ROLE_ID" class="govuk-checkboxes__input trigger-result-update" value="@item.Id" id="role_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedRoleIds.Contains(item.Id), "checked")/>
+                                                    <input name="@GovernorSearchViewModel.BIND_ALIAS_ROLE_ID" class="govuk-checkboxes__input trigger-result-update" value="@item.Id" id="role_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedRoleIds.Contains(item.Id), "checked") />
                                                     <label for="role_@item.Id" class="govuk-checkboxes__label">
                                                         @item
                                                     </label>
@@ -163,7 +171,7 @@
                                         <legend class="govuk-visually-hidden">Select an option below to filter the results</legend>
                                         <div class="govuk-checkboxes gias-filter-checkboxes">
                                             <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
-                                                <input id="grouptype_all" class="govuk-checkboxes__input select-all" type="checkbox"/>
+                                                <input id="grouptype_all" class="govuk-checkboxes__input select-all" type="checkbox" />
                                                 <label for="grouptype_all" class="govuk-checkboxes__label">
                                                     All
                                                 </label>
@@ -173,7 +181,7 @@
                                             @foreach (var item in Model.GovernorTypeFlags.OrderBy(x => x.Name))
                                             {
                                                 <div class="govuk-checkboxes__item">
-                                                    <input name="g" class="govuk-checkboxes__input trigger-result-update" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGovernorTypeFlagIds.Contains(item.Id), "checked")/>
+                                                    <input name="g" class="govuk-checkboxes__input trigger-result-update" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGovernorTypeFlagIds.Contains(item.Id), "checked") />
                                                     <label for="group-type_@item.Id" class="govuk-checkboxes__label">
                                                         @item
                                                     </label>
@@ -189,7 +197,7 @@
 
                         @Selector("Local authority", GovernorSearchViewModel.BIND_ALIAS_LAIDS, Model.LocalAuthorities.OrderBy(x => x.Name), Model.SelectedLocalAuthorityIds, filterRefine: true, isExtraFilter: true)
 
-                        <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit"/>
+                        <input type="submit" value="Update" class="govuk-button govuk-!-margin-top-2 gias-filter-submit js-hidden" id="filter-submit" />
                         @Html.HiddenFor(!Model.GovernorSearchModel.Forename.IsEmpty(), x => x.GovernorSearchModel.Forename)
                         @Html.HiddenFor(!Model.GovernorSearchModel.Surname.IsEmpty(), x => x.GovernorSearchModel.Surname)
                         @Html.HiddenFor(Model.GovernorSearchModel.IncludeHistoric, x => x.GovernorSearchModel.IncludeHistoric)
@@ -225,7 +233,7 @@
     <div class="search-field-wrap">
         <label class="filter-searchwithin-label">
             <span class="govuk-visually-hidden">Search within @label filter</span>
-            <input type="text" class="filter-search govuk-input"/>
+            <input type="text" class="filter-search govuk-input" />
             <button class="field-clear hidden">
                 <span class="govuk-visually-hidden">Clear</span>
             </button>
@@ -260,7 +268,7 @@
                     <legend class="govuk-visually-hidden">Select an option below to filter the results- changing the selection will refresh the results</legend>
                     <div class="govuk-checkboxes gias-filter-checkboxes">
                         <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
-                            <input id="@(name)_all" class="govuk-checkboxes__input select-all js-filter-input" type="checkbox"/>
+                            <input id="@(name)_all" class="govuk-checkboxes__input select-all js-filter-input" type="checkbox" />
                             <label for="@(name)_all" class="govuk-checkboxes__label js-filter-label">
                                 All
                             </label>
@@ -270,7 +278,7 @@
                         @foreach (var item in items)
                         {
                             <div class="govuk-checkboxes__item">
-                                <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="govuk-checkboxes__input trigger-result-update js-filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked")/>
+                                <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="govuk-checkboxes__input trigger-result-update js-filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
                                 <label for="@(name)_@item.Id" class="govuk-checkboxes__label js-filter-label">
                                     @item
                                 </label>

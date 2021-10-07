@@ -63,117 +63,119 @@
             </ul>
         </div>
     }
-    <div class="tab-content-wrapper gias-tabs-content">
-        <div id="group-data" class="tab-content">
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-one-third">
-                    <a href="#results-container" class="govuk-visually-hidden-focusable">Skip filters</a>
-                    <form id="download-filters">
-                        @Html.HiddenFor(m => m.Skip)
-                        <fieldset class="govuk-fieldset" id="download-radios">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">Select an option</legend>
-                            <div class="govuk-form-group govuk-!-margin-bottom-2">
-                                <div class="govuk-radios govuk-radios--small govuk-radios--conditional" data-module="govuk-radios">
-                                    @foreach (eDownloadFilter ft in Enum.GetValues(typeof(eDownloadFilter)))
-                                    {
-                                        <div class="govuk-radios__item gias-radio__item--bordered-filter">
-                                            @{
-                                                var id = TagBuilder.CreateSanitizedId(string.Format("{0}-{1}", "search-type", ft));
-                                            }
-                                            @Html.RadioButtonFor(x => x.SearchType, ft, new { id, data_aria_controls = $"{ft}", @class = "govuk-radios__input" })
-                                            @Html.Label(ft.EnumDisplayNameFor(), new { @for = id, @class = "govuk-label govuk-radios__label" })
-                                        </div>
-                                    }
+<div class="tab-content-wrapper gias-tabs-content">
+    <div id="group-data" class="tab-content">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-third">
+                <a href="#results-container" class="govuk-visually-hidden-focusable">Skip filters</a>
+                <form id="download-filters">
+                    @Html.HiddenFor(m => m.Skip)
+                    <fieldset class="govuk-fieldset" id="download-radios">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">Select an option</legend>
+                        <div class="govuk-form-group govuk-!-margin-bottom-2">
+                            <div class="govuk-radios govuk-radios--small govuk-radios--conditional" data-module="govuk-radios">
+                                @foreach (eDownloadFilter ft in Enum.GetValues(typeof(eDownloadFilter)))
+                                {
+                                    <div class="govuk-radios__item gias-radio__item--bordered-filter">
+                                        @{
+                                            var id = TagBuilder.CreateSanitizedId(string.Format("{0}-{1}", "search-type", ft));
+                                        }
+                                        @Html.RadioButtonFor(x => x.SearchType, ft, new { id, data_aria_controls = $"{ft}", @class = "govuk-radios__input" })
+                                        @Html.Label(ft.EnumDisplayNameFor(), new { @for = id, @class = "govuk-label govuk-radios__label" })
+                                    </div>
+                                }
 
-                                    <div id="@eDownloadFilter.DateFilter.ToString()" class="govuk-radios__conditional govuk-radios__conditional--hidden gias-conditional--bordered">
-                                        <div class="date-filters  @Html.ValidationCssClassFor(x => x.FilterDate.Day) @Html.ValidationCssClassFor(x => x.FilterDate.Month) @Html.ValidationCssClassFor(x => x.FilterDate.Year)" id="filterDate">
-                                            <p class="govuk-!-padding-right-2">
-                                                Files can be downloaded from<br />
-                                                11 September 2020 to present
-                                            </p>
-                                            @Html.EditorFor(m => m.FilterDate,
-                                                new
-                                                {
-                                                    disableHint = false,
-                                                    labelClass = "govuk-label",
-                                                    dateHint = "11 09 2020",
-                                                    title = "",
-                                                    inFilters = false,
-                                                    fieldsetClassName = "search-to-date",
-                                                    hideLegend = true
-                                                })
-                                            <div class="js-show-block">
-                                                <button type="submit" name="apply" class="govuk-button downloads-filter-button" id="filter-apply">Apply</button>
-                                            </div>
-
+                                <div id="@eDownloadFilter.DateFilter.ToString()" class="govuk-radios__conditional govuk-radios__conditional--hidden gias-conditional--bordered">
+                                    <div class="date-filters  @Html.ValidationCssClassFor(x => x.FilterDate.Day) @Html.ValidationCssClassFor(x => x.FilterDate.Month) @Html.ValidationCssClassFor(x => x.FilterDate.Year)" id="filterDate">
+                                        <p class="govuk-!-padding-right-2">
+                                            Files can be downloaded from<br />
+                                            11 September 2020 to present
+                                        </p>
+                                        @Html.EditorFor(m => m.FilterDate,
+                                            new
+                                            {
+                                                disableHint = false,
+                                                labelClass = "govuk-label",
+                                                dateHint = "11 09 2020",
+                                                title = "",
+                                                inFilters = false,
+                                                fieldsetClassName = "search-to-date",
+                                                hideLegend = true
+                                            })
+                                        <div class="js-show-block">
+                                            <button type="submit" name="apply" class="govuk-button downloads-filter-button" id="filter-apply">Apply</button>
                                         </div>
 
                                     </div>
+
                                 </div>
                             </div>
-                            <div class="govuk-form-group no-js-show-block">
-                                <button type="submit" name="action" class="govuk-button " id="filter-submit">Update</button>
-                            </div>
-                        </fieldset>
-                    </form>
-                </div>
-                @* results start *@
-                <div class="govuk-grid-column-two-thirds" id="results-container">
-                    @{ Html.RenderPartial(@"Partials\_DownloadsResults");}
+                        </div>
+                        <div class="govuk-form-group no-js-show-block">
+                            <button type="submit" name="action" class="govuk-button " id="filter-submit">Update</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            @* results start *@
+            <div class="govuk-grid-column-two-thirds" id="results-container">
+                @{ Html.RenderPartial(@"Partials\_DownloadsResults");}
+            </div>
+        </div>
+    </div>
+    @if (Model.AreScheduledExtractsAvailable)
+    {
+        <div id="scheduled-extracts" class="tab-content">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <p>
+                        This is full data that can be found on Get Information about Schools. Not all files are date stamped, so it's a good idea to make a note of when you download the file.
+                    </p>
+
+                    @if (Model.ScheduledExtracts.PageCount > 1)
+                    {
+                        <div class="top-pagination">
+                            @Html.Partial("_GenericPaginationV2", Model.ScheduledExtracts)
+                        </div>
+                    }
+
+                    <table class="govuk-table gias-table retain-columns @(Model.ScheduledExtracts.PageCount > 1 ? "" : "no-pagination")">
+                        <caption class="govuk-visually-hidden">Scheduled extracts files</caption>
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th scope="col" class="govuk-table__header">File</th>
+                                <th scope="col" class="govuk-table__header govuk-table__header--numeric">ID</th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            @foreach (var item in Model.ScheduledExtracts.Items)
+                            {
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell download-list-item">
+                                        @Html.RouteLink(item.Name, "RequestScheduledExtract", new { eid = item.Id }, new { rel = "nofollow" })
+                                    </td>
+                                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                                        @item.Id
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    @if (Model.ScheduledExtracts.PageCount > 1)
+                    {
+                        <div class="lower-pagination">
+                            @Html.Partial("_GenericPaginationV2", Model.ScheduledExtracts)
+                        </div>
+                        @helpers.BackToTopLink()
+                    }
                 </div>
             </div>
         </div>
-        @if (Model.AreScheduledExtractsAvailable)
-        {
-            <div id="scheduled-extracts" class="tab-content">
-                <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-full">
-                        <p>
-                            This is full data that can be found on Get Information about Schools. Not all files are date stamped, so it's a good idea to make a note of when you download the file.
-                        </p>
+    }
 
-                        @if (Model.ScheduledExtracts.PageCount > 1)
-                        {
-                            <div class="top-pagination">
-                                @Html.Partial("_GenericPaginationV2", Model.ScheduledExtracts)
-                            </div>
-                        }
 
-                        <table class="govuk-table gias-table retain-columns @(Model.ScheduledExtracts.PageCount > 1 ? "" : "no-pagination")">
-                            <caption class="govuk-visually-hidden">Scheduled extracts files</caption>
-                            <thead class="govuk-table__head">
-                                <tr class="govuk-table__row">
-                                    <th scope="col" class="govuk-table__header">File</th>
-                                    <th scope="col" class="govuk-table__header govuk-table__header--numeric">ID</th>
-                                </tr>
-                            </thead>
-                            <tbody class="govuk-table__body">
-                                @foreach (var item in Model.ScheduledExtracts.Items)
-                                {
-                                    <tr class="govuk-table__row">
-                                        <td class="govuk-table__cell download-list-item">
-                                            @Html.RouteLink(item.Name, "RequestScheduledExtract", new { eid = item.Id }, new { rel = "nofollow" })
-                                        </td>
-                                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                                            @item.Id
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                        @if (Model.ScheduledExtracts.PageCount > 1)
-                        {
-                            <div class="lower-pagination">
-                                @Html.Partial("_GenericPaginationV2", Model.ScheduledExtracts)
-                            </div>
-                            @helpers.BackToTopLink()
-                        }
-                    </div>
-                </div>
-            </div>
-        }
-
-    </div>
+    @helpers.BackToTopLink()
+</div>
 </div>
 
 
