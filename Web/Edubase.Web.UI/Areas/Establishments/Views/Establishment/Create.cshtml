@@ -271,7 +271,8 @@
                     @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step2)
                     {
                         @* PHASE *@
-                        <div id="establishment-phase-form-group" @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
+                        <div id="establishment-phase-form-group">
+                            @Html.ValidationCssClassFor(x => x.EducationPhaseId)"
                             @Html.LabelFor(x => x.EducationPhaseId, "Phase of education", new { @class = "govuk-label" })
                             @Html.ValidationMessageFor(x => x.EducationPhaseId, null, new { @class = "govuk-error-message" })
                             @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "Please select", new { @class = "govuk-select" })
@@ -471,8 +472,6 @@
                         </div>
                     </div>
                 }
-
-
             }
         </div>
     </div>
