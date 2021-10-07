@@ -277,8 +277,8 @@
                             @Html.ValidationMessageFor(x => x.EducationPhaseId, null, new { @class = "govuk-error-message" })
                             @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "Please select", new { @class = "govuk-select" })
                         </div>
-
-                        <div class="govuk-grid-column-full" id="number-gen-options">
+                        <br />
+                        <div id="number-gen-options">
                             <fieldset class="govuk-fieldset inline create-estab-number-gen">
                                 <legend id="GenerateEstabNumber" class="govuk-fieldset__legend--s govuk-!-margin-bottom-2">Establishment number</legend>
                                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GenerateEstabNumber)">
