@@ -130,6 +130,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
                 RuleFor(x => x.GovernanceDetail)
                     .Must(x => !string.IsNullOrWhiteSpace(x))
                     .WithMessage("Please enter governance detail");
+
+                RuleFor(x => x.EstablishmentStatusId)
+                    .Must(x => x != null)
+                    .WithMessage("Please enter establishment status");
+
             });
 
 
