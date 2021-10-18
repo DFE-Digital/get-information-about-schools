@@ -205,13 +205,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Create")]
-        public async Task<ActionResult> Create(CreateChildrensCentreViewModel viewModel, bool JsDisabled = false, bool routeComplete = false )
+        public async Task<ActionResult> Create(CreateChildrensCentreViewModel viewModel, bool JsDisabled = false, bool routeComplete = false, bool isBack = false)
         {
             viewModel.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
-
-            var step1OK = viewModel.LocalAuthorityId != null && viewModel.Name != null && viewModel.EstablishmentTypeId != null;
-            var step2OK = viewModel.EducationPhaseId != null && viewModel.GenerateEstabNumber != null;
 
             await PopulateCCSelectLists(viewModel);
             if (viewModel.EstablishmentTypeId != null)
@@ -221,8 +218,19 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 viewModel.EducationPhases = (await _cachedLookupService.EducationPhasesGetAllAsync()).Where(x => phaseMap.Contains(x.Id)).ToSelectList(viewModel.EducationPhaseId);
             }
 
+            if (isBack)
+            {
+                viewModel.StepName = viewModel.PreviousStepName;
+                //need to escape here to redraw the screen and collect additional data
+                return View(viewModel);
+            }
+
+            var step1OK = viewModel.LocalAuthorityId != null && viewModel.Name != null && viewModel.EstablishmentTypeId != null;
+            var step2OK = viewModel.EducationPhaseId != null && viewModel.GenerateEstabNumber != null;
+
             if (viewModel.EstablishmentTypeId == 41 && routeComplete && step1OK)
             {
+                viewModel.PreviousStepName = viewModel.StepName;
                 viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step5;
                 var result = await new CreateChildrensCentreViewModelValidator(_establishmentReadService).ValidateAsync(viewModel);
                 result.AddToModelState(ModelState, string.Empty);
@@ -232,6 +240,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (viewModel.EstablishmentTypeId == 41 && viewModel.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step1 && !routeComplete && step1OK)
             {
+                viewModel.PreviousStepName = viewModel.StepName;
                 viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step5;
                 //need to escape here to redraw the screen and collect additional data
                 return View(viewModel);
@@ -247,10 +256,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     switch (viewModel.GenerateEstabNumber)
                     {
                         case true:
+                            viewModel.PreviousStepName = viewModel.StepName;
                             viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step3;
                             // if they opted to generate a number, we dont need to re-render the screen, we can just continue to process below
                             break;
                         case false:
+                            viewModel.PreviousStepName = viewModel.StepName;
                             viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step4;
                             return View(viewModel);
                         default:
@@ -260,6 +271,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
                 if (viewModel.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step1 && step1OK)
                 {
+                    viewModel.PreviousStepName = viewModel.StepName;
                     viewModel.StepName = viewModel.EstablishmentTypeId != 41
                         ? CreateEstablishmentViewModel.eEstabCreateSteps.Step2
                         : CreateEstablishmentViewModel.eEstabCreateSteps.Step5;

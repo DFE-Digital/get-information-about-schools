@@ -16,7 +16,8 @@
                     <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
                     <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
                 </ol>
-                @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step2 || Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step5)
+                
+                @*@if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step2 || Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step5)
                 {
                     // Back button should redirect to step 1
                     <button type="submit" class="govuk-back-link gias-back-link--button" name="@nameof(Model.StepName)"
@@ -31,8 +32,19 @@
                             value="@Model.GoBack(Model)">
                         Back
                     </button>
-                }
+                }*@
             </div>
+        </div>
+    </div>
+}
+@helper BackLink()
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <button type="submit" class="govuk-back-link gias-back-link--button cancel" name="isBack"
+                    value="true">
+                Back
+            </button>
         </div>
     </div>
 }
@@ -47,22 +59,24 @@
 
 
 @*this is now the journey for JS and non-js users *@
-    <div id="create-establishment">
-        <div class="govuk-grid-row">
-            @using (Html.BeginForm())
-            {
-                @Html.AntiForgeryToken()
-                @Html.HiddenFor(x => x.ProcessedWarnings)
-                @Html.HiddenFor(x => x.StepName)
-                @Html.HiddenFor(x => x.jsDisabled, true)
+<div id="create-establishment">
+    <div class="govuk-grid-row">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.ProcessedWarnings)
+            @Html.HiddenFor(x => x.StepName)
+            @Html.HiddenFor(x => x.jsDisabled, true)
 
-                //Disabled - fix for mobile devices.
-                //                <div class="govuk-grid-column-full gias-hidden__from-tablet">
-                //                    <div class="button-row govuk-!-margin-bottom-4">
-                //                        <button type="submit" name="action" value="" class="govuk-button">Create establishment</button>
-                //                       @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
-                //                    </div>
-                //                </div>
+            //Disabled - fix for mobile devices.
+            //                <div class="govuk-grid-column-full gias-hidden__from-tablet">
+            //                    <div class="button-row govuk-!-margin-bottom-4">
+            //                        <button type="submit" name="action" value="" class="govuk-button">Create establishment</button>
+            //                       @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+            //                    </div>
+            //                </div>
+
+            @BackLink()
 
             <div class="govuk-grid-column-one-half">
 
@@ -301,25 +315,25 @@
                 }
             </div>
 
-                if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND))
-                {
-                    var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND);
-                    <div class="modal-overlay" id="warning-modal-overlay-0"></div>
-                    <div class="modal-content" id="warning-modal-content-0" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
-                        @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "modal-exit js-allow-exit", data_module = "govuk-button" })
-                        <div class="modal-inner">
-                            <h3 class="govuk-heading-l" tabindex="0" id="modal-label">Duplicate record</h3>
-                            <p tabindex="0" id="model-desc">The record you are creating for <strong>@(warning.MessageParameters[0])</strong> in <strong>@(warning.MessageParameters[1])</strong> may duplicate existing record(s): <strong>@(warning.MessageParameters[2])</strong>
-                        </div>
-                        <div class="button-row">
-                            <button type="submit" name="action" value="" class="govuk-button">Proceed</button>
-                            @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
-                        </div>
+            if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND))
+            {
+                var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND);
+                <div class="modal-overlay" id="warning-modal-overlay-0"></div>
+                <div class="modal-content" id="warning-modal-content-0" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
+                    @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "modal-exit js-allow-exit", data_module = "govuk-button" })
+                    <div class="modal-inner">
+                        <h3 class="govuk-heading-l" tabindex="0" id="modal-label">Duplicate record</h3>
+                        <p tabindex="0" id="model-desc">The record you are creating for <strong>@(warning.MessageParameters[0])</strong> in <strong>@(warning.MessageParameters[1])</strong> may duplicate existing record(s): <strong>@(warning.MessageParameters[2])</strong>
                     </div>
-                }
+                    <div class="button-row">
+                        <button type="submit" name="action" value="" class="govuk-button">Proceed</button>
+                        @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+                    </div>
+                </div>
             }
-        </div>
+        }
     </div>
+</div>
 
 
 @section ViewScripts {

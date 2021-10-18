@@ -47,6 +47,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
 
         public eEstabCreateSteps StepName { get; set; } = eEstabCreateSteps.Step1;
 
+        public eEstabCreateSteps PreviousStepName { get; set; } = eEstabCreateSteps.Step1;
+
         public enum eEstabCreateSteps
         {
             Step1,
