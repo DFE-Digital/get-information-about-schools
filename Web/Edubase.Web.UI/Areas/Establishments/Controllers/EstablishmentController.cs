@@ -210,8 +210,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
 
-
-
             var step1OK = viewModel.LocalAuthorityId != null && viewModel.Name != null && viewModel.EstablishmentTypeId != null;
             var step2OK = viewModel.EducationPhaseId != null && viewModel.GenerateEstabNumber != null;
 
@@ -314,6 +312,30 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
             }
             return View(viewModel);
+        }
+
+        public ActionResult GoBack(CreateChildrensCentreViewModel viewModel)
+        {
+            switch (viewModel.StepName)
+            {
+                case CreateEstablishmentViewModel.eEstabCreateSteps.Step1:
+                    //Shouldn't be needed
+                    return View(viewModel);
+                case CreateEstablishmentViewModel.eEstabCreateSteps.Step2:
+                    viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step1;
+                    return View(viewModel);
+                case CreateEstablishmentViewModel.eEstabCreateSteps.Step3:
+                    viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step2;
+                    return View(viewModel);
+                case CreateEstablishmentViewModel.eEstabCreateSteps.Step4:
+                    viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step2;
+                    return View(viewModel);
+                case CreateEstablishmentViewModel.eEstabCreateSteps.Step5:
+                    viewModel.StepName = CreateEstablishmentViewModel.eEstabCreateSteps.Step1;
+                    return View(viewModel);
+                default:
+                    return View(viewModel);
+            }
         }
 
         [HttpGet, Route("Details/{id:int}", Name = "EstabDetails")]
