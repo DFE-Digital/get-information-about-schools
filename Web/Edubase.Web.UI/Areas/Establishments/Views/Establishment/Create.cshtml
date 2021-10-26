@@ -1,4 +1,6 @@
 @using Edubase.Services.Domain
+@using CreateSteps = Edubase.Web.UI.Areas.Establishments.Models.CreateEstablishmentViewModel.eEstabCreateSteps;
+
 @model CreateChildrensCentreViewModel
 @{
     ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Create a new establishment");
@@ -16,23 +18,6 @@
                     <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
                     <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
                 </ol>
-                
-                @*@if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step2 || Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step5)
-                {
-                    // Back button should redirect to step 1
-                    <button type="submit" class="govuk-back-link gias-back-link--button" name="@nameof(Model.StepName)"
-                            value="@Model.GoBack(Model)">
-                        Back
-                    </button>
-                }
-                @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step3 || Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step4)
-                {
-                    // Back button should redirect to step 2
-                    <button type="submit" class="govuk-back-link gias-back-link--button" name="@nameof(Model.StepName)"
-                            value="@Model.GoBack(Model)">
-                        Back
-                    </button>
-                }*@
             </div>
         </div>
     </div>
@@ -41,10 +26,18 @@
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            <button type="submit" class="govuk-back-link gias-back-link--button cancel" name="isBack"
-                    value="true">
-                Back
-            </button>
+
+            @if (Model.CurrentStep == CreateSteps.NameEntry)
+            {
+                @Html.ActionLink("Back", "Index", "Tools", new { area = "" }, new { @class = "govuk-back-link gias-back-link--button cancel", data_module = "govuk-button" })
+            }
+            else
+            {
+                <button type="submit" class="govuk-back-link gias-back-link--button cancel" name="@(nameof(Model.ActionStep))" value="@(Model.PreviousStep)">
+                    Back
+                </button>
+            }
+
         </div>
     </div>
 }
@@ -65,7 +58,8 @@
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.ProcessedWarnings)
-            @Html.HiddenFor(x => x.StepName)
+            @Html.HiddenFor(x => x.PreviousStep)
+            @Html.HiddenFor(x => x.CurrentStep)
             @Html.HiddenFor(x => x.jsDisabled, true)
 
             //Disabled - fix for mobile devices.
@@ -80,7 +74,7 @@
 
             <div class="govuk-grid-column-one-half">
 
-                @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step1)
+                @if (Model.CurrentStep == CreateSteps.NameEntry)
                 {
                     <p>Set up a new establishment record by completing the fields below and selecting continue.</p>
                     <h2 class="govuk-heading-m">New establishment details</h2>
@@ -103,10 +97,6 @@
                         @Html.ValidationMessageFor(x => x.EstablishmentTypeId, null, new { @class = "govuk-error-message" })
                         @Html.DropDownListFor(x => x.EstablishmentTypeId, Model.EstablishmentTypes, "Please select", new { @class = "govuk-select" })
                     </div>
-
-                    <div class="button-row">
-                        <button type="submit" name="action" value="" class="govuk-button" id="create-submit">Continue</button>
-                    </div>
                 }
                 else
                 {
@@ -116,7 +106,7 @@
                 }
 
 
-                @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step2)
+                @if (Model.CurrentStep == CreateSteps.PhaseOfEducation)
                 {
                     <p>Set up a new establishment record by completing the fields below and selecting continue.</p>
                     <h2 class="govuk-heading-m">New establishment details</h2>
@@ -144,19 +134,18 @@
                             </div>
                         </fieldset>
                     </div>
-
-                    <div class="button-row">
-                        <button type="submit" name="action" value="" class="govuk-button" id="create-submit">Continue</button>
-                    </div>
                 }
                 else
                 {
-                    @Html.HiddenFor(x => x.EducationPhaseId)
-                    @Html.HiddenFor(x => x.GenerateEstabNumber)
+                    if (Model.CurrentStep != CreateSteps.NameEntry)
+                    {
+                        @Html.HiddenFor(x => x.EducationPhaseId)
+                        @Html.HiddenFor(x => x.GenerateEstabNumber)
+                    }
                 }
 
 
-                @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step3)
+                @if (Model.CurrentStep == CreateSteps.EstabNumberGenerated)
                 {
                     <p>Set up a new establishment record by completing the fields below and selecting create establishment.</p>
                     <h2 class="govuk-heading-m">New establishment details</h2>
@@ -165,7 +154,7 @@
                 }
 
 
-                @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step4)
+                @if (Model.CurrentStep == CreateSteps.EnterEstabNumber)
                 {
                     <p>Set up a new establishment record by completing the fields below and selecting create establishment.</p>
                     <h2 class="govuk-heading-m">New establishment details</h2>
@@ -185,10 +174,13 @@
                 }
                 else
                 {
-                    @Html.HiddenFor(x => x.EstablishmentNumber)
+                    if (Model.CurrentStep != CreateSteps.NameEntry)
+                    {
+                        @Html.HiddenFor(x => x.EstablishmentNumber)
+                    }
                 }
 
-                @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step5)
+                @if (Model.CurrentStep == CreateSteps.ChildrensCentreEntry)
                 {
                     <p>Set up a new establishment record by completing the fields below and selecting create establishment.</p>
                     <h2 class="govuk-heading-m">New establishment details</h2>
@@ -276,41 +268,55 @@
                 }
                 else
                 {
-                    @Html.HiddenFor(x => x.OpenDate)
-                    @Html.HiddenFor(x => x.OpenDate.Day)
-                    @Html.HiddenFor(x => x.OpenDate.Month)
-                    @Html.HiddenFor(x => x.OpenDate.Year)
-                    @Html.HiddenFor(x => x.Address.CityOrTown)
-                    @Html.HiddenFor(x => x.Address.Country)
-                    @Html.HiddenFor(x => x.Address.County)
-                    @Html.HiddenFor(x => x.Address.Line1)
-                    @Html.HiddenFor(x => x.Address.Line2)
-                    @Html.HiddenFor(x => x.Address.Line3)
-                    @Html.HiddenFor(x => x.Address.PostCode)
-                    @Html.HiddenFor(x => x.ManagerFirstName)
-                    @Html.HiddenFor(x => x.ManagerLastName)
-                    @Html.HiddenFor(x => x.CentreEmail)
-                    @Html.HiddenFor(x => x.Telephone)
-                    @Html.HiddenFor(x => x.OperationalHoursId)
-                    @Html.HiddenFor(x => x.NumberOfUnderFives)
-                    @Html.HiddenFor(x => x.GovernanceId)
-                    @Html.HiddenFor(x => x.GovernanceDetail)
-                    @Html.HiddenFor(x => x.PhaseId)
-                    @Html.HiddenFor(x => x.DisadvantagedAreaId)
-                    @Html.HiddenFor(x => x.DirectProvisionOfEarlyYears)
-                    @Html.HiddenFor(x => x.EstablishmentStatusId)
+                    if (Model.CurrentStep != CreateSteps.NameEntry)
+                    {
+                        @Html.HiddenFor(x => x.OpenDate)
+                        @Html.HiddenFor(x => x.OpenDate.Day)
+                        @Html.HiddenFor(x => x.OpenDate.Month)
+                        @Html.HiddenFor(x => x.OpenDate.Year)
+                        @Html.HiddenFor(x => x.Address.CityOrTown)
+                        @Html.HiddenFor(x => x.Address.Country)
+                        @Html.HiddenFor(x => x.Address.County)
+                        @Html.HiddenFor(x => x.Address.Line1)
+                        @Html.HiddenFor(x => x.Address.Line2)
+                        @Html.HiddenFor(x => x.Address.Line3)
+                        @Html.HiddenFor(x => x.Address.PostCode)
+                        @Html.HiddenFor(x => x.ManagerFirstName)
+                        @Html.HiddenFor(x => x.ManagerLastName)
+                        @Html.HiddenFor(x => x.CentreEmail)
+                        @Html.HiddenFor(x => x.Telephone)
+                        @Html.HiddenFor(x => x.OperationalHoursId)
+                        @Html.HiddenFor(x => x.NumberOfUnderFives)
+                        @Html.HiddenFor(x => x.GovernanceId)
+                        @Html.HiddenFor(x => x.GovernanceDetail)
+                        @Html.HiddenFor(x => x.PhaseId)
+                        @Html.HiddenFor(x => x.DisadvantagedAreaId)
+                        @Html.HiddenFor(x => x.DirectProvisionOfEarlyYears)
+                        @Html.HiddenFor(x => x.EstablishmentStatusId)
+                    }
+                    else
+                    {
+                        @Html.Hidden(nameof(Model.Address) + "." + nameof(Model.Address.PostCode), "")
+                    }
                 }
 
-                @if (Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step3 ||
-                    Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step4 ||
-                    Model.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step5)
+
+                @if (Model.CurrentStep == CreateSteps.EstabNumberGenerated ||
+                    Model.CurrentStep == CreateSteps.EnterEstabNumber ||
+                    Model.CurrentStep == CreateSteps.ChildrensCentreEntry)
                 //Not sure whether to segregate this into an additional step or add the create control to the three journey ends
                 //Might be better to do this bit if StepName is (3,4,5).
                 {
                     @Html.Hidden("routeComplete", true)
                     <div class="button-row">
-                        <button type="submit" name="action" value="" class="govuk-button" id="create-submit">Create establishment</button>
+                        <button type="submit" name="@nameof(Model.ActionStep)" value="@Model.ActionStep" class="govuk-button" id="create-submit">Create establishment</button>
                         @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+                    </div>
+                }
+                else
+                {
+                    <div class="button-row">
+                        <button type="submit" name="@nameof(Model.ActionStep)" value="@Model.ActionStep" class="govuk-button" id="create-submit">Continue</button>
                     </div>
                 }
             </div>
@@ -326,7 +332,7 @@
                         <p tabindex="0" id="model-desc">The record you are creating for <strong>@(warning.MessageParameters[0])</strong> in <strong>@(warning.MessageParameters[1])</strong> may duplicate existing record(s): <strong>@(warning.MessageParameters[2])</strong>
                     </div>
                     <div class="button-row">
-                        <button type="submit" name="action" value="" class="govuk-button">Proceed</button>
+                        <button type="submit" name="@nameof(Model.ActionStep)" value="@Model.ActionStep" class="govuk-button">Proceed</button>
                         @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
                     </div>
                 </div>

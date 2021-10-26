@@ -45,17 +45,19 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
 
         public bool jsDisabled { get; set; } = false;
 
-        public eEstabCreateSteps StepName { get; set; } = eEstabCreateSteps.Step1;
-
-        public eEstabCreateSteps PreviousStepName { get; set; } = eEstabCreateSteps.Step1;
-
+        public eEstabCreateSteps ActionStep { get; set; } = eEstabCreateSteps.PhaseOfEducation;
+        public eEstabCreateSteps CurrentStep { get; set; } = eEstabCreateSteps.NameEntry;
+        public eEstabCreateSteps PreviousStep { get; set; } = eEstabCreateSteps.Undefined;
+        
         public enum eEstabCreateSteps
         {
-            Step1,
-            Step2,
-            Step3,
-            Step4,
-            Step5
+            Undefined,
+            NameEntry,
+            PhaseOfEducation,
+            EnterEstabNumber,
+            EstabNumberGenerated,
+            ChildrensCentreEntry,
+            Complete
         }
 
     }
