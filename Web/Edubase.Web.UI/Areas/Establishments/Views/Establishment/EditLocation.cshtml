@@ -248,47 +248,7 @@
                         @Html.TextBoxFor(x => x.Northing, new { @class = "govuk-input" })
                     </div>
                 }
-
-                @if (Model.EditPolicy.CASWardId)
-                {
-                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CASWardId) @Html.ValidationCssClassFor(x => x.CASWardName)" id="searchby-casward-ref">
-                        <label class="govuk-label" for="@nameof(Model.CASWardName)">Census ward</label>
-                        @Html.ValidationMessageFor(x => x.CASWardId, null, new {@class = "govuk-error-message"})
-                        @Html.ValidationMessageFor(x => x.CASWardName, null, new {@class = "govuk-error-message"})
-
-                        @if (Model.LocationEditField.Equals(nameof(Model.CASWardId)))
-                        {
-                            var options = Model.CASWards.Select(x =>
-                                new SelectListItem
-                                {
-                                    Value = x.Id.ToString(),
-                                    Text = x.Name
-                                }).ToList();
-                            @Html.DropDownListFor(x => x.CASWardId, options, new {@class = "govuk-select"})
-                        }
-                        else
-                        {
-                            <div id="CASWardId" class="autosuggest scrollableAutosuggest">
-                                @Html.TextBoxFor(x => x.CASWardName, new {@class = "govuk-input", autocomplete = "off", disabled = "disabled"})
-                            </div>
-                            @Html.HiddenFor(x => x.CASWardId, new { id = "CASWardIdHidden" })
-                        }
-
-
-                        @if (Model.LocationEditField.IsNullOrEmpty())
-                        {
-                            <div class="button-row govuk-!-padding-top-2 no-js-show-block">
-                                @Html.ActionLink("Edit census ward",
-                                    "EditLocation",
-                                    "Establishment",
-                                    null, null,
-                                    nameof(Model.CASWardId),
-                                    new {area = "Establishments", id = Model.Urn, locationField = nameof(Model.CASWardId)},
-                                    new {@class = "govuk-button govuk-button--secondary"})
-                            </div>
-                        }
-                    </div>
-                }
+ 
 
                 @if (Model.EditPolicy.MSOACode)
                 {
@@ -415,7 +375,6 @@
         window.districts = @Html.Json(Model.AdministrativeDistricts);
         window.wards = @Html.Json(Model.AdministrativeWards);
         window.constituencies = @Html.Json(Model.ParliamentaryConstituencies);
-        window.caswards = @Html.Json(Model.CASWards);
         window.gsslas = @Html.Json(Model.GSSLALookup);
 
     </script>

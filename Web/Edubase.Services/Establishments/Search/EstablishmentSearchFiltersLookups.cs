@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 
 namespace Edubase.Services.Establishments.Search
@@ -74,9 +74,6 @@ namespace Edubase.Services.Establishments.Search
 
         [JsonProperty("GSSLAIds"), JsonIgnore]
         public int[] GSSLAIds { get; set; } = new int[0];
-
-        [JsonProperty("casWardIds"), JsonIgnore]
-        public int[] CASWardIds { get; set; } = new int[0];
 
         [JsonProperty("MSOAIds"), JsonIgnore]
         public int[] MSOAIds { get; set; } = new int[0];

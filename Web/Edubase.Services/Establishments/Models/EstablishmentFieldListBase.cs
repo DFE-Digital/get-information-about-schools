@@ -149,7 +149,6 @@ namespace Edubase.Services.Establishments.Models
         public virtual T ParliamentaryConstituencyId { get; set; }
         public virtual T UrbanRuralId { get; set; }
         public virtual T GSSLAId { get; set; }
-        public virtual T CASWardId { get; set; }
         public virtual T MSOAId { get; set; }
         public virtual T LSOAId { get; set; }
         public virtual T MSOACode => MSOAId;

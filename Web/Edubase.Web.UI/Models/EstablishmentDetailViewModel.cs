@@ -132,7 +132,6 @@ namespace Edubase.Web.UI.Models
         public string ParliamentaryConstituencyName { get; set; }
         public string UrbanRuralName { get; set; }
         public string GSSLAName { get; set; }
-        public string CASWardName { get; set; }
         public string MSOAName { get; set; }
         public string LSOAName { get; set; }
         public string LocalAuthorityName { get; set; }

@@ -107,7 +107,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                 RuleFor(x => x.GroupName)
                     .Cascade(CascadeMode.StopOnFirstFailure)
                     .NotEmpty()
-                    .WithMessage(x => $"Please enter the {x.FieldNamePrefix.ToLower()} name")
+                    .WithMessage(x => $"Please enter the {x.GroupTypeLabelPrefix.ToLower()} name")
                     .When(x => x.SaveGroupDetail);
 
                 RuleFor(x => x.GroupId)

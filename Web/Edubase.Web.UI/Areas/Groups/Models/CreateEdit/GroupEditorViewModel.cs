@@ -22,13 +22,15 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             DetailsAndLinks
         }
 
-        private static readonly Dictionary<eGroupTypeMode, string> _fieldNamePrefixers = new Dictionary<eGroupTypeMode, string>
+        private static readonly Dictionary<int, string> _groupTypeLabelPrefixers = new Dictionary<int, string>
         {
-            [eGroupTypeMode.ChildrensCentre] = "Group",
-            [eGroupTypeMode.Trust] = "Foundation trust",
-            [eGroupTypeMode.Federation] = "Federation",
-            [eGroupTypeMode.AcademyTrust] = "Trust",
-            [eGroupTypeMode.Sponsor] = "Academy sponsor"
+            [(int) GT.ChildrensCentresCollaboration] = "Children's centres collaboration",
+            [(int) GT.ChildrensCentresGroup] = "Children's centres group",
+            [(int) GT.Federation] = "Federation",
+            [(int) GT.MultiacademyTrust] = "Multi-academy trust",
+            [(int) GT.SchoolSponsor] = "Academy sponsor",
+            [(int) GT.SingleacademyTrust] = "Single-academy trust",
+            [(int) GT.Trust] = "Foundation trust",
         };
 
         public const string ActionSave = "save";
@@ -58,7 +60,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public string Action { get; set; }
         public int ActionUrn => Action.Split('-').Last().ToInteger() ?? 0;
         public eSaveMode SaveMode { get; set; }
-        public string FieldNamePrefix => _fieldNamePrefixers.Get(GroupTypeMode);
+        public string GroupTypeLabelPrefix => GroupTypeId.HasValue ? _groupTypeLabelPrefixers[GroupTypeId.Value] : null;
+        public string GroupNameLabel => GroupTypeId.HasValue ? $"{_groupTypeLabelPrefixers[GroupTypeId.Value]} name" : null;
         public bool InEditMode => GroupUId.HasValue;
         public string ManagerEmailAddress { get; set; }
         public int? LocalAuthorityId { get; set; }
@@ -79,6 +82,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public string AddressJsonToken { get; set; }
         public bool CloseAndMarkAsCreatedInError { get; set; }
         public bool CanUserCloseAndMarkAsCreatedInError { get; set; }
+        public string CloseAndMarkAsCreatedInErrorLabel => CanUserCloseAndMarkAsCreatedInError ? $"Close this {GroupTypeLabelPrefix.ToLower()} and mark as created in error" : null;
         public bool CanUserEditStatus { get; set; }
         public bool CanUserEditClosedDate { get; set; }
         public bool CanUserEditUkprn { get; set; }

@@ -1,4 +1,4 @@
-﻿using Edubase.Services;
+using Edubase.Services;
 using Edubase.Services.Establishments;
 using Edubase.Web.UI.Validation;
 using FluentValidation;
@@ -12,14 +12,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage("Please enter an establishment name");
             RuleFor(x => x.LocalAuthorityId).NotEmpty().WithMessage("Please select a local authority");
-
-            RuleFor(x => x.EducationPhaseId)
-                .Cascade(CascadeMode.StopOnFirstFailure)
-                .NotNull().WithMessage("Please select a a phase of education")
-                .NotEmpty().WithMessage("Please select a a phase of education")
-                .Must((m, x) => establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[m.EstablishmentTypeId].Contains(x.Value))
-                .WithMessage("Education phase is not valid for the selected type of establishment");
-
+            /*
+                        RuleFor(x => x.EducationPhaseId)
+                            .Cascade(CascadeMode.StopOnFirstFailure)
+                            .NotNull().WithMessage("Please select a phase of education")
+                            .NotEmpty().WithMessage("Please select a phase of education")
+                            .Must((m, x) => establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[m.EstablishmentTypeId].Contains(x.Value))
+                            .WithMessage("Education phase is not valid for the selected type of establishment");
+            */
             RuleFor(x => x.EstablishmentTypeId).NotEmpty().WithMessage("Please select an establishment type");
             RuleFor(x => x.GenerateEstabNumber).NotNull().WithMessage("Please select 'Generate number' or 'Enter number'");
 
@@ -33,32 +33,44 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
     {
         public CreateChildrensCentreViewModelValidator(IEstablishmentReadService establishmentReadService)
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage("Please enter an establishment name");
-            RuleFor(x => x.LocalAuthorityId).NotEmpty().WithMessage("Please select a local authority");
-
-            RuleFor(x => x.EducationPhaseId)
-                .Cascade(CascadeMode.StopOnFirstFailure)
-                .NotNull().WithMessage("Please select a a phase of education")
-                .NotEmpty().WithMessage("Please select a a phase of education")
-                .Must((m, x) => establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[m.EstablishmentTypeId].Contains(x.Value))
-                .WithMessage("Education phase is not valid for the selected type of establishment")
-                .When(x => x.EstablishmentTypeId != 41);
-
-            RuleFor(x => x.EstablishmentTypeId)
-                .NotEmpty()
-                .WithMessage("Please select an establishment type");
-
-            RuleFor(x => x.GenerateEstabNumber)
-                .NotNull()
-                .WithMessage("Please select 'Generate number' or 'Enter number'")
-                .When(x => x.EstablishmentTypeId != 41);
-
-            RuleFor(x => x.EstablishmentNumber)
-                .NotEmpty().WithMessage("Please enter an establishment number")
-                .When(x => x.GenerateEstabNumber.HasValue && !x.GenerateEstabNumber.GetValueOrDefault());
-
-            When(x => x.EstablishmentTypeId == 41, () =>
+            When(x => x.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step1, () =>
             {
+                RuleFor(x => x.Name).NotEmpty().WithMessage("Please enter an establishment name");
+                RuleFor(x => x.LocalAuthorityId).NotEmpty().WithMessage("Please select a local authority");
+                RuleFor(x => x.EstablishmentTypeId).NotEmpty().WithMessage("Please select an establishment type");
+            });
+
+            When(x => x.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step2, () =>      //Had some aggro with combining tests, may not work
+            {
+                RuleFor(x => x.EducationPhaseId)
+                .Cascade(CascadeMode.StopOnFirstFailure)
+                    .NotNull().WithMessage("Please select a phase of education")
+                    .NotEmpty().WithMessage("Please select a phase of education")
+                    .Must((m, x) => establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[m.EstablishmentTypeId.Value].Contains(x.Value))    //Fails here
+                    .WithMessage("Education phase is not valid for the selected type of establishment")
+                    .When(x => x.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step2 && x.EstablishmentTypeId != 41);
+                RuleFor(x => x.GenerateEstabNumber)
+                    .NotNull()
+                    .WithMessage("Please select 'Generate number' or 'Enter number'")
+                    .When(x => x.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step2 && x.EstablishmentTypeId != 41);
+
+            });
+
+            When(x => x.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step3, () =>
+            {
+                //Don't think we need anything here, as this should be the auto-generation step
+            });
+
+            When(x => x.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step4, () =>
+            {
+                RuleFor(x => x.EstablishmentNumber)
+                    .NotEmpty().WithMessage("Please enter an establishment number")
+                    .When(x => x.GenerateEstabNumber.HasValue && !x.GenerateEstabNumber.GetValueOrDefault());
+            });
+
+            When(x => x.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step5, () =>
+            {
+
                 RuleFor(x => x.OpenDate)
                     .Must(x => x.IsValid() && x.IsNotEmpty())
                     .WithMessage("Please enter the date of opening");
@@ -118,7 +130,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
                 RuleFor(x => x.GovernanceDetail)
                     .Must(x => !string.IsNullOrWhiteSpace(x))
                     .WithMessage("Please enter governance detail");
+
+                RuleFor(x => x.EstablishmentStatusId)
+                    .Must(x => x != null)
+                    .WithMessage("Please enter establishment status");
+
             });
+
+
 
         }
     }
