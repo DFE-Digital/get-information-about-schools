@@ -231,10 +231,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 return View(viewModel);
             }
 
-            var step1OK = viewModel.LocalAuthorityId != null && viewModel.Name != null && viewModel.EstablishmentTypeId != null;
-            var step2OK = viewModel.EducationPhaseId != null && viewModel.GenerateEstabNumber != null;
+            var isNameEntryOk = viewModel.LocalAuthorityId != null && viewModel.Name != null && viewModel.EstablishmentTypeId != null;
+            var isPhaseOfEducationOk = viewModel.EducationPhaseId != null && viewModel.GenerateEstabNumber != null;
 
-            if (viewModel.EstablishmentTypeId == 41 && routeComplete && step1OK)
+            if (viewModel.EstablishmentTypeId == 41 && routeComplete && isNameEntryOk)
             {
                 return ModelState.IsValid ? await CreateChildrensCentre(viewModel) : View(viewModel);
             }
@@ -245,7 +245,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 viewModel.CurrentStep = viewModel.ActionStep;
             }
 
-            if (viewModel.EstablishmentTypeId == 41 && viewModel.ActionStep == CreateSteps.PhaseOfEducation && !routeComplete && step1OK)
+            if (viewModel.EstablishmentTypeId == 41 && viewModel.ActionStep == CreateSteps.PhaseOfEducation && !routeComplete && isNameEntryOk)
             {
                 viewModel.CurrentStep = CreateSteps.ChildrensCentreEntry;
                 viewModel.ActionStep = CreateSteps.Complete;
@@ -253,30 +253,21 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 return View(viewModel);
             }
 
-            if (viewModel.ActionStep != CreateSteps.EstabNumberGenerated && !routeComplete)
+            if (viewModel.ActionStep == CreateSteps.EstabNumber && isPhaseOfEducationOk)
             {
-                // we can actively ignore step3, as there is no re-render to the screen we just need to ensure the model is correct as per usual.
+                viewModel.CurrentStep = CreateSteps.EstabNumber;
+                viewModel.ActionStep = CreateSteps.Complete;
+                return View(viewModel);
+            }
 
-                if (viewModel.ActionStep == CreateSteps.EnterEstabNumber && step2OK)
-                {
-                    switch (viewModel.GenerateEstabNumber)
-                    {
-                        case true:
-                            viewModel.ActionStep = CreateSteps.EstabNumberGenerated;
-                            // if they opted to generate a number, we dont need to re-render the screen, we can just continue to process below
-                            break;
-                        case false:
-                            viewModel.ActionStep = CreateSteps.ChildrensCentreEntry;
-                            return View(viewModel);
-                        default:
-                            break;
-                    };
-                }
+            
 
-                if (viewModel.ActionStep == CreateSteps.PhaseOfEducation && step1OK)
+            if (viewModel.ActionStep != CreateSteps.EstabNumber && !routeComplete)
+            {
+                if (viewModel.ActionStep == CreateSteps.PhaseOfEducation && isNameEntryOk)
                 {
                     viewModel.ActionStep = viewModel.EstablishmentTypeId != 41
-                        ? CreateSteps.EnterEstabNumber
+                        ? CreateSteps.EstabNumber
                         : CreateSteps.Complete;
                 }
             }
@@ -308,6 +299,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {
                     viewModel.SetWarnings(validation);
                     ModelState.Remove(nameof(viewModel.ProcessedWarnings));
+                }
+                else
+                {
+                    // go back to estab number
+                    viewModel.ActionStep = CreateSteps.Complete;
+                    viewModel.CurrentStep = CreateSteps.EstabNumber;
+                    viewModel.PreviousStep = CreateSteps.PhaseOfEducation;
                 }
 
                 if (ModelState.IsValid && !viewModel.WarningsToProcess.Any())

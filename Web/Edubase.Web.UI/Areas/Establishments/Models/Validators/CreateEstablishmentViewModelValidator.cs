@@ -41,7 +41,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
                 RuleFor(x => x.EstablishmentTypeId).NotEmpty().WithMessage("Please select an establishment type");
             });
 
-            When(x => x.ActionStep == CreateSteps.EnterEstabNumber, () =>      //Had some aggro with combining tests, may not work
+            When(x => x.ActionStep == CreateSteps.EstabNumber, () =>      //Had some aggro with combining tests, may not work
             {
                 RuleFor(x => x.EducationPhaseId)
                 .Cascade(CascadeMode.StopOnFirstFailure)
@@ -49,27 +49,27 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
                     .NotEmpty().WithMessage("Please select a phase of education")
                     .Must((m, x) => establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[m.EstablishmentTypeId.Value].Contains(x.Value))    //Fails here
                     .WithMessage("Education phase is not valid for the selected type of establishment")
-                    .When(x => x.ActionStep == CreateSteps.EnterEstabNumber && x.EstablishmentTypeId != 41);
+                    .When(x => x.ActionStep == CreateSteps.EstabNumber && x.EstablishmentTypeId != 41);
                 RuleFor(x => x.GenerateEstabNumber)
                     .NotNull()
                     .WithMessage("Please select 'Generate number' or 'Enter number'")
-                    .When(x => x.ActionStep == CreateSteps.EnterEstabNumber && x.EstablishmentTypeId != 41);
+                    .When(x => x.ActionStep == CreateSteps.EstabNumber && x.EstablishmentTypeId != 41);
 
             });
 
-            When(x => x.ActionStep == CreateSteps.EstabNumberGenerated, () =>
+            When(x => x.ActionStep == CreateSteps.EstabNumber, () =>
             {
                 //Don't think we need anything here, as this should be the auto-generation step
             });
 
-            When(x => x.ActionStep == CreateSteps.ChildrensCentreEntry, () =>
+            When(x => x.ActionStep == CreateSteps.Complete && x.EstablishmentTypeId != 41, () =>
             {
                 RuleFor(x => x.EstablishmentNumber)
                     .NotEmpty().WithMessage("Please enter an establishment number")
                     .When(x => x.GenerateEstabNumber.HasValue && !x.GenerateEstabNumber.GetValueOrDefault());
             });
 
-            When(x => x.ActionStep == CreateSteps.Complete, () =>
+            When(x => x.ActionStep == CreateSteps.Complete && x.EstablishmentTypeId ==  41, () =>
             {
 
                 RuleFor(x => x.OpenDate)
