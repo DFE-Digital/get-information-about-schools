@@ -161,7 +161,7 @@
                                 <a href="#" class="govuk-button" v-on:click.prevent="step1Continue()">
                                     Continue
                                 </a>
-                                <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="step0Complete=false, appState = 'initial'; clearErrors()" v-show="!detailEdit">
+                                <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="step0Completed=false, appState = 'initial'; clearErrors()" v-show="!detailEdit">
                                     Cancel
                                 </a>
                                 <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="step1Continue" v-show="detailEdit">

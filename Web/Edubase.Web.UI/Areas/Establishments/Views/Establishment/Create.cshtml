@@ -57,7 +57,6 @@
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
-            @Html.HiddenFor(x => x.ProcessedWarnings)
             @Html.HiddenFor(x => x.PreviousStep)
             @Html.HiddenFor(x => x.CurrentStep)
             @Html.HiddenFor(x => x.jsDisabled, true)
@@ -180,7 +179,7 @@
                     }
                 }
 
-                @if (Model.CurrentStep == CreateSteps.ChildrensCentreEntry)
+                @if (Model.CurrentStep == CreateSteps.CreateEntry)
                 {
                     <p>Set up a new establishment record by completing the fields below and selecting create establishment.</p>
                     <h2 class="govuk-heading-m">New establishment details</h2>
@@ -303,11 +302,11 @@
 
                 @if (Model.CurrentStep == CreateSteps.EstabNumberGenerated ||
                     Model.CurrentStep == CreateSteps.EnterEstabNumber ||
-                    Model.CurrentStep == CreateSteps.ChildrensCentreEntry)
+                    Model.CurrentStep == CreateSteps.CreateEntry)
                 //Not sure whether to segregate this into an additional step or add the create control to the three journey ends
                 //Might be better to do this bit if StepName is (3,4,5).
                 {
-                    @Html.Hidden("routeComplete", true)
+                    @Html.HiddenFor(x => x.ProcessedWarnings)
                     <div class="button-row">
                         <button type="submit" name="@nameof(Model.ActionStep)" value="@Model.ActionStep" class="govuk-button" id="create-submit">Create establishment</button>
                         @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
@@ -326,14 +325,13 @@
                 var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.ESTABLISHMENT_WITH_SAME_NAME_LA_FOUND);
                 <div class="modal-overlay" id="warning-modal-overlay-0"></div>
                 <div class="modal-content" id="warning-modal-content-0" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
-                    @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "modal-exit js-allow-exit", data_module = "govuk-button" })
                     <div class="modal-inner">
                         <h3 class="govuk-heading-l" tabindex="0" id="modal-label">Duplicate record</h3>
                         <p tabindex="0" id="model-desc">The record you are creating for <strong>@(warning.MessageParameters[0])</strong> in <strong>@(warning.MessageParameters[1])</strong> may duplicate existing record(s): <strong>@(warning.MessageParameters[2])</strong>
                     </div>
                     <div class="button-row">
                         <button type="submit" name="@nameof(Model.ActionStep)" value="@Model.ActionStep" class="govuk-button">Proceed</button>
-                        @Html.ActionLink("Cancel", "Create", "Establishment", new { area = "Establishments" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+                        <button type="submit" name="@nameof(Model.ActionStep)" value="@Model.PreviousStep" class="govuk-button govuk-button--secondary" >Cancel</button>
                     </div>
                 </div>
             }
