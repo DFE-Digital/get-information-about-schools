@@ -372,7 +372,7 @@
             </div>
         </div>
     </div>
-    <div v-show="validMergeUrns && !mergerCompleted">
+    <div v-show="validMergeUrns && !mergerComplete">
         <div class="govuk-grid-column-two-thirds" id="merger-summary">
             <p>You can propose closing one or more schools and altering the remaining school.</p>
             <h2 class="govuk-heading-s">Establishments to be merged</h2>
@@ -426,7 +426,7 @@
         </div>
 
     </div>
-    <div v-show="mergerCompleted">
+    <div v-show="mergerComplete">
         <div class="govuk-grid-column-two-thirds">
             <div class="summary-panel">
                 <h3 class="govuk-heading-s">Closing establishment details</h3>
