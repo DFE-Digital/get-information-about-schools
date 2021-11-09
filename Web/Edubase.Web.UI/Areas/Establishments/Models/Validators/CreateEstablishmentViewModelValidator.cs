@@ -62,14 +62,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
                 //Don't think we need anything here, as this should be the auto-generation step
             });
 
-            When(x => x.ActionStep == CreateSteps.Complete && x.EstablishmentTypeId != 41, () =>
+            When(x => x.ActionStep == CreateSteps.Completed && x.EstablishmentTypeId != 41, () =>
             {
                 RuleFor(x => x.EstablishmentNumber)
                     .NotEmpty().WithMessage("Please enter an establishment number")
                     .When(x => x.GenerateEstabNumber.HasValue && !x.GenerateEstabNumber.GetValueOrDefault());
             });
 
-            When(x => x.ActionStep == CreateSteps.Complete && x.EstablishmentTypeId ==  41, () =>
+            When(x => x.ActionStep == CreateSteps.Completed && x.EstablishmentTypeId ==  41, () =>
             {
 
                 RuleFor(x => x.OpenDate)

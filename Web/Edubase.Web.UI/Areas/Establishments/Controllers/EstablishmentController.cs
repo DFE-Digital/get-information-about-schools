@@ -206,10 +206,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken, EdubaseAuthorize, Route("Create")]
-        public async Task<ActionResult> Create(CreateChildrensCentreViewModel viewModel, bool JsDisabled = false, bool routeComplete = false)
+        public async Task<ActionResult> Create(CreateChildrensCentreViewModel viewModel, bool JsDisabled = false)
         {
             viewModel.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
+            var routeComplete = viewModel.ActionStep == CreateSteps.Completed;
 
             await PopulateCCSelectLists(viewModel);
             if (viewModel.EstablishmentTypeId != null)
@@ -225,7 +226,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (viewModel.ActionStep < viewModel.CurrentStep)
             {
-                viewModel.ActionStep = viewModel.CurrentStep == CreateSteps.ChildrensCentreEntry ? CreateSteps.PhaseOfEducation : viewModel.CurrentStep;
+                viewModel.ActionStep = viewModel.CurrentStep == CreateSteps.CreateEntry ? CreateSteps.PhaseOfEducation : viewModel.CurrentStep;
                 viewModel.CurrentStep = viewModel.PreviousStep;
                 viewModel.PreviousStep = viewModel.PreviousStep - 1;
                 return View(viewModel);
@@ -239,7 +240,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 return ModelState.IsValid ? await CreateChildrensCentre(viewModel) : View(viewModel);
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !routeComplete)
             {
                 viewModel.PreviousStep = viewModel.CurrentStep;
                 viewModel.CurrentStep = viewModel.ActionStep;
@@ -247,8 +248,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (viewModel.EstablishmentTypeId == 41 && viewModel.ActionStep == CreateSteps.PhaseOfEducation && !routeComplete && isNameEntryOk)
             {
-                viewModel.CurrentStep = CreateSteps.ChildrensCentreEntry;
-                viewModel.ActionStep = CreateSteps.Complete;
+                viewModel.CurrentStep = CreateSteps.CreateEntry;
+                viewModel.ActionStep = CreateSteps.Completed;
                 //need to escape here to redraw the screen and collect additional data
                 return View(viewModel);
             }
@@ -256,7 +257,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             if (viewModel.ActionStep == CreateSteps.EstabNumber && isPhaseOfEducationOk)
             {
                 viewModel.CurrentStep = CreateSteps.EstabNumber;
-                viewModel.ActionStep = CreateSteps.Complete;
+                viewModel.ActionStep = CreateSteps.Completed;
                 return View(viewModel);
             }
 
@@ -268,7 +269,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {
                     viewModel.ActionStep = viewModel.EstablishmentTypeId != 41
                         ? CreateSteps.EstabNumber
-                        : CreateSteps.Complete;
+                        : CreateSteps.Completed;
                 }
             }
 
@@ -303,7 +304,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 else
                 {
                     // go back to estab number
-                    viewModel.ActionStep = CreateSteps.Complete;
+                    viewModel.ActionStep = CreateSteps.Completed;
                     viewModel.CurrentStep = CreateSteps.EstabNumber;
                     viewModel.PreviousStep = CreateSteps.PhaseOfEducation;
                 }

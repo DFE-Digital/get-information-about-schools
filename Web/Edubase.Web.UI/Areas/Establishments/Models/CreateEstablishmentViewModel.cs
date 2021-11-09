@@ -55,8 +55,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
             NameEntry,
             PhaseOfEducation,
             EstabNumber,
-            ChildrensCentreEntry,
-            Complete
+            CreateEntry,
+            Completed
         }
 
     }
