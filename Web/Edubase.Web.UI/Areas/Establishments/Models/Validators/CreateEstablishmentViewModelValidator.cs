@@ -3,6 +3,8 @@ using Edubase.Services.Establishments;
 using Edubase.Web.UI.Validation;
 using FluentValidation;
 using System.Linq;
+using Edubase.Common;
+using Edubase.Services.Enums;
 using CreateSteps = Edubase.Web.UI.Areas.Establishments.Models.CreateEstablishmentViewModel.eEstabCreateSteps;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
@@ -39,6 +41,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
                 RuleFor(x => x.Name).NotEmpty().WithMessage("Please enter an establishment name");
                 RuleFor(x => x.LocalAuthorityId).NotEmpty().WithMessage("Please select a local authority");
                 RuleFor(x => x.EstablishmentTypeId).NotEmpty().WithMessage("Please select an establishment type");
+                RuleFor(x => x.LocalAuthorityId)
+                    .Must(x => x == 153)
+                    .WithMessage("Please select 'Does not apply'")
+                    .When(x => x.EstablishmentTypeId.OneOfThese(eLookupEstablishmentType.BritishSchoolsOverseas, eLookupEstablishmentType.OnlineProvider));
             });
 
             When(x => x.ActionStep == CreateSteps.EstabNumber, () =>      //Had some aggro with combining tests, may not work

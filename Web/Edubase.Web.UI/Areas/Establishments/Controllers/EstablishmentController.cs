@@ -246,7 +246,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 viewModel.CurrentStep = viewModel.ActionStep;
             }
 
-            if (viewModel.EstablishmentTypeId == 41 && viewModel.ActionStep == CreateSteps.PhaseOfEducation && !routeComplete && isNameEntryOk)
+            if (ModelState.IsValid && viewModel.EstablishmentTypeId == 41 && viewModel.ActionStep == CreateSteps.PhaseOfEducation && !routeComplete && isNameEntryOk)
             {
                 viewModel.CurrentStep = CreateSteps.CreateEntry;
                 viewModel.ActionStep = CreateSteps.Completed;
@@ -254,16 +254,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 return View(viewModel);
             }
 
-            if (viewModel.ActionStep == CreateSteps.EstabNumber && isPhaseOfEducationOk)
+            if (ModelState.IsValid && viewModel.ActionStep == CreateSteps.EstabNumber && isPhaseOfEducationOk)
             {
                 viewModel.CurrentStep = CreateSteps.EstabNumber;
                 viewModel.ActionStep = CreateSteps.Completed;
                 return View(viewModel);
             }
 
-            
-
-            if (viewModel.ActionStep != CreateSteps.EstabNumber && !routeComplete)
+            if (ModelState.IsValid && viewModel.ActionStep != CreateSteps.EstabNumber && !routeComplete)
             {
                 if (viewModel.ActionStep == CreateSteps.PhaseOfEducation && isNameEntryOk)
                 {
@@ -273,7 +271,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
             }
 
-            if (routeComplete && ModelState.IsValid)  //attempt to prevent end of route processing until final control is posted
+            if (ModelState.IsValid && routeComplete)  //attempt to prevent end of route processing until final control is posted
             {
                 var apiModel = new EstablishmentModel
                 {
