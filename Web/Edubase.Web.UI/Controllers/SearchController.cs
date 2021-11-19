@@ -283,7 +283,7 @@ namespace Edubase.Web.UI.Controllers
             else
             {
                 var localAuthorityDisambiguationViewModel = new LocalAuthorityDisambiguationViewModel(model.SelectedLocalAuthorityIds, model.LocalAuthorityToAdd ?? "",
-                    localAuthorities.Where(x => x.Name.IndexOf(model.LocalAuthorityToAdd ?? "", StringComparison.OrdinalIgnoreCase) > -1).Take(10).ToList());
+                    localAuthorities.Where(x => x.Name.IndexOf(model.LocalAuthorityToAdd ?? "", StringComparison.OrdinalIgnoreCase) > -1).Take(10).ToList(), model.OpenOnly);
                 return View("LocalAuthorityDisambiguation", localAuthorityDisambiguationViewModel);
             }
         }
