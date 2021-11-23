@@ -773,6 +773,7 @@
     <Content Include="Views\Faq\EditGroup.cshtml" />
     <Content Include="Areas\Groups\Views\Group\Partials\Details\_ChildrensCentresGroupDetails.cshtml" />
     <Content Include="Areas\Groups\Views\Group\Partials\Details\_GenericGroupDetails.cshtml" />
+    <Content Include="Views\Home\TermsofUse.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>

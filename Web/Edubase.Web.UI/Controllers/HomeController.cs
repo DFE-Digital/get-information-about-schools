@@ -148,6 +148,9 @@ namespace Edubase.Web.UI.Controllers
         [Route("~/help")]
         public ActionResult Help() => View();
 
+        [Route("~/TermsofUse")]
+        public ActionResult TermsofUse() => View();
+
         [Route("~/8bg594ghfdgh5t90-throwex"), Filters.EdubaseAuthorize]
         public ActionResult ThrowException() { throw new Exception("Test exception - to test exception reporting"); }
 
