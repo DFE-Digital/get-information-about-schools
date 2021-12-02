@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models.Faq;
+using Glimpse.AspNet.Tab;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -105,7 +106,7 @@ namespace Edubase.Web.UI.Controllers
                     var item = new FaqItem()
                     {
                         Title = viewModel.Title,
-                        Content = viewModel.Content,
+                        Content = viewModel.Content.Trim(),
                         GroupId = viewModel.GroupId,
                         DisplayOrder = (await _FaqItemRepository.GetAllAsync(1000)).Items.Count(x => x.GroupId == viewModel.GroupId) + 1
                     };
@@ -115,7 +116,7 @@ namespace Edubase.Web.UI.Controllers
                 {
                     var item = oldModel.ShallowCopy();
                     item.Title = viewModel.Title;
-                    item.Content = viewModel.Content;
+                    item.Content = viewModel.Content.Trim();
                     item.GroupId = viewModel.GroupId;
 
                     if (oldModel.GroupId != viewModel.GroupId)

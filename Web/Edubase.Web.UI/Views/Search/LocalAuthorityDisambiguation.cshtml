@@ -1,3 +1,5 @@
+@using Edubase.Services.Domain;
+@using Edubase.Services.Enums;
 @using Edubase.Web.UI.Models.Search;
 @using Edubase.Web.UI
 @using Glimpse.Core.Configuration
@@ -23,7 +25,7 @@
             <ul class="govuk-list">
                 @foreach (var item in Model.MatchingLocalAuthorities)
                 {
-                    <li><a href="/?SearchType=ByLocalAuthority&@QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.AddUnique(item.Id).ToArray())#la">@item.Name</a></li>
+                    <li>@LocalAuthorityLink(item)</li>
                 }
             </ul>
             <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="govuk-button govuk-button--secondary js-show-inline">Back to search</a>
@@ -34,9 +36,7 @@
         {
             <p>
                 Did you mean
-                <a href="/?SearchType=ByLocalAuthority&@QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.AddUnique(Model.MatchingLocalAuthorities[0].Id).ToArray())#la">
-                    @Model.MatchingLocalAuthorities[0].Name
-                </a>?
+                @LocalAuthorityLink(@Model.MatchingLocalAuthorities[0])?
             </p>
             <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments", SearchType = eSearchType.ByLocalAuthority})" class="govuk-button govuk-button--secondary js-show-inline">Back to search</a>
             <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = "Establishments"})" class="govuk-button govuk-button--secondary no-js-show-inline">Back to search</a>
@@ -49,6 +49,13 @@
         }
     </div>
 </div>
+
+@helper LocalAuthorityLink(LookupDto item)
+{
+    string url = $"/?SearchType=ByLocalAuthority&{QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.AddUnique(item.Id).ToArray())}&OpenOnly={Model.OpenOnly}#la";
+
+    <a href="@url">@item.Name</a>
+}
 
 @section BreadCrumbs
 {

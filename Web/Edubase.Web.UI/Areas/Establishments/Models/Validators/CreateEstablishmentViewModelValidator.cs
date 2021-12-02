@@ -3,6 +3,9 @@ using Edubase.Services.Establishments;
 using Edubase.Web.UI.Validation;
 using FluentValidation;
 using System.Linq;
+using Edubase.Common;
+using Edubase.Services.Enums;
+using CreateSteps = Edubase.Web.UI.Areas.Establishments.Models.CreateEstablishmentViewModel.eEstabCreateSteps;
 
 namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
 {
@@ -33,14 +36,18 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
     {
         public CreateChildrensCentreViewModelValidator(IEstablishmentReadService establishmentReadService)
         {
-            When(x => x.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step1, () =>
+            When(x => x.ActionStep == CreateSteps.PhaseOfEducation, () =>
             {
                 RuleFor(x => x.Name).NotEmpty().WithMessage("Please enter an establishment name");
                 RuleFor(x => x.LocalAuthorityId).NotEmpty().WithMessage("Please select a local authority");
                 RuleFor(x => x.EstablishmentTypeId).NotEmpty().WithMessage("Please select an establishment type");
+                RuleFor(x => x.LocalAuthorityId)
+                    .Must(x => x == 153)
+                    .WithMessage("Please select 'Does not apply'")
+                    .When(x => x.EstablishmentTypeId.OneOfThese(eLookupEstablishmentType.BritishSchoolsOverseas, eLookupEstablishmentType.OnlineProvider));
             });
 
-            When(x => x.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step2, () =>      //Had some aggro with combining tests, may not work
+            When(x => x.ActionStep == CreateSteps.EstabNumber, () =>      //Had some aggro with combining tests, may not work
             {
                 RuleFor(x => x.EducationPhaseId)
                 .Cascade(CascadeMode.StopOnFirstFailure)
@@ -48,27 +55,27 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Validators
                     .NotEmpty().WithMessage("Please select a phase of education")
                     .Must((m, x) => establishmentReadService.GetEstabType2EducationPhaseMap().AsInts()[m.EstablishmentTypeId.Value].Contains(x.Value))    //Fails here
                     .WithMessage("Education phase is not valid for the selected type of establishment")
-                    .When(x => x.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step2 && x.EstablishmentTypeId != 41);
+                    .When(x => x.ActionStep == CreateSteps.EstabNumber && x.EstablishmentTypeId != 41);
                 RuleFor(x => x.GenerateEstabNumber)
                     .NotNull()
                     .WithMessage("Please select 'Generate number' or 'Enter number'")
-                    .When(x => x.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step2 && x.EstablishmentTypeId != 41);
+                    .When(x => x.ActionStep == CreateSteps.EstabNumber && x.EstablishmentTypeId != 41);
 
             });
 
-            When(x => x.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step3, () =>
+            When(x => x.ActionStep == CreateSteps.EstabNumber, () =>
             {
                 //Don't think we need anything here, as this should be the auto-generation step
             });
 
-            When(x => x.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step4, () =>
+            When(x => x.ActionStep == CreateSteps.Completed && x.EstablishmentTypeId != 41, () =>
             {
                 RuleFor(x => x.EstablishmentNumber)
                     .NotEmpty().WithMessage("Please enter an establishment number")
                     .When(x => x.GenerateEstabNumber.HasValue && !x.GenerateEstabNumber.GetValueOrDefault());
             });
 
-            When(x => x.StepName == CreateEstablishmentViewModel.eEstabCreateSteps.Step5, () =>
+            When(x => x.ActionStep == CreateSteps.Completed && x.EstablishmentTypeId ==  41, () =>
             {
 
                 RuleFor(x => x.OpenDate)
