@@ -1,0 +1,76 @@
+@{
+    ViewBag.Title = "Get Information about Schools";
+    ViewBag.imageMQ = "(max-width: 768px)";
+    ViewBag.SiteSection = "help";
+}
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Search", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Help", "Help", "Home", new { area = "" }, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Terms of Use</h1>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-m">Do</h2>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>sign into one computer at a time with your login details</li>
+            <li>open GIAS in only one browser at a time</li>
+            <li>report malfunctions, incidents and any observed or suspected security breaches immediately to DfE using a
+                <a href="https://www.get-information-schools.service.gov.uk/Contact">data collections service request form</a></li>
+            <li>sign out of GIAS before closing the browser page</li>
+            <li>ensure compliance with the <a href="https://www.gov.uk/data-protection" target="_blank" rel="noreferrer noopener">Data Protection Act 1998 (opens in new tab)</a> for all personal information you input / submit onto or, work with on GIAS</li>
+            <li>contact your DfE Sign-in (DSI) approver immediately if you no longer have access to GIAS</li>
+            <li>contact the DfE Sign-in approver of the relevant organisation for a separate user account if you are a designated user for that organisation</li>
+            <li>contact the <a href="https://help.signin.education.gov.uk/contact-us" target="_blank" rel="noreferrer noopener">DfE Sign-in support (opens in a new tab)</a> team for any DfE Sign-in related queries</li>
+        </ul>
+
+        <h2 class="govuk-heading-m">Don&rsquo;t</h2>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>sign into GIAS on more than one computer, using multiple browser sessions or run-on multiple browser tabs at the same time</li>
+            <li>share sign-in details with any other person</li>
+            <li>under any circumstances, circumvent or attempt to circumvent controls and restrictions applied to GIAS</li>
+        </ul>
+        <p>Note: any GIAS user identified as not adhering to the above guidance may have their access permissions withdrawn.</p>
+
+        <h2 class="govuk-heading-m">Service level</h2>
+        <p>The Data Operations service desk provides support between the hours of 8:30am and 4:30pm, Monday to Thursday and 8:30am and 4:00pm Friday, excluding bank holidays and the Christmas closure. The Data Operations service desk will only answer GIAS related queries. For support on DfE Sign-in (DSI), in the first instance you should seek advice from your approver; alternatively complete a DfE Sign-in
+            <a href="https://help.signin.education.gov.uk/contact-us" target="_blank" rel="noreferrer noopener">service request form (opens in a new tab)</a>.</p>
+        <p>Unfortunately any requests put forward in error will be disregarded.</p>
+        <p>GIAS is available outside of these times (on an unsupported basis) but users should note availability cannot be guaranteed. Essential maintenance, where possible, will be scheduled during non-service hours as far as possible and advance warning of planned service disruption will be provided via a system notification banner visible to all users.</p>
+        <p>Planned outages within the GIAS service hours will be minimised as far as possible.</p>
+
+        <h2 class="govuk-heading-m">How do I provide feedback on my GIAS user experience or log my interest in taking part in future user research?</h2>
+        <p>You should use the  <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=yXfS-grGoU2187O4s0qC-ZYZAR7wa5FMmFGoqFTjsw5UREJBVlAxSTBKWFdOMEcwTTU1M0gyVVJKRCQlQCN0PWcu"  target="_blank" rel="noreferrer noopener">user satisfaction survey (opens in a new tab)</a> to provide feedback about your experience or suggestions for further improvement. We are not always able to respond to each individual piece of feedback, but all feedback is recorded and helps us ensure functionality of value is retained and areas for improvement are prioritised.</p>
+        <p>You can also use the user satisfaction survey to share your contact details and express your interest in taking part in future user research.</p>
+
+        <h2 class="govuk-heading-m">How do I raise a query or report a data error or other issue?</h2>
+        <p>You should raise a data collections service request form to log a query or report a specific issue. Consult with your designated DfE Sign-in approver before submitting a service request to ascertain whether they can assist with your query first.<p>
+        <p>When sending a service request, provide as much detail as possible so our staff can log and prioritise your request based on impact and urgency, and respond accordingly.<p>
+        <p>Note: we are not always able to respond to queries or investigate issues raised by other routes (for example the user satisfaction survey, social media, or the DfE Data Operations service desk Slack channel).<p>
+
+        <h2 class="govuk-heading-m">Request investigation and resolution</h2>
+        <p>If contact is made via the data collections service request form on the website, your request will be investigated and resolved by a Data Operations service desk first line support operator. You will be contacted by e-mail or by telephone and advised accordingly. In some instances, it may be necessary to refer your query to a subject expert, who may then contact you directly, or you will be provided with feedback via the first line support operator.<p>
+        <p>We reserve the right to close GIAS without warning for essential/urgent maintenance, but will publicise service unavailability as soon as possible, and advise when the service will be available. We also reserve the right to suspend GIAS if required, however, affected users will be notified as soon as this action is deemed necessary.<p>
+
+        @helpers.BackToTopLink()
+    </div>
+</div>
