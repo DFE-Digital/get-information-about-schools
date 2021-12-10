@@ -63,7 +63,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             model.SearchQueryString = Request.QueryString.ToString();
 
             var retVal = await SearchByUrnAsync(model);
-            if (retVal != null) return retVal;
+            if (retVal != null)
+            {
+                return retVal;
+            }
 
             model.SavedFilterToken = TempData["SavedToken"]?.ToString();
 
@@ -75,7 +78,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
 
             var payload = await GetEstablishmentSearchPayload(model);
-            if (!payload.Success) model.Error = payload.ErrorMessage;
+            if (!payload.Success)
+            {
+                model.Error = payload.ErrorMessage;
+            }
+
             return await ProcessEstablishmentsSearch(model, payload.Object);
         }
 
@@ -84,7 +91,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             model.SearchQueryString = Request.QueryString.ToString();
             var payload = await GetEstablishmentSearchPayload(model);
-            if (!payload.Success) model.Error = payload.ErrorMessage;
+            if (!payload.Success)
+            {
+                model.Error = payload.ErrorMessage;
+            }
+
             await ProcessEstablishmentsSearch(model, payload.Object);
             HttpContext.Response.Headers.Add("x-count", model.Count.ToString());
             HttpContext.Response.Headers.Add("x-show-date-filter-warning",
@@ -100,7 +111,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (!payload.Success) model.Error = payload.ErrorMessage;
             await ProcessEstablishmentsSearch(model, payload.Object);
-            var localAuthorities = (await _lookupService.LocalAuthorityGetAllAsync());
+            var localAuthorities = await _lookupService.LocalAuthorityGetAllAsync();
             var establishmentTypes = await _lookupService.EstablishmentTypesGetAllAsync();
             var educationPhases = await _lookupService.EducationPhasesGetAllAsync();
             var counties = (await _lookupService.CountiesGetAllAsync()).Where(c => c.Id != 63); //remove "not recorded"
@@ -479,7 +490,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
 
             if (model.Count == 1 && model.GoToDetailPageOnOneResult)
+            {
                 return RedirectToEstabDetail(model.Results.First().Urn.GetValueOrDefault());
+            }
             else
             {
                 var permittedStatusIds = await _establishmentReadService.GetPermittedStatusIdsAsync(User);

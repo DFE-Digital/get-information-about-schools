@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,7 +11,11 @@ namespace Edubase.Web.UI.ValueConverters
         public static string Convert(string url)
         {
             url = url.Clean();
-            if (url != null && !url.StartsWith("http")) url = "http://" + url;
+            if (url != null && !url.StartsWith("http"))
+            {
+                url = "http://" + url;
+            }
+
             return url;
         }
     }

@@ -60,7 +60,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                             Errors = response.Errors
                         };
                     }
-                    else return RedirectToAction(nameof(Result), new { response.GetResponse().Id, state });
+                    else
+                    {
+                        return RedirectToAction(nameof(Result), new { response.GetResponse().Id, state });
+                    }
                 }
             }
 
@@ -72,7 +75,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         public async Task<ActionResult> Result(Guid id, string state)
         {
             var model = await _establishmentWriteService.BulkUpdateAsync_GetProgressAsync(id, User);
-            if (!model.IsCompleted()) return View("InProgress", model);
+            if (!model.IsCompleted())
+            {
+                return View("InProgress", model);
+            }
             else
             {
                 var dto = UriHelper.DeserializeUrlToken<BulkUpdateDto>(state);
