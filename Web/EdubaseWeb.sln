@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Data", "Edubase.Data\Edubase.Data.csproj", "{8C3D6834-3FA1-440A-A396-6489E22E8063}"
 EndProject
@@ -14,8 +14,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.UnitTest", "Edubase.UnitTest\Edubase.UnitTest.csproj", "{13E16127-6989-497C-83A2-0127B407468E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{9313FD19-2FDE-4C58-B0DE-E469E160CCDE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.IntegrationTest", "Edubase.IntegrationTest\Edubase.IntegrationTest.csproj", "{4309E8AC-70FB-4B9B-88EA-15139156078C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.Services.Texuna", "Edubase.Services.Texuna\Edubase.Services.Texuna.csproj", "{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}"
 EndProject
@@ -96,18 +94,6 @@ Global
 		{13E16127-6989-497C-83A2-0127B407468E}.Release|x64.Build.0 = Release|Any CPU
 		{13E16127-6989-497C-83A2-0127B407468E}.Release|x86.ActiveCfg = Release|Any CPU
 		{13E16127-6989-497C-83A2-0127B407468E}.Release|x86.Build.0 = Release|Any CPU
-		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Debug|x64.ActiveCfg = Debug|x64
-		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Debug|x64.Build.0 = Debug|x64
-		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Debug|x86.ActiveCfg = Debug|x86
-		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Debug|x86.Build.0 = Debug|x86
-		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Release|x64.ActiveCfg = Release|x64
-		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Release|x64.Build.0 = Release|x64
-		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Release|x86.ActiveCfg = Release|x86
-		{4309E8AC-70FB-4B9B-88EA-15139156078C}.Release|x86.Build.0 = Release|x86
 		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B42EFCA1-48E9-4C63-9FB3-7BE4D2F22EFB}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -138,7 +124,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{13E16127-6989-497C-83A2-0127B407468E} = {9313FD19-2FDE-4C58-B0DE-E469E160CCDE}
-		{4309E8AC-70FB-4B9B-88EA-15139156078C} = {9313FD19-2FDE-4C58-B0DE-E469E160CCDE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D9896917-C379-499C-86CE-4BDEE7283715}
