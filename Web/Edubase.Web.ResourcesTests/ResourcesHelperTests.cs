@@ -18,6 +18,9 @@ namespace Edubase.Web.Resources.Tests
         [InlineData(eLookupEstablishmentTypeGroup.Academies, null)]
         [InlineData(eLookupEstablishmentTypeGroup.Academies, false)]
         [InlineData(eLookupEstablishmentTypeGroup.Academies, true)]
+        [InlineData(eLookupEstablishmentTypeGroup.OtherTypes, null)]
+        [InlineData(eLookupEstablishmentTypeGroup.OtherTypes, false)]
+        [InlineData(eLookupEstablishmentTypeGroup.OtherTypes, true)]
         public void GetResourceStringForEstablishmentTest(eLookupEstablishmentTypeGroup? establishmentType, bool? isAuthenticated)
         {
             //there is very little to test on this method, except that even when provided with junk it returns null
