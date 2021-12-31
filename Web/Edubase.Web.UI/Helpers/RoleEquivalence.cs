@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Edubase.Services.Enums;
 
@@ -19,12 +19,7 @@ namespace Edubase.Web.UI.Helpers
 
         public static eLookupGovernorRole? GetLocalEquivalentToSharedRole(eLookupGovernorRole role)
         {
-           if (equivalentRoles.Any(x => x.Value.Contains(role)))
-           {
-               return equivalentRoles.Single(x => x.Value.Contains(role)).Key;
-           }
-
-            return null;
+            return equivalentRoles.Any(x => x.Value.Contains(role)) ? (eLookupGovernorRole?) equivalentRoles.Single(x => x.Value.Contains(role)).Key : null;
         }
 
         public static List<eLookupGovernorRole> GetEquivalentRole(eLookupGovernorRole role)
@@ -39,17 +34,14 @@ namespace Edubase.Web.UI.Helpers
                 };
             }
 
-            if (role == eLookupGovernorRole.Establishment_SharedLocalGovernor ||
-                role == eLookupGovernorRole.Group_SharedLocalGovernor)
-            {
-                return new List<eLookupGovernorRole>
+            return role == eLookupGovernorRole.Establishment_SharedLocalGovernor ||
+                role == eLookupGovernorRole.Group_SharedLocalGovernor
+                ? new List<eLookupGovernorRole>
                 {
                     eLookupGovernorRole.Group_SharedLocalGovernor,
                     eLookupGovernorRole.Establishment_SharedLocalGovernor
-                };
-            }
-
-            return new List<eLookupGovernorRole> {role};
+                }
+                : new List<eLookupGovernorRole> {role};
         }
     }
 }

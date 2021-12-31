@@ -22,12 +22,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         [HttpPost, Route("CreateChildrensCentre/Validate")]
         public async Task<IHttpActionResult> ValidateChildrensCentreGroup(ValidateChildrensCentreStep2 model)
         {
-            if (!ModelState.IsValid)
-            {
-                return Json(ModelState.Where(m => m.Value.Errors.Any()));
-            }
-
-            return Json(new string[] { });
+            return !ModelState.IsValid ? Json(ModelState.Where(m => m.Value.Errors.Any())) : (IHttpActionResult) Json(new string[] { });
         }
 
         [HttpPost, Route("CreateChildrensCentre/Validate/OpenDate")]
@@ -40,13 +35,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 ModelState.AddModelError("openDate", "The date specified is not valid");
             }
-
-            if (!ModelState.IsValid)
-            {
-                return Json(ModelState.Where(m => m.Value.Errors.Any()));
-            }
-
-            return Json(new string[] { });
+            return !ModelState.IsValid ? Json(ModelState.Where(m => m.Value.Errors.Any())) : (IHttpActionResult) Json(new string[] { });
         }
 
         [HttpPost, Route("CreateChildrensCentre/Validate/JoinedDate")]
@@ -80,12 +69,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 ModelState.AddModelError("joinDate", message);
             }
 
-            if (!ModelState.IsValid)
-            {
-                return Json(ModelState.Where(m => m.Value.Errors.Any()));
-            }
-
-            return Json(new string[] { });
+            return !ModelState.IsValid ? Json(ModelState.Where(m => m.Value.Errors.Any())) : (IHttpActionResult) Json(new string[] { });
         }
 
         [HttpPost, Route("CreateChildrensCentre/Validate/All")]

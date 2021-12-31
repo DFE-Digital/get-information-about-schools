@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Services.Domain;
 using FluentValidation;
 using System;
@@ -25,7 +25,11 @@ namespace Edubase.Web.UI
         public static List<int> AddUnique(this List<int> list, int item)
         {
             var retVal = new List<int>(list);
-            if (!retVal.Contains(item)) retVal.Add(item);
+            if (!retVal.Contains(item))
+            {
+                retVal.Add(item);
+            }
+
             return retVal;
         }
 

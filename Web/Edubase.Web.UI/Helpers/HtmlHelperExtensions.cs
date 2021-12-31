@@ -24,29 +24,29 @@ namespace Edubase.Web.UI.Helpers
             var expressionText = ExpressionHelper.GetExpressionText(expression);
             var fullHtmlFieldName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(expressionText);
             var state = htmlHelper.ViewData.ModelState[fullHtmlFieldName];
-            if (state == null) return MvcHtmlString.Empty;
-            return state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-form-group--error");
+            return state == null
+                ? MvcHtmlString.Empty
+                : state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-form-group--error");
         }
 
         public static MvcHtmlString ValidationCssClass(this HtmlHelper htmlHelper, string modelName)
         {
             var state = htmlHelper.ViewData.ModelState[modelName];
-            if (state == null) return MvcHtmlString.Empty;
-            return state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-error-message");
+            return state == null ? MvcHtmlString.Empty : state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-error-message");
         }
 
         public static MvcHtmlString ValidationGroupCssClass(this HtmlHelper htmlHelper, string modelName)
         {
             var state = htmlHelper.ViewData.ModelState[modelName];
-            if (state == null) return MvcHtmlString.Empty;
-            return state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-form-group--error");
+            return state == null
+                ? MvcHtmlString.Empty
+                : state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-form-group--error");
         }
 
         public static MvcHtmlString ValidationSelectCssClass(this HtmlHelper htmlHelper, string modelName)
         {
             var state = htmlHelper.ViewData.ModelState[modelName];
-            if (state == null) return MvcHtmlString.Empty;
-            return state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-select--error");
+            return state == null ? MvcHtmlString.Empty : state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-select--error");
         }
 
 
@@ -58,8 +58,7 @@ namespace Edubase.Web.UI.Helpers
             var expressionText = ExpressionHelper.GetExpressionText(expression);
             var fullHtmlFieldName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(expressionText);
             var state = htmlHelper.ViewData.ModelState[fullHtmlFieldName];
-            if (state == null) return MvcHtmlString.Empty;
-            return state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-input--error");
+            return state == null ? MvcHtmlString.Empty : state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-input--error");
         }
 
         public static MvcHtmlString ValidationMessageNested(this HtmlHelper htmlHelper, string modelName)
@@ -150,14 +149,14 @@ namespace Edubase.Web.UI.Helpers
 
         public static HtmlHelper<TModel> For<TModel>(ViewContext viewContext, ViewDataDictionary viewData, RouteCollection routeCollection) where TModel : class, new()
         {
-            TModel model = new TModel();
+            var model = new TModel();
             return For<TModel>(viewContext, viewData, routeCollection, model);
         }
 
         public static HtmlHelper<TModel> For<TModel>(ViewContext viewContext, ViewDataDictionary viewData, RouteCollection routeCollection, TModel model)
         {
             var newViewData = new ViewDataDictionary(viewData) { Model = model };
-            ViewContext newViewContext = new ViewContext(
+            var newViewContext = new ViewContext(
                 viewContext.Controller.ControllerContext,
                 viewContext.View,
                 newViewData,
@@ -193,7 +192,10 @@ namespace Edubase.Web.UI.Helpers
                 var result = mb > minimumValue ? mb : minimumValue;
                 return new MvcHtmlString(result.ToString() + " MB");
             }
-            else return new MvcHtmlString(string.Empty);
+            else
+            {
+                return new MvcHtmlString(string.Empty);
+            }
         }
 
         /// <summary>
@@ -207,7 +209,7 @@ namespace Edubase.Web.UI.Helpers
             => (obj is DateTime? ? ((DateTime?)obj)?.ToString(dateFormat ?? "d MMMM yyyy").Clean() : obj?.ToString().Clean()) ?? "Not recorded";
 
 
-        private const string assetsPath = "public/assets/scripts/build";
+        private const string AssetsPath = "public/assets/scripts/build";
         /// <summary>
         /// Outputs the path to the requested js by name (ignoring file hash)
         /// </summary>
@@ -222,9 +224,9 @@ namespace Edubase.Web.UI.Helpers
                 path = HttpRuntime.AppDomainAppPath;
             }
 
-            var files = Directory.GetFiles(Path.Combine(path, assetsPath), expression).Select(Path.GetFileName).ToList();
+            var files = Directory.GetFiles(Path.Combine(path, AssetsPath), expression).Select(Path.GetFileName).ToList();
 
-            return files.Count == 1 ? $"/{assetsPath}/{files[0]}" : "";
+            return files.Count == 1 ? $"/{AssetsPath}/{files[0]}" : "";
         }
 
         /// <summary>
@@ -245,8 +247,10 @@ namespace Edubase.Web.UI.Helpers
                 : HtmlHelper.AnonymousObjectToHtmlAttributes(fixedHtmlAttributes);
             if (dynamicHtmlAttributes != null)
             {
-                foreach (KeyValuePair<string, object> kvp in dynamicHtmlAttributes)
+                foreach (var kvp in dynamicHtmlAttributes)
+                {
                     rvd[kvp.Key] = kvp.Value;
+                }
             }
             return rvd;
         }

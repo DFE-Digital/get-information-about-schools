@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -19,14 +19,22 @@ namespace Edubase.Web.UI.Models.Grid
         {
             var cell = new GridCellViewModel(content?.ToString());
             Cells.Add(cell);
-            if (Cells.Count > Parent.HeaderCells.Count) throw new Exception("You cannot add more row cells than header cells");
+            if (Cells.Count > Parent.HeaderCells.Count)
+            {
+                throw new Exception("You cannot add more row cells than header cells");
+            }
+
             cell.Parent = Parent.HeaderCells[Cells.Count - 1];
             return this;
         }
 
         public GridRowViewModel<T> AddCell(object content, bool condition)
         {
-            if (condition) AddCell(content);
+            if (condition)
+            {
+                AddCell(content);
+            }
+
             return this;
         }
 

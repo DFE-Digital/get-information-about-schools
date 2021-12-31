@@ -11,7 +11,9 @@ namespace Edubase.Web.UI.Helpers
         public static void EduBaseAddToModelState(this ValidationResult result, ModelStateDictionary modelState, string prefix, bool avoidDuplicates = false)
         {
             if (result.IsValid)
+            {
                 return;
+            }
 
             foreach (var error in result.Errors)
             {

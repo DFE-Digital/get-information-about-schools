@@ -42,7 +42,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         // public ActionResult Index() => View();
         public async Task<ActionResult> ManageAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc")
         {
-            int take = 50;
+            var take = 50;
             var now = DateTime.Now;
 
             var from = new DateTime(now.Year, now.Month, 1);
@@ -54,7 +54,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
 
-            var result = await (_establishmentReadService.SearchAsync(
+            var result = await _establishmentReadService.SearchAsync(
                 new EstablishmentSearchPayload
                 {
                     Skip = skip,
@@ -76,7 +76,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                         nameof(M.PredecessorName),
                         nameof(M.PredecessorUrn)
                     }
-                }, User));
+                }, User);
 
 
             var academyOpenings = new List<EditAcademyOpeningViewModel>();
@@ -134,19 +134,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 case "PredecessorName-asc":
                     academyOpenings.Sort(delegate(EditAcademyOpeningViewModel x, EditAcademyOpeningViewModel y)
                     {
-                        if (y.PredecessorName == null && y.PredecessorName == null) return 0;
-                        else if (x.PredecessorName == null) return 1;
-                        else if (y.PredecessorName == null) return -1;
-                        else return x.PredecessorName.CompareTo(y.PredecessorName);
+                        return y.PredecessorName == null && y.PredecessorName == null
+                            ? 0
+                            : x.PredecessorName == null ? 1 : y.PredecessorName == null ? -1 : x.PredecessorName.CompareTo(y.PredecessorName);
                     });
                     break;
                 case "PredecessorName-desc":
                     academyOpenings.Sort(delegate(EditAcademyOpeningViewModel x, EditAcademyOpeningViewModel y)
                     {
-                        if (y.PredecessorName == null && y.PredecessorName == null) return 0;
-                        else if (x.PredecessorName == null) return -1;
-                        else if (y.PredecessorName == null) return 1;
-                        else return y.PredecessorName.CompareTo(x.PredecessorName);
+                        return y.PredecessorName == null && y.PredecessorName == null
+                            ? 0
+                            : x.PredecessorName == null ? -1 : y.PredecessorName == null ? 1 : y.PredecessorName.CompareTo(x.PredecessorName);
                     });
                     break;
 
@@ -180,7 +178,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var link = links.FirstOrDefault(e =>
                 e.LinkTypeId == (int) eLookupEstablishmentLinkType.ParentOrPredecessor);
 
-            var establishment = (result).GetResult();
+            var establishment = result.GetResult();
 
             var viewModel = new EditAcademyOpeningViewModel()
             {
@@ -212,7 +210,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 return View("EditAcademyOpening", viewModel);
             }
 
-            DateTime openingDate = viewModel.OpeningDate.ToDateTime().GetValueOrDefault();
+            var openingDate = viewModel.OpeningDate.ToDateTime().GetValueOrDefault();
             var links = await _establishmentReadService.GetLinkedEstablishmentsAsync(viewModel.Urn, User);
             var link = links.FirstOrDefault(e =>
                 e.LinkTypeId == (int) eLookupEstablishmentLinkType.ParentOrPredecessor);
@@ -267,7 +265,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 var link = links.FirstOrDefault(e =>
                     e.LinkTypeId == (int) eLookupEstablishmentLinkType.ParentOrPredecessor);
 
-                var establishment = (result).GetResult();
+                var establishment = result.GetResult();
                 if (establishment.StatusId != (int)eLookupEstablishmentStatus.ProposedToOpen)
                 {
                     ModelState.AddModelError("Urn", "Please enter a valid URN");

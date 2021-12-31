@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -39,7 +39,11 @@ namespace Edubase.Web.UI.Models.Grid
 
         public GridViewModel<T> AddHeaderCell(string text, bool condition, string sortKey = "", string sortType = "")
         {
-            if(condition) HeaderCells.Add(new GridCellViewModel(text, sortKey, sortType));
+            if(condition)
+            {
+                HeaderCells.Add(new GridCellViewModel(text, sortKey, sortType));
+            }
+
             return this;
         }
 
