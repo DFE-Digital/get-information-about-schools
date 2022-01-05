@@ -41,6 +41,14 @@ namespace Edubase.Data.Repositories
         }
 
         public async Task CreateAsync(IEnumerable<NotificationBanner> entities) => await CreateAsync(entities.ToArray());
+        
+        public Page<NotificationBanner> GetAll(int take, TableContinuationToken skip = null, eNotificationBannerPartition partitionKey = eNotificationBannerPartition.Current)
+        {
+            var query = Table.CreateQuery<NotificationBanner>().Where(x => x.PartitionKey == partitionKey.ToString()).AsQueryable();
+            query = query.Take(take);
+            var results = Table.ExecuteQuerySegmentedAsync(query.AsTableQuery(), skip).Result;
+            return new Page<NotificationBanner>(results, results.ContinuationToken);
+        }
 
         public async Task<Page<NotificationBanner>> GetAllAsync(int take, TableContinuationToken skip = null, eNotificationBannerPartition partitionKey = eNotificationBannerPartition.Current)
         {
