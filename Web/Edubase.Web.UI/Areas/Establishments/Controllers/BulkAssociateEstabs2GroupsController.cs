@@ -38,14 +38,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 var fileName = FileHelper.GetTempFileName(Path.GetExtension(viewModel.BulkFile.FileName));
                 viewModel.BulkFile.SaveAs(fileName);
                 var result = await _establishmentWriteService.BulkAssociateEstabs2GroupsAsync(fileName, User);
-                if (result.HasErrors)
-                {
-                    return await ResultInternalAsync(Guid.Empty, viewModel, result);
-                }
-                else
-                {
-                    return RedirectToRoute("BulkAssociateEstabs2GroupsResult", new { id = result.GetResponse().Id });
-                }
+                return result.HasErrors
+                    ? await ResultInternalAsync(Guid.Empty, viewModel, result)
+                    : RedirectToRoute("BulkAssociateEstabs2GroupsResult", new { id = result.GetResponse().Id });
             }
             return View(ViewName, viewModel);
         }

@@ -23,8 +23,14 @@ namespace Edubase.Web.UI.Helpers
                 foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(substitutes.GetType()))
                 {
                     var value = property.GetValue(substitutes)?.ToString()?.Clean();
-                    if (value == null) query.Remove(property.Name);
-                    else query[property.Name] = value;
+                    if (value == null)
+                    {
+                        query.Remove(property.Name);
+                    }
+                    else
+                    {
+                        query[property.Name] = value;
+                    }
                 }
             }
             
@@ -51,8 +57,14 @@ namespace Edubase.Web.UI.Helpers
                 foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(substitutes.GetType()))
                 {
                     var value = property.GetValue(substitutes)?.ToString()?.Clean();
-                    if (value == null) query.Remove(property.Name);
-                    else query[property.Name] = value;
+                    if (value == null)
+                    {
+                        query.Remove(property.Name);
+                    }
+                    else
+                    {
+                        query[property.Name] = value;
+                    }
                 }
             }
             return new MvcHtmlString(query.ToString());
@@ -60,16 +72,25 @@ namespace Edubase.Web.UI.Helpers
 
         public static string ToQueryString(this NameValueCollection nvc)
         {
-            if (nvc == null) return string.Empty;
+            if (nvc == null)
+            {
+                return string.Empty;
+            }
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             foreach (string key in nvc.Keys)
             {
-                if (string.IsNullOrWhiteSpace(key)) continue;
+                if (string.IsNullOrWhiteSpace(key))
+                {
+                    continue;
+                }
 
                 string[] values = nvc.GetValues(key);
-                if (values == null) continue;
+                if (values == null)
+                {
+                    continue;
+                }
 
                 foreach (string value in values)
                 {
