@@ -19,9 +19,9 @@ namespace Edubase.Data.Entity
 
     public enum eNotificationBannerStatus
     {
-        [Display(Name = "Currently showing")]
+        [Display(Name = "Active")]
         Live,
-        [Display(Name = "Scheduled to show in the future")]
+        [Display(Name = "Future")]
         Future,
         [Display(Name = "Expired")]
         Expired
