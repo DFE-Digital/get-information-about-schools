@@ -32,12 +32,6 @@ namespace Edubase.Web.UI.Controllers
          Route("Tools/MergersTool/SelectMergerType")]
         public ActionResult SelectMergerType(string mergerType)
         {
-            if (string.IsNullOrEmpty(mergerType))
-            {
-                ModelState.AddModelError("MergerType", "Please select \"Amalgamation\" or \"Merger\"");
-                return View("~/Views/Tools/MergersTool.cshtml");
-            }
-
             if (mergerType == "Merger")
             {
                 return RedirectToAction("MergeEstablishments");
@@ -48,7 +42,7 @@ namespace Edubase.Web.UI.Controllers
                 return RedirectToAction("AmalgamateEstablishments");
             }
 
-
+            ModelState.AddModelError("MergerType", "Please select \"Amalgamation\" or \"Merger\"");
             return View("~/Views/Tools/MergersTool.cshtml");
         }
 
@@ -73,14 +67,8 @@ namespace Edubase.Web.UI.Controllers
             var viewModel = new MergeEstablishmentsModel();
             var submittedUrns = new List<int>();
 
-            //Scott Dawson - keeping this for discussion before removal as part of adding Unit Tests
-            //var leadHasErrors = ModelState.Keys.Where(k => k == "LeadEstablishmentUrn")
-            //    .Select(k => ModelState[k].Errors).First().Select(e => e.ErrorMessage).Any
-
-            //var estab1HasErrors = ModelState.Keys.Where(k => k == "Establishment1Urn")
-            //    .Select(k => ModelState[k].Errors).First().Select(e => e.ErrorMessage).Any();
-            bool leadHasErrors = DoesModelStateHaveErrorsForKey("LeadEstablishmentUrn");
-            bool estab1HasErrors = DoesModelStateHaveErrorsForKey("Establishment1Urn");
+            var leadHasErrors = DoesModelStateHaveErrorsForKey("LeadEstablishmentUrn");
+            var estab1HasErrors = DoesModelStateHaveErrorsForKey("Establishment1Urn");
 
             if (!model.LeadEstablishmentUrn.HasValue && !leadHasErrors)
             {
@@ -121,9 +109,6 @@ namespace Edubase.Web.UI.Controllers
                 var estab1 =
                     await _establishmentReadService.GetAsync(model.Establishment1Urn.GetValueOrDefault(), User);
 
-                //Scott Dawson - keeping this for discussion before removal as part of adding Unit Tests
-                //var hasErrors = ModelState.Keys.Where(k => k == "Establishment1Urn")
-                //    .Select(k => ModelState[k].Errors).First().Select(e => e.ErrorMessage).Any();
                 var hasErrors = DoesModelStateHaveErrorsForKey("Establishment1Urn");
 
                 if (estab1.GetResult() == null)
@@ -147,10 +132,7 @@ namespace Edubase.Web.UI.Controllers
                 var estab2 =
                     await _establishmentReadService.GetAsync(model.Establishment2Urn.GetValueOrDefault(), User);
 
-                //Scott Dawson - keeping this for discussion before removal as part of adding Unit Tests
-                //var hasErrors = ModelState.Keys.Where(k => k == "Establishment2Urn")
-                //    .Select(k => ModelState[k].Errors).First().Select(e => e.ErrorMessage).Any();
-                bool hasErrors = DoesModelStateHaveErrorsForKey("Establishment2Urn");
+                var hasErrors = DoesModelStateHaveErrorsForKey("Establishment2Urn");
 
                 if (estab2.GetResult() == null)
                 {
@@ -173,10 +155,6 @@ namespace Edubase.Web.UI.Controllers
                 var estab3 =
                     await _establishmentReadService.GetAsync(model.Establishment3Urn.GetValueOrDefault(), User);
 
-
-                //Scott Dawson - keeping this for discussion before removal as part of adding Unit Tests
-                //var hasErrors = ModelState.Keys.Where(k => k == "Establishment3Urn")
-                //    .Select(k => ModelState[k].Errors).First().Select(e => e.ErrorMessage).Any();
                 var hasErrors = DoesModelStateHaveErrorsForKey("Establishment3Urn");
 
                 if (estab3.GetResult() == null)
@@ -221,74 +199,74 @@ namespace Edubase.Web.UI.Controllers
             }
 
 
-            if (!ModelState.IsValid)
-            {
-                return View("~/Views/Tools/Mergers/MergeEstablishments.cshtml", model);
-            }
-
-            return View("~/Views/Tools/Mergers/ConfirmMerger.cshtml", viewModel);
+            return !ModelState.IsValid
+                ? View("~/Views/Tools/Mergers/MergeEstablishments.cshtml", model)
+                : View("~/Views/Tools/Mergers/ConfirmMerger.cshtml", viewModel);
         }
-
-        private bool DoesModelStateHaveErrorsForKey(string key)
-        {
-            bool hasErrors = false;
-            if (ModelState.TryGetValue(key, out var modelState))
-            {
-                hasErrors = modelState.Errors.Count > 0;
-            }
-            return hasErrors;
-        }
-
 
         [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanMergeEstablishments),
          Route("Tools/MergersTool/ConfirmMerger")]
         public async Task<ActionResult> ProcessMergeAsync(MergeEstablishmentsModel model)
         {
-            //scott dawson - for deletion after discussion - Order changed, should null check first to avoid null exception
-            //if (model.MergeDate.IsEmpty() || model.MergeDate == null || !model.MergeDate.IsValid())
             if (model.MergeDate == null || model.MergeDate.IsEmpty() || !model.MergeDate.IsValid())
             {
                 ViewData.ModelState.AddModelError("MergeDate", "Please enter a valid establishment open date");
                 return View("~/Views/Tools/Mergers/ConfirmMerger.cshtml", model);
             }
+            if (model.LeadEstablishmentUrn == null)
+            {
+                ViewData.ModelState.AddModelError("LeadEstablishmentUrn", "Please provide a Lead Establishment URN");
+                return View("~/Views/Tools/Mergers/ConfirmMerger.cshtml", model);
+            }
 
             var urns = new List<int>();
 
-            urns.Add(model.Establishment1Urn.GetValueOrDefault());
+            if (model.Establishment1Urn.HasValue)
+            {
+                model.Establishment1Urn.GetValueOrDefault();
+            }
 
             if (model.Establishment2Urn.HasValue)
             {
                 urns.Add(model.Establishment2Urn.GetValueOrDefault());
             }
 
-            //Scott dawson - WOW!!!!! - I am guessing this should be model.Establishment3Urn not 2
-            if (model.Establishment2Urn.HasValue)
+            if (model.Establishment3Urn.HasValue)
             {
                 urns.Add(model.Establishment3Urn.GetValueOrDefault());
             }
 
-            var mergeDate = new DateTime(model.MergeDate.Year.GetValueOrDefault(),
-                model.MergeDate.Month.GetValueOrDefault(), model.MergeDate.Day.GetValueOrDefault());
+            if (urns.Count < 1)
+            {
+                ViewData.ModelState.AddModelError("Establishment1Urn", "Please provide at least one establishment URN");
+                return View("~/Views/Tools/Mergers/ConfirmMerger.cshtml", model);
+            }
+            else
+            {
+                var mergeDate = new DateTime(model.MergeDate.Year.GetValueOrDefault(),
+                    model.MergeDate.Month.GetValueOrDefault(), model.MergeDate.Day.GetValueOrDefault());
 
-            var result = await _establishmentWriteService.AmalgamateOrMergeAsync(
-                new AmalgamateMergeRequest()
+                var result = await _establishmentWriteService.AmalgamateOrMergeAsync(
+                    new AmalgamateMergeRequest()
+                    {
+                        OperationType = AmalgamateMergeRequest.eOperationType.Merge,
+                        OperationTypeDescriptor = "merge",
+                        LeadEstablishmentUrn = model.LeadEstablishmentUrn,
+                        MergeOrAmalgamationDate = mergeDate,
+                        UrnsToMerge = urns.ToArray()
+                    }, User);
+
+                if (!result.HasErrors)
                 {
-                    OperationType = AmalgamateMergeRequest.eOperationType.Merge,
-                    OperationTypeDescriptor = "merge",
-                    LeadEstablishmentUrn = model.LeadEstablishmentUrn,
-                    MergeOrAmalgamationDate = mergeDate,
-                    UrnsToMerge = urns.ToArray()
-                }, User);
+                    return View("~/Views/Tools/Mergers/MergerComplete.cshtml", model);
+                }
 
-            if (!result.HasErrors)
-            {
-                return View("~/Views/Tools/Mergers/MergerComplete.cshtml", model);
+                foreach (var err in result.Errors)
+                {
+                    ViewData.ModelState.AddModelError(err.Fields, err.Message);
+                }
             }
 
-            foreach (var err in result.Errors)
-            {
-                ViewData.ModelState.AddModelError(err.Fields, err.Message);
-            }
 
             return View("~/Views/Tools/Mergers/ConfirmMerger.cshtml", model);
         }
@@ -300,13 +278,7 @@ namespace Edubase.Web.UI.Controllers
             var viewModel = new AmalgamateEstablishmentsModel();
 
             var submittedUrns = new List<int>();
-            //Scott Dawson - keeping this for discussion before removal as part of adding Unit Tests
-            //var estab0HasErrors = ModelState.Keys.Where(k => k == "Establishment0Urn")
-            //    .Select(k => ModelState[k].Errors).First().Select(e => e.ErrorMessage).Any();
-
-            //var estab1HasErrors = ModelState.Keys.Where(k => k == "Establishment1Urn")
-            //    .Select(k => ModelState[k].Errors).First().Select(e => e.ErrorMessage).Any();
-
+            
             var estab0HasErrors = DoesModelStateHaveErrorsForKey("Establishment0Urn");
             var estab1HasErrors = DoesModelStateHaveErrorsForKey("Establishment1Urn");
 
@@ -540,6 +512,16 @@ namespace Edubase.Web.UI.Controllers
             }
 
             return View("~/Views/Tools/Mergers/ConfirmAmalgamation.cshtml", model);
+        }
+
+        private bool DoesModelStateHaveErrorsForKey(string key)
+        {
+            bool hasErrors = false;
+            if (ModelState.TryGetValue(key, out var modelState))
+            {
+                hasErrors = modelState.Errors.Count > 0;
+            }
+            return hasErrors;
         }
     }
 }

@@ -32,6 +32,9 @@ namespace Edubase.Web.UI.Controllers.Tests
                 }
             };
 
+        private ApiResponse<AmalgamateMergeResult, AmalgamateMergeValidationEnvelope[]> amalgamateMergeApiResponse =
+            new ApiResponse<AmalgamateMergeResult, AmalgamateMergeValidationEnvelope[]>(true);
+
         public AmalgamateMergeControllerTests()
         {
             controller = new AmalgamateMergeController(
@@ -42,6 +45,8 @@ namespace Edubase.Web.UI.Controllers.Tests
                 .ReturnsAsync(establishmentServiceResultNull);
             mockEstablishmentReadService.Setup(x => x.GetAsync(It.IsInRange<int>(100, 110, Range.Inclusive), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(establishmentServiceResultTestEstablishement);
+            mockEstablishmentWriteService.Setup(x => x.AmalgamateOrMergeAsync(It.IsAny<AmalgamateMergeRequest>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(amalgamateMergeApiResponse);
         }
 
         [Fact()]
@@ -188,20 +193,45 @@ namespace Edubase.Web.UI.Controllers.Tests
         [Theory()]
         [MemberData(nameof(GetProcessMergeAsyncTestData))]
         public async Task ProcessMergeAsyncTestAsync(
-            DateTimeViewModel mergeDate,
-            int? urn1,
-            int? urn2,
-            int? urn3,
-            bool successExpected )
+            int? year,
+            int? month,
+            int? day,
+            bool includeLeadEstablishmentUrn,
+            bool includeUrns,
+            bool errorsInApiResponse,
+            bool successExpected)
         {
-            var model = new MergeEstablishmentsModel()
+            var model = new MergeEstablishmentsModel();
+
+            if (year == 0 || month == 0 || day == 0)
             {
-                MergeDate = mergeDate,
-                Establishment1Urn = urn1,
-                Establishment2Urn = urn2,
-                Establishment3Urn = urn3,
-            };
-            var expectedViewName = @"~/Views/Tools/Mergers/ConfirmMerger.cshtml";
+                model.MergeDate = new DateTimeViewModel();
+            }
+            else if (year != null && month != null && day != null)
+            {
+                model.MergeDate = new DateTimeViewModel { Year = year, Month = month, Day = day, };
+            }
+
+            if (includeLeadEstablishmentUrn)
+            {
+                model.LeadEstablishmentUrn = 100;
+            }
+
+            if (includeUrns)
+            {
+                model.Establishment1Urn = 1;
+                model.Establishment2Urn = 2;
+                model.Establishment3Urn = 3;
+            }
+
+            if (errorsInApiResponse)
+            {
+
+                var errors = new List<ApiError> { new ApiError { Code = "T35T", Message = "TEST", Fields = "TESTFIELD" } };
+                amalgamateMergeApiResponse.Errors = errors.ToArray();
+            }
+
+            var expectedViewName = successExpected ? @"~/Views/Tools/Mergers/MergerComplete.cshtml" : @"~/Views/Tools/Mergers/ConfirmMerger.cshtml";
 
             var result = await controller.ProcessMergeAsync(model) as ViewResult;
 
@@ -214,16 +244,21 @@ namespace Edubase.Web.UI.Controllers.Tests
         {
             var allData = new List<object[]>
             {
-                new object[] { null, null, null, null, false },
-                new object[] { new DateTimeViewModel(), null, null, null, false },
-                new object[] { new DateTimeViewModel() { Year = 2020, Month = 02, Day = 31}, null, null, null, false },
-                new object[] { new DateTimeViewModel() { Year = 2021, Month = 05, Day = 06}, null, null, null, false },
-                new object[] { new DateTimeViewModel() { Year = 2021, Month = 05, Day = 06}, 1, null, null, false },
-                new object[] { new DateTimeViewModel() { Year = 2021, Month = 05, Day = 06}, 1, 2, null, false },
-                new object[] { new DateTimeViewModel() { Year = 2021, Month = 05, Day = 06}, 1, null, 3, false },
-                new object[] { new DateTimeViewModel() { Year = 2021, Month = 05, Day = 06}, 1, 2, 3, false }
+                new object[] { null, null, null, false,  false, false, false },
+                new object[] { 0, 0, 0, true, true, false, false },
+                new object[] { 2020, 02, 31, true, true, false, false },
+                new object[] { 2021, 05, 06, true, false, false, false },
+                new object[] { 2021, 05, 06, false, true, false, false },
+                new object[] { 2021, 05, 06, true, true, true, false },
+                new object[] { 2021, 05, 06, true, true, false, true },
             };
             return allData;
         }
+
+        //[Theory()]
+        //public void ProcessAmalgamationEstablishmentsAsyncTest()
+        //{
+        //    Assert.True(false, "This test needs an implementation");
+        //}
     }
 }
