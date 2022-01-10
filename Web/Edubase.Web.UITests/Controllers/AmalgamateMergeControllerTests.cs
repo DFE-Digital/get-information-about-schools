@@ -32,7 +32,7 @@ namespace Edubase.Web.UI.Controllers.Tests
                 }
             };
 
-        private ApiResponse<AmalgamateMergeResult, AmalgamateMergeValidationEnvelope[]> amalgamateMergeApiResponse =
+        private readonly ApiResponse<AmalgamateMergeResult, AmalgamateMergeValidationEnvelope[]> amalgamateMergeApiResponse =
             new ApiResponse<AmalgamateMergeResult, AmalgamateMergeValidationEnvelope[]>(true);
 
         public AmalgamateMergeControllerTests()
@@ -255,10 +255,85 @@ namespace Edubase.Web.UI.Controllers.Tests
             return allData;
         }
 
-        //[Theory()]
-        //public void ProcessAmalgamationEstablishmentsAsyncTest()
-        //{
-        //    Assert.True(false, "This test needs an implementation");
-        //}
+        [Theory()]
+        [MemberData(nameof(GetProcessAmalgamationEstablishmentsAsyncTestTestData))]
+        public async Task ProcessAmalgamationEstablishmentsAsyncTest(
+            bool doesEst0HaveErrors,
+            bool doesEst1HaveErrors,
+            int? est0Urn,
+            int? est1Urn,
+            int? est2Urn,
+            int? est3Urn,
+            bool doesModelHaveErrors,
+            bool successExpected)
+        {
+            var model = new AmalgamateEstablishmentsModel();
+
+            var expectedViewName = successExpected ? @"~/Views/Tools/Mergers/ConfirmAmalgamation.cshtml"
+                : @"~/Views/Tools/Mergers/AmalgamateEstablishments.cshtml";
+
+            var result = await controller.ProcessAmalgamationEstablishmentsAsync(model) as ViewResult;
+
+            Assert.NotNull(result);
+            Assert.True(successExpected == result.ViewData.ModelState.IsValid);
+            Assert.Equal(expectedViewName, result.ViewName);
+        }
+
+        public static IEnumerable<object[]> GetProcessAmalgamationEstablishmentsAsyncTestTestData()
+        {
+            var allData = new List<object[]>
+            {
+                //              est0Errors  est1Errors  est0Urn est1Urn est2Urn est3Urn modelError  success
+                //everything wrong
+                new object[] {  true,       true,       null,   null,   null,   null,   true,       false },
+
+                //one thing wrong
+                new object[] {  true,       false,      101,    102,    103,    104,    false,      false },
+                new object[] {  false,      true,       101,    102,    103,    104,    false,      false },
+                new object[] {  false,      false,      null,   102,    103,    104,    false,      false },
+                new object[] {  false,      false,      101,    null,   null,   null,   false,      false },
+                new object[] {  false,      false,      101,    102,    103,    104,    true,       false },
+
+                //Not found Ids
+                new object[] {  false,      false,      1,      102,    103,    104,    false,      false },
+                new object[] {  false,      false,      101,    2,      103,    104,    false,      false },
+                new object[] {  false,      false,      101,    102,    3,      104,    false,      false },
+                new object[] {  false,      false,      101,    102,    103,    4,      false,      false },
+                new object[] {  false,      false,      1,      2,      103,    104,    false,      false },
+                new object[] {  false,      false,      1,      102,    3,      104,    false,      false },
+                new object[] {  false,      false,      1,      102,    103,    4,      false,      false },
+                new object[] {  false,      false,      101,    2,      3,      104,    false,      false },
+                new object[] {  false,      false,      101,    2,      103,    4,      false,      false },
+                new object[] {  false,      false,      101,    102,    3,      4,      false,      false },
+                new object[] {  false,      false,      1,      2,      3,      104,    false,      false },
+                new object[] {  false,      false,      1,      2,      103,    4,      false,      false },
+                new object[] {  false,      false,      1,      102,    3,      4,      false,      false },
+                new object[] {  false,      false,      101,    2,      3,      4,      false,      false },
+                new object[] {  false,      false,      1,      2,      3,      4,      false,      false },
+
+                //duplicate IDS
+                new object[] {  false,      false,      101,    101,    103,    104,    false,      false },
+                new object[] {  false,      false,      101,    102,    101,    104,    false,      false },
+                new object[] {  false,      false,      101,    102,    103,    101,    false,      false },
+                new object[] {  false,      false,      101,    102,    102,    104,    false,      false },
+                new object[] {  false,      false,      101,    102,    103,    102,    false,      false },
+                new object[] {  false,      false,      101,    102,    103,    103,    false,      false },
+                new object[] {  false,      false,      101,    101,    101,    104,    false,      false },
+                new object[] {  false,      false,      101,    101,    103,    101,    false,      false },
+                new object[] {  false,      false,      101,    102,    101,    101,    false,      false },
+                new object[] {  false,      false,      101,    102,    102,    102,    false,      false },
+                new object[] {  false,      false,      101,    101,    101,    101,    false,      false },
+
+                //should be valid
+                new object[] {  false,      false,      101,    102,    103,    104,    false,      true },
+                new object[] {  false,      false,      101,    102,    103,    null,   false,      true },
+                new object[] {  false,      false,      101,    102,    null,   104,    false,      true },
+                new object[] {  false,      false,      101,    null,   103,    104,    false,      true },
+                new object[] {  false,      false,      101,    102,    null,   null,   false,      true },
+                new object[] {  false,      false,      101,    null,   103,    null,   false,      true },
+                new object[] {  false,      false,      101,    null,   null,   104,    false,      true },
+            };
+            return allData;
+        }
     }
 }

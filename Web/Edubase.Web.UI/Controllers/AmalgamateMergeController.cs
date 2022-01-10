@@ -448,11 +448,11 @@ namespace Edubase.Web.UI.Controllers
                 return View("~/Views/Tools/Mergers/ConfirmAmalgamation.cshtml", model);
             }
 
-            var urns = new List<int>();
-
-            urns.Add(model.Establishment0Urn.GetValueOrDefault());
-
-            urns.Add(model.Establishment1Urn.GetValueOrDefault());
+            var urns = new List<int>
+            {
+                model.Establishment0Urn.GetValueOrDefault(),
+                model.Establishment1Urn.GetValueOrDefault()
+            };
 
 
             if (model.Establishment2Urn.HasValue)
@@ -516,7 +516,7 @@ namespace Edubase.Web.UI.Controllers
 
         private bool DoesModelStateHaveErrorsForKey(string key)
         {
-            bool hasErrors = false;
+            var hasErrors = false;
             if (ModelState.TryGetValue(key, out var modelState))
             {
                 hasErrors = modelState.Errors.Count > 0;
