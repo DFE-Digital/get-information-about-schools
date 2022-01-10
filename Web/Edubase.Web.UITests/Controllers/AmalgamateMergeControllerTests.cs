@@ -258,16 +258,37 @@ namespace Edubase.Web.UI.Controllers.Tests
         [Theory()]
         [MemberData(nameof(GetProcessAmalgamationEstablishmentsAsyncTestTestData))]
         public async Task ProcessAmalgamationEstablishmentsAsyncTest(
-            bool doesEst0HaveErrors,
-            bool doesEst1HaveErrors,
+            bool est0HasErrors,
+            bool est1HasErrors,
             int? est0Urn,
             int? est1Urn,
             int? est2Urn,
             int? est3Urn,
-            bool doesModelHaveErrors,
+            bool modelHasErrors,
             bool successExpected)
         {
-            var model = new AmalgamateEstablishmentsModel();
+            var model = new AmalgamateEstablishmentsModel
+            {
+                Establishment0Urn = est0Urn,
+                Establishment1Urn = est1Urn,
+                Establishment2Urn = est2Urn,
+                Establishment3Urn = est3Urn
+            };
+
+            if (est0HasErrors)
+            {
+                controller.ViewData.ModelState.AddModelError("Establishment0Urn", "test error");
+            }
+
+            if(est1HasErrors)
+            {
+                controller.ViewData.ModelState.AddModelError("Establishment1Urn", "test error");
+            }
+
+            if (modelHasErrors)
+            {
+                controller.ViewData.ModelState.AddModelError("test", "test error");
+            }
 
             var expectedViewName = successExpected ? @"~/Views/Tools/Mergers/ConfirmAmalgamation.cshtml"
                 : @"~/Views/Tools/Mergers/AmalgamateEstablishments.cshtml";
