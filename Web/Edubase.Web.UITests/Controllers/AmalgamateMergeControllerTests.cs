@@ -33,7 +33,10 @@ namespace Edubase.Web.UI.Controllers.Tests
             };
 
         private readonly ApiResponse<AmalgamateMergeResult, AmalgamateMergeValidationEnvelope[]> amalgamateMergeApiResponse =
-            new ApiResponse<AmalgamateMergeResult, AmalgamateMergeValidationEnvelope[]>(true);
+            new ApiResponse<AmalgamateMergeResult, AmalgamateMergeValidationEnvelope[]>(true)
+            {
+                Response = new AmalgamateMergeResult() { AmalgamateNewEstablishmentUrn = 101 }
+            };
 
         public AmalgamateMergeControllerTests()
         {
@@ -43,10 +46,15 @@ namespace Edubase.Web.UI.Controllers.Tests
 
             mockEstablishmentReadService.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(establishmentServiceResultNull);
+
             mockEstablishmentReadService.Setup(x => x.GetAsync(It.IsInRange<int>(100, 110, Range.Inclusive), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(establishmentServiceResultTestEstablishement);
+
             mockEstablishmentWriteService.Setup(x => x.AmalgamateOrMergeAsync(It.IsAny<AmalgamateMergeRequest>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(amalgamateMergeApiResponse);
+
+            mockCachedLookupService.Setup(x => x.LocalAuthorityGetAllAsync())
+                .ReturnsAsync(new List<LookupDto> { new LookupDto { Id = 1, Code = "TEST", Name = "TEST", DisplayOrder = 1 } });
         }
 
         [Fact()]
@@ -280,7 +288,7 @@ namespace Edubase.Web.UI.Controllers.Tests
                 controller.ViewData.ModelState.AddModelError("Establishment0Urn", "test error");
             }
 
-            if(est1HasErrors)
+            if (est1HasErrors)
             {
                 controller.ViewData.ModelState.AddModelError("Establishment1Urn", "test error");
             }
@@ -353,6 +361,120 @@ namespace Edubase.Web.UI.Controllers.Tests
                 new object[] {  false,      false,      101,    102,    null,   null,   false,      true },
                 new object[] {  false,      false,      101,    null,   103,    null,   false,      true },
                 new object[] {  false,      false,      101,    null,   null,   104,    false,      true },
+            };
+            return allData;
+        }
+
+        [Theory()]
+        [MemberData(nameof(GetProcessAmalgamationAsyncTestData))]
+        public async Task ProcessAmalgamationAsyncTest(
+            int? mergeDateYear,
+            int? mergeDateMonth,
+            int? mergeDateDay,
+            string newEstablishmentName,
+            string establishmentType,
+            int? establishmentPhase,
+            string localAuthorityId,
+            bool modelIsValid,
+            int? est0Urn,
+            int? est1Urn,
+            int? est2Urn,
+            int? est3Urn,
+            bool resultHasErrors,
+            bool successExpected
+            )
+        {
+            var unsuccessfulViewName = @"~/Views/Tools/Mergers/ConfirmAmalgamation.cshtml";
+            var successfulViewName = @"~/Views/Tools/Mergers/AmalgamationComplete.cshtml";
+            var expectedViewName = successExpected ? successfulViewName : unsuccessfulViewName;
+
+            var model = new AmalgamateEstablishmentsModel()
+            {
+                MergeDate = new DateTimeViewModel() { Year = mergeDateYear, Month = mergeDateMonth, Day = mergeDateDay },
+                NewEstablishmentName = newEstablishmentName,
+                EstablishmentType = establishmentType,
+                EstablishmentPhase = establishmentPhase,
+                LocalAuthorityId = localAuthorityId,
+                Establishment0Urn = est0Urn,
+                Establishment1Urn = est1Urn,
+                Establishment2Urn = est2Urn,
+                Establishment3Urn = est3Urn,
+            };
+
+            if(!modelIsValid)
+            {
+                controller.ViewData.ModelState.AddModelError("TEST", "TEST ERROR");
+            }
+
+            if(resultHasErrors)
+            {
+                var errors = new List<ApiError> { new ApiError { Code = "T35T", Message = "TEST", Fields = "TESTFIELD" } };
+                amalgamateMergeApiResponse.Errors = errors.ToArray();
+            }
+
+            var result = await controller.ProcessAmalgamationAsync(model) as ViewResult;
+
+            Assert.NotNull(result);
+            Assert.True(successExpected == result.ViewData.ModelState.IsValid);
+            Assert.Equal(expectedViewName, result.ViewName);
+        }
+
+        public static IEnumerable<object[]> GetProcessAmalgamationAsyncTestData()
+        {
+            var allData = new List<object[]>
+            {
+                //              mergeDate       newEstName  estType estPhase    locAuthId   modelValid  est0Urn est1Urn est2Urn est3Urn resultError succesful
+                //all correct
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       101,    102,    103,    104,    false,      true},
+                //dates                                             
+                new object[] {  2021, 13, 01,   "test sch", "1",    1,          "1",        true,       101,    102,    103,    104,    false,      false},
+                new object[] {  2021, 01, 32,   "test sch", "1",    1,          "1",        true,       101,    102,    103,    104,    false,      false},
+                new object[] {  2021, 02, 29,   "test sch", "1",    1,          "1",        true,       101,    102,    103,    104,    false,      false},
+                new object[] {  2020, 02, 29,   "test sch", "1",    1,          "1",        true,       101,    102,    103,    104,    false,      true},
+                new object[] {  2100, 02, 29,   "test sch", "1",    1,          "1",        true,       101,    102,    103,    104,    false,      false},
+                new object[] { null, null, null,"test sch", "1",    1,          "1",        true,       101,    102,    103,    104,    false,      false},
+                new object[] {  2021, 01, null, "test sch", "1",    1,          "1",        true,       101,    102,    103,    104,    false,      false},
+                new object[] {  2021, null, 08, "test sch", "1",    1,          "1",        true,       101,    102,    103,    104,    false,      false},
+                new object[] {  null, null, 08, "test sch", "1",    1,          "1",        true,       101,    102,    103,    104,    false,      false},
+                new object[] {  null, 01, null, "test sch", "1",    1,          "1",        true,       101,    102,    103,    104,    false,      false},
+                new object[] { 2021, null, null,"test sch", "1",    1,          "1",        true,       101,    102,    103,    104,    false,      false},
+                //estName                                           
+                new object[] {  2021, 01, 20,   null,       "1",    1,          "1",        true,       101,    102,    103,    104,    false,      false},
+                new object[] {  2021, 01, 20,   "        ", "1",    1,          "1",        true,       101,    102,    103,    104,    false,      false},
+                new object[] {  2021, 01, 20,   "",         "1",    1,          "1",        true,       101,    102,    103,    104,    false,      false},
+                //estType                                           
+                new object[] {  2021, 01, 20,   "test sch", null,   1,          "1",        true,       101,    102,    103,    104,    false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "",     1,          "1",        true,       101,    102,    103,    104,    false,      false},
+                new object[] {  2021, 01, 20,   "test sch", " ",    1,          "1",        true,       101,    102,    103,    104,    false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "text", 1,          "1",        true,       101,    102,    103,    104,    false,      false},
+                //estPhase
+                new object[] {  2021, 01, 20,   "test sch", "1",    null,       "1",        true,       101,    102,    103,    104,    false,      true},
+                //localAuthorityId
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          null,       true,       101,    102,    103,    104,    false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          " ",        true,       101,    102,    103,    104,    false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "",         true,       101,    102,    103,    104,    false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "text",     true,       101,    102,    103,    104,    false,      false},
+                //modelValid                                        
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        false,      101,    102,    103,    104,    false,      false},
+                //Urns-accepatable                                  
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       101,    102,    null,   null,   false,      true},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       101,    null,   103,    null,   false,      true},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       101,    null,   null,   104,    false,      true},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       101,    102,    103,    null,   false,      true},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       101,    102,    null,   104,    false,      true},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       101,    null,   103,    104,    false,      true},
+                //Urns-unacceptable
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       null,   102,    103,    104,    false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       101,    null,   null,   null,   false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       null,   102,    null,   null,   false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       null,   null,   103,    null,   false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       null,   null,   null,   104,    false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       null,   102,    103,    null,   false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       null,   102,    null,   104,    false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       null,   null,   103,    104,    false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       null,   null,   null,   null,   false,      false},
+                //resultError
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       null,   null,   103,    104,    true,       false},
             };
             return allData;
         }
