@@ -417,43 +417,37 @@ namespace Edubase.Web.UI.Controllers
                 ViewData.ModelState.AddModelError("MergeDate", "Please enter a valid establishment open date");
             }
 
-            if (string.IsNullOrEmpty(model.NewEstablishmentName))
+            if (string.IsNullOrWhiteSpace(model.NewEstablishmentName))
             {
                 ViewData.ModelState.AddModelError("NewEstablishmentName", "Please enter the establishment name");
             }
 
-            if (string.IsNullOrEmpty(model.EstablishmentType))
+            if (string.IsNullOrWhiteSpace(model.EstablishmentType))
             {
                 ViewData.ModelState.AddModelError("EstablishmentType", "Please select the establishment type");
             }
 
-            if (string.IsNullOrEmpty(model.EstablishmentPhase.GetValueOrDefault().ToString()))
+            if (!model.EstablishmentPhase.HasValue)
             {
                 ViewData.ModelState.AddModelError("EstablishmentPhase", "Please select the establishment phase");
             }
 
-            if (string.IsNullOrEmpty(model.LocalAuthorityId))
+            if (string.IsNullOrWhiteSpace(model.LocalAuthorityId))
             {
                 ViewData.ModelState.AddModelError("LocalAuthorityId", "Please select a local authority");
             }
 
-            model.EstablishmentPhases = (await _lookupService.EducationPhasesGetAllAsync()).ToSelectList();
+            var urns = new List<int>();
 
-            model.EstablishmentTypes = (await _lookupService.EstablishmentTypesGetAllAsync()).ToSelectList();
-
-            model.LocalAuthorities = (await _lookupService.LocalAuthorityGetAllAsync()).ToSelectList();
-
-            if (!ModelState.IsValid)
+            if (model.Establishment0Urn.HasValue)
             {
-                return View("~/Views/Tools/Mergers/ConfirmAmalgamation.cshtml", model);
+                urns.Add(model.Establishment0Urn.GetValueOrDefault());
             }
 
-            var urns = new List<int>
+            if (model.Establishment1Urn.HasValue)
             {
-                model.Establishment0Urn.GetValueOrDefault(),
-                model.Establishment1Urn.GetValueOrDefault()
-            };
-
+                urns.Add(model.Establishment1Urn.GetValueOrDefault());
+            }
 
             if (model.Establishment2Urn.HasValue)
             {
@@ -465,14 +459,27 @@ namespace Edubase.Web.UI.Controllers
                 urns.Add(model.Establishment3Urn.GetValueOrDefault());
             }
 
+            if (urns.Count < 2)
+            {
+                ViewData.ModelState.AddModelError("Establishment0Urn", "At least two URNs must be provided");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View("~/Views/Tools/Mergers/ConfirmAmalgamation.cshtml", model);
+            }
+
+            model.EstablishmentPhases = (await _lookupService.EducationPhasesGetAllAsync()).ToSelectList();
+
+            model.EstablishmentTypes = (await _lookupService.EstablishmentTypesGetAllAsync()).ToSelectList();
+
+            model.LocalAuthorities = (await _lookupService.LocalAuthorityGetAllAsync()).ToSelectList();
+
             var mergeDate = new DateTime(model.MergeDate.Year.GetValueOrDefault(),
                 model.MergeDate.Month.GetValueOrDefault(), model.MergeDate.Day.GetValueOrDefault());
 
-
             var establishmentTypeId = int.TryParse(model.EstablishmentType, out var i) ? i : (int?) null;
             var localAuthorityId = int.TryParse(model.LocalAuthorityId, out var j) ? j : (int?) null;
-
-
 
             var result = await _establishmentWriteService.AmalgamateOrMergeAsync(
                 new AmalgamateMergeRequest()

@@ -415,7 +415,7 @@ namespace Edubase.Web.UI.Controllers.Tests
             var result = await controller.ProcessAmalgamationAsync(model) as ViewResult;
 
             Assert.NotNull(result);
-            Assert.True(successExpected == result.ViewData.ModelState.IsValid);
+            Assert.Equal(successExpected, result.ViewData.ModelState.IsValid);
             Assert.Equal(expectedViewName, result.ViewName);
         }
 
@@ -446,14 +446,14 @@ namespace Edubase.Web.UI.Controllers.Tests
                 new object[] {  2021, 01, 20,   "test sch", null,   1,          "1",        true,       101,    102,    103,    104,    false,      false},
                 new object[] {  2021, 01, 20,   "test sch", "",     1,          "1",        true,       101,    102,    103,    104,    false,      false},
                 new object[] {  2021, 01, 20,   "test sch", " ",    1,          "1",        true,       101,    102,    103,    104,    false,      false},
-                new object[] {  2021, 01, 20,   "test sch", "text", 1,          "1",        true,       101,    102,    103,    104,    false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "text", 1,          "1",        true,       101,    102,    103,    104,    false,      true},
                 //estPhase
-                new object[] {  2021, 01, 20,   "test sch", "1",    null,       "1",        true,       101,    102,    103,    104,    false,      true},
+                new object[] {  2021, 01, 20,   "test sch", "1",    null,       "1",        true,       101,    102,    103,    104,    false,      false},
                 //localAuthorityId
                 new object[] {  2021, 01, 20,   "test sch", "1",    1,          null,       true,       101,    102,    103,    104,    false,      false},
                 new object[] {  2021, 01, 20,   "test sch", "1",    1,          " ",        true,       101,    102,    103,    104,    false,      false},
                 new object[] {  2021, 01, 20,   "test sch", "1",    1,          "",         true,       101,    102,    103,    104,    false,      false},
-                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "text",     true,       101,    102,    103,    104,    false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "text",     true,       101,    102,    103,    104,    false,      true},
                 //modelValid                                        
                 new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        false,      101,    102,    103,    104,    false,      false},
                 //Urns-accepatable                                  
@@ -463,18 +463,18 @@ namespace Edubase.Web.UI.Controllers.Tests
                 new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       101,    102,    103,    null,   false,      true},
                 new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       101,    102,    null,   104,    false,      true},
                 new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       101,    null,   103,    104,    false,      true},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       null,   102,    103,    null,   false,      true},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       null,   102,    null,   104,    false,      true},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       null,   null,   103,    104,    false,      true},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       null,   102,    103,    104,    false,      true},
                 //Urns-unacceptable
-                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       null,   102,    103,    104,    false,      false},
-                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       101,    null,   null,   null,   false,      false},
-                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       null,   102,    null,   null,   false,      false},
-                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       null,   null,   103,    null,   false,      false},
-                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       null,   null,   null,   104,    false,      false},
-                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       null,   102,    103,    null,   false,      false},
-                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       null,   102,    null,   104,    false,      false},
-                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       null,   null,   103,    104,    false,      false},
-                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       null,   null,   null,   null,   false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       101,    null,   null,   null,   false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       null,   102,    null,   null,   false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       null,   null,   103,    null,   false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       null,   null,   null,   104,    false,      false},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       null,   null,   null,   null,   false,      false},
                 //resultError
-                new object[] {  2021, 01, 20,   "test sch", "1",    1,    "1",        true,       null,   null,   103,    104,    true,       false},
+                new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       null,   null,   103,    104,    true,       false},
             };
             return allData;
         }
