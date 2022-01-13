@@ -179,11 +179,8 @@
     <Compile Include="Common\DisposerTest.cs" />
     <Compile Include="Controllers\EstablishmentControllerTest.cs" />
     <Compile Include="Controllers\GovernorControllerTest.cs" />
-    <Compile Include="Controllers\GovernorSearchControllerTest.cs" />
     <Compile Include="Controllers\GroupControllerTest.cs" />
-    <Compile Include="Controllers\GroupSearchControllerTest.cs" />
     <Compile Include="Controllers\EstablishmentsSearchControllerTest.cs" />
-    <Compile Include="Controllers\SearchControllerTest.cs" />
     <Compile Include="Mocks\Disposable.cs" />
     <Compile Include="Mocks\MockHttpMessageHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
