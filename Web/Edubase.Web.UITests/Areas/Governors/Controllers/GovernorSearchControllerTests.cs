@@ -1,28 +1,30 @@
+using Xunit;
+using Edubase.Web.UI.Areas.Governors.Controllers;
+using System;
 using System.Collections.Generic;
-using System.Security.Principal;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Moq;
+using Edubase.Services.Governors.Downloads;
+using Edubase.Services.Governors;
+using Edubase.Services.Lookup;
+using Edubase.Services.Groups;
+using Edubase.Services.Establishments;
 using System.Web;
+using System.Security.Principal;
+using Edubase.Services.Governors.Search;
+using Edubase.Services.Domain;
+using Edubase.Services.Governors.Models;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Edubase.Services.Domain;
-using Edubase.Services.Establishments;
-using Edubase.Services.Governors;
-using Edubase.Services.Governors.Downloads;
-using Edubase.Services.Governors.Models;
-using Edubase.Services.Governors.Search;
-using Edubase.Services.Groups;
-using Edubase.Services.Lookup;
-using Edubase.Web.UI.Areas.Governors.Controllers;
 using Edubase.Web.UI.Areas.Governors.Models;
-using Moq;
-using NUnit.Framework;
 
-namespace Edubase.UnitTest.Controllers
+namespace Edubase.Web.UI.Areas.Governors.Controllers.Tests
 {
-    [TestFixture]
-    public class GovernorSearchControllerTest
+    public class GovernorSearchControllerTests
     {
-        [Test]
+        [Fact()]
         public async Task GovernorSearch_Index_ReturnsAllByDefault()
         {
             var gds = new Mock<IGovernorDownloadService>();
@@ -37,25 +39,27 @@ namespace Edubase.UnitTest.Controllers
             context.SetupGet(x => x.Request).Returns(request.Object);
             context.SetupGet(x => x.User).Returns(new GenericPrincipal(new GenericIdentity("bob"), new[] { "superhuman" }));
 
-            grs.Setup(x => x.SearchAsync(It.IsAny<GovernorSearchPayload>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiPagedResult<SearchGovernorModel>(2, new List<SearchGovernorModel>
-            {
-                new SearchGovernorModel{ Person_FirstName="bob" },
-                new SearchGovernorModel{ Person_FirstName="jim" }
-            }));
+            grs.Setup(x => x.SearchAsync(It.IsAny<GovernorSearchPayload>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => new ApiPagedResult<SearchGovernorModel>(2, new List<SearchGovernorModel>
+                    {
+                        new SearchGovernorModel{ Person_FirstName="bob" },
+                        new SearchGovernorModel{ Person_FirstName="jim" }
+                    }));
 
             var subject = new GovernorSearchController(gds.Object, grs.Object, cls.Object, gprs.Object, ers.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
 
             var vm = new GovernorSearchViewModel();
-            var result = (ViewResult) await subject.Index(vm);
+            var result = await subject.Index(vm) as ViewResult;
 
-            Assert.That(result.ViewName, Is.EqualTo("Index"));
-            Assert.That(vm.Count, Is.EqualTo(2));
-            Assert.That(vm.Results[0].Person_FirstName, Is.EqualTo("bob"));
-            Assert.That(vm.Results[1].Person_FirstName, Is.EqualTo("jim"));
+            Assert.NotNull(result);
+            Assert.Equal("Index", result.ViewName);
+            Assert.Equal(2, vm.Count);
+            Assert.Equal("bob", vm.Results[0].Person_FirstName);
+            Assert.Equal("jim", vm.Results[1].Person_FirstName);
         }
 
-        [Test]
+        [Fact()]
         public async Task GovernorSearch_Index_ProcessesFilters()
         {
             var gds = new Mock<IGovernorDownloadService>();
@@ -70,10 +74,11 @@ namespace Edubase.UnitTest.Controllers
             context.SetupGet(x => x.Request).Returns(request.Object);
             context.SetupGet(x => x.User).Returns(new GenericPrincipal(new GenericIdentity("bob"), new[] { "superhuman" }));
 
-            grs.Setup(x => x.SearchAsync(It.IsAny<GovernorSearchPayload>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiPagedResult<SearchGovernorModel>(2, new List<SearchGovernorModel>
-            {
-                new SearchGovernorModel{ Person_FirstName="bob" }
-            }));
+            grs.Setup(x => x.SearchAsync(It.IsAny<GovernorSearchPayload>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => new ApiPagedResult<SearchGovernorModel>(2, new List<SearchGovernorModel>
+                {
+                    new SearchGovernorModel{ Person_FirstName="bob" }
+                }));
 
             var subject = new GovernorSearchController(gds.Object, grs.Object, cls.Object, gprs.Object, ers.Object);
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
@@ -81,7 +86,8 @@ namespace Edubase.UnitTest.Controllers
             var vm = new GovernorSearchViewModel();
             vm.GovernorSearchModel.Forename = "bob";
             var result = (ViewResult) await subject.Index(vm);
-            grs.Verify(x => x.SearchAsync(It.Is<GovernorSearchPayload>(p => p.FirstName == "bob" && p.IncludeHistoric == false), It.IsAny<IPrincipal>()));
+            grs.Verify(x => x.SearchAsync(
+                It.Is<GovernorSearchPayload>(p => p.FirstName == "bob" && p.IncludeHistoric == false), It.IsAny<IPrincipal>()));
 
             vm = new GovernorSearchViewModel();
             vm.GovernorSearchModel.Surname = "yup";
