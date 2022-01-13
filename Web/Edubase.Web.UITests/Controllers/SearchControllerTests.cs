@@ -1,20 +1,17 @@
-using Xunit;
-using Edubase.Web.UI.Controllers;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Moq;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
+using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
+using Edubase.Services.Geo;
 using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
-using Edubase.Services.Geo;
-using System.Web.Mvc;
 using Edubase.Web.UI.Models.Search;
-using Edubase.Services.Domain;
-using System.Web;
-using System.Web.Routing;
+using Moq;
+using Xunit;
 
 namespace Edubase.Web.UI.Controllers.Tests
 {
