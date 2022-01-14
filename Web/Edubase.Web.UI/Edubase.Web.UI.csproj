@@ -367,6 +367,8 @@
     <Compile Include="Helpers\RouteDto.cs" />
     <Compile Include="Models\Faq\FaqGroupsViewModel.cs" />
     <Compile Include="Models\Faq\FaqGroupViewModel.cs" />
+    <Compile Include="Models\Notifications\NotificationsBannerAuditViewModel.cs" />
+    <Compile Include="Models\Notifications\NotificationsBannersAuditViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsBannerViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsBannersViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsTemplateViewModel.cs" />
@@ -778,6 +780,8 @@
     <Content Include="Areas\Groups\Views\Group\Partials\Details\_GenericGroupDetails.cshtml" />
     <Content Include="Views\TermsofUse\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
+    <Content Include="Views\Notifications\AuditBanners.cshtml" />
+    <Content Include="Views\Notifications\AuditBanner.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>

@@ -12,8 +12,11 @@ namespace Edubase.Data.Entity
 
     public enum eNotificationBannerEvent
     {
+        [Display(Name = "Created")]
         Create,
+        [Display(Name = "Updated")]
         Update,
+        [Display(Name = "Deleted")]
         Delete
     }
 
