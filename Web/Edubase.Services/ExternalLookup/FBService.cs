@@ -73,7 +73,7 @@ namespace Edubase.Services.ExternalLookup
             switch (lookupType)
             {
                 case FbType.Trust:
-                    url = $"api/truststatus/{lookupId}";
+                    url = $"api/truststatus/{lookupId}1";
                     break;
                 case FbType.Federation:
                     url = $"api/federationstatus/{lookupId}";
@@ -81,6 +81,11 @@ namespace Edubase.Services.ExternalLookup
             }
 
             return url;
+        }
+
+        private HttpRequestMessage HeadRestRequest(int? lookupId, FbType lookupType)
+        {
+            return new HttpRequestMessage(HttpMethod.Get, ApiUrl(lookupId, lookupType));
         }
 
         public async Task<bool> CheckExists(int? lookupId, FbType lookupType)
@@ -94,10 +99,11 @@ namespace Edubase.Services.ExternalLookup
             else
             {
                 var cacheTime = ConfigurationManager.AppSettings["FinancialBenchmarkingCacheHours"].ToInteger() ?? 8;
+                var request = HeadRestRequest(lookupId, lookupType);
 
                 try
                 {
-                    using (var response = await RetryPolicy.ExecuteAsync(async () => await _client.GetAsync(ApiUrlPath(lookupId, lookupType))))
+                    using (var response = await RetryPolicy.ExecuteAsync(async () => await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead)))
                     {
                         var isOk = response.StatusCode == HttpStatusCode.OK;
                         MemoryCache.Default.Set(new CacheItem(key, isOk), new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.Now.AddHours(cacheTime) });
