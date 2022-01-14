@@ -18,11 +18,9 @@ namespace Edubase.Services.ExternalLookup
 
     public class FBService : IFBService
     {
-        private static HttpClient _client = new HttpClient
-        {
-            BaseAddress = new Uri(ConfigurationManager.AppSettings["FinancialBenchmarkingURL"]),
-            Timeout = TimeSpan.FromSeconds(10)
-        };
+        private static HttpClient _client;
+        private static string urlBaseAddress;
+        private static string apiBaseAddress;
 
         private static readonly Policy RetryPolicy = Policy.TimeoutAsync(1).Wrap(Policy
             .Handle<HttpRequestException>()
@@ -31,17 +29,24 @@ namespace Edubase.Services.ExternalLookup
                 TimeSpan.FromSeconds(1)
             }));
 
-        public FBService(HttpClient client)
+        public FBService(HttpClient client, string baseAddress = "FinancialBenchmarkingApiURL", int timeOut = 10)
         {
-            _client = client;
+            apiBaseAddress = baseAddress == "FinancialBenchmarkingApiURL" ? ConfigurationManager.AppSettings[baseAddress] : baseAddress;
+            urlBaseAddress = baseAddress == "FinancialBenchmarkingApiURL" ? ConfigurationManager.AppSettings["FinancialBenchmarkingURL"] : baseAddress;
+
+            _client = new HttpClient
+            {
+                BaseAddress = new Uri(apiBaseAddress),
+                Timeout = TimeSpan.FromSeconds(timeOut)
+            };
         }
 
         public string PublicURL(int? lookupId, FbType lookupType)
         {
-            return $"{_client.BaseAddress.AbsoluteUri}{UrlPath(lookupId, lookupType)}";
+            return $"{urlBaseAddress}{PublicUrlPath(lookupId, lookupType)}";
         }
 
-        private string UrlPath(int? lookupId, FbType lookupType)
+        private string PublicUrlPath(int? lookupId, FbType lookupType)
         {
             var url = $"school/detail?urn={lookupId}";
             switch (lookupType)
@@ -57,9 +62,25 @@ namespace Edubase.Services.ExternalLookup
             return url;
         }
 
-        private HttpRequestMessage HeadRestRequest(int? lookupId, FbType lookupType)
+        public string ApiUrl(int? lookupId, FbType lookupType)
         {
-            return new HttpRequestMessage(HttpMethod.Head, UrlPath(lookupId, lookupType));
+            return $"{apiBaseAddress}{ApiUrlPath(lookupId, lookupType)}";
+        }
+
+        private string ApiUrlPath(int? lookupId, FbType lookupType)
+        {
+            var url = $"api/schoolstatus/{lookupId}";
+            switch (lookupType)
+            {
+                case FbType.Trust:
+                    url = $"api/truststatus/{lookupId}";
+                    break;
+                case FbType.Federation:
+                    url = $"api/federationstatus/{lookupId}";
+                    break;
+            }
+
+            return url;
         }
 
         public async Task<bool> CheckExists(int? lookupId, FbType lookupType)
@@ -73,11 +94,10 @@ namespace Edubase.Services.ExternalLookup
             else
             {
                 var cacheTime = ConfigurationManager.AppSettings["FinancialBenchmarkingCacheHours"].ToInteger() ?? 8;
-                var request = HeadRestRequest(lookupId, lookupType);
 
                 try
                 {
-                    using (var response = await RetryPolicy.ExecuteAsync(async () => await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead)))
+                    using (var response = await RetryPolicy.ExecuteAsync(async () => await _client.GetAsync(ApiUrlPath(lookupId, lookupType))))
                     {
                         var isOk = response.StatusCode == HttpStatusCode.OK;
                         MemoryCache.Default.Set(new CacheItem(key, isOk), new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.Now.AddHours(cacheTime) });
