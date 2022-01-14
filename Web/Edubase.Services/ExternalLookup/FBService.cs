@@ -73,7 +73,7 @@ namespace Edubase.Services.ExternalLookup
             switch (lookupType)
             {
                 case FbType.Trust:
-                    url = $"api/truststatus/{lookupId}1";
+                    url = $"api/truststatus/{lookupId}";
                     break;
                 case FbType.Federation:
                     url = $"api/federationstatus/{lookupId}";
