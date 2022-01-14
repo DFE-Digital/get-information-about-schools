@@ -38,8 +38,19 @@
 
 @using (Html.BeginRouteForm(Model.Id == null ? "PostCreateBanner" : "PostEditBanner", new { Model.Id }, FormMethod.Post))
 {
-    <div class="button-row govuk-!-margin-bottom-4">
-        @if (Model.Action == eNotificationBannerAction.Start)
+<div class="button-row govuk-!-margin-bottom-4">
+    @if (Model.Action == eNotificationBannerAction.Start)
+    {
+        if (Model.Counter == 0)
+        {
+            @Html.ActionLink(
+                "Back",
+                "AuditBanners",
+                "Notifications",
+                null,
+                new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
+        }
+        else
         {
             @Html.ActionLink(
                 "Back",
@@ -48,13 +59,14 @@
                 null,
                 new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
         }
-        else
-        {
-            <button type="submit" class="govuk-back-link gias-back-link--button" name="@nameof(Model.GoBack)" value="true">
-                Back
-            </button>
-        }
-    </div>
+    }
+    else
+    {
+        <button type="submit" class="govuk-back-link gias-back-link--button" name="@nameof(Model.GoBack)" value="true">
+            Back
+        </button>
+    }
+</div>
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
@@ -67,7 +79,7 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
-                    <span class="govuk-caption-m">@(Model.Id == null ? "Add " : "Edit ") notification banner @Model.Counter</span>
+                    <span class="govuk-caption-m">@(Model.Id == null ? "Add " : "Edit ") notification banner @Html.Conditional(Model.Counter > 0, Model.Counter.ToString())</span>
                 </div>
             </div>
 

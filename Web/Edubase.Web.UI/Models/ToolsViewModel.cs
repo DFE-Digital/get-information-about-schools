@@ -142,7 +142,7 @@ namespace Edubase.Web.UI.Models
             retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View establishment and group change history", "ChangeHistoryCriteria"), Description = "View establishment and group data changes." });
             if (UserCanManageNotifications)
             {
-                retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Manage notification banners", "Notifications"), Description = "Create a notification banner, view an existing notification banner and/or edit one or more existing notification banner messages, alert levels or scheduling. Add, edit or delete templated messages for notification banners." });
+                retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Manage notification banners", "Notifications"), Description = "Create a notification banner, view an existing notification banner and/or edit one or more existing notification banner messages, alert levels or scheduling. Add, edit or delete templated messages for notification banners. View the full change history audit of the notification banner messages." });
             }
 
             return retVal;
