@@ -792,7 +792,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.Tests
                 }
             };
 
-            mockLayoutHelper > ().Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), estabId, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
+            mockLayoutHelper.Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), estabId, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
             mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(estabId, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
             mockGovernorsReadService.Setup(g => g.GetGovernorPermissions(estabId, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
             mockGovernorsReadService.Setup(g => g.GetGovernorAsync(governorId, It.IsAny<IPrincipal>())).ReturnsAsync(() => governor);
@@ -816,354 +816,356 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.Tests
             Assert.Equal(errorMessage, viewResult.ViewData.ModelState[errorKey].Errors[0].ErrorMessage);
         }
 
-        //[Fact()]
-        //public async Task Gov_DeleteOrRetireGovernor_SharedGov_Save_Estab_OK()
-        //{
-        //    var governorId = 2436;
-        //    var estabId = 6151;
+        [Fact()]
+        public async Task Gov_DeleteOrRetireGovernor_SharedGov_Save_Estab_OK()
+        {
+            var governorId = 2436;
+            var estabId = 6151;
 
-        //    var governorDetailsDto = new GovernorsDetailsDto
-        //    {
-        //        ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
-        //        RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
-        //        {
-        //            { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
-        //            { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
-        //        },
-        //        CurrentGovernors = new List<GovernorModel>(),
-        //        HistoricalGovernors = new List<GovernorModel>()
-        //    };
+            var governorDetailsDto = new GovernorsDetailsDto
+            {
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
+                RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
+                {
+                    { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
+                    { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
+                },
+                CurrentGovernors = new List<GovernorModel>(),
+                HistoricalGovernors = new List<GovernorModel>()
+            };
 
-        //    var governor = new GovernorModel
-        //    {
-        //        Id = governorId,
-        //        Appointments = new[]
-        //        {
-        //            new GovernorAppointment
-        //            {
-        //                EstablishmentUrn = estabId,
-        //                AppointmentStartDate = DateTime.Now.AddDays(-30)
-        //            }
-        //        }
-        //    };
+            var governor = new GovernorModel
+            {
+                Id = governorId,
+                Appointments = new[]
+                {
+                    new GovernorAppointment
+                    {
+                        EstablishmentUrn = estabId,
+                        AppointmentStartDate = DateTime.Now.AddDays(-30)
+                    }
+                }
+            };
 
-        //    var error = new ApiResponse(true);
+            var error = new ApiResponse(true);
 
-        //    mockLayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), estabId, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
-        //    mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(estabId, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
-        //    mockGovernorsReadService.Setup(g => g.GetGovernorAsync(governorId, It.IsAny<IPrincipal>())).ReturnsAsync(() => governor);
-        //    mockGovernorsWriteService.Setup(g => g.UpdateSharedGovernorAppointmentAsync(governorId, estabId, It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => error);
-        //    SetupCachedLookupService();
-
-        //    var result = await controller.DeleteOrRetireGovernor(new GovernorsGridViewModel
-        //    {
-        //        EstablishmentUrn = estabId,
-        //        Action = "Save",
-        //        RemovalAppointmentEndDate = new DateTimeViewModel(DateTime.Now),
-        //        RemovalGid = governorId,
-        //        GovernorShared = true
-        //    });
-
-        //    var viewResult = result as RedirectResult;
-        //    viewResult.ShouldNotBeNull();
-
-        //    viewResult.Url.ShouldContain("#school-governance");
-        //    mockGovernorsWriteService.Verify(g => g.UpdateSharedGovernorAppointmentAsync(governorId, estabId, It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>()), Times.Once);
-        //}
-
-        //[Fact()]
-        //public async Task Gov_DeleteOrRetireGovernor_Estab_Remove_Shared_OK()
-        //{
-        //    var estabId = 7845;
-        //    var governorId = 6224;
-
-        //    var governorDetailsDto = new GovernorsDetailsDto
-        //    {
-        //        ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
-        //        RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
-        //        {
-        //            { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
-        //            { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
-        //        },
-        //        CurrentGovernors = new List<GovernorModel>(),
-        //        HistoricalGovernors = new List<GovernorModel>()
-        //    };
-
-        //    mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(estabId, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
-        //    mockGovernorsWriteService.Setup(g => g.UpdateDatesAsync(governorId, It.IsAny<DateTime>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiResponse(true));
-        //    mockLayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), estabId, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
-        //    mockGovernorsWriteService.Setup(g => g.DeleteSharedGovernorAppointmentAsync(governorId, estabId, It.IsAny<IPrincipal>())).Returns(Task.CompletedTask);
-        //    SetupCachedLookupService();
-
-        //    mockCachedLookupService.Setup(c => c.GovernorRolesGetAllAsync()).ReturnsAsync(() => new List<LookupDto>
-        //    {
-        //        new LookupDto { Id = (int)eLookupGovernorRole.AccountingOfficer, Name = "Accounting Officer"},
-        //        new LookupDto { Id = (int)eLookupGovernorRole.Governor, Name = "Governor"}
-        //    });
-
-        //    var result = await controller.DeleteOrRetireGovernor(new GovernorsGridViewModel
-        //    {
-        //        EstablishmentUrn = estabId,
-        //        Action = "Remove",
-        //        RemovalAppointmentEndDate = new DateTimeViewModel(DateTime.Now),
-        //        RemovalGid = governorId,
-        //        GovernorShared = true
-        //    });
-
-        //    var viewResult = result as RedirectResult;
-        //    viewResult.ShouldNotBeNull();
-
-        //    viewResult.Url.ShouldContain("#school-governance");
-        //    mockGovernorsWriteService.Verify(g => g.DeleteSharedGovernorAppointmentAsync(governorId, estabId, It.IsAny<IPrincipal>()), Times.Once);
-        //}
-
-        //[Fact()]
-        //public async Task Gov_DeleteOrRetireGovernor_Estab_Remove_NonShared_OK()
-        //{
-        //    var estabId = 7845;
-        //    var governorId = 6224;
-
-        //    var governorDetailsDto = new GovernorsDetailsDto
-        //    {
-        //        ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
-        //        RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
-        //        {
-        //            { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
-        //            { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
-        //        },
-        //        CurrentGovernors = new List<GovernorModel>(),
-        //        HistoricalGovernors = new List<GovernorModel>()
-        //    };
-
-        //    mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(estabId, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
-        //    mockGovernorsWriteService.Setup(g => g.UpdateDatesAsync(governorId, It.IsAny<DateTime>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiResponse(true));
-        //    mockLayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), estabId, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
-        //    mockGovernorsWriteService.Setup(g => g.DeleteAsync(governorId, It.IsAny<IPrincipal>())).Returns(Task.CompletedTask);
-        //    SetupCachedLookupService();
-
-        //    mockCachedLookupService.Setup(c => c.GovernorRolesGetAllAsync()).ReturnsAsync(() => new List<LookupDto>
-        //    {
-        //        new LookupDto { Id = (int)eLookupGovernorRole.AccountingOfficer, Name = "Accounting Officer"},
-        //        new LookupDto { Id = (int)eLookupGovernorRole.Governor, Name = "Governor"}
-        //    });
-
-        //    var result = await controller.DeleteOrRetireGovernor(new GovernorsGridViewModel
-        //    {
-        //        EstablishmentUrn = estabId,
-        //        Action = "Remove",
-        //        RemovalAppointmentEndDate = new DateTimeViewModel(DateTime.Now),
-        //        RemovalGid = governorId
-        //    });
-
-        //    var viewResult = result as RedirectResult;
-        //    viewResult.ShouldNotBeNull();
-
-        //    viewResult.Url.ShouldContain("#school-governance");
-        //    mockGovernorsWriteService.Verify(g => g.DeleteAsync(governorId, It.IsAny<IPrincipal>()), Times.Once);
-        //}
-
-        //[TestCase(null, 153513)]
-        //[TestCase(16851, null)]
-        //public async Task Gov_Post_AddEditOrReplace_ApiError(int? estabId, int? groupId)
-        //{
-        //    var errorKey = "test";
-        //    var errorMessage = "test message";
-
-        //    SetupCachedLookupService();
-        //    mockGovernorsReadService.Setup(g => g.GetEditorDisplayPolicyAsync(It.IsAny<eLookupGovernorRole>(), It.IsAny<bool>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorDisplayPolicy());
-        //    mockLayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<CreateEditGovernorViewModel>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
-        //    mockGovernorsWriteService
-        //        .Setup(g => g.ValidateAsync(It.IsAny<GovernorModel>(), It.IsAny<IPrincipal>()))
-        //        .ReturnsAsync(() => new ValidationEnvelopeDto()
-        //        {
-        //            Errors =
-        //            {
-        //                new ApiError {Code = "Test", Fields = errorKey, Message = errorMessage}
-        //            }
-        //        });
-
-        //    var result = await controller.AddEditOrReplace(new CreateEditGovernorViewModel { EstablishmentUrn = estabId, GroupUId = groupId });
-
-        //    var viewResult = result as ViewResult;
-        //    viewResult.ShouldNotBeNull();
-        //    var model = viewResult.Model as CreateEditGovernorViewModel;
-        //    model.ShouldNotBeNull();
-        //    viewResult.ViewData.ModelState.IsValid.ShouldBeFalse();
-        //    viewResult.ViewData.ModelState.ContainsKey(errorKey).ShouldBeTrue();
-        //    viewResult.ViewData.ModelState[errorKey].Errors.Count.ShouldBe(1);
-        //    viewResult.ViewData.ModelState[errorKey].Errors[0].ErrorMessage.ShouldBe(errorMessage);
-        //}
-
-        //[Fact()]
-        //public async Task Gov_Get_ReplaceChair()
-        //{
-        //    var estabId = 364631;
-        //    var gid = 135454;
-
-        //    var governor = new GovernorModel
-        //    {
-        //        Id = gid,
-        //        RoleId = (int) eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody
-        //    };
-
-        //    var governorDetailsDto = new GovernorsDetailsDto
-        //    {
-        //        ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
-        //        RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
-        //        {
-        //            { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
-        //            { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
-        //        },
-        //        CurrentGovernors = new List<GovernorModel>(),
-        //        HistoricalGovernors = new List<GovernorModel>()
-        //    };
-
-        //    mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
-        //    mockGovernorsReadService.Setup(g => g.GetGovernorAsync(gid, It.IsAny<IPrincipal>())).ReturnsAsync(() => governor);
-        //    mockGovernorsReadService.Setup(g => g.GetSharedGovernorsAsync(estabId, It.IsAny<IPrincipal>())).ReturnsAsync(() => new List<GovernorModel>());
-        //    mockGovernorsReadService.Setup(g => g.GetEditorDisplayPolicyAsync(It.IsAny<eLookupGovernorRole>(), false, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorDisplayPolicy());
-        //    mockLayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<ReplaceChairViewModel>(), estabId, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
-        //    SetupCachedLookupService();
-
-        //    var result = await controller.ReplaceChair(estabId, gid);
-        //    var viewResult = result as ViewResult;
-        //    viewResult.ShouldNotBeNull();
-
-        //    var model = viewResult.Model as ReplaceChairViewModel;
-        //    model.ShouldNotBeNull();
-        //    model.ExistingGovernorId.ShouldBe(gid);
-        //    model.Role.ShouldBe((eLookupGovernorRole) governor.RoleId);
-        //}
-
-        //[Fact()]
-        //public async Task Gov_Put_ReplaceChair_NewChairShared()
-        //{
-        //    var govId = 465134;
-        //    var newGovId = 68543;
-        //    var estabUrn = 16802;
-
-        //    var model = new ReplaceChairViewModel
-        //    {
-        //        ExistingGovernorId = govId,
-        //        Urn = estabUrn,
-        //        NewChairType = ReplaceChairViewModel.ChairType.SharedChair,
-        //        SharedGovernors = new List<SharedGovernorViewModel>
-        //        {
-        //            new SharedGovernorViewModel
-        //            {
-        //                Id = newGovId,
-        //                AppointmentEndDate = new DateTimeViewModel(DateTime.Now.AddYears(1))
-        //            }
-        //        },
-        //        SelectedGovernorId = newGovId,
-        //        DateTermEnds = new DateTimeViewModel(DateTime.Today),
-        //    };
-
-        //    mockGovernorsWriteService.Setup(g => g.AddSharedGovernorAppointmentAsync(newGovId, estabUrn, It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiResponse(true));
-
-        //    var result = await controller.ReplaceChair(model);
-        //    var redirectResult = result as RedirectResult;
-        //    redirectResult.ShouldNotBeNull();
-        //    redirectResult.Url.ShouldContain("#school-governance");
-
-        //    mockGovernorsWriteService.Verify(g => g.AddSharedGovernorAppointmentAsync(newGovId, estabUrn, It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>()), Times.Once);
-        //}
-
-        //[Fact()]
-        //public async Task Gov_Put_ReplaceChair_NewChairNotShared_NoValidationErrors()
-        //{
-        //    var govId = 465134;
-        //    var estabUrn = 16802;
-
-        //    var model = new ReplaceChairViewModel
-        //    {
-        //        ExistingGovernorId = govId,
-        //        Urn = estabUrn,
-        //        NewChairType = ReplaceChairViewModel.ChairType.LocalChair,
-        //        NewLocalGovernor = new CreateEditGovernorViewModel
-        //        {
-        //            AppointmentEndDate = new DateTimeViewModel(DateTime.Today.AddYears(1)),
-        //            DOB = new DateTimeViewModel(),
-        //        },
-        //        DateTermEnds = new DateTimeViewModel(DateTime.Today),
-        //    };
-
-        //    mockGovernorsWriteService.Setup(g => g.ValidateAsync(It.IsAny<GovernorModel>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ValidationEnvelopeDto { Errors = new List<ApiError>() });
-        //    mockGovernorsWriteService.Setup(g => g.SaveAsync(It.IsAny<GovernorModel>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiResponse<int>(true));
-
-        //    var result = await controller.ReplaceChair(model);
-        //    var redirectResult = result as RedirectResult;
-        //    redirectResult.ShouldNotBeNull();
-        //    redirectResult.Url.ShouldContain("#school-governance");
-        //}
-
-        //[Fact()]
-        //public async Task Gov_Put_ReplaceChair_NewChairNotShared_ValidationErrors()
-        //{
-        //    var govId = 465134;
-        //    var estabUrn = 16802;
-        //    var errorKey = "Test";
-        //    var errorText = "Test Message";
-
-        //    var existingGov = new GovernorModel
-        //    {
-        //        RoleId = (int) eLookupGovernorRole.ChairOfLocalGoverningBody
-        //    };
-
-        //    var model = new ReplaceChairViewModel
-        //    {
-        //        ExistingGovernorId = govId,
-        //        Urn = estabUrn,
-        //        NewChairType = ReplaceChairViewModel.ChairType.LocalChair,
-        //        NewLocalGovernor = new CreateEditGovernorViewModel
-        //        {
-        //            AppointmentEndDate = new DateTimeViewModel(DateTime.Today.AddYears(1)),
-        //            DOB = new DateTimeViewModel(),
-        //        },
-        //        DateTermEnds = new DateTimeViewModel(DateTime.Today),
-        //    };
-
-        //    mockGovernorsWriteService
-        //        .Setup(g => g.ValidateAsync(It.IsAny<GovernorModel>(), It.IsAny<IPrincipal>()))
-        //        .ReturnsAsync(() => new ValidationEnvelopeDto
-        //        {
-        //            Errors = new List<ApiError>
-        //            {
-        //                new ApiError
-        //                {
-        //                    Fields = errorKey,
-        //                    Message = errorText
-        //                }
-        //            }
-        //        });
-
-        //    var governorDetailsDto = new GovernorsDetailsDto
-        //    {
-        //        ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
-        //        RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
-        //        {
-        //            { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
-        //            { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
-        //        },
-        //        CurrentGovernors = new List<GovernorModel>(),
-        //        HistoricalGovernors = new List<GovernorModel>()
-        //    };
-
-        //    mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            mockLayoutHelper.Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), estabId, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
+            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(estabId, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            mockGovernorsReadService.Setup(g => g.GetGovernorAsync(governorId, It.IsAny<IPrincipal>())).ReturnsAsync(() => governor);
+            mockGovernorsWriteService.Setup(g => g.UpdateSharedGovernorAppointmentAsync(governorId, estabId, It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => error);
 
 
-        //    mockGovernorsReadService.Setup(g => g.GetGovernorAsync(model.ExistingGovernorId, It.IsAny<IPrincipal>())).ReturnsAsync(() => existingGov);
-        //    mockGovernorsReadService.Setup(g => g.GetSharedGovernorsAsync(estabUrn, It.IsAny<IPrincipal>())).ReturnsAsync(() => new List<GovernorModel>());
-        //    mockGovernorsReadService.Setup(g => g.GetEditorDisplayPolicyAsync(It.IsAny<eLookupGovernorRole>(), false, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorDisplayPolicy());
-        //    mockLayoutHelper>().Setup(l => l.PopulateLayoutProperties(It.IsAny<ReplaceChairViewModel>(), estabUrn, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
-        //    SetupCachedLookupService();
+            var result = await controller.DeleteOrRetireGovernor(new GovernorsGridViewModel
+            {
+                EstablishmentUrn = estabId,
+                Action = "Save",
+                RemovalAppointmentEndDate = new DateTimeViewModel(DateTime.Now),
+                RemovalGid = governorId,
+                GovernorShared = true
+            });
 
-        //    var result = await controller.ReplaceChair(model);
-        //    var viewResult = result as ViewResult;
-        //    viewResult.ShouldNotBeNull();
-        //    var modelResult = viewResult.Model as ReplaceChairViewModel;
-        //    modelResult.ShouldNotBeNull();
-        //    modelResult.ShouldBe(model);
-        //}
+            var viewResult = result as RedirectResult;
+            Assert.NotNull(viewResult);
+
+            Assert.Contains("#school-governance", viewResult.Url);
+            mockGovernorsWriteService.Verify(g => g.UpdateSharedGovernorAppointmentAsync(governorId, estabId, It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>()), Times.Once);
+        }
+
+        [Fact()]
+        public async Task Gov_DeleteOrRetireGovernor_Estab_Remove_Shared_OK()
+        {
+            var estabId = 7845;
+            var governorId = 6224;
+
+            var governorDetailsDto = new GovernorsDetailsDto
+            {
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
+                RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
+                {
+                    { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
+                    { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
+                },
+                CurrentGovernors = new List<GovernorModel>(),
+                HistoricalGovernors = new List<GovernorModel>()
+            };
+
+            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(estabId, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            mockGovernorsWriteService.Setup(g => g.UpdateDatesAsync(governorId, It.IsAny<DateTime>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiResponse(true));
+            mockLayoutHelper.Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), estabId, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
+            mockGovernorsWriteService.Setup(g => g.DeleteSharedGovernorAppointmentAsync(governorId, estabId, It.IsAny<IPrincipal>())).Returns(Task.CompletedTask);
+
+
+            mockCachedLookupService.Setup(c => c.GovernorRolesGetAllAsync()).ReturnsAsync(() => new List<LookupDto>
+            {
+                new LookupDto { Id = (int)eLookupGovernorRole.AccountingOfficer, Name = "Accounting Officer"},
+                new LookupDto { Id = (int)eLookupGovernorRole.Governor, Name = "Governor"}
+            });
+
+            var result = await controller.DeleteOrRetireGovernor(new GovernorsGridViewModel
+            {
+                EstablishmentUrn = estabId,
+                Action = "Remove",
+                RemovalAppointmentEndDate = new DateTimeViewModel(DateTime.Now),
+                RemovalGid = governorId,
+                GovernorShared = true
+            });
+
+            var viewResult = result as RedirectResult;
+            Assert.NotNull(viewResult);
+
+            Assert.Contains("#school-governance", viewResult.Url);
+            mockGovernorsWriteService.Verify(g => g.DeleteSharedGovernorAppointmentAsync(governorId, estabId, It.IsAny<IPrincipal>()), Times.Once);
+        }
+
+        [Fact()]
+        public async Task Gov_DeleteOrRetireGovernor_Estab_Remove_NonShared_OK()
+        {
+            var estabId = 7845;
+            var governorId = 6224;
+
+            var governorDetailsDto = new GovernorsDetailsDto
+            {
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
+                RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
+                {
+                    { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
+                    { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
+                },
+                CurrentGovernors = new List<GovernorModel>(),
+                HistoricalGovernors = new List<GovernorModel>()
+            };
+
+            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(estabId, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            mockGovernorsWriteService.Setup(g => g.UpdateDatesAsync(governorId, It.IsAny<DateTime>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiResponse(true));
+            mockLayoutHelper.Setup(l => l.PopulateLayoutProperties(It.IsAny<GovernorsGridViewModel>(), estabId, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
+            mockGovernorsWriteService.Setup(g => g.DeleteAsync(governorId, It.IsAny<IPrincipal>())).Returns(Task.CompletedTask);
+
+
+            mockCachedLookupService.Setup(c => c.GovernorRolesGetAllAsync()).ReturnsAsync(() => new List<LookupDto>
+            {
+                new LookupDto { Id = (int)eLookupGovernorRole.AccountingOfficer, Name = "Accounting Officer"},
+                new LookupDto { Id = (int)eLookupGovernorRole.Governor, Name = "Governor"}
+            });
+
+            var result = await controller.DeleteOrRetireGovernor(new GovernorsGridViewModel
+            {
+                EstablishmentUrn = estabId,
+                Action = "Remove",
+                RemovalAppointmentEndDate = new DateTimeViewModel(DateTime.Now),
+                RemovalGid = governorId
+            });
+
+            var viewResult = result as RedirectResult;
+            Assert.NotNull(viewResult);
+
+            Assert.Contains("#school-governance", viewResult.Url);
+            mockGovernorsWriteService.Verify(g => g.DeleteAsync(governorId, It.IsAny<IPrincipal>()), Times.Once);
+        }
+
+        [Theory()]
+        [InlineData(null, 153513)]
+        [InlineData(16851, null)]
+        public async Task Gov_Post_AddEditOrReplace_ApiError(int? estabId, int? groupId)
+        {
+            var errorKey = "test";
+            var errorMessage = "test message";
+
+
+            mockGovernorsReadService.Setup(g => g.GetEditorDisplayPolicyAsync(It.IsAny<eLookupGovernorRole>(), It.IsAny<bool>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorDisplayPolicy());
+            mockLayoutHelper.Setup(l => l.PopulateLayoutProperties(It.IsAny<CreateEditGovernorViewModel>(), It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
+            mockGovernorsWriteService
+                .Setup(g => g.ValidateAsync(It.IsAny<GovernorModel>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => new ValidationEnvelopeDto()
+                {
+                    Errors =
+                    {
+                        new ApiError {Code = "Test", Fields = errorKey, Message = errorMessage}
+                    }
+                });
+
+            var result = await controller.AddEditOrReplace(new CreateEditGovernorViewModel { EstablishmentUrn = estabId, GroupUId = groupId });
+
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            var model = viewResult.Model as CreateEditGovernorViewModel;
+            Assert.NotNull(model);
+            Assert.False(viewResult.ViewData.ModelState.IsValid);
+            Assert.True(viewResult.ViewData.ModelState.ContainsKey(errorKey));
+            Assert.Single(viewResult.ViewData.ModelState[errorKey].Errors);
+            Assert.Equal(errorMessage, viewResult.ViewData.ModelState[errorKey].Errors[0].ErrorMessage);
+        }
+
+        [Fact()]
+        public async Task Gov_Get_ReplaceChair()
+        {
+            var estabId = 364631;
+            var gid = 135454;
+
+            var governor = new GovernorModel
+            {
+                Id = gid,
+                RoleId = (int) eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody
+            };
+
+            var governorDetailsDto = new GovernorsDetailsDto
+            {
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
+                RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
+                {
+                    { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
+                    { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
+                },
+                CurrentGovernors = new List<GovernorModel>(),
+                HistoricalGovernors = new List<GovernorModel>()
+            };
+
+            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+            mockGovernorsReadService.Setup(g => g.GetGovernorAsync(gid, It.IsAny<IPrincipal>())).ReturnsAsync(() => governor);
+            mockGovernorsReadService.Setup(g => g.GetSharedGovernorsAsync(estabId, It.IsAny<IPrincipal>())).ReturnsAsync(() => new List<GovernorModel>());
+            mockGovernorsReadService.Setup(g => g.GetEditorDisplayPolicyAsync(It.IsAny<eLookupGovernorRole>(), false, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorDisplayPolicy());
+            mockLayoutHelper.Setup(l => l.PopulateLayoutProperties(It.IsAny<ReplaceChairViewModel>(), estabId, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
+
+
+            var result = await controller.ReplaceChair(estabId, gid);
+            var viewResult = result as ViewResult;
+
+            Assert.NotNull(viewResult);
+
+            var model = viewResult.Model as ReplaceChairViewModel;
+            Assert.NotNull(model); ;
+            Assert.Equal(gid, model.ExistingGovernorId);
+            Assert.Equal((eLookupGovernorRole) governor.RoleId, model.Role);
+        }
+
+        [Fact()]
+        public async Task Gov_Put_ReplaceChair_NewChairShared()
+        {
+            var govId = 465134;
+            var newGovId = 68543;
+            var estabUrn = 16802;
+
+            var model = new ReplaceChairViewModel
+            {
+                ExistingGovernorId = govId,
+                Urn = estabUrn,
+                NewChairType = ReplaceChairViewModel.ChairType.SharedChair,
+                SharedGovernors = new List<SharedGovernorViewModel>
+                {
+                    new SharedGovernorViewModel
+                    {
+                        Id = newGovId,
+                        AppointmentEndDate = new DateTimeViewModel(DateTime.Now.AddYears(1))
+                    }
+                },
+                SelectedGovernorId = newGovId,
+                DateTermEnds = new DateTimeViewModel(DateTime.Today),
+            };
+
+            mockGovernorsWriteService.Setup(g => g.AddSharedGovernorAppointmentAsync(newGovId, estabUrn, It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiResponse(true));
+
+            var result = await controller.ReplaceChair(model);
+            var redirectResult = result as RedirectResult;
+            Assert.NotNull(redirectResult);
+            Assert.Contains("#school-governance", redirectResult.Url);
+
+            mockGovernorsWriteService.Verify(g => g.AddSharedGovernorAppointmentAsync(newGovId, estabUrn, It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>()), Times.Once);
+        }
+
+        [Fact()]
+        public async Task Gov_Put_ReplaceChair_NewChairNotShared_NoValidationErrors()
+        {
+            var govId = 465134;
+            var estabUrn = 16802;
+
+            var model = new ReplaceChairViewModel
+            {
+                ExistingGovernorId = govId,
+                Urn = estabUrn,
+                NewChairType = ReplaceChairViewModel.ChairType.LocalChair,
+                NewLocalGovernor = new CreateEditGovernorViewModel
+                {
+                    AppointmentEndDate = new DateTimeViewModel(DateTime.Today.AddYears(1)),
+                    DOB = new DateTimeViewModel(),
+                },
+                DateTermEnds = new DateTimeViewModel(DateTime.Today),
+            };
+
+            mockGovernorsWriteService.Setup(g => g.ValidateAsync(It.IsAny<GovernorModel>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ValidationEnvelopeDto { Errors = new List<ApiError>() });
+            mockGovernorsWriteService.Setup(g => g.SaveAsync(It.IsAny<GovernorModel>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiResponse<int>(true));
+
+            var result = await controller.ReplaceChair(model);
+            var redirectResult = result as RedirectResult;
+            Assert.NotNull(redirectResult);
+            Assert.Contains("#school-governance", redirectResult.Url);
+        }
+
+        [Fact()]
+        public async Task Gov_Put_ReplaceChair_NewChairNotShared_ValidationErrors()
+        {
+            var govId = 465134;
+            var estabUrn = 16802;
+            var errorKey = "Test";
+            var errorText = "Test Message";
+
+            var existingGov = new GovernorModel
+            {
+                RoleId = (int) eLookupGovernorRole.ChairOfLocalGoverningBody
+            };
+
+            var model = new ReplaceChairViewModel
+            {
+                ExistingGovernorId = govId,
+                Urn = estabUrn,
+                NewChairType = ReplaceChairViewModel.ChairType.LocalChair,
+                NewLocalGovernor = new CreateEditGovernorViewModel
+                {
+                    AppointmentEndDate = new DateTimeViewModel(DateTime.Today.AddYears(1)),
+                    DOB = new DateTimeViewModel(),
+                },
+                DateTermEnds = new DateTimeViewModel(DateTime.Today),
+            };
+
+            mockGovernorsWriteService
+                .Setup(g => g.ValidateAsync(It.IsAny<GovernorModel>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => new ValidationEnvelopeDto
+                {
+                    Errors = new List<ApiError>
+                    {
+                        new ApiError
+                        {
+                            Fields = errorKey,
+                            Message = errorText
+                        }
+                    }
+                });
+
+            var governorDetailsDto = new GovernorsDetailsDto
+            {
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
+                RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
+                {
+                    { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
+                    { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
+                },
+                CurrentGovernors = new List<GovernorModel>(),
+                HistoricalGovernors = new List<GovernorModel>()
+            };
+
+            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
+
+
+            mockGovernorsReadService.Setup(g => g.GetGovernorAsync(model.ExistingGovernorId, It.IsAny<IPrincipal>())).ReturnsAsync(() => existingGov);
+            mockGovernorsReadService.Setup(g => g.GetSharedGovernorsAsync(estabUrn, It.IsAny<IPrincipal>())).ReturnsAsync(() => new List<GovernorModel>());
+            mockGovernorsReadService.Setup(g => g.GetEditorDisplayPolicyAsync(It.IsAny<eLookupGovernorRole>(), false, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorDisplayPolicy());
+            mockLayoutHelper.Setup(l => l.PopulateLayoutProperties(It.IsAny<ReplaceChairViewModel>(), estabUrn, null, It.IsAny<IPrincipal>(), It.IsAny<Action<EstablishmentModel>>(), It.IsAny<Action<GroupModel>>())).Returns(Task.CompletedTask);
+
+
+            var result = await controller.ReplaceChair(model);
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+            var modelResult = viewResult.Model as ReplaceChairViewModel;
+            Assert.NotNull(modelResult);
+            Assert.Equal(model, modelResult);
+        }
     }
 }

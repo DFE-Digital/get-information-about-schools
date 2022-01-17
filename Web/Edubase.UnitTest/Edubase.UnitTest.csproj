@@ -175,7 +175,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\GovernorControllerTest.cs" />
     <Compile Include="Controllers\GroupControllerTest.cs" />
     <Compile Include="Mocks\Disposable.cs" />
     <Compile Include="Mocks\MockHttpMessageHandler.cs" />
