@@ -32,6 +32,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Web.UITests", "Edub
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.CommonTests", "Edubase.CommonTests\Edubase.CommonTests.csproj", "{C40D68A8-5748-4FDA-A82C-8E171FA2EE43}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.ServicesTests", "Edubase.ServicesTests\Edubase.ServicesTests.csproj", "{9708EF96-6579-4C74-A044-7916972BFB07}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug (QA)|Any CPU = Debug (QA)|Any CPU
@@ -351,6 +353,36 @@ Global
 		{C40D68A8-5748-4FDA-A82C-8E171FA2EE43}.ReleaseTexunaAPI|x64.Build.0 = Release|Any CPU
 		{C40D68A8-5748-4FDA-A82C-8E171FA2EE43}.ReleaseTexunaAPI|x86.ActiveCfg = Release|Any CPU
 		{C40D68A8-5748-4FDA-A82C-8E171FA2EE43}.ReleaseTexunaAPI|x86.Build.0 = Release|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Debug (QA)|Any CPU.ActiveCfg = Debug|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Debug (QA)|Any CPU.Build.0 = Debug|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Debug (QA)|x64.ActiveCfg = Debug|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Debug (QA)|x64.Build.0 = Debug|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Debug (QA)|x86.ActiveCfg = Debug|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Debug (QA)|x86.Build.0 = Debug|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Debug|x64.Build.0 = Debug|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Debug|x86.Build.0 = Debug|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Debug-TexunaAPI|Any CPU.ActiveCfg = Debug|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Debug-TexunaAPI|Any CPU.Build.0 = Debug|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Debug-TexunaAPI|x64.ActiveCfg = Debug|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Debug-TexunaAPI|x64.Build.0 = Debug|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Debug-TexunaAPI|x86.ActiveCfg = Debug|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Debug-TexunaAPI|x86.Build.0 = Debug|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Release|x64.ActiveCfg = Release|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Release|x64.Build.0 = Release|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Release|x86.ActiveCfg = Release|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.Release|x86.Build.0 = Release|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.ReleaseTexunaAPI|Any CPU.ActiveCfg = Release|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.ReleaseTexunaAPI|Any CPU.Build.0 = Release|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.ReleaseTexunaAPI|x64.ActiveCfg = Release|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.ReleaseTexunaAPI|x64.Build.0 = Release|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.ReleaseTexunaAPI|x86.ActiveCfg = Release|Any CPU
+		{9708EF96-6579-4C74-A044-7916972BFB07}.ReleaseTexunaAPI|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
