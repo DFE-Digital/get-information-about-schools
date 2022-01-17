@@ -30,11 +30,11 @@ namespace Edubase.UnitTest.Controllers
     [TestFixture]
     public class GovernorControllerTest : UnitTestBase<GovernorController>
     {
-        [Test]
-        public async Task Gov_Edit_Null_Params()
-        {
-            await ObjectUnderTest.Edit(null, null, null, null).ShouldThrowAsync<InvalidParameterException>();
-        }
+        //[Test]
+        //public async Task Gov_Edit_Null_Params()
+        //{
+        //    await ObjectUnderTest.Edit(null, null, null, null).ShouldThrowAsync<InvalidParameterException>();
+        //}
 
         [Test]
         public async Task Gov_Edit_GroupIdSpecified()
