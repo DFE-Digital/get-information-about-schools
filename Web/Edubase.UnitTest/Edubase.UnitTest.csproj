@@ -175,7 +175,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\TokenTest.cs" />
     <Compile Include="Controllers\EstablishmentControllerTest.cs" />
     <Compile Include="Controllers\GovernorControllerTest.cs" />
     <Compile Include="Controllers\GroupControllerTest.cs" />

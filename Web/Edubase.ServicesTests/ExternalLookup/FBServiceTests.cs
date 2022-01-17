@@ -1,12 +1,6 @@
-using Xunit;
-using Edubase.Services.ExternalLookup;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit.Abstractions;
 using System.Net.Http;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace Edubase.Services.ExternalLookup.Tests
 {

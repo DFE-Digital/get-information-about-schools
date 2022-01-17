@@ -1,7 +1,7 @@
-using Xunit;
-using Moq;
 using System.Security.Principal;
 using Edubase.Services.Enums;
+using Moq;
+using Xunit;
 
 namespace Edubase.Web.Resources.Tests
 {
