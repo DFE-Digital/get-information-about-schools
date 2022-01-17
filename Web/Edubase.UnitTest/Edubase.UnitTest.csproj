@@ -176,7 +176,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\TokenTest.cs" />
-    <Compile Include="Common\DisposerTest.cs" />
     <Compile Include="Controllers\EstablishmentControllerTest.cs" />
     <Compile Include="Controllers\GovernorControllerTest.cs" />
     <Compile Include="Controllers\GroupControllerTest.cs" />
