@@ -14,18 +14,16 @@ using Edubase.Services.Establishments.Downloads;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
 using Edubase.Services.Lookup;
-using Edubase.Web.UI.Areas.Establishments.Controllers;
 using Edubase.Web.UI.Areas.Establishments.Models.Search;
 using Moq;
-using NUnit.Framework;
+using Xunit;
 using static Edubase.Web.UI.Areas.Establishments.Models.Search.EstablishmentSearchViewModel;
 
-namespace Edubase.UnitTest.Controllers
+namespace Edubase.Web.UI.Areas.Establishments.Controllers.Tests
 {
-    [TestFixture]
-    public class EstablishmentsSearchControllerTest
+    public class EstablishmentsSearchControllerTests
     {
-        [Test]
+        [Fact]
         public async Task EstabSearch_Index_DisplaysResults()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
@@ -40,12 +38,21 @@ namespace Edubase.UnitTest.Controllers
             context.SetupGet(x => x.Request).Returns(request.Object);
             context.SetupGet(x => x.User).Returns(null as IPrincipal);
             context.SetupGet(x => x.Request.IsAuthenticated).Returns(false);
-            cls.Setup(x => x.LocalAuthorityGetAllAsync()).ReturnsAsync(new[] { new LookupDto { Id = 2, Name = "TESTLA" }, new LookupDto { Id = 3, Name = "BOB" } });
-            cls.Setup(x => x.EstablishmentStatusesGetAllAsync()).ReturnsAsync(new[] { new LookupDto { Id = 1, Name = "status1" }, new LookupDto { Id = 2, Name = "status2" } });
+            cls.Setup(x => x.LocalAuthorityGetAllAsync()).ReturnsAsync(new[]
+            {
+                new LookupDto { Id = 2, Name = "TESTLA" },
+                new LookupDto { Id = 3, Name = "BOB" }
+            });
+            cls.Setup(x => x.EstablishmentStatusesGetAllAsync()).ReturnsAsync(new[]
+            {
+                new LookupDto { Id = 1, Name = "status1" },
+                new LookupDto { Id = 2, Name = "status2" }
+            });
             cls.Setup(x => x.GetNameAsync(It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>())).ReturnsAsync("bob");
             ers.Setup(x => x.CanAccess(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<bool>(false));
             ers.Setup(x => x.GetPermittedStatusIdsAsync(It.IsAny<IPrincipal>())).ReturnsAsync(new[] { 1 });
-            ers.Setup(x => x.SearchAsync(It.IsAny<EstablishmentSearchPayload>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiPagedResult<EstablishmentSearchResultModel>(2, new List<EstablishmentSearchResultModel>
+            ers.Setup(x => x.SearchAsync(It.IsAny<EstablishmentSearchPayload>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => new ApiPagedResult<EstablishmentSearchResultModel>(2, new List<EstablishmentSearchResultModel>
             {
                 new EstablishmentSearchResultModel
                 {
@@ -64,15 +71,16 @@ namespace Edubase.UnitTest.Controllers
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = "school";
 
-            var result = (ViewResult) await subject.Index(vm);
+            var result = await subject.Index(vm) as ViewResult;
 
-            Assert.That(vm.Count, Is.EqualTo(2));
-            Assert.That(vm.Results.Count, Is.EqualTo(2));
-            Assert.That(vm.Results[0].Name, Is.EqualTo("School 1"));
-            Assert.That(vm.Results[1].Name, Is.EqualTo("School 2"));
+            Assert.NotNull(result);
+            Assert.Equal(2, vm.Count);
+            Assert.Equal(2, vm.Results.Count);
+            Assert.Equal("School 1", vm.Results[0].Name);
+            Assert.Equal("School 2", vm.Results[1].Name);
         }
 
-        [Test]
+        [Fact]
         public async Task EstabSearch_Index_GoToDetailPageOnOneResult_MultipleResults()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
@@ -111,23 +119,27 @@ namespace Edubase.UnitTest.Controllers
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = "school";
             vm.GoToDetailPageOnOneResult = true;
-            var result = (ViewResult) await subject.Index(vm);
-            Assert.That(vm.Count, Is.EqualTo(2));
-            Assert.That(vm.Results.Count, Is.EqualTo(2));
-            Assert.That(vm.Results[0].Name, Is.EqualTo("School 1"));
-            Assert.That(vm.Results[1].Name, Is.EqualTo("School 2"));
+            var result = await subject.Index(vm) as ViewResult;
+
+            Assert.NotNull(result);
+            Assert.Equal(2, vm.Count);
+            Assert.Equal(2, vm.Results.Count);
+            Assert.Equal("School 1", vm.Results[0].Name);
+            Assert.Equal("School 2", vm.Results[1].Name);
 
             vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = "school";
             vm.GoToDetailPageOnOneResult = false;
-            result = (ViewResult) await subject.Index(vm);
-            Assert.That(vm.Count, Is.EqualTo(2));
-            Assert.That(vm.Results.Count, Is.EqualTo(2));
-            Assert.That(vm.Results[0].Name, Is.EqualTo("School 1"));
-            Assert.That(vm.Results[1].Name, Is.EqualTo("School 2"));
+            result = await subject.Index(vm) as ViewResult;
+
+            Assert.NotNull(result);
+            Assert.Equal(2, vm.Count);
+            Assert.Equal(2, vm.Results.Count);
+            Assert.Equal("School 1", vm.Results[0].Name);
+            Assert.Equal("School 2", vm.Results[1].Name);
         }
 
-        [Test]
+        [Fact]
         public async Task EstabSearch_Index_GoToDetailPageOnOneResult_OneResult()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
@@ -164,22 +176,28 @@ namespace Edubase.UnitTest.Controllers
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = "school";
             vm.GoToDetailPageOnOneResult = true;
-            var result = (RedirectToRouteResult) await subject.Index(vm);
-            Assert.That(result.RouteValues["action"], Is.EqualTo("Details"));
-            Assert.That(result.RouteValues["controller"], Is.EqualTo("Establishment"));
-            Assert.That(result.RouteValues["id"], Is.EqualTo(672393));
-            Assert.That(result.RouteValues["area"], Is.EqualTo("Establishments"));
+            var result = await subject.Index(vm) as RedirectToRouteResult;
+
+            Assert.NotNull(result);
+            Assert.Equal("Establishment", result.RouteValues["controller"]);
+            Assert.Equal(672393, result.RouteValues["id"]);
+            Assert.Equal("Details", result.RouteValues["action"]);
+            Assert.Equal("Establishments", result.RouteValues["area"]);
 
             vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = "school";
             vm.GoToDetailPageOnOneResult = false;
-            var result2 = (ViewResult) await subject.Index(vm);
-            Assert.That(vm.Count, Is.EqualTo(1));
-            Assert.That(vm.Results.Count, Is.EqualTo(1));
-            Assert.That(vm.Results[0].Name, Is.EqualTo("School 1"));
+            var result2 = await subject.Index(vm) as ViewResult;
+
+            Assert.NotNull(result);
+            Assert.Equal(1, vm.Count);
+            Assert.Equal(1, vm.Results.Count);
+            Assert.Equal("School 1", vm.Results[0].Name);
         }
 
-        [Test, TestCase("432/5437"), TestCase("4325437")]
+        [Theory]
+        [InlineData(@"432/5437")]
+        [InlineData("4325437")]
         public async Task EstabSearch_Index_SearchWithLAESTAB(string laestab)
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
@@ -218,16 +236,18 @@ namespace Edubase.UnitTest.Controllers
 
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.Text = laestab;
-            var result = (ViewResult) await subject.Index(vm);
-            Assert.That(vm.TextSearchType, Is.EqualTo(eTextSearchType.LAESTAB));
-            Assert.That(vm.Count, Is.EqualTo(1));
-            Assert.That(vm.Results.Count, Is.EqualTo(1));
-            Assert.That(vm.Results[0].Name, Is.EqualTo("School 1"));
-            Assert.That(vm.Results[0].LocalAuthorityId, Is.EqualTo(432));
-            Assert.That(vm.Results[0].EstablishmentNumber, Is.EqualTo(5437));
+            var result = await subject.Index(vm) as ViewResult;
+
+            Assert.NotNull(result);
+            Assert.Equal(eTextSearchType.LAESTAB, vm.TextSearchType);
+            Assert.Equal(1, vm.Count);
+            Assert.Equal(1, vm.Results.Count);
+            Assert.Equal("School 1", vm.Results[0].Name);
+            Assert.Equal(432, vm.Results[0].LocalAuthorityId);
+            Assert.Equal(5437, vm.Results[0].EstablishmentNumber);
         }
 
-        [Test]
+        [Fact]
         public async Task EstabSearch_Index_WithInvalidURN_RedirectsBackOnSelf()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
@@ -254,12 +274,12 @@ namespace Edubase.UnitTest.Controllers
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.AutoSuggestValue = "1256";
 
-            var result = (RedirectResult) await subject.Index(vm);
-
-            Assert.That(result.Url, Is.EqualTo("action=Index|controller=Search|area=|SearchType=Text|TextSearchModel.Text=|NoResults=True"));
+            var result = await subject.Index(vm) as RedirectResult;
+            Assert.NotNull(result);
+            Assert.Equal("action=Index|controller=Search|area=|SearchType=Text|TextSearchModel.Text=|NoResults=True", result.Url);
         }
 
-        [Test]
+        [Fact]
         public async Task EstabSearch_Index_WithValidURN_RedirectsToEstabDetail()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
@@ -280,15 +300,16 @@ namespace Edubase.UnitTest.Controllers
             var vm = new EstablishmentSearchViewModel();
             vm.TextSearchModel.AutoSuggestValue = "123456";
 
-            var result = (RedirectToRouteResult) await subject.Index(vm);
+            var result = await subject.Index(vm) as RedirectToRouteResult;
 
-            Assert.That(result.RouteValues["action"], Is.EqualTo("Details"));
-            Assert.That(result.RouteValues["controller"], Is.EqualTo("Establishment"));
-            Assert.That(result.RouteValues["id"], Is.EqualTo(123456));
-            Assert.That(result.RouteValues["area"], Is.EqualTo("Establishments"));
+            Assert.NotNull(result);
+            Assert.Equal("Details", result.RouteValues["action"]);
+            Assert.Equal("Establishment", result.RouteValues["controller"]);
+            Assert.Equal(123456, result.RouteValues["id"]);
+            Assert.Equal("Establishments", result.RouteValues["area"]);
         }
 
-        [Test]
+        [Fact]
         public async Task EstabSearch_PrepareDownload_Step1_BackOfficeUser()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
@@ -310,17 +331,18 @@ namespace Edubase.UnitTest.Controllers
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
             var viewModel = new EstablishmentSearchDownloadViewModel();
-            var result = (ViewResult) await subject.PrepareDownload(viewModel);
+            var result = await subject.PrepareDownload(viewModel) as ViewResult;
 
-            Assert.That(viewModel.AllowAnyExtraFields, Is.True);
-            Assert.That(viewModel.AllowIncludeBringUpFields, Is.True);
-            Assert.That(viewModel.AllowIncludeChildrensCentreFields, Is.True);
-            Assert.That(viewModel.AllowIncludeEmailAddresses, Is.True);
-            Assert.That(viewModel.AllowIncludeIEBTFields, Is.True);
-            Assert.That(result.ViewName, Is.EqualTo("Downloads/SelectDataset"));
+            Assert.NotNull(result);
+            Assert.True(viewModel.AllowAnyExtraFields);
+            Assert.True(viewModel.AllowIncludeBringUpFields);
+            Assert.True(viewModel.AllowIncludeChildrensCentreFields);
+            Assert.True(viewModel.AllowIncludeEmailAddresses);
+            Assert.True(viewModel.AllowIncludeIEBTFields);
+            Assert.Equal("Downloads/SelectDataset", result.ViewName);
         }
 
-        [Test]
+        [Fact]
         public async Task EstabSearch_PrepareDownload_Step1_PublicUser()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
@@ -342,17 +364,18 @@ namespace Edubase.UnitTest.Controllers
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
             var viewModel = new EstablishmentSearchDownloadViewModel();
-            var result = (ViewResult) await subject.PrepareDownload(viewModel);
+            var result = await subject.PrepareDownload(viewModel) as ViewResult;
 
-            Assert.That(viewModel.AllowAnyExtraFields, Is.False);
-            Assert.That(viewModel.AllowIncludeBringUpFields, Is.False);
-            Assert.That(viewModel.AllowIncludeChildrensCentreFields, Is.False);
-            Assert.That(viewModel.AllowIncludeEmailAddresses, Is.False);
-            Assert.That(viewModel.AllowIncludeIEBTFields, Is.False);
-            Assert.That(result.ViewName, Is.EqualTo("Downloads/SelectDataset"));
+            Assert.NotNull(result);
+            Assert.False(viewModel.AllowAnyExtraFields);
+            Assert.False(viewModel.AllowIncludeBringUpFields);
+            Assert.False(viewModel.AllowIncludeChildrensCentreFields);
+            Assert.False(viewModel.AllowIncludeEmailAddresses);
+            Assert.False(viewModel.AllowIncludeIEBTFields);
+            Assert.Equal("Downloads/SelectDataset", result.ViewName);
         }
 
-        [Test]
+        [Fact]
         public async Task EstabSearch_PrepareDownload_Step2()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
@@ -374,17 +397,18 @@ namespace Edubase.UnitTest.Controllers
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
             var viewModel = new EstablishmentSearchDownloadViewModel() { Dataset = eDataSet.Full };
-            var result = (ViewResult) await subject.PrepareDownload(viewModel);
+            var result = await subject.PrepareDownload(viewModel) as ViewResult;
 
-            Assert.That(viewModel.AllowAnyExtraFields, Is.True);
-            Assert.That(viewModel.AllowIncludeBringUpFields, Is.True);
-            Assert.That(viewModel.AllowIncludeChildrensCentreFields, Is.True);
-            Assert.That(viewModel.AllowIncludeEmailAddresses, Is.True);
-            Assert.That(viewModel.AllowIncludeIEBTFields, Is.True);
-            Assert.That(result.ViewName, Is.EqualTo("Downloads/SelectFormat"));
+            Assert.NotNull(result);
+            Assert.True(viewModel.AllowAnyExtraFields);
+            Assert.True(viewModel.AllowIncludeBringUpFields);
+            Assert.True(viewModel.AllowIncludeChildrensCentreFields);
+            Assert.True(viewModel.AllowIncludeEmailAddresses);
+            Assert.True(viewModel.AllowIncludeIEBTFields);
+            Assert.Equal("Downloads/SelectFormat", result.ViewName);
         }
 
-        [Test]
+        [Fact]
         public async Task EstabSearch_PrepareDownload_Step3()
         {
             var ers = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
@@ -408,10 +432,11 @@ namespace Edubase.UnitTest.Controllers
             subject.ControllerContext = new ControllerContext(context.Object, new RouteData(), subject);
             subject.Url = mockUrlHelper.Object;
             var viewModel = new EstablishmentSearchDownloadViewModel() { Dataset = eDataSet.Full, FileFormat = Edubase.Services.Enums.eFileFormat.XLSX };
-            var result = (RedirectToRouteResult) await subject.PrepareDownload(viewModel);
+            var result = await subject.PrepareDownload(viewModel) as RedirectToRouteResult;
 
-            Assert.That(result.RouteValues["action"], Is.EqualTo("Download"));
-            Assert.That(result.RouteValues["id"], Is.EqualTo(guid));
+            Assert.NotNull(result);
+            Assert.Equal("Download", result.RouteValues["action"]);
+            Assert.Equal(guid, result.RouteValues["id"]);
         }
     }
 }
