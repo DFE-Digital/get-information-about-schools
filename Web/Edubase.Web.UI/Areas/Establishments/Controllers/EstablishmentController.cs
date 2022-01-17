@@ -404,21 +404,23 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             Response.Headers.Add("Access-Control-Allow-Origin", "*");
             var result = await _establishmentReadService.GetAsync(urn, User);
-            if (result.ReturnValue == null)
-            {
-                return HttpNotFound();
-            }
-            return new HttpStatusCodeResult(200);
+            return result.ReturnValue == null ? HttpNotFound() : new HttpStatusCodeResult(200);
         }
 
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}", Name = "EditEstablishmentDetail")]
         public async Task<ActionResult> EditDetails(int? id, string addrtok)
         {
-            if (!id.HasValue) return HttpNotFound();
+            if (!id.HasValue)
+            {
+                return HttpNotFound();
+            }
+
             var viewModel = await CreateEditViewModel(id, vm =>
             {
                 if (addrtok.Clean() != null)
+                {
                     AddOrReplaceAddressFromUrlToken(addrtok, vm);
+                }
             });
             viewModel.SelectedTab = "details";
             return View(viewModel);
@@ -430,9 +432,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Helpdesk")]
         public async Task<ActionResult> EditHelpdesk(int? id)
         {
-            if (!id.HasValue) return HttpNotFound();
+            if (!id.HasValue)
+            {
+                return HttpNotFound();
+            }
+
             var viewModel = await CreateEditViewModel(id);
-            if (!viewModel.TabDisplayPolicy.Helpdesk) throw new PermissionDeniedException();
+            if (!viewModel.TabDisplayPolicy.Helpdesk)
+            {
+                throw new PermissionDeniedException();
+            }
+
             viewModel.SelectedTab = "helpdesk";
             return View(viewModel);
         }
@@ -443,11 +453,19 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/IEBT")]
         public async Task<ActionResult> EditIEBT(int? id)
         {
-            if (!id.HasValue) return HttpNotFound();
-            var viewModel = await CreateEditViewModel(id);
-            if (!viewModel.TabDisplayPolicy.IEBT) throw new PermissionDeniedException();
-            viewModel.SelectedTab = "iebt";
-            return View("EditIEBT", viewModel);
+            if (id.HasValue)
+            {
+                var viewModel = await CreateEditViewModel(id);
+                if (!viewModel.TabDisplayPolicy.IEBT)
+                {
+                    throw new PermissionDeniedException();
+                }
+
+                viewModel.SelectedTab = "iebt";
+                return View("EditIEBT", viewModel);
+            }
+
+            return HttpNotFound();
         }
 
         [HttpGet, EdubaseAuthorize, Route("Proprietor/Add/{urn:int}/{counter:int}")]
@@ -473,7 +491,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             ViewBag.ShowSaved = saved;
 
-            if (!id.HasValue) return HttpNotFound();
+            if (!id.HasValue)
+            {
+                return HttpNotFound();
+            }
 
             var viewModel = new EditEstablishmentLinksViewModel();
             await PopulateEstablishmentPageViewModel(viewModel, id.Value, "links");
@@ -486,9 +507,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpGet, EdubaseAuthorize, Route("Edit/{id:int}/Location/{locationField?}")]
         public async Task<ActionResult> EditLocation(int? id, string locationField = null)
         {
-            if (!id.HasValue) return HttpNotFound();
+            if (!id.HasValue)
+            {
+                return HttpNotFound();
+            }
+
             var viewModel = await CreateEditViewModel(id);
-            if (!viewModel.TabDisplayPolicy.Location) throw new PermissionDeniedException();
+            if (!viewModel.TabDisplayPolicy.Location)
+            {
+                throw new PermissionDeniedException();
+            }
+
             viewModel.SelectedTab = "location";
             viewModel.LocationEditField = locationField ?? string.Empty;
             return View(viewModel);
@@ -593,7 +622,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         public async Task<ActionResult> SearchForEstablishment(int? id, SearchForEstablishmentViewModel viewModel)
         {
             viewModel = viewModel ?? new SearchForEstablishmentViewModel();
-            if (!id.HasValue) return HttpNotFound();
+            if (!id.HasValue)
+            {
+                return HttpNotFound();
+            }
+
             await PopulateEstablishmentPageViewModel(viewModel, id.Value, "links");
 
             if (viewModel.DoSearch)
@@ -781,7 +814,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             var reverseLink = reverseLinks.FirstOrDefault(x => x.Urn == deltaViewModel.Urn);
             if (reverseLink != null)
+            {
                 await _establishmentWriteService.DeleteLinkedEstablishmentAsync(deltaViewModel.ActiveRecord.Urn.Value, reverseLink.Id.Value, User);
+            }
 
             return RedirectToRoute("EditEstabLinks", new { id = deltaViewModel.Urn });
         }
@@ -893,7 +928,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (domainModel.TypeId.HasValue)
             {
-                viewModel.TypeName = (await _cachedLookupService.GetNameAsync(() => domainModel.TypeId));
+                viewModel.TypeName = await _cachedLookupService.GetNameAsync(() => domainModel.TypeId);
             }
 
             viewModel.LegalParentGroup = GetLegalParent(viewModel.Urn.Value, await _groupReadService.GetAllByEstablishmentUrnAsync(viewModel.Urn.Value, User), User);
@@ -992,7 +1027,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     Town = x.Town,
                     UPRN = x.UPRN,
                     CountryName = (await c.GetNameAsync(() => x.CountryId)).RemoveSubstring("Not recorded"),
-                    CountyName = (await c.GetNameAsync((() => x.CountyId))).RemoveSubstring("Not recorded")
+                    CountyName = (await c.GetNameAsync(() => x.CountyId)).RemoveSubstring("Not recorded")
                 }));
             }
 
@@ -1248,8 +1283,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
                     var changes = await _establishmentReadService.GetModelChangesAsync(domainModel, editPolicyEnvelope.ApprovalsPolicy, User);
 
-                    if (originalEstabTypeId == ET.ChildrensCentreLinkedSite && newEstabTypeId == ET.ChildrensCentre) viewModel.CCIsPromoting = true;
-                    else if (originalEstabTypeId == ET.ChildrensCentre && newEstabTypeId == ET.ChildrensCentreLinkedSite) viewModel.CCIsDemoting = true;
+                    if (originalEstabTypeId == ET.ChildrensCentreLinkedSite && newEstabTypeId == ET.ChildrensCentre)
+                    {
+                        viewModel.CCIsPromoting = true;
+                    }
+                    else if (originalEstabTypeId == ET.ChildrensCentre && newEstabTypeId == ET.ChildrensCentreLinkedSite)
+                    {
+                        viewModel.CCIsDemoting = true;
+                    }
 
                     if (changes.Any())
                     {

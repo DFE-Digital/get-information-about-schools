@@ -57,14 +57,9 @@ namespace Edubase.Web.UI.Controllers
 
             var id = loginInfo.ExternalIdentity;
 
-            if (ConfigurationManager.AppSettings["owin:appStartup"] == "SASimulatorConfiguration")
-            {
-                id = new StubClaimsIdConverter().Convert(id);
-            }
-            else
-            {
-                id = new SecureAccessClaimsIdConverter().Convert(id);
-            }
+            id = ConfigurationManager.AppSettings["owin:appStartup"] == "SASimulatorConfiguration"
+                ? new StubClaimsIdConverter().Convert(id)
+                : new SecureAccessClaimsIdConverter().Convert(id);
 
             var principal = new ClaimsPrincipal(id);
             var roles = await _securityService.GetRolesAsync(principal);
@@ -89,12 +84,18 @@ namespace Edubase.Web.UI.Controllers
             if (principal.IsInRole(EdubaseRoles.ESTABLISHMENT))
             {
                 var urn = await _securityService.GetMyEstablishmentUrn(principal);
-                if (urn.HasValue) return RedirectToRoute("EstabDetails", new { id = urn });
+                if (urn.HasValue)
+                {
+                    return RedirectToRoute("EstabDetails", new { id = urn });
+                }
             }
             else if (principal.IsInRole(EdubaseRoles.EDUBASE_GROUP_MAT))
             {
                 var uid = await _securityService.GetMyMATUId(principal);
-                if (uid.HasValue) return RedirectToRoute("GroupDetails", new { id = uid });
+                if (uid.HasValue)
+                {
+                    return RedirectToRoute("GroupDetails", new { id = uid });
+                }
             }
 
             return RedirectToAction("Index", "Search");

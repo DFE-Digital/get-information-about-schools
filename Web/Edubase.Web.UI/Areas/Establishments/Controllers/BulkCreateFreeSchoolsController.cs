@@ -41,8 +41,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 var fileName = FileHelper.GetTempFileName(Path.GetExtension(viewModel.BulkFile.FileName));
                 viewModel.BulkFile.SaveAs(fileName);
                 var result = await _establishmentWriteService.BulkCreateFreeSchoolsAsync(fileName, User);
-                if (result.HasErrors) return await ResultInternalAsync(Guid.Empty, viewModel, result);
-                else return RedirectToRoute("BulkCreateFreeSchoolsResult", new { id = result.GetResponse().Id });
+                return result.HasErrors
+                    ? await ResultInternalAsync(Guid.Empty, viewModel, result)
+                    : RedirectToRoute("BulkCreateFreeSchoolsResult", new { id = result.GetResponse().Id });
             }
             return View(ViewName, viewModel);
         }
@@ -68,7 +69,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             if (apiResponse.Success)
             {
                 viewModel.Result = apiResponse.GetResponse();
-                if (viewModel.Result.IsProgressing()) return View("InProgress");
+                if (viewModel.Result.IsProgressing())
+                {
+                    return View("InProgress");
+                }
                 else if (viewModel.Result.IsCompleted())
                 {
                     if (viewModel.Result.HasCreatedEstablishments) // NOTE: You _ONLY_ ever get HasCreatedEstablishments==true, when the ENTIRE operation has succeeded.
@@ -77,16 +81,28 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     }
                     else // no establishments have been created. Show the main upload page with the error detail.
                     {
-                        if (viewModel.Result.HasErrors) AddApiErrorsToModelState(viewModel.Result.Errors);
-                        else if (viewModel.Result.RowErrors > 0) ModelState.AddModelError("error-log", "Please download the error log to correct your data before resubmitting");
+                        if (viewModel.Result.HasErrors)
+                        {
+                            AddApiErrorsToModelState(viewModel.Result.Errors);
+                        }
+                        else if (viewModel.Result.RowErrors > 0)
+                        {
+                            ModelState.AddModelError("error-log", "Please download the error log to correct your data before resubmitting");
+                        }
                         else
                         {
                             try
                             {
                                 var errorLogFileContent = await new System.Net.Http.HttpClient().GetStringAsync(viewModel.Result.ErrorLogFile.Url);
                                 var lines = errorLogFileContent.Split('\n').Take(3);
-                                if (lines.Any()) lines.ForEach(x => ModelState.AddModelError(string.Empty, x));
-                                else ModelState.AddModelError(string.Empty, "The request failed, but the API did not provide any details as to why.");
+                                if (lines.Any())
+                                {
+                                    lines.ForEach(x => ModelState.AddModelError(string.Empty, x));
+                                }
+                                else
+                                {
+                                    ModelState.AddModelError(string.Empty, "The request failed, but the API did not provide any details as to why.");
+                                }
                             }
                             catch (Exception)
                             {
@@ -96,14 +112,20 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                         return View(ViewName, viewModel);
                     }
                 }
-                else throw new Exception($"The status of task {id} is unclear; the API did not provide a good enough response {Newtonsoft.Json.JsonConvert.SerializeObject(viewModel.Result)}");
+                else
+                {
+                    throw new Exception($"The status of task {id} is unclear; the API did not provide a good enough response {Newtonsoft.Json.JsonConvert.SerializeObject(viewModel.Result)}");
+                }
             }
             else if (apiResponse.HasErrors)
             {
                 AddApiErrorsToModelState(apiResponse.Errors, nameof(viewModel.BulkFile));
                 return View(ViewName, viewModel);
             }
-            else throw new Exception("ApiResponse indicated failure, but no errors were supplied");
+            else
+            {
+                throw new Exception("ApiResponse indicated failure, but no errors were supplied");
+            }
         }
 
         private async Task<ActionResult> ResultInternalAjaxAsync(Guid id, BulkCreateFreeSchoolsViewModel viewModel, ApiResponse<BulkCreateFreeSchoolsResult> apiResponse)
@@ -112,41 +134,35 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             if (apiResponse.Success)
             {
                 viewModel.Result = apiResponse.GetResponse();
-                if (viewModel.Result.IsProgressing())
-                {
-                    return Json(JsonConvert.SerializeObject(new
+                return viewModel.Result.IsProgressing()
+                    ? Json(JsonConvert.SerializeObject(new
                     {
                         status = false, redirect = redirectUrl
-                    }));
-                }
-
-                else if (viewModel.Result.IsCompleted())
-                {
-                    if (viewModel.Result.HasCreatedEstablishments) // NOTE: You _ONLY_ ever get HasCreatedEstablishments==true, when the ENTIRE operation has succeeded.
-                    {
-                        return Json(JsonConvert.SerializeObject(new
-                        {
-                            status = true, redirect = redirectUrl
-                        }));
-                    }
-                    else // no establishments have been created. Show the main upload page with the error detail.
-                    {
-                        return Json(JsonConvert.SerializeObject(new
-                        {
-                            status = true, redirect = redirectUrl
-                        }));
-                    }
-                }
-                else throw new Exception($"The status of task {id} is unclear; the API did not provide a good enough response {Newtonsoft.Json.JsonConvert.SerializeObject(viewModel.Result)}");
+                    }))
+                    : viewModel.Result.IsCompleted()
+                        ? viewModel.Result.HasCreatedEstablishments
+                                            ? Json(JsonConvert.SerializeObject(new
+                                            {
+                                                status = true,
+                                                redirect = redirectUrl
+                                            }))
+                                            : Json(JsonConvert.SerializeObject(new
+                                            {
+                                                status = true,
+                                                redirect = redirectUrl
+                                            }))
+                        : throw new Exception($"The status of task {id} is unclear; the API did not provide a good enough response {Newtonsoft.Json.JsonConvert.SerializeObject(viewModel.Result)}");
             }
-            else if (apiResponse.HasErrors)
+            else
             {
-                return Json(JsonConvert.SerializeObject(new
-                {
-                    status = true, redirect = redirectUrl
-                }));
+                return apiResponse.HasErrors
+                    ? Json(JsonConvert.SerializeObject(new
+                    {
+                        status = true,
+                        redirect = redirectUrl
+                    }))
+                    : throw new Exception("ApiResponse indicated failure, but no errors were supplied");
             }
-            else throw new Exception("ApiResponse indicated failure, but no errors were supplied");
         }
     }
 }

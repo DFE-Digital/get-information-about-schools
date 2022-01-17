@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Text;
@@ -41,7 +41,9 @@ namespace Edubase.Web.UI.Helpers
                 response.ContentEncoding = ContentEncoding;
             }
             if (Data == null)
+            {
                 return;
+            }
 
             var jsonSerializerSettings = new JsonSerializerSettings
             {

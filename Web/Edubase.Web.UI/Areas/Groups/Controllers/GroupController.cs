@@ -83,9 +83,18 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (viewModel.ActionName == "find" && ModelState.IsValid)
             {
                 var result = (await _groupReadService.SearchByIdsAsync(viewModel.Text, viewModel.Text.ToInteger(), viewModel.Text, viewModel.Text.ToInteger(), User)).Items.FirstOrDefault();
-                if (result == null) ModelState.AddModelError(nameof(viewModel.Text), "We were unable to find a single-academy trust matching those details");
-                else if (result.StatusId == ((int) GS.Closed)) ModelState.AddModelError(nameof(viewModel.Text), "Closed single-academy trusts can not be converted");
-                else if (result.GroupTypeId != (int) GT.SingleacademyTrust) ModelState.AddModelError(nameof(viewModel.Text), "That's an invalid group because it's of the wrong type.");
+                if (result == null)
+                {
+                    ModelState.AddModelError(nameof(viewModel.Text), "We were unable to find a single-academy trust matching those details");
+                }
+                else if (result.StatusId == ((int) GS.Closed))
+                {
+                    ModelState.AddModelError(nameof(viewModel.Text), "Closed single-academy trusts can not be converted");
+                }
+                else if (result.GroupTypeId != (int) GT.SingleacademyTrust)
+                {
+                    ModelState.AddModelError(nameof(viewModel.Text), "That's an invalid group because it's of the wrong type.");
+                }
                 else
                 {
                     viewModel.Details = result;
@@ -124,7 +133,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (viewModel.Action == ActionSave && ModelState.IsValid && !viewModel.WarningsToProcess.Any())
             {
                 var actionResult = await ProcessCreateEditGroup(viewModel);
-                if (actionResult != null) return actionResult;
+                if (actionResult != null)
+                {
+                    return actionResult;
+                }
             }
 
             if (ModelState.IsValid || viewModel.Action == ActionLinkedEstablishmentCancelEdit)
@@ -186,7 +198,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         [HttpGet, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}")]
         public async Task<ActionResult> CreateAcademyTrust(string companiesHouseNumber)
         {
-            if (string.IsNullOrWhiteSpace(companiesHouseNumber)) return HttpNotFound();
+            if (string.IsNullOrWhiteSpace(companiesHouseNumber))
+            {
+                return HttpNotFound();
+            }
 
             var companyProfile = await _companiesHouseService.SearchByCompaniesHouseNumber(companiesHouseNumber);
             var groupTypes = await GetAcademyTrustGroupTypes();
@@ -263,7 +278,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     viewModel.LocalAuthorityId = permission.CCLocalAuthorityId;
                     viewModel.LocalAuthorityName = await _lookup.GetNameAsync(() => viewModel.LocalAuthorityId);
                 }
-                else viewModel.IsLocalAuthorityEditable = true;
+                else
+                {
+                    viewModel.IsLocalAuthorityEditable = true;
+                }
 
                 return View("CreateChildrensCentre", viewModel);
             }
@@ -421,7 +439,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 else
                 {
                     var actionResult = await ProcessCreateEditGroup(viewModel);
-                    if (actionResult != null) return actionResult;
+                    if (actionResult != null)
+                    {
+                        return actionResult;
+                    }
                 }
             }
             else
@@ -459,7 +480,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             viewModel.DeriveCCLeadCentreUrn();
 
-            if (viewModel.GroupTypeId.HasValue) viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => viewModel.GroupTypeId));
+            if (viewModel.GroupTypeId.HasValue)
+            {
+                viewModel.GroupTypeName = (await _lookup.GetNameAsync(() => viewModel.GroupTypeId));
+            }
 
             return View(viewModel);
         }
@@ -482,7 +506,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (ModelState.IsValid)
             {
                 var actionResult = await ProcessCreateEditGroup(viewModel);
-                if (actionResult != null) return actionResult;
+                if (actionResult != null)
+                {
+                    return actionResult;
+                }
             }
 
             return View(viewModel);
@@ -720,13 +747,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     dto = new SaveGroupDto(createDomainModel(), createLinksDomainModel());
                 }
             }
-            else if (viewModel.SaveMode == eSaveMode.Links)
-            {
-                dto = new SaveGroupDto(viewModel.GroupUId.Value, createLinksDomainModel());
-            }
             else
             {
-                throw new NotImplementedException($"SaveMode '{viewModel.SaveMode}' is not supported");
+                dto = viewModel.SaveMode == eSaveMode.Links
+                    ? new SaveGroupDto(viewModel.GroupUId.Value, createLinksDomainModel())
+                    : throw new NotImplementedException($"SaveMode '{viewModel.SaveMode}' is not supported");
             }
 
             if (viewModel.CanUserCloseAndMarkAsCreatedInError
@@ -896,7 +921,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 throw new InvalidParameterException("The action parameter is invalid");
             }
 
-            if (!suppressClearModelState) ModelState.Clear();
+            if (!suppressClearModelState)
+            {
+                ModelState.Clear();
+            }
 
             return null;
         }
@@ -907,7 +935,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             if (dto.IsNewEntity)
             {
                 var resp = await _groupWriteService.SaveNewAsync(dto, User);
-                if (!resp.HasErrors) viewModel.GroupUId = resp.GetResponse().Value;
+                if (!resp.HasErrors)
+                {
+                    viewModel.GroupUId = resp.GetResponse().Value;
+                }
+
                 return resp;
             }
             else
