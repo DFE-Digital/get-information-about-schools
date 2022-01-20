@@ -90,23 +90,23 @@
             <table class="approval-changes govuk-table gias-table sortable-table">
                 <caption class="govuk-visually-hidden">Notification audit</caption>
                 <thead class="govuk-table__head">
-                    <tr class="gocuk-table__row">
-                        @foreach (var tableColumn in tableColumns)
-                        {
-                            <th scope="col" class="govuk-table__header @Html.Conditional(tableColumn.Item3 == false, "govuk-!-font-weight-regular")">
-                                @if (tableColumn.Item3)
-                                {
-                                    <a href="@Url.SortUrl(tableColumn.Item1)"
-                                       class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
-                                       aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
-                                }
-                                else
-                                {
-                                    @tableColumn.Item2
-                                }
-                            </th>
-                        }
-                    </tr>
+                <tr class="gocuk-table__row">
+                    @foreach (var tableColumn in tableColumns)
+                    {
+                        <th scope="col" class="govuk-table__header @Html.Conditional(tableColumn.Item3 == false, "govuk-!-font-weight-regular")">
+                            @if (tableColumn.Item3)
+                            {
+                                <a href="@Url.SortUrl(tableColumn.Item1)"
+                                   class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                                   aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
+                            }
+                            else
+                            {
+                                @tableColumn.Item2
+                            }
+                        </th>
+                    }
+                </tr>
                 </thead>
                 <tbody class="govuk-table__body">
                 @foreach (var banner in Model.GroupedBanners)
@@ -164,6 +164,7 @@
                 }
                 </tbody>
             </table>
+            @helpers.BackToTopLink()
         }
     </div>
 }
