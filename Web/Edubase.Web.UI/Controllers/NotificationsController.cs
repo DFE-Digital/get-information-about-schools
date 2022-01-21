@@ -47,6 +47,35 @@ namespace Edubase.Web.UI.Controllers
             return View(model);
         }
 
+        [Route("Banners/Audit"), EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        public async Task<ActionResult> AuditBanners(string sortBy)
+        {
+            var result = await _BannerRepository.GetAllAsync(1000);
+            var audit = await _BannerRepository.GetAllAsync(1000, null, eNotificationBannerPartition.Archive);
+            var items = result.Items.ToList();
+            items.AddRange(audit.Items);
+
+            var distinct = items.GroupBy(x => x.Tracker)
+                .Select(grp => new { tracker = grp.Key, banners = grp.OrderByDescending(x => x.Version) })
+                .Select(x => x.banners.First());
+
+            var model = new NotificationsBannersAuditViewModel(distinct, sortBy);
+            return View(model);
+        }
+
+        [Route("Banners/Audit/{id}"), EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        public async Task<ActionResult> AuditBanner(string id, string sortBy)
+        {
+            var result = await _BannerRepository.GetAllAsync(1000);
+            var audit = await _BannerRepository.GetAllAsync(1000, null, eNotificationBannerPartition.Archive);
+            var items = result.Items.ToList();
+            items.AddRange(audit.Items);
+
+            var distinct = items.Where(x => x.Tracker == id);
+
+            var model = new NotificationsBannerAuditViewModel(distinct, sortBy);
+            return View(model);
+        }
 
         [Route("Banner/New", Name = "CreateBanner"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> CreateBanner()
@@ -317,12 +346,9 @@ namespace Edubase.Web.UI.Controllers
         [Route("BannersPartial")]
         public ActionResult BannersPartial()
         {
-            return Task.Run(async () =>
-            {
-                var result = await _BannerRepository.GetAllAsync(1000);
-                var model = new NotificationsBannersViewModel(result.Items.Where(x => x.Visible));
-                return PartialView("_NotificationsBannersPartial", model);
-            }).Result;
+            var visible = _BannerRepository.GetAll(1000);
+            var model = new NotificationsBannersViewModel(visible.Items.Where(x => x.Visible));
+            return PartialView("_NotificationsBannersPartial", model);
         }
     }
 }

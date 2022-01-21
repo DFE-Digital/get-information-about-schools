@@ -1,0 +1,171 @@
+@using System.Globalization
+@using System.Web.Mvc.Html
+@using Edubase.Common
+@using Edubase.Data.Entity
+@model Edubase.Web.UI.Models.Notifications.NotificationsBannersAuditViewModel
+@{ ViewBag.Title = "Get Information about Schools";
+    ViewBag.SiteSection = "tools"; }
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Notifications", "Index", "Notifications", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Notification banners history</h1>
+    </div>
+</div>
+
+<div class="button-row govuk-!-margin-bottom-4">
+    @Html.ActionLink(
+                "Back",
+                "Index",
+                "Notifications",
+                null,
+                new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
+</div>
+
+@{
+    var request = HttpContext.Current.Request;
+    var sortDir = "desc";
+    var sortDirText = "a descending order";
+    var sortField = nameof(NotificationBanner.AuditTimestamp);
+
+    if (request.QueryString["sortby"] != null)
+    {
+        sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
+        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
+        sortDirText = (request.QueryString["sortby"] ?? "").Contains("asc") ? "an ascending order" : "a descending order";
+    }
+
+    var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";
+    var unsortedDescription = ". Click to sort data by this column.";
+
+    var tableColumns = new List<Tuple<string, string, bool>>
+    {
+        Tuple.Create(nameof(NotificationBanner.Tracker), "Notification banner ID", true),
+        Tuple.Create(nameof(NotificationBanner.AuditTimestamp), "Time and date", true),
+        Tuple.Create(nameof(NotificationBanner.Status), "Status", true),
+        Tuple.Create(nameof(NotificationBanner.AuditUser), "User ID", true),
+        Tuple.Create(nameof(NotificationBanner.Start), "Visibility start", false),
+        Tuple.Create(nameof(NotificationBanner.End), "Visibility end", false),
+        Tuple.Create(nameof(NotificationBanner.Importance), "Alert level", false),
+        Tuple.Create(nameof(NotificationBanner.Content), "Message", false),
+        Tuple.Create("", "History", false),
+        Tuple.Create("", "Edit", false)
+    };
+
+    <div id="audit-history">
+        @if (!Model.GroupedBanners.Any())
+        {
+            <p class="govuk-body">There are no audit records available at the moment</p>
+        }
+        else
+        {
+            var bannerTracker = string.Empty;
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <p class="govuk-body-s">Showing 1-@Model.GroupedBanners.Count() of @Model.GroupedBanners.Count()</p>
+                </div>
+            </div>
+
+            <table class="approval-changes govuk-table gias-table sortable-table">
+                <caption class="govuk-visually-hidden">Notification audit</caption>
+                <thead class="govuk-table__head">
+                <tr class="gocuk-table__row">
+                    @foreach (var tableColumn in tableColumns)
+                    {
+                        <th scope="col" class="govuk-table__header @Html.Conditional(tableColumn.Item3 == false, "govuk-!-font-weight-regular")">
+                            @if (tableColumn.Item3)
+                            {
+                                <a href="@Url.SortUrl(tableColumn.Item1)"
+                                   class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                                   aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
+                            }
+                            else
+                            {
+                                @tableColumn.Item2
+                            }
+                        </th>
+                    }
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                @foreach (var banner in Model.GroupedBanners)
+                {
+                    var bannerEvent = (eNotificationBannerEvent)Enum.Parse(typeof(eNotificationBannerEvent), banner.AuditEvent, true);
+                    <tr class="govuk-table__row">
+                        <td data-label="Notification banner ID" class="govuk-table__cell">@banner.Tracker</td>
+                        <td data-label="Time and date" class="govuk-table__cell" >@(banner.Timestamp.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower()) <br /> @banner.Timestamp.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</td>
+                        <td data-label="Status" class="govuk-table__cell">
+                            @if (bannerEvent == eNotificationBannerEvent.Delete)
+                            {
+                                <span>@bannerEvent.EnumDisplayNameFor()</span>
+                            }
+                            else
+                            {
+                                <span>@banner.Status.EnumDisplayNameFor()</span>
+                            }
+                        </td>
+                        <td data-label="User ID" class="govuk-table__cell">@banner.AuditUser</td>
+                        <td data-label="Visibility start" class="govuk-table__cell" >@banner.Start.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower() <br /> @banner.Start.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</td>
+                        <td data-label="Visibility end" class="govuk-table__cell" >@banner.End.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower() <br /> @banner.End.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</td>
+                        <td data-label="Alert level" class="govuk-table__cell">@(((eNotificationBannerImportance) banner.Importance).EnumDisplayNameFor())</td>
+                        <td data-label="Message" class="govuk-table__cell">@banner.Content</td>
+                        <td data-label="History" class="govuk-table__cell">
+                            @if (banner.Version > 1)
+                            {
+                                @Html.ActionLink(
+                                    "View",
+                                    "AuditBanner",
+                                    "Notifications",
+                                    new { id = banner.Tracker },
+                                    null)
+                            }
+                            else
+                            {
+                                <span>N/A</span>
+                            }
+                        </td>
+                        <td data-label="Edit" class="govuk-table__cell">
+                            @if (bannerEvent == eNotificationBannerEvent.Delete || banner.Status == eNotificationBannerStatus.Expired)
+                            {
+                                <span>N/A</span>
+                            }
+                            else
+                            {
+                                @Html.ActionLink(
+                                    "Edit",
+                                    "EditBannerAsync",
+                                    "Notifications",
+                                    new { id = banner.RowKey, counter = 0 },
+                                    null)
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+            @helpers.BackToTopLink()
+        }
+    </div>
+}
+

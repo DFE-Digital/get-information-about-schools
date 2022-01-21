@@ -32,8 +32,8 @@ namespace Edubase.Web.UI.Controllers
         private readonly IGroupReadService _groupReadService;
         private readonly ICacheAccessor _cacheAccessor;
         private readonly ICachedLookupService _lookupService;
-        public const int _take = 5000;
-        public const string _cacheTag = "sitemap";
+        public const int Take = 5000;
+        public const string CacheTag = "sitemap";
         private readonly int _cacheDays = ConfigurationManager.AppSettings["SitemapCacheDays"].ToInteger() ?? 1;
 
         public SitemapController(IEstablishmentReadService establishmentReadService,
@@ -55,7 +55,7 @@ namespace Edubase.Web.UI.Controllers
                 await CleanSitemapCache();
             }
 
-            var cacheName = $"{_cacheTag}_index";
+            var cacheName = $"{CacheTag}_index";
             var responseCopy = await _cacheAccessor.GetAsync<string>(cacheName);
 
             if (responseCopy.IsNullOrEmpty())
@@ -70,7 +70,7 @@ namespace Edubase.Web.UI.Controllers
         [Route("~/sitemap_site.xml")]
         public async Task<ActionResult> SitemapSite()
         {
-            var cacheName = $"{_cacheTag}_site";
+            var cacheName = $"{CacheTag}_site";
             var responseCopy = await _cacheAccessor.GetAsync<string>(cacheName);
 
             if (responseCopy.IsNullOrEmpty())
@@ -86,7 +86,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> SitemapEstablishmentByType(int estType)
         {
             Server.ScriptTimeout = 300;
-            var cacheName = $"{_cacheTag}_est_{estType}";
+            var cacheName = $"{CacheTag}_est_{estType}";
             var responseCopy = await _cacheAccessor.GetAsync<string>(cacheName);
 
             if (responseCopy.IsNullOrEmpty())
@@ -102,7 +102,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> SitemapGroupByType(int groupType)
         {
             Server.ScriptTimeout = 300;
-            var cacheName = $"{_cacheTag}_group_{groupType}";
+            var cacheName = $"{CacheTag}_group_{groupType}";
             var responseCopy = await _cacheAccessor.GetAsync<string>(cacheName);
 
             if (responseCopy.IsNullOrEmpty())
@@ -146,17 +146,17 @@ namespace Edubase.Web.UI.Controllers
 
         private async Task<bool> CleanSitemapCache()
         {
-            await _cacheAccessor.DeleteAsync($"{_cacheTag}_index");
-            await _cacheAccessor.DeleteAsync($"{_cacheTag}_site");
+            await _cacheAccessor.DeleteAsync($"{CacheTag}_index");
+            await _cacheAccessor.DeleteAsync($"{CacheTag}_site");
 
             foreach (var est in await GetEstablishmentTypes())
             {
-                await _cacheAccessor.DeleteAsync($"{_cacheTag}_est_{est}");
+                await _cacheAccessor.DeleteAsync($"{CacheTag}_est_{est}");
             }
 
             foreach (var grp in await GetGroupTypes())
             {
-                await _cacheAccessor.DeleteAsync($"{_cacheTag}_group_{grp}");
+                await _cacheAccessor.DeleteAsync($"{CacheTag}_group_{grp}");
             }
 
             return true;
@@ -209,13 +209,13 @@ namespace Edubase.Web.UI.Controllers
                 var skip = 0;
                 do
                 {
-                    var lookup = await _establishmentReadService.SearchAsync(new EstablishmentSearchPayload { Filters = new EstablishmentSearchFilters { TypeIds = new [] {estType}, StatusIds = new[] { 1, 4 } }, Skip = skip, Take = _take }, User);
+                    var lookup = await _establishmentReadService.SearchAsync(new EstablishmentSearchPayload { Filters = new EstablishmentSearchFilters { TypeIds = new [] {estType}, StatusIds = new[] { 1, 4 } }, Skip = skip, Take = Take }, User);
                     resultItems.AddRange(lookup.Items);
-                    if (skip + _take >= resultCount.Count)
+                    if (skip + Take >= resultCount.Count)
                     {
                         break;
                     }
-                    skip += _take;
+                    skip += Take;
                 } while (true);
             }
 
@@ -265,13 +265,13 @@ namespace Edubase.Web.UI.Controllers
                 var skip = 0;
                 do
                 {
-                    var lookup = await _groupReadService.SearchAsync(new GroupSearchPayload { GroupTypeIds = new[] { groupType }, GroupStatusIds = new[] { 1, 4 }, Skip = skip, Take = _take }, User);
+                    var lookup = await _groupReadService.SearchAsync(new GroupSearchPayload { GroupTypeIds = new[] { groupType }, GroupStatusIds = new[] { 1, 4 }, Skip = skip, Take = Take }, User);
                     resultItems.AddRange(lookup.Items);
-                    if (skip + _take >= resultCount.Count)
+                    if (skip + Take >= resultCount.Count)
                     {
                         break;
                     }
-                    skip += _take;
+                    skip += Take;
                 } while (true);
             }
 

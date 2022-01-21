@@ -71,7 +71,11 @@ namespace Edubase.Web.UI
         private static void GetExternalSettings()
         {
             string configPath = Path.Combine(AppContext.BaseDirectory, "../../devsecrets.gias.config.alwaysignore");
-            if (!File.Exists(configPath)) throw new FileNotFoundException();
+            if (!File.Exists(configPath))
+            {
+                throw new FileNotFoundException();
+            }
+
             XmlDocument doc = new XmlDocument();
             using (XmlReader reader = XmlReader.Create(configPath, GetSecureXmlReaderSettings()))
             {
@@ -98,8 +102,16 @@ namespace Edubase.Web.UI
                         FieldInfo configurationReadOnlyField = typeof(ConfigurationElement).GetField("_bReadOnly", BindingFlags.Instance | BindingFlags.NonPublic);
                         foreach (XmlNode node in childNode.ChildNodes)
                         {
-                            if (!node.Name.Equals("add")) continue;
-                            if (node.Attributes == null) continue;
+                            if (!node.Name.Equals("add"))
+                            {
+                                continue;
+                            }
+
+                            if (node.Attributes == null)
+                            {
+                                continue;
+                            }
+
                             ConnectionStringSettings connection = ConfigurationManager.ConnectionStrings[node.Attributes?["name"].Value];
                             configurationReadOnlyField?.SetValue(connection, false);
                             connection.ConnectionString = node.Attributes?["connectionString"].Value;

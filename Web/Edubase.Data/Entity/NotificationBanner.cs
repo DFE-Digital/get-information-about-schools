@@ -12,16 +12,19 @@ namespace Edubase.Data.Entity
 
     public enum eNotificationBannerEvent
     {
+        [Display(Name = "Created")]
         Create,
+        [Display(Name = "Updated")]
         Update,
+        [Display(Name = "Deleted")]
         Delete
     }
 
     public enum eNotificationBannerStatus
     {
-        [Display(Name = "Currently showing")]
+        [Display(Name = "Active")]
         Live,
-        [Display(Name = "Scheduled to show in the future")]
+        [Display(Name = "Future")]
         Future,
         [Display(Name = "Expired")]
         Expired
