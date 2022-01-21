@@ -33,7 +33,7 @@ using static Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModelB
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers.Tests
 {
-    public class GroupControllerTests
+    public class GroupControllerTests: IDisposable
     {
         private readonly GroupController controller;
         private readonly Mock<ICachedLookupService> mockCachedLookupService;
@@ -53,6 +53,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.Tests
         private readonly Mock<HttpContextBase> mockHttpContextBase = new Mock<HttpContextBase>(MockBehavior.Strict);
         private readonly Mock<IPrincipal> mockPrincipal = new Mock<IPrincipal>(MockBehavior.Strict);
         private readonly Mock<IIdentity> mockIdentity = new Mock<IIdentity>(MockBehavior.Strict);
+        private bool disposedValue;
 
         public GroupControllerTests(ITestOutputHelper output)
         {
@@ -913,5 +914,23 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.Tests
             Assert.Equal(123, result.RouteValues["id"]);
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    controller.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

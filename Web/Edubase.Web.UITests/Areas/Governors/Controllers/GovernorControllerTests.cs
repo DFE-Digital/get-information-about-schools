@@ -1,36 +1,33 @@
-using Xunit;
-using Edubase.Web.UI.Areas.Governors.Controllers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Edubase.Services.Governors;
-using Moq;
-using Edubase.Services.Nomenclature;
-using Edubase.Services.Lookup;
-using Edubase.Services.Groups;
-using Edubase.Services.Establishments;
-using Edubase.Web.UI.Helpers;
-using Edubase.Web.UITests;
-using System.Web.Mvc;
-using Edubase.Services.Enums;
-using System.Web;
 using System.Security.Principal;
-using Edubase.Web.UI.Exceptions;
-using Edubase.Services.Governors.Models;
-using Edubase.Services.Governors.DisplayPolicies;
-using Edubase.Web.UI.Areas.Governors.Models;
-using Edubase.Services.Establishments.Models;
-using Edubase.Services.Groups.Models;
-using Edubase.Services.Domain;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
 using System.Web.Routing;
+using Edubase.Services.Domain;
+using Edubase.Services.Enums;
+using Edubase.Services.Establishments;
+using Edubase.Services.Establishments.Models;
 using Edubase.Services.Exceptions;
+using Edubase.Services.Governors;
+using Edubase.Services.Governors.DisplayPolicies;
+using Edubase.Services.Governors.Models;
+using Edubase.Services.Groups;
+using Edubase.Services.Groups.Models;
+using Edubase.Services.Lookup;
+using Edubase.Services.Nomenclature;
+using Edubase.Web.UI.Areas.Governors.Models;
+using Edubase.Web.UI.Exceptions;
+using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
+using Edubase.Web.UITests;
+using Moq;
+using Xunit;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers.Tests
 {
-    public class GovernorControllerTests
+    public class GovernorControllerTests: IDisposable
     {
         private readonly GovernorController controller;
         private readonly Mock<ICachedLookupService> mockCachedLookupService;
@@ -47,7 +44,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.Tests
         private readonly Mock<HttpContextBase> mockHttpContextBase = new Mock<HttpContextBase>(MockBehavior.Strict);
         private readonly Mock<IPrincipal> mockPrincipal = new Mock<IPrincipal>(MockBehavior.Strict);
         private readonly Mock<IIdentity> mockIdentity = new Mock<IIdentity>(MockBehavior.Strict);
-
+        private bool disposedValue;
 
         public GovernorControllerTests()
         {
@@ -1166,6 +1163,25 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.Tests
             var modelResult = viewResult.Model as ReplaceChairViewModel;
             Assert.NotNull(modelResult);
             Assert.Equal(model, modelResult);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    controller.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

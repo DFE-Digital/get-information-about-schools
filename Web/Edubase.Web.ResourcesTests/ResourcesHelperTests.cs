@@ -25,10 +25,10 @@ namespace Edubase.Web.Resources.Tests
         {
             //there is very little to test on this method, except that even when provided with junk it returns null
             //values have been provided to test the various routes the method may provide a result
-            IPrincipal? user = null;
+            IPrincipal user = null;
             var resourcesHelper = new ResourcesHelper();
 
-            if(isAuthenticated is not null)
+            if(isAuthenticated != null)
             {
                 var mockUser = new Mock<IPrincipal>();
                 mockUser.Setup(x => x.Identity.IsAuthenticated).Returns(isAuthenticated ?? false);

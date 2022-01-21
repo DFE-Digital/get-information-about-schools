@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ using Xunit;
 
 namespace Edubase.Web.UI.Controllers.Tests
 {
-    public class AmalgamateMergeControllerTests
+    public class AmalgamateMergeControllerTests: IDisposable
     {
         private readonly Mock<IEstablishmentReadService> mockEstablishmentReadService = new Mock<IEstablishmentReadService>();
         private readonly Mock<IEstablishmentWriteService> mockEstablishmentWriteService = new Mock<IEstablishmentWriteService>();
@@ -36,6 +37,7 @@ namespace Edubase.Web.UI.Controllers.Tests
             {
                 Response = new AmalgamateMergeResult() { AmalgamateNewEstablishmentUrn = 101 }
             };
+        private bool disposedValue;
 
         public AmalgamateMergeControllerTests()
         {
@@ -476,6 +478,26 @@ namespace Edubase.Web.UI.Controllers.Tests
                 new object[] {  2021, 01, 20,   "test sch", "1",    1,          "1",        true,       null,   null,   103,    104,    true,       false},
             };
             return allData;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    controller.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
@@ -28,7 +27,7 @@ using Xunit;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers.Tests
 {
-    public class EstablishmentControllerTests
+    public class EstablishmentControllerTests: IDisposable
     {
         private readonly EstablishmentController controller;
         private readonly Mock<ICachedLookupService> mockCachedLookupService;
@@ -49,6 +48,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.Tests
       
         private readonly Mock<ICSCPService> mockCscpService = new Mock<ICSCPService>(MockBehavior.Strict);
         private readonly Mock<IFBService> mockFbService = new Mock<IFBService>(MockBehavior.Strict);
+        private bool disposedValue;
 
         public EstablishmentControllerTests()
         {
@@ -330,6 +330,24 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.Tests
             var response = await controller.SearchForEstablishment(null, null);
 
             Assert.IsType<HttpNotFoundResult>(response);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    controller.Dispose();
+                }
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }
