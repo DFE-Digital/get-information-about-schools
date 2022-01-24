@@ -58,16 +58,18 @@
     var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";
     var unsortedDescription = ". Click to sort data by this column.";
 
-    var tableColumns = new List<Tuple<string, string>>
+    var tableColumns = new List<Tuple<string, string, bool>>
     {
-        Tuple.Create(nameof(NotificationBanner.Tracker), "Notification banner ID"),
-        Tuple.Create(nameof(NotificationBanner.AuditTimestamp), "Time and date"),
-        Tuple.Create(nameof(NotificationBanner.Status), "Status"),
-        Tuple.Create(nameof(NotificationBanner.AuditUser), "User ID"),
-        Tuple.Create(nameof(NotificationBanner.Start), "Visibility start"),
-        Tuple.Create(nameof(NotificationBanner.End), "Visibility end"),
-        Tuple.Create(nameof(NotificationBanner.Importance), "Alert level"),
-        Tuple.Create(nameof(NotificationBanner.Content), "Message"),
+        Tuple.Create(nameof(NotificationBanner.Tracker), "Notification banner ID", true),
+        Tuple.Create(nameof(NotificationBanner.AuditTimestamp), "Time and date", true),
+        Tuple.Create(nameof(NotificationBanner.Status), "Status", true),
+        Tuple.Create(nameof(NotificationBanner.AuditUser), "User ID", true),
+        Tuple.Create(nameof(NotificationBanner.Start), "Visibility start", false),
+        Tuple.Create(nameof(NotificationBanner.End), "Visibility end", false),
+        Tuple.Create(nameof(NotificationBanner.Importance), "Alert level", false),
+        Tuple.Create(nameof(NotificationBanner.Content), "Message", false),
+        Tuple.Create("", "History", false),
+        Tuple.Create("", "Edit", false)
     };
 
     <div id="audit-history">
@@ -91,14 +93,19 @@
                 <tr class="gocuk-table__row">
                     @foreach (var tableColumn in tableColumns)
                     {
-                        <th scope="col" class="govuk-table__header">
-                            <a href="@Url.SortUrl(tableColumn.Item1)"
-                               class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
-                               aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
+                        <th scope="col" class="govuk-table__header @Html.Conditional(tableColumn.Item3 == false, "govuk-!-font-weight-regular")">
+                            @if (tableColumn.Item3)
+                            {
+                                <a href="@Url.SortUrl(tableColumn.Item1)"
+                                   class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                                   aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
+                            }
+                            else
+                            {
+                                @tableColumn.Item2
+                            }
                         </th>
                     }
-                    <th scope="col" class="govuk-table__header govuk-!-font-weight-regular">History</th>
-                    <th scope="col" class="govuk-table__header govuk-!-font-weight-regular">Edit</th>
                 </tr>
                 </thead>
                 <tbody class="govuk-table__body">
@@ -157,6 +164,7 @@
                 }
                 </tbody>
             </table>
+            @helpers.BackToTopLink()
         }
     </div>
 }
