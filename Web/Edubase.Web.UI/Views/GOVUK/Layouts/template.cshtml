@@ -195,10 +195,13 @@
             </div>
 
             <div class="govuk-header__content">
-                @Html.ActionLink("Get Information about Schools", "Index", "Search", new {area = ""}, new {id = "proposition-name", @class = "govuk-header__link govuk-header__link--service-name"})
+                @Html.ActionLink("Get Information about Schools", "Index", "Home", new {area = ""}, new {id = "proposition-name", @class = "govuk-header__link govuk-header__link--service-name"})
                 <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
                 <nav>
                     <ul id="navigation" class="govuk-header__navigation " aria-label="Top Level Navigation">
+                        <li class="govuk-header__navigation-item @(ViewBag.siteSection == "home" ? "govuk-header__navigation-item--active" : String.Empty)">
+                            @Html.ActionLink("Home", "Index", "Home", new {area = ""}, new {@class = "govuk-header__link"})
+                        </li>
                         <li class="govuk-header__navigation-item @(ViewBag.siteSection == "search" ? "govuk-header__navigation-item--active" : String.Empty)">
                             @Html.ActionLink("Search", "Index", "Search", new {area = ""}, new {@class = "govuk-header__link"})
                         </li>
