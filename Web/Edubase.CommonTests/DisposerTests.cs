@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace Edubase.Common.Tests
+namespace Edubase.Common.UnitTests
 {
     public class DisposerTests
     {

@@ -21,11 +21,11 @@ using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Exceptions;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
-using Edubase.Web.UITests;
+using Edubase.Web.UIUnitTests;
 using Moq;
 using Xunit;
 
-namespace Edubase.Web.UI.Areas.Governors.Controllers.Tests
+namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
 {
     public class GovernorControllerTests: IDisposable
     {

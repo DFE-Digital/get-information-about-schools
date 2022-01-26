@@ -21,11 +21,11 @@ using Edubase.Services.Security;
 using Edubase.Web.Resources;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Models;
-using Edubase.Web.UITests;
+using Edubase.Web.UIUnitTests;
 using Moq;
 using Xunit;
 
-namespace Edubase.Web.UI.Areas.Establishments.Controllers.Tests
+namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
 {
     public class EstablishmentControllerTests: IDisposable
     {

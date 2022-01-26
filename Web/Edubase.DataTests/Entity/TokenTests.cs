@@ -2,7 +2,7 @@ using System;
 using Edubase.Data.Entity;
 using Xunit;
 
-namespace Edubase.DataTests.Entity
+namespace Edubase.DataTests.Entity.UnitTests
 {
     public class TokenTests
     {

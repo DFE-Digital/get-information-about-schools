@@ -2,7 +2,7 @@ using System.Net.Http;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Edubase.Services.ExternalLookup.Tests
+namespace Edubase.Services.ExternalLookup.UnitTests
 {
     public class FBServiceTests
     {

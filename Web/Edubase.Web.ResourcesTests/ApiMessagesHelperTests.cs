@@ -2,7 +2,7 @@ using System.Reflection;
 using System.Resources;
 using Xunit;
 
-namespace Edubase.Web.Resources.Tests
+namespace Edubase.Web.Resources.UnitTests
 {
     public class ApiMessagesHelperTests
     {

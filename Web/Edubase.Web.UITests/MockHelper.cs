@@ -5,7 +5,7 @@ using Edubase.Services.Domain;
 using Edubase.Services.Lookup;
 using Moq;
 
-namespace Edubase.Web.UITests
+namespace Edubase.Web.UIUnitTests
 {
     internal static class MockHelper
     {

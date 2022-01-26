@@ -19,7 +19,7 @@ using Moq;
 using Xunit;
 using static Edubase.Web.UI.Areas.Establishments.Models.Search.EstablishmentSearchViewModel;
 
-namespace Edubase.Web.UI.Areas.Establishments.Controllers.Tests
+namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
 {
     public class EstablishmentsSearchControllerTests
     {

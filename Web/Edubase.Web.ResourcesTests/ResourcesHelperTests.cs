@@ -3,7 +3,7 @@ using Edubase.Services.Enums;
 using Moq;
 using Xunit;
 
-namespace Edubase.Web.Resources.Tests
+namespace Edubase.Web.Resources.UnitTests
 {
     public class ResourcesHelperTests
     {

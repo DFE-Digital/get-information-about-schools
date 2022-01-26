@@ -14,7 +14,7 @@ using Edubase.Web.UI.Areas.Groups.Models;
 using Moq;
 using Xunit;
 
-namespace Edubase.Web.UI.Areas.Groups.Controllers.Tests
+namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
 {
     public class GroupSearchControllerTests
     {

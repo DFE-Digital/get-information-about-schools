@@ -16,7 +16,7 @@ using Edubase.Web.UI.Areas.Governors.Models;
 using Moq;
 using Xunit;
 
-namespace Edubase.Web.UI.Areas.Governors.Controllers.Tests
+namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
 {
     public class GovernorSearchControllerTests
     {

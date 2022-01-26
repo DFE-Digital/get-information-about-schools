@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Edubase.Web.UI.ValueConverters.Tests
+namespace Edubase.Web.UI.ValueConverters.UnitTests
 {
     public class WeblinkConverterTests
     {

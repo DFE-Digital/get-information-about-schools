@@ -13,7 +13,7 @@ using Edubase.Web.UI.Models.Search;
 using Moq;
 using Xunit;
 
-namespace Edubase.Web.UI.Controllers.Tests
+namespace Edubase.Web.UI.Controllers.UnitTests
 {
     public class SearchControllerTests
     {

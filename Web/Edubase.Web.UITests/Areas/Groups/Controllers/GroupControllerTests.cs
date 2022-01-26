@@ -24,14 +24,14 @@ using Edubase.Services.Security;
 using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Exceptions;
-using Edubase.Web.UITests;
+using Edubase.Web.UIUnitTests;
 using Moq;
 using Xunit;
 using Xunit.Abstractions;
 using static Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
 using static Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModelBase;
 
-namespace Edubase.Web.UI.Areas.Groups.Controllers.Tests
+namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
 {
     public class GroupControllerTests: IDisposable
     {
