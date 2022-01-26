@@ -26,15 +26,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F2669A17
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nunit", "Nunit", "{D3C2B93A-BA27-4E54-B5D3-CCCAB4162E6D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Web.ResourcesTests", "Edubase.Web.ResourcesTests\Edubase.Web.ResourcesTests.csproj", "{AB3B9399-0A1F-4386-9A66-57D00E4CEFC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Web.ResourcesUnitTests", "Edubase.Web.ResourcesTests\Edubase.Web.ResourcesUnitTests.csproj", "{AB3B9399-0A1F-4386-9A66-57D00E4CEFC1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Web.UITests", "Edubase.Web.UITests\Edubase.Web.UITests.csproj", "{0A0C2C6E-F73D-48C9-8224-2E4FD67017A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edubase.Web.UIUnitTests", "Edubase.Web.UITests\Edubase.Web.UIUnitTests.csproj", "{0A0C2C6E-F73D-48C9-8224-2E4FD67017A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.CommonTests", "Edubase.CommonTests\Edubase.CommonTests.csproj", "{C40D68A8-5748-4FDA-A82C-8E171FA2EE43}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.CommonUnitTests", "Edubase.CommonTests\Edubase.CommonUnitTests.csproj", "{C40D68A8-5748-4FDA-A82C-8E171FA2EE43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.ServicesTests", "Edubase.ServicesTests\Edubase.ServicesTests.csproj", "{9708EF96-6579-4C74-A044-7916972BFB07}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.ServicesUnitTests", "Edubase.ServicesTests\Edubase.ServicesUnitTests.csproj", "{9708EF96-6579-4C74-A044-7916972BFB07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.DataTests", "Edubase.DataTests\Edubase.DataTests.csproj", "{51BF61CC-040F-4CA4-8571-0B10D56B56B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edubase.DataUnitTests", "Edubase.DataTests\Edubase.DataUnitTests.csproj", "{51BF61CC-040F-4CA4-8571-0B10D56B56B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
