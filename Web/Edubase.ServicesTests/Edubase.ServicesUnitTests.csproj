@@ -6,8 +6,8 @@
     <ProjectGuid>{9708EF96-6579-4C74-A044-7916972BFB07}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Edubase.ServicesTests</RootNamespace>
-    <AssemblyName>Edubase.ServicesTests</AssemblyName>
+    <RootNamespace>Edubase.ServicesUnitTests</RootNamespace>
+    <AssemblyName>Edubase.ServicesUnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
