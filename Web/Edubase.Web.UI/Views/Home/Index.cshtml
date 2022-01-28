@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Get Information about Schools";
     ViewBag.siteSection = "home";
-    var groupSpacing = "govuk-!-margin-bottom-4";
+    var groupSpacing = "home-grid-component";
 }
 
 <div class="govuk-grid-row">
@@ -92,10 +92,7 @@
                         This is for establishment users only and local authority and group users where applicable. Please sign into your DfE Sign-in (DSI) account to make any updates
                     </p>
                     <p>
-                        <a href="https://services.signin.education.gov.uk/" target="_blank" rel="noreferrer noopener">
-                            DfE Sign-in
-                            (opens in new tab)
-                        </a>
+                        @Html.ActionLink("DfE Sign-in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { rel = "nofollow" })
                     </p>
                 </div>
             </div>
