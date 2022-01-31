@@ -33,7 +33,7 @@ using static Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModelB
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
 {
-    public class GroupControllerTests: IDisposable
+    public class GroupControllerTests : IDisposable
     {
         private readonly GroupController controller;
         private readonly Mock<ICachedLookupService> mockCachedLookupService;
@@ -114,7 +114,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             cls.Setup(x => x.GetNameAsync(It.IsAny<Expression<Func<int?>>>(), It.IsAny<string>())).ReturnsAsync("placeholder");
         }
 
-        private GroupModel CreateGroupModel()
+        private GroupModel CreateGroupModel(eLookupGroupType groupType)
         {
             return new GroupModel
             {
@@ -132,14 +132,14 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
                 ConfirmationUpToDateGovernance_LastConfirmationDate = DateTime.Now,
                 DelegationInformation = "delinf",
                 GroupId = "123",
-                GroupTypeId = (int) eLookupGroupType.Federation,
+                GroupTypeId = (int) groupType,
                 GroupUId = 123,
                 HeadFirstName = Faker.Name.First(),
                 HeadLastName = Faker.Name.Last(),
                 HeadTitleId = 1,
                 LocalAuthorityId = 1,
                 ManagerEmailAddress = Faker.Internet.Email(),
-                Name = "I am Federation",
+                Name = $"I am {groupType.ToString()}",
                 OpenDate = DateTime.Now.Subtract(TimeSpan.FromDays(10)),
                 StatusId = (int) eLookupGroupStatus.Open
             };
@@ -278,10 +278,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             output.WriteLine(testName);
 
             mockSecurityService.Setup(x => x.GetCreateGroupPermissionAsync(It.IsAny<IPrincipal>()))
-                .ReturnsAsync(new CreateGroupPermissionDto {
+                .ReturnsAsync(new CreateGroupPermissionDto
+                {
                     GroupTypes = new eLookupGroupType[] {
                         eLookupGroupType.ChildrensCentresCollaboration, eLookupGroupType.Federation, eLookupGroupType.Trust, eLookupGroupType.SchoolSponsor },
-                    CCLocalAuthorityId = localAuthorityId });
+                    CCLocalAuthorityId = localAuthorityId
+                });
 
             InjectBasicLAsAndGroupTypes();
 
@@ -408,7 +410,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
 
 
         [Fact]
-        public async Task Group_EditDetails()
+        public async Task Group_Federation_EditDetails()
         {
             var grs = mockGroupReadService;
             var estabList = CreateEstabList();
@@ -417,33 +419,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
 
             InjectBasicLAsAndGroupTypes();
 
-            var domainModel = new GroupModel
-            {
-                Address = new AddressDto
-                {
-                    CityOrTown = Faker.Address.City(),
-                    Line1 = Faker.Address.StreetAddress(),
-                    Line2 = Faker.Address.SecondaryAddress(),
-                    Line3 = Faker.Address.UkCounty(),
-                    PostCode = Faker.Address.UkPostCode()
-                },
-                ClosedDate = DateTime.Now,
-                CompaniesHouseNumber = "67829662",
-                ConfirmationUpToDateGovernanceRequired = true,
-                ConfirmationUpToDateGovernance_LastConfirmationDate = DateTime.Now,
-                DelegationInformation = "delinf",
-                GroupId = "123",
-                GroupTypeId = (int) eLookupGroupType.Federation,
-                GroupUId = 123,
-                HeadFirstName = Faker.Name.First(),
-                HeadLastName = Faker.Name.Last(),
-                HeadTitleId = 1,
-                LocalAuthorityId = 1,
-                ManagerEmailAddress = Faker.Internet.Email(),
-                Name = "I am Federation",
-                OpenDate = DateTime.Now.Subtract(TimeSpan.FromDays(10)),
-                StatusId = (int) eLookupGroupStatus.Open
-            };
+            var domainModel = CreateGroupModel(eLookupGroupType.Federation);
 
             grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(domainModel));
             grs.Setup(x => x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), true)).ReturnsAsync(estabList);
@@ -471,6 +447,49 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             Assert.Equal("Edit federation", vm.PageTitle);
             Assert.Equal((int) eLookupGroupStatus.Open, vm.StatusId);
             Assert.Equal(domainModel.Address.ToString(), vm.Address);
+            Assert.True(vm.CanUserCloseAndMarkAsCreatedInError);
+            Assert.Equal(estabList.Single(x => x.CCIsLeadCentre == true).Urn, vm.CCLeadCentreUrn);
+        }
+
+
+        [Fact]
+        public async Task Group_Trust_EditDetails()
+        {
+            var grs = mockGroupReadService;
+            var estabList = CreateEstabList();
+
+            mockPrincipal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(true);
+
+            InjectBasicLAsAndGroupTypes();
+
+            var domainModel = CreateGroupModel(eLookupGroupType.Trust);
+
+            grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(domainModel));
+            grs.Setup(x => x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), true)).ReturnsAsync(estabList);
+
+            var response = (ViewResult) await controller.EditDetails(123);
+            var vm = (GroupEditorViewModel) response.Model;
+            Assert.Equal("EditDetails", response.ViewName);
+            Assert.Equal("I am Trust", vm.GroupName);
+            Assert.Equal("123", vm.GroupId);
+            Assert.Equal(eLookupGroupType.Trust, vm.GroupType);
+            Assert.Equal((int) eLookupGroupType.Trust, vm.GroupTypeId);
+            Assert.Equal(eGroupTypeMode.Trust, vm.GroupTypeMode);
+            Assert.Equal("placeholder", vm.GroupTypeName);
+            Assert.Equal(123, vm.GroupUId);
+            Assert.True(vm.InEditMode);
+            Assert.False(vm.IsLocalAuthorityEditable);
+            Assert.Equal(10, vm.LinkedEstablishments.Establishments.Count);
+            Assert.Equal("Schools", vm.ListOfEstablishmentsPluralName);
+            Assert.Equal(1, vm.LocalAuthorityId);
+            Assert.Equal("placeholder", vm.LocalAuthorityName);
+            Assert.Equal(domainModel.ManagerEmailAddress, vm.ManagerEmailAddress);
+            Assert.Equal(domainModel.OpenDate.GetValueOrDefault().Date, vm.OpenDate.ToDateTime().GetValueOrDefault().Date);
+            Assert.Equal(domainModel.ClosedDate.GetValueOrDefault().Date, vm.ClosedDate.ToDateTime().GetValueOrDefault().Date);
+            Assert.Equal("Open date", vm.OpenDateLabel);
+            Assert.Equal("Edit foundation trust", vm.PageTitle);
+            Assert.Equal((int) eLookupGroupStatus.Open, vm.StatusId);
+            Assert.Equal(domainModel.Address.ToString(), vm.Address);
             Assert.False(vm.CanUserCloseAndMarkAsCreatedInError);
             Assert.Equal(estabList.Single(x => x.CCIsLeadCentre == true).Urn, vm.CCLeadCentreUrn);
         }
@@ -480,7 +499,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
         [InlineData(eLookupGroupType.MultiacademyTrust, "Multi-academy trust name", "Close this multi-academy trust and mark as created in error", "Group_EditDetails_DynamicLabels_MultiacademyTrust")]
         [InlineData(eLookupGroupType.ChildrensCentresCollaboration, "Children's centres collaboration name", "", "Group_EditDetails_DynamicLabels_ChildrensCentresCollaboration")]
         [InlineData(eLookupGroupType.ChildrensCentresGroup, "Children's centres group name", "", "Group_EditDetails_DynamicLabels_ChildrensCentresGroup")]
-        [InlineData(eLookupGroupType.Federation, "Federation name", "", "Group_EditDetails_DynamicLabels_Federation")]
+        [InlineData(eLookupGroupType.Federation, "Federation name", "Close this federation and mark as created in error", "Group_EditDetails_DynamicLabels_Federation")]
         [InlineData(eLookupGroupType.Trust, "Foundation trust name", "", "Group_EditDetails_DynamicLabels_Trust")]
         [InlineData(eLookupGroupType.SchoolSponsor, "Academy sponsor name", "Close this academy sponsor and mark as created in error", "Group_EditDetails_DynamicLabels_SchoolSponsor")]
         public async Task Group_EditDetails_DynamicLabels(eLookupGroupType groupType, string groupNameLabelText,
@@ -495,33 +514,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
 
             InjectBasicLAsAndGroupTypes();
 
-            var domainModel = new GroupModel
-            {
-                Address = new AddressDto
-                {
-                    CityOrTown = Faker.Address.City(),
-                    Line1 = Faker.Address.StreetAddress(),
-                    Line2 = Faker.Address.SecondaryAddress(),
-                    Line3 = Faker.Address.UkCounty(),
-                    PostCode = Faker.Address.UkPostCode()
-                },
-                ClosedDate = DateTime.Now,
-                CompaniesHouseNumber = "67829662",
-                ConfirmationUpToDateGovernanceRequired = true,
-                ConfirmationUpToDateGovernance_LastConfirmationDate = DateTime.Now,
-                DelegationInformation = "delinf",
-                GroupId = "123",
-                GroupTypeId = (int) groupType,
-                GroupUId = 123,
-                HeadFirstName = Faker.Name.First(),
-                HeadLastName = Faker.Name.Last(),
-                HeadTitleId = 1,
-                LocalAuthorityId = 1,
-                ManagerEmailAddress = Faker.Internet.Email(),
-                Name = "I am a Group",
-                OpenDate = DateTime.Now.Subtract(TimeSpan.FromDays(10)),
-                StatusId = (int) eLookupGroupStatus.Open
-            };
+            var domainModel = CreateGroupModel(groupType);
 
             grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(domainModel));
             grs.Setup(x => x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), true)).ReturnsAsync(estabList);
@@ -542,40 +535,14 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
 
 
         [Fact]
-        public async Task Group_EditLinks()
+        public async Task Group_Federation_EditLinks()
         {
             var grs = mockGroupReadService;
             var estabList = CreateEstabList();
 
             InjectBasicLAsAndGroupTypes();
 
-            var domainModel = new GroupModel
-            {
-                Address = new AddressDto
-                {
-                    CityOrTown = Faker.Address.City(),
-                    Line1 = Faker.Address.StreetAddress(),
-                    Line2 = Faker.Address.SecondaryAddress(),
-                    Line3 = Faker.Address.UkCounty(),
-                    PostCode = Faker.Address.UkPostCode()
-                },
-                ClosedDate = DateTime.Now,
-                CompaniesHouseNumber = "67829662",
-                ConfirmationUpToDateGovernanceRequired = true,
-                ConfirmationUpToDateGovernance_LastConfirmationDate = DateTime.Now,
-                DelegationInformation = "delinf",
-                GroupId = "123",
-                GroupTypeId = (int) eLookupGroupType.Federation,
-                GroupUId = 123,
-                HeadFirstName = Faker.Name.First(),
-                HeadLastName = Faker.Name.Last(),
-                HeadTitleId = 1,
-                LocalAuthorityId = 1,
-                ManagerEmailAddress = Faker.Internet.Email(),
-                Name = "I am Federation",
-                OpenDate = DateTime.Now.Subtract(TimeSpan.FromDays(10)),
-                StatusId = (int) eLookupGroupStatus.Open
-            };
+            var domainModel = CreateGroupModel(eLookupGroupType.Federation);
 
             grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(domainModel));
             grs.Setup(x => x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), true)).ReturnsAsync(estabList);
@@ -597,6 +564,39 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             Assert.Equal("links", vm.SelectedTabName);
             Assert.Equal("Open date", vm.OpenDateLabel);
             Assert.Equal("Edit federation", vm.PageTitle);
+            Assert.False(vm.CanUserCloseAndMarkAsCreatedInError);
+        }
+
+        [Fact]
+        public async Task Group_Trust_EditLinks()
+        {
+            var grs = mockGroupReadService;
+            var estabList = CreateEstabList();
+
+            InjectBasicLAsAndGroupTypes();
+
+            var domainModel = CreateGroupModel(eLookupGroupType.Trust);
+
+            grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(domainModel));
+            grs.Setup(x => x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), true)).ReturnsAsync(estabList);
+
+            var response = (ViewResult) await controller.EditLinks(123);
+            var vm = (GroupEditorViewModel) response.Model;
+            Assert.Equal(string.Empty, response.ViewName);
+            Assert.Equal("I am Trust", vm.GroupName);
+            Assert.Equal(123, vm.GroupUId);
+            Assert.Equal(eLookupGroupType.Trust, vm.GroupType);
+            Assert.Equal((int) eLookupGroupType.Trust, vm.GroupTypeId);
+            Assert.Equal(eGroupTypeMode.Trust, vm.GroupTypeMode);
+            Assert.Equal("placeholder", vm.GroupTypeName);
+            Assert.Equal(estabList.Single(x => x.CCIsLeadCentre == true).Urn, vm.CCLeadCentreUrn);
+            Assert.Equal(eSaveMode.Links, vm.SaveMode);
+            Assert.True(vm.InEditMode);
+            Assert.Equal(10, vm.LinkedEstablishments.Establishments.Count);
+            Assert.Equal("Schools", vm.ListOfEstablishmentsPluralName);
+            Assert.Equal("links", vm.SelectedTabName);
+            Assert.Equal("Open date", vm.OpenDateLabel);
+            Assert.Equal("Edit foundation trust", vm.PageTitle);
             Assert.False(vm.CanUserCloseAndMarkAsCreatedInError);
         }
 
@@ -730,9 +730,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
         }
 
         [Fact]
-        public async Task Group_EditLinks_Post_Success()
+        public async Task Group_Federation_EditLinks_Post_Success()
         {
-            var domainModel = CreateGroupModel();
+            var domainModel = CreateGroupModel(eLookupGroupType.Federation);
             var gws = mockGroupsWriteService;
             var grs = mockGroupReadService;
             grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(domainModel));
@@ -763,9 +763,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
 
 
         [Fact]
-        public async Task Group_EditLinks_RemoveEstablishment_Success()
+        public async Task Group_Federation_EditLinks_RemoveEstablishment_Success()
         {
-            var domainModel = CreateGroupModel();
+            var domainModel = CreateGroupModel(eLookupGroupType.Federation);
 
             var grs = mockGroupReadService;
             grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(domainModel));
@@ -793,9 +793,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
         }
 
         [Fact]
-        public async Task Group_EditLinks_CancelEditMode()
+        public async Task Group_Federation_EditLinks_CancelEditMode()
         {
-            var domainModel = CreateGroupModel();
+            var domainModel = CreateGroupModel(eLookupGroupType.Federation);
 
             var grs = mockGroupReadService;
             grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(domainModel));
@@ -824,9 +824,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
 
 
         [Fact]
-        public async Task Group_EditLinks_SetEditMode_Success()
+        public async Task Group_Federation_EditLinks_SetEditMode_Success()
         {
-            var domainModel = CreateGroupModel();
+            var domainModel = CreateGroupModel(eLookupGroupType.Federation);
 
             var grs = mockGroupReadService;
             grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(domainModel));
@@ -856,9 +856,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
         }
 
         [Fact]
-        public async Task Group_EditLinks_SaveJoinedDate_Success()
+        public async Task Group_Federation_EditLinks_SaveJoinedDate_Success()
         {
-            var domainModel = CreateGroupModel();
+            var domainModel = CreateGroupModel(eLookupGroupType.Federation);
 
             var grs = mockGroupReadService;
             grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(domainModel));
