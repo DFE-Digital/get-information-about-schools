@@ -1,57 +1,228 @@
-@using Edubase.Web.UI.Models
 @model HomepageViewModel
 @{
     ViewBag.Title = "Get Information about Schools";
+    ViewBag.siteSection = "home";
+    var groupSpacing = "home-grid-component";
 }
 
-<div class="grid-row">
-    <div class="column-full">
-        <h1 class="heading-intro">Home page</h1>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Get Information about Schools</h1>
+        <p>
+        </p>
     </div>
 </div>
 
-<div class="grid-row">
-    <div class="column-half">
-        <h2 class="heading-medium">Search</h2>
-        <ul>
-            <li>@Html.ActionLink("Search", "Index", "Search")</li>
-        </ul>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <!-- MAIN CONTENT -->
 
-        <h2 class="heading-medium">Downloads</h2>
-        <ul>
-            <li>@Html.ActionLink("Download all school data", "Index", "Downloads")</li>
-        </ul>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half @groupSpacing">
+                <ul class="govuk-list">
+                    <li>
+                        <h3 class="govuk-heading-m">Establishments</h3>
+                        <p>
+                            Find and search for establishments
+                        </p>
+                        <p>
+                            <a href="@Url.Action("Index", "Search", new {area = "",SelectedTab = SearchViewModel.Tab.Establishments})">
+                                Search for establishments
+                            </a>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+            <div class="govuk-grid-column-one-half @groupSpacing">
+                <ul class="govuk-list">
+                    <li>
+                        <h3 class="govuk-heading-m">Establishment groups</h3>
+                        <p>
+                            Find and search for establishment groups
+                        </p>
+                        <p>
+                            <a href="@Url.Action("Index", "Search", new {area = "",SelectedTab = SearchViewModel.Tab.Groups})">
+                                Search for establishment groups
+                            </a>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half @groupSpacing">
+                <ul class="govuk-list">
+                    <li>
+                        <h3 class="govuk-heading-m">Governance roles</h3>
+                        <p>
+                            Find and search for governance roles in state maintained establishments and academy trust groups
+                        </p>
+                        <p>
+                            <a href="@Url.Action("Index", "Search", new {area = "",SelectedTab = SearchViewModel.Tab.Governors})">
+                                Search for governance roles
+                            </a>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+            <div class="govuk-grid-column-one-half @groupSpacing">
+                <ul class="govuk-list">
+                    <li>
+                        <h3 class="govuk-heading-m">Downloads</h3>
+                        <p>
+                            Download files of specific data item fields from the database that are publicly available and updated daily
+                        </p>
+                        <p>
+                            <a href="@Url.Action("Index", "Downloads", new {area = ""})">
+                                Find a download
+                            </a>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        @if (!Request.IsAuthenticated)
+        {
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full @groupSpacing">
+                    <h2 class="govuk-heading-m">Update your establishment, group and governance information</h2>
+                    <p>
+                        This is for establishment users only and local authority and group users where applicable. Please sign into your DfE Sign-in (DSI) account to make any updates
+                    </p>
+                    <p>
+                        @Html.ActionLink("DfE Sign-in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { rel = "nofollow" })
+                    </p>
+                </div>
+            </div>
+        }
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0 home-hr">
+            </div>
+        </div>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full @groupSpacing">
+                <h2 class="govuk-heading-m">The following websites may be of interest in your searches</h2>
+            </div>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half @groupSpacing">
+                <ul class="govuk-list">
+                    <li>
+                        <h3 class="govuk-heading-m">Find and Compare Schools in England</h3>
+                        <p>
+                            Search and compare performance information about schools and further education colleges in England
+                        </p>
+                        <p>
+                            <a href="@Model.CscpHomepage" target="_blank" rel="noreferrer noopener">
+                                Search
+                                (opens in new tab)
+                            </a>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+            <div class="govuk-grid-column-one-half @groupSpacing">
+                <ul class="govuk-list">
+                    <li>
+                        <h3 class="govuk-heading-m">Schools Financial Benchmarking</h3>
+                        <p>
+                            Search and compare financial data about schools and academy trusts in England
+                        </p>
+                        <p>
+                            <a href="@Model.FinancialBenchmarkingHomepage" target="_blank" rel="noreferrer noopener">
+                                Search
+                                (opens in new tab)
+                            </a>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half @groupSpacing">
+                <ul class="govuk-list">
+                    <li>
+                        <h3 class="govuk-heading-m">Ofsted</h3>
+                        <p>
+                            Search and view Ofsted inspection reports for establishments in England
+                        </p>
+                        <p>
+                            <a href="https://reports.ofsted.gov.uk/" target="_blank" rel="noreferrer noopener">
+                                Search
+                                (opens in new tab)
+                            </a>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+            <div class="govuk-grid-column-one-half @groupSpacing">
+                <ul class="govuk-list">
+                    <li>
+                        <h3 class="govuk-heading-m">Education and learning</h3>
+                        <p>
+                            See a comprehensive listings of all DfE services and guidance
+                        </p>
+                        <p>
+                            <a href="https://www.gov.uk/browse/education" target="_blank" rel="noreferrer noopener">
+                                Explore
+                                (opens in new tab)
+                            </a>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0 home-hr">
+            </div>
+        </div>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full @groupSpacing">
+                <h2 class="govuk-heading-m">Information about educational establishments in the rest of the United Kingdom</h2>
+                <p>
+                    Please visit the:
+                </p>
+                <p>
+                    Northern Ireland government
+                    <a href="https://www.northernireland.gov.uk/" target="_blank" rel="noreferrer noopener">
+                        website
+                        (opens in new tab)
+                    </a>
+                </p>
+                <p>
+                    Scottish government
+                    <a href="https://www.gov.scot/" target="_blank" rel="noreferrer noopener">
+                        website
+                        (opens in new tab)
+                    </a>
+                </p>
+                <p>
+                    Welsh government
+                    <a href="https://gov.wales/" target="_blank" rel="noreferrer noopener">
+                        website
+                        (opens in new tab)
+                    </a>
+                </p>
+            </div>
+        </div>
     </div>
 
-    @if (Model.AllowApprovals || Model.AllowSchoolCreation || Model.AllowTrustCreation)
-    {
-        <div class="column-half">
+    <div class="govuk-grid-column-one-third">
+        <!-- RIGHT HAND CONTENT-->
+    </div>
+</div>
 
-            @if (Model.AllowApprovals)
-            {
-                <h2 class="heading-medium">Approvals</h2>
-                <ul>
-                    <li>@Html.ActionLink("View my approval items" + (ViewBag.PendingApprovalItemsCount > 0 ? " (" + ViewBag.PendingApprovalItemsCount + ")" : "") as string, "Index", "Approval")</li>
-                </ul>
-            }
 
-            @if (Model.AllowSchoolCreation || Model.AllowTrustCreation)
-            {
-                <h2 class="heading-medium">Create</h2>
-                <ul>
-                    @if (Model.AllowSchoolCreation)
-                    {
-                        <li>@Html.ActionLink("Create new school", "Create", "Establishment")</li>
-                    }
-
-                    @if (Model.AllowTrustCreation)
-                    {
-                        <li>@Html.ActionLink("Create new Academy Trust", "SearchCompaniesHouse", "Group", new { area = "Groups" }, null)</li>
-                    }
-                </ul>
-            }
-
-        </div>
-    }
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @helpers.BackToTopLink()
+    </div>
 </div>

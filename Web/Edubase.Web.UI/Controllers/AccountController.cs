@@ -98,7 +98,7 @@ namespace Edubase.Web.UI.Controllers
                 }
             }
 
-            return RedirectToAction("Index", "Search");
+            return RedirectToAction("Index", "Home");
         }
 
         [Route(nameof(LogOff)), HttpGet]
