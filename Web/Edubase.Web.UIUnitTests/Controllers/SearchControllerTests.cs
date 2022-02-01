@@ -54,7 +54,7 @@ namespace Edubase.Web.UI.Controllers.UnitTests
             }) as RedirectResult;
 
             Assert.NotNull(result);
-            Assert.Equal($"/?SearchType=ByLocalAuthority&{SearchViewModel.BIND_ALIAS_LAIDS}=1&{SearchViewModel.BIND_ALIAS_LAIDS}=2#la",
+            Assert.Equal($"?SearchType=ByLocalAuthority&{SearchViewModel.BIND_ALIAS_LAIDS}=1&{SearchViewModel.BIND_ALIAS_LAIDS}=2#la",
                 result.Url);
         }
 
