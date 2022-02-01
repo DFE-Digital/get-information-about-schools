@@ -40,22 +40,9 @@ namespace Edubase.UnitTest.Controllers
             cls.Setup(x => x.LocalAuthorityGetAllAsync()).ReturnsAsync(new[] { new LookupDto { Id = 2, Name = "TESTLA" } });
 
             var subject = new SearchController(ers, cls.Object, grs, gps);
-<<<<<<< Updated upstream:Web/Edubase.UnitTest/Controllers/SearchControllerTest.cs
             var result = (RedirectResult) await subject.Index(new SearchViewModel { SearchType = eSearchType.LocalAuthorityDisambiguation, LocalAuthorityToAdd = "TESTLA", SelectedLocalAuthorityIds = new LocalAuthorityIdList(new[] { 1 }) });
 
             Assert.That(result.Url, Is.EqualTo($"/?SearchType=ByLocalAuthority&{SearchViewModel.BIND_ALIAS_LAIDS}=1&{SearchViewModel.BIND_ALIAS_LAIDS}=2#la"));
-=======
-            var result = await subject.Index(new SearchViewModel
-            {
-                SearchType = eSearchType.LocalAuthorityDisambiguation,
-                LocalAuthorityToAdd = "TESTLA",
-                SelectedLocalAuthorityIds = new LocalAuthorityIdList(new[] { 1 })
-            }) as RedirectResult;
-
-            Assert.NotNull(result);
-            Assert.Equal($"?SearchType=ByLocalAuthority&{SearchViewModel.BIND_ALIAS_LAIDS}=1&{SearchViewModel.BIND_ALIAS_LAIDS}=2#la",
-                result.Url);
->>>>>>> Stashed changes:Web/Edubase.Web.UIUnitTests/Controllers/SearchControllerTests.cs
         }
 
         [Test]
