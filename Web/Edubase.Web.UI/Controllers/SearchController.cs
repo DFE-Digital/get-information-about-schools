@@ -181,7 +181,7 @@ namespace Edubase.Web.UI.Controllers
 
                 if (viewModel.LocalAuthorityToRemove.HasValue)
                 {
-                    return Redirect("/?" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
+                    return Redirect("?" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
                                         viewModel.RemoveLocalAuthorityId(viewModel.LocalAuthorityToRemove.Value).SelectedLocalAuthorityIds.ToArray()) + "#la");
                 }
 
@@ -279,7 +279,7 @@ namespace Edubase.Web.UI.Controllers
         {
             var localAuthorities = await _cachedLookupService.LocalAuthorityGetAllAsync();
             var localAuthority = localAuthorities.FirstOrDefault(x => x.Name.Equals(model.LocalAuthorityToAdd, StringComparison.OrdinalIgnoreCase));
-            if (localAuthority != null) return Redirect("/?SearchType=ByLocalAuthority&" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
+            if (localAuthority != null) return Redirect("?SearchType=ByLocalAuthority&" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
                 model.AddLocalAuthorityId(localAuthority.Id).SelectedLocalAuthorityIds.ToArray()) + "#la");
             else
             {
