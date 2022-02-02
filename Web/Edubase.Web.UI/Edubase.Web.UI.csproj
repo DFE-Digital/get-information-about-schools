@@ -782,6 +782,7 @@
     <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
     <Content Include="Views\Notifications\AuditBanners.cshtml" />
     <Content Include="Views\Notifications\AuditBanner.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>
