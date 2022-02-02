@@ -23,7 +23,7 @@ if (document.getElementById('close-created-in-error')) {
   if($groupTypeName !== 'School sponsor') {
     modalMessage = 'All ' + $groupTypeLinks + ' will be removed on closure.'
   }
-  
+
   let canCloseImmediately = false;
   const closeCheckbox = document.getElementById('close-created-in-error');
 
