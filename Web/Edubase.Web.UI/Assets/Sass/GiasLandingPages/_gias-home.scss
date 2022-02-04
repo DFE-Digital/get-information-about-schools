@@ -1,0 +1,14 @@
+.home-hr {
+  border: none;
+  height: govuk-spacing(1);
+  color: govuk-colour("blue");
+  background-color: govuk-colour("blue");
+}
+
+.home-grid-component {
+  margin-bottom: govuk-spacing(4);
+  
+  @include govuk-media-query($until: tablet) {
+    margin-bottom: govuk-spacing(6);
+  }
+}

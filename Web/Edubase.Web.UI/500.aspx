@@ -88,8 +88,11 @@
                 <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
                 <nav>
                     <ul id="navigation" class="govuk-header__navigation " aria-label="Top Level Navigation">
-                        <li class="govuk-header__navigation-item govuk-header__navigation-item--active">
-                            <a class="govuk-header__link" href="/">Search</a>
+                        <li class="govuk-header__navigation-item">
+                            <a class="govuk-header__link" href="/">Home</a>
+                        </li>
+                        <li class="govuk-header__navigation-item">
+                            <a class="govuk-header__link" href="/Search">Search</a>
                         </li>
                         <li class="govuk-header__navigation-item ">
                             <a class="govuk-header__link" href="/Downloads">Downloads</a>

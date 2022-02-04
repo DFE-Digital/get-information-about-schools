@@ -14,6 +14,7 @@ using System.Web.Mvc;
 using System.Xml.Linq;
 using Edubase.Services.Establishments;
 using Edubase.Web.UI.Helpers;
+using Edubase.Web.UI.Models;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -35,6 +36,9 @@ namespace Edubase.Web.UI.Controllers
             _blobService = blobService;
             _cacheAccessor = cacheAccessor;
         }
+
+        [Route("~/")]
+        public ActionResult Index() => View(new HomepageViewModel());
 
         [Route("~/accessibility")]
         public ActionResult Accessibility() => View();

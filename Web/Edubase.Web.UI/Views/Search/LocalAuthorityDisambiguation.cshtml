@@ -2,6 +2,8 @@
 @using Edubase.Services.Enums;
 @using Edubase.Web.UI.Models.Search;
 @using Edubase.Web.UI
+@using Edubase.Web.UI.Areas.Establishments.Controllers
+@using Edubase.Web.UI.Areas.Establishments.Models.Search
 @using Glimpse.Core.Configuration
 @using VM = Edubase.Web.UI.Models.Search.LocalAuthorityDisambiguationViewModel;
 @model VM
@@ -52,9 +54,13 @@
 
 @helper LocalAuthorityLink(LookupDto item)
 {
-    string url = $"/?SearchType=ByLocalAuthority&{QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.AddUnique(item.Id).ToArray())}&OpenOnly={Model.OpenOnly}#la";
+    var cleanQueryString = HttpUtility.ParseQueryString(string.Empty);
 
-    <a href="@url">@item.Name</a>
+    cleanQueryString.Add(nameof(EstablishmentSearchViewModel.SearchType), eSearchType.ByLocalAuthority.ToString());
+    cleanQueryString.Add(nameof(Model.OpenOnly), Model.OpenOnly.ToString());
+
+    var queryString = $"{cleanQueryString.ToString()}&{QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS, Model.SelectedLocalAuthorityIds.AddUnique(item.Id).ToArray())}#la";
+    <a href="@Url.Action("Index", "Search", new { area = "" })?@queryString">@item.Name</a>
 }
 
 @section BreadCrumbs

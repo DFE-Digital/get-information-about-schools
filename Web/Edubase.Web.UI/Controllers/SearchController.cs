@@ -21,6 +21,7 @@ namespace Edubase.Web.UI.Controllers
     using Edubase.Services.Geo;
     using eStatus = Services.Enums.eLookupEstablishmentStatus;
 
+    [RoutePrefix("Search"), Route("{action=index}")]
     public class SearchController : EduBaseController
     {
         private readonly IEstablishmentReadService _establishmentReadService;
@@ -39,7 +40,7 @@ namespace Edubase.Web.UI.Controllers
             _groupReadService = groupReadService;
         }
 
-        [HttpGet, Route(Name = "Homepage")]
+        [HttpGet, Route(Name = "Index")]
         public async Task<ActionResult> Index(SearchViewModel viewModel)
         {
             if (!viewModel.NoResults)
@@ -172,7 +173,7 @@ namespace Edubase.Web.UI.Controllers
             return View("Index", viewModel);
         }
 
-        [HttpGet, Route("Search/Results", Name = "SearchResults")]
+        [HttpGet, Route("Results", Name = "SearchResults")]
         public async Task<ActionResult> IndexResults(SearchViewModel viewModel)
         {
             if (!viewModel.NoResults)
@@ -180,7 +181,7 @@ namespace Edubase.Web.UI.Controllers
 
                 if (viewModel.LocalAuthorityToRemove.HasValue)
                 {
-                    return Redirect("/?" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
+                    return Redirect("?" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
                                         viewModel.RemoveLocalAuthorityId(viewModel.LocalAuthorityToRemove.Value).SelectedLocalAuthorityIds.ToArray()) + "#la");
                 }
 
@@ -240,7 +241,7 @@ namespace Edubase.Web.UI.Controllers
             return await Index(viewModel);
         }
 
-        [Route("Search/Suggest"), HttpGet]
+        [Route("Suggest"), HttpGet]
         public async Task<ActionResult> Suggest(string text)
         {
             var suggestions = (await _establishmentReadService.SuggestAsync(StringUtil.DistillEstablishmentName(text), User)).ToArray();
@@ -260,10 +261,10 @@ namespace Edubase.Web.UI.Controllers
             return Json(suggestions);
         }
 
-        [Route("Search/SuggestGroup"), HttpGet]
+        [Route("SuggestGroup"), HttpGet]
         public async Task<ActionResult> SuggestGroup(string text) => Json(await _groupReadService.SuggestAsync(text.Distill(), User));
 
-        [Route("Search/SuggestPlace"), HttpGet]
+        [Route("SuggestPlace"), HttpGet]
         public async Task<ActionResult> SuggestPlace(string text)
         {
             if (!QueryValidator.ValidatePlaceSuggestionQuery(text))
@@ -278,7 +279,7 @@ namespace Edubase.Web.UI.Controllers
         {
             var localAuthorities = await _cachedLookupService.LocalAuthorityGetAllAsync();
             var localAuthority = localAuthorities.FirstOrDefault(x => x.Name.Equals(model.LocalAuthorityToAdd, StringComparison.OrdinalIgnoreCase));
-            if (localAuthority != null) return Redirect("/?SearchType=ByLocalAuthority&" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
+            if (localAuthority != null) return Redirect("?SearchType=ByLocalAuthority&" + QueryStringHelper.ToQueryString(SearchViewModel.BIND_ALIAS_LAIDS,
                 model.AddLocalAuthorityId(localAuthority.Id).SelectedLocalAuthorityIds.ToArray()) + "#la");
             else
             {

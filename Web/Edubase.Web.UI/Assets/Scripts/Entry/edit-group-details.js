@@ -16,6 +16,10 @@ if (document.getElementById('close-created-in-error')) {
 	  $groupTypeLinks = "academies and/or free schools";
   }
 
+  if ($groupTypeName == 'Federation') {
+    $groupTypeLinks = "establishments";
+  }
+
   if($groupTypeName !== 'School sponsor') {
     modalMessage = 'All ' + $groupTypeLinks + ' will be removed on closure.'
   }

@@ -158,10 +158,10 @@ namespace Edubase.Services.Establishments.Models
 
         public string ProprietorBodyName { get; set; }
 
-        [DisplayName("Number of special pupils under a SEN statement/EHCP"), JsonProperty("SENStat")]
+        [DisplayName("Total number of special pupils under a special educational needs (SEN) statement/education, health and care (EHC) plan"), JsonProperty("SENStat")]
         public int? SENStat { get; set; }
 
-        [DisplayName("Number of special pupils not under a SEN statement/EHCP"), JsonProperty("SENNoStat")]
+        [DisplayName("Number of special pupils not under a special educational needs (SEN) statement/education, health and care (EHC) plan"), JsonProperty("SENNoStat")]
         public int? SENNoStat { get; set; }
         
         [JsonProperty("SEN1Ids")]
