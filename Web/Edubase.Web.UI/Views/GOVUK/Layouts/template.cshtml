@@ -200,22 +200,25 @@
                 <nav>
                     <ul id="navigation" class="govuk-header__navigation " aria-label="Top Level Navigation">
                         <li class="govuk-header__navigation-item @(ViewBag.siteSection == "home" ? "govuk-header__navigation-item--active" : String.Empty)">
-                            @Html.ActionLink("Home", "Index", "Home", new {area = ""}, new {@class = "govuk-header__link"})
+                            @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-header__link" })
                         </li>
                         <li class="govuk-header__navigation-item @(ViewBag.siteSection == "search" ? "govuk-header__navigation-item--active" : String.Empty)">
-                            @Html.ActionLink("Search", "Index", "Search", new {area = ""}, new {@class = "govuk-header__link"})
+                            @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-header__link" })
                         </li>
                         <li class="govuk-header__navigation-item @(ViewBag.siteSection == "downloads" ? "govuk-header__navigation-item--active" : String.Empty)">
-                            @Html.ActionLink("Downloads", "Index", "Downloads", new {area = ""}, new {@class = "govuk-header__link"})
+                            @Html.ActionLink("Downloads", "Index", "Downloads", new { area = "" }, new { @class = "govuk-header__link" })
                         </li>
                         @if (Request.IsAuthenticated)
                         {
                             <li class="govuk-header__navigation-item @(ViewBag.siteSection == "tools" ? "govuk-header__navigation-item--active" : String.Empty)">
-                                @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-header__link"})
+                                @Html.ActionLink("Tools", "Index", "Tools", new { area = "" }, new { @class = "govuk-header__link" })
                             </li>
                         }
+                        <li class="govuk-header__navigation-item @(ViewBag.siteSection == "about" ? "govuk-header__navigation-item--active" : String.Empty)">
+                            @Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "govuk-header__link" })
+                        </li>
                         <li class="govuk-header__navigation-item @(ViewBag.siteSection == "help" ? "govuk-header__navigation-item--active" : String.Empty)">
-                            @Html.ActionLink("Help", "Help", "Home", new {area = ""}, new {@class = "govuk-header__link"})
+                            @Html.ActionLink("Help", "Help", "Home", new { area = "" }, new { @class = "govuk-header__link" })
                         </li>
                         <li class="govuk-header__navigation-item @(ViewBag.siteSection == "news" ? "govuk-header__navigation-item--active" : String.Empty)">
                             <a href="/News" class="govuk-header__link">News</a>
@@ -223,13 +226,13 @@
                         @if (Request.IsAuthenticated)
                         {
                             <li class="govuk-header__navigation-item">
-                                @Html.ActionLink("Sign out", "LogOff", "Account", new {area = "", returnUrl = Request.Url.PathAndQuery}, new {id = "logout-link", Class = "login-link govuk-header__link", rel = "nofollow"})
+                                @Html.ActionLink("Sign out", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id = "logout-link", Class = "login-link govuk-header__link", rel = "nofollow" })
                             </li>
                         }
                         else
                         {
                             <li class="govuk-header__navigation-item">
-                                @Html.ActionLink("Sign in", "LogIn", "Account", new {area = "", returnUrl = Request.Url.PathAndQuery}, new {Class = "login-link govuk-header__link", rel = "nofollow"})
+                                @Html.ActionLink("Sign in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { Class = "login-link govuk-header__link", rel = "nofollow" })
                             </li>
                         }
                     </ul>
