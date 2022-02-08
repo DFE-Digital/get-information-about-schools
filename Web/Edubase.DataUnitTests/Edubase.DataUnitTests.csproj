@@ -67,6 +67,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Edubase.Common\Edubase.Common.csproj">
+      <Project>{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}</Project>
+      <Name>Edubase.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Edubase.Data\Edubase.Data.csproj">
       <Project>{8C3D6834-3FA1-440A-A396-6489E22E8063}</Project>
       <Name>Edubase.Data</Name>
