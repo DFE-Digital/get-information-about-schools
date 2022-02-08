@@ -23,7 +23,5 @@ namespace Edubase.Web.UI.Controllers.Api
             await _tokenRepository.CreateAsync(token);
             return new { token = token.Id };
         }
-
-        
     }
 }
