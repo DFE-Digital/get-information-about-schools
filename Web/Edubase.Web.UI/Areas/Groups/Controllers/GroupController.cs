@@ -648,6 +648,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     viewModel.LinkedEstablishments.Establishments.RemoveAll(x => x.Urn == viewModel.ActionUrn);
                 }
 
+
                 var domainList = viewModel.LinkedEstablishments.Establishments.Select(x => new LinkedEstablishmentGroup
                     {
                         Urn = x.Urn,
