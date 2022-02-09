@@ -643,6 +643,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             List<LinkedEstablishmentGroup> createLinksDomainModel()
             {
+                if (viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove))
+                {
+                    viewModel.LinkedEstablishments.Establishments.RemoveAll(x => x.Urn == viewModel.ActionUrn);
+                }
+
                 var domainList = viewModel.LinkedEstablishments.Establishments.Select(x => new LinkedEstablishmentGroup
                     {
                         Urn = x.Urn,
@@ -737,12 +742,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 {
                     dto = new SaveGroupDto(createDomainModel(), createLinkedEstablishmentFromAdd());
                 }
-                else if (viewModel.Action.StartsWith(ActionLinkedEstablishmentRemove))
-                {
-                    viewModel.LinkedEstablishments.Establishments.RemoveAll(x => x.Urn == viewModel.ActionUrn);
-                    dto = new SaveGroupDto(createDomainModel(), createLinksDomainModel());
-                }
-                else
+                else 
                 {
                     dto = new SaveGroupDto(createDomainModel(), createLinksDomainModel());
                 }
