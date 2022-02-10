@@ -3,6 +3,20 @@
     ViewBag.Title = "About";
     ViewBag.SiteSection = "about";
 }
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-xl">About</h1>
@@ -50,7 +64,8 @@
                     All establishments have a GIAS record that should be kept up to date. Anyone can access the public site, however, to amend the establishment&rsquo;s record and access non-public information the site must be accessed via DfE Sign-in (DSI). Each establishment has a DfE Sign-in approver who should ensure the establishment&rsquo;s record is kept up to date. The approver can assign access to the establishment&rsquo;s record for other establishment colleagues if they need to. For local authority maintained schools, the local authority is also able to access the establishment&rsquo;s record to make amendments, and for academies and free schools multi-academy trusts (MATs).
                 </p>
                 <p>
-                    All federations and multi-academy trusts (MATs) have a GIAS record that should be kept up to date. Anyone can access the public site, however to amend the records the following process should be taken by these organisations:</p>
+                    All federations and multi-academy trusts (MATs) have a GIAS record that should be kept up to date. Anyone can access the public site, however to amend the records the following process should be taken by these organisations:
+                </p>
                 <p>
                     Federation records should be accessed via the federation establishment&rsquo;s DfE Sign-in accounts.
                 </p>
