@@ -590,24 +590,37 @@
         </div>
     }
 
-    @if (Model.EditPolicy.FreeSchoolMealsNumber)
+    @if (Model.DisplayPolicy.FreeSchoolMealsNumber)
     {
+        var attributes = new Dictionary<string,object>();
+        if (!Model.EditPolicy.FreeSchoolMealsNumber)
+        {
+            attributes.Add("readonly", "true");
+            attributes.Add("disabled", "disabled");
+        }
+
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FreeSchoolMealsNumber)">
             @Html.LabelFor(x => x.FreeSchoolMealsNumber, new {@class = "govuk-label"})
             @Html.ValidationMessageFor(x => x.FreeSchoolMealsNumber, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.FreeSchoolMealsNumber, new {@class = "govuk-input"})
+            @Html.TextBoxFor(x => x.FreeSchoolMealsNumber, Html.GetHtmlAttributes(new { @class = "govuk-input" }, attributes))
         </div>
     }
 
-    @if (Model.EditPolicy.FreeSchoolMealsPercentage)
+    @if (Model.DisplayPolicy.FreeSchoolMealsPercentage)
     {
+        var attributes = new Dictionary<string, object>();
+        if (!Model.EditPolicy.FreeSchoolMealsPercentage)
+        {
+            attributes.Add("readonly", "true");
+            attributes.Add("disabled", "disabled");
+        }
+
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FreeSchoolMealsPercentage)">
             @Html.LabelFor(x => x.FreeSchoolMealsPercentage, new {@class = "govuk-label"})
             @Html.ValidationMessageFor(x => x.FreeSchoolMealsPercentage, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.FreeSchoolMealsPercentage, new {@class = "govuk-input"})
+            @Html.TextBoxFor(x => x.FreeSchoolMealsPercentage, Html.GetHtmlAttributes(new { @class = "govuk-input" }, attributes))
         </div>
     }
-
 
     @if (Model.EditPolicy.SENStat)
     {

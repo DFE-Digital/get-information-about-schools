@@ -48,6 +48,7 @@ namespace Edubase.Web.UI.Models
         }
 
         public EstablishmentDisplayEditPolicy EditPolicy { get; set; }
+        public EstablishmentDisplayEditPolicy DisplayPolicy { get; set; }
 
         public Dictionary<string, string> SelectedTab2DetailPageTabNameMapping { get; private set; } = new Dictionary<string, string>
         {
