@@ -746,6 +746,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _mapper.Map(domainModel.IEBTModel, viewModel);
 
             viewModel.EditPolicy = (await _establishmentReadService.GetEditPolicyAsync(domainModel, User)).EditPolicy;
+            viewModel.DisplayPolicy = await _establishmentReadService.GetDisplayPolicyAsync(domainModel, User);
             viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.EditPolicy, User);
             viewModel.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin);
             viewModel.SENIds = viewModel.SENIds ?? new int[0];
@@ -1197,6 +1198,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             var domainModel = (await _establishmentReadService.GetAsync(viewModel.Urn.Value, User)).GetResult();
             var editPolicyEnvelope = await _establishmentReadService.GetEditPolicyAsync(domainModel, User);
+            var displayPolicyEnvelope = await _establishmentReadService.GetDisplayPolicyAsync(domainModel, User);
+            viewModel.DisplayPolicy = displayPolicyEnvelope;
             viewModel.EditPolicy = editPolicyEnvelope.EditPolicy;
             viewModel.EmptyEmailFields = new List<string>();
 

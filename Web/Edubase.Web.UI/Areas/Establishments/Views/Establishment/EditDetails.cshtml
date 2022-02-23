@@ -29,10 +29,11 @@
         <div class="govuk-grid-column-full">
             <div class="govuk-breadcrumbs">
                 <ol class="govuk-breadcrumbs__list">
-                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
                     @if (Model.LegalParentGroup != null)
                     {
-                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new {id = Model.LegalParentGroup.GroupUId, area = "Groups"}, new {@class = "govuk-breadcrumbs__link"})</li>
+                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new { id = Model.LegalParentGroup.GroupUId, area = "Groups" }, new { @class = "govuk-breadcrumbs__link" })</li>
                     }
                 </ol>
             </div>
@@ -589,24 +590,37 @@
         </div>
     }
 
-    @if (Model.EditPolicy.FreeSchoolMealsNumber)
+    @if (Model.DisplayPolicy.FreeSchoolMealsNumber)
     {
+        var attributes = new Dictionary<string,object>();
+        if (!Model.EditPolicy.FreeSchoolMealsNumber)
+        {
+            attributes.Add("readonly", "true");
+            attributes.Add("disabled", "disabled");
+        }
+
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FreeSchoolMealsNumber)">
             @Html.LabelFor(x => x.FreeSchoolMealsNumber, new {@class = "govuk-label"})
             @Html.ValidationMessageFor(x => x.FreeSchoolMealsNumber, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.FreeSchoolMealsNumber, new {@class = "govuk-input"})
+            @Html.TextBoxFor(x => x.FreeSchoolMealsNumber, Html.GetHtmlAttributes(new { @class = "govuk-input" }, attributes))
         </div>
     }
 
-    @if (Model.EditPolicy.FreeSchoolMealsPercentage)
+    @if (Model.DisplayPolicy.FreeSchoolMealsPercentage)
     {
+        var attributes = new Dictionary<string, object>();
+        if (!Model.EditPolicy.FreeSchoolMealsPercentage)
+        {
+            attributes.Add("readonly", "true");
+            attributes.Add("disabled", "disabled");
+        }
+
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FreeSchoolMealsPercentage)">
             @Html.LabelFor(x => x.FreeSchoolMealsPercentage, new {@class = "govuk-label"})
             @Html.ValidationMessageFor(x => x.FreeSchoolMealsPercentage, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.FreeSchoolMealsPercentage, new {@class = "govuk-input"})
+            @Html.TextBoxFor(x => x.FreeSchoolMealsPercentage, Html.GetHtmlAttributes(new { @class = "govuk-input" }, attributes))
         </div>
     }
-
 
     @if (Model.EditPolicy.SENStat)
     {

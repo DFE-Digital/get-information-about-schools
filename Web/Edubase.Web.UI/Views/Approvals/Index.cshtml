@@ -11,9 +11,7 @@
         <div class="govuk-grid-column-full">
             <div class="govuk-breadcrumbs">
                 <ol class="govuk-breadcrumbs__list">
-                    <li class="govuk-breadcrumbs__list-item">
-                        @Html.ActionLink("Search", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
-                    </li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
                     <li class="govuk-breadcrumbs__list-item">
                         @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
                     </li>
@@ -82,12 +80,14 @@
         <p>Please try again later.</p>
         <p>A report of the error has been sent to our technical team.</p>
 
-        <p class="api-error-code" v-show="apiBork.hasOwnProperty('errorCode')">Error code: {{apiBork.errorCode}}</p>
+        @* These properties are not available on the Ajax error response so will never display. 
+        Can tweak them to display the Axios errors but need a discussion on whether we want to display this level of detail. *@
+        @* <p class="api-error-code" v-show="apiBork.hasOwnProperty('errorCode')">Error code: {{apiBork.errorCode}}</p>
         <div v-show="apiBork.hasOwnProperty('technicalDetails')">
             <code>
                 {{apiBork.technicalDetails}}
             </code>
-        </div>
+        </div> *@
     </div>
 </div>
 
@@ -182,7 +182,7 @@
                         <tr v-for="(entry, index) in changes" class="govuk-table__row">
                             <td class="cell-checkbox govuk-table__cell" data-label="Select item">
                                 <div class="govuk-checkboxes__item">
-                                    <input :id="'change-'+entry.id" name="pending-change" :value="entry.id" type="checkbox" class="govuk-checkboxes__input" v-on:click="selectItem">
+                                    <input :id="'change-'+entry.id" name="pending-change" :value="entry.id" type="checkbox" class="govuk-checkboxes__input" v-on:click="selectItem" v-model="selectedItems">
                                     <label class="govuk-checkboxes__label" :for="'change-'+entry.id">
                                         <span class="govuk-visually-hidden">Select this change for approval or rejection</span>
                                     </label>
