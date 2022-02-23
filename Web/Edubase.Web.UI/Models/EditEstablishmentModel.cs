@@ -48,6 +48,7 @@ namespace Edubase.Web.UI.Models
         }
 
         public EstablishmentDisplayEditPolicy EditPolicy { get; set; }
+        public EstablishmentDisplayEditPolicy DisplayPolicy { get; set; }
 
         public Dictionary<string, string> SelectedTab2DetailPageTabNameMapping { get; private set; } = new Dictionary<string, string>
         {
@@ -308,7 +309,7 @@ namespace Edubase.Web.UI.Models
         public double? FreeSchoolMealsPercentage { get; set; }
 
 
-        [DisplayName("Total number of special pupils under a special educational needs (SEN) statement/education, health and care (EHC) plan")]
+        [DisplayName("Number of special pupils under a special educational needs (SEN) statement/education, health and care (EHC) plan")]
         public int? SENStat { get; set; }
 
         [DisplayName("Number of special pupils not under a special educational needs (SEN) statement/education, health and care (EHC) plan")]

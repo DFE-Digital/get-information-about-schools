@@ -9,12 +9,13 @@
         <div class="govuk-grid-column-full">
             <div class="govuk-breadcrumbs">
                 <ol class="govuk-breadcrumbs__list">
-                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
                     @if (Model.LegalParentGroup != null)
                     {
-                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new {id = Model.LegalParentGroup.GroupUId, area = "Groups"}, new {@class = "govuk-breadcrumbs__link"})</li>
+                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink(Model.LegalParentGroup.Name, "Details", "Group", new { id = Model.LegalParentGroup.GroupUId, area = "Groups" }, new { @class = "govuk-breadcrumbs__link" })</li>
                     }
-                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink(Model.OriginalEstablishmentName ?? Model.Name, "Details", "Establishment", new {@class = "requires-conf-to-leave govuk-breadcrumbs__link"})</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink(Model.OriginalEstablishmentName ?? Model.Name, "Details", "Establishment", new { @class = "requires-conf-to-leave govuk-breadcrumbs__link" })</li>
                 </ol>
             </div>
         </div>

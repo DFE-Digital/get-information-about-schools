@@ -202,6 +202,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                 .Returns(editEstabModel);
             mockMapper.Setup(m => m.Map(It.IsAny<IEBTModel>(), editEstabModel))
                 .Returns(editEstabModel);
+            mockEstablishmentReadService.Setup(e => e.GetDisplayPolicyAsync(establishment, It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => new EstablishmentDisplayEditPolicy());
             mockEstablishmentReadService.Setup(e => e.GetEditPolicyAsync(establishment, It.IsAny<IPrincipal>()))
                 .ReturnsAsync(() => new EstablishmentEditPolicyEnvelope
                 {
