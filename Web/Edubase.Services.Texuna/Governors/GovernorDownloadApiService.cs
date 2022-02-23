@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Domain;
+using Edubase.Services.Domain;
 using Edubase.Services.Establishments.Downloads;
 using Edubase.Services.Governors.Downloads;
 using Edubase.Services.Governors.Search;
@@ -11,10 +11,12 @@ namespace Edubase.Services.Texuna.Governors
     public class GovernorDownloadApiService : IGovernorDownloadService
     {
         private readonly HttpClientWrapper _httpClient;
-
-        public GovernorDownloadApiService(HttpClientWrapper httpClient)
+        private readonly ApiClientWrapper _apiClient;
+        
+        public GovernorDownloadApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient)
         {
             _httpClient = httpClient;
+            _apiClient = apiClient;
         }
 
         public async Task<ProgressDto> GetDownloadGenerationProgressAsync(Guid taskId, IPrincipal principal)

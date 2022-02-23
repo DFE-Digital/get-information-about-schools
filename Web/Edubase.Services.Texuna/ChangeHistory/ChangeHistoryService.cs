@@ -10,10 +10,12 @@ namespace Edubase.Services.Texuna.ChangeHistory
     public class ChangeHistoryService : IChangeHistoryService
     {
         private readonly HttpClientWrapper _httpClient;
-
-        public ChangeHistoryService(HttpClientWrapper httpClient)
+        private readonly ApiClientWrapper _apiClient;
+        
+        public ChangeHistoryService(HttpClientWrapper httpClient, ApiClientWrapper apiClient)
         {
             _httpClient = httpClient;
+            _apiClient = apiClient;
         }
 
         public async Task<List<EstablishmentField>> GetEstablishmentFieldsAsync(IPrincipal principal)

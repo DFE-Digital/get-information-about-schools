@@ -10,8 +10,13 @@ namespace Edubase.Services.Texuna.Approvals
     public class ApprovalService : IApprovalService
     {
         private readonly HttpClientWrapper _httpClient;
-
-        public ApprovalService(HttpClientWrapper httpClient) => _httpClient = httpClient;
+        private readonly ApiClientWrapper _apiClient;
+        
+        public ApprovalService(HttpClientWrapper httpClient, ApiClientWrapper apiClient)
+        {
+            _httpClient = httpClient;
+            _apiClient = apiClient;
+        }
 
         public async Task<ApiResponse> ActionAsync(PendingChangeRequestAction payload, IPrincipal principal)
             => await _httpClient.PostAsync("approvals/pending", payload, principal);

@@ -1,4 +1,4 @@
-﻿using Edubase.Services;
+using Edubase.Services;
 using Edubase.Services.Core;
 using Edubase.Services.Exceptions;
 using Edubase.UnitTest.Mocks;
@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Edubase.Data.Repositories;
 
 namespace Edubase.UnitTest.Services.Texuna.Core
 {
@@ -123,7 +124,7 @@ namespace Edubase.UnitTest.Services.Texuna.Core
             return retVal;
         }
 
-        private HttpClientWrapper CreateWrapper(MockHttpMessageHandler mockHandler) => new HttpClientWrapper(new HttpClient(mockHandler), IocConfig.CreateJsonMediaTypeFormatter(), new Mock<IClientStorage>(MockBehavior.Loose).Object);
+        private HttpClientWrapper CreateWrapper(MockHttpMessageHandler mockHandler) => new HttpClientWrapper(new HttpClient(mockHandler), IocConfig.CreateJsonMediaTypeFormatter(), new Mock<IClientStorage>(MockBehavior.Loose).Object, null);
 
 
     }

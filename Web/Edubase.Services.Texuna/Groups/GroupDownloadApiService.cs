@@ -11,10 +11,12 @@ namespace Edubase.Services.Texuna.Groups
     public class GroupDownloadApiService : IGroupDownloadService
     {
         private readonly HttpClientWrapper _httpClient;
-
-        public GroupDownloadApiService(HttpClientWrapper httpClient)
+        private readonly ApiClientWrapper _apiClient;
+        
+        public GroupDownloadApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient)
         {
             _httpClient = httpClient;
+            _apiClient = apiClient;
         }
 
         public async Task<DownloadDto> DownloadGroupHistory(int groupUId, DownloadType downloadType, DateTime? dateFrom, DateTime? dateTo, string suggestedBy, IPrincipal principal) 

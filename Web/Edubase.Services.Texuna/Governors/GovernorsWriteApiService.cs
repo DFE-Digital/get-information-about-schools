@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Governors;
+using Edubase.Services.Governors;
 using System;
 using System.Threading.Tasks;
 using Edubase.Services.Governors.Models;
@@ -10,10 +10,12 @@ namespace Edubase.Services.Texuna.Governors
     public class GovernorsWriteApiService : IGovernorsWriteService
     {
         private readonly HttpClientWrapper _httpClient;
-
-        public GovernorsWriteApiService(HttpClientWrapper httpClient)
+        private readonly ApiClientWrapper _apiClient;
+        
+        public GovernorsWriteApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient)
         {
             _httpClient = httpClient;
+            _apiClient = apiClient;
         }
 
         public async Task DeleteAsync(int id, IPrincipal principal)

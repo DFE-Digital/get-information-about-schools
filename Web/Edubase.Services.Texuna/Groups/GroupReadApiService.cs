@@ -20,11 +20,13 @@ namespace Edubase.Services.Texuna.Groups
     {
         private const string ApiSuggestPath = "suggest/group";
         private readonly HttpClientWrapper _httpClient;
+        private readonly ApiClientWrapper _apiClient;
         private readonly ICachedLookupService _cachedLookupService;
-
-        public GroupReadApiService(HttpClientWrapper httpClient, ICachedLookupService cachedLookupService)
+        
+        public GroupReadApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient, ICachedLookupService cachedLookupService)
         {
             _httpClient = httpClient;
+            _apiClient = apiClient;
             _cachedLookupService = cachedLookupService;
         }
 
@@ -54,7 +56,7 @@ namespace Edubase.Services.Texuna.Groups
             }
         }
 
-        public async Task<ServiceResultDto<GroupModel>> GetAsync(int uid, IPrincipal principal) => new ServiceResultDto<GroupModel>((await _httpClient.GetAsync<GroupModel>($"group/{uid}", principal, false)).Response);
+        public async Task<ServiceResultDto<GroupModel>> GetAsync(int uid, IPrincipal principal) => new ServiceResultDto<GroupModel>((await _apiClient.GetAsync<GroupModel>($"group/{uid}", principal, false)).Response);
 
         public async Task<bool> CanEditAsync(int uid, IPrincipal principal) => (await _httpClient.GetAsync<BoolResult>($"group/{uid}/canedit", principal)).GetResponse().Value;
 

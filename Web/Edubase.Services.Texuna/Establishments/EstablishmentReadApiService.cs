@@ -31,10 +31,12 @@ namespace Edubase.Services.Texuna.Establishments
 
         private readonly ICachedLookupService _cachedLookupService;
         private readonly HttpClientWrapper _httpClient;
-
-        public EstablishmentReadApiService(HttpClientWrapper httpClient, ICachedLookupService cachedLookupService)
+        private readonly ApiClientWrapper _apiClient;
+        
+        public EstablishmentReadApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient, ICachedLookupService cachedLookupService)
         {
             _httpClient = httpClient;
+            _apiClient = apiClient;
             _cachedLookupService = cachedLookupService;
         }
 

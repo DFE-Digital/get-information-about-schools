@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Domain;
+using Edubase.Services.Domain;
 using Edubase.Services.Security;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -8,8 +8,13 @@ namespace Edubase.Services.Texuna.Security
     public class SecurityApiService : ISecurityService
     {
         private readonly HttpClientWrapper _httpClient;
+        private readonly ApiClientWrapper _apiClient;
 
-        public SecurityApiService(HttpClientWrapper httpClient) { _httpClient = httpClient; }
+        public SecurityApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient)
+        {
+            _httpClient = httpClient;
+            _apiClient = apiClient;
+        }
 
         public IPrincipal CreateAnonymousPrincipal() => new GenericPrincipal(new GenericIdentity("ANON"), new string[0]);
         

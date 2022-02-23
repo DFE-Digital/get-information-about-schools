@@ -53,6 +53,9 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.9.4.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.9.4\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.3\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
@@ -88,10 +91,12 @@
     <Compile Include="ChangeHistory\Models\SearchChangeHistoryDownloadPayload.cs" />
     <Compile Include="ChangeHistory\Models\SearchChangeHistoryPayload.cs" />
     <Compile Include="ChangeHistory\Models\UserGroupModel.cs" />
+    <Compile Include="Core\ApiClientWrapper.cs" />
     <Compile Include="Core\BasicAuthCredentials.cs" />
     <Compile Include="Core\FormatterError.cs" />
     <Compile Include="Core\FormatterErrorLogger.cs" />
     <Compile Include="Core\HttpClientWrapper.cs" />
+    <Compile Include="Core\ClientWrapperBase.cs" />
     <Compile Include="Downloads\DownloadsApiService.cs" />
     <Compile Include="Establishments\EstablishmentDownloadApiService.cs" />
     <Compile Include="Establishments\EstablishmentReadApiService.cs" />

@@ -47,6 +47,7 @@ using Edubase.Services.Texuna.Serialization;
 using System.Net.Http.Headers;
 using Edubase.Services.Texuna.Core;
 using System.Web;
+using Autofac.Features.AttributeFilters;
 using AzureTableLogger;
 using AzureTableLogger.Services;
 using Edubase.Services.ExternalLookup;
@@ -134,8 +135,11 @@ namespace Edubase.Web.UI
 
             builder.RegisterInstance(CreateJsonMediaTypeFormatter()).SingleInstance().AsSelf();
 
-            builder.RegisterInstance(CreateHttpClient()).SingleInstance().AsSelf();
-            builder.RegisterType<HttpClientWrapper>().AsSelf();
+            builder.RegisterInstance(CreateHttpClient()).SingleInstance().Named<HttpClient>(nameof(HttpClientWrapper));
+            builder.RegisterType<HttpClientWrapper>().AsSelf().WithAttributeFiltering();
+
+            builder.RegisterInstance(CreateApiClient()).SingleInstance().Named<HttpClient>(nameof(ApiClientWrapper));
+            builder.RegisterType<ApiClientWrapper>().AsSelf().WithAttributeFiltering();
 
             builder.RegisterType<GovernorDownloadApiService>().As<IGovernorDownloadService>();
             builder.RegisterType<GovernorsReadApiService>().As<IGovernorsReadService>();
@@ -199,6 +203,19 @@ namespace Edubase.Web.UI
             if (apiUsername != null && apiPassword != null)
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());
 
+            return client;
+        }
+
+        public static HttpClient CreateApiClient()
+        {
+            var client = new HttpClient(new HttpClientHandler { UseCookies = false })
+            {
+                BaseAddress = new Uri(ConfigurationManager.AppSettings["ApiBaseAddress"]),
+                Timeout = TimeSpan.FromSeconds(180),
+            };
+
+            client.DefaultRequestHeaders.Add("x-functions-key", ConfigurationManager.AppSettings["ApiFAKey"]);
+            
             return client;
         }
 

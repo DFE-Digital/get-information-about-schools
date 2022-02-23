@@ -14,10 +14,12 @@ namespace Edubase.Services.Texuna.Downloads
     public class DownloadsApiService : IDownloadsService
     {
         private readonly HttpClientWrapper _httpClient;
-
-        public DownloadsApiService(HttpClientWrapper httpClient)
+        private readonly ApiClientWrapper _apiClient;
+        
+        public DownloadsApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient)
         {
             _httpClient = httpClient;
+            _apiClient = apiClient;
         }
 
         public async Task<FileDownload[]> GetListAsync(DateTime filterDate, IPrincipal principal) => (await _httpClient.GetAsync<FileDownload[]>($"downloads?filterDate={filterDate.ToString("yyyy-MM-dd")}", principal)).Response;

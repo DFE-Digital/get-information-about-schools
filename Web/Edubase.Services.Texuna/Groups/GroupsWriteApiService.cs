@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Domain;
+using Edubase.Services.Domain;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using System.Security.Principal;
@@ -10,10 +10,12 @@ namespace Edubase.Services.Texuna.Groups
     public class GroupsWriteApiService : IGroupsWriteService
     {
         private readonly HttpClientWrapper _httpClient;
+        private readonly ApiClientWrapper _apiClient;
 
-        public GroupsWriteApiService(HttpClientWrapper httpClient)
+        public GroupsWriteApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient)
         {
             _httpClient = httpClient;
+            _apiClient = apiClient;
         }
 
         public async Task<ApiResponse> SaveAsync(SaveGroupDto dto, IPrincipal principal) => await _httpClient.PutAsync($"group", dto, principal);
