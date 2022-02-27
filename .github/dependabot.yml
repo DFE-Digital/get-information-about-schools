@@ -10,16 +10,16 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    open-pull-requests-limit: 50
+    open-pull-requests-limit: 300
 
   - package-ecosystem: "nuget"
     directory: "/Web"
     schedule:
       interval: "daily"
-    open-pull-requests-limit: 50
+    open-pull-requests-limit: 300
 
   - package-ecosystem: "npm"
     directory: "/Web/Edubase.Web.UI/"
     schedule:
       interval: "daily"
-    open-pull-requests-limit: 50
+    open-pull-requests-limit: 300
