@@ -168,6 +168,8 @@ namespace Edubase.Web.UI.Controllers
             string scheme = urlHelper.RequestContext.HttpContext.Request.Url.Scheme;
             List<SitemapNode> nodes = new List<SitemapNode>();
 
+            nodes.Add(BuildNode("Index", "Home", null, null, 1, SitemapFrequency.Yearly));
+
             nodes.Add(BuildNode("Index", "Search", null, null, 1, SitemapFrequency.Yearly));
             foreach (var tab in (SearchViewModel.Tab[]) Enum.GetValues(typeof(SearchViewModel.Tab)))
             {
@@ -188,6 +190,11 @@ namespace Edubase.Web.UI.Controllers
             nodes.Add(BuildNode("Governance", "Guidance", null, null, 0.3));
             nodes.Add(BuildNode("Responsibilities", "Home"));
             nodes.Add(BuildNode("Privacy", "Home"));
+            nodes.Add(BuildNode("Index", "TermsofUse"));
+            nodes.Add(BuildNode("Contact", "Home"));
+            nodes.Add(BuildNode("About", "Home", null, null, 0.7));
+            nodes.Add(BuildNode("Accessibility", "Home"));
+            nodes.Add(BuildNode("AccessibilityReport", "Home"));
             return nodes;
         }
 
