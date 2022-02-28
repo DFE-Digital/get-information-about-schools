@@ -93,7 +93,11 @@
         <p class="group-type establishment-fine-detail">@Model.GroupTypeName</p>
 
         <p class="govuk-body-s establishment-data-download">
-            @Html.RouteLink("Download group data", "GroupDataDownload", new { uid = Model.Group.GroupUId, state = UriHelper.SerializeToUrlToken(new[] { new RouteDto("GroupDetails", new RouteValueDictionary(new { id = Model.Group.GroupUId }), Model.Group.Name) }) }, new { rel = "nofollow" })
+            @Html.RouteLink("Download group data", "GroupDataDownload", new { uid = Model.Group.GroupUId,
+            state = UriHelper.SerializeToUrlToken(RouteDto.Create(
+                new RouteDto("Search", new RouteValueDictionary(new { SelectedTab = SearchViewModel.Tab.Groups.ToString() }), "Search"),
+                new RouteDto("GroupDetails", new RouteValueDictionary(new { id = Model.Group.GroupUId }), Model.Group.Name)
+            ))}, new { rel = "nofollow" })
         </p>
 
         @if (Model.IsClosed)
