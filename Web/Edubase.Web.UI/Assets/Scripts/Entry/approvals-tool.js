@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import axios from "axios";
 import errorSummary from '../GiasVueComponents/errorSummary';
 import GiasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
 
@@ -14,6 +15,7 @@ new Vue({
   },
   data: {
     changes: [],
+    selectedItems: [],
     apiUrl: '/api/approvals/change-requests',
     confirmUrl: '/api/approvals/change-request',
     reason: '',
@@ -59,8 +61,8 @@ new Vue({
     this.getChangesData();
 
   },
-  mounted: function (){
-    this.counter = new GiasTextCounter(document.getElementById('reason'), {maxLength: 1024});
+  mounted: function () {
+    this.counter = new GiasTextCounter(document.getElementById('reason'), { maxLength: 1024 });
   },
   computed: {
     pageCount: function () {
@@ -103,9 +105,6 @@ new Vue({
 
       return paginationItems;
     },
-    isZeroItemsSelected: function () {
-      return $('#changes-table').find('.govuk-checkboxes__input').filter(':checked').length === 0;
-    }
   },
   methods: {
     formatValue(dateString) {
@@ -116,8 +115,8 @@ new Vue({
 
       const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
       const dateSplit = dateString.split('/');
-	  const curdate = parseInt(dateSplit[0], 10);
-      const monthInt = parseInt(dateSplit[1],10) -1;
+      const curdate = parseInt(dateSplit[0], 10);
+      const monthInt = parseInt(dateSplit[1], 10) - 1;
 
       return `${curdate} ${monthNames[monthInt]} ${dateSplit[2]}`;
     },
@@ -125,11 +124,11 @@ new Vue({
       this.clearErrors();
       this.showRejections = true;
       window.setTimeout(function () {
-        $('#modal-label').focus();
+        document.getElementById('modal-label').focus();
       }, 0);
     },
     selectItem: function () {
-      this.noItemsSelected = ($('#changes-table').find('.govuk-checkboxes__input').filter(':checked').length === 0);
+      this.noItemsSelected = this.selectedItems.length == 0;
     },
     selectReason: function () {
       let reasonText = this.reason;
@@ -156,7 +155,7 @@ new Vue({
       this.reason = reasonText;
       this.reasonIds = [];
       this.showRejections = false;
-      $('#reason').focus().trigger('drop');
+      document.getElementById('reason').focus().trigger('drop');
     },
     setSort: function (sort) {
       if (sort === this.sortType) {
@@ -181,29 +180,30 @@ new Vue({
       const self = this;
       this.isProcessing = true;
       const sortDir = this.sortAscending ? '-asc' : '-desc';
-      $('#changes-table').find(':checkbox').prop('checked', false);
 
-      $.ajax({
-        url: self.apiUrl,
-        data: {
-          take: self.pageSize,
-          skip: skip || 0,
-          sortBy: self.sortType + sortDir
-        },
-        success: function (data) {
-          self.currentCount = data.count;
-          self.changes = data.items;
+      this.selectedItems = [];
+
+      const params = {
+        take: self.pageSize,
+        skip: skip || 0,
+        sortBy: self.sortType + sortDir
+      }
+
+      axios.get(self.apiUrl, { params })
+        .then(res => {
+          self.currentCount = res.data.count;
+          self.changes = res.data.items;
           self.isProcessing = false;
           if (callback) {
             callback.call(self);
           }
-        },
-        error: function (jqxhr) {
-          if (jqxhr.hasOwnProperty('responseJSON')) {
-            self.apiBork = jqxhr.responseJSON;
+        })
+        .catch(error => {
+          if (error.response) {
+            self.apiBork = error.response.data;
           }
-        }
-      });
+          self.isProcessing = false;
+        })
     },
     approveSuccessCallback: function () {
       this.itemsConfirmedRemoved = true;
@@ -236,59 +236,55 @@ new Vue({
     confirmRejection: function () {
       this.clearErrors();
       const self = this;
-      const $reason = $('#reason');
+      const reason = document.getElementById('reason');
       this.apiError = '';
-      this.invalidReason = $reason.val().length < 1;
-      this.reasonLength = $reason.val().length > 1024;
+      this.invalidReason = reason.value.length < 1;
+      this.reasonLength = reason.value.length > 1024;
 
-      if ($reason.val().length === 0) {
+      if (reason.value.length === 0) {
         this.errors.push({
           href: '#reason',
           message: 'Please enter a reason for the rejection'
         });
-      } else if ($reason.val().length > 1024) {
+      } else if (reason.value.length > 1024) {
         this.errors.push({
           href: '#reason',
           message: 'Please enter a reason less than 1024 characters'
         });
       }
 
-      const selectedItems = $('#changes-table').find('.govuk-checkboxes__input')
-        .filter(':checked');
-
-      // this.noneSelectedError = selectedItems.length === 0;
-      if (selectedItems.length === 0) {
+      if (this.selectedItems.length === 0) {
         this.errors.push({
           href: '#changes-table',
           message: 'Please select some changes to reject'
         });
       }
 
-
       if (this.errors.length > 0) {
         this.errorFocus();
       } else {
         this.isProcessing = true;
-        let removedIds = selectedItems.map(function (n, item) {
-          return Number(item.value);
-        });
-        removedIds = $.makeArray(removedIds);
 
-        $.ajax({
-          url: self.confirmUrl,
-          contentType: 'application/json; charset=utf-8',
-          dataType: 'json',
-          method: 'post',
-          data: JSON.stringify({
-            action: 'reject',
-            'ids': removedIds,
-            rejectionReason: $('#reason').val()
-          }),
-          success: function (data) {
-            self.getChangesData(0, self.rejectSuccessCallBack);
-          },
-          error: function (jqXHR, textStatus, errorThrown) {
-            const responses = JSON.parse(jqXHR.responseText);
+        const params = {
+          action: 'reject',
+          'ids': this.selectedItems,
+          rejectionReason: document.getElementById('reason').value
+        };
+
+        const headers = {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Data-Type': 'json',
+        }
+
+        axios.post(self.confirmUrl, params, {
+          headers: headers
+        })
+        .then(response => {
+          self.getChangesData(0, self.rejectSuccessCallBack);
+        })
+        .catch(error => {
+          if (error.response) {
+            const responses = error.response.data;
 
             for (let i = 0, len = responses.length; i < len; i++) {
               self.errors.push({
@@ -296,12 +292,10 @@ new Vue({
                 message: responses[i].message
               });
             }
-            self.isProcessing = false;
 
-            if (jqXHR.hasOwnProperty('responseJSON')) {
-              self.apiBork = jqXHR.responseJSON;
-            }
-          }
+            self.apiBork = error.response.data;
+            self.isProcessing = false;
+          }         
         });
       }
     },
@@ -309,11 +303,8 @@ new Vue({
       this.clearErrors();
       const self = this;
       this.apiError = '';
-      const selectedItems = $('#changes-table').find('.govuk-checkboxes__input')
-        .filter(':checked');
 
-      //this.approvalError = (selectedItems.length === 0);
-      if (selectedItems.length === 0) {
+      if (this.selectedItems.length === 0) {
         this.errors.push({
           href: '#changes-table',
           message: 'Please select some changes to approve'
@@ -328,49 +319,44 @@ new Vue({
         this.errorFocus();
       } else {
         this.isProcessing = true;
-        let removedIds = selectedItems.map(function (n, item) {
-          return Number(item.value);
-        });
 
-        removedIds = $.makeArray(removedIds);
+        const params = {
+          action: 'approve',
+          'ids': this.selectedItems
+        };
 
-        $.ajax({
-          url: self.confirmUrl,
-          contentType: 'application/json; charset=utf-8',
-          dataType: 'json',
-          method: 'post',
-          data: JSON.stringify({
-            action: 'approve',
-            'ids': removedIds
-          }),
-          success: function (data) {
-            self.getChangesData(0, self.approveSuccessCallback);
+        const headers = {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Data-Type': 'json',
+        };
 
-          },
-          error: function (jqXHR, textStatus, errorThrown) {
-            const responses = JSON.parse(jqXHR.responseText);
-            for (var i = 0, len = responses.length; i < len; i++) {
-              messages.push(responses[i].message);
+        axios.post(self.confirmUrl, params, {
+          headers: headers
+        })
+        .then(response => {
+          self.getChangesData(0, self.approveSuccessCallback);
+        })
+        .catch(error => {
+          if (error.response) {
+            const responses = error.response.data;
+
+            for (let i = 0, len = responses.length; i < len; i++) {
               self.errors.push({
                 href: '#',
                 message: responses[i].message
               });
             }
-            self.isProcessing = false;
 
-            if (jqXHR.hasOwnProperty('responseJSON')) {
-              self.apiBork = jqXHR.responseJSON;
-            }
-          }
+            self.apiBork = error.response.data;
+            self.isProcessing = false;
+          }         
         });
       }
     },
     rejectSelection: function () {
       this.clearErrors();
 
-      const selectedItems = $('#changes-table').find('.govuk-checkboxes__input')
-        .filter(':checked');
-      if (selectedItems.length === 0) {
+      if (this.selectedItems.length === 0) {
         this.errors.push({
           href: '#changes-table',
           message: 'Please select some changes to reject'
@@ -390,15 +376,15 @@ new Vue({
 
     },
     errorFocus: function () {
-      const $eSummary = $('.error-summary');
-      if ($eSummary.length) {
+      const eSummary = document.getElementsByClassName('error-summary');
+      if (eSummary.length) {
         window.document.title = "Error: Review and approve changes - GOV.UK";
-        $('.error-summary').focus();
+        eSummary.focus();
       } else {
         window.setTimeout(function () {
-          if ($eSummary.length) {
+          if (eSummary.length) {
             window.document.title = "Error: Review and approve changes - GOV.UK";
-            $('.error-summary').focus();
+            eSummary.focus();
           }
         }, 500);
       }

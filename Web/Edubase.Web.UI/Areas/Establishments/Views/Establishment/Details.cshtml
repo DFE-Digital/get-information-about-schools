@@ -2,6 +2,7 @@
 @using Edubase.Web.UI.Models
 @using Edubase.Common
 @using Edubase.Services.Enums
+@using Edubase.Web.UI.Models.Search
 @using Microsoft.Ajax.Utilities
 @model EstablishmentDetailViewModel
 @{
@@ -14,6 +15,7 @@
         <div class="govuk-grid-column-full">
             <div class="govuk-breadcrumbs">
                 <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
                     <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
 
                     @if (!Model.SearchQueryString.IsNullOrWhiteSpace())
@@ -101,7 +103,11 @@
         <p class="urn establishment-fine-detail"><abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn</p>
         <p class="establishment-type establishment-fine-detail">@Model.TypeName</p>
         <p class="establishment-data-download">
-            @Html.RouteLink("Download establishment data", "EstabDataDownload", new { Model.Establishment.Urn, state = UriHelper.SerializeToUrlToken(RouteDto.Create(Model.LegalParentGroupRouteDto, Model.EstabDetailRouteDto)) }, new { rel = "nofollow" })
+            @Html.RouteLink("Download establishment data", "EstabDataDownload", new { Model.Establishment.Urn,
+                state = UriHelper.SerializeToUrlToken(RouteDto.Create(
+                    new RouteDto("Search", new RouteValueDictionary(new { SelectedTab = SearchViewModel.Tab.Establishments.ToString() }), "Search"),
+                    Model.LegalParentGroupRouteDto,
+                    Model.EstabDetailRouteDto))}, new { rel = "nofollow" })
         </p>
 
         @if (Model.LegalParentGroup != null)
