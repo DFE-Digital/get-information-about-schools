@@ -1,0 +1,87 @@
+@using Edubase.Web.UI.Controllers
+@{
+    ViewBag.Title = "About";
+    ViewBag.SiteSection = "about";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">About</h1>
+
+        <p>
+            Get Information about Schools (GIAS) is the Department for Education&rsquo;s register for several organisation types and where information on other organisations is recorded and maintained.
+        </p>
+
+        <p>
+            GIAS is used by the department and key partners to contact establishments, update systems, perform analysis and inform policy decisions, some of which carry funding implications.
+        </p>
+
+        <p>
+            Establishment, federation, academy trust and approved local authority users can access their records by signing into their DfE Sign-in (DSI) account.
+        </p>
+
+        <p>
+            It is essential that these users ensure their organisations details are up-to-date on the GIAS website, including their governance details (where appliable) which is reflected through
+            <a href="https://www.legislation.gov.uk/ukpga/1996/56/section/538" target="_blank" rel="noreferrer noopener">The Education Act 1996 (opens in new tab)</a> and the
+            <a href="https://www.gov.uk/guidance/academy-trust-handbook" target="_blank" rel="noreferrer noopener">Academies Trust Handbook (ATH) (opens in new tab)</a>.
+        </p>
+
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    The National Database of Governors
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                <p>
+                    All governance boards for state maintained establishments and academy trusts are required to provide information about people involved in governance for their organisation via GIAS which is also the
+                    <a href="https://www.gov.uk/government/news/national-database-of-governors" target="_blank" rel="noreferrer noopener">National Database of Governors (opens in new tab)</a>.
+                </p>
+            </div>
+        </details>
+
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    More information for establishment, local authority and group users
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                <p>
+                    All establishments have a GIAS record that should be kept up to date. Anyone can access the public site, however, to amend the establishment&rsquo;s record and access non-public information the site must be accessed via DfE Sign-in (DSI). Each establishment has a DfE Sign-in approver who should ensure the establishment&rsquo;s record is kept up to date. The approver can assign access to the establishment&rsquo;s record for other establishment colleagues if they need to. For local authority maintained schools, the local authority is also able to access the establishment&rsquo;s record to make amendments, and for academies and free schools multi-academy trusts (MATs).
+                </p>
+                <p>
+                    All federations and multi-academy trusts (MATs) have a GIAS record that should be kept up to date. Anyone can access the public site, however to amend the records the following process should be taken by these organisations:
+                </p>
+                <p>
+                    Federation records should be accessed via the federation establishment&rsquo;s DfE Sign-in accounts.
+                </p>
+                <p>
+                    Multi-academy trust (MAT) records should be accessed via the multi-academy trust DfE Sign-in (DSI) account. Each multi-academy trust has a DSI approver who can assign access to the MAT record for other colleagues if they wish to.
+                </p>
+                <p>
+                    GIAS is the legislative avenue for local authority maintained schools to inform the Secretary of State of changes to their organisation made through the prescribed alterations regulation process:
+                    <a href="https://www.gov.uk/government/publications/school-organisation-maintained-schools">&ldquo;Making significant changes (&lsquo;prescribed alterations&rsquo;) to maintained schools&rdquo; (opens in new tab)</a>
+                    . For academies the
+                    <a href="https://www.gov.uk/government/publications/making-significant-changes-to-an-existing-academy">&ldquo;Making significant changes to an open academy and closure by mutual agreement guidance&rdquo; (opens in new tab)</a>
+                    sets out that GIAS must be kept up-to-date.
+                </p>
+            </div>
+        </details>
+
+        @helpers.BackToTopLink()
+    </div>
+</div>

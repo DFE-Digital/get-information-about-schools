@@ -254,6 +254,7 @@ const autocompleteSetup = (function (){
         e.preventDefault();
         $('#' + $(this).text().toLowerCase().replace(/\s/g, '-')).remove();
         $(this).remove();
+        $("input[value='" + $(this).val() +"'][name='d']").remove();
       });
 
       $('#LocalAuthorityToAdd').on('focus', function () {

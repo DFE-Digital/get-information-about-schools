@@ -40,6 +40,10 @@ namespace Edubase.Web.UI.Controllers
         [Route("~/")]
         public ActionResult Index() => View(new HomepageViewModel());
 
+        [Route("~/about")]
+        public ActionResult About() => View();
+
+
         [Route("~/accessibility")]
         public ActionResult Accessibility() => View();
 

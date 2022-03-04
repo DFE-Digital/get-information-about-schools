@@ -141,7 +141,7 @@
                             <a href="/" id="proposition-name">Get Information about Schools</a>
 
                             <ul id="proposition-links">
-                                <li><a href="/">Search</a></li>
+                                <li><a href="/">Home</a></li>
                                 <li><a href="/Downloads">Downloads</a></li>
                             </ul>
 
@@ -188,7 +188,7 @@
         <div class="breadcrumbs">
             <ol>
                 <li>
-                    <a href="/">Search</a>
+                    <a href="/">Home</a>
                 </li>
                 <a href="obj/">obj/</a>
             </ol>

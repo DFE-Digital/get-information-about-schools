@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Common.Formatting;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
@@ -26,8 +26,7 @@ namespace Edubase.Data.Entity
         {
             var partitionKey = Base62.FromDate(tokenDate);
             if (partitionKey.Length < 4) partitionKey = partitionKey.PadLeft(4, '0');
-            else if (partitionKey.Length > 4) partitionKey = partitionKey.Substring(0, 4);
-
+            
             PartitionKey = partitionKey;
             RowKey = Base62.Encode(RandomNumber.Next(1, 10_000_000));
         }
