@@ -135,6 +135,7 @@
     <Compile Include="DbGeographyConverter.cs" />
     <Compile Include="Entity\FaqGroup.cs" />
     <Compile Include="Entity\FaqItem.cs" />
+    <Compile Include="Entity\NewsArticle.cs" />
     <Compile Include="Entity\NotificationBanner.cs" />
     <Compile Include="Entity\NotificationTemplate.cs" />
     <Compile Include="Entity\Token.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="Repositories\ILocalAuthoritySetRepository.cs" />
     <Compile Include="Repositories\ITokenRepository.cs" />
     <Compile Include="Repositories\IUserPreferenceRepository.cs" />
+    <Compile Include="Repositories\NewsArticleRepository.cs" />
     <Compile Include="Repositories\NotificationBannerRepository.cs" />
     <Compile Include="Repositories\NotificationTemplateRepository.cs" />
     <Compile Include="Repositories\UserPreferenceRepository.cs" />
