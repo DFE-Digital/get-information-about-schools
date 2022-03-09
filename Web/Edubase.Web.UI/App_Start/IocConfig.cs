@@ -174,6 +174,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<FaqGroupRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NotificationTemplateRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NotificationBannerRepository>().AsSelf().SingleInstance();
+            builder.RegisterType<NewsArticleRepository>().AsSelf().SingleInstance();
         }
 
         public static JsonMediaTypeFormatter CreateJsonMediaTypeFormatter()

@@ -1,9 +1,11 @@
-@model IHtmlString
+@using System.Globalization
+@model Edubase.Web.UI.Models.News.NewsArticlesViewModel
 @{
     ViewBag.Title = "Get Information about Schools";
     ViewBag.bodyClasses = "news-page";
     ViewBag.SiteSection = "news";
 }
+
 @section BreadCrumbs
 {
     <div class="govuk-grid-row">
@@ -24,7 +26,7 @@
         <p>These are news items that are no more than 6 months old. Select news archive if you want to see news items older than 6 months.</p>
         <p>All news items show what was originally displayed at the time of publication, therefore some links in these news items may no longer work.</p>
         <div class="gias-align-right govuk-body govuk-!-margin-bottom-0">
-            @Html.ActionLink("News archive", "NewsArchive", "Home")
+            @Html.ActionLink("News archive", "Archive", "News")
         </div>
     </div>
 </div>
@@ -32,7 +34,25 @@
 
     <div class="govuk-grid-column-two-thirds news-blog">
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
-        @Model
+
+        @if (Model.Articles.Any())
+        {
+            foreach (var modelArticle in Model.Articles)
+            {
+                <h2 class="govuk-heading-m">
+                    @modelArticle.Title<br />
+                    @if (@modelArticle.ShowDate)
+                    {
+                        <span class="gias-news-heading--date">@modelArticle.ArticleDate.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</span>
+                    }
+                </h2>
+
+                @Html.Raw(modelArticle.Content)
+
+                <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+            }
+        }
+
     </div>
 
     <div class="govuk-grid-column-one-third about">
