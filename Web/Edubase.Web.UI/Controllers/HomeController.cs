@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Xml.Linq;
+using Edubase.Data.Repositories;
 using Edubase.Services.Establishments;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
@@ -21,8 +23,6 @@ namespace Edubase.Web.UI.Controllers
     [RoutePrefix("Home"), Route("{action=index}")]
     public class HomeController : EduBaseController
     {
-        const string NewsBlobNameHtml = "newsblog.html";
-        const string ArchiveBlobNameHtml = "archiveblog.html";
         public const string NewsBlobETag = "newsblog-etag";
         private const string UserPrefsCookieName = "analytics_preferences";
 
@@ -108,51 +108,7 @@ namespace Edubase.Web.UI.Controllers
 
         [Route("~/privacy")]
         public ActionResult Privacy() => View();
-
-        [Route("~/news")]
-        public async Task<ActionResult> News(bool? refresh)
-        {
-            var blob = _blobService.GetBlobReference("content", NewsBlobNameHtml);
-            var html = await _cacheAccessor.GetAsync<string>(NewsBlobNameHtml);
-            var etag = await _cacheAccessor.GetAsync<string>(NewsBlobETag);
-
-            if (refresh.GetValueOrDefault())
-            {
-                await _cacheAccessor.DeleteAsync(ArchiveBlobNameHtml);
-            }
-
-            if((html == null && await blob.ExistsAsync()) || refresh.GetValueOrDefault())
-            {
-                await blob.FetchAttributesAsync();
-                html = await blob.DownloadTextAsync();
-                etag = CleanETag(blob.Properties.ETag);
-
-                await _cacheAccessor.SetAsync(NewsBlobNameHtml, html, TimeSpan.FromHours(1));
-                await _cacheAccessor.SetAsync(NewsBlobETag, etag, TimeSpan.FromHours(1));
-            }
-
-            Response.Cookies.Set(new HttpCookie(NewsBlobETag, etag) { Expires = DateTime.MaxValue, SameSite = SameSiteMode.Strict});
-
-            return View(new MvcHtmlString(html));
-        }
-
-        [Route("~/news/archive")]
-        public async Task<ActionResult> NewsArchive()
-        {
-            var blob = _blobService.GetBlobReference("content", ArchiveBlobNameHtml);
-            var html = await _cacheAccessor.GetAsync<string>(ArchiveBlobNameHtml);
-
-            if (html == null && await blob.ExistsAsync())
-            {
-                await blob.FetchAttributesAsync();
-                html = await blob.DownloadTextAsync();
-
-                await _cacheAccessor.SetAsync(ArchiveBlobNameHtml, html, TimeSpan.FromHours(1));
-            }
-
-            return View(new MvcHtmlString(html));
-        }
-
+        
         [Route("~/help")]
         public ActionResult Help() => View();
 
@@ -175,24 +131,19 @@ namespace Edubase.Web.UI.Controllers
         public static string GetNewsPageETag()
         {
             var cache = DependencyResolver.Current.GetService<ICacheAccessor>();
-            var svc = DependencyResolver.Current.GetService<IBlobService>();
+            var newsRepo = DependencyResolver.Current.GetService<NewsArticleRepository>();
 
             var etag = cache.Get<string>(NewsBlobETag);
-            if(etag == null)
+            if (etag == null)
             {
-                var blob = svc.GetBlobReference("content", NewsBlobNameHtml);
-                if (blob.Exists())
-                {
-                    blob.FetchAttributes();
-                    etag = CleanETag(blob.Properties.ETag);
-                    cache.Set(NewsBlobETag, etag, TimeSpan.FromHours(1));
-                }
+                var results = newsRepo.GetAll(1000);
+                var latestItem = results.Items.Where(x => x.Visible).OrderByDescending(x => x.ArticleDate)
+                    .First();
+                etag = latestItem.RowKey;
+                cache.Set(NewsBlobETag, etag, TimeSpan.FromHours(1));
             }
 
             return etag;
         }
-
-
-        private static string CleanETag(string s) => s.Replace("\"", string.Empty);
     }
 }
