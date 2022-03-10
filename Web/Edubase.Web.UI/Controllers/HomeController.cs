@@ -23,22 +23,28 @@ namespace Edubase.Web.UI.Controllers
     [RoutePrefix("Home"), Route("{action=index}")]
     public class HomeController : EduBaseController
     {
-        public const string NewsBlobETag = "newsblog-etag";
         private const string UserPrefsCookieName = "analytics_preferences";
 
         private readonly ILookupService _lookup;
         private readonly IBlobService _blobService;
         private readonly ICacheAccessor _cacheAccessor;
+        private readonly NewsArticleRepository _newsRepository;
 
-        public HomeController(ILookupService lookup, IBlobService blobService, ICacheAccessor cacheAccessor)
+        public HomeController(ILookupService lookup, IBlobService blobService, ICacheAccessor cacheAccessor, NewsArticleRepository newsRepository)
         {
             _lookup = lookup;
             _blobService = blobService;
             _cacheAccessor = cacheAccessor;
+            _newsRepository = newsRepository;
         }
 
         [Route("~/")]
-        public ActionResult Index() => View(new HomepageViewModel());
+        public async Task<ActionResult> Index()
+        {
+            var results = await _newsRepository.GetAllAsync(1000);
+            var items = results.Items.Where(x => x.Visible).OrderByDescending(x => x.ArticleDate).Take(2);
+            return View(new HomepageViewModel(items));
+        }
 
         [Route("~/about")]
         public ActionResult About() => View();
@@ -108,7 +114,7 @@ namespace Edubase.Web.UI.Controllers
 
         [Route("~/privacy")]
         public ActionResult Privacy() => View();
-        
+
         [Route("~/help")]
         public ActionResult Help() => View();
 
@@ -127,23 +133,5 @@ namespace Edubase.Web.UI.Controllers
 
         [Route("~/Contact")]
         public ActionResult Contact() => View();
-
-        public static string GetNewsPageETag()
-        {
-            var cache = DependencyResolver.Current.GetService<ICacheAccessor>();
-            var newsRepo = DependencyResolver.Current.GetService<NewsArticleRepository>();
-
-            var etag = cache.Get<string>(NewsBlobETag);
-            if (etag == null)
-            {
-                var results = newsRepo.GetAll(1000);
-                var latestItem = results.Items.Where(x => x.Visible).OrderByDescending(x => x.ArticleDate)
-                    .First();
-                etag = latestItem.RowKey;
-                cache.Set(NewsBlobETag, etag, TimeSpan.FromHours(1));
-            }
-
-            return etag;
-        }
     }
 }

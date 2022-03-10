@@ -1,0 +1,46 @@
+@using System.Globalization
+@model Edubase.Web.UI.Models.News.NewsArticlesViewModel
+@{
+    ViewBag.Title = "Get Information about Schools";
+    ViewBag.bodyClasses = "news-page";
+    ViewBag.SiteSection = "news";
+}
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("News", "Index", "News", new { area = "", year = @Model.LookupYear }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.Articles.Any())
+{
+    foreach (var modelArticle in Model.Articles)
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h1 class="govuk-heading-xl">
+                    @modelArticle.Title
+                    @if (@modelArticle.ShowDate)
+                    {
+                        <span class="gias-news-heading--date">@modelArticle.ArticleDate.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</span>
+                    }
+                </h1>
+                @Html.Raw(modelArticle.Content)
+            </div>
+        </div>
+    }
+}
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @helpers.BackToTopLink()
+    </div>
+</div>
