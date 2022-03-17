@@ -6,9 +6,10 @@ namespace Edubase.Web.UI.Models.News
     public class NewsArticleViewModel
     {
         public string Id { get; set; }
-        [Required, AllowHtml]
+
+        [Required]
         public string Title { get; set; }
-        public DateTimeViewModel ArticleDate { get; set; }
+        public DateTimeViewModel ArticleDate { get; set; } = new DateTimeViewModel();
         public bool ShowDate { get; set; } = true;
 
         [Required, AllowHtml]
