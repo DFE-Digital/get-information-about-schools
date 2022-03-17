@@ -861,7 +861,8 @@
     <Content Include="Assets\Scripts\GiasVueComponents\GovukAccordion.vue" />
     <Content Include="Assets\Scripts\GiasVueComponents\textFieldFormGroup.vue" />
     <Content Include="Views\News\Index.cshtml" />
-    <Content Include="Views\News\Archive.cshtml" />
+    <Content Include="Views\News\Article.cshtml" />
+    <Content Include="Views\News\Manage.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>

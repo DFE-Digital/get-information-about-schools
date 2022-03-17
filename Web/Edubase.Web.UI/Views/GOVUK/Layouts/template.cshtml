@@ -290,19 +290,6 @@
     @RenderSection("BodyEnd", required: false)
 
     <script nonce="@Html.ScriptNonce()">
-            (function () {
-                var myetag = window.DfECookieManager.getCookie("@Edubase.Web.UI.Controllers.HomeController.NewsBlobETag");
-                var etag = "@Edubase.Web.UI.Controllers.HomeController.GetNewsPageETag()";
-                if (!myetag) myetag = null;
-                if (!etag) etag = null;
-
-                if (myetag !== etag) {
-                    displayNewsDialog("@Edubase.Web.UI.Controllers.HomeController.NewsBlobETag", etag);
-                }
-            })();
-        </script>
-
-    <script nonce="@Html.ScriptNonce()">
         if (top.location !== location) {
             top.location.href = document.location.href;
         }

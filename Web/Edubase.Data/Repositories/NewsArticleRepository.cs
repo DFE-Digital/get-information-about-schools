@@ -41,18 +41,42 @@ namespace Edubase.Data.Repositories
         }
 
         public async Task CreateAsync(IEnumerable<NewsArticle> entities) => await CreateAsync(entities.ToArray());
-        public Page<NewsArticle> GetAll(int take, TableContinuationToken skip = null, eNewsArticlePartition partitionKey = eNewsArticlePartition.Current)
+        public Page<NewsArticle> GetAll(int take, bool visible = true, int? year = null, TableContinuationToken skip = null, eNewsArticlePartition partitionKey = eNewsArticlePartition.Current)
         {
             var query = Table.CreateQuery<NewsArticle>().Where(x => x.PartitionKey == partitionKey.ToString()).AsQueryable();
+
+            if (visible)
+            {
+                query = query.Where(x => x.ArticleDate <= DateTime.Now);
+            }
+
+            if (year != null)
+            {
+                query = query.Where(x => x.ArticleDate >= new DateTime(year.Value, 1, 1) && x.ArticleDate < new DateTime(year.Value, 12, 31, 23, 59, 59));
+            }
+
             query = query.Take(take);
+
             var results = Table.ExecuteQuerySegmentedAsync(query.AsTableQuery(), skip).Result;
             return new Page<NewsArticle>(results, results.ContinuationToken);
         }
-        
-        public async Task<Page<NewsArticle>> GetAllAsync(int take, TableContinuationToken skip = null, eNewsArticlePartition partitionKey = eNewsArticlePartition.Current)
+
+        public async Task<Page<NewsArticle>> GetAllAsync(int take, bool visible = true, int? year = null, TableContinuationToken skip = null, eNewsArticlePartition partitionKey = eNewsArticlePartition.Current)
         {
             var query = Table.CreateQuery<NewsArticle>().AsQueryable().Where(x => x.PartitionKey == partitionKey.ToString()).AsQueryable();
+
+            if (visible)
+            {
+                query = query.Where(x => x.ArticleDate <= DateTime.Now);
+            }
+
+            if (year != null)
+            {
+                query = query.Where(x => x.ArticleDate >= new DateTime(year.Value, 1, 1) && x.ArticleDate < new DateTime(year.Value, 12, 31, 23, 59, 59));
+            }
+
             query = query.Take(take);
+
             var results = await Table.ExecuteQuerySegmentedAsync(query.AsTableQuery(), skip);
             return new Page<NewsArticle>(results, results.ContinuationToken);
         }
@@ -104,6 +128,5 @@ namespace Edubase.Data.Repositories
             item.Version++;
             await Table.ExecuteAsync(TableOperation.Replace(item));
         }
-
     }
 }

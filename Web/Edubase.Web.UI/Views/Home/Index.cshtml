@@ -1,3 +1,4 @@
+@using System.Globalization
 @model HomepageViewModel
 @{
     ViewBag.Title = "Get Information about Schools";
@@ -8,16 +9,21 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-xl">Get Information about Schools</h1>
-        <p class="govuk-!-padding-bottom-3">
-            For more information about this service go to the
-            <a href="@Url.Action("About", "Home", new {area = ""})">about</a> page.
-        </p>
     </div>
 </div>
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <!-- MAIN CONTENT -->
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <p class="govuk-!-padding-bottom-3">
+                    For more information about this service go to the
+                    <a href="@Url.Action("About", "Home", new {area = ""})">about</a> page.
+                </p>
+            </div>
+        </div>
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half @groupSpacing">
@@ -28,7 +34,7 @@
                             Find and search for establishments
                         </p>
                         <p>
-                            <a href="@Url.Action("Index", "Search", new {area = "",SelectedTab = SearchViewModel.Tab.Establishments})">
+                            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Establishments})">
                                 Search for establishments
                             </a>
                         </p>
@@ -43,7 +49,7 @@
                             Find and search for establishment groups
                         </p>
                         <p>
-                            <a href="@Url.Action("Index", "Search", new {area = "",SelectedTab = SearchViewModel.Tab.Groups})">
+                            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Groups})">
                                 Search for establishment groups
                             </a>
                         </p>
@@ -61,7 +67,7 @@
                             Find and search for governance roles in state maintained establishments and academy trust groups
                         </p>
                         <p>
-                            <a href="@Url.Action("Index", "Search", new {area = "",SelectedTab = SearchViewModel.Tab.Governors})">
+                            <a href="@Url.Action("Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Governors})">
                                 Search for governance roles
                             </a>
                         </p>
@@ -219,6 +225,31 @@
 
     <div class="govuk-grid-column-one-third">
         <!-- RIGHT HAND CONTENT-->
+        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-0 home-hr">
+
+        <h3 class="govuk-heading-m">News</h3>
+        @{
+            foreach (var modelNewsArticle in Model.NewsArticles)
+            {
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <p class="govuk-!-margin-bottom-0">
+                            <a href="@Url.Action("Article", "News", new {id = @modelNewsArticle.RowKey})">
+                                @modelNewsArticle.Title
+                            </a>
+                        </p>
+                        <p class="govuk-!-font-size-16">
+                            @modelNewsArticle.ArticleDate.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)
+                        </p>
+                    </div>
+                </div>
+            }
+        }
+        <p>
+            <a href="@Url.Action("Index", "News", null)">
+                More news
+            </a>
+        </p>
     </div>
 </div>
 
