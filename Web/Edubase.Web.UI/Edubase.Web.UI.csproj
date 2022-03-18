@@ -350,6 +350,7 @@
     <Compile Include="Controllers\GlossaryController.cs" />
     <Compile Include="Areas\Groups\Models\CreateEdit\ValidateEstablishmentJoinedDateModel.cs" />
     <Compile Include="Controllers\GuidanceController.cs" />
+    <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\NotificationsController.cs" />
     <Compile Include="Controllers\SitemapController.cs" />
     <Compile Include="Controllers\TermsofUseController.cs" />
@@ -367,6 +368,8 @@
     <Compile Include="Helpers\RouteDto.cs" />
     <Compile Include="Models\Faq\FaqGroupsViewModel.cs" />
     <Compile Include="Models\Faq\FaqGroupViewModel.cs" />
+    <Compile Include="Models\News\NewsArticlesViewModel.cs" />
+    <Compile Include="Models\News\NewsArticleViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsBannerAuditViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsBannersAuditViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsBannerViewModel.cs" />
@@ -783,7 +786,6 @@
     <Content Include="Views\Shared\EditorTemplates\AddressViewModel.cshtml" />
     <Content Include="Views\Guidance\Index.cshtml" />
     <Content Include="Views\Home\Cookies.cshtml" />
-    <Content Include="Views\Home\News.cshtml" />
     <Content Include="Views\Shared\FullErrorDetail.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AgeRangeFilterViewModel.cshtml" />
     <Content Include="Views\Shared\_GenericPaginationV2.cshtml" />
@@ -810,7 +812,6 @@
     <Content Include="Views\Faq\CreateEdit.cshtml" />
     <Content Include="Views\Faq\Index.cshtml" />
     <Content Include="Views\Shared\Downloads\DownloadError.cshtml" />
-    <Content Include="Views\Home\NewsArchive.cshtml" />
     <Content Include="Views\Home\Responsibilities.cshtml" />
     <Content Include="Views\Downloads\ReadyToDownload.cshtml" />
     <Content Include="Views\Home\Privacy.cshtml" />
@@ -859,6 +860,9 @@
     <Content Include="Assets\Scripts\GiasVueComponents\GiasWaitSpinner.vue" />
     <Content Include="Assets\Scripts\GiasVueComponents\GovukAccordion.vue" />
     <Content Include="Assets\Scripts\GiasVueComponents\textFieldFormGroup.vue" />
+    <Content Include="Views\News\Index.cshtml" />
+    <Content Include="Views\News\Article.cshtml" />
+    <Content Include="Views\News\Manage.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>
