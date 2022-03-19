@@ -45,6 +45,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
@@ -72,6 +73,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Establishments\EstablishmentReadApiServiceTests.cs" />
+    <Compile Include="Fakes\UserClaimsPrincipalFake.cs" />
+    <Compile Include="Mocks\MockHttpMessageHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +92,10 @@
     <ProjectReference Include="..\Edubase.Services\Edubase.Services.csproj">
       <Project>{D605ACE4-2659-48DC-BF21-94E7B8D230DA}</Project>
       <Name>Edubase.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Edubase.Web.UI\Edubase.Web.UI.csproj">
+      <Project>{f32e2a2e-6782-4293-b533-284ff1b17ff6}</Project>
+      <Name>Edubase.Web.UI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
