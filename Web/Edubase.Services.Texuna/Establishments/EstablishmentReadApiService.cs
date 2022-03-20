@@ -30,17 +30,17 @@ namespace Edubase.Services.Texuna.Establishments
         private const string ApiSuggestPath = "suggest/establishment";
 
         private readonly ICachedLookupService _cachedLookupService;
-        private readonly HttpClientWrapper _httpClient;
+        private readonly IHttpClientWrapper _httpClient;
 
-        public EstablishmentReadApiService(HttpClientWrapper httpClient, ICachedLookupService cachedLookupService)
+        public EstablishmentReadApiService(IHttpClientWrapper httpClient, ICachedLookupService cachedLookupService)
         {
             _httpClient = httpClient;
             _cachedLookupService = cachedLookupService;
         }
 
         public async Task<ServiceResultDto<bool>> CanAccess(int urn, IPrincipal principal)
-            => new ServiceResultDto<bool>((await _httpClient.GetAsync<BoolResult>($"establishment/{urn}/canaccess", principal)).GetResponse().Value);
-
+          => new ServiceResultDto<bool>((await _httpClient.GetAsync<BoolResult>($"establishment/{urn}/canaccess", principal)).GetResponse().Value);
+          
         public async Task<bool> CanEditAsync(int urn, IPrincipal principal)
             => (await _httpClient.GetAsync<BoolResult>($"establishment/{urn}/canedit", principal)).Response.Value;
 

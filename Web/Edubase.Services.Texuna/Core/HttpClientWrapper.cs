@@ -25,7 +25,7 @@ namespace Edubase.Services
     using Texuna.Core;
     using Texuna.Glimpse;
 
-    public class HttpClientWrapper
+    public class HttpClientWrapper : IHttpClientWrapper1
     {
         private readonly HttpClient _httpClient;
         private readonly JsonMediaTypeFormatter _formatter;
@@ -41,7 +41,7 @@ namespace Edubase.Services
             _formatter = formatter;
             _apiRecorderSessionItemRepository = apiRecorderSessionItemRepository;
         }
-        
+
         public HttpClientWrapper(HttpClient httpClient) : this(httpClient, null, null, null)
         {
 
@@ -160,8 +160,8 @@ namespace Edubase.Services
                 new ContentDispositionHeaderValue("form-data")
                 {
                     Name = "bulkfile", // shouldn't be necessary, but it is.
-                        FileName = Path.GetFileName(fileName) // shouldn't be necessary
-                    };
+                    FileName = Path.GetFileName(fileName) // shouldn't be necessary
+                };
 
             content.Add(fileContent);
 
@@ -326,8 +326,8 @@ namespace Edubase.Services
         private async Task<T> DeserializeResponseAsync<T>(HttpResponseMessage message, string requestUri)
         {
             AssertJsonContent(message);
-            if (typeof(T) == typeof(string)) return (T)(object)await message.Content.ReadAsStringAsync();
-            else if (typeof(T) == typeof(int?)) return (T)(object)(await message.Content.ReadAsStringAsync()).ToInteger();
+            if (typeof(T) == typeof(string)) return (T) (object) await message.Content.ReadAsStringAsync();
+            else if (typeof(T) == typeof(int?)) return (T) (object) (await message.Content.ReadAsStringAsync()).ToInteger();
             else
             {
                 var errorLogger = new FormatterErrorLogger();
@@ -376,12 +376,12 @@ namespace Edubase.Services
                 var data = new ApiTraceData
                 {
                     StartTime = startTime,
-                    DurationMillis = (int)Math.Round((DateTime.UtcNow - startTime).TotalMilliseconds, 0),
+                    DurationMillis = (int) Math.Round((DateTime.UtcNow - startTime).TotalMilliseconds, 0),
                     Method = requestMessage.Method.Method,
                     Url = requestMessage.RequestUri.ToString(),
                     Request = $"{requestMessage.Headers}{Environment.NewLine}{GetRequestJsonBody(requestMessage)}",
                     Response = $"{response?.Headers}{Environment.NewLine}{responseMessage}",
-                    ResponseCode = response != null ? (int)response.StatusCode : 0,
+                    ResponseCode = response != null ? (int) response.StatusCode : 0,
                     ClientIpAddress = context?.Request.UserHostAddress,
                     UserId = context?.User?.Identity?.GetUserId(),
                     UserName = context?.User?.Identity?.GetUserName()
@@ -422,7 +422,7 @@ namespace Edubase.Services
             }
             catch (Exception)
             {
-                
+
             }
         }
 

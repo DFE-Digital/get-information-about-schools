@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Edubase.Services.Texuna.Models
 {
-    internal class BoolResult
+    public class BoolResult
     {
         public bool Value { get; set; }
     }
