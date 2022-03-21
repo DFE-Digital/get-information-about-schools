@@ -33,14 +33,6 @@
     </div>
 </div>
 
-<div class="button-row govuk-!-margin-bottom-4">
-    @Html.ActionLink(
-                "Back",
-                "Index",
-                "Notifications",
-                null,
-                new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
-</div>
 
 @{
     var request = HttpContext.Current.Request;
@@ -62,7 +54,7 @@
     {
         Tuple.Create(nameof(NotificationBanner.Tracker), "Notification banner ID", true),
         Tuple.Create(nameof(NotificationBanner.AuditTimestamp), "Time and date", true),
-        Tuple.Create(nameof(NotificationBanner.Status), "Status", true),
+        Tuple.Create(nameof(NotificationBanner.Status), "Publish status", true),
         Tuple.Create(nameof(NotificationBanner.AuditUser), "User ID", true),
         Tuple.Create(nameof(NotificationBanner.Start), "Visibility start", false),
         Tuple.Create(nameof(NotificationBanner.End), "Visibility end", false),
@@ -168,4 +160,3 @@
         }
     </div>
 }
-
