@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Exceptions;
+using Edubase.Services.Exceptions;
 
 namespace Edubase.Services.Domain
 {

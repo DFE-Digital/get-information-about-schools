@@ -38,9 +38,16 @@ namespace Edubase.Services.Texuna.Establishments
             _cachedLookupService = cachedLookupService;
         }
 
+
+
+
         public async Task<ServiceResultDto<bool>> CanAccess(int urn, IPrincipal principal)
           => new ServiceResultDto<bool>((await _httpClient.GetAsync<BoolResult>($"establishment/{urn}/canaccess", principal)).GetResponse().Value);
-          
+
+
+
+
+
         public async Task<bool> CanEditAsync(int urn, IPrincipal principal)
             => (await _httpClient.GetAsync<BoolResult>($"establishment/{urn}/canedit", principal)).Response.Value;
 
