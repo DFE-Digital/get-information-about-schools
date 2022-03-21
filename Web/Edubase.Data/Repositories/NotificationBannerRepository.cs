@@ -47,7 +47,7 @@ namespace Edubase.Data.Repositories
             var query = Table.CreateQuery<NotificationBanner>().Where(x => x.PartitionKey == partitionKey.ToString()).AsQueryable();
             if (visibleOnly)
             {
-                query = query.Where(x => x.Visible);
+                query = query.Where(x => x.Start <= DateTime.Now && x.End >= DateTime.Now);
             }
             query = query.Take(take);
             var results = Table.ExecuteQuerySegmentedAsync(query.AsTableQuery(), skip).Result;
