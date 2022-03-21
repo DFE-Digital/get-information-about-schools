@@ -23,7 +23,39 @@
                     <li class="govuk-breadcrumbs__list-item">
                         @Html.ActionLink("Notifications", "Index", "Notifications", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
                     </li>
+
+                    @if (Model.Counter == 0)
+                    {
+                        <li class="govuk-breadcrumbs__list-item">
+                            @Html.ActionLink("History", "AuditBanners", "Notifications", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                        </li>
+                    }
+
                 </ol>
+            </div>
+        </div>
+    </div>
+}
+
+@if (ViewBag.ShowSaved != null && ViewBag.ShowSaved)
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
+                <div class="tick"></div>
+                <p aria-live="polite">
+                    Your changes have been saved.
+                    Make further changes by selecting continue or
+                    @Html.ActionLink(
+                        "go back to history",
+                        "AuditBanners",
+                        "Notifications",
+                        new { area = "" },
+                        new { @class = "govuk-link govuk-link--inverse" })
+                </p>
+                <a class="cross" href="#">
+                    <span class="govuk-visually-hidden">Dismiss notification</span>
+                </a>
             </div>
         </div>
     </div>
@@ -38,35 +70,26 @@
 
 @using (Html.BeginRouteForm(Model.Id == null ? "PostCreateBanner" : "PostEditBanner", new { Model.Id }, FormMethod.Post))
 {
-<div class="button-row govuk-!-margin-bottom-4">
-    @if (Model.Action == eNotificationBannerAction.Start)
-    {
-        if (Model.Counter == 0)
+    <div class="button-row govuk-!-margin-bottom-4">
+        @if (Model.Action == eNotificationBannerAction.Start)
         {
-            @Html.ActionLink(
-                "Back",
-                "AuditBanners",
-                "Notifications",
-                null,
-                new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
+            if (Model.Counter != 0)
+            {
+                @Html.ActionLink(
+                    "Back",
+                    "AuditBanners",
+                    "Notifications",
+                    null,
+                    new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
+            }
         }
         else
         {
-            @Html.ActionLink(
-                "Back",
-                "Banners",
-                "Notifications",
-                null,
-                new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
+            <button type="submit" class="govuk-back-link gias-back-link--button" name="@nameof(Model.GoBack)" value="true">
+                Back
+            </button>
         }
-    }
-    else
-    {
-        <button type="submit" class="govuk-back-link gias-back-link--button" name="@nameof(Model.GoBack)" value="true">
-            Back
-        </button>
-    }
-</div>
+    </div>
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
@@ -280,5 +303,3 @@
         </div>
     </div>
 }
-
-
