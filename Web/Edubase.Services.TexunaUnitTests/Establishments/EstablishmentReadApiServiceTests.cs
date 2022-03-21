@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Establishments;
+using Edubase.Services.Establishments.DisplayPolicies;
+using Edubase.Services.Establishments.EditPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Lookup;
 using Edubase.Services.Texuna;
@@ -26,7 +28,6 @@ namespace Edubase.Services.TexunaUnitTests.Establishments
 
         public EstablishmentReadApiServiceTests()
         {
-
         }
 
         [Fact]
@@ -231,6 +232,167 @@ namespace Edubase.Services.TexunaUnitTests.Establishments
             Assert.Equal(apiResponse.Response.Name, result.Name);
         }
 
+        [Fact]
+        public async Task GetChangeHistoryDownloadAsync_Returns_Correct_Filtered_Change_History_Items_For_Download()
+        {
+            //Arrange
+            var user = new UserClaimsPrincipalFake().GetUserClaimsPrincipal();
+            var apiResponse = new ApiResponse<FileDownloadDto>(true)
+            {
+                Response = new FileDownloadDto()
+                {
+                    Name = "Name1",
+                    Description = "Description1"
+                }
+            };
+
+            _mockHttpClientWrapper.Setup(x => x.PostAsync<FileDownloadDto>(It.IsAny<string>(), It.IsAny<EstablishmentChangeHistoryDownloadFilters>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => apiResponse);
+
+            //Act
+            var service = GetEstablishmentReadApiService();
+            var result = await service.GetChangeHistoryDownloadAsync(123456, new EstablishmentChangeHistoryDownloadFilters() { ApprovedBy = "Approver1" }, user);
+
+            //Assert
+            _mockHttpClientWrapper.Verify(x => x.PostAsync<FileDownloadDto>(It.IsAny<string>(), It.IsAny<EstablishmentChangeHistoryDownloadFilters>(), It.IsAny<IPrincipal>()), Times.Once());
+            Assert.Equal(apiResponse.Response.Name, result.Name);
+        }
+
+        [Fact]
+        public async Task GetGovernanceChangeHistoryAsync_Returns_Correct_Number_Of_Change_History_Items()
+        {
+            //Arrange
+            var user = new UserClaimsPrincipalFake().GetUserClaimsPrincipal();
+            var apiResponse = new ApiResponse<ApiPagedResult<EstablishmentChangeDto>>(true)
+            {
+                Response = new ApiPagedResult<EstablishmentChangeDto>()
+                {
+                    Items = new List<EstablishmentChangeDto>()
+                    {
+                        new EstablishmentChangeDto() { Urn = 12345, Id = "Id1" },
+                        new EstablishmentChangeDto() { Urn = 12346, Id = "Id2" },
+                    },
+                    Count = 2,
+                }
+            };
+
+            _mockHttpClientWrapper.Setup(x => x.GetAsync<ApiPagedResult<EstablishmentChangeDto>>(It.IsAny<string>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => apiResponse);
+
+            //Act
+            var service = GetEstablishmentReadApiService();
+            var result = await service.GetGovernanceChangeHistoryAsync(123456, 1, 1, "Urn", user);
+
+            //Assert
+            _mockHttpClientWrapper.Verify(x => x.GetAsync<ApiPagedResult<EstablishmentChangeDto>>(It.IsAny<string>(), It.IsAny<IPrincipal>()), Times.Once());
+            Assert.Equal(apiResponse.Response.Items.Count, result.Items.Count);
+        }
+
+        [Fact]
+        public async Task GetGovernanceChangeHistoryDownloadAsync_Returns_Correct_Change_History_Items_For_Download()
+        {
+            //Arrange
+            var user = new UserClaimsPrincipalFake().GetUserClaimsPrincipal();
+            var apiResponse = new ApiResponse<FileDownloadDto>(true)
+            {
+                Response = new FileDownloadDto()
+                {
+                    Name = "Name1",
+                    Description = "Description1"
+                }
+            };
+
+            _mockHttpClientWrapper.Setup(x => x.GetAsync<FileDownloadDto>(It.IsAny<string>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => apiResponse);
+
+            //Act
+            var service = GetEstablishmentReadApiService();
+            var result = await service.GetGovernanceChangeHistoryDownloadAsync(123456, DownloadType.xlsx, user);
+
+            //Assert
+            _mockHttpClientWrapper.Verify(x => x.GetAsync<FileDownloadDto>(It.IsAny<string>(), It.IsAny<IPrincipal>()), Times.Once());
+            Assert.Equal(apiResponse.Response.Name, result.Name);
+        }
+
+        [Fact]
+        public async Task GetDisplayPolicyAsync_Returns_Correct_Establishment_Response()
+        {
+            //Arrange
+            var user = new UserClaimsPrincipalFake().GetUserClaimsPrincipal();
+            var apiResponse = new ApiResponse<EstablishmentDisplayEditPolicy>(true)
+            {
+                Response = new EstablishmentDisplayEditPolicy()
+                {
+                     HeadteacherLabel = "HeadLabel1",
+                     HeadEmailAddressLabel = "HeadEmailAddress1"     
+                }
+            };
+
+            _mockHttpClientWrapper.Setup(x => x.GetAsync<EstablishmentDisplayEditPolicy>(It.IsAny<string>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => apiResponse);
+
+            //Act
+            var service = GetEstablishmentReadApiService();
+            var result = await service.GetDisplayPolicyAsync(new EstablishmentModel() { EstablishmentTypeGroupId = 4 }, user);
+
+            //Assert
+            _mockHttpClientWrapper.Verify(x => x.GetAsync<EstablishmentDisplayEditPolicy>(It.IsAny<string>(), It.IsAny<IPrincipal>()), Times.Once());
+            Assert.Equal(apiResponse.Response.HeadEmailAddressLabel, result.HeadEmailAddressLabel);
+        }
+
+        [Fact]
+        public async Task GetDownloadAsync_Returns_Correct_Download_Data()
+        {
+            //Arrange
+            var user = new UserClaimsPrincipalFake().GetUserClaimsPrincipal();
+            var apiResponse = new ApiResponse<FileDownloadDto>(true)
+            {
+                Response = new FileDownloadDto()
+                {
+                    Name = "Name1",
+                    Description = "Description1"
+                }
+            };
+
+            _mockHttpClientWrapper.Setup(x => x.GetAsync<FileDownloadDto>(It.IsAny<string>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => apiResponse);
+
+            //Act
+            var service = GetEstablishmentReadApiService();
+            var result = await service.GetDownloadAsync(123456, DownloadType.xlsx, user);
+
+            //Assert
+            _mockHttpClientWrapper.Verify(x => x.GetAsync<FileDownloadDto>(It.IsAny<string>(), It.IsAny<IPrincipal>()), Times.Once());
+            Assert.Equal(apiResponse.Response.Name, result.Name);
+        }
+
+        [Fact]
+        public async Task GetEditPolicyAsync_Returns_Correct_Establishment_Policy_Envelope()
+        {
+            //Arrange
+            var user = new UserClaimsPrincipalFake().GetUserClaimsPrincipal();
+            var apiResponse = new ApiResponse<EstablishmentEditPolicyEnvelope>(true)
+            {
+                Response = new EstablishmentEditPolicyEnvelope()
+                {
+                    ApprovalsPolicy = new EstablishmentApprovalsPolicy()
+                    {
+                        Name = new ApprovalPolicy() { ApproverName = "Approver1" }
+                    }
+                }
+            };
+
+            _mockHttpClientWrapper.Setup(x => x.GetAsync<EstablishmentEditPolicyEnvelope>(It.IsAny<string>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => apiResponse);
+
+            //Act
+            var service = GetEstablishmentReadApiService();
+            var result = await service.GetEditPolicyAsync(new EstablishmentModel() { Name = "EstablishmentName1" }, user);
+
+            //Assert
+            _mockHttpClientWrapper.Verify(x => x.GetAsync<EstablishmentEditPolicyEnvelope>(It.IsAny<string>(), It.IsAny<IPrincipal>()), Times.Once());
+            Assert.Equal(apiResponse.Response.ApprovalsPolicy.Name.ApproverName, result.ApprovalsPolicy.Name.ApproverName);
+        }
 
 
 
