@@ -74,7 +74,6 @@
   <ItemGroup>
     <Compile Include="Establishments\EstablishmentReadApiServiceTests.cs" />
     <Compile Include="Fakes\UserClaimsPrincipalFake.cs" />
-    <Compile Include="Mocks\MockHttpMessageHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

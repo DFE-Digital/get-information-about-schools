@@ -38,15 +38,8 @@ namespace Edubase.Services.Texuna.Establishments
             _cachedLookupService = cachedLookupService;
         }
 
-
-
-
         public async Task<ServiceResultDto<bool>> CanAccess(int urn, IPrincipal principal)
           => new ServiceResultDto<bool>((await _httpClient.GetAsync<BoolResult>($"establishment/{urn}/canaccess", principal)).GetResponse().Value);
-
-
-
-
 
         public async Task<bool> CanEditAsync(int urn, IPrincipal principal)
             => (await _httpClient.GetAsync<BoolResult>($"establishment/{urn}/canedit", principal)).Response.Value;
@@ -237,8 +230,6 @@ namespace Edubase.Services.Texuna.Establishments
 
             return (await _httpClient.GetAsync<List<EstablishmentSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}", principal)).GetResponse();
         }
-
-
 
         private async Task<IEnumerable<ChangeDescriptor>> DetectProprietorsChanges(EstablishmentModel originalModel, EstablishmentModel newModel)
         {
