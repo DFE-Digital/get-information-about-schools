@@ -25,7 +25,7 @@ namespace Edubase.Services
     using Texuna.Core;
     using Texuna.Glimpse;
 
-    public class HttpClientWrapper : IHttpClientWrapper1
+    public class HttpClientWrapper : IHttpClientWrapper
     {
         private readonly HttpClient _httpClient;
         private readonly JsonMediaTypeFormatter _formatter;
