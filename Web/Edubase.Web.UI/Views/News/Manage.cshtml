@@ -28,10 +28,37 @@
         <ul class="govuk-list">
             <li>
                 <h3 class="govuk-heading-s">
+                    @Html.ActionLink("Create", "CreateArticle", "News")
+                </h3>
+                <p>
+                    Create a fresh news article.
+                </p>
+            </li>
+
+            <li>
+                <h3 class="govuk-heading-s">
                     @Html.ActionLink("Preview", "Preview", "News")
                 </h3>
                 <p>
                     Preview the news page to see how it will look. This shows all articles and does not mask those which are not yet live.
+                </p>
+            </li>
+
+            <li>
+                <h3 class="govuk-heading-s">
+                    @Html.ActionLink("Amend", "Edit", "News")
+                </h3>
+                <p>
+                    Edit or Delete an existing news article.
+                </p>
+            </li>
+
+            <li>
+                <h3 class="govuk-heading-s">
+                    @Html.ActionLink("Audit", "AuditArticles", "News")
+                </h3>
+                <p>
+                    View the full change history audit of all the news articles, including all created versions.
                 </p>
             </li>
         </ul>

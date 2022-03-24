@@ -1,0 +1,59 @@
+@using System.Globalization
+@model Edubase.Web.UI.Models.News.NewsArticleViewModel
+@{
+    ViewBag.Title = "Get Information about Schools";
+    ViewBag.bodyClasses = "news-page";
+    ViewBag.SiteSection = "news";
+}
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("News", "Index", "News", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Manage", "Manage", "News", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">Delete news article</h1>
+    </div>
+</div>
+
+<div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+        <span class="govuk-warning-text__assistive">Warning</span>
+        Are you sure you want to delete the following news article?
+    </strong>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds news-blog">
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+
+        <h2 class="govuk-heading-m">
+            @Model.Title<br />
+            @if (Model.ShowDate)
+            {
+                <span class="gias-news-heading--date">@(Model.ArticleDate.ToDateTime()?.ToString("d MMMM yyyy", CultureInfo.InvariantCulture))</span>
+            }
+        </h2>
+
+        @Html.Raw(Model.Content)
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        @Html.RouteLink("Yes, delete this news article", "DeleteArticleConfirmed", new { id = Model.Id }, new { @class = "govuk-button govuk-button--warning" })
+    </div>
+</div>

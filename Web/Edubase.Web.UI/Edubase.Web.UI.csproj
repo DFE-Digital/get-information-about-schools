@@ -368,6 +368,8 @@
     <Compile Include="Helpers\RouteDto.cs" />
     <Compile Include="Models\Faq\FaqGroupsViewModel.cs" />
     <Compile Include="Models\Faq\FaqGroupViewModel.cs" />
+    <Compile Include="Models\News\NewsArticleAuditViewModel.cs" />
+    <Compile Include="Models\News\NewsArticlesAuditViewModel.cs" />
     <Compile Include="Models\News\NewsArticlesViewModel.cs" />
     <Compile Include="Models\News\NewsArticleViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsBannerAuditViewModel.cs" />
@@ -863,6 +865,10 @@
     <Content Include="Views\News\Index.cshtml" />
     <Content Include="Views\News\Article.cshtml" />
     <Content Include="Views\News\Manage.cshtml" />
+    <Content Include="Views\News\ConfirmDeleteArticle.cshtml" />
+    <Content Include="Views\News\EditArticle.cshtml" />
+    <Content Include="Views\News\AuditArticles.cshtml" />
+    <Content Include="Views\News\AuditArticle.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>

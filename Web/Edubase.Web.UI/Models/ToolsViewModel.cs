@@ -35,6 +35,7 @@ namespace Edubase.Web.UI.Models
         public bool UserCanBulkAssociateEstabs2Groups { get; internal set; }
         public bool UserCanDownloadMATClosureReport { get; internal set; }
         public bool UserCanManageNotifications { get; internal set; }
+        public bool UserCanManageNews { get; internal set; }
 
         public List<LinkAction> GetCreateActions(HtmlHelper htmlHelper)
         {
@@ -140,9 +141,15 @@ namespace Edubase.Web.UI.Models
             }
 
             retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("View establishment and group change history", "ChangeHistoryCriteria"), Description = "View establishment and group data changes." });
+
             if (UserCanManageNotifications)
             {
                 retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Manage notification banners", "Notifications"), Description = "Create a notification banner, view an existing notification banner and/or edit one or more existing notification banner messages, alert levels or scheduling. Add, edit or delete templated messages for notification banners. View the full change history audit of the notification banner messages." });
+            }
+
+            if (UserCanManageNews)
+            {
+                retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Manage news", "ManageNews"), Description = "Create a news article, preview upcoming articles and/or edit one or more articles. View the full change history audit of the news articles." });
             }
 
             return retVal;
