@@ -9,11 +9,13 @@ namespace Edubase.Web.UI.Models.News
         public IEnumerable<NewsArticle> Articles { get; }
         public int LookupYear { get; set; }
         public bool IsPreview { get; set; }
-        public NewsArticlesViewModel(IEnumerable<NewsArticle> items, int lookupYear, bool isPreview = false)
+        public bool AllowEdit { get; set; }
+        public NewsArticlesViewModel(IEnumerable<NewsArticle> items, int lookupYear, bool isPreview = false, bool allowEdit = false)
         {
             Articles = items.OrderByDescending(x => x.ArticleDate);
             LookupYear = lookupYear;
             IsPreview = isPreview;
+            AllowEdit = allowEdit;
         }
     }
 }

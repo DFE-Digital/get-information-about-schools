@@ -69,6 +69,14 @@
 
                 @Html.Raw(modelArticle.Content)
 
+                if (@Model.AllowEdit)
+                {
+                    <p>
+                        @Html.RouteLink("Edit news article", "EditArticle", new { id = @modelArticle.RowKey }, new { @class = "govuk-button govuk-button--secondary" })
+                        @Html.RouteLink("Delete news article", "DeleteArticle", new { id = @modelArticle.RowKey }, new { @class = "govuk-button govuk-button--secondary gias-banner-delete-button" })
+                    </p>
+                }
+
                 <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
             }
         }

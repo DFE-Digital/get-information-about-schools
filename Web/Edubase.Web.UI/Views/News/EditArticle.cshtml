@@ -1,0 +1,180 @@
+@using System.Globalization
+@using Edubase.Web.UI.Models.News
+@model Edubase.Web.UI.Models.News.NewsArticleViewModel
+@{
+    ViewBag.Title = "Get Information about Schools";
+    ViewBag.bodyClasses = "news-page";
+    ViewBag.SiteSection = "news";
+}
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("News", "Index", "News", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Manage", "Manage", "News", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        @Html.Partial("_ValidationSummary", ViewData.ModelState)
+        <h1 class="govuk-heading-xl">@(Model.Id == null ? "Add" : "Edit") news article</h1>
+    </div>
+</div>
+
+@using (Html.BeginRouteForm(Model.Id == null ? "PostCreateArticle" : "PostEditArticle", new { Model.Id }, FormMethod.Post))
+{
+    @Html.HiddenFor(x => x.Id)
+    @Html.HiddenFor(x => x.Action)
+
+    <div class="button-row govuk-!-margin-bottom-4">
+        @if (Model.Action == eNewsArticleAction.Start)
+        {
+            if (Model.Id == null)
+            {
+                @Html.ActionLink(
+                    "Back",
+                    "Manage",
+                    "News",
+                    null,
+                    new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
+            }
+            else
+            {
+                @Html.ActionLink(
+                    "Back",
+                    "Edit",
+                    "News",
+                    null,
+                    new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
+            }
+        }
+        else
+        {
+            <button type="submit" class="govuk-back-link gias-back-link--button" name="@nameof(Model.GoBack)" value="true">
+                Back
+            </button>
+        }
+    </div>
+
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+            @if (Model.Action == eNewsArticleAction.Start)
+            {
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <h2 class="govuk-heading-m">News article title</h2>
+                    </div>
+
+                    <div class="govuk-grid-column-full">
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Title)">
+                            @Html.ValidationMessageFor(x => x.Title, null, new { @class = "govuk-error-message" })
+                            @Html.TextBoxFor(x => x.Title, new { @class = "govuk-input" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <h2 class="govuk-heading-m">News article content</h2>
+                    </div>
+
+                    <div class="govuk-grid-column-full">
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Content)">
+                            @Html.ValidationMessageFor(x => x.Content, null, new { @class = "govuk-error-message" })
+                            @Html.TextAreaFor(x => x.Content, new { @class = "govuk-textarea entry-content", rows = "20", cols = "40" })
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <h2 class="govuk-heading-m">Schedule news visibility</h2>
+                    </div>
+
+                    <div class="govuk-grid-column-full">
+                        <p>Choose the start date and start time and the end date and end time for the notification banner to be visible on the site.</p>
+
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ArticleDate)">
+                            @Html.EditorFor(x => x.ArticleDate, "DateTimeViewModelExtended", new { title = "Article display date and time", fieldsetClassName = "edit-date-fieldset", dateHint = $"{DateTime.Now:dd MM yyyy} 14:30", dateHintAdditional = "The time will be UK local time, taking into account daylight savings" })
+                        </div>
+                    </div>
+                </div>
+
+
+                <h3 class="govuk-heading-s">Display the date with the article title</h3>
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ShowDate)">
+                    <div class="govuk-radios">
+                        @Html.ValidationMessageFor(x => x.ShowDate, null, new { @class = "govuk-error-message" })
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item">
+                                @Html.GiasRadioFor(x => x.ShowDate, true, "Yes", null, new { @class = "govuk-radios__input" })
+                            </div>
+                            <div class="govuk-radios__item">
+                                @Html.GiasRadioFor(x => x.ShowDate, false, "No", null, new { @class = "govuk-radios__input" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                @Html.HiddenFor(x => x.Title)
+                @Html.HiddenFor(x => x.Content)
+                @Html.HiddenFor(x => x.ShowDate)
+                @Html.HiddenFor(x => x.ArticleDate.Day)
+                @Html.HiddenFor(x => x.ArticleDate.Month)
+                @Html.HiddenFor(x => x.ArticleDate.Year)
+                @Html.HiddenFor(x => x.ArticleDate.Hour)
+                @Html.HiddenFor(x => x.ArticleDate.Minute)
+            }
+
+            @if (Model.Action == eNewsArticleAction.Review)
+            {
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <span class="govuk-caption-m">Check all details are correct before saving</span>
+                    </div>
+                </div>
+
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full news-blog">
+                        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+
+                        <h2 class="govuk-heading-m">
+                            @Model.Title<br />
+                            @if (Model.ShowDate)
+                            {
+                                <span class="gias-news-heading--date">@(Model.ArticleDate.ToDateTime()?.ToString("d MMMM yyyy", CultureInfo.InvariantCulture))</span>
+                            }
+                        </h2>
+
+                        @Html.Raw(Model.Content)
+
+                        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+                    </div>
+                </div>
+            }
+
+
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <div class="button-row govuk-!-padding-top-6">
+                        <button type="submit" class="govuk-button">@(Model.Action == eNewsArticleAction.Review ? "Accept and save" : "Continue")</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
