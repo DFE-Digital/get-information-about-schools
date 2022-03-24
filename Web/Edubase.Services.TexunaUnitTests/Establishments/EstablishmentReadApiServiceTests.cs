@@ -35,7 +35,7 @@ namespace Edubase.Services.TexunaUnitTests.Establishments
 
             //Act
             var service = GetEstablishmentReadApiService();
-            var result = await service.CanAccess(It.IsAny<int>(), null);
+            var result = await service.CanAccess(123456, null);
 
             //Assert
             _mockHttpClientWrapper.Verify(x => x.GetAsync<BoolResult>(It.IsAny<string>(), It.IsAny<IPrincipal>()), Times.Once());
@@ -53,7 +53,7 @@ namespace Edubase.Services.TexunaUnitTests.Establishments
 
             //Act
             var service = GetEstablishmentReadApiService();
-            var result = await service.CanAccess(It.IsAny<int>(), It.IsAny<IPrincipal>());
+            var result = await service.CanAccess(123456, null);
 
             //Assert
             _mockHttpClientWrapper.Verify(x => x.GetAsync<BoolResult>(It.IsAny<string>(), It.IsAny<IPrincipal>()), Times.Once());
@@ -88,7 +88,7 @@ namespace Edubase.Services.TexunaUnitTests.Establishments
 
             //Act
             var service = GetEstablishmentReadApiService();
-            var result = await service.CanEditAsync(It.IsAny<int>(), It.IsAny<IPrincipal>());
+            var result = await service.CanEditAsync(123456, null);
 
             //Assert
             _mockHttpClientWrapper.Verify(x => x.GetAsync<BoolResult>(It.IsAny<string>(), It.IsAny<IPrincipal>()), Times.Once());
