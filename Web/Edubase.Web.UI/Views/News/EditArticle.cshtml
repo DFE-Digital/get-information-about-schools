@@ -98,29 +98,34 @@
 
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-full">
-                        <h2 class="govuk-heading-m">Schedule news visibility</h2>
+                        <h2 class="govuk-heading-m">Schedule visibility</h2>
                     </div>
 
                     <div class="govuk-grid-column-full">
-                        <p>Choose the start date and start time and the end date and end time for the notification banner to be visible on the site.</p>
-
                         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ArticleDate)">
-                            @Html.EditorFor(x => x.ArticleDate, "DateTimeViewModelExtended", new { title = "Article display date and time", fieldsetClassName = "edit-date-fieldset", dateHint = $"{DateTime.Now:dd MM yyyy} 14:30", dateHintAdditional = "The time will be UK local time, taking into account daylight savings" })
+                            @Html.EditorFor(x => x.ArticleDate, "DateTimeViewModelExtended", new { title = "Article display date and time", fieldsetClassName = "edit-date-fieldset", dateHint = $"{DateTime.Now:dd MM yyyy} 18:00", dateHintAdditional = "The time will be UK local time, taking into account daylight savings" })
                         </div>
                     </div>
                 </div>
 
 
-                <h3 class="govuk-heading-s">Display the date with the article title</h3>
-                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ShowDate)">
-                    <div class="govuk-radios">
-                        @Html.ValidationMessageFor(x => x.ShowDate, null, new { @class = "govuk-error-message" })
-                        <div class="govuk-radios">
-                            <div class="govuk-radios__item">
-                                @Html.GiasRadioFor(x => x.ShowDate, true, "Yes", null, new { @class = "govuk-radios__input" })
-                            </div>
-                            <div class="govuk-radios__item">
-                                @Html.GiasRadioFor(x => x.ShowDate, false, "No", null, new { @class = "govuk-radios__input" })
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <h2 class="govuk-heading-m">Display the date with the article title</h2>
+                    </div>
+
+                    <div class="govuk-grid-column-full">
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ShowDate)">
+                            <div class="govuk-radios">
+                                @Html.ValidationMessageFor(x => x.ShowDate, null, new { @class = "govuk-error-message" })
+                                <div class="govuk-radios">
+                                    <div class="govuk-radios__item">
+                                        @Html.GiasRadioFor(x => x.ShowDate, true, "Yes", null, new { @class = "govuk-radios__input" })
+                                    </div>
+                                    <div class="govuk-radios__item">
+                                        @Html.GiasRadioFor(x => x.ShowDate, false, "No", null, new { @class = "govuk-radios__input" })
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
