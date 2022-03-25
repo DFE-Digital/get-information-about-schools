@@ -1,4 +1,5 @@
 @using System.Globalization
+@using Edubase.Data.Entity
 @model Edubase.Web.UI.Models.News.NewsArticlesViewModel
 @{
     ViewBag.Title = "Get Information about Schools";
@@ -13,9 +14,26 @@
                 <ol class="govuk-breadcrumbs__list">
                     <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
                     <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("News", "Index", "News", new { area = "", year = @Model.LookupYear }, new { @class = "govuk-breadcrumbs__link" })</li>
+
+                    @if (Model.AuditRoute != null)
+                    {
+                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Manage", "Manage", "News", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    }
                 </ol>
             </div>
         </div>
+    </div>
+}
+
+@if (Model.AuditRoute != null)
+{
+    <div class="button-row govuk-!-margin-bottom-4">
+        @Html.ActionLink(
+            "Back",
+            Model.AuditRoute,
+            "News",
+            null,
+            new { id = Model.Articles.First().Tracker })
     </div>
 }
 
