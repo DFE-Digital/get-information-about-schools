@@ -56,7 +56,7 @@ namespace Edubase.Web.UI.Models.News
                         break;
 
                     default:
-                        items = items.OrderByDescending(x => x.AuditTimestamp);
+                        items = items.OrderByDescending(x => x.ArticleDate);
                         break;
                 }
             }
@@ -97,7 +97,7 @@ namespace Edubase.Web.UI.Models.News
                         break;
                         
                     default:
-                        items = items.OrderBy(x => x.AuditTimestamp);
+                        items = items.OrderBy(x => x.ArticleDate);
                         break;
                 }
             }

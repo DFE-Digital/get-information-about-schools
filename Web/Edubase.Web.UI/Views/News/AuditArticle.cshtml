@@ -1,6 +1,7 @@
 @using System.Globalization
 @using System.Web.Mvc.Html
 @using Edubase.Data.Entity
+@using Edubase.Web.UI.Controllers
 @using MoreLinq
 @model Edubase.Web.UI.Models.News.NewsArticleAuditViewModel
 @{
@@ -30,6 +31,15 @@
     </div>
 </div>
 
+<div class="button-row govuk-!-margin-bottom-4">
+    @Html.ActionLink(
+        "Back",
+        "AuditArticles",
+        "News",
+        null,
+        null)
+</div>
+
 @{
     var request = HttpContext.Current.Request;
     var sortDir = "desc";
@@ -55,7 +65,7 @@
         Tuple.Create(nameof(NewsArticle.Title), "Title", false),
         Tuple.Create(nameof(NewsArticle.ArticleDate), "Article date", true),
         Tuple.Create(nameof(NewsArticle.ShowDate), "Show date", true),
-        Tuple.Create(nameof(NewsArticle.Content), "Content", false)
+        Tuple.Create(nameof(NewsArticle.Content), "Article", false)
     };
 
 <div id="audit-history">
@@ -124,7 +134,14 @@
                         <td data-label="Title" class="govuk-table__cell">@article.Title</td>
                         <td data-label="Article date" class="govuk-table__cell">@article.ArticleDate.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower() <br /> @article.ArticleDate.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</td>
                         <td data-label="Show date" class="govuk-table__cell">@article.ShowDate</td>
-                        <td data-label="Content" class="govuk-table__cell">@article.Content</td>
+                        <td data-label="Content" class="govuk-table__cell">
+                            @Html.ActionLink(
+                                "View article content",
+                                article.PartitionKey == eNewsArticlePartition.Current.ToString() ? "Article" : "ArticleAudit",
+                                "News",
+                                new { id = article.RowKey, auditRoute = nameof(NewsController.AuditArticle)},
+                                null)
+                        </td>
                     </tr>
                 }
             </tbody>
