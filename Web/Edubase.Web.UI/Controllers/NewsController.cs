@@ -33,13 +33,23 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [Route("Article/{id}", Name = "Article"), HttpGet]
-        public async Task<ActionResult> Article(string id)
+        public async Task<ActionResult> Article(string id, string auditRoute)
         {
             var item = await _newsRepository.GetAsync(id);
             if (item == null) return HttpNotFound();
 
-            var model = new NewsArticlesViewModel(new List<NewsArticle> { item }, item.ArticleDate.Year);
+            var model = new NewsArticlesViewModel(new List<NewsArticle> { item }, item.ArticleDate.Year, false, false, auditRoute);
             return View(model);
+        }
+
+        [Route("Article/Audit/{id}", Name = "ArticleAudit"), HttpGet]
+        public async Task<ActionResult> ArticleAudit(string id, string auditRoute = nameof(AuditArticle))
+        {
+            var item = await _newsRepository.GetAsync(id, eNewsArticlePartition.Archive);
+            if (item == null) return HttpNotFound();
+
+            var model = new NewsArticlesViewModel(new List<NewsArticle> { item }, item.ArticleDate.Year, false, false, auditRoute);
+            return View(nameof(Article), model);
         }
 
         [Route("Manage", Name = "ManageNews"), EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
