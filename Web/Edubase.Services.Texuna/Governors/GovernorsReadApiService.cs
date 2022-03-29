@@ -13,11 +13,11 @@ namespace Edubase.Services.Texuna.Governors
 {
     public class GovernorsReadApiService : IGovernorsReadService
     {
-        private readonly HttpClientWrapper _httpClient;
-        private readonly ApiClientWrapper _apiClient;
+        private readonly IHttpClientWrapper _httpClient;
+        private readonly IApiClientWrapper _apiClient;
         private readonly IEstablishmentReadService _establishmentReadService;
 
-        public GovernorsReadApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient, IEstablishmentReadService establishmentReadService)
+        public GovernorsReadApiService(IHttpClientWrapper httpClient, IApiClientWrapper apiClient, IEstablishmentReadService establishmentReadService)
         {
             _httpClient = httpClient;
             _apiClient = apiClient;

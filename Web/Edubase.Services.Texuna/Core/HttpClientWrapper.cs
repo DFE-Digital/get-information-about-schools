@@ -7,7 +7,7 @@ namespace Edubase.Services
     using Texuna.Core;
     using Autofac.Features.AttributeFilters;
 
-    public class HttpClientWrapper : ClientWrapperBase
+    public class HttpClientWrapper : ClientWrapperBase, IHttpClientWrapper
     {
         public HttpClientWrapper([KeyFilter(nameof(HttpClientWrapper))] HttpClient httpClient, JsonMediaTypeFormatter formatter, IClientStorage clientStorage, ApiRecorderSessionItemRepository apiRecorderSessionItemRepository)
             : base(httpClient, formatter, clientStorage, apiRecorderSessionItemRepository)

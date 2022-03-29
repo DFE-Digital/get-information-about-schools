@@ -9,10 +9,10 @@ namespace Edubase.Services.Texuna.Approvals
 {
     public class ApprovalService : IApprovalService
     {
-        private readonly HttpClientWrapper _httpClient;
-        private readonly ApiClientWrapper _apiClient;
+        private readonly IHttpClientWrapper _httpClient;
+        private readonly IApiClientWrapper _apiClient;
         
-        public ApprovalService(HttpClientWrapper httpClient, ApiClientWrapper apiClient)
+        public ApprovalService(IHttpClientWrapper httpClient, IApiClientWrapper apiClient)
         {
             _httpClient = httpClient;
             _apiClient = apiClient;

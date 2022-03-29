@@ -1,29 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Formatting;
-using System.Net.Http.Headers;
-using System.Security.Principal;
-using System.Threading.Tasks;
-using System.Web;
-using Edubase.Common;
-using Edubase.Common.IO;
-using Edubase.Data.Repositories;
-using Edubase.Services.Core;
-using Edubase.Services.Domain;
-using Edubase.Services.Exceptions;
-using Edubase.Services.Texuna.Glimpse;
-using Microsoft.AspNet.Identity;
-using Newtonsoft.Json;
-
-namespace Edubase.Services.Texuna.Core
+namespace Edubase.Services
 {
-    public class ClientWrapperBase : IClientWrapperBase
+    using Core;
+    using Data.Repositories;
+    using System.Net.Http;
+    using System.Net.Http.Formatting;
+    using Texuna.Core;
+    using Autofac.Features.AttributeFilters;
+
+<<<<<<< HEAD
+    public class HttpClientWrapper : ClientWrapperBase
+    {
+        public HttpClientWrapper([KeyFilter(nameof(HttpClientWrapper))] HttpClient httpClient, JsonMediaTypeFormatter formatter, IClientStorage clientStorage, ApiRecorderSessionItemRepository apiRecorderSessionItemRepository)
+            : base(httpClient, formatter, clientStorage, apiRecorderSessionItemRepository)
+        {
+        }
+=======
+    public class HttpClientWrapper : IHttpClientWrapper
     {
         private readonly HttpClient _httpClient;
         private readonly JsonMediaTypeFormatter _formatter;
@@ -32,12 +24,27 @@ namespace Edubase.Services.Texuna.Core
         private const string REQ_BODY_JSON_PAYLOAD = "EdubaseRequestBodyJsonPayload";
         private readonly IClientStorage _clientStorage;
 
-        public ClientWrapperBase(HttpClient httpClient, JsonMediaTypeFormatter formatter, IClientStorage clientStorage, ApiRecorderSessionItemRepository apiRecorderSessionItemRepository)
+        public HttpClientWrapper(HttpClient httpClient, JsonMediaTypeFormatter formatter, IClientStorage clientStorage, ApiRecorderSessionItemRepository apiRecorderSessionItemRepository)
         {
             _httpClient = httpClient;
             _clientStorage = clientStorage;
             _formatter = formatter;
             _apiRecorderSessionItemRepository = apiRecorderSessionItemRepository;
+        }
+
+        public HttpClientWrapper(HttpClient httpClient) : this(httpClient, null, null, null)
+        {
+
+        }
+
+        public HttpClientWrapper(HttpClient httpClient, JsonMediaTypeFormatter formatter) : this(httpClient, formatter, null, null)
+        {
+
+        }
+
+        public HttpClientWrapper(HttpClient httpClient, JsonMediaTypeFormatter formatter, IClientStorage clientStorage) : this(httpClient, formatter, clientStorage, null)
+        {
+
         }
 
         public async Task<ApiResponse<TResponse>> GetAsync<TResponse>(string uri, IPrincipal principal) => await GetAsync<TResponse>(uri, principal, true);
@@ -450,5 +457,6 @@ namespace Edubase.Services.Texuna.Core
         }
 
         #endregion
+>>>>>>> feature/51806-EstablishmentReadApiService-Unit-Tests
     }
 }

@@ -7,10 +7,10 @@ namespace Edubase.Services.Texuna.Security
 {
     public class SecurityApiService : ISecurityService
     {
-        private readonly HttpClientWrapper _httpClient;
-        private readonly ApiClientWrapper _apiClient;
+        private readonly IHttpClientWrapper _httpClient;
+        private readonly IApiClientWrapper _apiClient;
 
-        public SecurityApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient)
+        public SecurityApiService(IHttpClientWrapper httpClient, IApiClientWrapper apiClient)
         {
             _httpClient = httpClient;
             _apiClient = apiClient;

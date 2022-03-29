@@ -18,6 +18,7 @@ namespace Edubase.Services.TexunaUnitTests.Establishments
     public class EstablishmentReadApiServiceTests
     {
         private readonly Mock<IHttpClientWrapper> _mockHttpClientWrapper = new Mock<IHttpClientWrapper>();
+        private readonly Mock<IApiClientWrapper> _mockApiClientWrapper = new Mock<IApiClientWrapper>();
         private readonly Mock<ICachedLookupService> _mockCachedLookupService = new Mock<ICachedLookupService>();
 
         public EstablishmentReadApiServiceTests()
@@ -707,7 +708,7 @@ namespace Edubase.Services.TexunaUnitTests.Establishments
        
         private EstablishmentReadApiService GetEstablishmentReadApiService()
         {
-            return new EstablishmentReadApiService(_mockHttpClientWrapper.Object, _mockCachedLookupService.Object);
+            return new EstablishmentReadApiService(_mockHttpClientWrapper.Object, _mockApiClientWrapper.Object, _mockCachedLookupService.Object);
         }
 
     }

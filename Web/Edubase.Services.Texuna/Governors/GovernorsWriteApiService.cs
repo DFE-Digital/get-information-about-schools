@@ -9,10 +9,10 @@ namespace Edubase.Services.Texuna.Governors
 {
     public class GovernorsWriteApiService : IGovernorsWriteService
     {
-        private readonly HttpClientWrapper _httpClient;
-        private readonly ApiClientWrapper _apiClient;
+        private readonly IHttpClientWrapper _httpClient;
+        private readonly IApiClientWrapper _apiClient;
         
-        public GovernorsWriteApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient)
+        public GovernorsWriteApiService(IHttpClientWrapper httpClient, IApiClientWrapper apiClient)
         {
             _httpClient = httpClient;
             _apiClient = apiClient;

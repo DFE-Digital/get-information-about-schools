@@ -10,10 +10,10 @@ namespace Edubase.Services.Texuna.Governors
 {
     public class GovernorDownloadApiService : IGovernorDownloadService
     {
-        private readonly HttpClientWrapper _httpClient;
-        private readonly ApiClientWrapper _apiClient;
+        private readonly IHttpClientWrapper _httpClient;
+        private readonly IApiClientWrapper _apiClient;
         
-        public GovernorDownloadApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient)
+        public GovernorDownloadApiService(IHttpClientWrapper httpClient, IApiClientWrapper apiClient)
         {
             _httpClient = httpClient;
             _apiClient = apiClient;

@@ -13,10 +13,10 @@ namespace Edubase.Services.Texuna.Downloads
 {
     public class DownloadsApiService : IDownloadsService
     {
-        private readonly HttpClientWrapper _httpClient;
-        private readonly ApiClientWrapper _apiClient;
+        private readonly IHttpClientWrapper _httpClient;
+        private readonly IApiClientWrapper _apiClient;
         
-        public DownloadsApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient)
+        public DownloadsApiService(IHttpClientWrapper httpClient, IApiClientWrapper apiClient)
         {
             _httpClient = httpClient;
             _apiClient = apiClient;

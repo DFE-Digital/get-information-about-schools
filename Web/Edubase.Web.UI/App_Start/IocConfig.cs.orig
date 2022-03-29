@@ -135,11 +135,17 @@ namespace Edubase.Web.UI
 
             builder.RegisterInstance(CreateJsonMediaTypeFormatter()).SingleInstance().AsSelf();
 
+<<<<<<< HEAD
             builder.RegisterInstance(CreateHttpClient()).SingleInstance().Named<HttpClient>(nameof(HttpClientWrapper));
-            builder.RegisterType<HttpClientWrapper>().As<IHttpClientWrapper>().WithAttributeFiltering();
+            builder.RegisterType<HttpClientWrapper>().AsSelf().WithAttributeFiltering();
 
             builder.RegisterInstance(CreateApiClient()).SingleInstance().Named<HttpClient>(nameof(ApiClientWrapper));
-            builder.RegisterType<ApiClientWrapper>().As<IApiClientWrapper>().WithAttributeFiltering();
+            builder.RegisterType<ApiClientWrapper>().AsSelf().WithAttributeFiltering();
+=======
+            builder.RegisterInstance(CreateHttpClient()).SingleInstance().AsSelf();
+            builder.RegisterType<HttpClientWrapper>().AsSelf();
+            builder.RegisterType<HttpClientWrapper>().As<IHttpClientWrapper>();
+>>>>>>> feature/51806-EstablishmentReadApiService-Unit-Tests
 
             builder.RegisterType<GovernorDownloadApiService>().As<IGovernorDownloadService>();
             builder.RegisterType<GovernorsReadApiService>().As<IGovernorsReadService>();

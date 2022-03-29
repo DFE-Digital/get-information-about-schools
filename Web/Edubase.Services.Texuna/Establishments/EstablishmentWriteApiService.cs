@@ -16,10 +16,10 @@ namespace Edubase.Services.Texuna.Establishments
     public class EstablishmentWriteApiService : IEstablishmentWriteService
     {
         private readonly IEstablishmentReadService _establishmentReadService;
-        private readonly HttpClientWrapper _httpClient;
-        private readonly ApiClientWrapper _apiClient;
+        private readonly IHttpClientWrapper _httpClient;
+        private readonly IApiClientWrapper _apiClient;
         
-        public EstablishmentWriteApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient, IEstablishmentReadService establishmentReadService)
+        public EstablishmentWriteApiService(IHttpClientWrapper httpClient, IApiClientWrapper apiClient, IEstablishmentReadService establishmentReadService)
         {
             _httpClient = httpClient;
             _apiClient = apiClient;
