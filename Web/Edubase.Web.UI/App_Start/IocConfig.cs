@@ -138,6 +138,7 @@ namespace Edubase.Web.UI
             builder.RegisterInstance(CreateHttpClient()).SingleInstance().Named<HttpClient>(nameof(HttpClientWrapper));
             builder.RegisterType<HttpClientWrapper>().AsSelf().WithAttributeFiltering();
 
+            builder.RegisterType<HttpClientWrapper>().As<IHttpClientWrapper>();
             builder.RegisterInstance(CreateApiClient()).SingleInstance().Named<HttpClient>(nameof(ApiClientWrapper));
             builder.RegisterType<ApiClientWrapper>().AsSelf().WithAttributeFiltering();
 

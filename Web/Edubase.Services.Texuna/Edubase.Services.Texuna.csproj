@@ -97,6 +97,7 @@
     <Compile Include="Core\FormatterErrorLogger.cs" />
     <Compile Include="Core\HttpClientWrapper.cs" />
     <Compile Include="Core\ClientWrapperBase.cs" />
+    <Compile Include="Core\IHttpClientWrapper.cs" />
     <Compile Include="Downloads\DownloadsApiService.cs" />
     <Compile Include="Establishments\EstablishmentDownloadApiService.cs" />
     <Compile Include="Establishments\EstablishmentReadApiService.cs" />

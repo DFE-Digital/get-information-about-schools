@@ -30,7 +30,7 @@ namespace Edubase.Services.Texuna.Establishments
         private const string ApiSuggestPath = "suggest/establishment";
 
         private readonly ICachedLookupService _cachedLookupService;
-        private readonly HttpClientWrapper _httpClient;
+        private readonly IHttpClientWrapper _httpClient;
         private readonly ApiClientWrapper _apiClient;
         
         public EstablishmentReadApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient, ICachedLookupService cachedLookupService)
@@ -41,7 +41,7 @@ namespace Edubase.Services.Texuna.Establishments
         }
 
         public async Task<ServiceResultDto<bool>> CanAccess(int urn, IPrincipal principal)
-            => new ServiceResultDto<bool>((await _httpClient.GetAsync<BoolResult>($"establishment/{urn}/canaccess", principal)).GetResponse().Value);
+          => new ServiceResultDto<bool>((await _httpClient.GetAsync<BoolResult>($"establishment/{urn}/canaccess", principal)).GetResponse().Value);
 
         public async Task<bool> CanEditAsync(int urn, IPrincipal principal)
             => (await _httpClient.GetAsync<BoolResult>($"establishment/{urn}/canedit", principal)).Response.Value;
@@ -203,8 +203,6 @@ namespace Edubase.Services.Texuna.Establishments
                     OldValue = change.OldValue.Clean(),
                     Tag = change.Tag,
                     RequiresApproval = (change.Tag == "additionaladdress" && approvalsPolicy.AdditionalAddresses.RequiresApproval) ||
-                                       //(change.Tag == "proprietors" && approvalsPolicy.IEBTDetail.Proprietors.RequiresApproval) ||
-                                       //(change.Name.Contains(nameof(approvalsPolicy.IEBTDetail.ChairOfProprietor)) && approvalsPolicy.IEBTDetail.ChairOfProprietor.RequiresApproval) ||
                                        approvalFields.Contains(change.Name, StringComparer.OrdinalIgnoreCase),
                     ApproverName = approvalsPolicy.GetApproverName(change.Name)
                 });
@@ -232,8 +230,6 @@ namespace Edubase.Services.Texuna.Establishments
 
             return (await _httpClient.GetAsync<List<EstablishmentSuggestionItem>>($"{ApiSuggestPath}?q={text}&take={take}", principal)).GetResponse();
         }
-
-
 
         private async Task<IEnumerable<ChangeDescriptor>> DetectProprietorsChanges(EstablishmentModel originalModel, EstablishmentModel newModel)
         {
