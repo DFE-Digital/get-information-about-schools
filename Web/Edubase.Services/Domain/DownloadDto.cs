@@ -1,4 +1,4 @@
-﻿namespace Edubase.Services.Domain
+namespace Edubase.Services.Domain
 {
     public enum DownloadType
     {

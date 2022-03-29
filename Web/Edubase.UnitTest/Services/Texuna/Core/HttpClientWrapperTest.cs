@@ -1,4 +1,4 @@
-﻿using Edubase.Services;
+using Edubase.Services;
 using Edubase.Services.Core;
 using Edubase.Services.Exceptions;
 using Edubase.UnitTest.Mocks;
