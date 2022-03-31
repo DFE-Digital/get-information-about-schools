@@ -28,7 +28,7 @@
     </div>
 </div>
 
-@using (Html.BeginRouteForm(Model.Id == null ? "PostCreateArticle" : "PostEditArticle", new { Model.Id }, FormMethod.Post))
+@using (Html.BeginRouteForm(Model.Id == null ? "PostCreateArticle" : "PostEditArticle", new { Model.Id }, FormMethod.Post, new { id = "newsForm" }))
 {
     @Html.HiddenFor(x => x.Id)
     @Html.HiddenFor(x => x.Action)
@@ -175,11 +175,69 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
                     <div class="button-row govuk-!-padding-top-6">
-                        <button type="submit" class="govuk-button">@(Model.Action == eNewsArticleAction.Review ? "Accept and save" : "Continue")</button>
+                        <button type="submit" id="submit" class="govuk-button">@(Model.Action == eNewsArticleAction.Review ? "Accept and save" : "Continue")</button>
                     </div>
                 </div>
             </div>
 
         </div>
     </div>
+}
+
+@section ViewScripts
+{
+    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+    <script src="https://unpkg.com/turndown/dist/turndown.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script nonce="@Html.ScriptNonce()">
+        if ("@(Model.Action == eNewsArticleAction.Start)" === "True") {
+
+            // nasty hack, but when editing existing HTML, we need to convert the HTML back into markdown for easyMDE to be able to read
+            const turndownService = new TurndownService();
+            document.getElementById('Content').value = turndownService.turndown(document.getElementById('Content').value);
+
+            // the rest of the code is then setting up the easyMDE component, and getting it to save the HTML back into the textarea when form submits
+            const easyMDE = new EasyMDE({
+                element: document.getElementById('Content'),
+                hideIcons: ["heading", "code", "quote", "image", "guide"],
+                showIcons: ["table"],
+                parsingConfig: {
+                    strikethrough: false,
+                    code: false,
+                    quote: false,
+                    image: false,
+                    comment: false
+                },
+                previewRender: (plainText) => customMarkdownParser(plainText)
+            });
+
+            // if we want to get the bullets to look correct on the preview toggle, we need to add a custom renderer to modify that
+            var customMarkdownParser = function (text) {
+                var renderer = new marked.Renderer();
+                var listRenderer = renderer.list;
+                renderer.list = (body, ordered, start) => {
+                    var html = listRenderer.call(renderer, body, ordered, start);
+                    return html.replace("<ul>","<ul class=\"govuk-list govuk-list--bullet\">");
+                };
+                var returned = marked.parse(text, { renderer: renderer });
+                return returned;
+            }
+
+            // this can probably be done in the main easyMDE renderconfig using similar custom parser above
+            function sanitisePreview() {
+                var fullHtml = easyMDE.markdown(easyMDE.value());
+                fullHtml = fullHtml.replace("<head></head><body>", "");
+                fullHtml = fullHtml.replace("</body>", "");
+                fullHtml = fullHtml.replace("<ul>", "<ul class=\"govuk-list govuk-list--bullet\">");
+                return fullHtml;
+            }
+
+            // finally, when the form is submitted, we want to convert the markdown text back to clean HTML in the textarea, to be saved back into the database.
+            document.getElementById('newsForm').onsubmit = function () {
+                document.getElementById('Content').value = sanitisePreview();
+            }
+        }
+    </script>
 }
