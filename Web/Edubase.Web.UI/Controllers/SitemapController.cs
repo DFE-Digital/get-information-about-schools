@@ -176,7 +176,7 @@ namespace Edubase.Web.UI.Controllers
                 nodes.Add(BuildNode("Index", "Search", new { SelectedTab = tab }, null, 1, SitemapFrequency.Yearly));
             }
 
-            nodes.Add(BuildNode("News", "Home", null, null, 0.9, SitemapFrequency.Weekly));
+            nodes.Add(BuildNode("Index", "News", null, null, 0.9, SitemapFrequency.Weekly));
             nodes.Add(BuildNode("Help", "Home", null, null, 0.5, SitemapFrequency.Yearly));
             nodes.Add(BuildNode("Index", "Faq", null, null, 0.6));
             nodes.Add(BuildNode("Cookies", "Home"));
