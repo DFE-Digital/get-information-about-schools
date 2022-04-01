@@ -136,6 +136,7 @@ namespace Edubase.Web.UI
 
             builder.RegisterInstance(CreateHttpClient()).SingleInstance().AsSelf();
             builder.RegisterType<HttpClientWrapper>().AsSelf();
+            builder.RegisterType<HttpClientWrapper>().As<IHttpClientWrapper>();
 
             builder.RegisterType<GovernorDownloadApiService>().As<IGovernorDownloadService>();
             builder.RegisterType<GovernorsReadApiService>().As<IGovernorsReadService>();

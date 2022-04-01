@@ -1,0 +1,165 @@
+@using System.Globalization
+@using System.Web.Mvc.Html
+@using Edubase.Data.Entity
+@using Edubase.Web.UI.Controllers
+@model Edubase.Web.UI.Models.News.NewsArticlesAuditViewModel
+@{
+    ViewBag.Title = "Get Information about Schools";
+    ViewBag.bodyClasses = "news-page";
+    ViewBag.SiteSection = "news";
+}
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("News", "Index", "News", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Manage", "Manage", "News", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">News articles history</h1>
+    </div>
+</div>
+
+@{
+    var request = HttpContext.Current.Request;
+    var sortDir = "desc";
+    var sortDirText = "a descending order";
+    var sortField = nameof(NewsArticle.ArticleDate);
+
+    if (request.QueryString["sortby"] != null)
+    {
+        sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
+        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
+        sortDirText = (request.QueryString["sortby"] ?? "").Contains("asc") ? "an ascending order" : "a descending order";
+    }
+
+    var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";
+    var unsortedDescription = ". Click to sort data by this column.";
+
+    var tableColumns = new List<Tuple<string, string, bool>>
+{
+        Tuple.Create(nameof(NewsArticle.Tracker), "News article ID", true),
+        Tuple.Create(nameof(NewsArticle.AuditTimestamp), "Time and date", true),
+        Tuple.Create(nameof(NewsArticle.Status), "Status", true),
+        Tuple.Create(nameof(NewsArticle.AuditUser), "User ID", true),
+        Tuple.Create(nameof(NewsArticle.Title), "Title", false),
+        Tuple.Create(nameof(NewsArticle.ArticleDate), "Article date", true),
+        Tuple.Create(nameof(NewsArticle.ShowDate), "Show date", true),
+        Tuple.Create(nameof(NewsArticle.Content), "Article", false),
+        Tuple.Create("", "History", false),
+        Tuple.Create("", "Edit", false)
+    };
+
+<div id="audit-history">
+    @if (!Model.GroupedArticles.Any())
+    {
+        <p class="govuk-body">There are no audit records available at the moment</p>
+    }
+    else
+    {
+        var articleTracker = string.Empty;
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <p class="govuk-body-s">Showing 1-@Model.GroupedArticles.Count() of @Model.GroupedArticles.Count()</p>
+            </div>
+        </div>
+
+        <table class="approval-changes govuk-table gias-table sortable-table">
+            <caption class="govuk-visually-hidden">News audit</caption>
+            <thead class="govuk-table__head">
+                <tr class="gocuk-table__row">
+                    @foreach (var tableColumn in tableColumns)
+                    {
+                        <th scope="col" class="govuk-table__header @Html.Conditional(tableColumn.Item3 == false, "govuk-!-font-weight-regular")">
+                            @if (tableColumn.Item3)
+                            {
+                                <a href="@Url.SortUrl(tableColumn.Item1)"
+                                   class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
+                                   aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">@tableColumn.Item2</a>
+                            }
+                            else
+                            {
+                                @tableColumn.Item2
+                            }
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var article in Model.GroupedArticles)
+                {
+                    var articleEvent = (eNewsArticleEvent)Enum.Parse(typeof(eNewsArticleEvent), article.AuditEvent, true);
+                    <tr class="govuk-table__row">
+                        <td data-label="News article ID" class="govuk-table__cell">@article.Tracker</td>
+                        <td data-label="Time and date" class="govuk-table__cell">@(article.Timestamp.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower()) <br /> @article.Timestamp.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</td>
+                        <td data-label="Status" class="govuk-table__cell">
+                            @if (articleEvent == eNewsArticleEvent.Delete)
+                            {
+                                <span>@articleEvent.EnumDisplayNameFor()</span>
+                            }
+                            else
+                            {
+                                <span>@article.Status.EnumDisplayNameFor()</span>
+                            }
+                        </td>
+                        <td data-label="User ID" class="govuk-table__cell">@article.AuditUser</td>
+                        <td data-label="Title" class="govuk-table__cell">@article.Title</td>
+                        <td data-label="Article date" class="govuk-table__cell">@article.ArticleDate.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower() <br /> @article.ArticleDate.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</td>
+                        <td data-label="Show date" class="govuk-table__cell">@article.ShowDate</td>
+                        <td data-label="Content" class="govuk-table__cell">
+                            @Html.ActionLink(
+                                "View article content",
+                                article.PartitionKey == eNewsArticlePartition.Current.ToString() ? "Article" : "ArticleAudit",
+                                "News",
+                                new { id = article.RowKey, auditRoute = nameof(NewsController.AuditArticles) },
+                                null)
+                        </td>
+                        <td data-label="History" class="govuk-table__cell">
+                            @if (article.Version > 1)
+                            {
+                                @Html.ActionLink(
+                                    "View",
+                                    "AuditArticle",
+                                    "News",
+                                    new { id = article.Tracker },
+                                    null)
+                            }
+                            else
+                            {
+                                <span>N/A</span>
+                            }
+                        </td>
+                        <td data-label="Edit" class="govuk-table__cell">
+                            @if (articleEvent == eNewsArticleEvent.Delete)
+                            {
+                                <span>N/A</span>
+                            }
+                            else
+                            {
+                                @Html.ActionLink(
+                                    "Edit",
+                                    "EditArticleAsync",
+                                    "News",
+                                    new { id = article.RowKey },
+                                    null)
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @helpers.BackToTopLink()
+    }
+</div>
+}
+

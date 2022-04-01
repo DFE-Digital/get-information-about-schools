@@ -42,17 +42,25 @@ namespace Edubase.Data.Repositories
 
         public async Task CreateAsync(IEnumerable<NotificationBanner> entities) => await CreateAsync(entities.ToArray());
         
-        public Page<NotificationBanner> GetAll(int take, TableContinuationToken skip = null, eNotificationBannerPartition partitionKey = eNotificationBannerPartition.Current)
+        public Page<NotificationBanner> GetAll(int take, TableContinuationToken skip = null, bool visibleOnly = true, eNotificationBannerPartition partitionKey = eNotificationBannerPartition.Current)
         {
             var query = Table.CreateQuery<NotificationBanner>().Where(x => x.PartitionKey == partitionKey.ToString()).AsQueryable();
+            if (visibleOnly)
+            {
+                query = query.Where(x => x.Start <= DateTime.Now && x.End >= DateTime.Now);
+            }
             query = query.Take(take);
             var results = Table.ExecuteQuerySegmentedAsync(query.AsTableQuery(), skip).Result;
             return new Page<NotificationBanner>(results, results.ContinuationToken);
         }
 
-        public async Task<Page<NotificationBanner>> GetAllAsync(int take, TableContinuationToken skip = null, eNotificationBannerPartition partitionKey = eNotificationBannerPartition.Current)
+        public async Task<Page<NotificationBanner>> GetAllAsync(int take, TableContinuationToken skip = null, bool excludeExpired = false, eNotificationBannerPartition partitionKey = eNotificationBannerPartition.Current)
         {
             var query = Table.CreateQuery<NotificationBanner>().Where(x => x.PartitionKey == partitionKey.ToString()).AsQueryable();
+            if (excludeExpired)
+            {
+                query = query.Where(x => x.End >= DateTime.Now);
+            }
             query = query.Take(take);
             var results = await Table.ExecuteQuerySegmentedAsync(query.AsTableQuery(), skip);
             return new Page<NotificationBanner>(results, results.ContinuationToken);
