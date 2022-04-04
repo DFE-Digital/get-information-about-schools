@@ -30,10 +30,16 @@ namespace Edubase.Services.Texuna.Establishments
         private const string ApiSuggestPath = "suggest/establishment";
 
         private readonly ICachedLookupService _cachedLookupService;
-        private readonly IHttpClientWrapper _httpClient;
-        private readonly IApiClientWrapper _apiClient;
+<<<<<<< HEAD
+        private readonly HttpClientWrapper _httpClient;
+        private readonly ApiClientWrapper _apiClient;
         
-        public EstablishmentReadApiService(IHttpClientWrapper httpClient, IApiClientWrapper apiClient, ICachedLookupService cachedLookupService)
+        public EstablishmentReadApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient, ICachedLookupService cachedLookupService)
+=======
+        private readonly IHttpClientWrapper _httpClient;
+
+        public EstablishmentReadApiService(IHttpClientWrapper httpClient, ICachedLookupService cachedLookupService)
+>>>>>>> feature/51806-EstablishmentReadApiService-Unit-Tests
         {
             _httpClient = httpClient;
             _apiClient = apiClient;

@@ -11,8 +11,8 @@ namespace Edubase.Services.Texuna.Lookup
     public class LookupApiService : ILookupService
     {
         private const string ApiPrefix = "lookup/";
-        private readonly HttpClientWrapper _httpClient;
-        private readonly ApiClientWrapper _apiClient;
+        private readonly IHttpClientWrapper _httpClient;
+        private readonly IApiClientWrapper _apiClient;
         private readonly ISecurityService _securityService;
 
         private readonly Dictionary<int, List<int>> establishmentTypeToGroup = new Dictionary<int, List<int>>
@@ -64,7 +64,7 @@ namespace Edubase.Services.Texuna.Lookup
             {45,  new List<int> {11}}
         };
 
-        public LookupApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient, ISecurityService securityService)
+        public LookupApiService(IHttpClientWrapper httpClient, IApiClientWrapper apiClient, ISecurityService securityService)
         {
             _securityService = securityService;
             _httpClient = httpClient;

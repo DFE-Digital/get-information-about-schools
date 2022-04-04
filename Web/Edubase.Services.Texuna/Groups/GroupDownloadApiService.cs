@@ -10,10 +10,10 @@ namespace Edubase.Services.Texuna.Groups
 {
     public class GroupDownloadApiService : IGroupDownloadService
     {
-        private readonly HttpClientWrapper _httpClient;
-        private readonly ApiClientWrapper _apiClient;
+        private readonly IHttpClientWrapper _httpClient;
+        private readonly IApiClientWrapper _apiClient;
         
-        public GroupDownloadApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient)
+        public GroupDownloadApiService(IHttpClientWrapper httpClient, IApiClientWrapper apiClient)
         {
             _httpClient = httpClient;
             _apiClient = apiClient;

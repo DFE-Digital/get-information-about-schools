@@ -9,10 +9,10 @@ namespace Edubase.Services.Texuna.Groups
 {
     public class GroupsWriteApiService : IGroupsWriteService
     {
-        private readonly HttpClientWrapper _httpClient;
-        private readonly ApiClientWrapper _apiClient;
+        private readonly IHttpClientWrapper _httpClient;
+        private readonly IApiClientWrapper _apiClient;
 
-        public GroupsWriteApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient)
+        public GroupsWriteApiService(IHttpClientWrapper httpClient, IApiClientWrapper apiClient)
         {
             _httpClient = httpClient;
             _apiClient = apiClient;

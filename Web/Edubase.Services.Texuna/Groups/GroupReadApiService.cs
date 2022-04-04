@@ -19,11 +19,11 @@ namespace Edubase.Services.Texuna.Groups
     public class GroupReadApiService : IGroupReadService
     {
         private const string ApiSuggestPath = "suggest/group";
-        private readonly HttpClientWrapper _httpClient;
-        private readonly ApiClientWrapper _apiClient;
+        private readonly IHttpClientWrapper _httpClient;
+        private readonly IApiClientWrapper _apiClient;
         private readonly ICachedLookupService _cachedLookupService;
         
-        public GroupReadApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient, ICachedLookupService cachedLookupService)
+        public GroupReadApiService(IHttpClientWrapper httpClient, IApiClientWrapper apiClient, ICachedLookupService cachedLookupService)
         {
             _httpClient = httpClient;
             _apiClient = apiClient;

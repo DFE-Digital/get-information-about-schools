@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Edubase.Common.Reflection;
 using Edubase.Common.Spatial;
 using Edubase.Services.Lookup;

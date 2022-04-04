@@ -96,10 +96,11 @@
     <Compile Include="Core\FormatterError.cs" />
     <Compile Include="Core\FormatterErrorLogger.cs" />
     <Compile Include="Core\HttpClientWrapper.cs" />
+<<<<<<< HEAD
     <Compile Include="Core\ClientWrapperBase.cs" />
-    <Compile Include="Core\IApiClientWrapper.cs" />
-    <Compile Include="Core\IClientWrapperBase.cs" />
+=======
     <Compile Include="Core\IHttpClientWrapper.cs" />
+>>>>>>> feature/51806-EstablishmentReadApiService-Unit-Tests
     <Compile Include="Downloads\DownloadsApiService.cs" />
     <Compile Include="Establishments\EstablishmentDownloadApiService.cs" />
     <Compile Include="Establishments\EstablishmentReadApiService.cs" />

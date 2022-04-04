@@ -9,10 +9,10 @@ namespace Edubase.Services.Texuna.Establishments
 {
     public class EstablishmentDownloadApiService : IEstablishmentDownloadService
     {
-        private readonly HttpClientWrapper _httpClient;
-        private readonly ApiClientWrapper _apiClient;
+        private readonly IHttpClientWrapper _httpClient;
+        private readonly IApiClientWrapper _apiClient;
         
-        public EstablishmentDownloadApiService(HttpClientWrapper httpClient, ApiClientWrapper apiClient)
+        public EstablishmentDownloadApiService(IHttpClientWrapper httpClient, IApiClientWrapper apiClient)
         {
             _httpClient = httpClient;
             _apiClient = apiClient;

@@ -9,10 +9,10 @@ namespace Edubase.Services.Texuna.ChangeHistory
 {
     public class ChangeHistoryService : IChangeHistoryService
     {
-        private readonly HttpClientWrapper _httpClient;
-        private readonly ApiClientWrapper _apiClient;
+        private readonly IHttpClientWrapper _httpClient;
+        private readonly IApiClientWrapper _apiClient;
         
-        public ChangeHistoryService(HttpClientWrapper httpClient, ApiClientWrapper apiClient)
+        public ChangeHistoryService(IHttpClientWrapper httpClient, IApiClientWrapper apiClient)
         {
             _httpClient = httpClient;
             _apiClient = apiClient;
