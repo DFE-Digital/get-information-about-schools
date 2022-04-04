@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="Approvals\ApprovalServiceTests.cs" />
     <Compile Include="Establishments\EstablishmentReadApiServiceTests.cs" />
+    <Compile Include="Lookup\LookupApiServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
