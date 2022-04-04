@@ -11,7 +11,7 @@ namespace Edubase.Services.Texuna.Lookup
     public class LookupApiService : ILookupService
     {
         private const string ApiPrefix = "lookup/";
-        private readonly HttpClientWrapper _httpClient;
+        private readonly IHttpClientWrapper _httpClient;
         private readonly ISecurityService _securityService;
 
         private readonly Dictionary<int, List<int>> establishmentTypeToGroup = new Dictionary<int, List<int>>
@@ -63,7 +63,7 @@ namespace Edubase.Services.Texuna.Lookup
             {45,  new List<int> {11}}
         };
 
-        public LookupApiService(HttpClientWrapper httpClient, ISecurityService securityService)
+        public LookupApiService(IHttpClientWrapper httpClient, ISecurityService securityService)
         {
             _securityService = securityService;
             _httpClient = httpClient;
@@ -75,7 +75,6 @@ namespace Edubase.Services.Texuna.Lookup
         public async Task<IEnumerable<LookupDto>> GroupTypesGetAllAsync() => await GetData("group-types");
         public async Task<IEnumerable<LookupDto>> EstablishmentTypeGroupsGetAllAsync() => await GetData("establishment-type-groups");
         public async Task<IEnumerable<LookupDto>> EstablishmentStatusesGetAllAsync() => await GetData("establishment-statuses");
-
         public async Task<IEnumerable<EstablishmentLookupDto>> EstablishmentTypesGetAllAsync()
         {
             var establishmentTypes =
@@ -91,7 +90,6 @@ namespace Edubase.Services.Texuna.Lookup
                     GroupIds = et.Value
                 });
         }
-
         public async Task<IEnumerable<LookupDto>> GroupStatusesGetAllAsync() => await GetData("group-statuses");
         public async Task<IEnumerable<LookupDto>> AccommodationChangedGetAllAsync() => await GetData("accommodation-changed");
         public async Task<IEnumerable<LookupDto>> AdministrativeDistrictsGetAllAsync() => await GetData("administrative-districts");
