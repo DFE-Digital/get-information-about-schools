@@ -373,6 +373,7 @@
     <Compile Include="Models\News\NewsArticlesViewModel.cs" />
     <Compile Include="Models\News\NewsArticleViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsBannerAuditViewModel.cs" />
+    <Compile Include="Models\Notifications\NotificationsBannersCleanViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsBannersAuditViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsBannerViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsBannersViewModel.cs" />
@@ -869,6 +870,7 @@
     <Content Include="Views\News\EditArticle.cshtml" />
     <Content Include="Views\News\AuditArticles.cshtml" />
     <Content Include="Views\News\AuditArticle.cshtml" />
+    <Content Include="Views\Notifications\ArchiveExpiredBanners.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>

@@ -51,6 +51,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Moq">
+      <Version>4.16.1</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
@@ -76,6 +79,7 @@
       <Name>Edubase.Data</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

@@ -10,7 +10,7 @@ using Microsoft.WindowsAzure.Storage.Table.Queryable;
 
 namespace Edubase.Data.Repositories
 {
-    public class NotificationTemplateRepository : TableStorageBase<NotificationTemplate>
+    public class NotificationTemplateRepository : TableStorageBase<NotificationTemplate>, INotificationTemplateRepository
     {
         public NotificationTemplateRepository()
             : base("DataConnectionString")
