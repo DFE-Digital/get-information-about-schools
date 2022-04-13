@@ -144,7 +144,7 @@ namespace Edubase.Web.UI.Models
 
             if (UserCanManageNotifications)
             {
-                retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Manage notification banners", "Notifications"), Description = "Create a notification banner, view an existing notification banner and/or edit one or more existing notification banner messages, alert levels or scheduling. Add, edit or delete templated messages for notification banners. View the full change history audit of the notification banner messages." });
+                retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Manage notification banners", "Notifications"), Description = "Create a notification banner, delete expired notification banners, view an existing notification banner and/or edit one or more existing notification banner messages, alert levels or scheduling. Add, edit or delete templated messages for notification banners. View the full change history audit of the notification banner messages." });
             }
 
             if (UserCanManageNews)

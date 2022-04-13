@@ -10,7 +10,7 @@ using Microsoft.WindowsAzure.Storage.Table.Queryable;
 
 namespace Edubase.Data.Repositories
 {
-    public class NotificationBannerRepository : TableStorageBase<NotificationBanner>
+    public class NotificationBannerRepository : TableStorageBase<NotificationBanner>, INotificationBannerRepository
     {
         public NotificationBannerRepository()
             : base("DataConnectionString")
@@ -41,7 +41,7 @@ namespace Edubase.Data.Repositories
         }
 
         public async Task CreateAsync(IEnumerable<NotificationBanner> entities) => await CreateAsync(entities.ToArray());
-        
+
         public Page<NotificationBanner> GetAll(int take, TableContinuationToken skip = null, bool visibleOnly = true, eNotificationBannerPartition partitionKey = eNotificationBannerPartition.Current)
         {
             var query = Table.CreateQuery<NotificationBanner>().Where(x => x.PartitionKey == partitionKey.ToString()).AsQueryable();
@@ -52,6 +52,16 @@ namespace Edubase.Data.Repositories
             query = query.Take(take);
             var results = Table.ExecuteQuerySegmentedAsync(query.AsTableQuery(), skip).Result;
             return new Page<NotificationBanner>(results, results.ContinuationToken);
+        }
+
+        public async Task<List<NotificationBanner>> GetExpiredAsync(eNotificationBannerPartition partitionKey)
+        {
+            var query = Table.CreateQuery<NotificationBanner>().Where(x => x.PartitionKey == partitionKey.ToString()).AsQueryable();
+
+            query = query.Where(x => x.End < DateTime.Now);
+
+            var results = await Table.ExecuteQuerySegmentedAsync(query.AsTableQuery(), null);
+            return new List<NotificationBanner>(results);
         }
 
         public async Task<Page<NotificationBanner>> GetAllAsync(int take, TableContinuationToken skip = null, bool excludeExpired = false, eNotificationBannerPartition partitionKey = eNotificationBannerPartition.Current)
