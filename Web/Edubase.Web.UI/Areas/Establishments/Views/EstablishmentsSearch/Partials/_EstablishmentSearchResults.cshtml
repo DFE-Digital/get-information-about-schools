@@ -24,7 +24,7 @@ else if (Model.Results.Count > 0)
             @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
             {
                 {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")},
-                {"maxPages", 4}
+                {"maxPages", 5}
             })
         </div>
 
@@ -83,7 +83,7 @@ else if (Model.Results.Count > 0)
     if (Model.PageCount > 1)
     {
         <div class="lower-pagination push--bottom">
-            @Html.Partial("_GenericPagination", Model, new ViewDataDictionary { {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")}, {"maxPages", 4} })
+            @Html.Partial("_GenericPagination", Model, new ViewDataDictionary { {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")}, {"maxPages", 5} })
         </div>
         @helpers.BackToTopLink()
     }
