@@ -16,12 +16,12 @@ namespace Edubase.Web.UI.Controllers
     [RoutePrefix("Notifications"), Route("{action=index}")]
     public class NotificationsController : EduBaseController
     {
-        private readonly INotificationTemplateRepository _TemplateRepository;
-        private readonly INotificationBannerRepository _BannerRepository;
+        private readonly NotificationTemplateRepository _TemplateRepository;
+        private readonly NotificationBannerRepository _BannerRepository;
 
         public NotificationsController(
-            INotificationTemplateRepository TemplateRepository,
-            INotificationBannerRepository BannerRepository)
+            NotificationTemplateRepository TemplateRepository,
+            NotificationBannerRepository BannerRepository)
         {
             _TemplateRepository = TemplateRepository;
             _BannerRepository = BannerRepository;
@@ -44,21 +44,6 @@ namespace Edubase.Web.UI.Controllers
                 ViewBag.ShowSaved = true;
                 TempData.Remove("ShowSaved");
             }
-            return View(model);
-        }
-
-        [Route("Banners/ArchiveExpired"), EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
-        public async Task<ActionResult> ArchiveExpiredBanners()
-        {
-            var result = await _BannerRepository.GetExpiredAsync(eNotificationBannerPartition.Current);
-
-            foreach (var item in result)
-            {
-              await _BannerRepository.DeleteAsync(item.RowKey, User.GetUserId());
-            }
-
-            var model = new NotificationsBannersArchiveExpiredViewModel(result);
-
             return View(model);
         }
 

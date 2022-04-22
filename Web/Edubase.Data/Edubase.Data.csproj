@@ -149,14 +149,11 @@
     <Compile Include="Repositories\FaqGroupRepository.cs" />
     <Compile Include="Repositories\FaqItemRepository.cs" />
     <Compile Include="Repositories\ILocalAuthoritySetRepository.cs" />
-    <Compile Include="Repositories\INotificationBannerRepository.cs" />
-    <Compile Include="Repositories\INotificationTemplateRepository.cs" />
     <Compile Include="Repositories\ITokenRepository.cs" />
     <Compile Include="Repositories\IUserPreferenceRepository.cs" />
     <Compile Include="Repositories\NewsArticleRepository.cs" />
     <Compile Include="Repositories\NotificationBannerRepository.cs" />
     <Compile Include="Repositories\NotificationTemplateRepository.cs" />
-    <Compile Include="Repositories\TableStorage\ITableStorageBase.cs" />
     <Compile Include="Repositories\UserPreferenceRepository.cs" />
     <Compile Include="Repositories\TokenRepository.cs" />
     <Compile Include="Repositories\LocalAuthoritySetRepository.cs" />
