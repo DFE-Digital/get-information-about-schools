@@ -169,8 +169,8 @@ namespace Edubase.Web.UI
             builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
             builder.RegisterType<FaqItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<FaqGroupRepository>().AsSelf().SingleInstance();
-            builder.RegisterType<NotificationBannerRepository>().As<INotificationBannerRepository>().SingleInstance();
-            builder.RegisterType<NotificationTemplateRepository>().As<INotificationTemplateRepository>().SingleInstance();
+            builder.RegisterType<NotificationBannerRepository>().AsSelf().SingleInstance();
+            builder.RegisterType<NotificationTemplateRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NewsArticleRepository>().AsSelf().SingleInstance();
         }
 
