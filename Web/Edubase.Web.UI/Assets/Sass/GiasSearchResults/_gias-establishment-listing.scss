@@ -94,6 +94,8 @@
     right: 0;
     top: 0;
     font-size: 12px;
+    background-color: #dee0e2;
+    padding: 2px 4px 2px 4px;
     color: $govuk-secondary-text-colour;
 
     @include govuk-media-query($until: tablet) {
