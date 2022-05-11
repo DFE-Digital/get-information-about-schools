@@ -1,4 +1,4 @@
-﻿namespace Edubase.Data.Repositories.TableStorage
+namespace Edubase.Data.Repositories.TableStorage
 {
     using System.Globalization;
     using Microsoft.WindowsAzure.Storage;

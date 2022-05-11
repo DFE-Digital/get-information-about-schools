@@ -24,7 +24,7 @@ else if (Model.Results.Count > 0)
             @Html.Partial("_GenericPagination", Model, new ViewDataDictionary
             {
                 {"resultsDescription", String.Concat("Showing ", @startResult, "-", @endResult, " of <span id='list-count'>", @Model.Count, "</span> establishments")},
-                {"maxPages", 5 }
+                {"maxPages", 5}
             })
         </div>
 

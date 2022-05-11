@@ -19,7 +19,9 @@ namespace Edubase.Web.UI.Controllers
         private readonly NotificationTemplateRepository _TemplateRepository;
         private readonly NotificationBannerRepository _BannerRepository;
 
-        public NotificationsController(NotificationTemplateRepository TemplateRepository, NotificationBannerRepository BannerRepository)
+        public NotificationsController(
+            NotificationTemplateRepository TemplateRepository,
+            NotificationBannerRepository BannerRepository)
         {
             _TemplateRepository = TemplateRepository;
             _BannerRepository = BannerRepository;

@@ -10,7 +10,7 @@ using Microsoft.WindowsAzure.Storage.Table.Queryable;
 
 namespace Edubase.Data.Repositories
 {
-    public class NotificationBannerRepository : TableStorageBase<NotificationBanner>
+    public class NotificationBannerRepository : TableStorageBase<NotificationBanner>// INotificationBannerRepository
     {
         public NotificationBannerRepository()
             : base("DataConnectionString")
@@ -41,7 +41,7 @@ namespace Edubase.Data.Repositories
         }
 
         public async Task CreateAsync(IEnumerable<NotificationBanner> entities) => await CreateAsync(entities.ToArray());
-        
+
         public Page<NotificationBanner> GetAll(int take, TableContinuationToken skip = null, bool visibleOnly = true, eNotificationBannerPartition partitionKey = eNotificationBannerPartition.Current)
         {
             var query = Table.CreateQuery<NotificationBanner>().Where(x => x.PartitionKey == partitionKey.ToString()).AsQueryable();
