@@ -30,17 +30,16 @@
         <h1 class="govuk-heading-l">Download data</h1>
     </div>
     <div class="gias-tabs-wrapper">
-        <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-grid-column-full">
 
             <p class="govuk-body">Your requested file is ready to download.</p>
 
             <ul class="govuk-list">
                 <li>
-                    <a href="@Url.Current(new { start = true })" rel="nofollow">
-                        Data in @(Request.QueryString["downloadtype"]?.ToString().ToUpper()) format
+                    <a class="govuk-button" href="@Url.Current(new { start = true })" rel="nofollow">
+                        Download
                     </a>
-                    (will download as a ZIP file: open the ZIP to access its content)
-
+                    <p class="govuk-body">The data is in @(Request.QueryString["downloadtype"]?.ToString().ToUpper()) format and will download as a ZIP file. Open the ZIP file to access its content.</p>
                 </li>
             </ul>
         </div>
