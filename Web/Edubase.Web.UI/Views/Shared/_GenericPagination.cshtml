@@ -7,7 +7,6 @@
     var maxPages = ViewData["maxPages"] != null ? (int)ViewData["maxPages"] : 10;
     var paginationStart = 0;
     var paginationFinish = @Model.PageCount;
-
 }
 
 @if (Model.PageCount > maxPages)
@@ -59,7 +58,8 @@
                 }
                 else
                 {
-                    var tabletClass = (i >= currentPage - 2 && i <= currentPage + 2) ? "tablet-pagination" : "";
+                    //var tabletClass = (i >= currentPage - 2 && i <= currentPage + 2) ? "tablet-pagination" : "";
+                    var tabletClass = (i == paginationFinish - 1) ? "" : "tablet-pagination";
                     <li>
                         <a href="@Url.Current(new {startIndex = (i * Model.PageSize), Count = Model.Count})" class="numeric-pagination @tabletClass" aria-label="Page @displayPage">@displayPage</a>
                     </li>
@@ -70,7 +70,7 @@
             @if (currentPage < Model.PageCount - 1)
             {
                 <li>
-                    <a href="@Url.Current(new {startIndex = ((currentPage + 1) * Model.PageSize), Count = Model.Count})" class="pagination-next" aria-label="Next page">Next</a>
+                    <a href="@Url.Current(new {startIndex = ((currentPage + 1) * Model.PageSize), Count = Model.Count})" class="pagination-next" aria-label="Next page">Next @currentPage</a>
                 </li>
             }
 

@@ -52,7 +52,8 @@
                 {
                     var tabletClass = (i >= Model.CurrentPageIndex - 2 && i <= Model.CurrentPageIndex + 2) ? "tablet-pagination" : "";
                     <li>
-                        <a href="@Url.Current(new {skip = ((i - 1) * Model.Take), Count = Model.Count})" class="numeric-pagination @tabletClass" aria-label="Page @i">@i</a>
+                        <a href="@Url.Current(new {skip = ((i - 1) * Model.Take), Count = Model.Count})"
+                           class="numeric-pagination @tabletClass" aria-label="Page @i">@i</a>
                     </li>
 
                 }
