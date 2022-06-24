@@ -34,7 +34,7 @@
       margin-bottom: 0;
     }
 
-    @media (max-width: 940px) {
+    @media (max-width: 1000px) {
       .numeric-pagination {
         display: none;
       }
@@ -46,14 +46,8 @@
       }
     }
 
-    .tablet-pagination,
     .go-nowhere {
-      display: block;
       padding: 0 3px 0 3px;
-
-      @media (max-width: 740px) {
-        display: none;
-      }
     }
   }
 
