@@ -15,6 +15,21 @@
         ViewBag.Title = "Edit establishment";
     }
 }
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
 @using (Html.BeginForm())
 {
     <div class="tab-content">
@@ -37,7 +52,7 @@
                         null,
                         "school-location",
                         new { id = Model.Urn },
-                        new { @class = "govuk-back-link gias-back-link--button", data_module="govuk-button" })
+                        new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
                 </div>
             </div>
             <div class="govuk-grid-column-one-half">
@@ -47,7 +62,7 @@
                         <label for="RSCRegionId" class="govuk-label" title="Regional School Comissioner">
                             Regional schools commissioner (RSC) region
                         </label>
-                        @Html.ValidationMessageFor(x => x.RSCRegionId, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.RSCRegionId, null, new { @class = "govuk-error-message" })
                         @Html.DropDownListFor(x => x.RSCRegionId, Model.RSCRegions, "", new { @class = "govuk-select" })
                     </div>
                 }
@@ -56,7 +71,7 @@
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernmentOfficeRegionId)">
                         <label for="GovernmentOfficeRegionId" class="govuk-label">Government office region (GOR)</label>
-                        @Html.ValidationMessageFor(x => x.GovernmentOfficeRegionId, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.GovernmentOfficeRegionId, null, new { @class = "govuk-error-message" })
                         @Html.DropDownListFor(x => x.GovernmentOfficeRegionId, Model.GovernmentOfficeRegions, "", new { @class = "govuk-select" })
                     </div>
                 }
@@ -65,8 +80,8 @@
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.AdministrativeDistrictId) @Html.ValidationCssClassFor(x => x.AdministrativeDistrictName)" id="searchby-district-ref">
                         <label class="govuk-label" for="@nameof(Model.AdministrativeDistrictName)">District</label>
-                        @Html.ValidationMessageFor(x => x.AdministrativeDistrictId, null, new {@class = "govuk-error-message"})
-                        @Html.ValidationMessageFor(x => x.AdministrativeDistrictName, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.AdministrativeDistrictId, null, new { @class = "govuk-error-message" })
+                        @Html.ValidationMessageFor(x => x.AdministrativeDistrictName, null, new { @class = "govuk-error-message" })
 
                         @if (Model.LocationEditField.Equals(nameof(Model.AdministrativeDistrictId)))
                         {
@@ -76,14 +91,14 @@
                                     Value = x.Id.ToString(),
                                     Text = x.Name
                                 }).ToList();
-                            @Html.DropDownListFor(x => x.AdministrativeDistrictId, options, new {@class = "govuk-select"})
+                            @Html.DropDownListFor(x => x.AdministrativeDistrictId, options, new { @class = "govuk-select" })
                         }
                         else
                         {
                             <div id="AdministrativeDistrictId" class="autosuggest">
-                                @Html.TextBoxFor(x => x.AdministrativeDistrictName, new {@class = "govuk-input", autocomplete = "off", disabled = "disabled"})
+                                @Html.TextBoxFor(x => x.AdministrativeDistrictName, new { @class = "govuk-input", autocomplete = "off", disabled = "disabled" })
                             </div>
-                            @Html.HiddenFor(x => x.AdministrativeDistrictId, new {id = "AdministrativeDistrictIdHidden"})
+                            @Html.HiddenFor(x => x.AdministrativeDistrictId, new { id = "AdministrativeDistrictIdHidden" })
                         }
 
                         @if (Model.LocationEditField.IsNullOrEmpty())
@@ -95,8 +110,8 @@
                                     null,
                                     null,
                                     nameof(Model.AdministrativeDistrictId),
-                                    new {area = "Establishments", id = Model.Urn, locationField = nameof(Model.AdministrativeDistrictId)},
-                                    new {@class = "govuk-button govuk-button--secondary"})
+                                    new { area = "Establishments", id = Model.Urn, locationField = nameof(Model.AdministrativeDistrictId) },
+                                    new { @class = "govuk-button govuk-button--secondary" })
                             </div>
                         }
 
@@ -108,25 +123,25 @@
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.AdministrativeWardId) @Html.ValidationCssClassFor(x => x.AdministrativeWardName)" id="searchby-ward-ref">
                         <label class="govuk-label" for="@nameof(Model.AdministrativeWardName)">Ward</label>
-                        @Html.ValidationMessageFor(x => x.AdministrativeWardId, null, new {@class = "govuk-error-message"})
-                        @Html.ValidationMessageFor(x => x.AdministrativeWardName, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.AdministrativeWardId, null, new { @class = "govuk-error-message" })
+                        @Html.ValidationMessageFor(x => x.AdministrativeWardName, null, new { @class = "govuk-error-message" })
                         @if (Model.LocationEditField.Equals(nameof(Model.AdministrativeWardId)))
-                         {
-                             var options = Model.AdministrativeWards.Select(x =>
-                                 new SelectListItem
-                                 {
-                                     Value = x.Id.ToString(),
-                                     Text = x.Name
-                                 }).ToList();
-                             @Html.DropDownListFor(x => x.AdministrativeWardId, options, new {@class = "govuk-select"})
-                         }
-                         else
-                         {
-                             <div id="AdministrativeWardId" class="autosuggest scrollableAutosuggest form-control">
-                                 @Html.TextBoxFor(x => x.AdministrativeWardName, new {@class = "govuk-input", autocomplete = "off", disabled = "disabled" })
-                             </div>
-                             @Html.HiddenFor(x => x.AdministrativeWardId, new { id = "AdministrativeWardIdHidden" })
-                         }
+                        {
+                            var options = Model.AdministrativeWards.Select(x =>
+                                new SelectListItem
+                                {
+                                    Value = x.Id.ToString(),
+                                    Text = x.Name
+                                }).ToList();
+                            @Html.DropDownListFor(x => x.AdministrativeWardId, options, new { @class = "govuk-select" })
+                        }
+                        else
+                        {
+                            <div id="AdministrativeWardId" class="autosuggest scrollableAutosuggest form-control">
+                                @Html.TextBoxFor(x => x.AdministrativeWardName, new { @class = "govuk-input", autocomplete = "off", disabled = "disabled" })
+                            </div>
+                            @Html.HiddenFor(x => x.AdministrativeWardId, new { id = "AdministrativeWardIdHidden" })
+                        }
 
                         @if (Model.LocationEditField.IsNullOrEmpty())
                         {
@@ -136,8 +151,8 @@
                                     "Establishment",
                                     null, null,
                                     nameof(Model.AdministrativeWardId),
-                                    new {area = "Establishments", id = Model.Urn, locationField = nameof(Model.AdministrativeWardId)},
-                                    new {@class = "govuk-button govuk-button--secondary"})
+                                    new { area = "Establishments", id = Model.Urn, locationField = nameof(Model.AdministrativeWardId) },
+                                    new { @class = "govuk-button govuk-button--secondary" })
                             </div>
                         }
                     </div>
@@ -147,22 +162,22 @@
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ParliamentaryConstituencyId) @Html.ValidationCssClassFor(x => x.ParliamentaryConstituencyName)" id="searchby-constituency-ref">
                         <label class="govuk-label" for="@nameof(Model.ParliamentaryConstituencyName)">Parliamentary constituency</label>
-                        @Html.ValidationMessageFor(x => x.ParliamentaryConstituencyId, null, new {@class = "govuk-error-message"})
-                        @Html.ValidationMessageFor(x => x.ParliamentaryConstituencyName, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.ParliamentaryConstituencyId, null, new { @class = "govuk-error-message" })
+                        @Html.ValidationMessageFor(x => x.ParliamentaryConstituencyName, null, new { @class = "govuk-error-message" })
                         @if (Model.LocationEditField.Equals(nameof(Model.ParliamentaryConstituencyId)))
-                         {
-                             var options = Model.ParliamentaryConstituencies.Select(x =>
-                                 new SelectListItem
-                                 {
-                                     Value = x.Id.ToString(),
-                                     Text = x.Name
-                                 }).ToList();
-                             @Html.DropDownListFor(x => x.ParliamentaryConstituencyId, options, new {@class = "govuk-select"})
-                         }
+                        {
+                            var options = Model.ParliamentaryConstituencies.Select(x =>
+                                new SelectListItem
+                                {
+                                    Value = x.Id.ToString(),
+                                    Text = x.Name
+                                }).ToList();
+                            @Html.DropDownListFor(x => x.ParliamentaryConstituencyId, options, new { @class = "govuk-select" })
+                        }
                         else
                         {
                             <div id="ParliamentaryConstituencyId" class="autosuggest form-control">
-                                @Html.TextBoxFor(x => x.ParliamentaryConstituencyName, new {@class = "govuk-input", autocomplete = "off", disabled = "disabled"})
+                                @Html.TextBoxFor(x => x.ParliamentaryConstituencyName, new { @class = "govuk-input", autocomplete = "off", disabled = "disabled" })
                             </div>
                             @Html.HiddenFor(x => x.ParliamentaryConstituencyId, new { id = "ParliamentaryConstituencyIdHidden" })
                         }
@@ -175,8 +190,8 @@
                                     "Establishment",
                                     null, null,
                                     nameof(Model.ParliamentaryConstituencyId),
-                                    new {area = "Establishments", id = Model.Urn, locationField = nameof(Model.ParliamentaryConstituencyId)},
-                                    new {@class = "govuk-button govuk-button--secondary"})
+                                    new { area = "Establishments", id = Model.Urn, locationField = nameof(Model.ParliamentaryConstituencyId) },
+                                    new { @class = "govuk-button govuk-button--secondary" })
                             </div>
                         }
                     </div>
@@ -186,7 +201,7 @@
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.UrbanRuralId)">
                         <label for="UrbanRuralId" class="govuk-label">Urban/rural description</label>
-                        @Html.ValidationMessageFor(x => x.UrbanRuralId, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.UrbanRuralId, null, new { @class = "govuk-error-message" })
                         @Html.DropDownListFor(x => x.UrbanRuralId, Model.UrbanRuralLookup, "", new { @class = "govuk-select" })
                     </div>
                 }
@@ -195,8 +210,8 @@
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GSSLAId) @Html.ValidationCssClassFor(x => x.GSSLAName)" id="searchby-gssla-ref">
                         <label class="govuk-label" for="@nameof(Model.GSSLAName)">Government Statistical Service (GSS) local authority code</label>
-                        @Html.ValidationMessageFor(x => x.GSSLAId, null, new {@class = "govuk-error-message"})
-                        @Html.ValidationMessageFor(x => x.GSSLAName, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.GSSLAId, null, new { @class = "govuk-error-message" })
+                        @Html.ValidationMessageFor(x => x.GSSLAName, null, new { @class = "govuk-error-message" })
 
                         @if (Model.LocationEditField.Equals(nameof(Model.GSSLAId)))
                         {
@@ -206,12 +221,12 @@
                                     Value = x.Id.ToString(),
                                     Text = x.Name
                                 }).ToList();
-                            @Html.DropDownListFor(x => x.GSSLAId, options, new {@class = "govuk-select"})
+                            @Html.DropDownListFor(x => x.GSSLAId, options, new { @class = "govuk-select" })
                         }
                         else
                         {
                             <div id="GSSLAId" class="autosuggest">
-                                @Html.TextBoxFor(x => x.GSSLAName, new {@class = "govuk-input", autocomplete = "off", disabled = "disabled"})
+                                @Html.TextBoxFor(x => x.GSSLAName, new { @class = "govuk-input", autocomplete = "off", disabled = "disabled" })
                             </div>
                             @Html.HiddenFor(x => x.GSSLAId, new { id = "GSSLAIdHidden" })
                         }
@@ -224,8 +239,8 @@
                                     "Establishment",
                                     null, null,
                                     nameof(Model.GSSLAId),
-                                    new {area = "Establishments", id = Model.Urn, locationField = nameof(Model.GSSLAId)},
-                                    new {@class = "govuk-button govuk-button--secondary"})
+                                    new { area = "Establishments", id = Model.Urn, locationField = nameof(Model.GSSLAId) },
+                                    new { @class = "govuk-button govuk-button--secondary" })
                             </div>
                         }
                     </div>
@@ -235,7 +250,7 @@
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Easting)">
                         <label class="govuk-label" for="Easting">Easting</label>
-                        @Html.ValidationMessageFor(x => x.Easting, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.Easting, null, new { @class = "govuk-error-message" })
                         @Html.TextBoxFor(x => x.Easting, new { @class = "govuk-input" })
                     </div>
                 }
@@ -244,18 +259,18 @@
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Northing)">
                         <label class="govuk-label" for="Northing">Northing</label>
-                        @Html.ValidationMessageFor(x => x.Northing, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.Northing, null, new { @class = "govuk-error-message" })
                         @Html.TextBoxFor(x => x.Northing, new { @class = "govuk-input" })
                     </div>
                 }
- 
+
 
                 @if (Model.EditPolicy.MSOACode)
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.MSOAId) @Html.ValidationCssClassFor(x => x.MSOAName)" id="searchby-msoa-ref">
                         <label class="govuk-label" for="@nameof(Model.MSOAName)">Middle super output area (MSOA)</label>
-                        @Html.ValidationMessageFor(x => x.MSOAId, null, new {@class = "govuk-error-message"})
-                        @Html.ValidationMessageFor(x => x.MSOAName, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.MSOAId, null, new { @class = "govuk-error-message" })
+                        @Html.ValidationMessageFor(x => x.MSOAName, null, new { @class = "govuk-error-message" })
 
                         @if (Model.LocationEditField.Equals(nameof(Model.MSOAId)))
                         {
@@ -265,12 +280,12 @@
                                     Value = x.Id.ToString(),
                                     Text = x.Name
                                 }).ToList();
-                            @Html.DropDownListFor(x => x.MSOAId, options, new {@class = "govuk-select"})
+                            @Html.DropDownListFor(x => x.MSOAId, options, new { @class = "govuk-select" })
                         }
                         else
                         {
                             <div id="MSOAId" class="autosuggest">
-                                @Html.TextBoxFor(x => x.MSOAName, new {@class = "govuk-input", autocomplete = "off", disabled = "disabled" })
+                                @Html.TextBoxFor(x => x.MSOAName, new { @class = "govuk-input", autocomplete = "off", disabled = "disabled" })
                             </div>
                             @Html.HiddenFor(x => x.MSOAId, new { id = "MSOAIdHidden" })
                         }
@@ -284,8 +299,8 @@
                                     "Establishment",
                                     null, null,
                                     nameof(Model.MSOAId),
-                                    new {area = "Establishments", id = Model.Urn, locationField = nameof(Model.MSOAId)},
-                                    new {@class = "govuk-button govuk-button--secondary"})
+                                    new { area = "Establishments", id = Model.Urn, locationField = nameof(Model.MSOAId) },
+                                    new { @class = "govuk-button govuk-button--secondary" })
                             </div>
                         }
                     </div>
@@ -295,8 +310,8 @@
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LSOAId) @Html.ValidationCssClassFor(x => x.LSOAName)" id="searchby-lsoa-ref">
                         <label class="govuk-label" for="@nameof(Model.LSOAName)">Lower super output area (LSOA)</label>
-                        @Html.ValidationMessageFor(x => x.LSOAId, null, new {@class = "govuk-error-message"})
-                        @Html.ValidationMessageFor(x => x.LSOAName, null, new {@class = "govuk-error-message"})
+                        @Html.ValidationMessageFor(x => x.LSOAId, null, new { @class = "govuk-error-message" })
+                        @Html.ValidationMessageFor(x => x.LSOAName, null, new { @class = "govuk-error-message" })
 
                         @if (Model.LocationEditField.Equals(nameof(Model.LSOAId)))
                         {
@@ -306,12 +321,12 @@
                                     Value = x.Id.ToString(),
                                     Text = x.Name
                                 }).ToList();
-                            @Html.DropDownListFor(x => x.LSOAId, options, new {@class = "govuk-select"})
+                            @Html.DropDownListFor(x => x.LSOAId, options, new { @class = "govuk-select" })
                         }
                         else
                         {
                             <div id="LSOAId" class="autosuggest">
-                                @Html.TextBoxFor(x => x.LSOAName, new {@class = "govuk-input", autocomplete = "off", disabled = "disabled" })
+                                @Html.TextBoxFor(x => x.LSOAName, new { @class = "govuk-input", autocomplete = "off", disabled = "disabled" })
                             </div>
                             @Html.HiddenFor(x => x.LSOAId, new { id = "LSOAIdHidden" })
                         }
@@ -325,8 +340,8 @@
                                     "Establishment",
                                     null, null,
                                     nameof(Model.LSOAId),
-                                    new {area = "Establishments", id = Model.Urn, locationField = nameof(Model.LSOAId)},
-                                    new {@class = "govuk-button govuk-button--secondary"})
+                                    new { area = "Establishments", id = Model.Urn, locationField = nameof(Model.LSOAId) },
+                                    new { @class = "govuk-button govuk-button--secondary" })
                             </div>
                         }
                     </div>
@@ -366,9 +381,9 @@
 }
 @if (Model.ChangesSummary == null)
 {
-@section ViewScripts
+    @section ViewScripts
 {
-    <script nonce="@Html.ScriptNonce()">
+        <script nonce="@Html.ScriptNonce()">
         var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());
         window.lsoas = @Html.Json(Model.LSOAs);
         window.msoas = @Html.Json(Model.MSOAs);
@@ -377,17 +392,17 @@
         window.constituencies = @Html.Json(Model.ParliamentaryConstituencies);
         window.gsslas = @Html.Json(Model.GSSLALookup);
 
-    </script>
-    <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-location.*.js"))"></script>
-}
+        </script>
+        <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-location.*.js"))"></script>
+    }
 }
 else
 {
-@section ViewScripts
+    @section ViewScripts
 {
-    <script nonce="@Html.ScriptNonce()">
+        <script nonce="@Html.ScriptNonce()">
         var isConfimingChanges = @((Model.ChangesSummary != null).ToString().ToLower());
-    </script>
-    <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-location.*.js"))"></script>
-}
+        </script>
+        <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-location.*.js"))"></script>
+    }
 }
