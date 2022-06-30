@@ -1,4 +1,4 @@
-﻿@using VM = Edubase.Web.UI.Areas.Governors.Models.EditGovernanceModeViewModel;
+@using VM = Edubase.Web.UI.Areas.Governors.Models.EditGovernanceModeViewModel;
 @using Edubase.Services.Enums;
 @model VM
 @{
@@ -7,69 +7,84 @@
     ViewBag.SelectedTab = "EditGovernance";
     Layout = Model.Layout;
 }
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
 <div class="govuk-grid-row">
-<div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-m">Governor sharing</h1>
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-m">Governor sharing</h1>
 
-    @using (Html.BeginRouteForm("EstabEditGovernanceMode", FormMethod.Post))
-    {
-        @Html.HiddenFor(x => x.Urn)
-        <div class="govuk-form-group">
-            <fieldset class="govuk-fieldset">
-                <legend class="govuk-visually-hidden">Select a governance policy</legend>
-                <div class="govuk-radios">
-                    @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.LocalGovernors))
-                    {
-                        <div class="govuk-radios__item">
-                            @Html.GiasRadioFor( x=>x.GovernanceMode,
-                                eGovernanceMode.LocalGovernors,
-                                "This establishment has local governors, not shared governors.",
-                                null,
-                                new { @class = "govuk-radios__input"})
+        @using (Html.BeginRouteForm("EstabEditGovernanceMode", FormMethod.Post))
+        {
+            @Html.HiddenFor(x => x.Urn)
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-visually-hidden">Select a governance policy</legend>
+                    <div class="govuk-radios">
+                        @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.LocalGovernors))
+                        {
+                            <div class="govuk-radios__item">
+                                @Html.GiasRadioFor(x => x.GovernanceMode,
+                                    eGovernanceMode.LocalGovernors,
+                                    "This establishment has local governors, not shared governors.",
+                                    null,
+                                    new { @class = "govuk-radios__input" })
 
-                        </div>
-                    }
-                    @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.LocalAndSharedGovernors))
-                    {
-                        <div class="govuk-radios__item">
-                            @Html.GiasRadioFor(x => x.GovernanceMode,
-                                eGovernanceMode.LocalAndSharedGovernors,
-                                "This establishment has local governors and also shares governors with other academies in the trust.",
-                                null,
-                                new { @class = "govuk-radios__input"})
+                            </div>
+                        }
+                        @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.LocalAndSharedGovernors))
+                        {
+                            <div class="govuk-radios__item">
+                                @Html.GiasRadioFor(x => x.GovernanceMode,
+                                    eGovernanceMode.LocalAndSharedGovernors,
+                                    "This establishment has local governors and also shares governors with other academies in the trust.",
+                                    null,
+                                    new { @class = "govuk-radios__input" })
 
-                        </div>
-                    }
-                    @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.NoLocalGovernors))
-                    {
-                        <div class="govuk-radios__item">
-                            @Html.GiasRadioFor(x =>x.GovernanceMode,
-                                eGovernanceMode.NoLocalGovernors,
-                                "This establishment is part of a multi-academy trust and does not have local governors.",
-                                null,
-                                new { @class = "govuk-radios__input"})
+                            </div>
+                        }
+                        @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.NoLocalGovernors))
+                        {
+                            <div class="govuk-radios__item">
+                                @Html.GiasRadioFor(x => x.GovernanceMode,
+                                    eGovernanceMode.NoLocalGovernors,
+                                    "This establishment is part of a multi-academy trust and does not have local governors.",
+                                    null,
+                                    new { @class = "govuk-radios__input" })
 
-                        </div>
-                    }
-                    @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.SharesLocalGovernors))
-                    {
-                        <div class="govuk-radios__item">
-                            @Html.GiasRadioFor(x => x.GovernanceMode,
-                                eGovernanceMode.SharesLocalGovernors,
-                                "This establishment shares local governors with other academies in the trust.",
-                                null,
-                                new { @class = "govuk-radios__input"})
+                            </div>
+                        }
+                        @if (Model.PermissibleGovernanceModes.Contains(eGovernanceMode.SharesLocalGovernors))
+                        {
+                            <div class="govuk-radios__item">
+                                @Html.GiasRadioFor(x => x.GovernanceMode,
+                                    eGovernanceMode.SharesLocalGovernors,
+                                    "This establishment shares local governors with other academies in the trust.",
+                                    null,
+                                    new { @class = "govuk-radios__input" })
 
-                        </div>
-                    }
-                </div>
-            </fieldset>
-        </div>
-        <div class="button-row">
-            <button type="submit" name="action" class="govuk-button">Save governor sharing</button>
-            @Html.ActionLink("Cancel", "Edit", "Governor", new { area = "Governors", establishmentUrn = Model.Urn }, new { @class = "govuk-button govuk-button--secondary", data_module="govuk-button" })
-        </div>
+                            </div>
+                        }
+                    </div>
+                </fieldset>
+            </div>
+            <div class="button-row">
+                <button type="submit" name="action" class="govuk-button">Save governor sharing</button>
+                @Html.ActionLink("Cancel", "Edit", "Governor", new { area = "Governors", establishmentUrn = Model.Urn }, new { @class = "govuk-button govuk-button--secondary", data_module = "govuk-button" })
+            </div>
 
-    }
-</div>
+        }
+    </div>
 </div>
