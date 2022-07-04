@@ -22,3 +22,12 @@
     font-size: 16px;
   }
 }
+.search-results-download-clear-search {
+  padding-left: 10px;
+  white-space: nowrap;
+
+  @media (max-width: 943px) {
+    padding-left: 0;
+    padding-right: 10px;
+  }
+}
