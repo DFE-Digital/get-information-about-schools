@@ -18,6 +18,6 @@ jobs:
       with:
         fetch-depth: '2'
     - name: gitleaks-action
-      uses: gitleaks/gitleaks-action@v1.6.0
+      uses: zricethezav/gitleaks-action@master
       with: 
         config-path: gitleaks.config
