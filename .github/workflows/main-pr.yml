@@ -14,7 +14,7 @@ jobs:
   gitleaks:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v1
     - name: gitleaks-action
       uses: gitleaks/gitleaks-action@v1.6.0
       with: 
