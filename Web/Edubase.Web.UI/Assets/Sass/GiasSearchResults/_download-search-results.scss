@@ -25,14 +25,9 @@
 .search-results-download-clear-search {
   padding-left: 10px;
   white-space: nowrap;
-  font-size: 19px;
 
-  @media (max-width: 983px) {
+  @media (max-width: 943px) {
     padding-left: 0;
     padding-right: 10px;
-    font-size: 19px;
   }
-}
-.search-results-download-view-in-sections {
-  padding-top: 38px;
 }

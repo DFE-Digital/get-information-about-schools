@@ -51,7 +51,6 @@
 .gias-hidden__from-tablet {
   @include govuk-media-query($from: tablet) {
     display: none;
-    padding-bottom: 0;
   }
 }
 
