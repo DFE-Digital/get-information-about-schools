@@ -30,9 +30,13 @@
   @media (max-width: 983px) {
     padding-left: 0;
     padding-right: 10px;
-    font-size: 19px;
+    font-size: 16px;
   }
 }
 .search-results-download-view-in-sections {
   padding-top: 38px;
+
+  @media (max-width: 640px) {
+    padding-bottom: 5px;
+  }
 }
