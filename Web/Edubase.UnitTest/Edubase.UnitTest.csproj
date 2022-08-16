@@ -81,8 +81,8 @@
     <Reference Include="EmptyFiles, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c7a34512ecd69090, processorArchitecture=MSIL">
       <HintPath>..\packages\EmptyFiles.2.8.0\lib\net461\EmptyFiles.dll</HintPath>
     </Reference>
-    <Reference Include="Faker.Net.4.8, Version=1.5.150.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Faker.Net.1.5.150\lib\net48\Faker.Net.4.8.dll</HintPath>
+    <Reference Include="Faker.Net.4.8, Version=2.0.154.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Faker.Net.2.0.154\lib\net48\Faker.Net.4.8.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentValidation.8.6.2\lib\net45\FluentValidation.dll</HintPath>
