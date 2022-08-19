@@ -9,7 +9,7 @@
     </label>
     <input v-bind:class="['govuk-input gias-inline-search__field', filterSearchError? 'govuk-input--error' : '']"
            id="field-text-search" v-model="filterSearchText" type="text">
-    <button class="govuk-button gias-inline-search__button" v-on:click.prevent="filterFilters">Search</button>
+    <button class="govuk-button gias-inline-search__button search-results-download-search-button" v-on:click.prevent="filterFilters">Search</button>
     <a href="#" class="search-results-download-clear-search" v-on:click.prevent="resetTextFilter" v-if="showClearButton">Clear search</a>
   </div>
     <div v-if="noMatchingFields">
