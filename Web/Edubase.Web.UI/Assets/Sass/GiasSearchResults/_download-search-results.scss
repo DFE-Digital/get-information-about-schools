@@ -22,12 +22,18 @@
     font-size: 16px;
   }
 }
+.search-results-download-search-button {
+  margin-right: 10px;
+
+  @media (max-width: 950px) {
+    margin-right: 0;
+  }
+}
 .search-results-download-clear-search {
-  padding-left: 10px;
   white-space: nowrap;
   font-size: 19px;
 
-  @media (max-width: 925px) {
+  @media (max-width: 640px) {
     padding-left: 0;
     font-size: 16px;
   }
