@@ -1,4 +1,4 @@
-﻿namespace Edubase.Services
+namespace Edubase.Services
 {
     using Common;
     using Microsoft.WindowsAzure.Storage;

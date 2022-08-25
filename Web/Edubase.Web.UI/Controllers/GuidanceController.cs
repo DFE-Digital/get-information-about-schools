@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using CsvHelper;
+using CsvHelper.Configuration;
 using Edubase.Services;
 using Edubase.Web.UI.Models.Guidance;
 using Microsoft.Data.Edm.Csdl;
@@ -31,51 +33,58 @@ namespace Edubase.Web.UI.Controllers
         public ActionResult ChildrensCentre() => View();
         public ActionResult Federation() => View();
         public ActionResult Governance() => View();
-        // public ActionResult LaNameCodes() => View();
 
         public async Task<ActionResult> LaNameCodes()
         {
             var viewModel = new GuidanceLaNameCodeViewModel();
 
-            //populate viewmodel with data from blob
             var data = await GetCsvFromContainer("guidance", "EnglishLaNameCodes.csv");
-            using (var streamReader = new StreamReader(data))
-            using (var csvReader = new CsvReader(streamReader, CultureInfo.InvariantCulture))
-            {
-                var records = csvReader.GetRecords<LaNameCodes>().ToList();
-            }
+
 
             return View();
         }
 
-        private async Task<string> GetCsvFromContainer(string container, string file)
+        private async Task<List<LaNameCodes>> GetCsvFromContainer(string container, string file)
         {
             var blob = _blobService.GetBlobReference(container, file);
-            if (await blob.ExistsAsync())
+
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
-                return blob.DownloadTextAsync().Result;
-                // return contents;
-                //var stream = await blob.OpenReadAsync();
-                //return new FileStreamResult(stream, blob.Properties.ContentType)
-                //{
-                //    FileDownloadName = blob.Name
-                //};
+                HasHeaderRecord = false,
+            };
+
+            using (var memoryStream = new MemoryStream())
+            {
+                blob.DownloadToStreamAsync(memoryStream).GetAwaiter().GetResult();
+                memoryStream.Position = 0;
+                using (var reader = new StreamReader(memoryStream))
+                using (var csv = new CsvReader(reader, config))
+                {
+                    var records = csv.GetRecords<LaNameCodes>().ToList();
+
+                    return records;
+                }
             }
-            throw new Exception("File not available");
         }
 
-        private async Task<ActionResult> GetFileFromContainer(string container, string file)
+
+        [HttpPost, Route("Download/LaNameCodes", Name = "LaNameCodesDownload")]
+        public async Task<ActionResult> LaNameCodesDownload(GuidanceLaNameCodeViewModel Downloadtype)
         {
-            var blob = _blobService.GetBlobReference(container, file);
-            if (await blob.ExistsAsync())
-            {
-                var stream = await blob.OpenReadAsync();
-                return new FileStreamResult(stream, blob.Properties.ContentType)
-                {
-                    FileDownloadName = blob.Name
-                };
-            }
-            throw new Exception("File not available");
+            var temp = Downloadtype;
+
+            return null;
+      
+            //var blob = _blobService.GetBlobReference(container, file);
+            //if (await blob.ExistsAsync())
+            //{
+            //    var stream = await blob.OpenReadAsync();
+            //    return new FileStreamResult(stream, blob.Properties.ContentType)
+            //    {
+            //        FileDownloadName = blob.Name
+            //    };
+            //}
+            //throw new Exception("File not available");
         }
     }
 }
