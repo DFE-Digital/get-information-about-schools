@@ -376,6 +376,8 @@
     <Compile Include="Helpers\RouteDto.cs" />
     <Compile Include="Models\Faq\FaqGroupsViewModel.cs" />
     <Compile Include="Models\Faq\FaqGroupViewModel.cs" />
+    <Compile Include="Models\Guidance\GuidanceLaNameCodeViewModel.cs" />
+    <Compile Include="Models\Guidance\LaNameCodes.cs" />
     <Compile Include="Models\News\NewsArticleAuditViewModel.cs" />
     <Compile Include="Models\News\NewsArticlesAuditViewModel.cs" />
     <Compile Include="Models\News\NewsArticlesViewModel.cs" />
@@ -878,6 +880,7 @@
     <Content Include="Views\News\AuditArticles.cshtml" />
     <Content Include="Views\News\AuditArticle.cshtml" />
     <None Include="packages.config" />
+    <Content Include="Views\Guidance\LaNameCodes.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>
