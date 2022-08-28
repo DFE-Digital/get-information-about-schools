@@ -62,11 +62,8 @@
 
         @using (Html.BeginRouteForm("LaNameCodesDownload"))
         {
-            <p>
-                <button class="govuk-button" name="DownloadType" value="England">Download</button><br />
-            </p>
-
             <table class="govuk-table gias-table">
+                <caption class="govuk-table__caption govuk-table__caption--m">English local authorities (LAs)</caption>
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header">English local authority (LA) name</th>
@@ -75,19 +72,22 @@
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell" data-label="English local authority (LA) name">data</td>
-                        <td class="govuk-table__cell" data-label="Get Information about Schools (GIAS) local authority (LA) code">data</td>
-                        <td class="govuk-table__cell" data-label="Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)">data</td>
-                    </tr>
+                    @foreach (var items in Model.EnglishLas)
+                    {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell" data-label="English local authority (LA) name">@items.LaName</td>
+                            <td class="govuk-table__cell" data-label="Get Information about Schools (GIAS) local authority (LA) code">@items.LaCode</td>
+                            <td class="govuk-table__cell" data-label="Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)">@items.OnsLaCode</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
-
             <p>
-                <button class="govuk-button" name="DownloadType" value="England">Download</button><br />
+                <button class="govuk-button" name="DownloadType" value="EnglishLaNameCodes">Download</button><br />
             </p>
 
             <table class="govuk-table gias-table">
+                <caption class="govuk-table__caption govuk-table__caption--m">Welsh local authorities (LAs)</caption>
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header">Welsh local authority (LA) name</th>
@@ -96,19 +96,22 @@
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell" data-label="Welsh local authority (LA) name">data</td>
-                        <td class="govuk-table__cell" data-label="Get Information about Schools (GIAS) local authority (LA) code">data</td>
-                        <td class="govuk-table__cell" data-label="Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)">data</td>
-                    </tr>
+                    @foreach (var items in Model.WelshLas)
+                    {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell" data-label="Welsh local authority (LA) name">@items.LaName</td>
+                            <td class="govuk-table__cell" data-label="Get Information about Schools (GIAS) local authority (LA) code">@items.LaCode</td>
+                            <td class="govuk-table__cell" data-label="Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)">@items.OnsLaCode</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
-
             <p>
-                <button class="govuk-button" name="DownloadType" value="Others">Download</button><br />
+                <button class="govuk-button" name="DownloadType" value="Wales">Download</button><br />
             </p>
 
             <table class="govuk-table gias-table">
+                <caption class="govuk-table__caption govuk-table__caption--m">Other local authorities (LAs)</caption>
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header">Other local authority (LA) name</th>
@@ -117,16 +120,21 @@
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell" data-label="'Local authority (LA)' name">data</td>
-                        <td class="govuk-table__cell" data-label="Get Information about Schools (GIAS) local authority (LA) code">data</td>
-                        <td class="govuk-table__cell" data-label="Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)">data</td>
-                    </tr>
+                    @foreach (var items in Model.OtherLas)
+                    {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell" data-label="'Local authority (LA)' name">@items.LaName</td>
+                            <td class="govuk-table__cell" data-label="Get Information about Schools (GIAS) local authority (LA) code">@items.LaCode</td>
+                            <td class="govuk-table__cell" data-label="Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)">@items.OnsLaCode</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
+            <p>
+                <button class="govuk-button" name="DownloadType" value="Others">Download</button><br />
+            </p>
 
         }
-
 
         @helpers.BackToTopLink()
     </div>

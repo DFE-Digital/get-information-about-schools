@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Edubase.Services.Domain;
 using Edubase.Web.UI.Models.Search;
 using Edubase.Services.Enums;
@@ -14,6 +14,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public int? Step { get; set; } = 0;
         public int? TotalSteps => 3;
         public string DownloadName => "group";
+        public string DownloadSource => "search";
         eFileFormat IDownloadGenerationProgressModel.FileFormat => FileFormat.Value;
 
         public GroupSearchDownloadGenerationProgressViewModel(ProgressDto progressDto)

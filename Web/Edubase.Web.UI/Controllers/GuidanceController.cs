@@ -8,6 +8,8 @@ using System.Web.Mvc;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Edubase.Services;
+using Edubase.Services.Domain;
+using Edubase.Services.Enums;
 using Edubase.Web.UI.Models.Guidance;
 using Microsoft.Data.Edm.Csdl;
 
@@ -36,21 +38,63 @@ namespace Edubase.Web.UI.Controllers
 
         public async Task<ActionResult> LaNameCodes()
         {
-            var viewModel = new GuidanceLaNameCodeViewModel();
-
-            var data = await GetCsvFromContainer("guidance", "EnglishLaNameCodes.csv");
-
-
-            return View();
+            return View(new GuidanceLaNameCodeViewModel()
+            {
+                EnglishLas = await GetCsvFromContainer("guidance", "EnglishLaNameCodes.csv"),
+                WelshLas = await GetCsvFromContainer("guidance", "WelshLaNameCodes.csv"),
+                OtherLas = await GetCsvFromContainer("guidance", "OtherLaNameCodes.csv"),
+            });
         }
 
-        private async Task<List<LaNameCodes>> GetCsvFromContainer(string container, string file)
+        //[HttpPost, Route("Download/LaNameCodes", Name = "LaNameCodesDownload")]
+        //public async Task<ActionResult> LaNameCodesDownload(string DownloadType)
+        //{
+        //    var temp = DownloadType;
+
+        //    return View("SelectFormat");
+        //}
+
+        //[HttpGet, Route("PrepareDownload")]
+        //public async Task<ActionResult> PrepareDownload(string DownloadType)
+        //{
+        //    var temp = DownloadType;
+
+        //    return null;
+
+        //    //should redirect to selectformat view
+        //}
+
+        [HttpPost, Route("Download/LaNameCodes", Name = "LaNameCodesDownload")]
+        public async Task<ActionResult> LaNameCodesDownload(eFileFormat? fileFormat, string downloadType)
+        {
+            if (fileFormat is null)
+            {
+                return View("Downloads/SelectFormat");
+            }
+
+            var temp = downloadType + fileFormat;
+
+            var blob = _blobService.GetBlobReference("guidance", downloadType);
+            if (await blob.ExistsAsync())
+            {
+                var stream = await blob.OpenReadAsync();
+                return new FileStreamResult(stream, blob.Properties.ContentType)
+                {
+                    FileDownloadName = blob.Name
+                };
+            }
+            throw new Exception("File not available");
+
+          //  return null;
+        }
+
+            private async Task<List<LaNameCodes>> GetCsvFromContainer(string container, string file)
         {
             var blob = _blobService.GetBlobReference(container, file);
 
             var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
-                HasHeaderRecord = false,
+               HasHeaderRecord = false,          
             };
 
             using (var memoryStream = new MemoryStream())
@@ -60,31 +104,12 @@ namespace Edubase.Web.UI.Controllers
                 using (var reader = new StreamReader(memoryStream))
                 using (var csv = new CsvReader(reader, config))
                 {
+                    csv.Read();
                     var records = csv.GetRecords<LaNameCodes>().ToList();
 
                     return records;
                 }
             }
-        }
-
-
-        [HttpPost, Route("Download/LaNameCodes", Name = "LaNameCodesDownload")]
-        public async Task<ActionResult> LaNameCodesDownload(GuidanceLaNameCodeViewModel Downloadtype)
-        {
-            var temp = Downloadtype;
-
-            return null;
-      
-            //var blob = _blobService.GetBlobReference(container, file);
-            //if (await blob.ExistsAsync())
-            //{
-            //    var stream = await blob.OpenReadAsync();
-            //    return new FileStreamResult(stream, blob.Properties.ContentType)
-            //    {
-            //        FileDownloadName = blob.Name
-            //    };
-            //}
-            //throw new Exception("File not available");
         }
     }
 }

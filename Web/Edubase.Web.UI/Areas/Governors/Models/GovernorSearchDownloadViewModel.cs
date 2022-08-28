@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Domain;
+using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Web.UI.Models.Search;
 using System;
@@ -12,6 +12,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public int? Step { get; set; } = 0;
         public int? TotalSteps { get; set; } = 0;
         public string DownloadName => "governor";
+        public string DownloadSource => "search";
         eFileFormat IDownloadGenerationProgressModel.FileFormat => FileFormat.Value;
         public bool? IncludeNonPublicData { get; set; }
 

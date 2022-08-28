@@ -18,6 +18,7 @@ using System.Web.Routing;
 using Edubase.Services;
 using Edubase.Services.Downloads.Models;
 using Edubase.Web.UI.Models.Search;
+using Edubase.Web.UI.Models.Guidance;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -180,6 +181,27 @@ namespace Edubase.Web.UI.Controllers
                 return RedirectToAction(nameof(DownloadGenerated), new { id = JsonConvert.DeserializeObject<ApiResultDto<Guid>>(response).Value });
             }
         }
+
+        //[HttpPost, Route("Download/LaNameCodes", Name = "LaNameCodesDownload")]
+        //public async Task<ActionResult> LaNameCodesDownload(GuidanceLaNameCodeViewModel DownloadType)
+        //{
+        //    var temp = DownloadType;
+
+        //    return null;
+
+        //    //should redirect to selectformat view
+
+        //    //var blob = _blobService.GetBlobReference(container, file);
+        //    //if (await blob.ExistsAsync())
+        //    //{
+        //    //    var stream = await blob.OpenReadAsync();
+        //    //    return new FileStreamResult(stream, blob.Properties.ContentType)
+        //    //    {
+        //    //        FileDownloadName = blob.Name
+        //    //    };
+        //    //}
+        //    //throw new Exception("File not available");
+        //}
 
         [HttpGet, Route("Download/Establishment/{urn}", Name = "EstabDataDownload")]
         public async Task<ActionResult> DownloadEstablishmentData(int urn, string state, DownloadType? downloadType = null, bool start = false)
