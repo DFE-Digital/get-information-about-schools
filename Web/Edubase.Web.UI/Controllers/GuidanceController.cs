@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -19,7 +20,7 @@ namespace Edubase.Web.UI.Controllers
     public class GuidanceController : EduBaseController
     {
         private readonly IBlobService _blobService;
-        private const string GUIDANCE = "guidance";
+        private const string GUIDANCE_CONTAINER = "guidance";
         private const string ENGLISH_LA_NAME_CODES = "EnglishLaNameCodes.csv";
         private const string WELSH_LA_NAME_CODES = "WelshLaNameCodes.csv";
         private const string OTHER_LA_NAME_CODES = "OtherLaNameCodes.csv";
@@ -41,9 +42,9 @@ namespace Edubase.Web.UI.Controllers
         {
             return View(new GuidanceLaNameCodeViewModel()
             {
-                EnglishLas = await GetCsvFromContainer(GUIDANCE, ENGLISH_LA_NAME_CODES),
-                WelshLas = await GetCsvFromContainer(GUIDANCE, WELSH_LA_NAME_CODES),
-                OtherLas = await GetCsvFromContainer(GUIDANCE, OTHER_LA_NAME_CODES),
+                EnglishLas = await GetCsvFromContainer(GUIDANCE_CONTAINER, ENGLISH_LA_NAME_CODES),
+                WelshLas = await GetCsvFromContainer(GUIDANCE_CONTAINER, WELSH_LA_NAME_CODES),
+                OtherLas = await GetCsvFromContainer(GUIDANCE_CONTAINER, OTHER_LA_NAME_CODES),
             });
         }
 
@@ -55,9 +56,9 @@ namespace Edubase.Web.UI.Controllers
                 return View("SelectFormat", viewModel);
             }
 
-            var file = viewModel.DownloadType + "." + viewModel.FileFormat.ToString().ToLower();
+            var file = viewModel.DownloadName + "." + viewModel.FileFormat.ToString().ToLower();
 
-            var blob = _blobService.GetBlobReference(GUIDANCE, file);
+            var blob = _blobService.GetBlobReference(GUIDANCE_CONTAINER, file);
             if (await blob.ExistsAsync())
             {
                 var stream = await blob.OpenReadAsync();
@@ -69,7 +70,7 @@ namespace Edubase.Web.UI.Controllers
             throw new Exception("File not available");
         }
 
-            private async Task<List<LaNameCodes>> GetCsvFromContainer(string container, string file)
+        private async Task<List<LaNameCodes>> GetCsvFromContainer(string container, string file)
         {
             var blob = _blobService.GetBlobReference(container, file);
 

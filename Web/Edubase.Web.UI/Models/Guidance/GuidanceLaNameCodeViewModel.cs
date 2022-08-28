@@ -5,8 +5,7 @@ namespace Edubase.Web.UI.Models.Guidance
 {
     public class GuidanceLaNameCodeViewModel
     {
-        public string DownloadType { get; set; }
-        // public string DownloadName { get; set; } = "guidance";
+        public string DownloadName { get; set; }
         public eFileFormat? FileFormat { get; set; }
         public List<LaNameCodes> EnglishLas { get; set; }
         public List<LaNameCodes> WelshLas { get; set; }

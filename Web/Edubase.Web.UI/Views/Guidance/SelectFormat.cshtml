@@ -75,15 +75,10 @@
     <div class="govuk-grid-column-full">
 
         <h2 class="govuk-heading-m">Download guidance results</h2>
-        @*@if (Model.TotalSteps.HasValue)
-        {
-            <p>@Model.Step of @Model.TotalSteps</p>
-        }*@
 
         <h2 class="govuk-heading-m">Select the file format of the data you are interested in</h2>
         <p>
             You can download your requested data in either CSV or XLSX format.
-            The file will download as a ZIP file: open the ZIP to access its contents.
         </p>
     </div>
 </div>
@@ -92,7 +87,7 @@
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-          @Html.HiddenFor(x => x.DownloadType)
+          @Html.HiddenFor(x => x.DownloadName)
             <div class="govuk-form-group">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-visually-hidden">Select your preferred format</legend>
