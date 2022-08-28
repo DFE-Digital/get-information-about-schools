@@ -46,35 +46,17 @@ namespace Edubase.Web.UI.Controllers
             });
         }
 
-        //[HttpPost, Route("Download/LaNameCodes", Name = "LaNameCodesDownload")]
-        //public async Task<ActionResult> LaNameCodesDownload(string DownloadType)
-        //{
-        //    var temp = DownloadType;
-
-        //    return View("SelectFormat");
-        //}
-
-        //[HttpGet, Route("PrepareDownload")]
-        //public async Task<ActionResult> PrepareDownload(string DownloadType)
-        //{
-        //    var temp = DownloadType;
-
-        //    return null;
-
-        //    //should redirect to selectformat view
-        //}
-
-        [HttpPost, Route("Download/LaNameCodes", Name = "LaNameCodesDownload")]
-        public async Task<ActionResult> LaNameCodesDownload(eFileFormat? fileFormat, string downloadType)
+        [HttpPost, Route("LaNameCodes", Name = "LaNameCodesDownload")]
+        public async Task<ActionResult> LaNameCodesDownload(GuidanceLaNameCodeViewModel viewModel)
         {
-            if (fileFormat is null)
+            if (!viewModel.FileFormat.HasValue)
             {
-                return View("Downloads/SelectFormat");
+                return View("SelectFormat", viewModel);
             }
 
-            var temp = downloadType + fileFormat;
+            var file = viewModel.DownloadType + "." + viewModel.FileFormat.ToString().ToLower();
 
-            var blob = _blobService.GetBlobReference("guidance", downloadType);
+            var blob = _blobService.GetBlobReference("guidance", file);
             if (await blob.ExistsAsync())
             {
                 var stream = await blob.OpenReadAsync();
@@ -84,8 +66,6 @@ namespace Edubase.Web.UI.Controllers
                 };
             }
             throw new Exception("File not available");
-
-          //  return null;
         }
 
             private async Task<List<LaNameCodes>> GetCsvFromContainer(string container, string file)

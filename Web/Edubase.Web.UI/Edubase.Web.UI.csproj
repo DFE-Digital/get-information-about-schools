@@ -887,6 +887,7 @@
     <Content Include="Views\News\AuditArticle.cshtml" />
     <None Include="packages.config" />
     <Content Include="Views\Guidance\LaNameCodes.cshtml" />
+    <Content Include="Views\Guidance\SelectFormat.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>

@@ -1,7 +1,7 @@
 @using Edubase.Services.Enums
 @using Microsoft.Ajax.Utilities
 @using Edubase.Web.UI.Helpers
-@model IDownloadGenerationProgressModel
+@model Edubase.Web.UI.Models.Guidance.GuidanceLaNameCodeViewModel
 @{
     ViewBag.bodyClasses = "schools-search-page search-page";
     ViewBag.hideLogo = true;
@@ -14,7 +14,7 @@
 
 @section BreadCrumbs
 {
-    @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
+    @*@if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
     {
         @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-back-link" })
     }
@@ -62,7 +62,7 @@
                 </div>
             </div>
         }
-    }
+    }*@
 }
 
 
@@ -74,11 +74,11 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 
-        <h2 class="govuk-heading-m">Download @Model.DownloadName search results</h2>
-        @if (Model.TotalSteps.HasValue)
+        <h2 class="govuk-heading-m">Download guidance results</h2>
+        @*@if (Model.TotalSteps.HasValue)
         {
             <p>@Model.Step of @Model.TotalSteps</p>
-        }
+        }*@
 
         <h2 class="govuk-heading-m">Select the file format of the data you are interested in</h2>
         <p>
@@ -88,11 +88,11 @@
     </div>
 </div>
 
-@using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get))
+@using (Html.BeginForm("LaNameCodesDownload", "Guidance", FormMethod.Post))
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            @Html.HiddenFor(x => x.SearchQueryString)
+          @Html.HiddenFor(x => x.DownloadType)
             <div class="govuk-form-group">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-visually-hidden">Select your preferred format</legend>
