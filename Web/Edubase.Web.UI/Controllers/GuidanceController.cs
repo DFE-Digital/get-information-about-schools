@@ -19,6 +19,10 @@ namespace Edubase.Web.UI.Controllers
     public class GuidanceController : EduBaseController
     {
         private readonly IBlobService _blobService;
+        private const string GUIDANCE = "guidance";
+        private const string ENGLISH_LA_NAME_CODES = "EnglishLaNameCodes.csv";
+        private const string WELSH_LA_NAME_CODES = "WelshLaNameCodes.csv";
+        private const string OTHER_LA_NAME_CODES = "OtherLaNameCodes.csv";
 
         public GuidanceController(IBlobService blobService)
         {
@@ -27,11 +31,8 @@ namespace Edubase.Web.UI.Controllers
 
         [Route(Name = "Guidance")]
         public ActionResult Index() => View();
-
         public ActionResult General() => View();
-
         public ActionResult EstablishmentBulkUpdate() => View();
-
         public ActionResult ChildrensCentre() => View();
         public ActionResult Federation() => View();
         public ActionResult Governance() => View();
@@ -40,9 +41,9 @@ namespace Edubase.Web.UI.Controllers
         {
             return View(new GuidanceLaNameCodeViewModel()
             {
-                EnglishLas = await GetCsvFromContainer("guidance", "EnglishLaNameCodes.csv"),
-                WelshLas = await GetCsvFromContainer("guidance", "WelshLaNameCodes.csv"),
-                OtherLas = await GetCsvFromContainer("guidance", "OtherLaNameCodes.csv"),
+                EnglishLas = await GetCsvFromContainer(GUIDANCE, ENGLISH_LA_NAME_CODES),
+                WelshLas = await GetCsvFromContainer(GUIDANCE, WELSH_LA_NAME_CODES),
+                OtherLas = await GetCsvFromContainer(GUIDANCE, OTHER_LA_NAME_CODES),
             });
         }
 
@@ -56,7 +57,7 @@ namespace Edubase.Web.UI.Controllers
 
             var file = viewModel.DownloadType + "." + viewModel.FileFormat.ToString().ToLower();
 
-            var blob = _blobService.GetBlobReference("guidance", file);
+            var blob = _blobService.GetBlobReference(GUIDANCE, file);
             if (await blob.ExistsAsync())
             {
                 var stream = await blob.OpenReadAsync();
