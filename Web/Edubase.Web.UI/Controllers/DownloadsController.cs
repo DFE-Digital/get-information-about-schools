@@ -18,6 +18,7 @@ using System.Web.Routing;
 using Edubase.Services;
 using Edubase.Services.Downloads.Models;
 using Edubase.Web.UI.Models.Search;
+using Edubase.Web.UI.Models.Guidance;
 
 namespace Edubase.Web.UI.Controllers
 {

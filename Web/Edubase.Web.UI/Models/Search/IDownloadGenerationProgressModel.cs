@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Domain;
+using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 
 namespace Edubase.Web.UI.Models.Search

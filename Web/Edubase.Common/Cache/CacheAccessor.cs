@@ -1,4 +1,4 @@
-﻿namespace Edubase.Common.Cache
+namespace Edubase.Common.Cache
 {
     using MoreLinq;
     using Newtonsoft.Json;

@@ -1,4 +1,4 @@
-﻿namespace Edubase.Services.Enums
+namespace Edubase.Services.Enums
 {
     public enum eLookupSearchSource
     {
