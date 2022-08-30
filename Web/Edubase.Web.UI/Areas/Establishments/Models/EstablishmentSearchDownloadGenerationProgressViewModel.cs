@@ -13,7 +13,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public int? Step { get; private set; }
         public int? TotalSteps => null;
         public string DownloadName => "establishment";
-        public string DownloadSource => "search";
         public eFileFormat FileFormat { get; set; }
 
 

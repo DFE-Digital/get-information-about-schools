@@ -25,7 +25,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public int? Step => null;
         public int? TotalSteps => null;
         public string DownloadName => "establishment";
-        public string DownloadSource => "search";
         eFileFormat IDownloadGenerationProgressModel.FileFormat => FileFormat.Value;
         public bool IncludeEmailAddresses { get; set; }
         public bool IncludeIEBTFields { get; set; }

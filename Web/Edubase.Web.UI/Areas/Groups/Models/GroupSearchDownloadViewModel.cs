@@ -12,7 +12,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public int? Step { get; set; } = 0;
         public int? TotalSteps => 3;
         public string DownloadName => "group";
-        public string DownloadSource => "search";
         eFileFormat IDownloadGenerationProgressModel.FileFormat => FileFormat.Value;
     }
 }

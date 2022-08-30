@@ -182,27 +182,6 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        //[HttpPost, Route("Download/LaNameCodes", Name = "LaNameCodesDownload")]
-        //public async Task<ActionResult> LaNameCodesDownload(GuidanceLaNameCodeViewModel DownloadType)
-        //{
-        //    var temp = DownloadType;
-
-        //    return null;
-
-        //    //should redirect to selectformat view
-
-        //    //var blob = _blobService.GetBlobReference(container, file);
-        //    //if (await blob.ExistsAsync())
-        //    //{
-        //    //    var stream = await blob.OpenReadAsync();
-        //    //    return new FileStreamResult(stream, blob.Properties.ContentType)
-        //    //    {
-        //    //        FileDownloadName = blob.Name
-        //    //    };
-        //    //}
-        //    //throw new Exception("File not available");
-        //}
-
         [HttpGet, Route("Download/Establishment/{urn}", Name = "EstabDataDownload")]
         public async Task<ActionResult> DownloadEstablishmentData(int urn, string state, DownloadType? downloadType = null, bool start = false)
         {
