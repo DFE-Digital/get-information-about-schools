@@ -43,7 +43,6 @@
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-           @* @Html.HiddenFor(x => x.DownloadName)*@
             <div class="govuk-form-group">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-visually-hidden">Select the data table you wish to download</legend>
@@ -60,7 +59,6 @@
     </div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            @Html.HiddenFieldsFromQueryString()
             <input class="govuk-button" data-module="govuk-button" type="submit" value="Select data">
         </div>
     </div>
