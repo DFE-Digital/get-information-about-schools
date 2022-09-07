@@ -25,10 +25,7 @@
                         @Html.ActionLink("Help", "Help", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
                     </li>
                     <li class="govuk-breadcrumbs__list-item">
-                        @Html.ActionLink("Local authority name and associated codes", "LaNameCodes", "Guidance", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
-                    </li>
-                    <li class="govuk-breadcrumbs__list-item">
-                        @Html.ActionLink("Select data table", "LaNameCodes/DataTables", "Guidance", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                        @Html.ActionLink("Local authority name and associated codes", "LaNameCodes", "Guidance", new { area = ""}, new { @class = "govuk-breadcrumbs__link" })
                     </li>
                 </ol>
             </div>
@@ -36,21 +33,9 @@
     </div>
 }
 
-
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-l">Download data</h1>
-    </div>
-</div>
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-
-        <h2 class="govuk-heading-m">Download local authority names and associated codes</h2>
-
-        <h2 class="govuk-heading-m">Select the file format of the data you are interested in</h2>
-        <p>
-            You can download your requested data in either CSV or XLSX format.
-        </p>
+        <h1 class="govuk-heading-l">Select data table to download</h1>
     </div>
 </div>
 
@@ -58,14 +43,16 @@
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            @Html.HiddenFor(x => x.DownloadName)
+           @* @Html.HiddenFor(x => x.DownloadName)*@
             <div class="govuk-form-group">
                 <fieldset class="govuk-fieldset">
-                    <legend class="govuk-visually-hidden">Select your preferred format</legend>
+                    <legend class="govuk-visually-hidden">Select the data table you wish to download</legend>
                     <div class="govuk-radios">
-                        @FormHelpers.GiasRadio("csv", "fileformat", "Data in CSV format", null, new { @checked = "checked" })
+                        @FormHelpers.GiasRadio("EnglishLaNameCodes", "downloadname", "English local authorities (LAs)", null, new { @checked = "checked" })
 
-                        @FormHelpers.GiasRadio("xlsx", "fileformat", "Data in XLSX (Excel) format")
+                        @FormHelpers.GiasRadio("WelshLaNameCodes", "downloadname", "Welsh local authorities (LAs)")
+
+                        @FormHelpers.GiasRadio("OtherLaNameCodes", "downloadname", "Other local authorities (LAs)")
                     </div>
                 </fieldset>
             </div>
@@ -74,7 +61,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             @Html.HiddenFieldsFromQueryString()
-            <input class="govuk-button" data-module="govuk-button" type="submit" value="Select and download">
+            <input class="govuk-button" data-module="govuk-button" type="submit" value="Select data">
         </div>
     </div>
 }
