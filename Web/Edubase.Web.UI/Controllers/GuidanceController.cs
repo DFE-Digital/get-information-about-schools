@@ -48,7 +48,13 @@ namespace Edubase.Web.UI.Controllers
             });
         }
 
-        [HttpPost, Route("LaNameCodes", Name = "LaNameCodesDownload")]
+        [Route("LaNameCodes/DataTables", Name = "SelectData")]
+        public ActionResult SelectData(GuidanceLaNameCodeViewModel viewModel)
+        {
+            return View("SelectData", viewModel);
+        }
+
+        [Route("LaNameCodes/DataTables/DownloadData", Name = "LaNameCodesDownload")]
         public async Task<ActionResult> LaNameCodesDownload(GuidanceLaNameCodeViewModel viewModel)
         {
             if (!viewModel.FileFormat.HasValue)

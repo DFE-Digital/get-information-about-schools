@@ -28,13 +28,13 @@
 }
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
+    <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-xl">Local authority name and associated codes</h1>
     </div>
 </div>
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
+    <div class="govuk-grid-column-two-thirds">
         <h2 class="govuk-heading-m">1. Introduction</h2>
         <p>
             This guidance shows the corresponding information for the local authority name, the three digit associated code which is now issued by
@@ -59,82 +59,78 @@
         </p>
 
         <h2 class="govuk-heading-m">2. Tables</h2>
+        <h3 class="govuk-heading-s">2.1. English local authorities (LAs)</h3>
 
-        @using (Html.BeginRouteForm("LaNameCodesDownload"))
-        {
-            <table class="govuk-table gias-table">
-                <caption class="govuk-table__caption govuk-table__caption--m">2.1 English local authorities (LAs)</caption>
-                <thead class="govuk-table__head">
+        <table class="govuk-table gias-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header">English local authority (LA) name</th>
+                    <th class="govuk-table__header">Get Information about Schools (GIAS) local authority (LA) code</th>
+                    <th class="govuk-table__header">Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var items in Model.EnglishLas)
+                {
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header">English local authority (LA) name</th>
-                        <th class="govuk-table__header">Get Information about Schools (GIAS) local authority (LA) code</th>
-                        <th class="govuk-table__header">Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)</th>
+                        <td class="govuk-table__cell" data-label="English local authority (LA) name">@items.LaName</td>
+                        <td class="govuk-table__cell" data-label="Get Information about Schools (GIAS) local authority (LA) code">@items.LaCode</td>
+                        <td class="govuk-table__cell" data-label="Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)">@items.OnsLaCode</td>
                     </tr>
-                </thead>
-                <tbody class="govuk-table__body">
-                    @foreach (var items in Model.EnglishLas)
-                    {
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell" data-label="English local authority (LA) name">@items.LaName</td>
-                            <td class="govuk-table__cell" data-label="Get Information about Schools (GIAS) local authority (LA) code">@items.LaCode</td>
-                            <td class="govuk-table__cell" data-label="Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)">@items.OnsLaCode</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <p>
-                <button class="govuk-button" name="DownloadName" value="EnglishLaNameCodes">Download</button><br />
-            </p>
+                }
+            </tbody>
+        </table>
 
-            <table class="govuk-table gias-table">
-                <caption class="govuk-table__caption govuk-table__caption--m">2.2 Welsh local authorities (LAs)</caption>
-                <thead class="govuk-table__head">
+        <h3 class="govuk-heading-s">2.2. Welsh local authorities (LAs)</h3>
+        <table class="govuk-table gias-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header">Welsh local authority (LA) name</th>
+                    <th class="govuk-table__header">Get Information about Schools (GIAS) local authority (LA) code</th>
+                    <th class="govuk-table__header">Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var items in Model.WelshLas)
+                {
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header">Welsh local authority (LA) name</th>
-                        <th class="govuk-table__header">Get Information about Schools (GIAS) local authority (LA) code</th>
-                        <th class="govuk-table__header">Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)</th>
+                        <td class="govuk-table__cell" data-label="Welsh local authority (LA) name">@items.LaName</td>
+                        <td class="govuk-table__cell" data-label="Get Information about Schools (GIAS) local authority (LA) code">@items.LaCode</td>
+                        <td class="govuk-table__cell" data-label="Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)">@items.OnsLaCode</td>
                     </tr>
-                </thead>
-                <tbody class="govuk-table__body">
-                    @foreach (var items in Model.WelshLas)
-                    {
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell" data-label="Welsh local authority (LA) name">@items.LaName</td>
-                            <td class="govuk-table__cell" data-label="Get Information about Schools (GIAS) local authority (LA) code">@items.LaCode</td>
-                            <td class="govuk-table__cell" data-label="Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)">@items.OnsLaCode</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <p>
-                <button class="govuk-button" name="DownloadName" value="WelshLaNameCodes">Download</button><br />
-            </p>
+                }
+            </tbody>
+        </table>
 
-            <table class="govuk-table gias-table">
-                <caption class="govuk-table__caption govuk-table__caption--m">2.3 Other local authorities (LAs)</caption>
-                <thead class="govuk-table__head">
+        <h3 class="govuk-heading-s">2.3. Other local authorities (LAs)</h3>
+        <table class="govuk-table gias-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header">Other local authority (LA) name</th>
+                    <th class="govuk-table__header">Get Information about Schools (GIAS) local authority (LA) code</th>
+                    <th class="govuk-table__header">Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var items in Model.OtherLas)
+                {
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header">Other local authority (LA) name</th>
-                        <th class="govuk-table__header">Get Information about Schools (GIAS) local authority (LA) code</th>
-                        <th class="govuk-table__header">Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)</th>
+                        <td class="govuk-table__cell" data-label="'Local authority (LA)' name">@items.LaName</td>
+                        <td class="govuk-table__cell" data-label="Get Information about Schools (GIAS) local authority (LA) code">@items.LaCode</td>
+                        <td class="govuk-table__cell" data-label="Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)">@items.OnsLaCode</td>
                     </tr>
-                </thead>
-                <tbody class="govuk-table__body">
-                    @foreach (var items in Model.OtherLas)
-                    {
-                        <tr class="govuk-table__row">
-                            <td class="govuk-table__cell" data-label="'Local authority (LA)' name">@items.LaName</td>
-                            <td class="govuk-table__cell" data-label="Get Information about Schools (GIAS) local authority (LA) code">@items.LaCode</td>
-                            <td class="govuk-table__cell" data-label="Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)">@items.OnsLaCode</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <p>
-                <button class="govuk-button" name="DownloadName" value="OtherLaNameCodes">Download</button><br />
-            </p>
+                }
+            </tbody>
+        </table>
 
-        }
+        <h2 class="govuk-heading-m">3. Download</h2>
+        <p>
+            If you wish to download any of the above tables please select the download button below.
+            You will then be able to select which table you wish to download and the format you require on the next page.
+        </p>
+        <p>
+            <a class="govuk-button" href="/Guidance/LaNameCodes/DataTables">Download</a>
+        </p>
 
         @helpers.BackToTopLink()
     </div>
