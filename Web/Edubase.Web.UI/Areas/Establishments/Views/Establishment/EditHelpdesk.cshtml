@@ -12,6 +12,21 @@
         ViewBag.Title = "Edit establishment";
     }
 }
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
 @using (Html.BeginForm())
 {
     <div class="tab-content">
@@ -34,8 +49,8 @@
                             null,
                             null,
                             "helpdesk",
-                            new {id = Model.Urn},
-                            new {@class = "govuk-back-link gias-back-link--button", data_module = "govuk-button"})
+                            new { id = Model.Urn },
+                            new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
                     </div>
                 </div>
             </div>
@@ -44,27 +59,27 @@
                     @if (Model.EditPolicy.HelpdeskNotes)
                     {
                         <div class="govuk-form-group">
-                            @Html.LabelFor(x => x.HelpdeskNotes, new {@class = "govuk-label"})
-                            @Html.TextAreaFor(x => x.HelpdeskNotes, new {@class = "govuk-textarea", rows = "10", maxlength = "1000"})
+                            @Html.LabelFor(x => x.HelpdeskNotes, new { @class = "govuk-label" })
+                            @Html.TextAreaFor(x => x.HelpdeskNotes, new { @class = "govuk-textarea", rows = "10", maxlength = "1000" })
                         </div>
                     }
                     @if (Model.EditPolicy.HelpdeskLastUpdate)
                     {
-                        @Html.EditorFor(x => x.HelpdeskLastUpdate, new {fieldsetClassName = "edit-date-fieldset"})
+                        @Html.EditorFor(x => x.HelpdeskLastUpdate, new { fieldsetClassName = "edit-date-fieldset" })
                     }
                     @if (Model.EditPolicy.HelpdeskPreviousLocalAuthorityId)
                     {
                         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousLocalAuthorityId)">
-                            @Html.LabelFor(x => x.HelpdeskPreviousLocalAuthorityId, new {@class = "govuk-label"})
-                            @Html.DropDownListFor(x => x.HelpdeskPreviousLocalAuthorityId, Model.LocalAuthorities, "Please select a local authority", new {@class = "govuk-select"})
+                            @Html.LabelFor(x => x.HelpdeskPreviousLocalAuthorityId, new { @class = "govuk-label" })
+                            @Html.DropDownListFor(x => x.HelpdeskPreviousLocalAuthorityId, Model.LocalAuthorities, "Please select a local authority", new { @class = "govuk-select" })
                         </div>
                     }
                     @if (Model.EditPolicy.HelpdeskPreviousEstablishmentNumber)
                     {
                         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HelpdeskPreviousEstablishmentNumber)">
-                            @Html.LabelFor(x => x.HelpdeskPreviousEstablishmentNumber, new {@class = "govuk-label"})
-                            @Html.ValidationMessageFor(x => x.HelpdeskPreviousEstablishmentNumber, null, new {@class = "govuk-error-message"})
-                            @Html.TextBoxFor(x => x.HelpdeskPreviousEstablishmentNumber, new {@class = "govuk-input"})
+                            @Html.LabelFor(x => x.HelpdeskPreviousEstablishmentNumber, new { @class = "govuk-label" })
+                            @Html.ValidationMessageFor(x => x.HelpdeskPreviousEstablishmentNumber, null, new { @class = "govuk-error-message" })
+                            @Html.TextBoxFor(x => x.HelpdeskPreviousEstablishmentNumber, new { @class = "govuk-input" })
                         </div>
                     }
                 </div>

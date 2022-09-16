@@ -1,0 +1,137 @@
+@using Edubase.Web.UI.Models.Guidance
+@model GuidanceLaNameCodeViewModel
+@{
+    ViewBag.Title = "Get Information about Schools";
+    ViewBag.imageMQ = "(max-width: 768px)";
+    ViewBag.SiteSection = "help";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-govuk-govuk-govuk-grid-row">
+        <div class="govuk-grid-govuk-grid-govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Help", "Help", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Guidance", "Index", "Guidance", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">Local authority name and associated codes</h1>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-m">1. Introduction</h2>
+        <p>
+            This guidance shows the corresponding information for the local authority name, the three digit associated code which is now issued by
+            the Get Information about Schools (GIAS) team and used to be known as the local education authority (LEA) number and the 9 digit code issued
+            by the Office for National Statistics (ONS).
+        </p>
+        <p>
+            The ONS advised in 2011, when the Government Statistical Service (GSS) coding and naming policy for some statistical geographies was
+            implemented on January 1st, that the new codes should be used in all exchanges of statistics and published outputs that normally include codes.
+            The Department for Education (DfE) had then and continue to have no firm proposals to apply the new codes to school numbering,
+            UPRNs, data collections or data transfers with local authorities.
+        </p>
+        <p>
+            The ONS codes are made up of two parts within the format ANNNNNNNN.
+            The first three characters (ANN) represent the area entity (i.e. an area type, such as county), with the first alpha value representing
+            the country within which the entity lies. The second part of the code comprises six number characters (NNNNNN) representing
+            the specific area instance (for example, Hampshire).
+        </p>
+        <p>
+            Further information regarding the coding and naming policy for statistical geographies can be found on the
+            <a href="https://www.ons.gov.uk/methodology/geography" target="_blank" rel="noreferrer noopener">ONS (opens in new tab)</a> website.
+        </p>
+
+        <h2 class="govuk-heading-m">2. Tables</h2>
+        <h3 class="govuk-heading-s">2.1. English local authorities (LAs)</h3>
+
+        <table class="govuk-table gias-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header">English local authority (LA) name</th>
+                    <th class="govuk-table__header">Get Information about Schools (GIAS) local authority (LA) code</th>
+                    <th class="govuk-table__header">Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var items in Model.EnglishLas)
+                {
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell" data-label="English local authority (LA) name">@items.LaName</td>
+                        <td class="govuk-table__cell" data-label="Get Information about Schools (GIAS) local authority (LA) code">@items.LaCode</td>
+                        <td class="govuk-table__cell" data-label="Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)">@items.OnsLaCode</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h3 class="govuk-heading-s">2.2. Welsh local authorities (LAs)</h3>
+        <table class="govuk-table gias-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header">Welsh local authority (LA) name</th>
+                    <th class="govuk-table__header">Get Information about Schools (GIAS) local authority (LA) code</th>
+                    <th class="govuk-table__header">Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var items in Model.WelshLas)
+                {
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell" data-label="Welsh local authority (LA) name">@items.LaName</td>
+                        <td class="govuk-table__cell" data-label="Get Information about Schools (GIAS) local authority (LA) code">@items.LaCode</td>
+                        <td class="govuk-table__cell" data-label="Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)">@items.OnsLaCode</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h3 class="govuk-heading-s">2.3. Other local authorities (LAs)</h3>
+        <table class="govuk-table gias-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header">Other local authority (LA) name</th>
+                    <th class="govuk-table__header">Get Information about Schools (GIAS) local authority (LA) code</th>
+                    <th class="govuk-table__header">Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var items in Model.OtherLas)
+                {
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell" data-label="'Local authority (LA)' name">@items.LaName</td>
+                        <td class="govuk-table__cell" data-label="Get Information about Schools (GIAS) local authority (LA) code">@items.LaCode</td>
+                        <td class="govuk-table__cell" data-label="Office for National Statistics (ONS) local authority (LA) code (also known as Government Statistical Service (GSS) local authority (LA) code on GIAS)">@items.OnsLaCode</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h2 class="govuk-heading-m">3. Download</h2>
+        <p>
+            If you wish to download any of the above tables please select the download button below.
+            You will then be able to select which table you wish to download and the format you require on the next page.
+        </p>
+        <p>
+            <a class="govuk-button" href="/Guidance/LaNameCodes/DataTables">Download</a>
+        </p>
+
+        @helpers.BackToTopLink()
+    </div>
+</div>

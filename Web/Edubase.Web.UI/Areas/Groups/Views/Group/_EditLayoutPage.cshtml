@@ -4,7 +4,7 @@
 @model VM
 @{
     ViewBag.bodyClasses = "create-edit school-details";
-    if(string.Equals(Model.SelectedTabName, "governance"))
+    if (string.Equals(Model.SelectedTabName, "governance"))
     {
         ViewBag.bodyClasses = String.Concat("governance ", ViewBag.bodyClasses);
 
@@ -14,17 +14,9 @@
     Layout = "~/Views/Dfe/Layouts/template.cshtml";
 }
 
-@section BreadCrumbs {
-   <div class="govuk-grid-row">
-       <div class="govuk-grid-column-full">
-           <div class="govuk-breadcrumbs">
-               <ol class="govuk-breadcrumbs__list">
-                   <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
-                   <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
-               </ol>
-           </div>
-       </div>
-   </div>
+@section BreadCrumbs
+{
+    @RenderSection("BreadCrumbs", false)
 }
 
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
@@ -47,7 +39,7 @@
             <div class="tab-wrap">
                 <ul class="gias-tabs">
                     <li class="gias-tabs__list-item @Html.Conditional(Model.SelectedTabName == "details", "gias-tabs__list-item--selected")">
-                         <a href="@Url.Action("EditDetails", "Group", new { id = Model.GroupUId, area = "Groups" })" class="gias-tabs__tab">Details</a>
+                        <a href="@Url.Action("EditDetails", "Group", new { id = Model.GroupUId, area = "Groups" })" class="gias-tabs__tab">Details</a>
 
                     </li>
                     <li class="gias-tabs__list-item  @Html.Conditional(Model.SelectedTabName == "links", "gias-tabs__list-item--selected")">

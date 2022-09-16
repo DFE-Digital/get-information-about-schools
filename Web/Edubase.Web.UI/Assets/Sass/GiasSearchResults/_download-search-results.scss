@@ -22,3 +22,26 @@
     font-size: 16px;
   }
 }
+.search-results-download-search-button {
+  margin-right: 10px;
+
+  @media (max-width: 950px) {
+    margin-right: 0;
+  }
+}
+.search-results-download-clear-search {
+  white-space: nowrap;
+  font-size: 19px;
+
+  @media (max-width: 640px) {
+    padding-left: 0;
+    font-size: 16px;
+  }
+}
+.search-results-download-view-in-sections {
+  padding-top: 38px;
+
+  @media (max-width: 640px) {
+    padding-bottom: 5px;
+  }
+}

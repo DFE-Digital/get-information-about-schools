@@ -1,4 +1,4 @@
-﻿namespace Edubase.Services.Texuna.Lookup
+namespace Edubase.Services.Texuna.Lookup
 {
     public static class Constants
     {

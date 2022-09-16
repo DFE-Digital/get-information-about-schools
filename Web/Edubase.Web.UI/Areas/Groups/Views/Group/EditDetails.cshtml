@@ -11,25 +11,39 @@
     ViewBag.OriginalGroupTypeName = Model.OriginalGroupTypeName;
     Layout = "_EditLayoutPage.cshtml";
     var buttonSaveText = Model.InEditMode ?
-        Model.GroupTypeId.OneOfThese(L.SingleacademyTrust, L.MultiacademyTrust)? "Continue": "Save details"
+        Model.GroupTypeId.OneOfThese(L.SingleacademyTrust, L.MultiacademyTrust) ? "Continue" : "Save details"
         : "Create new " + Model.GroupTypeLabelPrefix.ToLower();
 }
-    <div class="tab-content">
 
-        @using (Html.BeginForm("EditDetails", "Group", new { area = "Groups" }, FormMethod.Post, new { @id = "edit-group-details" }))
-        {
-            @Html.HiddenFor(x => x.GroupUId)
-            @Html.HiddenFor(x => x.GroupTypeMode)
-            @Html.HiddenFor(x => x.SaveMode)
-            @Html.HiddenFor(x => x.SelectedTabName)
-            @Html.HiddenFor(x => x.GroupTypeName)
-            @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
-            @Html.HiddenFor(x => x.AddressJsonToken)
-            @Html.HiddenFor(x => x.ProcessedWarnings)
-            @Html.HiddenFor(x => x.CanUserCloseAndMarkAsCreatedInError)
-            @Html.HiddenFor(x => x.CanUserEditClosedDate)
-            @Html.HiddenFor(x => x.CanUserEditStatus)
-            @Html.HiddenFor(x => x.OriginalStatusId)
+@section BreadCrumbs {
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="tab-content">
+
+    @using (Html.BeginForm("EditDetails", "Group", new { area = "Groups" }, FormMethod.Post, new { @id = "edit-group-details" }))
+    {
+        @Html.HiddenFor(x => x.GroupUId)
+        @Html.HiddenFor(x => x.GroupTypeMode)
+        @Html.HiddenFor(x => x.SaveMode)
+        @Html.HiddenFor(x => x.SelectedTabName)
+        @Html.HiddenFor(x => x.GroupTypeName)
+        @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
+        @Html.HiddenFor(x => x.AddressJsonToken)
+        @Html.HiddenFor(x => x.ProcessedWarnings)
+        @Html.HiddenFor(x => x.CanUserCloseAndMarkAsCreatedInError)
+        @Html.HiddenFor(x => x.CanUserEditClosedDate)
+        @Html.HiddenFor(x => x.CanUserEditStatus)
+        @Html.HiddenFor(x => x.OriginalStatusId)
         @Html.HiddenFor(x => x.LocalAuthorityId)
 
 
@@ -43,7 +57,7 @@
 
                     <div class="button-row govuk-!-padding-top-8">
                         <button type="submit" name="action" class="govuk-button" id="edit-submit" value="@VM.ActionSave">Accept and save</button>
-                        @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button"})
+                        @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
                     </div>
                 </div>
             </div>
@@ -54,7 +68,7 @@
                 <div class="govuk-grid-column-full">
                     <div class="button-row govuk-!-margin-bottom-4">
                         <button type="submit" name="action" class="govuk-button" id="edit-submit" value="@VM.ActionSave">@buttonSaveText</button>
-                        @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button"})
+                        @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
                     </div>
                 </div>
             </div>
@@ -234,7 +248,7 @@
                 <div class="govuk-grid-column-full">
                     <div class="button-row govuk-!-padding-top-4">
                         <button type="submit" name="action" class="govuk-button" id="edit-submit" value="@VM.ActionSave">@buttonSaveText</button>
-                        @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button"})
+                        @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
                     </div>
 
                 </div>
@@ -246,8 +260,8 @@
                 </div>
             </div>
         </div>
-        }
-    </div>
+    }
+</div>
 
 @section ViewScripts
 {

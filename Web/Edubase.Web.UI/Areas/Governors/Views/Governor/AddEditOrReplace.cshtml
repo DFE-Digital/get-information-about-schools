@@ -11,69 +11,84 @@
     ViewBag.SelectedTab = "EditGovernance";
     Layout = Model.Layout;
 }
-<div class="govuk-grid-row">
-<div class="govuk-grid-column-one-half">
 
-    @using (Html.BeginRouteForm(Model.FormPostRouteName, FormMethod.Post, new {id = "governorEdit"}))
-    {
-
-        <h2 class="govuk-heading-m">
-            @(Model.Mode == CreateEditGovernorViewModel.EditMode.Edit ? "Edit" : "")
-            @(Model.Mode == CreateEditGovernorViewModel.EditMode.Create ? "Add" : "")
-            @(Model.Mode == CreateEditGovernorViewModel.EditMode.Replace ? "Replace" : "")
-
-            @Model.GovernorRoleName.ToLower()
-        </h2>
-
-        @Html.HiddenFor(x => x.GovernorRole)
-        @Html.HiddenFor(x => x.GovernorRoleName)
-        @Html.HiddenFor(x => x.GID)
-        @Html.HiddenFor(x => x.EstablishmentUrn)
-        @Html.HiddenFor(x => x.GroupUId)
-        @Html.HiddenFor(x => x.SelectedTabName)
-        @Html.HiddenFor(x => x.GroupName)
-        @Html.HiddenFor(x => x.GroupTypeId)
-        @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
-        @Html.HiddenFor(x => x.IsHistoric)
-        @Html.HiddenFor(x => x.Mode)
-        @Html.HiddenFor(x => x.SelectedPreviousGovernorId)
-
-        @Html.HiddenFor(x => x.ReplaceGovernorViewModel.GID)
-        @Html.HiddenFor(x => x.ReplaceGovernorViewModel.Name)
-
-        if (Model.ReplaceGovernorViewModel.GID.HasValue)
-        {
-            <h3 class="govuk-heading-s">@Model.ReplaceGovernorViewModel.Name</h3>
-            <div class="date-group-wrap">
-                @Html.EditorFor(x => x.ReplaceGovernorViewModel.AppointmentEndDate, new { title = "Date term ends (required to save record)", fieldSetClassName = "edit-date-fieldset" })
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
             </div>
-
-            if (Model.AllowReinstateAsGovernor)
-            {
-                <div class="govuk-checkboxes">
-                    @FormHelpers.GiasCheckbox("true", "ReinstateAsGovernor", Model.ReinstateAsGovernorCheckboxLabel, null,new {id = nameof(Model.ReinstateAsGovernor)})
-                </div>
-            }
-        }
-
-        <h2 class="govuk-heading-m govuk-!-padding-top-6">@(Model.ReplaceGovernorViewModel.GID.HasValue ? string.Concat("New ", Model.GovernorRoleName).ToSentenceCase() : Model.GovernorRoleName)</h2>
-
-        if (Model.ExistingGovernors.Any())
-        {
-            <div class="govuk-form-group js-when-on">
-                @Html.LabelFor(x => x.SelectedPreviousGovernorId, Model.SelectPreviousGovernorLabel, new { @class="govuk-label"})
-                @Html.DropDownListFor(x => x.SelectedPreviousGovernorId, Model.ExistingGovernors, "New", new { @class = "govuk-select choose-governor" })
-            </div>
-
-        }
-
-        @Html.EditorFor(m => m, new {  fieldsetClassName = "edit-date-fieldset", disableStartDate = Model.ReplaceGovernorViewModel.GID.HasValue, reactivationWarning = (Model.Mode == CreateEditGovernorViewModel.EditMode.Edit && Model.AppointmentEndDate.ToDateTime().HasValue && Model.AppointmentEndDate.ToDateTime().Value < DateTime.Now.Date) })
-
-        <div class="button-row">
-            @Buttons()
         </div>
-    }
-</div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+
+        @using (Html.BeginRouteForm(Model.FormPostRouteName, FormMethod.Post, new { id = "governorEdit" }))
+        {
+
+            <h2 class="govuk-heading-m">
+                @(Model.Mode == CreateEditGovernorViewModel.EditMode.Edit ? "Edit" : "")
+                @(Model.Mode == CreateEditGovernorViewModel.EditMode.Create ? "Add" : "")
+                @(Model.Mode == CreateEditGovernorViewModel.EditMode.Replace ? "Replace" : "")
+
+                @Model.GovernorRoleName.ToLower()
+            </h2>
+
+            @Html.HiddenFor(x => x.GovernorRole)
+            @Html.HiddenFor(x => x.GovernorRoleName)
+            @Html.HiddenFor(x => x.GID)
+            @Html.HiddenFor(x => x.EstablishmentUrn)
+            @Html.HiddenFor(x => x.GroupUId)
+            @Html.HiddenFor(x => x.SelectedTabName)
+            @Html.HiddenFor(x => x.GroupName)
+            @Html.HiddenFor(x => x.GroupTypeId)
+            @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
+            @Html.HiddenFor(x => x.IsHistoric)
+            @Html.HiddenFor(x => x.Mode)
+            @Html.HiddenFor(x => x.SelectedPreviousGovernorId)
+
+            @Html.HiddenFor(x => x.ReplaceGovernorViewModel.GID)
+            @Html.HiddenFor(x => x.ReplaceGovernorViewModel.Name)
+
+            if (Model.ReplaceGovernorViewModel.GID.HasValue)
+            {
+                <h3 class="govuk-heading-s">@Model.ReplaceGovernorViewModel.Name</h3>
+                <div class="date-group-wrap">
+                    @Html.EditorFor(x => x.ReplaceGovernorViewModel.AppointmentEndDate, new { title = "Date term ends (required to save record)", fieldSetClassName = "edit-date-fieldset" })
+                </div>
+
+                if (Model.AllowReinstateAsGovernor)
+                {
+                    <div class="govuk-checkboxes">
+                        @FormHelpers.GiasCheckbox("true", "ReinstateAsGovernor", Model.ReinstateAsGovernorCheckboxLabel, null, new { id = nameof(Model.ReinstateAsGovernor) })
+                    </div>
+                }
+            }
+
+            <h2 class="govuk-heading-m govuk-!-padding-top-6">@(Model.ReplaceGovernorViewModel.GID.HasValue ? string.Concat("New ", Model.GovernorRoleName).ToSentenceCase() : Model.GovernorRoleName)</h2>
+
+            if (Model.ExistingGovernors.Any())
+            {
+                <div class="govuk-form-group js-when-on">
+                    @Html.LabelFor(x => x.SelectedPreviousGovernorId, Model.SelectPreviousGovernorLabel, new { @class = "govuk-label" })
+                    @Html.DropDownListFor(x => x.SelectedPreviousGovernorId, Model.ExistingGovernors, "New", new { @class = "govuk-select choose-governor" })
+                </div>
+
+            }
+
+            @Html.EditorFor(m => m, new { fieldsetClassName = "edit-date-fieldset", disableStartDate = Model.ReplaceGovernorViewModel.GID.HasValue, reactivationWarning = (Model.Mode == CreateEditGovernorViewModel.EditMode.Edit && Model.AppointmentEndDate.ToDateTime().HasValue && Model.AppointmentEndDate.ToDateTime().Value < DateTime.Now.Date) })
+
+            <div class="button-row">
+                @Buttons()
+            </div>
+        }
+    </div>
 </div>
 
 @helper Buttons()
@@ -92,7 +107,7 @@
             <text>Add person</text>
         }
     </button>
-    @Html.ActionLink("Cancel", "Edit", "Governor", new { area = "Governors", groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, new { @class = "govuk-button govuk-button--secondary", data_module="govuk-button" })
+    @Html.ActionLink("Cancel", "Edit", "Governor", new { area = "Governors", groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, new { @class = "govuk-button govuk-button--secondary", data_module = "govuk-button" })
 }
 
 @section ViewScripts

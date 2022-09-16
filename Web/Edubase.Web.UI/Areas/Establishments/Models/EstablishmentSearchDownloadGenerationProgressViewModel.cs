@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Edubase.Services.Domain;
 using Edubase.Web.UI.Models.Search;
 using Edubase.Services.Enums;
@@ -13,7 +13,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Models.Search
         public int? Step { get; private set; }
         public int? TotalSteps => null;
         public string DownloadName => "establishment";
-
         public eFileFormat FileFormat { get; set; }
 
 

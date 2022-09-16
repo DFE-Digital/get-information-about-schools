@@ -1,0 +1,65 @@
+@using Edubase.Services.Enums
+@using Microsoft.Ajax.Utilities
+@using Edubase.Web.UI.Helpers
+@model Edubase.Web.UI.Models.Guidance.GuidanceLaNameCodeViewModel
+@{
+    ViewBag.bodyClasses = "schools-search-page search-page";
+    ViewBag.hideLogo = true;
+}
+
+@section Head
+{
+    <meta name="robots" content="noindex,nofollow" />
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-govuk-govuk-govuk-grid-row">
+        <div class="govuk-grid-govuk-grid-govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Help", "Help", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Local authority name and associated codes", "LaNameCodes", "Guidance", new { area = ""}, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">Select data table to download</h1>
+    </div>
+</div>
+
+@using (Html.BeginForm("LaNameCodesDownload", "Guidance", FormMethod.Post))
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-visually-hidden">Select the data table you wish to download</legend>
+                    <div class="govuk-radios">
+                        @FormHelpers.GiasRadio("EnglishLaNameCodes", "downloadname", "English local authorities (LAs)", null, new { @checked = "checked" })
+
+                        @FormHelpers.GiasRadio("WelshLaNameCodes", "downloadname", "Welsh local authorities (LAs)")
+
+                        @FormHelpers.GiasRadio("OtherLaNameCodes", "downloadname", "Other local authorities (LAs)")
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <input class="govuk-button" data-module="govuk-button" type="submit" value="Select data">
+        </div>
+    </div>
+}

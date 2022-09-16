@@ -1,6 +1,20 @@
-﻿@model SearchForEstablishmentViewModel
+@model SearchForEstablishmentViewModel
 @{
     Layout = "_EditLayoutPage.cshtml";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
 }
 
 @using (Html.BeginRouteForm("EditEstabLinks_SearchForEstablishment", FormMethod.Get))
@@ -20,8 +34,8 @@
                 <label class="govuk-label" for="SearchUrn">
                     Other establishment's Unique Reference Number (URN)
                 </label>
-                @Html.ValidationMessageFor(x => x.SearchUrn, null, new {@class="govuk-error-message"})
-                @Html.TextBoxFor(x => x.SearchUrn, new {@class = "govuk-input govuk-input--width-10"})
+                @Html.ValidationMessageFor(x => x.SearchUrn, null, new { @class = "govuk-error-message" })
+                @Html.TextBoxFor(x => x.SearchUrn, new { @class = "govuk-input govuk-input--width-10" })
                 <button id="search-urn-submit" class="govuk-button links-estab-search-button" name="@SearchForEstablishmentViewModel.BIND_ALIAS_DOSEARCH" value="true">Search URN</button>
             </div>
         </div>
