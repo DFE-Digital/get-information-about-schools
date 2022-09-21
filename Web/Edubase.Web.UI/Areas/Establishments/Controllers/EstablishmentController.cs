@@ -1043,10 +1043,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
         private async Task PopulateSelectLists(ViewModel viewModel)
         {
+            var localAuthorities = await _cachedLookupService.LocalAuthorityGetAllAsync();
+
             viewModel.AccommodationChanges = (await _cachedLookupService.AccommodationChangedGetAllAsync()).ToSelectList(viewModel.AccommodationChangedId);
             viewModel.FurtherEducationTypes = (await _cachedLookupService.FurtherEducationTypesGetAllAsync()).ToSelectList(viewModel.FurtherEducationTypeId);
             viewModel.Genders = (await _cachedLookupService.GendersGetAllAsync()).ToSelectList(viewModel.GenderId);
-            viewModel.LocalAuthorities = (await _cachedLookupService.LocalAuthorityGetAllAsync()).ToSelectList(viewModel.LocalAuthorityId);
+            viewModel.LocalAuthorities = localAuthorities.ToSelectList(viewModel.LocalAuthorityId);
             viewModel.EstablishmentTypes = (await _cachedLookupService.EstablishmentTypesGetAllAsync()).ToSelectList(viewModel.TypeId);
             viewModel.HeadTitles = (await _cachedLookupService.TitlesGetAllAsync()).ToSelectList(viewModel.HeadTitleId);
             viewModel.Statuses = (await _cachedLookupService.EstablishmentStatusesGetAllAsync()).ToSelectList(viewModel.StatusId);
@@ -1119,6 +1121,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.CCPhaseTypes = (await _cachedLookupService.CCPhaseTypesGetAllAsync()).ToSelectList(viewModel.CCPhaseTypeId);
             viewModel.CCDisadvantagedAreas = (await _cachedLookupService.CCDisadvantagedAreasGetAllAsync()).ToSelectList(viewModel.CCDisadvantagedAreaId);
             viewModel.CCDirectProvisionOfEarlyYears = (await _cachedLookupService.DirectProvisionOfEarlyYearsGetAllAsync()).ToSelectList(viewModel.CCDirectProvisionOfEarlyYearsId);
+
+            if(viewModel.LocalAuthorityId.HasValue)
+            {
+                viewModel.LocalAuthorityCode = (from la in localAuthorities
+                                                where la.Id == viewModel.LocalAuthorityId.Value
+                                                select la.Code).FirstOrDefault();
+            }
         }
 
         private async Task PopulateSelectLists(CreateEstablishmentViewModel viewModel)
