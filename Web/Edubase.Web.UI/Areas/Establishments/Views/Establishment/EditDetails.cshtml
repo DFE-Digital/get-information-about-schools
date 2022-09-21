@@ -304,7 +304,7 @@
                 <p class="govuk-hint govuk-body-s">LA code and Establishment number</p>
                 @Html.ValidationMessageFor(x => x.EstablishmentNumber, null, new {@class = "govuk-error-message"})
                 <label class="govuk-visually-hidden" for="lacode"> LA code</label>
-                <input type="text" id="lacode" class="govuk-input govuk-input--width-5" size="5" disabled="disabled" value="@Model.LocalAuthorityId"/>
+                <input type="text" id="lacode" class="govuk-input govuk-input--width-5" size="5" disabled="disabled" value="@Model.LocalAuthorityCode"/>
                 <label class="govuk-visually-hidden" for="EstablishmentNumber">Establishment number</label>
                 @Html.TextBoxFor(x => x.EstablishmentNumber, new {@class = "govuk-input govuk-input--width-10"})
             </fieldset>

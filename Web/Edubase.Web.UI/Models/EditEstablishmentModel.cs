@@ -60,7 +60,7 @@ namespace Edubase.Web.UI.Models
 
         public int? Urn { get; set; }
         public int? LocalAuthorityId { get; set; }
-        public string LocalAuthorityCode { get; private set; }
+        public string LocalAuthorityCode { get; set; }
         public string Name { get; set; }
         public int? StatusId { get; set; }
         public int? ReasonEstablishmentOpenedId { get; set; }
