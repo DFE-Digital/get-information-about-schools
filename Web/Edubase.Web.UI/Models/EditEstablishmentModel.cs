@@ -17,7 +17,7 @@ namespace Edubase.Web.UI.Models
     using System.ComponentModel;
     using System.Linq;
     using ET = Services.Enums.eLookupEstablishmentType;
-
+    
     public class EditEstablishmentModel : IEstablishmentPageViewModel
     {
         /// <summary>
@@ -60,6 +60,7 @@ namespace Edubase.Web.UI.Models
 
         public int? Urn { get; set; }
         public int? LocalAuthorityId { get; set; }
+        public string LocalAuthorityCode { get; private set; }
         public string Name { get; set; }
         public int? StatusId { get; set; }
         public int? ReasonEstablishmentOpenedId { get; set; }
