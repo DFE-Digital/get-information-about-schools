@@ -19,6 +19,20 @@
     }
 }
 
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
 @using (Html.BeginForm())
 {
     <div class="tab-content govuk-grid-row" id="edit-iebt">
@@ -50,7 +64,7 @@
                 @if (Model.EditPolicy.IEBTDetail.Notes)
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Notes)">
-                        @Html.LabelFor(x => x.Notes, new { @class="govuk-label" })
+                        @Html.LabelFor(x => x.Notes, new { @class = "govuk-label" })
                         @Html.ValidationMessageFor(x => x.Notes, null, new { @class = "govuk-error-message" })
                         @Html.TextAreaFor(x => x.Notes, new { @class = "govuk-textarea", rows = "10" })
                     </div>
@@ -59,7 +73,7 @@
                 @if (Model.EditPolicy.IEBTDetail.Associations)
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Associations)">
-                        @Html.LabelFor(x => x.Associations, new { @class="govuk-label" })
+                        @Html.LabelFor(x => x.Associations, new { @class = "govuk-label" })
                         @Html.ValidationMessageFor(x => x.Associations, null, new { @class = "govuk-error-message" })
                         @Html.TextAreaFor(x => x.Associations, new { @class = "govuk-textarea", rows = "10" })
                     </div>
@@ -67,58 +81,58 @@
 
                 @if (Model.EditPolicy.IEBTDetail.DateOfTheLastBridgeVisit)
                 {
-                    @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Date of last Bridge visit" , fieldsetClassName = "edit-date-fieldset" })
+                    @Html.EditorFor(x => x.DateOfTheLastBridgeVisit, new { title = "Date of last Bridge visit", fieldsetClassName = "edit-date-fieldset" })
                 }
 
                 @if (Model.EditPolicy.IEBTDetail.DateOfLastOfstedVisit)
                 {
-                    @Html.EditorFor(x => x.DateOfLastOfstedVisit, new { title = "Date of last Ofsted visit", fieldsetClassName = "edit-date-fieldset"  })
+                    @Html.EditorFor(x => x.DateOfLastOfstedVisit, new { title = "Date of last Ofsted visit", fieldsetClassName = "edit-date-fieldset" })
                 }
 
                 @if (Model.EditPolicy.IEBTDetail.DateOfTheLastISIVisit)
                 {
-                    @Html.EditorFor(x => x.DateOfTheLastISIVisit, new { title = "Date of last ISI visit", fieldsetClassName = "edit-date-fieldset"  })
+                    @Html.EditorFor(x => x.DateOfTheLastISIVisit, new { title = "Date of last ISI visit", fieldsetClassName = "edit-date-fieldset" })
                 }
 
                 @if (Model.EditPolicy.IEBTDetail.DateOfTheLastWelfareVisit)
                 {
-                    @Html.EditorFor(x => x.DateOfTheLastWelfareVisit, new { title = "Date of last welfare visit", fieldsetClassName = "edit-date-fieldset"  })
+                    @Html.EditorFor(x => x.DateOfTheLastWelfareVisit, new { title = "Date of last welfare visit", fieldsetClassName = "edit-date-fieldset" })
                 }
 
                 @if (Model.EditPolicy.IEBTDetail.DateOfTheLastFPVisit)
                 {
-                    @Html.EditorFor(x => x.DateOfTheLastFPVisit, new { title = "Date of last FP visit", fieldsetClassName = "edit-date-fieldset"  })
+                    @Html.EditorFor(x => x.DateOfTheLastFPVisit, new { title = "Date of last FP visit", fieldsetClassName = "edit-date-fieldset" })
                 }
 
                 @if (Model.EditPolicy.IEBTDetail.DateOfTheLastSISVisit)
                 {
-                    @Html.EditorFor(x => x.DateOfTheLastSISVisit, new { title = "Date of last SIS visit", fieldsetClassName = "edit-date-fieldset"  })
+                    @Html.EditorFor(x => x.DateOfTheLastSISVisit, new { title = "Date of last SIS visit", fieldsetClassName = "edit-date-fieldset" })
                 }
 
                 @if (Model.EditPolicy.IEBTDetail.NextOfstedVisit)
                 {
-                    @Html.EditorFor(x => x.NextOfstedVisit, new { title = "Next Ofsted visit", fieldsetClassName = "edit-date-fieldset"  })
+                    @Html.EditorFor(x => x.NextOfstedVisit, new { title = "Next Ofsted visit", fieldsetClassName = "edit-date-fieldset" })
                 }
 
                 @if (Model.EditPolicy.IEBTDetail.NextGeneralActionRequired)
                 {
-                    @Html.EditorFor(x => x.NextGeneralActionRequired, new { title = "Next general action required", fieldsetClassName = "edit-date-fieldset"  })
+                    @Html.EditorFor(x => x.NextGeneralActionRequired, new { title = "Next general action required", fieldsetClassName = "edit-date-fieldset" })
                 }
 
                 @if (Model.EditPolicy.IEBTDetail.NextActionRequiredByWEL)
                 {
-                    @Html.EditorFor(x => x.NextActionRequiredByWEL, new { title = "Next action required by WEL", fieldsetClassName = "edit-date-fieldset"  })
+                    @Html.EditorFor(x => x.NextActionRequiredByWEL, new { title = "Next action required by WEL", fieldsetClassName = "edit-date-fieldset" })
                 }
 
                 @if (Model.EditPolicy.IEBTDetail.NextActionRequiredByFP)
                 {
-                    @Html.EditorFor(x => x.NextActionRequiredByFP, new { title = "Next action required by FP", fieldsetClassName = "edit-date-fieldset"  })
+                    @Html.EditorFor(x => x.NextActionRequiredByFP, new { title = "Next action required by FP", fieldsetClassName = "edit-date-fieldset" })
                 }
 
                 @if (Model.EditPolicy.InspectorateId)
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.InspectorateId)">
-                        @Html.LabelFor(x => x.InspectorateId, new { @class="govuk-label" })
+                        @Html.LabelFor(x => x.InspectorateId, new { @class = "govuk-label" })
                         @Html.ValidationMessageFor(x => x.InspectorateId, null, new { @class = "govuk-error-message" })
                         @Html.DropDownListFor(x => x.InspectorateId, Model.Inspectorates, "", new { @class = "govuk-select" })
                     </div>
@@ -127,7 +141,7 @@
                 @if (Model.EditPolicy.IEBTDetail.IndependentSchoolTypeId)
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.IndependentSchoolTypeId)">
-                        @Html.LabelFor(x => x.IndependentSchoolTypeId, new { @class="govuk-label" })
+                        @Html.LabelFor(x => x.IndependentSchoolTypeId, new { @class = "govuk-label" })
                         @Html.ValidationMessageFor(x => x.IndependentSchoolTypeId, null, new { @class = "govuk-error-message" })
                         @Html.DropDownListFor(x => x.IndependentSchoolTypeId, Model.IndependentSchoolTypes, "", new { @class = "govuk-select" })
                     </div>
@@ -273,8 +287,8 @@
                 @if (Model.EditPolicy.IEBTDetail.BoardingEstablishmentId)
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.BoardingEstablishmentId)">
-                        @Html.LabelFor(x => x.BoardingEstablishmentId, new { @class="govuk-label" })
-                        @Html.ValidationMessageFor(x => x.BoardingEstablishmentId,null, new { @class = "govuk-error-message" })
+                        @Html.LabelFor(x => x.BoardingEstablishmentId, new { @class = "govuk-label" })
+                        @Html.ValidationMessageFor(x => x.BoardingEstablishmentId, null, new { @class = "govuk-error-message" })
                         @Html.DropDownListFor(x => x.BoardingEstablishmentId, Model.BoardingEstablishment, "", new { @class = "govuk-select" })
                     </div>
                 }
@@ -282,59 +296,59 @@
 
                 @if (Model.EditPolicy.IEBTDetail.ProprietorTypeId)
                 {
-                <fieldset class="govuk-fieldset @Html.ValidationCssClassFor(x => x.ProprietorTypeId)" id="proprietor-radios">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="@nameof(Model.EditPolicy.IEBTDetail.ProprietorTypeId)">Proprietor</legend>
+                    <fieldset class="govuk-fieldset @Html.ValidationCssClassFor(x => x.ProprietorTypeId)" id="proprietor-radios">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s" id="@nameof(Model.EditPolicy.IEBTDetail.ProprietorTypeId)">Proprietor</legend>
 
-                    @Html.ValidationMessageFor(x => x.ProprietorTypeId, null, new { @class = "govuk-error-message" })
-                    <div class="govuk-form-group">
-                        <div class="govuk-radios " data-module="govuk-radios">
-                            @foreach (eProprietorType pt in Enum.GetValues(typeof(eProprietorType)))
-                            {
-                                if (pt.GetAttributeOfType<EnumGiasAttribute>()?.Hidden != true)
+                        @Html.ValidationMessageFor(x => x.ProprietorTypeId, null, new { @class = "govuk-error-message" })
+                        <div class="govuk-form-group">
+                            <div class="govuk-radios " data-module="govuk-radios">
+                                @foreach (eProprietorType pt in Enum.GetValues(typeof(eProprietorType)))
                                 {
-                                    <div class="govuk-radios__item">
-                                        @{
-                                            var id = TagBuilder.CreateSanitizedId(string.Format("{0}-{1}", "proprietor-type", pt));
-                                        }
-                                        @Html.RadioButtonFor(x => x.ProprietorTypeId, (int)pt, new { id, data_aria_controls = $"{pt}", value=$"{pt}", @class = "govuk-radios__input" })
-                                        @Html.Label(pt.EnumDisplayNameFor().ToSentenceCase(), new { @for = id, data_toggle_panel = pt, @class = "govuk-radios__label"})
-                                    </div>
+                                    if (pt.GetAttributeOfType<EnumGiasAttribute>()?.Hidden != true)
+                                    {
+                                        <div class="govuk-radios__item">
+                                            @{
+                                                var id = TagBuilder.CreateSanitizedId(string.Format("{0}-{1}", "proprietor-type", pt));
+                                            }
+                                            @Html.RadioButtonFor(x => x.ProprietorTypeId, (int)pt, new { id, data_aria_controls = $"{pt}", value = $"{pt}", @class = "govuk-radios__input" })
+                                            @Html.Label(pt.EnumDisplayNameFor().ToSentenceCase(), new { @for = id, data_toggle_panel = pt, @class = "govuk-radios__label" })
+                                        </div>
+                                    }
                                 }
-                            }
+                            </div>
+                            <div class="no-js-show-block">
+                                <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASUpdateProprietors" class="govuk-button--secondary govuk-button govuk-!-margin-top-2 js-hidden">Update</button>
+                            </div>
                         </div>
-                        <div class="no-js-show-block">
-                            <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASUpdateProprietors" class="govuk-button--secondary govuk-button govuk-!-margin-top-2 js-hidden">Update</button>
-                        </div>
-                    </div>
 
-                <div id="proprietor-entry" class="govuk-radios__conditional">
-                    <div id="@eProprietorType.IndividualProprietor.ToString()" class="@(Model.ProprietorTypeId.OneOfThese(eProprietorType.IndividualProprietor)? "": "hidden")">
-                        <p>
-                            Is a person or group of persons who own an independent school and are not members of a proprietorial body.
-                        </p>
-                    </div>
-                    <div id="@eProprietorType.ProprietorBody.ToString()" class="@(Model.ProprietorTypeId.OneOfThese(eProprietorType.ProprietorBody)? "": "hidden")">
-                        <p>
-                            Is a body, corporate or incorporate, that owns an independent school, for example, a limited company, a charity, a trust or a governing body.
-                        </p>
-                        <h4 class="govuk-heading-s">Proprietor body details</h4>
-                    </div>
-                    @if (Model.Proprietors.Any() && Model.ProprietorTypeId.OneOfThese(eProprietorType.IndividualProprietor,eProprietorType.ProprietorBody))
-                    {
-                        Html.RenderPartial(@"Partials\_EditProprietorList");
-                    }
-                    <div id="@eProprietorType.ProprietorBody.ToString()-chair" class="@(Model.ProprietorTypeId.OneOfThese(eProprietorType.ProprietorBody)? "": "hidden")">
-                        <h4 class="govuk-heading-s">Chair of the proprietary body details</h4>
-                        @Html.EditorFor(x => x.ChairOfProprietor, new {ProprietorType = "chairOfProprietor", displayPolicy = Model.EditPolicy.IEBTDetail.ChairOfProprietor})
-                    </div>
-                </div>
-                </fieldset>
+                        <div id="proprietor-entry" class="govuk-radios__conditional">
+                            <div id="@eProprietorType.IndividualProprietor.ToString()" class="@(Model.ProprietorTypeId.OneOfThese(eProprietorType.IndividualProprietor)? "": "hidden")">
+                                <p>
+                                    Is a person or group of persons who own an independent school and are not members of a proprietorial body.
+                                </p>
+                            </div>
+                            <div id="@eProprietorType.ProprietorBody.ToString()" class="@(Model.ProprietorTypeId.OneOfThese(eProprietorType.ProprietorBody)? "": "hidden")">
+                                <p>
+                                    Is a body, corporate or incorporate, that owns an independent school, for example, a limited company, a charity, a trust or a governing body.
+                                </p>
+                                <h4 class="govuk-heading-s">Proprietor body details</h4>
+                            </div>
+                            @if (Model.Proprietors.Any() && Model.ProprietorTypeId.OneOfThese(eProprietorType.IndividualProprietor, eProprietorType.ProprietorBody))
+                            {
+                                Html.RenderPartial(@"Partials\_EditProprietorList");
+                            }
+                            <div id="@eProprietorType.ProprietorBody.ToString()-chair" class="@(Model.ProprietorTypeId.OneOfThese(eProprietorType.ProprietorBody)? "": "hidden")">
+                                <h4 class="govuk-heading-s">Chair of the proprietary body details</h4>
+                                @Html.EditorFor(x => x.ChairOfProprietor, new { ProprietorType = "chairOfProprietor", displayPolicy = Model.EditPolicy.IEBTDetail.ChairOfProprietor })
+                            </div>
+                        </div>
+                    </fieldset>
                 }
 
                 @if (Model.EditPolicy.IEBTDetail.AccommodationChangedId)
                 {
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.AccommodationChangedId)">
-                        @Html.LabelFor(x => x.AccommodationChangedId, new { @class="govuk-label" })
+                        @Html.LabelFor(x => x.AccommodationChangedId, new { @class = "govuk-label" })
                         @Html.ValidationMessageFor(x => x.AccommodationChangedId, null, new { @class = "govuk-error-message" })
                         @Html.DropDownListFor(x => x.AccommodationChangedId, Model.AccommodationChanges, "", new { @class = "govuk-select" })
                     </div>
