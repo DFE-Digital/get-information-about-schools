@@ -266,12 +266,9 @@ namespace Edubase.Web.UI.Controllers
         [Route("SuggestPlace"), HttpGet]
         public async Task<ActionResult> SuggestPlace(string text)
         {
-            if (!QueryValidator.ValidatePlaceSuggestionQuery(text))
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            return Json(await _placesService.SearchAsync(text, true));
+            return QueryValidator.ValidatePlaceSuggestionQuery(text)
+                ? (ActionResult) Json(await _placesService.SearchAsync(text, true))
+                : new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
         private async Task<ActionResult> ProcessLocalAuthorityDisambiguation(SearchViewModel model)
