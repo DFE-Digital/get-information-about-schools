@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using System.Web.Http.Results;
 using System.Web.Mvc;
 using Antlr.Runtime;
-using DM.Common.Validators;
 using Edubase.Services.Establishments.Search;
 
 namespace Edubase.Web.UI.Controllers
