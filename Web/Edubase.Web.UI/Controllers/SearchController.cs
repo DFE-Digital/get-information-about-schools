@@ -1,3 +1,8 @@
+using System;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 using Edubase.Common;
 using Edubase.Services.Establishments;
 using Edubase.Services.Groups;
@@ -5,14 +10,6 @@ using Edubase.Services.Lookup;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Search;
-using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using System.Web.Http.Results;
-using System.Web.Mvc;
-using Antlr.Runtime;
-using Edubase.Services.Establishments.Search;
 
 namespace Edubase.Web.UI.Controllers
 {
