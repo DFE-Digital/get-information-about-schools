@@ -695,7 +695,6 @@
     <Content Include="Areas\Establishments\Views\Establishment\Partials\ConfirmationNotifications.cshtml" />
     <Content Include="Areas\Groups\Views\Group\Partials\GroupConfirmationNotifications.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\Partials\_EditAddresses.cshtml" />
-    <Content Include="blockedips.config" />
     <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Downloads\SelectCustomFields.cshtml" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
