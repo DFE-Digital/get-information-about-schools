@@ -226,7 +226,7 @@
                         @if (Request.IsAuthenticated)
                         {
                             <li class="govuk-header__navigation-item">
-                                @Html.ActionLink("Sign out", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id = "logout-link", Class = "login-link govuk-header__link", rel = "nofollow" })
+                                @Html.ActionLink("Sign out", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id = "logout-link", Class = "logout-link govuk-header__link", rel = "nofollow" })
                             </li>
                         }
                         else
