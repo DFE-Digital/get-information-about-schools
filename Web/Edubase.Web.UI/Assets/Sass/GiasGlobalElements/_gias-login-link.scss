@@ -2,8 +2,16 @@
   position: relative;
 }
 
+.logout-link {
+  @include govuk-media-query(880px) {
+    position: absolute;
+    right: 10px;
+    bottom: 15px;
+  }
+}
+
 .login-link {
-  @include govuk-media-query(860px) {
+  @include govuk-media-query(desktop) {
     position: absolute;
     right: 10px;
     bottom: 15px;
