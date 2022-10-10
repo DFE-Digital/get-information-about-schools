@@ -25,8 +25,16 @@ namespace Edubase.Data.Entity
         public Token(DateTime tokenDate)
         {
             var partitionKey = Base62.FromDate(tokenDate);
-            if (partitionKey.Length < 4) partitionKey = partitionKey.PadLeft(4, '0');
-            
+            if (partitionKey.Length < 4)
+            {
+                partitionKey = partitionKey.PadLeft(4, '0');
+            }
+            else
+            {
+                partitionKey = partitionKey.Substring(0, 4);
+            }
+
+
             PartitionKey = partitionKey;
             RowKey = Base62.Encode(RandomNumber.Next(1, 10_000_000));
         }

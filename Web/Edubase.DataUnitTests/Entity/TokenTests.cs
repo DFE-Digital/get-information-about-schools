@@ -8,32 +8,16 @@ namespace Edubase.DataTests.Entity.UnitTests
     public class TokenTests
     {
         [Fact]
-        public void ValidateTokenPartitionsKeysAreAtLeast4Digits()
+        public void ValidateTokenPartitionsKeysAreOnly4Digits()
         {
-            var testDays = 3650;
+            var testDays = 36500;
 
-            for (var i = 0; i < testDays; i++)
+            for (var i = -3560; i < testDays; i += 10)
             {
                 var d = DateTime.Now.AddDays(i);
 
                 var t = new Token(d);
-                Assert.True(t.PartitionKey.Length > 3);
-            }
-        }
-        
-        [Fact]
-        public void ValidateTokensCanBeDecoded()
-        {
-            var testDays = 3650;
-            for (var i = 0; i < testDays; i++)
-            {
-                var d = DateTime.Now.AddDays(i);
-
-                var encode = Base62.FromDate(d);
-                Assert.True(encode != null);
-
-                var decode = Base62.Decode(encode);
-                Assert.True(decode == int.Parse(string.Concat(d.Year, d.Month, d.Day)));
+                Assert.Equal(4, t.PartitionKey.Length);
             }
         }
     }
