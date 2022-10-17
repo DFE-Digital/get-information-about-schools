@@ -5,7 +5,7 @@ namespace Edubase.Services.Domain
 
     public class EdubaseChangeDto : ChangeDescriptorDto
     {
-        public string Id { get; set; }
+        public new string  Id { get; set; }
         public string OriginatorUserName { get; set; }
         public string ApproverUserName { get; set; }
         public DateTime? EffectiveDateUtc { get; set; }

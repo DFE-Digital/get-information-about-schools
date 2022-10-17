@@ -110,7 +110,7 @@ namespace Edubase.Services.ExternalLookup
                         return isOk;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return false;
                 }

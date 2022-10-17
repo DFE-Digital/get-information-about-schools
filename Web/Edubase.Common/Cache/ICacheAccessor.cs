@@ -1,4 +1,4 @@
-﻿namespace Edubase.Common.Cache
+namespace Edubase.Common.Cache
 {
     using System;
     using System.Collections.Generic;
@@ -9,11 +9,6 @@
     public interface ICacheAccessor : IDisposable
     {
         /// <summary>
-        /// Returns the connected-status of the cache
-        /// </summary>
-        CacheAccessor.State Status { get; }
-
-        /// <summary>
         /// Validates the data going into the Cache and then sets the item into the cache.
         /// The method will return very quickly, because it'll set things to the cache asynchronously (the client code can be agnostic about this fact).
         /// This method is purposely not with Async in the name because it should be treated synchronously. 
@@ -22,17 +17,6 @@
         /// <param name="value">The object to put in</param>
         /// <param name="cacheExpiry">The absolute expiration. Pass in null for no cache expiry.</param>
         void Set<T>(string key, T value, TimeSpan? cacheExpiry);
-
-        /// <summary>
-        /// Validates the data going into the Cache and then sets the item into the cache.
-        /// The method will return very quickly, because it'll set things to the cache asynchronously (the client code can be agnostic about this fact).
-        /// This method is purposely not with Async in the name because it should be treated synchronously. 
-        /// </summary>
-        /// <param name="domain">A prefix for the cache key, to help separate different cache areas; e.g., 'Users' &amp; 'Shoutouts' are examples of domains.</param>
-        /// <param name="key">The cache key</param>
-        /// <param name="value">The object to put in</param>
-        /// <param name="cacheExpiry">The absolute expiration. Pass in null for no cache expiry.</param>
-        void Set<T>(string domain, string key, T value, TimeSpan? cacheExpiry);
 
         /// <summary>
         /// Retrieves an item from the cache
@@ -83,22 +67,6 @@
         /// <returns></returns>
         Task<bool> DeleteAsync(string domain, string key);
 
-        /// <summary>
-        /// Returns how many times the instance tried to connect to the cache
-        /// </summary>
-        int ConnectionAttemptsCount { get; }
-
-        /// <summary>
-        /// Transiently initialises the cache.  This will be done lazily if necessary, however, feel free to use it for eager init.
-        /// </summary>
-        /// <returns></returns>
-        Task InitialiseIfNecessaryAsync();
-
-        /// <summary>
-        /// How long it took to connect to the cache
-        /// </summary>
-        long LastConnectionElapsedMilliseconds { get; }
-
         string CreateKey(string domain, string key);
 
         string CreateKey(string key);
@@ -111,11 +79,7 @@
         Task<T> AutoAsync<T>(Func<T> factory, string cacheKey, string callerTypeName, string relationshipKey = null, [CallerMemberName] string callerFuncName = null);
         T Auto<T>(Func<T> factory, string cacheKey, string callerTypeName, string relationshipKey = null, [CallerMemberName] string callerFuncName = null);
 
-        Task ClearRelatedCacheKeysAsync(string relationshipKey);
-
         long GetMemoryCacheApproximateSize();
-
-        IGrouping<string, KeyValuePair<string, string>>[] GetRedisMemoryUsage();
 
         Task ClearAsync();
     }

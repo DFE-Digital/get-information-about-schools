@@ -41,7 +41,7 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> ClearCache()
         {
             await IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ICacheAccessor>().ClearAsync();
-            return Content("Redis cache and MemoryCache cleared successfully.", "text/plain");
+            return Content("Caches cleared successfully.", "text/plain");
         }
         
         public async Task FlushErrors() => await _loggingService.FlushAsync();

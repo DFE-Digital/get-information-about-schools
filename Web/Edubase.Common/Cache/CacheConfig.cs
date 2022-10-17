@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 
 namespace Edubase.Common.Cache
@@ -35,20 +35,23 @@ namespace Edubase.Common.Cache
         public CacheConfig()
         {
             ConnectionString = ConfigurationManager.ConnectionStrings["Redis"]?.ConnectionString;
-            Name = "Cache_" + Guid.NewGuid().ToString("N").ToUpper(); // useful for debugging purposes.
+            Name = "Cache_" + Guid.NewGuid().ToString("N").ToUpper();
             IsDistributedCachingEnabled = true;
-            IsAuditingEnabled = false; // useful for debugging purposes.
+            IsAuditingEnabled = false;
             IsCentralCacheEnabled = true;
             CacheDomain = ConfigurationManager.AppSettings["Environment"] ?? string.Empty;
 
             if (CacheDomain.Equals("localdev", StringComparison.OrdinalIgnoreCase))
-                CacheDomain += "_" + Environment.MachineName; //Guid.NewGuid().ToString().Substring(0, 5);
+            {
+                CacheDomain += "_" + Environment.MachineName;
+            }
 
             CacheDomain = CacheDomain?.ToLower();
         }
 
-        internal string ProcessKey(string key) => CacheDomain.Clean() != null && key.Clean() != null ? string.Concat(CacheDomain, "_", key) : key;
-
-        
+        internal string ProcessKey(string key)
+        {
+            return CacheDomain.Clean() != null && key.Clean() != null ? string.Concat(CacheDomain, "_", key) : key;
+        }
     }
 }

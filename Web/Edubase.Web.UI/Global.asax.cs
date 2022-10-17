@@ -30,7 +30,7 @@ namespace Edubase.Web.UI
             {
                 GetExternalSettings();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new UnauthorizedAccessException("Could not get external settings. This is probably because you haven't been issued the external settings file.");
             }
@@ -48,7 +48,7 @@ namespace Edubase.Web.UI
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters, IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ExceptionHandler>());
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
-            IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ICacheAccessor>().InitialiseIfNecessaryAsync().Wait();
+            //IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ICacheAccessor>().InitialiseIfNecessaryAsync().Wait();
 
             var fluentValidationModelValidatorProvider = new FluentValidationModelValidatorProvider(new AutofacValidatorFactory(IocConfig.AutofacDependencyResolver));
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
@@ -70,21 +70,23 @@ namespace Edubase.Web.UI
 
         private static void GetExternalSettings()
         {
-            string configPath = Path.Combine(AppContext.BaseDirectory, "../../devsecrets.gias.config.alwaysignore");
+            var configPath = Path.Combine(AppContext.BaseDirectory, "../../devsecrets.gias.config.alwaysignore");
             if (!File.Exists(configPath))
             {
                 throw new FileNotFoundException();
             }
 
-            XmlDocument doc = new XmlDocument();
-            using (XmlReader reader = XmlReader.Create(configPath, GetSecureXmlReaderSettings()))
+            var doc = NewMethod();
+            using (var reader = XmlReader.Create(configPath, GetSecureXmlReaderSettings()))
             {
                 doc.Load(reader);
             }
 
             foreach (XmlNode child in doc.ChildNodes)
             {
+#pragma warning disable IDE0011 // Add braces
                 if (!child.Name.Equals("configuration")) continue;
+#pragma warning restore IDE0011 // Add braces
                 foreach (XmlNode childNode in child.ChildNodes)
                 {
                     if (childNode.Name.Equals("appSettings"))
@@ -99,7 +101,7 @@ namespace Edubase.Web.UI
                     }
                     else if (childNode.Name.Equals("connectionStrings"))
                     {
-                        FieldInfo configurationReadOnlyField = typeof(ConfigurationElement).GetField("_bReadOnly", BindingFlags.Instance | BindingFlags.NonPublic);
+                        var configurationReadOnlyField = typeof(ConfigurationElement).GetField("_bReadOnly", BindingFlags.Instance | BindingFlags.NonPublic);
                         foreach (XmlNode node in childNode.ChildNodes)
                         {
                             if (!node.Name.Equals("add"))
@@ -112,7 +114,7 @@ namespace Edubase.Web.UI
                                 continue;
                             }
 
-                            ConnectionStringSettings connection = ConfigurationManager.ConnectionStrings[node.Attributes?["name"].Value];
+                            var connection = ConfigurationManager.ConnectionStrings[node.Attributes?["name"].Value];
                             configurationReadOnlyField?.SetValue(connection, false);
                             connection.ConnectionString = node.Attributes?["connectionString"].Value;
                         }
@@ -120,6 +122,11 @@ namespace Edubase.Web.UI
                 }
 
             }
+        }
+
+        private static XmlDocument NewMethod()
+        {
+            return new XmlDocument();
         }
 
         protected void Application_Error(object sender, EventArgs e)
@@ -151,7 +158,7 @@ namespace Edubase.Web.UI
                 {
                     if (c != null && c.Response != null && c.Response.Headers != null)
                     {
-                        foreach (string header in headers)
+                        foreach (var header in headers)
                         {
                             if (c.Response.Headers[header] != null)
                             {
@@ -166,7 +173,7 @@ namespace Edubase.Web.UI
 
         private static XmlReaderSettings GetSecureXmlReaderSettings()
         {
-            XmlReaderSettings settings = new XmlReaderSettings
+            var settings = new XmlReaderSettings
             {
                 IgnoreComments = true,
                 IgnoreProcessingInstructions = true,
