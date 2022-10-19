@@ -74,7 +74,7 @@ namespace Edubase.Web.UI
                 throw new FileNotFoundException();
             }
 
-            var doc = NewMethod();
+            var doc = new XmlDocument();
             using (var reader = XmlReader.Create(configPath, GetSecureXmlReaderSettings()))
             {
                 doc.Load(reader);
@@ -120,11 +120,6 @@ namespace Edubase.Web.UI
                 }
 
             }
-        }
-
-        private static XmlDocument NewMethod()
-        {
-            return new XmlDocument();
         }
 
         protected void Application_Error(object sender, EventArgs e)
