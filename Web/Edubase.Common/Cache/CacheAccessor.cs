@@ -180,9 +180,10 @@ namespace Edubase.Common.Cache
         /// Deletes all data from the cache
         /// </summary>
         /// <returns></returns>
-        public async Task ClearAsync()
+        public Task ClearAsync()
         {
-            await Task.Run(() => Clear());
+            Clear();
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -243,15 +244,12 @@ namespace Edubase.Common.Cache
         /// <param name="value"></param>
         /// <param name="cacheExpiry"></param>
         /// <returns></returns>
-        public async Task SetAsync<T>(string key, T value, TimeSpan? cacheExpiry = null)
+        public Task SetAsync<T>(string key, T value, TimeSpan? cacheExpiry = null)
         {
             key = CleanKey(key);
             try
             {
-                var tasks = new List<Task>
-                {
-                    Task.Run(() => PutInFastCache(key, value))
-                };
+                PutInFastCache(key, value);
 
                 DateTime? expirationUtc = null;
                 if (cacheExpiry.HasValue)
@@ -259,9 +257,8 @@ namespace Edubase.Common.Cache
                     expirationUtc = DateTime.UtcNow.Add(cacheExpiry.Value);
                 }
                 var buffer = ToByteBuffer(value, _config.IsPayloadCompressionEnabled, new Dictionary<string, object>() { ["ExpirationUtc"] = expirationUtc });
-                tasks.Add(Task.Run(() => SetInMemoryCache(key, buffer, cacheExpiry)));
+                SetInMemoryCache(key, buffer, cacheExpiry);
 
-                await Task.WhenAll(tasks);
                 Log(eCacheEvent.KeySetInMemory, key);
             }
             catch (Exception ex)
@@ -272,6 +269,7 @@ namespace Edubase.Common.Cache
                     throw;
                 }
             }
+            return Task.CompletedTask;
         }
 
         private void PutInFastCache<T>(string key, T value) 
@@ -286,13 +284,13 @@ namespace Edubase.Common.Cache
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
-        public async Task<CacheResponseDto<T>> GetWithMetaDataAsync<T>(string key)
+        public Task<CacheResponseDto<T>> GetWithMetaDataAsync<T>(string key)
         {
             key = CleanKey(key);
             var dto = new CacheResponseDto<T>().StartTiming();
             try
             {
-                await Task.Run(() => TryGetFromMemoryCache(key, ref dto));
+                TryGetFromMemoryCache(key, ref dto);
             }
             catch (Exception ex)
             {
@@ -304,7 +302,7 @@ namespace Edubase.Common.Cache
                 Log(ex);
                 dto.Exception = ex;
             }
-            return dto.StopTiming();
+            return Task.FromResult(dto.StopTiming());
         }
 
         /// <summary>
@@ -386,19 +384,15 @@ namespace Edubase.Common.Cache
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public async Task<bool> DeleteAsync(string key)
+        public Task<bool> DeleteAsync(string key)
         {
             key = CleanKey(key);
             var retVal = false;
             try
             {
-                var tasks = new List<Task>()
-                {
-                    Task.Run(() => _fastMemcache.Remove(key)),
-                    Task.Run(() => _memoryCache.Remove(key)),
-                };
+                _fastMemcache.Remove(key);
+                _memoryCache.Remove(key);
 
-                await Task.WhenAll(tasks);
                 Log(eCacheEvent.KeyDeletedInMemory, key);
                 retVal = true;
             }
@@ -407,7 +401,7 @@ namespace Edubase.Common.Cache
                 Log(ex);
             }
 
-            return retVal;
+            return Task.FromResult(retVal);
         }
 
         private string CleanKey(string key)
