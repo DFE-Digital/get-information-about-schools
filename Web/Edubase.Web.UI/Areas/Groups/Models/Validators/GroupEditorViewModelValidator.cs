@@ -57,7 +57,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .WithSummaryMessage("The Joined Date specified is not valid")
 
                     .Must((model, joinDate) => VerifyJoinedDate(joinDate.ToDateTime(), model))
-                    .WithMessage(x => $"The join date you entered is before the {x.GroupTypeLabelPrefix.ToLower()}'s open date of {x.OpenDate}. Please enter a later date.");
+                    .WithMessage(x => GenerateJoinDateBeforeOpenDateMessage(x));
             });
 
             // Having edited a joined date, validate the date...
@@ -68,7 +68,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .WithSummaryMessage("The Joined Date specified is not valid")
 
                     .Must((model, joinDate) => VerifyJoinedDate(joinDate.ToDateTime(), model))
-                    .WithMessage(x => $"The join date you entered is before the {x.GroupTypeLabelPrefix.ToLower()}'s open date of {x.OpenDate}. Please enter a later date.");
+                    .WithMessage(x => GenerateJoinDateBeforeOpenDateMessage(x));
             });
 
             // On getting to the save page....
@@ -129,7 +129,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
 
                         .Must((model, estab) => VerifyJoinedDate(estab.JoinedDateEditable.ToDateTime() ?? estab.JoinedDate, model))
                         .When(x => x.OpenDate.ToDateTime().GetValueOrDefault().Date != DateTime.Now.Date)
-                        .WithMessage(x => $"The join date you entered is before the {x.GroupTypeLabelPrefix.ToLower()}'s open date of {x.OpenDate}. Please enter a later date.");
+                        .WithMessage(x => GenerateJoinDateBeforeOpenDateMessage(x));
                 });
             });
 
@@ -152,6 +152,13 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                    model.OpenDate.ToDateTime().HasValue &&
                    joinedDate.HasValue &&
                    joinedDate.Value.Date >= model.OpenDate.ToDateTime().Value.Date;
+        }
+
+        private string GenerateJoinDateBeforeOpenDateMessage(GroupEditorViewModel viewModel)
+        {
+            return "The join date you entered is before the " +
+                $"{viewModel.GroupTypeLabelPrefix.ToLower()}'s open date of {viewModel.OpenDate}. " +
+                "Please enter a later date.";
         }
     }
 }
