@@ -57,7 +57,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .WithSummaryMessage("The Joined Date specified is not valid")
 
                     .Must((model, joinDate) => VerifyJoinedDate(joinDate.ToDateTime(), model))
-                    .WithMessage(x => $"The join date you entered is before the {x.GroupType}'s open date of {x.OpenDate}. Please enter a later date.");
+                    .WithMessage(x => $"The join date you entered is before the {x.GroupTypeLabelPrefix.ToLower()}'s open date of {x.OpenDate}. Please enter a later date.");
             });
 
             // Having edited a joined date, validate the date...
@@ -68,7 +68,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .WithSummaryMessage("The Joined Date specified is not valid")
 
                     .Must((model, joinDate) => VerifyJoinedDate(joinDate.ToDateTime(), model))
-                    .WithMessage(x => $"The join date you entered is before the {x.GroupType}'s open date of {x.OpenDate}. Please enter a later date.");
+                    .WithMessage(x => $"The join date you entered is before the {x.GroupTypeLabelPrefix.ToLower()}'s open date of {x.OpenDate}. Please enter a later date.");
             });
 
             // On getting to the save page....
@@ -129,7 +129,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
 
                         .Must((model, estab) => VerifyJoinedDate(estab.JoinedDateEditable.ToDateTime() ?? estab.JoinedDate, model))
                         .When(x => x.OpenDate.ToDateTime().GetValueOrDefault().Date != DateTime.Now.Date)
-                        .WithMessage(x => $"The join date you entered is before the {x.GroupType}'s open date of {x.OpenDate}. Please enter a later date.");
+                        .WithMessage(x => $"The join date you entered is before the {x.GroupTypeLabelPrefix.ToLower()}'s open date of {x.OpenDate}. Please enter a later date.");
                 });
             });
 
