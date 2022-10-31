@@ -38,7 +38,7 @@
             @if (Model.CurrentPageIndex > 1)
             {
                 <li>
-                    <a href="@Url.Current(new {skip = (Model.Skip - Model.Take), Count = Model.Count})" class="pagination-prev" aria-label="Previous page">Previous</a>
+                    <a href="@Url.Current(new {skip = (Model.Skip - Model.Take), Count = Model.Count})" class="pagination-prev" aria-label="Previous page"><< Previous</a>
                 </li>
             }
 
@@ -62,7 +62,7 @@
             @if (Model.CurrentPageIndex < Model.PageCount)
             {
                 <li>
-                    <a href="@Url.Current(new {skip = (Model.Skip + Model.Take), Count = Model.Count})" class="pagination-next" aria-label="Next page">Next</a>
+                    <a href="@Url.Current(new {skip = (Model.Skip + Model.Take), Count = Model.Count})" class="pagination-next" aria-label="Next page">Next >></a>
                 </li>
             }
 
