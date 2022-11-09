@@ -157,9 +157,10 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
         private string GenerateJoinDateBeforeOpenDateMessage(GroupEditorViewModel viewModel)
         {
             return $"An establishment can only join the {viewModel.GroupTypeLabelPrefix.ToLower()} " +
-                $"on the date the {viewModel.GroupTypeLabelPrefix.ToLower()} is opened or a date afterwards. " +
+                $"on the date the {viewModel.GroupTypeLabelPrefix.ToLower()} " +
+                $"is opened or a date afterwards. " +
                 $"The {viewModel.GroupTypeLabelPrefix.ToLower()} opened on {viewModel.OpenDate}. " +
-                $"Please enter a valid joining date.";
+                $"A valid joining date must be entered.";
         }
     }
 }
