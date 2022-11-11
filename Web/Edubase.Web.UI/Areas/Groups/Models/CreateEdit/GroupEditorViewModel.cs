@@ -68,7 +68,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public bool IsLocalAuthorityEditable { get; set; }
         public string LocalAuthorityName { get; set; }
         public string OpenDateLabel => GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust) ? "Incorporated on (open date)" : "Open date";
-        public GT? GroupType => GroupTypeId.HasValue ? (GT)GroupTypeId.Value : null as GT?;
+        public GT? GroupType => GroupTypeId.HasValue ? (GT) GroupTypeId.Value : null as GT?;
 
         public string OriginalGroupName { get; set; }
         public string OriginalGroupTypeName { get; set; }

@@ -1,3 +1,8 @@
+using System;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 using Edubase.Common;
 using Edubase.Services.Establishments;
 using Edubase.Services.Groups;
@@ -5,15 +10,6 @@ using Edubase.Services.Lookup;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Search;
-using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using System.Web.Http.Results;
-using System.Web.Mvc;
-using Antlr.Runtime;
-using DM.Common.Validators;
-using Edubase.Services.Establishments.Search;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -267,12 +263,9 @@ namespace Edubase.Web.UI.Controllers
         [Route("SuggestPlace"), HttpGet]
         public async Task<ActionResult> SuggestPlace(string text)
         {
-            if (!QueryValidator.ValidatePlaceSuggestionQuery(text))
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            return Json(await _placesService.SearchAsync(text, true));
+            return QueryValidator.ValidatePlaceSuggestionQuery(text)
+                ? (ActionResult) Json(await _placesService.SearchAsync(text, true))
+                : new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
         private async Task<ActionResult> ProcessLocalAuthorityDisambiguation(SearchViewModel model)

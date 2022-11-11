@@ -48,6 +48,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="DisposerTests.cs" />
+    <Compile Include="Formatting\Base62Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
