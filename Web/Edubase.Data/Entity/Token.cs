@@ -33,8 +33,6 @@ namespace Edubase.Data.Entity
             {
                 partitionKey = partitionKey.Substring(0, 4);
             }
-
-
             PartitionKey = partitionKey;
             RowKey = Base62.Encode(RandomNumber.Next(1, 10_000_000));
         }
