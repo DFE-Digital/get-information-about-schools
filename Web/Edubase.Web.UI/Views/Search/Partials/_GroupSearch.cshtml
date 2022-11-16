@@ -28,7 +28,7 @@
                     <div class="govuk-form-group">
                         <div class="govuk-radio" data-module="govuk-radio">
                             <div class="govuk-radios__item">
-                                @Html.RadioButtonFor(m => m.SearchType, eSearchType.Group, new {id = "searchtype-name-group", name = "search-by", value = "all", data_toggle_panel = "#searchby-group-ref", @class = "govuk-radios__input"})
+                                @Html.RadioButtonFor(m => m.SearchType, eSearchType.Group, new {id = "searchtype-name-group", name = "search-by", value = "all", data_toggle_panel = "#searchby-group-ref", autocomplete="off", @class = "govuk-radios__input"})
                                 <label for="searchtype-name-group" class="govuk-label govuk-radios__label">
                                     Name or reference number
                                 </label>
@@ -74,7 +74,7 @@
                     <div class="govuk-form-group">
                         <div class="govuk-radio" data-module="govuk-radio">
                             <div class="govuk-radios__item">
-                                <input id="searchtype-all-groups" name="search-by" value="all" type="radio" data-toggle-panel="#searchby-allgroups-ref" class="govuk-radios__input">
+                                <input id="searchtype-all-groups" name="search-by" value="all" type="radio" data-toggle-panel="#searchby-allgroups-ref" autocomplete="off" class="govuk-radios__input">
                                 <label for="searchtype-all-groups" class="govuk-label govuk-radios__label">
                                     All establishment groups
                                 </label>
