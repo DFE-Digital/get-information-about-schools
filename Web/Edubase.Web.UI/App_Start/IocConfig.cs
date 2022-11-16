@@ -172,6 +172,10 @@ namespace Edubase.Web.UI
             builder.RegisterType<NotificationBannerRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NotificationTemplateRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NewsArticleRepository>().AsSelf().SingleInstance();
+
+            builder.RegisterInstance(CreateLookupClient()).SingleInstance().Named<HttpClient>("LookupClient");
+            builder.RegisterInstance(w => new HttpClientWrapper(w.ResolveNamed<HttpClient>("LookupClient"));
+            builder.Register(c => new LookupApiService(c.ResolveNamed<HttpClient>("LookupClient"), typeof(ISecurityService))).As<ILookupService>();
         }
 
         public static JsonMediaTypeFormatter CreateJsonMediaTypeFormatter()
@@ -240,6 +244,23 @@ namespace Edubase.Web.UI
             var header = new ProductHeaderValue("GIAS", Assembly.GetExecutingAssembly().GetName().Version.ToString());
             var userAgent = new ProductInfoHeaderValue(header);
             client.DefaultRequestHeaders.UserAgent.Add(userAgent);
+            return client;
+        }
+
+        public static HttpClient CreateLookupClient()
+        {
+            var client = new HttpClient(new HttpClientHandler { UseCookies = false })
+            {
+                BaseAddress = new Uri(ConfigurationManager.AppSettings["LookupApiBaseAddress"]),
+                Timeout = TimeSpan.FromSeconds(180),
+            };
+
+            var apiUsername = ConfigurationManager.AppSettings["LookupApi:Username"];
+            var apiPassword = ConfigurationManager.AppSettings["LookupApi:Password"];
+
+            if (apiUsername != null && apiPassword != null)
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());
+
             return client;
         }
     }
