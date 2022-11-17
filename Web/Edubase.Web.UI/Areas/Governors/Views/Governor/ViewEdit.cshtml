@@ -1,6 +1,7 @@
 @using Edubase.Services.Enums;
 @using Edubase.Web.UI.Models.Grid
 @using Edubase.Web.UI.Helpers
+
 @model GovernorsGridViewModel
 @{
     Layout = Model.Layout;
@@ -344,20 +345,20 @@ else
             foreach (var row in grid.Rows)
             {
                 <div id="gov-id-@row.Model.Id" class="governor-edit-panel govuk-!-margin-bottom-9 @Html.DuplicateCssClassFor(row.Model.Id)">
-                    <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="gid-@row.Model.Id">@row.Cells[0].Text</h3>
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="@StringUtils.ElementIdFormat(grid.Title+"-name")">@row.Cells[0].Text</h3>
                     <dl class="govuk-summary-list govuk-!-margin-bottom-1">
                         @if (historic)
                         {
                             <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key">Role</dt>
-                                <dd class="govuk-summary-list__value">@grid.RoleName</dd>
+                                <dt class="govuk-summary-list__key" id="@StringUtils.ElementIdFormat(@grid.Title+"-key")">Role</dt>
+                                <dd class="govuk-summary-list__value" id="@StringUtils.ElementIdFormat(@grid.Title+"-value")">@grid.RoleName</dd>
                             </div>
                         }
                         @foreach (var cell in row.Cells.Skip(1))
                         {
                             <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key">@cell.Parent.Text</dt>
-                                <dd class="govuk-summary-list__value">@(cell.Text ?? "Not recorded")</dd>
+                                <dt class="govuk-summary-list__key" id="@StringUtils.ElementIdFormat(@grid.Title+"-"+@cell.Parent.Text+"-key")">@cell.Parent.Text</dt>
+                                <dd class="govuk-summary-list__value" id="@StringUtils.ElementIdFormat(@grid.Title+"-"+@cell.Parent.Text+"-value")">@(cell.Text ?? "Not recorded")</dd>
                             </div>
                         }
                     </dl>
