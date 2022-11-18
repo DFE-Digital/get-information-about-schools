@@ -1,59 +1,58 @@
+using System;
+using System.Configuration;
+using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
+using System.Reflection;
+using System.Web;
+using System.Web.Http;
+using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
 using AutoMapper;
+using AzureTableLogger;
+using AzureTableLogger.Services;
 using Edubase.Common;
 using Edubase.Common.Cache;
 using Edubase.Data;
+using Edubase.Data.Repositories;
 using Edubase.Services;
 using Edubase.Services.Approvals;
+using Edubase.Services.Core;
+using Edubase.Services.DataQuality;
 using Edubase.Services.Downloads;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Downloads;
+using Edubase.Services.ExternalLookup;
+using Edubase.Services.Geo;
 using Edubase.Services.Governors;
 using Edubase.Services.Governors.Downloads;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Downloads;
-using Edubase.Services.IntegrationEndPoints.CompaniesHouse;
 using Edubase.Services.IntegrationEndPoints.AzureMaps;
+using Edubase.Services.IntegrationEndPoints.CompaniesHouse;
+using Edubase.Services.IntegrationEndPoints.OSPlaces;
 using Edubase.Services.IntegrationEndPoints.Smtp;
 using Edubase.Services.Lookup;
 using Edubase.Services.Nomenclature;
 using Edubase.Services.Security;
 using Edubase.Services.Texuna.Approvals;
 using Edubase.Services.Texuna.ChangeHistory;
+using Edubase.Services.Texuna.Core;
 using Edubase.Services.Texuna.Downloads;
 using Edubase.Services.Texuna.Establishments;
 using Edubase.Services.Texuna.Governors;
 using Edubase.Services.Texuna.Groups;
 using Edubase.Services.Texuna.Lookup;
 using Edubase.Services.Texuna.Security;
-using Edubase.Web.Resources;
-using Edubase.Web.UI.Validation;
-using Newtonsoft.Json;
-using System;
-using System.Configuration;
-using System.Net;
-using System.Net.Http;
-using System.Reflection;
-using System.Web.Http;
-using System.Web.Mvc;
-using Edubase.Data.Repositories;
-using Edubase.Services.DataQuality;
-using Edubase.Web.UI.Helpers;
-using Edubase.Services.Core;
-using System.Net.Http.Formatting;
 using Edubase.Services.Texuna.Serialization;
-using System.Net.Http.Headers;
-using Edubase.Services.Texuna.Core;
-using System.Web;
-using AzureTableLogger;
-using AzureTableLogger.Services;
-using Edubase.Services.ExternalLookup;
+using Edubase.Web.Resources;
 using Edubase.Web.UI.Filters;
+using Edubase.Web.UI.Helpers;
+using Edubase.Web.UI.Validation;
 using Microsoft.WindowsAzure.Storage;
-using Edubase.Services.Geo;
-using Edubase.Services.IntegrationEndPoints.OSPlaces;
+using Newtonsoft.Json;
 
 namespace Edubase.Web.UI
 {
@@ -130,13 +129,48 @@ namespace Edubase.Web.UI
             builder.RegisterType<EstablishmentDownloadApiService>().As<IEstablishmentDownloadService>();
             builder.RegisterType<GroupReadApiService>().As<IGroupReadService>();
             builder.RegisterType<GroupDownloadApiService>().As<IGroupDownloadService>();
-            builder.RegisterType<LookupApiService>().As<ILookupService>();
+            //builder.RegisterType<LookupApiService>().As<ILookupService>();
 
             builder.RegisterInstance(CreateJsonMediaTypeFormatter()).SingleInstance().AsSelf();
 
+            // CML current code with just one API
+            //builder.RegisterInstance(CreateHttpClient()).SingleInstance().AsSelf();
+            //builder.RegisterType<HttpClientWrapper>().AsSelf();
+            //builder.RegisterType<HttpClientWrapper>().As<IHttpClientWrapper>();
+
             builder.RegisterInstance(CreateHttpClient()).SingleInstance().AsSelf();
-            builder.RegisterType<HttpClientWrapper>().AsSelf();
-            builder.RegisterType<HttpClientWrapper>().As<IHttpClientWrapper>();
+            builder.RegisterType<HttpClientWrapper>()
+               .AsSelf()
+               .As<IHttpClientWrapper>();
+
+            builder.RegisterInstance(CreateLookupClient()).SingleInstance().Named<HttpClient>("LookupApiClient");
+
+            // attempt to register type rather than instance - ResolvedParameter doesn't work 
+            //builder.RegisterType<HttpClientWrapper>()
+                //.AsSelf()
+                //.PreserveExistingDefaults() // don't overwrite the default HttpClientWrapper for all other DI
+                //.WithParameter(
+                //   new ResolvedParameter(
+                //       (pi, ctx) => pi.ParameterType == typeof(HttpClient) && pi.Name == "LookupApiClient",
+                //       (pi, ctx) => "httpClient"
+                //       ))
+                //.WithParameter("httpClient", CreateLookupClient()) // this works but creates new HttpClient every time instead of singleton
+                //.WithParameter(new NamedParameter("httpsClient",  ))
+                //.Named<HttpClientWrapper>("LookupHttpClientWrapper");
+
+            // register a ClientWrapper with the named LookupHttpClientWrapper
+            builder.Register(c => new HttpClientWrapper(
+                c.ResolveNamed<HttpClient>("LookupApiClient"), // inject the LookupHttpClient
+                c.Resolve<JsonMediaTypeFormatter>(),
+                c.Resolve<IClientStorage>(),
+                c.Resolve<ApiRecorderSessionItemRepository>()
+                ))
+                .Named<HttpClientWrapper>("LookupHttpClientWrapper");
+
+            builder.Register(c => new LookupApiService(
+                c.ResolveNamed<HttpClientWrapper>("LookupHttpClientWrapper"), // inject the specific LookupWrapper instead of the default
+                c.Resolve<ISecurityService>()))
+                .As<ILookupService>();
 
             builder.RegisterType<GovernorDownloadApiService>().As<IGovernorDownloadService>();
             builder.RegisterType<GovernorsReadApiService>().As<IGovernorsReadService>();
@@ -172,10 +206,6 @@ namespace Edubase.Web.UI
             builder.RegisterType<NotificationBannerRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NotificationTemplateRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NewsArticleRepository>().AsSelf().SingleInstance();
-
-            builder.RegisterInstance(CreateLookupClient()).SingleInstance().Named<HttpClient>("LookupClient");
-            builder.RegisterInstance(w => new HttpClientWrapper(w.ResolveNamed<HttpClient>("LookupClient"));
-            builder.Register(c => new LookupApiService(c.ResolveNamed<HttpClient>("LookupClient"), typeof(ISecurityService))).As<ILookupService>();
         }
 
         public static JsonMediaTypeFormatter CreateJsonMediaTypeFormatter()
@@ -256,7 +286,7 @@ namespace Edubase.Web.UI
             };
 
             var apiUsername = ConfigurationManager.AppSettings["LookupApi:Username"];
-            var apiPassword = ConfigurationManager.AppSettings["LookupApi:Password"];
+            var apiPassword = ConfigurationManager.AppSettings["api:Password"];
 
             if (apiUsername != null && apiPassword != null)
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());
