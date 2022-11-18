@@ -338,7 +338,7 @@ else
     <div class="governor-list">
         @if (!historic)
         {
-            <h2 class="govuk-heading-m">@grid.Title</h2>
+            <h2 class="govuk-heading-m" id="@StringUtils.ElementIdFormat(grid.Title+"-heading")">@grid.Title</h2>
         }
         @if (grid.Rows.Any())
         {
