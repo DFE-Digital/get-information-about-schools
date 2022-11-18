@@ -1,101 +1,102 @@
+@using Edubase.Web.UI.Helpers
 @model Edubase.Web.UI.Models.Grid.GovernorGridViewModel
 
-    <div class="governor-grid">
-        @if (!Model.IsHistoricRole)
+<div class="governor-grid">
+    @if (!Model.IsHistoricRole)
+    {
+        <h2 class="govuk-heading-m" id="@StringUtils.ElementIdFormat(@Model.Title+"-heading")">@Model.Title</h2>
+    }
+    @if (!User.Identity.IsAuthenticated && Model.GroupUid != null && Model.IsSharedRole)
+    {
+        if (Model.Rows.Any())
         {
-            <h2 class="govuk-heading-m">@Model.Title</h2>
+            <p class="govuk-body-s">This multi-academy trust operates a shared governance model, please see the information displayed on the individual academy records.</p>
         }
-        @if (!User.Identity.IsAuthenticated && Model.GroupUid != null && Model.IsSharedRole)
+        else
         {
-            if (Model.Rows.Any())
+            <p class="govuk-body-s">Not recorded</p>
+        }
+    }
+    else
+    {
+        if (Model.Rows.Any())
+        {
+            if (!User.Identity.IsAuthenticated)
             {
-                <p class="govuk-body-s">This multi-academy trust operates a shared governance model, please see the information displayed on the individual academy records.</p>
+                <table class="govuk-table gias-table list-table sortable-table governors">
+                    <caption class="govuk-visually-hidden">@Model.Title</caption>
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            @foreach (var column in Model.HeaderCells)
+                            {
+                                if (!String.IsNullOrEmpty(column.SortKey))
+                                {
+                                    <th scope="col" class="govuk-table__header col-@column.SortKey @(@Model.HeaderCells[1].SortKey == "appointed" ? "has-appointed" : "")">
+                                        <a href="#" class="js-sort-header" data-sort-key="@column.SortKey" data-sort-type="@column.SortType">
+                                            @(column.Text ?? "Not recorded")
+                                        </a>
+                                    </th>
+                                }
+                                else
+                                {
+                                    <th class="govuk-table__header">
+                                        @(column.Text ?? "Not recorded")
+                                    </th>
+                                }
+                            }
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        @foreach (var row in Model.Rows)
+                        {
+                            var cellCount = 0;
+                            <tr class="govuk-table__row">
+                                @foreach (var cell in row.Cells)
+                                {
+                                    <td data-label="@Model.HeaderCells[cellCount].Text" class="govuk-table__cell" id="@StringUtils.ElementIdFormat(@Model.Title+"-"+@cell.Parent.Text+"-Value")">@(cell.Text ?? "Not recorded")</td>
+                                    cellCount++;
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             }
             else
             {
-                <p class="govuk-body-s">Not recorded</p>
+                foreach (var row in Model.Rows)
+                {
+                    if (row.Cells.Any())
+                    {
+                        <div id="gov-id-@row.Model.Id" class="governor-edit-panel @Html.DuplicateCssClassFor(row.Model.Id)">
+                            <h3 class="govuk-heading-s govuk-!-margin-bottom-2" id="@StringUtils.ElementIdFormat(@Model.Title+"-name")">@row.Cells[0].Text</h3>
+                            <dl class="govuk-summary-list">
+                                @if (Model.IsHistoricRole)
+                                {
+                                    <div class="govuk-summary-list__row">
+                                        <dt class="govuk-summary-list__key">Role:</dt>
+                                        <dd class="govuk-summary-list__value">@Model.RoleName</dd>
+                                    </div>
+                                }
+                                @foreach (var cell in row.Cells.Skip(1))
+                                {
+                                    if (cell.Parent != null)
+                                    {
+                                        <div class="govuk-summary-list__row">
+                                            <dt class="govuk-summary-list__key" id="@StringUtils.ElementIdFormat(@Model.Title+"-"+@cell.Parent.Text+"-key")">@cell.Parent.Text:</dt>
+                                            <dd class="govuk-summary-list__value" id="@StringUtils.ElementIdFormat(@Model.Title+"-"+@cell.Parent.Text+"-value")">@(cell.Text ?? "Not recorded")</dd>
+                                        </div>
+
+                                    }
+                                }
+                            </dl>
+                        </div>
+                    }
+                }
             }
         }
         else
         {
-            if (Model.Rows.Any())
-            {
-                if (!User.Identity.IsAuthenticated)
-                {
-                    <table class="govuk-table gias-table list-table sortable-table governors">
-                        <caption class="govuk-visually-hidden">@Model.Title</caption>
-                        <thead class="govuk-table__head">
-                            <tr class="govuk-table__row">
-                                @foreach (var column in Model.HeaderCells)
-                                {
-                                    if (!String.IsNullOrEmpty(column.SortKey))
-                                    {
-                                        <th scope="col" class="govuk-table__header col-@column.SortKey @(@Model.HeaderCells[1].SortKey == "appointed" ? "has-appointed" : "")">
-                                            <a href="#" class="js-sort-header" data-sort-key="@column.SortKey" data-sort-type="@column.SortType">
-                                                @(column.Text ?? "Not recorded")
-                                            </a>
-                                        </th>
-                                    }
-                                    else
-                                    {
-                                        <th class="govuk-table__header">
-                                            @(column.Text ?? "Not recorded")
-                                        </th>
-                                    }
-                                }
-                            </tr>
-                        </thead>
-                        <tbody class="govuk-table__body">
-                            @foreach (var row in Model.Rows)
-                            {
-                                var cellCount = 0;
-                                <tr class="govuk-table__row">
-                                    @foreach (var cell in row.Cells)
-                                    {
-                                        <td data-label="@Model.HeaderCells[cellCount].Text" class="govuk-table__cell">@(cell.Text ?? "Not recorded")</td>
-                                        cellCount++;
-                                    }
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-                else
-                {
-                    foreach (var row in Model.Rows)
-                    {
-                        if (row.Cells.Any())
-                        {
-                            <div id="gov-id-@row.Model.Id" class="governor-edit-panel @Html.DuplicateCssClassFor(row.Model.Id)">
-                                <h3 class="govuk-heading-s govuk-!-margin-bottom-2" id="gid-@row.Model.Id">@row.Cells[0].Text</h3>
-                                <dl class="govuk-summary-list">
-                                    @if (Model.IsHistoricRole)
-                                    {
-                                        <div class="govuk-summary-list__row">
-                                            <dt class="govuk-summary-list__key">Role:</dt>
-                                            <dd class="govuk-summary-list__value">@Model.RoleName</dd>
-                                        </div>
-                                    }
-                                    @foreach (var cell in row.Cells.Skip(1))
-                                    {
-                                        if (cell.Parent != null)
-                                        {
-                                            <div class="govuk-summary-list__row">
-                                                <dt class="govuk-summary-list__key">@cell.Parent.Text:</dt>
-                                                <dd class="govuk-summary-list__value">@(cell.Text ?? "Not recorded")</dd>
-                                            </div>
-
-                                        }
-                                    }
-                                </dl>
-                            </div>
-                        }
-                    }
-                }
-            }
-            else
-            {
-                <p class="govuk-body-s">Not recorded</p>
-            }
+            <p class="govuk-body-s">Not recorded</p>
         }
-    </div>
+    }
+</div>
