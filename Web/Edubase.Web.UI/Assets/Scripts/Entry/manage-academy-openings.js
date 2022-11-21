@@ -255,6 +255,9 @@ const academyOpenings = new Vue({
           this.slicePage = this.currentPage - 2;
         }
       }
+      if (this.slicePage < 0) {
+        this.slicePage = 0;
+      }
     },
     editEstab: function (urn) {
       this.searchUrn = urn;
