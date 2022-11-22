@@ -130,13 +130,27 @@ namespace Edubase.Web.UI
             builder.RegisterType<EstablishmentDownloadApiService>().As<IEstablishmentDownloadService>();
             builder.RegisterType<GroupReadApiService>().As<IGroupReadService>();
             builder.RegisterType<GroupDownloadApiService>().As<IGroupDownloadService>();
-            builder.RegisterType<LookupApiService>().As<ILookupService>();
-
             builder.RegisterInstance(CreateJsonMediaTypeFormatter()).SingleInstance().AsSelf();
 
+            // HttpClient and HttpClientWrapper injected by default
             builder.RegisterInstance(CreateHttpClient()).SingleInstance().AsSelf();
-            builder.RegisterType<HttpClientWrapper>().AsSelf();
-            builder.RegisterType<HttpClientWrapper>().As<IHttpClientWrapper>();
+            builder.RegisterType<HttpClientWrapper>()
+               .AsSelf()
+               .As<IHttpClientWrapper>();
+
+            // named HttpClient and HttpClientWrapper used by lookup service
+            builder.RegisterInstance(CreateLookupClient()).SingleInstance().Named<HttpClient>("LookupApiClient");
+            builder.Register(c => new HttpClientWrapper(
+                c.ResolveNamed<HttpClient>("LookupApiClient"),
+                c.Resolve<JsonMediaTypeFormatter>(),
+                c.Resolve<IClientStorage>(),
+                c.Resolve<ApiRecorderSessionItemRepository>()
+                ))
+                .Named<HttpClientWrapper>("LookupHttpClientWrapper");
+            builder.Register(c => new LookupApiService(
+                c.ResolveNamed<HttpClientWrapper>("LookupHttpClientWrapper"),
+                c.Resolve<ISecurityService>()))
+                .As<ILookupService>();
 
             builder.RegisterType<GovernorDownloadApiService>().As<IGovernorDownloadService>();
             builder.RegisterType<GovernorsReadApiService>().As<IGovernorsReadService>();
@@ -240,6 +254,25 @@ namespace Edubase.Web.UI
             var header = new ProductHeaderValue("GIAS", Assembly.GetExecutingAssembly().GetName().Version.ToString());
             var userAgent = new ProductInfoHeaderValue(header);
             client.DefaultRequestHeaders.UserAgent.Add(userAgent);
+            return client;
+        }
+        public static HttpClient CreateLookupClient()
+        {
+            var lookupApi = ConfigurationManager.AppSettings["LookupApiBaseAddress"];
+            var client = new HttpClient(new HttpClientHandler { UseCookies = false })
+            {
+                BaseAddress = new Uri(lookupApi ?? ConfigurationManager.AppSettings["TexunaApiBaseAddress"]),
+                Timeout = TimeSpan.FromSeconds(180),
+            };
+
+            if (lookupApi == null)
+            {
+                var apiUsername = ConfigurationManager.AppSettings["api:Username"];
+                var apiPassword = ConfigurationManager.AppSettings["api:Password"];
+
+                if (apiUsername != null && apiPassword != null)
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());
+            }
             return client;
         }
     }
