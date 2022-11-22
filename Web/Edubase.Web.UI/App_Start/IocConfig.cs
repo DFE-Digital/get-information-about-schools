@@ -129,46 +129,26 @@ namespace Edubase.Web.UI
             builder.RegisterType<EstablishmentDownloadApiService>().As<IEstablishmentDownloadService>();
             builder.RegisterType<GroupReadApiService>().As<IGroupReadService>();
             builder.RegisterType<GroupDownloadApiService>().As<IGroupDownloadService>();
-            //builder.RegisterType<LookupApiService>().As<ILookupService>();
 
             builder.RegisterInstance(CreateJsonMediaTypeFormatter()).SingleInstance().AsSelf();
 
-            // CML current code with just one API
-            //builder.RegisterInstance(CreateHttpClient()).SingleInstance().AsSelf();
-            //builder.RegisterType<HttpClientWrapper>().AsSelf();
-            //builder.RegisterType<HttpClientWrapper>().As<IHttpClientWrapper>();
-
+            // HttpClient and HttpClientWrapper injected by default
             builder.RegisterInstance(CreateHttpClient()).SingleInstance().AsSelf();
             builder.RegisterType<HttpClientWrapper>()
                .AsSelf()
                .As<IHttpClientWrapper>();
 
+            // named HttpClient and HttpClientWrapper used by lookup service
             builder.RegisterInstance(CreateLookupClient()).SingleInstance().Named<HttpClient>("LookupApiClient");
-
-            // attempt to register type rather than instance - ResolvedParameter doesn't work 
-            //builder.RegisterType<HttpClientWrapper>()
-                //.AsSelf()
-                //.PreserveExistingDefaults() // don't overwrite the default HttpClientWrapper for all other DI
-                //.WithParameter(
-                //   new ResolvedParameter(
-                //       (pi, ctx) => pi.ParameterType == typeof(HttpClient) && pi.Name == "LookupApiClient",
-                //       (pi, ctx) => "httpClient"
-                //       ))
-                //.WithParameter("httpClient", CreateLookupClient()) // this works but creates new HttpClient every time instead of singleton
-                //.WithParameter(new NamedParameter("httpsClient",  ))
-                //.Named<HttpClientWrapper>("LookupHttpClientWrapper");
-
-            // register a ClientWrapper with the named LookupHttpClientWrapper
             builder.Register(c => new HttpClientWrapper(
-                c.ResolveNamed<HttpClient>("LookupApiClient"), // inject the LookupHttpClient
+                c.ResolveNamed<HttpClient>("LookupApiClient"),
                 c.Resolve<JsonMediaTypeFormatter>(),
                 c.Resolve<IClientStorage>(),
                 c.Resolve<ApiRecorderSessionItemRepository>()
                 ))
                 .Named<HttpClientWrapper>("LookupHttpClientWrapper");
-
             builder.Register(c => new LookupApiService(
-                c.ResolveNamed<HttpClientWrapper>("LookupHttpClientWrapper"), // inject the specific LookupWrapper instead of the default
+                c.ResolveNamed<HttpClientWrapper>("LookupHttpClientWrapper"), 
                 c.Resolve<ISecurityService>()))
                 .As<ILookupService>();
 
@@ -279,18 +259,21 @@ namespace Edubase.Web.UI
 
         public static HttpClient CreateLookupClient()
         {
+            var lookupApi = ConfigurationManager.AppSettings["LookupApiBaseAddress"];
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
             {
-                BaseAddress = new Uri(ConfigurationManager.AppSettings["LookupApiBaseAddress"]),
+                BaseAddress = new Uri(lookupApi ?? ConfigurationManager.AppSettings["TexunaApiBaseAddress"]),
                 Timeout = TimeSpan.FromSeconds(180),
             };
 
-            var apiUsername = ConfigurationManager.AppSettings["LookupApi:Username"];
-            var apiPassword = ConfigurationManager.AppSettings["api:Password"];
+            if (lookupApi == null)
+            {
+                var apiUsername = ConfigurationManager.AppSettings["api:Username"];
+                var apiPassword = ConfigurationManager.AppSettings["api:Password"];
 
-            if (apiUsername != null && apiPassword != null)
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());
-
+                if (apiUsername != null && apiPassword != null)
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());
+            }
             return client;
         }
     }
