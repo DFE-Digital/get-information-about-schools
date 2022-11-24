@@ -355,7 +355,7 @@
                 }
 
                 <div class="button-row govuk-!-padding-top-4">
-                    <button type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveIEBT)">Save IEBT</button>
+                    <button type="submit" class="govuk-button" id="save-iebt-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveIEBT)">Save IEBT</button>
                 </div>
 
             </div>
@@ -366,7 +366,7 @@
             <div class="govuk-grid-column-full">
                 @{ Html.RenderPartial("Partials/_ConfirmChanges"); }
                 <div class="button-row">
-                    <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm">Accept and save</button>
+                    <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm" id="accept-and-save-iebt-button">Accept and save</button>
                 </div>
             </div>
         }
