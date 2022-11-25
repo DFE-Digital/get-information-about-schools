@@ -74,7 +74,7 @@
                                     }
                                     else
                                     {
-                                        <button class="govuk-button govuk-button--secondary govuk-accordion__buttons" aria_label="Move group down" disabled>Down</button>
+                                        <button id=@StringUtils.ElementIdFormat(group.GroupName + "-group-down-button") class="govuk-button govuk-button--secondary govuk-accordion__buttons" aria_label="Move group down" disabled>Down</button>
                                     }
 
                                     @if (group.DisplayOrder > Model.Groups.First().DisplayOrder)
@@ -83,7 +83,7 @@
                                     }
                                     else
                                     {
-                                        <button class="govuk-button govuk-button--secondary govuk-accordion__buttons" aria_label="Move group up" disabled>Up</button>
+                                        <button id=@StringUtils.ElementIdFormat(group.GroupName + "-group-up-button") class="govuk-button govuk-button--secondary govuk-accordion__buttons" aria_label="Move group up" disabled>Up</button>
                                     }
                                 </div>
                             </div>
