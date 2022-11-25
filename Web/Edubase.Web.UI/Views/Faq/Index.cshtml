@@ -38,8 +38,8 @@
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
-                @Html.RouteLink("Add group", "CreateGroup", null, new {@class = "govuk-button"})
-                @Html.RouteLink("Add entry", "CreateItem", null, new {@class = "govuk-button"})
+                @Html.RouteLink("Add group", "CreateGroup", null, new {@id = "add-group-button",  @class = "govuk-button"})
+                @Html.RouteLink("Add entry", "CreateItem", null, new {@id = "add-entry-button", @class = "govuk-button"})
             </div>
         </div>
     }
