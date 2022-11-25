@@ -114,7 +114,7 @@
                                             }
                                             else
                                             {
-                                                <button id=@StringUtils.ElementIdFormat(item.Title + "-down-button") class="govuk-button govuk-button--secondary govuk-accordion__buttons" aria_label="Move entry down" disabled>Down</button>
+                                                <button id=@StringUtils.ElementIdFormat(item.Title + "-entry-down-button") class="govuk-button govuk-button--secondary govuk-accordion__buttons" aria_label="Move entry down" disabled>Down</button>
                                             }
 
                                             @if (item.DisplayOrder > groupItems.First().DisplayOrder)
@@ -123,7 +123,7 @@
                                             }
                                             else
                                             {
-                                                <button class="govuk-button govuk-button--secondary govuk-accordion__buttons" aria_label="Move entry up" disabled>Up</button>
+                                                <button id=@StringUtils.ElementIdFormat(item.Title + "-entry-up-button") class="govuk-button govuk-button--secondary govuk-accordion__buttons" aria_label="Move entry up" disabled>Up</button>
                                             }
                                         </div>
                                     }
