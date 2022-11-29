@@ -6,7 +6,7 @@
 <div id="school-iebt" class="tab-content">
 @if (Model.UserCanEdit && Model.TabEditPolicy.IEBT)
 {
-    @Html.ActionLink("Edit IEBT", "EditIEBT", "Establishment", null, new {@class = "govuk-button govuk-button--secondary", data_module = "govuk-button"})
+    @Html.ActionLink("Edit IEBT", "EditIEBT", "Establishment", null, new {@id = "edit-iebt-button", @class = "govuk-button govuk-button--secondary", data_module = "govuk-button"})
 }
 
 <div class="detail-summary">
@@ -448,7 +448,7 @@
 @if (Model.UserCanEdit && Model.TabEditPolicy.IEBT)
 {
     <div class="button-row govuk-!-padding-top-4">
-        @Html.ActionLink("Edit IEBT", "EditIEBT", "Establishment", null, new {@class = "govuk-button govuk-button--secondary", data_module ="govuk-button" })
+        @Html.ActionLink("Edit IEBT", "EditIEBT", "Establishment", null, new {@id = "edit-iebt-button", @class = "govuk-button govuk-button--secondary", data_module ="govuk-button" })
     </div>
 }
 
