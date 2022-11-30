@@ -18,6 +18,9 @@
     string editorPrefix = ViewData["editorPrefix"]?.ToString();
 }
 
+@* add an if for governance professional else everything else
+    use templates for each field/group of fields, so order and visibility can be controlled without duplicating code*@
+
 @if (Model.DisplayPolicy.FullName)
 {
     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernorTitleId)">
