@@ -901,7 +901,7 @@
             Html.RenderPartial("Partials/_ConfirmChanges");
 
             <div class="button-row govuk-!-padding-top-8">
-                <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm">Accept and save</button>
+                <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" id="as-confirm-button" class="govuk-button js-confirm">Accept and save</button>
             </div>
 
             @section ViewScripts {
