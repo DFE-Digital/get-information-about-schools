@@ -17,5 +17,11 @@ namespace Edubase.Services.Enums
         Establishment_SharedChairOfLocalGoverningBody = 11,
         Group_SharedLocalGovernor = 12,
         Establishment_SharedLocalGovernor = 13,
+        GovernanceProfessionalToALocalAuthorityMaintainedSchool = 15,
+        GovernanceProfessionalToAFederation = 16,
+        GovernanceProfessionalToAnIndividualAcademyOrFreeSchool = 17,
+        GovernanceProfessionalToAMat = 18,
+        Group_SharedGovernanceProfessional = 19,
+        Establishment_SharedGovernanceProfessional = 20,
     }
 }
