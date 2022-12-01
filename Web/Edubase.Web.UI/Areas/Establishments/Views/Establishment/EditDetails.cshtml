@@ -253,7 +253,7 @@
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.TypeId)">
             <label class="govuk-label" for="TypeId">Establishment type</label>
             @Html.ValidationMessageFor(x => x.TypeId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.TypeId, Model.EstablishmentTypes, "Please select", new {@class = "govuk-select"})
+            @Html.DropDownListFor(x => x.TypeId, Model.EstablishmentTypes, "Please select", new { id = "establishment-type-dropdown", @class = "govuk-select"})
         </div>
     }
     else
@@ -901,7 +901,7 @@
             Html.RenderPartial("Partials/_ConfirmChanges");
 
             <div class="button-row govuk-!-padding-top-8">
-                <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm">Accept and save</button>
+                <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" id="accept-and-save-button" class="govuk-button js-confirm">Accept and save</button>
             </div>
 
             @section ViewScripts {
