@@ -88,3 +88,43 @@ if ($("#remove-shared-governor").length > 0) {
 
 }
 
+const titleInput = document.getElementById('governorTitleInput');
+const firstNameInput = document.getElementById('governorFirstNameInput');
+const middleNameInput = document.getElementById('governorMiddleNameInput');
+const lastNameInput = document.getElementById('governorLastNameInput');
+
+if (titleInput != null) {
+  titleInput.addEventListener('change', UpdateFullName);
+}
+if (firstNameInput != null) {
+  firstNameInput.addEventListener('change', UpdateFullName);
+}
+if (middleNameInput != null) {
+  middleNameInput.addEventListener('change', UpdateFullName);
+}
+if (lastNameInput != null) {
+  lastNameInput.addEventListener('change', UpdateFullName);
+}
+
+function UpdateFullName() {
+  const fullNameInput = document.getElementById('governorFullNameInput');
+  let fullname = '';
+
+  if (titleInput.value != null) {
+    fullname += titleInput.options[titleInput.selectedIndex].text + ' ';
+  }
+
+  if (firstNameInput.value != null) {
+    fullname += firstNameInput.value + ' ';
+  }
+
+  if (middleNameInput.value != null) {
+    fullname += middleNameInput.value + ' ';
+  }
+
+  if (lastNameInput.value != null) {
+    fullname += lastNameInput.value;
+  }
+
+  fullNameInput.value = fullname;
+}

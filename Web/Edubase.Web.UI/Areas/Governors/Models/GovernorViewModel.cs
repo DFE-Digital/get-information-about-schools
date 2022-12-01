@@ -1,6 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing.Text;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 using Edubase.Services.Enums;
 using Edubase.Services.Governors.DisplayPolicies;
 using Edubase.Web.UI.Models;
@@ -24,6 +30,33 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         [DisplayName("Last name")]
         public string LastName { get; set; }
+
+        [DisplayName("Full name")]
+        public string FullName
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder(string.Empty);
+
+                var addSpaceIfNeeded = new Action(() => {
+                    if (sb.Length > 0)
+                    {
+                        sb.Append(" ");
+                    }
+                });
+
+                var title = Titles.Where(x => x.Value == GovernorTitleId.ToString()).Select(x => x.Text).FirstOrDefault();
+                sb.Append(title ?? string.Empty);
+                addSpaceIfNeeded();
+                sb.Append(FirstName ?? string.Empty);
+                addSpaceIfNeeded();
+                sb.Append(MiddleName ?? string.Empty);
+                addSpaceIfNeeded();
+                sb.Append(LastName ?? string.Empty);
+
+                return sb.ToString().Trim();
+            }
+        }
 
         [DisplayName("Appointing body")]
         public int? AppointingBodyId { get; set; }

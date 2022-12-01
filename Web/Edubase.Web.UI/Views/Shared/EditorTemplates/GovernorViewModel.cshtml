@@ -18,33 +18,48 @@
     string editorPrefix = ViewData["editorPrefix"]?.ToString();
 }
 
-@* add an if for governance professional else everything else
-    use templates for each field/group of fields, so order and visibility can be controlled without duplicating code*@
+@*@if (EnumSets.eGovernanceProfessionalRoles.Contains(Model.GovernorRole))
+    {
+        <div class="govuk-form-group">
 
+        </div>
+    }
+    else
+    {*@
 @if (Model.DisplayPolicy.FullName)
 {
+    <div class="govuk-form-group">
+        @Html.LabelFor(x => x.FullName, new { @class = "govuk-label" })
+        @Html.TextBoxFor(x => x.FullName,
+            new { id = "governorFullNameInput", @class = "govuk-input", @readonly = true, disabled = "disabled" })
+    </div>
+
     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernorTitleId)">
         @Html.LabelFor(x => x.GovernorTitleId, new { @class = "govuk-label" })
         @Html.ValidationMessageFor(x => x.GovernorTitleId, null, new { @class = "govuk-error-message" })
-        @Html.DropDownListFor(x => x.GovernorTitleId, Model.Titles, "", new { @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.GovernorTitleId)) })
+        @Html.DropDownListFor(x => x.GovernorTitleId, Model.Titles, "",
+            new { id = "governorTitleInput", @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.GovernorTitleId)) })
     </div>
 
     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FirstName)">
         @Html.LabelFor(x => x.FirstName, "First name (required to save record)", new { @class = "govuk-label" })
         @Html.ValidationMessageFor(x => x.FirstName, null, new { @class = "govuk-error-message" })
-        @Html.TextBoxFor(x => x.FirstName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.FirstName)) })
+        @Html.TextBoxFor(x => x.FirstName,
+            new { id = "governorFirstNameInput", @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.FirstName)) })
     </div>
 
     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.MiddleName)">
         @Html.LabelFor(x => x.MiddleName, new { @class = "govuk-label" })
         @Html.ValidationMessageFor(x => x.MiddleName, null, new { @class = "govuk-error-message" })
-        @Html.TextBoxFor(x => x.MiddleName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.MiddleName)) })
+        @Html.TextBoxFor(x => x.MiddleName,
+            new { id = "governorMiddleNameInput", @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.MiddleName)) })
     </div>
 
     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LastName)">
         @Html.LabelFor(x => x.LastName, "Last name (required to save record)", new { @class = "govuk-label" })
         @Html.ValidationMessageFor(x => x.LastName, null, new { @class = "govuk-error-message" })
-        @Html.TextBoxFor(x => x.LastName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.LastName)) })
+        @Html.TextBoxFor(x => x.LastName,
+            new { id = "governorLastNameInput", @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.LastName)) })
     </div>
 }
 
@@ -148,3 +163,4 @@
         @Html.TextBoxFor(x => x.TelephoneNumber, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.TelephoneNumber)) })
     </div>
 }
+@* } *@
