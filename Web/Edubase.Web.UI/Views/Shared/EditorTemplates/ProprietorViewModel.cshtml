@@ -67,7 +67,7 @@
         {
             <span class="govuk-error-message">@Html.ViewData.ModelState[countyId].Errors.First().ErrorMessage</span>
         }
-        @Html.DropDownListFor(x => x.CountyId, Model.Counties, "", new { @class = "govuk-select" })
+        @Html.DropDownListFor(x => x.CountyId, Model.Counties, "", new { id = "proprietor-country-dropdown", @class = "govuk-select" })
     </div>
 }
 

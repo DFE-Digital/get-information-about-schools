@@ -19,7 +19,7 @@
 @if (Model.DisplayPolicy.IEBTDetail.Associations && p.Associations)
 {
     <h2 class="govuk-heading-s">Associations</h2>
-    <div class="govuk-body">@(Model.Establishment.IEBTModel.Associations ?? "Not recorded")</div>
+    <div id="associations-text" class="govuk-body">@(Model.Establishment.IEBTModel.Associations ?? "Not recorded")</div>
 }
 
 <dl class="govuk-summary-list">
