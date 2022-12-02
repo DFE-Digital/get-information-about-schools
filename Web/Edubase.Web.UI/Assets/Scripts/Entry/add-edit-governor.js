@@ -92,6 +92,7 @@ const titleInput = document.getElementById('governorTitleInput');
 const firstNameInput = document.getElementById('governorFirstNameInput');
 const middleNameInput = document.getElementById('governorMiddleNameInput');
 const lastNameInput = document.getElementById('governorLastNameInput');
+const fullNameDiv = document.getElementById('governorFullNameDiv');
 
 if (titleInput != null) {
   titleInput.addEventListener('change', UpdateFullName);
@@ -104,6 +105,9 @@ if (middleNameInput != null) {
 }
 if (lastNameInput != null) {
   lastNameInput.addEventListener('change', UpdateFullName);
+}
+if (fullNameDiv != null) {
+  fullNameDiv.style.display = 'block';
 }
 
 function UpdateFullName() {

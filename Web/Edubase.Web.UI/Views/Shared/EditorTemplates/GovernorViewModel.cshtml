@@ -28,7 +28,7 @@
     {*@
 @if (Model.DisplayPolicy.FullName)
 {
-    <div class="govuk-form-group">
+    <div class="govuk-form-group" id="governorFullNameDiv" style="display:none">
         @Html.LabelFor(x => x.FullName, new { @class = "govuk-label" })
         @Html.TextBoxFor(x => x.FullName,
             new { id = "governorFullNameInput", @class = "govuk-input", @readonly = true, disabled = "disabled" })
