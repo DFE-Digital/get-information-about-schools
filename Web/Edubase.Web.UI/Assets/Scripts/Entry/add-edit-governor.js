@@ -118,11 +118,11 @@ function UpdateFullName() {
     fullname += titleInput.options[titleInput.selectedIndex].text + ' ';
   }
 
-  if (firstNameInput.value != null) {
+  if (firstNameInput.value != null && firstNameInput.value != '') {
     fullname += firstNameInput.value + ' ';
   }
 
-  if (middleNameInput.value != null) {
+  if (middleNameInput.value != null && middleNameInput.value != '') {
     fullname += middleNameInput.value + ' ';
   }
 

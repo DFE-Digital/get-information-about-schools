@@ -36,10 +36,10 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         {
             get
             {
-                StringBuilder sb = new StringBuilder(string.Empty);
+                var sb = new StringBuilder(string.Empty);
 
                 var addSpaceIfNeeded = new Action(() => {
-                    if (sb.Length > 0)
+                    if (sb.Length > 0 && sb[sb.Length - 1] != ' ')
                     {
                         sb.Append(" ");
                     }
