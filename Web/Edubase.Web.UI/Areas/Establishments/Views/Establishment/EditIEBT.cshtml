@@ -350,7 +350,7 @@
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.AccommodationChangedId)">
                         @Html.LabelFor(x => x.AccommodationChangedId, new { @class = "govuk-label" })
                         @Html.ValidationMessageFor(x => x.AccommodationChangedId, null, new { @class = "govuk-error-message" })
-                        @Html.DropDownListFor(x => x.AccommodationChangedId, Model.AccommodationChanges, "", new { @class = "govuk-select" })
+                        @Html.DropDownListWithIds(x => x.AccommodationChangedId, Model.AccommodationChanges, new { @class = "govuk-select" })
                     </div>
                 }
 
