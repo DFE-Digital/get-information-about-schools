@@ -253,7 +253,7 @@
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.TypeId)">
             <label class="govuk-label" for="TypeId">Establishment type</label>
             @Html.ValidationMessageFor(x => x.TypeId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.TypeId, Model.EstablishmentTypes, "Please select", new { id = "establishment-type-dropdown", @class = "govuk-select"})
+            @Html.DropDownListFor(x => x.TypeId, Model.EstablishmentTypes, "Please select", new {@class = "govuk-select"})
         </div>
     }
     else
@@ -291,7 +291,7 @@
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
             <label for="LocalAuthorityId" class="govuk-label">Local authority</label>
-            @Html.ValidationMessageFor(x => x.LocalAuthorityId, null, new { id = "local-authority-dropdown", @class = "govuk-error-message"})
+            @Html.ValidationMessageFor(x => x.LocalAuthorityId, null, new {@class = "govuk-error-message"})
             @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new {@class = "govuk-select"})
         </div>
     }
@@ -333,7 +333,7 @@
     {
         <div class="govuk-form-group">
             <label for="AdmissionsPolicyId" class="govuk-label">Admissions policy</label>
-            @Html.DropDownListFor(x => x.AdmissionsPolicyId, Model.AdmissionsPolicies, "", new { id = "admissions-policy-dropdown", @class = "govuk-select"})
+            @Html.DropDownListFor(x => x.AdmissionsPolicyId, Model.AdmissionsPolicies, "", new {@class = "govuk-select"})
         </div>
     }
 
@@ -391,7 +391,7 @@
     {
         <div class="govuk-form-group">
             <label class="govuk-label" for="ReligiousCharacterId">Religious character</label>
-            @Html.DropDownListFor(x => x.ReligiousCharacterId, Model.ReligiousCharacters, "", new {id = "religious-character-dropdown", @class = "govuk-select"})
+            @Html.DropDownListFor(x => x.ReligiousCharacterId, Model.ReligiousCharacters, "", new {@class = "govuk-select"})
         </div>
     }
 
@@ -409,7 +409,7 @@
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ReligiousEthosId)">
             <label class="govuk-label" for="ReligiousEthosId">Religious ethos</label>
             @Html.ValidationMessageFor(x => x.ReligiousEthosId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.ReligiousEthosId, Model.ReligiousEthoses, "", new {id = "religious-ethos-dropdown", @class = "govuk-select"})
+            @Html.DropDownListFor(x => x.ReligiousEthosId, Model.ReligiousEthoses, "", new {@class = "govuk-select"})
         </div>
     }
 
@@ -473,7 +473,7 @@
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentOpenedId)">
             <label class="govuk-label" for="ReasonEstablishmentOpenedId">Reason establishment opened</label>
-            @Html.ValidationMessageFor(x => x.ReasonEstablishmentOpenedId, null, new {id = "reason-establishment-opened-dropdown", @class = "govuk-error-message"})
+            @Html.ValidationMessageFor(x => x.ReasonEstablishmentOpenedId, null, new {@class = "govuk-error-message"})
             @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, Model.ReasonsEstablishmentOpened, "", new {@class = "govuk-select"})
         </div>
     }
@@ -488,7 +488,7 @@
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentClosedId)">
             <label class="govuk-label" for="ReasonEstablishmentClosedId">Reason establishment closed</label>
-            @Html.ValidationMessageFor(x => x.ReasonEstablishmentClosedId, null, new {id = "reason-establishment-closed-dropdown", @class = "govuk-error-message"})
+            @Html.ValidationMessageFor(x => x.ReasonEstablishmentClosedId, null, new {@class = "govuk-error-message"})
             @Html.DropDownListFor(x => x.ReasonEstablishmentClosedId, Model.ReasonsEstablishmentClosed, "", new {@class = "govuk-select"})
         </div>
     }
