@@ -2,8 +2,8 @@
 @using Edubase.Services.Enums
 @model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
 
-@*@if (EnumSets.eGovernanceProfessionalRoles.Contains(Model.GovernorRole))
-{*@
+@if (EnumSets.eGovernanceProfessionalRoles.Contains(Model.GovernorRole))
+{
     @Html.Partial("_GovernorEditGid")
     @Html.Partial("_GovernorEditName")
     @Html.Partial("_GovernorEditDateOfBirth")
@@ -11,7 +11,7 @@
     @Html.Partial("_GovernorEditTelephoneNumber")
     @Html.Partial("_GovernorEditEmail")
     @Html.Partial("_GovernorEditAppointmentDates")
-@*}
+}
 else
 {
     @Html.Partial("_GovernorEditName")
@@ -23,5 +23,5 @@ else
     @Html.Partial("_GovernorEditDateOfBirth")
     @Html.Partial("_GovernorEditPreviousName")
     @Html.Partial("_GovernorEditTelephoneNumber")
-}*@
+}
 
