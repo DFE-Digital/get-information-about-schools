@@ -1,0 +1,7 @@
+@using Edubase.Common
+@model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
+
+@if (Model.DisplayPolicy.DOB)
+{
+    @Html.EditorFor(x => x.DOB)
+}

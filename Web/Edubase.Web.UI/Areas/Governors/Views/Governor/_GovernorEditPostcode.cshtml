@@ -1,0 +1,12 @@
+@using Edubase.Common
+@model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
+
+@if (Model.DisplayPolicy.PostCode)
+{
+    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PostCode)">
+        @Html.LabelFor(x => x.PostCode, new { @class = "govuk-label" })
+        @Html.ValidationMessageFor(x => x.PostCode, null, new { @class = "govuk-error-message" })
+        @Html.TextBoxFor(x => x.PostCode,
+            new { id="GovernorPostcodeInput", @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PostCode)) })
+    </div>
+}

@@ -1,0 +1,11 @@
+@using Edubase.Common
+@model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
+
+@if (Model.DisplayPolicy.TelephoneNumber)
+{
+    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.TelephoneNumber)">
+        @Html.LabelFor(x => x.TelephoneNumber, "Telephone (required to save record)", new { @class = "govuk-label" })
+        @Html.ValidationMessageFor(x => x.TelephoneNumber, null, new { @class = "govuk-error-message" })
+        @Html.TextBoxFor(x => x.TelephoneNumber, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.TelephoneNumber)) })
+    </div>
+}

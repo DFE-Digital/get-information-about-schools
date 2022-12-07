@@ -1,0 +1,9 @@
+@model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
+
+@if (Model.DisplayPolicy.Id)
+{
+    <div class="govuk-form-group">
+        @Html.LabelFor(x => x.GID, new { @class = "govuk-label" })
+        <input id="governorGidInput" class="govuk-input" value="@Model.GID" readonly="readonly" disabled="disabled" />
+    </div>
+}
