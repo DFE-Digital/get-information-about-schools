@@ -3,6 +3,14 @@
 @model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
 
 @{
+    string dateAppointmentEndsTooltipMessage = null;
+    if (EnumSets.eGovernanceProfessionalRoles.Contains(Model.GovernorRole))
+    {
+        dateAppointmentEndsTooltipMessage = "A governance professional may have a fixed appointment. If this applies, enter the date their fixed appointment is due to end. If there is not a fixed appointment, leave this field blank until their appointment ends and then add the date their appointment ended date.";
+    }
+}
+
+@{
     bool disableStartDate;
     if (!bool.TryParse(ViewData["disableStartDate"]?.ToString(), out disableStartDate))
     {
@@ -30,6 +38,10 @@
 @if (Model.DisplayPolicy.AppointmentEndDate)
 {
     @Html.EditorFor(x => x.AppointmentEndDate,
-        new { title = Model.GovernorRole == eLookupGovernorRole.Member ? "Date stepped down" : "Date term ends", showReactivationWarning })
+        new {
+            title = Model.GovernorRole == eLookupGovernorRole.Member ? "Date stepped down" : "Date term ends",
+            tooltipText = dateAppointmentEndsTooltipMessage,
+            showReactivationWarning
+        });
 }
 

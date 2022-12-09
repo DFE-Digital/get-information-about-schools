@@ -12,6 +12,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 {
     public class GovernorViewModel
     {
+        [DisplayName("Governance role identifier (GID)")]
         public int? GID { get; set; }
 
         public eLookupGovernorRole GovernorRole { get; set; }
@@ -28,7 +29,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         [DisplayName("Last name")]
         public string LastName { get; set; }
 
-        [DisplayName("Full name")]
+        [DisplayName("Name")]
         public string FullName
         {
             get
@@ -61,7 +62,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         [DisplayName("Date of appointment")]
         public DateTimeViewModel AppointmentStartDate { get; set; } = new DateTimeViewModel();
 
-        [DisplayName("Date term ends")]
+        [DisplayName("Date appointment ended")]
         public DateTimeViewModel AppointmentEndDate { get; set; } = new DateTimeViewModel();
 
         [DisplayName("Email address")]
@@ -73,7 +74,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         [DisplayName("Home postcode")]
         public string PostCode { get; set; }
 
-        [DisplayName("Telephone")]
+        [DisplayName("Telephone number")]
         public string TelephoneNumber { get; set; }
 
 

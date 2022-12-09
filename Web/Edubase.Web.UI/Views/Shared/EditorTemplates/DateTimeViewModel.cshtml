@@ -11,6 +11,9 @@
     bool hideLegend = false;
     bool.TryParse(ViewData["disableHint"]?.ToString(), out disableHint);
     string legendPrefix = "";
+    string tooltipTitle = null;
+    string tooltipText = null;
+    string tooltipUnderscoredTitle = null;
 
     if (ViewData["dateHint"] != null)
     {
@@ -63,6 +66,13 @@
         legendPrefix = ViewData["editorPrefix"].ToString() + "_";
     }
 
+    //if (ViewData["tooltipTitle"] != null && ViewData["tooltipText"] != null)
+    //{
+    tooltipTitle = ViewData["title"]?.ToString() ?? ViewData.ModelMetadata.DisplayName;
+    tooltipUnderscoredTitle = tooltipTitle.ToLower().Replace(" ", "_");
+    tooltipText = ViewData["tooltipText"]?.ToString();
+    //}
+
 }
 <div @Html.Raw(classBinding)>
     <fieldset class="govuk-fieldset range-group @fieldsetClassName">
@@ -71,7 +81,16 @@
             <span class="govuk-error-message hidden">Please check the date(s) you have entered</span>
             <span class="govuk-error-message hidden date-range-error">Please use a valid date range</span>
         }
-        <legend class="govuk-fieldset__legend @Html.Conditional(hideLegend, "hidden")" id="@legendPrefix@ViewData.ModelMetadata.PropertyName">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
+        <legend class="govuk-fieldset__legend @Html.Conditional(hideLegend, "hidden")" id="@legendPrefix@ViewData.ModelMetadata.PropertyName">
+            @(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])
+            @if (!string.IsNullOrWhiteSpace(tooltipText))
+            {
+                <a id="@tooltipUnderscoredTitle-ToolTipLink" href="#help-text-@tooltipUnderscoredTitle" class="help-icon modal-link">
+                    <span class="govuk-visually-hidden">Help with the @tooltipTitle.ToLower() field</span>
+                    @helpers.DialogHiddenPrompt()
+                </a>
+            }
+        </legend>
 
         @{
             var fullFieldId = ViewData.TemplateInfo.GetFullHtmlFieldName(Model?.Label)
@@ -111,7 +130,6 @@
                 }
             }
         }
-
         @if (!disableHint)
         {
             if (dateHint != String.Empty)
@@ -159,22 +177,20 @@
         <div class="govuk-date-input">
             <div class="govuk-date-input__item">
                 <div class="govuk-form-group">
-
-
-                    @Html.LabelFor(x => x.Day, new {@class = string.Concat(labelClassName, " govuk-label govuk-date-input__label")})
-                    @Html.TextBoxFor(x => x.Day, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, dayCssClasses, 2, ViewData["vueModel"] != null ? String.Concat((string) ViewData["vueModel"], "Day") : null))
+                    @Html.LabelFor(x => x.Day, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
+                    @Html.TextBoxFor(x => x.Day, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, dayCssClasses, 2, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Day") : null))
                 </div>
             </div>
             <div class="govuk-date-input__item">
                 <div class="govuk-form-group">
-                    @Html.LabelFor(x => x.Month, new {@class = string.Concat(labelClassName, " govuk-label govuk-date-input__label")})
-                    @Html.TextBoxFor(x => x.Month, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, monthCssClasses, 2, ViewData["vueModel"] != null ? String.Concat((string) ViewData["vueModel"], "Month") : null))
+                    @Html.LabelFor(x => x.Month, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
+                    @Html.TextBoxFor(x => x.Month, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, monthCssClasses, 2, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Month") : null))
                 </div>
             </div>
             <div class="govuk-date-input__item gias-year-input__item">
                 <div class="govuk-form-group">
-                    @Html.LabelFor(x => x.Year, new {@class = string.Concat(labelClassName, " govuk-label govuk-date-input__label")})
-                    @Html.TextBoxFor(x => x.Year, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, yearCssClasses, 4, ViewData["vueModel"] != null ? String.Concat((string) ViewData["vueModel"], "Year") : null))
+                    @Html.LabelFor(x => x.Year, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
+                    @Html.TextBoxFor(x => x.Year, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, yearCssClasses, 4, ViewData["vueModel"] != null ? String.Concat((string)ViewData["vueModel"], "Year") : null))
                 </div>
             </div>
         </div>
@@ -185,6 +201,13 @@
             @Html.HiddenFor(x => x.Year)
         }
     </fieldset>
+</div>
+
+<div class="govuk-grid-column-full helptext-container">
+    <div id="help-text-@tooltipUnderscoredTitle">
+        <h3 class="govuk-heading-s make-modal-header">@tooltipTitle</h3>
+        <p class="govuk-body">@tooltipText</p>
+    </div>
 </div>
 
 @functions
