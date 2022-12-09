@@ -390,16 +390,16 @@
             @if (Model.DisplayPolicy.CompaniesHouseNumber)
             {
                 <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Companies House number</dt>
-                    <dd class="govuk-summary-list__value">@(Model.Establishment.CompaniesHouseNumber ?? "Not recorded")</dd>
+                    <dt id="companies-house-number-key" class="govuk-summary-list__key">Companies House number</dt>
+                    <dd id="companies-house-number-value" class="govuk-summary-list__value">@(Model.Establishment.CompaniesHouseNumber ?? "Not recorded")</dd>
                 </div>
             }
 
             @if (Model.DisplayPolicy.EstablishmentAccreditedId)
             {
                 <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Establishment accredited</dt>
-                    <dd class="govuk-summary-list__value">@(Model.EstablishmentAccreditedName ?? "Not recorded")</dd>
+                    <dt id="establishment-accredited-key" class="govuk-summary-list__key">Establishment accredited</dt>
+                    <dd id="establishment-accredited-value" class="govuk-summary-list__value">@(Model.EstablishmentAccreditedName ?? "Not recorded")</dd>
                 </div>
             }
             <!-- Online Provider content -->
