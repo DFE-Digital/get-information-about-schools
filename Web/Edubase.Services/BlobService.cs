@@ -120,6 +120,21 @@ namespace Edubase.Services
         }
 
         /// <summary>
+        /// Get a blob as a memory stream
+        /// </summary>
+        /// <param name="absolutePath"></param>
+        /// <returns></returns>
+        public async Task<MemoryStream> ArchiveBlob(Stream blobStream)
+        {
+            //var blobStream = new MemoryStream();
+            //var pathComponents = ExtractPathComponents(absolutePath.ToLower());
+            //var blob = GetBlobReference(pathComponents.ContainerName, pathComponents.Path);
+            //await blob.DownloadToStreamAsync(blobStream);
+
+            //return blobStream;
+        }
+
+        /// <summary>
         /// Uploads a blob from a byte array
         /// </summary>
         /// <param name="sourceBytes"></param>
