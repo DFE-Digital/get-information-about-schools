@@ -1,0 +1,47 @@
+@using Edubase.Common
+@using Edubase.Services.Enums
+@model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
+
+@{
+    string dateAppointmentEndsTooltipMessage = null;
+    if (EnumSets.eGovernanceProfessionalRoles.Contains(Model.GovernorRole))
+    {
+        dateAppointmentEndsTooltipMessage = "A governance professional may have a fixed appointment. If this applies, enter the date their fixed appointment is due to end. If there is not a fixed appointment, leave this field blank until their appointment ends and then add the date their appointment ended date.";
+    }
+}
+
+@{
+    bool disableStartDate;
+    if (!bool.TryParse(ViewData["disableStartDate"]?.ToString(), out disableStartDate))
+    {
+        disableStartDate = false;
+    }
+
+    bool showReactivationWarning;
+    if (!bool.TryParse(ViewData["reactivationWarning"]?.ToString(), out showReactivationWarning))
+    {
+        showReactivationWarning = false;
+    }
+
+    string editorPrefix = ViewData["editorPrefix"]?.ToString();
+}
+
+@if (Model.DisplayPolicy.AppointmentStartDate)
+{
+    var detail = disableStartDate ? @"based on current governor's end date" : @"required to save record";
+    var title = $"Date of appointment ({detail})";
+
+    @Html.EditorFor(x => x.AppointmentStartDate,
+        new { title, @readonly = disableStartDate, ClassPrefix = "start-date", editorPrefix })
+}
+
+@if (Model.DisplayPolicy.AppointmentEndDate)
+{
+    @Html.EditorFor(x => x.AppointmentEndDate,
+        new {
+            title = Model.GovernorRole == eLookupGovernorRole.Member ? "Date stepped down" : "Date term ends",
+            tooltipText = dateAppointmentEndsTooltipMessage,
+            showReactivationWarning
+        });
+}
+

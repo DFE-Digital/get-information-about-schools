@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Text;
 using System.Web.Mvc;
 using Edubase.Services.Enums;
 using Edubase.Services.Governors.DisplayPolicies;
@@ -9,6 +12,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 {
     public class GovernorViewModel
     {
+        [DisplayName("Governance role identifier (GID)")]
         public int? GID { get; set; }
 
         public eLookupGovernorRole GovernorRole { get; set; }
@@ -25,13 +29,40 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         [DisplayName("Last name")]
         public string LastName { get; set; }
 
+        [DisplayName("Name")]
+        public string FullName
+        {
+            get
+            {
+                var sb = new StringBuilder(string.Empty);
+
+                var addSpaceIfNeeded = new Action(() => {
+                    if (sb.Length > 0 && sb[sb.Length - 1] != ' ')
+                    {
+                        sb.Append(" ");
+                    }
+                });
+
+                var title = Titles.Where(x => x.Value == GovernorTitleId.ToString()).Select(x => x.Text).FirstOrDefault();
+                sb.Append(title ?? string.Empty);
+                addSpaceIfNeeded();
+                sb.Append(FirstName ?? string.Empty);
+                addSpaceIfNeeded();
+                sb.Append(MiddleName ?? string.Empty);
+                addSpaceIfNeeded();
+                sb.Append(LastName ?? string.Empty);
+
+                return sb.ToString().Trim();
+            }
+        }
+
         [DisplayName("Appointing body")]
         public int? AppointingBodyId { get; set; }
 
         [DisplayName("Date of appointment")]
         public DateTimeViewModel AppointmentStartDate { get; set; } = new DateTimeViewModel();
 
-        [DisplayName("Date term ends")]
+        [DisplayName("Date appointment ended")]
         public DateTimeViewModel AppointmentEndDate { get; set; } = new DateTimeViewModel();
 
         [DisplayName("Email address")]
@@ -43,7 +74,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         [DisplayName("Home postcode")]
         public string PostCode { get; set; }
 
-        [DisplayName("Telephone")]
+        [DisplayName("Telephone number")]
         public string TelephoneNumber { get; set; }
 
 

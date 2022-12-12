@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Edubase.Services.Enums
@@ -46,7 +46,12 @@ namespace Edubase.Services.Enums
             GR.ChairOfTrustees,
             GR.AccountingOfficer,
             GR.ChiefFinancialOfficer,
-            GR.Establishment_SharedChairOfLocalGoverningBody
+            GR.Establishment_SharedChairOfLocalGoverningBody,
+            GR.GovernanceProfessionalToALocalAuthorityMaintainedSchool,
+            GR.GovernanceProfessionalToAFederation,
+            GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool,
+            GR.GovernanceProfessionalToAMat,
+            GR.Establishment_SharedGovernanceProfessional
         };
 
         public static IEnumerable<int> SingularGovernorRoles { get; } = eSingularGovernorRoles.Cast<int>();
@@ -56,9 +61,23 @@ namespace Edubase.Services.Enums
             GR.Group_SharedChairOfLocalGoverningBody,
             GR.Group_SharedLocalGovernor,
             GR.Establishment_SharedLocalGovernor,
-            GR.Establishment_SharedChairOfLocalGoverningBody
+            GR.Establishment_SharedChairOfLocalGoverningBody,
+            GR.Group_SharedGovernanceProfessional,
+            GR.Establishment_SharedGovernanceProfessional
         };
 
         public static IEnumerable<int> SharedGovernorRoles { get; } = eSharedGovernorRoles.Cast<int>();
+
+        public static IEnumerable<GR> eGovernanceProfessionalRoles { get; } = new[]
+        {
+            GR.GovernanceProfessionalToALocalAuthorityMaintainedSchool,
+            GR.GovernanceProfessionalToAFederation,
+            GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool,
+            GR.GovernanceProfessionalToAMat,
+            GR.Group_SharedGovernanceProfessional,
+            GR.Establishment_SharedGovernanceProfessional,
+        };
+
+        public static IEnumerable<int> GovernanceProfessionalRole = eGovernanceProfessionalRoles.Cast<int>();
     }
 }

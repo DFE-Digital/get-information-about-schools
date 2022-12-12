@@ -607,6 +607,7 @@
     <Content Include="Assets\Scripts\GiasGlobal\giasAriaLive.js" />
     <Content Include="Assets\Scripts\GiasGlobal\GiasCookieBanner.js" />
     <Content Include="Assets\Scripts\GiasGlobal\GiasReOrderValidationSummary.js" />
+    <Content Include="Assets\Scripts\GiasHelpers\GovernorFullNameHelper.js" />
     <Content Include="Assets\Scripts\GiasHelpers\QueryString.js" />
     <Content Include="Assets\Scripts\GiasHelpers\supportsHistory.js" />
     <Content Include="Assets\Scripts\GiasHelpers\throttle.js" />
@@ -884,10 +885,19 @@
     <Content Include="Views\News\EditArticle.cshtml" />
     <Content Include="Views\News\AuditArticles.cshtml" />
     <Content Include="Views\News\AuditArticle.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\_GovernorEditGid.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\_GovernorEditAppointingBody.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\_GovernorEditAppointmentDates.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\_GovernorEditEmail.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\_GovernorEditPostcode.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\_GovernorEditDateOfBirth.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\_GovernorEditPreviousName.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\_GovernorEditTelephoneNumber.cshtml" />
     <None Include="packages.config" />
     <Content Include="Views\Guidance\LaNameCodes.cshtml" />
     <Content Include="Views\Guidance\SelectFormat.cshtml" />
     <Content Include="Views\Guidance\SelectData.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\_GovernorEditName.cshtml" />
     <None Include="Views\Unauthorized\Index.cshtml" />
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>
