@@ -49,7 +49,7 @@
                             <div class="govuk-grid-row">
                                 <div class="govuk-grid-column-two-thirds govuk-!-padding-bottom-2">
                                     <h2 class="govuk-heading-s">@item.Title</h2>
-                                    <div class="gias-user-content">@Html.Raw(item.Content)</div>
+                                    <div class="gias-user-content">@Html.Raw(item.Content.Replace("\n", "<br/>"))</div>
                                 </div>
 
                                 @if (Model.UserCanEdit)
