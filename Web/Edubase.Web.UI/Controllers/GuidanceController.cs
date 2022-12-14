@@ -12,6 +12,7 @@ using Edubase.Services;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Web.UI.Models.Guidance;
+using Glimpse.Mvc.Model;
 using Microsoft.Data.Edm.Csdl;
 
 namespace Edubase.Web.UI.Controllers
@@ -54,27 +55,48 @@ namespace Edubase.Web.UI.Controllers
             return View("SelectData", viewModel);
         }
 
-        [Route("LaNameCodes/DataTables/DownloadData", Name = "LaNameCodesDownload")]
-        public async Task<ActionResult> LaNameCodesDownload(GuidanceLaNameCodeViewModel viewModel)
+        [Route("LaNameCodes/DataTables/SelectFormat", Name = "LaNameCodesSelectFormat")]
+        public ActionResult LaNameCodesSelectFormat(GuidanceLaNameCodeViewModel viewModel)
         {
-            if (!viewModel.FileFormat.HasValue)
-            {
-                return View("SelectFormat", viewModel);
-            }
-
-            var file = viewModel.DownloadName + "." + viewModel.FileFormat.ToString().ToLower();
-
-            var blob = _blobService.GetBlobReference(GUIDANCE_CONTAINER, file);
-            if (await blob.ExistsAsync())
-            {
-                var stream = await blob.OpenReadAsync();
-                return new FileStreamResult(stream, blob.Properties.ContentType)
-                {
-                    FileDownloadName = blob.Name
-                };
-            }
-            throw new Exception("File not available");
+            return View("SelectFormat", viewModel);
         }
+
+        [Route("LaNameCodes/DataTables/SelectFormat/GenerateDownload", Name = "LaNameCodesGenerateDownload")]
+        public async Task<ActionResult> LaNameCodesGenerateDownload(GuidanceLaNameCodeViewModel viewModel)
+        {
+            var blobName = viewModel.DownloadName + "." + viewModel.FileFormat.ToString().ToLower();
+
+            var memoryStream = new MemoryStream();
+
+            try
+            {
+               // var blobStream = await _blobService.GetBlobAsStreamAsync("/" + GUIDANCE_CONTAINER + "/" + blob);
+
+                var blob = _blobService.GetBlobReference(GUIDANCE_CONTAINER, blobName);
+
+                blob.DownloadToStreamAsync(memoryStream).GetAwaiter().GetResult();
+                memoryStream.Position = 0;
+
+                TempData["ArchivedBlob"] = await _blobService.ArchiveBlobAsync(memoryStream, blobName);
+
+                return View("ReadyToDownload");
+
+            }
+            catch (Exception)
+            {
+                return View("Error");
+            }         
+        }
+
+        [Route("LaNameCodes/DataTables/SelectFormat/GenerateDownload/Download", Name = "LaNameCodesDownload")]
+        public ActionResult LaNameCodesDownload()
+        {
+            return new FileStreamResult((MemoryStream) TempData["ArchivedBlob"], "application/octet-stream")
+            {
+                FileDownloadName = "Results.zip"
+            };
+        }
+    
 
         private async Task<List<LaNameCodes>> GetCsvFromContainer(string container, string file)
         {

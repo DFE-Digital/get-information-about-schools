@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using System;
 
 namespace Edubase.Services.Domain
