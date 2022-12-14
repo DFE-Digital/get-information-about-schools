@@ -132,9 +132,9 @@ namespace Edubase.Services
 
             using (var archive = new ZipArchive(archiveStream, ZipArchiveMode.Create, true))
             {
-                var fileToArchive = archive.CreateEntry(blobName);
+                var blobToArchive = archive.CreateEntry(blobName);
 
-                using (var entryStream = fileToArchive.Open())
+                using (var entryStream = blobToArchive.Open())
                 {
                   await blobStream.CopyToAsync(entryStream);
                 }

@@ -49,8 +49,8 @@ namespace Edubase.Web.UI.Controllers
             });
         }
 
-        [Route("LaNameCodes/DataTables", Name = "SelectData")]
-        public ActionResult SelectData(GuidanceLaNameCodeViewModel viewModel)
+        [Route("LaNameCodes/DataTables", Name = "LaNameCodesSelectData")]
+        public ActionResult LaNameCodesSelectData(GuidanceLaNameCodeViewModel viewModel)
         {
             return View("SelectData", viewModel);
         }
@@ -70,8 +70,6 @@ namespace Edubase.Web.UI.Controllers
 
             try
             {
-               // var blobStream = await _blobService.GetBlobAsStreamAsync("/" + GUIDANCE_CONTAINER + "/" + blob);
-
                 var blob = _blobService.GetBlobReference(GUIDANCE_CONTAINER, blobName);
 
                 blob.DownloadToStreamAsync(memoryStream).GetAwaiter().GetResult();
@@ -109,7 +107,7 @@ namespace Edubase.Web.UI.Controllers
 
             using (var memoryStream = new MemoryStream())
             {
-                blob.DownloadToStreamAsync(memoryStream).GetAwaiter().GetResult();
+                await blob.DownloadToStreamAsync(memoryStream);
                 memoryStream.Position = 0;
                 using (var reader = new StreamReader(memoryStream))
                 using (var csv = new CsvReader(reader, config))
