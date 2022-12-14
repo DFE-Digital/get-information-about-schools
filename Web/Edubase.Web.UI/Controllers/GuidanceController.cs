@@ -2,18 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Edubase.Services;
-using Edubase.Services.Domain;
-using Edubase.Services.Enums;
 using Edubase.Web.UI.Models.Guidance;
-using Glimpse.Mvc.Model;
-using Microsoft.Data.Edm.Csdl;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -83,7 +78,7 @@ namespace Edubase.Web.UI.Controllers
             catch (Exception)
             {
                 return View("Error");
-            }         
+            }
         }
 
         [Route("LaNameCodes/DataTables/SelectFormat/GenerateDownload/Download", Name = "LaNameCodesDownload")]
@@ -94,7 +89,7 @@ namespace Edubase.Web.UI.Controllers
                 FileDownloadName = "Results.zip"
             };
         }
-    
+
 
         private async Task<List<LaNameCodes>> GetCsvFromContainer(string container, string file)
         {
@@ -102,7 +97,7 @@ namespace Edubase.Web.UI.Controllers
 
             var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
-               HasHeaderRecord = false,          
+                HasHeaderRecord = false,
             };
 
             using (var memoryStream = new MemoryStream())
