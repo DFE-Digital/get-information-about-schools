@@ -58,7 +58,9 @@ namespace Edubase.Web.UI.Controllers
 
                     if (ModelState.IsValid)
                     {
-                        if (viewModel.SearchType == eSearchType.Location && LatLon.Parse(viewModel.LocationSearchModel.AutoSuggestValue) == null && !viewModel.LocationSearchModel.Text.IsNullOrEmpty())
+                        if (viewModel.SearchType == eSearchType.Location
+                            && LatLon.Parse(viewModel.LocationSearchModel.AutoSuggestValue) == null
+                            && !viewModel.LocationSearchModel.Text.IsNullOrEmpty())
                         {
                             var disambiguationResult = await ProcessLocationDisambiguation(viewModel.LocationSearchModel.Text);
                             if (disambiguationResult != null)
