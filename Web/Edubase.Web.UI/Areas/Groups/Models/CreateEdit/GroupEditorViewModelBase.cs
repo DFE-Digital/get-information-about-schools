@@ -42,12 +42,31 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         {
             get
             {
-                if (GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)) return eGroupTypeMode.ChildrensCentre;
-                else if (GroupTypeId.OneOfThese(GT.Federation)) return eGroupTypeMode.Federation;
-                else if (GroupTypeId.OneOfThese(GT.Trust)) return eGroupTypeMode.Trust;
-                else if (GroupTypeId.OneOfThese(GT.SchoolSponsor)) return eGroupTypeMode.Sponsor;
-                else if (GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust)) return eGroupTypeMode.AcademyTrust;
-                else throw new NotImplementedException($"GroupTypeId '{GroupTypeId}' is not supported");
+                if (GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup))
+                {
+                    return eGroupTypeMode.ChildrensCentre;
+                }
+                else if (GroupTypeId.OneOfThese(GT.Federation))
+                {
+                    return eGroupTypeMode.Federation;
+                }
+                else if (GroupTypeId.OneOfThese(GT.Trust))
+                {
+                    return eGroupTypeMode.Trust;
+                }
+                else if (GroupTypeId.OneOfThese(GT.SchoolSponsor))
+                {
+                    return eGroupTypeMode.Sponsor;
+                }
+                else if (GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust))
+                {
+                    return eGroupTypeMode.AcademyTrust;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException(nameof(GroupTypeId),
+                        $@"GroupTypeId '{GroupTypeId}' is not supported");
+                }
             }
         }
 

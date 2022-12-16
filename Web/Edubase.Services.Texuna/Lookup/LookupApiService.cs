@@ -68,7 +68,7 @@ namespace Edubase.Services.Texuna.Lookup
             _securityService = securityService;
             _httpClient = httpClient;
         }
-        
+
         public async Task<IEnumerable<LookupDto>> LocalAuthorityGetAllAsync() => await GetData("local-authorities");
         public async Task<IEnumerable<LookupDto>> GovernorRolesGetAllAsync() => await GetData("governor-roles");
         public async Task<IEnumerable<LookupDto>> GovernorAppointingBodiesGetAllAsync() => await GetData("governor-appointing-bodies");
@@ -146,303 +146,303 @@ namespace Edubase.Services.Texuna.Lookup
         public async Task<IEnumerable<LookupDto>> RscRegionsGetAllAsync() => await GetData("rsc-regions");
         private async Task<IEnumerable<LookupDto>> GetData(string name) => (await _httpClient.GetAsync<List<LookupDto>>(ApiPrefix + name, _securityService.CreateAnonymousPrincipal())).GetResponse();
 
-        #region Synchronous methods (deprecating)
-
-        public IEnumerable<LookupDto> LocalAuthorityGetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<LookupDto> AccommodationChangedGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> AdministrativeDistrictsGetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<LookupDto> AdministrativeWardsGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> AdmissionsPoliciesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> BoardingEstablishmentGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> CASWardsGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> CCDeliveryModelsGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> CCDisadvantagedAreasGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> CCGovernanceGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> CCGroupLeadsGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> CCOperationalHoursGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> CCPhaseTypesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> ChildcareFacilitiesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> DiocesesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> DirectProvisionOfEarlyYearsGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<LookupDto> EducationPhasesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> EstablishmentAccreditedGetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<LookupDto> EstablishmentLinkTypesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> EstablishmentStatusesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> EstablishmentTypeGroupsGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<EstablishmentLookupDto> EstablishmentTypesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> FurtherEducationTypesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> GendersGetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<LookupDto> GovernmentOfficeRegionsGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> GovernorAppointingBodiesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> GovernorRolesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> GroupStatusesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> GroupTypesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> GSSLAGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> HeadTitlesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> IndependentSchoolTypesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> InspectorateNamesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> InspectoratesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> LocalGovernorsGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> LSOAsGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> MSOAsGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> NationalitiesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> ParliamentaryConstituenciesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> ProvisionBoardingGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> ProvisionNurseriesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> ProvisionOfficialSixthFormsGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> ProvisionSpecialClassesGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> PRUEBDsGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> PruEducatedByOthersGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> PruFulltimeProvisionsGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> PRUSENsGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> QualityAssuranceBodyNameGetAll()
-        {
-            throw new NotImplementedException();
-        }        
-        public IEnumerable<LookupDto> ReasonEstablishmentClosedGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> ReasonEstablishmentOpenedGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> ReligiousCharactersGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> ReligiousEthosGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> ResourcedProvisionsGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> Section41ApprovedGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> SpecialEducationNeedsGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> TeenageMothersProvisionsGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> TypeOfResourcedProvisionsGetAll()
-        {
-            throw new NotImplementedException();
-        }
-        
-        public IEnumerable<LookupDto> UrbanRuralGetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-
-        #endregion
+        // #region Synchronous methods (deprecating)
+        //
+        // public IEnumerable<LookupDto> LocalAuthorityGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> AccommodationChangedGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> AdministrativeDistrictsGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> AdministrativeWardsGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> AdmissionsPoliciesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> BoardingEstablishmentGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> CASWardsGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> CCDeliveryModelsGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> CCDisadvantagedAreasGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> CCGovernanceGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> CCGroupLeadsGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> CCOperationalHoursGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> CCPhaseTypesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> ChildcareFacilitiesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> DiocesesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> DirectProvisionOfEarlyYearsGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public void Dispose()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> EducationPhasesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> EstablishmentAccreditedGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> EstablishmentLinkTypesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> EstablishmentStatusesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> EstablishmentTypeGroupsGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<EstablishmentLookupDto> EstablishmentTypesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> FurtherEducationTypesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> GendersGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> GovernmentOfficeRegionsGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> GovernorAppointingBodiesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> GovernorRolesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> GroupStatusesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> GroupTypesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> GSSLAGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> HeadTitlesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> IndependentSchoolTypesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> InspectorateNamesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> InspectoratesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> LocalGovernorsGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> LSOAsGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> MSOAsGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> NationalitiesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> ParliamentaryConstituenciesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> ProvisionBoardingGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> ProvisionNurseriesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> ProvisionOfficialSixthFormsGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> ProvisionSpecialClassesGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> PRUEBDsGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> PruEducatedByOthersGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> PruFulltimeProvisionsGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> PRUSENsGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> QualityAssuranceBodyNameGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        // public IEnumerable<LookupDto> ReasonEstablishmentClosedGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> ReasonEstablishmentOpenedGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> ReligiousCharactersGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> ReligiousEthosGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> ResourcedProvisionsGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> Section41ApprovedGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> SpecialEducationNeedsGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> TeenageMothersProvisionsGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> TypeOfResourcedProvisionsGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        // public IEnumerable<LookupDto> UrbanRuralGetAll()
+        // {
+        //     throw new NotImplementedException();
+        // }
+        //
+        //
+        // #endregion
     }
 }

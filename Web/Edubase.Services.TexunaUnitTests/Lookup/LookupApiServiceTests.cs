@@ -67,16 +67,6 @@ namespace Edubase.Services.Texuna.Lookup.Tests
             Assert.Equal(_lookupDtoList.Count, result.Count());
         }
 
-        [Theory]
-        [MemberData(nameof(GetSyncronousLookupTypes))]
-        public void SyncronousLookupsTest(string lookupType)
-        {
-            //use reflection to construct method name
-            var method = _lookupApiService.GetType().GetMethod($"{lookupType}GetAll");
-            var ex = Assert.Throws<System.Reflection.TargetInvocationException>(() => method.Invoke(_lookupApiService, null));
-            Assert.IsType<NotImplementedException>(ex.InnerException);
-        }
-
         public static IEnumerable<object[]> GetAsyncLookupTypes()
         {
             var allData = new List<object[]>

@@ -388,7 +388,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 OriginalStatusId = domainModel.StatusId,
                 UKPRN = domainModel.UKPRN.ToInteger()
             };
-            viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
+            viewModel.ListOfEstablishmentsPluralName = NomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
 
             await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, id, true);
             await PopulateSelectLists(viewModel);
@@ -455,7 +455,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 }
             }
 
-            viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT) viewModel.GroupTypeId.Value);
+            viewModel.ListOfEstablishmentsPluralName = NomenclatureService.GetEstablishmentsPluralName((GT) viewModel.GroupTypeId.Value);
             SetEditPermissions(viewModel);
 
             return View("EditDetails", viewModel);
@@ -475,7 +475,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             };
 
             await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, id, true);
-            viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT) viewModel.GroupTypeId.Value);
+            viewModel.ListOfEstablishmentsPluralName = NomenclatureService.GetEstablishmentsPluralName((GT) viewModel.GroupTypeId.Value);
             viewModel.SelectedTabName = "links";
 
             viewModel.DeriveCCLeadCentreUrn();
@@ -752,7 +752,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 dto = viewModel.SaveMode == eSaveMode.Links
                     ? new SaveGroupDto(viewModel.GroupUId.Value, createLinksDomainModel())
-                    : throw new NotImplementedException($"SaveMode '{viewModel.SaveMode}' is not supported");
+                    : throw new ArgumentOutOfRangeException(nameof(viewModel.SaveMode),
+                        $"SaveMode '{viewModel.SaveMode}' is not supported");
             }
 
             if (viewModel.CanUserCloseAndMarkAsCreatedInError

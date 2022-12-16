@@ -2,6 +2,7 @@
 using Edubase.Common.Text;
 using Edubase.Services.Enums;
 using System;
+using System.Diagnostics;
 using Humanizer;
 
 namespace Edubase.Services.Nomenclature
@@ -27,12 +28,25 @@ namespace Edubase.Services.Nomenclature
             return name;
         }
 
-        public string GetEstablishmentsPluralName(GT groupType, eTextCase textCase = eTextCase.TitleCase)
+        public static string GetEstablishmentsPluralName(GT groupType, eTextCase textCase = eTextCase.TitleCase)
         {
-            if (groupType.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)) return "children's centres".ToTextCase(textCase);
-            else if (groupType.OneOfThese(GT.Federation, GT.Trust)) return "schools".ToTextCase(textCase);
-            else if (groupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor)) return "academies".ToTextCase(textCase);
-            else throw new NotImplementedException($"Group type '{groupType}' is not supported for this operation");
+            switch(groupType)
+            {
+                case GT.ChildrensCentresCollaboration:
+                case GT.ChildrensCentresGroup:
+                    return "children's centres".ToTextCase(textCase);
+                case GT.Federation:
+                case GT.Trust:
+                    return "schools".ToTextCase(textCase);
+                case GT.MultiacademyTrust:
+                case GT.SingleacademyTrust:
+                case GT.SchoolSponsor:
+                    return "academies".ToTextCase(textCase);
+                case eLookupGroupType.UmbrellaTrust:
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(groupType),
+                        $"Group type '{groupType}' is not supported for this operation");
+            }
         }
     }
 }
