@@ -61,7 +61,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             var viewModel = new BulkCreateFreeSchoolsViewModel();
             var apiResponse = await _establishmentWriteService.BulkCreateFreeSchoolsGetProgressAsync(id, User);
-            return await ResultInternalAjaxAsync(id, viewModel, apiResponse);
+            return await Task.Run(() => ResultInternalAjaxAsync(id, viewModel, apiResponse));
         }
 
         private async Task<ActionResult> ResultInternalAsync(Guid id, BulkCreateFreeSchoolsViewModel viewModel, ApiResponse<BulkCreateFreeSchoolsResult> apiResponse)
@@ -128,7 +128,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
         }
 
-        private async Task<ActionResult> ResultInternalAjaxAsync(Guid id, BulkCreateFreeSchoolsViewModel viewModel, ApiResponse<BulkCreateFreeSchoolsResult> apiResponse)
+        private ActionResult ResultInternalAjaxAsync(Guid id, BulkCreateFreeSchoolsViewModel viewModel, ApiResponse<BulkCreateFreeSchoolsResult> apiResponse)
         {
             var redirectUrl = string.Concat("/Establishments/bulk-create-free-schools/", id);
             if (apiResponse.Success)
@@ -140,17 +140,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                         status = false, redirect = redirectUrl
                     }))
                     : viewModel.Result.IsCompleted()
-                        ? viewModel.Result.HasCreatedEstablishments
-                                            ? Json(JsonConvert.SerializeObject(new
-                                            {
-                                                status = true,
-                                                redirect = redirectUrl
-                                            }))
-                                            : Json(JsonConvert.SerializeObject(new
-                                            {
-                                                status = true,
-                                                redirect = redirectUrl
-                                            }))
+                        ? Json(JsonConvert.SerializeObject(new
+                        {
+                            status = true,
+                            redirect = redirectUrl
+                        }))
                         : throw new Exception($"The status of task {id} is unclear; the API did not provide a good enough response {Newtonsoft.Json.JsonConvert.SerializeObject(viewModel.Result)}");
             }
             else

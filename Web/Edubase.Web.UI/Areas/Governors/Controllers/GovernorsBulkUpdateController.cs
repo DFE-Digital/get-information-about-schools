@@ -26,7 +26,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         public async Task<ActionResult> Index()
         {
             var vm = TempData["ProcessBulkUpdate"] as GovernorsBulkUpdateViewModel ?? new GovernorsBulkUpdateViewModel();
-            return View("Index", vm);
+            return await Task.Run(() => View("Index", vm));
         }
 
         [HttpGet, Route("DownloadTemplate")]
@@ -62,7 +62,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         {
                             ModelState.AddModelError("BulkFile", result.Errors[0].Message);
                         }
-                        else 
+                        else
                         {
                             ModelState.AddModelError("error-log", "Please download the error log to correct your data before resubmitting");
                             viewModel.ErrorLogDownload = result.ErrorLogFile;

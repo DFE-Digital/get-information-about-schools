@@ -28,13 +28,13 @@ namespace Edubase.Services.Texuna.ChangeHistory
         [Obsolete("Please use GetSuggesterGroupsAsync", true)]
         public async Task<List<UserGroupModel>> GetApproversGroupsAsync(IPrincipal principal)
         {
-            throw new NotImplementedException("GetApproversGroupsAsync is not implemented because it returns the exact same information as GetSuggesterGroupsAsync");
+            return await GetSuggesterGroupsAsync(principal);
         }
 
         public async Task<ProgressDto> SearchWithDownloadGenerationAsync(SearchChangeHistoryDownloadPayload payload, IPrincipal principal)
             => (await _httpClient.PostAsync<ProgressDto>("change-history/download", payload, principal)).GetResponse();
 
-        public async Task<ProgressDto> GetDownloadGenerationProgressAsync(Guid taskId, IPrincipal principal) 
+        public async Task<ProgressDto> GetDownloadGenerationProgressAsync(Guid taskId, IPrincipal principal)
             => (await _httpClient.GetAsync<ProgressDto>($"change-history/download/progress/{taskId}", principal)).GetResponse();
     }
 }
