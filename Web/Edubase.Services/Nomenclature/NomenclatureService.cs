@@ -1,8 +1,7 @@
-﻿using Edubase.Common;
+﻿using System;
+using Edubase.Common;
 using Edubase.Common.Text;
 using Edubase.Services.Enums;
-using System;
-using System.Diagnostics;
 using Humanizer;
 
 namespace Edubase.Services.Nomenclature
@@ -11,14 +10,16 @@ namespace Edubase.Services.Nomenclature
 
     public class NomenclatureService
     {
-        public string GetGovernorRoleName(eLookupGovernorRole role, eTextCase textCase = eTextCase.SentenceCase, bool pluralise = false)
+        public string GetGovernorRoleName(eLookupGovernorRole role, eTextCase textCase = eTextCase.SentenceCase,
+            bool pluralise = false)
         {
-            var roleName =  role.ToString();
+            var roleName = role.ToString();
             if (roleName.Contains("_"))
             {
                 var index = roleName.IndexOf("_", StringComparison.Ordinal);
                 roleName = roleName.Substring(index + 1);
             }
+
             var name = roleName.ToProperCase().ToTextCase(textCase);
             if (pluralise)
             {
@@ -30,7 +31,7 @@ namespace Edubase.Services.Nomenclature
 
         public static string GetEstablishmentsPluralName(GT groupType, eTextCase textCase = eTextCase.TitleCase)
         {
-            switch(groupType)
+            switch (groupType)
             {
                 case GT.ChildrensCentresCollaboration:
                 case GT.ChildrensCentresGroup:
