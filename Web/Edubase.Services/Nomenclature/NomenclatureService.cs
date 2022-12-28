@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using Edubase.Common;
 using Edubase.Common.Text;
 using Edubase.Services.Enums;
@@ -45,8 +46,9 @@ namespace Edubase.Services.Nomenclature
                     return "academies".ToTextCase(textCase);
                 case GT.UmbrellaTrust:
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(groupType), groupType,
-                        $"Group type '{groupType}' is not supported for this operation");
+                    throw new InvalidEnumArgumentException(nameof(groupType),
+                        (int) groupType,
+                        groupType.GetType());
             }
         }
     }
