@@ -1,6 +1,5 @@
-@using Edubase.Common
 @using Edubase.Services.Enums
-@model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
+@model GovernorViewModel
 
 @{
     string dateAppointmentEndsTooltipMessage = null;
@@ -23,7 +22,7 @@
         showReactivationWarning = false;
     }
 
-    string editorPrefix = ViewData["editorPrefix"]?.ToString();
+    var editorPrefix = ViewData["editorPrefix"]?.ToString();
 }
 
 @if (Model.DisplayPolicy.AppointmentStartDate)
@@ -38,10 +37,11 @@
 @if (Model.DisplayPolicy.AppointmentEndDate)
 {
     @Html.EditorFor(x => x.AppointmentEndDate,
-        new {
+        new
+        {
             title = Model.GovernorRole == eLookupGovernorRole.Member ? "Date stepped down" : "Date term ends",
             tooltipText = dateAppointmentEndsTooltipMessage,
             showReactivationWarning
-        });
+        })
+    ;
 }
-

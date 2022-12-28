@@ -1,6 +1,4 @@
-@using Edubase.Common
-@using Edubase.Services.Enums
-@model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
+@model GovernorViewModel
 
 @if (Model.DisplayPolicy.PreviousFullName)
 {
@@ -8,7 +6,7 @@
         @Html.LabelFor(x => x.PreviousTitleId, new { @class = "govuk-label" })
         @Html.ValidationMessageFor(x => x.PreviousTitleId, null, new { @class = "govuk-error-message" })
         @Html.DropDownListFor(x => x.PreviousTitleId, Model.PreviousTitles, "",
-            new { id="GovernorPreviousNameTitleInput", @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.PreviousTitleId)) })
+            new { id = "GovernorPreviousNameTitleInput", @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.PreviousTitleId)) })
     </div>
 
     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PreviousFirstName)">

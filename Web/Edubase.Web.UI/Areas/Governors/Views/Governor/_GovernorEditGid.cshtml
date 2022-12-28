@@ -1,4 +1,4 @@
-@model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
+@model GovernorViewModel
 
 @if (Model.DisplayPolicy.Id)
 {
@@ -10,7 +10,7 @@
                 @helpers.DialogHiddenPrompt()
             </a>
         </label>
-        <input id="governorGidInput" class="govuk-input" value="@Model.GID" readonly="readonly" disabled="disabled" />
+        <input id="governorGidInput" class="govuk-input" value="@Model.GID" readonly="readonly" disabled="disabled"/>
     </div>
 
     <div class="govuk-grid-column-full helptext-container">
