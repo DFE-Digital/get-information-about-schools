@@ -45,7 +45,7 @@ namespace Edubase.Services.Nomenclature
                     return "academies".ToTextCase(textCase);
                 case GT.UmbrellaTrust:
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(groupType),
+                    throw new ArgumentOutOfRangeException(nameof(groupType), groupType,
                         $"Group type '{groupType}' is not supported for this operation");
             }
         }
