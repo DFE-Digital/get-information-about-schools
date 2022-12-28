@@ -43,7 +43,7 @@ namespace Edubase.Services.Nomenclature
                 case GT.SingleacademyTrust:
                 case GT.SchoolSponsor:
                     return "academies".ToTextCase(textCase);
-                case eLookupGroupType.UmbrellaTrust:
+                case GT.UmbrellaTrust:
                 default:
                     throw new ArgumentOutOfRangeException(nameof(groupType),
                         $"Group type '{groupType}' is not supported for this operation");
