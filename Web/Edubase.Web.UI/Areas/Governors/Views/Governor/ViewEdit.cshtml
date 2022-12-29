@@ -212,124 +212,119 @@ else
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            @if (Model.DomainModel.HasFullAccess)
-            {
-                // Render lists
-                foreach (var grid in Model.Grids)
-                {
-                    <text>
-                        @ShowGovernorEditor(grid)
-                    </text>
-                }
-                if (Model.HistoricGrids.Any(h => h.Rows.Any()))
-                {
-                    <h2 class="govuk-heading-m">Historic (left within last 12 months)</h2>
-                    <details class="govuk-details  govuk-!-font-size-16 gias-details--noborder" data-module="govuk-details">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">
-                                <span class="gias-details-closed-text">More details</span>
-                                <span class="gias-details-open-text">Less details</span>
-                            </span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            @foreach (var grid in Model.HistoricGrids)
-                            {
-                                if (grid.Rows.Any())
-                                {
-                                    <text>
-                                        @ShowGovernorEditor(grid, true)
-                                    </text>
-                                }
-                            }
-                        </div>
-                    </details>
-                }
-            }
-            else
-            {
-                for (var index = 0; index < Model.Grids.Count; index++)
-                {
-                    @Html.DisplayFor(m => m.Grids[index])
-                }
-                if (User.Identity.IsAuthenticated)
-                {
-                    if (Model.HistoricGrids.Any(h => h.Rows.Any()))
-                    {
-                        <h2 class="govuk-heading-m">Historic (left within last 12 months)</h2>
-                        <details class="govuk-details govuk-!-font-size-16 gias-details--noborder" data-module="govuk-details">
-                            <summary class="govuk-details__summary">
-                                <span class="govuk-details__summary-text">
-                                    <span class="gias-details-closed-text">More details</span>
-                                    <span class="gias-details-open-text">Less details</span>
-                                </span>
-                            </summary>
-                            <div class="govuk-details__text">
-                                @for (var index = 0; index < Model.HistoricGrids.Count; index++)
-                                {
-                                    if (Model.HistoricGrids[index].Rows.Any())
-                                    {
-                                        @Html.DisplayFor(m => m.HistoricGrids[index])
-                                    }
-                                }
-                            </div>
-                        </details>
-                    }
-                }
-                else
-                {
-                    if (Model.HistoricGovernors.Any())
-                    {
-                        <h2 class="govuk-heading-m">Historic (left within last 12 months)</h2>
-                        <details class="govuk-details govuk-!-font-size-16 gias-details--noborder" data-module="govuk-details">
-                            <summary class="govuk-details__summary">
-                                <span class="govuk-details__summary-text">
-                                    <span class="gias-details-closed-text">More details</span>
-                                    <span class="gias-details-open-text">Less details</span>
-                                </span>
-                            </summary>
-                            <div class="govuk-details__text">
-                                <table class="govuk-table govuk-!-font-size-16 gias-table list-table sortable-table historical governors">
-                                    <caption class="govuk-visually-hidden">Historical governance</caption>
-                                    <thead class="govuk-table__head">
-                                    <tr class="govuk-table__row">
-                                        <th scope="col" class="govuk-table__header">
-                                            <a href="#" class="js-sort-header" data-sort-key="name" data-sort-type="sortText">Name</a>
-                                        </th>
-                                        <th scope="col" class="govuk-table__header">
-                                            <a href="#" class="js-sort-header" data-sort-key="role" data-sort-type="sortText">Role</a>
-                                        </th>
-                                        <th scope="col" class="govuk-table__header">
-                                            <a href="#" class="js-sort-header" data-sort-key="appointed" data-sort-type="sortText">Appointed by</a>
-                                        </th>
-                                        <th scope="col" class="govuk-table__header">
-                                            <a href="#" class="js-sort-header" data-sort-key="from" data-sort-type="sortDate">From</a>
-                                        </th>
-                                        <th scope="col" class="govuk-table__header">
-                                            <a href="#" class="js-sort-header" data-sort-key="to" data-sort-type="sortDate">To</a>
-                                        </th>
-                                    </tr>
-                                    </thead>
-                                    <tbody class="govuk-table__body">
-                                    @foreach (var governor in Model.HistoricGovernors)
-                                    {
-                                        <tr class="govuk-table__row">
-                                            <td data-label="Name" class="govuk-table__cell">@governor.FullName</td>
-                                            <td data-label="Role" class="govuk-table__cell">@governor.RoleName</td>
-                                            <td data-label="Appointed by" class="govuk-table__cell">@governor.AppointingBody</td>
-                                            <td data-label="From" class="govuk-table__cell">@(governor.AppointmentStartDate.ToDateTime()?.ToString("d MMMM yyyy"))</td>
-                                            <td data-label="To" class="govuk-table__cell">@(governor.AppointmentEndDate.ToDateTime()?.ToString("d MMMM yyyy"))</td>
-                                        </tr>
-                                    }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </details>
-                    }
-                }
-            }
+            @DisplayCurrentGovernancePeople()
+            @DisplayHistoricGovernancePeople()
         </div>
     </div>
 }
+
+@helper DisplayCurrentGovernancePeople()
+{
+    for (var index = 0; index < Model.Grids.Count; index++)
+    {
+        if (Model.DomainModel.HasFullAccess)
+        {
+            <text>
+                @ShowGovernorEditor(Model.Grids[index])
+            </text>
+        }
+        else
+        {
+            var index1 = index;
+            @Html.DisplayFor(m => m.Grids[index1])
+        }
+    }
+}
+
+@helper DisplayHistoricGovernancePeople()
+{
+    if (Model.HistoricGovernors.Any())
+    {
+        <h2 class="govuk-heading-m">Historic (left within last 12 months)</h2>
+        <details class="govuk-details govuk-!-font-size-16 gias-details--noborder" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    <span class="gias-details-closed-text">More details</span>
+                    <span class="gias-details-open-text">Less details</span>
+                </span>
+            </summary>
+            @if (User.Identity.IsAuthenticated)
+            {
+                @ShowHistoricalGovernorsForAuthenticatedUser()
+            }
+            else
+            {
+                @ShowHistoricalGovernorsForPublicUser()
+            }
+        </details>
+    }
+}
+
+@helper ShowHistoricalGovernorsForAuthenticatedUser()
+{
+    <div class="govuk-details__text">
+        @for (var index = 0; index < Model.HistoricGrids.Count; index++)
+        {
+            if (Model.HistoricGrids[index].Rows.Any())
+            {
+                if (Model.DomainModel.HasFullAccess)
+                {
+                    @ShowGovernorEditor(Model.HistoricGrids[index], true)
+                }
+                else
+                {
+                    var index1 = index;
+                    @Html.DisplayFor(m => m.HistoricGrids[index1])
+                }
+            }
+        }
+    </div>
+}
+
+@helper ShowHistoricalGovernorsForPublicUser()
+{
+    <div class="govuk-details__text">
+        <table class="govuk-table govuk-!-font-size-16 gias-table list-table sortable-table historical governors">
+            <caption class="govuk-visually-hidden">Historical governance</caption>
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">
+                    <a href="#" class="js-sort-header" data-sort-key="name" data-sort-type="sortText">Name</a>
+                </th>
+                <th scope="col" class="govuk-table__header">
+                    <a href="#" class="js-sort-header" data-sort-key="gid" data-sort-type="sortText">Governance role identifier (GID)</a>
+                </th>
+                <th scope="col" class="govuk-table__header">
+                    <a href="#" class="js-sort-header" data-sort-key="role" data-sort-type="sortText">Role</a>
+                </th>
+                <th scope="col" class="govuk-table__header">
+                    <a href="#" class="js-sort-header" data-sort-key="appointed" data-sort-type="sortText">Appointed by</a>
+                </th>
+                <th scope="col" class="govuk-table__header">
+                    <a href="#" class="js-sort-header" data-sort-key="from" data-sort-type="sortDate">Date of apppointment</a>
+                </th>
+                <th scope="col" class="govuk-table__header">
+                    <a href="#" class="js-sort-header" data-sort-key="to" data-sort-type="sortDate">Date appointment ended</a>
+                </th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+            @foreach (var governor in Model.HistoricGovernors)
+            {
+                <tr class="govuk-table__row">
+                    <td data-label="Name" class="govuk-table__cell">@governor.FullName</td>
+                    <td data-label="Gid" class="govuk-table__cell">@governor.GID</td>
+                    <td data-label="Role" class="govuk-table__cell">@governor.RoleName</td>
+                    <td data-label="Appointed by" class="govuk-table__cell">@governor.AppointingBody</td>
+                    <td data-label="From" class="govuk-table__cell">@(governor.AppointmentStartDate.ToDateTime()?.ToString("d MMMM yyyy"))</td>
+                    <td data-label="To" class="govuk-table__cell">@(governor.AppointmentEndDate.ToDateTime()?.ToString("d MMMM yyyy"))</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}
+
 
 @helper ShowGovernorEditor(GovernorGridViewModel grid, bool historic = false)
 {

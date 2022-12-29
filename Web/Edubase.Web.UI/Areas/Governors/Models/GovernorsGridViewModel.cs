@@ -157,35 +157,35 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                         ? appointment.AppointmentEndDate
                         : governor.AppointmentEndDate;
 
-                    if (EnumSets.eGovernanceProfessionalRoles.Contains(role))
-                    {
-                        grid.AddRow(governor, endDate)
-                            .AddCell(governor.GetFullName(), displayPolicy.FullName)
-                            .AddCell(governor.Id, displayPolicy.Id)
-                            .AddCell(governor.DOB?.ToString("d MMMM yyyy"), displayPolicy.DOB)
-                            .AddCell(governor.PostCode, displayPolicy.PostCode)
-                            .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber)
-                            .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
-                            .AddCell(startDate?.ToString("d MMMM yyyy"), displayPolicy.AppointmentStartDate)
-                            .AddCell(endDate?.ToString("d MMMM yyyy"), includeEndDate);
-                    }
-                    else
-                    {
-                        grid.AddRow(governor, endDate)
-                            .AddCell(governor.GetFullName(), displayPolicy.FullName)
-                            .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments,
-                                role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody))
-                            .AddCell(governor.Id, displayPolicy.Id)
-                            .AddCell(AppointingBodies.FirstOrDefault(x => x.Id == governor.AppointingBodyId)?.Name,
-                                displayPolicy.AppointingBodyId)
-                            .AddCell(startDate?.ToString("d MMMM yyyy"), displayPolicy.AppointmentStartDate)
-                            .AddCell(endDate?.ToString("d MMMM yyyy"), includeEndDate)
-                            .AddCell(governor.PostCode, displayPolicy.PostCode)
-                            .AddCell(governor.DOB?.ToString("d MMMM yyyy"), displayPolicy.DOB)
-                            .AddCell(governor.GetPreviousFullName(), displayPolicy.PreviousFullName)
-                            .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
-                            .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber);
-                    }
+                    // if (EnumSets.eGovernanceProfessionalRoles.Contains(role))
+                    // {
+                    grid.AddRow(governor, endDate)
+                        .AddCell(governor.GetFullName(), displayPolicy.FullName)
+                        .AddCell(governor.Id, displayPolicy.Id)
+                        .AddCell(governor.DOB?.ToString("d MMMM yyyy"), displayPolicy.DOB)
+                        .AddCell(governor.PostCode, displayPolicy.PostCode)
+                        .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber)
+                        .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
+                        .AddCell(startDate?.ToString("d MMMM yyyy"), displayPolicy.AppointmentStartDate)
+                        .AddCell(endDate?.ToString("d MMMM yyyy"), includeEndDate);
+                    // }
+                    // else
+                    // {
+                    // grid.AddRow(governor, endDate)
+                    //     .AddCell(governor.GetFullName(), displayPolicy.FullName)
+                    //     .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments,
+                    //         role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody))
+                    //     .AddCell(governor.Id, displayPolicy.Id)
+                    //     .AddCell(AppointingBodies.FirstOrDefault(x => x.Id == governor.AppointingBodyId)?.Name,
+                    //         displayPolicy.AppointingBodyId)
+                    //     .AddCell(startDate?.ToString("d MMMM yyyy"), displayPolicy.AppointmentStartDate)
+                    //     .AddCell(endDate?.ToString("d MMMM yyyy"), includeEndDate)
+                    //     .AddCell(governor.PostCode, displayPolicy.PostCode)
+                    //     .AddCell(governor.DOB?.ToString("d MMMM yyyy"), displayPolicy.DOB)
+                    //     .AddCell(governor.GetPreviousFullName(), displayPolicy.PreviousFullName)
+                    //     .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
+                    //     .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber);
+                    // }
 
                     if (isHistoric)
                     {
@@ -197,7 +197,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                             AppointmentEndDate = new DateTimeViewModel(governor.AppointmentEndDate),
                             AppointmentStartDate = new DateTimeViewModel(governor.AppointmentStartDate),
                             FullName = governor.GetFullName(),
-                            RoleName = _nomenclatureService.GetGovernorRoleName(role)
+                            RoleName = _nomenclatureService.GetGovernorRoleName(role),
+                            GID = governor.Id
                         };
 
                         HistoricGovernors.Add(gov);
@@ -222,32 +223,32 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         private void SetupHeader(GR role, GridViewModel<GovernorModel> grid, GovernorDisplayPolicy displayPolicy,
             bool includeEndDate)
         {
-            if (EnumSets.eGovernanceProfessionalRoles.Contains(role))
-            {
-                grid.AddHeaderCell("Name", displayPolicy.FullName, "name", "sortText")
-                    .AddHeaderCell("Governance role identifier (GID)", displayPolicy.Id, "gid")
-                    .AddHeaderCell("Date of birth", displayPolicy.DOB)
-                    .AddHeaderCell("Home postcode", displayPolicy.PostCode)
-                    .AddHeaderCell("Telephone", displayPolicy.TelephoneNumber)
-                    .AddHeaderCell("Email address", displayPolicy.EmailAddress)
-                    .AddHeaderCell("Date of appointment", displayPolicy.AppointmentStartDate, "fromDate", "sortDate")
-                    .AddHeaderCell("Date appointment ended", includeEndDate, "toDate", "sortDate");
-            }
-            else
-            {
-                grid.AddHeaderCell("Name", displayPolicy.FullName, "name", "sortText")
-                    .AddHeaderCell("Shared with", role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody),
-                        "shared", "sortText")
-                    .AddHeaderCell("GID", displayPolicy.Id, "gid")
-                    .AddHeaderCell("Appointed by", displayPolicy.AppointingBodyId, "appointed", "sortText")
-                    .AddHeaderCell("From", displayPolicy.AppointmentStartDate, "fromDate", "sortDate")
-                    .AddHeaderCell(role == GR.Member ? "Date stepped down" : "To", includeEndDate, "toDate", "sortDate")
-                    .AddHeaderCell("Postcode", displayPolicy.PostCode)
-                    .AddHeaderCell("Date of birth", displayPolicy.DOB)
-                    .AddHeaderCell("Previous name", displayPolicy.PreviousFullName)
-                    .AddHeaderCell("Email address", displayPolicy.EmailAddress)
-                    .AddHeaderCell("Telephone", displayPolicy.TelephoneNumber);
-            }
+            // if (EnumSets.eGovernanceProfessionalRoles.Contains(role))
+            // {
+            grid.AddHeaderCell("Name", displayPolicy.FullName, "name", "sortText")
+                .AddHeaderCell("Governance role identifier (GID)", displayPolicy.Id, "gid")
+                .AddHeaderCell("Date of birth", displayPolicy.DOB)
+                .AddHeaderCell("Home postcode", displayPolicy.PostCode)
+                .AddHeaderCell("Telephone", displayPolicy.TelephoneNumber)
+                .AddHeaderCell("Email address", displayPolicy.EmailAddress)
+                .AddHeaderCell("Date of appointment", displayPolicy.AppointmentStartDate, "fromDate", "sortDate")
+                .AddHeaderCell("Date appointment ended", includeEndDate, "toDate", "sortDate");
+            // }
+            // else
+            // {
+            //     grid.AddHeaderCell("Name", displayPolicy.FullName, "name", "sortText")
+            //         .AddHeaderCell("Shared with", role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody),
+            //             "shared", "sortText")
+            //         .AddHeaderCell("GID", displayPolicy.Id, "gid")
+            //         .AddHeaderCell("Appointed by", displayPolicy.AppointingBodyId, "appointed", "sortText")
+            //         .AddHeaderCell("From", displayPolicy.AppointmentStartDate, "fromDate", "sortDate")
+            //         .AddHeaderCell(role == GR.Member ? "Date stepped down" : "To", includeEndDate, "toDate", "sortDate")
+            //         .AddHeaderCell("Postcode", displayPolicy.PostCode)
+            //         .AddHeaderCell("Date of birth", displayPolicy.DOB)
+            //         .AddHeaderCell("Previous name", displayPolicy.PreviousFullName)
+            //         .AddHeaderCell("Email address", displayPolicy.EmailAddress)
+            //         .AddHeaderCell("Telephone", displayPolicy.TelephoneNumber);
+            // }
         }
 
         /// <summary>
