@@ -1,7 +1,0 @@
-@model GovernorViewModel
-
-@if (Model.DisplayPolicy.DOB)
-{
-    @Html.EditorFor(x => x.DOB,
-        new { tooltipText = "This information will not be made public and will only be shared within the Department for Education, across government and with organisations where the department are legally required to do so for business-critical work and safeguarding actions." })
-}
