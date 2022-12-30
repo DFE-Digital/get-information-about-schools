@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import axios from "axios";
 import errorSummary from '../GiasVueComponents/errorSummary';
 import GiasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
@@ -62,7 +61,7 @@ new Vue({
 
   },
   mounted: function () {
-    this.counter = new GiasTextCounter(document.getElementById('reason'), { maxLength: 1024 });
+    this.counter = new GiasTextCounter(document.getElementById('reason'), {maxLength: 1024});
   },
   computed: {
     pageCount: function () {
@@ -87,12 +86,10 @@ new Vue({
       if (this.totalPages > maxPages) {
         if (this.currentPage < 4) {
           paginationFinish = maxPages;
-        }
-        else if (this.currentPage >= 4 && !(this.currentPage + 3 > this.totalPages)) {
+        } else if (this.currentPage >= 4 && !(this.currentPage + 3 > this.totalPages)) {
           paginationFinish = this.currentPage + 2;
           paginationStart = paginationFinish - (maxPages - 1);
-        }
-        else if (this.currentPage + 3 > this.totalPages) {
+        } else if (this.currentPage + 3 > this.totalPages) {
           paginationFinish = this.totalPages;
           paginationStart = this.totalPages - (maxPages - 1);
         }
@@ -189,7 +186,7 @@ new Vue({
         sortBy: self.sortType + sortDir
       }
 
-      axios.get(self.apiUrl, { params })
+      axios.get(self.apiUrl, {params})
         .then(res => {
           self.currentCount = res.data.count;
           self.changes = res.data.items;
@@ -279,24 +276,24 @@ new Vue({
         axios.post(self.confirmUrl, params, {
           headers: headers
         })
-        .then(response => {
-          self.getChangesData(0, self.rejectSuccessCallBack);
-        })
-        .catch(error => {
-          if (error.response) {
-            const responses = error.response.data;
+          .then(response => {
+            self.getChangesData(0, self.rejectSuccessCallBack);
+          })
+          .catch(error => {
+            if (error.response) {
+              const responses = error.response.data;
 
-            for (let i = 0, len = responses.length; i < len; i++) {
-              self.errors.push({
-                href: '#',
-                message: responses[i].message
-              });
+              for (let i = 0, len = responses.length; i < len; i++) {
+                self.errors.push({
+                  href: '#',
+                  message: responses[i].message
+                });
+              }
+
+              self.apiBork = error.response.data;
+              self.isProcessing = false;
             }
-
-            self.apiBork = error.response.data;
-            self.isProcessing = false;
-          }         
-        });
+          });
       }
     },
     approveSelection: function () {
@@ -333,24 +330,24 @@ new Vue({
         axios.post(self.confirmUrl, params, {
           headers: headers
         })
-        .then(response => {
-          self.getChangesData(0, self.approveSuccessCallback);
-        })
-        .catch(error => {
-          if (error.response) {
-            const responses = error.response.data;
+          .then(response => {
+            self.getChangesData(0, self.approveSuccessCallback);
+          })
+          .catch(error => {
+            if (error.response) {
+              const responses = error.response.data;
 
-            for (let i = 0, len = responses.length; i < len; i++) {
-              self.errors.push({
-                href: '#',
-                message: responses[i].message
-              });
+              for (let i = 0, len = responses.length; i < len; i++) {
+                self.errors.push({
+                  href: '#',
+                  message: responses[i].message
+                });
+              }
+
+              self.apiBork = error.response.data;
+              self.isProcessing = false;
             }
-
-            self.apiBork = error.response.data;
-            self.isProcessing = false;
-          }         
-        });
+          });
       }
     },
     rejectSelection: function () {
@@ -366,7 +363,7 @@ new Vue({
       this.errorFocus();
 
       if (this.errors.length > 0) {
-        return;
+
       } else {
         this.pendingRejection = true;
         this.reason = '';
