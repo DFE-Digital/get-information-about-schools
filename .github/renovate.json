@@ -1,0 +1,26 @@
+﻿{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    },
+    {
+      "matchUpdateTypes": ["minor"],
+      "automerge": false
+    },
+    {
+      "matchUpdateTypes": ["patch", "pin", "digest"],
+      "automerge": false
+    }
+  ],
+  "automergeType": "pr",
+  "prHourlyLimit": 0,
+  "semanticCommits": "enabled",
+  "dependencyDashboard": true,
+  "baseBranches": ["master", "dev"],
+  "configWarningReuseIssue": false
+}
