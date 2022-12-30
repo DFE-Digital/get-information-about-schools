@@ -22,5 +22,6 @@
   "semanticCommits": "enabled",
   "dependencyDashboard": true,
   "baseBranches": ["master", "dev"],
-  "configWarningReuseIssue": false
+  "configWarningReuseIssue": false,
+  "labels": ["dependencies"]
 }
