@@ -19,21 +19,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup .NET Core SDK ${{ env.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
           source-url: ${{ env.AZURE_ARTIFACTS_FEED_URL }}
         env:
-          NUGET_AUTH_TOKEN: ${{ secrets.AZURE_PACKAGE_FEED_TOKEN }} 
-          
+          NUGET_AUTH_TOKEN: ${{ secrets.AZURE_PACKAGE_FEED_TOKEN }}
+
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
 
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.0.5
-        
+
       - name: Setup VSTest
         uses: darenm/Setup-VSTest@v1
 
@@ -45,7 +45,7 @@ jobs:
         working-directory: ./Web
         run: |
           msbuild.exe EdubaseWeb.sln  /t:Rebuild /p:platform="Any CPU" /p:configuration="Release"
-        
+
       ## Currently manually specifying the tests to trigger -- unclear if these can be picked up automatically?
       - name: Run Tests
         working-directory: ./Web
@@ -63,5 +63,3 @@ jobs:
           name: dotnet-results-${{ env.DOTNET_VERSION }}
           path: ./Web/TestResults
         if: ${{ always() }}
-        
-        
