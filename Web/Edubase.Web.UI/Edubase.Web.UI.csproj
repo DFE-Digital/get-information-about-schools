@@ -712,7 +712,7 @@
     <Content Include="Properties\webjobs-list.json" />
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
     <Content Include="robots.txt" />
-    <Content Include="App_offline_x.htm" />
+    <Content Include="App_offline.htm"/>
     <Content Include="Views\Approvals\ExplainRejections.cshtml" />
     <Content Include="Views\Approvals\Partials\_ApprovalsTable.cshtml" />
     <Content Include="Views\Home\Accessibility.cshtml" />
@@ -884,6 +884,7 @@
     <Content Include="Views\News\EditArticle.cshtml" />
     <Content Include="Views\News\AuditArticles.cshtml" />
     <Content Include="Views\News\AuditArticle.cshtml" />
+      <Content Include="webpack.config.js"/>
     <None Include="packages.config" />
     <Content Include="Views\Guidance\LaNameCodes.cshtml" />
     <Content Include="Views\Guidance\SelectFormat.cshtml" />
