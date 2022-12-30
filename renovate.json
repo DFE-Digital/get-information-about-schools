@@ -19,8 +19,9 @@
   ],
   "automergeType": "pr",
   "prHourlyLimit": 0,
-  "semanticCommits": true,
+  "semanticCommits": "enabled",
   "dependencyDashboard": true,
-  "baseBranches": ["master", "dev"],
+  "baseBranches": ["master"],
   "configWarningReuseIssue": false,
+  "labels": ["dependencies"]
 }
