@@ -16,7 +16,7 @@ on:
     branches: [ "master" ]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ "master", "dev" ]
+    branches: [ "master" ]
   schedule:
     - cron: '21 3 * * 6'
 
@@ -83,7 +83,7 @@ jobs:
     - name: Build Solution
       working-directory: ./Web
       run: |
-        msbuild.exe EdubaseWeb.sln  /t:Rebuild /p:platform="Any CPU" /p:configuration="Release"
+        msbuild.exe EdubaseWeb.sln  /t:Rebuild /p:platform="Any CPU" /p:configuration="Release" -m
 
 #### /END CUSTOM BUILD STEPS FOR C# PROJECTS WHICH USE PRIVATE NUGET FEED
 
