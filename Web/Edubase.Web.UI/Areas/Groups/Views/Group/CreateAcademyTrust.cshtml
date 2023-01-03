@@ -41,7 +41,7 @@
             @if (Model.TrustExists == true)
             {
                 <div role="alert" class="warning-message js-trigger-aria-live">
-                    <p id="warning-message" class="message-text" aria-live="polite">Company is already a @(Model.TypeId == (int)eLookupGroupType.MultiacademyTrust? "multi-academy" : "single-academy") trust</p>
+                    <p id="create-academy-trust-warning-message" class="message-text" aria-live="polite">Company is already a @(Model.TypeId == (int)eLookupGroupType.MultiacademyTrust? "multi-academy" : "single-academy") trust</p>
                 </div>
             }
             else

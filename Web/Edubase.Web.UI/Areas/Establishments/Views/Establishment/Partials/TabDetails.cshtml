@@ -37,8 +37,8 @@
     @if ((User.InRole(EdubaseRoles.ESTABLISHMENT) && Model.IsClosed) || (User.InRole(EdubaseRoles.ROLE_PRISM, EdubaseRoles.ROLE_STAKEHOLDER) && Model.Establishment.CloseDate.HasValue && Model.Establishment.CloseDate?.AddMonths(6) < DateTime.Today))
     {
         <div class="gias-establishment-closed-panel">
-            <p class="govuk-heading-s govuk-!-margin-bottom-1">The establishment record is now closed for updates.</p>
-            <p class="govuk-body-s">
+            <p id="establishment-closed-panel-heading" class="govuk-heading-s govuk-!-margin-bottom-1">The establishment record is now closed for updates.</p>
+            <p id="establishment-closed-panel-text" class="govuk-body-s">
                 If the update to the record is urgent, please <a href="https://form.education.gov.uk/en/AchieveForms/?form_uri=sandbox-publish://AF-Process-2b61dfcd-9296-4f6a-8a26-4671265cae67/AF-Stage-f3f5200e-e605-4a1b-ae6b-3536bc77305c/definition.json&redirectlink=/en&cancelRedirectLink=/en" target="_blank" rel="noreferrer noopener"> raise a service request (opens in new tab)</a>
             </p>
         </div>
