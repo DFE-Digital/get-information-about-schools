@@ -23,7 +23,7 @@
 
 <h1 class="govuk-heading-l gias-landing-heading">
     <span class="heading-preamble">Edit establishment group</span>
-    @(ViewBag.OriginalGroupName ?? Model.GroupName)
+    <span id="heading">@(ViewBag.OriginalGroupName ?? Model.GroupName)</span>
 </h1>
 
 <p class="urn establishment-fine-detail"><abbr title="Unique Identifier">UID</abbr>: @Model.GroupUId</p>

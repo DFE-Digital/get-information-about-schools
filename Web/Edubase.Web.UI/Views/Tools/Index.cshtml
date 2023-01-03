@@ -51,12 +51,12 @@
             }
             <div class="@gridClass">
                 <ul class="govuk-list @Html.Conditional(list.Count > 1, "gias-columns-2")">
-                    @foreach (var item in list)
-                    {
+                    @for (int itemCounter = 0; itemCounter < list.Count; itemCounter++)
+                    { 
                         <li>
-                            <h3 class="govuk-heading-s">@Html.Raw(HttpUtility.HtmlDecode(item.Link.ToHtmlString()))</h3>
+                            <h3 id="tool-link-@label.ToLower()-@itemCounter" class="govuk-heading-s">@Html.Raw(HttpUtility.HtmlDecode(list[itemCounter].Link.ToHtmlString()))</h3>
                             <p class="@Html.Conditional(list.Count == 1, "govuk-!-padding-right-6")">
-                                @Html.Raw(item.Description)
+                                @Html.Raw(list[itemCounter].Description)
                             </p>
                         </li>
                     }
