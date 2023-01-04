@@ -32,7 +32,7 @@ jobs:
         uses: microsoft/setup-msbuild@v1
 
       - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.0.5
+        uses: NuGet/setup-nuget@v1.1.1
 
       - name: Setup VSTest
         uses: darenm/Setup-VSTest@v1
@@ -58,7 +58,7 @@ jobs:
 
 
       - name: Upload dotnet test results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: dotnet-results-${{ env.DOTNET_VERSION }}
           path: ./Web/TestResults
