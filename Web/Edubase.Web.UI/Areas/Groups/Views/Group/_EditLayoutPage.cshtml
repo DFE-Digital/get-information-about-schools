@@ -22,8 +22,8 @@
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
 <h1 class="govuk-heading-l gias-landing-heading">
-    <span class="heading-preamble">Edit establishment group</span>
-    <span id="heading">@(ViewBag.OriginalGroupName ?? Model.GroupName)</span>
+    <span id="heading" class="heading-preamble">Edit establishment group</span>
+    <span id="establishment-group-name">@(ViewBag.OriginalGroupName ?? Model.GroupName)</span>
 </h1>
 
 <p class="urn establishment-fine-detail"><abbr title="Unique Identifier">UID</abbr>: @Model.GroupUId</p>

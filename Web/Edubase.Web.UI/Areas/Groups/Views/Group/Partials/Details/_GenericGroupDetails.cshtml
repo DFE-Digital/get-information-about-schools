@@ -55,8 +55,8 @@
 @if (Model.UKPRN.HasValue)
 {
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key"><abbr title="UK provider reference number (UKPRN)">UK provider reference number (UKPRN)</abbr></dt>
-        <dd class="govuk-summary-list__value">@Model.UKPRN</dd>
+        <dt id="ukprn-key" class="govuk-summary-list__key"><abbr title="UK provider reference number (UKPRN)">UK provider reference number (UKPRN)</abbr></dt>
+        <dd id="ukprn-value" class="govuk-summary-list__value">@Model.UKPRN</dd>
     </div>
 }
 <div class="govuk-summary-list__row">
