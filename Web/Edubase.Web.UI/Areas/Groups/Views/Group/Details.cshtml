@@ -85,7 +85,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-l gias-landing-heading">
-            <span id="heading" class="heading-preamble">Establishment group</span>
+            <span id="establishment-group-heading" class="heading-preamble">Establishment group</span>
             <span id="establishment-group-name">@Model.Group.Name</span>
         </h1>
 
@@ -131,7 +131,7 @@
             <div class="tab-wrap">
                 <ul class="gias-tabs">
                     <li class="gias-tabs__list-item">
-                        <a href="#details" class="gias-tabs__tab ">Details</a>
+                        <a href="#details" id="details-tab-link" class="gias-tabs__tab ">Details</a>
                     </li>
                     <li class="gias-tabs__list-item">
                         <a href="#list" class="gias-tabs__tab ">@Model.EstablishmentsPluralName (@Model.Establishments.Count)</a>
@@ -140,14 +140,14 @@
                     @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
                     {
                         <li class="gias-tabs__list-item">
-                            <a href="#governance" class="gias-tabs__tab ">Governance</a>
+                            <a href="#governance" id="governance-tab-link" class="gias-tabs__tab ">Governance</a>
                         </li>
                     }
 
                     @if (Model.IsUserLoggedOn)
                     {
                         <li class="gias-tabs__list-item">
-                            <a href="#change-history" class="gias-tabs__tab ">Changes</a>
+                            <a href="#change-history" id="changes-tab-link" class="gias-tabs__tab ">Changes</a>
                         </li>
                     }
 
@@ -183,7 +183,7 @@
                         @if (Model.CanUserEdit)
                         {
                             <div class="govuk-!-padding-top-4">
-                                @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "govuk-button govuk-button--secondary" })
+                                @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { id = "edit-details-button", @class = "govuk-button govuk-button--secondary" })
                             </div>
 
                         }
