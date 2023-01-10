@@ -33,11 +33,11 @@ else
 }
 
     <h1 class="govuk-heading-l gias-landing-heading">
-        <span class="heading-preamble">Edit establishment</span>
+        <span id="edit-establishment-heading"class="heading-preamble">Edit establishment</span>
         @(ViewBag.OriginalEstablishmentName ?? Model.Name)
     </h1>
-    <p class="urn establishment-fine-detail"><abbr title="Unique Reference Number">URN</abbr>: @Model.Urn</p>
-    <p class="establishment-type establishment-fine-detail">@(ViewBag.OriginalTypeName ?? Model.TypeName)</p>
+    <p id="urn-sub-heading" class="urn establishment-fine-detail"><abbr title="Unique Reference Number">URN</abbr>: @Model.Urn</p>
+    <p id="edit-establishment-name"class="establishment-type establishment-fine-detail">@(ViewBag.OriginalTypeName ?? Model.TypeName)</p>
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
@@ -46,39 +46,39 @@ else
             <div class="tab-wrap">
                 <ul class="gias-tabs">
                     <li class="gias-tabs__list-item @Html.Conditional(string.Equals(Model.SelectedTab, "details"), "gias-tabs__list-item--selected")">
-                        <a href="@Url.Action("EditDetails", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="gias-tabs__tab">Details</a>
+                        <a href="@Url.Action("EditDetails", "Establishment", new {id = Model.Urn, area = "Establishments"})" id="details-tab-link" class="gias-tabs__tab">Details</a>
                     </li>
 
                     @if (Model.TabDisplayPolicy.Governance)
                     {
                         <li class="gias-tabs__list-item @Html.Conditional(string.Equals(Model.SelectedTab, "governance"), "gias-tabs__list-item--selected")">
-                            <a href="@Url.Action("Edit", "Governor", new { establishmentUrn = Model.Urn, area = "Governors" })" class="gias-tabs__tab">Governance</a>
+                            <a href="@Url.Action("Edit", "Governor", new { establishmentUrn = Model.Urn, area = "Governors" })" id="governance-tab-link" class="gias-tabs__tab">Governance</a>
                         </li>
                     }
 
                     @if (Model.TabDisplayPolicy.IEBT)
                     {
                         <li class="gias-tabs__list-item @Html.Conditional(string.Equals(Model.SelectedTab, "iebt"), "gias-tabs__list-item--selected")">
-                            <a href="@Url.Action("EditIEBT", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="gias-tabs__tab">IEBT</a>
+                            <a href="@Url.Action("EditIEBT", "Establishment", new {id = Model.Urn, area = "Establishments"})" id="iebt-tab-link" class="gias-tabs__tab">IEBT</a>
                         </li>
                     }
 
                     <li class="gias-tabs__list-item @Html.Conditional(string.Equals(Model.SelectedTab, "links"), "gias-tabs__list-item--selected")">
-                        <a href="@Url.Action("EditLinks", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="gias-tabs__tab">Links</a>
+                        <a href="@Url.Action("EditLinks", "Establishment", new {id = Model.Urn, area = "Establishments"})" id="links-tab-link" class="gias-tabs__tab">Links</a>
                     </li>
 
 
                     @if (Model.TabDisplayPolicy.Location)
                     {
                         <li class="gias-tabs__list-item @Html.Conditional(string.Equals(Model.SelectedTab, "location"), "gias-tabs__list-item--selected")">
-                           <a href="@Url.Action("EditLocation", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="gias-tabs__tab">Location</a>
+                           <a href="@Url.Action("EditLocation", "Establishment", new {id = Model.Urn, area = "Establishments"})" id="location-tab-link" class="gias-tabs__tab">Location</a>
                         </li>
                     }
 
                     @if (Model.TabDisplayPolicy.Helpdesk)
                     {
                         <li class="gias-tabs__list-item @Html.Conditional(string.Equals(Model.SelectedTab, "helpdesk"), "gias-tabs__list-item--selected")">
-                            <a href="@Url.Action("EditHelpdesk", "Establishment", new {id = Model.Urn, area = "Establishments"})" class="gias-tabs__tab">Helpdesk</a>
+                            <a href="@Url.Action("EditHelpdesk", "Establishment", new {id = Model.Urn, area = "Establishments"})" id="helpdesk-tab-link" class="gias-tabs__tab">Helpdesk</a>
                         </li>
                     }
                 </ul>
