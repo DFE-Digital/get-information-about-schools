@@ -10,7 +10,7 @@
     <div class="detail-summary">
 
         <h2 id="helpdesk-notes" class="govuk-heading-s">Helpdesk notes:</h2>
-        <div id="helpdesk-notes-info" class="govuk-body">@(Model.Establishment.HelpdeskNotes.Clean() ?? "Not recorded")</div>
+        <div id="helpdesk-notes-value" class="govuk-body">@(Model.Establishment.HelpdeskNotes.Clean() ?? "Not recorded")</div>
 
         <dl class="govuk-summary-list">
             @if (Model.DisplayPolicy.HelpdeskLastUpdate)
@@ -24,21 +24,21 @@
             {
                 <div class="govuk-summary-list__row">
                     <dt id="edubase-trigger-1" class="govuk-summary-list__key">EduBase trigger 1</dt>
-                    <dd id="edubase-trigger" class="govuk-summary-list__value">@Model.Establishment.HelpdeskTrigger1</dd>
+                    <dd id="edubase-trigger-value" class="govuk-summary-list__value">@Model.Establishment.HelpdeskTrigger1</dd>
                 </div>
             }
             @if (Model.DisplayPolicy.HelpdeskPreviousLocalAuthorityId)
             {
                 <div class="govuk-summary-list__row">
                     <dt id="previous-local-authority" class="govuk-summary-list__key">Previous local authority</dt>
-                    <dd id="previous-local-authority-info" class="govuk-summary-list__value">@Model.HelpdeskPreviousLocalAuthorityName</dd>
+                    <dd id="previous-local-authority-value" class="govuk-summary-list__value">@Model.HelpdeskPreviousLocalAuthorityName</dd>
                 </div>
             }
             @if (Model.DisplayPolicy.HelpdeskPreviousEstablishmentNumber)
             {
                 <div class="govuk-summary-list__row">
                     <dt id="previous-establishment-number" class="govuk-summary-list__key">Previous establishment number</dt>
-                    <dd id="previous-establishment-number-info" class="govuk-summary-list__value">@Model.Establishment.HelpdeskPreviousEstablishmentNumber</dd>
+                    <dd id="previous-establishment-number-value" class="govuk-summary-list__value">@Model.Establishment.HelpdeskPreviousEstablishmentNumber</dd>
                 </div>
             }
 
