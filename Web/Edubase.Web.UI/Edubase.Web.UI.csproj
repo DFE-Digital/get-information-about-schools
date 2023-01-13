@@ -773,7 +773,6 @@
     <Content Include="Areas\Establishments\Views\EstablishmentsSearch\Partials\_EstablishmentSearchResults.cshtml" />
     <Content Include="Areas\Groups\Views\GroupSearch\Partials\_GroupSearchResults.cshtml" />
     <Content Include="Views\Shared\_ValidationSummary.cshtml" />
-    <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_GenericPagination.cshtml" />
     <Content Include="Views\Tools\Index.cshtml" />
     <Content Include="Views\Shared\DomainError.cshtml" />
@@ -893,12 +892,8 @@
     <Content Include="Views\Unauthorized\LoginFailed.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="Areas\Governors\Views\Search\" />
     <Folder Include="Properties\PublishProfiles\" />
-    <Folder Include="Views\Admin\" />
     <Folder Include="Views\GOVUK\Views\errors\" />
-    <Folder Include="Views\UserRoles\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Edubase.Common\Edubase.Common.csproj">

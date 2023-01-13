@@ -88,7 +88,7 @@ namespace Edubase.Web.UI.Helpers
                 }
 
                 vm.SelectedTabName = "governance";
-                vm.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((eLookupGroupType)vm.GroupTypeId.Value);
+                vm.ListOfEstablishmentsPluralName = NomenclatureService.GetEstablishmentsPluralName((eLookupGroupType)vm.GroupTypeId.Value);
                 processGroup?.Invoke(domainModel);
             }
         }
