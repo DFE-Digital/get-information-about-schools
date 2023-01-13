@@ -1,8 +1,5 @@
-@using Edubase.Services.Enums
-@using Edubase.Common;
-@using Edubase.Common.Text;
+@using Edubase.Common.Text
 @using VM = Edubase.Web.UI.Areas.Governors.Models.CreateEditGovernorViewModel;
-@using System.Linq.Expressions
 
 @model VM
 @{
@@ -31,7 +28,6 @@
 
         @using (Html.BeginRouteForm(Model.FormPostRouteName, FormMethod.Post, new { id = "governorEdit" }))
         {
-
             <h2 class="govuk-heading-m">
                 @(Model.Mode == CreateEditGovernorViewModel.EditMode.Edit ? "Edit" : "")
                 @(Model.Mode == CreateEditGovernorViewModel.EditMode.Create ? "Add" : "")
@@ -79,10 +75,9 @@
                     @Html.LabelFor(x => x.SelectedPreviousGovernorId, Model.SelectPreviousGovernorLabel, new { @class = "govuk-label" })
                     @Html.DropDownListFor(x => x.SelectedPreviousGovernorId, Model.ExistingGovernors, "New", new { @class = "govuk-select choose-governor" })
                 </div>
-
             }
 
-            @Html.EditorFor(m => m, new { fieldsetClassName = "edit-date-fieldset", disableStartDate = Model.ReplaceGovernorViewModel.GID.HasValue, reactivationWarning = (Model.Mode == CreateEditGovernorViewModel.EditMode.Edit && Model.AppointmentEndDate.ToDateTime().HasValue && Model.AppointmentEndDate.ToDateTime().Value < DateTime.Now.Date) })
+            @Html.EditorFor(m => m, new { fieldsetClassName = "edit-date-fieldset", disableStartDate = Model.ReplaceGovernorViewModel.GID.HasValue, reactivationWarning = Model.Mode == CreateEditGovernorViewModel.EditMode.Edit && Model.AppointmentEndDate.ToDateTime().HasValue && Model.AppointmentEndDate.ToDateTime().Value < DateTime.Now.Date })
 
             <div class="button-row">
                 @Buttons()
