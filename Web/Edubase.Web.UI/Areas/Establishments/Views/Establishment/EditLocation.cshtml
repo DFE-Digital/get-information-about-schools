@@ -52,7 +52,7 @@
                         null,
                         "school-location",
                         new { id = Model.Urn },
-                        new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
+                        new { id = "edit-back-button", @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
                 </div>
             </div>
             <div class="govuk-grid-column-one-half">
@@ -63,7 +63,7 @@
                             Regional schools commissioner (RSC) region
                         </label>
                         @Html.ValidationMessageFor(x => x.RSCRegionId, null, new { @class = "govuk-error-message" })
-                        @Html.DropDownListFor(x => x.RSCRegionId, Model.RSCRegions, "", new { @class = "govuk-select" })
+                        @Html.DropDownListFor(x => x.RSCRegionId, Model.RSCRegions, "", new { id = "rsc-region-dropdown", @class = "govuk-select" })
                     </div>
                 }
 
@@ -202,7 +202,7 @@
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.UrbanRuralId)">
                         <label for="UrbanRuralId" class="govuk-label">Urban/rural description</label>
                         @Html.ValidationMessageFor(x => x.UrbanRuralId, null, new { @class = "govuk-error-message" })
-                        @Html.DropDownListFor(x => x.UrbanRuralId, Model.UrbanRuralLookup, "", new { @class = "govuk-select" })
+                        @Html.DropDownListFor(x => x.UrbanRuralId, Model.UrbanRuralLookup, "", new { id = "urban-rural-dropdown", @class = "govuk-select" })
                     </div>
                 }
 

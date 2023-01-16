@@ -146,42 +146,42 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <div class="gias-tabs-wrapper">
-            <div class="tab-wrap">
+            <div class="tab-wrap" id="tab-wrap">
                 <ul class="gias-tabs">
                     @if (Model.TabDisplayPolicy.Details)
                     {
-                        <li class="gias-tabs__list-item"><a href="#school-dashboard" class="gias-tabs__tab">Details</a></li>
+                        <li class="gias-tabs__list-item"><a href="#school-dashboard" id="details-tab-link" class="gias-tabs__tab">Details</a></li>
                     }
 
                     @if (Model.TabDisplayPolicy.Governance)
                     {
-                        <li class="gias-tabs__list-item"><a href="#school-governance" class="gias-tabs__tab">Governance</a></li>
+                        <li class="gias-tabs__list-item"><a href="#school-governance" id="governance-tab-link" class="gias-tabs__tab">Governance</a></li>
                     }
 
 
                     @if (Model.TabDisplayPolicy.IEBT)
                     {
-                        <li class="gias-tabs__list-item"><a href="#school-iebt" class="gias-tabs__tab">IEBT</a></li>
+                        <li class="gias-tabs__list-item"><a href="#school-iebt" id="iebt-tab-link" class="gias-tabs__tab">IEBT</a></li>
                     }
 
                     @if (Model.TabDisplayPolicy.Links)
                     {
-                        <li class="gias-tabs__list-item"><a href="#school-links" class="gias-tabs__tab">Links</a></li>
+                        <li class="gias-tabs__list-item"><a href="#school-links" id="links-tab-link" class="gias-tabs__tab">Links</a></li>
                     }
 
                     @if (Model.TabDisplayPolicy.Location)
                     {
-                        <li class="gias-tabs__list-item"><a href="#school-location" class="gias-tabs__tab">Location</a></li>
+                        <li class="gias-tabs__list-item"><a href="#school-location" id="location-tab-link" class="gias-tabs__tab">Location</a></li>
                     }
 
                     @if (Model.ChangeHistory != null && Model.TabDisplayPolicy.ChangeHistory)
                     {
-                        <li class="gias-tabs__list-item"><a href="#school-change-history" class="gias-tabs__tab">Changes</a></li>
+                        <li class="gias-tabs__list-item"><a href="#school-change-history" id="changes-tab-link" class="gias-tabs__tab">Changes</a></li>
                     }
 
                     @if (Model.TabDisplayPolicy.Helpdesk)
                     {
-                        <li class="gias-tabs__list-item"><a href="#helpdesk" class="gias-tabs__tab">Helpdesk</a></li>
+                        <li class="gias-tabs__list-item"><a href="#helpdesk" id="helpdesk-tab-link" class="gias-tabs__tab">Helpdesk</a></li>
                     }
                 </ul>
             </div>

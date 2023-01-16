@@ -1,0 +1,49 @@
+
+@model Edubase.Web.UI.Models.Guidance.GuidanceLaNameCodeViewModel
+@{
+    ViewBag.hideLogo = true;
+}
+@section Head
+{
+    <meta name="robots" content="noindex,nofollow" />
+}
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Help", "Help", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Local authority name and associated codes", "LaNameCodes", "Guidance", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Select data table", "LaNameCodesSelectData", "Guidance", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Select format", "LaNameCodesSelectFormat", "Guidance", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Download generation completed</h1>
+    </div>
+    <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-s">Your extract is ready</h2>
+        <p>Your requested file is ready to download.</p>
+        <p>
+           <a id="help-guidance-lanamecodes-download-button" class="govuk-button" href="/Guidance/LaNameCodes/DataTables/SelectFormat/GenerateDownload/Download">Download</a>
+        </p>
+    </div>
+</div>
+

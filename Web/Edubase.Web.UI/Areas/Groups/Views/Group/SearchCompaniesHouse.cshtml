@@ -30,7 +30,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             @Html.Partial("_ValidationSummary", ViewData.ModelState)
-            <h1 class="govuk-heading-xl">Create new academy trusts</h1>
+            <h1 id="create-academy-trust-details-heading" class="govuk-heading-xl">Create new academy trusts</h1>
             <p>Set up an academy trust record by adding the Companies House name or number in the field below and selecting search.</p>
         </div>
     </div>
@@ -41,7 +41,7 @@
                 @Html.LabelFor(x => x.SearchText, "Companies House name or number", new { @class = "govuk-label" })
                 @Html.ValidationMessageFor(x => x.SearchText, null, new { @class = "govuk-error-message"})
                 @Html.TextBoxFor(x => x.SearchText, new { maxlength = 120, @class = "govuk-input  govuk-!-width-three-quarters" })
-                <button type="submit" class="govuk-button links-estab-search-button">Search</button>
+                <button type="submit" id="search-companies-house-submit-button" class="govuk-button links-estab-search-button">Search</button>
             </div>
 
         </div>

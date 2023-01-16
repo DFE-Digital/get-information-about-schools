@@ -254,5 +254,41 @@ namespace Edubase.Web.UI.Helpers
             }
             return rvd;
         }
+
+        /// <summary>
+        /// Gets details for an Select drop down list and creates a new select with
+        /// a unique ID for each option
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <typeparam name="TProperty"></typeparam>
+        /// <param name="expression">Data model to be used against</param>
+        /// <param name="selectListItem">Items of the dropdown list. Usually a blank class to populate</param>
+        /// <param name="htmlAttributes">Containing additonal attributes for the element, expected class usually</param>
+        /// <returns></returns>
+        public static MvcHtmlString DropDownListWithIds<TModel, TProperty>(
+            this HtmlHelper<TModel> htmlHelper,
+           Expression<Func<TModel, TProperty>> expression,
+           IEnumerable<SelectListItem> selectListItem,
+           object htmlAttributes)
+        {
+            var expressionText = ExpressionHelper.GetExpressionText(expression);
+
+            var dropdown = new TagBuilder("select");
+
+            dropdown.Attributes.Add("name", expressionText);
+            dropdown.Attributes.Add("id", expressionText);
+
+            var options = new StringBuilder();
+
+            foreach (var item in selectListItem)
+            {
+                options = options.Append("<option value='" + item.Value + "'id='" + expressionText + "-option-" + item.Text + "'>" + item.Text + "</option>");
+            }
+
+            dropdown.InnerHtml = options.ToString();
+            dropdown.MergeAttributes(new RouteValueDictionary(htmlAttributes));
+
+            return MvcHtmlString.Create(dropdown.ToString(TagRenderMode.Normal));
+        }
     }
 }

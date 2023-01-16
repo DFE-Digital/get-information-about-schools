@@ -45,7 +45,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         private readonly Mock<IIdentity> mockIdentity = new Mock<IIdentity>(MockBehavior.Strict);
         private readonly Mock<ControllerContext> mockControllerContext = new Mock<ControllerContext>(MockBehavior.Strict);
         private readonly Mock<UrlHelper> mockUrlHelper = new Mock<UrlHelper>(MockBehavior.Loose);
-      
+
         private readonly Mock<ICSCPService> mockCscpService = new Mock<ICSCPService>(MockBehavior.Strict);
         private readonly Mock<IFBService> mockFbService = new Mock<IFBService>(MockBehavior.Strict);
         private bool disposedValue;
@@ -313,8 +313,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             var result = await controller.AddOrReplaceEstablishmentAddressAsync(5, "test");
 
             Assert.NotNull(result);
-            //TODO - The above assert was added when converted to XUnit, before this the test asserted nothing.
-            //Figure out if anything else needs testing on this, or does it it just test the method completes without exception
+            //The above assert was added when converted to XUnit, before this the test asserted nothing
         }
 
         [Fact]

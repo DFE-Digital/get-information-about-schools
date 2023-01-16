@@ -6,7 +6,7 @@
 <div id="school-dashboard" class="tab-content">
     @if (Model.UserCanEdit && Model.TabEditPolicy.Details)
     {
-        @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "govuk-button govuk-button--secondary" })
+        @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { id = "edit-details-button", @class = "govuk-button govuk-button--secondary" })
 
         if (!Model.MediumPriorityEstablishmentConfirmationPending &&
             !Model.HighPriorityEstablishmentConfirmationPending &&
@@ -29,7 +29,7 @@
         {
             using (Html.BeginRouteForm("EstablishmentConfirmUpToDate", new { Model.Establishment.Urn, showBanner = true }, FormMethod.Post, new { @class = "gias-action-form" }))
             {
-                <button class="govuk-button" data-module="govuk-button" id="estab-data-confirm">Confirm details</button>
+                <button class="govuk-button" data-module="govuk-button" id="establishment-data-confirm-button">Confirm details</button>
             }
         }
     }
@@ -37,8 +37,8 @@
     @if ((User.InRole(EdubaseRoles.ESTABLISHMENT) && Model.IsClosed) || (User.InRole(EdubaseRoles.ROLE_PRISM, EdubaseRoles.ROLE_STAKEHOLDER) && Model.Establishment.CloseDate.HasValue && Model.Establishment.CloseDate?.AddMonths(6) < DateTime.Today))
     {
         <div class="gias-establishment-closed-panel">
-            <p class="govuk-heading-s govuk-!-margin-bottom-1">The establishment record is now closed for updates.</p>
-            <p class="govuk-body-s">
+            <p id="establishment-closed-panel-heading" class="govuk-heading-s govuk-!-margin-bottom-1">The establishment record is now closed for updates.</p>
+            <p id="establishment-closed-panel-text" class="govuk-body-s">
                 If the update to the record is urgent, please <a href="https://form.education.gov.uk/en/AchieveForms/?form_uri=sandbox-publish://AF-Process-2b61dfcd-9296-4f6a-8a26-4671265cae67/AF-Stage-f3f5200e-e605-4a1b-ae6b-3536bc77305c/definition.json&redirectlink=/en&cancelRedirectLink=/en" target="_blank" rel="noreferrer noopener"> raise a service request (opens in new tab)</a>
             </p>
         </div>
@@ -390,16 +390,16 @@
             @if (Model.DisplayPolicy.CompaniesHouseNumber)
             {
                 <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Companies House number</dt>
-                    <dd class="govuk-summary-list__value">@(Model.Establishment.CompaniesHouseNumber ?? "Not recorded")</dd>
+                    <dt id="companies-house-number-key" class="govuk-summary-list__key">Companies House number</dt>
+                    <dd id="companies-house-number-value" class="govuk-summary-list__value">@(Model.Establishment.CompaniesHouseNumber ?? "Not recorded")</dd>
                 </div>
             }
 
             @if (Model.DisplayPolicy.EstablishmentAccreditedId)
             {
                 <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Establishment accredited</dt>
-                    <dd class="govuk-summary-list__value">@(Model.EstablishmentAccreditedName ?? "Not recorded")</dd>
+                    <dt id="establishment-accredited-key" class="govuk-summary-list__key">Establishment accredited</dt>
+                    <dd id="establishment-accredited-value" class="govuk-summary-list__value">@(Model.EstablishmentAccreditedName ?? "Not recorded")</dd>
                 </div>
             }
             <!-- Online Provider content -->
@@ -561,7 +561,7 @@
     @if (Model.UserCanEdit && Model.TabEditPolicy.Details)
     {
         <div class="govuk-!-padding-top-4">
-            @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "govuk-button govuk-button--secondary" })
+            @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { id = "edit-details-button", @class = "govuk-button govuk-button--secondary" })
         </div>
     }
 

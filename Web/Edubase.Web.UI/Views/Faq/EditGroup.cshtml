@@ -53,7 +53,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <div class="button-row govuk-!-padding-top-6">
-                <button type="submit" class="govuk-button">Save group</button>
+                <button type="submit" id="save-group-button" class="govuk-button">Save group</button>
                 @if (Model.CanDelete)
                 {
                     <button type="submit" class="govuk-button govuk-button--secondary" name="@nameof(Model.IsDeleting)" id="delete-button" value="true">Delete</button>

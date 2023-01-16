@@ -9,31 +9,31 @@
 @if (displayPolicy.Name)
 {
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">@labelPrefix name</dt>
-        <dd class="govuk-summary-list__value">@(Model.Name ?? "Not recorded")</dd>
+        <dt id="proprietor-name-key" class="govuk-summary-list__key">@labelPrefix name</dt>
+        <dd id="proprietor-name-value" class="govuk-summary-list__value">@(Model.Name ?? "Not recorded")</dd>
     </div>
 }
 
 @if (displayPolicy.Address3)
 {
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">@labelPrefix address</dt>
-        <dd class="govuk-summary-list__value">@(Model.GetAddress() ?? "Not recorded")</dd>
+        <dt id="proprietor-address-key" class="govuk-summary-list__key">@labelPrefix address</dt>
+        <dd id="proprietor-address-value" class="govuk-summary-list__value">@(Model.GetAddress() ?? "Not recorded")</dd>
     </div>
 }
 
 @if (displayPolicy.TelephoneNumber)
 {
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">@labelPrefix telephone</dt>
-        <dd class="govuk-summary-list__value">@(Model.TelephoneNumber ?? "Not recorded")</dd>
+        <dt id="proprietor-telephone-key" class="govuk-summary-list__key">@labelPrefix telephone</dt>
+        <dd id="proprietor-telephone-value" class="govuk-summary-list__value">@(Model.TelephoneNumber ?? "Not recorded")</dd>
     </div>
 }
 
 @if (displayPolicy.Email)
 {
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">@labelPrefix email</dt>
-        <dd class="govuk-summary-list__value">@(Model.Email ?? "Not recorded")</dd>
+        <dt id="proprietor-email-key" class="govuk-summary-list__key">@labelPrefix email</dt>
+        <dd id="proprietor-email-value" class="govuk-summary-list__value">@(Model.Email ?? "Not recorded")</dd>
     </div>
 }

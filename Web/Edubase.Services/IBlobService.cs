@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
@@ -11,6 +11,7 @@ namespace Edubase.Services
         Task<bool> ExistsAsync(string absolutePathWithContainerNameAndPrependingSlash);
         Task<bool> ExistsAsync(string containerName, string blobName);
         Task<MemoryStream> GetBlobAsStreamAsync(string absolutePath);
+        Task<MemoryStream> ArchiveBlobAsync(MemoryStream blobStream, string blobName);
         CloudBlockBlob GetBlobReference(string destinationContainerName, string destinationBlobName);
         BlobService Initialise(string containerName, bool fullPublicReadAccess = false, bool ensurePermissions = false);
         Task<string> UploadAsync(byte[] sourceBytes, string mimeType, string absolutePathWithContainerNameAndPrependingSlash);

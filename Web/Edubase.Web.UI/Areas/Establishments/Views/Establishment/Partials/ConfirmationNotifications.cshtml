@@ -26,13 +26,13 @@
             {
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-three-quarters">
-                        <p class="govuk-notification-banner__heading govuk-!-margin-bottom-1">
+                        <p id="@type.ToLower()-details-confirmation-heading" class="govuk-notification-banner__heading govuk-!-margin-bottom-1">
                             <label for="estab-data-confirm">Review and confirm if the @type.ToLower() details are correct</label>
                         </p>
-                        <p class="govuk-!-margin-bottom-1">
+                        <p id="@type.ToLower()-details-confirmation-body" class="govuk-!-margin-bottom-1">
                             If they are not correct, edit your @type.ToLower() details below.<br />
                         </p>
-                        <p class="govuk-hint govuk-!-font-size-14 govuk-!-margin-bottom-1">Date record last confirmed or updated: @date</p>
+                        <p id="@type.ToLower()-details-confirmation-date" class="govuk-hint govuk-!-font-size-14 govuk-!-margin-bottom-1">Date record last confirmed or updated: @date</p>
                     </div>
                     <div class="govuk-grid-column-one-quarter">
                         <button class="govuk-button" data-module="govuk-button" id="estab-data-confirm">Confirm</button>

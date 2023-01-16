@@ -22,8 +22,8 @@
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
 <h1 class="govuk-heading-l gias-landing-heading">
-    <span class="heading-preamble">Edit establishment group</span>
-    @(ViewBag.OriginalGroupName ?? Model.GroupName)
+    <span id="edit-establishment-group-heading" class="heading-preamble">Edit establishment group</span>
+    <span id="establishment-group-name">@(ViewBag.OriginalGroupName ?? Model.GroupName)</span>
 </h1>
 
 <p class="urn establishment-fine-detail"><abbr title="Unique Identifier">UID</abbr>: @Model.GroupUId</p>
@@ -39,16 +39,16 @@
             <div class="tab-wrap">
                 <ul class="gias-tabs">
                     <li class="gias-tabs__list-item @Html.Conditional(Model.SelectedTabName == "details", "gias-tabs__list-item--selected")">
-                        <a href="@Url.Action("EditDetails", "Group", new { id = Model.GroupUId, area = "Groups" })" class="gias-tabs__tab">Details</a>
+                        <a href="@Url.Action("EditDetails", "Group", new { id = Model.GroupUId, area = "Groups" })" id="details-tab" class="gias-tabs__tab">Details</a>
 
                     </li>
                     <li class="gias-tabs__list-item  @Html.Conditional(Model.SelectedTabName == "links", "gias-tabs__list-item--selected")">
-                        <a href="@Url.Action("EditLinks", "Group", new { id = Model.GroupUId, area = "Groups" })" class="gias-tabs__tab">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
+                        <a href="@Url.Action("EditLinks", "Group", new { id = Model.GroupUId, area = "Groups" })" id=@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName + "-tab") class="gias-tabs__tab">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
                     </li>
                     @if (Model.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
                     {
                         <li class="gias-tabs__list-item  @Html.Conditional(Model.SelectedTabName == "governance", "gias-tabs__list-item--selected")">
-                            <a href="@Url.Action("Edit", "Governor", new {groupUId = Model.GroupUId, area = "Governors"})" class="gias-tabs__tab">Governance</a>
+                            <a href="@Url.Action("Edit", "Governor", new {groupUId = Model.GroupUId, area = "Governors"})" id="governance-tab" class="gias-tabs__tab">Governance</a>
                         </li>
                     }
                 </ul>

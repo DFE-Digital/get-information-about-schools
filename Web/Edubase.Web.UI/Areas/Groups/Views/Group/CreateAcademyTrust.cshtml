@@ -28,7 +28,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         @Html.Partial("_ValidationSummary", ViewData.ModelState)
-        <h1 class="govuk-heading-xl">Enter academy trust details</h1>
+        <h1 id="enter-academy-trust-details-heading" class="govuk-heading-xl">Enter academy trust details</h1>
     </div>
 </div>
 
@@ -41,7 +41,7 @@
             @if (Model.TrustExists == true)
             {
                 <div role="alert" class="warning-message js-trigger-aria-live">
-                    <p class="message-text" aria-live="polite">Company is already a @(Model.TypeId == (int)eLookupGroupType.MultiacademyTrust? "multi-academy" : "single-academy") trust</p>
+                    <p id="create-academy-trust-warning-message" class="message-text" aria-live="polite">Company is already a @(Model.TypeId == (int)eLookupGroupType.MultiacademyTrust? "multi-academy" : "single-academy") trust</p>
                 </div>
             }
             else
@@ -57,23 +57,23 @@
 
                 <dl class="govuk-summary-list">
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">Company name</dt>
-                        <dd class="govuk-summary-list__value">@Model.Name</dd>
+                        <dt id="company-name-key" class="govuk-summary-list__key">Company name</dt>
+                        <dd id="company-name-value" class="govuk-summary-list__value">@Model.Name</dd>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">Companies House number</dt>
-                        <dd class="govuk-summary-list__value">
+                        <dt id="companies-house-number-key" class="govuk-summary-list__key">Companies House number</dt>
+                        <dd id="companies-house-number-value" class="govuk-summary-list__value">
                             <a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@Model.CompaniesHouseNumber" target="_blank" rel="noreferrer noopener">
                                 @Model.CompaniesHouseNumber (opens in new tab)</a>
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">Incorporated</dt>
-                        <dd class="govuk-summary-list__value">@(Model.OpenDate?.ToString("d MMMM yyyy"))</dd>
+                        <dt id="incorporated-key" class="govuk-summary-list__key">Incorporated</dt>
+                        <dd id="incorporated-value" class="govuk-summary-list__value">@(Model.OpenDate?.ToString("d MMMM yyyy"))</dd>
                     </div>
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">Address</dt>
-                        <dd class="govuk-summary-list__value">@Model.Address</dd>
+                        <dt id="address-name-key" class="govuk-summary-list__key">Address</dt>
+                        <dd id="address-value" class="govuk-summary-list__value">@Model.Address</dd>
                     </div>
                 </dl>
 
@@ -96,9 +96,9 @@
                     <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Trust details</h2>
                     <dl class="govuk-summary-list">
                         <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">Trust name</dt>
-                            <dd class="govuk-summary-list__value">
-                                @Html.ActionLink(Model.TrustName, "Details", "Group", new {id = Model.GroupUid, area = "groups" },null)
+                            <dt id="trust-name-key" class="govuk-summary-list__key">Trust name</dt>
+                            <dd id="trust-name-value" class="govuk-summary-list__value">
+                                <span id="trust-name-link">@Html.ActionLink(Model.TrustName, "Details", "Group", new { id = Model.GroupUid, area = "groups" }, null)</span>
                             </dd>
                         </div>
                         <div class="govuk-summary-list__row">
@@ -147,7 +147,7 @@
                 @Html.ActionLink(HttpUtility.HtmlDecode("&laquo; Go back"), "SearchCompaniesHouse", "Group", new {area = "Groups"}, new {@class = "govuk-button govuk-button--secondary cancel"})
                 if (Model.AllowSave)
                 {
-                    <button type="submit" class="govuk-button submit">Create academy trust</button>
+                    <button type="submit" id="create-academy-trust-submit-button" class="govuk-button submit">Create academy trust</button>
                 }
                 @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
             }

@@ -73,8 +73,8 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
-                <div class="tick"></div>
-                <p class="message-text" aria-live="polite">Your changes have been saved</p>
+                <div id="update-banner-tick-icon" class="tick"></div>
+                <p id="update-banner-body" class="message-text" aria-live="polite">Your changes have been saved</p>
                 <a class="cross" href="#">
                     <span class="govuk-visually-hidden">Dismiss notification</span>
                 </a>
@@ -85,12 +85,12 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-l gias-landing-heading">
-            <span class="heading-preamble">Establishment group</span>
-            @Model.Group.Name
+            <span id="establishment-group-heading" class="heading-preamble">Establishment group</span>
+            <span id="establishment-group-name">@Model.Group.Name</span>
         </h1>
 
-        <p class="urn establishment-fine-detail"><abbr title="Unique Identifier">UID</abbr>: @Model.Group.GroupUId</p>
-        <p class="group-type establishment-fine-detail">@Model.GroupTypeName</p>
+        <p id="uid" class="urn establishment-fine-detail"><abbr title="Unique Identifier">UID</abbr>: <span id="uid-value">@Model.Group.GroupUId</span></p>
+        <p id="establishment-group-type" class="group-type establishment-fine-detail">@Model.GroupTypeName</p>
 
         <p class="govuk-body-s establishment-data-download">
             @Html.RouteLink("Download group data", "GroupDataDownload", new { uid = Model.Group.GroupUId,
@@ -131,7 +131,7 @@
             <div class="tab-wrap">
                 <ul class="gias-tabs">
                     <li class="gias-tabs__list-item">
-                        <a href="#details" class="gias-tabs__tab ">Details</a>
+                        <a href="#details" id="details-tab-link" class="gias-tabs__tab ">Details</a>
                     </li>
                     <li class="gias-tabs__list-item">
                         <a href="#list" class="gias-tabs__tab ">@Model.EstablishmentsPluralName (@Model.Establishments.Count)</a>
@@ -140,14 +140,14 @@
                     @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
                     {
                         <li class="gias-tabs__list-item">
-                            <a href="#governance" class="gias-tabs__tab ">Governance</a>
+                            <a href="#governance" id="governance-tab-link" class="gias-tabs__tab ">Governance</a>
                         </li>
                     }
 
                     @if (Model.IsUserLoggedOn)
                     {
                         <li class="gias-tabs__list-item">
-                            <a href="#change-history" class="gias-tabs__tab ">Changes</a>
+                            <a href="#change-history" id="changes-tab-link" class="gias-tabs__tab ">Changes</a>
                         </li>
                     }
 
@@ -158,7 +158,7 @@
 
                     @if (Model.CanUserEdit)
                     {
-                        @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "govuk-button govuk-button--secondary" })
+                        @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @id= "edit-details-button", @class = "govuk-button govuk-button--secondary" })
                     }
                     <div class="detail-summary">
                         @* <dl class="gias-summary-list gias-summary-list--70 @Html.Conditional(Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.SchoolSponsor, eLookupGroupType.Federation, eLookupGroupType.Trust), "gias-summary-list--40")"> *@
@@ -183,7 +183,7 @@
                         @if (Model.CanUserEdit)
                         {
                             <div class="govuk-!-padding-top-4">
-                                @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "govuk-button govuk-button--secondary" })
+                                @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { id = "edit-details-button", @class = "govuk-button govuk-button--secondary" })
                             </div>
 
                         }
@@ -297,7 +297,7 @@
                                 {
                                     <div class="govuk-grid-row">
                                         <div class="govuk-grid-column-full">
-                                            @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "govuk-button govuk-button--secondary" })
+                                            @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { id = "edit-governance-button", @class = "govuk-button govuk-button--secondary" })
                                         </div>
                                     </div>
                                 }
@@ -308,7 +308,7 @@
                                 {
                                     <div class="govuk-grid-row">
                                         <div class="govuk-grid-column-full">
-                                            @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "govuk-button govuk-button--secondary" })
+                                            @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { id = "edit-governance-button", @class = "govuk-button govuk-button--secondary" })
                                         </div>
                                     </div>
                                 }
