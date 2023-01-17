@@ -50,8 +50,8 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
-                <div class="tick"></div>
-                <p class="message-text" aria-live="polite">@description</p>
+                <div id="update-banner-tick-icon" class="tick"></div>
+                <p id="update-banner-body" class="message-text" aria-live="polite">@description</p>
                 <a class="cross" href="#">
                     <span class="govuk-visually-hidden">Dismiss notification</span>
                 </a>
@@ -68,10 +68,10 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
-                <p class="message-text" aria-live="polite">
+                <p id="approval-banner-body" class="message-text" aria-live="polite">
                     @if (approvedCount > 0)
                     {
-                        <div class="tick"></div>
+                        <div id="approval-banner-tick-icon" class="tick"></div>
                     <p>@approvedCount change@(Html.Conditional(approvedCount > 1, "s")) to establishment details @(approvedCount > 1 ? "have" : "has") been instantly updated.</p>
                 }
                     @if (approvedCount > 0 && pendingCount > 0)
