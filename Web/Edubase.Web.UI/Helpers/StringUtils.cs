@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Edubase.Web.UI.Helpers
@@ -10,7 +11,14 @@ namespace Edubase.Web.UI.Helpers
     {
         public static string ElementIdFormat(string text)
         {
-            return text.Replace(' ', '-').Replace(@"'", string.Empty).Replace(".", string.Empty).Replace("[", "-").Replace("]", "-").ToLowerInvariant();
+            text = text.Replace(".", string.Empty)
+                       .Replace("'", string.Empty);
+
+            var pattern = @"[^a-zA-Z0-9_]";
+            var replacement = "-";
+            var result = Regex.Replace(text, pattern, replacement);
+
+            return result.ToLowerInvariant();
         }
     }
 }
