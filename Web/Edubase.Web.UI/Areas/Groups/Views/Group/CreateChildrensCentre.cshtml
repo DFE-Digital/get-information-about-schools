@@ -31,37 +31,37 @@
 
         <div v-if="groupNameApiError.length>0 || groupNameError || laError || openDateError || tooFewCentresError || urnError || urnApiErrors.length>0 || duplicateUrnError || apiErrors.length>0 || joinDateError" class="govuk-error-summary" aria-labelledby="govuk-error-summary-title" role="alert" tabindex="-1">
             <h2 id="govuk-error-summary-title" class="govuk-error-summary__title">Incorrect or missing details</h2>
-            <div class="govuk-error-summary__body">
+            <div id="govuk-error-summary-body" class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list">
                     <li v-show="groupNameApiError.length>0">
-                        <a href="#GroupName">{{groupNameApiError}}</a>
+                        <a id="group-name-api-error" href="#GroupName">{{groupNameApiError}}</a>
                     </li>
                     <li v-show="groupNameError">
-                        <a href="#GroupName">Please enter the {{groupTypeName}} name</a>
+                        <a id="group-name-error" href="#GroupName">Please enter the {{groupTypeName}} name</a>
                     </li>
                     <li v-show="openDateError">
-                        <a href="#OpenDate">Please check the opening date you have entered</a>
+                        <a id="open-date-error" href="#OpenDate">Please check the opening date you have entered</a>
                     </li>
                     <li v-show="laError">
-                        <a href="#LocalAuthorityId">Please select a local authority</a>
+                        <a id="local-authority-id-error" href="#LocalAuthorityId">Please select a local authority</a>
                     </li>
                     <li v-show="tooFewCentresError">
-                        <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">You need to add at least two centres</a>
+                        <a id="too-few-centres-error" href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">You need to add at least two centres</a>
                     </li>
                     <li v-show="urnError">
-                        <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a>
+                        <a id="urn-error" href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></a>
                     </li>
                     <li v-show="urnApiErrors.length>0" v-for="err in urnApiErrors">
-                        <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">{{err.field}} : {{err.message}}</a>
+                        <a id="urn-api-error" href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">{{err.field}} : {{err.message}}</a>
                     </li>
                     <li v-show="duplicateUrnError">
-                        <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">The <abbr title="Unique Reference Number">URN</abbr> is a duplicate</a>
+                        <a id="duplicate-urn-error" href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">The <abbr title="Unique Reference Number">URN</abbr> is a duplicate</a>
                     </li>
                     <li v-show="apiErrors.length>0" v-for="err in apiErrors">
-                        <a href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">{{err.field}} <span v-if="err.field">:</span> {{err.message}}</a>
+                        <a id="api-error" href="#LinkedEstablishments_LinkedEstablishmentSearch_Urn">{{err.field}} <span v-if="err.field">:</span> {{err.message}}</a>
                     </li>
                     <li v-show="joinDateError">
-                        <a href="#JoinedDate">Please check the joined date you have entered</a>
+                        <a id="joined-date-error" href="#JoinedDate">Please check the joined date you have entered</a>
                     </li>
 
                 </ul>

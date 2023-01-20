@@ -134,7 +134,7 @@
                         <a href="#details" id="details-tab-link" class="gias-tabs__tab ">Details</a>
                     </li>
                     <li class="gias-tabs__list-item">
-                        <a href="#list" class="gias-tabs__tab ">@Model.EstablishmentsPluralName (@Model.Establishments.Count)</a>
+                        <a href="#list" id="group-establishments-tab-link" class="gias-tabs__tab ">@Model.EstablishmentsPluralName (@Model.Establishments.Count)</a>
                     </li>
 
                     @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
@@ -196,7 +196,7 @@
                         {
                             <div class="govuk-grid-row">
                                 <div class="govuk-grid-column-full">
-                                    @Html.ActionLink($"Edit {Model.EstablishmentsPluralName.ToLower()}", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "govuk-button govuk-button--secondary" })
+                                    @Html.ActionLink($"Edit {Model.EstablishmentsPluralName.ToLower()}", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @id = $"edit-{StringUtils.ElementIdFormat(Model.EstablishmentsPluralName)}-button", @class = "govuk-button govuk-button--secondary" })
                                 </div>
                             </div>
                         }
