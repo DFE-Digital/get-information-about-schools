@@ -10,7 +10,7 @@ namespace Edubase.Web.UI.Helpers
     {
         public static string ElementIdFormat(string text)
         {
-            return text.Replace(' ', '-').ToLowerInvariant();
+            return text.Replace(' ', '-').Replace(@"'", string.Empty).Replace(".", string.Empty).Replace("[", "-").Replace("]", "-").ToLowerInvariant();
         }
     }
 }
