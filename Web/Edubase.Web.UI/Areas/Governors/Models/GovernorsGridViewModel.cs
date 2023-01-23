@@ -95,6 +95,14 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             GovernorPermissions = governorPermissions;
             CreateGrids(dto, dto.CurrentGovernors, false, groupUId, establishmentUrn);
             CreateGrids(dto, dto.HistoricalGovernors, true, groupUId, establishmentUrn);
+
+            var tester = DomainModel.CurrentGovernors.Select(x => x.AppointmentStartDate).First();
+
+        }
+
+        public DateTime? appointmentStartDatePreviousGovernor()
+        {
+            return DomainModel.CurrentGovernors.Select(x => x.AppointmentStartDate).First();
         }
 
         public GovernorsGridViewModel()

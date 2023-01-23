@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Enums;
+using Edubase.Services.Enums;
 using Edubase.Services.Governors.DisplayPolicies;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -53,4 +53,11 @@ namespace Edubase.Services.Governors.Models
         public GovernorDisplayPolicy DisplayPolicy { get; set; }
         public eLookupGovernorRole GovernorRoleId { get; set; }
     }
+
+    //public class appointmentStartDatePreviousGovernor
+    //{
+
+    //    currentGoer
+    //  //  return DomainModel.CurrentGovernors.Select(x => x.AppointmentStartDate).First();
+    //}
 }

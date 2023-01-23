@@ -50,6 +50,18 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly ILayoutHelper _layoutHelper;
 
+        private DateTime? _PreviousAppointmentDate;
+        public DateTime? PreviousAppointmentDate
+        {
+            get => _PreviousAppointmentDate;
+            set
+            {
+                if (value.HasValue) {
+                    _PreviousAppointmentDate = value;
+                }
+            }
+        }
+
         public GovernorController(
             IGovernorsReadService governorsReadService,
             NomenclatureService nomenclatureService,
@@ -93,6 +105,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 await _cachedLookupService.NationalitiesGetAllAsync(),
                 await _cachedLookupService.GovernorAppointingBodiesGetAllAsync(),
                 governorPermissions);
+
+            PreviousAppointmentDate = viewModel.appointmentStartDatePreviousGovernor();
 
             var applicableRoles = domainModel.ApplicableRoles.Cast<int>();
             viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).Where(x => applicableRoles.Contains(x.Id)).Select(x => new LookupItemViewModel(x)).ToList();
@@ -232,6 +246,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 AppointmentEndDateYear = Request.QueryString["y"].ToInteger(),
                 Reinstate = Request.QueryString["rag"] == "true"
             };
+
 
             var replaceMode = ((Route) ControllerContext.RouteData.Route).Url.IndexOf("/Replace/", StringComparison.OrdinalIgnoreCase) > -1;
             if (role == null && gid == null)
@@ -458,6 +473,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 RoleId = (int) viewModel.GovernorRole,
                 TelephoneNumber = viewModel.TelephoneNumber
             };
+
+            GovernanceProfessionalValidation(governorModel);
 
             var validationResults = await _governorsWriteService.ValidateAsync(governorModel, User);
             validationResults.ApplyToModelState(ControllerContext, true);
@@ -854,5 +871,87 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 }
             }
         }
+
+        public GovernorModel GovernanceProfessionalValidation(GovernorModel governorModel)
+        {
+
+            // check there is already a existing person there (roleID = 17)
+
+
+            // check that the person has a date of appointment  ******
+
+
+            // check that the existing person has no date term ends
+
+
+            // then the various conditions can be set below
+            // ---------------------------------------------
+
+
+            // - scenario 1
+
+            // appointment start date (AppointmentStartDate) -- has one
+
+            var appointmentStartDateNewGovernor = governorModel.AppointmentStartDate;
+
+            // get AppointmentEndDate
+
+            var appointmentEndDateNewGovernor = governorModel.AppointmentEndDate;
+
+            // if greater or equal to existing persons date of appointment - then error message
+
+            if (PreviousAppointmentDate >= appointmentStartDateNewGovernor)
+            {
+                var errorMessage = 3;
+            }
+
+
+
+
+            // - senario 2
+
+            //And the new person has a Date of appointment less than the existing person's Date of appointment (start date)
+            //And the new person has a Date term ends greater than or equal to the existing person's Date of appointment
+
+
+            //if (appointmentStartDateNewGovernor < PreviousAppointmentDate &&
+            //      appointmentEndDateNewGovernor => PreviousAppointmentDate)
+            //{
+            //    var errorMessage = 3;
+            //}
+
+
+
+
+            // - senario 3
+
+            //And the new person has no Date term ends (given the main conditions)
+
+            if (appointmentEndDateNewGovernor == null)
+            {
+                var errorMessage = 3;
+            }
+
+
+
+
+
+            return governorModel;
+        }
     }
 }
+
+//3 -
+
+
+//Given I am adding a person to the governance of an Establishment
+//And the establishment has a person with any Governance Professional Role as their role
+//And that person has a Date of appointment
+//And that person has no Date term ends
+
+
+
+//When I try to add a new person with any Governance Professional Role as their role
+//And the new person has no Date term ends
+//Then I should receive a suitable error response
+//And the new person should not be added
