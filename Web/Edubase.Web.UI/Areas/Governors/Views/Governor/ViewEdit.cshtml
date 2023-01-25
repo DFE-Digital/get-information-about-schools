@@ -219,9 +219,10 @@ else
                 // Render lists
                 foreach (var grid in Model.Grids)
                 {
-                    <text>
+                    if (grid.Rows.Any())
+                    {
                         @ShowGovernorEditor(grid)
-                    </text>
+                    }
                 }
                 if (Model.HistoricGrids.Any(h => h.Rows.Any()))
                 {
@@ -238,9 +239,7 @@ else
                             {
                                 if (grid.Rows.Any())
                                 {
-                                    <text>
-                                        @ShowGovernorEditor(grid, true)
-                                    </text>
+                                    @ShowGovernorEditor(grid, true)
                                 }
                             }
                         </div>
@@ -336,10 +335,6 @@ else
 @helper ShowGovernorEditor(GovernorGridViewModel grid, bool historic = false)
 {
     <div class="governor-list">
-        @if (!historic)
-        {
-            <h2 class="govuk-heading-m" id="@StringUtils.ElementIdFormat(grid.Title+"-heading")">@grid.Title</h2>
-        }
         @if (grid.Rows.Any())
         {
             foreach (var row in grid.Rows)
