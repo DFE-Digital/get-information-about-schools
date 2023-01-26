@@ -403,7 +403,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             viewModel.NewLocalGovernor.PostCode = model.PostCode;
 
             viewModel.Urn = model.EstablishmentUrn;
-            
+
             viewModel.SelectedPreviousExistingNonChairId = model.Id;
         }
 
@@ -411,19 +411,45 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         {
             var existingGovernors = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, user);
 
-            if (EnumSets.eSingularGovernorRoles.Contains(roleId))
+            // Only a single chair of a local governing body may be attached (either directly, or via shared role)
+            var isChairRole = (
+                roleId == eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody
+                || roleId == eLookupGovernorRole.ChairOfLocalGoverningBody
+            );
+            var existingChairOfLocalGoverningBodyMatchFound = existingGovernors.CurrentGovernors.Any(g =>
+                g.RoleId == (int) eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody
+                || g.RoleId == (int) eLookupGovernorRole.ChairOfLocalGoverningBody
+            );
+            var isChairOfLocalGoverningBodyDuplicate = isChairRole && existingChairOfLocalGoverningBodyMatchFound;
+            if (isChairOfLocalGoverningBodyDuplicate)
             {
-                if (roleId == eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody ||
-                    roleId == eLookupGovernorRole.ChairOfLocalGoverningBody)
-                {
-                    return !existingGovernors.CurrentGovernors.Any(
-                        g => g.RoleId == (int) eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody ||
-                             g.RoleId == (int) eLookupGovernorRole.ChairOfLocalGoverningBody);
-                }
-
-                return existingGovernors.CurrentGovernors.All(g => g.RoleId != (int) roleId);
+                return false;
             }
 
+            // Only a single governance professional may be attached
+            var isGovernanceProfessionalRole = EnumSets.eGovernanceProfessionalRoles.Contains(roleId);
+            var existingGovernanceProfessionalMatchFound = existingGovernors.CurrentGovernors.Any(g =>
+            {
+                return EnumSets.eGovernanceProfessionalRoles
+                    .Select(role => (int?) role)
+                    .Contains(g.RoleId);
+            });
+            var isGovernanceProfessionalDuplicate = isGovernanceProfessionalRole && existingGovernanceProfessionalMatchFound;
+            if (isGovernanceProfessionalDuplicate)
+            {
+                return false;
+            }
+
+            // Where the new governor is a role which permits only a single appointee, forbid if an exact match is found
+            var isRoleWhichPermitsOnlySingleAppointee = EnumSets.eSingularGovernorRoles.Contains(roleId);
+            var exactGovernorTypeMatchFound = existingGovernors.CurrentGovernors
+                .Any(g => g.RoleId == (int) roleId);
+            if (isRoleWhichPermitsOnlySingleAppointee && exactGovernorTypeMatchFound)
+            {
+                return false;
+            }
+
+            // Allow, if no rule met to forbid creating a new governor of this type
             return true;
         }
 
