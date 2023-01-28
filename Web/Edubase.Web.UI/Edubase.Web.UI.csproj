@@ -737,6 +737,12 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\DfE\Layouts\template.cshtml" />
+    <Content Include="Views\GOVUK\Layouts\template.cshtml" />
+    <Content Include="Views\GOVUK\Partials\footer-support-links.cshtml" />
+    <Content Include="Views\GOVUK\Partials\footer-top.cshtml" />
+    <Content Include="Views\GOVUK\Partials\phase\alpha.cshtml" />
+    <Content Include="Views\GOVUK\Partials\phase\beta.cshtml" />
+    <Content Include="Views\GOVUK\Views\ga\google-analytics.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Areas\Establishments\Views\Establishment\EditDetails.cshtml" />
     <Content Include="Views\Downloads\Index.cshtml" />
@@ -889,6 +895,7 @@
     <Folder Include="Areas\Governors\Views\Search\" />
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Views\Admin\" />
+    <Folder Include="Views\GOVUK\Views\errors\" />
     <Folder Include="Views\UserRoles\" />
   </ItemGroup>
   <ItemGroup>
