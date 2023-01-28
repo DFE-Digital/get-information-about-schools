@@ -92,6 +92,10 @@ jobs:
       with:
         category: "/language:${{matrix.language}}"
 
+    - uses: actions/upload-artifact@v3
+      with:
+        name: codeql-sarif-files-${{ matrix.language }}
+        path: ${{ runner.workspace }}/results/${{ matrix.language }}.sarif
 
 
   analyze_javascript:
@@ -147,3 +151,8 @@ jobs:
       uses: github/codeql-action/analyze@v2
       with:
         category: "/language:${{matrix.language}}"
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: codeql-sarif-files-${{ matrix.language }}
+        path: ${{ runner.workspace }}/results/${{ matrix.language }}.sarif
