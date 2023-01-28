@@ -6,7 +6,7 @@ name: gitleaks-push
 # events for all branches
 on:
   push:
-    branches: 
+    branches:
       - '*'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -14,10 +14,10 @@ jobs:
   gitleaks:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3.3.0
       with:
         fetch-depth: '2'
     - name: gitleaks-action
       uses: gitleaks/gitleaks-action@v1.6.0
-      with: 
+      with:
         config-path: gitleaks.config
