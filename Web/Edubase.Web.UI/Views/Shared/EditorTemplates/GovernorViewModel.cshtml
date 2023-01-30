@@ -37,7 +37,7 @@ else
                     @helpers.DialogHiddenPrompt()
                 </a>
             </label>
-            <input id="governorGidInput" class="govuk-input" value="@Model.GID" readonly="readonly" disabled="disabled"/>
+            <input id="governorGidInput" class="govuk-input" value="@Model.GID" readonly="readonly" disabled="disabled" />
         </div>
 
         <div class="govuk-grid-column-full helptext-container">
@@ -63,7 +63,7 @@ else
                     @helpers.DialogHiddenPrompt()
                 </a>
             </label>
-            <input id="governorFullNameInput" class="govuk-input" readonly="readonly" disabled="disabled" value="@Model.FullName"/>
+            <input id="governorFullNameInput" class="govuk-input" readonly="readonly" disabled="disabled" value="@Model.FullName" />
         </div>
 
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernorTitleId)">
@@ -73,11 +73,16 @@ else
                 new { id = "governorTitleInput", @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.GovernorTitleId)) })
         </div>
 
+    var additionalInfo = "";
+    if (!EnumSets.eGovernanceProfessionalRoles.Contains(Model.GovernorRole))
+    {
+        additionalInfo = " (required to save record)";
+    }
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FirstName)">
-            @Html.LabelFor(x => x.FirstName, "First name (required to save record)", new { @class = "govuk-label" })
+            @Html.LabelFor(x => x.FirstName, $"First name{additionalInfo}", new { @class = "govuk-label" })
             @Html.ValidationMessageFor(x => x.FirstName, null, new { @class = "govuk-error-message" })
             @Html.TextBoxFor(x => x.FirstName,
-                new { id = "governorFirstNameInput", @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.FirstName)) })
+                     new { id = "governorFirstNameInput", @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.FirstName)) })
         </div>
 
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.MiddleName)">
@@ -88,7 +93,7 @@ else
         </div>
 
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LastName)">
-            @Html.LabelFor(x => x.LastName, "Last name (required to save record)", new { @class = "govuk-label" })
+            @Html.LabelFor(x => x.LastName, $"Last name{additionalInfo}", new { @class = "govuk-label" })
             @Html.ValidationMessageFor(x => x.LastName, null, new { @class = "govuk-error-message" })
             @Html.TextBoxFor(x => x.LastName,
                 new { id = "governorLastNameInput", @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.LastName)) })
@@ -132,7 +137,7 @@ else
             @Html.ValidationMessageFor(x => x.PostCode, null, new { @class = "govuk-error-message" })
             <input id="GovernorPostcodeInput"
                    class="@string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PostCode)))"
-                   value="@Model.PostCode"/>
+                   value="@Model.PostCode" />
         </div>
 
         <div class="govuk-grid-column-full helptext-container">
@@ -161,7 +166,7 @@ else
             @Html.ValidationMessageFor(x => x.TelephoneNumber, null, new { @class = "govuk-error-message" })
             <input id="GovernorTelephoneNumberInput"
                    class="@string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.TelephoneNumber)))"
-                   value="@Model.TelephoneNumber"/>
+                   value="@Model.TelephoneNumber" />
         </div>
 
         <div class="govuk-grid-column-full helptext-container">
@@ -202,10 +207,12 @@ else
 
 @helper DisplayAppointmentDates()
 {
+    bool isGovernorRole = false;
     string dateAppointmentEndsTooltipMessage = null;
     if (EnumSets.eGovernanceProfessionalRoles.Contains(Model.GovernorRole))
     {
         dateAppointmentEndsTooltipMessage = "A governance professional may have a fixed appointment. If this applies, enter the date their fixed appointment is due to end. If there is not a fixed appointment, leave this field blank until their appointment ends and then add the date their appointment ended date.";
+        isGovernorRole = true;
     }
     if (!bool.TryParse(ViewData["disableStartDate"]?.ToString(), out var disableStartDate))
     {
@@ -219,11 +226,19 @@ else
 
     if (Model.DisplayPolicy.AppointmentStartDate)
     {
-     //   var detail = disableStartDate ? @"based on current governor's end date" : @"required to save record";
-        var title = $"Date of appointment";
-
+        string detail;
+        string title;
+        if (isGovernorRole)
+        {
+            detail = disableStartDate ? @"based on current governor's end date" : @"";
+        }
+        else
+        {
+            detail = disableStartDate ? @"based on current governor's end date" : @"required to save record";
+        }
+        title = $"Date of appointment {(detail)}";
         @Html.EditorFor(x => x.AppointmentStartDate,
-            new { title, @readonly = disableStartDate, ClassPrefix = "start-date", editorPrefix })
+new { title, @readonly = disableStartDate, ClassPrefix = "start-date", editorPrefix })
     }
 
     if (Model.DisplayPolicy.AppointmentEndDate)
