@@ -71,22 +71,22 @@
                         </div>
 
                         var prefix = string.Concat(nameof(Model.LinkedEstablishments), "_", nameof(Model.LinkedEstablishments.LinkedEstablishmentSearch));
-                        <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Establishment found</h2>
+                        <h2 id="establishment-found-heading" class="govuk-heading-s govuk-!-margin-bottom-2">Establishment found</h2>
 
                         <ul class="school-results-listing">
                             <li>
                                 <dl class="govuk-summary-list">
                                     <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">Name</dt>
-                                        <dd class="govuk-summary-list__value">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Name</dd>
+                                        <dt id="establishment-name-key" class="govuk-summary-list__key">Name</dt>
+                                        <dd id="establishment-name-value" class="govuk-summary-list__value">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Name</dd>
                                     </div>
                                     <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">Address</dt>
-                                        <dd class="govuk-summary-list__value">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Address</dd>
+                                        <dt id="establishment-address-key" class="govuk-summary-list__key">Address</dt>
+                                        <dd id="establishment-address-value" class="govuk-summary-list__value">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Address</dd>
                                     </div>
                                     <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key"><abbr title="Unique Reference Number">URN</abbr></dt>
-                                        <dd class="govuk-summary-list__value">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Urn</dd>
+                                        <dt id="establishment-urn-key" class="govuk-summary-list__key"><abbr title="Unique Reference Number">URN</abbr></dt>
+                                        <dd id="establishment-urn-value" class="govuk-summary-list__value">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Urn</dd>
                                     </div>
                                 </dl>
                             </li>
@@ -115,7 +115,7 @@
                             <label class="govuk-label" for="LinkedEstablishments_LinkedEstablishmentSearch_Urn">Enter the establishment's Unique Reference Number (URN)</label>
                             @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, null, new { @class = "govuk-error-message" })
                             @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "govuk-input  govuk-!-width-one-half" })
-                            <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" class="govuk-button inline-button links-estab-search-button">Search URN</button>
+                            <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" id="search-urn-button" class="govuk-button inline-button links-estab-search-button">Search URN</button>
                         </div>
                     }
                 </div>
@@ -128,7 +128,7 @@
                     <div class="button-row govuk-!-margin-bottom-4">
                         @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                         {
-                            <button type="submit" name="action" class="govuk-button" value="@VM.ActionSaveLinks">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
+                            <button id="save-@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName)-top-button" type="submit" name="action" class="govuk-button" value="@VM.ActionSaveLinks">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
                         }
                         @Html.ActionLink(
                             "Cancel",
@@ -145,11 +145,11 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <h2 class="govuk-heading-m">List of @Model.ListOfEstablishmentsPluralName (@Model.LinkedEstablishments.Establishments.Count)</h2>
+                    <h2 id="list-of-@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName)-heading" class="govuk-heading-m">List of @Model.ListOfEstablishmentsPluralName (@Model.LinkedEstablishments.Establishments.Count)</h2>
                 </div>
             </div>
 
-            <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentStartSearch" class="govuk-button inline-button links-estab-search-button">Add establishment</button>
+            <button id="add-establishment-button" type="submit" name="action" value="@VM.ActionLinkedEstablishmentStartSearch" class="govuk-button inline-button links-estab-search-button">Add establishment</button>
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
@@ -264,7 +264,7 @@
                     <div class="button-row">
                         @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                         {
-                            <button type="submit" name="action" class="govuk-button" value="@VM.ActionSaveLinks">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
+                            <button id="save-@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName)-bottom-button" type="submit" name="action" class="govuk-button" value="@VM.ActionSaveLinks">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
                         }
                         @Html.ActionLink(
                             "Cancel",
