@@ -39,6 +39,7 @@ namespace Edubase.Services.Enums
             ET.UniversityTechnicalCollege
         }.Cast<int>();
 
+        // See also database table StaffRole, column isOnePersonRole
         public static IEnumerable<GR> eSingularGovernorRoles { get; } = new[]
         {
             GR.ChairOfGovernors,
@@ -51,11 +52,13 @@ namespace Edubase.Services.Enums
             GR.GovernanceProfessionalToAFederation,
             GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool,
             GR.GovernanceProfessionalToAMat,
+            GR.Group_SharedGovernanceProfessional,
             GR.Establishment_SharedGovernanceProfessional
         };
 
         public static IEnumerable<int> SingularGovernorRoles { get; } = eSingularGovernorRoles.Cast<int>();
 
+        // See also database table StaffRole, columns isSharing and isShared
         public static IEnumerable<GR> eSharedGovernorRoles { get; } = new[]
         {
             GR.Group_SharedChairOfLocalGoverningBody,
@@ -68,6 +71,7 @@ namespace Edubase.Services.Enums
 
         public static IEnumerable<int> SharedGovernorRoles { get; } = eSharedGovernorRoles.Cast<int>();
 
+        // See also database table StaffRole
         public static IEnumerable<GR> eGovernanceProfessionalRoles { get; } = new[]
         {
             GR.GovernanceProfessionalToALocalAuthorityMaintainedSchool,
