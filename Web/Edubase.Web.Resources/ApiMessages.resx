@@ -281,4 +281,7 @@ Please check the 'Establishment open date'</value>
   <data name="error.wrongValue.futureDate.validate.field.edit.governor_appointmentStartDate" xml:space="preserve">
     <value>Date of appointment must not be in the future</value>
   </data>
+  <data name="error.wrongValue.stepdownDate.validate.field.edit.governor_appointmentEndDate" xml:space="preserve">
+    <value>Date appointment ended must not be before the Date of appointment</value>
+  </data>
 </root>
