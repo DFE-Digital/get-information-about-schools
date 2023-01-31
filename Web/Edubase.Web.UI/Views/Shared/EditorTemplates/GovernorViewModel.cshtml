@@ -226,27 +226,21 @@ else
 
     if (Model.DisplayPolicy.AppointmentStartDate)
     {
-        string detail;
-        string title;
-        if (isGovernorRole)
-        {
-            detail = disableStartDate ? @"based on current governor's end date" : @"";
-        }
-        else
-        {
-            detail = disableStartDate ? @"based on current governor's end date" : @"required to save record";
-        }
-        title = $"Date of appointment ({detail})";
+        var StartDateSaveRecord = isGovernorRole ? "(required to save record)" : "";
+        var detail = disableStartDate ? @"(based on current governor's end date)" : $@"{StartDateSaveRecord}";
+        var title = $"Date of appointment {detail}";
         @Html.EditorFor(x => x.AppointmentStartDate,
 new { title, @readonly = disableStartDate, ClassPrefix = "start-date", editorPrefix })
-    }
+}
 
-    if (Model.DisplayPolicy.AppointmentEndDate)
-    {
+if (Model.DisplayPolicy.AppointmentEndDate)
+{
+    var EndDateText = isGovernorRole ? "Date appointment ended" : "Date term ends";
+
         @Html.EditorFor(x => x.AppointmentEndDate,
             new
             {
-                title = Model.GovernorRole == eLookupGovernorRole.Member ? "Date stepped down" : "Date appointment ended",
+                title = Model.GovernorRole == eLookupGovernorRole.Member ? "Date stepped down" : $"{EndDateText}",
                 tooltipText = dateAppointmentEndsTooltipMessage,
                 showReactivationWarning
             })
