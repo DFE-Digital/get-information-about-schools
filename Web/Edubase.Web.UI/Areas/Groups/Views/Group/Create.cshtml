@@ -27,7 +27,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         @Html.Partial("_ValidationSummary", ViewData.ModelState)
-        <h1 class="govuk-heading-xl">@string.Concat(Model.PageTitle, "s")</h1>
+        <h1 id="@StringUtils.ElementIdFormat(string.Concat(Model.PageTitle, "s"))" class="govuk-heading-xl">@string.Concat(Model.PageTitle, "s")</h1>
     </div>
 </div>
 
@@ -77,7 +77,7 @@
         }
         else
         {
-            <h2 class="govuk-heading-m">@Model.EntityName.ToSentenceCase() details</h2>
+            <h2 id="@StringUtils.ElementIdFormat(Model.EntityName)-details" class="govuk-heading-m">@Model.EntityName.ToSentenceCase() details</h2>
         }
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GroupName)">
             <label for="GroupName" class="govuk-label">@Model.GroupTypeLabelPrefix name</label>
