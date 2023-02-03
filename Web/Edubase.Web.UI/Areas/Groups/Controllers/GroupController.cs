@@ -388,7 +388,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 OriginalStatusId = domainModel.StatusId,
                 UKPRN = domainModel.UKPRN.ToInteger()
             };
-            viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
+            viewModel.ListOfEstablishmentsPluralName = NomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
 
             await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, id, true);
             await PopulateSelectLists(viewModel);
@@ -401,7 +401,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 viewModel.GroupTypeName = await _lookup.GetNameAsync(() => viewModel.GroupTypeId);
             }
 
-            await SetEditPermissions(viewModel);
+            SetEditPermissions(viewModel);
 
             return View("EditDetails", viewModel);
         }
@@ -455,8 +455,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 }
             }
 
-            viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT) viewModel.GroupTypeId.Value);
-            await SetEditPermissions(viewModel);
+            viewModel.ListOfEstablishmentsPluralName = NomenclatureService.GetEstablishmentsPluralName((GT) viewModel.GroupTypeId.Value);
+            SetEditPermissions(viewModel);
 
             return View("EditDetails", viewModel);
         }
@@ -475,7 +475,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             };
 
             await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, id, true);
-            viewModel.ListOfEstablishmentsPluralName = _nomenclatureService.GetEstablishmentsPluralName((GT) viewModel.GroupTypeId.Value);
+            viewModel.ListOfEstablishmentsPluralName = NomenclatureService.GetEstablishmentsPluralName((GT) viewModel.GroupTypeId.Value);
             viewModel.SelectedTabName = "links";
 
             viewModel.DeriveCCLeadCentreUrn();
@@ -737,13 +737,13 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 else if (viewModel.Action.StartsWith(ActionLinkedEstablishmentEdit))
                 {
                     dto = new SaveGroupDto(createDomainModel(), createLinkedEstablishmentFromEdit());
-                    _ = EditLinkedEstablishment(viewModel);
+                    EditLinkedEstablishment(viewModel);
                 }
                 else if (viewModel.Action == ActionLinkedEstablishmentAdd)
                 {
                     dto = new SaveGroupDto(createDomainModel(), createLinkedEstablishmentFromAdd());
                 }
-                else 
+                else
                 {
                     dto = new SaveGroupDto(createDomainModel(), createLinksDomainModel());
                 }
@@ -752,7 +752,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 dto = viewModel.SaveMode == eSaveMode.Links
                     ? new SaveGroupDto(viewModel.GroupUId.Value, createLinksDomainModel())
-                    : throw new NotImplementedException($"SaveMode '{viewModel.SaveMode}' is not supported");
+                    : throw new ArgumentOutOfRangeException(nameof(viewModel.SaveMode),
+                        $"SaveMode '{viewModel.SaveMode}' is not supported");
             }
 
             if (viewModel.CanUserCloseAndMarkAsCreatedInError
@@ -809,7 +810,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return viewModel;
         }
 
-        private async Task<GroupEditorViewModel> SetEditPermissions(GroupEditorViewModel viewModel)
+        private GroupEditorViewModel SetEditPermissions(GroupEditorViewModel viewModel)
         {
             viewModel.CanUserCloseAndMarkAsCreatedInError = viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor, GT.Federation)
                                                                && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed)
@@ -949,7 +950,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
         }
 
-        private async Task EditLinkedEstablishment(GroupEditorViewModel viewModel)
+        private void EditLinkedEstablishment(GroupEditorViewModel viewModel)
         {
             var model = viewModel.LinkedEstablishments.Establishments.First(x => x.Urn == viewModel.ActionUrn);
             viewModel.LinkedEstablishments.LinkedEstablishmentSearch.Name = model.Name;

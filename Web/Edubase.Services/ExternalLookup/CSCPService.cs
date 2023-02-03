@@ -32,7 +32,7 @@ namespace Edubase.Services.ExternalLookup
             var collection = mat ? _matAddress : _schoolAddress;
             return collection;
         }
-        
+
         public string PublicURL(int? urn, string name, bool mat = false)
         {
             var collection = GetCollection(mat);
@@ -69,7 +69,7 @@ namespace Edubase.Services.ExternalLookup
                         return isOk;
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
                     return false;
                 }
