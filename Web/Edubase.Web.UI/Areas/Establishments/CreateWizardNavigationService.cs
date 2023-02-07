@@ -5,7 +5,7 @@ namespace Edubase.Web.UI.Areas.Establishments
 {
     public static class CreateWizardNavigationService
     {
-        public static bool NavigatedBack(CreateChildrensCentreViewModel viewModel)
+        public static bool NavigatedBack(CreateEstablishmentViewModel viewModel)
         {
             if (viewModel.ActionStep < viewModel.CurrentStep)
             {
@@ -20,9 +20,9 @@ namespace Edubase.Web.UI.Areas.Establishments
             }
         }
 
-        public static bool RouteIsComplete(CreateChildrensCentreViewModel viewModel) => viewModel.ActionStep == CreateSteps.Completed;
+        public static bool RouteIsComplete(CreateEstablishmentViewModel viewModel) => viewModel.ActionStep == CreateSteps.Completed;
 
-        public static bool MoveToNextStep(CreateChildrensCentreViewModel viewModel)
+        public static bool MoveToNextStep(CreateEstablishmentViewModel viewModel)
         {
             if (viewModel.ActionStep != CreateSteps.Completed)
             {
