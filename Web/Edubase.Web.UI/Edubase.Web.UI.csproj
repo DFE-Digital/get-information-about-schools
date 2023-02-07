@@ -342,6 +342,7 @@
     <Compile Include="Areas\Establishments\Controllers\BulkCreateFreeSchoolsController.cs" />
     <Compile Include="Areas\Establishments\Controllers\BulkUpdateController.cs" />
     <Compile Include="Areas\Establishments\Controllers\EstablishmentsSearchController.cs" />
+    <Compile Include="Areas\Establishments\CreateWizardNavigationService.cs" />
     <Compile Include="Areas\Establishments\Models\AdditionalAddressViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\BulkAssociateEstabs2GroupsViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\BulkCreateFreeSchoolsViewModel.cs" />

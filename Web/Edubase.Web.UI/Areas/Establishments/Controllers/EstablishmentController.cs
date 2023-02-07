@@ -210,7 +210,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             viewModel.CreateEstablishmentPermission = await _securityService.GetCreateEstablishmentPermissionAsync(User);
             viewModel.Type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
-            var routeComplete = viewModel.ActionStep == CreateSteps.Completed;
 
             await PopulateCCSelectLists(viewModel);
             if (viewModel.EstablishmentTypeId != null)
@@ -224,55 +223,23 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             ModelState.Remove(nameof(viewModel.CurrentStep));
             ModelState.Remove(nameof(viewModel.ActionStep));
 
-            if (viewModel.ActionStep < viewModel.CurrentStep)
+            if (CreateWizardNavigationService.NavigatedBack(viewModel))
             {
-                viewModel.ActionStep = viewModel.CurrentStep == CreateSteps.CreateEntry ? CreateSteps.PhaseOfEducation : viewModel.CurrentStep;
-                viewModel.CurrentStep = viewModel.PreviousStep;
-                viewModel.PreviousStep = viewModel.PreviousStep - 1;
                 return View(viewModel);
             }
 
-            var isNameEntryOk = viewModel.LocalAuthorityId != null && viewModel.Name != null && viewModel.EstablishmentTypeId != null;
-            var isPhaseOfEducationOk = viewModel.EducationPhaseId != null && viewModel.GenerateEstabNumber != null;
-
-            if (viewModel.EstablishmentTypeId == 41 && routeComplete && isNameEntryOk)
+            var moveToNextStep = ModelState.IsValid ? CreateWizardNavigationService.MoveToNextStep(viewModel) : false;
+            if (moveToNextStep)
             {
-                return ModelState.IsValid ? await CreateChildrensCentre(viewModel) : View(viewModel);
-            }
-
-            if (ModelState.IsValid && !routeComplete)
-            {
-                viewModel.PreviousStep = viewModel.CurrentStep;
-                viewModel.CurrentStep = viewModel.ActionStep;
-            }
-
-            if (ModelState.IsValid && viewModel.EstablishmentTypeId == 41 && viewModel.ActionStep == CreateSteps.PhaseOfEducation && !routeComplete && isNameEntryOk)
-            {
-                viewModel.CurrentStep = CreateSteps.CreateEntry;
-                viewModel.ActionStep = CreateSteps.Completed;
-                //need to escape here to redraw the screen and collect additional data
                 return View(viewModel);
             }
 
-            if (ModelState.IsValid && viewModel.ActionStep == CreateSteps.EstabNumber && isPhaseOfEducationOk)
+            if (ModelState.IsValid && CreateWizardNavigationService.RouteIsComplete(viewModel))  //attempt to prevent end of route processing until final control is posted
             {
-                viewModel.CurrentStep = CreateSteps.EstabNumber;
-                viewModel.ActionStep = CreateSteps.Completed;
-                return View(viewModel);
-            }
-
-            if (ModelState.IsValid && viewModel.ActionStep != CreateSteps.EstabNumber && !routeComplete)
-            {
-                if (viewModel.ActionStep == CreateSteps.PhaseOfEducation && isNameEntryOk)
+                if (viewModel.EstablishmentTypeId == 41)
                 {
-                    viewModel.ActionStep = viewModel.EstablishmentTypeId != 41
-                        ? CreateSteps.EstabNumber
-                        : CreateSteps.Completed;
+                    return ModelState.IsValid ? await CreateChildrensCentre(viewModel) : View(viewModel);
                 }
-            }
-
-            if (ModelState.IsValid && routeComplete)  //attempt to prevent end of route processing until final control is posted
-            {
                 var apiModel = new EstablishmentModel
                 {
                     Name = viewModel.Name,
