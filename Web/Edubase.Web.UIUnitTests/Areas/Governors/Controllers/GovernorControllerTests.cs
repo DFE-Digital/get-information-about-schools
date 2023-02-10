@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
@@ -241,7 +242,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
                 It.IsAny<Action<EstablishmentModel>>(),
                 It.IsAny<Action<GroupModel>>()))
                 .Returns(Task.CompletedTask);
-            
+
 
             mockCachedLookupService.Setup(c => c.GovernorRolesGetAllAsync()).ReturnsAsync(() => new List<LookupDto>
             {
@@ -600,6 +601,82 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             var redirectResult = result as RedirectToRouteResult;
             Assert.NotNull(redirectResult);
             Assert.Equal("SelectSharedGovernor", redirectResult.RouteName);
+        }
+
+        /// <summary>
+        /// Every chair of local governing body role, combined with every chair of local governing body role.
+        /// At the time of writing, equivalent to:
+        ///     [InlineData( eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody,          eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody          )]
+        ///     [InlineData( eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody,          eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody  )]
+        ///     [InlineData( eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody,  eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody          )]
+        ///     [InlineData( eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody,  eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody  )]
+        /// </summary>
+        public static IEnumerable<object[]> PairwiseChairOfLocalGoverningBodyRoles =>
+        (
+            from preExistingRole in EnumSets.eChairOfLocalGoverningBodyRoles
+            from newRole in EnumSets.eChairOfLocalGoverningBodyRoles
+            select new object[] { preExistingRole, newRole }
+        );
+
+        [Theory()]
+        [MemberData(nameof(PairwiseChairOfLocalGoverningBodyRoles))]
+        public async Task Gov_AddEditOrReplace_RoleSpecified_ChairOfLocalGoverningBody_RoleAlreadyExists(eLookupGovernorRole preExistingGovernorRole, eLookupGovernorRole newGovernorRole)
+        {
+            var estabUrn = 4;
+            mockGovernorsReadService
+                .Setup(g => g.GetGovernorListAsync(estabUrn, null, It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => new GovernorsDetailsDto
+                {
+                    CurrentGovernors = new List<GovernorModel>()
+                    {
+                        new GovernorModel() {RoleId = (int) preExistingGovernorRole}
+                    }
+                });
+            mockControllerContext.SetupGet(c => c.RouteData)
+                .Returns(new RouteData(new Route("", new PageRouteHandler("~/")), new PageRouteHandler("~/")));
+
+            var result = await controller.AddEditOrReplace(null, estabUrn, newGovernorRole, null);
+
+            // Expecting to redirect back, rejecting the proposed add/edit
+            var redirectResult = result as RedirectToRouteResult;
+            Assert.NotNull(redirectResult);
+            Assert.Equal("EstabEditGovernance", redirectResult.RouteName);
+        }
+
+
+        /// <summary>
+        /// Every governance professional role, combined with every type of governance professional.
+        /// </summary>
+        public static IEnumerable<object[]> PairwiseGovernanceProfessionalRoles =>
+        (
+            from preExistingRole in EnumSets.eGovernanceProfessionalRoles
+            from newRole in EnumSets.eGovernanceProfessionalRoles
+            select new object[] { preExistingRole, newRole }
+        );
+
+        [Theory()]
+        [MemberData(nameof(PairwiseGovernanceProfessionalRoles))]
+        public async Task Gov_AddEditOrReplace_RoleSpecified_GovernanceProfessional_RoleAlreadyExists(eLookupGovernorRole preExistingGovernorRole, eLookupGovernorRole newGovernorRole)
+        {
+            var estabUrn = 4;
+            mockGovernorsReadService
+                .Setup(g => g.GetGovernorListAsync(estabUrn, null, It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => new GovernorsDetailsDto
+                {
+                    CurrentGovernors = new List<GovernorModel>()
+                    {
+                        new GovernorModel() {RoleId = (int) preExistingGovernorRole}
+                    }
+                });
+            mockControllerContext.SetupGet(c => c.RouteData)
+                .Returns(new RouteData(new Route("", new PageRouteHandler("~/")), new PageRouteHandler("~/")));
+
+            var result = await controller.AddEditOrReplace(null, estabUrn, newGovernorRole, null);
+
+            // Expecting to redirect back, rejecting the proposed add/edit
+            var redirectResult = result as RedirectToRouteResult;
+            Assert.NotNull(redirectResult);
+            Assert.Equal("EstabEditGovernance", redirectResult.RouteName);
         }
 
         [Fact()]

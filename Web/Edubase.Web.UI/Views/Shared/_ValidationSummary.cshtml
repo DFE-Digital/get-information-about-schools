@@ -14,7 +14,7 @@
                     foreach (var modelError in validationResult.Errors)
                     {
                         <li>
-                            <a href="#@modelError.PropertyName">@(modelError.CustomState?.ToString() ?? modelError.ErrorMessage)</a>
+                            <a id="error-summary-@StringUtils.ElementIdFormat(@modelError.PropertyName)-list-item" href="#@modelError.PropertyName">@(modelError.CustomState?.ToString() ?? modelError.ErrorMessage)</a>
                         </li>
                     }
                 }
@@ -24,7 +24,7 @@
                     foreach (var modelError in Model.Keys.SelectMany(key => this.Model[key].Errors.Select(x => Tuple.Create(key, x.ErrorMessage))))
                     {
                         <li>
-                            <a href='#@modelError.Item1.Replace(".", "_").Replace("[", "_").Replace("]", "_")'>@modelError.Item2</a>
+                            <a id="error-summary-@StringUtils.ElementIdFormat(@modelError.Item1)-list-item" href='#@modelError.Item1.Replace(".", "_").Replace("[", "_").Replace("]", "_")'>@modelError.Item2</a>
                         </li>
                     }
                 }

@@ -403,28 +403,63 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             viewModel.NewLocalGovernor.PostCode = model.PostCode;
 
             viewModel.Urn = model.EstablishmentUrn;
-            
+
             viewModel.SelectedPreviousExistingNonChairId = model.Id;
         }
 
-        private async Task<bool> RoleAllowed(eLookupGovernorRole roleId, int? groupUId, int? establishmentUrn, IPrincipal user)
+        private async Task<bool> RoleAllowed(eLookupGovernorRole role, int? groupUId, int? establishmentUrn, IPrincipal user)
         {
             var existingGovernors = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, user);
+            var existingGovernorRoleIds = existingGovernors
+                .CurrentGovernors
+                .Select(g => g.RoleId)
+                .OfType<int>()
+                .ToHashSet();
 
-            if (EnumSets.eSingularGovernorRoles.Contains(roleId))
+            // Only a single chair of a local governing body may be attached (either directly, or via shared role)
+            if (IsEquivalentRoleAlreadyPresent(role, EnumSets.eChairOfLocalGoverningBodyRoles, existingGovernorRoleIds))
             {
-                if (roleId == eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody ||
-                    roleId == eLookupGovernorRole.ChairOfLocalGoverningBody)
-                {
-                    return !existingGovernors.CurrentGovernors.Any(
-                        g => g.RoleId == (int) eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody ||
-                             g.RoleId == (int) eLookupGovernorRole.ChairOfLocalGoverningBody);
-                }
-
-                return existingGovernors.CurrentGovernors.All(g => g.RoleId != (int) roleId);
+                return false;
             }
 
+            // Only a single governance professional may be attached
+            if (IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
+            {
+                return false;
+            }
+
+            // Where the new governor is a role which permits only a single appointee, forbid if an exact match is found
+            var isRoleWhichPermitsOnlySingleAppointee = EnumSets.eSingularGovernorRoles.Contains(role);
+            var exactCurrentGovernorTypeMatchFound = existingGovernorRoleIds.Contains((int) role);
+            if (isRoleWhichPermitsOnlySingleAppointee && exactCurrentGovernorTypeMatchFound)
+            {
+                return false;
+            }
+
+            // Allow, if no rule met to forbid creating a new governor of this type
             return true;
+        }
+
+        /// <param name="governorRole">The role under consideration</param>
+        /// <param name="rolesToConsiderEquivalent">Roles which must not co-exist for the purposes of this check - for example, we must not (simultaneously) have a chairperson and a "shared" chairperson.</param>
+        /// <param name="existingRoleIds">The collection of governors to search for equivalent</param>
+        /// <returns><c>true</c>, where the role ID is match exactly or with an existing role which it may not co-exist with, else <c>false</c>.</returns>
+        private static bool IsEquivalentRoleAlreadyPresent(
+            eLookupGovernorRole governorRole,
+            IEnumerable<eLookupGovernorRole> rolesToConsiderEquivalent,
+            IEnumerable<int> existingRoleIds
+        )
+        {
+            var equivalentRoleIds = rolesToConsiderEquivalent
+                .Select(role => (int) role)
+                .ToHashSet();
+
+            var isRoleUnderConsideration = equivalentRoleIds.Contains((int) governorRole);
+            var existingMatchFound = existingRoleIds
+                .Any(existingRoleId => equivalentRoleIds.Contains(existingRoleId));
+
+            var isGovernanceProfessionalDuplicate = isRoleUnderConsideration && existingMatchFound;
+            return isGovernanceProfessionalDuplicate;
         }
 
         [Route(GROUP_ADD_GOVERNOR), Route(ESTAB_ADD_GOVERNOR),
