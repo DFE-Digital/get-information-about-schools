@@ -461,17 +461,17 @@
                             <dt class="govuk-summary-list__key">Data from other services</dt>
                             <dd class="govuk-summary-list__value">
                                 <ul class="govuk-list">
-                                    @if (!Model.ShowCscp && !Model.ShowFinancialBenchmarking)
+                                    @if (!Model.ShowFscp && !Model.ShowFinancialBenchmarking)
                                     {
                                         <li>
                                             Not applicable
                                         </li>
                                     }
-                                    @if (Model.ShowCscp)
+                                    @if (Model.ShowFscp)
                                     {
                                         <li>
-                                            <a href="@Model.CscpURL" rel="noreferrer noopener" target="_blank">
-                                                Compare school and college performance (opens in new tab)
+                                            <a href="@Model.FscpURL" rel="noreferrer noopener" target="_blank">
+                                                Find school and college performance data in England (opens in new tab)
                                             </a>
                                         </li>
                                     }

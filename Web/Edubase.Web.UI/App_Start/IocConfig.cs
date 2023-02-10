@@ -115,8 +115,8 @@ namespace Edubase.Web.UI
             builder.RegisterType<OSPlacesApiService>().As<IOSPlacesApiService>();
             builder.RegisterType<PlacesLookupService>().As<IPlacesLookupService>();
 
-            builder.RegisterInstance(CreateCscpClient()).SingleInstance().Named<HttpClient>("CscpClient");
-            builder.Register(c => new CSCPService(c.ResolveNamed<HttpClient>("CscpClient"))).As<ICSCPService>();
+            builder.RegisterInstance(CreateFscpClient()).SingleInstance().Named<HttpClient>("FscpClient");
+            builder.Register(c => new FSCPService(c.ResolveNamed<HttpClient>("FscpClient"))).As<IFSCPService>();
 
             builder.RegisterInstance(CreateSfbClient()).SingleInstance().Named<HttpClient>("SfbClient");
             builder.Register(c => new FBService(c.ResolveNamed<HttpClient>("SfbClient"))).As<IFBService>();
@@ -218,16 +218,16 @@ namespace Edubase.Web.UI
             return client;
         }
 
-        public static HttpClient CreateCscpClient()
+        public static HttpClient CreateFscpClient()
         {
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
             {
-                BaseAddress = new Uri(ConfigurationManager.AppSettings["CscpURL"]),
+                BaseAddress = new Uri(ConfigurationManager.AppSettings["FscpURL"]),
                 Timeout = TimeSpan.FromSeconds(10),
             };
 
-            var apiUsername = ConfigurationManager.AppSettings["CscpUsername"];
-            var apiPassword = ConfigurationManager.AppSettings["CscpPassword"];
+            var apiUsername = ConfigurationManager.AppSettings["FscpUsername"];
+            var apiPassword = ConfigurationManager.AppSettings["FscpPassword"];
 
             if (!apiUsername.IsNullOrEmpty() && !apiPassword.IsNullOrEmpty())
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());
