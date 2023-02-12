@@ -240,8 +240,8 @@
                                 @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                                 {
                                     <div class="button-row govuk-!-margin-bottom-6 govuk-!-padding-top-0">
-                                        <button type="submit" class="govuk-button govuk-button--secondary button-remove" name="action" value="@VM.ActionLinkedEstablishmentRemove@e.Urn" aria-label="Remove establishment">Remove</button>
-                                        <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentEdit@e.Urn" class="govuk-button govuk-button--secondary">Edit join date</button>
+                                        <button type="submit" class="govuk-button govuk-button--secondary button-remove" id="remove-button" name="action" value="@VM.ActionLinkedEstablishmentRemove@e.Urn" aria-label="Remove establishment">Remove</button>
+                                        <button type="submit" id="edit-join-date-button" name="action" value="@VM.ActionLinkedEstablishmentEdit@e.Urn" class="govuk-button govuk-button--secondary">Edit join date</button>
                                     </div>
                                 }
                                 else if (e.EditMode)
