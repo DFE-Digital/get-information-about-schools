@@ -46,7 +46,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         private readonly Mock<ControllerContext> mockControllerContext = new Mock<ControllerContext>(MockBehavior.Strict);
         private readonly Mock<UrlHelper> mockUrlHelper = new Mock<UrlHelper>(MockBehavior.Loose);
 
-        private readonly Mock<IFSCPDService> mockCscpService = new Mock<IFSCPDService>(MockBehavior.Strict);
+        private readonly Mock<IFSCPDService> mockFscpdService = new Mock<IFSCPDService>(MockBehavior.Strict);
         private readonly Mock<IFBService> mockFbService = new Mock<IFBService>(MockBehavior.Strict);
         private bool disposedValue;
 
@@ -211,9 +211,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                 });
             mockPrincipal.Setup(p => p.IsInRole(It.IsAny<string>()))
                 .Returns(true);
-            mockCscpService.Setup(x => x.CheckExists(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
+            mockFscpdService.Setup(x => x.CheckExists(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
                 .ReturnsAsync(true);
-            mockCscpService.Setup(x => x.PublicURL(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
+            mockFscpdService.Setup(x => x.PublicURL(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
                 .Returns("https://cscp.azurewebsites.net/school/123456");
             mockFbService.Setup(x => x.CheckExists(It.IsAny<int>(), It.IsAny<FbType>()))
                 .ReturnsAsync(true);
