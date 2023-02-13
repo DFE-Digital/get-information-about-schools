@@ -9,7 +9,7 @@ using Polly;
 
 namespace Edubase.Services.ExternalLookup
 {
-    public class FSCPService : IFSCPService
+    public class FSCPDService : IFSCPDService
     {
         private static HttpClient _client;
         private string _matAddress = "multi-academy-trust";
@@ -22,7 +22,7 @@ namespace Edubase.Services.ExternalLookup
                 TimeSpan.FromSeconds(1)
             }));
 
-        public FSCPService(HttpClient client)
+        public FSCPDService(HttpClient client)
         {
             _client = client;
         }
@@ -49,7 +49,7 @@ namespace Edubase.Services.ExternalLookup
         public async Task<bool> CheckExists(int? urn, string name, bool mat = false)
         {
             var collection = GetCollection(mat);
-            var key = $"fscp-{collection}-{urn}";
+            var key = $"fscpd-{collection}-{urn}";
             var value = MemoryCache.Default.Get(key);
             if (value != null)
             {
@@ -57,7 +57,7 @@ namespace Edubase.Services.ExternalLookup
             }
             else
             {
-                var cacheTime = ConfigurationManager.AppSettings["FscpCacheHours"].ToInteger() ?? 8;
+                var cacheTime = ConfigurationManager.AppSettings["FscpdCacheHours"].ToInteger() ?? 8;
                 var request = HeadRestRequest(urn, name, collection);
 
                 try

@@ -46,7 +46,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         private readonly Mock<ControllerContext> mockControllerContext = new Mock<ControllerContext>(MockBehavior.Strict);
         private readonly Mock<UrlHelper> mockUrlHelper = new Mock<UrlHelper>(MockBehavior.Loose);
 
-        private readonly Mock<IFSCPService> mockCscpService = new Mock<IFSCPService>(MockBehavior.Strict);
+        private readonly Mock<IFSCPDService> mockCscpService = new Mock<IFSCPDService>(MockBehavior.Strict);
         private readonly Mock<IFBService> mockFbService = new Mock<IFBService>(MockBehavior.Strict);
         private bool disposedValue;
 

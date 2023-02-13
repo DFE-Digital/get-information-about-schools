@@ -177,17 +177,17 @@ namespace Edubase.Web.UI.Models
         public bool HighPriorityEstablishmentConfirmationPending => (Establishment?.UrgentConfirmationUpToDateRequired).GetValueOrDefault();
         public bool HighPriorityGovernanceConfirmationPending => (Establishment?.UrgentConfirmationUpToDateGovernanceRequired).GetValueOrDefault();
 
-        public string FscpURL => extService.FscpURL(Establishment.Urn, Establishment.Name, Establishment.TypeId.OneOfThese(eLookupGroupType.MultiacademyTrust));
-        private bool? showFscp;
-        public bool ShowFscp
+        public string FscpdURL => extService.FscpdURL(Establishment.Urn, Establishment.Name, Establishment.TypeId.OneOfThese(eLookupGroupType.MultiacademyTrust));
+        private bool? showFscpd;
+        public bool ShowFscpd
         {
             get
             {
-                if (!showFscp.HasValue)
+                if (!showFscpd.HasValue)
                 {
-                    showFscp = extService != null && Task.Run(() => extService.FscpCheckExists(Establishment.Urn, Establishment.Name, Establishment.TypeId.OneOfThese(eLookupGroupType.MultiacademyTrust))).Result;
+                    showFscpd = extService != null && Task.Run(() => extService.FscpdCheckExists(Establishment.Urn, Establishment.Name, Establishment.TypeId.OneOfThese(eLookupGroupType.MultiacademyTrust))).Result;
                 }
-                return showFscp.Value;
+                return showFscpd.Value;
             }
         }
 

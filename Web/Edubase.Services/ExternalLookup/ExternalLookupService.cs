@@ -4,23 +4,23 @@ namespace Edubase.Services.ExternalLookup
 {
     public class ExternalLookupService : IExternalLookupService
     {
-        private readonly IFSCPService _fscpService;
+        private readonly IFSCPDService _fscpdService;
         private readonly IFBService _fbService;
 
-        public ExternalLookupService(IFSCPService fscpService, IFBService fbService)
+        public ExternalLookupService(IFSCPDService fscpdService, IFBService fbService)
         {
             _fscpService = fscpService;
             _fbService = fbService;
         }
 
-        public async Task<bool> FscpCheckExists(int? urn, string name, bool mat = false)
+        public async Task<bool> FscpdCheckExists(int? urn, string name, bool mat = false)
         {
-            return await _fscpService.CheckExists(urn, name, mat);
+            return await _fscpdService.CheckExists(urn, name, mat);
         }
 
-        public string FscpURL(int? urn, string name, bool mat = false)
+        public string FscpdURL(int? urn, string name, bool mat = false)
         {
-            return _fscpService.PublicURL(urn, name, mat);
+            return _fscpdService.PublicURL(urn, name, mat);
         }
 
         public async Task<bool> SfbCheckExists(int? lookupId, FbType lookupType)

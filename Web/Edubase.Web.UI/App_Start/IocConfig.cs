@@ -115,8 +115,8 @@ namespace Edubase.Web.UI
             builder.RegisterType<OSPlacesApiService>().As<IOSPlacesApiService>();
             builder.RegisterType<PlacesLookupService>().As<IPlacesLookupService>();
 
-            builder.RegisterInstance(CreateFscpClient()).SingleInstance().Named<HttpClient>("FscpClient");
-            builder.Register(c => new FSCPService(c.ResolveNamed<HttpClient>("FscpClient"))).As<IFSCPService>();
+            builder.RegisterInstance(CreateFscpdClient()).SingleInstance().Named<HttpClient>("FscpdClient");
+            builder.Register(c => new FSCPDService(c.ResolveNamed<HttpClient>("FscpdClient"))).As<IFSCPDService>();
 
             builder.RegisterInstance(CreateSfbClient()).SingleInstance().Named<HttpClient>("SfbClient");
             builder.Register(c => new FBService(c.ResolveNamed<HttpClient>("SfbClient"))).As<IFBService>();
@@ -218,16 +218,16 @@ namespace Edubase.Web.UI
             return client;
         }
 
-        public static HttpClient CreateFscpClient()
+        public static HttpClient CreateFscpdClient()
         {
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
             {
-                BaseAddress = new Uri(ConfigurationManager.AppSettings["FscpURL"]),
+                BaseAddress = new Uri(ConfigurationManager.AppSettings["FscpdURL"]),
                 Timeout = TimeSpan.FromSeconds(10),
             };
 
-            var apiUsername = ConfigurationManager.AppSettings["FscpUsername"];
-            var apiPassword = ConfigurationManager.AppSettings["FscpPassword"];
+            var apiUsername = ConfigurationManager.AppSettings["FscpdUsername"];
+            var apiPassword = ConfigurationManager.AppSettings["FscpdPassword"];
 
             if (!apiUsername.IsNullOrEmpty() && !apiPassword.IsNullOrEmpty())
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());

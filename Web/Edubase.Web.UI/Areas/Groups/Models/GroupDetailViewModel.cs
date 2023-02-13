@@ -65,17 +65,17 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public IEnumerable<LinkedGroupModel> Links { get; set; }
         public GovernorPermissions GovernorPermissions { get; set; }
 
-        public string FscpURL => extService.FscpURL(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor));
-        private bool? showFscp;
+        public string FscpdURL => extService.FscpdURL(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor));
+        private bool? showFscpd;
         public bool ShowFscp
         {
             get
             {
-                if (!showFscp.HasValue)
+                if (!showFscpd.HasValue)
                 {
-                    showFscp = extService != null && Task.Run(() => extService.FscpCheckExists(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor))).Result;
+                    showFscpd = extService != null && Task.Run(() => extService.FscpdCheckExists(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor))).Result;
                 }
-                return showFscp.Value;
+                return showFscpd.Value;
             }
         }
 

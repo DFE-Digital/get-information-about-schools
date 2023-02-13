@@ -270,16 +270,16 @@
         <dt class="govuk-summary-list__key">Data from other services</dt>
         <dd class="govuk-summary-list__value">
             <ul class="govuk-list">
-                @if (!Model.ShowFscp && !Model.ShowFinancialBenchmarking)
+                @if (!Model.ShowFscpd && !Model.ShowFinancialBenchmarking)
                 {
                     <li>
                         Not applicable
                     </li>
                 }
-                @if (Model.ShowFscp)
+                @if (Model.ShowFscpd)
                 {
             <li>
-                <a href="@Model.FscpURL" rel="noreferrer noopener" target="_blank">
+                <a href="@Model.FscpdURL" rel="noreferrer noopener" target="_blank">
                     Find school and college performance data in England (opens in new tab)
                 </a>
             </li>
