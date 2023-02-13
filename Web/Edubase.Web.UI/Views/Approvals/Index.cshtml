@@ -130,8 +130,8 @@
                             </div>
                         </div>
                         <div class="button-row">
-                            <button type="submit" name="action" class="govuk-button" v-on:click.prevent="confirmRejection">Submit</button>
-                            <button type="submit" name="action" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="pendingRejection = false; reason=''; clearErrors()">Cancel</button>
+                            <button type="submit" id="submit-button" name="action" class="govuk-button" v-on:click.prevent="confirmRejection">Submit</button>
+                            <button type="submit" id="cancel-button" name="action" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="pendingRejection = false; reason=''; clearErrors()">Cancel</button>
                         </div>
                     </div>
                 </form>

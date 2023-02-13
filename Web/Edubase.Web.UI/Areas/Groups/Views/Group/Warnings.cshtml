@@ -27,7 +27,7 @@
             <button type="submit" id="proceed-button" name="action" value="save" class="govuk-button">Proceed</button>
             @if (isEdit)
             {
-                <a href="@Request.Url.AbsoluteUri" class="govuk-button govuk-button--secondary cancel" data-module="govuk-button">Cancel</a>
+                <a href="@Request.Url.AbsoluteUri" id="cancel-button" class="govuk-button govuk-button--secondary cancel" data-module="govuk-button">Cancel</a>
             }
             else
             {
