@@ -61,23 +61,23 @@
 }
 <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">Group type</dt>
-    <dd class="govuk-summary-list__value">@Model.GroupTypeName</dd>
+    <dd class="govuk-summary-list__value" id="group-type-value">@Model.GroupTypeName</dd>
 </div>
 @if (Model.IsUserLoggedOn)
 {
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">Status</dt>
-        <dd class="govuk-summary-list__value">@(Model.GroupStatusName ?? "Not recorded")</dd>
+        <dd class="govuk-summary-list__value" id="status-value">@(Model.GroupStatusName ?? "Not recorded")</dd>
     </div>
 }
 <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">@Model.OpenDateLabel</dt>
-    <dd class="govuk-summary-list__value">@(Model.Group.OpenDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+    <dd class="govuk-summary-list__value" id="group-open-date-value">@(Model.Group.OpenDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
 </div>
 @if (Model.IsUserLoggedOn)
 {
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">Close date</dt>
-        <dd class="govuk-summary-list__value">@(Model.Group.ClosedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        <dd class="govuk-summary-list__value" id="group-close-date-value">@(Model.Group.ClosedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
     </div>
 }

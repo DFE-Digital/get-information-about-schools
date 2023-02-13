@@ -1,4 +1,4 @@
-﻿@using Edubase.Services.Domain
+@using Edubase.Services.Domain
 @model GroupEditorViewModel
 
 @if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.GROUP_WITH_SIMILAR_NAME_FOUND))
@@ -24,10 +24,10 @@
             <p tabindex="0" id="model-desc">There's already a group with a similar name:<br /><strong>@warning.MessageParameters[0]</strong>, <abbr title="Unique Identifier">UID</abbr>: @warning.MessageParameters[1]</p>
         </div>
         <div class="button-row">
-            <button type="submit" name="action" value="save" class="govuk-button">Proceed</button>
+            <button type="submit" id="proceed-button" name="action" value="save" class="govuk-button">Proceed</button>
             @if (isEdit)
             {
-                <a href="@Request.Url.AbsoluteUri" class="govuk-button govuk-button--secondary cancel" data-module="govuk-button">Cancel</a>
+                <a href="@Request.Url.AbsoluteUri" id="cancel-button" class="govuk-button govuk-button--secondary cancel" data-module="govuk-button">Cancel</a>
             }
             else
             {

@@ -9,11 +9,11 @@
     <dd class="govuk-summary-list__value">@Model.GetAddress()</dd>
 </div>
 <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">Local authority</dt>
+    <dt id="local-authority-key" class="govuk-summary-list__key">Local authority</dt>
     <dd class="govuk-summary-list__value">
         @if (Model.Establishment.LocalAuthorityId.HasValue)
         {
-            <a href="@Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})?searchtype=ByLocalAuthority&@EstablishmentSearchViewModel.BIND_ALIAS_LAIDS=@Model.Establishment.LocalAuthorityId">
+            <a id="local-authority-value" href="@Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})?searchtype=ByLocalAuthority&@EstablishmentSearchViewModel.BIND_ALIAS_LAIDS=@Model.Establishment.LocalAuthorityId">
                 @Model.LocalAuthorityName
             </a>
             <text>(@Model.LocalAuthorityCode)</text>
