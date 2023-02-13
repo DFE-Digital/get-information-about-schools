@@ -67,7 +67,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
 
         public string FscpdURL => extService.FscpdURL(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor));
         private bool? showFscpd;
-        public bool ShowFscp
+        public bool ShowFscpd
         {
             get
             {

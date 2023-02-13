@@ -9,7 +9,7 @@ namespace Edubase.Services.ExternalLookup
 
         public ExternalLookupService(IFSCPDService fscpdService, IFBService fbService)
         {
-            _fscpService = fscpService;
+            _fscpdService = fscpdService;
             _fbService = fbService;
         }
 
