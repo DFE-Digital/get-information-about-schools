@@ -36,7 +36,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 var payload = viewModel.MapToDto();
                 var fileName = payload.FileName;
-                //var fileName = FileHelper.GetTempFileName(Path.GetExtension(viewModel.BulkFile.FileName));
                 viewModel.BulkFile.SaveAs(fileName);
 
                 if (new FileInfo(fileName).Length > 1000000)
@@ -45,15 +44,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
                 else
                 {
-                    
-                    //var payload = new BulkUpdateDto()
-                    //{
-                    //    BulkFileType = viewModel.BulkUpdateType.Value,
-                    //    FileName = fileName,
-                    //    OverrideCRProcess = viewModel.CanOverrideCRProcess && viewModel.OverrideCRProcess,
-                    //    EffectiveDate = viewModel.EffectiveDate.ToDateTime().HasValue ? viewModel.EffectiveDate.ToDateTime() : DateTime.UtcNow,
-                    //};
-
                     var state = UriHelper.SerializeToUrlToken(payload);
                     var response = await _establishmentWriteService.BulkUpdateAsync(payload, User);
                     System.IO.File.Delete(fileName);

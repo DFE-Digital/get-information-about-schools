@@ -20,7 +20,7 @@ namespace Edubase.Web.UI.Mappers
                 BulkFileType = viewModel.BulkUpdateType.Value,
                 FileName = fileName,
                 OverrideCRProcess = viewModel.CanOverrideCRProcess && viewModel.OverrideCRProcess,
-                EffectiveDate = viewModel.EffectiveDate.ToDateTime().HasValue ? viewModel.EffectiveDate.ToDateTime() : DateTime.UtcNow,
+                EffectiveDate = viewModel.EffectiveDate.ToDateTime().HasValue ? viewModel.EffectiveDate.ToDateTime() : DateTime.Today
             };
         }
     }
