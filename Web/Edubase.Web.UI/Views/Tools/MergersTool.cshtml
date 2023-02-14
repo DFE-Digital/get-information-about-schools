@@ -304,7 +304,7 @@
             <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--m"/>
             <h3 class="govuk-heading-s">New establishment details</h3>
             <ul class="govuk-list govuk-list--spaced amalg-summary">
-                <li><a v-bind:href="amalgUrl">{{amalgUrn}} - {{ newName }}</a></li>
+                <li><a id="amalgamation-url-link" v-bind:href="amalgUrl">{{amalgUrn}} - {{ newName }}</a></li>
                 <li>Establishment type: {{ selectedEstablishmentType() }}</li>
                 <li>Amalgamation date: {{ displayDate }}</li>
             </ul>
