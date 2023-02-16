@@ -78,17 +78,17 @@ else
         {
             additionalInfo = " (required to save record)";
         }
-<div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FirstName)">
-    @Html.LabelFor(x => x.FirstName, $"First name{additionalInfo}", new { @class = "govuk-label" })
-    @Html.ValidationMessageFor(x => x.FirstName, null, new { @class = "govuk-error-message" })
-    @Html.TextBoxFor(x => x.FirstName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.FirstName)) })
-</div>
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FirstName)">
+            @Html.LabelFor(x => x.FirstName, $"First name{additionalInfo}", new { @class = "govuk-label" })
+            @Html.ValidationMessageFor(x => x.FirstName, null, new { @class = "govuk-error-message" })
+            @Html.TextBoxFor(x => x.FirstName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.FirstName)) })
+        </div>
 
-<div class="govuk-form-group @Html.ValidationCssClassFor(x => x.MiddleName)">
-    @Html.LabelFor(x => x.MiddleName, new { @class = "govuk-label" })
-    @Html.ValidationMessageFor(x => x.MiddleName, null, new { @class = "govuk-error-message" })
-    @Html.TextBoxFor(x => x.MiddleName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.MiddleName)) })
-</div>
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.MiddleName)">
+            @Html.LabelFor(x => x.MiddleName, new { @class = "govuk-label" })
+            @Html.ValidationMessageFor(x => x.MiddleName, null, new { @class = "govuk-error-message" })
+            @Html.TextBoxFor(x => x.MiddleName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.MiddleName)) })
+        </div>
 
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LastName)">
             @Html.LabelFor(x => x.LastName, $"Last name{additionalInfo}", new { @class = "govuk-label" })
@@ -189,11 +189,11 @@ else
             labelText += " (required to save record)";
         }
 
-<div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EmailAddress)">
-    @Html.LabelFor(x => x.EmailAddress, labelText, new { @class = "govuk-label" })
-    @Html.ValidationMessageFor(x => x.EmailAddress, null, new { @class = "govuk-error-message" })
-    @Html.TextBoxFor(x => x.EmailAddress, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.EmailAddress)) })
-</div>
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EmailAddress)">
+            @Html.LabelFor(x => x.EmailAddress, labelText, new { @class = "govuk-label" })
+            @Html.ValidationMessageFor(x => x.EmailAddress, null, new { @class = "govuk-error-message" })
+            @Html.TextBoxFor(x => x.EmailAddress, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.EmailAddress)) })
+        </div>
     }
 }
 
@@ -243,11 +243,12 @@ else
 {
     if (Model.DisplayPolicy.AppointingBodyId)
     {
-<div class="govuk-form-group @Html.ValidationCssClassFor(x => x.AppointingBodyId)">
-    @Html.LabelFor(x => x.AppointingBodyId, "Appointing body (required to save record)", new { @class = "govuk-label" })
-    @Html.ValidationMessageFor(x => x.AppointingBodyId, null, new { @class = "govuk-error-message" })
-    @Html.TextBoxFor(x => x.AppointingBodyId, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.AppointingBodyId)) })
-</div>
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.AppointingBodyId)">
+            @Html.LabelFor(x => x.AppointingBodyId, "Appointing body (required to save record)", new { @class = "govuk-label" })
+            @Html.ValidationMessageFor(x => x.AppointingBodyId, null, new { @class = "govuk-error-message" })
+            @Html.DropDownListFor(x => x.AppointingBodyId, Model.AppointingBodies, "",
+                new { id = "governorAppointingBodyInput", @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.AppointingBodyId)) })
+        </div>
     }
 }
 
