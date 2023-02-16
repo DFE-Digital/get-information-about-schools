@@ -31,13 +31,13 @@ else
     {
         <div class="govuk-form-group">
             <label class="govuk-label" for="governorGidInput">
-                Name
+                Governance role identifier (GID)
                 <a id="GidTooltipLink" href="#help-text-gid" class="help-icon modal-link">
                     <span class="govuk-visually-hidden">Help with the governance role identifier field</span>
                     @helpers.DialogHiddenPrompt()
                 </a>
             </label>
-            <input id="governorGidInput" class="govuk-input" value="@Model.GID" readonly="readonly" disabled="disabled" />
+            <input id="governorGidInput" class="govuk-input" value="@Model.GID" readonly="readonly" disabled="disabled"/>
         </div>
 
         <div class="govuk-grid-column-full helptext-container">
@@ -63,7 +63,7 @@ else
                     @helpers.DialogHiddenPrompt()
                 </a>
             </label>
-            <input id="governorFullNameInput" class="govuk-input" readonly="readonly" disabled="disabled" value="@Model.FullName" />
+            <input id="governorFullNameInput" class="govuk-input" readonly="readonly" disabled="disabled" value="@Model.FullName"/>
         </div>
 
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernorTitleId)">
@@ -78,11 +78,11 @@ else
         {
             additionalInfo = " (required to save record)";
         }
-<div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FirstName)">
-    @Html.LabelFor(x => x.FirstName, $"First name{additionalInfo}", new { @class = "govuk-label" })
-    @Html.ValidationMessageFor(x => x.FirstName, null, new { @class = "govuk-error-message" })
-    @Html.TextBoxFor(x => x.FirstName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.FirstName)) })
-</div>
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FirstName)">
+            @Html.LabelFor(x => x.FirstName, $"First name{additionalInfo}", new { @class = "govuk-label" })
+            @Html.ValidationMessageFor(x => x.FirstName, null, new { @class = "govuk-error-message" })
+            @Html.TextBoxFor(x => x.FirstName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.FirstName)) })
+        </div>
 
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.MiddleName)">
             @Html.LabelFor(x => x.MiddleName, new { @class = "govuk-label" })
@@ -190,17 +190,17 @@ else
             labelText += " (required to save record)";
         }
 
-<div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EmailAddress)">
-    @Html.LabelFor(x => x.EmailAddress, labelText, new { @class = "govuk-label" })
-    @Html.ValidationMessageFor(x => x.EmailAddress, null, new { @class = "govuk-error-message" })
-    @Html.TextBoxFor(x => x.EmailAddress, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.EmailAddress)) })
-</div>
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EmailAddress)">
+            @Html.LabelFor(x => x.EmailAddress, labelText, new { @class = "govuk-label" })
+            @Html.ValidationMessageFor(x => x.EmailAddress, null, new { @class = "govuk-error-message" })
+            @Html.TextBoxFor(x => x.EmailAddress, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.EmailAddress)) })
+        </div>
     }
 }
 
 @helper DisplayAppointmentDates()
 {
-    bool isGovernorRole = false;
+    var isGovernorRole = false;
     string dateAppointmentEndsTooltipMessage = null;
     if (EnumSets.eGovernanceProfessionalRoles.Contains(Model.GovernorRole))
     {
@@ -223,7 +223,7 @@ else
         var detail = disableStartDate ? @"(based on current governor's end date)" : $@"{StartDateSaveRecord}";
         var title = $"Date of appointment {detail}";
         @Html.EditorFor(x => x.AppointmentStartDate,
-        new { title, @readonly = disableStartDate, ClassPrefix = "start-date", editorPrefix })
+            new { title, @readonly = disableStartDate, ClassPrefix = "start-date", editorPrefix })
     }
 
     if (Model.DisplayPolicy.AppointmentEndDate)
@@ -244,11 +244,11 @@ else
 {
     if (Model.DisplayPolicy.AppointingBodyId)
     {
-<div class="govuk-form-group @Html.ValidationCssClassFor(x => x.AppointingBodyId)">
-    @Html.LabelFor(x => x.AppointingBodyId, "Appointing body (required to save record)", new { @class = "govuk-label" })
-    @Html.ValidationMessageFor(x => x.AppointingBodyId, null, new { @class = "govuk-error-message" })
-    @Html.TextBoxFor(x => x.AppointingBodyId, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.AppointingBodyId)) })
-</div>
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.AppointingBodyId)">
+            @Html.LabelFor(x => x.AppointingBodyId, "Appointing body (required to save record)", new { @class = "govuk-label" })
+            @Html.ValidationMessageFor(x => x.AppointingBodyId, null, new { @class = "govuk-error-message" })
+            @Html.TextBoxFor(x => x.AppointingBodyId, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.AppointingBodyId)) })
+        </div>
     }
 }
 
