@@ -1,7 +1,5 @@
-@using Edubase.Services.Enums;
+@using Edubase.Services.Enums
 @using Edubase.Web.UI.Models.Grid
-@using Edubase.Web.UI.Helpers
-
 @model GovernorsGridViewModel
 @{
     Layout = Model.Layout;
@@ -25,8 +23,8 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             @(Model.GroupUId.HasValue
-                ? Html.ActionLink("Back", "Details", "Group", null, null, "governance", new {area = "Groups", id = Model.GroupUId}, new { id = "edit-back-button", @class = "govuk-back-link gias-back-link--button"})
-                : Html.ActionLink("Back", "Details", "Establishment", null, null, "school-governance", new {area = "Establishments", id = Model.EstablishmentUrn}, new { id = "edit-back-button", @class = "govuk-back-link gias-back-link--button cancel"}))
+                ? Html.ActionLink("Back", "Details", "Group", null, null, "governance", new { area = "Groups", id = Model.GroupUId }, new { id = "edit-back-button", @class = "govuk-back-link gias-back-link--button" })
+                : Html.ActionLink("Back", "Details", "Establishment", null, null, "school-governance", new { area = "Establishments", id = Model.EstablishmentUrn }, new { id = "edit-back-button", @class = "govuk-back-link gias-back-link--button cancel" }))
         </div>
     </div>
     <div class="govuk-grid-row">
@@ -146,7 +144,7 @@ else
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
-                @Html.RouteLink("Edit delegated authority", "GroupEditDelegation", new { GroupUId = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
+                @Html.RouteLink("Edit delegated authority", "GroupEditDelegation", new { Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
             </div>
         </div>
     }
@@ -170,7 +168,7 @@ else
     <p class="govuk-body-s">@(Model.CorporateContact ?? "Not recorded")</p>
     if (Model.EditMode)
     {
-        @Html.RouteLink("Edit corporate contact", "GroupEditCorporateContact", new { GroupUId = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
+        @Html.RouteLink("Edit corporate contact", "GroupEditCorporateContact", new { Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
     }
 }
 
@@ -219,9 +217,12 @@ else
                 // Render lists
                 foreach (var grid in Model.Grids)
                 {
-                    <text>
-                        @ShowGovernorEditor(grid)
-                    </text>
+                    if (grid.Rows.Any())
+                    {
+                        <text>
+                            @ShowGovernorEditor(grid)
+                        </text>
+                    }
                 }
                 if (Model.HistoricGrids.Any(h => h.Rows.Any()))
                 {
@@ -293,35 +294,35 @@ else
                                 <table class="govuk-table govuk-!-font-size-16 gias-table list-table sortable-table historical governors">
                                     <caption class="govuk-visually-hidden">Historical governance</caption>
                                     <thead class="govuk-table__head">
-                                        <tr class="govuk-table__row">
-                                            <th scope="col" class="govuk-table__header">
-                                                <a href="#" class="js-sort-header" data-sort-key="name" data-sort-type="sortText">Name</a>
-                                            </th>
-                                            <th scope="col" class="govuk-table__header">
-                                                <a href="#" class="js-sort-header" data-sort-key="role" data-sort-type="sortText">Role</a>
-                                            </th>
-                                            <th scope="col" class="govuk-table__header">
-                                                <a href="#" class="js-sort-header" data-sort-key="appointed" data-sort-type="sortText">Appointed by</a>
-                                            </th>
-                                            <th scope="col" class="govuk-table__header">
-                                                <a href="#" class="js-sort-header" data-sort-key="from" data-sort-type="sortDate">From</a>
-                                            </th>
-                                            <th scope="col" class="govuk-table__header">
-                                                <a href="#" class="js-sort-header" data-sort-key="to" data-sort-type="sortDate">To</a>
-                                            </th>
-                                        </tr>
+                                    <tr class="govuk-table__row">
+                                        <th scope="col" class="govuk-table__header">
+                                            <a href="#" class="js-sort-header" data-sort-key="name" data-sort-type="sortText">Name</a>
+                                        </th>
+                                        <th scope="col" class="govuk-table__header">
+                                            <a href="#" class="js-sort-header" data-sort-key="role" data-sort-type="sortText">Role</a>
+                                        </th>
+                                        <th scope="col" class="govuk-table__header">
+                                            <a href="#" class="js-sort-header" data-sort-key="appointed" data-sort-type="sortText">Appointed by</a>
+                                        </th>
+                                        <th scope="col" class="govuk-table__header">
+                                            <a href="#" class="js-sort-header" data-sort-key="from" data-sort-type="sortDate">From</a>
+                                        </th>
+                                        <th scope="col" class="govuk-table__header">
+                                            <a href="#" class="js-sort-header" data-sort-key="to" data-sort-type="sortDate">To</a>
+                                        </th>
+                                    </tr>
                                     </thead>
                                     <tbody class="govuk-table__body">
-                                        @foreach (var governor in Model.HistoricGovernors)
-                                        {
-                                            <tr class="govuk-table__row">
-                                                <td data-label="Name" class="govuk-table__cell">@governor.FullName</td>
-                                                <td data-label="Role" class="govuk-table__cell">@governor.RoleName</td>
-                                                <td data-label="Appointed by" class="govuk-table__cell">@governor.AppointingBody</td>
-                                                <td data-label="From" class="govuk-table__cell">@(governor.AppointmentStartDate.ToDateTime()?.ToString("d MMMM yyyy"))</td>
-                                                <td data-label="To" class="govuk-table__cell">@(governor.AppointmentEndDate.ToDateTime()?.ToString("d MMMM yyyy"))</td>
-                                            </tr>
-                                        }
+                                    @foreach (var governor in Model.HistoricGovernors)
+                                    {
+                                        <tr class="govuk-table__row">
+                                            <td data-label="Name" class="govuk-table__cell">@governor.FullName</td>
+                                            <td data-label="Role" class="govuk-table__cell">@governor.RoleName</td>
+                                            <td data-label="Appointed by" class="govuk-table__cell">@governor.AppointingBody</td>
+                                            <td data-label="From" class="govuk-table__cell">@(governor.AppointmentStartDate.ToDateTime()?.ToString("d MMMM yyyy"))</td>
+                                            <td data-label="To" class="govuk-table__cell">@(governor.AppointmentEndDate.ToDateTime()?.ToString("d MMMM yyyy"))</td>
+                                        </tr>
+                                    }
                                     </tbody>
                                 </table>
                             </div>
@@ -338,27 +339,27 @@ else
     <div class="governor-list">
         @if (!historic)
         {
-            <h2 class="govuk-heading-m" id="@StringUtils.ElementIdFormat(grid.Title+"-heading")">@grid.Title</h2>
+            <h2 class="govuk-heading-m" id="@StringUtils.ElementIdFormat(grid.Title + "-heading")">@grid.Title</h2>
         }
         @if (grid.Rows.Any())
         {
             foreach (var row in grid.Rows)
             {
                 <div id="gov-id-@row.Model.Id" class="governor-edit-panel govuk-!-margin-bottom-9 @Html.DuplicateCssClassFor(row.Model.Id)">
-                    <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="@StringUtils.ElementIdFormat(grid.Title+"-name")">@row.Cells[0].Text</h3>
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="@StringUtils.ElementIdFormat(grid.Title + "-name")">@row.Cells[0].Text</h3>
                     <dl class="govuk-summary-list govuk-!-margin-bottom-1">
                         @if (historic)
                         {
                             <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key" id="@StringUtils.ElementIdFormat(@grid.Title+"-key")">Role</dt>
-                                <dd class="govuk-summary-list__value" id="@StringUtils.ElementIdFormat(@grid.Title+"-value")">@grid.RoleName</dd>
+                                <dt class="govuk-summary-list__key" id="@StringUtils.ElementIdFormat(grid.Title + "-key")">Role</dt>
+                                <dd class="govuk-summary-list__value" id="@StringUtils.ElementIdFormat(grid.Title + "-value")">@grid.RoleName</dd>
                             </div>
                         }
                         @foreach (var cell in row.Cells.Skip(1))
                         {
                             <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key" id="@StringUtils.ElementIdFormat(@grid.Title+"-"+@cell.Parent.Text+"-key")">@cell.Parent.Text</dt>
-                                <dd class="govuk-summary-list__value" id="@StringUtils.ElementIdFormat(@grid.Title+"-"+@cell.Parent.Text+"-value")">@(cell.Text ?? "Not recorded")</dd>
+                                <dt class="govuk-summary-list__key" id="@StringUtils.ElementIdFormat(grid.Title + "-" + cell.Parent.Text + "-key")">@cell.Parent.Text</dt>
+                                <dd class="govuk-summary-list__value" id="@StringUtils.ElementIdFormat(grid.Title + "-" + cell.Parent.Text + "-value")">@(cell.Text ?? "Not recorded")</dd>
                             </div>
                         }
                     </dl>
@@ -384,7 +385,9 @@ else
 
                                     @if (Model.GovernorPermissions.Remove)
                                     {
-                                        if (EnumSets.SingularGovernorRoles.Contains(row.Model.RoleId.Value))
+                                        if (row.Model.RoleId != null
+                                            && EnumSets.SingularGovernorRoles.Contains(row.Model.RoleId.Value)
+                                            && !EnumSets.GovernanceProfessionalRoles.Contains(row.Model.RoleId.Value))
                                         {
                                             if (Model.EstablishmentUrn.HasValue && (row.Model.RoleId.Value == (int)eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody || row.Model.RoleId.Value == (int)eLookupGovernorRole.ChairOfLocalGoverningBody))
                                             {
@@ -436,7 +439,7 @@ else
                                                         <div class="govuk-form-group">
                                                             <p>Confirm you wish to remove this person</p>
                                                             <div class="button-row">
-                                                                <input type="submit" name="action" value="Remove" class="govuk-button" />
+                                                                <input type="submit" name="action" value="Remove" class="govuk-button"/>
 
                                                                 @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
                                                             </div>
@@ -450,7 +453,7 @@ else
                                             <div class="remove-governor gias-panel-indent">
                                                 <p>Confirm you wish to remove this person</p>
                                                 <div class="button-row">
-                                                    <input id="remove-shared-governor" type="submit" name="action" value="Remove" class="govuk-button" />
+                                                    <input id="remove-shared-governor" type="submit" name="action" value="Remove" class="govuk-button"/>
 
                                                     @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
                                                 </div>
