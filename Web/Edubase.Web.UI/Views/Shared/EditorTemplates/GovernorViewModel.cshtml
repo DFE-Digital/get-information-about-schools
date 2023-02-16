@@ -87,8 +87,7 @@ else
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.MiddleName)">
             @Html.LabelFor(x => x.MiddleName, new { @class = "govuk-label" })
             @Html.ValidationMessageFor(x => x.MiddleName, null, new { @class = "govuk-error-message" })
-            @Html.TextBoxFor(x => x.MiddleName,
-                new { id = "governorMiddleNameInput", @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.MiddleName)) })
+            @Html.TextBoxFor(x => x.MiddleName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.MiddleName)) })
         </div>
 
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LastName)">
@@ -247,7 +246,8 @@ else
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.AppointingBodyId)">
             @Html.LabelFor(x => x.AppointingBodyId, "Appointing body (required to save record)", new { @class = "govuk-label" })
             @Html.ValidationMessageFor(x => x.AppointingBodyId, null, new { @class = "govuk-error-message" })
-            @Html.TextBoxFor(x => x.AppointingBodyId, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.AppointingBodyId)) })
+            @Html.DropDownListFor(x => x.AppointingBodyId, Model.AppointingBodies, "",
+                new { id = "governorAppointingBodyInput", @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.AppointingBodyId)) })
         </div>
     }
 }

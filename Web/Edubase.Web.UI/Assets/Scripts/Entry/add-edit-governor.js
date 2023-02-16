@@ -89,9 +89,9 @@ if ($("#remove-shared-governor").length > 0) {
 }
 
 const titleInput = document.getElementById('governorTitleInput');
-const firstNameInput = document.getElementById('governorFirstNameInput');
-const middleNameInput = document.getElementById('governorMiddleNameInput');
-const lastNameInput = document.getElementById('governorLastNameInput');
+const firstNameInput = document.getElementById('FirstName');
+const middleNameInput = document.getElementById('MiddleName');
+const lastNameInput = document.getElementById('LastName');
 const fullNameDiv = document.getElementById('governorFullNameDiv');
 
 if (titleInput != null) {
