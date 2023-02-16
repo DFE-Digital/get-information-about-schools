@@ -84,12 +84,11 @@ else
     @Html.TextBoxFor(x => x.FirstName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.FirstName)) })
 </div>
 
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.MiddleName)">
-            @Html.LabelFor(x => x.MiddleName, new { @class = "govuk-label" })
-            @Html.ValidationMessageFor(x => x.MiddleName, null, new { @class = "govuk-error-message" })
-            @Html.TextBoxFor(x => x.MiddleName,
-                new { id = "governorMiddleNameInput", @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.MiddleName)) })
-        </div>
+<div class="govuk-form-group @Html.ValidationCssClassFor(x => x.MiddleName)">
+    @Html.LabelFor(x => x.MiddleName, new { @class = "govuk-label" })
+    @Html.ValidationMessageFor(x => x.MiddleName, null, new { @class = "govuk-error-message" })
+    @Html.TextBoxFor(x => x.MiddleName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.MiddleName)) })
+</div>
 
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LastName)">
             @Html.LabelFor(x => x.LastName, $"Last name{additionalInfo}", new { @class = "govuk-label" })
