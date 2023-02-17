@@ -422,24 +422,24 @@ else
                                                 <legend class="govuk-visually-hidden" Do you wish to retire or remove this person?></legend>
 
                                                 <div class="govuk-radios--conditional" data-module="govuk-radios">
-                                                    @FormHelpers.GiasRadio("1", "removal-mode", "This person has completed their term", null, new { data_aria_controls = "retire-governor", @checked = "checked" })
+                                                    @FormHelpers.GiasRadio("1", "removal-mode", "This person has completed their term", null, new { data_aria_controls = "retire-governor-radio", @checked = "checked" })
                                                     <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="retire-governor-radio">
                                                         <div class="govuk-form-group">
                                                             <p>Provide a date term ends to retire this person</p>
                                                             @Html.EditorFor(x => x.RemovalAppointmentEndDate, new { title = "Date term ends", fieldsetClassName = "edit-date-fieldset" })
                                                             <div class="button-row">
-                                                                <button id="retire-governor" type="submit" name="action" value="Save" class="govuk-button">Save date and retire person</button>
+                                                                <button id="confirm-retire-governor-button" type="submit" name="action" value="Save" class="govuk-button">Save date and retire person</button>
 
                                                                 @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    @FormHelpers.GiasRadio("2", "removal-mode", "Remove person", null, new { data_aria_controls = "remove-governor" })
+                                                    @FormHelpers.GiasRadio("2", "removal-mode", "Remove person", null, new { data_aria_controls = "remove-governor-radio" })
                                                     <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="remove-governor-radio">
                                                         <div class="govuk-form-group">
                                                             <p>Confirm you wish to remove this person</p>
                                                             <div class="button-row">
-                                                                <input type="submit" name="action" value="Remove" class="govuk-button" data-animation="confirm-governor-removal-button"/>
+                                                                <input type="submit" name="action" value="Remove" class="govuk-button" id="confirm-remove-governor-button"/>
 
                                                                 @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
                                                             </div>
@@ -453,7 +453,7 @@ else
                                             <div class="remove-governor gias-panel-indent">
                                                 <p>Confirm you wish to remove this person</p>
                                                 <div class="button-row">
-                                                    <input id="remove-shared-governor" type="submit" name="action" value="Remove" class="govuk-button"/>
+                                                    <input id="confirm-remove-shared-governor-button" type="submit" name="action" value="Remove" class="govuk-button"/>
 
                                                     @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
                                                 </div>
