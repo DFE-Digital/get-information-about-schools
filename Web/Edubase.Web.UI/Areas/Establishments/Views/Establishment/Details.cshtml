@@ -122,7 +122,7 @@
         {
             if (Model.Establishment.CloseDate != null)
             {
-                <div class="gias-establishment-closed-message">
+                <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
                     <p>
                         This establishment closed on @(Model.Establishment.CloseDate?.ToString("d MMMM yyyy")).
                         View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
@@ -131,7 +131,7 @@
             }
             else
             {
-                <div class="gias-establishment-closed-message">
+                <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
                     <p>
                         This establishment is closed.
                         View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>

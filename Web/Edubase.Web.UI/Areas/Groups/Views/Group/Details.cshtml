@@ -104,7 +104,7 @@
         {
             if (Model.IsClosedInError)
             {
-                <div class="gias-establishment-closed-message">
+                <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
                     <p>
                         This @Model.GroupTypeNameForClosureLabel was created in error and subsequently closed on @(Model.CloseDate?.ToString("d MMMM yyyy")).
                     </p>
@@ -112,7 +112,7 @@
             }
             else
             {
-                <div class="gias-establishment-closed-message">
+                <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
                     <p>
                         This @Model.GroupTypeNameForClosureLabel closed on @(Model.CloseDate?.ToString("d MMMM yyyy")).
                     </p>
