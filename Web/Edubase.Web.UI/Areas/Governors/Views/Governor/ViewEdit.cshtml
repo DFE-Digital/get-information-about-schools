@@ -294,35 +294,35 @@ else
                                 <table class="govuk-table govuk-!-font-size-16 gias-table list-table sortable-table historical governors">
                                     <caption class="govuk-visually-hidden">Historical governance</caption>
                                     <thead class="govuk-table__head">
-                                    <tr class="govuk-table__row">
-                                        <th scope="col" class="govuk-table__header">
-                                            <a href="#" class="js-sort-header" data-sort-key="name" data-sort-type="sortText">Name</a>
-                                        </th>
-                                        <th scope="col" class="govuk-table__header">
-                                            <a href="#" class="js-sort-header" data-sort-key="role" data-sort-type="sortText">Role</a>
-                                        </th>
-                                        <th scope="col" class="govuk-table__header">
-                                            <a href="#" class="js-sort-header" data-sort-key="appointed" data-sort-type="sortText">Appointed by</a>
-                                        </th>
-                                        <th scope="col" class="govuk-table__header">
-                                            <a href="#" class="js-sort-header" data-sort-key="from" data-sort-type="sortDate">From</a>
-                                        </th>
-                                        <th scope="col" class="govuk-table__header">
-                                            <a href="#" class="js-sort-header" data-sort-key="to" data-sort-type="sortDate">To</a>
-                                        </th>
-                                    </tr>
+                                        <tr class="govuk-table__row">
+                                            <th scope="col" class="govuk-table__header">
+                                                <a href="#" class="js-sort-header" data-sort-key="name" data-sort-type="sortText">Name</a>
+                                            </th>
+                                            <th scope="col" class="govuk-table__header">
+                                                <a href="#" class="js-sort-header" data-sort-key="gid" data-sort-type="sortText">Governance role identifier (GID)</a>
+                                            </th>
+                                            <th scope="col" class="govuk-table__header">
+                                                <a href="#" class="js-sort-header" data-sort-key="role" data-sort-type="sortText">Role</a>
+                                            </th>
+                                            <th scope="col" class="govuk-table__header">
+                                                <a href="#" class="js-sort-header" data-sort-key="from" data-sort-type="sortDate">From</a>
+                                            </th>
+                                            <th scope="col" class="govuk-table__header">
+                                                <a href="#" class="js-sort-header" data-sort-key="to" data-sort-type="sortDate">To</a>
+                                            </th>
+                                        </tr>
                                     </thead>
                                     <tbody class="govuk-table__body">
-                                    @foreach (var governor in Model.HistoricGovernors)
-                                    {
-                                        <tr class="govuk-table__row">
-                                            <td data-label="Name" class="govuk-table__cell">@governor.FullName</td>
-                                            <td data-label="Role" class="govuk-table__cell">@governor.RoleName</td>
-                                            <td data-label="Appointed by" class="govuk-table__cell">@governor.AppointingBody</td>
-                                            <td data-label="From" class="govuk-table__cell">@(governor.AppointmentStartDate.ToDateTime()?.ToString("d MMMM yyyy"))</td>
-                                            <td data-label="To" class="govuk-table__cell">@(governor.AppointmentEndDate.ToDateTime()?.ToString("d MMMM yyyy"))</td>
-                                        </tr>
-                                    }
+                                        @foreach (var governor in Model.HistoricGovernors)
+                                        {
+                                            <tr class="govuk-table__row">
+                                                <td data-label="Name" class="govuk-table__cell">@governor.FullName</td>
+                                                <td data-label="GID" class="govuk-table__cell">@governor.GID</td>
+                                                <td data-label="Appointed by" class="govuk-table__cell">@governor.RoleName</td>
+                                                <td data-label="From" class="govuk-table__cell">@(governor.AppointmentStartDate.ToDateTime()?.ToString("d MMMM yyyy"))</td>
+                                                <td data-label="To" class="govuk-table__cell">@(governor.AppointmentEndDate.ToDateTime()?.ToString("d MMMM yyyy"))</td>
+                                            </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>
