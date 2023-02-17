@@ -78,8 +78,8 @@
         </div>
         <div class="govuk-grid-column-full">
             <div class="button-row">
-                <button type="submit" name="action" value="" class="govuk-button" v-on:click.prevent="checkMergeType">Continue</button>
-                <button type="submit" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
+                <button type="submit" id="continue-button" name="action" value="" class="govuk-button" v-on:click.prevent="checkMergeType">Continue</button>
+                <button type="submit" id="cancel-button" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
             </div>
         </div>
 
@@ -158,8 +158,8 @@
     </div>
     <div class="govuk-grid-column-full">
         <div class="button-row">
-            <button type="submit" name="action" value="" class="govuk-button" v-on:click.prevent="checkMergeType">Continue</button>
-            <button type="submit" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
+            <button type="submit" id="continue-button" name="action" value="" class="govuk-button" v-on:click.prevent="checkMergeType">Continue</button>
+            <button type="submit" id="cancel-button" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
         </div>
     </div>
 </div>
@@ -171,7 +171,7 @@
             <div class="button-row">
                 <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false; clearErrors();"> &laquo; Go back</a>
                 <button type="submit" name="action" value="" class="govuk-button" v-on:click.prevent="validateAmalgamationFields">Continue</button>
-                <button type="submit" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
+                <button type="submit" id="cancel-button" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
             </div>
         </div>
         <div class="govuk-grid-column-two-thirds">
@@ -208,8 +208,8 @@
         <div class="govuk-grid-column-full">
             <div class="button-row govuk-!-padding-top-8">
                 <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false; clearErrors();"> &laquo; Go back</a>
-                <button type="submit" name="action" value="" class="govuk-button" v-on:click.prevent="validateAmalgamationFields">Continue</button>
-                <button type="submit" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
+                <button type="submit" id="continue-button" name="action" value="" class="govuk-button" v-on:click.prevent="validateAmalgamationFields">Continue</button>
+                <button type="submit" id="cancel-button" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
             </div>
         </div>
     </div>
@@ -218,7 +218,7 @@
             <div class="button-row">
                 <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="validMergeUrns=false; clearErrors();">&laquo; Go back</a>
                 <button type="submit" name="action" value="" class="govuk-button" v-on:click.prevent="processAmalgamation">Process</button>
-                <button type="submit" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
+                <button type="submit" name="action" id="cancel-button" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
             </div>
         </div>
         <div class="govuk-grid-column-two-thirds">
@@ -283,9 +283,9 @@
         </div>
         <div class="govuk-grid-column-full">
             <div class="button-row govuk-!-padding-top-6">
-                <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="validMergeUrns=false; clearErrors();">&laquo; Go back</a>
-                <button type="submit" name="action" value="" class="govuk-button" v-on:click.prevent="processAmalgamation">Process</button>
-                <button type="submit" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
+                <a href="#" id="go-back-button" class="govuk-button govuk-button--secondary" v-on:click.prevent="validMergeUrns=false; clearErrors();">&laquo; Go back</a>
+                <button type="submit" id="process-button" name="action" value="" class="govuk-button" v-on:click.prevent="processAmalgamation">Process</button>
+                <button type="submit" id="cancel-button" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
             </div>
         </div>
     </div>
@@ -304,7 +304,7 @@
             <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--m"/>
             <h3 class="govuk-heading-s">New establishment details</h3>
             <ul class="govuk-list govuk-list--spaced amalg-summary">
-                <li><a v-bind:href="amalgUrl">{{amalgUrn}} - {{ newName }}</a></li>
+                <li><a id="amalgamation-url-link" v-bind:href="amalgUrl">{{amalgUrn}} - {{ newName }}</a></li>
                 <li>Establishment type: {{ selectedEstablishmentType() }}</li>
                 <li>Amalgamation date: {{ displayDate }}</li>
             </ul>
@@ -364,9 +364,9 @@
         </div>
         <div class="govuk-grid-column-full">
             <div class="button-row govuk-!-padding-top-8">
-                <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false; clearErrors();"> &laquo; Go back</a>
-                <button type="submit" name="action" value="" class="govuk-button" v-on:click.prevent="validateMergeFields">Continue</button>
-                <button type="submit" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
+                <a href="#" class="govuk-button govuk-button--secondary" id="go-back-button" v-on:click.prevent="mergerType='', mergerTypeConfirmed=false; clearErrors();"> &laquo; Go back</a>
+                <button type="submit" name="action" value="" id="continue-button" class="govuk-button" v-on:click.prevent="validateMergeFields">Continue</button>
+                <button type="submit" name="action" id="cancel-button" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
             </div>
         </div>
     </div>
@@ -417,9 +417,9 @@
         </div>
         <div class="govuk-grid-column-full">
             <div class="button-row">
-                <a href="#" class="govuk-button govuk-button--secondary" v-on:click.prevent="validMergeUrns=false; clearErrors();">&laquo; Go back</a>
-                <button type="submit" name="action" value="" class="govuk-button" v-on:click.prevent="processMerger">Process</button>
-                <button type="submit" name="action" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
+                <a href="#" class="govuk-button govuk-button--secondary" id="go-back-button" v-on:click.prevent="validMergeUrns=false; clearErrors();">&laquo; Go back</a>
+                <button type="submit" name="action" id="process-button" value="" class="govuk-button" v-on:click.prevent="processMerger">Process</button>
+                <button type="submit" name="action" id="cancel-button" value="" class="govuk-button govuk-button--secondary cancel" v-on:click.prevent="restart">Cancel</button>
             </div>
         </div>
 

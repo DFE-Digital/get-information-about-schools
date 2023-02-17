@@ -290,7 +290,7 @@
     @if (Model.EditPolicy.LocalAuthorityId)
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
-            <label for="LocalAuthorityId" class="govuk-label">Local authority</label>
+            <label for="LocalAuthorityId" id="local-authority" class="govuk-label">Local authority</label>
             @Html.ValidationMessageFor(x => x.LocalAuthorityId, null, new {@class = "govuk-error-message"})
             @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new {@class = "govuk-select"})
         </div>

@@ -32,8 +32,8 @@
             @foreach (var l in Model.LinkedEstablishments)
             {
                 <tr class="govuk-table__row">
-                    <td data-label="URN" class="govuk-table__cell">@Html.ActionLink(l.Urn.ToString(), "Details", new {id = l.Urn})</td>
-                    <td data-label="Establishment name" class="govuk-table__cell">@Html.ActionLink((l.EstablishmentName ?? "-"), "Details", new {id = l.Urn})</td>
+                    <td data-label="URN" id="@l.Urn"  class="govuk-table__cell">@Html.ActionLink(l.Urn.ToString(), "Details", new {id = l.Urn})</td>
+                    <td data-label="Establishment name" id="@StringUtils.ElementIdFormat(Html.Field(l.EstablishmentName))" class="govuk-table__cell">@Html.ActionLink((l.EstablishmentName ?? "-"), "Details", new {id = l.Urn})</td>
                     <td data-label="Type of link" class="govuk-table__cell">@l.LinkTypeName</td>
                     <td data-label="Date linked" class="govuk-table__cell">@(l.LinkDate?.ToString("d MMMM yyyy") ?? "None recorded")</td>
                 </tr>

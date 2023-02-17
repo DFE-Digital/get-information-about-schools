@@ -380,6 +380,7 @@
     <Compile Include="Helpers\QueryValidator.cs" />
     <Compile Include="Helpers\RouteDto.cs" />
     <Compile Include="Helpers\StringUtils.cs" />
+    <Compile Include="Mappers\BulkUpdateViewModelToDtoMapper.cs" />
     <Compile Include="Models\Faq\FaqGroupsViewModel.cs" />
     <Compile Include="Models\Faq\FaqGroupViewModel.cs" />
     <Compile Include="Models\Guidance\GuidanceLaNameCodeViewModel.cs" />
