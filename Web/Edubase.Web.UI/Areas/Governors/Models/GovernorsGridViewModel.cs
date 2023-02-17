@@ -239,7 +239,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 grid.AddHeaderCell("Name", displayPolicy.FullName, "name", "sortText")
                     .AddHeaderCell("Shared with", role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody),
                         "shared", "sortText")
-                    .AddHeaderCell("GID", displayPolicy.Id, "gid")
+                    .AddHeaderCell("Governance role identifier (GID)", displayPolicy.Id, "gid")
                     .AddHeaderCell("Appointed by", displayPolicy.AppointingBodyId, "appointed", "sortText")
                     .AddHeaderCell("From", displayPolicy.AppointmentStartDate, "fromDate", "sortDate")
                     .AddHeaderCell(role == GR.Member ? "Date stepped down" : "To", includeEndDate, "toDate", "sortDate")
