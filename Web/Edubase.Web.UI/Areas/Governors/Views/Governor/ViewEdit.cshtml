@@ -395,12 +395,12 @@ else
                                             }
                                             else
                                             {
-                                                @Html.RouteLink("Replace person", Model.EstablishmentUrn.HasValue ? "EstabReplaceGovernor" : "GroupReplaceGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary" })
+                                                @Html.RouteLink("Replace person", Model.EstablishmentUrn.HasValue ? "EstabReplaceGovernor" : "GroupReplaceGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "govuk-button govuk-button-secondary" })
                                             }
                                         }
                                         else
                                         {
-                                            @Html.RouteLink("Remove person", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", null, null, "gid-" + row.Model.Id, new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, removalGid = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary", id = "remove-governor-button" })
+                                            @Html.RouteLink("Remove person", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", null, null, "gid-" + row.Model.Id, new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, removalGid = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary", id = $"remove-governor-{row.Model.Id}-button" })
                                         }
                                     }
                                 </div>
