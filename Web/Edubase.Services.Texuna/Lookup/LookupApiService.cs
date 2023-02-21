@@ -14,6 +14,7 @@ namespace Edubase.Services.Texuna.Lookup
         private readonly IHttpClientWrapper _httpClient;
         private readonly ISecurityService _securityService;
 
+        //Mapping EstablishmentType.id to EstablishmentTypeGroup.code
         private readonly Dictionary<int, List<int>> establishmentTypeToGroup = new Dictionary<int, List<int>>
         {
             {39, new List<int> {2}},
@@ -60,7 +61,8 @@ namespace Edubase.Services.Texuna.Lookup
             {34, new List<int> {3}},
             {2,  new List<int> {7}},
             {3,  new List<int> {7}},
-            {45,  new List<int> {11}}
+            {45,  new List<int> {11}},
+            {46, new List<int> {10}}
         };
 
         public LookupApiService(IHttpClientWrapper httpClient, ISecurityService securityService)
