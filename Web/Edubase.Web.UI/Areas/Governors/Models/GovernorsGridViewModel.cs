@@ -159,9 +159,12 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
                     if (EnumSets.eGovernanceProfessionalRoles.Contains(role))
                     {
+                        var displayAppointingBody = !GovernorPermissions.Update;
                         grid.AddRow(governor, endDate)
                             .AddCell(governor.GetFullName(), displayPolicy.FullName)
                             .AddCell(governor.Id, displayPolicy.Id)
+                            .AddCell(AppointingBodies.FirstOrDefault(x => x.Id == governor.AppointingBodyId)?.Name,
+                                displayAppointingBody)
                             .AddCell(governor.DOB?.ToString("d MMMM yyyy"), displayPolicy.DOB)
                             .AddCell(governor.PostCode, displayPolicy.PostCode)
                             .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber)
@@ -225,11 +228,13 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         {
             if (EnumSets.eGovernanceProfessionalRoles.Contains(role))
             {
+                var displayAppointingBody = !GovernorPermissions.Update;
                 grid.AddHeaderCell("Name", displayPolicy.FullName, "name", "sortText")
                     .AddHeaderCell("Governance role identifier (GID)", displayPolicy.Id, "gid")
+                    .AddHeaderCell("Appointed By", displayAppointingBody, "sortText")
                     .AddHeaderCell("Date of birth", displayPolicy.DOB)
                     .AddHeaderCell("Home postcode", displayPolicy.PostCode)
-                    .AddHeaderCell("Telephone", displayPolicy.TelephoneNumber)
+                    .AddHeaderCell("Telephone Number", displayPolicy.TelephoneNumber)
                     .AddHeaderCell("Email address", displayPolicy.EmailAddress)
                     .AddHeaderCell("Date of appointment", displayPolicy.AppointmentStartDate, "fromDate", "sortDate")
                     .AddHeaderCell("Date appointment ended", includeEndDate, "toDate", "sortDate");
