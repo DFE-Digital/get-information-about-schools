@@ -299,7 +299,7 @@ else
                                                 <a href="#" class="js-sort-header" data-sort-key="name" data-sort-type="sortText">Name</a>
                                             </th>
                                             <th scope="col" class="govuk-table__header">
-                                                <a href="#" class="js-sort-header" data-sort-key="gid" data-sort-type="sortText">Governance role identifier (GID)</a>
+                                                <a href="#" class="js-sort-header" data-sort-key="gid" data-sort-type="sortText" id="gid-header">Governance role identifier (GID)</a>
                                             </th>
                                             <th scope="col" class="govuk-table__header">
                                                 <a href="#" class="js-sort-header" data-sort-key="role" data-sort-type="sortText">Role</a>
@@ -422,8 +422,8 @@ else
                                                 <legend class="govuk-visually-hidden" Do you wish to retire or remove this person?></legend>
 
                                                 <div class="govuk-radios--conditional" data-module="govuk-radios">
-                                                    @FormHelpers.GiasRadio("1", "removal-mode", "This person has completed their term", null, new { data_aria_controls = "retire-governor-radio", @checked = "checked" })
-                                                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="retire-governor-radio">
+                                                    @FormHelpers.GiasRadio("1", "removal-mode", "This person has completed their term", null, new { data_aria_controls = "retire-governor-content", @checked = "checked", id = "retire-governor-radio" })
+                                                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="retire-governor-content">
                                                         <div class="govuk-form-group">
                                                             <p>Provide a date term ends to retire this person</p>
                                                             @Html.EditorFor(x => x.RemovalAppointmentEndDate, new { title = "Date term ends", fieldsetClassName = "edit-date-fieldset" })
@@ -434,8 +434,8 @@ else
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    @FormHelpers.GiasRadio("2", "removal-mode", "Remove person", null, new { data_aria_controls = "remove-governor-radio" })
-                                                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="remove-governor-radio">
+                                                    @FormHelpers.GiasRadio("2", "removal-mode", "Remove person", null, new { data_aria_controls = "remove-governor-content", id = "remove-governor-radio" })
+                                                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="remove-governor">
                                                         <div class="govuk-form-group">
                                                             <p>Confirm you wish to remove this person</p>
                                                             <div class="button-row">
