@@ -159,11 +159,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
                     if (EnumSets.eGovernanceProfessionalRoles.Contains(role))
                     {
-                        var displayAppointingBody = false;
-                        if (displayPolicy.AppointingBodyId == true && !GovernorPermissions.Update == true)
-                        {
-                            displayAppointingBody = true;
-                        }
+                        var displayAppointingBody = displayPolicy.AppointingBodyId && !GovernorPermissions.Update;
                         grid.AddRow(governor, endDate)
                             .AddCell(governor.GetFullName(), displayPolicy.FullName)
                             .AddCell(governor.Id, displayPolicy.Id)
@@ -232,11 +228,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         {
             if (EnumSets.eGovernanceProfessionalRoles.Contains(role))
             {
-                var displayAppointingBody = false;
-                if (displayPolicy.AppointingBodyId == true && !GovernorPermissions.Update == true)
-                {
-                    displayAppointingBody = true;
-                }
+                var displayAppointingBody = displayPolicy.AppointingBodyId && !GovernorPermissions.Update;
                 grid.AddHeaderCell("Name", displayPolicy.FullName, "name", "sortText")
                     .AddHeaderCell("Governance role identifier (GID)", displayPolicy.Id, "gid")
                     .AddHeaderCell("Appointed By", displayAppointingBody, "sortText")
