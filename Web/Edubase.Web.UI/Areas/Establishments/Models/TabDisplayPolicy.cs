@@ -20,13 +20,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
 
         public bool Helpdesk { get; set; }
 
-        public TabDisplayPolicy(EstablishmentModel model, EstablishmentDisplayEditPolicy policy, IPrincipal principal)
+        public TabDisplayPolicy(int? EstablishmentTypeId, EstablishmentDisplayEditPolicy policy, IPrincipal principal)
         {
             IEBT = policy.IEBTDetail.Any();
 
             Helpdesk = policy.HelpdeskNotes;
 
-            Governance = model.TypeId.OneOfThese(
+            Governance = EstablishmentTypeId.OneOfThese(
                     ET.Academy1619Converter, 
                     ET.Academy1619SponsorLed, 
                     ET.AcademyAlternativeProvisionConverter, 

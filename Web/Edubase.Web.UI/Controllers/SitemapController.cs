@@ -245,7 +245,7 @@ namespace Edubase.Web.UI.Controllers
 
             // not all establishments have the governance page displayed for the general public
             var displayPolicy = new EstablishmentDisplayEditPolicy { IEBTDetail = new IEBTDetailDisplayEditPolicy() };
-            var tabPolicy = new TabDisplayPolicy(item, displayPolicy, User);
+            var tabPolicy = new TabDisplayPolicy(item.TypeId, displayPolicy, User);
             if (tabPolicy.Governance)
             {
                 nodes.Add(BuildNode("Details", "Establishment", new { area = "Establishments", id = item.Urn }, "school-governance", priority, SitemapFrequency.Weekly, item.LastUpdatedUtc));

@@ -714,7 +714,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             viewModel.EditPolicy = (await _establishmentReadService.GetEditPolicyAsync(domainModel, User)).EditPolicy;
             viewModel.DisplayPolicy = await _establishmentReadService.GetDisplayPolicyAsync(domainModel, User);
-            viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.EditPolicy, User);
+            viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel.TypeId, viewModel.EditPolicy, User);
             viewModel.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin);
             viewModel.SENIds = viewModel.SENIds ?? new int[0];
             viewModel.LocationEditField = string.Empty;
@@ -876,7 +876,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private async Task PopulateDisplayPolicies(EstablishmentDetailViewModel viewModel)
         {
             viewModel.DisplayPolicy = await _establishmentReadService.GetDisplayPolicyAsync(viewModel.Establishment, User);
-            viewModel.TabDisplayPolicy = new TabDisplayPolicy(viewModel.Establishment, viewModel.DisplayPolicy, User);
+            viewModel.TabDisplayPolicy = new TabDisplayPolicy(viewModel.Establishment.TypeId, viewModel.DisplayPolicy, User);
         }
 
         private async Task PopulateEditPermissions(EstablishmentDetailViewModel viewModel)
@@ -891,7 +891,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.Urn = urn;
             var domainModel = (await _establishmentReadService.GetAsync(urn, User)).GetResult();
             var editPolicy = (await _establishmentReadService.GetEditPolicyAsync(domainModel, User)).EditPolicy;
-            viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, editPolicy, User);
+            viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel.TypeId, editPolicy, User);
             viewModel.Name = domainModel.Name;
 
             if (domainModel.TypeId.HasValue)
@@ -1187,7 +1187,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 viewModel.AdditionalAddresses = new List<AdditionalAddressModel>(domainModel.AdditionalAddresses);
             }
 
-            viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel, viewModel.EditPolicy, User);
+            viewModel.TabDisplayPolicy = new TabDisplayPolicy(domainModel.TypeId, viewModel.EditPolicy, User);
             viewModel.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin);
 
             await PopulateSelectLists(viewModel);
