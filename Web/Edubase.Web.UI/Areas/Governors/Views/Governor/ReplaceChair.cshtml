@@ -32,7 +32,7 @@
         <div class="govuk-grid-column-one-half">
             <div class="button-row govuk-!-margin-bottom-4">
                 <input type="submit" value="Save" class="govuk-button" />
-                <a href="@Url.RouteUrl("EstabEditGovernance", new {establishmentUrn = Model.Urn.Value})" class="govuk-button govuk-button--secondary">Cancel</a>
+                <a href="@Url.RouteUrl("EstabEditGovernance", new {establishmentUrn = Model.Urn.Value})" id="cancel-button" class="govuk-button govuk-button--secondary">Cancel</a>
             </div>
             <h2 class="govuk-heading-m">Replace @Model.RoleName</h2>
             <h3 class="govuk-heading-s">@Model.GovernorFullName</h3>

@@ -9,11 +9,11 @@
     <dd class="govuk-summary-list__value">@Model.GetAddress()</dd>
 </div>
 <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">Local authority</dt>
+    <dt id="local-authority-key" class="govuk-summary-list__key">Local authority</dt>
     <dd class="govuk-summary-list__value">
         @if (Model.Establishment.LocalAuthorityId.HasValue)
         {
-            <a href="@Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})?searchtype=ByLocalAuthority&@EstablishmentSearchViewModel.BIND_ALIAS_LAIDS=@Model.Establishment.LocalAuthorityId">
+            <a id="local-authority-value" href="@Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})?searchtype=ByLocalAuthority&@EstablishmentSearchViewModel.BIND_ALIAS_LAIDS=@Model.Establishment.LocalAuthorityId">
                 @Model.LocalAuthorityName
             </a>
             <text>(@Model.LocalAuthorityCode)</text>
@@ -270,17 +270,18 @@
         <dt class="govuk-summary-list__key">Data from other services</dt>
         <dd class="govuk-summary-list__value">
             <ul class="govuk-list">
-                @if (!Model.ShowCscp && !Model.ShowFinancialBenchmarking)
+                @if (!Model.ShowFscpd && !Model.ShowFinancialBenchmarking)
                 {
                     <li>
                         Not applicable
                     </li>
                 }
-                @if (Model.ShowCscp)
+                @if (Model.ShowFscpd)
                 {
             <li>
-                <a href="@Model.CscpURL" rel="noreferrer noopener" target="_blank">
-                    Compare school and college performance (opens in new tab)</a>
+                <a href="@Model.FscpdURL" rel="noreferrer noopener" target="_blank">
+                    Find school and college performance data in England (opens in new tab)
+                </a>
             </li>
                 }
                 @if (Model.ShowFinancialBenchmarking)

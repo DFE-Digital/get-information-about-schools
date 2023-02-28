@@ -104,7 +104,7 @@
         {
             if (Model.IsClosedInError)
             {
-                <div class="gias-establishment-closed-message">
+                <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
                     <p>
                         This @Model.GroupTypeNameForClosureLabel was created in error and subsequently closed on @(Model.CloseDate?.ToString("d MMMM yyyy")).
                     </p>
@@ -112,7 +112,7 @@
             }
             else
             {
-                <div class="gias-establishment-closed-message">
+                <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
                     <p>
                         This @Model.GroupTypeNameForClosureLabel closed on @(Model.CloseDate?.ToString("d MMMM yyyy")).
                     </p>
@@ -461,17 +461,17 @@
                             <dt class="govuk-summary-list__key">Data from other services</dt>
                             <dd class="govuk-summary-list__value">
                                 <ul class="govuk-list">
-                                    @if (!Model.ShowCscp && !Model.ShowFinancialBenchmarking)
+                                    @if (!Model.ShowFscpd && !Model.ShowFinancialBenchmarking)
                                     {
                                         <li>
                                             Not applicable
                                         </li>
                                     }
-                                    @if (Model.ShowCscp)
+                                    @if (Model.ShowFscpd)
                                     {
                                         <li>
-                                            <a href="@Model.CscpURL" rel="noreferrer noopener" target="_blank">
-                                                Compare school and college performance (opens in new tab)
+                                            <a href="@Model.FscpdURL" rel="noreferrer noopener" target="_blank">
+                                                Find school and college performance data in England (opens in new tab)
                                             </a>
                                         </li>
                                     }

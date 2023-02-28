@@ -9,6 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Newtonsoft.Json;
+using Edubase.Web.UI.Mappers;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
@@ -33,7 +34,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (ModelState.IsValid)
             {
-                var fileName = FileHelper.GetTempFileName(Path.GetExtension(viewModel.BulkFile.FileName));
+                var payload = viewModel.MapToDto();
+                var fileName = payload.FileName;
                 viewModel.BulkFile.SaveAs(fileName);
 
                 if (new FileInfo(fileName).Length > 1000000)
@@ -42,13 +44,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
                 else
                 {
-                    var payload = new BulkUpdateDto
-                    {
-                        BulkFileType = viewModel.BulkUpdateType.Value,
-                        FileName = fileName,
-                        OverrideCRProcess = viewModel.CanOverrideCRProcess && viewModel.OverrideCRProcess
-                    };
-
                     var state = UriHelper.SerializeToUrlToken(payload);
                     var response = await _establishmentWriteService.BulkUpdateAsync(payload, User);
                     System.IO.File.Delete(fileName);
