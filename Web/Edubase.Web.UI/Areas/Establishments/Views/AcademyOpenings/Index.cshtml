@@ -150,14 +150,14 @@
                         </tr>
                         </thead>
                         <tbody v-if="pages.length > 0" class="govuk-table__body">
-                        <tr v-for="(entry, index) in page" class="govuk-table__row">
-                            <td data-label="Opening date" class="govuk-table__cell cell-openingdate"> {{entry.displayDate}} </td>
-                            <td data-label="URN" class="govuk-table__cell"><a v-bind:href="detailUrl(entry.urn)">{{entry.urn}}</a></td>
-                            <td data-label="Establishment name" class="govuk-table__cell">{{entry.name}}</td>
-                            <td data-label="Establishment type" class="govuk-table__cell">{{entry.establishmentType}}</td>
-                            <td data-label="Predecessor URN" class="govuk-table__cell"><a v-bind:href="detailUrl(entry.predecessorUrn)" v-if="entry.predecessorUrn">{{entry.predecessorUrn}}</a></td>
-                            <td data-label="Predecessor name" class="govuk-table__cell">{{entry.predecessorName}}</td>
-                            <td class="cell-edit govuk-table__cell"><a href="#" v-on:click.prevent="editEstab(entry.urn)" aria-label="Edit opening details">Edit</a></td>
+                        <tr v-for="(entry, index) in page" class="govuk-table__row" v-bind:id="`table-row-${index}`">
+                            <td data-label="Opening date" v-bind:id="`opening-date-${entry.urn}`" class="govuk-table__cell cell-openingdate"> {{entry.displayDate}} </td>
+                            <td data-label="URN" class="govuk-table__cell"><a v-bind:href="detailUrl(entry.urn)" v-bind:id="`urn-${entry.urn}-link`">{{entry.urn}}</a></td>
+                            <td data-label="Establishment name" v-bind:id="`establishment-name-${entry.urn}`" class="govuk-table__cell">{{entry.name}}</td>
+                            <td data-label="Establishment type" v-bind:id="`establishment-type-${entry.urn}`" class="govuk-table__cell">{{entry.establishmentType}}</td>
+                            <td data-label="Predecessor URN" class="govuk-table__cell"><a v-bind:href="detailUrl(entry.predecessorUrn)" v-bind:id="`predecessor-urn-${entry.predecessorUrn}-link`" v-if="entry.predecessorUrn">{{entry.predecessorUrn}}</a></td>
+                            <td data-label="Predecessor name" v-bind:id="`predecessor-name-${entry.predecessorUrn}`" class="govuk-table__cell">{{entry.predecessorName}}</td>
+                            <td class="cell-edit govuk-table__cell"><a href="#" v-bind:id="`edit-${entry.urn}-link`" v-on:click.prevent="editEstab(entry.urn)" aria-label="Edit opening details">Edit</a></td>
                         </tr>
                         </tbody>
                         <tbody v-else class="govuk-table__body">
@@ -319,7 +319,7 @@
         </div>
 
         <div class="button-row">
-            <input type="submit" class="govuk-button opening-save" value="Save" v-on:click.prevent="updateRecord"/>
+            <input type="submit" id="save-button" class="govuk-button opening-save" value="Save" v-on:click.prevent="updateRecord"/>
             <a href="#" id="cancel-button" class="govuk-button govuk-button--secondary" v-on:click="cancelEditClick" data-module="govuk-button">Cancel</a>
         </div>
     </div>
@@ -349,7 +349,7 @@
         <div class="tab-wrap" id="tab-wrap">
             <ul class="gias-tabs">
                 <li class="gias-tabs__list-item gias-tabs__list-item--selected">
-                    <a href="#calendar" class="gias-tabs__tab">Opening calendar</a>
+                    <a href="#calendar" id="opening-calendar-tab" class="gias-tabs__tab">Opening calendar</a>
                 </li>
                 <li class="gias-tabs__list-item">
                     @Html.ActionLink("Academy search",
