@@ -56,6 +56,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
                 policy.RSCRegionId, policy.GovernmentOfficeRegionId, policy.AdministrativeDistrictId, policy.AdministrativeWardId, policy.ParliamentaryConstituencyId,
                 policy.UrbanRuralId, policy.GSSLAId, policy.Easting, policy.Northing, policy.MSOAId, policy.LSOAId
             }.Any(x => x == true);
+
+            ChangeHistory = !model.TypeId.OneOfThese(ET.SecureAcademies16to19);
+            Links = !model.TypeId.OneOfThese(ET.SecureAcademies16to19);
         }
 
         public TabDisplayPolicy()
