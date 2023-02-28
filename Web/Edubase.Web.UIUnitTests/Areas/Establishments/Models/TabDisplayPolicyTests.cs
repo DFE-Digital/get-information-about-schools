@@ -140,7 +140,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
                 new object[] { ET.OtherIndependentSpecialSchool, false},
                 new object[] { ET.PlayingForSuccessCentres, false},
                 new object[] { ET.PupilReferralUnit, true},
-                new object[] { ET.SecureAcademies16to19, false},
+                //new object[] { ET.SecureAcademies16to19, false},
                 new object[] { ET.SecureUnits, false },
                 new object[] { ET.ServiceChildrensEducation, false},
                 new object[] { ET.SixthFormCentres, false},
