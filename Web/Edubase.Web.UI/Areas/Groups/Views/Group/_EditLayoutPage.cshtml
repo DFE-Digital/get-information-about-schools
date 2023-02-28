@@ -36,7 +36,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <div class="gias-tabs-wrapper">
-            <div class="tab-wrap" id="tab-wrap">
+            <div class="tab-wrap" id="edit-links-tab-wrap">
                 <ul class="gias-tabs">
                     <li class="gias-tabs__list-item @Html.Conditional(Model.SelectedTabName == "details", "gias-tabs__list-item--selected")">
                         <a href="@Url.Action("EditDetails", "Group", new { id = Model.GroupUId, area = "Groups" })" id="details-tab" class="gias-tabs__tab">Details</a>
