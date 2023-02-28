@@ -229,7 +229,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     .AddHeaderCell("Governance role identifier (GID)", displayPolicy.Id, "gid")
                     .AddHeaderCell("Date of birth", displayPolicy.DOB)
                     .AddHeaderCell("Home postcode", displayPolicy.PostCode)
-                    .AddHeaderCell("Telephone", displayPolicy.TelephoneNumber)
+                    .AddHeaderCell("Telephone number", displayPolicy.TelephoneNumber)
                     .AddHeaderCell("Email address", displayPolicy.EmailAddress)
                     .AddHeaderCell("Date of appointment", displayPolicy.AppointmentStartDate, "fromDate", "sortDate")
                     .AddHeaderCell("Date appointment ended", includeEndDate, "toDate", "sortDate");
