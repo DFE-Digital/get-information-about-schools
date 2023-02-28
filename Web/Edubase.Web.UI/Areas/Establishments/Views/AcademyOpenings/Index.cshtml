@@ -150,7 +150,7 @@
                         </tr>
                         </thead>
                         <tbody v-if="pages.length > 0" class="govuk-table__body">
-                        <tr v-for="(entry, index) in page" class="govuk-table__row" id="table-row">
+                        <tr v-for="(entry, index) in page" class="govuk-table__row" v-bind:id="`table-row-${index}`">
                             <td data-label="Opening date" v-bind:id="`opening-date-${entry.urn}`" class="govuk-table__cell cell-openingdate"> {{entry.displayDate}} </td>
                             <td data-label="URN" class="govuk-table__cell"><a v-bind:href="detailUrl(entry.urn)" v-bind:id="`urn-${entry.urn}-link`">{{entry.urn}}</a></td>
                             <td data-label="Establishment name" v-bind:id="`establishment-name-${entry.urn}`" class="govuk-table__cell">{{entry.name}}</td>
