@@ -19,6 +19,7 @@ namespace Edubase.Web.UI.Models
         public bool UserCanCreateAcademyTrustGroup { get; set; }
         public bool UserCanCreateFederationGroup { get; set; }
         public bool UserCanCreateSchoolTrustGroup { get; set; }
+        public bool UserCanCreateSecureSingleAcademyTrustGroup { get; set; }
         public bool UserCanCreateAcademySponsor { get; set; }
 
         public bool UserCanCreateEstablishment { get; set; }

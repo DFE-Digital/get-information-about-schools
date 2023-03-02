@@ -64,6 +64,8 @@ namespace Edubase.Web.UI.Controllers
                 UserCanCreateChildrensCentreGroup = createGroupPermission.GroupTypes.Any(x => x == GT.ChildrensCentresCollaboration || x == GT.ChildrensCentresGroup),
                 UserCanCreateFederationGroup = createGroupPermission.GroupTypes.Any(x => x == GT.Federation),
                 UserCanCreateSchoolTrustGroup = createGroupPermission.GroupTypes.Any(x => x == GT.Trust),
+                //TODO below is a hack to make this work as currently this is not returned from the java api security/group/create-permission
+                UserCanCreateSecureSingleAcademyTrustGroup = true,//createGroupPermission.GroupTypes.Any(x => x == GT.SecureSingleAcademyTrust),
                 UserCanCreateAcademySponsor = createGroupPermission.GroupTypes.Any(x => x == GT.SchoolSponsor),
                 UserCanCreateEstablishment = createEstablishmentPermission.CanCreate,
                 UserCanManageAcademyOpenings = User.InRole(AuthorizedRoles.CanManageAcademyOpenings),

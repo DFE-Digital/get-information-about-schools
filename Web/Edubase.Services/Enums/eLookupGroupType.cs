@@ -11,6 +11,7 @@ namespace Edubase.Services.Enums
         SingleacademyTrust = 10,
         Trust = 2,
         UmbrellaTrust = 7,
+        SecureSingleAcademyTrust = 11
     }
 
 }
