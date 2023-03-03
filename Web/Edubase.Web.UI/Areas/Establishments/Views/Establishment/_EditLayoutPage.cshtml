@@ -43,7 +43,7 @@ else
     <div class="govuk-grid-column-full">
 
         <div class="gias-tabs-wrapper">
-            <div class="tab-wrap" id="tab-wrap">
+            <div class="tab-wrap" id="gias-details-tab-wrap">
                 <ul class="gias-tabs">
                     <li class="gias-tabs__list-item @Html.Conditional(string.Equals(Model.SelectedTab, "details"), "gias-tabs__list-item--selected")">
                         <a href="@Url.Action("EditDetails", "Establishment", new {id = Model.Urn, area = "Establishments"})" id="details-tab-link" class="gias-tabs__tab">Details</a>
