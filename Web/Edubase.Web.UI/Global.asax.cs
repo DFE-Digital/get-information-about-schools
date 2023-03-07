@@ -18,6 +18,8 @@ using Newtonsoft.Json.Serialization;
 using Edubase.Web.UI.Helpers.ModelBinding;
 using Edubase.Web.UI.Helpers.ValueProviders;
 using Sustainsys.Saml2.Exceptions;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Edubase.Web.UI
 {
@@ -25,8 +27,42 @@ namespace Edubase.Web.UI
     {
         protected void Application_Start()
         {
+            /*
+             * This block is used to (optionally) whitelist a known-good self-signed certificate.
+             * While it *could* be modified to always return true, it is better practice to whitelist.
+             * The "thumbprint" of the certificate can be found using the web browser.
+             *
+             * Works when inserted at top of `Application_Start` method, but likely a better location to do so.
+             *
+             * Credit for base code and approach: https://stackoverflow.com/a/44140506
+             */
+                System.Net.ServicePointManager.ServerCertificateValidationCallback += delegate (
+                    object sender,
+                    X509Certificate cert,
+                    X509Chain chain,
+                    SslPolicyErrors sslPolicyErrors)
+                {
+                    // If no SSL verification issues, continue.
+                    if (sslPolicyErrors == SslPolicyErrors.None)
+                    {
+                        return true;   //Is valid
+                    }
+
+                    // This thumbprint can be obtained via
+                    var knownGoodSslCertificateThumbprintSha1 = "EC9F4BECFAFFA0A72816D9FF9C444D16DAAF1CEA".ToUpper();
+                    var actualCertHashStringSha1 = cert.GetCertHashString();
+
+                    // If SSL verification problem, compare against a "known-good" self-signed certificate's thumbprint.
+                    if (actualCertHashStringSha1 == knownGoodSslCertificateThumbprintSha1)
+                    {
+                        return true;
+                    }
+
+                    // Else, reject
+                    return false;
+                };
 #if DEBUG
-            try
+                try
             {
                 GetExternalSettings();
             }
