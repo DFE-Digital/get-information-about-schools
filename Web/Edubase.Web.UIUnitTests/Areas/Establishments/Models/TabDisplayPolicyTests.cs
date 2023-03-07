@@ -22,15 +22,13 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
         /// <summary>
         /// Test Governance tab setting depending on Establishment type
         /// </summary>
-        /// <param name="establishmentTypeId"></param>
-        /// <param name="expectedGovernanceTab"></param>
         [Theory]
         [MemberData(nameof(EstablishmentTypeGovernanceTestData))]
         public void EstablishmentTypeId_SetsExpectedGovernanceTab(int establishmentTypeId, bool expectedGovernanceTab)
         {
             var establishmentDisplayEditPolicy = new EstablishmentDisplayEditPolicy
             {
-                IEBTDetail = new IEBTDetailDisplayEditPolicy() { Proprietors = new ProprietorFieldList<bool>(), ChairOfProprietor = new ProprietorFieldList<bool>() }
+                IEBTDetail = PopulatedIEBTDetail
             };
 
             var sutTabDisplayPolicy = new TabDisplayPolicy(new EstablishmentModel { TypeId = establishmentTypeId }, establishmentDisplayEditPolicy, new Mock<IPrincipal>().Object);
@@ -39,7 +37,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
         }
 
         /// <summary>
-        /// Test Links tab setting depending on Establishment type
+        /// Test Links and Changes tabs settings depending on Establishment type
         /// </summary>
         [Theory]
         [MemberData(nameof(EstablishmentTypeChangesAndLinksTestData))]
@@ -47,7 +45,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
         {
             var establishmentDisplayEditPolicy = new EstablishmentDisplayEditPolicy
             {
-                IEBTDetail = new IEBTDetailDisplayEditPolicy() { Proprietors = new ProprietorFieldList<bool>(), ChairOfProprietor = new ProprietorFieldList<bool>() }
+                IEBTDetail = PopulatedIEBTDetail
             };
 
             var sutTabDisplayPolicy = new TabDisplayPolicy(new EstablishmentModel { TypeId = establishmentTypeId }, establishmentDisplayEditPolicy, new Mock<IPrincipal>().Object);
@@ -90,7 +88,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
                         MSOAId = false,
                         LSOAId = false,
                         // IEBT details
-                        IEBTDetail = NoIEBTDetail },
+                        IEBTDetail = EmptyIEBTDetail },
                     new TabDisplayPolicy() {
                         Helpdesk = false,
                         Location = false,
@@ -112,7 +110,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
                         MSOAId = false,
                         LSOAId = false,
                         // IEBT details
-                        IEBTDetail = IEBTDetail },
+                        IEBTDetail = PopulatedIEBTDetail },
                     new TabDisplayPolicy() {
                         Helpdesk = true,
                         Location = true,
@@ -225,12 +223,12 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
             };
         }
 
-        public static IEBTDetailDisplayEditPolicy IEBTDetail => new IEBTDetailDisplayEditPolicy()
+        public static IEBTDetailDisplayEditPolicy PopulatedIEBTDetail => new IEBTDetailDisplayEditPolicy()
         {
             Notes = true
         };
 
-        public static IEBTDetailDisplayEditPolicy NoIEBTDetail => new IEBTDetailDisplayEditPolicy
+        public static IEBTDetailDisplayEditPolicy EmptyIEBTDetail => new IEBTDetailDisplayEditPolicy
         {
             Notes = false,
             DateOfTheLastBridgeVisit = false,
