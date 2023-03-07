@@ -39,10 +39,8 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
         }
 
         /// <summary>
-        /// Test Changes tab setting depending on Establishment type
+        /// Test Links tab setting depending on Establishment type
         /// </summary>
-        /// <param name="establishmentTypeId"></param>
-        /// <param name="expectedChangesTab"></param>
         [Theory]
         [MemberData(nameof(EstablishmentTypeChangesAndLinksTestData))]
         public void EstablishmentTypeId_SetsExpectedChangesTab(int establishmentTypeId, bool expectedChangesTab, bool expectedLinksTab)
@@ -61,8 +59,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
         /// <summary>
         /// Test IEBT, Location and HelpDesk tab settings depending on display-policy fields being true
         /// </summary>
-        /// <param name="displayPolicy"></param>
-        /// <param name="expectedTabDisplayPolicy"></param>
         [Theory]
         [MemberData(nameof(DisplayPolicyTestData))]
         public void EstablishmentDisplayEditPolicy_SetsExpectedDependentTabs(EstablishmentDisplayEditPolicy displayPolicy, TabDisplayPolicy expectedTabDisplayPolicy)
@@ -216,7 +212,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
                 new object[] { ET.OtherIndependentSpecialSchool, true, true},
                 new object[] { ET.PlayingForSuccessCentres, true, true},
                 new object[] { ET.PupilReferralUnit,true, true},
-                new object[] { ET.SecureAcademies16to19, false, false},
+                new object[] { ET.SecureAcademies16to19, true, false},
                 new object[] { ET.SecureUnits, true, true},
                 new object[] { ET.ServiceChildrensEducation, true, true},
                 new object[] { ET.SixthFormCentres, true, true},
