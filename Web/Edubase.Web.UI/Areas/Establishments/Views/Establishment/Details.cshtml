@@ -46,7 +46,7 @@
     {
         description = ViewBag.Confirmed == "Governance" ? "Governance information confirmed" : "Details confirmed";
     }
-    
+
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
@@ -122,7 +122,7 @@
         {
             if (Model.Establishment.CloseDate != null)
             {
-                <div class="gias-establishment-closed-message">
+                <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
                     <p>
                         This establishment closed on @(Model.Establishment.CloseDate?.ToString("d MMMM yyyy")).
                         View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
@@ -131,7 +131,7 @@
             }
             else
             {
-                <div class="gias-establishment-closed-message">
+                <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
                     <p>
                         This establishment is closed.
                         View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
@@ -146,7 +146,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <div class="gias-tabs-wrapper">
-            <div class="tab-wrap" id="details-tab-wrap">
+            <div class="tab-wrap" id="school-tab-wrap">
                 <ul class="gias-tabs">
                     @if (Model.TabDisplayPolicy.Details)
                     {
@@ -262,19 +262,19 @@
             <h3 class="govuk-heading-s make-modal-header">Free school meals</h3>
             <div class="govuk-body">
                 <p>
-                    This field is not editable by establishment users as it is populated by the DfE using the underlying data 
-                    from the schools, pupils and their characteristics statistical release published each summer. 
-                    The figures used are the performance table figures which ensures GIAS and the Find and Compare Schools in 
+                    This field is not editable by establishment users as it is populated by the DfE using the underlying data
+                    from the schools, pupils and their characteristics statistical release published each summer.
+                    The figures used are the performance table figures which ensures GIAS and the Find and Compare Schools in
                     England service are consistent.
-                </p>               
+                </p>
                 <p>
-                    This information is compiled from the data returned by establishments for their establishment's situation 
+                    This information is compiled from the data returned by establishments for their establishment's situation
                     on the third Thursday in January, in the spring school census data collection return.
                 </p>
                 <p>
-                    This field shows whether a pupil's family have claimed eligibility for free school meals as reported in 
-                    the annual spring school census. Pupils or their parents are able to claim free school meals if they 
-                    receive a qualifying benefit. This field does not show pupils who actually received free school meals 
+                    This field shows whether a pupil's family have claimed eligibility for free school meals as reported in
+                    the annual spring school census. Pupils or their parents are able to claim free school meals if they
+                    receive a qualifying benefit. This field does not show pupils who actually received free school meals
                     but the number of those who are eligible to receive them.
                 </p>
             </div>
@@ -284,19 +284,19 @@
             <h3 class="govuk-heading-s make-modal-header">Free school meals</h3>
             <div class="govuk-body">
                 <p>
-                    This field is not editable by establishment users as it is populated by the DfE using the underlying data 
-                    from the schools, pupils and their characteristics statistical release published each summer. The figures 
-                    used are the performance table figures which ensures GIAS and the Find and Compare Schools in England 
+                    This field is not editable by establishment users as it is populated by the DfE using the underlying data
+                    from the schools, pupils and their characteristics statistical release published each summer. The figures
+                    used are the performance table figures which ensures GIAS and the Find and Compare Schools in England
                     service are consistent.
-                </p>               
+                </p>
                 <p>
-                    This information is compiled from the data returned by establishments for their establishment's situation 
+                    This information is compiled from the data returned by establishments for their establishment's situation
                     on the third Thursday in January, in the spring school census data collection return.
                 </p>
                 <p>
-                    This field shows whether a pupil's family have claimed eligibility for free school meals as reported in 
-                    the annual spring school census. Pupils or their parents are able to claim free school meals if they 
-                    receive a qualifying benefit. This field does not show pupils who actually received free school meals but 
+                    This field shows whether a pupil's family have claimed eligibility for free school meals as reported in
+                    the annual spring school census. Pupils or their parents are able to claim free school meals if they
+                    receive a qualifying benefit. This field does not show pupils who actually received free school meals but
                     the percentage of those who are eligible to receive them.
                 </p>
             </div>

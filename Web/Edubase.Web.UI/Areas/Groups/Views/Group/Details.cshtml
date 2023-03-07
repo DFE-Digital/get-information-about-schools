@@ -104,7 +104,7 @@
         {
             if (Model.IsClosedInError)
             {
-                <div class="gias-establishment-closed-message">
+                <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
                     <p>
                         This @Model.GroupTypeNameForClosureLabel was created in error and subsequently closed on @(Model.CloseDate?.ToString("d MMMM yyyy")).
                     </p>
@@ -112,7 +112,7 @@
             }
             else
             {
-                <div class="gias-establishment-closed-message">
+                <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
                     <p>
                         This @Model.GroupTypeNameForClosureLabel closed on @(Model.CloseDate?.ToString("d MMMM yyyy")).
                     </p>
@@ -128,7 +128,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <div class="gias-tabs-wrapper">
-            <div class="tab-wrap" id="gias-details-tab-wrap">
+            <div class="tab-wrap" id="details-tab-wrap">
                 <ul class="gias-tabs">
                     <li class="gias-tabs__list-item">
                         <a href="#details" id="details-tab-link" class="gias-tabs__tab ">Details</a>
@@ -493,4 +493,3 @@
                         <script nonce="@Html.ScriptNonce()">var mapMode = 'group';</script>
                         <script src="@Html.Raw(Html.GetWebpackScriptUrl("landing-page-bundle.*.js"))"></script>
                     }
-
