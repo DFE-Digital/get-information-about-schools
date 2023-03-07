@@ -33,7 +33,7 @@
 </div>
 
 
-@using (Html.BeginForm("SaveNewAcademyTrust", "Group", new { area = "Groups" }, FormMethod.Post))
+@using (Html.BeginForm("SaveNewAcademyTrust", "Group", new { area = "Groups", groupTypeName = ViewData["groupTypeName"] }, FormMethod.Post))
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
@@ -144,7 +144,7 @@
             }
             else
             {
-                @Html.ActionLink(HttpUtility.HtmlDecode("&laquo; Go back"), "SearchCompaniesHouse", "Group", new {area = "Groups"}, new {@class = "govuk-button govuk-button--secondary cancel"})
+                @Html.ActionLink(HttpUtility.HtmlDecode("&laquo; Go back"), "SearchCompaniesHouse", "Group", new {area = "Groups", groupTypeName = ViewData["groupTypeName"] }, new {@class = "govuk-button govuk-button--secondary cancel"})
                 if (Model.AllowSave)
                 {
                     <button type="submit" id="create-academy-trust-submit-button" class="govuk-button submit">Create academy trust</button>
