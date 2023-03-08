@@ -25,7 +25,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groupUId, int? establishmentUrn,
             NomenclatureService nomenclatureService, IEnumerable<LookupDto> nationalities,
-            IEnumerable<LookupDto> appointingBodies, GovernorPermissions governorPermissions)
+            IEnumerable<LookupDto> appointingBodies, IEnumerable<LookupDto> titles, GovernorPermissions governorPermissions)
         {
             _nomenclatureService = nomenclatureService;
             DomainModel = dto;
@@ -33,6 +33,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             GroupUId = groupUId;
             Nationalities = nationalities;
             AppointingBodies = appointingBodies;
+            Titles = titles;
             EstablishmentUrn = establishmentUrn;
             GovernorPermissions = governorPermissions;
             CreateGrids(dto, dto.CurrentGovernors, false, groupUId, establishmentUrn);
@@ -79,6 +80,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public IEnumerable<LookupDto> Nationalities { get; }
         public IEnumerable<LookupDto> AppointingBodies { get; }
+
+        public IEnumerable<LookupDto> Titles { get; }
 
         string IEstablishmentPageViewModel.SelectedTab { get; set; }
 
@@ -157,10 +160,12 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                         ? appointment.AppointmentEndDate
                         : governor.AppointmentEndDate;
 
+                    var getFullnameWithTitle = FullNameWithTitle(governor);
+
                     if (EnumSets.eGovernanceProfessionalRoles.Contains(role))
                     {
                         grid.AddRow(governor, endDate)
-                            .AddCell(governor.GetFullName(), displayPolicy.FullName)
+                            .AddCell(getFullnameWithTitle, displayPolicy.FullName)
                             .AddCell(governor.Id, displayPolicy.Id)
                             .AddCell(governor.DOB?.ToString("d MMMM yyyy"), displayPolicy.DOB)
                             .AddCell(governor.PostCode, displayPolicy.PostCode)
@@ -303,6 +308,13 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     addedCount++;
                 }
             }
+        }
+
+        public string FullNameWithTitle(GovernorModel governor)
+        {
+            var title = Titles.FirstOrDefault(x => x.Id == governor.Person_TitleId)?.Name;
+            var full = $"{title} {governor.Person_FirstName} {governor.Person_MiddleName} {governor.Person_LastName}";
+            return full;
         }
     }
 }
