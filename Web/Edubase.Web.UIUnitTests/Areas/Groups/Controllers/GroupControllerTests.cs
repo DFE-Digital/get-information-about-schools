@@ -909,7 +909,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
                 OpenDate = DateTime.Now,
                 GroupId = "54243"
             };
-            var result = (RedirectToRouteResult) await controller.SaveNewAcademyTrust(vm);
+            var result = (RedirectToRouteResult) await controller.SaveNewAcademyTrust(vm,"academy-trust");
             Assert.Equal("Details", result.RouteValues["action"]);
             Assert.Equal(123, result.RouteValues["id"]);
         }
