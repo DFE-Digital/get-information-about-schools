@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Edubase.Services.Enums
@@ -36,6 +36,7 @@ namespace Edubase.Services.Enums
             ET.FreeSchoolsAlternativeProvision,
             ET.FreeSchoolsSpecial,
             ET.StudioSchools,
+            ET.SecureAcademies16to19,
             ET.UniversityTechnicalCollege
         }.Cast<int>();
 
