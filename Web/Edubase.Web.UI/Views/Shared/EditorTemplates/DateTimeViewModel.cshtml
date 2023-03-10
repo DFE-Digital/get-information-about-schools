@@ -207,19 +207,19 @@
             <div class="govuk-date-input__item">
                 <div class="govuk-form-group">
                     @Html.LabelFor(x => x.Day, new {@class = string.Concat(labelClassName, " govuk-label govuk-date-input__label")})
-                    @Html.TextBoxFor(x => x.Day, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, dayCssClasses, 2, ViewData["vueModel"] != null ? string.Concat((string) ViewData["vueModel"], "Day") : null))
+                    @Html.TextBoxFor(x => x.Day, GetAttributes(ViewData["readonly"] as bool? ?? false, dayCssClasses, 2, ViewData["vueModel"] != null ? string.Concat((string) ViewData["vueModel"], "Day") : null))
                 </div>
             </div>
             <div class="govuk-date-input__item">
                 <div class="govuk-form-group">
                     @Html.LabelFor(x => x.Month, new {@class = string.Concat(labelClassName, " govuk-label govuk-date-input__label")})
-                    @Html.TextBoxFor(x => x.Month, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, monthCssClasses, 2, ViewData["vueModel"] != null ? string.Concat((string) ViewData["vueModel"], "Month") : null))
+                    @Html.TextBoxFor(x => x.Month, GetAttributes(ViewData["readonly"] as bool? ?? false, monthCssClasses, 2, ViewData["vueModel"] != null ? string.Concat((string) ViewData["vueModel"], "Month") : null))
                 </div>
             </div>
             <div class="govuk-date-input__item gias-year-input__item">
                 <div class="govuk-form-group">
                     @Html.LabelFor(x => x.Year, new {@class = string.Concat(labelClassName, " govuk-label govuk-date-input__label")})
-                    @Html.TextBoxFor(x => x.Year, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, yearCssClasses, 4, ViewData["vueModel"] != null ? string.Concat((string) ViewData["vueModel"], "Year") : null))
+                    @Html.TextBoxFor(x => x.Year, GetAttributes(ViewData["readonly"] as bool? ?? false, yearCssClasses, 4, ViewData["vueModel"] != null ? string.Concat((string) ViewData["vueModel"], "Year") : null))
                 </div>
             </div>
         </div>
@@ -235,14 +235,14 @@
 
 @functions
 {
-    static object GetCheckboxAttributes(bool? readOnly, string cssClasses, int maxlength, string vueModel)
+    static object GetAttributes(bool? readOnly, string cssClasses, int maxlength, string vueModel)
     {
         if (readOnly.HasValue && readOnly.Value)
-            return new { @class = cssClasses, disabled = "disabled", maxlength };
+            return new { @class = cssClasses, disabled = "disabled", maxlength, inputmode = "numeric" };
 
         if (vueModel != null)
-            return new { @class = cssClasses, maxlength, v_model = vueModel };
+            return new { @class = cssClasses, maxlength, v_model = vueModel, inputmode = "numeric" };
 
-        return new { @class = cssClasses, maxlength };
+        return new { @class = cssClasses, maxlength, inputmode = "numeric" };
     }
 }
