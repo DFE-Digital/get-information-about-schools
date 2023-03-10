@@ -13,6 +13,7 @@
     string tooltipTitle = null;
     string tooltipText = null;
     string tooltipUnderscoredTitle = null;
+    var describedByIds = "";
 
     if (ViewData["dateHint"] != null)
     {
@@ -46,7 +47,7 @@
     }
     else
     {
-        classBinding = "class=\"govuk-form-group create-edit-form-group date-group "
+        classBinding = "class=\"abc govuk-form-group create-edit-form-group date-group "
                        + Html.ValidationGroupCssClass(ViewData.ModelMetadata.PropertyName) + " "
                        + Html.ValidationCssClassFor(x => x) + " "
                        + Html.ValidationCssClassFor(x => x.Day) + " "
@@ -73,12 +74,17 @@
 
 }
 <div @Html.Raw(classBinding)>
-    <fieldset class="govuk-fieldset range-group @fieldsetClassName">
-        @*
-            TODO - Add "described by" to have screen reader speak hints, per https://design-system.service.gov.uk/components/error-message/
-            TODO - Add "described by" to have screen reader speak errors, per https://design-system.service.gov.uk/components/error-message/
-              <fieldset class="govuk-fieldset" role="group" aria-describedby="passport-issued-hint passport-issued-error">
-         *@
+
+    @{
+        describedByIds = describedByIds + " " + @legendPrefix + @ViewData.ModelMetadata.PropertyName + "-hint";
+    }
+    @{
+        if (!disableHint)
+        {
+            describedByIds = describedByIds + " " + @ViewData.ModelMetadata.PropertyName +"-errors";
+        }
+    }
+    <fieldset class="govuk-fieldset range-group @fieldsetClassName" aria-describedby="@describedByIds">
         @if (ViewData["inFilters"] != null)
         {
             <span class="govuk-error-message hidden">Please check the date(s) you have entered</span>
@@ -149,11 +155,11 @@
         {
             if (dateHint != string.Empty)
             {
-                <p class="govuk-hint">For example, @dateHint</p>
+                <p class="govuk-hint" id="@legendPrefix@ViewData.ModelMetadata.PropertyName-hint">For example, @dateHint</p>
             }
             else
             {
-                <p class="govuk-hint">For example, 20 03 2003</p>
+                <p class="govuk-hint" id="@legendPrefix@ViewData.ModelMetadata.PropertyName-hint">For example, 20 03 2003</p>
             }
         }
 
@@ -164,6 +170,7 @@
             </div>
         }
 
+        <span id="@ViewData.ModelMetadata.PropertyName-errors">
         @{
             var errContent = new List<MvcHtmlString>
             {
@@ -174,11 +181,14 @@
                 Html.ValidationMessageFor(x => x.Year, null, new {@class = "govuk-error-message"})
             };
 
-            foreach (var mvcHtmlString in errContent.Select(x => x?.ToHtmlString()).Distinct())
+            var enumerable = errContent.Select(x => x?.ToHtmlString());
+            var mvcHtmlStrings = enumerable.Distinct();
+            foreach (var mvcHtmlString in mvcHtmlStrings)
             {
                 @Html.Raw(mvcHtmlString)
             }
         }
+        </span>
 
         @if (ViewData["vueModel"] != null)
         {
