@@ -74,11 +74,27 @@
 }
 <div @Html.Raw(classBinding)>
     <fieldset class="govuk-fieldset range-group @fieldsetClassName">
+        @*
+            TODO - Add "described by" to have screen reader speak hints, per https://design-system.service.gov.uk/components/error-message/
+            TODO - Add "described by" to have screen reader speak errors, per https://design-system.service.gov.uk/components/error-message/
+              <fieldset class="govuk-fieldset" role="group" aria-describedby="passport-issued-hint passport-issued-error">
+         *@
         @if (ViewData["inFilters"] != null)
         {
             <span class="govuk-error-message hidden">Please check the date(s) you have entered</span>
             <span class="govuk-error-message hidden date-range-error">Please use a valid date range</span>
         }
+
+        @if (!string.IsNullOrWhiteSpace(tooltipText))
+        {
+            <div class="govuk-grid-column-full helptext-container">
+                <div id="help-text-@tooltipUnderscoredTitle">
+                    <h3 class="govuk-heading-s make-modal-header">@tooltipTitle</h3>
+                    <p class="govuk-body">@tooltipText</p>
+                </div>
+            </div>
+        }
+
         <legend class="govuk-fieldset__legend @Html.Conditional(hideLegend, "hidden")" id="@legendPrefix@ViewData.ModelMetadata.PropertyName">
             @(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])
             @if (!string.IsNullOrWhiteSpace(tooltipText))
@@ -128,6 +144,7 @@
                 }
             }
         }
+
         @if (!disableHint)
         {
             if (dateHint != string.Empty)
@@ -151,10 +168,10 @@
             var errContent = new List<MvcHtmlString>
             {
                 Html.ValidationMessageNested(ViewData.ModelMetadata.PropertyName),
-                Html.ValidationMessageFor(x => x, null, new { @class = "govuk-error-message" }),
-                Html.ValidationMessageFor(x => x.Day, null, new { @class = "govuk-error-message" }),
-                Html.ValidationMessageFor(x => x.Month, null, new { @class = "govuk-error-message" }),
-                Html.ValidationMessageFor(x => x.Year, null, new { @class = "govuk-error-message" })
+                Html.ValidationMessageFor(x => x, null, new {@class = "govuk-error-message"}),
+                Html.ValidationMessageFor(x => x.Day, null, new {@class = "govuk-error-message"}),
+                Html.ValidationMessageFor(x => x.Month, null, new {@class = "govuk-error-message"}),
+                Html.ValidationMessageFor(x => x.Year, null, new {@class = "govuk-error-message"})
             };
 
             foreach (var mvcHtmlString in errContent.Select(x => x?.ToHtmlString()).Distinct())
@@ -172,23 +189,27 @@
             var monthCssClasses = string.Concat(Html.TextBoxValidationClass(x => x.Month), " govuk-input ", $"{cssClassPrefix}-month");
             var yearCssClasses = string.Concat(Html.TextBoxValidationClass(x => x.Year), " govuk-input ", $"{cssClassPrefix}-year");
         }
+        @*
+            TODO -- Add inputmode="numeric"
+            per https://technology.blog.gov.uk/2020/02/24/why-the-gov-uk-design-system-team-changed-the-input-type-for-numbers/
+        *@
         <div class="govuk-date-input">
             <div class="govuk-date-input__item">
                 <div class="govuk-form-group">
-                    @Html.LabelFor(x => x.Day, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
-                    @Html.TextBoxFor(x => x.Day, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, dayCssClasses, 2, ViewData["vueModel"] != null ? string.Concat((string)ViewData["vueModel"], "Day") : null))
+                    @Html.LabelFor(x => x.Day, new {@class = string.Concat(labelClassName, " govuk-label govuk-date-input__label")})
+                    @Html.TextBoxFor(x => x.Day, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, dayCssClasses, 2, ViewData["vueModel"] != null ? string.Concat((string) ViewData["vueModel"], "Day") : null))
                 </div>
             </div>
             <div class="govuk-date-input__item">
                 <div class="govuk-form-group">
-                    @Html.LabelFor(x => x.Month, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
-                    @Html.TextBoxFor(x => x.Month, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, monthCssClasses, 2, ViewData["vueModel"] != null ? string.Concat((string)ViewData["vueModel"], "Month") : null))
+                    @Html.LabelFor(x => x.Month, new {@class = string.Concat(labelClassName, " govuk-label govuk-date-input__label")})
+                    @Html.TextBoxFor(x => x.Month, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, monthCssClasses, 2, ViewData["vueModel"] != null ? string.Concat((string) ViewData["vueModel"], "Month") : null))
                 </div>
             </div>
             <div class="govuk-date-input__item gias-year-input__item">
                 <div class="govuk-form-group">
-                    @Html.LabelFor(x => x.Year, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
-                    @Html.TextBoxFor(x => x.Year, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, yearCssClasses, 4, ViewData["vueModel"] != null ? string.Concat((string)ViewData["vueModel"], "Year") : null))
+                    @Html.LabelFor(x => x.Year, new {@class = string.Concat(labelClassName, " govuk-label govuk-date-input__label")})
+                    @Html.TextBoxFor(x => x.Year, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, yearCssClasses, 4, ViewData["vueModel"] != null ? string.Concat((string) ViewData["vueModel"], "Year") : null))
                 </div>
             </div>
         </div>
@@ -201,12 +222,6 @@
     </fieldset>
 </div>
 
-<div class="govuk-grid-column-full helptext-container">
-    <div id="help-text-@tooltipUnderscoredTitle">
-        <h3 class="govuk-heading-s make-modal-header">@tooltipTitle</h3>
-        <p class="govuk-body">@tooltipText</p>
-    </div>
-</div>
 
 @functions
 {
