@@ -199,10 +199,7 @@
             var monthCssClasses = string.Concat(Html.TextBoxValidationClass(x => x.Month), " govuk-input ", $"{cssClassPrefix}-month");
             var yearCssClasses = string.Concat(Html.TextBoxValidationClass(x => x.Year), " govuk-input ", $"{cssClassPrefix}-year");
         }
-        @*
-            TODO -- Add inputmode="numeric"
-            per https://technology.blog.gov.uk/2020/02/24/why-the-gov-uk-design-system-team-changed-the-input-type-for-numbers/
-        *@
+
         <div class="govuk-date-input">
             <div class="govuk-date-input__item">
                 <div class="govuk-form-group">
