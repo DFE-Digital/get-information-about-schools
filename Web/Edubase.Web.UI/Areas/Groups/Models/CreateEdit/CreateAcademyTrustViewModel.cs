@@ -1,5 +1,6 @@
 using Edubase.Common;
 using Edubase.Services.Domain;
+using Edubase.Services.Enums;
 using Edubase.Services.IntegrationEndPoints.CompaniesHouse.Models;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,13 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 {
     public class CreateAcademyTrustViewModel
     {
+        private static readonly Dictionary<int?, string> GroupTypeName = new Dictionary<int?, string>()
+        {
+            { (int) eLookupGroupType.MultiacademyTrust, "multi-academy trust" },
+            { (int) eLookupGroupType.SingleacademyTrust, "single-academy trust" },
+            { (int) eLookupGroupType.SecureSingleAcademyTrust, "secure single-academy trust" }
+        };
+
         public CreateAcademyTrustViewModel(CompanyProfile companyProfile)
         {
             Name = companyProfile.Name;
@@ -54,6 +62,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 
         public string CompaniesHouseAddressToken { get; set; }
 
-
+        public string TypeName => TypeId != null ? GroupTypeName[TypeId] : null;
     }
 }
