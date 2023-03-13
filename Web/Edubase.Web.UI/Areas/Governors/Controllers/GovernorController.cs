@@ -92,6 +92,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 _nomenclatureService,
                 await _cachedLookupService.NationalitiesGetAllAsync(),
                 await _cachedLookupService.GovernorAppointingBodiesGetAllAsync(),
+                await _cachedLookupService.TitlesGetAllAsync(),
                 governorPermissions);
 
             var applicableRoles = domainModel.ApplicableRoles.Cast<int>();
@@ -838,6 +839,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     _nomenclatureService,
                     await _cachedLookupService.NationalitiesGetAllAsync(),
                     await _cachedLookupService.GovernorAppointingBodiesGetAllAsync(),
+                    await _cachedLookupService.TitlesGetAllAsync(),
                     governorPermissions);
 
                 if (establishmentUrn.HasValue || establishmentModel != null)
