@@ -1,5 +1,5 @@
 import GiasAttachUnload from '../GiasModules/GiasModals/GiasAttachUnload';
-import GiasOkCancel from '../GiasModules/GiasModals/GiasOkCancel';
+
 const $main = $('#main-content');
 
 const unloadHandler = new GiasAttachUnload({
@@ -88,47 +88,60 @@ if ($("#remove-shared-governor").length > 0) {
 
 }
 
-const titleInput = document.getElementById('governorTitleInput');
-const firstNameInput = document.getElementById('FirstName');
-const middleNameInput = document.getElementById('MiddleName');
-const lastNameInput = document.getElementById('LastName');
+const titleInput = document.getElementById('governor-title-dropdown');
+const firstNameInput = document.getElementById('governor-first-name-textbox');
+const middleNameInput = document.getElementById('governor-middle-name-textbox');
+const lastNameInput = document.getElementById('governor-last-name-textbox');
 const fullNameDiv = document.getElementById('governorFullNameDiv');
+const governorFullNameInput = document.getElementById('governorFullNameInput');
 
 if (titleInput != null) {
-  titleInput.addEventListener('change', UpdateFullName);
+  titleInput.addEventListener('input', UpdateFullName);
+} else {
+  console.warn("title input field not found - automatic update of full name display will be limited");
 }
 if (firstNameInput != null) {
-  firstNameInput.addEventListener('change', UpdateFullName);
+  firstNameInput.addEventListener('input', UpdateFullName);
+} else {
+  console.warn("first name input field not found - automatic update of full name display will be limited");
 }
 if (middleNameInput != null) {
-  middleNameInput.addEventListener('change', UpdateFullName);
+  middleNameInput.addEventListener('input', UpdateFullName);
+} else {
+  console.warn("middle name input field not found - automatic update of full name display will be limited");
 }
 if (lastNameInput != null) {
-  lastNameInput.addEventListener('change', UpdateFullName);
+  lastNameInput.addEventListener('input', UpdateFullName);
+} else {
+  console.warn("last name input field not found - automatic update of full name display will be limited");
 }
 if (fullNameDiv != null) {
   fullNameDiv.style.display = 'block';
+} else {
+  console.warn("full name div not found - automatic update of full name display will be limited");
+}
+if (governorFullNameInput == null) {
+  console.warn("full name input not found - automatic update of full name display will be limited");
 }
 
+/**
+ * See also the server-side rendered C# implementation, whose implementation
+ * should be kept synchronised with the browser-side JavaScript implementation:
+ * - Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel.FullName
+ */
 function UpdateFullName() {
-  const fullNameInput = document.getElementById('governorFullNameInput');
-  let fullname = '';
-
-  if (titleInput.value != null) {
-    fullname += titleInput.options[titleInput.selectedIndex].text + ' ';
+  // Do not include the title in the "full name", if the title is not provided
+  let title = titleInput.options[titleInput.selectedIndex].text;
+  if (["Not recorded", "Not-applicable"].indexOf(title) !== -1) {
+    title = "";
   }
 
-  if (firstNameInput.value != null && firstNameInput.value != '') {
-    fullname += firstNameInput.value + ' ';
-  }
+  // Join the name parts with only a single space between each name part
+  const fullNameValue = [title, firstNameInput.value, middleNameInput.value, lastNameInput.value]
+    .filter(part => part)
+    .map(part => part.trim())
+    .join(" ")
+    .trim();
 
-  if (middleNameInput.value != null && middleNameInput.value != '') {
-    fullname += middleNameInput.value + ' ';
-  }
-
-  if (lastNameInput.value != null) {
-    fullname += lastNameInput.value;
-  }
-
-  fullNameInput.value = fullname;
+  governorFullNameInput.value = fullNameValue;
 }
