@@ -159,7 +159,10 @@
 
             foreach (var mvcHtmlString in errContent.Select(x => x?.ToHtmlString()).Distinct())
             {
-                @Html.Raw(mvcHtmlString)
+                if (mvcHtmlString != "<span class=\"field-validation-error govuk-error-message\">AppointmentDate cannot be empty</span>")
+                {
+                    @Html.Raw(mvcHtmlString)
+                }
             }
         }
 

@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
@@ -73,7 +74,8 @@ namespace Edubase.Web.UI.Helpers
                     {
                         foreach (var error in htmlHelper.ViewData.ModelState[modelName].Errors)
                         {
-                            htmlHelper.ViewData.ModelState.AddModelError(fullFieldName, error.ErrorMessage);
+                            var itemSplit = Regex.Replace(error.ErrorMessage, "([a-z])([A-Z])", "$1 $2");
+                            htmlHelper.ViewData.ModelState.AddModelError(fullFieldName, itemSplit);
                         }
                     }
                 }
