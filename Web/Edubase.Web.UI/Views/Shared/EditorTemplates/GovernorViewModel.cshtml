@@ -91,7 +91,7 @@ else
             var inputId = "governor-first-name-textbox";
             var errorsWrapperId = $"{inputId}-errors";
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FirstName)">
-                @Html.LabelFor(x => x.FirstName, $"First name{additionalInfo}", new { @class = "govuk-label", @for = inputId, })
+                @Html.LabelFor(x => x.FirstName, $"First name{additionalInfo}", new { @class = "govuk-label", @for = inputId,})
                 <span id="@errorsWrapperId">
                     @Html.ValidationMessageFor(x => x.FirstName, "First name cannot be empty", new { @class = "govuk-error-message" })
                 </span>
