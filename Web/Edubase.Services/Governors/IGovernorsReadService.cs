@@ -14,7 +14,8 @@ namespace Edubase.Services.Governors
         Task<ApiPagedResult<SearchGovernorModel>> SearchAsync(GovernorSearchPayload payload, IPrincipal principal);
         Task<GovernorsDetailsDto> GetGovernorListAsync(int? urn = null, int? groupUId = null, IPrincipal principal = null);
         Task<GovernorPermissions> GetGovernorPermissions(int? urn = default(int?), int? groupUId = default(int?), IPrincipal principal = null);
-        Task<GovernorDisplayPolicy> GetEditorDisplayPolicyAsync(eLookupGovernorRole role, bool isGroup, IPrincipal principal);
+        Task<GovernorDisplayPolicy> GetDisplayPolicyAsync(eLookupGovernorRole role, int? urn = default(int?), int? groupUId = default(int?), IPrincipal principal = null);
+        Task<GovernorEditPolicy> GetEditPolicyAsync(eLookupGovernorRole role, bool isGroup, IPrincipal principal);
         Task<GovernorModel> GetGovernorAsync(int gid, IPrincipal principal);
         Task<IEnumerable<GovernorModel>> GetSharedGovernorsAsync(int establishmentUrn, IPrincipal principal);
         Task<string> GetGovernorBulkUpdateTemplateUri(IPrincipal principal);

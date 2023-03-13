@@ -215,6 +215,7 @@
     <Compile Include="Geo\PlaceDto.cs" />
     <Compile Include="Geo\PlacesLookupService.cs" />
     <Compile Include="Governors\DisplayPolicies\GovernorDisplayPolicy.cs" />
+    <Compile Include="Governors\DisplayPolicies\GovernorEditPolicy.cs" />
     <Compile Include="Governors\Downloads\GovernorSearchDownloadPayload.cs" />
     <Compile Include="Governors\IGovernorsWriteService.cs" />
     <Compile Include="Governors\Models\GovernorAppointment.cs" />

@@ -27,7 +27,7 @@ else
 
 @helper DisplayGid()
 {
-    if (Model.DisplayPolicy.Id)
+    if (Model.EditPolicy.Id)
     {
         <div class="govuk-form-group">
             <label class="govuk-label" for="governorGidInput">
@@ -52,7 +52,7 @@ else
 
 @helper DisplayName()
 {
-    if (Model.DisplayPolicy.FullName)
+    if (Model.EditPolicy.FullName)
     {
         <div class="govuk-form-group" id="governorFullNameDiv" style="display:none">
             <label class="govuk-label" for="governorFullNameInput">
@@ -126,7 +126,7 @@ else
 
 @helper DisplayDateOfBirth()
 {
-    if (Model.DisplayPolicy.DOB)
+    if (Model.EditPolicy.DOB)
     {
         @Html.EditorFor(x => x.DOB,
             new
@@ -138,7 +138,7 @@ else
 
 @helper DisplayPostcode()
 {
-    if (Model.DisplayPolicy.PostCode)
+    if (Model.EditPolicy.PostCode)
     {
         var inputId = "governor-postcode-textbox";
         var errorsWrapperId = $"{inputId}-errors";
@@ -168,7 +168,7 @@ else
 
 @helper DisplayTelephoneNumber()
 {
-    if (Model.DisplayPolicy.TelephoneNumber)
+    if (Model.EditPolicy.TelephoneNumber)
     {
         var inputId = "governor-telephone-number-textbox";
         var errorsWrapperId = $"{inputId}-errors";
@@ -198,7 +198,7 @@ else
 
 @helper DisplayEmail()
 {
-    if (Model.DisplayPolicy.EmailAddress)
+    if (Model.EditPolicy.EmailAddress)
     {
         var labelText = "Email address";
         if (Model.GovernorRole.OneOfThese(
@@ -265,7 +265,7 @@ else
     }
     var editorPrefix = ViewData["editorPrefix"]?.ToString();
 
-    if (Model.DisplayPolicy.AppointmentStartDate)
+    if (Model.EditPolicy.AppointmentStartDate)
     {
         var startDateSaveRecord = isGovernorRole ? "(required to save record)" : "";
         var detail = disableStartDate ? @"(based on current governor's end date)" : $@"{startDateSaveRecord}";
@@ -274,7 +274,7 @@ else
             new { title, @readonly = disableStartDate, ClassPrefix = "start-date", editorPrefix })
     }
 
-    if (Model.DisplayPolicy.AppointmentEndDate)
+    if (Model.EditPolicy.AppointmentEndDate)
     {
         var titleText = Model.GovernorRole == eLookupGovernorRole.Member
             ? "Date stepped down"
@@ -294,7 +294,7 @@ else
 
 @helper DisplayAppointingBody()
 {
-    if (Model.DisplayPolicy.AppointingBodyId)
+    if (Model.EditPolicy.AppointingBodyId)
     {
         var inputId = "appointing-body-id-textbox";
         var errorsWrapperId = $"{inputId}-errors";
@@ -311,7 +311,7 @@ else
 
 @helper DisplayPreviousName()
 {
-    if (Model.DisplayPolicy.PreviousFullName)
+    if (Model.EditPolicy.PreviousFullName)
     {
         {
             var inputId = "previous-name-title-select";

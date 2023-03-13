@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Edubase.Services.Enums;
 using Edubase.Services.Governors.DisplayPolicies;
@@ -22,25 +23,35 @@ namespace Edubase.Services.Texuna.Governors
             _establishmentReadService = establishmentReadService;
         }
 
-        public async Task<GovernorDisplayPolicy> GetEditorDisplayPolicyAsync(eLookupGovernorRole role, bool isGroup, IPrincipal principal)
-            => (await _httpClient.GetAsync<GovernorDisplayPolicy>($"governor/{(int)role}/edit-policy?isForGroup={isGroup.ToString().ToLower()}", principal)).GetResponse();
+        public async Task<GovernorDisplayPolicy> GetDisplayPolicyAsync(eLookupGovernorRole role, int? urn = default(int?), int? groupUId = default(int?), IPrincipal principal = null)
+        {
+            // The API returns the governance display policies within the API endpoint to fetch governor details,
+            // therefore we must fetch the governors and inspect the display policies within this response.
+            var governorsDetailsDto = await GetGovernorListAsync(urn, groupUId, principal);
+            var governorDisplayPolicy = governorsDetailsDto.RoleDisplayPolicies[role];
+
+            return governorDisplayPolicy;
+        }
+
+        public async Task<GovernorEditPolicy> GetEditPolicyAsync(eLookupGovernorRole role, bool isGroup, IPrincipal principal)
+            => (await _httpClient.GetAsync<GovernorEditPolicy>($"governor/{(int) role}/edit-policy?isForGroup={isGroup.ToString().ToLower()}", principal)).GetResponse();
 
         public async Task<GovernorModel> GetGovernorAsync(int gid, IPrincipal principal)
         {
             var retVal = (await _httpClient.GetAsync<GovernorModel>($"governor/{gid}", principal)).GetResponse();
             return retVal;
         }
-        
+
         public async Task<GovernorsDetailsDto> GetGovernorListAsync(int? urn = default(int?), int? groupUId = default(int?), IPrincipal principal = null)
         {
             var retVal = (await _httpClient.GetAsync<GovernorsDetailsTexunaDto>($"governors?{(groupUId.HasValue ? "uid" : "urn")}={(urn.HasValue ? urn : groupUId)}", principal)).GetResponse();
             return retVal;
         }
 
-        public async Task<GovernorPermissions> GetGovernorPermissions(int? urn = default(int?), int? groupUId = default(int?), IPrincipal principal = null) 
+        public async Task<GovernorPermissions> GetGovernorPermissions(int? urn = default(int?), int? groupUId = default(int?), IPrincipal principal = null)
             => (await _httpClient.GetAsync<GovernorPermissions>($"governors/permissions?{(groupUId.HasValue ? "uid" : "urn")}={(urn.HasValue ? urn : groupUId)}", principal)).GetResponse();
 
-        public async Task<ApiPagedResult<SearchGovernorModel>> SearchAsync(GovernorSearchPayload payload, IPrincipal principal) 
+        public async Task<ApiPagedResult<SearchGovernorModel>> SearchAsync(GovernorSearchPayload payload, IPrincipal principal)
             => (await _httpClient.PostAsync<ApiPagedResult<SearchGovernorModel>>("governor/search", payload, principal)).GetResponse();
 
         public async Task<IEnumerable<GovernorModel>> GetSharedGovernorsAsync(int establishmentUrn, IPrincipal principal)
