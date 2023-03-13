@@ -93,7 +93,7 @@ else
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FirstName)">
                 @Html.LabelFor(x => x.FirstName, $"First name{additionalInfo}", new { @class = "govuk-label", @for = inputId, })
                 <span id="@errorsWrapperId">
-                    @Html.ValidationMessageFor(x => x.FirstName, "First Name cannot be empty", new { @class = "govuk-error-message" })
+                    @Html.ValidationMessageFor(x => x.FirstName, "First name cannot be empty", new { @class = "govuk-error-message" })
                 </span>
                 @Html.TextBoxFor(x => x.FirstName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.FirstName)), aria_describedBy = errorsWrapperId, })
             </div>
@@ -118,7 +118,7 @@ else
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LastName)">
                 @Html.LabelFor(x => x.LastName, $"Last name{additionalInfo}", new { @class = "govuk-label", @for = inputId })
                 <span id="@errorsWrapperId">
-                    @Html.ValidationMessageFor(x => x.LastName, "Last Name cannot be empty", new { @class = "govuk-error-message" })
+                    @Html.ValidationMessageFor(x => x.LastName, "Last name cannot be empty", new { @class = "govuk-error-message" })
                 </span>
                 @Html.TextBoxFor(x => x.LastName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.LastName)), aria_describedBy = errorsWrapperId, })
             </div>

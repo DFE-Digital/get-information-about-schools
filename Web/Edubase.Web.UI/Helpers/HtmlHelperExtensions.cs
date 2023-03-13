@@ -74,14 +74,21 @@ namespace Edubase.Web.UI.Helpers
                     {
                         foreach (var error in htmlHelper.ViewData.ModelState[modelName].Errors)
                         {
-                            var itemSplit = Regex.Replace(error.ErrorMessage, "([a-z])([A-Z])", "$1 $2");
-                            htmlHelper.ViewData.ModelState.AddModelError(fullFieldName, itemSplit);
+                            var splitName = SplitNameAndCapitaliseFirstLetter(error);
+                            htmlHelper.ViewData.ModelState.AddModelError(fullFieldName, splitName);
                         }
                     }
                 }
             }
 
             return htmlHelper.ValidationMessage(modelName, (string) null, new { @class = "govuk-error-message"});
+        }
+
+        private static string SplitNameAndCapitaliseFirstLetter(ModelError error)
+        {
+            var splitName = Regex.Replace(error.ErrorMessage, "([a-z])([A-Z])", "$1 $2");
+            splitName = splitName.Substring(0, 1) + splitName.Substring(1).ToLower();
+            return splitName;
         }
 
         public static MvcHtmlString DuplicateCssClassFor(this HtmlHelper htmlHelper, int? governorId)
