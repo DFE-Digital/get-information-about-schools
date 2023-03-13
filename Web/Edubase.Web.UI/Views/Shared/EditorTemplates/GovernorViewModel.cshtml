@@ -217,9 +217,34 @@ else
         var inputId = "governor-email-textbox";
         var errorsWrapperId = $"{inputId}-errors";
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EmailAddress)">
-            @Html.LabelFor(x => x.EmailAddress, labelText, new { @class = "govuk-label" })
-            @Html.ValidationMessageFor(x => x.EmailAddress, null, new { @class = "govuk-error-message" })
-            @Html.TextBoxFor(x => x.EmailAddress, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.EmailAddress)) })
+
+            @Html.LabelFor(x => x.EmailAddress, labelText, new { @class = "govuk-label", @for = inputId })
+            <details class="govuk-details govuk-!-margin-bottom-2" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        How this email address information is used
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p>
+                        The governance professional personal establishment email address must be added here.
+                        If the governance professional does not have an establishment email address, then their work/business email address should be entered here.
+                        If this is also their personal email address, it should be made clear to them how the email address will be used.
+                        The email address must be an up-to-date, valid, and actively monitored email address.
+                        This information is not publicly displayed on the website's interface and is classed as personal data, therefore,
+                        it cannot be shared publicly, for example, through a Freedom of Information (FOI) request.
+                        Under the conditions of Article 6(1)(e) of the UK-GDPR this information can be shared with other government departments,
+                        non-departmental public bodies, arm's length bodies and partners for official functions and tasks within the public interest to be performed.
+                    </p>
+                    <p>
+                        This information is very important as it allows the Department for Education to share important information and messages with the governance professional.
+                    </p>
+                </div>
+            </details>
+            <span id="@errorsWrapperId">
+                @Html.ValidationMessageFor(x => x.EmailAddress, null, new { @class = "govuk-error-message" })
+            </span>
+            @Html.TextBoxFor(x => x.EmailAddress, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.EmailAddress)), id = inputId, aria_describedBy = errorsWrapperId, })
         </div>
     }
 }
