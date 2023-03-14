@@ -10,6 +10,7 @@
     ViewBag.PageClass = "school-details";
     ViewBag.HideLogo = true;
 }
+
 @section BreadCrumbs {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
@@ -23,13 +24,13 @@
                         if (Model.SearchSource == eLookupSearchSource.Governors)
                         {
                             <li class="govuk-breadcrumbs__list-item">
-                                <a class="govuk-breadcrumbs__link" href=@($"{Url.Action("Index", "GovernorSearch", new {area = "Governors"})}?{Model.SearchQueryString}")>Search results</a>
+                                <a class="govuk-breadcrumbs__link" href=@($"{Url.Action("Index", "GovernorSearch", new { area = "Governors" })}?{Model.SearchQueryString}")>Search results</a>
                             </li>
                         }
                         else
                         {
                             <li class="govuk-breadcrumbs__list-item">
-                                <a class="govuk-breadcrumbs__link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")>Establishments</a>
+                                <a class="govuk-breadcrumbs__link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" })}?{Model.SearchQueryString}")>Establishments</a>
                             </li>
                         }
                     }
@@ -42,7 +43,7 @@
 @if (ViewBag.ShowSaved != null && ViewBag.ShowSaved)
 {
     var description = "Your changes have been saved";
-    if (!((string) ViewBag.Confirmed).IsNullOrEmpty())
+    if (!((string)ViewBag.Confirmed).IsNullOrEmpty())
     {
         description = ViewBag.Confirmed == "Governance" ? "Governance information confirmed" : "Details confirmed";
     }
@@ -72,12 +73,12 @@
                     @if (approvedCount > 0)
                     {
                         <div id="approval-banner-tick-icon" class="tick"></div>
-                    <p>@approvedCount change@(Html.Conditional(approvedCount > 1, "s")) to establishment details @(approvedCount > 1 ? "have" : "has") been instantly updated.</p>
-                }
+                        <p>@approvedCount change@(Html.Conditional(approvedCount > 1, "s")) to establishment details @(approvedCount > 1 ? "have" : "has") been instantly updated.</p>
+                    }
                     @if (approvedCount > 0 && pendingCount > 0)
                     {
                         <p>
-                            <br />
+                            <br/>
                         </p>
                     }
                     @if (pendingCount > 0)
@@ -85,14 +86,14 @@
                         <div class="@pendingTickClass"></div>
                         <p>@pendingCount change@(Html.Conditional(pendingCount > 1, "s")) to establishment details require DfE approval. You do not need to take any action now and changes will be made soon. If the DfE need more information they will contact you.</p>
                     }
-                    </p>
-                    <a class="cross" href="#">
-                        <span class="govuk-visually-hidden">Dismiss notification</span>
-                    </a>
-                </div>
+                </p>
+                <a class="cross" href="#">
+                    <span class="govuk-visually-hidden">Dismiss notification</span>
+                </a>
             </div>
         </div>
-    }
+    </div>
+}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-l gias-landing-heading">
@@ -103,11 +104,14 @@
         <p class="urn establishment-fine-detail"><abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn</p>
         <p class="establishment-type establishment-fine-detail">@Model.TypeName</p>
         <p class="establishment-data-download">
-            @Html.RouteLink("Download establishment data", "EstabDataDownload", new { Model.Establishment.Urn,
+            @Html.RouteLink("Download establishment data", "EstabDataDownload", new
+            {
+                Model.Establishment.Urn,
                 state = UriHelper.SerializeToUrlToken(RouteDto.Create(
                     new RouteDto("Search", new RouteValueDictionary(new { SelectedTab = SearchViewModel.Tab.Establishments.ToString() }), "Search"),
                     Model.LegalParentGroupRouteDto,
-                    Model.EstabDetailRouteDto))}, new { rel = "nofollow" })
+                    Model.EstabDetailRouteDto))
+            }, new { rel = "nofollow" })
         </p>
 
         @if (Model.LegalParentGroup != null)
@@ -115,7 +119,6 @@
             <div>
                 <p class="establishment-fine-detail">@Model.GetGroupFieldLabel(Model.LegalParentGroup): @Html.RouteLink(Model.LegalParentGroupRouteDto.Label, Model.LegalParentGroupRouteDto.RouteName, Model.LegalParentGroupRouteDto.RouteValues, HtmlHelper.AnonymousObjectToHtmlAttributes(new { @class = "govuk-breadcrumbs__link" }))</p>
             </div>
-
         }
 
         @if (Model.IsClosed)
@@ -141,7 +144,7 @@
         }
     </div>
 </div>
-@{Html.RenderPartial(@"Partials\ConfirmationNotifications");}
+@{ Html.RenderPartial(@"Partials\ConfirmationNotifications"); }
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
@@ -150,38 +153,52 @@
                 <ul class="gias-tabs">
                     @if (Model.TabDisplayPolicy.Details)
                     {
-                        <li class="gias-tabs__list-item"><a href="#school-dashboard" id="details-tab-link" class="gias-tabs__tab">Details</a></li>
+                        <li class="gias-tabs__list-item">
+                            <a href="#school-dashboard" id="details-tab-link" class="gias-tabs__tab">Details</a>
+                        </li>
                     }
 
                     @if (Model.TabDisplayPolicy.Governance)
                     {
-                        <li class="gias-tabs__list-item"><a href="#school-governance" id="governance-tab-link" class="gias-tabs__tab">Governance</a></li>
+                        <li class="gias-tabs__list-item">
+                            <a href="#school-governance" id="governance-tab-link" class="gias-tabs__tab">Governance</a>
+                        </li>
                     }
 
 
                     @if (Model.TabDisplayPolicy.IEBT)
                     {
-                        <li class="gias-tabs__list-item"><a href="#school-iebt" id="iebt-tab-link" class="gias-tabs__tab">IEBT</a></li>
+                        <li class="gias-tabs__list-item">
+                            <a href="#school-iebt" id="iebt-tab-link" class="gias-tabs__tab">IEBT</a>
+                        </li>
                     }
 
                     @if (Model.TabDisplayPolicy.Links)
                     {
-                        <li class="gias-tabs__list-item"><a href="#school-links" id="links-tab-link" class="gias-tabs__tab">Links</a></li>
+                        <li class="gias-tabs__list-item">
+                            <a href="#school-links" id="links-tab-link" class="gias-tabs__tab">Links</a>
+                        </li>
                     }
 
                     @if (Model.TabDisplayPolicy.Location)
                     {
-                        <li class="gias-tabs__list-item"><a href="#school-location" id="location-tab-link" class="gias-tabs__tab">Location</a></li>
+                        <li class="gias-tabs__list-item">
+                            <a href="#school-location" id="location-tab-link" class="gias-tabs__tab">Location</a>
+                        </li>
                     }
 
                     @if (Model.ChangeHistory != null && Model.TabDisplayPolicy.ChangeHistory)
                     {
-                        <li class="gias-tabs__list-item"><a href="#school-change-history" id="changes-tab-link" class="gias-tabs__tab">Changes</a></li>
+                        <li class="gias-tabs__list-item">
+                            <a href="#school-change-history" id="changes-tab-link" class="gias-tabs__tab">Changes</a>
+                        </li>
                     }
 
                     @if (Model.TabDisplayPolicy.Helpdesk)
                     {
-                        <li class="gias-tabs__list-item"><a href="#helpdesk" id="helpdesk-tab-link" class="gias-tabs__tab">Helpdesk</a></li>
+                        <li class="gias-tabs__list-item">
+                            <a href="#helpdesk" id="helpdesk-tab-link" class="gias-tabs__tab">Helpdesk</a>
+                        </li>
                     }
                 </ul>
             </div>
@@ -302,26 +319,23 @@
             </div>
         </div>
 
-            <div id="help-text-msoa">
-                <h3 class="govuk-heading-s make-modal-header">Middle super output area (MSOA)</h3>
-                <div class="govuk-body">
-                    <p>
-                        The data presented for the middle super output area (MSOA) is representative of the 2011 census.
-                    </p>
-                </div>
+        <div id="help-text-msoa">
+            <h3 class="govuk-heading-s make-modal-header">Middle super output area (MSOA)</h3>
+            <div class="govuk-body">
+                <p>
+                    The data presented for the middle super output area (MSOA) is representative of the 2011 census.
+                </p>
             </div>
+        </div>
 
-            <div id="help-text-lsoa">
-                <h3 class="govuk-heading-s make-modal-header">Lower super output area (LSOA)</h3>
-                <div class="govuk-body">
-                    <p>
-                        The data presented for the lower super output area (LSOA) is representative of the 2011 census.
-                    </p>
-                </div>
+        <div id="help-text-lsoa">
+            <h3 class="govuk-heading-s make-modal-header">Lower super output area (LSOA)</h3>
+            <div class="govuk-body">
+                <p>
+                    The data presented for the lower super output area (LSOA) is representative of the 2011 census.
+                </p>
             </div>
-
-
-
+        </div>
     </div>
 </div>
 
