@@ -185,7 +185,10 @@
             var mvcHtmlStrings = enumerable.Distinct();
             foreach (var mvcHtmlString in mvcHtmlStrings)
             {
-                @Html.Raw(mvcHtmlString)
+                if (mvcHtmlString != "<span class=\"field-validation-error govuk-error-message\">AppointmentDate cannot be empty</span>")
+                {
+                    @Html.Raw(mvcHtmlString)
+                }
             }
         }
         </span>

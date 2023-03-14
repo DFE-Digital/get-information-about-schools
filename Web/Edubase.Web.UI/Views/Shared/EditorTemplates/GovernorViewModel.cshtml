@@ -45,7 +45,8 @@ else
                     </p>
                 </div>
             </div>
-            <input id="governorGidInput" class="govuk-input" value="@Model.GID" readonly="readonly" disabled="disabled" placeholder="This value is generated internally by GIAS"/>
+
+            <input id="governorGidInput" class="govuk-input" value="@Model.GID" readonly="readonly" disabled="disabled" placeholder="This value is generated internally by GIAS" />
         </div>
     }
 }
@@ -71,11 +72,11 @@ else
                     </p>
                 </div>
             </div>
-            <input id="governorFullNameInput" class="govuk-input" readonly="readonly" disabled="disabled" value="@Model.FullName"/>
+            <input id="governorFullNameInput" class="govuk-input" readonly="readonly" disabled="disabled" value="@Model.FullName" />
         </div>
 
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernorTitleId)">
-            @Html.LabelFor(x => x.GovernorTitleId, new { @class = "govuk-label", @for = "governor-title-dropdown"})
+            @Html.LabelFor(x => x.GovernorTitleId, new { @class = "govuk-label", @for = "governor-title-dropdown" })
             @Html.ValidationMessageFor(x => x.GovernorTitleId, null, new { @class = "govuk-error-message" })
             @Html.DropDownListFor(x => x.GovernorTitleId, Model.Titles, "", new { id = "governor-title-dropdown", @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.GovernorTitleId)), })
         </div>
@@ -90,11 +91,11 @@ else
             var inputId = "governor-first-name-textbox";
             var errorsWrapperId = $"{inputId}-errors";
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FirstName)">
-                @Html.LabelFor(x => x.FirstName, $"First name{additionalInfo}", new {@class = "govuk-label", @for = inputId,})
+                @Html.LabelFor(x => x.FirstName, $"First name{additionalInfo}", new { @class = "govuk-label", @for = inputId,})
                 <span id="@errorsWrapperId">
-                    @Html.ValidationMessageFor(x => x.FirstName, null, new {@class = "govuk-error-message"})
+                    @Html.ValidationMessageFor(x => x.FirstName, "First name cannot be empty", new { @class = "govuk-error-message" })
                 </span>
-                @Html.TextBoxFor(x => x.FirstName, new {@class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.FirstName)), id = inputId, aria_describedBy = errorsWrapperId, })
+                @Html.TextBoxFor(x => x.FirstName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.FirstName)), aria_describedBy = errorsWrapperId, })
             </div>
         }
 
@@ -102,23 +103,24 @@ else
             var inputId = "governor-middle-name-textbox";
             var errorsWrapperId = $"{inputId}-errors";
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.MiddleName)">
-                @Html.LabelFor(x => x.MiddleName, new {@class = "govuk-label", @for = inputId})
+                @Html.LabelFor(x => x.MiddleName, new { @class = "govuk-label", @for = inputId })
                 <span id="@errorsWrapperId">
-                    @Html.ValidationMessageFor(x => x.MiddleName, null, new {@class = "govuk-error-message"})
+                    @Html.ValidationMessageFor(x => x.MiddleName, null, new { @class = "govuk-error-message" })
                 </span>
-                @Html.TextBoxFor(x => x.MiddleName, new {@class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.MiddleName)), id = inputId, aria_describedBy = errorsWrapperId,})
+                @Html.TextBoxFor(x => x.MiddleName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.MiddleName)), id = inputId, aria_describedBy = errorsWrapperId, })
             </div>
         }
+
 
         {
             var inputId = "governor-last-name-textbox";
             var errorsWrapperId = $"{inputId}-errors";
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LastName)">
-                @Html.LabelFor(x => x.LastName, $"Last name{additionalInfo}", new {@class = "govuk-label", @for = inputId})
+                @Html.LabelFor(x => x.LastName, $"Last name{additionalInfo}", new { @class = "govuk-label", @for = inputId })
                 <span id="@errorsWrapperId">
-                    @Html.ValidationMessageFor(x => x.LastName, null, new {@class = "govuk-error-message"})
+                    @Html.ValidationMessageFor(x => x.LastName, "Last name cannot be empty", new { @class = "govuk-error-message" })
                 </span>
-                @Html.TextBoxFor(x => x.LastName, new {@class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.LastName)), id = inputId, aria_describedBy = errorsWrapperId,})
+                @Html.TextBoxFor(x => x.LastName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.LastName)), aria_describedBy = errorsWrapperId, })
             </div>
         }
     }
@@ -151,7 +153,7 @@ else
                 </a>
             </label>
             <span id="@errorsWrapperId">
-                @Html.ValidationMessageFor(x => x.PostCode, null, new {@class = "govuk-error-message"})
+                @Html.ValidationMessageFor(x => x.PostCode, null, new { @class = "govuk-error-message" })
             </span>
             <div class="govuk-grid-column-full helptext-container">
                 <div id="help-text-postcode">
@@ -161,7 +163,7 @@ else
                     </p>
                 </div>
             </div>
-            @Html.TextBoxFor(x => x.PostCode, new {@class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PostCode)), id = inputId, aria_describedBy = errorsWrapperId, })
+            @Html.TextBoxFor(x => x.PostCode, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PostCode)), id = inputId, aria_describedBy = errorsWrapperId, })
         </div>
     }
 }
@@ -191,7 +193,7 @@ else
                     </p>
                 </div>
             </div>
-            @Html.TextBoxFor(x => x.TelephoneNumber, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.TelephoneNumber)), id = inputId, aria_describedBy = errorsWrapperId,})
+            @Html.TextBoxFor(x => x.TelephoneNumber, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.TelephoneNumber)), id = inputId, aria_describedBy = errorsWrapperId, })
         </div>
     }
 }
@@ -215,6 +217,7 @@ else
         var inputId = "governor-email-textbox";
         var errorsWrapperId = $"{inputId}-errors";
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EmailAddress)">
+
             @Html.LabelFor(x => x.EmailAddress, labelText, new { @class = "govuk-label", @for = inputId })
             <details class="govuk-details govuk-!-margin-bottom-2" data-module="govuk-details">
                 <summary class="govuk-details__summary">
@@ -304,7 +307,7 @@ else
                 @Html.ValidationMessageFor(x => x.AppointingBodyId, null, new { @class = "govuk-error-message" })
             </span>
             @Html.DropDownListFor(x => x.AppointingBodyId, Model.AppointingBodies, "",
-                new { id = "governorAppointingBodyInput", @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.AppointingBodyId)), aria_describedBy = errorsWrapperId, })
+                new { id = "governorAppointingBodyInput", @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.AppointingBodyId)) })
         </div>
     }
 }
@@ -317,12 +320,12 @@ else
             var inputId = "previous-name-title-select";
             var errorsWrapperId = $"{inputId}-errors";
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PreviousTitleId)">
-                @Html.LabelFor(x => x.PreviousTitleId, new {@class = "govuk-label"})
+                @Html.LabelFor(x => x.PreviousTitleId, new { @class = "govuk-label" })
                 <span id="@errorsWrapperId">
-                    @Html.ValidationMessageFor(x => x.PreviousTitleId, null, new {@class = "govuk-error-message"})
+                    @Html.ValidationMessageFor(x => x.PreviousTitleId, null, new { @class = "govuk-error-message" })
                 </span>
                 @Html.DropDownListFor(x => x.PreviousTitleId, Model.PreviousTitles, "",
-                    new {id = "GovernorPreviousNameTitleInput", @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.PreviousTitleId)), aria_describedBy = errorsWrapperId,})
+                    new { id = "GovernorPreviousNameTitleInput", @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.PreviousTitleId)), aria_describedBy = errorsWrapperId, })
             </div>
         }
 
@@ -356,12 +359,12 @@ else
             var inputId = "previous-last-name-textbox";
             var errorsWrapperId = $"{inputId}-errors";
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PreviousLastName)">
-                @Html.LabelFor(x => x.PreviousLastName, new {@class = "govuk-label"})
+                @Html.LabelFor(x => x.PreviousLastName, new { @class = "govuk-label" })
                 <span id="@errorsWrapperId">
-                    @Html.ValidationMessageFor(x => x.PreviousLastName, null, new {@class = "govuk-error-message"})
+                    @Html.ValidationMessageFor(x => x.PreviousLastName, null, new { @class = "govuk-error-message" })
                 </span>
                 @Html.TextBoxFor(x => x.PreviousLastName,
-                    new {id = "GovernorPreviousNameLastNameInput", @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PreviousLastName)), aria_describedBy = errorsWrapperId,})
+                    new { id = "GovernorPreviousNameLastNameInput", @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PreviousLastName)), aria_describedBy = errorsWrapperId, })
             </div>
         }
     }
