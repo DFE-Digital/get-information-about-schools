@@ -55,6 +55,8 @@ else
 {
     if (Model.DisplayPolicy.FullName)
     {
+        // Note that JavaScript interacts with these HTML elements
+        // Updates to the IDs will need to be reflected in both the <label> and within Edubase.Web.UI/Assets/Scripts/Entry/add-edit-governor.js
         <div class="govuk-form-group" id="governorFullNameDiv" style="display:none">
             <label class="govuk-label" for="governorFullNameInput">
                 Name
@@ -75,11 +77,15 @@ else
             <input id="governorFullNameInput" class="govuk-input" readonly="readonly" disabled="disabled" value="@Model.FullName" />
         </div>
 
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernorTitleId)">
-            @Html.LabelFor(x => x.GovernorTitleId, new { @class = "govuk-label", @for = "governor-title-dropdown" })
-            @Html.ValidationMessageFor(x => x.GovernorTitleId, null, new { @class = "govuk-error-message" })
-            @Html.DropDownListFor(x => x.GovernorTitleId, Model.Titles, "", new { id = "governor-title-dropdown", @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.GovernorTitleId)), })
-        </div>
+        {
+            // Note that JavaScript interacts with these HTML elements
+            // Updates to the IDs will need to be reflected in both the <label> and within Edubase.Web.UI/Assets/Scripts/Entry/add-edit-governor.js
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernorTitleId)">
+                @Html.LabelFor(x => x.GovernorTitleId, new {@class = "govuk-label",})
+                @Html.ValidationMessageFor(x => x.GovernorTitleId, null, new {@class = "govuk-error-message"})
+                @Html.DropDownListFor(x => x.GovernorTitleId, Model.Titles, "", new {@class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.GovernorTitleId)),})
+            </div>
+        }
 
         var additionalInfo = "";
         if (!EnumSets.eGovernanceProfessionalRoles.Contains(Model.GovernorRole))
@@ -88,10 +94,12 @@ else
         }
 
         {
-            var inputId = "governor-first-name-textbox";
+            // Note that JavaScript interacts with these HTML elements
+            // Updates to the IDs will need to be reflected in both the <label> and within Edubase.Web.UI/Assets/Scripts/Entry/add-edit-governor.js
+            var inputId = @Html.IdFor(x => x.FirstName);
             var errorsWrapperId = $"{inputId}-errors";
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FirstName)">
-                @Html.LabelFor(x => x.FirstName, $"First name{additionalInfo}", new { @class = "govuk-label", @for = inputId,})
+                @Html.LabelFor(x => x.FirstName, $"First name{additionalInfo}", new { @class = "govuk-label",})
                 <span id="@errorsWrapperId">
                     @Html.ValidationMessageFor(x => x.FirstName, "First name cannot be empty", new { @class = "govuk-error-message" })
                 </span>
@@ -100,23 +108,27 @@ else
         }
 
         {
-            var inputId = "governor-middle-name-textbox";
+            // Note that JavaScript interacts with these HTML elements
+            // Updates to the IDs will need to be reflected in both the <label> and within Edubase.Web.UI/Assets/Scripts/Entry/add-edit-governor.js
+            var inputId = @Html.IdFor(x => x.MiddleName);
             var errorsWrapperId = $"{inputId}-errors";
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.MiddleName)">
-                @Html.LabelFor(x => x.MiddleName, new { @class = "govuk-label", @for = inputId })
+                @Html.LabelFor(x => x.MiddleName, new { @class = "govuk-label", })
                 <span id="@errorsWrapperId">
                     @Html.ValidationMessageFor(x => x.MiddleName, null, new { @class = "govuk-error-message" })
                 </span>
-                @Html.TextBoxFor(x => x.MiddleName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.MiddleName)), id = inputId, aria_describedBy = errorsWrapperId, })
+                @Html.TextBoxFor(x => x.MiddleName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.MiddleName)), aria_describedBy = errorsWrapperId, })
             </div>
         }
 
 
         {
-            var inputId = "governor-last-name-textbox";
+            // Note that JavaScript interacts with these HTML elements
+            // Updates to the IDs will need to be reflected in both the <label> and within Edubase.Web.UI/Assets/Scripts/Entry/add-edit-governor.js
+            var inputId = @Html.IdFor(x => x.LastName);
             var errorsWrapperId = $"{inputId}-errors";
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LastName)">
-                @Html.LabelFor(x => x.LastName, $"Last name{additionalInfo}", new { @class = "govuk-label", @for = inputId })
+                @Html.LabelFor(x => x.LastName, $"Last name{additionalInfo}", new { @class = "govuk-label", })
                 <span id="@errorsWrapperId">
                     @Html.ValidationMessageFor(x => x.LastName, "Last name cannot be empty", new { @class = "govuk-error-message" })
                 </span>

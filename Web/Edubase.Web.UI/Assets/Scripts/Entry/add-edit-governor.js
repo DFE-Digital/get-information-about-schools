@@ -88,10 +88,12 @@ if ($("#remove-shared-governor").length > 0) {
 
 }
 
-const titleInput = document.getElementById('governor-title-dropdown');
-const firstNameInput = document.getElementById('governor-first-name-textbox');
-const middleNameInput = document.getElementById('governor-middle-name-textbox');
-const lastNameInput = document.getElementById('governor-last-name-textbox');
+// Note that these IDs will reflect IDs (either auto-generated or manually-specified) within:
+// - Edubase.Web.UI\Views\Shared\EditorTemplates\GovernorViewModel.cshtml
+const titleInput = document.getElementById('GovernorTitleId');
+const firstNameInput = document.getElementById('FirstName');
+const middleNameInput = document.getElementById('MiddleName');
+const lastNameInput = document.getElementById('LastName');
 const fullNameDiv = document.getElementById('governorFullNameDiv');
 const governorFullNameInput = document.getElementById('governorFullNameInput');
 
