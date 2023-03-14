@@ -19,7 +19,7 @@ namespace Edubase.ServicesUnitTests.Establishments.EditPolicies
                 new LookupDto { Id = (int) eLookupEstablishmentStatus.Quarantine }
             };
 
-            var result = lookups.FilterForEstablishmentType((int) ET.SecureAcademies16to19);
+            var result = lookups.FilterForEstablishmentType((int) ET.AcademySecure16to19);
 
             Assert.Equal(2, result.Count());
             Assert.Equal((int) eLookupEstablishmentStatus.PendingApproval, result.ToArray()[0].Id);

@@ -20,7 +20,7 @@ namespace Edubase.Services.Establishments.EditPolicies
 
         public static IEnumerable<LookupDto> FilterForEstablishmentType(this IEnumerable<LookupDto> lookups, int? typeId)
         {
-            return typeId == (int) ET.SecureAcademies16to19 ? lookups.Where(x => secureAcademies16to19StatusIds.Contains(x.Id)) : lookups;
+            return typeId == (int) ET.AcademySecure16to19 ? lookups.Where(x => secureAcademies16to19StatusIds.Contains(x.Id)) : lookups;
         }
     }
 }
