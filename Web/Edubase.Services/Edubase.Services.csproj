@@ -186,6 +186,7 @@
     <Compile Include="Establishments\Downloads\eDataSet.cs" />
     <Compile Include="Establishments\Downloads\EstablishmentSearchDownloadPayload.cs" />
     <Compile Include="Establishments\EditPolicies\EstablishmentEditPolicyEnvelope.cs" />
+    <Compile Include="Establishments\EditPolicies\LookupOptionsFilter.cs" />
     <Compile Include="Establishments\Models\AdditionalAddressModel.cs" />
     <Compile Include="Establishments\Models\AmalgamateMergeRequest.cs" />
     <Compile Include="Establishments\Models\BulkCreateAcademiesProgress.cs" />

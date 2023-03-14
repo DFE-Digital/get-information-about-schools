@@ -48,6 +48,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Establishments\EditPolicies\LookupOptionsFilterTests.cs" />
     <Compile Include="ExternalLookup\FBServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
