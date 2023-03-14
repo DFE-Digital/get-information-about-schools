@@ -22,15 +22,13 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
         /// <summary>
         /// Test Governance tab setting depending on Establishment type
         /// </summary>
-        /// <param name="establishmentTypeId"></param>
-        /// <param name="expectedGovernanceTab"></param>
         [Theory]
         [MemberData(nameof(EstablishmentTypeGovernanceTestData))]
         public void EstablishmentTypeId_SetsExpectedGovernanceTab(int establishmentTypeId, bool expectedGovernanceTab)
         {
             var establishmentDisplayEditPolicy = new EstablishmentDisplayEditPolicy
             {
-                IEBTDetail = new IEBTDetailDisplayEditPolicy() { Proprietors = new ProprietorFieldList<bool>(), ChairOfProprietor = new ProprietorFieldList<bool>() }
+                IEBTDetail = PopulatedIEBTDetail
             };
 
             var sutTabDisplayPolicy = new TabDisplayPolicy(new EstablishmentModel { TypeId = establishmentTypeId }, establishmentDisplayEditPolicy, new Mock<IPrincipal>().Object);
@@ -39,17 +37,15 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
         }
 
         /// <summary>
-        /// Test Changes tab setting depending on Establishment type
+        /// Test Links and Changes tabs settings depending on Establishment type
         /// </summary>
-        /// <param name="establishmentTypeId"></param>
-        /// <param name="expectedChangesTab"></param>
         [Theory]
         [MemberData(nameof(EstablishmentTypeChangesAndLinksTestData))]
         public void EstablishmentTypeId_SetsExpectedChangesTab(int establishmentTypeId, bool expectedChangesTab, bool expectedLinksTab)
         {
             var establishmentDisplayEditPolicy = new EstablishmentDisplayEditPolicy
             {
-                IEBTDetail = new IEBTDetailDisplayEditPolicy() { Proprietors = new ProprietorFieldList<bool>(), ChairOfProprietor = new ProprietorFieldList<bool>() }
+                IEBTDetail = PopulatedIEBTDetail
             };
 
             var sutTabDisplayPolicy = new TabDisplayPolicy(new EstablishmentModel { TypeId = establishmentTypeId }, establishmentDisplayEditPolicy, new Mock<IPrincipal>().Object);
@@ -61,8 +57,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
         /// <summary>
         /// Test IEBT, Location and HelpDesk tab settings depending on display-policy fields being true
         /// </summary>
-        /// <param name="displayPolicy"></param>
-        /// <param name="expectedTabDisplayPolicy"></param>
         [Theory]
         [MemberData(nameof(DisplayPolicyTestData))]
         public void EstablishmentDisplayEditPolicy_SetsExpectedDependentTabs(EstablishmentDisplayEditPolicy displayPolicy, TabDisplayPolicy expectedTabDisplayPolicy)
@@ -94,7 +88,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
                         MSOAId = false,
                         LSOAId = false,
                         // IEBT details
-                        IEBTDetail = NoIEBTDetail },
+                        IEBTDetail = EmptyIEBTDetail },
                     new TabDisplayPolicy() {
                         Helpdesk = false,
                         Location = false,
@@ -116,7 +110,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
                         MSOAId = false,
                         LSOAId = false,
                         // IEBT details
-                        IEBTDetail = IEBTDetail },
+                        IEBTDetail = PopulatedIEBTDetail },
                     new TabDisplayPolicy() {
                         Helpdesk = true,
                         Location = true,
@@ -164,7 +158,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
                 new object[] { ET.OtherIndependentSpecialSchool, false},
                 new object[] { ET.PlayingForSuccessCentres, false},
                 new object[] { ET.PupilReferralUnit, true},
-                new object[] { ET.SecureAcademies16to19, false},
+                new object[] { ET.AcademySecure16to19, false},
                 new object[] { ET.SecureUnits, false },
                 new object[] { ET.ServiceChildrensEducation, false},
                 new object[] { ET.SixthFormCentres, false},
@@ -216,7 +210,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
                 new object[] { ET.OtherIndependentSpecialSchool, true, true},
                 new object[] { ET.PlayingForSuccessCentres, true, true},
                 new object[] { ET.PupilReferralUnit,true, true},
-                new object[] { ET.SecureAcademies16to19, false, false},
+                new object[] { ET.AcademySecure16to19, true, false},
                 new object[] { ET.SecureUnits, true, true},
                 new object[] { ET.ServiceChildrensEducation, true, true},
                 new object[] { ET.SixthFormCentres, true, true},
@@ -229,12 +223,12 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments.Models
             };
         }
 
-        public static IEBTDetailDisplayEditPolicy IEBTDetail => new IEBTDetailDisplayEditPolicy()
+        public static IEBTDetailDisplayEditPolicy PopulatedIEBTDetail => new IEBTDetailDisplayEditPolicy()
         {
             Notes = true
         };
 
-        public static IEBTDetailDisplayEditPolicy NoIEBTDetail => new IEBTDetailDisplayEditPolicy
+        public static IEBTDetailDisplayEditPolicy EmptyIEBTDetail => new IEBTDetailDisplayEditPolicy
         {
             Notes = false,
             DateOfTheLastBridgeVisit = false,

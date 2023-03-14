@@ -158,7 +158,7 @@ namespace Edubase.Services.Texuna.Establishments
 
                 {ET.OnlineProvider, new []{ EP.Primary, EP.MiddleDeemedPrimary, EP.Secondary, EP.MiddleDeemedSecondary, EP._16Plus, EP.AllThrough }},
 
-                {ET.SecureAcademies16to19, new []{ EP._16Plus } }
+                {ET.AcademySecure16to19, new []{ EP._16Plus } }
             };
 
             return retVal;
