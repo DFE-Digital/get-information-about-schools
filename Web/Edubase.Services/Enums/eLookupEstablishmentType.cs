@@ -48,6 +48,6 @@ namespace Edubase.Services.Enums
         VoluntaryControlledSchool = 3,
         WelshEstablishment = 24,
         OnlineProvider = 45,
-        SecureAcademies16to19 = 46
+        AcademySecure16to19 = 46
     }
 }   
