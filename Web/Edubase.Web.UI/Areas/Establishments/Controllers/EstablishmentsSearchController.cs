@@ -20,6 +20,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
     using Edubase.Services.Establishments.Models;
     using Edubase.Services.Security;
     using Edubase.Web.UI.Helpers;
+    using Edubase.Web.UI.Mappers.Establishment;
     using Models.Search;
     using Services.Domain;
     using Services.Enums;
@@ -496,20 +497,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             else
             {
                 var permittedStatusIds = await _establishmentReadService.GetPermittedStatusIdsAsync(User);
-                var establishmentTypes = await _lookupService.EstablishmentTypesGetAllAsync();
                 var establishmentGroupTypes = await _lookupService.EstablishmentTypeGroupsGetAllAsync();
+                var establishmentTypes = await _lookupService.EstablishmentTypesGetAllAsync();
 
-
-                model.EstablishmentTypes = establishmentGroupTypes.Select(groupType =>
-                        new HeirarchicalLookupItemViewModel
-                        {
-                            Id = groupType.Id,
-                            Name = groupType.Name,
-                            ChildItems = establishmentTypes.Where(c => c.GroupIds.Contains(groupType.Id))
-                                .Select(e => new HeirarchicalLookupItemViewModel {Id = e.Id, Name = e.Name})
-                                .ToList()
-                        })
-                    .ToList();
+                model.EstablishmentTypes = LookupToSearchViewModelMapper.MapToHeirarchicalLookupItemViewModels(establishmentTypes, establishmentGroupTypes);
 
                 model.EstablishmentTypeLookup = establishmentTypes.ToDictionary(e => e.Id, e => e.Name);
 

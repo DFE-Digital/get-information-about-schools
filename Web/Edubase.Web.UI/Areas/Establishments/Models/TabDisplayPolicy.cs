@@ -57,7 +57,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
                 policy.UrbanRuralId, policy.GSSLAId, policy.Easting, policy.Northing, policy.MSOAId, policy.LSOAId
             }.Any(x => x == true);
 
-            Links = !model.TypeId.OneOfThese(ET.SecureAcademies16to19);
+            Links = !model.TypeId.OneOfThese(ET.AcademySecure16to19);
         }
 
         public TabDisplayPolicy()
