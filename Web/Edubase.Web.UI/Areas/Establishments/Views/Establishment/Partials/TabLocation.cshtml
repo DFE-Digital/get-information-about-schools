@@ -47,11 +47,21 @@
             </div>
 
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Middle super output area (MSOA)</dt>
+                <dt class="govuk-summary-list__key">Middle super output area (MSOA)
+                    <a href="#help-text-msoa" class="help-icon modal-link">
+                        <span class="govuk-visually-hidden">Help with middle super output area</span>
+                        @helpers.DialogHiddenPrompt()
+                    </a>
+                    </dt>
                 <dd class="govuk-summary-list__value">@Model.MSOAName</dd>
             </div>
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Lower super output area (LSOA)</dt>
+                <dt class="govuk-summary-list__key">Lower super output area (LSOA)
+                    <a href="#help-text-lsoa" class="help-icon modal-link">
+                        <span class="govuk-visually-hidden">Help with lower super output area</span>
+                        @helpers.DialogHiddenPrompt()
+                    </a>
+                    </dt>
                 <dd class="govuk-summary-list__value">@Model.LSOAName</dd>
             </div>
         </dl>
