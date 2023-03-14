@@ -94,6 +94,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public string PreviousLastName { get; set; }
 
         public GovernorEditPolicy EditPolicy { get; internal set; }
+        public GovernorDisplayPolicy DisplayPolicy { get; internal set; }
 
         public IEnumerable<SelectListItem> Titles { get; set; } = new List<SelectListItem>();
         public IEnumerable<SelectListItem> PreviousTitles { get; set; } = new List<SelectListItem>();

@@ -330,6 +330,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             viewModel.GovernorRole = role.Value;
             await PopulateSelectLists(viewModel);
             viewModel.EditPolicy = await _governorsReadService.GetEditPolicyAsync(role.Value, groupUId.HasValue, User);
+            viewModel.DisplayPolicy = await _governorsReadService.GetDisplayPolicyAsync(role.Value, null, groupUId, User);
 
             ModelState.Clear();
 
@@ -472,6 +473,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         {
             await PopulateSelectLists(viewModel);
             viewModel.EditPolicy = await _governorsReadService.GetEditPolicyAsync(viewModel.GovernorRole, viewModel.GroupUId.HasValue, User);
+            viewModel.DisplayPolicy = await _governorsReadService.GetDisplayPolicyAsync(viewModel.GovernorRole, null, viewModel.GroupUId, User);
 
             var governorModel = new GovernorModel
             {
@@ -638,7 +640,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 DateTermEnds = new DateTimeViewModel(governor.AppointmentEndDate),
                 NewLocalGovernor = new GovernorViewModel
                 {
-                    EditPolicy = await _governorsReadService.GetEditPolicyAsync((RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole) governor.RoleId.Value) ?? (eLookupGovernorRole) governor.RoleId.Value), false, User)
+                    EditPolicy = await _governorsReadService.GetEditPolicyAsync((RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole) governor.RoleId.Value) ?? (eLookupGovernorRole) governor.RoleId.Value), false, User),
+                    DisplayPolicy = await _governorsReadService.GetDisplayPolicyAsync((RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole) governor.RoleId.Value) ?? (eLookupGovernorRole) governor.RoleId.Value), establishmentUrn, null, User),
                 },
                 SharedGovernors = (await Task.WhenAll(governors.Select(async g => await SharedGovernorViewModel.MapFromGovernor(g, establishmentUrn, _cachedLookupService)))).ToList(),
                 NewChairType = ReplaceChairViewModel.ChairType.LocalChair,
@@ -774,6 +777,10 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             model.NewLocalGovernor.EditPolicy = await _governorsReadService.GetEditPolicyAsync(
                 (RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole) governor.RoleId.Value) ??
                  (eLookupGovernorRole) governor.RoleId.Value), false, User);
+
+            model.NewLocalGovernor.DisplayPolicy = await _governorsReadService.GetDisplayPolicyAsync(
+                (RoleEquivalence.GetLocalEquivalentToSharedRole((eLookupGovernorRole) governor.RoleId.Value) ??
+                 (eLookupGovernorRole) governor.RoleId.Value), model.Urn, null, User);
 
             var sourceGovernors = (await Task.WhenAll(governors.Select(async g => await SharedGovernorViewModel.MapFromGovernor(g, model.Urn.Value, _cachedLookupService)))).ToList();
             if (model.SharedGovernors == null)
