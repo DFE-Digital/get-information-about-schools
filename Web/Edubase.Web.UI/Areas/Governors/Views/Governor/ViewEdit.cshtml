@@ -226,12 +226,12 @@ else
                 }
                 if (Model.HistoricGrids.Any(h => h.Rows.Any()))
                 {
-                    <h2 class="govuk-heading-m">Historic (left within last 12 months)</h2>
+                    <h2 class="govuk-heading-m" id="historic-governor-heading">Historic (left within last 12 months)</h2>
                     <details class="govuk-details  govuk-!-font-size-16 gias-details--noborder" data-module="govuk-details">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
-                                <span class="gias-details-closed-text">More details</span>
-                                <span class="gias-details-open-text">Less details</span>
+                                <span class="gias-details-closed-text" id="historic-expand-details">More details</span>
+                                <span class="gias-details-open-text" id="historic-collapse-details">Less details</span>
                             </span>
                         </summary>
                         <div class="govuk-details__text">
@@ -379,7 +379,7 @@ else
                                         }
                                         else
                                         {
-                                            @Html.RouteLink("Edit person", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary" })
+                                            @Html.RouteLink("Edit person", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary", id = $"edit-governor-{row.Model.Id}-button" })
                                         }
                                     }
 
