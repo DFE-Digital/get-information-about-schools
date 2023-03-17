@@ -84,7 +84,7 @@ namespace Edubase.Web.UI.Models
 
             if (UserCanCreateAcademyTrustGroup)
             {
-                retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new academy trusts", "SearchCompaniesHouse", "Group", new { area = "Groups", groupTypeName = "academy-trust" }, null), Description = "Set up a new academy trust record." });
+                retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("Create new academy trusts", "SearchCompaniesHouse", "Group", new { area = "Groups", academyTrustRoute = "academy-trust" }, null), Description = "Set up a new academy trust record." });
             }
 
             if (UserCanConvertAcademyTrusts)
@@ -93,7 +93,7 @@ namespace Edubase.Web.UI.Models
             }
             if (UserCanCreateSecureSingleAcademyTrustGroup)
             {
-                retVal.Add(new LinkAction {  Link = htmlHelper.ActionLink("Create new Secure Single-academy trust", "SearchCompaniesHouse", "Group", new { area = "Groups", groupTypeName = "secure-academy-trust"}, null), Description = "Set up a new secure single-academy trust record." });
+                retVal.Add(new LinkAction {  Link = htmlHelper.ActionLink("Create new Secure Single-academy trust", "SearchCompaniesHouse", "Group", new { area = "Groups", academyTrustRoute = "secure-academy-trust"}, null), Description = "Set up a new secure single-academy trust record." });
             }
 
             return retVal;

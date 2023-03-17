@@ -191,18 +191,24 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 : View("Create", viewModel);
         }
 
-        [HttpGet, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}")]
-        public async Task<ActionResult> CreateAcademyTrust(string companiesHouseNumber)
+        [HttpGet, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}/{academyTrustRoute}")]
+        public async Task<ActionResult> CreateAcademyTrust(string companiesHouseNumber, string academyTrustRoute)
         {
+            var permission = await _securityService.GetCreateGroupPermissionAsync(User);
+
+            if (HasCreatePermissionForGroupType(permission, academyTrustRoute))
+            {
+                throw new PermissionDeniedException("Current principal does not have the required permissions.");
+            }
+
             if (string.IsNullOrWhiteSpace(companiesHouseNumber))
             {
                 return HttpNotFound();
             }
 
-            var groupTypeName = Request.QueryString["groupTypeName"];
-            ViewData["groupTypeName"] = groupTypeName;
+            ViewData["academyTrustRoute"] = academyTrustRoute;
             var companyProfile = await _companiesHouseService.SearchByCompaniesHouseNumber(companiesHouseNumber);
-            var groupTypes = await GetAcademyTrustGroupTypes(groupTypeName);
+            var groupTypes = await GetAcademyTrustGroupTypes(academyTrustRoute);
 
             var vm = new CreateAcademyTrustViewModel(companyProfile.Items.First(), groupTypes);
 
@@ -513,19 +519,14 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}")]
-        public async Task<ActionResult> SaveNewAcademyTrust(CreateAcademyTrustViewModel viewModel, string groupTypeName)
+        [HttpPost, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}/{academyTrustRoute}")]
+        public async Task<ActionResult> SaveNewAcademyTrust(CreateAcademyTrustViewModel viewModel, string academyTrustRoute)
         {
             var permission = await _securityService.GetCreateGroupPermissionAsync(User);
             if ((viewModel.TypeId != null) && (!permission.GroupTypes.Any(x => (int)x == viewModel.TypeId)))
             {
                 throw new PermissionDeniedException("Current principal does not have permission to create a group of this type.");
             }
-            // CML old way of doing it - I'm not keen
-            //if (!permission.GroupTypes.Any(x => x == GT.MultiacademyTrust || x == GT.SingleacademyTrust || x == GT.SecureSingleAcademyTrust))
-            //{
-                
-            //}
 
             var dto = new SaveGroupDto(new GroupModel
             {
@@ -561,38 +562,23 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
             else
             {
-                viewModel.GroupTypes = await GetAcademyTrustGroupTypes(groupTypeName, viewModel.TypeId);
+                viewModel.GroupTypes = await GetAcademyTrustGroupTypes(academyTrustRoute, viewModel.TypeId);
             }
 
             return View("CreateAcademyTrust", viewModel);
         }
 
-        private IEnumerable<eLookupGroupType> GroupTypesFromRouteName(string routeName)
-        {
-            return routeName == "academy-trust"
-                ? new List<eLookupGroupType> { GT.MultiacademyTrust, GT.SingleacademyTrust }
-                : new List<eLookupGroupType> { GT.SecureSingleAcademyTrust };
-        }
-
-        private bool HasCreatePermission(CreateGroupPermissionDto userPermissions, string groupTypeName)
-        {
-            var query = from groupType in GroupTypesFromRouteName(groupTypeName)
-                        join permissionType in userPermissions.GroupTypes on groupType equals permissionType
-                        select new { groupType };
-            return query.ToList().IsNullOrEmpty();
-        }
-
-        [HttpGet, EdubaseAuthorize, Route(nameof(SearchCompaniesHouse) + "/{groupTypeName}")]
-        public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel, string groupTypeName)
+        [HttpGet, EdubaseAuthorize, Route(nameof(SearchCompaniesHouse) + "/{academyTrustRoute}")]
+        public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel, string academyTrustRoute)
         {
             var permission = await _securityService.GetCreateGroupPermissionAsync(User);
 
-            if (HasCreatePermission(permission, groupTypeName))
+            if (HasCreatePermissionForGroupType(permission, academyTrustRoute))
             {
                 throw new PermissionDeniedException("Current principal does not have the required permissions.");
             }
 
-            ViewData["groupTypeName"] = groupTypeName;
+            ViewData["academyTrustRoute"] = academyTrustRoute;
 
             if (!viewModel.SearchText.IsNullOrEmpty())
             {
@@ -611,7 +597,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 }
                 else if (viewModel.Results.Count == 1)
                 {
-                    return RedirectToAction("CreateAcademyTrust", "Group", new { companiesHouseNumber = viewModel.Results.Items.First().Number, area = "Groups", groupTypeName = groupTypeName });
+                    return RedirectToAction("CreateAcademyTrust", "Group", new { companiesHouseNumber = viewModel.Results.Items.First().Number, area = "Groups", academyTrustRoute = academyTrustRoute });
                 }
             }
 
@@ -790,6 +776,24 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return dto;
         }
 
+        private IEnumerable<eLookupGroupType> GroupTypesFromRouteName(string routeName)
+        {
+            switch (routeName)
+            {
+                case "academy-trust":
+                    return new List<eLookupGroupType> { GT.MultiacademyTrust, GT.SingleacademyTrust };
+                case "secure-academy-trust":
+                    return new List<eLookupGroupType> { GT.SecureSingleAcademyTrust };
+                default: return new List<eLookupGroupType>();
+            };
+        }
+        private bool HasCreatePermissionForGroupType(CreateGroupPermissionDto userPermissions, string academyTrustRoute)
+        {
+            var query = from groupType in GroupTypesFromRouteName(academyTrustRoute)
+                        join permissionType in userPermissions.GroupTypes on groupType equals permissionType
+                        select new { groupType };
+            return query.ToList().IsNullOrEmpty();
+        }
         private async Task<IEnumerable<eLookupGroupType>> GetAcademyGroupTypeIdsPermitted()
         {
             var groupTypesAllowed = await _securityService.GetCreateGroupPermissionAsync(User);
@@ -797,20 +801,17 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return new List<eLookupGroupType>() { GT.MultiacademyTrust, GT.SingleacademyTrust };
         }
 
-        private async Task<IEnumerable<SelectListItem>> GetAcademyTrustGroupTypes(string groupTypeName, int? typeId = null)
+        private async Task<IEnumerable<SelectListItem>> GetAcademyTrustGroupTypes(string academyTrustRoute, int? typeId = null)
         {
-            if (groupTypeName == "secure-academy-trust")
+            if (academyTrustRoute == "secure-academy-trust")
             {
                 return (await _lookup.GroupTypesGetAllAsync()).Where(x => x.Id == (int) GT.SecureSingleAcademyTrust).ToSelectList(typeId);
             }
-            else if (groupTypeName == "academy-trust")
+            else if (academyTrustRoute == "academy-trust")
             {
-                return (await _lookup.GroupTypesGetAllAsync()).Where(x => x.Id == (int) GT.MultiacademyTrust || x.Id == (int) GT.SingleacademyTrust).ToSelectList(typeId);
+                return (await _lookup.GroupTypesGetAllAsync()).Where(x => x.Id == (int) GT.MultiacademyTrust || x.Id == (int) GT.SingleacademyTrust).ToSelectList(typeId);              
             }
-            else
-            {
-                return new List<SelectListItem>();
-            }
+            else return null;
         }
 
         private async Task PopulateEstablishmentList(List<EstablishmentGroupViewModel> list, int groupUId, bool includeFutureDated = false)

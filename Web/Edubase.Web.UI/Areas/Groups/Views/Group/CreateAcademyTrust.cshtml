@@ -33,7 +33,7 @@
 </div>
 
 
-@using (Html.BeginForm("SaveNewAcademyTrust", "Group", new { area = "Groups", groupTypeName = ViewData["groupTypeName"] }, FormMethod.Post))
+@using (Html.BeginForm("SaveNewAcademyTrust", "Group", new { area = "Groups", academyTrustRoute = ViewData["academyTrustRoute"] }, FormMethod.Post))
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
@@ -77,7 +77,7 @@
                     </div>
                 </dl>
 
-                <p>@Html.ActionLink("Wrong company?", "SearchCompaniesHouse", "Group", new {area = "Groups", groupTypeName = ViewData["groupTypeName"] }, new { @class = "change-link" })</p>
+                <p>@Html.ActionLink("Wrong company?", "SearchCompaniesHouse", "Group", new {area = "Groups", academyTrustRoute = ViewData["academyTrustRoute"] }, new { @class = "change-link" })</p>
             </div>
 
             @Html.HiddenFor(x => x.CompaniesHouseAddressToken)
@@ -140,11 +140,11 @@
             <div class="button-row">
             @if (Model.TrustExists == true)
             {
-                @Html.ActionLink("Back to company search", "SearchCompaniesHouse", "Group", new {area = "Groups", groupTypeName = ViewData["groupTypeName"] }, new {@class = "govuk-button cancel"})
+                @Html.ActionLink("Back to company search", "SearchCompaniesHouse", "Group", new {area = "Groups", academyTrustRoute = ViewData["academyTrustRoute"] }, new {@class = "govuk-button cancel"})
             }
             else
             {
-                @Html.ActionLink(HttpUtility.HtmlDecode("&laquo; Go back"), "SearchCompaniesHouse", "Group", new {area = "Groups", groupTypeName = ViewData["groupTypeName"] }, new {@class = "govuk-button govuk-button--secondary cancel"})
+                @Html.ActionLink(HttpUtility.HtmlDecode("&laquo; Go back"), "SearchCompaniesHouse", "Group", new {area = "Groups", academyTrustRoute = ViewData["academyTrustRoute"] }, new {@class = "govuk-button govuk-button--secondary cancel"})
                 if (Model.AllowSave)
                 {
                     <button type="submit" id="create-academy-trust-submit-button" class="govuk-button submit">Create academy trust</button>
