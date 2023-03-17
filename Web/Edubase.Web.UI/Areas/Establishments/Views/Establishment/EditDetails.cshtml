@@ -290,7 +290,7 @@
     @if (Model.EditPolicy.LocalAuthorityId)
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
-            <label for="LocalAuthorityId" class="govuk-label">Local authority</label>
+            <label for="LocalAuthorityId" id="local-authority" class="govuk-label">Local authority</label>
             @Html.ValidationMessageFor(x => x.LocalAuthorityId, null, new {@class = "govuk-error-message"})
             @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new {@class = "govuk-select"})
         </div>
@@ -391,7 +391,7 @@
     {
         <div class="govuk-form-group">
             <label class="govuk-label" for="ReligiousCharacterId">Religious character</label>
-            @Html.DropDownListFor(x => x.ReligiousCharacterId, Model.ReligiousCharacters, "", new {@class = "govuk-select", id = "ReligiousCharacterId"})
+            @Html.DropDownListFor(x => x.ReligiousCharacterId, Model.ReligiousCharacters, "", new {@class = "govuk-select"})
         </div>
     }
 
@@ -400,7 +400,7 @@
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.DioceseId)">
             <label class="govuk-label" for="diocese">Diocese</label>
-            @Html.DropDownListFor(x => x.DioceseId, Model.Dioceses, "", new {id = "diocese", @class = "govuk-select"})
+            @Html.DropDownListFor(x => x.DioceseId, Model.Dioceses, "", new {id = "diocese-dropdown", @class = "govuk-select"})
         </div>
     }
 
@@ -884,7 +884,7 @@
     }
     <!-- Online Provider content -->
     <div class="button-row govuk-!-padding-top-4">
-        <button id="save-submit-bottom" type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, "details")">Continue</button>
+        <button id="save-submit-button" type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, "details")">Continue</button>
     </div>
     </div>
     </div>
@@ -901,7 +901,7 @@
             Html.RenderPartial("Partials/_ConfirmChanges");
 
             <div class="button-row govuk-!-padding-top-8">
-                <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm">Accept and save</button>
+                <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" id="accept-and-save-button" class="govuk-button js-confirm">Accept and save</button>
             </div>
 
             @section ViewScripts {

@@ -9,16 +9,18 @@
     ViewBag.bodyClasses = " search-page custom-fields-download";
     ViewBag.hideLogo = true;
 }
+
 @section Head
 {
-    <meta name="robots" content="noindex,nofollow" />
+    <meta name="robots" content="noindex,nofollow"/>
 }
 
 @section BreadCrumbs
 {
     @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
     {
-        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-back-link" })
+        @Html.ActionLink("Search", "Index", "Search", new { area = "" },
+            new { @class = "govuk-back-link" })
     }
     else
     {
@@ -26,9 +28,18 @@
             <div class="govuk-grid-column-full">
                 <div class="govuk-breadcrumbs">
                     <ol class="govuk-breadcrumbs__list">
-                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
-                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Establishments}, new {@class = "govuk-breadcrumbs__link"})</li>
-                        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")>Search results</a></li>
+                        <li class="govuk-breadcrumbs__list-item">
+                            @Html.ActionLink("Home", "Index", "Home",
+                                new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                        </li>
+                        <li class="govuk-breadcrumbs__list-item">
+                            @Html.ActionLink("Search", "Index", "Search",
+                                new { area = "", SelectedTab = SearchViewModel.Tab.Establishments },
+                                new { @class = "govuk-breadcrumbs__link" })
+                        </li>
+                        <li class="govuk-breadcrumbs__list-item">
+                            <a class="govuk-breadcrumbs__link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" })}?{Model.SearchQueryString}")>Search results</a>
+                        </li>
                     </ol>
                 </div>
             </div>
@@ -39,7 +50,7 @@
 <div id="field-select-app" v-cloak>
     <div class="govuk-grid-row js-show-block">
         <div class="govuk-grid-column-full">
-            <error-summary error-title="There was a problem" :errors="errorMessages" />
+            <error-summary error-title="There was a problem" :errors="errorMessages"/>
         </div>
     </div>
 
@@ -54,24 +65,25 @@
             <h2 class="govuk-heading-m">Select the data you are interested in</h2>
         </div>
     </div>
-    @using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get, new Dictionary<string, object> { ["@submit"] = "handleSubmit", ["id"] = "field-selection" }))
+    @using (Html.BeginForm("PrepareDownload", "EstablishmentsSearch", FormMethod.Get,
+        new Dictionary<string, object> { ["@submit"] = "handleSubmit", ["id"] = "field-selection" }))
     {
         <div id="js-field-selection" class="js-show-block">
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <search-by-field-name :fields="fields" :selected-fields="selectedFields" />
+                    <search-by-field-name :fields="fields" :selected-fields="selectedFields"/>
                 </div>
                 <div class="govuk-grid-column-one-third search-results-download-view-in-sections">
-                    <view-switcher :view-as-list="viewAsList" />
+                    <view-switcher :view-as-list="viewAsList"/>
                 </div>
             </div>
 
             <div class="govuk-grid-row" v-if="shouldShowContinue">
                 <div class="govuk-grid-column-one-half">
-                    <input type="submit" class="govuk-button" value="Next" />
+                    <input type="submit" class="govuk-button" value="Next"/>
                 </div>
-                <checkbox-remote-selection :selected-fields="selectedFields" />
+                <checkbox-remote-selection :selected-fields="selectedFields"/>
             </div>
 
             <div class="govuk-grid-row" v-show="!viewAsList">
@@ -79,7 +91,7 @@
                     <download-categorised-fields accordion-id="categorised-fields"
                                                  :panel-data="categoryList"
                                                  :selected-fields="selectedFields"
-                                                 :has-error="radioError" />
+                                                 :has-error="radioError"/>
                 </div>
             </div>
 
@@ -93,7 +105,8 @@
                                       :label="chx.name"
                                       :value="chx.id"
                                       v-model="selectedFields"
-                                      v-for="(chx, i) in fields" :key="i+'_'"></checkbox>
+                                      v-for="(chx, i) in fields" :key="i+'_'">
+                            </checkbox>
                         </div>
                     </div>
                     <div v-bind:class="['govuk-form-group', radioError? 'govuk-form-group--error' : '']" v-else>
@@ -113,16 +126,16 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full  govuk-!-padding-top-4" v-if="shouldShowContinue">
-                    <input type="submit" class="govuk-button" value="Next" />
+                    <input type="submit" class="govuk-button" value="Next"/>
                 </div>
             </div>
         </div>
 
         <div id="no-js-container">
-            <input type="hidden" value="true" name="ViewedCustomFields" />
+            <input type="hidden" value="true" name="ViewedCustomFields"/>
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
-                    <input type="submit" class="govuk-button" value="Next" />
+                    <input type="submit" class="govuk-button" value="Next"/>
                 </div>
             </div>
             <div class="govuk-grid-row">
@@ -131,7 +144,6 @@
                         @Html.ValidationMessageFor(x => x.CustomFieldsByCategory, null, new { @class = "govuk-error-message" })
                         @foreach (var fieldCategory in Model.CustomFieldsByCategory)
                         {
-
                             <div class="gias-download-fields--section">
                                 <h2 class="govuk-heading-m">@fieldCategory.Category</h2>
                                 <div class="gias-download-fields--section__content">
@@ -157,14 +169,13 @@
             </div>
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full govuk-!-padding-top-4">
-                    <input type="submit" class="govuk-button" value="Next" />
+                    <input type="submit" class="govuk-button" value="Next"/>
                 </div>
             </div>
         </div>
         @Html.HiddenFieldsFromQueryString(new[] { EstablishmentSearchDownloadViewModel.SelectedCustomFieldsBindAlias })
     }
 </div>
-
 
 
 @section ViewScripts

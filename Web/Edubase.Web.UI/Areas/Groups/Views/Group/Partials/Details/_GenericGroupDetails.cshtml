@@ -26,18 +26,18 @@
 @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor))
 {
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Group identifier (ID)</dt>
-        <dd class="govuk-summary-list__value">@(Model.Group.GroupId.Clean() ?? "Not recorded")</dd>
+        <dt id="group-identifier-key" class="govuk-summary-list__key">Group identifier (ID)</dt>
+        <dd id="group-identifier-value" class="govuk-summary-list__value">@(Model.Group.GroupId.Clean() ?? "Not recorded")</dd>
     </div>
 }
 @if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
 {
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
+        <dt id="company-number-key" class="govuk-summary-list__key">
             Company number<br />
             (also known as Companies House (CH) number)
         </dt>
-        <dd class="govuk-summary-list__value">
+        <dd id="company-number-value" class="govuk-summary-list__value">
             @if (Model.Group.CompaniesHouseNumber.IsNullOrEmpty())
             {
                 <text>Not recorded</text>
@@ -55,29 +55,29 @@
 @if (Model.UKPRN.HasValue)
 {
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key"><abbr title="UK provider reference number (UKPRN)">UK provider reference number (UKPRN)</abbr></dt>
-        <dd class="govuk-summary-list__value">@Model.UKPRN</dd>
+        <dt id="ukprn-key" class="govuk-summary-list__key"><abbr title="UK provider reference number (UKPRN)">UK provider reference number (UKPRN)</abbr></dt>
+        <dd id="ukprn-value" class="govuk-summary-list__value">@Model.UKPRN</dd>
     </div>
 }
 <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">Group type</dt>
-    <dd class="govuk-summary-list__value">@Model.GroupTypeName</dd>
+    <dd class="govuk-summary-list__value" id="group-type-value">@Model.GroupTypeName</dd>
 </div>
 @if (Model.IsUserLoggedOn)
 {
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">Status</dt>
-        <dd class="govuk-summary-list__value">@(Model.GroupStatusName ?? "Not recorded")</dd>
+        <dd class="govuk-summary-list__value" id="status-value">@(Model.GroupStatusName ?? "Not recorded")</dd>
     </div>
 }
 <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">@Model.OpenDateLabel</dt>
-    <dd class="govuk-summary-list__value">@(Model.Group.OpenDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+    <dd class="govuk-summary-list__value" id="group-open-date-value">@(Model.Group.OpenDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
 </div>
 @if (Model.IsUserLoggedOn)
 {
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">Close date</dt>
-        <dd class="govuk-summary-list__value">@(Model.Group.ClosedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        <dd class="govuk-summary-list__value" id="group-close-date-value">@(Model.Group.ClosedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
     </div>
 }

@@ -1,4 +1,4 @@
-﻿using Edubase.Data.Entity;
+using Edubase.Data.Entity;
 using Edubase.Data.Repositories.TableStorage;
 using Microsoft.WindowsAzure.Storage.Table;
 using System.Threading.Tasks;

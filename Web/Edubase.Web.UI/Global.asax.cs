@@ -30,7 +30,7 @@ namespace Edubase.Web.UI
             {
                 GetExternalSettings();
             }
-            catch (Exception e)
+            catch
             {
                 throw new UnauthorizedAccessException("Could not get external settings. This is probably because you haven't been issued the external settings file.");
             }

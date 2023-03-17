@@ -9,7 +9,7 @@
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
-                @Html.ActionLink("Edit governance", "Edit", "Governor", new { establishmentUrn = Model.Establishment.Urn, area = "Governors" }, new { @class = "govuk-button govuk-button--secondary" })
+                @Html.ActionLink("Edit governance", "Edit", "Governor", new { establishmentUrn = Model.Establishment.Urn, area = "Governors" }, new { id = "edit-governance-button", @class = "govuk-button govuk-button--secondary" })
                 
                 @if (!Model.MediumPriorityGovernanceConfirmationPending &&
                      !Model.HighPriorityGovernanceConfirmationPending &&
@@ -32,7 +32,7 @@
                 {
                     using (Html.BeginRouteForm("EstablishmentGovernanceConfirmUpToDate", new {Model.Establishment.Urn, showBanner = true}, FormMethod.Post, new {@class = "gias-action-form" }))
                     {
-                    <button class="govuk-button" data-module="govuk-button" id="estab-data-confirm">Confirm governance information</button>
+                    <button class="govuk-button" data-module="govuk-button" id="governance-data-confirm-button">Confirm governance information</button>
                     }
                 }
             </div>
@@ -45,7 +45,7 @@
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
-                @Html.ActionLink("Edit governance", "Edit", "Governor", new { establishmentUrn = Model.Establishment.Urn, area = "Governors" }, new { @class = "govuk-button govuk-button--secondary" })
+                @Html.ActionLink("Edit governance", "Edit", "Governor", new { establishmentUrn = Model.Establishment.Urn, area = "Governors" }, new { id = "edit-governance-button", @class = "govuk-button govuk-button--secondary" })
             </div>
         </div>
 

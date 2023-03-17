@@ -28,7 +28,7 @@
                         @Html.ActionLink("Local authority name and associated codes", "LaNameCodes", "Guidance", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
                     </li>
                     <li class="govuk-breadcrumbs__list-item">
-                        @Html.ActionLink("Select data table", "LaNameCodes/DataTables", "Guidance", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                        @Html.ActionLink("Select data table", "LaNameCodesSelectData", "Guidance", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
                     </li>
                 </ol>
             </div>
@@ -54,7 +54,7 @@
     </div>
 </div>
 
-@using (Html.BeginForm("LaNameCodesDownload", "Guidance", FormMethod.Post))
+@using (Html.BeginForm("LaNameCodesGenerateDownload", "Guidance", FormMethod.Post))
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
@@ -73,8 +73,7 @@
     </div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-           @* @Html.HiddenFieldsFromQueryString()*@
-            <input class="govuk-button" data-module="govuk-button" type="submit" value="Select and download">
+            <input id="help-guidance-lanamecodes-selectformat-button" class="govuk-button" data-module="govuk-button" type="submit" value="Select and download">
         </div>
     </div>
 }

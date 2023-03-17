@@ -1,6 +1,7 @@
 @using Edubase.Services.Enums;
 @using Edubase.Web.UI.Models.Grid
 @using Edubase.Web.UI.Helpers
+
 @model GovernorsGridViewModel
 @{
     Layout = Model.Layout;
@@ -24,8 +25,8 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             @(Model.GroupUId.HasValue
-                ? Html.ActionLink("Back", "Details", "Group", null, null, "governance", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-back-link gias-back-link--button"})
-                : Html.ActionLink("Back", "Details", "Establishment", null, null, "school-governance", new {area = "Establishments", id = Model.EstablishmentUrn}, new {@class = "govuk-back-link gias-back-link--button cancel"}))
+                ? Html.ActionLink("Back", "Details", "Group", null, null, "governance", new {area = "Groups", id = Model.GroupUId}, new { id = "edit-back-button", @class = "govuk-back-link gias-back-link--button"})
+                : Html.ActionLink("Back", "Details", "Establishment", null, null, "school-governance", new {area = "Establishments", id = Model.EstablishmentUrn}, new { id = "edit-back-button", @class = "govuk-back-link gias-back-link--button cancel"}))
         </div>
     </div>
     <div class="govuk-grid-row">
@@ -337,27 +338,27 @@ else
     <div class="governor-list">
         @if (!historic)
         {
-            <h2 class="govuk-heading-m">@grid.Title</h2>
+            <h2 class="govuk-heading-m" id="@StringUtils.ElementIdFormat(grid.Title+"-heading")">@grid.Title</h2>
         }
         @if (grid.Rows.Any())
         {
             foreach (var row in grid.Rows)
             {
                 <div id="gov-id-@row.Model.Id" class="governor-edit-panel govuk-!-margin-bottom-9 @Html.DuplicateCssClassFor(row.Model.Id)">
-                    <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="gid-@row.Model.Id">@row.Cells[0].Text</h3>
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="@StringUtils.ElementIdFormat(grid.Title+"-name")">@row.Cells[0].Text</h3>
                     <dl class="govuk-summary-list govuk-!-margin-bottom-1">
                         @if (historic)
                         {
                             <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key">Role</dt>
-                                <dd class="govuk-summary-list__value">@grid.RoleName</dd>
+                                <dt class="govuk-summary-list__key" id="@StringUtils.ElementIdFormat(@grid.Title+"-key")">Role</dt>
+                                <dd class="govuk-summary-list__value" id="@StringUtils.ElementIdFormat(@grid.Title+"-value")">@grid.RoleName</dd>
                             </div>
                         }
                         @foreach (var cell in row.Cells.Skip(1))
                         {
                             <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key">@cell.Parent.Text</dt>
-                                <dd class="govuk-summary-list__value">@(cell.Text ?? "Not recorded")</dd>
+                                <dt class="govuk-summary-list__key" id="@StringUtils.ElementIdFormat(@grid.Title+"-"+@cell.Parent.Text+"-key")">@cell.Parent.Text</dt>
+                                <dd class="govuk-summary-list__value" id="@StringUtils.ElementIdFormat(@grid.Title+"-"+@cell.Parent.Text+"-value")">@(cell.Text ?? "Not recorded")</dd>
                             </div>
                         }
                     </dl>

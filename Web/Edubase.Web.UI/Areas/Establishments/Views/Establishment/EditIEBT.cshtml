@@ -58,7 +58,7 @@
                         null,
                         "school-iebt",
                         new { id = Model.Urn },
-                        new { @class = "govuk-back-link gias-back-link--button cancel", data_module = "govuk-button" })
+                        new { id = "edit-back-button", @class = "govuk-back-link gias-back-link--button cancel", data_module = "govuk-button" })
                 </div>
 
                 @if (Model.EditPolicy.IEBTDetail.Notes)
@@ -134,7 +134,7 @@
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.InspectorateId)">
                         @Html.LabelFor(x => x.InspectorateId, new { @class = "govuk-label" })
                         @Html.ValidationMessageFor(x => x.InspectorateId, null, new { @class = "govuk-error-message" })
-                        @Html.DropDownListFor(x => x.InspectorateId, Model.Inspectorates, "", new { @class = "govuk-select" })
+                        @Html.DropDownListFor(x => x.InspectorateId, Model.Inspectorates, "", new { id = "inspectorate-dropdown", @class = "govuk-select" })
                     </div>
                 }
 
@@ -143,7 +143,7 @@
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.IndependentSchoolTypeId)">
                         @Html.LabelFor(x => x.IndependentSchoolTypeId, new { @class = "govuk-label" })
                         @Html.ValidationMessageFor(x => x.IndependentSchoolTypeId, null, new { @class = "govuk-error-message" })
-                        @Html.DropDownListFor(x => x.IndependentSchoolTypeId, Model.IndependentSchoolTypes, "", new { @class = "govuk-select" })
+                        @Html.DropDownListFor(x => x.IndependentSchoolTypeId, Model.IndependentSchoolTypes, "", new { id = "independent-school-type-dropdown", @class = "govuk-select" })
                     </div>
                 }
 
@@ -289,7 +289,7 @@
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.BoardingEstablishmentId)">
                         @Html.LabelFor(x => x.BoardingEstablishmentId, new { @class = "govuk-label" })
                         @Html.ValidationMessageFor(x => x.BoardingEstablishmentId, null, new { @class = "govuk-error-message" })
-                        @Html.DropDownListFor(x => x.BoardingEstablishmentId, Model.BoardingEstablishment, "", new { @class = "govuk-select" })
+                        @Html.DropDownListFor(x => x.BoardingEstablishmentId, Model.BoardingEstablishment, "", new { id = "boarding-establishment-dropdown", @class = "govuk-select" })
                     </div>
                 }
 
@@ -350,12 +350,12 @@
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.AccommodationChangedId)">
                         @Html.LabelFor(x => x.AccommodationChangedId, new { @class = "govuk-label" })
                         @Html.ValidationMessageFor(x => x.AccommodationChangedId, null, new { @class = "govuk-error-message" })
-                        @Html.DropDownListFor(x => x.AccommodationChangedId, Model.AccommodationChanges, "", new { @class = "govuk-select" })
+                        @Html.DropDownListWithIds(x => x.AccommodationChangedId, Model.AccommodationChanges, new { @class = "govuk-select" })
                     </div>
                 }
 
                 <div class="button-row govuk-!-padding-top-4">
-                    <button type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveIEBT)">Save IEBT</button>
+                    <button type="submit" class="govuk-button" id="save-iebt-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, ViewModel.ASSaveIEBT)">Save IEBT</button>
                 </div>
 
             </div>
@@ -366,7 +366,7 @@
             <div class="govuk-grid-column-full">
                 @{ Html.RenderPartial("Partials/_ConfirmChanges"); }
                 <div class="button-row">
-                    <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm">Accept and save</button>
+                    <button type="submit" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.ASConfirm" class="govuk-button js-confirm" id="accept-and-save-iebt-button">Accept and save</button>
                 </div>
             </div>
         }

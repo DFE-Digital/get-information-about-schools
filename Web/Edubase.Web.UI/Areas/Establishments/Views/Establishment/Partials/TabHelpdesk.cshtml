@@ -4,13 +4,13 @@
 <div id="helpdesk" class="tab-content">
     @if (Model.UserCanEdit && Model.TabEditPolicy.Helpdesk)
     {
-        @Html.ActionLink("Edit helpdesk notes", "EditHelpdesk", "Establishment", new {id = Model.Establishment.Urn}, new {@class = "govuk-button govuk-button--secondary"})
+        @Html.ActionLink("Edit helpdesk notes", "EditHelpdesk", "Establishment", new { id = Model.Establishment.Urn }, new { id = "edit-helpdesk-notes", @class = "govuk-button govuk-button--secondary" })
     }
 
     <div class="detail-summary">
 
-        <h2 class="govuk-heading-s">Helpdesk notes:</h2>
-        <div class="govuk-body">@(Model.Establishment.HelpdeskNotes.Clean() ?? "Not recorded")</div>
+        <h2 id="helpdesk-notes-key" class="govuk-heading-s">Helpdesk notes:</h2>
+        <div id="helpdesk-notes-value" class="govuk-body">@(Model.Establishment.HelpdeskNotes.Clean() ?? "Not recorded")</div>
 
         <dl class="govuk-summary-list">
             @if (Model.DisplayPolicy.HelpdeskLastUpdate)
@@ -23,22 +23,22 @@
             @if (Model.DisplayPolicy.HelpdeskTrigger1)
             {
                 <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">EduBase trigger 1</dt>
-                    <dd class="govuk-summary-list__value">@Model.Establishment.HelpdeskTrigger1</dd>
+                    <dt id="edubase-trigger-1-key" class="govuk-summary-list__key">EduBase trigger 1</dt>
+                    <dd id="edubase-trigger-1-value" class="govuk-summary-list__value">@Model.Establishment.HelpdeskTrigger1</dd>
                 </div>
             }
             @if (Model.DisplayPolicy.HelpdeskPreviousLocalAuthorityId)
             {
                 <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Previous local authority</dt>
-                    <dd class="govuk-summary-list__value">@Model.HelpdeskPreviousLocalAuthorityName</dd>
+                    <dt id="previous-local-authority-key" class="govuk-summary-list__key">Previous local authority</dt>
+                    <dd id="previous-local-authority-value" class="govuk-summary-list__value">@Model.HelpdeskPreviousLocalAuthorityName</dd>
                 </div>
             }
             @if (Model.DisplayPolicy.HelpdeskPreviousEstablishmentNumber)
             {
                 <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Previous establishment number</dt>
-                    <dd class="govuk-summary-list__value">@Model.Establishment.HelpdeskPreviousEstablishmentNumber</dd>
+                    <dt id="previous-establishment-number-key" class="govuk-summary-list__key">Previous establishment number</dt>
+                    <dd id="previous-establishment-number-value" class="govuk-summary-list__value">@Model.Establishment.HelpdeskPreviousEstablishmentNumber</dd>
                 </div>
             }
 
@@ -48,7 +48,7 @@
     @if (Model.UserCanEdit && Model.TabEditPolicy.Helpdesk)
     {
         <div class="govuk-!-padding-top-4">
-            @Html.ActionLink("Edit helpdesk notes", "EditHelpdesk", "Establishment", new {id = Model.Establishment.Urn}, new {@class = "govuk-button govuk-button--secondary"})
+            @Html.ActionLink("Edit helpdesk notes", "EditHelpdesk", "Establishment", new { id = Model.Establishment.Urn }, new { @class = "govuk-button govuk-button--secondary" })
         </div>
     }
 </div>

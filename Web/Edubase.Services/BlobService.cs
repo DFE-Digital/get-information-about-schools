@@ -6,6 +6,7 @@ namespace Edubase.Services
     using Microsoft.WindowsAzure.Storage.RetryPolicies;
     using System;
     using System.IO;
+    using System.IO.Compression;
     using System.Threading.Tasks;
 
     public class BlobService : IBlobService
@@ -117,6 +118,31 @@ namespace Edubase.Services
             await blob.DownloadToStreamAsync(blobStream);
 
             return blobStream;
+        }
+
+        /// <summary>
+        /// Adds a blob as a memory stream to a zip archive 
+        /// </summary>
+        /// <param name="blobStream"></param>
+        /// <param name="blobName"></param>
+        /// <returns></returns>
+        public async Task<MemoryStream> ArchiveBlobAsync(MemoryStream blobStream, string blobName)
+        {
+            var archiveStream = new MemoryStream();
+
+            using (var archive = new ZipArchive(archiveStream, ZipArchiveMode.Create, true))
+            {
+                var blobToArchive = archive.CreateEntry(blobName);
+
+                using (var entryStream = blobToArchive.Open())
+                {
+                  await blobStream.CopyToAsync(entryStream);
+                }
+            }
+
+            archiveStream.Position = 0;
+            
+            return archiveStream;
         }
 
         /// <summary>

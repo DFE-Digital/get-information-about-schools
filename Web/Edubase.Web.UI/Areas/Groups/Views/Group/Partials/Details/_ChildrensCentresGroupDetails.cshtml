@@ -3,44 +3,44 @@
 @model GroupDetailViewModel
 
 <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key"><abbr title="Unique Identifier">Unique group identifier (UID)</abbr></dt>
-    <dd class="govuk-summary-list__value">@Model.Group.GroupUId</dd>
+    <dt id="uid-key" class="govuk-summary-list__key"><abbr title="Unique Identifier">Unique group identifier (UID)</abbr></dt>
+    <dd id="uid-value" class="govuk-summary-list__value">@Model.Group.GroupUId</dd>
 </div>
 <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">Address</dt>
-    <dd class="govuk-summary-list__value">@(Model.Address ?? "Not recorded")</dd>
+    <dt id="address-key" class="govuk-summary-list__key">Address</dt>
+    <dd id="address-value" class="govuk-summary-list__value">@(Model.Address ?? "Not recorded")</dd>
 </div>
 <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">Local authority (LA)</dt>
-    <dd class="govuk-summary-list__value">@(Model.LocalAuthorityName ?? "Not recorded")</dd>
+    <dt id="local-authority-key" class="govuk-summary-list__key">Local authority (LA)</dt>
+    <dd id="local-authority-value" class="govuk-summary-list__value">@(Model.LocalAuthorityName ?? "Not recorded")</dd>
 </div>
 <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">Group type</dt>
-    <dd class="govuk-summary-list__value">@Model.GroupTypeName</dd>
+    <dt id="group-type-key" class="govuk-summary-list__key">Group type</dt>
+    <dd id="group-type-value" class="govuk-summary-list__value">@Model.GroupTypeName</dd>
 </div>
 @if (Model.IsUserLoggedOn)
 {
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Status</dt>
-        <dd class="govuk-summary-list__value">@(Model.GroupStatusName ?? "Not recorded")</dd>
+        <dt id="status-key" class="govuk-summary-list__key">Status</dt>
+        <dd id="status-value" class="govuk-summary-list__value">@(Model.GroupStatusName ?? "Not recorded")</dd>
     </div>
 }
 <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">@Model.OpenDateLabel</dt>
-    <dd class="govuk-summary-list__value">@(Model.Group.OpenDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+    <dt id="open-date-key" class="govuk-summary-list__key">@Model.OpenDateLabel</dt>
+    <dd id="open-date-value"class="govuk-summary-list__value">@(Model.Group.OpenDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
 </div>
 @if (Model.IsUserLoggedOn)
 {
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Close date</dt>
-        <dd class="govuk-summary-list__value">@(Model.Group.ClosedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+        <dt id="close-date-key" class="govuk-summary-list__key">Close date</dt>
+        <dd id="close-date-value" class="govuk-summary-list__value">@(Model.Group.ClosedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
     </div>
 }
 @if (User.InRole(AuthorizedRoles.CanSeeChildrensCentreGroupManagerEmail))
 {
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Children's centres group manager email</dt>
-        <dd class="govuk-summary-list__value">@(Model.Group.ManagerEmailAddress ?? "Not recorded")</dd>
+        <dt id="childrens-centres-group-manager-email-key" class="govuk-summary-list__key">Children's centres group manager email</dt>
+        <dd id="childrens-centres-group-manager-email-value" class="govuk-summary-list__value">@(Model.Group.ManagerEmailAddress ?? "Not recorded")</dd>
     </div>
 }
 

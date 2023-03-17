@@ -71,22 +71,22 @@
                         </div>
 
                         var prefix = string.Concat(nameof(Model.LinkedEstablishments), "_", nameof(Model.LinkedEstablishments.LinkedEstablishmentSearch));
-                        <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Establishment found</h2>
+                        <h2 id="establishment-found-heading" class="govuk-heading-s govuk-!-margin-bottom-2">Establishment found</h2>
 
                         <ul class="school-results-listing">
                             <li>
                                 <dl class="govuk-summary-list">
                                     <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">Name</dt>
-                                        <dd class="govuk-summary-list__value">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Name</dd>
+                                        <dt id="establishment-name-key" class="govuk-summary-list__key">Name</dt>
+                                        <dd id="establishment-name-value" class="govuk-summary-list__value">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Name</dd>
                                     </div>
                                     <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">Address</dt>
-                                        <dd class="govuk-summary-list__value">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Address</dd>
+                                        <dt id="establishment-address-key" class="govuk-summary-list__key">Address</dt>
+                                        <dd id="establishment-address-value" class="govuk-summary-list__value">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Address</dd>
                                     </div>
                                     <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key"><abbr title="Unique Reference Number">URN</abbr></dt>
-                                        <dd class="govuk-summary-list__value">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Urn</dd>
+                                        <dt id="establishment-urn-key" class="govuk-summary-list__key"><abbr title="Unique Reference Number">URN</abbr></dt>
+                                        <dd id="establishment-urn-value" class="govuk-summary-list__value">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Urn</dd>
                                     </div>
                                 </dl>
                             </li>
@@ -115,7 +115,7 @@
                             <label class="govuk-label" for="LinkedEstablishments_LinkedEstablishmentSearch_Urn">Enter the establishment's Unique Reference Number (URN)</label>
                             @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, null, new { @class = "govuk-error-message" })
                             @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "govuk-input  govuk-!-width-one-half" })
-                            <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" class="govuk-button inline-button links-estab-search-button">Search URN</button>
+                            <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" id="search-urn-button" class="govuk-button inline-button links-estab-search-button">Search URN</button>
                         </div>
                     }
                 </div>
@@ -128,7 +128,7 @@
                     <div class="button-row govuk-!-margin-bottom-4">
                         @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                         {
-                            <button type="submit" name="action" class="govuk-button" value="@VM.ActionSaveLinks">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
+                            <button id="save-@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName)-top-button" type="submit" name="action" class="govuk-button" value="@VM.ActionSaveLinks">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
                         }
                         @Html.ActionLink(
                             "Cancel",
@@ -145,11 +145,11 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <h2 class="govuk-heading-m">List of @Model.ListOfEstablishmentsPluralName (@Model.LinkedEstablishments.Establishments.Count)</h2>
+                    <h2 id="list-of-@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName)-heading" class="govuk-heading-m">List of @Model.ListOfEstablishmentsPluralName (@Model.LinkedEstablishments.Establishments.Count)</h2>
                 </div>
             </div>
 
-            <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentStartSearch" class="govuk-button inline-button links-estab-search-button">Add establishment</button>
+            <button id="add-establishment-button" type="submit" name="action" value="@VM.ActionLinkedEstablishmentStartSearch" class="govuk-button inline-button links-estab-search-button">Add establishment</button>
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
@@ -171,48 +171,48 @@
                                 }
                                 <dl class="govuk-summary-list">
                                     <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">Address</dt>
-                                        <dd class="govuk-summary-list__value">@e.Address</dd>
+                                        <dt id="establishment-address-key" class="govuk-summary-list__key">Address</dt>
+                                        <dd id="establishment-address-value" class="govuk-summary-list__value">@e.Address</dd>
                                     </div>
                                     <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">Phase / type</dt>
-                                        <dd class="govuk-summary-list__value">
+                                        <dt id="establishment-phase-type-key" class="govuk-summary-list__key">Phase / type</dt>
+                                        <dd id="establishment-phase-type-value" class="govuk-summary-list__value">
                                             @(e.PhaseName ?? "Not recorded"),
                                             @(e.TypeName ?? "Not recorded")
                                         </dd>
                                     </div>
                                     <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key"><abbr title="Unique Reference Number">URN</abbr></dt>
-                                        <dd class="govuk-summary-list__value">@e.Urn</dd>
+                                        <dt id="establishment-urn-key" class="govuk-summary-list__key"><abbr title="Unique Reference Number">URN</abbr></dt>
+                                        <dd id="establishment-urn-value" class="govuk-summary-list__value">@e.Urn</dd>
                                     </div>
                                     @if (e.UKPRN.HasValue)
                                     {
                                         <div class="govuk-summary-list__row">
-                                            <dt class="govuk-summary-list__key"><abbr title="UK provider reference number (UKPRN)">UKPRN</abbr></dt>
-                                            <dd class="govuk-summary-list__value">@e.UKPRN</dd>
+                                            <dt id="establishment-ukprn-key" class="govuk-summary-list__key"><abbr title="UK provider reference number (UKPRN)">UKPRN</abbr></dt>
+                                            <dd id="establishment-ukprn-value" class="govuk-summary-list__value">@e.UKPRN</dd>
                                         </div>
                                     }
                                     <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">
+                                        <dt id="establishment-laestab-key" class="govuk-summary-list__key">
                                             <abbr title="Local authority - Establishment number">LAESTAB</abbr>
                                         </dt>
-                                        <dd class="govuk-summary-list__value">@(e.LAESTAB ?? "Not recorded")</dd>
+                                        <dd id="establishment-laestab-value" class="govuk-summary-list__value">@(e.LAESTAB ?? "Not recorded")</dd>
                                     </div>
                                     <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">Status</dt>
-                                        <dd class="govuk-summary-list__value">@(e.StatusName ?? "Not recorded")</dd>
+                                        <dt id="establishment-status-key" class="govuk-summary-list__key">Status</dt>
+                                        <dd id="establishment-status-value" class="govuk-summary-list__value">@(e.StatusName ?? "Not recorded")</dd>
                                     </div>
                                     <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">Local authority name</dt>
-                                        <dd class="govuk-summary-list__value">@(e.LocalAuthorityName ?? "Not recorded")</dd>
+                                        <dt id="establishment-la-key" class="govuk-summary-list__key">Local authority name</dt>
+                                        <dd id="establishment-la-value" class="govuk-summary-list__value">@(e.LocalAuthorityName ?? "Not recorded")</dd>
                                     </div>
 
 
                                     @if (!e.EditMode)
                                     {
                                         <div class="govuk-summary-list__row">
-                                            <dt class="govuk-summary-list__key">Joined date</dt>
-                                            <dd class="govuk-summary-list__value">@(e.JoinedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+                                            <dt id="establishment-joined-date-key" class="govuk-summary-list__key">Joined date</dt>
+                                            <dd id="establishment-joined-date-value"class="govuk-summary-list__value">@(e.JoinedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
                                         </div>
                                     }
 
@@ -240,8 +240,8 @@
                                 @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                                 {
                                     <div class="button-row govuk-!-margin-bottom-6 govuk-!-padding-top-0">
-                                        <button type="submit" class="govuk-button govuk-button--secondary button-remove" name="action" value="@VM.ActionLinkedEstablishmentRemove@e.Urn" aria-label="Remove establishment">Remove</button>
-                                        <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentEdit@e.Urn" class="govuk-button govuk-button--secondary">Edit join date</button>
+                                        <button type="submit" class="govuk-button govuk-button--secondary button-remove" id="remove-button" name="action" value="@VM.ActionLinkedEstablishmentRemove@e.Urn" aria-label="Remove establishment">Remove</button>
+                                        <button type="submit" id="edit-join-date-button" name="action" value="@VM.ActionLinkedEstablishmentEdit@e.Urn" class="govuk-button govuk-button--secondary">Edit join date</button>
                                     </div>
                                 }
                                 else if (e.EditMode)
@@ -264,7 +264,7 @@
                     <div class="button-row">
                         @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                         {
-                            <button type="submit" name="action" class="govuk-button" value="@VM.ActionSaveLinks">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
+                            <button id="save-@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName)-bottom-button" type="submit" name="action" class="govuk-button" value="@VM.ActionSaveLinks">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
                         }
                         @Html.ActionLink(
                             "Cancel",

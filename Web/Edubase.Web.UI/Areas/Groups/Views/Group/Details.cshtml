@@ -73,8 +73,8 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <div class="pending-updates-message js-dismiss-message js-trigger-aria-live" role="alert">
-                <div class="tick"></div>
-                <p class="message-text" aria-live="polite">Your changes have been saved</p>
+                <div id="update-banner-tick-icon" class="tick"></div>
+                <p id="update-banner-body" class="message-text" aria-live="polite">Your changes have been saved</p>
                 <a class="cross" href="#">
                     <span class="govuk-visually-hidden">Dismiss notification</span>
                 </a>
@@ -85,12 +85,12 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-l gias-landing-heading">
-            <span class="heading-preamble">Establishment group</span>
-            @Model.Group.Name
+            <span id="establishment-group-heading" class="heading-preamble">Establishment group</span>
+            <span id="establishment-group-name">@Model.Group.Name</span>
         </h1>
 
-        <p class="urn establishment-fine-detail"><abbr title="Unique Identifier">UID</abbr>: @Model.Group.GroupUId</p>
-        <p class="group-type establishment-fine-detail">@Model.GroupTypeName</p>
+        <p id="uid" class="urn establishment-fine-detail"><abbr title="Unique Identifier">UID</abbr>: <span id="uid-value">@Model.Group.GroupUId</span></p>
+        <p id="establishment-group-type" class="group-type establishment-fine-detail">@Model.GroupTypeName</p>
 
         <p class="govuk-body-s establishment-data-download">
             @Html.RouteLink("Download group data", "GroupDataDownload", new { uid = Model.Group.GroupUId,
@@ -104,7 +104,7 @@
         {
             if (Model.IsClosedInError)
             {
-                <div class="gias-establishment-closed-message">
+                <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
                     <p>
                         This @Model.GroupTypeNameForClosureLabel was created in error and subsequently closed on @(Model.CloseDate?.ToString("d MMMM yyyy")).
                     </p>
@@ -112,7 +112,7 @@
             }
             else
             {
-                <div class="gias-establishment-closed-message">
+                <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
                     <p>
                         This @Model.GroupTypeNameForClosureLabel closed on @(Model.CloseDate?.ToString("d MMMM yyyy")).
                     </p>
@@ -128,26 +128,26 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <div class="gias-tabs-wrapper">
-            <div class="tab-wrap">
+            <div class="tab-wrap" id="details-tab-wrap">
                 <ul class="gias-tabs">
                     <li class="gias-tabs__list-item">
-                        <a href="#details" class="gias-tabs__tab ">Details</a>
+                        <a href="#details" id="details-tab-link" class="gias-tabs__tab ">Details</a>
                     </li>
                     <li class="gias-tabs__list-item">
-                        <a href="#list" class="gias-tabs__tab ">@Model.EstablishmentsPluralName (@Model.Establishments.Count)</a>
+                        <a href="#list" id="group-establishments-tab-link" class="gias-tabs__tab ">@Model.EstablishmentsPluralName (@Model.Establishments.Count)</a>
                     </li>
 
                     @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
                     {
                         <li class="gias-tabs__list-item">
-                            <a href="#governance" class="gias-tabs__tab ">Governance</a>
+                            <a href="#governance" id="governance-tab-link" class="gias-tabs__tab ">Governance</a>
                         </li>
                     }
 
                     @if (Model.IsUserLoggedOn)
                     {
                         <li class="gias-tabs__list-item">
-                            <a href="#change-history" class="gias-tabs__tab ">Changes</a>
+                            <a href="#change-history" id="changes-tab-link" class="gias-tabs__tab ">Changes</a>
                         </li>
                     }
 
@@ -158,7 +158,7 @@
 
                     @if (Model.CanUserEdit)
                     {
-                        @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "govuk-button govuk-button--secondary" })
+                        @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @id= "edit-details-button", @class = "govuk-button govuk-button--secondary" })
                     }
                     <div class="detail-summary">
                         @* <dl class="gias-summary-list gias-summary-list--70 @Html.Conditional(Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.SchoolSponsor, eLookupGroupType.Federation, eLookupGroupType.Trust), "gias-summary-list--40")"> *@
@@ -183,7 +183,7 @@
                         @if (Model.CanUserEdit)
                         {
                             <div class="govuk-!-padding-top-4">
-                                @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "govuk-button govuk-button--secondary" })
+                                @Html.ActionLink("Edit details", "EditDetails", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { id = "edit-details-button", @class = "govuk-button govuk-button--secondary" })
                             </div>
 
                         }
@@ -196,7 +196,7 @@
                         {
                             <div class="govuk-grid-row">
                                 <div class="govuk-grid-column-full">
-                                    @Html.ActionLink($"Edit {Model.EstablishmentsPluralName.ToLower()}", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @class = "govuk-button govuk-button--secondary" })
+                                    @Html.ActionLink($"Edit {Model.EstablishmentsPluralName.ToLower()}", "EditLinks", "Group", new { id = Model.Group.GroupUId, area = "Groups" }, new { @id = $"edit-{StringUtils.ElementIdFormat(Model.EstablishmentsPluralName)}-button", @class = "govuk-button govuk-button--secondary" })
                                 </div>
                             </div>
                         }
@@ -228,46 +228,46 @@
 
                                                 <dl class="govuk-summary-list">
                                                     <div class="govuk-summary-list__row">
-                                                    <dt class="govuk-summary-list__key">Address</dt>
-                                                    <dd class="govuk-summary-list__value">@result.Address</dd>
+                                                    <dt id="establishment-address-key" class="govuk-summary-list__key">Address</dt>
+                                                    <dd id="establishment-address-value" class="govuk-summary-list__value">@result.Address</dd>
                                     </div>
                                     <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">Phase / type</dt>
-                                        <dd class="govuk-summary-list__value">
+                                        <dt id="establishment-phase-type-key" class="govuk-summary-list__key">Phase / type</dt>
+                                        <dd id="establishment-phase-type-value" class="govuk-summary-list__value">
                                             @(result.PhaseName ?? "Not recorded"),
                                             @(result.TypeName ?? "Not recorded")
                                         </dd>
                                     </div>
                                     <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key"><abbr title="Unique Reference Number">URN</abbr></dt>
-                                        <dd class="govuk-summary-list__value">@result.Urn</dd>
+                                        <dt id="establishment-urn-key" class="govuk-summary-list__key"><abbr title="Unique Reference Number">URN</abbr></dt>
+                                        <dd id="establishment-urn-value" class="govuk-summary-list__value">@result.Urn</dd>
                                     </div>
 
                                     @if (result.UKPRN.HasValue)
                                     {
                                         <div class="govuk-summary-list__row">
-                                            <dt class="govuk-summary-list__key"><abbr title="UK provider reference number (UKPRN)">UKPRN</abbr></dt>
-                                            <dd class="govuk-summary-list__value">@result.UKPRN</dd>
+                                            <dt id="establishment-ukprn-key" class="govuk-summary-list__key"><abbr title="UK provider reference number (UKPRN)">UKPRN</abbr></dt>
+                                            <dd id="establishment-ukprn-value" class="govuk-summary-list__value">@result.UKPRN</dd>
                                         </div>
                                     }
 
                                     <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">
+                                        <dt id="establishment-laestab-key" class="govuk-summary-list__key">
                                             <abbr title="Local authority - Establishment number">LAESTAB</abbr>
                                         </dt>
-                                        <dd class="govuk-summary-list__value">@(result.LAESTAB ?? "Not recorded")</dd>
+                                        <dd id="establishment-laestab-value" class="govuk-summary-list__value">@(result.LAESTAB ?? "Not recorded")</dd>
                                     </div>
                                     <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">Status</dt>
-                                        <dd class="govuk-summary-list__value">@(result.StatusName ?? "Not recorded")</dd>
+                                        <dt id="establishment-status-key" class="govuk-summary-list__key">Status</dt>
+                                        <dd id="establishment-status-value" class="govuk-summary-list__value">@(result.StatusName ?? "Not recorded")</dd>
                                     </div>
                                     <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">Local authority name</dt>
-                                        <dd class="govuk-summary-list__value">@(result.LocalAuthorityName ?? "Not recorded")</dd>
+                                        <dt id="establishment-la-key" class="govuk-summary-list__key">Local authority name</dt>
+                                        <dd id="establishment-la-value" class="govuk-summary-list__value">@(result.LocalAuthorityName ?? "Not recorded")</dd>
                                     </div>
                                     <div class="govuk-summary-list__row">
-                                        <dt class="govuk-summary-list__key">Joined date</dt>
-                                        <dd class="govuk-summary-list__value">@(result.JoinedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+                                        <dt id="establishment-joined-date-key" class="govuk-summary-list__key">Joined date</dt>
+                                        <dd id="establishment-joined-date-value" class="govuk-summary-list__value">@(result.JoinedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
                                     </div>
                                     </dl>
 
@@ -297,7 +297,7 @@
                                 {
                                     <div class="govuk-grid-row">
                                         <div class="govuk-grid-column-full">
-                                            @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "govuk-button govuk-button--secondary" })
+                                            @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { id = "edit-governance-button", @class = "govuk-button govuk-button--secondary" })
                                         </div>
                                     </div>
                                 }
@@ -308,7 +308,7 @@
                                 {
                                     <div class="govuk-grid-row">
                                         <div class="govuk-grid-column-full">
-                                            @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { @class = "govuk-button govuk-button--secondary" })
+                                            @Html.ActionLink("Edit governance", "Edit", "Governor", new { groupUId = Model.Group.GroupUId, area = "Governors" }, new { id = "edit-governance-button", @class = "govuk-button govuk-button--secondary" })
                                         </div>
                                     </div>
                                 }
@@ -461,17 +461,17 @@
                             <dt class="govuk-summary-list__key">Data from other services</dt>
                             <dd class="govuk-summary-list__value">
                                 <ul class="govuk-list">
-                                    @if (!Model.ShowCscp && !Model.ShowFinancialBenchmarking)
+                                    @if (!Model.ShowFscpd && !Model.ShowFinancialBenchmarking)
                                     {
                                         <li>
                                             Not applicable
                                         </li>
                                     }
-                                    @if (Model.ShowCscp)
+                                    @if (Model.ShowFscpd)
                                     {
                                         <li>
-                                            <a href="@Model.CscpURL" rel="noreferrer noopener" target="_blank">
-                                                Compare school and college performance (opens in new tab)
+                                            <a href="@Model.FscpdURL" rel="noreferrer noopener" target="_blank">
+                                                Find school and college performance data in England (opens in new tab)
                                             </a>
                                         </li>
                                     }

@@ -23,7 +23,7 @@
                 <div class="govuk-form-group">
                     <div class="govuk-radio" data-module="govuk-radio">
                         <div class="govuk-radios__item">
-                            @Html.RadioButtonFor(m => m.SearchType, eSearchType.Governor, new {id = "searchtype-gov-namerole", name = "gsearch", value = "name-role", data_toggle_panel = "#searchtype-gov-namerole-ref", @class = "govuk-radios__input"})
+                            @Html.RadioButtonFor(m => m.SearchType, eSearchType.Governor, new {id = "searchtype-gov-namerole", name = "gsearch", value = "name-role", data_toggle_panel = "#searchtype-gov-namerole-ref", autocomplete = "off", @class = "govuk-radios__input"})
                             <label for="searchtype-gov-namerole" class="govuk-label govuk-radios__label">
                                 Name or role
                             </label>
@@ -99,7 +99,7 @@
                     <div class="govuk-form-group">
                         <div class="govuk-radio" data-module="govuk-radio">
                             <div class="govuk-radios__item">
-                                @Html.RadioButtonFor(m => m.SearchType, eSearchType.GovernorReference, new {id = "searchtype-gov-refno", name = "gsearch", value = "gid", data_toggle_panel = "#searchtype-gov-refno-ref", @class = "govuk-radios__input"})
+                                @Html.RadioButtonFor(m => m.SearchType, eSearchType.GovernorReference, new {id = "searchtype-gov-refno", name = "gsearch", value = "gid", data_toggle_panel = "#searchtype-gov-refno-ref", autocomplete = "off", @class = "govuk-radios__input"})
                                 <label for="searchtype-gov-refno" class="govuk-label govuk-radios__label">
                                     Reference number
                                 </label>
@@ -152,7 +152,7 @@
                 <div class="govuk-form-group">
                     <div class="govuk-radio" data-module="govuk-radio">
                         <div class="govuk-radios__item">
-                            <input type="radio" id="searchtype-gov-all" data-toggle-panel="#searchtype-gov-all-ref" name="gsearch" value="all" class="govuk-radios__input"
+                            <input type="radio" id="searchtype-gov-all" data-toggle-panel="#searchtype-gov-all-ref" name="gsearch" value="all" autocomplete="off" class="govuk-radios__input"
                                    @Html.Conditional(gSearch == "all", "checked=checked")/>
                             <label for="searchtype-gov-all" class="govuk-label govuk-radios__label">All governors</label>
                         </div>

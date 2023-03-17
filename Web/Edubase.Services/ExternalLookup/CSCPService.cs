@@ -9,7 +9,7 @@ using Polly;
 
 namespace Edubase.Services.ExternalLookup
 {
-    public class CSCPService : ICSCPService
+    public class FSCPDService : IFSCPDService
     {
         private static HttpClient _client;
         private string _matAddress = "multi-academy-trust";
@@ -22,7 +22,7 @@ namespace Edubase.Services.ExternalLookup
                 TimeSpan.FromSeconds(1)
             }));
 
-        public CSCPService(HttpClient client)
+        public FSCPDService(HttpClient client)
         {
             _client = client;
         }
@@ -32,7 +32,7 @@ namespace Edubase.Services.ExternalLookup
             var collection = mat ? _matAddress : _schoolAddress;
             return collection;
         }
-        
+
         public string PublicURL(int? urn, string name, bool mat = false)
         {
             var collection = GetCollection(mat);
@@ -49,7 +49,7 @@ namespace Edubase.Services.ExternalLookup
         public async Task<bool> CheckExists(int? urn, string name, bool mat = false)
         {
             var collection = GetCollection(mat);
-            var key = $"cscp-{collection}-{urn}";
+            var key = $"fscpd-{collection}-{urn}";
             var value = MemoryCache.Default.Get(key);
             if (value != null)
             {
@@ -57,7 +57,7 @@ namespace Edubase.Services.ExternalLookup
             }
             else
             {
-                var cacheTime = ConfigurationManager.AppSettings["CscpCacheHours"].ToInteger() ?? 8;
+                var cacheTime = ConfigurationManager.AppSettings["FscpdCacheHours"].ToInteger() ?? 8;
                 var request = HeadRestRequest(urn, name, collection);
 
                 try
@@ -69,7 +69,7 @@ namespace Edubase.Services.ExternalLookup
                         return isOk;
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
                     return false;
                 }

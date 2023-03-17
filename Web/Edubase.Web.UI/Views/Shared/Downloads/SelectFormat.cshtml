@@ -1,10 +1,33 @@
 @using Edubase.Services.Enums
+@using Edubase.Web.UI.Areas.Establishments.Controllers
+@using Edubase.Web.UI.Areas.Governors.Controllers
+@using Edubase.Web.UI.Areas.Groups.Controllers
 @using Microsoft.Ajax.Utilities
 @using Edubase.Web.UI.Helpers
 @model IDownloadGenerationProgressModel
 @{
     ViewBag.bodyClasses = "schools-search-page search-page";
     ViewBag.hideLogo = true;
+    string searchController;
+
+    switch (Model.SearchSource)
+    {
+        case eLookupSearchSource.Governors:
+            searchController = nameof(GovernorSearchController);
+            break;
+        case eLookupSearchSource.Establishments:
+            searchController = nameof(EstablishmentsSearchController);
+            break;
+        case eLookupSearchSource.Groups:
+            searchController = nameof(GroupSearchController);
+            break;
+        case null:
+            throw new ArgumentNullException();
+        default:
+            throw new ArgumentOutOfRangeException();
+    }
+
+    searchController = searchController.Replace("Controller", string.Empty);
 }
 
 @section Head
@@ -87,7 +110,7 @@
     </div>
 </div>
 
-@using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get))
+@using (Html.BeginForm("PrepareDownload", searchController, FormMethod.Get))
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">

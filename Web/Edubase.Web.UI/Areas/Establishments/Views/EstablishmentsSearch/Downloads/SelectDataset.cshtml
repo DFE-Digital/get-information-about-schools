@@ -1,9 +1,6 @@
-@using Edubase.Services.Enums
-@using Microsoft.Ajax.Utilities
-@using Edubase.Web.UI.Areas.Establishments.Models.Search
-@model EstablishmentSearchDownloadViewModel
-@using Edubase.Web.UI.Helpers
 @using Edubase.Web.UI.Models.Search
+@using Microsoft.Ajax.Utilities
+@model EstablishmentSearchDownloadViewModel
 @{
     ViewBag.bodyClasses = " search-page";
     ViewBag.hideLogo = true;
@@ -17,7 +14,8 @@
 {
     @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
     {
-        @Html.ActionLink("Search", "Index", "Search", new { area = "" }, new { @class = "govuk-back-link" })
+        @Html.ActionLink("Search", "Index", "Search",
+            new { area = "" }, new { @class = "govuk-back-link" })
     }
     else
     {
@@ -25,9 +23,21 @@
             <div class="govuk-grid-column-full">
                 <div class="govuk-breadcrumbs">
                     <ol class="govuk-breadcrumbs__list">
-                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
-                        <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Search", "Index", "Search", new {area = "", SelectedTab = SearchViewModel.Tab.Establishments}, new {@class = "govuk-breadcrumbs__link"})</li>
-                        <li class="govuk-breadcrumbs__list-item"><a class="govuk-breadcrumbs__link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new {area = "Establishments"})}?{Model.SearchQueryString}")>Search results</a></li>
+                        <li class="govuk-breadcrumbs__list-item">
+                            @Html.ActionLink("Home", "Index", "Home",
+                                new { area = "" }, new { @class = "govuk-breadcrumbs__link" })
+                        </li>
+                        <li class="govuk-breadcrumbs__list-item">
+                            @Html.ActionLink("Search", "Index", "Search",
+                                new { area = "", SelectedTab = SearchViewModel.Tab.Establishments },
+                                new { @class = "govuk-breadcrumbs__link" })
+                        </li>
+                        <li class="govuk-breadcrumbs__list-item">
+                            <a class="govuk-breadcrumbs__link"
+                               href=@($"{Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" })}?{Model.SearchQueryString}")>
+                                Search results
+                            </a>
+                        </li>
                     </ol>
                 </div>
             </div>
@@ -100,7 +110,7 @@
             </div>
         </details>
 
-        @using (Html.BeginForm("PrepareDownload", "Search", FormMethod.Get))
+        @using (Html.BeginForm("PrepareDownload", "EstablishmentsSearch", FormMethod.Get))
         {
             @Html.HiddenFor(m => m.SearchQueryString)
             <div class="download-step">

@@ -29,11 +29,11 @@
 
             @if (Model.CurrentStep == CreateSteps.NameEntry)
             {
-                @Html.ActionLink("Back", "Index", "Tools", new { area = "" }, new { @class = "govuk-back-link gias-back-link--button cancel", data_module = "govuk-button" })
+                @Html.ActionLink("Back", "Index", "Tools", new { area = "" }, new { id = "edit-back-button", @class = "govuk-back-link gias-back-link--button cancel", data_module = "govuk-button" })
             }
             else
             {
-                <button type="submit" class="govuk-back-link gias-back-link--button cancel" name="@(nameof(Model.ActionStep))" value="@(Model.PreviousStep)">
+                <button type="submit" id="edit-back-button" class="govuk-back-link gias-back-link--button cancel" name="@(nameof(Model.ActionStep))" value="@(Model.PreviousStep)">
                     Back
                 </button>
             }
@@ -327,8 +327,8 @@
                         <p tabindex="0" id="model-desc">The record you are creating for <strong>@(warning.MessageParameters[0])</strong> in <strong>@(warning.MessageParameters[1])</strong> may duplicate existing record(s): <strong>@(warning.MessageParameters[2])</strong>
                     </div>
                     <div class="button-row">
-                        <button type="submit" name="@nameof(Model.ActionStep)" value="@Model.ActionStep" class="govuk-button">Proceed</button>
-                        <button type="submit" name="@nameof(Model.ActionStep)" value="@Model.PreviousStep" class="govuk-button govuk-button--secondary" >Cancel</button>
+                        <button type="submit" id="proceed-button" name="@nameof(Model.ActionStep)" value="@Model.ActionStep" class="govuk-button">Proceed</button>
+                        <button type="submit" id="cancel-button" name="@nameof(Model.ActionStep)" value="@Model.PreviousStep" class="govuk-button govuk-button--secondary" >Cancel</button>
                     </div>
                 </div>
             }
