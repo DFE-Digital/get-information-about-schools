@@ -210,7 +210,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             var companyProfile = await _companiesHouseService.SearchByCompaniesHouseNumber(companiesHouseNumber);
             var groupTypes = await GetAcademyTrustGroupTypes(academyTrustRoute);
 
-            var vm = new CreateAcademyTrustViewModel(companyProfile.Items.First(), groupTypes);
+            var vm = new CreateAcademyTrustViewModel(companyProfile.Items.First(), groupTypes.ToSelectList());
 
             var existingTrust = await _groupReadService.SearchByIdsAsync(null, null, companiesHouseNumber, null, User);
             if (existingTrust != null && existingTrust.Items.Any())
@@ -562,7 +562,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
             else
             {
-                viewModel.GroupTypes = await GetAcademyTrustGroupTypes(academyTrustRoute, viewModel.TypeId);
+                viewModel.GroupTypes = (await GetAcademyTrustGroupTypes(academyTrustRoute)).ToSelectList(viewModel.TypeId);
             }
 
             return View("CreateAcademyTrust", viewModel);
@@ -794,24 +794,14 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                         select new { groupType };
             return query.ToList().IsNullOrEmpty();
         }
-        private async Task<IEnumerable<eLookupGroupType>> GetAcademyGroupTypeIdsPermitted()
-        {
-            var groupTypesAllowed = await _securityService.GetCreateGroupPermissionAsync(User);
 
-            return new List<eLookupGroupType>() { GT.MultiacademyTrust, GT.SingleacademyTrust };
-        }
-
-        private async Task<IEnumerable<SelectListItem>> GetAcademyTrustGroupTypes(string academyTrustRoute, int? typeId = null)
+        private async Task<IEnumerable<LookupDto>> GetAcademyTrustGroupTypes(string academyTrustRoute)
         {
-            if (academyTrustRoute == "secure-academy-trust")
-            {
-                return (await _lookup.GroupTypesGetAllAsync()).Where(x => x.Id == (int) GT.SecureSingleAcademyTrust).ToSelectList(typeId);
-            }
-            else if (academyTrustRoute == "academy-trust")
-            {
-                return (await _lookup.GroupTypesGetAllAsync()).Where(x => x.Id == (int) GT.MultiacademyTrust || x.Id == (int) GT.SingleacademyTrust).ToSelectList(typeId);              
-            }
-            else return null;
+            var allGroupTypes = await _lookup.GroupTypesGetAllAsync();
+            var query = from groupType in GroupTypesFromRouteName(academyTrustRoute)
+                        join lookup in allGroupTypes on (int) groupType equals lookup.Id
+                        select lookup;
+            return query;
         }
 
         private async Task PopulateEstablishmentList(List<EstablishmentGroupViewModel> list, int groupUId, bool includeFutureDated = false)
