@@ -1,27 +1,24 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 using Edubase.Services.Establishments;
+using Edubase.Services.ExternalLookup;
+using Edubase.Services.Governors;
 using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
 using Edubase.Services.Security;
 using Edubase.Web.UI.Areas.Groups.Models;
-using FluentValidation.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using Castle.Components.DictionaryAdapter;
-using Edubase.Services.ExternalLookup;
-using Edubase.Services.Governors;
-using Edubase.Services.Texuna.Governors;
-using Edubase.Web.UI.Areas.Establishments.Controllers;
 using Edubase.Web.UI.Helpers;
+using FluentValidation.Mvc;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
     using Common;
     using Exceptions;
     using Filters;
+    using Microsoft.IdentityModel.Tokens;
     using Models.CreateEdit;
     using Models.Validators;
     using MoreLinq;
@@ -34,9 +31,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using UI.Models;
     using static Models.CreateEdit.GroupEditorViewModel;
     using static Models.CreateEdit.GroupEditorViewModelBase;
-    using GT = Services.Enums.eLookupGroupType;
     using GS = Services.Enums.eLookupGroupStatus;
-    using R = EdubaseRoles;
+    using GT = Services.Enums.eLookupGroupType;
 
     [RouteArea("Groups"), RoutePrefix("Group")]
     public class GroupController : Controller
@@ -195,18 +191,26 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 : View("Create", viewModel);
         }
 
-        [HttpGet, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}")]
-        public async Task<ActionResult> CreateAcademyTrust(string companiesHouseNumber)
+        [HttpGet, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}/{academyTrustRoute}")]
+        public async Task<ActionResult> CreateAcademyTrust(string companiesHouseNumber, string academyTrustRoute)
         {
+            var permission = await _securityService.GetCreateGroupPermissionAsync(User);
+
+            if (HasCreatePermissionForGroupType(permission, academyTrustRoute))
+            {
+                throw new PermissionDeniedException("Current principal does not have the required permissions.");
+            }
+
             if (string.IsNullOrWhiteSpace(companiesHouseNumber))
             {
                 return HttpNotFound();
             }
 
+            ViewData["academyTrustRoute"] = academyTrustRoute;
             var companyProfile = await _companiesHouseService.SearchByCompaniesHouseNumber(companiesHouseNumber);
-            var groupTypes = await GetAcademyTrustGroupTypes();
+            var groupTypes = await GetAcademyTrustGroupTypes(academyTrustRoute);
 
-            var vm = new CreateAcademyTrustViewModel(companyProfile.Items.First(), groupTypes);
+            var vm = new CreateAcademyTrustViewModel(companyProfile.Items.First(), groupTypes.ToSelectList());
 
             var existingTrust = await _groupReadService.SearchByIdsAsync(null, null, companiesHouseNumber, null, User);
             if (existingTrust != null && existingTrust.Items.Any())
@@ -515,11 +519,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}")]
-        public async Task<ActionResult> SaveNewAcademyTrust(CreateAcademyTrustViewModel viewModel)
+        [HttpPost, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}/{academyTrustRoute}")]
+        public async Task<ActionResult> SaveNewAcademyTrust(CreateAcademyTrustViewModel viewModel, string academyTrustRoute)
         {
             var permission = await _securityService.GetCreateGroupPermissionAsync(User);
-            if (!permission.GroupTypes.Any(x => x == GT.MultiacademyTrust || x == GT.SingleacademyTrust))
+            if ((viewModel.TypeId != null) && (!permission.GroupTypes.Any(x => (int)x == viewModel.TypeId)))
             {
                 throw new PermissionDeniedException("Current principal does not have permission to create a group of this type.");
             }
@@ -558,20 +562,23 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             }
             else
             {
-                viewModel.GroupTypes = await GetAcademyTrustGroupTypes(viewModel.TypeId);
+                viewModel.GroupTypes = (await GetAcademyTrustGroupTypes(academyTrustRoute)).ToSelectList(viewModel.TypeId);
             }
 
             return View("CreateAcademyTrust", viewModel);
         }
 
-        [HttpGet, EdubaseAuthorize, Route(nameof(SearchCompaniesHouse))]
-        public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel)
+        [HttpGet, EdubaseAuthorize, Route(nameof(SearchCompaniesHouse) + "/{academyTrustRoute}")]
+        public async Task<ActionResult> SearchCompaniesHouse(SearchCompaniesHouseModel viewModel, string academyTrustRoute)
         {
             var permission = await _securityService.GetCreateGroupPermissionAsync(User);
-            if (!permission.GroupTypes.Any(x => x == GT.MultiacademyTrust || x == GT.SingleacademyTrust))
+
+            if (HasCreatePermissionForGroupType(permission, academyTrustRoute))
             {
                 throw new PermissionDeniedException("Current principal does not have the required permissions.");
             }
+
+            ViewData["academyTrustRoute"] = academyTrustRoute;
 
             if (!viewModel.SearchText.IsNullOrEmpty())
             {
@@ -590,7 +597,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 }
                 else if (viewModel.Results.Count == 1)
                 {
-                    return RedirectToAction("CreateAcademyTrust", "Group", new { companiesHouseNumber = viewModel.Results.Items.First().Number, area = "Groups" });
+                    return RedirectToAction("CreateAcademyTrust", "Group", new { companiesHouseNumber = viewModel.Results.Items.First().Number, area = "Groups", academyTrustRoute = academyTrustRoute });
                 }
             }
 
@@ -598,6 +605,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 ModelState.AddModelError(nameof(viewModel.SearchText), "The SearchText field is required.");
             }
+            
             return View(viewModel);
         }
 
@@ -768,8 +776,33 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return dto;
         }
 
-        private async Task<IEnumerable<SelectListItem>> GetAcademyTrustGroupTypes(int? typeId = null)
-                    => (await _lookup.GroupTypesGetAllAsync()).Where(x => x.Id == (int) GT.MultiacademyTrust || x.Id == (int) GT.SingleacademyTrust).ToSelectList(typeId);
+        private IEnumerable<eLookupGroupType> GroupTypesFromRouteName(string routeName)
+        {
+            switch (routeName)
+            {
+                case "academy-trust":
+                    return new List<eLookupGroupType> { GT.MultiacademyTrust, GT.SingleacademyTrust };
+                case "secure-academy-trust":
+                    return new List<eLookupGroupType> { GT.SecureSingleAcademyTrust };
+                default: return new List<eLookupGroupType>();
+            };
+        }
+        private bool HasCreatePermissionForGroupType(CreateGroupPermissionDto userPermissions, string academyTrustRoute)
+        {
+            var query = from groupType in GroupTypesFromRouteName(academyTrustRoute)
+                        join permissionType in userPermissions.GroupTypes on groupType equals permissionType
+                        select new { groupType };
+            return query.ToList().IsNullOrEmpty();
+        }
+
+        private async Task<IEnumerable<LookupDto>> GetAcademyTrustGroupTypes(string academyTrustRoute)
+        {
+            var allGroupTypes = await _lookup.GroupTypesGetAllAsync();
+            var query = from groupType in GroupTypesFromRouteName(academyTrustRoute)
+                        join lookup in allGroupTypes on (int) groupType equals lookup.Id
+                        select lookup;
+            return query;
+        }
 
         private async Task PopulateEstablishmentList(List<EstablishmentGroupViewModel> list, int groupUId, bool includeFutureDated = false)
         {

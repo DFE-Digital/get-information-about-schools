@@ -84,7 +84,7 @@
                         @foreach (var result in Model.Results.Items)
                         {
                             <tr class="govuk-table__row">
-                                <td data-label="Name" class="govuk-table__cell">@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups" }, null)</td>
+                                <td data-label="Name" class="govuk-table__cell">@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups", academyTrustRoute = ViewData["academyTrustRoute"] }, null)</td>
                                 <td data-label="Companies House number" class="govuk-table__cell"><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number" target="_blank">@result.Number (opens in new tab)</a></td>
                                 <td data-label="Date incorporated" class="govuk-table__cell">@(result.IncorporationDate?.ToString("d MMMM yyyy"))</td>
                                 <td data-label="Address" class="govuk-table__cell">@(result.Address.ToString() ?? "Not recorded")</td>

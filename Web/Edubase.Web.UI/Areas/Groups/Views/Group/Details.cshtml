@@ -289,7 +289,7 @@
 
                         </div>
 
-                        @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
+                        @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust || Model.Group.GroupTypeId == (int)eLookupGroupType.SecureSingleAcademyTrust)
                         {
                             <div id="governance" class="tab-content">
 
