@@ -845,23 +845,24 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
         private GroupEditorViewModel SetEditPermissions(GroupEditorViewModel viewModel)
         {
-            viewModel.CanUserCloseAndMarkAsCreatedInError = viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor, GT.Federation)
+            viewModel.CanUserCloseAndMarkAsCreatedInError = viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor, GT.Federation, GT.SecureSingleAcademyTrust)
                                                                && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed)
-                                                               && User.InRole(AuthorizedRoles.IsAdmin);
+                                                               && User.InRole(AuthorizedRoles.CanUserCloseAndMarkAsCreatedInError);
 
             viewModel.IsLocalAuthorityEditable = viewModel.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)
                                                  && viewModel.LinkedEstablishments.Establishments.Count == 0 && User.InRole(AuthorizedRoles.IsAdmin);
 
-
-            if (User.InRole(AuthorizedRoles.CanBulkAssociateEstabs2Groups) && viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust))
+            //TODO bo and ycs have access here
+            if ((User.InRole(AuthorizedRoles.CanBulkAssociateEstabs2Groups) || User.InRole(AuthorizedRoles.CanEditGroupClosedDateStatus))
+                && viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SecureSingleAcademyTrust))
             {
                 viewModel.CanUserEditClosedDate = true;
                 viewModel.CanUserEditStatus = true;
                 PopulateStatusSelectList(viewModel);
             }
 
-            if (User.InRole(AuthorizedRoles.IsAdmin) &&
-                viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust))
+            if (User.InRole(AuthorizedRoles.CanEditUkprn) &&
+                viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SecureSingleAcademyTrust))
             {
                 viewModel.CanUserEditUkprn = true;
             }

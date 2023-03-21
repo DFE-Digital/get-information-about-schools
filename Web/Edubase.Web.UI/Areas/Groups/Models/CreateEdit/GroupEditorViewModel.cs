@@ -31,6 +31,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
             [(int) GT.SchoolSponsor] = "Academy sponsor",
             [(int) GT.SingleacademyTrust] = "Single-academy trust",
             [(int) GT.Trust] = "Foundation trust",
+            [(int) GT.SecureSingleAcademyTrust] = "Secure single-academy trust",
         };
 
         public const string ActionSave = "save";

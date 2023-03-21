@@ -17,5 +17,9 @@ namespace Edubase.Web.UI.Helpers
         public const string CanMergeEstablishments = EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.EDUBASE + "," + EdubaseRoles.EDUBASE_CMT + "," + EdubaseRoles.AP_AOS + "," + EdubaseRoles.APT + "," + EdubaseRoles.EFADO + "," + EdubaseRoles.FST + "," + EdubaseRoles.IEBT + "," + EdubaseRoles.SOU;
         public const string CanApprove = EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.EDUBASE + "," + EdubaseRoles.EDUBASE_CMT + "," + EdubaseRoles.AP_AOS + "," + EdubaseRoles.APT + "," + EdubaseRoles.EDUBASE_CHILDRENS_CENTRE_POLICY + "," + EdubaseRoles.EFADO + "," + EdubaseRoles.EFAHNS + "," + EdubaseRoles.FST + "," + EdubaseRoles.IEBT + "," + EdubaseRoles.SOU + "," + EdubaseRoles.EDUBASE_LACCDO + "," + EdubaseRoles.LADO + "," + EdubaseRoles.LSU;
         public const string CanSeeChildrensCentreGroupManagerEmail = EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.EDUBASE_CHILDRENS_CENTRE_POLICY + "," + EdubaseRoles.EDUBASE_LACCDO;
+        public const string CanUserCloseAndMarkAsCreatedInError = EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.YCS;
+        public const string CanEditGroupClosedDateStatus = EdubaseRoles.YCS;
+        public const string CanEditUkprn = EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.UKRLP;
+        
     }
 }

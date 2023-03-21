@@ -77,7 +77,7 @@
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GroupName)">
                         <label for="name" class="govuk-label">@Model.GroupTypeLabelPrefix name</label>
                         @Html.ValidationMessageFor(x => x.GroupName, null, new { @class = "govuk-error-message" })
-                        @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
+                        @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.SecureSingleAcademyTrust))
                         {
                             <input value="@Model.GroupName" disabled="disabled" class="govuk-input" id="@nameof(Model.GroupName)" />
                             @Html.HiddenFor(x => x.GroupName)
@@ -88,7 +88,7 @@
                         }
                     </div>
 
-                    @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.ChildrensCentresGroup))
+                    @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.ChildrensCentresGroup, L.SecureSingleAcademyTrust))
                     {
                         <div class="govuk-form-group">
                             <label for="address" class="govuk-label">Address</label>
@@ -138,7 +138,7 @@
                         </div>
                     }
 
-                    @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
+                    @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.SecureSingleAcademyTrust))
                     {
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="companiesHouseNumber">
@@ -190,7 +190,7 @@
                     }
 
                     @* OPEN DATE *@
-                    @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
+                    @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.SecureSingleAcademyTrust))
                     {
                         <div class="govuk-form-group">
                             <label for="openDate" class="govuk-label">@Model.OpenDateLabel</label>
@@ -206,7 +206,7 @@
                     }
 
                     @* CLOSED DATE *@
-                    @if (!Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust) || Model.CanUserEditClosedDate)
+                    @if (!Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.SecureSingleAcademyTrust) || Model.CanUserEditClosedDate)
                     {
                         @Html.EditorFor(x => x.ClosedDate, new { title = "Close date", fieldsetClassName = "closed-date edit-date-fieldset" })
                     }
