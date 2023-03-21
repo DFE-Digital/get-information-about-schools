@@ -31,6 +31,7 @@ namespace Edubase.Services.Establishments.DisplayPolicies
                 HeadteacherLabel = "Headteacher/Manager";
                 HeadPreferredJobTitleLabel = "Headteacher/Manager preferred job title";
                 HeadEmailAddressLabel = "Headteacher/Manager email address";
+                EstablishmentTypeLabel = "Establishment type";
             }
 
             return this;
