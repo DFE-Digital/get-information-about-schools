@@ -37,8 +37,7 @@
             @for (var index = 0; index < Model.Items.Count(); index++)
             {
                 <div class="govuk-form-group data-status-group">
-                    <h2 class="govuk-heading-s">Establishment type</h2>
-                    <p>@Model.Items[index].EstablishmentType.GetEnumMember()</p>
+                    <h2 class="govuk-heading-s">@Model.Items[index].EstablishmentType.GetEnumMember()</h2>
                     @Html.HiddenFor(m => m.Items[index].EstablishmentType)
                     @Html.EditorFor(m => m.Items[index].LastUpdated, new {title = "Last updated", fieldsetClassName = "edit-date-fieldset"})
                 </div>
