@@ -381,6 +381,8 @@
     <Compile Include="Helpers\RouteDto.cs" />
     <Compile Include="Helpers\StringUtils.cs" />
     <Compile Include="Mappers\BulkUpdateViewModelToDtoMapper.cs" />
+    <Compile Include="Models\DataQuality\DataQualityDataOwnerItem.cs" />
+    <Compile Include="Models\DataQuality\EditDataQualityDataOwnersViewModel.cs" />
     <Compile Include="Models\Faq\FaqGroupsViewModel.cs" />
     <Compile Include="Models\Faq\FaqGroupViewModel.cs" />
     <Compile Include="Models\Guidance\GuidanceLaNameCodeViewModel.cs" />
@@ -716,6 +718,7 @@
     <Content Include="App_offline_x.htm" />
     <Content Include="Views\Approvals\ExplainRejections.cshtml" />
     <Content Include="Views\Approvals\Partials\_ApprovalsTable.cshtml" />
+    <Content Include="Views\DataQuality\EditDataOwnerDetails.cshtml" />
     <Content Include="Views\Home\Accessibility.cshtml" />
     <Content Include="Views\Tools\DownloadClosedTrustsInformation.cshtml" />
     <Content Include="Views\Tools\Mergers\AmalgamateEstablishments.cshtml" />

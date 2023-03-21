@@ -17,8 +17,9 @@ namespace Edubase.Web.UI.Controllers
     [EdubaseAuthorize]
     public class DataQualityController : Controller
     {
-        private readonly IDataQualityWriteService dataQualityWriteService;
-        private readonly int dataQualityUpdatePeriod;
+        private readonly IDataQualityWriteService _dataQualityWriteService;
+        private readonly int _dataQualityUpdatePeriod;
+
         private readonly Dictionary<string, DataQualityStatus.DataQualityEstablishmentType> _roleToDataSetMappings = new Dictionary<string, DataQualityStatus.DataQualityEstablishmentType>
         {
             { EdubaseRoles.EFADO,  DataQualityStatus.DataQualityEstablishmentType.OpenAcademiesAndFreeSchools},
@@ -31,21 +32,24 @@ namespace Edubase.Web.UI.Controllers
 
         public DataQualityController(IDataQualityWriteService dataQualityWriteService)
         {
-            this.dataQualityWriteService = dataQualityWriteService;
-            if (!int.TryParse(ConfigurationManager.AppSettings["DataQualityUpdatePeriod"], out dataQualityUpdatePeriod))
+            this._dataQualityWriteService = dataQualityWriteService;
+            if (!int.TryParse(ConfigurationManager.AppSettings["DataQualityUpdatePeriod"], out _dataQualityUpdatePeriod))
             {
-                this.dataQualityUpdatePeriod = 7;
+                this._dataQualityUpdatePeriod = 7;
             }
         }
 
         [HttpGet, Route("DataQuality/Status")]
         public async Task<ActionResult> Status()
         {
-            var items = (await dataQualityWriteService.GetDataQualityStatus()).Select(d => new DataQualityStatusItem
-            {
-                EstablishmentType = d.EstablishmentType,
-                LastUpdated = new DateTimeViewModel(d.LastUpdated)
-            }).OrderBy(x => x.EstablishmentType.GetEnumMember()).ToList();
+            var items = (await _dataQualityWriteService.GetDataQualityStatus())
+                .Select(d => new DataQualityStatusItem
+                {
+                    EstablishmentType = d.EstablishmentType,
+                    LastUpdated = new DateTimeViewModel(d.LastUpdated)
+                })
+                .OrderBy(x => x.EstablishmentType.GetEnumMember())
+                .ToList();
 
             var urgent = false;
             foreach (var kvp in _roleToDataSetMappings)
@@ -53,8 +57,8 @@ namespace Edubase.Web.UI.Controllers
                 if (User.InRole(kvp.Key, AuthorizedRoles.IsAdmin))
                 {
                     var lastUpdated = items.FirstOrDefault(d => d.EstablishmentType == kvp.Value)?.LastUpdated;
-                    if (lastUpdated?.ToDateTime() == null || 
-                        lastUpdated.ToDateTime().Value.AddDays(dataQualityUpdatePeriod) < DateTime.Now.Date)
+                    if (lastUpdated?.ToDateTime() == null ||
+                        lastUpdated.ToDateTime().Value.AddDays(_dataQualityUpdatePeriod) < DateTime.Now.Date)
                     {
                         urgent = true;
                     }
@@ -73,7 +77,7 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route("DataQuality/Edit")]
         public async Task<ActionResult> EditStatus()
         {
-            var datasets = (await dataQualityWriteService.GetDataQualityStatus()).Select(d => new DataQualityStatusItem
+            var datasets = (await _dataQualityWriteService.GetDataQualityStatus()).Select(d => new DataQualityStatusItem
                 {
                     EstablishmentType = d.EstablishmentType,
                     LastUpdated = new DateTimeViewModel(d.LastUpdated)
@@ -110,8 +114,62 @@ namespace Edubase.Web.UI.Controllers
             {
                 foreach (var item in model.Items)
                 {
-                    await dataQualityWriteService.UpdateDataQualityDate(item.EstablishmentType,
-                        item.LastUpdated.ToDateTime(DateTimeKind.Utc).Value);
+                    await _dataQualityWriteService.UpdateDataQualityDate(
+                        item.EstablishmentType,
+                        item.LastUpdated.ToDateTime(DateTimeKind.Utc).Value
+                    );
+                }
+
+                return RedirectToAction("ViewStatus", new {dataUpdated = true});
+            }
+
+            return View(model);
+        }
+
+
+        [HttpGet, Route("DataQuality/EditDataOwnerDetails")]
+        public async Task<ActionResult> EditDataOwnerDetails()
+        {
+            var datasets = (await _dataQualityWriteService.GetDataQualityStatus()).Select(d => new DataQualityDataOwnerItem()
+                {
+                    EstablishmentType = d.EstablishmentType,
+                    Name = d.DataOwner,
+                    Email = d.Email,
+                })
+                .ToList();
+
+            var data = new EditDataQualityDataOwnerViewModel
+            {
+                Items = new List<DataQualityDataOwnerItem>()
+            };
+
+            foreach (var kvp in _roleToDataSetMappings)
+            {
+                if (User.InRole(kvp.Key, AuthorizedRoles.IsAdmin))
+                {
+                    var item = new DataQualityDataOwnerItem() {EstablishmentType = kvp.Value};
+
+                    if (User.IsInRole(AuthorizedRoles.IsAdmin))
+                    {
+                        item.Name = datasets.FirstOrDefault(d => d.EstablishmentType == kvp.Value)?.Name;
+                        item.Email = datasets.FirstOrDefault(d => d.EstablishmentType == kvp.Value)?.Email;
+                    }
+
+                    data.Items.Add(item);
+                }
+            }
+            data.Items.Sort((x,y) => x.EstablishmentType.GetEnumMember().CompareTo(y.EstablishmentType.GetEnumMember()));
+            return View(data);
+        }
+
+        [HttpPost, Route("DataQuality/EditDataOwnerDetails")]
+        public async Task<ActionResult> EditDataOwnerDetails(EditDataQualityDataOwnerViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                foreach (var item in model.Items)
+                {
+                    await _dataQualityWriteService.UpdateDataQualityDataOwner(item.EstablishmentType, item.Name, item.Email);
                 }
 
                 return RedirectToAction("ViewStatus", new {dataUpdated = true});
@@ -125,17 +183,23 @@ namespace Edubase.Web.UI.Controllers
         {
             var data = new FullDataQualityStatusViewModel
             {
-                Items = (await dataQualityWriteService.GetDataQualityStatus()).Select(d => new FullDataQualityStatusItem
-                {
-                    EstablishmentType = d.EstablishmentType,
-                    LastUpdated = new DateTimeViewModel(d.LastUpdated),
-                    DataOwner = d.DataOwner,
-                    Email = d.Email
-                }).OrderBy(x=>x.EstablishmentType.GetEnumMember()).ToList(),
-                DataUpdated = dataUpdated
-            };
+                Items = (await _dataQualityWriteService.GetDataQualityStatus())
+                    .Select(d => new FullDataQualityStatusItem
+                    {
+                        EstablishmentType = d.EstablishmentType,
+                        LastUpdated = new DateTimeViewModel(d.LastUpdated),
+                        DataOwner = d.DataOwner,
+                        Email = d.Email
+                    })
+                    .OrderBy(x => x.EstablishmentType.GetEnumMember())
+                    .ToList(),
+                DataUpdated = dataUpdated,
 
-            data.UserCanUpdate = Api.UserRolesController.UserRequiresDataQualityPrompt(User);
+                // Backoffice role users do not need to be prompted (appears on logon), but should be able to update the date
+                UserCanUpdateLastUpdated = Api.UserRolesController.UserRequiresDataQualityPrompt(User) || User.InRole(AuthorizedRoles.IsAdmin),
+
+                UserCanUpdateDataOwnerDetails = User.InRole(AuthorizedRoles.IsAdmin)
+            };
 
             return View(data);
         }

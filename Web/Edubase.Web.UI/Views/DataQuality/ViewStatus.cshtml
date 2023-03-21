@@ -66,13 +66,20 @@
         <p id="independent-pending" class="govuk-body-s">* All approved changes to establishments' registered details are recorded at this date. Changes still pending approval won't appear here yet.</p>
 
 
-            @if (Model.UserCanUpdate)
-            {
-                <div class="button-row govuk-!-padding-top-4">
-                    @Html.ActionLink("Update", "EditStatus", "DataQuality", new {area = ""}, new { @class = "govuk-button govuk-button--secondary", data_module = "govuk-button" })
-                </div>
-            }
+        @if (Model.UserCanUpdateLastUpdated || Model.UserCanUpdateDataOwnerDetails)
+        {
+            <div class="button-row govuk-!-padding-top-4">
+                @if (Model.UserCanUpdateLastUpdated)
+                {
+                    @Html.ActionLink("Update Last Updated Dates", "EditStatus", "DataQuality", new {area = ""}, new {@class = "govuk-button govuk-button--secondary", data_module = "govuk-button"})
+                }
+                @if (Model.UserCanUpdateDataOwnerDetails)
+                {
+                    @Html.ActionLink("Update Data Owner Details", "EditDataOwnerDetails", "DataQuality", new {area = ""}, new {@class = "govuk-button govuk-button--secondary", data_module = "govuk-button"})
+                }
+            </div>
+        }
+
 
     </div>
 </div>
-
