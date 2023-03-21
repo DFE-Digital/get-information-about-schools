@@ -14,7 +14,7 @@ using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Controllers
 {
-    [EdubaseAuthorize]
+    [EdubaseAuthorize(Roles = AuthorisationRoles)]
     public class DataQualityController : Controller
     {
         private readonly IDataQualityWriteService _dataQualityWriteService;
@@ -29,6 +29,8 @@ namespace Edubase.Web.UI.Controllers
             { EdubaseRoles.SOU,  DataQualityStatus.DataQualityEstablishmentType.LaMaintainedSchools},
             { EdubaseRoles.FST,  DataQualityStatus.DataQualityEstablishmentType.FreeSchoolOpeners}
         };
+
+        private const string AuthorisationRoles = AuthorizedRoles.IsAdmin + "," + EdubaseRoles.EFADO + "," + EdubaseRoles.AP_AOS + "," + EdubaseRoles.IEBT + "," + EdubaseRoles.APT + "," + EdubaseRoles.SOU + "," + EdubaseRoles.FST;
 
         public DataQualityController(IDataQualityWriteService dataQualityWriteService)
         {
@@ -114,10 +116,15 @@ namespace Edubase.Web.UI.Controllers
             {
                 foreach (var item in model.Items)
                 {
-                    await _dataQualityWriteService.UpdateDataQualityDate(
-                        item.EstablishmentType,
-                        item.LastUpdated.ToDateTime(DateTimeKind.Utc).Value
-                    );
+                    // Only update the item value if the user has permission to so for that specific establishment type
+                    var entry = _roleToDataSetMappings.SingleOrDefault(x => x.Value == item.EstablishmentType);
+                    if (User.InRole(entry.Key, AuthorizedRoles.IsAdmin))
+                    {
+                        await _dataQualityWriteService.UpdateDataQualityDate(
+                            item.EstablishmentType,
+                            item.LastUpdated.ToDateTime(DateTimeKind.Utc).Value
+                        );
+                    }
                 }
 
                 return RedirectToAction("ViewStatus", new {dataUpdated = true});
@@ -169,7 +176,16 @@ namespace Edubase.Web.UI.Controllers
             {
                 foreach (var item in model.Items)
                 {
-                    await _dataQualityWriteService.UpdateDataQualityDataOwner(item.EstablishmentType, item.Name, item.Email);
+                    // Only update the item value if the user has permission to so for that specific establishment type
+                    var entry = _roleToDataSetMappings.SingleOrDefault(x => x.Value == item.EstablishmentType);
+                    if (User.InRole(entry.Key, AuthorizedRoles.IsAdmin))
+                    {
+                        await _dataQualityWriteService.UpdateDataQualityDataOwner(
+                            item.EstablishmentType,
+                            item.Name,
+                            item.Email
+                        );
+                    }
                 }
 
                 return RedirectToAction("ViewStatus", new {dataUpdated = true});
