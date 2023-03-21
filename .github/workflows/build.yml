@@ -14,7 +14,6 @@ jobs:
   build:
     runs-on: windows-latest
     env:
-      AZURE_ARTIFACTS_FEED_URL: "https://agilefactory.pkgs.visualstudio.com/_packaging/DM.Common/nuget/v3/index.json"
       DOTNET_VERSION: '6.0.x'
 
     steps:
@@ -24,7 +23,6 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-          source-url: ${{ env.AZURE_ARTIFACTS_FEED_URL }}
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.AZURE_PACKAGE_FEED_TOKEN }}
 
