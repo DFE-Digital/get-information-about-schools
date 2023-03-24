@@ -42,10 +42,32 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .WithMessage("This establishment is already in this group. Please enter a different URN")
                     .WithSummaryMessage("This establishment is already in this group. Please enter a different URN")
 
-                    .MustAsync(async (x, ct) =>
+                    .MustAsync(async (urnSearchText, ct) =>
                     {
-                        return (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false)).ReturnValue != null;
-                    }).WithMessage("The establishment was not found").WithSummaryMessage("The establishment was not found");
+                        var matchedEstablishment = (await _establishmentReadService.GetAsync(urnSearchText.ToInteger().Value, principal).ConfigureAwait(false)).ReturnValue;
+                        var establishmentExists = matchedEstablishment != null;
+                        return establishmentExists;
+                    })
+                    .WithMessage("The establishment was not found")
+                    .WithSummaryMessage("The establishment was not found")
+
+                    .MustAsync(async (model, urnSearchText, ct) =>
+                    {
+                        var matchedEstablishment = (await _establishmentReadService.GetAsync(urnSearchText.ToInteger().Value, principal).ConfigureAwait(false)).ReturnValue;
+                        if (model.GroupTypeMode != eGroupTypeMode.ChildrensCentre)
+                        {
+                            // If it's not a children's centres group, this validation step is not relevant
+                            return true;
+                        }
+
+                        // Only "children's centre" and "children's centre linked site" may be added to a "children's centres group"
+                        // "Type Group" ID of `12` refers to children's centre establishment types
+                        // See also database tables `EstablishmentType` and `EstablishmentTypeGroup`
+                        var establishmentTypeIsPermitted = matchedEstablishment.EstablishmentTypeGroupId == 12;
+                        return establishmentTypeIsPermitted;
+                    })
+                    .WithMessage("Enter a URN for a children's centre or children's centre linked site")
+                    .WithSummaryMessage("Enter a URN for a children's centre or children's centre linked site");
             });
 
             // Having found an establishment to link, validate the joined date if supplied...
