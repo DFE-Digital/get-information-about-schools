@@ -65,9 +65,9 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                         }
 
                         // Only "children's centre" and "children's centre linked site" may be added to a "children's centres group"
-                        // "Type Group" ID of `12` refers to children's centre establishment types
+                        // "Type Group" of "Children's Centres" (code `12` / id `4`) refers to children's centre establishment types
                         // See also database tables `EstablishmentType` and `EstablishmentTypeGroup`
-                        var establishmentTypeIsPermitted = matchedEstablishment.EstablishmentTypeGroupId == 12;
+                        var establishmentTypeIsPermitted = matchedEstablishment.EstablishmentTypeGroupId == 4;
                         return establishmentTypeIsPermitted;
                     })
                     .WithMessage("Enter a URN for a children's centre or children's centre linked site")
