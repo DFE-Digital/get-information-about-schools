@@ -5,6 +5,8 @@ using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Validation;
 using FluentValidation;
 using System.Linq;
+using System.Threading.Tasks;
+using Edubase.Services.Establishments.Models;
 
 namespace Edubase.Web.UI.Areas.Groups.Models.Validators
 {
@@ -19,6 +21,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
     {
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IGroupReadService _groupReadService;
+
+        private EstablishmentModel _matchedEstablishment;
 
         public GroupEditorViewModelValidator(IGroupReadService groupReadService, IEstablishmentReadService establishmentReadService, IPrincipal principal, ISecurityService securityService)
         {
@@ -44,7 +48,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
 
                     .MustAsync(async (urnSearchText, ct) =>
                     {
-                        var matchedEstablishment = (await _establishmentReadService.GetAsync(urnSearchText.ToInteger().Value, principal).ConfigureAwait(false)).ReturnValue;
+                        var matchedEstablishment = await GetOrFetchMatchedEstablishment(_establishmentReadService, principal, urnSearchText);
                         var establishmentExists = matchedEstablishment != null;
                         return establishmentExists;
                     })
@@ -53,7 +57,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
 
                     .MustAsync(async (model, urnSearchText, ct) =>
                     {
-                        var matchedEstablishment = (await _establishmentReadService.GetAsync(urnSearchText.ToInteger().Value, principal).ConfigureAwait(false)).ReturnValue;
+                        var matchedEstablishment = await GetOrFetchMatchedEstablishment(_establishmentReadService, principal, urnSearchText);
                         if (model.GroupTypeMode != eGroupTypeMode.ChildrensCentre)
                         {
                             // If it's not a children's centres group, this validation step is not relevant
@@ -168,6 +172,17 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
             });
         }
 
+        private async Task<EstablishmentModel> GetOrFetchMatchedEstablishment(IEstablishmentReadService establishmentReadService, IPrincipal principal, string urnSearchText)
+        {
+            if (_matchedEstablishment == null)
+            {
+                _matchedEstablishment = (await establishmentReadService.GetAsync(urnSearchText.ToInteger().Value, principal).ConfigureAwait(false))
+                    .ReturnValue;
+            }
+
+            return _matchedEstablishment;
+        }
+
         private bool VerifyJoinedDate(DateTime? joinedDate, GroupEditorViewModel model)
         {
             return model.OpenDate.IsValid() &&
@@ -184,5 +199,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                 $"The {viewModel.GroupTypeLabelPrefix.ToLower()} opened on {viewModel.OpenDate}. " +
                 $"A valid joining date must be entered.";
         }
+
     }
 }
