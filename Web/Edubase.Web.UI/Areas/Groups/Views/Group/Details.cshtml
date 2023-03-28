@@ -91,8 +91,7 @@
 
         <p id="uid" class="urn establishment-fine-detail"><abbr title="Unique Identifier">UID</abbr>: <span id="uid-value">@Model.Group.GroupUId</span></p>
         <p id="establishment-group-type" class="group-type establishment-fine-detail">@Model.GroupTypeName</p>
-
-        <p class="govuk-body-s establishment-data-download">
+        <p id="establishment-group-data-download" class="govuk-body-s establishment-data-download">
             @Html.RouteLink("Download group data", "GroupDataDownload", new { uid = Model.Group.GroupUId,
             state = UriHelper.SerializeToUrlToken(RouteDto.Create(
                 new RouteDto("Search", new RouteValueDictionary(new { SelectedTab = SearchViewModel.Tab.Groups.ToString() }), "Search"),

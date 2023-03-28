@@ -47,12 +47,12 @@
 
         foreach (var group in downloadGroups)
         {
-            <h2 class="govuk-heading-m">@group.Heading</h2>
+            <h2 id="@StringUtils.ElementIdFormat(group.Heading)-heading" class="govuk-heading-m">@group.Heading</h2>
             <p>@group.Paragraph</p>
             foreach (var item in group.SubSections)
             {
                 <div class="govuk-form-group">
-                    <h3 class="govuk-heading-s">@item.Heading</h3>
+                    <h3 id="@StringUtils.ElementIdFormat(item.Heading)-heading" class="govuk-heading-s">@item.Heading</h3>
                     <div class="govuk-checkboxes">
                         @foreach (var file in item.Files)
                         {
@@ -64,9 +64,9 @@
                             <div class="govuk-checkboxes__item">
                                 @Html.Hidden($"{itemPrefix}{nameof(file.Item2.Tag)}", file.Item2.Tag)
                                 @Html.Hidden($"{itemPrefix}{nameof(file.Item2.FileGeneratedDate)}", file.Item2.FileGeneratedDate)
-                                <input id="@checkboxName" type="checkbox" name="@checkboxName" class="govuk-checkboxes__input" value="true"
+                                <input id="@StringUtils.ElementIdFormat(file.Item1.ToString())-checkbox" type="checkbox" name="@checkboxName" class="govuk-checkboxes__input" value="true"
                                        data-trackinglabel="@string.Concat(file.Item2.Tag,"|", file.Item2.FileGeneratedDate, "|", file.Item2.FileGeneratedDate < DateTime.Today)" />
-                                <label for="@checkboxName" class="govuk-checkboxes__label">@checkboxLabel</label>
+                                <label id="@StringUtils.ElementIdFormat(file.Item1.ToString())-checkbox-label" for="@checkboxName" class="govuk-checkboxes__label">@checkboxLabel</label>
                             </div>
 
                             i += 1;
@@ -76,7 +76,7 @@
             }
         }
         <p>
-            <input type="submit" id="downloadSelected" class="govuk-button" value="Download selected files" /><br />
+            <input type="submit" id="download-selected-files-button" class="govuk-button" value="Download selected files" /><br />
         </p>
     }
 }
