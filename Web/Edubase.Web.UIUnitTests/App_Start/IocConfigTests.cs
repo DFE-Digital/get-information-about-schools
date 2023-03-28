@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http.Headers;
 using Edubase.Services.Texuna.Core;
 using Edubase.Web.UI;
@@ -32,8 +32,8 @@ namespace Edubase.Web.UIUnitTests
         }
 
         [Theory]
-        [InlineData(@"https://google.com/")]
-        [InlineData(@"https://duckduckgo.com/")]
+        [InlineData(@"https://example.com/")]
+        [InlineData(@"https://example.org/api/")]
         public void CreateLookupClient_ClientHasProvidedAddress(string address)
         {
             var sut = IocConfig.CreateLookupClient(address, null, null);
