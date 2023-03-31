@@ -845,6 +845,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
         private GroupEditorViewModel SetEditPermissions(GroupEditorViewModel viewModel)
         {
+            //this method only controls the visibility of the fields not access to the actual page
+
             viewModel.CanUserCloseAndMarkAsCreatedInError = viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor, GT.Federation, GT.SecureSingleAcademyTrust)
                                                                && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed)
                                                                && User.InRole(AuthorizedRoles.CanUserCloseAndMarkAsCreatedInError);
