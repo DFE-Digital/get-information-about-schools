@@ -320,7 +320,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 GroupTypeName = model.GroupTypeId.HasValue ? await _lookup.GetNameAsync(() => model.GroupTypeId) : null,
                 LocalAuthorityName = model.LocalAuthorityId.HasValue ? await _lookup.GetNameAsync(() => model.LocalAuthorityId) : null,
                 GroupStatusName = model.StatusId.HasValue ? await _lookup.GetNameAsync(() => model.StatusId, "Group") : null,
-                Address = model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup) ? model.Address.ToString() : null,
+                Address = model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup, GT.SecureSingleAcademyTrust) ? model.Address.ToString() : null,
                 IsUserLoggedOn = User.Identity.IsAuthenticated,
                 GroupTypeId = model.GroupTypeId ?? -1,
                 IsClosed = model.StatusId == (int)eLookupGroupStatus.Closed || model.StatusId == (int)eLookupGroupStatus.CreatedInError,
@@ -852,7 +852,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             viewModel.IsLocalAuthorityEditable = viewModel.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)
                                                  && viewModel.LinkedEstablishments.Establishments.Count == 0 && User.InRole(AuthorizedRoles.IsAdmin);
 
-            //TODO bo and ycs have access here
             if ((User.InRole(AuthorizedRoles.CanBulkAssociateEstabs2Groups) || User.InRole(AuthorizedRoles.CanEditGroupClosedDateStatus))
                 && viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SecureSingleAcademyTrust))
             {

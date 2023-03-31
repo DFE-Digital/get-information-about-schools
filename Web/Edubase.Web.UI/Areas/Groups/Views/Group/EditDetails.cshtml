@@ -137,6 +137,10 @@
                             @Html.TextBoxFor(x => x.GroupId, new { @class = "govuk-input", maxlength = 120 })
                         </div>
                     }
+                    else
+                    {
+                        @Html.HiddenFor(x => x.GroupId)
+                    }
 
                     @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.SecureSingleAcademyTrust))
                     {
