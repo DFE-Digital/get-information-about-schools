@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "stylelint": "stylelint \"./Assets/Sass/**/*.scss\" --config .stylelintrc --fix",
     "buildDev": "webpack --mode=development --progress=profile",
+    "buildDevWatch": "webpack --mode=development --progress=profile --watch",
     "build": "webpack --mode=production --progress",
     "buildCi": "webpack --mode=production --progress --env=ci"
   },
