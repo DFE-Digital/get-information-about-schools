@@ -25,7 +25,7 @@
 
 <div class="tab-content">
 
-@using (Html.BeginForm("EditLinks", "Group", new { area = "Groups" }, FormMethod.Post))
+@using (Html.BeginForm("EditLinks", "Group", new { area = "Groups" }, FormMethod.Post, new { id = "gias-federation-schools-tab-form" }))
 {
     @Html.HiddenFor(x => x.GroupUId)
     @Html.HiddenFor(x => x.SaveMode)
@@ -94,7 +94,8 @@
                         </li>
                     </ul>
 
-                    @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date", editorPrefix = prefix, fieldsetClassName = "edit-date-fieldset" })
+                    @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate,
+                        new { title = "Joined date", editorPrefix = prefix, fieldsetClassName = "edit-date-fieldset" })
 
                     <button id="add-estab-submit" type="submit" name="action" value="@VM.ActionLinkedEstablishmentAdd" class="govuk-button">Add establishment</button>
                     @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
@@ -130,7 +131,10 @@
                 <div class="button-row govuk-!-margin-bottom-4">
                     @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                     {
-                        <button id="save-@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName)-top-button" type="submit" name="action" class="govuk-button" value="@VM.ActionSaveLinks">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
+                        <button id="save-@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName)-top-button" type="submit"
+                                name="action" class="govuk-button" value="@VM.ActionSaveLinks">
+                            Save @Model.ListOfEstablishmentsPluralName.ToLower()
+                        </button>
                     }
                     @Html.ActionLink(
                         "Cancel",
@@ -147,7 +151,10 @@
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                <h2 id="list-of-@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName)-heading" class="govuk-heading-m">List of @Model.ListOfEstablishmentsPluralName (@Model.LinkedEstablishments.Establishments.Count)</h2>
+                <h2 id="list-of-@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName)-heading"
+                    class="govuk-heading-m">
+                    List of @Model.ListOfEstablishmentsPluralName (@Model.LinkedEstablishments.Establishments.Count)
+                </h2>
             </div>
         </div>
 
@@ -162,7 +169,8 @@
                         var id = String.Concat("linkedEstablishments_", @i, "__id");
                         <li>
                             <h4 class="govuk-heading-s" id="@id">
-                                @Html.ActionLink(Model.LinkedEstablishments.Establishments[i].Name, "Details", "Establishment", new { id = Model.LinkedEstablishments.Establishments[i].Urn, area = "Establishments" }, null)
+                                @Html.ActionLink(Model.LinkedEstablishments.Establishments[i].Name, "Details", "Establishment",
+                                    new { id = Model.LinkedEstablishments.Establishments[i].Urn, area = "Establishments" }, null)
                             </h4>
                             @if (ViewData.ModelState["linkedEstablishments[" + i + "].id"] != null)
                             {
@@ -239,21 +247,32 @@
 
                             @if (e.EditMode)
                             {
-                                @Html.EditorFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable, new { title = "Joined date", fieldsetClassName = "joined-date-editor edit-date-fieldset" })
+                                @Html.EditorFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable,
+                                    new { title = "Joined date", fieldsetClassName = "joined-date-editor edit-date-fieldset" })
                             }
 
                             @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                             {
                                 <div class="button-row govuk-!-margin-bottom-6 govuk-!-padding-top-0">
-                                    <button type="submit" class="govuk-button govuk-button--secondary button-remove" id="remove-button" name="action" value="@VM.ActionLinkedEstablishmentRemove@e.Urn" aria-label="Remove establishment">Remove</button>
-                                    <button type="submit" id="edit-join-date-button" name="action" value="@VM.ActionLinkedEstablishmentEdit@e.Urn" class="govuk-button govuk-button--secondary">Edit join date</button>
+                                    <button type="submit" class="govuk-button govuk-button--secondary button-remove" id="remove-button" name="action"
+                                            value="@VM.ActionLinkedEstablishmentRemove@e.Urn" aria-label="Remove establishment">
+                                        Remove
+                                    </button>
+                                    <button type="submit" id="edit-join-date-button" name="action" value="@VM.ActionLinkedEstablishmentEdit@e.Urn"
+                                            class="govuk-button govuk-button--secondary">
+                                        Edit join date
+                                    </button>
                                 </div>
                             }
                             else if (e.EditMode)
                             {
                                 <div class="button-row govuk-!-margin-bottom-6 govuk-!-padding-top-4">
-                                    <button id="save-joined-date-submit" type="submit" class="govuk-button" name="action" value="@VM.ActionLinkedEstablishmentSave">Save joined date</button>
-                                    @Html.ActionLink("Cancel", "EditLinks", "Group", new { area = "Groups" }, new { @class = "govuk-button govuk-button--secondary js-allow-exit", data_module = "govuk-button" })
+                                    <button id="save-joined-date-submit" type="submit" class="govuk-button"
+                                            name="action" value="@VM.ActionLinkedEstablishmentSave">
+                                        Save joined date
+                                    </button>
+                                    @Html.ActionLink("Cancel", "EditLinks", "Group", new { area = "Groups" },
+                                        new { @class = "govuk-button govuk-button--secondary js-allow-exit", data_module = "govuk-button" })
                                 </div>
                             }
 
@@ -264,12 +283,24 @@
             </div>
         </div>
 
+        <div  class="non-javascript-group-establishment-governance-updates">
+            <h2 class="govuk-heading-m">Governance updates</h2>
+            <p class="govuk-body">
+                You are now about to create your federation. To complete the process, you need to update the governance section for each establishment
+                in the federation to reflect the new federation governing body. Each establishment should have the same governance information.
+                All term of office roles for the individual establishments before they became part of the federation should be closed
+                and new term of office roles for the federation governing body should be added.
+            </p>
+        </div>
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
                 <div class="button-row">
                     @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
                     {
-                        <button id="save-@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName)-bottom-button" type="submit" name="action" class="govuk-button" value="@VM.ActionSaveLinks">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
+                        <button id="save-@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName)-bottom-button" type="submit" name="action"
+                                class="govuk-button" value="@VM.ActionSaveLinks">
+                            Save @Model.ListOfEstablishmentsPluralName.ToLower()
+                        </button>
                     }
                     @Html.ActionLink(
                         "Cancel",
@@ -284,37 +315,25 @@
             </div>
         </div>
     }
+    <div id="group-establishment-governance-updates-modal" class="group-establishment-governance-updates-modal">
+        <div class="group-establishment-governance-updates-modal-content">
+            <span class="group-establishment-governance-close">
+                <a href="#bottom" class="group-establishment-governance-close-link">Close</a>
+            </span>
+            <h2 class="govuk-heading-m">Governance updates</h2>
+            <p class="govuk-body">
+                You have now created your federation. To complete the process, you need to update the governance section for each establishment
+                in the federation to reflect the new federation governing body. Each establishment should have the same governance information.
+                All term of office roles for the individual establishments before they became part of the federation should be closed
+                and new term of office roles for the federation governing body should be added.
+            </p>
+            <input class="govuk-button" name="action" type="submit" value="Continue">
+        </div>
+    </div>
 }
 
 </div>
-@* <div class="govuk-grid-row"> *@
-@*     <div class="govuk-grid-column-full governance-modal"> *@
-@*         <div id="save-schools-governance-updates-modal"> *@
-@*             <h3 class="govuk-heading-sr">Governance updates</h3> *@
-@*             <p> *@
-@*                 You have now created your federation. To complete the process, you need to update the governance section for each establishment <br> *@
-@*                 in the federation to reflect the new federation governing body. Each establishment should have the same governance information. <br> *@
-@*                 All term of office roles for the individual establishments before they became part of the federation should be closed <br> *@
-@*                 and new term of office roles for the federation governing body should be added. *@
-@*             </p> *@
-@*         </div> *@
-@*     </div> *@
-@* </div> *@
-<div id="governance-updates-modal" class="gias-governance-modal">
-    <div class="gias-governance-modal-content">
-        <span class="gias-governance-close">
-            <a href="#" class="gias-governance-close-link">Close</a>
-        </span>
-        <h2 class="govuk-heading-m">Governance updates</h2>
-        <p class="govuk-body">
-            You have now created your federation. To complete the process, you need to update the governance section for each establishment
-            in the federation to reflect the new federation governing body. Each establishment should have the same governance information.
-            All term of office roles for the individual establishments before they became part of the federation should be closed
-            and new term of office roles for the federation governing body should be added.
-        </p>
-        <a class="govuk-button" id="gias-governance-modal-continue-link">continue</a>
-    </div>
-</div>
+
 
 <script nonce="@Html.ScriptNonce()">window.blockReOrder = true;</script>
 
@@ -332,16 +351,16 @@
     }
 
     <script nonce="@Html.ScriptNonce()" type="text/javascript">
-     const governanceUpdatesModal = document.getElementById("governance-updates-modal");
-     console.log(governanceUpdatesModal);
+     const governanceUpdatesModal = document.getElementById("group-establishment-governance-updates-modal");
      const id=`save-@StringUtils.ElementIdFormat(Model.ListOfEstablishmentsPluralName)-bottom-button`;
-     console.log(id);
      const saveBtn = document.getElementById(`${id}`);
+     const closeLink = document.getElementsByClassName("group-establishment-governance-close-link")[0];
       saveBtn.onclick = function (e){
-          alert("I work");
             governanceUpdatesModal.style.display="block";
           e.preventDefault();
-
+      };
+      closeLink.onclick = function (){
+            governanceUpdatesModal.style.display="none";
       };
     </script>
     <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-group-links.*.js"))"></script>
