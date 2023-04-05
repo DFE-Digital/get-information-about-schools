@@ -283,7 +283,7 @@
             </div>
         </div>
 
-        <div  class="non-javascript-group-establishment-governance-updates">
+        <div class="information govuk-inset-text">
             <h2 class="govuk-heading-m">Governance updates</h2>
             <p class="govuk-body">
                 You are now about to create your federation. To complete the process, you need to update the governance section for each establishment
@@ -315,21 +315,21 @@
             </div>
         </div>
     }
-    <div id="group-establishment-governance-updates-modal" class="group-establishment-governance-updates-modal">
-        <div class="group-establishment-governance-updates-modal-content">
-            <span class="group-establishment-governance-close">
-                <a href="#bottom" class="group-establishment-governance-close-link">Close</a>
-            </span>
-            <h2 class="govuk-heading-m">Governance updates</h2>
-            <p class="govuk-body">
-                You have now created your federation. To complete the process, you need to update the governance section for each establishment
-                in the federation to reflect the new federation governing body. Each establishment should have the same governance information.
-                All term of office roles for the individual establishments before they became part of the federation should be closed
-                and new term of office roles for the federation governing body should be added.
-            </p>
-            <input class="govuk-button" name="action" type="submit" value="Continue">
-        </div>
-    </div>
+    <div id="group-establishment-governance-updates-modal"  class="gias-modal-main-container">
+                <div class="gias-modal-main-container__content">
+                    <span class="gias-modal-main-container__close-container">
+                        <a id="group-establishment-governance-close-link" href="#bottom" class="gias-modal-main-container__close-container__link">Close</a>
+                    </span>
+                    <h2 class="govuk-heading-m">Governance updates</h2>
+                    <p class="govuk-body">
+                        You have now created your federation. To complete the process, you need to update the governance section for each establishment
+                        in the federation to reflect the new federation governing body. Each establishment should have the same governance information.
+                        All term of office roles for the individual establishments before they became part of the federation should be closed
+                        and new term of office roles for the federation governing body should be added.
+                    </p>
+                    <input class="govuk-button gias-modal-main-container__content__button" name="action" type="submit" value="Continue">
+                </div>
+            </div>
 }
 
 </div>
@@ -352,9 +352,11 @@
 
     <script nonce="@Html.ScriptNonce()" type="text/javascript">
      const governanceUpdatesModal = document.getElementById("group-establishment-governance-updates-modal");
+     console.log(governanceUpdatesModal);
      const id=`save-@StringUtils.ElementIdFormat(Model.ListOfEstablishmentsPluralName)-bottom-button`;
+     console.log(id);
      const saveBtn = document.getElementById(`${id}`);
-     const closeLink = document.getElementsByClassName("group-establishment-governance-close-link")[0];
+     const closeLink = document.getElementById("group-establishment-governance-close-link");
       saveBtn.onclick = function (e){
             governanceUpdatesModal.style.display="block";
           e.preventDefault();
