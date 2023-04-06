@@ -496,6 +496,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             };
 
             var validationResults = await _governorsWriteService.ValidateAsync(governorModel, User);
+            validationResults = CheckEndDateNotBeforeStartDate(governorModel, validationResults);
             validationResults.ApplyToModelState(ControllerContext, true);
 
             if (ModelState.IsValid)
@@ -890,6 +891,28 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     }
                 }
             }
+        }
+
+        private ValidationEnvelopeDto CheckEndDateNotBeforeStartDate(GovernorModel governorModel, ValidationEnvelopeDto validationResults)
+        {
+            if (governorModel.AppointmentStartDate != null && governorModel.AppointmentEndDate != null &&
+                governorModel.AppointmentStartDate >= governorModel.AppointmentEndDate)
+            {
+                validationResults = new ValidationEnvelopeDto
+                {
+                    Errors = new List<ApiError>
+                    {
+                        new ApiError
+                        {
+                            Code = "error.wrongValue.stepdownDate.validate.field.edit.governor_appointmentEndDate",
+                            Fields = "appointmentEndDate",
+                            Message = "Date appointment ended must not be before the date of appointment"
+                        }
+                    }
+                };
+            }
+
+            return validationResults;
         }
     }
 }
