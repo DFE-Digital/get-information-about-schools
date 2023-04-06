@@ -330,9 +330,7 @@
 
     <script nonce="@Html.ScriptNonce()" type="text/javascript">
          const governanceUpdatesModal = document.getElementById("group-establishment-governance-updates-modal");
-         console.log(governanceUpdatesModal);
          const id=`save-@StringUtils.ElementIdFormat(Model.ListOfEstablishmentsPluralName)-bottom-button`;
-         console.log(id);
          const saveBtn = document.getElementById(`${id}`);
          const closeLink = document.getElementById("group-establishment-governance-close-link");
           saveBtn.onclick = function (e){
