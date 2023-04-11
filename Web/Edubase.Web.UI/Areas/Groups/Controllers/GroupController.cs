@@ -390,7 +390,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 SelectedTabName = "details",
                 StatusId = domainModel.StatusId,
                 OriginalStatusId = domainModel.StatusId,
-                UKPRN = domainModel.UKPRN.ToInteger()
+                UKPRN = domainModel.UKPRN.ToInteger(),
+                GroupStatusName = domainModel.StatusId.HasValue ? await _lookup.GetNameAsync(() => domainModel.StatusId, "Group") : null
             };
             viewModel.ListOfEstablishmentsPluralName = NomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
 
@@ -846,24 +847,48 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         private GroupEditorViewModel SetEditPermissions(GroupEditorViewModel viewModel)
         {
             //this method only controls the visibility of the fields not access to the actual page
+            if (viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor, GT.Federation)
+                && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed)
+                && User.InRole(AuthorizedRoles.IsAdmin))
+            {
+                viewModel.CanUserCloseAndMarkAsCreatedInError = true;
+            }
+            else if(viewModel.GroupType == GT.SecureSingleAcademyTrust
+                && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed)
+                && User.InRole(EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.YCS))
+            {
+                viewModel.CanUserCloseAndMarkAsCreatedInError = true;
+            }
 
-            viewModel.CanUserCloseAndMarkAsCreatedInError = viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor, GT.Federation, GT.SecureSingleAcademyTrust)
-                                                               && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed)
-                                                               && User.InRole(AuthorizedRoles.CanUserCloseAndMarkAsCreatedInError);
+            if (viewModel.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)
+                                                             && viewModel.LinkedEstablishments.Establishments.Count == 0 && User.InRole(AuthorizedRoles.IsAdmin))
+            {
+                viewModel.IsLocalAuthorityEditable = true;
+            }
 
-            viewModel.IsLocalAuthorityEditable = viewModel.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)
-                                                 && viewModel.LinkedEstablishments.Establishments.Count == 0 && User.InRole(AuthorizedRoles.IsAdmin);
-
-            if ((User.InRole(AuthorizedRoles.CanBulkAssociateEstabs2Groups) || User.InRole(AuthorizedRoles.CanEditGroupClosedDateStatus))
-                && viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SecureSingleAcademyTrust))
+            if (viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust)
+                && User.InRole(AuthorizedRoles.CanBulkAssociateEstabs2Groups))
+            {
+                viewModel.CanUserEditClosedDate = true;
+                viewModel.CanUserEditStatus = true;
+                PopulateStatusSelectList(viewModel);
+            }
+            else if(viewModel.GroupType == GT.SecureSingleAcademyTrust
+                && User.InRole(EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.YCS))
             {
                 viewModel.CanUserEditClosedDate = true;
                 viewModel.CanUserEditStatus = true;
                 PopulateStatusSelectList(viewModel);
             }
 
-            if (User.InRole(AuthorizedRoles.CanEditUkprn) &&
-                viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SecureSingleAcademyTrust))
+            if (viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust)
+                && User.InRole(AuthorizedRoles.IsAdmin))
+                
+            {
+                viewModel.CanUserEditUkprn = true;
+            }
+            else if(viewModel.GroupType == GT.SecureSingleAcademyTrust
+                && User.InRole(EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.UKRLP))
             {
                 viewModel.CanUserEditUkprn = true;
             }

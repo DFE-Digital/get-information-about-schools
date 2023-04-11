@@ -190,7 +190,11 @@
                     }
                     else
                     {
-                        @Html.HiddenFor(x => x.StatusId)
+                        <div class="govuk-form-group">
+                            <label for="StatusId" class="govuk-label">Status</label>
+                            <input type="text" value="@Model.GroupStatusName" class="govuk-input" disabled="disabled" id="groupStatusName" />
+                            @Html.HiddenFor(x => x.StatusId)
+                        </div>
                     }
 
                     @* OPEN DATE *@

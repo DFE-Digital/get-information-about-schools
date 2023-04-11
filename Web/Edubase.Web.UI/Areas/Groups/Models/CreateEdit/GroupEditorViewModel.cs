@@ -95,6 +95,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 
         public int? CCLeadCentreUrn { get; set; }
 
+        public string GroupStatusName { get; set; }
+
         public void SetCCLeadCentreUrn()
         {
             if (GroupType == GT.ChildrensCentresCollaboration || GroupType == GT.ChildrensCentresGroup)
