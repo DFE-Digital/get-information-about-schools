@@ -68,7 +68,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Academy.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="ApiMessages.resx" />
+    <EmbeddedResource Include="ApiMessages.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="FileDownloadNames.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>FileDownloadNames.Designer.cs</LastGenOutput>

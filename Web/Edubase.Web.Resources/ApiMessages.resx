@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!--
     Microsoft ResX Schema
@@ -282,6 +282,6 @@ Please check the 'Establishment open date'</value>
     <value>Date of appointment must not be in the future</value>
   </data>
   <data name="error.wrongValue.stepdownDate.validate.field.edit.governor_appointmentEndDate" xml:space="preserve">
-    <value>Date appointment ended must not be before the Date of appointment</value>
+    <value>Date appointment ended must not be before the date of appointment</value>
   </data>
 </root>
