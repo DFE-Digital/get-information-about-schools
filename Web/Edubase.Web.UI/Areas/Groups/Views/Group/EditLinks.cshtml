@@ -215,7 +215,7 @@
                                 {
                                     <div class="govuk-summary-list__row">
                                         <dt id="establishment-joined-date-key" class="govuk-summary-list__key">Joined date</dt>
-                                        <dd id="establishment-joined-date-value"class="govuk-summary-list__value">@(e.JoinedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+                                        <dd id="establishment-joined-date-value" class="govuk-summary-list__value">@(e.JoinedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
                                     </div>
                                 }
 
@@ -333,13 +333,11 @@
          const id=`save-@StringUtils.ElementIdFormat(Model.ListOfEstablishmentsPluralName)-bottom-button`;
          const saveBtn = document.getElementById(`${id}`);
          const closeLink = document.getElementById("group-establishment-governance-close-link");
-          saveBtn.onclick = function (e){
+          saveBtn.onclick=(e) =>{
                 governanceUpdatesModal.style.display="block";
-              e.preventDefault();
+                e.preventDefault();
           };
-          closeLink.onclick = function (){
-                governanceUpdatesModal.style.display="none";
-          };
+          closeLink.onclick = ()=> governanceUpdatesModal.style.display="none";
         </script>
 
     <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-group-links.*.js"))"></script>
