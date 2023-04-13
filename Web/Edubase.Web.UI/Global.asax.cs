@@ -28,7 +28,8 @@ namespace Edubase.Web.UI
 #if DEBUG
             try
             {
-                GetExternalSettings();
+                const string pathToConfigFile = "../../devsecrets.gias.config.alwaysignore";
+                GetExternalSettings(pathToConfigFile);
             }
             catch
             {
@@ -68,9 +69,9 @@ namespace Edubase.Web.UI
         }
 
 
-        private static void GetExternalSettings()
+        private static void GetExternalSettings(string pathToConfigFile)
         {
-            string configPath = Path.Combine(AppContext.BaseDirectory, "../../devsecrets.gias.config.alwaysignore");
+            string configPath = Path.Combine(AppContext.BaseDirectory, pathToConfigFile);
             if (!File.Exists(configPath))
             {
                 throw new FileNotFoundException();
