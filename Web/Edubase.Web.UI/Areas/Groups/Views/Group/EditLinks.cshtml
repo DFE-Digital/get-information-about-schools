@@ -1,5 +1,3 @@
-@using Edubase.Services.Enums
-@using Edubase.Common;
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
 @using L = Edubase.Services.Enums.eLookupGroupType;
 @model VM
@@ -25,261 +23,294 @@
 
 <div class="tab-content">
 
-    @using (Html.BeginForm("EditLinks", "Group", new { area = "Groups" }, FormMethod.Post))
+@using (Html.BeginForm("EditLinks", "Group", new { area = "Groups" }, FormMethod.Post))
+{
+    @Html.HiddenFor(x => x.GroupUId)
+    @Html.HiddenFor(x => x.SaveMode)
+    @Html.HiddenFor(x => x.GroupTypeId)
+    @Html.HiddenFor(x => x.GroupName)
+    @Html.HiddenFor(x => x.GroupTypeName)
+    @Html.HiddenFor(x => x.SelectedTabName)
+    @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
+
+    for (int i = 0; i < Model.LinkedEstablishments.Establishments.Count; i++)
     {
-        @Html.HiddenFor(x => x.GroupUId)
-        @Html.HiddenFor(x => x.SaveMode)
-        @Html.HiddenFor(x => x.GroupTypeId)
-        @Html.HiddenFor(x => x.GroupName)
-        @Html.HiddenFor(x => x.GroupTypeName)
-        @Html.HiddenFor(x => x.SelectedTabName)
-        @Html.HiddenFor(x => x.ListOfEstablishmentsPluralName)
+        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Id)
+        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Name)
+        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Urn)
+        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].UKPRN)
+        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Address)
+        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].PhaseName)
+        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].TypeName)
+        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].LAESTAB)
+        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].StatusName)
+        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].LocalAuthorityName)
+        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].HeadFullName)
+        @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].EditMode)
 
-        for (int i = 0; i < Model.LinkedEstablishments.Establishments.Count; i++)
+        if (!Model.LinkedEstablishments.Establishments[i].EditMode)
         {
-            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Id)
-            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Name)
-            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Urn)
-            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].UKPRN)
-            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].Address)
-            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].PhaseName)
-            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].TypeName)
-            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].LAESTAB)
-            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].StatusName)
-            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].LocalAuthorityName)
-            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].HeadFullName)
-            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].EditMode)
-
-            if (!Model.LinkedEstablishments.Establishments[i].EditMode)
-            {
-                @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].JoinedDate)
-            }
-        }
-
-        if (Model.Action == VM.ActionLinkedEstablishmentSearch ||
-            Model.Action == VM.ActionLinkedEstablishmentStartSearch ||
-            (Model.Action == VM.ActionLinkedEstablishmentAdd && Model.LinkedEstablishments.LinkedEstablishmentSearch.HasResult))
-        {
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-full">
-                    @if (Model.LinkedEstablishments.LinkedEstablishmentSearch.HasResult)
-                    {
-                        <div class="button-row govuk-!-margin-bottom-4">
-                            <button type="submit" class="govuk-back-link gias-back-link--button" name="action" value="@VM.ActionLinkedEstablishmentStartSearch">
-                                Back
-                            </button>
-                        </div>
-
-                        var prefix = string.Concat(nameof(Model.LinkedEstablishments), "_", nameof(Model.LinkedEstablishments.LinkedEstablishmentSearch));
-                        <h2 id="establishment-found-heading" class="govuk-heading-s govuk-!-margin-bottom-2">Establishment found</h2>
-
-                        <ul class="school-results-listing">
-                            <li>
-                                <dl class="govuk-summary-list">
-                                    <div class="govuk-summary-list__row">
-                                        <dt id="establishment-name-key" class="govuk-summary-list__key">Name</dt>
-                                        <dd id="establishment-name-value" class="govuk-summary-list__value">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Name</dd>
-                                    </div>
-                                    <div class="govuk-summary-list__row">
-                                        <dt id="establishment-address-key" class="govuk-summary-list__key">Address</dt>
-                                        <dd id="establishment-address-value" class="govuk-summary-list__value">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Address</dd>
-                                    </div>
-                                    <div class="govuk-summary-list__row">
-                                        <dt id="establishment-urn-key" class="govuk-summary-list__key"><abbr title="Unique Reference Number">URN</abbr></dt>
-                                        <dd id="establishment-urn-value" class="govuk-summary-list__value">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Urn</dd>
-                                    </div>
-                                </dl>
-                            </li>
-                        </ul>
-
-                        @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date", editorPrefix = prefix, fieldsetClassName = "edit-date-fieldset" })
-
-                        <button id="add-estab-submit" type="submit" name="action" value="@VM.ActionLinkedEstablishmentAdd" class="govuk-button">Add establishment</button>
-                        @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
-                        @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Name)
-                        @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Address)
-                        @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn)
-                    }
-                    else
-                    {
-                        <div class="button-row govuk-!-margin-bottom-4">
-                            <button type="submit" class="govuk-back-link gias-back-link--button" name="action" value="@VM.ActionLinkedEstablishmentCancelAdd">
-                                Back
-                            </button>
-                        </div>
-
-                        <h3 class="govuk-heading-s">Search for an establishment to add</h3>
-
-                        <p>Only add an establishment appropriate to the establishment type of group</p>
-                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)">
-                            <label class="govuk-label" for="LinkedEstablishments_LinkedEstablishmentSearch_Urn">Enter the establishment's Unique Reference Number (URN)</label>
-                            @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, null, new { @class = "govuk-error-message" })
-                            @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "govuk-input  govuk-!-width-one-half" })
-                            <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" id="search-urn-button" class="govuk-button inline-button links-estab-search-button">Search URN</button>
-                        </div>
-                    }
-                </div>
-            </div>
-        }
-        else
-        {
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-full">
-                    <div class="button-row govuk-!-margin-bottom-4">
-                        @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
-                        {
-                            <button id="save-@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName)-top-button" type="submit" name="action" class="govuk-button" value="@VM.ActionSaveLinks">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
-                        }
-                        @Html.ActionLink(
-                            "Cancel",
-                            "Details",
-                            "Group",
-                            null,
-                            null,
-                            "list",
-                            new { area = "Groups", id = Model.GroupUId },
-                            new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
-                    </div>
-                </div>
-            </div>
-
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-two-thirds">
-                    <h2 id="list-of-@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName)-heading" class="govuk-heading-m">List of @Model.ListOfEstablishmentsPluralName (@Model.LinkedEstablishments.Establishments.Count)</h2>
-                </div>
-            </div>
-
-            <button id="add-establishment-button" type="submit" name="action" value="@VM.ActionLinkedEstablishmentStartSearch" class="govuk-button inline-button links-estab-search-button">Add establishment</button>
-
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-two-thirds">
-                    <ul class="school-results-listing">
-                        @for (int i = 0; i < Model.LinkedEstablishments.Establishments.Count; i++)
-                        {
-                            var e = Model.LinkedEstablishments.Establishments[i];
-                            var id = String.Concat("linkedEstablishments_", @i, "__id");
-                            <li>
-                                <h4 class="govuk-heading-s" id="@id">
-                                    @Html.ActionLink(Model.LinkedEstablishments.Establishments[i].Name, "Details", "Establishment", new { id = Model.LinkedEstablishments.Establishments[i].Urn, area = "Establishments" }, null)
-                                </h4>
-                                @if (ViewData.ModelState["linkedEstablishments[" + i + "].id"] != null)
-                                {
-                                    <div class="govuk-form-group govuk-form-group--error govuk-!-padding-bottom-1 govuk-!-padding-top-2 govuk-!-margin-bottom-1">
-                                        <div class="govuk-error-message">@Html.ValidationMessageNested("linkedEstablishments[" + i + "].id")</div>
-                                    </div>
-
-                                }
-                                <dl class="govuk-summary-list">
-                                    <div class="govuk-summary-list__row">
-                                        <dt id="establishment-address-key" class="govuk-summary-list__key">Address</dt>
-                                        <dd id="establishment-address-value" class="govuk-summary-list__value">@e.Address</dd>
-                                    </div>
-                                    <div class="govuk-summary-list__row">
-                                        <dt id="establishment-phase-type-key" class="govuk-summary-list__key">Phase / type</dt>
-                                        <dd id="establishment-phase-type-value" class="govuk-summary-list__value">
-                                            @(e.PhaseName ?? "Not recorded"),
-                                            @(e.TypeName ?? "Not recorded")
-                                        </dd>
-                                    </div>
-                                    <div class="govuk-summary-list__row">
-                                        <dt id="establishment-urn-key" class="govuk-summary-list__key"><abbr title="Unique Reference Number">URN</abbr></dt>
-                                        <dd id="establishment-urn-value" class="govuk-summary-list__value">@e.Urn</dd>
-                                    </div>
-                                    @if (e.UKPRN.HasValue)
-                                    {
-                                        <div class="govuk-summary-list__row">
-                                            <dt id="establishment-ukprn-key" class="govuk-summary-list__key"><abbr title="UK provider reference number (UKPRN)">UKPRN</abbr></dt>
-                                            <dd id="establishment-ukprn-value" class="govuk-summary-list__value">@e.UKPRN</dd>
-                                        </div>
-                                    }
-                                    <div class="govuk-summary-list__row">
-                                        <dt id="establishment-laestab-key" class="govuk-summary-list__key">
-                                            <abbr title="Local authority - Establishment number">LAESTAB</abbr>
-                                        </dt>
-                                        <dd id="establishment-laestab-value" class="govuk-summary-list__value">@(e.LAESTAB ?? "Not recorded")</dd>
-                                    </div>
-                                    <div class="govuk-summary-list__row">
-                                        <dt id="establishment-status-key" class="govuk-summary-list__key">Status</dt>
-                                        <dd id="establishment-status-value" class="govuk-summary-list__value">@(e.StatusName ?? "Not recorded")</dd>
-                                    </div>
-                                    <div class="govuk-summary-list__row">
-                                        <dt id="establishment-la-key" class="govuk-summary-list__key">Local authority name</dt>
-                                        <dd id="establishment-la-value" class="govuk-summary-list__value">@(e.LocalAuthorityName ?? "Not recorded")</dd>
-                                    </div>
-
-
-                                    @if (!e.EditMode)
-                                    {
-                                        <div class="govuk-summary-list__row">
-                                            <dt id="establishment-joined-date-key" class="govuk-summary-list__key">Joined date</dt>
-                                            <dd id="establishment-joined-date-value"class="govuk-summary-list__value">@(e.JoinedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
-                                        </div>
-                                    }
-
-                                </dl>
-
-                                @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
-                                {
-                                    <div class="govuk-form-group">
-                                        <div class="govuk-radios">
-                                            <div class="govuk-radios__item">
-                                                @Html.RadioButtonFor(x => x.CCLeadCentreUrn, e.Urn, new { id = "CCLeadCentreUrn" + i, @class = "govuk-radios__input" })
-                                                <label for="CCLeadCentreUrn@(i)" class="govuk-radios__label">
-                                                    Make this children's centre a lead centre
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-
-                                @if (e.EditMode)
-                                {
-                                    @Html.EditorFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable, new { title = "Joined date", fieldsetClassName = "joined-date-editor edit-date-fieldset" })
-                                }
-
-                                @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
-                                {
-                                    <div class="button-row govuk-!-margin-bottom-6 govuk-!-padding-top-0">
-                                        <button type="submit" class="govuk-button govuk-button--secondary button-remove" id="remove-button" name="action" value="@VM.ActionLinkedEstablishmentRemove@e.Urn" aria-label="Remove establishment">Remove</button>
-                                        <button type="submit" id="edit-join-date-button" name="action" value="@VM.ActionLinkedEstablishmentEdit@e.Urn" class="govuk-button govuk-button--secondary">Edit join date</button>
-                                    </div>
-                                }
-                                else if (e.EditMode)
-                                {
-                                    <div class="button-row govuk-!-margin-bottom-6 govuk-!-padding-top-4">
-                                        <button id="save-joined-date-submit" type="submit" class="govuk-button" name="action" value="@VM.ActionLinkedEstablishmentSave">Save joined date</button>
-                                        @Html.ActionLink("Cancel", "EditLinks", "Group", new { area = "Groups" }, new { @class = "govuk-button govuk-button--secondary js-allow-exit", data_module = "govuk-button" })
-                                    </div>
-                                }
-
-                                <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-                            </li>
-                        }
-                    </ul>
-                </div>
-            </div>
-
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-one-half">
-                    <div class="button-row">
-                        @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
-                        {
-                            <button id="save-@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName)-bottom-button" type="submit" name="action" class="govuk-button" value="@VM.ActionSaveLinks">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
-                        }
-                        @Html.ActionLink(
-                            "Cancel",
-                            "Details",
-                            "Group",
-                            null,
-                            null,
-                            "list",
-                            new { area = "Groups", id = Model.GroupUId },
-                            new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
-                    </div>
-                </div>
-            </div>
+            @Html.HiddenFor(x => x.LinkedEstablishments.Establishments[i].JoinedDate)
         }
     }
+
+    if (Model.Action == VM.ActionLinkedEstablishmentSearch ||
+        Model.Action == VM.ActionLinkedEstablishmentStartSearch ||
+        (Model.Action == VM.ActionLinkedEstablishmentAdd && Model.LinkedEstablishments.LinkedEstablishmentSearch.HasResult))
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                @if (Model.LinkedEstablishments.LinkedEstablishmentSearch.HasResult)
+                {
+                    <div class="button-row govuk-!-margin-bottom-4">
+                        <button type="submit" class="govuk-back-link gias-back-link--button" name="action" value="@VM.ActionLinkedEstablishmentStartSearch">
+                            Back
+                        </button>
+                    </div>
+
+                    var prefix = string.Concat(nameof(Model.LinkedEstablishments), "_", nameof(Model.LinkedEstablishments.LinkedEstablishmentSearch));
+                    <h2 id="establishment-found-heading" class="govuk-heading-s govuk-!-margin-bottom-2">Establishment found</h2>
+
+                    <ul class="school-results-listing">
+                        <li>
+                            <dl class="govuk-summary-list">
+                                <div class="govuk-summary-list__row">
+                                    <dt id="establishment-name-key" class="govuk-summary-list__key">Name</dt>
+                                    <dd id="establishment-name-value" class="govuk-summary-list__value">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Name</dd>
+                                </div>
+                                <div class="govuk-summary-list__row">
+                                    <dt id="establishment-address-key" class="govuk-summary-list__key">Address</dt>
+                                    <dd id="establishment-address-value" class="govuk-summary-list__value">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Address</dd>
+                                </div>
+                                <div class="govuk-summary-list__row">
+                                    <dt id="establishment-urn-key" class="govuk-summary-list__key">
+                                        <abbr title="Unique Reference Number">URN</abbr>
+                                    </dt>
+                                    <dd id="establishment-urn-value" class="govuk-summary-list__value">@Model.LinkedEstablishments.LinkedEstablishmentSearch.Urn</dd>
+                                </div>
+                            </dl>
+                        </li>
+                    </ul>
+
+                    @Html.EditorFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.JoinedDate, new { title = "Joined date", editorPrefix = prefix, fieldsetClassName = "edit-date-fieldset" })
+
+                    <button id="add-estab-submit" type="submit" name="action" value="@VM.ActionLinkedEstablishmentAdd" class="govuk-button">Add establishment</button>
+                    @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)
+                    @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Name)
+                    @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Address)
+                    @Html.HiddenFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.FoundUrn)
+                }
+                else
+                {
+                    <div class="button-row govuk-!-margin-bottom-4">
+                        <button type="submit" class="govuk-back-link gias-back-link--button" name="action" value="@VM.ActionLinkedEstablishmentCancelAdd">
+                            Back
+                        </button>
+                    </div>
+
+                    <h3 class="govuk-heading-s">Search for an establishment to add</h3>
+
+                    <p>Only add an establishment appropriate to the establishment type of group</p>
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn)">
+                        <label class="govuk-label" for="LinkedEstablishments_LinkedEstablishmentSearch_Urn">Enter the establishment's Unique Reference Number (URN)</label>
+                        @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, null, new { @class = "govuk-error-message" })
+                        @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "govuk-input  govuk-!-width-one-half" })
+                        <button type="submit" name="action" value="@VM.ActionLinkedEstablishmentSearch" id="search-urn-button" class="govuk-button inline-button links-estab-search-button">Search URN</button>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <div class="button-row govuk-!-margin-bottom-4">
+                    @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
+                    {
+                        <button id="save-@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName)-top-button" type="submit" name="action" class="govuk-button" value="@VM.ActionSaveLinks">Save @Model.ListOfEstablishmentsPluralName.ToLower()</button>
+                    }
+                    @Html.ActionLink(
+                        "Cancel",
+                        "Details",
+                        "Group",
+                        null,
+                        null,
+                        "list",
+                        new { area = "Groups", id = Model.GroupUId },
+                        new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+                </div>
+            </div>
+        </div>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h2 id="list-of-@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName)-heading" class="govuk-heading-m">List of @Model.ListOfEstablishmentsPluralName (@Model.LinkedEstablishments.Establishments.Count)</h2>
+            </div>
+        </div>
+
+        <button id="add-establishment-button" type="submit" name="action" value="@VM.ActionLinkedEstablishmentStartSearch" class="govuk-button inline-button links-estab-search-button">Add establishment</button>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <ul class="school-results-listing">
+                    @for (int i = 0; i < Model.LinkedEstablishments.Establishments.Count; i++)
+                    {
+                        var e = Model.LinkedEstablishments.Establishments[i];
+                        var id = String.Concat("linkedEstablishments_", @i, "__id");
+                        <li>
+                            <h4 class="govuk-heading-s" id="@id">
+                                @Html.ActionLink(Model.LinkedEstablishments.Establishments[i].Name, "Details", "Establishment", new { id = Model.LinkedEstablishments.Establishments[i].Urn, area = "Establishments" }, null)
+                            </h4>
+                            @if (ViewData.ModelState["linkedEstablishments[" + i + "].id"] != null)
+                            {
+                                <div class="govuk-form-group govuk-form-group--error govuk-!-padding-bottom-1 govuk-!-padding-top-2 govuk-!-margin-bottom-1">
+                                    <div class="govuk-error-message">@Html.ValidationMessageNested("linkedEstablishments[" + i + "].id")</div>
+                                </div>
+                            }
+                            <dl class="govuk-summary-list">
+                                <div class="govuk-summary-list__row">
+                                    <dt id="establishment-address-key" class="govuk-summary-list__key">Address</dt>
+                                    <dd id="establishment-address-value" class="govuk-summary-list__value">@e.Address</dd>
+                                </div>
+                                <div class="govuk-summary-list__row">
+                                    <dt id="establishment-phase-type-key" class="govuk-summary-list__key">Phase / type</dt>
+                                    <dd id="establishment-phase-type-value" class="govuk-summary-list__value">
+                                        @(e.PhaseName ?? "Not recorded"),
+                                        @(e.TypeName ?? "Not recorded")
+                                    </dd>
+                                </div>
+                                <div class="govuk-summary-list__row">
+                                    <dt id="establishment-urn-key" class="govuk-summary-list__key">
+                                        <abbr title="Unique Reference Number">URN</abbr>
+                                    </dt>
+                                    <dd id="establishment-urn-value" class="govuk-summary-list__value">@e.Urn</dd>
+                                </div>
+                                @if (e.UKPRN.HasValue)
+                                {
+                                    <div class="govuk-summary-list__row">
+                                        <dt id="establishment-ukprn-key" class="govuk-summary-list__key">
+                                            <abbr title="UK provider reference number (UKPRN)">UKPRN</abbr>
+                                        </dt>
+                                        <dd id="establishment-ukprn-value" class="govuk-summary-list__value">@e.UKPRN</dd>
+                                    </div>
+                                }
+                                <div class="govuk-summary-list__row">
+                                    <dt id="establishment-laestab-key" class="govuk-summary-list__key">
+                                        <abbr title="Local authority - Establishment number">LAESTAB</abbr>
+                                    </dt>
+                                    <dd id="establishment-laestab-value" class="govuk-summary-list__value">@(e.LAESTAB ?? "Not recorded")</dd>
+                                </div>
+                                <div class="govuk-summary-list__row">
+                                    <dt id="establishment-status-key" class="govuk-summary-list__key">Status</dt>
+                                    <dd id="establishment-status-value" class="govuk-summary-list__value">@(e.StatusName ?? "Not recorded")</dd>
+                                </div>
+                                <div class="govuk-summary-list__row">
+                                    <dt id="establishment-la-key" class="govuk-summary-list__key">Local authority name</dt>
+                                    <dd id="establishment-la-value" class="govuk-summary-list__value">@(e.LocalAuthorityName ?? "Not recorded")</dd>
+                                </div>
+
+
+                                @if (!e.EditMode)
+                                {
+                                    <div class="govuk-summary-list__row">
+                                        <dt id="establishment-joined-date-key" class="govuk-summary-list__key">Joined date</dt>
+                                        <dd id="establishment-joined-date-value" class="govuk-summary-list__value">@(e.JoinedDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+                                    </div>
+                                }
+
+                            </dl>
+
+                            @if (Model.GroupTypeMode == VM.eGroupTypeMode.ChildrensCentre)
+                            {
+                                <div class="govuk-form-group">
+                                    <div class="govuk-radios">
+                                        <div class="govuk-radios__item">
+                                            @Html.RadioButtonFor(x => x.CCLeadCentreUrn, e.Urn, new { id = "CCLeadCentreUrn" + i, @class = "govuk-radios__input" })
+                                            <label for="CCLeadCentreUrn@(i)" class="govuk-radios__label">
+                                                Make this children's centre a lead centre
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            @if (e.EditMode)
+                            {
+                                @Html.EditorFor(x => x.LinkedEstablishments.Establishments[i].JoinedDateEditable, new { title = "Joined date", fieldsetClassName = "joined-date-editor edit-date-fieldset" })
+                            }
+
+                            @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
+                            {
+                                <div class="button-row govuk-!-margin-bottom-6 govuk-!-padding-top-0">
+                                    <button type="submit" class="govuk-button govuk-button--secondary button-remove" id="remove-button" name="action" value="@VM.ActionLinkedEstablishmentRemove@e.Urn" aria-label="Remove establishment">Remove</button>
+                                    <button type="submit" id="edit-join-date-button" name="action" value="@VM.ActionLinkedEstablishmentEdit@e.Urn" class="govuk-button govuk-button--secondary">Edit join date</button>
+                                </div>
+                            }
+                            else if (e.EditMode)
+                            {
+                                <div class="button-row govuk-!-margin-bottom-6 govuk-!-padding-top-4">
+                                    <button id="save-joined-date-submit" type="submit" class="govuk-button" name="action" value="@VM.ActionLinkedEstablishmentSave">Save joined date</button>
+                                    @Html.ActionLink("Cancel", "EditLinks", "Group", new { area = "Groups" }, new { @class = "govuk-button govuk-button--secondary js-allow-exit", data_module = "govuk-button" })
+                                </div>
+                            }
+
+                            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="information govuk-inset-text">
+            <h2 class="govuk-heading-m">Governance updates</h2>
+            <p class="govuk-body">
+                You are now about to create your federation. To complete the process, you need to update the governance section for each establishment
+                in the federation to reflect the new federation governing body. Each establishment should have the same governance information.
+                All term of office roles for the individual establishments before they became part of the federation should be closed
+                and new term of office roles for the federation governing body should be added.
+            </p>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <div class="button-row">
+                    @if (!Model.LinkedEstablishments.Establishments.Any(x => x.EditMode))
+                    {
+                        <button id="save-@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName)-bottom-button" type="submit"
+                                name="action" class="govuk-button" value="@VM.ActionSaveLinks">
+                            Save @Model.ListOfEstablishmentsPluralName.ToLower()
+                        </button>
+                    }
+                    @Html.ActionLink(
+                        "Cancel",
+                        "Details",
+                        "Group",
+                        null,
+                        null,
+                        "list",
+                        new { area = "Groups", id = Model.GroupUId },
+                        new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+                </div>
+            </div>
+        </div>
+    }
+    <div id="group-establishment-governance-updates-modal" class="gias-modal-main-container">
+        <div class="gias-modal-main-container__content">
+            <span class="gias-modal-main-container__close-container">
+                <a id="group-establishment-governance-close-link" href="#bottom" class="gias-modal-main-container__close-container__link">Close</a>
+            </span>
+            <h2 class="govuk-heading-m">Governance updates</h2>
+            <p class="govuk-body">
+                You have now created your federation. To complete the process, you need to update the governance section for each establishment
+                in the federation to reflect the new federation governing body. Each establishment should have the same governance information.
+                All term of office roles for the individual establishments before they became part of the federation should be closed
+                and new term of office roles for the federation governing body should be added.
+            </p>
+            <input class="govuk-button gias-modal-main-container__content__button" name="action" type="submit" value="Continue">
+        </div>
+    </div>
+}
 
 </div>
 <script nonce="@Html.ScriptNonce()">window.blockReOrder = true;</script>
@@ -295,8 +326,19 @@
     @if (Request.HttpMethod == "POST" && Model.Action != "cancel")
     {
         <script nonce="@Html.ScriptNonce()">var isConfirmingChanges = true;</script>
-
     }
+
+    <script nonce="@Html.ScriptNonce()" type="text/javascript">
+         const governanceUpdatesModal = document.getElementById("group-establishment-governance-updates-modal");
+         const id=`save-@StringUtils.ElementIdFormat(Model.ListOfEstablishmentsPluralName)-bottom-button`;
+         const saveBtn = document.getElementById(`${id}`);
+         const closeLink = document.getElementById("group-establishment-governance-close-link");
+          saveBtn.onclick=(e) =>{
+                governanceUpdatesModal.style.display="block";
+                e.preventDefault();
+          };
+          closeLink.onclick = ()=> governanceUpdatesModal.style.display="none";
+        </script>
 
     <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-group-links.*.js"))"></script>
 }
