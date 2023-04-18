@@ -348,6 +348,7 @@
     <Compile Include="Areas\Establishments\Models\EditAcademyOpeningViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\ManageAcademyOpeningsViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\TabEditPolicy.cs" />
+    <Compile Include="Areas\Establishments\Models\TabWarningsModel.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\BulkAssociateEstabs2GroupsViewModelValidator.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\BulkCreateFreeSchoolsViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernanceController.cs" />

@@ -205,5 +205,11 @@ namespace Edubase.Web.UI.Models
                 return showFinancialBenchmarking.Value;
             }
         }
+
+        public TabWarningsModel TabWarnings
+        {
+            get;
+            set;
+        }
     }
 }
