@@ -206,10 +206,6 @@ namespace Edubase.Web.UI.Models
             }
         }
 
-        public TabWarningsModel TabWarnings
-        {
-            get;
-            set;
-        }
+        public TabWarningsModel TabWarnings { get; set; }
     }
 }
