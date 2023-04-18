@@ -18,6 +18,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using Common;
     using Exceptions;
     using Filters;
+    using global::Glimpse.Mvc.Model;
     using Microsoft.IdentityModel.Tokens;
     using Models.CreateEdit;
     using Models.Validators;
@@ -847,53 +848,83 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         private GroupEditorViewModel SetEditPermissions(GroupEditorViewModel viewModel)
         {
             //this method only controls the visibility of the fields not access to the actual page
+            viewModel.CanUserCloseAndMarkAsCreatedInError = CanUserCloseAndMarkAsCreatedInError(viewModel);
+
+            viewModel.IsLocalAuthorityEditable = CanUserEditLocalAuthority(viewModel);
+
+            var canEditCloseDataStatus = CanEditCloseDataStatus(viewModel);
+            viewModel.CanUserEditClosedDate = canEditCloseDataStatus;
+            viewModel.CanUserEditStatus = canEditCloseDataStatus;
+
+            if (canEditCloseDataStatus)
+            {
+                PopulateStatusSelectList(viewModel);
+            }
+
+            viewModel.CanUserEditUkprn = CanUserEditUkprn(viewModel);
+
+            return viewModel;
+        }
+
+        private bool CanUserCloseAndMarkAsCreatedInError(GroupEditorViewModel viewModel)
+        {
             if (viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor, GT.Federation)
                 && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed)
                 && User.InRole(AuthorizedRoles.IsAdmin))
             {
-                viewModel.CanUserCloseAndMarkAsCreatedInError = true;
+                return true;
             }
-            else if(viewModel.GroupType == GT.SecureSingleAcademyTrust
+            else if (viewModel.GroupType == GT.SecureSingleAcademyTrust
                 && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed)
-                && User.InRole(EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.YCS))
+                && User.InRole(AuthorizedRoles.Secure1619CloseAndMarkAsCreatedInError))
             {
-                viewModel.CanUserCloseAndMarkAsCreatedInError = true;
+                return true;
             }
 
+            return false;
+        }
+
+        private bool CanUserEditLocalAuthority(GroupEditorViewModel viewModel)
+        {
             if (viewModel.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)
-                                                             && viewModel.LinkedEstablishments.Establishments.Count == 0 && User.InRole(AuthorizedRoles.IsAdmin))
+                                                 && viewModel.LinkedEstablishments.Establishments.Count == 0 && User.InRole(AuthorizedRoles.IsAdmin))
             {
-                viewModel.IsLocalAuthorityEditable = true;
+                return true;
             }
 
+            return false;
+        }
+
+        private bool CanEditCloseDataStatus(GroupEditorViewModel viewModel)
+        {
             if (viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust)
                 && User.InRole(AuthorizedRoles.CanBulkAssociateEstabs2Groups))
             {
-                viewModel.CanUserEditClosedDate = true;
-                viewModel.CanUserEditStatus = true;
-                PopulateStatusSelectList(viewModel);
+                return true;
             }
-            else if(viewModel.GroupType == GT.SecureSingleAcademyTrust
-                && User.InRole(EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.YCS))
+            else if (viewModel.GroupType == GT.SecureSingleAcademyTrust
+                && User.InRole(AuthorizedRoles.Secure1619CanEditCloseDataStatus))
             {
-                viewModel.CanUserEditClosedDate = true;
-                viewModel.CanUserEditStatus = true;
-                PopulateStatusSelectList(viewModel);
+                return true;
             }
 
+            return false;
+        }
+
+        private bool CanUserEditUkprn(GroupEditorViewModel viewModel)
+        {
             if (viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust)
                 && User.InRole(AuthorizedRoles.IsAdmin))
-                
             {
-                viewModel.CanUserEditUkprn = true;
+                return true;
             }
-            else if(viewModel.GroupType == GT.SecureSingleAcademyTrust
-                && User.InRole(EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.UKRLP))
+            else if (viewModel.GroupType == GT.SecureSingleAcademyTrust
+                && User.InRole(AuthorizedRoles.Secure1619CanEditUkprn))
             {
-                viewModel.CanUserEditUkprn = true;
+                return true;
             }
 
-            return viewModel;
+            return false;
         }
 
         private async Task<ActionResult> ProcessCreateEditGroup(GroupEditorViewModel viewModel)

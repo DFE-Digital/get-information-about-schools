@@ -1,4 +1,6 @@
 using Edubase.Services.Security;
+using Sustainsys.Saml2.Metadata;
+
 namespace Edubase.Web.UI.Helpers
 {
     public static class AuthorizedRoles
@@ -16,6 +18,11 @@ namespace Edubase.Web.UI.Helpers
         public const string CanManageAcademyOpenings = EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.EFADO + "," + EdubaseRoles.AP_AOS;
         public const string CanMergeEstablishments = EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.EDUBASE + "," + EdubaseRoles.EDUBASE_CMT + "," + EdubaseRoles.AP_AOS + "," + EdubaseRoles.APT + "," + EdubaseRoles.EFADO + "," + EdubaseRoles.FST + "," + EdubaseRoles.IEBT + "," + EdubaseRoles.SOU;
         public const string CanApprove = EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.EDUBASE + "," + EdubaseRoles.EDUBASE_CMT + "," + EdubaseRoles.AP_AOS + "," + EdubaseRoles.APT + "," + EdubaseRoles.EDUBASE_CHILDRENS_CENTRE_POLICY + "," + EdubaseRoles.EFADO + "," + EdubaseRoles.EFAHNS + "," + EdubaseRoles.FST + "," + EdubaseRoles.IEBT + "," + EdubaseRoles.SOU + "," + EdubaseRoles.EDUBASE_LACCDO + "," + EdubaseRoles.LADO + "," + EdubaseRoles.LSU;
-        public const string CanSeeChildrensCentreGroupManagerEmail = EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.EDUBASE_CHILDRENS_CENTRE_POLICY + "," + EdubaseRoles.EDUBASE_LACCDO;       
+        public const string CanSeeChildrensCentreGroupManagerEmail = EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.EDUBASE_CHILDRENS_CENTRE_POLICY + "," + EdubaseRoles.EDUBASE_LACCDO;
+
+        //below strings control access to fields for secure 16-19 groups.  pemissions for other establishment groups are controlled by other values above
+        public const string Secure1619CloseAndMarkAsCreatedInError = EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.YCS;
+        public const string Secure1619CanEditCloseDataStatus = EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.YCS;
+        public const string Secure1619CanEditUkprn = EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.UKRLP;
     }
 }
