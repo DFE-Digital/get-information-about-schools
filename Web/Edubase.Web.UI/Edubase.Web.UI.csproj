@@ -356,6 +356,7 @@
     <Compile Include="Areas\Governors\Controllers\SharedGovernorController.cs" />
     <Compile Include="Areas\Governors\Models\HistoricGovernorViewModel.cs" />
     <Compile Include="Areas\Groups\Models\ConvertSATViewModel.cs" />
+    <Compile Include="Areas\ViewRulesHandlers\GroupEditorViewModelRulesHandler.cs" />
     <Compile Include="Controllers\AmalgamateMergeController.cs" />
     <Compile Include="Controllers\Api\UtilApiController.cs" />
     <Compile Include="Controllers\FaqController.cs" />
