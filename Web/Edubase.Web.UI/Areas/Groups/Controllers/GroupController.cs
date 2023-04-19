@@ -19,6 +19,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using Edubase.Web.UI.Areas.Groups.ViewRulesHandlers;
     using Exceptions;
     using Filters;
+    using global::Glimpse.Mvc.Model;
     using Microsoft.IdentityModel.Tokens;
     using Models.CreateEdit;
     using Models.Validators;
