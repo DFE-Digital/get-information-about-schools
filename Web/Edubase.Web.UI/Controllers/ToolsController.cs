@@ -41,7 +41,9 @@ namespace Edubase.Web.UI.Controllers
         private readonly ILocalAuthoritySetRepository _localAuthoritySetRepository;
         private readonly IEstablishmentDownloadService _establishmentDownloadService;
 
-        public ToolsController(ISecurityService securityService, IEstablishmentReadService establishmentReadService, IEstablishmentWriteService establishmentWriteService, ICachedLookupService lookup, IClientStorage clientStorage, ILocalAuthoritySetRepository localAuthoritySetRepository, IEstablishmentDownloadService establishmentDownloadService)
+        public ToolsController(ISecurityService securityService, IEstablishmentReadService establishmentReadService, IEstablishmentWriteService establishmentWriteService,
+            ICachedLookupService lookup, IClientStorage clientStorage, ILocalAuthoritySetRepository localAuthoritySetRepository,
+            IEstablishmentDownloadService establishmentDownloadService)
         {
             _securityService = securityService;
             _establishmentReadService = establishmentReadService;
@@ -67,6 +69,7 @@ namespace Edubase.Web.UI.Controllers
                 UserCanCreateAcademySponsor = createGroupPermission.GroupTypes.Any(x => x == GT.SchoolSponsor),
                 UserCanCreateEstablishment = createEstablishmentPermission.CanCreate,
                 UserCanManageAcademyOpenings = User.InRole(AuthorizedRoles.CanManageAcademyOpenings),
+                UserCanManage16To19SecureAcademyOpenings = User.InRole(AuthorizedRoles.CanManage16To19SecureAcademyOpenings),
                 UserCanBulkCreateAcademies = User.InRole(AuthorizedRoles.CanBulkCreateAcademies),
                 UserCanMergeOrAmalgamateEstablishments = User.InRole(AuthorizedRoles.CanMergeEstablishments),
                 UserCanBulkUpdateGovernors = User.InRole(AuthorizedRoles.CanBulkUpdateGovernors),

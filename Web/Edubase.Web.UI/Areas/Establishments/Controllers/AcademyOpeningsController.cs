@@ -38,9 +38,16 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _establishmentWriteService = establishmentWriteService;
         }
 
+        [HttpGet, Route("16-19-secure-academy-openings", Name = "Manage16To19SecureAcademyOpenings")]
+        public Task<ActionResult> Manage16To19SecureAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc") =>
+            Task.FromResult<ActionResult>(RedirectToAction(nameof(ManageAcademyOpenings),
+                new { skip, sortBy, establishmentCode = "43" }));
+
+
         [HttpGet, Route("academy-openings", Name = "ManageAcademyOpenings")]
         // public ActionResult Index() => View();
-        public async Task<ActionResult> ManageAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc")
+        public async Task<ActionResult> ManageAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc",
+            string establishmentCode = null)
         {
             var take = 50;
             var now = DateTime.Now;
@@ -51,8 +58,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
 
             var property = typeof(EditAcademyOpeningViewModel).GetProperty(sortBy);
-
+            //Todo maybe able to get it to look up only ycs when necessary
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
+            if (establishmentCode != null) estabTypes = estabTypes.Where(et => et.Code == establishmentCode);
 
             var result = await _establishmentReadService.SearchAsync(
                 new EstablishmentSearchPayload
@@ -64,8 +72,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     {
                         OpenDateMin = from,
                         OpenDateMax = to,
-                        EstablishmentTypeGroupIds = new[] {(int) eLookupEstablishmentTypeGroup.Academies},
-                        StatusIds = new[] {(int) eLookupEstablishmentStatus.ProposedToOpen}
+                        EstablishmentTypeGroupIds = new[] { (int) eLookupEstablishmentTypeGroup.Academies },
+                        StatusIds = new[] { (int) eLookupEstablishmentStatus.ProposedToOpen }
                     },
                     Select = new List<string>
                     {
@@ -104,7 +112,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     academyOpenings.Sort((x, y) => x.OpenDate.CompareTo(y.OpenDate));
                     break;
                 case "OpenDate-asc":
-                     academyOpenings.Sort((x, y) => y.OpenDate.CompareTo(x.OpenDate));
+                    academyOpenings.Sort((x, y) => y.OpenDate.CompareTo(x.OpenDate));
                     break;
                 case "Urn-asc":
                     academyOpenings.Sort((x, y) => x.Urn.CompareTo(y.Urn));
@@ -136,7 +144,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     {
                         return y.PredecessorName == null && y.PredecessorName == null
                             ? 0
-                            : x.PredecessorName == null ? 1 : y.PredecessorName == null ? -1 : x.PredecessorName.CompareTo(y.PredecessorName);
+                            : x.PredecessorName == null
+                                ? 1
+                                : y.PredecessorName == null
+                                    ? -1
+                                    : x.PredecessorName.CompareTo(y.PredecessorName);
                     });
                     break;
                 case "PredecessorName-desc":
@@ -144,10 +156,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     {
                         return y.PredecessorName == null && y.PredecessorName == null
                             ? 0
-                            : x.PredecessorName == null ? -1 : y.PredecessorName == null ? 1 : y.PredecessorName.CompareTo(x.PredecessorName);
+                            : x.PredecessorName == null
+                                ? -1
+                                : y.PredecessorName == null
+                                    ? 1
+                                    : y.PredecessorName.CompareTo(x.PredecessorName);
                     });
                     break;
-
             }
 
 
@@ -219,8 +234,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             if (link != null)
             {
                 response = await _establishmentWriteService.PartialUpdateAsync(
-                    new EstablishmentModel {CloseDate = openingDate.AddDays(-1), Urn = link.Urn},
-                    new EstablishmentFieldList {CloseDate = true}, User);
+                    new EstablishmentModel { CloseDate = openingDate.AddDays(-1), Urn = link.Urn },
+                    new EstablishmentFieldList { CloseDate = true }, User);
 
                 if (response.HasErrors)
                 {
@@ -235,7 +250,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 new EstablishmentModel
                 {
                     OpenDate = openingDate, Name = viewModel.EstablishmentName, Urn = viewModel.Urn
-                }, new EstablishmentFieldList {OpenDate = true, Name = true}, User);
+                }, new EstablishmentFieldList { OpenDate = true, Name = true }, User);
 
             if (response.HasErrors)
             {
@@ -251,7 +266,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpGet, Route("search-academies", Name = "SearchAcademyOpenings")]
         public async Task<ActionResult> SearchAcademyOpenings(int? urn, bool? isSearching)
         {
-
             if (urn.HasValue)
             {
                 var result = await _establishmentReadService.GetAsync((int) urn, User);
@@ -260,18 +274,18 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     ModelState.AddModelError("Urn", "Please enter a valid URN");
                     return View("SearchAcademyOpenings", new EditAcademyOpeningViewModel());
                 }
+
                 var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
                 var links = await _establishmentReadService.GetLinkedEstablishmentsAsync((int) urn, User);
                 var link = links.FirstOrDefault(e =>
                     e.LinkTypeId == (int) eLookupEstablishmentLinkType.ParentOrPredecessor);
 
                 var establishment = result.GetResult();
-                if (establishment.StatusId != (int)eLookupEstablishmentStatus.ProposedToOpen)
+                if (establishment.StatusId != (int) eLookupEstablishmentStatus.ProposedToOpen)
                 {
                     ModelState.AddModelError("Urn", "Please enter a valid URN");
                     return View("SearchAcademyOpenings", new EditAcademyOpeningViewModel());
                 }
-
 
 
                 var viewModel = new EditAcademyOpeningViewModel()
