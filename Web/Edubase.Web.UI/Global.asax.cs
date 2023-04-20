@@ -6,7 +6,10 @@ using FluentValidation.Mvc;
 using System;
 using System.Configuration;
 using System.IO;
+using System.Net.Security;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -17,6 +20,7 @@ using Edubase.Services.ExternalLookup;
 using Newtonsoft.Json.Serialization;
 using Edubase.Web.UI.Helpers.ModelBinding;
 using Edubase.Web.UI.Helpers.ValueProviders;
+using Microsoft.Ajax.Utilities;
 using Sustainsys.Saml2.Exceptions;
 
 namespace Edubase.Web.UI
@@ -28,13 +32,19 @@ namespace Edubase.Web.UI
 #if DEBUG
             try
             {
-                GetExternalSettings();
+                const string pathToConfigFile = "../../devsecrets.gias.config.alwaysignore";
+                GetExternalSettings(pathToConfigFile);
             }
             catch
             {
                 throw new UnauthorizedAccessException("Could not get external settings. This is probably because you haven't been issued the external settings file.");
             }
 #endif
+
+            // Self-signed certificates fail validation for HTTPS connections - optionally override this for
+            // local development if a SHA1 hash has been provided within configuration.
+            AddTrustedCertificatesFromConfiguration();
+
 
             GlobalConfiguration.Configure(x =>
             {
@@ -68,9 +78,9 @@ namespace Edubase.Web.UI
         }
 
 
-        private static void GetExternalSettings()
+        private static void GetExternalSettings(string pathToConfigFile)
         {
-            string configPath = Path.Combine(AppContext.BaseDirectory, "../../devsecrets.gias.config.alwaysignore");
+            string configPath = Path.Combine(AppContext.BaseDirectory, pathToConfigFile);
             if (!File.Exists(configPath))
             {
                 throw new FileNotFoundException();
@@ -120,6 +130,85 @@ namespace Edubase.Web.UI
                 }
 
             }
+        }
+
+        /// <summary>
+        /// <p>
+        ///     This is used to (optionally) add a known-good self-signed certificate to the allow list.
+        /// </p><p>
+        ///     An allow-list specified within local configuration is preferable to alternatives
+        ///     such as disabling SSL verification entirely, or adding the certificate to the
+        ///     trusted root store.
+        /// </p><p>
+        ///     Strongly discouraged for any environment other than local development.
+        ///     (currently enforced, where <c>Environment</c> must be <c>localdev</c>)
+        /// </p><p>
+        ///     <list type="bullet">
+        ///         <item>The SHA1 thumbprint of the certificate to add to the allow list.</item>
+        ///         <item>Non-alphanumeric characters are removed (<c>[^A-Za-z0-9_]</c>) and case is normalised.</item>
+        ///         <item>This can be obtained from the web browser.</item>
+        ///     </list>
+        /// </p><p>
+        ///     Adapted from: https://stackoverflow.com/a/44140506
+        /// </p>
+        /// </summary>
+        private static void AddTrustedCertificatesFromConfiguration()
+        {
+            System.Net.ServicePointManager.ServerCertificateValidationCallback += delegate(
+                object sender,
+                X509Certificate cert,
+                X509Chain chain,
+                SslPolicyErrors sslPolicyErrors)
+            {
+                if (sslPolicyErrors == SslPolicyErrors.None)
+                {
+                    // If no SSL verification issues under normal circumstances, no need to check further.
+                    return true;
+                }
+
+                var environment = ConfigurationManager.AppSettings["Environment"];
+                if (!environment.Equals("localdev"))
+                {
+                    // If not running locally, don't allow any override of SSL verification and reject the connection.
+                    return false;
+                }
+
+                var knownGoodSslCertificateThumbprintSha1 = ConfigurationManager.AppSettings["ApiCertificateSha1"];
+                if (knownGoodSslCertificateThumbprintSha1.IsNullOrWhiteSpace())
+                {
+                    // If no known-good certificate is specified, reject the connection.
+                    return false;
+                }
+
+                // SHA1 thumbprint is normally hexadecimal, but software might include additional characters
+                // when presenting the value for display (e.g. spaces, colons, dashes) so remove them
+                // and normalise to a consistent case (not strictly required if string comparison ignores case).
+                var normalisedKnownGoodThumbprintSha1 = Regex
+                    .Replace(knownGoodSslCertificateThumbprintSha1, @"[^A-Za-z0-9]+", "")
+                    .ToUpperInvariant();
+                if (knownGoodSslCertificateThumbprintSha1.IsNullOrWhiteSpace())
+                {
+                    // If the certificate's thumbprint is empty after normalisation (e.g., maybe it contained only special characters which got removed),
+                    // therefore throw an exception because this is a developer/configuration error.
+                    throw new ArgumentException(
+                        "Invalid configuration - The API SSL certificate thumbprint has been specified, but normalises to an empty value."
+                    );
+                }
+
+                var actualCertHashStringSha1 = cert.GetCertHashString();
+                if (string.Equals(
+                        actualCertHashStringSha1,
+                        normalisedKnownGoodThumbprintSha1,
+                        StringComparison.OrdinalIgnoreCase
+                    ))
+                {
+                    // Certificate would normally be rejected, but it matches the given known-good certificate therefore allow it.
+                    return true;
+                }
+
+                // Default to rejecting the connection if the certificate is not in the allow list.
+                return false;
+            };
         }
 
         protected void Application_Error(object sender, EventArgs e)
