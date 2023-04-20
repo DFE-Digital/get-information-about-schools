@@ -28,5 +28,6 @@
         public const string DUGE = "DUGE";
         public const string LSU = "LSU";
         public const string UKRLP = "UKRLP";
+        public const string YCS = "YCS";
     }
 }

@@ -41,7 +41,10 @@ namespace Edubase.Web.UI.Controllers
         private readonly ILocalAuthoritySetRepository _localAuthoritySetRepository;
         private readonly IEstablishmentDownloadService _establishmentDownloadService;
 
-        public ToolsController(ISecurityService securityService, IEstablishmentReadService establishmentReadService, IEstablishmentWriteService establishmentWriteService, ICachedLookupService lookup, IClientStorage clientStorage, ILocalAuthoritySetRepository localAuthoritySetRepository, IEstablishmentDownloadService establishmentDownloadService)
+        public ToolsController(ISecurityService securityService, IEstablishmentReadService establishmentReadService,
+            IEstablishmentWriteService establishmentWriteService, ICachedLookupService lookup,
+            IClientStorage clientStorage, ILocalAuthoritySetRepository localAuthoritySetRepository,
+            IEstablishmentDownloadService establishmentDownloadService)
         {
             _securityService = securityService;
             _establishmentReadService = establishmentReadService;
@@ -60,21 +63,29 @@ namespace Edubase.Web.UI.Controllers
 
             var viewModel = new ToolsViewModel
             {
-                UserCanCreateAcademyTrustGroup = createGroupPermission.GroupTypes.Any(x => x == GT.MultiacademyTrust || x == GT.SingleacademyTrust),
-                UserCanCreateChildrensCentreGroup = createGroupPermission.GroupTypes.Any(x => x == GT.ChildrensCentresCollaboration || x == GT.ChildrensCentresGroup),
+                UserCanCreateAcademyTrustGroup =
+                    createGroupPermission.GroupTypes.Any(x =>
+                        x == GT.MultiacademyTrust || x == GT.SingleacademyTrust),
+                UserCanCreateChildrensCentreGroup =
+                    createGroupPermission.GroupTypes.Any(x =>
+                        x == GT.ChildrensCentresCollaboration || x == GT.ChildrensCentresGroup),
                 UserCanCreateFederationGroup = createGroupPermission.GroupTypes.Any(x => x == GT.Federation),
                 UserCanCreateSchoolTrustGroup = createGroupPermission.GroupTypes.Any(x => x == GT.Trust),
-                UserCanCreateSecureSingleAcademyTrustGroup = createGroupPermission.GroupTypes.Any(x => x == GT.SecureSingleAcademyTrust),
+                UserCanCreateSecureSingleAcademyTrustGroup =
+                    createGroupPermission.GroupTypes.Any(x => x == GT.SecureSingleAcademyTrust),
                 UserCanCreateAcademySponsor = createGroupPermission.GroupTypes.Any(x => x == GT.SchoolSponsor),
                 UserCanCreateEstablishment = createEstablishmentPermission.CanCreate,
                 UserCanManageAcademyOpenings = User.InRole(AuthorizedRoles.CanManageAcademyOpenings),
+                UserCanManage16To19SecureAcademyOpenings =
+                    User.InRole(AuthorizedRoles.CanManage16To19SecureAcademyOpenings),
                 UserCanBulkCreateAcademies = User.InRole(AuthorizedRoles.CanBulkCreateAcademies),
                 UserCanMergeOrAmalgamateEstablishments = User.InRole(AuthorizedRoles.CanMergeEstablishments),
                 UserCanBulkUpdateGovernors = User.InRole(AuthorizedRoles.CanBulkUpdateGovernors),
                 UserCanBulkUpdateEstablishments = User.InRole(AuthorizedRoles.CanBulkUpdateEstablishments),
                 UserCanApprove = User.InRole(AuthorizedRoles.CanApprove),
                 UserCanConvertAcademyTrusts = User.InRole(AuthorizedRoles.CanManageAcademyTrusts),
-                UserCanViewIndependentSchoolsSignificantDates = User.InRole(AuthorizedRoles.CanSearchIndependentSchools),
+                UserCanViewIndependentSchoolsSignificantDates =
+                    User.InRole(AuthorizedRoles.CanSearchIndependentSchools),
                 UserCanBulkCreateFreeSchools = User.InRole(AuthorizedRoles.CanBulkCreateFreeSchools),
                 UserCanBulkAssociateEstabs2Groups = User.InRole(AuthorizedRoles.CanBulkAssociateEstabs2Groups),
                 UserCanDownloadMATClosureReport = User.InRole(AuthorizedRoles.CanManageAcademyTrusts),
@@ -93,7 +104,8 @@ namespace Edubase.Web.UI.Controllers
         public ActionResult BulkAcademies() => View();
 
         [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanBulkCreateAcademies)]
-        public async Task<ActionResult> BulkAcademies(BulkAcademiesViewModel model, int? removeUrn, int? editUrn, string action)
+        public async Task<ActionResult> BulkAcademies(BulkAcademiesViewModel model, int? removeUrn, int? editUrn,
+            string action)
         {
             var establishmentTypeFullList = (await _lookup.EstablishmentTypesGetAllAsync()).ToList();
             model.ItemTypes = establishmentTypeFullList.ToSelectList();
@@ -129,7 +141,8 @@ namespace Edubase.Web.UI.Controllers
                     }
                     else
                     {
-                        filteredItems = (await GetFilteredBulkAcademyTypes((int) est.Urn, establishmentTypeFullList)).ToSelectList(est?.TypeId)?.ToArray();
+                        filteredItems = (await GetFilteredBulkAcademyTypes((int) est.Urn, establishmentTypeFullList))
+                            .ToSelectList(est?.TypeId)?.ToArray();
                         if (filteredItems?.Length == 0)
                         {
                             ModelState.AddModelError(nameof(model.SearchUrn), "Please enter a valid URN");
@@ -140,7 +153,9 @@ namespace Edubase.Web.UI.Controllers
 
             if (action == "add")
             {
-                model.FilteredItemTypes = (await GetFilteredBulkAcademyTypes(model.FoundItem.Urn ?? 0, establishmentTypeFullList)).ToSelectList(model.FoundItem.EstablishmentTypeId);
+                model.FilteredItemTypes =
+                    (await GetFilteredBulkAcademyTypes(model.FoundItem.Urn ?? 0, establishmentTypeFullList))
+                    .ToSelectList(model.FoundItem.EstablishmentTypeId);
 
                 if (model.FoundItem.EstablishmentTypeId == null)
                 {
@@ -161,6 +176,7 @@ namespace Edubase.Web.UI.Controllers
             {
                 return View(model);
             }
+
             ModelState.Clear();
 
             // remove
@@ -176,7 +192,9 @@ namespace Edubase.Web.UI.Controllers
                 if (editUrn != null)
                 {
                     var itm = model.ItemsToAdd?.First(x => x.Urn == editUrn);
-                    model.FilteredItemTypes = (await GetFilteredBulkAcademyTypes((int) editUrn, establishmentTypeFullList)).ToSelectList(itm?.EstablishmentTypeId);
+                    model.FilteredItemTypes =
+                        (await GetFilteredBulkAcademyTypes((int) editUrn, establishmentTypeFullList)).ToSelectList(
+                            itm?.EstablishmentTypeId);
                     model.FoundItem = itm;
                     ViewBag.ButtonText = "Update establishment";
                 }
@@ -240,7 +258,8 @@ namespace Edubase.Web.UI.Controllers
         }
 
 
-        private async Task<Tuple<Guid, List<BulkAcademyViewModel>>> ProcessBulkAcademies(List<BulkAcademyViewModel> itemsToAdd)
+        private async Task<Tuple<Guid, List<BulkAcademyViewModel>>> ProcessBulkAcademies(
+            List<BulkAcademyViewModel> itemsToAdd)
         {
             var responseGuid = Guid.Empty;
 
@@ -288,26 +307,27 @@ namespace Edubase.Web.UI.Controllers
                     // pause before trying the non-complete items again
                     System.Threading.Thread.Sleep(1000);
                 }
+
                 loopCount += 1;
             }
 
             return new Tuple<Guid, List<BulkAcademyViewModel>>(responseGuid, itemsToAdd);
         }
 
-        private async Task<List<EstablishmentLookupDto>> GetFilteredBulkAcademyTypes(int urn, List<EstablishmentLookupDto> fullList)
+        private async Task<List<EstablishmentLookupDto>> GetFilteredBulkAcademyTypes(int urn,
+            List<EstablishmentLookupDto> fullList)
         {
             var filteredList = fullList.ToList();
             foreach (var est in fullList)
             {
-                var call = await _establishmentWriteService.ValidateBulkCreateAcademies(new NewAcademyRequest[]
-                {
-                    new NewAcademyRequest()
+                var call = await _establishmentWriteService.ValidateBulkCreateAcademies(
+                    new NewAcademyRequest[]
                     {
-                        TypeId = est.Id,
-                        OpeningDate = DateTime.Now,
-                        PredecessorEstablishmentUrn = urn
-                    }
-                }, User);
+                        new NewAcademyRequest()
+                        {
+                            TypeId = est.Id, OpeningDate = DateTime.Now, PredecessorEstablishmentUrn = urn
+                        }
+                    }, User);
 
                 if (call.HasErrors || (call.Response.Length > 0 && call.Response[0].HasErrors))
                 {
@@ -319,11 +339,11 @@ namespace Edubase.Web.UI.Controllers
         }
 
 
-
         [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanMergeEstablishments)]
         public async Task<ActionResult> MergersTool()
         {
-            var settings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
+            var settings =
+                new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
 
             var type2PhaseMap = _establishmentReadService.GetEstabType2EducationPhaseMap().AsInts();
             var type2PhaseMapJson = JsonConvert.SerializeObject(type2PhaseMap, Formatting.None, settings);
@@ -352,16 +372,19 @@ namespace Edubase.Web.UI.Controllers
             return View();
         }
 
-        [HttpPost, EdubaseAuthorize, Route("ApiSessionRecorder", Name = "PostApiSessionRecorder"), ValidateAntiForgeryToken]
+        [HttpPost, EdubaseAuthorize, Route("ApiSessionRecorder", Name = "PostApiSessionRecorder"),
+         ValidateAntiForgeryToken]
         public ActionResult ApiSessionRecorderToggle()
         {
             ViewBag.LastSessionId = _clientStorage.Get("ApiSessionId");
-            if (_clientStorage.Get("ApiSessionId") == null) ViewBag.SessionId = _clientStorage.Save("ApiSessionId", Guid.NewGuid().ToString("N"));
+            if (_clientStorage.Get("ApiSessionId") == null)
+                ViewBag.SessionId = _clientStorage.Save("ApiSessionId", Guid.NewGuid().ToString("N"));
             else ViewBag.SessionId = _clientStorage.Save("ApiSessionId", null);
             return View("ApiSessionRecorder");
         }
 
-        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanSearchIndependentSchools), Route("~/independent-schools", Name = "IndSchSearch")]
+        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanSearchIndependentSchools),
+         Route("~/independent-schools", Name = "IndSchSearch")]
         public async Task<ActionResult> IndependentSchoolsSearch(IndSchoolsSearchViewModel viewModel)
         {
             await PopulateLookupData(viewModel);
@@ -371,7 +394,8 @@ namespace Edubase.Web.UI.Controllers
                 ModelState.Clear();
             }
 
-            if(viewModel.MinDate.ToDateTime().HasValue && viewModel.MaxDate.ToDateTime().HasValue && viewModel.MinDate.ToDateTime() > viewModel.MaxDate.ToDateTime())
+            if (viewModel.MinDate.ToDateTime().HasValue && viewModel.MaxDate.ToDateTime().HasValue &&
+                viewModel.MinDate.ToDateTime() > viewModel.MaxDate.ToDateTime())
                 ModelState.AddModelError("date-range", "Please use a valid date range");
 
             if (ModelState.IsValid)
@@ -381,11 +405,13 @@ namespace Edubase.Web.UI.Controllers
                     case IndSchoolsSearchViewModel.ActionSearch:
                         return View("IndependentSchoolsSearchResults", viewModel.SetResults(
                             new PaginatedResult<EstablishmentSearchResultModel>(viewModel.Skip, viewModel.Take,
-                                await _establishmentReadService.SearchAsync(await CreateIndSchoolSearchPayload(viewModel),
+                                await _establishmentReadService.SearchAsync(
+                                    await CreateIndSchoolSearchPayload(viewModel),
                                     User))));
                     case IndSchoolsSearchViewModel.ActionSaveSet:
                         return Redirect(string.Concat(Url.RouteUrl("CreatePredefinedLASet"), "?",
-                            QueryStringHelper.ToQueryString(IndSchoolsSearchViewModel.BindAliasForSelectedLocalAuthorityIds,
+                            QueryStringHelper.ToQueryString(
+                                IndSchoolsSearchViewModel.BindAliasForSelectedLocalAuthorityIds,
                                 viewModel.SelectedLocalAuthorityIds.ToArray())));
                     default:
                         break;
@@ -399,7 +425,8 @@ namespace Edubase.Web.UI.Controllers
             return View(viewModel);
         }
 
-        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanSearchIndependentSchools), Route("~/independent-schools/results-js", Name = "IndSchSearchResultsPartial")]
+        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanSearchIndependentSchools),
+         Route("~/independent-schools/results-js", Name = "IndSchSearchResultsPartial")]
         public async Task<ActionResult> IndependentSchoolsSearchResults(IndSchoolsSearchViewModel viewModel)
         {
             await PopulateLookupData(viewModel);
@@ -409,23 +436,28 @@ namespace Edubase.Web.UI.Controllers
             return PartialView("_IndSchSearchResults", viewModel);
         }
 
-        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools), Route("~/independent-schools/download", Name = "IndSchSearchResultsRequestDownload")]
+        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools),
+         Route("~/independent-schools/download", Name = "IndSchSearchResultsRequestDownload")]
         public async Task<ActionResult> IndependentSchoolsSearchDownload(IndSchoolsSearchViewModel viewModel)
         {
-            var id = await _establishmentDownloadService.SearchWithDownloadGenerationAsync(new EstablishmentSearchDownloadPayload
-            {
-                 SearchPayload= await CreateIndSchoolSearchPayload(viewModel),
-                 FileFormat = eFileFormat.XLSX,
-                 DataSet = eDataSet.IEBT
-            }, User);
+            var id = await _establishmentDownloadService.SearchWithDownloadGenerationAsync(
+                new EstablishmentSearchDownloadPayload
+                {
+                    SearchPayload = await CreateIndSchoolSearchPayload(viewModel),
+                    FileFormat = eFileFormat.XLSX,
+                    DataSet = eDataSet.IEBT
+                }, User);
 
             return RedirectToRoute("IndSchSearchResultsDownload", new { id, viewModel.Mode });
         }
 
-        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools), Route("~/independent-schools/download/{id}", Name = "IndSchSearchResultsDownload")]
+        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools),
+         Route("~/independent-schools/download/{id}", Name = "IndSchSearchResultsDownload")]
         public async Task<ActionResult> IndependentSchoolsSearchDownload(Guid id, string mode)
         {
-            ViewBag.Subtitle = mode == IndSchoolsSearchViewModel.SpecifierDateOfActionGeneral ? "Download results for next general action required": "Download results for next welfare action required";
+            ViewBag.Subtitle = mode == IndSchoolsSearchViewModel.SpecifierDateOfActionGeneral
+                ? "Download results for next general action required"
+                : "Download results for next welfare action required";
             var model = await _establishmentDownloadService.GetDownloadGenerationProgressAsync(id, User);
 
             if (model.HasErrored)
@@ -459,52 +491,63 @@ namespace Edubase.Web.UI.Controllers
                 }), JsonRequestBehavior.AllowGet);
         }
 
-        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools), Route("~/independent-schools/predefined-local-authority-sets", Name = "PredefinedLASets")]
+        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools),
+         Route("~/independent-schools/predefined-local-authority-sets", Name = "PredefinedLASets")]
         public async Task<ActionResult> PredefinedLASets(PredefinedLASetsViewModel viewModel)
         {
             viewModel.LocalAuthorities = await _lookup.LocalAuthorityGetAllAsync();
             var items = (await _localAuthoritySetRepository.GetAllAsync()).Items.OrderBy(x => x.Title);
-            viewModel.Results =  new PaginatedResult<LocalAuthoritySet>(viewModel.Skip, 100, items.Count(), items.Skip(viewModel.Skip).Take(100).ToList());
+            viewModel.Results = new PaginatedResult<LocalAuthoritySet>(viewModel.Skip, 100, items.Count(),
+                items.Skip(viewModel.Skip).Take(100).ToList());
             return View(viewModel);
         }
 
-        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools), Route("~/independent-schools/predefined-local-authority-sets/create", Name = "CreatePredefinedLASet")]
+        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools),
+         Route("~/independent-schools/predefined-local-authority-sets/create", Name = "CreatePredefinedLASet")]
         public async Task<ActionResult> CreatePredefinedLASet(PredefinedLASetViewModel viewModel)
         {
             ModelState.Clear();
-            viewModel.LocalAuthorities = (await _lookup.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+            viewModel.LocalAuthorities = (await _lookup.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name)
+                .Select(x => new LookupItemViewModel(x));
             return View("CreateEditPredefinedLASet", viewModel);
         }
 
-        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools), Route("~/independent-schools/predefined-local-authority-sets/edit/{id}", Name = "EditPredefinedLASet")]
+        [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools),
+         Route("~/independent-schools/predefined-local-authority-sets/edit/{id}", Name = "EditPredefinedLASet")]
         public async Task<ActionResult> EditPredefinedLASet(string id)
         {
             var entity = await _localAuthoritySetRepository.GetAsync(id);
-            return View("CreateEditPredefinedLASet", new PredefinedLASetViewModel
-            {
-                Id = entity.RowKey,
-                SelectedLocalAuthorityIds = entity.Ids.ToList(),
-                Title = entity.Title,
-                LocalAuthorities = (await _lookup.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x))
-            });
+            return View("CreateEditPredefinedLASet",
+                new PredefinedLASetViewModel
+                {
+                    Id = entity.RowKey,
+                    SelectedLocalAuthorityIds = entity.Ids.ToList(),
+                    Title = entity.Title,
+                    LocalAuthorities = (await _lookup.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name)
+                        .Select(x => new LookupItemViewModel(x))
+                });
         }
 
         [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools),
-            Route("~/independent-schools/predefined-local-authority-sets/edit/{id}", Name = "EditPredefinedLASetPost"),
-            Route("~/independent-schools/predefined-local-authority-sets/create", Name = "CreatePredefinedLASetPost")]
+         Route("~/independent-schools/predefined-local-authority-sets/edit/{id}", Name = "EditPredefinedLASetPost"),
+         Route("~/independent-schools/predefined-local-authority-sets/create", Name = "CreatePredefinedLASetPost")]
         public async Task<ActionResult> CreateEditPredefinedLASet(PredefinedLASetViewModel viewModel)
         {
-            if(ModelState.ContainsKey(nameof(viewModel.SuppressWarning)))
+            if (ModelState.ContainsKey(nameof(viewModel.SuppressWarning)))
                 ModelState.Remove(nameof(viewModel.SuppressWarning));
 
             if (ModelState.IsValid)
             {
                 var sets = await _localAuthoritySetRepository.GetAllAsync();
-                var duplicate = sets.Items.Where(x => x.Title == viewModel.Title && (viewModel.IsNewEntity || viewModel.Id != x.RowKey)).Select(x => x.RowKey).FirstOrDefault();
+                var duplicate = sets.Items
+                    .Where(x => x.Title == viewModel.Title && (viewModel.IsNewEntity || viewModel.Id != x.RowKey))
+                    .Select(x => x.RowKey).FirstOrDefault();
 
                 if (duplicate == null || viewModel.SuppressWarning)
                 {
-                    var entity = viewModel.IsNewEntity ? new LocalAuthoritySet() : await _localAuthoritySetRepository.GetAsync(viewModel.Id);
+                    var entity = viewModel.IsNewEntity
+                        ? new LocalAuthoritySet()
+                        : await _localAuthoritySetRepository.GetAsync(viewModel.Id);
                     entity.Title = viewModel.Title;
                     entity.Ids = viewModel.SelectedLocalAuthorityIds.ToArray();
                     if (viewModel.IsNewEntity) await _localAuthoritySetRepository.CreateAsync(entity);
@@ -514,21 +557,26 @@ namespace Edubase.Web.UI.Controllers
 
                     if (viewModel.Referrer == "results")
                     {
-                        return Redirect(string.Concat(Url.RouteUrl("IndSchSearch"), "?a=search&Mode=", viewModel.Mode, "&",
-                            QueryStringHelper.ToQueryString(IndSchoolsSearchViewModel.BindAliasForSelectedLocalAuthorityIds,
+                        return Redirect(string.Concat(Url.RouteUrl("IndSchSearch"), "?a=search&Mode=", viewModel.Mode,
+                            "&",
+                            QueryStringHelper.ToQueryString(
+                                IndSchoolsSearchViewModel.BindAliasForSelectedLocalAuthorityIds,
                                 viewModel.SelectedLocalAuthorityIds.ToArray())));
                     }
+
                     return RedirectToRoute("PredefinedLASets");
                 }
                 else if (duplicate != null) viewModel.WarningNameClash = true;
             }
 
-            viewModel.LocalAuthorities = (await _lookup.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+            viewModel.LocalAuthorities = (await _lookup.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name)
+                .Select(x => new LookupItemViewModel(x));
 
             return View("CreateEditPredefinedLASet", viewModel);
         }
 
-        [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools), Route("~/independent-schools/predefined-local-authority-sets/delete/{id}", Name = "DeletePredefinedLASet")]
+        [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools),
+         Route("~/independent-schools/predefined-local-authority-sets/delete/{id}", Name = "DeletePredefinedLASet")]
         public async Task<ActionResult> DeletePredefinedLASet(string id)
         {
             await _localAuthoritySetRepository.DeleteAsync(id);
@@ -545,36 +593,48 @@ namespace Edubase.Web.UI.Controllers
         private async Task<EstablishmentSearchPayload> CreateIndSchoolSearchPayload(IndSchoolsSearchViewModel viewModel)
         {
             int[] laIds;
-            if (viewModel.SelectedLocalAuthoritySetId.Clean() != null) laIds = (await _localAuthoritySetRepository.GetAsync(viewModel.SelectedLocalAuthoritySetId.Clean())).Ids;
+            if (viewModel.SelectedLocalAuthoritySetId.Clean() != null)
+                laIds = (await _localAuthoritySetRepository.GetAsync(viewModel.SelectedLocalAuthoritySetId.Clean()))
+                    .Ids;
             else laIds = viewModel.SelectedLocalAuthorityIds.ToArray();
 
             // Default to large min/max range, so that only those record _with_ a date are shown.
-            Func<DateTime?, DateTime?> getMaxDate = (DateTime? dt) => dt.HasValue ? dt : new DateTime(DateTime.UtcNow.Year + 100, 1, 1);
-            Func<DateTime?, DateTime?> getMinDate = (DateTime? dt) => dt.HasValue ? dt : new DateTime(DateTime.UtcNow.Year - 100, 1, 1);
+            Func<DateTime?, DateTime?> getMaxDate = (DateTime? dt) =>
+                dt.HasValue ? dt : new DateTime(DateTime.UtcNow.Year + 100, 1, 1);
+            Func<DateTime?, DateTime?> getMinDate = (DateTime? dt) =>
+                dt.HasValue ? dt : new DateTime(DateTime.UtcNow.Year - 100, 1, 1);
 
             return new EstablishmentSearchPayload
             {
                 Filters = new EstablishmentSearchFilters
                 {
-                    NextActionRequiredByWELMin = viewModel.IsWelfareMode ? getMinDate(viewModel.MinDate.ToDateTime()) : null,
-                    NextActionRequiredByWELMax = viewModel.IsWelfareMode ? getMaxDate(viewModel.MaxDate.ToDateTime()) : null,
-                    NextGeneralActionRequiredMin = viewModel.IsGeneralMode ? getMinDate(viewModel.MinDate.ToDateTime()) : null,
-                    NextGeneralActionRequiredMax = viewModel.IsGeneralMode ? getMaxDate(viewModel.MaxDate.ToDateTime()) : null,
+                    NextActionRequiredByWELMin =
+                        viewModel.IsWelfareMode ? getMinDate(viewModel.MinDate.ToDateTime()) : null,
+                    NextActionRequiredByWELMax =
+                        viewModel.IsWelfareMode ? getMaxDate(viewModel.MaxDate.ToDateTime()) : null,
+                    NextGeneralActionRequiredMin =
+                        viewModel.IsGeneralMode ? getMinDate(viewModel.MinDate.ToDateTime()) : null,
+                    NextGeneralActionRequiredMax =
+                        viewModel.IsGeneralMode ? getMaxDate(viewModel.MaxDate.ToDateTime()) : null,
                     LocalAuthorityIds = laIds,
-                    StatusIds = new[] { (int) eLookupEstablishmentStatus.Open, (int) eLookupEstablishmentStatus.OpenButProposedToClose }
+                    StatusIds = new[]
+                    {
+                        (int) eLookupEstablishmentStatus.Open,
+                        (int) eLookupEstablishmentStatus.OpenButProposedToClose
+                    }
                 },
                 Skip = viewModel.Skip,
                 Take = 50,
                 Select = new List<string>
-                    {
-                        nameof(EstablishmentSearchResultModel.Name),
-                        nameof(EstablishmentSearchResultModel.LocalAuthorityId),
-                        nameof(EstablishmentSearchResultModel.Address_CityOrTown),
-                        nameof(EstablishmentSearchResultModel.StatusId),
-                        nameof(EstablishmentSearchResultModel.TypeId),
-                        nameof(EstablishmentSearchResultModel.NextGeneralActionRequired),
-                        nameof(EstablishmentSearchResultModel.NextActionRequiredByWEL)
-                    }
+                {
+                    nameof(EstablishmentSearchResultModel.Name),
+                    nameof(EstablishmentSearchResultModel.LocalAuthorityId),
+                    nameof(EstablishmentSearchResultModel.Address_CityOrTown),
+                    nameof(EstablishmentSearchResultModel.StatusId),
+                    nameof(EstablishmentSearchResultModel.TypeId),
+                    nameof(EstablishmentSearchResultModel.NextGeneralActionRequired),
+                    nameof(EstablishmentSearchResultModel.NextActionRequiredByWEL)
+                }
             };
         }
     }
