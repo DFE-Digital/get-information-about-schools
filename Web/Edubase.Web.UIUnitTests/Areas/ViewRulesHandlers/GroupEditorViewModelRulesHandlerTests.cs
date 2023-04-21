@@ -27,7 +27,6 @@ namespace Edubase.Web.UIUnitTests.Areas.ViewRulesHandlers
         [InlineData(eLookupGroupType.SchoolSponsor, eLookupGroupStatus.Open, EdubaseRoles.ROLE_BACKOFFICE)]
         [InlineData(eLookupGroupType.Federation, eLookupGroupStatus.Open, EdubaseRoles.ROLE_BACKOFFICE)]
         [InlineData(eLookupGroupType.SecureSingleAcademyTrust, eLookupGroupStatus.Open, EdubaseRoles.ROLE_BACKOFFICE)]
-        [InlineData(eLookupGroupType.SecureSingleAcademyTrust, eLookupGroupStatus.Open, EdubaseRoles.YCS)]
         public void SetEditPermissions_GroupViewModel_CanUserCloseAndMarkAsCreatedInError_True(eLookupGroupType groupType, eLookupGroupStatus statusId, string role)
         {
             mockPrincipal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(false);
@@ -56,6 +55,7 @@ namespace Edubase.Web.UIUnitTests.Areas.ViewRulesHandlers
         [InlineData(eLookupGroupType.SecureSingleAcademyTrust, eLookupGroupStatus.Closed, EdubaseRoles.ROLE_BACKOFFICE)]
         [InlineData(eLookupGroupType.SecureSingleAcademyTrust, eLookupGroupStatus.CreatedInError, EdubaseRoles.YCS)]
         [InlineData(eLookupGroupType.SecureSingleAcademyTrust, eLookupGroupStatus.Closed, EdubaseRoles.YCS)]
+        [InlineData(eLookupGroupType.SecureSingleAcademyTrust, eLookupGroupStatus.Open, EdubaseRoles.YCS)]
         [InlineData(eLookupGroupType.MultiacademyTrust, eLookupGroupStatus.CreatedInError, EdubaseRoles.YCS)]
         [InlineData(eLookupGroupType.MultiacademyTrust, eLookupGroupStatus.Closed, EdubaseRoles.YCS)]
         [InlineData(eLookupGroupType.SingleacademyTrust, eLookupGroupStatus.CreatedInError, EdubaseRoles.YCS)]
@@ -126,7 +126,6 @@ namespace Edubase.Web.UIUnitTests.Areas.ViewRulesHandlers
         [InlineData((int) eLookupGroupType.SingleacademyTrust, EdubaseRoles.EDUBASE_CMT)]
         [InlineData((int) eLookupGroupType.SingleacademyTrust, EdubaseRoles.AP_AOS)]
         [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.ROLE_BACKOFFICE)]
-        [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.YCS)]
 
         public void SetEditPermissions_GroupViewModel_CanUserEditClosedDate_CanUserEditStatus_True(int groupType, string role)
         {
@@ -150,6 +149,7 @@ namespace Edubase.Web.UIUnitTests.Areas.ViewRulesHandlers
         [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.EDUBASE)]
         [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.EDUBASE_CMT)]
         [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.AP_AOS)]
+        [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.YCS)]
         public void SetEditPermissions_GroupViewModel_CanUserEditClosedDate_CanUserEditStatus_False(int groupType, string role)
         {
             mockPrincipal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(false);

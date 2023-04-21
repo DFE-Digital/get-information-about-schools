@@ -36,20 +36,13 @@ namespace Edubase.Web.UI.Areas.Groups.ViewRulesHandlers
 
         public static bool UserCanCloseAndMarkAsCreatedInError(GroupEditorViewModel viewModel, IPrincipal user)
         {
-            var result = false;
-            if (viewModel.GroupType.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor, eLookupGroupType.Federation)
+            return viewModel.GroupType.OneOfThese(eLookupGroupType.MultiacademyTrust,
+                                                eLookupGroupType.SingleacademyTrust,
+                                                eLookupGroupType.SchoolSponsor,
+                                                eLookupGroupType.Federation,
+                                                eLookupGroupType.SecureSingleAcademyTrust)
                 && !viewModel.StatusId.OneOfThese(eLookupGroupStatus.CreatedInError, eLookupGroupStatus.Closed)
-                && user.InRole(AuthorizedRoles.IsAdmin))
-            {
-                result = true;
-            }
-            else if (viewModel.GroupType == eLookupGroupType.SecureSingleAcademyTrust
-                && !viewModel.StatusId.OneOfThese(eLookupGroupStatus.CreatedInError, eLookupGroupStatus.Closed)
-                && user.InRole(AuthorizedRoles.IsAdmin + "," + EdubaseRoles.YCS))
-            {
-                result = true;
-            }
-            return result;
+                && user.InRole(AuthorizedRoles.IsAdmin);
         }
 
         public static bool UserCanEditClosedDateAndStatus(GroupEditorViewModel viewModel, IPrincipal user)
@@ -61,7 +54,7 @@ namespace Edubase.Web.UI.Areas.Groups.ViewRulesHandlers
                 result = true;
             }
             else if (viewModel.GroupType == eLookupGroupType.SecureSingleAcademyTrust
-                && user.InRole(AuthorizedRoles.IsAdmin + "," + EdubaseRoles.YCS))
+                && user.InRole(AuthorizedRoles.IsAdmin))
             {
                 result = true;
             }
