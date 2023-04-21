@@ -39,14 +39,16 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route("16-19-secure-academy-openings", Name = "Manage16To19SecureAcademyOpenings")]
-        public Task<ActionResult> Manage16To19SecureAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc") =>
-            Task.FromResult<ActionResult>(RedirectToAction(nameof(ManageAcademyOpenings),
-                new { skip, sortBy, establishmentCode = "43" }));
+        public Task<ActionResult> Manage16To19SecureAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc")
+        {
+            TempData["EstablishmentCodeFor16To19SecureAcademy"] = "57";
+            return Task.FromResult<ActionResult>(RedirectToAction(nameof(ManageAcademyOpenings),
+                new { skip, sortBy }));
+        }
 
         [HttpGet, Route("academy-openings", Name = "ManageAcademyOpenings")]
         // public ActionResult Index() => View();
-        public async Task<ActionResult> ManageAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc",
-            string establishmentCode = null)
+        public async Task<ActionResult> ManageAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc")
         {
             var take = 50;
             var now = DateTime.Now;
@@ -59,7 +61,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var property = typeof(EditAcademyOpeningViewModel).GetProperty(sortBy);
 
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
-            if (establishmentCode != null) estabTypes = estabTypes.Where(et => et.Code == establishmentCode);
+
+            object establishmentCodeFor16To19SecureAcademy = TempData.TryGetValue(
+                "EstablishmentCodeFor16To19SecureAcademy", out establishmentCodeFor16To19SecureAcademy);
+
+            estabTypes = Utility.FilterEstablishmentTypes(estabTypes, establishmentCodeFor16To19SecureAcademy?.ToString());
 
             var result = await _establishmentReadService.SearchAsync(
                 new EstablishmentSearchPayload
@@ -71,7 +77,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     {
                         OpenDateMin = from,
                         OpenDateMax = to,
-                        EstablishmentTypeGroupIds = new[] { (int) eLookupEstablishmentTypeGroup.Academies },
+                        EstablishmentTypeGroupIds =
+                            Utility.GetAcademyOpeningsEstablishmentTypeGroupIds(
+                                establishmentCodeFor16To19SecureAcademy?.ToString()),
                         StatusIds = new[] { (int) eLookupEstablishmentStatus.ProposedToOpen }
                     },
                     Select = new List<string>

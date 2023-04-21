@@ -13,6 +13,8 @@ namespace Edubase.Services.Enums
         SpecialSchools = 8,
         Universities = 5,
         WelshSchools = 9,
-        OnlineProvider = 11
+        OnlineProvider = 11,
+        //Todo confirm from Catherine || Anthony about the correct value
+        Secure16To19Academy=11
     }
 }
