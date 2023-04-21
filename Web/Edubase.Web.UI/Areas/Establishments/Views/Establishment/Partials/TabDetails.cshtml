@@ -44,6 +44,17 @@
         </div>
     }
 
+    @if (!Model.TabWarnings.DetailsTab.IsEmpty())
+    {
+        <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-warning-text__assistive">Warning</span>
+                @Model.TabWarnings.DetailsTab
+            </strong>
+        </div>
+    }
+
     @if (Model.Establishment.Location != null)
     {
         <a href="#details-summary" class="govuk-skip-link">Skip map</a>
