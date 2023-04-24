@@ -65,7 +65,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             object establishmentCodeFor16To19SecureAcademy = TempData.TryGetValue(
                 "EstablishmentCodeFor16To19SecureAcademy", out establishmentCodeFor16To19SecureAcademy);
 
-            estabTypes = Utility.FilterEstablishmentTypes(estabTypes, establishmentCodeFor16To19SecureAcademy?.ToString());
+            estabTypes = Utility.FilterEstablishmentType(estabTypes, establishmentCodeFor16To19SecureAcademy?.ToString());
 
             var result = await _establishmentReadService.SearchAsync(
                 new EstablishmentSearchPayload
@@ -78,7 +78,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                         OpenDateMin = from,
                         OpenDateMax = to,
                         EstablishmentTypeGroupIds =
-                            Utility.GetAcademyOpeningsEstablishmentTypeGroupIds(
+                            Utility.GetAcademyOpeningsEstablishmentTypeByTypeGroupId(
                                 establishmentCodeFor16To19SecureAcademy?.ToString()),
                         StatusIds = new[] { (int) eLookupEstablishmentStatus.ProposedToOpen }
                     },

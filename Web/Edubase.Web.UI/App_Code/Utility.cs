@@ -7,15 +7,16 @@ namespace Edubase.Web.UI
 {
     public static class Utility
     {
-        public static int[] GetAcademyOpeningsEstablishmentTypeGroupIds(string establishmentCode) =>
+        public static int[] GetAcademyOpeningsEstablishmentTypeByTypeGroupId(string establishmentCode) =>
             new[]
             {
-                establishmentCode == null
+                // 57 is the establishment type code for Secure 16-19 Academies.
+                establishmentCode == null || establishmentCode != "57"
                     ? (int) eLookupEstablishmentTypeGroup.Academies
                     : (int) eLookupEstablishmentTypeGroup.Secure16To19Academy
             };
 
-        public static IEnumerable<EstablishmentLookupDto> FilterEstablishmentTypes(
+        public static IEnumerable<EstablishmentLookupDto> FilterEstablishmentType(
             IEnumerable<EstablishmentLookupDto> establishmentTypes, string establishmentCode = null)
         {
             if (!string.IsNullOrWhiteSpace(establishmentCode) && int.TryParse(establishmentCode, out var estabCode))

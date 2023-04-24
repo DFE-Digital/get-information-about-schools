@@ -48,7 +48,7 @@ namespace Edubase.Web.UI.Controllers.Api
             string establishmentCode = null)
         {
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
-            estabTypes = Utility.FilterEstablishmentTypes(estabTypes, establishmentCode);
+            estabTypes = Utility.FilterEstablishmentType(estabTypes, establishmentCode);
 
             var apiResult = (await _establishmentReadService.SearchAsync(
                 new EstablishmentSearchPayload
@@ -60,7 +60,7 @@ namespace Edubase.Web.UI.Controllers.Api
                     {
                         OpenDateMin = from,
                         OpenDateMax = to,
-                        EstablishmentTypeGroupIds = Utility.GetAcademyOpeningsEstablishmentTypeGroupIds(
+                        EstablishmentTypeGroupIds = Utility.GetAcademyOpeningsEstablishmentTypeByTypeGroupId(
                             establishmentCode),
                         StatusIds = new[] { (int) eLookupEstablishmentStatus.ProposedToOpen }
                     },
