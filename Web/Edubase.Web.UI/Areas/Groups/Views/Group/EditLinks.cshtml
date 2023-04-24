@@ -264,8 +264,8 @@
 
 
         <div class="information govuk-inset-text">
-            <h2 class="govuk-heading-m">Governance updates</h2>
-            <p class="govuk-body">
+            <h2 id="governance-updates-modal-heading" class="govuk-heading-m">Governance updates</h2>
+            <p id="governance-updates-modal-body" class="govuk-body">
                 You are now about to create your federation. To complete the process, you need to update the governance section for each establishment
                 in the federation to reflect the new federation governing body. Each establishment should have the same governance information.
                 All term of office roles for the individual establishments before they became part of the federation should be closed
@@ -300,14 +300,18 @@
             <span class="gias-modal-main-container__close-container">
                 <a id="group-establishment-governance-close-link" href="#bottom" class="gias-modal-main-container__close-container__link">Close</a>
             </span>
-            <h2 class="govuk-heading-m">Governance updates</h2>
-            <p class="govuk-body">
+            <h2 id="governance-updates-modal-heading" class="govuk-heading-m">Governance updates</h2>
+            <p id="governance-updates-modal-body" class="govuk-body">
                 You have now created your federation. To complete the process, you need to update the governance section for each establishment
                 in the federation to reflect the new federation governing body. Each establishment should have the same governance information.
                 All term of office roles for the individual establishments before they became part of the federation should be closed
                 and new term of office roles for the federation governing body should be added.
             </p>
-            <input class="govuk-button gias-modal-main-container__content__button" name="action" type="submit" value="Continue">
+            @* The same name i.e. action and value i.e. @VM.ActionSaveLinks is being used as with the save button above so the backend code *@
+            @* behaves in the same way  *@
+            <button class="govuk-button gias-modal-main-container__content__button" type="submit" name="action" value="@VM.ActionSaveLinks">
+                Continue
+            </button>
         </div>
     </div>
 }
