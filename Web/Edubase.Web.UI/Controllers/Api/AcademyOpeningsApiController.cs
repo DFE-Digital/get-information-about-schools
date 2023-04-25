@@ -44,11 +44,10 @@ namespace Edubase.Web.UI.Controllers.Api
         /// <returns></returns>
         [Route("api/academy-openings/list/{from:datetime}/{to:datetime}/{skip:int}/{take:int}/{establishmentCode?}"),
          HttpGet]
-        public async Task<dynamic> GetListAsync(DateTime from, DateTime to, int skip, int take,
-            string establishmentCode = null)
+        public async Task<dynamic> GetListAsync(DateTime from, DateTime to, int skip, int take,string establishmentCode = null)
         {
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
-            estabTypes = Utility.FilterEstablishmentType(estabTypes, establishmentCode);
+            estabTypes = SecureAcademyUtility.FilterEstablishmentType(estabTypes, establishmentCode);
 
             var apiResult = (await _establishmentReadService.SearchAsync(
                 new EstablishmentSearchPayload
@@ -60,7 +59,7 @@ namespace Edubase.Web.UI.Controllers.Api
                     {
                         OpenDateMin = from,
                         OpenDateMax = to,
-                        EstablishmentTypeGroupIds = Utility.GetAcademyOpeningsEstablishmentTypeByTypeGroupId(
+                        EstablishmentTypeGroupIds = SecureAcademyUtility.GetAcademyOpeningsEstablishmentTypeByTypeGroupId(
                             establishmentCode),
                         StatusIds = new[] { (int) eLookupEstablishmentStatus.ProposedToOpen }
                     },

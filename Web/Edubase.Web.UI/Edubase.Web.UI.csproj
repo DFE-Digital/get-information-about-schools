@@ -333,7 +333,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Code\Utility.cs" />
     <Compile Include="App_Start\AutoMapperWebProfile.cs" />
     <Compile Include="App_Start\AutoMapperWebConfiguration.cs" />
     <Compile Include="App_Start\StartupSASimulator.cs" />
@@ -380,6 +379,7 @@
     <Compile Include="Helpers\NonceHelper.cs" />
     <Compile Include="Helpers\QueryValidator.cs" />
     <Compile Include="Helpers\RouteDto.cs" />
+    <Compile Include="Helpers\SecureAcademyUtility.cs" />
     <Compile Include="Helpers\StringUtils.cs" />
     <Compile Include="Mappers\BulkUpdateViewModelToDtoMapper.cs" />
     <Compile Include="Mappers\LookupToSearchViewModelMapper.cs" />

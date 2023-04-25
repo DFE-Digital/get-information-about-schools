@@ -211,13 +211,21 @@ const academyOpenings = new Vue({
       nowPlus30.setDate(1);
 
       nowPlus30.setFullYear(currentYear + 30);
+
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      let establishmentCode = "";
+      if(urlParams.has("establishmentCode"))
+        establishmentCode= urlParams.get("establishmentCode");
+
+      console.log(establishmentCode);
       // step into callback hell
-      $.getJSON('/api/academy-openings/list/' + self.formatDate(now, '-') + '/' + self.formatDate(nowPlus30, '-') + '/0/1',
+      $.getJSON('/api/academy-openings/list/' + self.formatDate(now, '-') + '/' + self.formatDate(nowPlus30, '-') + '/0/1'+'/'+establishmentCode,
         function (data) {
           totalRecords = data.count;
           self.initialRecordCount = totalRecords;
           self.currentCount = totalRecords;
-          $.getJSON('/api/academy-openings/list/' + self.formatDate(now, '-') + '/' + self.formatDate(nowPlus30, '-') + '/0/' + totalRecords,
+          $.getJSON('/api/academy-openings/list/' + self.formatDate(now, '-') + '/' + self.formatDate(nowPlus30, '-') + '/0/' + totalRecords +'/'+establishmentCode,
             function (data) {
               self.openingAcademies = data.items;
               self.buildPages(data.items, self.pageSize);

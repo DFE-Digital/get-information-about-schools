@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Edubase.Services.Establishments;
 using Edubase.Web.UI.Helpers;
@@ -13,6 +14,7 @@ using Edubase.Services.Enums;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
 using Edubase.Services.Lookup;
+using Edubase.Services.Security;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Filters;
 using Microsoft.Ajax.Utilities;
@@ -39,16 +41,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route("16-19-secure-academy-openings", Name = "Manage16To19SecureAcademyOpenings")]
-        public Task<ActionResult> Manage16To19SecureAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc")
-        {
-            TempData["EstablishmentCodeFor16To19SecureAcademy"] = "57";
-            return Task.FromResult<ActionResult>(RedirectToAction(nameof(ManageAcademyOpenings),
-                new { skip, sortBy }));
-        }
+        public Task<ActionResult> Manage16To19SecureAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc")=>
+            Task.FromResult<ActionResult>(RedirectToAction(nameof(ManageAcademyOpenings), new { skip, sortBy, establishmentCode="57" }));
 
         [HttpGet, Route("academy-openings", Name = "ManageAcademyOpenings")]
         // public ActionResult Index() => View();
-        public async Task<ActionResult> ManageAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc")
+        public async Task<ActionResult> ManageAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc", string establishmentCode=null)
         {
             var take = 50;
             var now = DateTime.Now;
@@ -62,10 +60,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
 
-            object establishmentCodeFor16To19SecureAcademy = TempData.TryGetValue(
-                "EstablishmentCodeFor16To19SecureAcademy", out establishmentCodeFor16To19SecureAcademy);
+            var establishmentCodeForSecure16To19Academy = SecureAcademyUtility.GetEstablishmentCodeForSecure16To19Academy(User);
 
-            estabTypes = Utility.FilterEstablishmentType(estabTypes, establishmentCodeFor16To19SecureAcademy?.ToString());
+            estabTypes = SecureAcademyUtility.FilterEstablishmentType(estabTypes,establishmentCodeForSecure16To19Academy);
 
             var result = await _establishmentReadService.SearchAsync(
                 new EstablishmentSearchPayload
@@ -78,8 +75,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                         OpenDateMin = from,
                         OpenDateMax = to,
                         EstablishmentTypeGroupIds =
-                            Utility.GetAcademyOpeningsEstablishmentTypeByTypeGroupId(
-                                establishmentCodeFor16To19SecureAcademy?.ToString()),
+                            SecureAcademyUtility.GetAcademyOpeningsEstablishmentTypeByTypeGroupId(
+                                establishmentCodeForSecure16To19Academy),
                         StatusIds = new[] { (int) eLookupEstablishmentStatus.ProposedToOpen }
                     },
                     Select = new List<string>
@@ -177,7 +174,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 AcademyOpenings =
                     new PaginatedResult<EditAcademyOpeningViewModel>(skip, take, result.Count, academyOpenings),
-                Items = academyOpenings
+                Items = academyOpenings,
+                PageTitle = SecureAcademyUtility.GetAcademyOpeningPageTitle(establishmentCodeForSecure16To19Academy)
             };
             vm.Count = result.Count;
             vm.Skip = skip;
