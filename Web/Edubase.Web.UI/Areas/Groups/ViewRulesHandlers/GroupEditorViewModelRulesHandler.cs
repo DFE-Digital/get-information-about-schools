@@ -76,5 +76,16 @@ namespace Edubase.Web.UI.Areas.Groups.ViewRulesHandlers
             }
             return result;
         }
+
+        public static bool ShowChangesReviewScreen(GroupEditorViewModel viewModel, IPrincipal user)
+        {
+            var result = false;
+            if (!viewModel.ChangesAcknowledged)
+            {
+                result = viewModel.GroupTypeId.OneOfThese(eLookupGroupType.SingleacademyTrust, eLookupGroupType.MultiacademyTrust)
+                        || (viewModel.GroupType == eLookupGroupType.SecureSingleAcademyTrust && user.IsInRole(EdubaseRoles.UKRLP));
+            }
+            return result;
+        }
     }
 }

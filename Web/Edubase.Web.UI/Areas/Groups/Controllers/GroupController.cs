@@ -438,7 +438,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 var dto = CreateSaveDto(viewModel).Group;
                 var changes = await _groupReadService.GetModelChangesAsync(dto, User);
 
-                if (changes.Any() && viewModel.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust) && !viewModel.ChangesAcknowledged)
+                if (changes.Any() && GroupEditorViewModelRulesHandler.ShowChangesReviewScreen(viewModel, User))
                 {
                     viewModel.ChangesSummary = changes;
                     return View("EditDetails", viewModel);

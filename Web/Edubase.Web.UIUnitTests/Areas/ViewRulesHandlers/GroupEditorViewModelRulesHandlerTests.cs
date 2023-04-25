@@ -206,5 +206,48 @@ namespace Edubase.Web.UIUnitTests.Areas.ViewRulesHandlers
 
             Assert.False(result.CanUserEditUkprn);
         }
+
+        [Theory]
+        [InlineData((int) eLookupGroupType.MultiacademyTrust, EdubaseRoles.ROLE_BACKOFFICE)]
+        [InlineData((int) eLookupGroupType.MultiacademyTrust, EdubaseRoles.UKRLP)]
+        [InlineData((int) eLookupGroupType.MultiacademyTrust, EdubaseRoles.YCS)]
+        [InlineData((int) eLookupGroupType.SingleacademyTrust, EdubaseRoles.ROLE_BACKOFFICE)]
+        [InlineData((int) eLookupGroupType.SingleacademyTrust, EdubaseRoles.UKRLP)]
+        [InlineData((int) eLookupGroupType.SingleacademyTrust, EdubaseRoles.YCS)]
+        [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.UKRLP)]
+        public void GroupViewModel_ShowChangesReviewScreen_True(int groupType, string role)
+        {
+            mockPrincipal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(false);
+            mockPrincipal.Setup(x => x.IsInRole(role)).Returns(true);
+
+            var viewModel = new GroupEditorViewModel()
+            {
+                GroupTypeId = groupType
+            };
+
+            var result = GroupEditorViewModelRulesHandler.ShowChangesReviewScreen(viewModel, mockPrincipal.Object);
+
+            Assert.True(result);
+        }
+
+        [Theory]
+        [InlineData((int) eLookupGroupType.Federation, EdubaseRoles.ROLE_BACKOFFICE)]
+        [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.EFADO)]
+        [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.YCS)]
+        [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.ROLE_BACKOFFICE)]
+        public void GroupViewModel_ShowChangesReviewScreen_False(int groupType, string role)
+        {
+            mockPrincipal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(false);
+            mockPrincipal.Setup(x => x.IsInRole(role)).Returns(true);
+
+            var viewModel = new GroupEditorViewModel()
+            {
+                GroupTypeId = groupType
+            };
+
+            var result = GroupEditorViewModelRulesHandler.ShowChangesReviewScreen(viewModel, mockPrincipal.Object);
+
+            Assert.False(result);
+        }
     }
 }
