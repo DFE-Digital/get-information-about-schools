@@ -225,7 +225,7 @@ namespace Edubase.Web.UIUnitTests.Areas.ViewRulesHandlers
                 GroupTypeId = groupType
             };
 
-            var result = GroupEditorViewModelRulesHandler.ShowChangesReviewScreen(viewModel, mockPrincipal.Object);
+            var result = GroupEditorViewModelRulesHandler.MustShowChangesReviewScreen(viewModel, mockPrincipal.Object);
 
             Assert.True(result);
         }
@@ -245,7 +245,7 @@ namespace Edubase.Web.UIUnitTests.Areas.ViewRulesHandlers
                 GroupTypeId = groupType
             };
 
-            var result = GroupEditorViewModelRulesHandler.ShowChangesReviewScreen(viewModel, mockPrincipal.Object);
+            var result = GroupEditorViewModelRulesHandler.MustShowChangesReviewScreen(viewModel, mockPrincipal.Object);
 
             Assert.False(result);
         }
