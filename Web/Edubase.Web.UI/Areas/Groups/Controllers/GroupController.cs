@@ -19,7 +19,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using Edubase.Web.UI.Areas.Groups.ViewRulesHandlers;
     using Exceptions;
     using Filters;
-    using global::Glimpse.Mvc.Model;
     using Microsoft.IdentityModel.Tokens;
     using Models.CreateEdit;
     using Models.Validators;
@@ -360,7 +359,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 GroupTypeName = model.GroupTypeId.HasValue ? await _lookup.GetNameAsync(() => model.GroupTypeId) : null,
                 LocalAuthorityName = await _lookup.GetNameAsync(() => model.LocalAuthorityId),
                 GroupStatusName =  await _lookup.GetNameAsync(() => model.StatusId, "Group"),
-                Address = model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup) ? model.Address.ToString() : null,
+                Address = model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup, GT.SecureSingleAcademyTrust) ? model.Address.ToString() : null,
                 IsUserLoggedOn = User.Identity.IsAuthenticated,
                 GroupTypeId = model.GroupTypeId ?? -1,
                 IsClosed = model.StatusId == (int) GS.Closed || model.StatusId == (int) GS.CreatedInError,

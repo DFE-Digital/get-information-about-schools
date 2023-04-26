@@ -31,6 +31,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
             [(int)GT.MultiacademyTrust] = "multi-academy trust",
             [(int)GT.SchoolSponsor] = "school sponsor",
             [(int)GT.SingleacademyTrust] = "single-academy trust",
+            [(int)GT.SecureSingleAcademyTrust] = "secure single-academy trust",
             [(int)GT.Trust] = "trust"
         };
 
@@ -50,7 +51,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public int GroupTypeId { get; set; }
         public int? UKPRN { get; set; }
 
-        public string OpenDateLabel => Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust) ? "Incorporated on (open date)" : "Open date";
+        public string OpenDateLabel => Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SecureSingleAcademyTrust) ? "Incorporated on (open date)" : "Open date";
         public string EstablishmentsPluralName => Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor, GT.SecureSingleAcademyTrust) ? "Academies" :
             (Group.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup) ? "Children's centres" : "Schools");
 
