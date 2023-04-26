@@ -68,7 +68,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public int? LocalAuthorityId { get; set; }
         public bool IsLocalAuthorityEditable { get; set; }
         public string LocalAuthorityName { get; set; }
-        public string OpenDateLabel => GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust) ? "Incorporated on (open date)" : "Open date";
+        public string OpenDateLabel => GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SecureSingleAcademyTrust) ? "Incorporated on (open date)" : "Open date";
         public GT? GroupType => GroupTypeId.HasValue ? (GT) GroupTypeId.Value : null as GT?;
 
         public string OriginalGroupName { get; set; }
@@ -157,6 +157,11 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
                 if (OriginalStatusId != (int) eLookupGroupStatus.Closed && StatusId == (int) eLookupGroupStatus.Closed && GroupTypeId == (int) GT.SingleacademyTrust)
                 {
                     WarningsToProcess.Add(new ApiWarning { Code = UIWarningCodeSatClosureAreYouSure, Message = "Are you sure you want to close this single-academy trust?" });
+                }
+
+                if (OriginalStatusId != (int) eLookupGroupStatus.Closed && StatusId == (int) eLookupGroupStatus.Closed && GroupTypeId == (int) GT.SecureSingleAcademyTrust)
+                {
+                    WarningsToProcess.Add(new ApiWarning { Code = UIWarningCodeSatClosureAreYouSure, Message = "Are you sure you want to close this secure single-academy trust?" });
                 }
             }
         }
