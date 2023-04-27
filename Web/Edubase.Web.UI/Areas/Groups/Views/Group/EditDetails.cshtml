@@ -11,7 +11,7 @@
     ViewBag.OriginalGroupTypeName = Model.OriginalGroupTypeName;
     Layout = "_EditLayoutPage.cshtml";
     var buttonSaveText = Model.InEditMode ?
-        Model.GroupTypeId.OneOfThese(L.SingleacademyTrust, L.MultiacademyTrust) ? "Continue" : "Save details"
+        Model.GroupTypeId.OneOfThese(L.SingleacademyTrust, L.MultiacademyTrust, L.SecureSingleAcademyTrust) ? "Continue" : "Save details"
         : "Create new " + Model.GroupTypeLabelPrefix.ToLower();
 }
 
