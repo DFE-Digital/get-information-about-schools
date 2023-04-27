@@ -77,7 +77,7 @@ namespace Edubase.Web.UI.Areas.Groups.ViewRulesHandlers
             return result;
         }
 
-        public static bool ShowChangesReviewScreen(GroupEditorViewModel viewModel, IPrincipal user)
+        public static bool MustShowChangesReviewScreen(GroupEditorViewModel viewModel, IPrincipal user)
         {
             var result = false;
             if (!viewModel.ChangesAcknowledged)
