@@ -51,842 +51,843 @@
 
     <div class="@Html.Conditional(Model.ChangesSummary != null || Model.IsUpdatingEmailFields.GetValueOrDefault(), "hidden")">
     <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-one-half">
 
-    <div class="button-row govuk-!-padding-bottom-4">
-        @Html.ActionLink("Back", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-back-link"})
-    </div>
-
-    @if (Model.EditPolicy.Name)
-    {
-        <div class="govuk-form-group first @Html.ValidationCssClassFor(x => x.Name)">
-            <label class="govuk-label" for="Name">
-                @{ var establishmentTitle = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Name of setting" : "School / College name"; }
-                @establishmentTitle
-            </label>
-            @Html.ValidationMessageFor(x => x.Name, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.Name, new {maxlength = 120, @class = "govuk-input"})
-        </div>
-    }
-
-    <div class="govuk-form-group">
-        <label class="govuk-label" for="urn">Unique Reference Number (URN)</label>
-        @Html.TextBoxFor(x => x.Urn, new {id = "urn", @class = "govuk-input", placeholder = "auto-generated", @readonly = true, disabled = "disabled"})
-    </div>
-
-    @if (Model.EditPolicy.Address_Line1)
-    {
-        <div class="govuk-form-group">
-            <label for="school-street" class="govuk-label">Street</label>
-            @Html.TextBoxFor(x => x.Address_Line1, new {maxlength = 120, id = "school-street", @class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.Address_Locality)
-    {
-        <div class="govuk-form-group">
-            <label for="school-locality" class="govuk-label">Locality</label>
-            @Html.TextBoxFor(x => x.Address_Locality, new {maxlength = 120, id = "school-locality", @class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.Address_Line3)
-    {
-        <div class="govuk-form-group">
-            <label for="school-addressline3" class="govuk-label">Address 3</label>
-            @Html.TextBoxFor(x => x.Address_Line3, new {maxlength = 120, id = "school-addressline3", @class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.Address_CityOrTown)
-    {
-        <div class="govuk-form-group">
-            <label for="school-town" class="govuk-label">Town</label>
-            @Html.TextBoxFor(x => x.Address_CityOrTown, new {maxlength = 120, id = "school-town", @class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.Address_CountyId && Model.Address_CountryId == Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
-    {
-        <div class="govuk-form-group">
-            <label for="Address_CountyId" class="govuk-label">County</label>
-            @Html.DropDownListFor(x => x.Address_CountyId, Model.Counties, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.Address_CountryId && Model.Address_CountryId != Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
-    {
-        <div class="govuk-form-group">
-            @Html.LabelFor(x => x.Address_CountryId, "Country", new {@class = "govuk-label", @for = "Address_CountryId_select"})
-            @Html.DropDownListFor(x => x.Address_CountryId, Model.Countries, "", new {@class = "govuk-select", disabled = "disabled", id="Address_CountryId_select"})
-        </div>
-    }
-
-    @Html.HiddenFor(x => x.Address_CountryId)
-
-    @if (Model.EditPolicy.Address_PostCode)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Address_PostCode)">
-            @Html.LabelFor(x => x.Address_PostCode, "Postcode", new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.Address_PostCode, null, new {@class = "govuk-error-message", @for = "disabled-postcode"})
-            @Html.TextBoxFor(x => x.Address_PostCode, new {maxlength = 120, @class = "govuk-input govuk-input--width-10", disabled = "disabled", id = "disabled-postcode"})
-            @Html.HiddenFor(x => x.Address_PostCode)
-            @Html.RouteLink("Replace this address", "AddOrReplaceEstablishmentAddress", new {urn = Model.Urn, target = "main"}, new {@class = "replace-address"})
-        </div>
-    }
-
-    @Html.HiddenFor(x => x.Address_UPRN)
-    @Html.HiddenFor(x => x.Northing)
-    @Html.HiddenFor(x => x.Easting)
-
-    @if (Model.EditPolicy.AdditionalAddresses)
-    {
-        Html.RenderPartial("Partials/_EditAddresses");
-        <div class="govuk-form-group">
-            @Html.RouteLink("Add new address", "AddOrReplaceEstablishmentAddress", new {urn = Model.Urn, target = "alt-new"}, new {@class = "replace-address"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.HeadTitleId)
-    {
-        <div class="govuk-form-group">
-            <label class="govuk-label" for="HeadTitleId">
-                @Html.Raw(Model.EditPolicy.HeadteacherLabel) title
-            </label>
-            @Html.DropDownListFor(x => x.HeadTitleId, Model.HeadTitles, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.HeadFirstName)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HeadFirstName)">
-            <label class="govuk-label" for="HeadFirstName">
-                @Html.Raw(Model.EditPolicy.HeadteacherLabel) first name
-            </label>
-            @Html.ValidationMessageFor(x => x.HeadFirstName, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.HeadFirstName, new {maxlength = 120, @class = "govuk-input", placeholder = "First name"})
-            @Html.HiddenFor(x => x.OldHeadFirstName)
-        </div>
-    }
-
-    @if (Model.EditPolicy.HeadLastName)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HeadLastName)">
-            <label class="govuk-label" for="HeadLastName">
-                @Html.Raw(Model.EditPolicy.HeadteacherLabel) last name
-            </label>
-            @Html.ValidationMessageFor(x => x.HeadLastName, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.HeadLastName, new {maxlength = 120, @class = "govuk-input", placeholder = "Last name"})
-            @Html.HiddenFor(x => x.OldHeadLastName)
-        </div>
-    }
-
-    @if (Model.EditPolicy.HeadAppointmentDate)
-    {
-        @Html.EditorFor(x => x.HeadAppointmentDate, new {title = "Headteacher date of appointment", fieldsetClassName = "edit-date-fieldset"})
-    }
-
-    @if (Model.EditPolicy.HeadEmailAddress && !Model.IsUpdatingEmailFields.GetValueOrDefault())
-    {
-        <details class="govuk-details govuk-!-margin-bottom-2" data-module="govuk-details">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">
-                    How this email address information is used
-                </span>
-            </summary>
-            <div class="govuk-details__text">
-                <p>
-                    The @Html.Raw(Model.EditPolicy.HeadteacherLabel.ToLower()) personal establishment email
-                    address must be added here. This must be an up-to-date, valid and actively monitored email address.
-                    This information is not publicly displayed on the website&apos;s interface and is classed as personal data,
-                    therefore it cannot be shared publicly, for example, through a Freedom of Information (FOI)
-                    request. Under the conditions of Article 6(1)(e) of the UK-GDPR this information can be shared with
-                    other government departments, non-departmental public bodies, arm&apos;s length bodies and
-                    partners for official functions and tasks within the public interest to be performed.
-                </p>
-                <p>
-                    This information is very important as it allows the Department for Education to share important
-                    information and messages with headteachers/principals/managers, especially during
-                    the Coronavirus pandemic.
-                </p>
+            <div class="button-row govuk-!-padding-bottom-4">
+                @Html.ActionLink("Back", "Details", "Establishment", new { id = Model.Urn }, new { @class = "govuk-back-link" })
             </div>
-        </details>
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HeadEmailAddress)">
-            <label class="govuk-label" for="HeadEmailAddress">
-                @Html.Raw(Model.EditPolicy.HeadteacherLabel) email address
 
-            </label>
-            @Html.ValidationMessageFor(x => x.HeadEmailAddress, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.HeadEmailAddress, new {maxlength = 120, @class = "govuk-input", aria_describedby = "help-text-headteacher-email-address"})
-        </div>
-    }
-
-
-    @if (Model.EditPolicy.AgeRange)
-    {
-        <div class="govuk-form-group range-group @Html.ValidationCssClassFor(x => x.StatutoryHighAge) @Html.ValidationCssClassFor(x => x.StatutoryLowAge)">
-            <fieldset class="govuk-fieldset edit-age-range-fieldset">
-                <legend class="govuk-fieldset__legend">
-                    Age range
-                </legend>
-                @Html.ValidationMessageFor(x => x.StatutoryLowAge, null, new {@class = "govuk-error-message"})
-                @Html.ValidationMessageFor(x => x.StatutoryHighAge, null, new {@class = "govuk-error-message"})
-
-                <span class="inline-form-control">
-                    <label for="StatutoryLowAge" class="govuk-label">
-                        Low
+            @if (Model.EditPolicy.Name)
+            {
+                <div class="govuk-form-group first @Html.ValidationCssClassFor(x => x.Name)">
+                    <label class="govuk-label" for="Name">
+                        @{ var establishmentTitle = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Name of setting" : "School / College name"; }
+                        @establishmentTitle
                     </label>
-                    @Html.TextBoxFor(x => x.StatutoryLowAge, new {maxlength = 2, @class = "govuk-input govuk-input--width-2 age-field", placeholder = "From"})
-
-                </span>
-                <span class="inline-form-control">
-                    <label for="StatutoryHighAge" class="govuk-label">High</label>
-                    @Html.TextBoxFor(x => x.StatutoryHighAge, new {maxlength = 2, @class = "govuk-input govuk-input--width-2 age-field", placeholder = "To"})
-                </span>
-            </fieldset>
-        </div>
-    }
-
-
-    @if (Model.EditPolicy.TypeId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.TypeId)">
-            <label class="govuk-label" for="TypeId">Establishment type</label>
-            @Html.ValidationMessageFor(x => x.TypeId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.TypeId, Model.EstablishmentTypes, "Please select", new {@class = "govuk-select"})
-        </div>
-    }
-    else
-    {
-        @Html.HiddenFor(x => x.TypeId)
-    }
-
-    @if (Model.EditPolicy.EducationPhaseId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
-            <label for="EducationPhaseId" class="govuk-label">Phase of education</label>
-            @Html.ValidationMessageFor(x => x.EducationPhaseId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.FurtherEducationTypeId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FurtherEducationTypeId)">
-            <label class="govuk-label" for="FurtherEducationTypeId">Further education type</label>
-            @Html.ValidationMessageFor(x => x.FurtherEducationTypeId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.FurtherEducationTypeId, Model.FurtherEducationTypes, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.GenderId)
-    {
-        <div class="govuk-form-group">
-            <label class="govuk-label" for="GenderId">Gender of entry</label>
-            @Html.DropDownListFor(x => x.GenderId, Model.Genders, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.LocalAuthorityId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
-            <label for="LocalAuthorityId" id="local-authority" class="govuk-label">Local authority</label>
-            @Html.ValidationMessageFor(x => x.LocalAuthorityId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.EstablishmentNumber)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
-            <fieldset class="govuk-fieldset gias-fieldset">
-                <legend class="govuk-fieldset__legend">DfE number</legend>
-                <p class="govuk-hint govuk-body-s">LA code and Establishment number</p>
-                @Html.ValidationMessageFor(x => x.EstablishmentNumber, null, new {@class = "govuk-error-message"})
-                <label class="govuk-visually-hidden" for="lacode"> LA code</label>
-                <input type="text" id="lacode" class="govuk-input govuk-input--width-5" size="5" disabled="disabled" value="@Model.LocalAuthorityCode"/>
-                <label class="govuk-visually-hidden" for="EstablishmentNumber">Establishment number</label>
-                @Html.TextBoxFor(x => x.EstablishmentNumber, new {@class = "govuk-input govuk-input--width-10"})
-            </fieldset>
-        </div>
-    }
-
-    @if (Model.EditPolicy.UKPRN)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.UKPRN)">
-            <label class="govuk-label" for="UKPRN">UK provider reference number (UKPRN)</label>
-            @Html.ValidationMessageFor(x => x.UKPRN, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.UKPRN, new {@class = "govuk-input", type = "text"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.StatusId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.StatusId)">
-            <label class="govuk-label" for="StatusId">Establishment status</label>
-            @Html.ValidationMessageFor(x => x.StatusId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.StatusId, Model.Statuses, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.AdmissionsPolicyId)
-    {
-        <div class="govuk-form-group">
-            <label for="AdmissionsPolicyId" class="govuk-label">Admissions policy</label>
-            @Html.DropDownListFor(x => x.AdmissionsPolicyId, Model.AdmissionsPolicies, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.Contact_WebsiteAddress)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Contact_WebsiteAddress)">
-            <label for="Contact_WebsiteAddress" class="govuk-label">Website</label>
-            @Html.ValidationMessageFor(x => x.Contact_WebsiteAddress, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.Contact_WebsiteAddress, new {@class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.Contact_TelephoneNumber)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Contact_TelephoneNumber)">
-            <label for="Contact_TelephoneNumber" class="govuk-label">Telephone</label>
-            @Html.ValidationMessageFor(x => x.Contact_TelephoneNumber, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.Contact_TelephoneNumber, new {@class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.OfstedRatingDetails)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.OfstedRatingId)">
-            @Html.LabelFor(x => x.OfstedRatingId, "Ofsted rating", new {@class = "govuk-label"})
-            @Html.DropDownListFor(x => x.OfstedRatingId, Model.OfstedRatings, "", new {@class = "govuk-select"})
-        </div>
-
-        @Html.EditorFor(x => x.OfstedInspectionDate, new {title = "Ofsted last inspection", fieldsetClassName = "edit-date-fieldset"})
-
-        <div class="govuk-form-group">
-            <label for="ofsted-report" class="govuk-label">Ofsted report link</label>
-            <input type="text" class="govuk-input" id="ofsted-report" disabled="disabled" value="http://reports.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/@Model.Urn"/>
-        </div>
-    }
-
-    @if (Model.EditPolicy.InspectorateId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.InspectorateId)">
-            <label class="govuk-label" for="InspectorateId">Inspectorate</label>
-            @Html.ValidationMessageFor(x => x.InspectorateId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.InspectorateId, Model.Inspectorates, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.ProprietorBodyName && !Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider))
-    {
-        <div class="govuk-form-group">
-            <label for="proprietor" class="govuk-label">Proprietor's name</label>
-            @Html.TextBoxFor(x => x.ProprietorBodyName, new {maxlength = 120, id = "proprietor", @class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.ReligiousCharacterId)
-    {
-        <div class="govuk-form-group">
-            <label class="govuk-label" for="ReligiousCharacterId">Religious character</label>
-            @Html.DropDownListFor(x => x.ReligiousCharacterId, Model.ReligiousCharacters, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-
-    @if (Model.EditPolicy.DioceseId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.DioceseId)">
-            <label class="govuk-label" for="diocese">Diocese</label>
-            @Html.DropDownListFor(x => x.DioceseId, Model.Dioceses, "", new {id = "diocese-dropdown", @class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.ReligiousEthosId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ReligiousEthosId)">
-            <label class="govuk-label" for="ReligiousEthosId">Religious ethos</label>
-            @Html.ValidationMessageFor(x => x.ReligiousEthosId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.ReligiousEthosId, Model.ReligiousEthoses, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.ProvisionBoardingId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ProvisionBoardingId)">
-            <label class="govuk-label" for="boarders">Boarders</label>
-            @Html.DropDownListFor(x => x.ProvisionBoardingId, Model.BoardingProvisions, "", new {@class = "govuk-select", id = "boarders"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.ProvisionNurseryId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ProvisionNurseryId)">
-            <label class="govuk-label" for="nursery">Nursery provision</label>
-            @Html.DropDownListFor(x => x.ProvisionNurseryId, Model.NurseryProvisions, "", new {@class = "govuk-select", id = "nursery"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.ProvisionOfficialSixthFormId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ProvisionOfficialSixthFormId)">
-            <label class="govuk-label" for="sixthform">Official sixth form</label>
-            @Html.DropDownListFor(x => x.ProvisionOfficialSixthFormId, Model.OfficialSixthFormProvisions, "", new {@class = "govuk-select", id = "sixthform"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.Capacity)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Capacity)">
-            <label class="govuk-label" for="Capacity">School capacity</label>
-            @Html.ValidationMessageFor(x => x.Capacity, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.Capacity, new {@class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.NumberOfPupilsOnRoll)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.NumberOfPupilsOnRoll)">
-            <label class="govuk-label" for="NumberOfPupilsOnRoll">Number of pupils</label>
-            @Html.ValidationMessageFor(x => x.NumberOfPupilsOnRoll, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.NumberOfPupilsOnRoll, new {@class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.Section41ApprovedId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Section41ApprovedId)">
-            <label class="govuk-label" for="Section41ApprovedId">Section 41 approved</label>
-            @Html.ValidationMessageFor(x => x.Section41ApprovedId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.Section41ApprovedId, Model.Section41ApprovedItems, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.OpenDate)
-    {
-        @Html.EditorFor(x => x.OpenDate, new { title = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date" : "Open date", fieldsetClassName = "edit-date-fieldset"})
-    }
-
-    @if (Model.EditPolicy.ReasonEstablishmentOpenedId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentOpenedId)">
-            <label class="govuk-label" for="ReasonEstablishmentOpenedId">Reason establishment opened</label>
-            @Html.ValidationMessageFor(x => x.ReasonEstablishmentOpenedId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, Model.ReasonsEstablishmentOpened, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.CloseDate)
-    {
-        @Html.EditorFor(x => x.CloseDate, new {title = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date ended" : "Close date", fieldsetClassName = "edit-date-fieldset"})
-    }
-
-
-    @if (Model.EditPolicy.ReasonEstablishmentClosedId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentClosedId)">
-            <label class="govuk-label" for="ReasonEstablishmentClosedId">Reason establishment closed</label>
-            @Html.ValidationMessageFor(x => x.ReasonEstablishmentClosedId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.ReasonEstablishmentClosedId, Model.ReasonsEstablishmentClosed, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-
-    @if (Model.EditPolicy.CCOperationalHoursId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CCOperationalHoursId)">
-            @Html.LabelFor(x => x.CCOperationalHoursId, "Operational hours", new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.CCOperationalHoursId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.CCOperationalHoursId, Model.CCOperationalHours, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.CCUnder5YearsOfAgeCount)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CCUnder5YearsOfAgeCount)">
-            @Html.LabelFor(x => x.CCUnder5YearsOfAgeCount, "Number of under 5s", new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.CCUnder5YearsOfAgeCount, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.CCUnder5YearsOfAgeCount, new {maxlength = 120, @class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.CCGovernanceId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CCGovernanceId)">
-            @Html.LabelFor(x => x.CCGovernanceId, "Governance", new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.CCGovernanceId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.CCGovernanceId, Model.CCGovernanceList, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.CCGovernanceDetail)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CCGovernanceDetail)">
-            @Html.LabelFor(x => x.CCGovernanceDetail, "Governance detail", new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.CCGovernanceDetail, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.CCGovernanceDetail, new {maxlength = 240, @class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.CCDeliveryModelId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CCDeliveryModelId)">
-            @Html.LabelFor(x => x.CCDeliveryModelId, "Delivery model", new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.CCDeliveryModelId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.CCDeliveryModelId, Model.CCDeliveryModels, "", new {@class = "form-control"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.CCGroupLeadId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CCGroupLeadId)">
-            @Html.LabelFor(x => x.CCGroupLeadId, "Group lead centre", new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.CCGroupLeadId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.CCGroupLeadId, Model.CCGroupLead, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.CCPhaseTypeId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CCPhaseTypeId)">
-            @Html.LabelFor(x => x.CCPhaseTypeId, "Phase", new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.CCPhaseTypeId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.CCPhaseTypeId, Model.CCPhaseTypes, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.CCDisadvantagedAreaId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CCDisadvantagedAreaId)">
-            @Html.LabelFor(x => x.CCDisadvantagedAreaId, "Disadvantaged area", new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.CCDisadvantagedAreaId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.CCDisadvantagedAreaId, Model.CCDisadvantagedAreas, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.CCDirectProvisionOfEarlyYearsId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CCDirectProvisionOfEarlyYearsId)">
-            @Html.LabelFor(x => x.CCDirectProvisionOfEarlyYearsId, "Direct provision of early years", new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.CCDirectProvisionOfEarlyYearsId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.CCDirectProvisionOfEarlyYearsId, Model.CCDirectProvisionOfEarlyYears, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-
-    @if (Model.EditPolicy.ProvisionSpecialClassesId)
-    {
-        <div class="govuk-form-group">
-            <label class="govuk-label" for="special-classes">
-                Special classes
-            </label>
-            @Html.DropDownListFor(x => x.ProvisionSpecialClassesId, Model.SpecialClassesProvisions, "", new {@class = "govuk-select", id = "special-classes"})
-        </div>
-    }
-
-    @if (Model.DisplayPolicy.FreeSchoolMealsNumber)
-    {
-        var attributes = new Dictionary<string,object>();
-        if (!Model.EditPolicy.FreeSchoolMealsNumber)
-        {
-            attributes.Add("readonly", "true");
-            attributes.Add("disabled", "disabled");
-        }
-
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FreeSchoolMealsNumber)">
-            @Html.LabelFor(x => x.FreeSchoolMealsNumber, new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.FreeSchoolMealsNumber, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.FreeSchoolMealsNumber, Html.GetHtmlAttributes(new { @class = "govuk-input" }, attributes))
-        </div>
-    }
-
-    @if (Model.DisplayPolicy.FreeSchoolMealsPercentage)
-    {
-        var attributes = new Dictionary<string, object>();
-        if (!Model.EditPolicy.FreeSchoolMealsPercentage)
-        {
-            attributes.Add("readonly", "true");
-            attributes.Add("disabled", "disabled");
-        }
-
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FreeSchoolMealsPercentage)">
-            @Html.LabelFor(x => x.FreeSchoolMealsPercentage, new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.FreeSchoolMealsPercentage, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.FreeSchoolMealsPercentage, Html.GetHtmlAttributes(new { @class = "govuk-input" }, attributes))
-        </div>
-    }
-
-    @if (Model.EditPolicy.SENStat)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SENStat)">
-            @Html.LabelFor(x => x.SENStat, new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.SENStat, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.SENStat, new {@class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.SENNoStat)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SENNoStat)">
-            @Html.LabelFor(x => x.SENNoStat, new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.SENNoStat, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.SENNoStat, new {@class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.Contact_EmailAddress && !Model.IsUpdatingEmailFields.GetValueOrDefault())
-    {
-        <details class="govuk-details govuk-!-margin-bottom-2" data-module="govuk-details">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">
-                    How this email address information is used
-                </span>
-            </summary>
-            <div class="govuk-details__text">
-                <p>
-                    The main establishment email address and the alternative establishment email address (if one exists for
-                    your establishment) should be added here respectively. These must be up-to-date, valid and actively
-                    monitored email addresses. No personal email addresses or personal establishment email addresses should
-                    be added to these fields. Although these fields are not publicly displayed on the website&apos;s
-                    interface they are not classed as personal data, therefore under certain circumstances GIAS must
-                    share this information, for example, if the department is requested to do so under a Freedom of
-                    Information (FOI) request. This data can be used by the DfE and other government departments,
-                    non-departmental public bodies, arm&apos;s length bodies and partners for official functions and tasks within
-                    the public interest.
-                </p>
-                <p>
-                    This information is very important as it allows the Department for Education to share important
-                    information and messages with establishments, especially during the Coronavirus pandemic.
-                </p>
-            </div>
-        </details>
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Contact_EmailAddress)">
-            <label class="govuk-label" for="@nameof(Model.Contact_EmailAddress)">
-                Email address
-            </label>
-            @Html.ValidationMessageFor(x => x.Contact_EmailAddress, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.Contact_EmailAddress, new {@class = "govuk-input", aria_describedby = "help-text-email-address"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.ContactAlt_EmailAddress && !Model.IsUpdatingEmailFields.GetValueOrDefault())
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ContactAlt_EmailAddress)">
-            <label class="govuk-label" for="@nameof(Model.ContactAlt_EmailAddress)">
-                Alternative email address
-            </label>
-            @Html.ValidationMessageFor(x => x.ContactAlt_EmailAddress, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.ContactAlt_EmailAddress, new {@class = "govuk-input", aria_describedby = "help-text-email-address"})
-        </div>
-    }
-
-
-    @if (Model.EditPolicy.SENIds)
-    {
-        <div class="govuk-form-group sen-provision">
-            <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-!-font-weight-bold">Type of SEN provision</legend>
-                <div class="govuk-checkboxes">
-                    @foreach (var item in Model.SENProvisions)
-                    {
-                        <div class="govuk-checkboxes__item">
-                            <input id="@nameof(Model.SENProvisions)_@item.Id" type="checkbox" name="@nameof(Model.SENIds)" class="govuk-checkboxes__input"
-                                   value="@item.Id" @Html.Conditional(Model.SENIds != null && Model.SENIds.Contains(item.Id), "checked")/>
-                            <label for="@nameof(Model.SENProvisions)_@item.Id" class="govuk-checkboxes__label">@item.Name</label>
-                        </div>
-                    }
+                    @Html.ValidationMessageFor(x => x.Name, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.Name, new { maxlength = 120, @class = "govuk-input" })
                 </div>
-            </fieldset>
+            }
+
+            <div class="govuk-form-group">
+                <label class="govuk-label" for="urn">Unique Reference Number (URN)</label>
+                @Html.TextBoxFor(x => x.Urn, new { id = "urn", @class = "govuk-input", placeholder = "auto-generated", @readonly = true, disabled = "disabled" })
+            </div>
+
+            @if (Model.EditPolicy.Address_Line1)
+            {
+                <div class="govuk-form-group">
+                    <label for="school-street" class="govuk-label">Street</label>
+                    @Html.TextBoxFor(x => x.Address_Line1, new { maxlength = 120, id = "school-street", @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.Address_Locality)
+            {
+                <div class="govuk-form-group">
+                    <label for="school-locality" class="govuk-label">Locality</label>
+                    @Html.TextBoxFor(x => x.Address_Locality, new { maxlength = 120, id = "school-locality", @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.Address_Line3)
+            {
+                <div class="govuk-form-group">
+                    <label for="school-addressline3" class="govuk-label">Address 3</label>
+                    @Html.TextBoxFor(x => x.Address_Line3, new { maxlength = 120, id = "school-addressline3", @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.Address_CityOrTown)
+            {
+                <div class="govuk-form-group">
+                    <label for="school-town" class="govuk-label">Town</label>
+                    @Html.TextBoxFor(x => x.Address_CityOrTown, new { maxlength = 120, id = "school-town", @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.Address_CountyId && Model.Address_CountryId == Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
+            {
+                <div class="govuk-form-group">
+                    <label for="Address_CountyId" class="govuk-label">County</label>
+                    @Html.DropDownListFor(x => x.Address_CountyId, Model.Counties, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.Address_CountryId && Model.Address_CountryId != Edubase.Services.Texuna.Lookup.Constants.COUNTRY_ID_UK)
+            {
+                <div class="govuk-form-group">
+                    @Html.LabelFor(x => x.Address_CountryId, "Country", new { @class = "govuk-label", @for = "Address_CountryId_select" })
+                    @Html.DropDownListFor(x => x.Address_CountryId, Model.Countries, "", new { @class = "govuk-select", disabled = "disabled", id = "Address_CountryId_select" })
+                </div>
+            }
+
+            @Html.HiddenFor(x => x.Address_CountryId)
+
+            @if (Model.EditPolicy.Address_PostCode)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Address_PostCode)">
+                    @Html.LabelFor(x => x.Address_PostCode, "Postcode", new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.Address_PostCode, null, new { @class = "govuk-error-message", @for = "disabled-postcode" })
+                    @Html.TextBoxFor(x => x.Address_PostCode, new { maxlength = 120, @class = "govuk-input govuk-input--width-10", disabled = "disabled", id = "disabled-postcode" })
+                    @Html.HiddenFor(x => x.Address_PostCode)
+                    @Html.RouteLink("Replace this address", "AddOrReplaceEstablishmentAddress", new { urn = Model.Urn, target = "main" }, new { @class = "replace-address" })
+                </div>
+            }
+
+            @Html.HiddenFor(x => x.Address_UPRN)
+            @Html.HiddenFor(x => x.Northing)
+            @Html.HiddenFor(x => x.Easting)
+
+            @if (Model.EditPolicy.AdditionalAddresses)
+            {
+                Html.RenderPartial("Partials/_EditAddresses");
+                <div class="govuk-form-group">
+                    @Html.RouteLink("Add new address", "AddOrReplaceEstablishmentAddress", new { urn = Model.Urn, target = "alt-new" }, new { @class = "replace-address" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.HeadTitleId)
+            {
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="HeadTitleId">
+                        @Html.Raw(Model.EditPolicy.HeadteacherLabel) title
+                    </label>
+                    @Html.DropDownListFor(x => x.HeadTitleId, Model.HeadTitles, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.HeadFirstName)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HeadFirstName)">
+                    <label class="govuk-label" for="HeadFirstName">
+                        @Html.Raw(Model.EditPolicy.HeadteacherLabel) first name
+                    </label>
+                    @Html.ValidationMessageFor(x => x.HeadFirstName, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.HeadFirstName, new { maxlength = 120, @class = "govuk-input", placeholder = "First name" })
+                    @Html.HiddenFor(x => x.OldHeadFirstName)
+                </div>
+            }
+
+            @if (Model.EditPolicy.HeadLastName)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HeadLastName)">
+                    <label class="govuk-label" for="HeadLastName">
+                        @Html.Raw(Model.EditPolicy.HeadteacherLabel) last name
+                    </label>
+                    @Html.ValidationMessageFor(x => x.HeadLastName, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.HeadLastName, new { maxlength = 120, @class = "govuk-input", placeholder = "Last name" })
+                    @Html.HiddenFor(x => x.OldHeadLastName)
+                </div>
+            }
+
+            @if (Model.EditPolicy.HeadAppointmentDate)
+            {
+                @Html.EditorFor(x => x.HeadAppointmentDate, new { title = "Headteacher date of appointment", fieldsetClassName = "edit-date-fieldset" })
+            }
+
+            @if (Model.EditPolicy.HeadEmailAddress && !Model.IsUpdatingEmailFields.GetValueOrDefault())
+            {
+                <details class="govuk-details govuk-!-margin-bottom-2" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                            How this email address information is used
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <p>
+                            The @Html.Raw(Model.EditPolicy.HeadteacherLabel.ToLower()) personal establishment email
+                            address must be added here. This must be an up-to-date, valid and actively monitored email address.
+                            This information is not publicly displayed on the website&apos;s interface and is classed as personal data,
+                            therefore it cannot be shared publicly, for example, through a Freedom of Information (FOI)
+                            request. Under the conditions of Article 6(1)(e) of the UK-GDPR this information can be shared with
+                            other government departments, non-departmental public bodies, arm&apos;s length bodies and
+                            partners for official functions and tasks within the public interest to be performed.
+                        </p>
+                        <p>
+                            This information is very important as it allows the Department for Education to share important
+                            information and messages with headteachers/principals/managers, especially during
+                            the Coronavirus pandemic.
+                        </p>
+                    </div>
+                </details>
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HeadEmailAddress)">
+                    <label class="govuk-label" for="HeadEmailAddress">
+                        @Html.Raw(Model.EditPolicy.HeadteacherLabel) email address
+
+                    </label>
+                    @Html.ValidationMessageFor(x => x.HeadEmailAddress, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.HeadEmailAddress, new { maxlength = 120, @class = "govuk-input", aria_describedby = "help-text-headteacher-email-address" })
+                </div>
+            }
+
+
+            @if (Model.EditPolicy.AgeRange)
+            {
+                <div class="govuk-form-group range-group @Html.ValidationCssClassFor(x => x.StatutoryHighAge) @Html.ValidationCssClassFor(x => x.StatutoryLowAge)">
+                    <fieldset class="govuk-fieldset edit-age-range-fieldset">
+                        <legend class="govuk-fieldset__legend">
+                            Age range
+                        </legend>
+                        @Html.ValidationMessageFor(x => x.StatutoryLowAge, null, new { @class = "govuk-error-message" })
+                        @Html.ValidationMessageFor(x => x.StatutoryHighAge, null, new { @class = "govuk-error-message" })
+
+                        <span class="inline-form-control">
+                            <label for="StatutoryLowAge" class="govuk-label">
+                                Low
+                            </label>
+                            @Html.TextBoxFor(x => x.StatutoryLowAge, new { maxlength = 2, @class = "govuk-input govuk-input--width-2 age-field", placeholder = "From" })
+
+                        </span>
+                        <span class="inline-form-control">
+                            <label for="StatutoryHighAge" class="govuk-label">High</label>
+                            @Html.TextBoxFor(x => x.StatutoryHighAge, new { maxlength = 2, @class = "govuk-input govuk-input--width-2 age-field", placeholder = "To" })
+                        </span>
+                    </fieldset>
+                </div>
+            }
+
+
+            @if (Model.EditPolicy.TypeId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.TypeId)">
+                    <label class="govuk-label" for="TypeId">Establishment type</label>
+                    @Html.ValidationMessageFor(x => x.TypeId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.TypeId, Model.EstablishmentTypes, "Please select", new { @class = "govuk-select" })
+                </div>
+            }
+            else
+            {
+                @Html.HiddenFor(x => x.TypeId)
+            }
+
+            @if (Model.EditPolicy.EducationPhaseId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EducationPhaseId)">
+                    <label for="EducationPhaseId" class="govuk-label">Phase of education</label>
+                    @Html.ValidationMessageFor(x => x.EducationPhaseId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.EducationPhaseId, Model.EducationPhases, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.FurtherEducationTypeId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FurtherEducationTypeId)">
+                    <label class="govuk-label" for="FurtherEducationTypeId">Further education type</label>
+                    @Html.ValidationMessageFor(x => x.FurtherEducationTypeId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.FurtherEducationTypeId, Model.FurtherEducationTypes, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.GenderId)
+            {
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="GenderId">Gender of entry</label>
+                    @Html.DropDownListFor(x => x.GenderId, Model.Genders, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.LocalAuthorityId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LocalAuthorityId)">
+                    <label for="LocalAuthorityId" id="local-authority" class="govuk-label">Local authority</label>
+                    @Html.ValidationMessageFor(x => x.LocalAuthorityId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.LocalAuthorityId, Model.LocalAuthorities, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.EstablishmentNumber)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentNumber)">
+                    <fieldset class="govuk-fieldset gias-fieldset">
+                        <legend class="govuk-fieldset__legend">DfE number</legend>
+                        <p class="govuk-hint govuk-body-s">LA code and Establishment number</p>
+                        @Html.ValidationMessageFor(x => x.EstablishmentNumber, null, new { @class = "govuk-error-message" })
+                        <label class="govuk-visually-hidden" for="lacode"> LA code</label>
+                        <input type="text" id="lacode" class="govuk-input govuk-input--width-5" size="5" disabled="disabled" value="@Model.LocalAuthorityCode" />
+                        <label class="govuk-visually-hidden" for="EstablishmentNumber">Establishment number</label>
+                        @Html.TextBoxFor(x => x.EstablishmentNumber, new { @class = "govuk-input govuk-input--width-10" })
+                    </fieldset>
+                </div>
+            }
+
+            @if (Model.EditPolicy.UKPRN)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.UKPRN)">
+                    <label class="govuk-label" for="UKPRN">UK provider reference number (UKPRN)</label>
+                    @Html.ValidationMessageFor(x => x.UKPRN, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.UKPRN, new { @class = "govuk-input", type = "text" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.StatusId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.StatusId)">
+                    <label class="govuk-label" for="StatusId">Establishment status</label>
+                    @Html.ValidationMessageFor(x => x.StatusId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.StatusId, Model.Statuses, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.AdmissionsPolicyId)
+            {
+                <div class="govuk-form-group">
+                    <label for="AdmissionsPolicyId" class="govuk-label">Admissions policy</label>
+                    @Html.DropDownListFor(x => x.AdmissionsPolicyId, Model.AdmissionsPolicies, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.Contact_WebsiteAddress)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Contact_WebsiteAddress)">
+                    <label for="Contact_WebsiteAddress" class="govuk-label">Website</label>
+                    @Html.ValidationMessageFor(x => x.Contact_WebsiteAddress, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.Contact_WebsiteAddress, new { @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.Contact_TelephoneNumber)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Contact_TelephoneNumber)">
+                    <label for="Contact_TelephoneNumber" class="govuk-label">Telephone</label>
+                    @Html.ValidationMessageFor(x => x.Contact_TelephoneNumber, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.Contact_TelephoneNumber, new { @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.OfstedRatingDetails)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.OfstedRatingId)">
+                    @Html.LabelFor(x => x.OfstedRatingId, "Ofsted rating", new { @class = "govuk-label" })
+                    @Html.DropDownListFor(x => x.OfstedRatingId, Model.OfstedRatings, "", new { @class = "govuk-select" })
+                </div>
+
+                @Html.EditorFor(x => x.OfstedInspectionDate, new { title = "Ofsted last inspection", fieldsetClassName = "edit-date-fieldset" })
+
+                <div class="govuk-form-group">
+                    <label for="ofsted-report" class="govuk-label">Ofsted report link</label>
+                    <input type="text" class="govuk-input" id="ofsted-report" disabled="disabled" value="http://reports.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/@Model.Urn" />
+                </div>
+            }
+
+            @if (Model.EditPolicy.InspectorateId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.InspectorateId)">
+                    <label class="govuk-label" for="InspectorateId">Inspectorate</label>
+                    @Html.ValidationMessageFor(x => x.InspectorateId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.InspectorateId, Model.Inspectorates, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.ProprietorBodyName && !Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider))
+            {
+                <div class="govuk-form-group">
+                    <label for="proprietor" class="govuk-label">Proprietor's name</label>
+                    @Html.TextBoxFor(x => x.ProprietorBodyName, new { maxlength = 120, id = "proprietor", @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.ReligiousCharacterId)
+            {
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="ReligiousCharacterId">Religious character</label>
+                    @Html.DropDownListFor(x => x.ReligiousCharacterId, Model.ReligiousCharacters, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+
+            @if (Model.EditPolicy.DioceseId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.DioceseId)">
+                    <label class="govuk-label" for="diocese">Diocese</label>
+                    @Html.DropDownListFor(x => x.DioceseId, Model.Dioceses, "", new { id = "diocese-dropdown", @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.ReligiousEthosId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ReligiousEthosId)">
+                    <label class="govuk-label" for="ReligiousEthosId">Religious ethos</label>
+                    @Html.ValidationMessageFor(x => x.ReligiousEthosId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.ReligiousEthosId, Model.ReligiousEthoses, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.ProvisionBoardingId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ProvisionBoardingId)">
+                    <label class="govuk-label" for="boarders">Boarders</label>
+                    @Html.DropDownListFor(x => x.ProvisionBoardingId, Model.BoardingProvisions, "", new { @class = "govuk-select", id = "boarders" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.ProvisionNurseryId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ProvisionNurseryId)">
+                    <label class="govuk-label" for="nursery">Nursery provision</label>
+                    @Html.DropDownListFor(x => x.ProvisionNurseryId, Model.NurseryProvisions, "", new { @class = "govuk-select", id = "nursery" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.ProvisionOfficialSixthFormId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ProvisionOfficialSixthFormId)">
+                    <label class="govuk-label" for="sixthform">Official sixth form</label>
+                    @Html.DropDownListFor(x => x.ProvisionOfficialSixthFormId, Model.OfficialSixthFormProvisions, "", new { @class = "govuk-select", id = "sixthform" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.Capacity)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Capacity)">
+                    <label class="govuk-label" for="Capacity">School capacity</label>
+                    @Html.ValidationMessageFor(x => x.Capacity, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.Capacity, new { @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.NumberOfPupilsOnRoll)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.NumberOfPupilsOnRoll)">
+                    <label class="govuk-label" for="NumberOfPupilsOnRoll">Number of pupils</label>
+                    @Html.ValidationMessageFor(x => x.NumberOfPupilsOnRoll, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.NumberOfPupilsOnRoll, new { @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.Section41ApprovedId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Section41ApprovedId)">
+                    <label class="govuk-label" for="Section41ApprovedId">Section 41 approved</label>
+                    @Html.ValidationMessageFor(x => x.Section41ApprovedId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.Section41ApprovedId, Model.Section41ApprovedItems, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.ReasonEstablishmentOpenedId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentOpenedId)">
+                    <label class="govuk-label" for="ReasonEstablishmentOpenedId">Reason establishment opened</label>
+                    @Html.ValidationMessageFor(x => x.ReasonEstablishmentOpenedId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.ReasonEstablishmentOpenedId, Model.ReasonsEstablishmentOpened, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.OpenDate)
+            {
+                @Html.EditorFor(x => x.OpenDate, new { title = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date" : "Open date", fieldsetClassName = "edit-date-fieldset" })
+            }
+
+
+            @if (Model.EditPolicy.CloseDate)
+            {
+                @Html.EditorFor(x => x.CloseDate, new { title = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation expiry date" : "Close date", fieldsetClassName = "edit-date-fieldset" })
+            }
+
+
+            @if (Model.EditPolicy.ReasonEstablishmentClosedId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentClosedId)">
+                    <label class="govuk-label" for="ReasonEstablishmentClosedId">Reason establishment closed</label>
+                    @Html.ValidationMessageFor(x => x.ReasonEstablishmentClosedId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.ReasonEstablishmentClosedId, Model.ReasonsEstablishmentClosed, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+
+            @if (Model.EditPolicy.CCOperationalHoursId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CCOperationalHoursId)">
+                    @Html.LabelFor(x => x.CCOperationalHoursId, "Operational hours", new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.CCOperationalHoursId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.CCOperationalHoursId, Model.CCOperationalHours, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.CCUnder5YearsOfAgeCount)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CCUnder5YearsOfAgeCount)">
+                    @Html.LabelFor(x => x.CCUnder5YearsOfAgeCount, "Number of under 5s", new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.CCUnder5YearsOfAgeCount, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.CCUnder5YearsOfAgeCount, new { maxlength = 120, @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.CCGovernanceId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CCGovernanceId)">
+                    @Html.LabelFor(x => x.CCGovernanceId, "Governance", new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.CCGovernanceId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.CCGovernanceId, Model.CCGovernanceList, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.CCGovernanceDetail)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CCGovernanceDetail)">
+                    @Html.LabelFor(x => x.CCGovernanceDetail, "Governance detail", new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.CCGovernanceDetail, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.CCGovernanceDetail, new { maxlength = 240, @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.CCDeliveryModelId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CCDeliveryModelId)">
+                    @Html.LabelFor(x => x.CCDeliveryModelId, "Delivery model", new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.CCDeliveryModelId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.CCDeliveryModelId, Model.CCDeliveryModels, "", new { @class = "form-control" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.CCGroupLeadId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CCGroupLeadId)">
+                    @Html.LabelFor(x => x.CCGroupLeadId, "Group lead centre", new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.CCGroupLeadId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.CCGroupLeadId, Model.CCGroupLead, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.CCPhaseTypeId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CCPhaseTypeId)">
+                    @Html.LabelFor(x => x.CCPhaseTypeId, "Phase", new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.CCPhaseTypeId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.CCPhaseTypeId, Model.CCPhaseTypes, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.CCDisadvantagedAreaId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CCDisadvantagedAreaId)">
+                    @Html.LabelFor(x => x.CCDisadvantagedAreaId, "Disadvantaged area", new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.CCDisadvantagedAreaId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.CCDisadvantagedAreaId, Model.CCDisadvantagedAreas, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.CCDirectProvisionOfEarlyYearsId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CCDirectProvisionOfEarlyYearsId)">
+                    @Html.LabelFor(x => x.CCDirectProvisionOfEarlyYearsId, "Direct provision of early years", new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.CCDirectProvisionOfEarlyYearsId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.CCDirectProvisionOfEarlyYearsId, Model.CCDirectProvisionOfEarlyYears, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+
+            @if (Model.EditPolicy.ProvisionSpecialClassesId)
+            {
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="special-classes">
+                        Special classes
+                    </label>
+                    @Html.DropDownListFor(x => x.ProvisionSpecialClassesId, Model.SpecialClassesProvisions, "", new { @class = "govuk-select", id = "special-classes" })
+                </div>
+            }
+
+            @if (Model.DisplayPolicy.FreeSchoolMealsNumber)
+            {
+                var attributes = new Dictionary<string, object>();
+                if (!Model.EditPolicy.FreeSchoolMealsNumber)
+                {
+                    attributes.Add("readonly", "true");
+                    attributes.Add("disabled", "disabled");
+                }
+
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FreeSchoolMealsNumber)">
+                    @Html.LabelFor(x => x.FreeSchoolMealsNumber, new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.FreeSchoolMealsNumber, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.FreeSchoolMealsNumber, Html.GetHtmlAttributes(new { @class = "govuk-input" }, attributes))
+                </div>
+            }
+
+            @if (Model.DisplayPolicy.FreeSchoolMealsPercentage)
+            {
+                var attributes = new Dictionary<string, object>();
+                if (!Model.EditPolicy.FreeSchoolMealsPercentage)
+                {
+                    attributes.Add("readonly", "true");
+                    attributes.Add("disabled", "disabled");
+                }
+
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FreeSchoolMealsPercentage)">
+                    @Html.LabelFor(x => x.FreeSchoolMealsPercentage, new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.FreeSchoolMealsPercentage, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.FreeSchoolMealsPercentage, Html.GetHtmlAttributes(new { @class = "govuk-input" }, attributes))
+                </div>
+            }
+
+            @if (Model.EditPolicy.SENStat)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SENStat)">
+                    @Html.LabelFor(x => x.SENStat, new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.SENStat, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.SENStat, new { @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.SENNoStat)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SENNoStat)">
+                    @Html.LabelFor(x => x.SENNoStat, new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.SENNoStat, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.SENNoStat, new { @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.Contact_EmailAddress && !Model.IsUpdatingEmailFields.GetValueOrDefault())
+            {
+                <details class="govuk-details govuk-!-margin-bottom-2" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                            How this email address information is used
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <p>
+                            The main establishment email address and the alternative establishment email address (if one exists for
+                            your establishment) should be added here respectively. These must be up-to-date, valid and actively
+                            monitored email addresses. No personal email addresses or personal establishment email addresses should
+                            be added to these fields. Although these fields are not publicly displayed on the website&apos;s
+                            interface they are not classed as personal data, therefore under certain circumstances GIAS must
+                            share this information, for example, if the department is requested to do so under a Freedom of
+                            Information (FOI) request. This data can be used by the DfE and other government departments,
+                            non-departmental public bodies, arm&apos;s length bodies and partners for official functions and tasks within
+                            the public interest.
+                        </p>
+                        <p>
+                            This information is very important as it allows the Department for Education to share important
+                            information and messages with establishments, especially during the Coronavirus pandemic.
+                        </p>
+                    </div>
+                </details>
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Contact_EmailAddress)">
+                    <label class="govuk-label" for="@nameof(Model.Contact_EmailAddress)">
+                        Email address
+                    </label>
+                    @Html.ValidationMessageFor(x => x.Contact_EmailAddress, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.Contact_EmailAddress, new { @class = "govuk-input", aria_describedby = "help-text-email-address" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.ContactAlt_EmailAddress && !Model.IsUpdatingEmailFields.GetValueOrDefault())
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ContactAlt_EmailAddress)">
+                    <label class="govuk-label" for="@nameof(Model.ContactAlt_EmailAddress)">
+                        Alternative email address
+                    </label>
+                    @Html.ValidationMessageFor(x => x.ContactAlt_EmailAddress, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.ContactAlt_EmailAddress, new { @class = "govuk-input", aria_describedby = "help-text-email-address" })
+                </div>
+            }
+
+
+            @if (Model.EditPolicy.SENIds)
+            {
+                <div class="govuk-form-group sen-provision">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-!-font-weight-bold">Type of SEN provision</legend>
+                        <div class="govuk-checkboxes">
+                            @foreach (var item in Model.SENProvisions)
+                            {
+                                <div class="govuk-checkboxes__item">
+                                    <input id="@nameof(Model.SENProvisions)_@item.Id" type="checkbox" name="@nameof(Model.SENIds)" class="govuk-checkboxes__input"
+                                           value="@item.Id" @Html.Conditional(Model.SENIds != null && Model.SENIds.Contains(item.Id), "checked") />
+                                    <label for="@nameof(Model.SENProvisions)_@item.Id" class="govuk-checkboxes__label">@item.Name</label>
+                                </div>
+                            }
+                        </div>
+                    </fieldset>
+                </div>
+                @* Flags the SEN list has been included in the request - DO NOT REMOVE. *@
+                <input type="hidden" name="SENList" value="1" />
+            }
+
+            @if (Model.EditPolicy.TeenageMothersProvisionId)
+            {
+                <div class="govuk-form-group">
+                    @Html.LabelFor(x => x.TeenageMothersProvisionId, new { @class = "govuk-label" })
+                    @Html.DropDownListFor(x => x.TeenageMothersProvisionId, Model.TeenageMothersProvisions, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.TeenageMothersCapacity)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.TeenageMothersCapacity)">
+                    @Html.LabelFor(x => x.TeenageMothersCapacity, new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.TeenageMothersCapacity, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.TeenageMothersCapacity, new { @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.ChildcareFacilitiesId)
+            {
+                <div class="govuk-form-group">
+                    @Html.LabelFor(x => x.ChildcareFacilitiesId, new { @class = "govuk-label" })
+                    @Html.DropDownListFor(x => x.ChildcareFacilitiesId, Model.ChildcareFacilitiesProvisions, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.PRUSENId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PRUSENId)">
+                    @Html.LabelFor(x => x.PRUSENId, new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.PRUSENId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.PRUSENId, Model.PRUSENOptions, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.PRUEBDId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PRUEBDId)">
+                    @Html.LabelFor(x => x.PRUEBDId, new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.PRUEBDId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.PRUEBDId, Model.PRUEBDOptions, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.PlacesPRU)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PlacesPRU)">
+                    @Html.LabelFor(x => x.PlacesPRU, new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.PlacesPRU, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.PlacesPRU, new { @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.PruFulltimeProvisionId)
+            {
+                <div class="govuk-form-group">
+                    @Html.LabelFor(x => x.PruFulltimeProvisionId, new { @class = "govuk-label" })
+                    @Html.DropDownListFor(x => x.PruFulltimeProvisionId, Model.PruFulltimeProvisionOptions, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.PruEducatedByOthersId)
+            {
+                <div class="govuk-form-group">
+                    @Html.LabelFor(x => x.PruEducatedByOthersId, new { @class = "govuk-label" })
+                    @Html.DropDownListFor(x => x.PruEducatedByOthersId, Model.PruEducatedByOthersOptions, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+
+            @if (Model.EditPolicy.TypeOfResourcedProvisionId)
+            {
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="resourced-provision-type">
+                        Type of resourced provision
+                    </label>
+
+                    @Html.DropDownListFor(x => x.TypeOfResourcedProvisionId, Model.TypeOfResourcedProvisions, "", new { @class = "govuk-select", id = "resourced-provision-type" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.ResourcedProvisionOnRoll)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ResourcedProvisionOnRoll)">
+                    <label class="govuk-label" for="ResourcedProvisionOnRoll">Resourced provision number on roll</label>
+                    @Html.ValidationMessageFor(x => x.ResourcedProvisionOnRoll, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.ResourcedProvisionOnRoll, new { @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.ResourcedProvisionCapacity)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ResourcedProvisionCapacity)">
+                    @Html.LabelFor(x => x.ResourcedProvisionCapacity, "Resourced provision capacity", new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.ResourcedProvisionCapacity, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.ResourcedProvisionCapacity, new { @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.SenUnitOnRoll)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SenUnitOnRoll)">
+                    <label class="govuk-label" for="SenUnitOnRoll">SEN unit number on roll</label>
+                    @Html.ValidationMessageFor(x => x.SenUnitOnRoll, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.SenUnitOnRoll, new { @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.SenUnitCapacity)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SenUnitCapacity)">
+                    <label class="govuk-label" for="SenUnitCapacity">SEN unit capacity</label>
+                    @Html.ValidationMessageFor(x => x.SenUnitCapacity, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.SenUnitCapacity, new { @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.BSOInspectorateId)
+            {
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="bso-inspectorate">BSO: Inspectorate name</label>
+                    @Html.DropDownListFor(x => x.BSOInspectorateId, Model.BSOInspectorates, "", new { @class = "govuk-select", id = "bso-inspectorate" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.BSOInspectorateReportUrl)
+            {
+                <div class="govuk-form-group">
+                    @Html.LabelFor(x => x.BSOInspectorateReportUrl, "Inspectorate report", new { @class = "govuk-label" })
+                    @Html.TextBoxFor(x => x.BSOInspectorateReportUrl, new { @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.BSODateOfLastInspectionVisit)
+            {
+                @Html.EditorFor(x => x.BSODateOfLastInspectionVisit, new { title = "BSO: Date of last inspection", fieldsetClassName = "edit-date-fieldset" })
+            }
+
+            @if (Model.EditPolicy.BSODateOfNextInspectionVisit)
+            {
+                @Html.EditorFor(x => x.BSODateOfNextInspectionVisit, new { title = "BSO: Next inspection visit", fieldsetClassName = "edit-date-fieldset" })
+            }
+
+            <!-- Online Provider content -->
+            @if (Model.EditPolicy.QualityAssuranceBodyNameId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.QualityAssuranceBodyNameId)">
+                    @Html.LabelFor(x => x.QualityAssuranceBodyNameId, null, new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.QualityAssuranceBodyNameId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.QualityAssuranceBodyNameId, Model.QualityAssuranceBodyName, "", new { @class = "govuk-select" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.QualityAssuranceBodyReport)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.QualityAssuranceBodyReport)">
+                    @Html.LabelFor(x => x.QualityAssuranceBodyReport, null, new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.QualityAssuranceBodyReport, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.QualityAssuranceBodyReport, new { @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.CompaniesHouseNumber)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CompaniesHouseNumber)">
+                    @Html.LabelFor(x => x.CompaniesHouseNumber, null, new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.CompaniesHouseNumber, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.CompaniesHouseNumber, new { @class = "govuk-input" })
+                </div>
+            }
+
+            @if (Model.EditPolicy.EstablishmentAccreditedId)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentAccreditedId)">
+                    @Html.LabelFor(x => x.EstablishmentAccreditedId, null, new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.EstablishmentAccreditedId, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.EstablishmentAccreditedId, Model.EstablishmentAccredited, "", new { @class = "govuk-select" })
+                </div>
+            }
+            <!-- Online Provider content -->
+            <div class="button-row govuk-!-padding-top-4">
+                <button id="save-submit-button" type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, "details")">Continue</button>
+            </div>
         </div>
-                        @* Flags the SEN list has been included in the request - DO NOT REMOVE. *@
-        <input type="hidden" name="SENList" value="1"/>
-    }
-
-    @if (Model.EditPolicy.TeenageMothersProvisionId)
-    {
-        <div class="govuk-form-group">
-            @Html.LabelFor(x => x.TeenageMothersProvisionId, new {@class = "govuk-label"})
-            @Html.DropDownListFor(x => x.TeenageMothersProvisionId, Model.TeenageMothersProvisions, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.TeenageMothersCapacity)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.TeenageMothersCapacity)">
-            @Html.LabelFor(x => x.TeenageMothersCapacity, new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.TeenageMothersCapacity, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.TeenageMothersCapacity, new {@class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.ChildcareFacilitiesId)
-    {
-        <div class="govuk-form-group">
-            @Html.LabelFor(x => x.ChildcareFacilitiesId, new {@class = "govuk-label"})
-            @Html.DropDownListFor(x => x.ChildcareFacilitiesId, Model.ChildcareFacilitiesProvisions, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.PRUSENId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PRUSENId)">
-            @Html.LabelFor(x => x.PRUSENId, new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.PRUSENId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.PRUSENId, Model.PRUSENOptions, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.PRUEBDId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PRUEBDId)">
-            @Html.LabelFor(x => x.PRUEBDId, new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.PRUEBDId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.PRUEBDId, Model.PRUEBDOptions, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.PlacesPRU)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PlacesPRU)">
-            @Html.LabelFor(x => x.PlacesPRU , new { @class= "govuk-label"})
-            @Html.ValidationMessageFor(x => x.PlacesPRU, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.PlacesPRU, new {@class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.PruFulltimeProvisionId)
-    {
-        <div class="govuk-form-group">
-            @Html.LabelFor(x => x.PruFulltimeProvisionId, new {@class = "govuk-label"})
-            @Html.DropDownListFor(x => x.PruFulltimeProvisionId, Model.PruFulltimeProvisionOptions, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.PruEducatedByOthersId)
-    {
-        <div class="govuk-form-group">
-            @Html.LabelFor(x => x.PruEducatedByOthersId, new {@class = "govuk-label"})
-            @Html.DropDownListFor(x => x.PruEducatedByOthersId, Model.PruEducatedByOthersOptions, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-
-    @if (Model.EditPolicy.TypeOfResourcedProvisionId)
-    {
-        <div class="govuk-form-group">
-            <label class="govuk-label" for="resourced-provision-type">
-                Type of resourced provision
-            </label>
-
-            @Html.DropDownListFor(x => x.TypeOfResourcedProvisionId, Model.TypeOfResourcedProvisions, "", new {@class = "govuk-select", id = "resourced-provision-type"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.ResourcedProvisionOnRoll)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ResourcedProvisionOnRoll)">
-            <label class="govuk-label" for="ResourcedProvisionOnRoll">Resourced provision number on roll</label>
-            @Html.ValidationMessageFor(x => x.ResourcedProvisionOnRoll, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.ResourcedProvisionOnRoll, new {@class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.ResourcedProvisionCapacity)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ResourcedProvisionCapacity)">
-            @Html.LabelFor(x => x.ResourcedProvisionCapacity, "Resourced provision capacity", new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.ResourcedProvisionCapacity, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.ResourcedProvisionCapacity, new {@class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.SenUnitOnRoll)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SenUnitOnRoll)">
-            <label class="govuk-label" for="SenUnitOnRoll">SEN unit number on roll</label>
-            @Html.ValidationMessageFor(x => x.SenUnitOnRoll, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.SenUnitOnRoll, new {@class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.SenUnitCapacity)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.SenUnitCapacity)">
-            <label class="govuk-label" for="SenUnitCapacity">SEN unit capacity</label>
-            @Html.ValidationMessageFor(x => x.SenUnitCapacity, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.SenUnitCapacity, new {@class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.BSOInspectorateId)
-    {
-        <div class="govuk-form-group">
-            <label class="govuk-label" for="bso-inspectorate">BSO: Inspectorate name</label>
-            @Html.DropDownListFor(x => x.BSOInspectorateId, Model.BSOInspectorates, "", new {@class = "govuk-select", id = "bso-inspectorate"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.BSOInspectorateReportUrl)
-    {
-        <div class="govuk-form-group">
-            @Html.LabelFor(x => x.BSOInspectorateReportUrl, "Inspectorate report", new {@class = "govuk-label"})
-            @Html.TextBoxFor(x => x.BSOInspectorateReportUrl, new {@class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.BSODateOfLastInspectionVisit)
-    {
-        @Html.EditorFor(x => x.BSODateOfLastInspectionVisit, new {title = "BSO: Date of last inspection", fieldsetClassName = "edit-date-fieldset"})
-    }
-
-    @if (Model.EditPolicy.BSODateOfNextInspectionVisit)
-    {
-        @Html.EditorFor(x => x.BSODateOfNextInspectionVisit, new {title = "BSO: Next inspection visit", fieldsetClassName = "edit-date-fieldset"})
-    }
-
-    <!-- Online Provider content -->
-    @if (Model.EditPolicy.QualityAssuranceBodyNameId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.QualityAssuranceBodyNameId)">
-            @Html.LabelFor(x => x.QualityAssuranceBodyNameId, null, new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.QualityAssuranceBodyNameId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.QualityAssuranceBodyNameId, Model.QualityAssuranceBodyName, "", new {@class = "govuk-select"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.QualityAssuranceBodyReport)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.QualityAssuranceBodyReport)">
-            @Html.LabelFor(x => x.QualityAssuranceBodyReport, null, new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.QualityAssuranceBodyReport, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.QualityAssuranceBodyReport, new {@class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.CompaniesHouseNumber)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CompaniesHouseNumber)">
-            @Html.LabelFor(x => x.CompaniesHouseNumber, null, new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.CompaniesHouseNumber, null, new {@class = "govuk-error-message"})
-            @Html.TextBoxFor(x => x.CompaniesHouseNumber, new {@class = "govuk-input"})
-        </div>
-    }
-
-    @if (Model.EditPolicy.EstablishmentAccreditedId)
-    {
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentAccreditedId)">
-            @Html.LabelFor(x => x.EstablishmentAccreditedId, null, new {@class = "govuk-label"})
-            @Html.ValidationMessageFor(x => x.EstablishmentAccreditedId, null, new {@class = "govuk-error-message"})
-            @Html.DropDownListFor(x => x.EstablishmentAccreditedId, Model.EstablishmentAccredited, "", new {@class = "govuk-select"})
-        </div>
-    }
-    <!-- Online Provider content -->
-    <div class="button-row govuk-!-padding-top-4">
-        <button id="save-submit-button" type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSave, "details")">Continue</button>
-    </div>
-    </div>
     </div>
     </div>
 
