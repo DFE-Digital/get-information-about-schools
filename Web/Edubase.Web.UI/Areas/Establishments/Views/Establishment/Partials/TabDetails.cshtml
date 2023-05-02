@@ -44,6 +44,17 @@
         </div>
     }
 
+    @if (!Model.TabWarnings.DetailsTab.IsEmpty())
+    {
+        <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-warning-text__assistive">Warning</span>
+                @Model.TabWarnings.DetailsTab
+            </strong>
+        </div>
+    }
+
     @if (Model.Establishment.Location != null)
     {
         <a href="#details-summary" class="govuk-skip-link">Skip map</a>
@@ -350,7 +361,7 @@
             {
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">@Model.DisplayPolicy.MainEmailAddressLabel</dt>
-                    <dd class="govuk-summary-list__value">@(Model.Establishment.Contact_EmailAddress ?? "Not recorded")</dd>
+                    <dd id="email-value" class="govuk-summary-list__value">@(Model.Establishment.Contact_EmailAddress ?? "Not recorded")</dd>
                 </div>
             }
 
@@ -358,7 +369,7 @@
             {
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">Alternative email</dt>
-                    <dd class="govuk-summary-list__value">@(Model.Establishment.ContactAlt_EmailAddress ?? "Not recorded")</dd>
+                    <dd id="alternative-email-value" class="govuk-summary-list__value">@(Model.Establishment.ContactAlt_EmailAddress ?? "Not recorded")</dd>
                 </div>
             }
 
@@ -366,7 +377,7 @@
             {
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">Date last changed<span class="govuk-visually-hidden"> </span>/<span class="govuk-visually-hidden"> </span>confirmed</dt>
-                    <dd class="govuk-summary-list__value">@(Model.Establishment.LastChangedDate?.ToString("d MMMM yyyy"))</dd>
+                    <dd id="confirmed-date-value" class="govuk-summary-list__value">@(Model.Establishment.LastChangedDate?.ToString("d MMMM yyyy"))</dd>
                 </div>
             }
 

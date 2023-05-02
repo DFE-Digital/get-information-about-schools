@@ -7,6 +7,16 @@
         @Html.ActionLink("Edit location", "EditLocation", "Establishment", new { id = Model.Establishment.Urn }, new { id = "edit-location-button", @class = "govuk-button govuk-button--secondary" })
     }
 
+    @if (!Model.TabWarnings.LocationTab.IsEmpty())
+    {
+        <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-warning-text__assistive">Warning</span>
+                @Model.TabWarnings.LocationTab
+            </strong>
+        </div>
+    }
     <div class="detail-summary">
         <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
@@ -81,7 +91,7 @@
     @if (Model.UserCanEdit && Model.TabEditPolicy.Location)
     {
         <div class="govuk-!-padding-top-4">
-            @Html.ActionLink("Edit location", "EditLocation", "Establishment", new {id = Model.Establishment.Urn}, new { id = "edit-location-button", @class = "govuk-button govuk-button--secondary"})
+            @Html.ActionLink("Edit location", "EditLocation", "Establishment", new { id = Model.Establishment.Urn }, new { id = "edit-location-button", @class = "govuk-button govuk-button--secondary" })
         </div>
     }
 

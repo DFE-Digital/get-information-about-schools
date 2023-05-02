@@ -42,7 +42,7 @@
 {
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadteacherLabel) appointment date</dt>
-        <dd class="govuk-summary-list__value">
+        <dd id="head-master-appointment-date-value" class="govuk-summary-list__value">
             @(Model.Establishment.HeadAppointmentDate?.ToString("d MMMM yyyy") ?? "Not recorded")
         </dd>
     </div>
@@ -52,7 +52,7 @@
 {
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadEmailAddressLabel)</dt>
-        <dd class="govuk-summary-list__value">
+        <dd id="head-master-email-value" class="govuk-summary-list__value">
             @(Model.Establishment.HeadEmailAddress ?? "Not recorded")
         </dd>
     </div>
@@ -78,8 +78,8 @@
 }
 
 <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">Phase of education</dt>
-    <dd class="govuk-summary-list__value">
+    <dt id="education-phase-key" class="govuk-summary-list__key">Phase of education</dt>
+    <dd id="education-phase-value" class="govuk-summary-list__value">
         @Model.EducationPhaseName
     </dd>
 </div>
@@ -87,7 +87,7 @@
 {
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">@(Model.DisplayPolicy.EstablishmentTypeLabel)</dt>
-        <dd class="govuk-summary-list__value">
+        <dd id="school-type-value" class="govuk-summary-list__value">
             @Model.TypeName
         </dd>
     </div>
@@ -139,7 +139,7 @@
 </div>
 <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">Establishment status</dt>
-    <dd class="govuk-summary-list__value">
+    <dd id="establishment-status-value" class="govuk-summary-list__value">
         @if (Model.IsClosed)
         {
             <span class="pending-closure">
