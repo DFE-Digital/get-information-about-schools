@@ -98,17 +98,24 @@ namespace Edubase.Web.UIUnitTests.Areas.ViewRulesHandlers
         }
 
         [Theory]
-        [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.ROLE_BACKOFFICE)]
-        [InlineData((int) eLookupGroupType.ChildrensCentresGroup, EdubaseRoles.YCS)]
-        [InlineData((int) eLookupGroupType.ChildrensCentresCollaboration, EdubaseRoles.YCS)]
-        public void SetEditPermissions_GroupViewModel_IsLocalAuthorityEditable_False(int groupType, string role)
+        [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.ROLE_BACKOFFICE, false)]
+        [InlineData((int) eLookupGroupType.ChildrensCentresGroup, EdubaseRoles.YCS, false)]
+        [InlineData((int) eLookupGroupType.ChildrensCentresCollaboration, EdubaseRoles.YCS, false)]
+        [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.ROLE_BACKOFFICE, true)]
+        [InlineData((int) eLookupGroupType.ChildrensCentresGroup, EdubaseRoles.YCS, true)]
+        [InlineData((int) eLookupGroupType.ChildrensCentresCollaboration, EdubaseRoles.YCS, true)]
+        [InlineData((int) eLookupGroupType.ChildrensCentresCollaboration, EdubaseRoles.ROLE_BACKOFFICE, true)]
+        [InlineData((int) eLookupGroupType.ChildrensCentresGroup, EdubaseRoles.ROLE_BACKOFFICE, true)]
+        public void SetEditPermissions_GroupViewModel_IsLocalAuthorityEditable_False(int groupType, string role, bool hasEstablishment)
         {
             mockPrincipal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(false);
             mockPrincipal.Setup(x => x.IsInRole(role)).Returns(true);
             var viewModel = new GroupEditorViewModel()
             {
                 GroupTypeId = groupType,
-                LinkedEstablishments = new GroupLinkedEstablishmentsViewModel() { Establishments = new List<EstablishmentGroupViewModel>() }
+                LinkedEstablishments = hasEstablishment ?
+                    new GroupLinkedEstablishmentsViewModel() { Establishments = new List<EstablishmentGroupViewModel>() { new EstablishmentGroupViewModel() } }
+                    : new GroupLinkedEstablishmentsViewModel() { Establishments = new List<EstablishmentGroupViewModel>() }
             };
 
             var result = GroupEditorViewModelRulesHandler.SetEditPermissions(viewModel, mockPrincipal.Object);
@@ -215,7 +222,7 @@ namespace Edubase.Web.UIUnitTests.Areas.ViewRulesHandlers
         [InlineData((int) eLookupGroupType.SingleacademyTrust, EdubaseRoles.UKRLP)]
         [InlineData((int) eLookupGroupType.SingleacademyTrust, EdubaseRoles.YCS)]
         [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.UKRLP)]
-        public void GroupViewModel_ShowChangesReviewScreen_True(int groupType, string role)
+        public void GroupViewModel_MustShowChangesReviewScreen_True(int groupType, string role)
         {
             mockPrincipal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(false);
             mockPrincipal.Setup(x => x.IsInRole(role)).Returns(true);
@@ -235,7 +242,7 @@ namespace Edubase.Web.UIUnitTests.Areas.ViewRulesHandlers
         [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.EFADO)]
         [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.YCS)]
         [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.ROLE_BACKOFFICE)]
-        public void GroupViewModel_ShowChangesReviewScreen_False(int groupType, string role)
+        public void GroupViewModel_MustShowChangesReviewScreen_False(int groupType, string role)
         {
             mockPrincipal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(false);
             mockPrincipal.Setup(x => x.IsInRole(role)).Returns(true);
