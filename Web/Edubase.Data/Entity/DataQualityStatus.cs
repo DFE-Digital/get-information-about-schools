@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 using Microsoft.WindowsAzure.Storage.Table;
 
@@ -24,7 +24,11 @@ namespace Edubase.Data.Entity
             IndependentSchools,
 
             [EnumMember(Value = "Pupil referral units")]
-            PupilReferralUnits
+            PupilReferralUnits,
+
+            [EnumMember(Value = "Secure academy 16-19 openers")]
+            AcademySecure16to19Openers
+
         }
 
         public DataQualityStatus()
