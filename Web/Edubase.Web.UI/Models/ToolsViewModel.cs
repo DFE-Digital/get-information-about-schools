@@ -203,7 +203,7 @@ namespace Edubase.Web.UI.Models
                 });
             }
 
-            if (UserCanManageAcademyOpenings && !UserCanManage16To19SecureAcademyOpenings)
+            if (UserCanManageAcademyOpenings)
             {
                 retVal.Add(new LinkAction
                 {
@@ -213,7 +213,7 @@ namespace Edubase.Web.UI.Models
                 });
             }
 
-            if (UserCanManageAcademyOpenings && UserCanManage16To19SecureAcademyOpenings)
+            if ( UserCanManage16To19SecureAcademyOpenings)
             {
                 retVal.Add(new LinkAction
                 {

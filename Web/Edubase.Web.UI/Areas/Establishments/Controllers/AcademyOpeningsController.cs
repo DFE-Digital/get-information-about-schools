@@ -1,20 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Edubase.Services.Establishments;
 using Edubase.Web.UI.Helpers;
 using System.Web.Mvc;
-using Edubase.Common;
 using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
 using Edubase.Services.Lookup;
-using Edubase.Services.Security;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Filters;
 using Microsoft.Ajax.Utilities;
@@ -24,7 +20,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
     using M = EstablishmentSearchResultModel;
 
     [RouteArea("Establishments"), System.Web.Mvc.RoutePrefix("manage"), System.Web.Mvc.Route("{action=index}"),
-     MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyOpenings)]
+     MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyOpenings, AuthorizedRoles.CanManageSecure16To19AcademyOpenings)]
     public class AcademyOpeningsController : Controller
     {
         private readonly IEstablishmentReadService _establishmentReadService;
@@ -41,12 +37,22 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route("16-19-secure-academy-openings", Name = "Manage16To19SecureAcademyOpenings")]
-        public Task<ActionResult> Manage16To19SecureAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc")=>
-            Task.FromResult<ActionResult>(RedirectToAction(nameof(ManageAcademyOpenings), new { skip, sortBy, establishmentCode="57" }));
+        public Task<ActionResult> Manage16To19SecureAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc")
+        {
+            //secure 16-19 academy establishment type Id is 46
+            return Task.FromResult<ActionResult>(RedirectToAction(nameof(ManageAcademyOpenings),
+                new
+                {
+                    skip,
+                    sortBy,
+                    isSecure16To19User = SecureAcademyUtility.EncryptValue(true.ToString()),
+                    establishmentTypeId = SecureAcademyUtility.EncryptValue("46")
+                }));
+        }
 
         [HttpGet, Route("academy-openings", Name = "ManageAcademyOpenings")]
-        // public ActionResult Index() => View();
-        public async Task<ActionResult> ManageAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc", string establishmentCode=null)
+        public async Task<ActionResult> ManageAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc",
+            string isSecure16To19User = null, string establishmentTypeId = null)
         {
             var take = 50;
             var now = DateTime.Now;
@@ -55,14 +61,18 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             var to = from.AddYears(30);
 
-
             var property = typeof(EditAcademyOpeningViewModel).GetProperty(sortBy);
 
+            var isUserSecure16To19 = !string.IsNullOrWhiteSpace(isSecure16To19User)
+                                     && bool.Parse(SecureAcademyUtility.DecryptValue(isSecure16To19User));
+
+            if (!string.IsNullOrWhiteSpace(establishmentTypeId))
+                establishmentTypeId = SecureAcademyUtility.DecryptValue(establishmentTypeId);
+
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
-
-            var establishmentCodeForSecure16To19Academy = SecureAcademyUtility.GetEstablishmentCodeForSecure16To19Academy(User);
-
-            estabTypes = SecureAcademyUtility.FilterEstablishmentType(estabTypes,establishmentCodeForSecure16To19Academy);
+            estabTypes =
+                SecureAcademyUtility.FilterEstablishmentsByEstablishmentTypeId
+                    (estabTypes, establishmentTypeId, isUserSecure16To19);
 
             var result = await _establishmentReadService.SearchAsync(
                 new EstablishmentSearchPayload
@@ -70,15 +80,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     Skip = skip,
                     Take = take,
                     SortBy = eSortBy.NameAlphabeticalAZ,
-                    Filters = new EstablishmentSearchFilters
-                    {
-                        OpenDateMin = from,
-                        OpenDateMax = to,
-                        EstablishmentTypeGroupIds =
-                            SecureAcademyUtility.GetAcademyOpeningsEstablishmentTypeByTypeGroupId(
-                                establishmentCodeForSecure16To19Academy),
-                        StatusIds = new[] { (int) eLookupEstablishmentStatus.ProposedToOpen }
-                    },
+                    Filters =
+                        SecureAcademyUtility.GetEstablishmentSearchFilters(
+                            new GetEstabSearchFiltersParam(from, to, establishmentTypeId, isUserSecure16To19)),
                     Select = new List<string>
                     {
                         nameof(M.Name),
@@ -175,7 +179,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 AcademyOpenings =
                     new PaginatedResult<EditAcademyOpeningViewModel>(skip, take, result.Count, academyOpenings),
                 Items = academyOpenings,
-                PageTitle = SecureAcademyUtility.GetAcademyOpeningPageTitle(establishmentCodeForSecure16To19Academy)
+                PageTitle = SecureAcademyUtility.GetAcademyOpeningPageTitle(establishmentTypeId, isUserSecure16To19)
             };
             vm.Count = result.Count;
             vm.Skip = skip;

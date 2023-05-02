@@ -374,6 +374,7 @@
     <Compile Include="Helpers\BrowserClientStorage.cs" />
     <Compile Include="Helpers\CannotBeEmptyAttribute.cs" />
     <Compile Include="Helpers\FormHelpers.cs" />
+    <Compile Include="Helpers\GetEstabSearchFiltersParam.cs" />
     <Compile Include="Helpers\ILayoutHelper.cs" />
     <Compile Include="Helpers\LayoutHelper.cs" />
     <Compile Include="Helpers\NonceHelper.cs" />

@@ -17,7 +17,7 @@ namespace Edubase.Web.UI.Controllers.Api
 {
     using M = EstablishmentSearchResultModel;
 
-    [MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyOpenings)]
+    [MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyOpenings, AuthorizedRoles.CanManageSecure16To19AcademyOpenings)]
     public class AcademyOpeningsApiController : ApiController
     {
         private readonly IEstablishmentReadService _establishmentReadService;
@@ -40,14 +40,28 @@ namespace Edubase.Web.UI.Controllers.Api
         /// <param name="to"></param>
         /// <param name="skip"></param>
         /// <param name="take"></param>
-        /// <param name="establishmentCode"></param>
+        /// <param name="isSecure16To19User"></param>
+        /// <param name="establishmentTypeId"></param>
         /// <returns></returns>
-        [Route("api/academy-openings/list/{from:datetime}/{to:datetime}/{skip:int}/{take:int}/{establishmentCode?}"),
+        [Route(
+             "api/academy-openings/list/{from:datetime}/{to:datetime}" +
+             "/{skip:int}/{take:int}/{isSecure16To19User}/{establishmentTypeId?}"),
          HttpGet]
-        public async Task<dynamic> GetListAsync(DateTime from, DateTime to, int skip, int take,string establishmentCode = null)
+        public async Task<dynamic> GetListAsync(DateTime from, DateTime to, int skip, int take,
+            string isSecure16To19User = null, string establishmentTypeId = null)
         {
+            var isUserSecure16To19 = !string.IsNullOrWhiteSpace(isSecure16To19User)
+                                     && bool.TryParse(SecureAcademyUtility.DecryptValue(isSecure16To19User),
+                                         out var result);
+
+            if (!string.IsNullOrWhiteSpace(establishmentTypeId))
+                establishmentTypeId = SecureAcademyUtility.DecryptValue(establishmentTypeId);
+
+
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
-            estabTypes = SecureAcademyUtility.FilterEstablishmentType(estabTypes, establishmentCode);
+            estabTypes =
+                SecureAcademyUtility.FilterEstablishmentsByEstablishmentTypeId
+                    (estabTypes, establishmentTypeId, isUserSecure16To19);
 
             var apiResult = (await _establishmentReadService.SearchAsync(
                 new EstablishmentSearchPayload
@@ -55,14 +69,8 @@ namespace Edubase.Web.UI.Controllers.Api
                     Skip = skip,
                     Take = take,
                     SortBy = eSortBy.NameAlphabeticalAZ,
-                    Filters = new EstablishmentSearchFilters
-                    {
-                        OpenDateMin = from,
-                        OpenDateMax = to,
-                        EstablishmentTypeGroupIds = SecureAcademyUtility.GetAcademyOpeningsEstablishmentTypeByTypeGroupId(
-                            establishmentCode),
-                        StatusIds = new[] { (int) eLookupEstablishmentStatus.ProposedToOpen }
-                    },
+                    Filters = SecureAcademyUtility.GetEstablishmentSearchFilters
+                        (new GetEstabSearchFiltersParam(from, to, establishmentTypeId, isUserSecure16To19)),
                     Select = new List<string>
                     {
                         nameof(M.Name),

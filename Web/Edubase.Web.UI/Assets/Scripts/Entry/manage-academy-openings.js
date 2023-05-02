@@ -209,23 +209,22 @@ const academyOpenings = new Vue({
 
       now.setDate(1);
       nowPlus30.setDate(1);
-
       nowPlus30.setFullYear(currentYear + 30);
 
-      const queryString = window.location.search;
-      const urlParams = new URLSearchParams(queryString);
-      let establishmentCode = "";
-      if(urlParams.has("establishmentCode"))
-        establishmentCode= urlParams.get("establishmentCode");
+      let establishmentTypeId=this.getQueryStringValue("establishmentTypeId");
+      let isSecure16To19User=this.getQueryStringValue("isSecure16To19User");
 
-      console.log(establishmentCode);
       // step into callback hell
-      $.getJSON('/api/academy-openings/list/' + self.formatDate(now, '-') + '/' + self.formatDate(nowPlus30, '-') + '/0/1'+'/'+establishmentCode,
+      let params = `${self.formatDate(now, '-')}/${self.formatDate(nowPlus30, '-')}/0/1`;
+      params = `${params}/${isSecure16To19User}/${establishmentTypeId}`;
+      $.getJSON(`/api/academy-openings/list/${params}`,
         function (data) {
           totalRecords = data.count;
           self.initialRecordCount = totalRecords;
           self.currentCount = totalRecords;
-          $.getJSON('/api/academy-openings/list/' + self.formatDate(now, '-') + '/' + self.formatDate(nowPlus30, '-') + '/0/' + totalRecords +'/'+establishmentCode,
+          params = `${self.formatDate(now, '-')}/${self.formatDate(nowPlus30, '-')}/0/${totalRecords}`;
+          params = `${params}/${isSecure16To19User}/${establishmentTypeId}`;
+          $.getJSON(`/api/academy-openings/list/${params}`,
             function (data) {
               self.openingAcademies = data.items;
               self.buildPages(data.items, self.pageSize);
@@ -251,6 +250,14 @@ const academyOpenings = new Vue({
         }
         self.isProcessing = false;
       });
+    },
+    getQueryStringValue: function (queryParameterKey){
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      let value=" "; // This is intentionally set to whitespace so a value is registered to the called Api
+      if (urlParams.has(queryParameterKey)) value = urlParams.get(queryParameterKey);
+
+      return value;
     },
     setCurrentPage: function (pageIndex) {
       this.currentPage = pageIndex;
@@ -391,7 +398,7 @@ const academyOpenings = new Vue({
 
       const datePages = this.openingAcademies.filter(function (opening) {
         const oDateParts = opening.openingDate.split('-');
-        const oDateMonth = parseInt(oDateParts[1], 10) -1;
+        const oDateMonth = parseInt(oDateParts[1], 10) - 1;
         const oDateYear = parseInt(oDateParts[0], 10);
 
         return oDateMonth === month && oDateYear === year;
@@ -467,7 +474,8 @@ const academyOpenings = new Vue({
       $(window).on('beforeunload', function (e) {
         return 'Any unsaved changes will be lost';
       });
-    }
+    },
+
   },
 
   computed: {
@@ -492,6 +500,7 @@ $(window).on('tabChange', function () {
 });
 $('#main-content').find('.gias-tabs-wrapper').giasTabs();
 $('#main-content').find('.gias-tabs__tab').eq(0).click();
+
 function blockExits() {
   $('a').on('click', function (e) {
     if (academyOpenings.isUserEditing()) {
