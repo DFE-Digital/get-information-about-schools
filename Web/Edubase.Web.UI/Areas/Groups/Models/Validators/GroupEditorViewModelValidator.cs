@@ -104,8 +104,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                         .WithMessage("Closed date is invalid. Please enter a valid date.");
                     });
 
-                When(x => x.CanUserEditClosedDate
-                    && x.GroupType == eLookupGroupType.SecureSingleAcademyTrust
+                When(x => x.GroupType == eLookupGroupType.SecureSingleAcademyTrust
                     && x.OriginalStatusId != (int) eLookupGroupStatus.Closed
                     && x.StatusId == (int) eLookupGroupStatus.Closed
                     && x.SaveGroupDetail, () =>
