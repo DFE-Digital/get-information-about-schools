@@ -3,7 +3,7 @@
 
 @model GroupDetailViewModel
 
-@if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.SingleacademyTrust, eLookupGroupType.MultiacademyTrust))
+@if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresGroup, eLookupGroupType.SingleacademyTrust, eLookupGroupType.MultiacademyTrust, eLookupGroupType.SecureSingleAcademyTrust))
 {
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">Address</dt>
@@ -30,7 +30,7 @@
         <dd id="group-identifier-value" class="govuk-summary-list__value">@(Model.Group.GroupId.Clean() ?? "Not recorded")</dd>
     </div>
 }
-@if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust))
+@if (Model.Group.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SecureSingleAcademyTrust))
 {
     <div class="govuk-summary-list__row">
         <dt id="company-number-key" class="govuk-summary-list__key">
