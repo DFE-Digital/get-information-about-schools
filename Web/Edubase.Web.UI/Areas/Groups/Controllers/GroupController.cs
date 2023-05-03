@@ -849,7 +849,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         private GroupEditorViewModel SetEditPermissions(GroupEditorViewModel viewModel)
         {
             viewModel.CanUserCloseAndMarkAsCreatedInError = GroupEditorViewModelRulesHandler.UserCanCloseAndMarkAsCreatedInError(viewModel, User);
-            viewModel.IsLocalAuthorityEditable = GroupEditorViewModelRulesHandler.IsLocalAuthorityEditable(viewModel, User);
+            viewModel.IsLocalAuthorityEditable = GroupEditorViewModelRulesHandler.LocalAuthorityIsEditable(viewModel, User);
 
             var userCanEditClosedDateAndStatus = GroupEditorViewModelRulesHandler.UserCanEditClosedDateAndStatus(viewModel, User);
             if (userCanEditClosedDateAndStatus)

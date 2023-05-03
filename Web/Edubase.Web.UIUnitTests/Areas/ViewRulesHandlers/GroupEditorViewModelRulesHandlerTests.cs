@@ -92,7 +92,7 @@ namespace Edubase.Web.UIUnitTests.Areas.ViewRulesHandlers
                 LinkedEstablishments = new GroupLinkedEstablishmentsViewModel() { Establishments = new List<EstablishmentGroupViewModel>() }
             };
 
-            var result = GroupEditorViewModelRulesHandler.IsLocalAuthorityEditable(viewModel, mockPrincipal.Object);
+            var result = GroupEditorViewModelRulesHandler.LocalAuthorityIsEditable(viewModel, mockPrincipal.Object);
 
             Assert.True(result);
         }
@@ -118,7 +118,7 @@ namespace Edubase.Web.UIUnitTests.Areas.ViewRulesHandlers
                     : new GroupLinkedEstablishmentsViewModel() { Establishments = new List<EstablishmentGroupViewModel>() }
             };
 
-            var result = GroupEditorViewModelRulesHandler.IsLocalAuthorityEditable(viewModel, mockPrincipal.Object);
+            var result = GroupEditorViewModelRulesHandler.LocalAuthorityIsEditable(viewModel, mockPrincipal.Object);
 
             Assert.False(result);
         }

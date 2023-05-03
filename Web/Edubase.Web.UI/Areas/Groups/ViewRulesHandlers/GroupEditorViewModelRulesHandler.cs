@@ -9,7 +9,7 @@ namespace Edubase.Web.UI.Areas.Groups.ViewRulesHandlers
 {
     public static class GroupEditorViewModelRulesHandler
     {
-        public static bool IsLocalAuthorityEditable(GroupEditorViewModel viewModel, IPrincipal user)
+        public static bool LocalAuthorityIsEditable(GroupEditorViewModel viewModel, IPrincipal user)
         {
             return viewModel.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresCollaboration, eLookupGroupType.ChildrensCentresGroup)
                                                  && viewModel.LinkedEstablishments.Establishments.Count == 0
