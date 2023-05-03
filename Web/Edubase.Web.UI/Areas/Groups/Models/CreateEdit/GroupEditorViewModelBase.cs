@@ -58,7 +58,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
                 {
                     return eGroupTypeMode.Sponsor;
                 }
-                else if (GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust))
+                else if (GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SecureSingleAcademyTrust))
                 {
                     return eGroupTypeMode.AcademyTrust;
                 }

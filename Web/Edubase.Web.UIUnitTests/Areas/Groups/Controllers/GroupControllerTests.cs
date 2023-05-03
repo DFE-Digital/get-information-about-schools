@@ -21,8 +21,10 @@ using Edubase.Services.IntegrationEndPoints.CompaniesHouse;
 using Edubase.Services.Lookup;
 using Edubase.Services.Nomenclature;
 using Edubase.Services.Security;
+using Edubase.Services.Texuna;
 using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
+using Edubase.Web.UI.Areas.Groups.ViewRulesHandlers;
 using Edubase.Web.UI.Exceptions;
 using Edubase.Web.UIUnitTests;
 using Moq;
@@ -502,6 +504,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
         [InlineData(eLookupGroupType.Federation, "Federation name", "Close this federation and mark as created in error", "Group_EditDetails_DynamicLabels_Federation")]
         [InlineData(eLookupGroupType.Trust, "Foundation trust name", "", "Group_EditDetails_DynamicLabels_Trust")]
         [InlineData(eLookupGroupType.SchoolSponsor, "Academy sponsor name", "Close this academy sponsor and mark as created in error", "Group_EditDetails_DynamicLabels_SchoolSponsor")]
+        [InlineData(eLookupGroupType.SecureSingleAcademyTrust, "Secure single-academy trust name", "Close this secure single-academy trust and mark as created in error", "Group_EditDetails_DynamicLabels_SecureSingleAcademyTrust")]
         public async Task Group_EditDetails_DynamicLabels(eLookupGroupType groupType, string groupNameLabelText,
             string closeAndMarkAsCreatedInErrorLabelText, string testName)
         {

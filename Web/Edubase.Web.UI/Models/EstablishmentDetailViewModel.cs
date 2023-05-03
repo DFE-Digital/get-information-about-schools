@@ -29,6 +29,7 @@ namespace Edubase.Web.UI.Models
         {
             [(int) eLookupGroupType.SingleacademyTrust] = "Single-academy trust",
             [(int) eLookupGroupType.MultiacademyTrust] = "Academy trust",
+            [(int) eLookupGroupType.SecureSingleAcademyTrust] = "Academy trust",
             [(int) eLookupGroupType.SchoolSponsor] = "Academy sponsor",
             [(int) eLookupGroupType.Trust] = "Trust",
             [(int) eLookupGroupType.Federation] = "Federation",
@@ -205,5 +206,7 @@ namespace Edubase.Web.UI.Models
                 return showFinancialBenchmarking.Value;
             }
         }
+
+        public TabWarningsModel TabWarnings { get; set; }
     }
 }

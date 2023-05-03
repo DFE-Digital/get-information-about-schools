@@ -16,6 +16,7 @@ using FluentValidation.Mvc;
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
     using Common;
+    using Edubase.Web.UI.Areas.Groups.ViewRulesHandlers;
     using Exceptions;
     using Filters;
     using Microsoft.IdentityModel.Tokens;
@@ -29,6 +30,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using Services.IntegrationEndPoints.CompaniesHouse;
     using Services.Nomenclature;
     using UI.Models;
+    using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
     using static Models.CreateEdit.GroupEditorViewModel;
     using static Models.CreateEdit.GroupEditorViewModelBase;
     using GS = Services.Enums.eLookupGroupStatus;
@@ -320,7 +322,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 GroupTypeName = model.GroupTypeId.HasValue ? await _lookup.GetNameAsync(() => model.GroupTypeId) : null,
                 LocalAuthorityName = model.LocalAuthorityId.HasValue ? await _lookup.GetNameAsync(() => model.LocalAuthorityId) : null,
                 GroupStatusName = model.StatusId.HasValue ? await _lookup.GetNameAsync(() => model.StatusId, "Group") : null,
-                Address = model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup) ? model.Address.ToString() : null,
+                Address = model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup, GT.SecureSingleAcademyTrust) ? model.Address.ToString() : null,
                 IsUserLoggedOn = User.Identity.IsAuthenticated,
                 GroupTypeId = model.GroupTypeId ?? -1,
                 IsClosed = model.StatusId == (int)eLookupGroupStatus.Closed || model.StatusId == (int)eLookupGroupStatus.CreatedInError,
@@ -358,7 +360,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 GroupTypeName = model.GroupTypeId.HasValue ? await _lookup.GetNameAsync(() => model.GroupTypeId) : null,
                 LocalAuthorityName = await _lookup.GetNameAsync(() => model.LocalAuthorityId),
                 GroupStatusName =  await _lookup.GetNameAsync(() => model.StatusId, "Group"),
-                Address = model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup) ? model.Address.ToString() : null,
+                Address = model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup, GT.SecureSingleAcademyTrust) ? model.Address.ToString() : null,
                 IsUserLoggedOn = User.Identity.IsAuthenticated,
                 GroupTypeId = model.GroupTypeId ?? -1,
                 IsClosed = model.StatusId == (int) GS.Closed || model.StatusId == (int) GS.CreatedInError,
@@ -390,7 +392,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 SelectedTabName = "details",
                 StatusId = domainModel.StatusId,
                 OriginalStatusId = domainModel.StatusId,
-                UKPRN = domainModel.UKPRN.ToInteger()
+                UKPRN = domainModel.UKPRN.ToInteger(),
+                GroupStatusName = domainModel.StatusId.HasValue ? await _lookup.GetNameAsync(() => domainModel.StatusId, "Group") : null
             };
             viewModel.ListOfEstablishmentsPluralName = NomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
 
@@ -435,7 +438,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 var dto = CreateSaveDto(viewModel).Group;
                 var changes = await _groupReadService.GetModelChangesAsync(dto, User);
 
-                if (changes.Any() && viewModel.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust) && !viewModel.ChangesAcknowledged)
+                if (changes.Any() && GroupEditorViewModelRulesHandler.MustShowChangesReviewScreen(viewModel, User))
                 {
                     viewModel.ChangesSummary = changes;
                     return View("EditDetails", viewModel);
@@ -845,27 +848,22 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
         private GroupEditorViewModel SetEditPermissions(GroupEditorViewModel viewModel)
         {
-            viewModel.CanUserCloseAndMarkAsCreatedInError = viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor, GT.Federation)
-                                                               && !viewModel.StatusId.OneOfThese(GS.CreatedInError, GS.Closed)
-                                                               && User.InRole(AuthorizedRoles.IsAdmin);
+            viewModel.CanUserCloseAndMarkAsCreatedInError = GroupEditorViewModelRulesHandler.UserCanCloseAndMarkAsCreatedInError(viewModel, User);
+            viewModel.IsLocalAuthorityEditable = GroupEditorViewModelRulesHandler.LocalAuthorityIsEditable(viewModel, User);
 
-            viewModel.IsLocalAuthorityEditable = viewModel.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup)
-                                                 && viewModel.LinkedEstablishments.Establishments.Count == 0 && User.InRole(AuthorizedRoles.IsAdmin);
-
-
-            if (User.InRole(AuthorizedRoles.CanBulkAssociateEstabs2Groups) && viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust))
+            var userCanEditClosedDateAndStatus = GroupEditorViewModelRulesHandler.UserCanEditClosedDateAndStatus(viewModel, User);
+            if (userCanEditClosedDateAndStatus)
             {
                 viewModel.CanUserEditClosedDate = true;
                 viewModel.CanUserEditStatus = true;
+            }
+
+            viewModel.CanUserEditUkprn = GroupEditorViewModelRulesHandler.UserCanEditUkprn(viewModel, User);
+
+            if (GroupEditorViewModelRulesHandler.UserCanEditClosedDateAndStatus(viewModel, User))
+            {
                 PopulateStatusSelectList(viewModel);
             }
-
-            if (User.InRole(AuthorizedRoles.IsAdmin) &&
-                viewModel.GroupType.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust))
-            {
-                viewModel.CanUserEditUkprn = true;
-            }
-
             return viewModel;
         }
 

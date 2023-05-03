@@ -348,6 +348,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
 
             viewModel.Establishment = result.ReturnValue;
+            viewModel.TabWarnings = new TabWarningsModel(viewModel.Establishment.TypeId);
 
             await Task.WhenAll(
                 PopulateLinkedEstablishments(id, viewModel),
@@ -358,7 +359,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 PopulateLookupNames(viewModel),
                 PopulateGovernors(viewModel));
 
-            viewModel.AgeRangeToolTip = viewModel.Establishment.TypeId.OneOfThese(ET.OnlineProvider)
+          viewModel.AgeRangeToolTip = viewModel.Establishment.TypeId.OneOfThese(ET.OnlineProvider)
                 ? _resourcesHelper.GetResourceStringForEstablishment("AgeRangeOnlineProvider", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User)
                 : _resourcesHelper.GetResourceStringForEstablishment("AgeRange", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
 

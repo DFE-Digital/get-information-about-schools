@@ -348,6 +348,7 @@
     <Compile Include="Areas\Establishments\Models\EditAcademyOpeningViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\ManageAcademyOpeningsViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\TabEditPolicy.cs" />
+    <Compile Include="Areas\Establishments\Models\TabWarningsModel.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\BulkAssociateEstabs2GroupsViewModelValidator.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\BulkCreateFreeSchoolsViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernanceController.cs" />
@@ -356,6 +357,7 @@
     <Compile Include="Areas\Governors\Controllers\SharedGovernorController.cs" />
     <Compile Include="Areas\Governors\Models\HistoricGovernorViewModel.cs" />
     <Compile Include="Areas\Groups\Models\ConvertSATViewModel.cs" />
+    <Compile Include="Areas\Groups\ViewRulesHandlers\GroupEditorViewModelRulesHandler.cs" />
     <Compile Include="Controllers\AmalgamateMergeController.cs" />
     <Compile Include="Controllers\Api\UtilApiController.cs" />
     <Compile Include="Controllers\FaqController.cs" />
