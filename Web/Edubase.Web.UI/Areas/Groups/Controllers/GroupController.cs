@@ -30,6 +30,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using Services.IntegrationEndPoints.CompaniesHouse;
     using Services.Nomenclature;
     using UI.Models;
+    using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
     using static Models.CreateEdit.GroupEditorViewModel;
     using static Models.CreateEdit.GroupEditorViewModelBase;
     using GS = Services.Enums.eLookupGroupStatus;
@@ -847,7 +848,18 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
         private GroupEditorViewModel SetEditPermissions(GroupEditorViewModel viewModel)
         {
-            viewModel = GroupEditorViewModelRulesHandler.SetEditPermissions(viewModel, User);
+            viewModel.CanUserCloseAndMarkAsCreatedInError = GroupEditorViewModelRulesHandler.UserCanCloseAndMarkAsCreatedInError(viewModel, User);
+            viewModel.IsLocalAuthorityEditable = GroupEditorViewModelRulesHandler.IsLocalAuthorityEditable(viewModel, User);
+
+            var userCanEditClosedDateAndStatus = GroupEditorViewModelRulesHandler.UserCanEditClosedDateAndStatus(viewModel, User);
+            if (userCanEditClosedDateAndStatus)
+            {
+                viewModel.CanUserEditClosedDate = true;
+                viewModel.CanUserEditStatus = true;
+            }
+
+            viewModel.CanUserEditUkprn = GroupEditorViewModelRulesHandler.UserCanEditUkprn(viewModel, User);
+
             if (GroupEditorViewModelRulesHandler.UserCanEditClosedDateAndStatus(viewModel, User))
             {
                 PopulateStatusSelectList(viewModel);

@@ -9,24 +9,6 @@ namespace Edubase.Web.UI.Areas.Groups.ViewRulesHandlers
 {
     public static class GroupEditorViewModelRulesHandler
     {
-        public static GroupEditorViewModel SetEditPermissions(GroupEditorViewModel viewModel, IPrincipal user)
-        {
-            viewModel.CanUserCloseAndMarkAsCreatedInError = UserCanCloseAndMarkAsCreatedInError(viewModel, user);
-
-            viewModel.IsLocalAuthorityEditable = IsLocalAuthorityEditable(viewModel, user);
-
-            var userCanEditClosedDateAndStatus = UserCanEditClosedDateAndStatus(viewModel, user);
-            if (userCanEditClosedDateAndStatus)
-            {
-                viewModel.CanUserEditClosedDate = true;
-                viewModel.CanUserEditStatus = true;
-            }
-
-            viewModel.CanUserEditUkprn = UserCanEditUkprn(viewModel, user);
-
-            return viewModel;
-        }
-
         public static bool IsLocalAuthorityEditable(GroupEditorViewModel viewModel, IPrincipal user)
         {
             return viewModel.GroupTypeId.OneOfThese(eLookupGroupType.ChildrensCentresCollaboration, eLookupGroupType.ChildrensCentresGroup)
