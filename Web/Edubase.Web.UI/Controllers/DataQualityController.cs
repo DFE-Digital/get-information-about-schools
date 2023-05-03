@@ -26,7 +26,8 @@ namespace Edubase.Web.UI.Controllers
             { EdubaseRoles.IEBT,  DataQualityStatus.DataQualityEstablishmentType.IndependentSchools},
             { EdubaseRoles.APT,  DataQualityStatus.DataQualityEstablishmentType.PupilReferralUnits},
             { EdubaseRoles.SOU,  DataQualityStatus.DataQualityEstablishmentType.LaMaintainedSchools},
-            { EdubaseRoles.FST,  DataQualityStatus.DataQualityEstablishmentType.FreeSchoolOpeners}
+            { EdubaseRoles.FST,  DataQualityStatus.DataQualityEstablishmentType.FreeSchoolOpeners},
+            { EdubaseRoles.YCS,  DataQualityStatus.DataQualityEstablishmentType.AcademySecure16to19Openers}
         };
 
         public DataQualityController(IDataQualityWriteService dataQualityWriteService)

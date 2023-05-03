@@ -28,6 +28,7 @@ namespace Edubase.Services.Security
         public const string DUGE = "DUGE";
         public const string LSU = "LSU";
         public const string UKRLP = "UKRLP";
+        public const string YCS = "YCS";
         public const string SSAT = "SESAT";//this value was taken so we have used SESAT for secure single academy trust
     }
 }
