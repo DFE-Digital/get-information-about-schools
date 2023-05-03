@@ -20,7 +20,7 @@ namespace Edubase.Web.UI.Models
         public bool UserCanCreateAcademySponsor { get; set; }
         public bool UserCanCreateEstablishment { get; set; }
         public bool UserCanManageAcademyOpenings { get; set; }
-        public bool UserCanManage16To19SecureAcademyOpenings { get; set; }
+        public bool UserCanManageSecureAcademy16To19Openings { get; set; }
         public bool UserCanMergeOrAmalgamateEstablishments { get; internal set; }
         public bool UserCanBulkCreateAcademies { get; internal set; }
         public bool UserCanBulkUpdateGovernors { get; internal set; }
@@ -213,14 +213,14 @@ namespace Edubase.Web.UI.Models
                 });
             }
 
-            if ( UserCanManage16To19SecureAcademyOpenings)
+            if ( UserCanManageSecureAcademy16To19Openings)
             {
                 retVal.Add(new LinkAction
                 {
-                    Link = htmlHelper.RouteLink("Manage 16-19 secure academy openings",
-                        "Manage16To19SecureAcademyOpenings"),
+                    Link = htmlHelper.RouteLink("Manage secure academy 16-19 openings",
+                        "ManageSecureAcademy16To19Openings"),
                     Description =
-                        "View details of proposed-to-open 16-19 secure academies.<br />Edit 16-19 secure academy names and opening dates."
+                        "View details of proposed-to-open secure academies 16-19.<br />Edit academy names and opening dates."
                 });
             }
 

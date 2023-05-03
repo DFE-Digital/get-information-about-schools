@@ -27,7 +27,7 @@ namespace Edubase.Web.UI.Helpers
 
             if (!string.IsNullOrWhiteSpace(establishmentTypeId) &&
                 IsSecure16to19AcademyEstablishmentTypeId(establishmentTypeId) && isSecure16To19User)
-                return "Manage 16-19 secure academy openings";
+                return "Manage secure academy 16-19 openings";
 
             throw new ArgumentException("unexpected parameters or values passed");
         }
@@ -150,9 +150,9 @@ namespace Edubase.Web.UI.Helpers
 
                 return decryptedValue;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new ArgumentException("The supplied parameter is compromised");
+                throw new ArgumentException($"The supplied parameter is compromised: {ex.Message}");
             }
         }
     }

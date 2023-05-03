@@ -76,7 +76,7 @@ namespace Edubase.Web.UI.Controllers
                 UserCanCreateAcademySponsor = createGroupPermission.GroupTypes.Any(x => x == GT.SchoolSponsor),
                 UserCanCreateEstablishment = createEstablishmentPermission.CanCreate,
                 UserCanManageAcademyOpenings = User.InRole(AuthorizedRoles.CanManageAcademyOpenings),
-                UserCanManage16To19SecureAcademyOpenings =
+                UserCanManageSecureAcademy16To19Openings =
                     User.InRole(AuthorizedRoles.CanManageSecure16To19AcademyOpenings),
                 UserCanBulkCreateAcademies = User.InRole(AuthorizedRoles.CanBulkCreateAcademies),
                 UserCanMergeOrAmalgamateEstablishments = User.InRole(AuthorizedRoles.CanMergeEstablishments),

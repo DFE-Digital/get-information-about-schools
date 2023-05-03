@@ -36,8 +36,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _establishmentWriteService = establishmentWriteService;
         }
 
-        [HttpGet, Route("16-19-secure-academy-openings", Name = "Manage16To19SecureAcademyOpenings")]
-        public Task<ActionResult> Manage16To19SecureAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc")
+        [HttpGet, Route("16-19-secure-academy-openings", Name = "ManageSecureAcademy16To19Openings")]
+        public Task<ActionResult> ManageSecureAcademy16To19Openings(int skip = 0, string sortBy = "OpenDate-desc")
         {
             //secure 16-19 academy establishment type Id is 46
             return Task.FromResult<ActionResult>(RedirectToAction(nameof(ManageAcademyOpenings),

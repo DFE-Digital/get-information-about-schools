@@ -52,7 +52,7 @@ namespace Edubase.Web.UI.Controllers.Api
         {
             var isUserSecure16To19 = !string.IsNullOrWhiteSpace(isSecure16To19User)
                                      && bool.TryParse(SecureAcademyUtility.DecryptValue(isSecure16To19User),
-                                         out var result);
+                                         out _);
 
             if (!string.IsNullOrWhiteSpace(establishmentTypeId))
                 establishmentTypeId = SecureAcademyUtility.DecryptValue(establishmentTypeId);
@@ -129,6 +129,7 @@ namespace Edubase.Web.UI.Controllers.Api
                 new EstablishmentFieldList { OpenDate = true, Name = true }, User);
 
             if (response.HasErrors) return Request.CreateResponse(HttpStatusCode.BadRequest, response);
+
             else return Request.CreateResponse(HttpStatusCode.OK, response);
         }
     }
