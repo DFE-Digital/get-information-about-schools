@@ -59,11 +59,10 @@ namespace Edubase.Web.UI.Controllers.Api
 
 
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
-            estabTypes =
-                SecureAcademyUtility.FilterEstablishmentsByEstablishmentTypeId
-                    (estabTypes, establishmentTypeId, isUserSecure16To19);
+            estabTypes = SecureAcademyUtility.FilterEstablishmentsByEstablishmentTypeId
+                (estabTypes, establishmentTypeId, isUserSecure16To19);
 
-            var apiResult = (await _establishmentReadService.SearchAsync(
+            var apiResult = await _establishmentReadService.SearchAsync(
                 new EstablishmentSearchPayload
                 {
                     Skip = skip,
@@ -80,7 +79,7 @@ namespace Edubase.Web.UI.Controllers.Api
                         nameof(M.PredecessorName),
                         nameof(M.PredecessorUrn)
                     }
-                }, User));
+                }, User);
 
 
             return new

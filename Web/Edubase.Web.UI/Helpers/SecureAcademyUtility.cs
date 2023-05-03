@@ -12,27 +12,55 @@ namespace Edubase.Web.UI.Helpers
 {
     public static class SecureAcademyUtility
     {
+        /// <summary>
+        /// A method to use to get the words for the title page.
+        /// Please note, this method expects the correct Establishment Type Id i.e 46
+        /// & correct user i.e. one in the CanManageSecure16To19AcademyOpenings role.
+        /// </summary>
+        /// <param name="establishmentTypeId"></param>
+        /// <param name="isSecure16To19User"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public static string GetAcademyOpeningPageTitle(string establishmentTypeId, bool isSecure16To19User)
         {
-            return string.IsNullOrWhiteSpace(establishmentTypeId) ||
-                   (!IsSecure16to19AcademyEstablishmentTypeId(establishmentTypeId) && !isSecure16To19User)
-                ? "Manage academy openings"
-                : "Manage 16-19 secure academy openings";
+            if (string.IsNullOrWhiteSpace(establishmentTypeId)) return "Manage academy openings";
+
+            if (!string.IsNullOrWhiteSpace(establishmentTypeId) &&
+                IsSecure16to19AcademyEstablishmentTypeId(establishmentTypeId) && isSecure16To19User)
+                return "Manage 16-19 secure academy openings";
+
+            throw new ArgumentException("unexpected parameters or values passed");
         }
 
+        /// <summary>
+        /// A method to use to filter the passed in Establishments by Establishment Type Id passed in.
+        /// NB: The filtering process will only take place if the user is in the CanManageSecure16To19AcademyOpenings role
+        /// </summary>
+        /// <param name="establishmentTypes"></param>
+        /// <param name="establishmentTypeId"></param>
+        /// <param name="isSecure16To19User"></param>
+        /// <returns></returns>
         public static IEnumerable<EstablishmentLookupDto> FilterEstablishmentsByEstablishmentTypeId(
             IEnumerable<EstablishmentLookupDto> establishmentTypes, string establishmentTypeId,
             bool isSecure16To19User)
         {
             if (isSecure16To19User && !string.IsNullOrWhiteSpace(establishmentTypeId) &&
-                int.TryParse(establishmentTypeId, out var estabTypeId))
+                int.TryParse(establishmentTypeId, out var estabTypeId) &&
+                IsSecure16to19AcademyEstablishmentTypeId(establishmentTypeId))
                 establishmentTypes = establishmentTypes.Where(e => e.Id == estabTypeId);
 
             return establishmentTypes;
         }
 
+        /// <summary>
+        /// A method to use to get the correct Establishment filters to use in a search.
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public static EstablishmentSearchFilters GetEstablishmentSearchFilters(GetEstabSearchFiltersParam param)
         {
+            //secure 16-19 academy establishment type Id is 46
             var estabTypeId = -1;
             if ((param.IsSecure16To19User && !string.IsNullOrWhiteSpace(param.EstablishmentTypeId) &&
                  int.TryParse(param.EstablishmentTypeId, out estabTypeId) && estabTypeId != 46)
@@ -62,6 +90,11 @@ namespace Edubase.Web.UI.Helpers
             establishmentTypeId.Trim().Equals("46", StringComparison.OrdinalIgnoreCase);
 
 
+        /// <summary>
+        /// A method to use to encrypt a non null string.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EncryptValue(string value)
         {
             var encryptionKey = "12wsdftgh4567mncvb";

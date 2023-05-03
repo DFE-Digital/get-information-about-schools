@@ -70,9 +70,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 establishmentTypeId = SecureAcademyUtility.DecryptValue(establishmentTypeId);
 
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
-            estabTypes =
-                SecureAcademyUtility.FilterEstablishmentsByEstablishmentTypeId
-                    (estabTypes, establishmentTypeId, isUserSecure16To19);
+            estabTypes = SecureAcademyUtility.FilterEstablishmentsByEstablishmentTypeId
+                (estabTypes, establishmentTypeId, isUserSecure16To19);
 
             var result = await _establishmentReadService.SearchAsync(
                 new EstablishmentSearchPayload
