@@ -382,7 +382,7 @@
     <Compile Include="Helpers\NonceHelper.cs" />
     <Compile Include="Helpers\QueryValidator.cs" />
     <Compile Include="Helpers\RouteDto.cs" />
-    <Compile Include="Helpers\SecureAcademyUtility.cs" />
+    <Compile Include="Helpers\AcademyUtility.cs" />
     <Compile Include="Helpers\StringUtils.cs" />
     <Compile Include="Mappers\BulkUpdateViewModelToDtoMapper.cs" />
     <Compile Include="Mappers\LookupToSearchViewModelMapper.cs" />

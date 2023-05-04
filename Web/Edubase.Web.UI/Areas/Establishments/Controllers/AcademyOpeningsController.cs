@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Edubase.Services.Establishments;
 using Edubase.Web.UI.Helpers;
 using System.Web.Mvc;
+using System.Web.Security;
 using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
@@ -14,6 +16,7 @@ using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Filters;
 using Microsoft.Ajax.Utilities;
+using Microsoft.AspNet.Identity;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
@@ -39,20 +42,21 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpGet, Route("16-19-secure-academy-openings", Name = "ManageSecureAcademy16To19Openings")]
         public Task<ActionResult> ManageSecureAcademy16To19Openings(int skip = 0, string sortBy = "OpenDate-desc")
         {
+            var role = AcademyUtility.GetSecureAcademy16To19Role(User);
             //secure 16-19 academy establishment type Id is 46
             return Task.FromResult<ActionResult>(RedirectToAction(nameof(ManageAcademyOpenings),
                 new
                 {
                     skip,
                     sortBy,
-                    isSecure16To19User = SecureAcademyUtility.EncryptValue(true.ToString()),
-                    establishmentTypeId = SecureAcademyUtility.EncryptValue("46")
+                    group = AcademyUtility.EncryptValue(role),
+                    establishmentTypeId = AcademyUtility.EncryptValue("46")
                 }));
         }
 
         [HttpGet, Route("academy-openings", Name = "ManageAcademyOpenings")]
         public async Task<ActionResult> ManageAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc",
-            string isSecure16To19User = null, string establishmentTypeId = null)
+            string group = null, string establishmentTypeId = null)
         {
             var take = 50;
             var now = DateTime.Now;
@@ -63,14 +67,19 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             var property = typeof(EditAcademyOpeningViewModel).GetProperty(sortBy);
 
-            var isUserSecure16To19 = !string.IsNullOrWhiteSpace(isSecure16To19User)
-                                     && bool.Parse(SecureAcademyUtility.DecryptValue(isSecure16To19User));
+            if (!string.IsNullOrWhiteSpace(group) &&
+                !AcademyUtility.IsSameSecureAcademy16To19User(User, AcademyUtility.DecryptValue(group)))
+                throw new AccessViolationException("Attempt to access resource without the right authorization");
 
-            if (!string.IsNullOrWhiteSpace(establishmentTypeId))
-                establishmentTypeId = SecureAcademyUtility.DecryptValue(establishmentTypeId);
+            var isUserSecure16To19 =
+                !string.IsNullOrWhiteSpace(group) &&
+                AcademyUtility.IsSecureAcademy16To19User(AcademyUtility.DecryptValue(group));
+
+            if (!string.IsNullOrWhiteSpace(establishmentTypeId) && isUserSecure16To19)
+                establishmentTypeId = AcademyUtility.DecryptValue(establishmentTypeId);
 
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
-            estabTypes = SecureAcademyUtility.FilterEstablishmentsByEstablishmentTypeId
+            estabTypes = AcademyUtility.FilterEstablishmentsByEstablishmentTypeId
                 (estabTypes, establishmentTypeId, isUserSecure16To19);
 
             var result = await _establishmentReadService.SearchAsync(
@@ -80,7 +89,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     Take = take,
                     SortBy = eSortBy.NameAlphabeticalAZ,
                     Filters =
-                        SecureAcademyUtility.GetEstablishmentSearchFilters(
+                        AcademyUtility.GetEstablishmentSearchFilters(
                             new GetEstabSearchFiltersParam(from, to, establishmentTypeId, isUserSecure16To19)),
                     Select = new List<string>
                     {
@@ -178,7 +187,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 AcademyOpenings =
                     new PaginatedResult<EditAcademyOpeningViewModel>(skip, take, result.Count, academyOpenings),
                 Items = academyOpenings,
-                PageTitle = SecureAcademyUtility.GetAcademyOpeningPageTitle(establishmentTypeId, isUserSecure16To19)
+                PageTitle = AcademyUtility.GetAcademyOpeningPageTitle(establishmentTypeId, isUserSecure16To19)
             };
             vm.Count = result.Count;
             vm.Skip = skip;

@@ -40,26 +40,29 @@ namespace Edubase.Web.UI.Controllers.Api
         /// <param name="to"></param>
         /// <param name="skip"></param>
         /// <param name="take"></param>
-        /// <param name="isSecure16To19User"></param>
+        /// <param name="group"></param>
         /// <param name="establishmentTypeId"></param>
         /// <returns></returns>
         [Route(
              "api/academy-openings/list/{from:datetime}/{to:datetime}" +
-             "/{skip:int}/{take:int}/{isSecure16To19User}/{establishmentTypeId?}"),
+             "/{skip:int}/{take:int}/{group?}/{establishmentTypeId?}"),
          HttpGet]
         public async Task<dynamic> GetListAsync(DateTime from, DateTime to, int skip, int take,
-            string isSecure16To19User = null, string establishmentTypeId = null)
+            string group = null, string establishmentTypeId = null)
         {
-            var isUserSecure16To19 = !string.IsNullOrWhiteSpace(isSecure16To19User)
-                                     && bool.TryParse(SecureAcademyUtility.DecryptValue(isSecure16To19User),
-                                         out _);
+            if (!string.IsNullOrWhiteSpace(group) &&
+                !AcademyUtility.IsSameSecureAcademy16To19User(User, AcademyUtility.DecryptValue(group)))
+                throw new AccessViolationException("Attempt to access resource without the right authorization");
 
-            if (!string.IsNullOrWhiteSpace(establishmentTypeId))
-                establishmentTypeId = SecureAcademyUtility.DecryptValue(establishmentTypeId);
+            var isUserSecure16To19 = !string.IsNullOrWhiteSpace(group) &&
+                                     AcademyUtility.IsSecureAcademy16To19User(AcademyUtility.DecryptValue(group));
+
+            if (!string.IsNullOrWhiteSpace(establishmentTypeId) && isUserSecure16To19)
+                establishmentTypeId = AcademyUtility.DecryptValue(establishmentTypeId);
 
 
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
-            estabTypes = SecureAcademyUtility.FilterEstablishmentsByEstablishmentTypeId
+            estabTypes = AcademyUtility.FilterEstablishmentsByEstablishmentTypeId
                 (estabTypes, establishmentTypeId, isUserSecure16To19);
 
             var apiResult = await _establishmentReadService.SearchAsync(
@@ -68,7 +71,7 @@ namespace Edubase.Web.UI.Controllers.Api
                     Skip = skip,
                     Take = take,
                     SortBy = eSortBy.NameAlphabeticalAZ,
-                    Filters = SecureAcademyUtility.GetEstablishmentSearchFilters
+                    Filters = AcademyUtility.GetEstablishmentSearchFilters
                         (new GetEstabSearchFiltersParam(from, to, establishmentTypeId, isUserSecure16To19)),
                     Select = new List<string>
                     {

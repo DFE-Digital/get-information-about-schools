@@ -21,7 +21,7 @@ namespace Edubase.Web.UIUnitTests.Helpers
         public void GetAcademyOpeningPageTitle_WhenCalledWithValidValues_ReturnsCorrectTitle(string establishmentTypeId,
             bool isSecure16To19User, string expectedPageTitle)
         {
-            var result = SecureAcademyUtility.GetAcademyOpeningPageTitle(establishmentTypeId, isSecure16To19User);
+            var result = AcademyUtility.GetAcademyOpeningPageTitle(establishmentTypeId, isSecure16To19User);
 
             Assert.Equal(result, expectedPageTitle);
         }
@@ -32,7 +32,7 @@ namespace Edubase.Web.UIUnitTests.Helpers
         public void GetAcademyOpeningPageTitle_WhenCalledWithInvalidValues_ThrowsArgumentException(
             string establishmentTypeId, bool isSecure16To19User) =>
             Assert.Throws<ArgumentException>(() =>
-                SecureAcademyUtility.GetAcademyOpeningPageTitle(establishmentTypeId, isSecure16To19User));
+                AcademyUtility.GetAcademyOpeningPageTitle(establishmentTypeId, isSecure16To19User));
 
 
         [Theory]
@@ -50,7 +50,7 @@ namespace Edubase.Web.UIUnitTests.Helpers
         {
             var establishments = DataUtility.GetEstablishmentLookupDto();
 
-            var result = SecureAcademyUtility.FilterEstablishmentsByEstablishmentTypeId
+            var result = AcademyUtility.FilterEstablishmentsByEstablishmentTypeId
                 (establishments, establishmentTypeId, isSecure16To19User);
 
             Assert.Equal(result.Count(), extectedResult);
@@ -66,7 +66,7 @@ namespace Edubase.Web.UIUnitTests.Helpers
             var parameter = new GetEstabSearchFiltersParam(DateTime.Now.Date.AddDays(-1), DateTime.Now,
                 establishmentTypeId, isSecure16To19User);
 
-            Assert.Throws<ArgumentException>(() => SecureAcademyUtility.GetEstablishmentSearchFilters(parameter));
+            Assert.Throws<ArgumentException>(() => AcademyUtility.GetEstablishmentSearchFilters(parameter));
         }
 
         [Theory]
@@ -77,7 +77,7 @@ namespace Edubase.Web.UIUnitTests.Helpers
             var parameter = new GetEstabSearchFiltersParam(DateTime.Now.Date.AddDays(-1), DateTime.Now,
                 establishmentTypeId, isSecure16To19User);
 
-            var result = SecureAcademyUtility.GetEstablishmentSearchFilters(parameter);
+            var result = AcademyUtility.GetEstablishmentSearchFilters(parameter);
 
             Assert.IsType<EstablishmentSearchFilters>(result);
             Assert.Empty(result.EstablishmentTypeGroupIds);
@@ -95,7 +95,7 @@ namespace Edubase.Web.UIUnitTests.Helpers
             var parameter = new GetEstabSearchFiltersParam(DateTime.Now.Date.AddDays(-1), DateTime.Now,
                 establishmentTypeId, isSecure16To19User);
 
-            var result = SecureAcademyUtility.GetEstablishmentSearchFilters(parameter);
+            var result = AcademyUtility.GetEstablishmentSearchFilters(parameter);
 
             Assert.IsType<EstablishmentSearchFilters>(result);
             Assert.Empty(result.TypeIds);
@@ -110,7 +110,7 @@ namespace Edubase.Web.UIUnitTests.Helpers
         [InlineData("test","tiEUR7hmOoxqNzQ9d5reWQ==")]
         public void EncryptValue_WhenCalled_ReturnsEncryptedValue(string value, string expectedValue)
         {
-            var result = SecureAcademyUtility.EncryptValue(value);
+            var result = AcademyUtility.EncryptValue(value);
 
             Assert.NotEmpty(result);
             Assert.Equal(result, expectedValue);
@@ -122,7 +122,7 @@ namespace Edubase.Web.UIUnitTests.Helpers
         [InlineData("A03pdA0yBdWaKdpvHY0E2Q==", "")]
         public void DecryptValue_WhenCalled_ReturnsDecryptedValue(string value, string expectedValue)
         {
-            var result = SecureAcademyUtility.DecryptValue(value);
+            var result = AcademyUtility.DecryptValue(value);
 
             Assert.Equal(result, expectedValue);
         }
@@ -131,6 +131,6 @@ namespace Edubase.Web.UIUnitTests.Helpers
         [InlineData("KfaJ1dPpVO5DrAUD+09UZl==")]
         [InlineData("A03qdA0yBdWaKdpvHY0E2Q==")]
         public void DecryptValue_WhenCalledWithAnInvalidValue_ThrowsArgumentException(string value) =>
-            Assert.Throws<ArgumentException>(() => SecureAcademyUtility.DecryptValue(value));
+            Assert.Throws<ArgumentException>(() => AcademyUtility.DecryptValue(value));
     }
 }

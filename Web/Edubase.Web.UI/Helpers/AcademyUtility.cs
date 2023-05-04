@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Security.Principal;
 using System.Text;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
@@ -10,7 +12,7 @@ using Edubase.Services.Establishments.Search;
 
 namespace Edubase.Web.UI.Helpers
 {
-    public static class SecureAcademyUtility
+    public static class AcademyUtility
     {
         /// <summary>
         /// A method to use to get the words for the title page.
@@ -97,6 +99,8 @@ namespace Edubase.Web.UI.Helpers
         /// <returns></returns>
         public static string EncryptValue(string value)
         {
+            if (!string.IsNullOrWhiteSpace(value) && value.Contains("_")) value = value.Replace("_","");
+
             var encryptionKey = "12wsdftgh4567mncvb";
             var encodedBytes = Encoding.Unicode.GetBytes(value);
             string encryptedValue;
@@ -124,6 +128,9 @@ namespace Edubase.Web.UI.Helpers
 
         public static string DecryptValue(string encryptedValue)
         {
+            // if (encryptedValue.Contains("-"))
+            //     encryptedValue = encryptedValue.Replace("_", "/");
+
             var encryptionKey = "12wsdftgh4567mncvb";
             try
             {
@@ -155,5 +162,32 @@ namespace Edubase.Web.UI.Helpers
                 throw new ArgumentException($"The supplied parameter is compromised: {ex.Message}");
             }
         }
+
+        public static string GetSecureAcademy16To19Role(IPrincipal user)
+        {
+            var identity = (ClaimsIdentity) user.Identity;
+            var roles = identity.Claims.ToList()
+                .Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value);
+            return roles.FirstOrDefault(role =>
+                AuthorizedRoles.CanManageSecure16To19AcademyOpenings.RemoveUnderscore().Contains(role.RemoveUnderscore()));
+        }
+
+        public static bool IsSecureAcademy16To19User(IPrincipal user)
+        {
+            var role = GetSecureAcademy16To19Role(user);
+            return AuthorizedRoles.CanManageSecure16To19AcademyOpenings.RemoveUnderscore().Contains(role.RemoveUnderscore());
+        }
+
+        public static bool IsSecureAcademy16To19User(string group) =>
+            AuthorizedRoles.CanManageSecure16To19AcademyOpenings.Replace("_", "").Contains(group);
+
+        public static bool IsSameSecureAcademy16To19User(IPrincipal user, string group)
+        {
+            var role = GetSecureAcademy16To19Role(user);
+            if (string.IsNullOrWhiteSpace(role)) return false;
+            return string.Compare(role.RemoveUnderscore(), group, StringComparison.OrdinalIgnoreCase) == 0;
+        }
+
+        public static string RemoveUnderscore(this string value) => value.Replace("_", "");
     }
 }
