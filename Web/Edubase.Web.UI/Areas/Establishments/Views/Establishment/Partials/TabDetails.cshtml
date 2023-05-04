@@ -6,7 +6,7 @@
 <div id="school-dashboard" class="tab-content">
     @if (Model.UserCanEdit && Model.TabEditPolicy.Details)
     {
-        @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { id = "edit-details-button", @class = "govuk-button govuk-button--secondary" })
+    @Html.ActionLink("Edit details", "EditDetails", "Establishment", new { id = Model.Establishment.Urn }, new { id = "edit-details-button", @class = "govuk-button govuk-button--secondary" })
 
         if (!Model.MediumPriorityEstablishmentConfirmationPending &&
             !Model.HighPriorityEstablishmentConfirmationPending &&
@@ -29,33 +29,33 @@
         {
             using (Html.BeginRouteForm("EstablishmentConfirmUpToDate", new { Model.Establishment.Urn, showBanner = true }, FormMethod.Post, new { @class = "gias-action-form" }))
             {
-                <button class="govuk-button" data-module="govuk-button" id="establishment-data-confirm-button">Confirm details</button>
+    <button class="govuk-button" data-module="govuk-button" id="establishment-data-confirm-button">Confirm details</button>
             }
         }
     }
 
     @if ((User.InRole(EdubaseRoles.ESTABLISHMENT) && Model.IsClosed) || (User.InRole(EdubaseRoles.ROLE_PRISM, EdubaseRoles.ROLE_STAKEHOLDER) && Model.Establishment.CloseDate.HasValue && Model.Establishment.CloseDate?.AddMonths(6) < DateTime.Today))
     {
-        <div class="gias-establishment-closed-panel">
-            <p id="establishment-closed-panel-heading" class="govuk-heading-s govuk-!-margin-bottom-1">The establishment record is now closed for updates.</p>
-            <p id="establishment-closed-panel-text" class="govuk-body-s">
-                If the update to the record is urgent, please <a href="https://form.education.gov.uk/en/AchieveForms/?form_uri=sandbox-publish://AF-Process-2b61dfcd-9296-4f6a-8a26-4671265cae67/AF-Stage-f3f5200e-e605-4a1b-ae6b-3536bc77305c/definition.json&redirectlink=/en&cancelRedirectLink=/en" target="_blank" rel="noreferrer noopener"> raise a service request (opens in new tab)</a>
-            </p>
-        </div>
+    <div class="gias-establishment-closed-panel">
+        <p id="establishment-closed-panel-heading" class="govuk-heading-s govuk-!-margin-bottom-1">The establishment record is now closed for updates.</p>
+        <p id="establishment-closed-panel-text" class="govuk-body-s">
+            If the update to the record is urgent, please <a href="https://form.education.gov.uk/en/AchieveForms/?form_uri=sandbox-publish://AF-Process-2b61dfcd-9296-4f6a-8a26-4671265cae67/AF-Stage-f3f5200e-e605-4a1b-ae6b-3536bc77305c/definition.json&redirectlink=/en&cancelRedirectLink=/en" target="_blank" rel="noreferrer noopener"> raise a service request (opens in new tab)</a>
+        </p>
+    </div>
     }
 
     @if (Model.Establishment.Location != null)
     {
-        <a href="#details-summary" class="govuk-skip-link">Skip map</a>
+    <a href="#details-summary" class="govuk-skip-link">Skip map</a>
 
-        <div class="landing-page-map-container">
-            <a href="#map" id="map-toggle" class="map-toggle" role="button">Show map</a>
-            <div id="map" class="school-detail-map"
-                 data-latlng="[@(Model.Establishment.Location?.Longitude),@(Model.Establishment.Location?.Latitude)]"
-                 data-school-name="@Model.Establishment.Name"
-                 data-school-address="@Model.GetAddress()">
-            </div>
+    <div class="landing-page-map-container">
+        <a href="#map" id="map-toggle" class="map-toggle" role="button">Show map</a>
+        <div id="map" class="school-detail-map"
+             data-latlng="[@(Model.Establishment.Location?.Longitude),@(Model.Establishment.Location?.Latitude)]"
+             data-school-name="@Model.Establishment.Name"
+             data-school-address="@Model.GetAddress()">
         </div>
+    </div>
     }
 
     <div class="detail-summary" id="details-summary">
@@ -64,84 +64,84 @@
 
             @if (Model.DisplayPolicy.ReligiousCharacterId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Religious character</dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.ReligiousCharacterName
-                    </dd>
-                </div>
+            <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Religious character</dt>
+            <dd class="govuk-summary-list__value">
+                @Model.ReligiousCharacterName
+            </dd>
+    </div>
             }
 
             @if (Model.DisplayPolicy.DioceseId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Diocese</dt>
-                    <dd class="govuk-summary-list__value">@Model.DioceseName</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Diocese</dt>
+                <dd class="govuk-summary-list__value">@Model.DioceseName</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.ReligiousEthosId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Religious ethos</dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.ReligiousEthosName
-                    </dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Religious ethos</dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.ReligiousEthosName
+                </dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.ProvisionBoardingId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Boarders</dt>
-                    <dd class="govuk-summary-list__value">@Model.ProvisionBoardingName</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Boarders</dt>
+                <dd class="govuk-summary-list__value">@Model.ProvisionBoardingName</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.ProvisionNurseryId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Nursery provision</dt>
-                    <dd class="govuk-summary-list__value">@Model.ProvisionNurseryName</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Nursery provision</dt>
+                <dd class="govuk-summary-list__value">@Model.ProvisionNurseryName</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.ProvisionOfficialSixthFormId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Official sixth form</dt>
-                    <dd class="govuk-summary-list__value">@Model.ProvisionOfficialSixthFormName</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Official sixth form</dt>
+                <dd class="govuk-summary-list__value">@Model.ProvisionOfficialSixthFormName</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.Capacity)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        School capacity
-                        <a href="#help-text-school-capacity" class="help-icon modal-link">
-                            <span class="govuk-visually-hidden">Help with school capacity field</span>
-                            @helpers.DialogHiddenPrompt()
-                        </a>
-                    </dt>
-                    <dd class="govuk-summary-list__value">@Model.Establishment.Capacity</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    School capacity
+                    <a href="#help-text-school-capacity" class="help-icon modal-link">
+                        <span class="govuk-visually-hidden">Help with school capacity field</span>
+                        @helpers.DialogHiddenPrompt()
+                    </a>
+                </dt>
+                <dd class="govuk-summary-list__value">@Model.Establishment.Capacity</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.NumberOfPupilsOnRoll)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Number of pupils</dt>
-                    <dd class="govuk-summary-list__value">@(Model.Establishment.NumberOfPupilsOnRoll?.ToString() ?? "Not recorded")</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Number of pupils</dt>
+                <dd class="govuk-summary-list__value">@(Model.Establishment.NumberOfPupilsOnRoll?.ToString() ?? "Not recorded")</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.Section41ApprovedId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Section 41 approved</dt>
-                    <dd class="govuk-summary-list__value">@Model.Section41ApprovedName</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Section 41 approved</dt>
+                <dd class="govuk-summary-list__value">@Model.Section41ApprovedName</dd>
+            </div>
             }
             @{
                 var openDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date" : "Open date";
@@ -157,406 +157,415 @@
                 <dd class="govuk-summary-list__value">@Model.ReasonEstablishmentOpenedName</dd>
             </div>
 
+            @if (Model.DisplayPolicy.AccreditationExpiryDate)
+            {
+                    var accreditationExpiryDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation expiry date" : "Closed date";
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">@accreditationExpiryDateTitle</dt>
+                <dd class="govuk-summary-list__value">@(Model.Establishment.AccreditationExpiryDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+            </div>
+            }
+
             @if (Model.DisplayPolicy.CloseDate)
             {
-                var closeDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation expiry date" : "Closed date";
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">@closeDateTitle</dt>
-                    <dd class="govuk-summary-list__value">@(Model.Establishment.CloseDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Reason establishment closed</dt>
-                    <dd class="govuk-summary-list__value">@Model.ReasonEstablishmentClosedName</dd>
-                </div>
+                var closeDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date ended" : "Closed date";
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">@closeDateTitle</dt>
+                <dd class="govuk-summary-list__value">@(Model.Establishment.CloseDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Reason establishment closed</dt>
+                <dd class="govuk-summary-list__value">@Model.ReasonEstablishmentClosedName</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.CCOperationalHoursId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Operational hours</dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.CCOperationalHoursName
-                    </dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Operational hours</dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.CCOperationalHoursName
+                </dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.CCUnder5YearsOfAgeCount)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Number of under 5s</dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.Establishment.CCUnder5YearsOfAgeCount
-                    </dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Number of under 5s</dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.Establishment.CCUnder5YearsOfAgeCount
+                </dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.CCGovernanceId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Governance</dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.CCGovernanceName
-                    </dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Governance</dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.CCGovernanceName
+                </dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.CCGovernanceDetail)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Governance detail</dt>
-                    <dd class="govuk-summary-list__value">
-                        @(Model.Establishment.CCGovernanceDetail ?? "Not recorded")
-                    </dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Governance detail</dt>
+                <dd class="govuk-summary-list__value">
+                    @(Model.Establishment.CCGovernanceDetail ?? "Not recorded")
+                </dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.CCLAContactDetail)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Local authority contact name</dt>
-                    <dd class="govuk-summary-list__value">
-                        @(Model.Establishment?.CCLAContactDetail?.FullName ?? "Not recorded")
-                    </dd>
-                </div>
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Local authority contact email</dt>
-                    <dd class="govuk-summary-list__value">
-                        @(Model.Establishment?.CCLAContactDetail?.EmailAddress ?? "Not recorded")
-                    </dd>
-                </div>
-                <div class="govuk-summary-list__row">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Local authority contact name</dt>
+                <dd class="govuk-summary-list__value">
+                    @(Model.Establishment?.CCLAContactDetail?.FullName ?? "Not recorded")
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Local authority contact email</dt>
+                <dd class="govuk-summary-list__value">
+                    @(Model.Establishment?.CCLAContactDetail?.EmailAddress ?? "Not recorded")
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
 
-                    <dt class="govuk-summary-list__key">Local authority contact telephone number</dt>
-                    <dd class="govuk-summary-list__value">
-                        @(Model.Establishment?.CCLAContactDetail?.TelephoneNumber ?? "Not recorded")
-                    </dd>
-                </div>
+                <dt class="govuk-summary-list__key">Local authority contact telephone number</dt>
+                <dd class="govuk-summary-list__value">
+                    @(Model.Establishment?.CCLAContactDetail?.TelephoneNumber ?? "Not recorded")
+                </dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.CCDeliveryModelId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Delivery model</dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.CCDeliveryModelName
-                    </dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Delivery model</dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.CCDeliveryModelName
+                </dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.GroupCollaborationName)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Group/Collaboration name</dt>
-                    <dd class="govuk-summary-list__value">
-                        @(Model.Groups.FirstOrDefault()?.Name ?? "Not recorded")
-                    </dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Group/Collaboration name</dt>
+                <dd class="govuk-summary-list__value">
+                    @(Model.Groups.FirstOrDefault()?.Name ?? "Not recorded")
+                </dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.CCGroupLeadId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Group lead centre</dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.CCGroupLeadName
-                    </dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Group lead centre</dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.CCGroupLeadName
+                </dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.CCPhaseTypeId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Phase</dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.CCPhaseTypeName
-                    </dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Phase</dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.CCPhaseTypeName
+                </dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.CCDisadvantagedAreaId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Disadvantaged area</dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.CCDisadvantagedAreaName
-                    </dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Disadvantaged area</dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.CCDisadvantagedAreaName
+                </dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.CCDirectProvisionOfEarlyYearsId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Direct provision of early years</dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.CCDirectProvisionOfEarlyYearsName
-                    </dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Direct provision of early years</dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.CCDirectProvisionOfEarlyYearsName
+                </dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.ProvisionSpecialClassesId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Special classes</dt>
-                    <dd class="govuk-summary-list__value">@Model.ProvisionSpecialClassesName</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Special classes</dt>
+                <dd class="govuk-summary-list__value">@Model.ProvisionSpecialClassesName</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.FreeSchoolMealsNumber)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Number of pupils eligible for free school meals
-                        <a href="#help-text-fsm" class="help-icon modal-link">
-                            <span class="govuk-visually-hidden">Help with number of pupils eligible for free school meals field</span>
-                            @helpers.DialogHiddenPrompt()
-                        </a>
-                    </dt>
-                    <dd class="govuk-summary-list__value">@(Model.Establishment.FreeSchoolMealsNumber?.ToString() ?? "Not recorded")</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Number of pupils eligible for free school meals
+                    <a href="#help-text-fsm" class="help-icon modal-link">
+                        <span class="govuk-visually-hidden">Help with number of pupils eligible for free school meals field</span>
+                        @helpers.DialogHiddenPrompt()
+                    </a>
+                </dt>
+                <dd class="govuk-summary-list__value">@(Model.Establishment.FreeSchoolMealsNumber?.ToString() ?? "Not recorded")</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.FreeSchoolMealsPercentage)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Percentage of children eligible for free school meals
-                        <a href="#help-text-fsm-percentage" class="help-icon modal-link">
-                            <span class="govuk-visually-hidden">Help with percentage of children eligible for free school meals field</span>
-                            @helpers.DialogHiddenPrompt()
-                        </a>
-                    </dt>
-                    <dd class="govuk-summary-list__value">@(Model.Establishment.FreeSchoolMealsPercentage?.ToString().Append("%") ?? "Not recorded")</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Percentage of children eligible for free school meals
+                    <a href="#help-text-fsm-percentage" class="help-icon modal-link">
+                        <span class="govuk-visually-hidden">Help with percentage of children eligible for free school meals field</span>
+                        @helpers.DialogHiddenPrompt()
+                    </a>
+                </dt>
+                <dd class="govuk-summary-list__value">@(Model.Establishment.FreeSchoolMealsPercentage?.ToString().Append("%") ?? "Not recorded")</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.SENStat)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Number of special pupils under a special educational needs (SEN) statement/education, health and care (EHC) plan</dt>
-                    <dd class="govuk-summary-list__value">@Model.Establishment.SENStat</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Number of special pupils under a special educational needs (SEN) statement/education, health and care (EHC) plan</dt>
+                <dd class="govuk-summary-list__value">@Model.Establishment.SENStat</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.SENNoStat)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Number of special pupils not under a special educational needs (SEN) statement/education, health and care (EHC) plan</dt>
-                    <dd class="govuk-summary-list__value">@Model.Establishment.SENNoStat</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Number of special pupils not under a special educational needs (SEN) statement/education, health and care (EHC) plan</dt>
+                <dd class="govuk-summary-list__value">@Model.Establishment.SENNoStat</dd>
+            </div>
             }
 
 
             @if (Model.DisplayPolicy.Contact_EmailAddress)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">@Model.DisplayPolicy.MainEmailAddressLabel</dt>
-                    <dd class="govuk-summary-list__value">@(Model.Establishment.Contact_EmailAddress ?? "Not recorded")</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">@Model.DisplayPolicy.MainEmailAddressLabel</dt>
+                <dd class="govuk-summary-list__value">@(Model.Establishment.Contact_EmailAddress ?? "Not recorded")</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.ContactAlt_EmailAddress)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Alternative email</dt>
-                    <dd class="govuk-summary-list__value">@(Model.Establishment.ContactAlt_EmailAddress ?? "Not recorded")</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Alternative email</dt>
+                <dd class="govuk-summary-list__value">@(Model.Establishment.ContactAlt_EmailAddress ?? "Not recorded")</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.LastChangedDate)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Date last changed<span class="govuk-visually-hidden"> </span>/<span class="govuk-visually-hidden"> </span>confirmed</dt>
-                    <dd class="govuk-summary-list__value">@(Model.Establishment.LastChangedDate?.ToString("d MMMM yyyy"))</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Date last changed<span class="govuk-visually-hidden"> </span>/<span class="govuk-visually-hidden"> </span>confirmed</dt>
+                <dd class="govuk-summary-list__value">@(Model.Establishment.LastChangedDate?.ToString("d MMMM yyyy"))</dd>
+            </div>
             }
 
             <!-- Online Provider content -->
             @if (Model.DisplayPolicy.QualityAssuranceBodyNameId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Quality assurance body name</dt>
-                    <dd class="govuk-summary-list__value">@(Model.QualityAssuranceBodyName ?? "Not recorded")</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Quality assurance body name</dt>
+                <dd class="govuk-summary-list__value">@(Model.QualityAssuranceBodyName ?? "Not recorded")</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.QualityAssuranceBodyReport)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Quality assurance body report</dt>
-                    <dd class="govuk-summary-list__value">@(Model.Establishment.QualityAssuranceBodyReport ?? "Not recorded")</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Quality assurance body report</dt>
+                <dd class="govuk-summary-list__value">@(Model.Establishment.QualityAssuranceBodyReport ?? "Not recorded")</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.CompaniesHouseNumber)
             {
-                <div class="govuk-summary-list__row">
-                    <dt id="companies-house-number-key" class="govuk-summary-list__key">Companies House number</dt>
-                    <dd id="companies-house-number-value" class="govuk-summary-list__value">@(Model.Establishment.CompaniesHouseNumber ?? "Not recorded")</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt id="companies-house-number-key" class="govuk-summary-list__key">Companies House number</dt>
+                <dd id="companies-house-number-value" class="govuk-summary-list__value">@(Model.Establishment.CompaniesHouseNumber ?? "Not recorded")</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.EstablishmentAccreditedId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt id="establishment-accredited-key" class="govuk-summary-list__key">Establishment accredited</dt>
-                    <dd id="establishment-accredited-value" class="govuk-summary-list__value">@(Model.EstablishmentAccreditedName ?? "Not recorded")</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt id="establishment-accredited-key" class="govuk-summary-list__key">Establishment accredited</dt>
+                <dd id="establishment-accredited-value" class="govuk-summary-list__value">@(Model.EstablishmentAccreditedName ?? "Not recorded")</dd>
+            </div>
             }
             <!-- Online Provider content -->
 
             @if (Model.DisplayPolicy.SENIds)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Type of SEN provision</dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.SENNames
-                    </dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Type of SEN provision</dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.SENNames
+                </dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.TeenageMothersProvisionId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Teenage mothers</dt>
-                    <dd class="govuk-summary-list__value">@Model.TeenageMothersProvisionName</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Teenage mothers</dt>
+                <dd class="govuk-summary-list__value">@Model.TeenageMothersProvisionName</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.TeenageMothersCapacity)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Teenage mothers places</dt>
-                    <dd class="govuk-summary-list__value">@Model.Establishment.TeenageMothersCapacity</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Teenage mothers places</dt>
+                <dd class="govuk-summary-list__value">@Model.Establishment.TeenageMothersCapacity</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.ChildcareFacilitiesId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Childcare facilities provision</dt>
-                    <dd class="govuk-summary-list__value">@Model.ChildcareFacilitiesName</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Childcare facilities provision</dt>
+                <dd class="govuk-summary-list__value">@Model.ChildcareFacilitiesName</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.PRUSENId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">SEN facilities</dt>
-                    <dd class="govuk-summary-list__value">@Model.PRUSENName</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">SEN facilities</dt>
+                <dd class="govuk-summary-list__value">@Model.PRUSENName</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.PRUEBDId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Pupils with EBD</dt>
-                    <dd class="govuk-summary-list__value">@Model.PRUEBDName</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Pupils with EBD</dt>
+                <dd class="govuk-summary-list__value">@Model.PRUEBDName</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.PlacesPRU)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Number of places</dt>
-                    <dd class="govuk-summary-list__value">@Model.Establishment.PlacesPRU</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Number of places</dt>
+                <dd class="govuk-summary-list__value">@Model.Establishment.PlacesPRU</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.PruFulltimeProvisionId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Full time provision </dt>
-                    <dd class="govuk-summary-list__value">@Model.PruFulltimeProvisionName</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Full time provision </dt>
+                <dd class="govuk-summary-list__value">@Model.PruFulltimeProvisionName</dd>
+            </div>
             }
 
 
             @if (Model.DisplayPolicy.PruEducatedByOthersId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Pupils educated by other providers</dt>
-                    <dd class="govuk-summary-list__value">@Model.PruEducatedByOthersName</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Pupils educated by other providers</dt>
+                <dd class="govuk-summary-list__value">@Model.PruEducatedByOthersName</dd>
+            </div>
             }
 
 
             @if (Model.DisplayPolicy.TypeOfResourcedProvisionId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Type of resourced provision</dt>
-                    <dd class="govuk-summary-list__value">@Model.TypeOfResourcedProvisionName</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Type of resourced provision</dt>
+                <dd class="govuk-summary-list__value">@Model.TypeOfResourcedProvisionName</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.ResourcedProvisionOnRoll)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Resourced provision number on roll</dt>
-                    <dd class="govuk-summary-list__value">@Model.Establishment.ResourcedProvisionOnRoll</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Resourced provision number on roll</dt>
+                <dd class="govuk-summary-list__value">@Model.Establishment.ResourcedProvisionOnRoll</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.ResourcedProvisionCapacity)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Resourced provision capacity</dt>
-                    <dd class="govuk-summary-list__value">@Model.Establishment.ResourcedProvisionCapacity</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Resourced provision capacity</dt>
+                <dd class="govuk-summary-list__value">@Model.Establishment.ResourcedProvisionCapacity</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.SenUnitOnRoll)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Special Educational Needs (SEN) unit number on roll</dt>
-                    <dd class="govuk-summary-list__value">@Model.Establishment.SenUnitOnRoll</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Special Educational Needs (SEN) unit number on roll</dt>
+                <dd class="govuk-summary-list__value">@Model.Establishment.SenUnitOnRoll</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.SenUnitCapacity)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Special Educational Needs (SEN) unit capacity</dt>
-                    <dd class="govuk-summary-list__value">@Model.Establishment.SenUnitCapacity</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Special Educational Needs (SEN) unit capacity</dt>
+                <dd class="govuk-summary-list__value">@Model.Establishment.SenUnitCapacity</dd>
+            </div>
             }
 
 
             @if (Model.DisplayPolicy.BSOInspectorateId)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Inspectorate name</dt>
-                    <dd class="govuk-summary-list__value">@Model.BSOInspectorateName</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Inspectorate name</dt>
+                <dd class="govuk-summary-list__value">@Model.BSOInspectorateName</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.BSOInspectorateReportUrl)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Inspectorate report</dt>
-                    <dd class="govuk-summary-list__value">@Model.Establishment.BSOInspectorateReportUrl</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Inspectorate report</dt>
+                <dd class="govuk-summary-list__value">@Model.Establishment.BSOInspectorateReportUrl</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.BSODateOfLastInspectionVisit)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Date of Last Inspection Visit</dt>
-                    <dd class="govuk-summary-list__value">@(Model.Establishment.BSODateOfLastInspectionVisit?.ToString("d MMMM yyyy"))</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Date of Last Inspection Visit</dt>
+                <dd class="govuk-summary-list__value">@(Model.Establishment.BSODateOfLastInspectionVisit?.ToString("d MMMM yyyy"))</dd>
+            </div>
             }
 
             @if (Model.DisplayPolicy.BSODateOfNextInspectionVisit)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">Date of Next Inspection Visit</dt>
-                    <dd class="govuk-summary-list__value">@(Model.Establishment.BSODateOfNextInspectionVisit?.ToString("d MMMM yyyy"))</dd>
-                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">Date of Next Inspection Visit</dt>
+                <dd class="govuk-summary-list__value">@(Model.Establishment.BSODateOfNextInspectionVisit?.ToString("d MMMM yyyy"))</dd>
+            </div>
             }
 
 
-        </dl>
+            </dl>
 
-    </div>
+        </div>
 
     @if (Model.UserCanEdit && Model.TabEditPolicy.Details)
     {

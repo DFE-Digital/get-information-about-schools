@@ -464,6 +464,11 @@
                 </div>
             }
 
+            @if (Model.EditPolicy.OpenDate)
+            {
+                @Html.EditorFor(x => x.OpenDate, new { title = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date" : "Open date", fieldsetClassName = "edit-date-fieldset" })
+            }
+
             @if (Model.EditPolicy.ReasonEstablishmentOpenedId)
             {
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ReasonEstablishmentOpenedId)">
@@ -473,15 +478,15 @@
                 </div>
             }
 
-            @if (Model.EditPolicy.OpenDate)
+            @if (Model.EditPolicy.AccreditationExpiryDate)
             {
-                @Html.EditorFor(x => x.OpenDate, new { title = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date" : "Open date", fieldsetClassName = "edit-date-fieldset" })
+                @Html.EditorFor(x => x.AccreditationExpiryDate, new { title = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation expiry date" : "Close date", fieldsetClassName = "edit-date-fieldset" })
             }
 
 
             @if (Model.EditPolicy.CloseDate)
             {
-                @Html.EditorFor(x => x.CloseDate, new { title = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation expiry date" : "Close date", fieldsetClassName = "edit-date-fieldset" })
+                @Html.EditorFor(x => x.CloseDate, new { title = Model.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date ended" : "Close date", fieldsetClassName = "edit-date-fieldset" })
             }
 
 
