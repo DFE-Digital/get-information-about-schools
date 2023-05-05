@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Edubase.Services.Establishments;
 using Edubase.Web.UI.Helpers;
 using System.Web.Mvc;
-using System.Web.Security;
 using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
@@ -16,13 +14,12 @@ using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Filters;
 using Microsoft.Ajax.Utilities;
-using Microsoft.AspNet.Identity;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
     using M = EstablishmentSearchResultModel;
 
-    [RouteArea("Establishments"), System.Web.Mvc.RoutePrefix("manage"), System.Web.Mvc.Route("{action=index}"),
+    [RouteArea("Establishments"), RoutePrefix("manage"), Route("{action=index}"),
      MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyOpenings, AuthorizedRoles.CanManageSecure16To19AcademyOpenings)]
     public class AcademyOpeningsController : Controller
     {
@@ -67,20 +64,16 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             var property = typeof(EditAcademyOpeningViewModel).GetProperty(sortBy);
 
-            if (!string.IsNullOrWhiteSpace(group) &&
-                !AcademyUtility.IsSameSecureAcademy16To19User(User, AcademyUtility.DecryptValue(group)))
-                throw new AccessViolationException("Attempt to access resource without the right authorization");
+            if (!AcademyUtility.DoesHaveAccessAuthorization(User, group, establishmentTypeId))
+                throw AcademyUtility.GetAccessViolationException();
 
-            var isUserSecure16To19 =
-                !string.IsNullOrWhiteSpace(group) &&
-                AcademyUtility.IsSecureAcademy16To19User(AcademyUtility.DecryptValue(group));
-
-            if (!string.IsNullOrWhiteSpace(establishmentTypeId) && isUserSecure16To19)
-                establishmentTypeId = AcademyUtility.DecryptValue(establishmentTypeId);
+            var isUserSecure16To19 = AcademyUtility.IsUserSecureAcademy16To19User(group);
+            establishmentTypeId = AcademyUtility.GetDecryptedEstablishmentTypeId(establishmentTypeId, isUserSecure16To19);
 
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
-            estabTypes = AcademyUtility.FilterEstablishmentsByEstablishmentTypeId
-                (estabTypes, establishmentTypeId, isUserSecure16To19);
+            estabTypes =
+                AcademyUtility.FilterEstablishmentsByEstablishmentTypeId(estabTypes, establishmentTypeId,
+                    isUserSecure16To19);
 
             var result = await _establishmentReadService.SearchAsync(
                 new EstablishmentSearchPayload

@@ -17,7 +17,7 @@ namespace Edubase.Web.UIUnitTests.Helpers
         [InlineData(null, true, "Manage academy openings")]
         [InlineData("", true, "Manage academy openings")]
         [InlineData(" ", true, "Manage academy openings")]
-        [InlineData("46", true, "Manage 16-19 secure academy openings")]
+        [InlineData("46", true, "Manage secure academy 16-19 openings")]
         public void GetAcademyOpeningPageTitle_WhenCalledWithValidValues_ReturnsCorrectTitle(string establishmentTypeId,
             bool isSecure16To19User, string expectedPageTitle)
         {
@@ -108,6 +108,7 @@ namespace Edubase.Web.UIUnitTests.Helpers
         [InlineData("","A03pdA0yBdWaKdpvHY0E2Q==")]
         [InlineData(" ","KfaJ1dPpVO5DrAUD+09UZA==")]
         [InlineData("test","tiEUR7hmOoxqNzQ9d5reWQ==")]
+        [InlineData("Role_BackOffice","EloqIptJdSWEsiFGrldlyuGpjXK8ulE6jHblL0dVIvo=")]
         public void EncryptValue_WhenCalled_ReturnsEncryptedValue(string value, string expectedValue)
         {
             var result = AcademyUtility.EncryptValue(value);
