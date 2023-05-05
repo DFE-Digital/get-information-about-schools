@@ -199,20 +199,6 @@ namespace Edubase.Web.UI.Helpers
         }
 
         /// <summary>
-        /// A method to use to check if the passed in user is of the 'CanManageSecure16To19AcademyOpenings' role group
-        /// and is the same value as the passed in roleName.
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="roleName"></param>
-        /// <returns></returns>
-        public static bool IsSameSecureAcademy16To19User(IPrincipal user, string roleName)
-        {
-            var role = GetSecureAcademy16To19Role(user);
-            if (string.IsNullOrWhiteSpace(role)) return false;
-            return string.Compare(role.RemoveUnderscore(), roleName, StringComparison.OrdinalIgnoreCase) == 0;
-        }
-
-        /// <summary>
         /// A method to use to check if the user has authorization to access a resource limited to those in
         /// the 'CanManageSecure16To19AcademyOpenings' user role.
         /// NB: This method is attempting to prevent manipulation or miss use of query parameters.
@@ -229,12 +215,9 @@ namespace Edubase.Web.UI.Helpers
         /// <summary>
         /// A method that returns an AccessViolationException.
         /// </summary>
-        /// <param name="message"></param>
         /// <returns></returns>
-        public static AccessViolationException GetAccessViolationException(string message = null) =>
-            new AccessViolationException(string.IsNullOrWhiteSpace(message)
-                ? "Attempt to access resource without the right authorization"
-                : message);
+        public static AccessViolationException GetAccessViolationException() =>
+            new AccessViolationException("Attempt to access resource without the right authorization");
 
         /// <summary>
         /// A method to use to check a roleName is part of those in the
