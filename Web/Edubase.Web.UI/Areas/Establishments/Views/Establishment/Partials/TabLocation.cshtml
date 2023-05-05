@@ -39,7 +39,7 @@
             </div>
             <div class="govuk-summary-list__row">
                 <dt id="easting-key" class="govuk-summary-list__key">Easting</dt>
-                <dd id="easting-key" class="govuk-summary-list__value">@Model.Establishment.Easting</dd>
+                <dd id="easting-value" class="govuk-summary-list__value">@Model.Establishment.Easting</dd>
             </div>
             <div class="govuk-summary-list__row">
                 <dt id="northing-key" class="govuk-summary-list__key">Northing</dt>
@@ -64,7 +64,7 @@
                         @helpers.DialogHiddenPrompt()
                     </a>
                 </dt>
-                <dd id="lsoa-key" class="govuk-summary-list__value">@Model.LSOAName</dd>
+                <dd id="lsoa-value" class="govuk-summary-list__value">@Model.LSOAName</dd>
             </div>
         </dl>
     </div>
@@ -82,8 +82,8 @@
             <div class="detail-summary">
                 <dl class="govuk-summary-list">
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">Address</dt>
-                        <dd class="govuk-summary-list__value">@address.GetAddress()</dd>
+                        <dt id="address-key" class="govuk-summary-list__key">Address</dt>
+                        <dd id="address-value" class="govuk-summary-list__value">@address.GetAddress()</dd>
                     </div>
                 </dl>
             </div>
