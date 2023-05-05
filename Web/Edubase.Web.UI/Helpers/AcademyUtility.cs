@@ -204,6 +204,8 @@ namespace Edubase.Web.UI.Helpers
         /// NB: This method is attempting to prevent manipulation or miss use of query parameters.
         /// </summary>
         /// <param name="user"></param>
+        /// <param name="roleName"></param>
+        /// <param name="establishmentTypeId"></param>
         /// <returns></returns>
         public static bool DoesHaveAccessAuthorization(IPrincipal user, string roleName, string establishmentTypeId)
         {
