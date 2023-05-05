@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Edubase.Web.UIUnitTests.Helpers
 {
-    public class SecureAcademyUtilityTestsPartI
+    public class SecureAcademyUtilityTestsI
     {
         [Theory]
         [InlineData(null, false, "Manage academy openings")]
@@ -108,7 +108,7 @@ namespace Edubase.Web.UIUnitTests.Helpers
         [InlineData("", "A03pdA0yBdWaKdpvHY0E2Q==")]
         [InlineData(" ", "KfaJ1dPpVO5DrAUD+09UZA==")]
         [InlineData("test", "tiEUR7hmOoxqNzQ9d5reWQ==")]
-        [InlineData("Role_BackOffice", "EloqIptJdSWEsiFGrldlyuGpjXK8ulE6jHblL0dVIvo=")]
+        [InlineData("46", "W3XrRxuGnzvRuqxllYzLlg==")]
         public void EncryptValue_WhenCalled_ReturnsEncryptedValue(string value, string expectedValue)
         {
             var result = AcademyUtility.EncryptValue(value);

@@ -39,21 +39,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpGet, Route("16-19-secure-academy-openings", Name = "ManageSecureAcademy16To19Openings")]
         public Task<ActionResult> ManageSecureAcademy16To19Openings(int skip = 0, string sortBy = "OpenDate-desc")
         {
-            var role = AcademyUtility.GetSecureAcademy16To19Role(User);
             //secure 16-19 academy establishment type Id is 46
             return Task.FromResult<ActionResult>(RedirectToAction(nameof(ManageAcademyOpenings),
-                new
-                {
-                    skip,
-                    sortBy,
-                    group = AcademyUtility.EncryptValue(role),
-                    establishmentTypeId = AcademyUtility.EncryptValue("46")
-                }));
+                new { skip, sortBy, establishmentTypeId = AcademyUtility.EncryptValue("46") }));
         }
 
         [HttpGet, Route("academy-openings", Name = "ManageAcademyOpenings")]
         public async Task<ActionResult> ManageAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc",
-            string group = null, string establishmentTypeId = null)
+            string establishmentTypeId = null)
         {
             var take = 50;
             var now = DateTime.Now;
@@ -64,11 +57,13 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             var property = typeof(EditAcademyOpeningViewModel).GetProperty(sortBy);
 
-            if (!AcademyUtility.DoesHaveAccessAuthorization(User, group, establishmentTypeId))
+            if (!AcademyUtility.DoesHaveAccessAuthorization(User, establishmentTypeId))
                 throw AcademyUtility.GetAccessViolationException();
 
-            var isUserSecure16To19 = AcademyUtility.IsUserSecureAcademy16To19User(group);
-            establishmentTypeId = AcademyUtility.GetDecryptedEstablishmentTypeId(establishmentTypeId, isUserSecure16To19);
+            var roleName = AcademyUtility.GetSecureAcademy16To19Role(User);
+            var isUserSecure16To19 = AcademyUtility.IsUserSecureAcademy16To19User(roleName);
+            establishmentTypeId =
+                AcademyUtility.GetDecryptedEstablishmentTypeId(establishmentTypeId, isUserSecure16To19);
 
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
             estabTypes =

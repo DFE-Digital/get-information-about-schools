@@ -100,8 +100,6 @@ namespace Edubase.Web.UI.Helpers
         /// <returns></returns>
         public static string EncryptValue(string value)
         {
-            if (!string.IsNullOrWhiteSpace(value) && value.Contains("_")) value = value.Replace("_", "");
-
             var encodedBytes = Encoding.Unicode.GetBytes(value);
             string encryptedValue;
             using (var encryptor = Aes.Create())
@@ -180,8 +178,7 @@ namespace Edubase.Web.UI.Helpers
             var roles = identity.Claims.ToList()
                 .Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value);
             return roles.FirstOrDefault(role =>
-                AuthorizedRoles.CanManageSecure16To19AcademyOpenings.RemoveUnderscore()
-                    .Contains(role.RemoveUnderscore()));
+                AuthorizedRoles.CanManageSecure16To19AcademyOpenings.Contains(role));
         }
 
         /// <summary>
@@ -194,8 +191,7 @@ namespace Edubase.Web.UI.Helpers
         {
             if (string.IsNullOrWhiteSpace(roleName)) return false;
 
-            return AuthorizedRoles.CanManageSecure16To19AcademyOpenings.Replace("_", "")
-                .Contains(roleName.RemoveUnderscore());
+            return AuthorizedRoles.CanManageSecure16To19AcademyOpenings.Contains(roleName);
         }
 
         /// <summary>
@@ -204,12 +200,11 @@ namespace Edubase.Web.UI.Helpers
         /// NB: This method is attempting to prevent manipulation or miss use of query parameters.
         /// </summary>
         /// <param name="user"></param>
-        /// <param name="roleName"></param>
         /// <param name="establishmentTypeId"></param>
         /// <returns></returns>
-        public static bool DoesHaveAccessAuthorization(IPrincipal user, string roleName, string establishmentTypeId)
+        public static bool DoesHaveAccessAuthorization(IPrincipal user,  string establishmentTypeId)
         {
-            if (string.IsNullOrWhiteSpace(roleName) && string.IsNullOrWhiteSpace(establishmentTypeId)) return true;
+            if (string.IsNullOrWhiteSpace(establishmentTypeId)) return true;
 
             return IsPartOfManageSecureAcademy16To19UserRole(GetSecureAcademy16To19Role(user));
         }
@@ -228,7 +223,7 @@ namespace Edubase.Web.UI.Helpers
         /// <param name="roleName"></param>
         /// <returns></returns>
         public static bool IsUserSecureAcademy16To19User(string roleName) =>
-            !string.IsNullOrWhiteSpace(roleName) && IsPartOfManageSecureAcademy16To19UserRole(DecryptValue(roleName));
+            !string.IsNullOrWhiteSpace(roleName) && IsPartOfManageSecureAcademy16To19UserRole(roleName);
 
         /// <summary>
         /// A method to use to get the value of an encrypted string EstablishmentTypeId.
@@ -247,7 +242,5 @@ namespace Edubase.Web.UI.Helpers
         //secure 16-19 academy establishment type Id is 46
         private static bool IsSecureAcademy16To19EstablishmentTypeId(string establishmentTypeId) =>
             establishmentTypeId.Trim().Equals("46", StringComparison.OrdinalIgnoreCase);
-
-        private static string RemoveUnderscore(this string value) => value.Replace("_", "");
     }
 }

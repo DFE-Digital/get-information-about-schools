@@ -212,18 +212,17 @@ const academyOpenings = new Vue({
       nowPlus30.setFullYear(currentYear + 30);
 
       let establishmentTypeId=this.getQueryStringValue("establishmentTypeId");
-      let group=this.getQueryStringValue("group");
 
       // step into callback hell
       let params = `${self.formatDate(now, '-')}/${self.formatDate(nowPlus30, '-')}/0/1`;
-      params = `${params}/${group}/${establishmentTypeId}`;
+      params = `${params}/${establishmentTypeId}`;
       $.getJSON(`/api/academy-openings/list/${params}`,
         function (data) {
           totalRecords = data.count;
           self.initialRecordCount = totalRecords;
           self.currentCount = totalRecords;
           params = `${self.formatDate(now, '-')}/${self.formatDate(nowPlus30, '-')}/0/${totalRecords}`;
-          params = `${params}/${group}/${establishmentTypeId}`;
+          params = `${params}/${establishmentTypeId}`;
           $.getJSON(`/api/academy-openings/list/${params}`,
             function (data) {
               self.openingAcademies = data.items;

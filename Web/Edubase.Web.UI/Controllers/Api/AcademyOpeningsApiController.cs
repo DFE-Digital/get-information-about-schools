@@ -40,25 +40,27 @@ namespace Edubase.Web.UI.Controllers.Api
         /// <param name="to"></param>
         /// <param name="skip"></param>
         /// <param name="take"></param>
-        /// <param name="group"></param>
         /// <param name="establishmentTypeId"></param>
         /// <returns></returns>
         [Route(
              "api/academy-openings/list/{from:datetime}/{to:datetime}" +
-             "/{skip:int}/{take:int}/{group?}/{establishmentTypeId?}"),
+             "/{skip:int}/{take:int}/{establishmentTypeId?}"),
          HttpGet]
         public async Task<dynamic> GetListAsync(DateTime from, DateTime to, int skip, int take,
-            string group = null, string establishmentTypeId = null)
+            string establishmentTypeId = null)
         {
-            if (!AcademyUtility.DoesHaveAccessAuthorization(User,group,establishmentTypeId))
+            if (!AcademyUtility.DoesHaveAccessAuthorization(User, establishmentTypeId))
                 throw AcademyUtility.GetAccessViolationException();
 
-            var isUserSecure16To19 = AcademyUtility.IsUserSecureAcademy16To19User(group);
-            establishmentTypeId = AcademyUtility.GetDecryptedEstablishmentTypeId(establishmentTypeId, isUserSecure16To19);
-
+            var roleName = AcademyUtility.GetSecureAcademy16To19Role(User);
+            var isUserSecure16To19 = AcademyUtility.IsUserSecureAcademy16To19User(roleName);
+            establishmentTypeId =
+                AcademyUtility.GetDecryptedEstablishmentTypeId(establishmentTypeId, isUserSecure16To19);
 
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
-            estabTypes = AcademyUtility.FilterEstablishmentsByEstablishmentTypeId(estabTypes, establishmentTypeId, isUserSecure16To19);
+            estabTypes =
+                AcademyUtility.FilterEstablishmentsByEstablishmentTypeId(estabTypes, establishmentTypeId,
+                    isUserSecure16To19);
 
             var apiResult = await _establishmentReadService.SearchAsync(
                 new EstablishmentSearchPayload

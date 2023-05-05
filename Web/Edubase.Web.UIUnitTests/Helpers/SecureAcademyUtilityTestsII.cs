@@ -8,14 +8,14 @@ using Xunit;
 
 namespace Edubase.Web.UIUnitTests.Helpers
 {
-    public class SecureAcademyUtilityTestsPartII
+    public class SecureAcademyUtilityTestsII
     {
         [Theory]
         [InlineData("YCS", "YCS")]
         [InlineData("ROLE_BACKOFFICE", "ROLE_BACKOFFICE")]
         [InlineData("EFADO", null)]
-        public void
-            GetSecureAcademy16To19Role_WhenUserIsCalled_ReturnsExpectedResult(string roleName, string expectedResult)
+        public void GetSecureAcademy16To19Role_WhenUserIsCalled_ReturnsExpectedResult
+            (string roleName, string expectedResult)
         {
             var mockPrincipal = GetMockPrincipalIdentity(roleName);
 
@@ -23,7 +23,6 @@ namespace Edubase.Web.UIUnitTests.Helpers
 
             Assert.Equal(result, expectedResult);
         }
-
 
         [Theory]
         [InlineData(null, false)]
@@ -48,9 +47,9 @@ namespace Edubase.Web.UIUnitTests.Helpers
         [InlineData(" ", null, true)]
         [InlineData(null, "", true)]
         [InlineData(null, " ", true)]
-        [InlineData("someValue", "", false)]
-        [InlineData("someValue", " ", false)]
-        [InlineData("someValue", null, false)]
+        [InlineData("someValue", "", true)]
+        [InlineData("someValue", " ", true)]
+        [InlineData("someValue", null, true)]
         [InlineData("", "someValue", false)]
         [InlineData(" ", "someValue", false)]
         [InlineData("YCS", "", true)]
@@ -61,16 +60,16 @@ namespace Edubase.Web.UIUnitTests.Helpers
         [InlineData("ROLE_BACKOFFICE", " ", true)]
         [InlineData("ROLE_BACKOFFICE", null, true)]
         [InlineData("ROLE_BACKOFFICE", "someValue", true)]
-        [InlineData("EFADO", "", false)]
-        [InlineData("EFADO", " ", false)]
-        [InlineData("EFADO", null, false)]
+        [InlineData("EFADO", "", true)]
+        [InlineData("EFADO", " ", true)]
+        [InlineData("EFADO", null, true)]
         [InlineData("EFADO", "someValue", false)]
         public void DoesHaveAccessAuthorization_WhenCalled_ReturnsExpectedResult(string roleName,
             string establishmentTypeId, bool expectedResult)
         {
             var user = GetMockPrincipalIdentity(roleName);
 
-            var result = AcademyUtility.DoesHaveAccessAuthorization(user.Object, roleName, establishmentTypeId);
+            var result = AcademyUtility.DoesHaveAccessAuthorization(user.Object, establishmentTypeId);
 
             Assert.Equal(result, expectedResult);
         }
@@ -88,22 +87,12 @@ namespace Edubase.Web.UIUnitTests.Helpers
         [InlineData("", false)]
         [InlineData(" ", false)]
         [InlineData(null, false)]
-        public void IsUserSecureAcademy16To19User_WhenCalledWithNullOrWhitespaceRoleName_ReturnsExpectedResult(
-            string roleName, bool expectedResult)
-        {
-            var result = AcademyUtility.IsUserSecureAcademy16To19User(roleName);
-
-            Assert.Equal(expectedResult, result);
-        }
-
-        [Theory]
         [InlineData("EFADO", false)]
         [InlineData("YCS", true)]
         [InlineData("ROLE_BACKOFFICE", true)]
-        public void IsUserSecureAcademy16To19User_WhenCalledWithNonNullOrNonWhitespaceRoleName_ReturnsExpectedResult
-            (string roleName, bool expectedResult)
+        public void IsUserSecureAcademy16To19User_WhenCalled_ReturnsExpectedResult(
+            string roleName, bool expectedResult)
         {
-            roleName = AcademyUtility.EncryptValue(roleName);
             var result = AcademyUtility.IsUserSecureAcademy16To19User(roleName);
 
             Assert.Equal(expectedResult, result);
