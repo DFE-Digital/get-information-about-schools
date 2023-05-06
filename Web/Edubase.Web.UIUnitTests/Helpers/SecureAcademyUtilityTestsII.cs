@@ -19,51 +19,27 @@ namespace Edubase.Web.UIUnitTests.Helpers
         {
             var mockPrincipal = GetMockPrincipalIdentity(roleName);
 
-            var result = AcademyUtility.GetSecureAcademy16To19Role(mockPrincipal.Object);
+            var result = AcademyUtility.GetAuthorizedRole(mockPrincipal.Object);
 
             Assert.Equal(result, expectedResult);
         }
 
         [Theory]
-        [InlineData(null, false)]
-        [InlineData("", false)]
-        [InlineData(" ", false)]
-        [InlineData("EFADO", false)]
-        [InlineData("ROLE_BACKOFFICE", true)]
-        [InlineData("YCS", true)]
-        public void IsPartOfManageSecureAcademy16To19UserRole_WhenCalled_ReturnsExpectedResult(string roleName,
-            bool expectedResult)
-        {
-            var result = AcademyUtility.IsPartOfManageSecureAcademy16To19UserRole(roleName);
-
-            Assert.Equal(result, expectedResult);
-        }
-
-        [Theory]
-        [InlineData("", "", true)]
-        [InlineData(" ", " ", true)]
-        [InlineData(null, null, true)]
-        [InlineData("", null, true)]
-        [InlineData(" ", null, true)]
-        [InlineData(null, "", true)]
-        [InlineData(null, " ", true)]
-        [InlineData("someValue", "", true)]
-        [InlineData("someValue", " ", true)]
-        [InlineData("someValue", null, true)]
-        [InlineData("", "someValue", false)]
-        [InlineData(" ", "someValue", false)]
-        [InlineData("YCS", "", true)]
-        [InlineData("YCS", " ", true)]
-        [InlineData("YCS", null, true)]
-        [InlineData("YCS", "someValue", true)]
+        [InlineData("someValue", "", false)]
+        [InlineData("someValue", " ", false)]
+        [InlineData("someValue", null, false)]
+        [InlineData("YCS", "", false)]
+        [InlineData("YCS", " ", false)]
+        [InlineData("YCS", null, false)]
+        [InlineData("YCS", "W3XrRxuGnzvRuqxllYzLlg==", true)]
         [InlineData("ROLE_BACKOFFICE", "", true)]
         [InlineData("ROLE_BACKOFFICE", " ", true)]
         [InlineData("ROLE_BACKOFFICE", null, true)]
-        [InlineData("ROLE_BACKOFFICE", "someValue", true)]
-        [InlineData("EFADO", "", true)]
+        [InlineData("ROLE_BACKOFFICE", "W3XrRxuGnzvRuqxllYzLlg==", true)]
+        [InlineData("EFADO", "",  true)]
         [InlineData("EFADO", " ", true)]
         [InlineData("EFADO", null, true)]
-        [InlineData("EFADO", "someValue", false)]
+        [InlineData("EFADO", "W3XrRxuGnzvRuqxllYzLlg==", false)]
         public void DoesHaveAccessAuthorization_WhenCalled_ReturnsExpectedResult(string roleName,
             string establishmentTypeId, bool expectedResult)
         {
@@ -99,33 +75,16 @@ namespace Edubase.Web.UIUnitTests.Helpers
         }
 
         [Theory]
-        [InlineData("", false, "")]
-        [InlineData(" ", false, " ")]
-        [InlineData(null, false, null)]
-        [InlineData("", true, "")]
-        [InlineData(" ", true, " ")]
-        [InlineData(null, true, null)]
-        public void
-            GetDecryptedEstablishmentTypeId_WhenCalledWithNullOrWhitespaceEstablishmentTypeId_ReturnsExpectedResult
-            (string establishmentTypeId, bool isUserSecureAcademy16To19, string expectedResult)
-        {
-            var result = AcademyUtility.GetDecryptedEstablishmentTypeId(establishmentTypeId, isUserSecureAcademy16To19);
+        [InlineData("",  "")]
+        [InlineData(" ", " ")]
+        [InlineData(null, null)]
+        [InlineData("W3XrRxuGnzvRuqxllYzLlg==", "46")]
 
-            Assert.Equal(expectedResult, result);
-        }
-
-        [Theory]
-        [InlineData("someValue", false, "someValue", false)]
-        [InlineData("someValue", true, "someValue", true)]
-        [InlineData("46", false, "46", false)]
-        [InlineData("46", true, "46", true)]
         public void
-            GetDecryptedEstablishmentTypeId_WhenCalledWithNonNullOrNonWhitespaceEstablishmentTypeId_ReturnsExpectedResult
-            (string establishmentTypeId, bool isUserSecureAcademy16To19, string expectedResult, bool shouldEncrypt)
+            GetDecryptedEstablishmentTypeId_WhenCalled_ReturnsExpectedResult
+            (string establishmentTypeId, string expectedResult)
         {
-            establishmentTypeId =
-                shouldEncrypt ? AcademyUtility.EncryptValue(establishmentTypeId) : establishmentTypeId;
-            var result = AcademyUtility.GetDecryptedEstablishmentTypeId(establishmentTypeId, isUserSecureAcademy16To19);
+            var result = AcademyUtility.GetDecryptedEstablishmentTypeId(establishmentTypeId);
 
             Assert.Equal(expectedResult, result);
         }

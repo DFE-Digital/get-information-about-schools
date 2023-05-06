@@ -17,7 +17,7 @@ namespace Edubase.Web.UI.Controllers.Api
 {
     using M = EstablishmentSearchResultModel;
 
-    [MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyOpenings, AuthorizedRoles.CanManageSecure16To19AcademyOpenings)]
+    [MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyOpenings, AuthorizedRoles.CanManageSecureAcademy16To19Openings)]
     public class AcademyOpeningsApiController : ApiController
     {
         private readonly IEstablishmentReadService _establishmentReadService;
@@ -52,10 +52,9 @@ namespace Edubase.Web.UI.Controllers.Api
             if (!AcademyUtility.DoesHaveAccessAuthorization(User, establishmentTypeId))
                 throw AcademyUtility.GetAccessViolationException();
 
-            var roleName = AcademyUtility.GetSecureAcademy16To19Role(User);
+            var roleName = AcademyUtility.GetAuthorizedRole(User);
             var isUserSecure16To19 = AcademyUtility.IsUserSecureAcademy16To19User(roleName);
-            establishmentTypeId =
-                AcademyUtility.GetDecryptedEstablishmentTypeId(establishmentTypeId, isUserSecure16To19);
+            establishmentTypeId = AcademyUtility.GetDecryptedEstablishmentTypeId(establishmentTypeId);
 
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
             estabTypes =

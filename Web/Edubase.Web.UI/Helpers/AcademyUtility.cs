@@ -166,47 +166,36 @@ namespace Edubase.Web.UI.Helpers
         }
 
         /// <summary>
-        /// A method to use for getting the name of the role of a user if the given user is part of the
-        /// 'CanManageSecure16To19AcademyOpenings' role group.
-        /// NB: It return null if it's not part of the CanManageSecure16To19AcademyOpenings role group.
+        /// A method to use for getting the value of the role of a user based on the authorization group passed.
         /// </summary>
         /// <param name="user"></param>
+        /// <param name="authorizedRoles"></param>
         /// <returns></returns>
-        public static string GetSecureAcademy16To19Role(IPrincipal user)
+        public static string GetAuthorizedRole(IPrincipal user,
+            string authorizedRoles = AuthorizedRoles.CanManageSecureAcademy16To19Openings)
         {
             var identity = (ClaimsIdentity) user.Identity;
             var roles = identity.Claims.ToList()
                 .Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value);
-            return roles.FirstOrDefault(role =>
-                AuthorizedRoles.CanManageSecure16To19AcademyOpenings.Contains(role));
+            return roles.FirstOrDefault(role => authorizedRoles.Contains(role));
         }
 
         /// <summary>
-        /// A method to use to check if a given role name/value is part of the roles in the
-        /// 'CanManageSecure16To19AcademyOpenings' role group.
-        /// </summary>
-        /// <param name="roleName"></param>
-        /// <returns></returns>
-        public static bool IsPartOfManageSecureAcademy16To19UserRole(string roleName)
-        {
-            if (string.IsNullOrWhiteSpace(roleName)) return false;
-
-            return AuthorizedRoles.CanManageSecure16To19AcademyOpenings.Contains(roleName);
-        }
-
-        /// <summary>
-        /// A method to use to check if the user has authorization to access a resource limited to those in
-        /// the 'CanManageSecure16To19AcademyOpenings' user role.
+        /// A method to use to check if the user has authorization to access a resource based on the authorization role the user resides.
         /// NB: This method is attempting to prevent manipulation or miss use of query parameters.
         /// </summary>
         /// <param name="user"></param>
         /// <param name="establishmentTypeId"></param>
         /// <returns></returns>
-        public static bool DoesHaveAccessAuthorization(IPrincipal user,  string establishmentTypeId)
+        public static bool DoesHaveAccessAuthorization(IPrincipal user, string establishmentTypeId)
         {
-            if (string.IsNullOrWhiteSpace(establishmentTypeId)) return true;
+            if (string.IsNullOrWhiteSpace(establishmentTypeId) && IsPartOfManageAcademyOpeningsUserRole(
+                    GetAuthorizedRole(user, AuthorizedRoles.CanManageAcademyOpenings))) return true;
 
-            return IsPartOfManageSecureAcademy16To19UserRole(GetSecureAcademy16To19Role(user));
+            if (!string.IsNullOrWhiteSpace(establishmentTypeId) && IsPartOfManageSecureAcademy16To19UserRole(
+                    GetAuthorizedRole(user)) && DecryptValue(establishmentTypeId) == "46") return true;
+
+            return false;
         }
 
         /// <summary>
@@ -229,12 +218,10 @@ namespace Edubase.Web.UI.Helpers
         /// A method to use to get the value of an encrypted string EstablishmentTypeId.
         /// </summary>
         /// <param name="establishmentTypeId"></param>
-        /// <param name="isUserSecureAcademy16To19"></param>
         /// <returns></returns>
-        public static string GetDecryptedEstablishmentTypeId(string establishmentTypeId, bool isUserSecureAcademy16To19)
+        public static string GetDecryptedEstablishmentTypeId(string establishmentTypeId)
         {
-            if (!string.IsNullOrWhiteSpace(establishmentTypeId) && isUserSecureAcademy16To19)
-                return DecryptValue(establishmentTypeId);
+            if (!string.IsNullOrWhiteSpace(establishmentTypeId)) return DecryptValue(establishmentTypeId);
 
             return establishmentTypeId;
         }
@@ -242,5 +229,12 @@ namespace Edubase.Web.UI.Helpers
         //secure 16-19 academy establishment type Id is 46
         private static bool IsSecureAcademy16To19EstablishmentTypeId(string establishmentTypeId) =>
             establishmentTypeId.Trim().Equals("46", StringComparison.OrdinalIgnoreCase);
+
+        private static bool IsPartOfManageSecureAcademy16To19UserRole(string roleName) =>
+            !string.IsNullOrWhiteSpace(roleName) &&
+            AuthorizedRoles.CanManageSecureAcademy16To19Openings.Contains(roleName);
+
+        private static bool IsPartOfManageAcademyOpeningsUserRole(string roleName) =>
+            !string.IsNullOrWhiteSpace(roleName) && AuthorizedRoles.CanManageAcademyOpenings.Contains(roleName);
     }
 }

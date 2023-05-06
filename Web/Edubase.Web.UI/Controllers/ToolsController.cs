@@ -77,7 +77,7 @@ namespace Edubase.Web.UI.Controllers
                 UserCanCreateEstablishment = createEstablishmentPermission.CanCreate,
                 UserCanManageAcademyOpenings = User.InRole(AuthorizedRoles.CanManageAcademyOpenings),
                 UserCanManageSecureAcademy16To19Openings =
-                    User.InRole(AuthorizedRoles.CanManageSecure16To19AcademyOpenings),
+                    User.InRole(AuthorizedRoles.CanManageSecureAcademy16To19Openings),
                 UserCanBulkCreateAcademies = User.InRole(AuthorizedRoles.CanBulkCreateAcademies),
                 UserCanMergeOrAmalgamateEstablishments = User.InRole(AuthorizedRoles.CanMergeEstablishments),
                 UserCanBulkUpdateGovernors = User.InRole(AuthorizedRoles.CanBulkUpdateGovernors),

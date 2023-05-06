@@ -121,6 +121,7 @@ namespace Edubase.Web.UIUnitTests.Helpers
         [InlineData("KfaJ1dPpVO5DrAUD+09UZA==", " ")]
         [InlineData("tiEUR7hmOoxqNzQ9d5reWQ==", "test")]
         [InlineData("A03pdA0yBdWaKdpvHY0E2Q==", "")]
+        [InlineData("W3XrRxuGnzvRuqxllYzLlg==", "46")]
         public void DecryptValue_WhenCalled_ReturnsDecryptedValue(string value, string expectedValue)
         {
             var result = AcademyUtility.DecryptValue(value);
