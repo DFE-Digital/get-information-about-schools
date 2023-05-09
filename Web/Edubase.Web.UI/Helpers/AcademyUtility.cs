@@ -124,7 +124,7 @@ namespace Edubase.Web.UI.Helpers
         }
 
         /// <summary>
-        /// A method that returns an PermissionDeniedException.
+        /// A method that returns a PermissionDeniedException.
         /// </summary>
         /// <returns></returns>
         public static PermissionDeniedException GetPermissionDeniedException() =>
