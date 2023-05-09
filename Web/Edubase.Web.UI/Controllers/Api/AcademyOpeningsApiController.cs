@@ -50,16 +50,10 @@ namespace Edubase.Web.UI.Controllers.Api
             string establishmentTypeId = null)
         {
             if (!AcademyUtility.DoesHaveAccessAuthorization(User, establishmentTypeId))
-                throw AcademyUtility.GetAccessViolationException();
-
-            var roleName = AcademyUtility.GetAuthorizedRole(User);
-            var isUserSecure16To19 = AcademyUtility.IsUserSecureAcademy16To19User(roleName);
-            establishmentTypeId = AcademyUtility.GetDecryptedEstablishmentTypeId(establishmentTypeId);
+                throw AcademyUtility.GetPermissionDeniedException();
 
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
-            estabTypes =
-                AcademyUtility.FilterEstablishmentsByEstablishmentTypeId(estabTypes, establishmentTypeId,
-                    isUserSecure16To19);
+            estabTypes = AcademyUtility.FilterEstablishmentsIfSecureAcademy16To19(estabTypes, establishmentTypeId);
 
             var apiResult = await _establishmentReadService.SearchAsync(
                 new EstablishmentSearchPayload
@@ -67,8 +61,7 @@ namespace Edubase.Web.UI.Controllers.Api
                     Skip = skip,
                     Take = take,
                     SortBy = eSortBy.NameAlphabeticalAZ,
-                    Filters = AcademyUtility.GetEstablishmentSearchFilters
-                        (new GetEstabSearchFiltersParam(from, to, establishmentTypeId, isUserSecure16To19)),
+                    Filters = AcademyUtility.GetEstablishmentSearchFilters(from, to, establishmentTypeId),
                     Select = new List<string>
                     {
                         nameof(M.Name),

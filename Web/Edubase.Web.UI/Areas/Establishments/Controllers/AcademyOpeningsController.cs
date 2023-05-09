@@ -41,7 +41,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             //secure 16-19 academy establishment type Id is 46
             return Task.FromResult<ActionResult>(RedirectToAction(nameof(ManageAcademyOpenings),
-                new { skip, sortBy, establishmentTypeId = AcademyUtility.EncryptValue("46") }));
+                new { skip, sortBy, establishmentTypeId = "46" }));
         }
 
         [HttpGet, Route("academy-openings", Name = "ManageAcademyOpenings")]
@@ -58,16 +58,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var property = typeof(EditAcademyOpeningViewModel).GetProperty(sortBy);
 
             if (!AcademyUtility.DoesHaveAccessAuthorization(User, establishmentTypeId))
-                throw AcademyUtility.GetAccessViolationException();
-
-            var roleName = AcademyUtility.GetAuthorizedRole(User);
-            var isUserSecure16To19 = AcademyUtility.IsUserSecureAcademy16To19User(roleName);
-            establishmentTypeId = AcademyUtility.GetDecryptedEstablishmentTypeId(establishmentTypeId);
+                throw AcademyUtility.GetPermissionDeniedException();
 
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
             estabTypes =
-                AcademyUtility.FilterEstablishmentsByEstablishmentTypeId(estabTypes, establishmentTypeId,
-                    isUserSecure16To19);
+                AcademyUtility.FilterEstablishmentsIfSecureAcademy16To19(estabTypes, establishmentTypeId);
 
             var result = await _establishmentReadService.SearchAsync(
                 new EstablishmentSearchPayload
@@ -75,9 +70,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     Skip = skip,
                     Take = take,
                     SortBy = eSortBy.NameAlphabeticalAZ,
-                    Filters =
-                        AcademyUtility.GetEstablishmentSearchFilters(
-                            new GetEstabSearchFiltersParam(from, to, establishmentTypeId, isUserSecure16To19)),
+                    Filters = AcademyUtility.GetEstablishmentSearchFilters(from, to, establishmentTypeId),
                     Select = new List<string>
                     {
                         nameof(M.Name),
@@ -174,7 +167,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 AcademyOpenings =
                     new PaginatedResult<EditAcademyOpeningViewModel>(skip, take, result.Count, academyOpenings),
                 Items = academyOpenings,
-                PageTitle = AcademyUtility.GetAcademyOpeningPageTitle(establishmentTypeId, isUserSecure16To19)
+                PageTitle = AcademyUtility.GetAcademyOpeningPageTitle(establishmentTypeId)
             };
             vm.Count = result.Count;
             vm.Skip = skip;
