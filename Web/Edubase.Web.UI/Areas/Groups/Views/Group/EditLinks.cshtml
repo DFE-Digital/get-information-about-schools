@@ -263,15 +263,18 @@
         </div>
 
 
-        <div class="information govuk-inset-text">
-            <h2 id="governance-updates-modal-heading" class="govuk-heading-m">Governance updates</h2>
-            <p id="governance-updates-modal-body" class="govuk-body">
-                You are now about to create your federation. To complete the process, you need to update the governance section for each establishment
-                in the federation to reflect the new federation governing body. Each establishment should have the same governance information.
-                All term of office roles for the individual establishments before they became part of the federation should be closed
-                and new term of office roles for the federation governing body should be added.
-            </p>
-        </div>
+        if (Model.EntityName.Equals("federation", StringComparison.OrdinalIgnoreCase))
+        {
+            <div class="information govuk-inset-text">
+                <h2 id="governance-updates-modal-heading" class="govuk-heading-m">Governance updates</h2>
+                <p id="governance-updates-modal-body" class="govuk-body">
+                    You are now about to create your federation. To complete the process, you need to update the governance section for each establishment
+                    in the federation to reflect the new federation governing body. Each establishment should have the same governance information.
+                    All term of office roles for the individual establishments before they became part of the federation should be closed
+                    and new term of office roles for the federation governing body should be added.
+                </p>
+            </div>
+        }
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
                 <div class="button-row">
@@ -295,25 +298,28 @@
             </div>
         </div>
     }
-    <div id="group-establishment-governance-updates-modal" class="gias-modal-main-container">
-        <div class="gias-modal-main-container__content">
-            <span class="gias-modal-main-container__close-container">
-                <a id="group-establishment-governance-close-link" href="#bottom" class="gias-modal-main-container__close-container__link">Close</a>
-            </span>
-            <h2 id="governance-updates-modal-heading" class="govuk-heading-m">Governance updates</h2>
-            <p id="governance-updates-modal-body" class="govuk-body">
-                You have now created your federation. To complete the process, you need to update the governance section for each establishment
-                in the federation to reflect the new federation governing body. Each establishment should have the same governance information.
-                All term of office roles for the individual establishments before they became part of the federation should be closed
-                and new term of office roles for the federation governing body should be added.
-            </p>
-            @* The same 'value' i.e. @VM.ActionSaveLinks is used in the continue button as in the save button,
+    if (Model.EntityName.Equals("federation", StringComparison.OrdinalIgnoreCase))
+    {
+        <div id="group-establishment-governance-updates-modal" class="gias-modal-main-container">
+            <div class="gias-modal-main-container__content">
+                <span class="gias-modal-main-container__close-container">
+                    <a id="group-establishment-governance-close-link" href="#bottom" class="gias-modal-main-container__close-container__link">Close</a>
+                </span>
+                <h2 id="governance-updates-modal-heading" class="govuk-heading-m">Governance updates</h2>
+                <p id="governance-updates-modal-body" class="govuk-body">
+                    You have now created your federation. To complete the process, you need to update the governance section for each establishment
+                    in the federation to reflect the new federation governing body. Each establishment should have the same governance information.
+                    All term of office roles for the individual establishments before they became part of the federation should be closed
+                    and new term of office roles for the federation governing body should be added.
+                </p>
+                @* The same 'value' i.e. @VM.ActionSaveLinks is used in the continue button as in the save button,
              So, the backend code behaves in the same way as in the save button when the continue button is clicked *@
-            <button class="govuk-button gias-modal-main-container__content__button" type="submit" name="action" value="@VM.ActionSaveLinks">
-                Continue
-            </button>
+                <button class="govuk-button gias-modal-main-container__content__button" type="submit" name="action" value="@VM.ActionSaveLinks">
+                    Continue
+                </button>
+            </div>
         </div>
-    </div>
+    }
 }
 
 </div>
@@ -332,7 +338,9 @@
         <script nonce="@Html.ScriptNonce()">var isConfirmingChanges = true;</script>
     }
 
-    <script nonce="@Html.ScriptNonce()" type="text/javascript">
+    @if (Model.EntityName.Equals("federation", StringComparison.OrdinalIgnoreCase))
+    {
+        <script nonce="@Html.ScriptNonce()" type="text/javascript">
          const governanceUpdatesModal = document.getElementById("group-establishment-governance-updates-modal");
          const id=`save-@StringUtils.ElementIdFormat(Model.ListOfEstablishmentsPluralName)-bottom-button`;
          const saveBtn = document.getElementById(`${id}`);
@@ -342,7 +350,8 @@
                 e.preventDefault();
           };
           closeLink.onclick = ()=> governanceUpdatesModal.style.display="none";
-        </script>
+    </script>
+    }
 
     <script src="@Html.Raw(Html.GetWebpackScriptUrl("edit-group-links.*.js"))"></script>
 }
