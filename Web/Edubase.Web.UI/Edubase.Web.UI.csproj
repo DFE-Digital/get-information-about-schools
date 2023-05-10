@@ -376,11 +376,13 @@
     <Compile Include="Helpers\BrowserClientStorage.cs" />
     <Compile Include="Helpers\CannotBeEmptyAttribute.cs" />
     <Compile Include="Helpers\FormHelpers.cs" />
+    <Compile Include="Helpers\GetEstabSearchFiltersParam.cs" />
     <Compile Include="Helpers\ILayoutHelper.cs" />
     <Compile Include="Helpers\LayoutHelper.cs" />
     <Compile Include="Helpers\NonceHelper.cs" />
     <Compile Include="Helpers\QueryValidator.cs" />
     <Compile Include="Helpers\RouteDto.cs" />
+    <Compile Include="Helpers\AcademyUtility.cs" />
     <Compile Include="Helpers\StringUtils.cs" />
     <Compile Include="Mappers\BulkUpdateViewModelToDtoMapper.cs" />
     <Compile Include="Mappers\LookupToSearchViewModelMapper.cs" />

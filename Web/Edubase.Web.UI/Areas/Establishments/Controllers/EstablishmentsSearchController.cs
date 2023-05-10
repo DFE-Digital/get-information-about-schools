@@ -1,23 +1,16 @@
-using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using Edubase.Common;
 using Edubase.Web.UI.Models;
 using System.Linq;
-using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Edubase.Data.Repositories;
-using Edubase.Services.Security.ClaimsIdentityConverters;
-using Edubase.Services.Texuna;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using Newtonsoft.Json;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
 {
-    using Edubase.Services.Establishments.Models;
     using Edubase.Services.Security;
     using Edubase.Web.UI.Helpers;
     using Edubase.Web.UI.Mappers.Establishment;
@@ -31,7 +24,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
     using System;
     using System.Collections.Specialized;
     using System.Threading.Tasks;
-    using System.Web.Hosting;
     using UI.Controllers;
     using UI.Models.Search;
     using EM = Services.Establishments.Models.EstablishmentModel;
