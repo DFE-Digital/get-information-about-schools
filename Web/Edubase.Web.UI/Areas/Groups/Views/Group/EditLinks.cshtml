@@ -7,9 +7,7 @@
     ViewBag.Title = Model.PageTitle;
     Layout = "_EditLayoutPage.cshtml";
 }
-@{
-    const string Federation = "federation";
-}
+
 @section BreadCrumbs {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
@@ -265,7 +263,7 @@
         </div>
 
 
-        if (Model.EntityName.Equals(Federation, StringComparison.OrdinalIgnoreCase))
+        if (Model.GroupTypeMode== GroupEditorViewModelBase.eGroupTypeMode.Federation)
         {
             <div class="information govuk-inset-text">
                 <h2 id="governance-updates-modal-heading" class="govuk-heading-m">Governance updates</h2>
@@ -300,7 +298,7 @@
             </div>
         </div>
     }
-    if (Model.EntityName.Equals(Federation, StringComparison.OrdinalIgnoreCase))
+    if (Model.GroupTypeMode== GroupEditorViewModelBase.eGroupTypeMode.Federation)
     {
         <div id="group-establishment-governance-updates-modal" class="gias-modal-main-container">
             <div class="gias-modal-main-container__content">
@@ -340,7 +338,7 @@
         <script nonce="@Html.ScriptNonce()">var isConfirmingChanges = true;</script>
     }
 
-    @if (Model.EntityName.Equals(Federation, StringComparison.OrdinalIgnoreCase))
+    @if (Model.GroupTypeMode== GroupEditorViewModelBase.eGroupTypeMode.Federation)
     {
         <script nonce="@Html.ScriptNonce()" type="text/javascript">
          const governanceUpdatesModal = document.getElementById("group-establishment-governance-updates-modal");
