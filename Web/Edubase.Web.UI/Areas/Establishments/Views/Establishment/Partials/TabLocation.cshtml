@@ -20,56 +20,68 @@
     <div class="detail-summary">
         <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Regional schools commissioner (RSC) region</dt>
-                <dd class="govuk-summary-list__value">@Model.RSCRegionName</dd>
+                <dt id="rsc-region-key" class="govuk-summary-list__key">Regional schools commissioner (RSC) region</dt>
+                <dd id="rsc-region-value" class="govuk-summary-list__value">@Model.RSCRegionName</dd>
             </div>
             <div class="govuk-summary-list__row">
                 <dt id="gor-key" class="govuk-summary-list__key">Government office region (GOR)</dt>
                 <dd id="gor-value" class="govuk-summary-list__value">@Model.GovernmentOfficeRegionName</dd>
             </div>
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">District</dt>
-                <dd class="govuk-summary-list__value">@Model.AdministrativeDistrictName</dd>
+                <dt id="district-key" class="govuk-summary-list__key">District</dt>
+                <dd id="district-value" class="govuk-summary-list__value">@Model.AdministrativeDistrictName</dd>
             </div>
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Ward</dt>
-                <dd class="govuk-summary-list__value">@Model.AdministrativeWardName</dd>
+                <dt id="ward-key" class="govuk-summary-list__key">Ward</dt>
+                <dd id="ward-value" class="govuk-summary-list__value">@Model.AdministrativeWardName</dd>
             </div>
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Parliamentary constituency</dt>
-                <dd class="govuk-summary-list__value">@Model.ParliamentaryConstituencyName</dd>
+                <dt id="parliamentary-constituency-key" class="govuk-summary-list__key">Parliamentary constituency</dt>
+                <dd id="parliamentary-constituency-value" class="govuk-summary-list__value">@Model.ParliamentaryConstituencyName</dd>
             </div>
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Urban/rural description</dt>
-                <dd class="govuk-summary-list__value">@Model.UrbanRuralName</dd>
+                <dt id="urban-rural-key" class="govuk-summary-list__key">Urban/rural description</dt>
+                <dd id="urban-rural-value" class="govuk-summary-list__value">@Model.UrbanRuralName</dd>
             </div>
             <div class="govuk-summary-list__row">
                 <dt id="gss-key" class="govuk-summary-list__key">Government Statistical Service (GSS) local authority code</dt>
                 <dd id="gss-value" class="govuk-summary-list__value">@Model.GSSLAName</dd>
             </div>
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Easting</dt>
-                <dd class="govuk-summary-list__value">@Model.Establishment.Easting</dd>
+                <dt id="easting-key" class="govuk-summary-list__key">Easting</dt>
+                <dd id="easting-value" class="govuk-summary-list__value">@Model.Establishment.Easting</dd>
             </div>
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Northing</dt>
-                <dd class="govuk-summary-list__value">@Model.Establishment.Northing</dd>
+                <dt id="northing-key" class="govuk-summary-list__key">Northing</dt>
+                <dd id="northing-value" class="govuk-summary-list__value">@Model.Establishment.Northing</dd>
             </div>
 
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Middle super output area (MSOA)</dt>
-                <dd class="govuk-summary-list__value">@Model.MSOAName</dd>
+                <dt id="msoa-key" class="govuk-summary-list__key">
+                    Middle super output area (MSOA)
+                    <a href="#help-text-msoa" class="help-icon modal-link">
+                        <span class="govuk-visually-hidden">Help with middle super output area</span>
+                        @helpers.DialogHiddenPrompt()
+                    </a>
+                </dt>
+                <dd id="msoa-value" class="govuk-summary-list__value">@Model.MSOAName</dd>
             </div>
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">Lower super output area (LSOA)</dt>
-                <dd class="govuk-summary-list__value">@Model.LSOAName</dd>
+                <dt id="lsoa-key" class="govuk-summary-list__key">
+                    Lower super output area (LSOA)
+                    <a href="#help-text-lsoa" class="help-icon modal-link">
+                        <span class="govuk-visually-hidden">Help with lower super output area</span>
+                        @helpers.DialogHiddenPrompt()
+                    </a>
+                </dt>
+                <dd id="lsoa-value" class="govuk-summary-list__value">@Model.LSOAName</dd>
             </div>
         </dl>
     </div>
 
     @if (Model.AdditionalAddressList.Any())
     {
-        <br />
+        <br/>
         <h3 class="govuk-heading-s">Other sites</h3>
         foreach (var address in Model.AdditionalAddressList)
         {
@@ -80,8 +92,8 @@
             <div class="detail-summary">
                 <dl class="govuk-summary-list">
                     <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">Address</dt>
-                        <dd class="govuk-summary-list__value">@address.GetAddress()</dd>
+                        <dt id="address-key" class="govuk-summary-list__key">Address</dt>
+                        <dd id="address-value" class="govuk-summary-list__value">@address.GetAddress()</dd>
                     </div>
                 </dl>
             </div>

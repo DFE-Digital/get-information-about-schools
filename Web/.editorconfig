@@ -18,6 +18,12 @@ charset = utf-8
 [*.{js,scss,vue}]
 indent_size = 2
 
+[Web.config]
+indent_size = 2
+
+[*.csproj]
+indent_size = 2
+
 ########################################################################################################################
 # .NET Coding Conventions                                                                                              #
 # Reference: https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference?view=vs-2017 #

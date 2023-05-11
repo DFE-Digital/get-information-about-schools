@@ -1,59 +1,58 @@
+using System;
+using System.Configuration;
+using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
+using System.Reflection;
+using System.Web;
+using System.Web.Http;
+using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
 using AutoMapper;
+using AzureTableLogger;
+using AzureTableLogger.Services;
 using Edubase.Common;
 using Edubase.Common.Cache;
 using Edubase.Data;
+using Edubase.Data.Repositories;
 using Edubase.Services;
 using Edubase.Services.Approvals;
+using Edubase.Services.Core;
+using Edubase.Services.DataQuality;
 using Edubase.Services.Downloads;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Downloads;
+using Edubase.Services.ExternalLookup;
+using Edubase.Services.Geo;
 using Edubase.Services.Governors;
 using Edubase.Services.Governors.Downloads;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Downloads;
-using Edubase.Services.IntegrationEndPoints.CompaniesHouse;
 using Edubase.Services.IntegrationEndPoints.AzureMaps;
+using Edubase.Services.IntegrationEndPoints.CompaniesHouse;
+using Edubase.Services.IntegrationEndPoints.OSPlaces;
 using Edubase.Services.IntegrationEndPoints.Smtp;
 using Edubase.Services.Lookup;
 using Edubase.Services.Nomenclature;
 using Edubase.Services.Security;
 using Edubase.Services.Texuna.Approvals;
 using Edubase.Services.Texuna.ChangeHistory;
+using Edubase.Services.Texuna.Core;
 using Edubase.Services.Texuna.Downloads;
 using Edubase.Services.Texuna.Establishments;
 using Edubase.Services.Texuna.Governors;
 using Edubase.Services.Texuna.Groups;
 using Edubase.Services.Texuna.Lookup;
 using Edubase.Services.Texuna.Security;
-using Edubase.Web.Resources;
-using Edubase.Web.UI.Validation;
-using Newtonsoft.Json;
-using System;
-using System.Configuration;
-using System.Net;
-using System.Net.Http;
-using System.Reflection;
-using System.Web.Http;
-using System.Web.Mvc;
-using Edubase.Data.Repositories;
-using Edubase.Services.DataQuality;
-using Edubase.Web.UI.Helpers;
-using Edubase.Services.Core;
-using System.Net.Http.Formatting;
 using Edubase.Services.Texuna.Serialization;
-using System.Net.Http.Headers;
-using Edubase.Services.Texuna.Core;
-using System.Web;
-using AzureTableLogger;
-using AzureTableLogger.Services;
-using Edubase.Services.ExternalLookup;
+using Edubase.Web.Resources;
 using Edubase.Web.UI.Filters;
+using Edubase.Web.UI.Helpers;
+using Edubase.Web.UI.Validation;
 using Microsoft.WindowsAzure.Storage;
-using Edubase.Services.Geo;
-using Edubase.Services.IntegrationEndPoints.OSPlaces;
+using Newtonsoft.Json;
 
 namespace Edubase.Web.UI
 {
@@ -87,23 +86,32 @@ namespace Edubase.Web.UI
 
         private static void RegisterTypes(ContainerBuilder builder)
         {
-            builder.RegisterType<MockSmtpEndPoint>().As<ISmtpEndPoint>(); // use mock for now, we don't need to email error reports at the moment.
+            builder.RegisterType<MockSmtpEndPoint>()
+                .As<ISmtpEndPoint>(); // use mock for now, we don't need to email error reports at the moment.
 
-            CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["DataConnectionString"].ConnectionString);
+            var cloudStorageAccount =
+                CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["DataConnectionString"]
+                    .ConnectionString);
             builder.RegisterInstance(cloudStorageAccount);
 
-            builder.Register(context => new LoggingServicePolicy {FlushInterval = TimeSpan.FromSeconds(30), RetentionCheckInterval = TimeSpan.FromDays(1), RetentionCutoffAge = 90, UsagePolicy = UsagePolicy.SCHEDULED}).SingleInstance();
+            builder.Register(context => new LoggingServicePolicy
+            {
+                FlushInterval = TimeSpan.FromSeconds(30),
+                RetentionCheckInterval = TimeSpan.FromDays(1),
+                RetentionCutoffAge = 90,
+                UsagePolicy = UsagePolicy.SCHEDULED
+            }).SingleInstance();
             builder.Register(context =>
             {
                 var loggingServicePolicy = context.Resolve<LoggingServicePolicy>();
                 return new LoggingService(loggingServicePolicy, cloudStorageAccount, "AZTLoggerMessages");
             }).As<ILoggingService>().SingleInstance();
             builder.RegisterType<AzLogger>().As<IAzLogger>().SingleInstance();
-            
+
             builder.RegisterType<ExceptionHandler>().AsSelf().SingleInstance();
 
             var dbGeographyConverter = new DbGeographyConverter();
-            var jsonConverterCollection = new JsonConverterCollection() { dbGeographyConverter };
+            var jsonConverterCollection = new JsonConverterCollection { dbGeographyConverter };
             builder.RegisterInstance(jsonConverterCollection);
 
             builder.RegisterType<CacheAccessor>()
@@ -135,21 +143,27 @@ namespace Edubase.Web.UI
             // HttpClient and HttpClientWrapper injected by default
             builder.RegisterInstance(CreateHttpClient()).SingleInstance().AsSelf();
             builder.RegisterType<HttpClientWrapper>()
-               .AsSelf()
-               .As<IHttpClientWrapper>();
+                .AsSelf()
+                .As<IHttpClientWrapper>();
 
             // named HttpClient and HttpClientWrapper used by lookup service
-            builder.RegisterInstance(CreateLookupClient()).SingleInstance().Named<HttpClient>("LookupApiClient");
+            builder.RegisterInstance(CreateLookupClient(
+                ConfigurationManager.AppSettings["LookupApiBaseAddress"],
+                ConfigurationManager.AppSettings["LookupApiUsername"],
+                ConfigurationManager.AppSettings["LookupApiPassword"]
+            )).SingleInstance().Named<HttpClient>("LookupApiClient");
+
+
             builder.Register(c => new HttpClientWrapper(
-                c.ResolveNamed<HttpClient>("LookupApiClient"),
-                c.Resolve<JsonMediaTypeFormatter>(),
-                c.Resolve<IClientStorage>(),
-                c.Resolve<ApiRecorderSessionItemRepository>()
+                    c.ResolveNamed<HttpClient>("LookupApiClient"),
+                    c.Resolve<JsonMediaTypeFormatter>(),
+                    c.Resolve<IClientStorage>(),
+                    c.Resolve<ApiRecorderSessionItemRepository>()
                 ))
                 .Named<HttpClientWrapper>("LookupHttpClientWrapper");
             builder.Register(c => new LookupApiService(
-                c.ResolveNamed<HttpClientWrapper>("LookupHttpClientWrapper"),
-                c.Resolve<ISecurityService>()))
+                    c.ResolveNamed<HttpClientWrapper>("LookupHttpClientWrapper"),
+                    c.Resolve<ISecurityService>()))
                 .As<ILookupService>();
 
             builder.RegisterType<GovernorDownloadApiService>().As<IGovernorDownloadService>();
@@ -176,7 +190,8 @@ namespace Edubase.Web.UI
 
             builder.RegisterType<LayoutHelper>().AsImplementedInterfaces().AsSelf();
 
-            builder.Register(c => new HttpContextWrapper(HttpContext.Current)).As<HttpContextBase>().InstancePerRequest();
+            builder.Register(c => new HttpContextWrapper(HttpContext.Current)).As<HttpContextBase>()
+                .InstancePerRequest();
             builder.RegisterType<BrowserClientStorage>().As<IClientStorage>().InstancePerRequest();
 
             builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
@@ -206,14 +221,17 @@ namespace Edubase.Web.UI
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
             {
                 BaseAddress = new Uri(ConfigurationManager.AppSettings["TexunaApiBaseAddress"]),
-                Timeout = TimeSpan.FromSeconds(180),
+                Timeout = TimeSpan.FromSeconds(180)
             };
 
             var apiUsername = ConfigurationManager.AppSettings["api:Username"];
             var apiPassword = ConfigurationManager.AppSettings["api:Password"];
 
             if (apiUsername != null && apiPassword != null)
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
+                    new BasicAuthCredentials(apiUsername, apiPassword).ToString());
+            }
 
             return client;
         }
@@ -223,14 +241,17 @@ namespace Edubase.Web.UI
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
             {
                 BaseAddress = new Uri(ConfigurationManager.AppSettings["FscpdURL"]),
-                Timeout = TimeSpan.FromSeconds(10),
+                Timeout = TimeSpan.FromSeconds(10)
             };
 
             var apiUsername = ConfigurationManager.AppSettings["FscpdUsername"];
             var apiPassword = ConfigurationManager.AppSettings["FscpdPassword"];
 
             if (!apiUsername.IsNullOrEmpty() && !apiPassword.IsNullOrEmpty())
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
+                    new BasicAuthCredentials(apiUsername, apiPassword).ToString());
+            }
 
             return client;
         }
@@ -240,7 +261,7 @@ namespace Edubase.Web.UI
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
             {
                 BaseAddress = new Uri(ConfigurationManager.AppSettings["FinancialBenchmarkingURL"]),
-                Timeout = TimeSpan.FromSeconds(10),
+                Timeout = TimeSpan.FromSeconds(10)
             };
 
             var apiUsername = ConfigurationManager.AppSettings["FinancialBenchmarkingUsername"];
@@ -248,7 +269,8 @@ namespace Edubase.Web.UI
 
             if (!apiUsername.IsNullOrEmpty() && !apiPassword.IsNullOrEmpty())
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
+                    new BasicAuthCredentials(apiUsername, apiPassword).ToString());
             }
 
             var header = new ProductHeaderValue("GIAS", Assembly.GetExecutingAssembly().GetName().Version.ToString());
@@ -256,23 +278,23 @@ namespace Edubase.Web.UI
             client.DefaultRequestHeaders.UserAgent.Add(userAgent);
             return client;
         }
-        public static HttpClient CreateLookupClient()
+
+        public static HttpClient CreateLookupClient(string lookupApiAddress,
+            string lookupApiUsername, string lookupApiPassword)
         {
-            var lookupApi = ConfigurationManager.AppSettings["LookupApiBaseAddress"];
+            var lookupUri = new Uri(lookupApiAddress);
+
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
             {
-                BaseAddress = new Uri(lookupApi ?? ConfigurationManager.AppSettings["TexunaApiBaseAddress"]),
-                Timeout = TimeSpan.FromSeconds(180),
+                BaseAddress = lookupUri, Timeout = TimeSpan.FromSeconds(180)
             };
 
-            if (lookupApi == null)
+            if (!string.IsNullOrEmpty(lookupApiUsername) && !string.IsNullOrEmpty(lookupApiPassword))
             {
-                var apiUsername = ConfigurationManager.AppSettings["api:Username"];
-                var apiPassword = ConfigurationManager.AppSettings["api:Password"];
-
-                if (apiUsername != null && apiPassword != null)
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", new BasicAuthCredentials(apiUsername, apiPassword).ToString());
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
+                    new BasicAuthCredentials(lookupApiUsername, lookupApiPassword).ToString());
             }
+
             return client;
         }
     }

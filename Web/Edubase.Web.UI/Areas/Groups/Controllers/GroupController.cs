@@ -443,6 +443,10 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                     viewModel.ChangesSummary = changes;
                     return View("EditDetails", viewModel);
                 }
+                else if (!changes.Any())
+                {
+                    return View("EditDetailsEmpty", viewModel);
+                }
                 else
                 {
                     var actionResult = await ProcessCreateEditGroup(viewModel);

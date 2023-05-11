@@ -425,7 +425,7 @@ const mergersApp = new Vue({
 
       if (this.mergeDateError) {
         this.errors.push({
-          href: '#amalgamationdate-day',
+          href: '#amalgamation-date-day',
           message: 'You have entered an invalid date. Please correct the date to continue',
         });
       }

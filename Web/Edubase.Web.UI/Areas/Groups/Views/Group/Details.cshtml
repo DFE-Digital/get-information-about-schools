@@ -4,7 +4,6 @@
 @using Edubase.Web.UI.Models.Search
 @using Microsoft.Ajax.Utilities
 @using System.Text.RegularExpressions
-@using Edubase.Services.Security
 
 @model GroupDetailViewModel
 @{
@@ -91,8 +90,7 @@
 
         <p id="uid" class="urn establishment-fine-detail"><abbr title="Unique Identifier">UID</abbr>: <span id="uid-value">@Model.Group.GroupUId</span></p>
         <p id="establishment-group-type" class="group-type establishment-fine-detail">@Model.GroupTypeName</p>
-
-        <p class="govuk-body-s establishment-data-download">
+        <p id="establishment-group-data-download" class="govuk-body-s establishment-data-download">
             @Html.RouteLink("Download group data", "GroupDataDownload", new { uid = Model.Group.GroupUId,
             state = UriHelper.SerializeToUrlToken(RouteDto.Create(
                 new RouteDto("Search", new RouteValueDictionary(new { SelectedTab = SearchViewModel.Tab.Groups.ToString() }), "Search"),
@@ -128,7 +126,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <div class="gias-tabs-wrapper">
-            <div class="tab-wrap" id="tab-wrap">
+            <div class="tab-wrap" id="details-tab-wrap">
                 <ul class="gias-tabs">
                     <li class="gias-tabs__list-item">
                         <a href="#details" id="details-tab-link" class="gias-tabs__tab ">Details</a>

@@ -126,7 +126,7 @@
         </div>
         <div class="govuk-grid-column-full">
             <div class="button-row govuk-!-padding-top-8">
-                <button id="email-save-submit-bottom" type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASAmendEmails, "details")">Continue</button>
+                <button id="email-save-submit-button" type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASAmendEmails, "details")">Continue</button>
             </div>
         </div>
     </div>
@@ -230,7 +230,7 @@ else
         </div>
         <div class="govuk-grid-column-full">
             <div class="button-row govuk-!-padding-top-4">
-                <button id="continue-bottom" type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSaveEmails, "details")">Continue</button>
+                <button id="save-submit-button" type="submit" class="govuk-button" name="@nameof(Model.ActionSpecifier)" value="@ViewModel.GetActionSpecifier(ViewModel.ASSaveEmails, "details")">Continue</button>
                 @* @Html.ActionLink("Cancel", "Details", "Establishment", new {id = Model.Urn}, new {@class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button"}) *@
             </div>
         </div>

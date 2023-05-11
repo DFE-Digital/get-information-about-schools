@@ -35,7 +35,7 @@
             <error-summary :errors="errors" error-title="There is a problem" />
         </div>
         @Html.Partial("_ValidationSummary", ViewData.ModelState)
-        <h1 class="govuk-heading-xl" id="downloadsTitle">@pageHeader</h1>
+        <h1 class="govuk-heading-xl" id="downloads-title">@pageHeader</h1>
         <p>
             This data is updated daily. The data fields and the order of the data fields can change in these downloads.
             If you need data in a prescribed format you should consider signing up for WebServices by submitting a
@@ -48,7 +48,7 @@
 <div class="gias-tabs-wrapper">
     @if (Model.AreScheduledExtractsAvailable)
     {
-        <div class="tab-wrap" id="tab-wrap">
+        <div class="tab-wrap" id="establishment-tab-wrap">
             <ul class="gias-tabs">
                 <li class="gias-tabs__list-item">
                     <a href="#group-data" class="gias-tabs__tab">
@@ -152,7 +152,7 @@
                             {
                                 <tr class="govuk-table__row">
                                     <td class="govuk-table__cell download-list-item">
-                                        @Html.RouteLink(item.Name, "RequestScheduledExtract", new { eid = item.Id }, new { rel = "nofollow" })
+                                        @Html.RouteLink(item.Name, "RequestScheduledExtract", new { eid = item.Id }, new { rel = "nofollow", id = $"{StringUtils.ElementIdFormat(item.Name)}" })
                                     </td>
                                     <td class="govuk-table__cell govuk-table__cell--numeric">
                                         @item.Id
