@@ -890,6 +890,8 @@
     <Content Include="Views\News\EditArticle.cshtml" />
     <Content Include="Views\News\AuditArticles.cshtml" />
     <Content Include="Views\News\AuditArticle.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\_LegalDutySecureAcademyTrustStatement.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\_LegalDutyStatement.cshtml" />
     <None Include="packages.config" />
     <Content Include="Views\Guidance\LaNameCodes.cshtml" />
     <Content Include="Views\Guidance\SelectFormat.cshtml" />

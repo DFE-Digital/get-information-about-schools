@@ -889,7 +889,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 await _cachedLookupService.GovernorAppointingBodiesGetAllAsync(),
                 governorPermissions);
 
-            if (establishmentUrn.HasValue || establishmentModel != null)
+            if (establishmentUrn.HasValue || establishmentModel != null) // governance view for an establishment
             {
                 var estabDomainModel = establishmentModel ??
                                        (await _establishmentReadService.GetAsync(establishmentUrn.Value, user))
@@ -899,13 +899,14 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 viewModel.GovernanceMode = items.Any() ? estabDomainModel.GovernanceMode : null;
             }
 
-            if (groupUId.HasValue)
+            if (groupUId.HasValue) // governance view for a group
             {
                 var groupModel = (await _groupReadService.GetAsync(groupUId.Value, user)).GetResult();
                 viewModel.ShowDelegationAndCorpContactInformation =
                     groupModel.GroupTypeId == (int) eLookupGroupType.MultiacademyTrust;
                 viewModel.DelegationInformation = groupModel.DelegationInformation;
                 viewModel.CorporateContact = groupModel.CorporateContact;
+                viewModel.GroupTypeId = groupModel.GroupTypeId;
             }
 
             return viewModel;
