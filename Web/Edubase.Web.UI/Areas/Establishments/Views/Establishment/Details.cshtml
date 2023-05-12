@@ -103,7 +103,7 @@
 
         <p id="urn" class="urn establishment-fine-detail"><abbr title="Unique Reference Number">URN</abbr>: <span id="urn-value">@Model.Establishment.Urn</span></p>
         <p id="establishment-type" class="establishment-type establishment-fine-detail">@Model.TypeName</p>
-        <p id="establishment-data-download" class="establishment-data-download">
+        <p class="establishment-data-download">
             @Html.RouteLink("Download establishment data", "EstabDataDownload", new
             {
                 Model.Establishment.Urn,
@@ -111,7 +111,7 @@
                     new RouteDto("Search", new RouteValueDictionary(new { SelectedTab = SearchViewModel.Tab.Establishments.ToString() }), "Search"),
                     Model.LegalParentGroupRouteDto,
                     Model.EstabDetailRouteDto))
-            }, new { rel = "nofollow" })
+            }, new { rel = "nofollow", id = "establishment-data-download-link" })
         </p>
 
         @if (Model.LegalParentGroup != null)
