@@ -48,7 +48,6 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="Establishments\EditPolicies\LookupOptionsFilterTests.cs" />
     <Compile Include="ExternalLookup\FBServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -68,6 +67,7 @@
       <Name>Edubase.Services</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
