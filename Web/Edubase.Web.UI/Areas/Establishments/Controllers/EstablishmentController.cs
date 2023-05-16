@@ -1423,6 +1423,20 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
                 viewModel.ShowDuplicateRecordError = validationEnvelope.Errors.Any(x => x.Code == "establishment.edit.with.same.name.la.postcode.found");
 
+
+                if (viewModel.AccreditationExpiryDate.Year.HasValue && viewModel.AccreditationExpiryDate.Month.HasValue && viewModel.AccreditationExpiryDate.Day.HasValue &&
+                    viewModel.OpenDate.Year.HasValue && viewModel.OpenDate.Month.HasValue && viewModel.OpenDate.Day.HasValue)
+                {
+                    var AccreditationEnd = new DateTime((int) viewModel.AccreditationExpiryDate.Year, (int) viewModel.AccreditationExpiryDate.Month, (int) viewModel.AccreditationExpiryDate.Day);
+                    var AccreditationStart = new DateTime((int) viewModel.OpenDate.Year, (int) viewModel.OpenDate.Month, (int) viewModel.OpenDate.Day);
+
+                    if (AccreditationEnd < AccreditationStart)
+                    {
+                        ModelState.AddModelError(nameof(viewModel.AccreditationExpiryDate), "Accreditation expiry date must be before accreditation start date");
+                    }
+                }
+
+
                 if (viewModel.ShowDuplicateRecordError)
                 {
                     ModelState.AddModelError(nameof(viewModel.Name), "Please enter a different establishment name");
