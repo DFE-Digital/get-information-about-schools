@@ -388,7 +388,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 OriginalStatusId = domainModel.StatusId,
                 UKPRN = domainModel.UKPRN.ToInteger()
             };
-            TempData["CompaniesHouseNumber"] = domainModel.CompaniesHouseNumber;
+            // TempData["CompaniesHouseNumber"] = domainModel.CompaniesHouseNumber;
             viewModel.ListOfEstablishmentsPluralName = NomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
 
             await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, id, true);
@@ -414,7 +414,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             result.AddToModelState(ModelState, string.Empty);
 
             await PopulateSelectLists(viewModel);
-            if (TempData.TryGetValue("CompaniesHouseNumber", out var value)&& viewModel.CompaniesHouseNumber != value.ToString())
+            if (TempData.TryGetValue("companiesHouseNumber", out var value))
                 viewModel.CompaniesHouseNumber = value.ToString();
 
             if (viewModel.CanUserEditStatus)
