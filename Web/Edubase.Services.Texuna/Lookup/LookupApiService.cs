@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using Edubase.Services.Domain;
 using Edubase.Services.Lookup;
@@ -7,7 +8,7 @@ using Edubase.Services.Security;
 
 namespace Edubase.Services.Texuna.Lookup
 {
-    public class LookupApiService : ILookupService
+    public class LookupApiService : ILookupService, IUserDependentLookupService
     {
         private const string ApiPrefix = "lookup/";
         private readonly IHttpClientWrapper _httpClient;
@@ -384,6 +385,11 @@ namespace Edubase.Services.Texuna.Lookup
         public async Task<IEnumerable<LookupDto>> CASWardsGetAllAsync()
         {
             return await GetData("cas-wards");
+        }
+
+        public async Task<IEnumerable<LookupDto>> EstablishmentStatusesGetAllAsync(IPrincipal user)
+        {
+            return (await _httpClient.GetAsync<List<LookupDto>>(ApiPrefix + "establishment-statuses", user)).GetResponse();
         }
 
         private async Task<IEnumerable<LookupDto>> GetData(string name)

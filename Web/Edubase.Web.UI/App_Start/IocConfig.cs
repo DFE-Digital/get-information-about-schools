@@ -165,6 +165,10 @@ namespace Edubase.Web.UI
                     c.ResolveNamed<HttpClientWrapper>("LookupHttpClientWrapper"),
                     c.Resolve<ISecurityService>()))
                 .As<ILookupService>();
+            builder.Register(c => new LookupApiService(
+                    c.ResolveNamed<HttpClientWrapper>("LookupHttpClientWrapper"),
+                    c.Resolve<ISecurityService>()))
+                .As<IUserDependentLookupService>();
 
             builder.RegisterType<GovernorDownloadApiService>().As<IGovernorDownloadService>();
             builder.RegisterType<GovernorsReadApiService>().As<IGovernorsReadService>();
