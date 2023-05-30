@@ -65,7 +65,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public IEnumerable<LinkedGroupModel> Links { get; set; }
         public GovernorPermissions GovernorPermissions { get; set; }
 
-        public string FscpdURL => extService.FscpdURL(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor));
+        public string FscpdURL => extService.FscpdURL(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SchoolSponsor));
         private bool? showFscpd;
         public bool ShowFscpd
         {
@@ -73,7 +73,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
             {
                 if (!showFscpd.HasValue)
                 {
-                    showFscpd = extService != null && Task.Run(() => extService.FscpdCheckExists(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor))).Result;
+                    showFscpd = extService != null && Task.Run(() => extService.FscpdCheckExists(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SchoolSponsor))).Result;
                 }
                 return showFscpd.Value;
             }

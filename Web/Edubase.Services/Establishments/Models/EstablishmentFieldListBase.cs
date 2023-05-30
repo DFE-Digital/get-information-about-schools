@@ -25,6 +25,8 @@ namespace Edubase.Services.Establishments.Models
 
         public virtual T CloseDate { get; set; }
 
+        public virtual T AccreditationExpiryDate { get; set; }
+
         public virtual T EducationPhaseId { get; set; }
 
         public virtual T StatutoryLowAge { get; set; }

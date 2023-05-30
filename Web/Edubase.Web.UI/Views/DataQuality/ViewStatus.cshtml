@@ -48,13 +48,13 @@
                 var updated = new DateTime((int)item.LastUpdated.Year,(int) item.LastUpdated.Month, (int)item.LastUpdated.Day);
 
                 <tr class="govuk-table__row">
-                    <td data-label="Establishment type" class="govuk-table__cell">@item.EstablishmentType.GetEnumMember()</td>
-                    <td data-label="Last updated" class="govuk-table__cell">@updated.ToString("d MMMM yyyy")</td>
-                    <td data-label="Data owner" @Html.Raw(hasClause ? "aria-describedby = 'independent-pending'" : "") class="govuk-table__cell">
+                    <td id="establishment-type-@StringUtils.ElementIdFormat(item.EstablishmentType.GetEnumMember())" data-label="Establishment type" class="govuk-table__cell">@item.EstablishmentType.GetEnumMember()</td>
+                    <td id="last-updated-@StringUtils.ElementIdFormat(item.EstablishmentType.GetEnumMember())" data-label="Last updated" class="govuk-table__cell">@updated.ToString("d MMMM yyyy")</td>
+                    <td id="data-owner-@StringUtils.ElementIdFormat(item.DataOwner)" data-label="Data owner" @Html.Raw(hasClause ? "aria-describedby = 'independent-pending'" : "") class="govuk-table__cell">
                         @item.DataOwner
                         @(hasClause ? "*" : "")
                     </td>
-                    <td data-label="Email"  class="govuk-table__cell">
+                    <td id="email-@StringUtils.ElementIdFormat(item.DataOwner)" data-label="Email"  class="govuk-table__cell">
                         @item.Email
                     </td>
                 </tr>
