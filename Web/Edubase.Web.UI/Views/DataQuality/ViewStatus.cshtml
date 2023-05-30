@@ -71,11 +71,11 @@
             <div class="button-row govuk-!-padding-top-4">
                 @if (Model.UserCanUpdateLastUpdated)
                 {
-                    @Html.ActionLink("Update Last Updated Dates", "EditStatus", "DataQuality", new {area = ""}, new {@class = "govuk-button govuk-button--secondary", data_module = "govuk-button"})
+                    @Html.ActionLink("Update last updated dates", "EditStatus", "DataQuality", new {area = ""}, new {@class = "govuk-button govuk-button--secondary", data_module = "govuk-button"})
                 }
                 @if (Model.UserCanUpdateDataOwnerDetails)
                 {
-                    @Html.ActionLink("Update Data Owner Details", "EditDataOwnerDetails", "DataQuality", new {area = ""}, new {@class = "govuk-button govuk-button--secondary", data_module = "govuk-button"})
+                    @Html.ActionLink("Update data owner details", "EditDataOwnerDetails", "DataQuality", new {area = ""}, new {@class = "govuk-button govuk-button--secondary", data_module = "govuk-button"})
                 }
             </div>
         }
