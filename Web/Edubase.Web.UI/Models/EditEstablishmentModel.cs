@@ -144,6 +144,8 @@ namespace Edubase.Web.UI.Models
         [Display(Name = "Close date")]
         public DateTimeViewModel CloseDate { get; set; } = new DateTimeViewModel();
 
+        public DateTimeViewModel AccreditationExpiryDate { get; set; } = new DateTimeViewModel();
+
         public string ActionSpecifier { get; set; }
         public string ActionSpecifierCommand => ActionSpecifier.GetPart("-", 0);
         public string ActionSpecifierParam => ActionSpecifier.GetPart("-", 1);

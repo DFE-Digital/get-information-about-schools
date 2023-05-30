@@ -111,7 +111,7 @@
                     new RouteDto("Search", new RouteValueDictionary(new { SelectedTab = SearchViewModel.Tab.Establishments.ToString() }), "Search"),
                     Model.LegalParentGroupRouteDto,
                     Model.EstabDetailRouteDto))
-            }, new { rel = "nofollow" })
+            }, new { rel = "nofollow", id = "establishment-data-download-link" })
         </p>
 
         @if (Model.LegalParentGroup != null)

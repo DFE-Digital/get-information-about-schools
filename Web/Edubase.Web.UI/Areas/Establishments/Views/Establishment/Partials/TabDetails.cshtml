@@ -168,6 +168,15 @@
                 <dd class="govuk-summary-list__value">@Model.ReasonEstablishmentOpenedName</dd>
             </div>
 
+            @if (Model.DisplayPolicy.AccreditationExpiryDate)
+            {
+                    var accreditationExpiryDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation expiry date" : "Closed date";
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">@accreditationExpiryDateTitle</dt>
+                <dd class="govuk-summary-list__value">@(Model.Establishment.AccreditationExpiryDate?.ToString("d MMMM yyyy") ?? "Not recorded")</dd>
+            </div>
+            }
+
             @if (Model.DisplayPolicy.CloseDate)
             {
                 var closeDateTitle = Model.Establishment.TypeId.OneOfThese(eLookupEstablishmentType.OnlineProvider) ? "Accreditation date ended" : "Closed date";
