@@ -14,6 +14,7 @@ using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Controllers
 {
+    // TODO: Potential nuance here -- might need to be able to view, but not modify (thus need to push this down to specific methods?)
     [EdubaseAuthorize(Roles = AuthorisationRoles)]
     public class DataQualityController : Controller
     {
@@ -137,34 +138,44 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route("DataQuality/EditDataOwnerDetails")]
         public async Task<ActionResult> EditDataOwnerDetails()
         {
+            var isAdmin = User.InRole(AuthorizedRoles.IsAdmin);
             var datasets = (await _dataQualityWriteService.GetDataQualityStatus()).Select(d => new DataQualityDataOwnerItem()
                 {
                     EstablishmentType = d.EstablishmentType,
                     Name = d.DataOwner,
                     Email = d.Email,
                 })
+                .Where(item =>
+                {
+                    if (isAdmin)
+                    {
+                        // Admin (backoffice) users may update details for all data owner entries
+                        return true;
+                    }
+
+                    // TODO: Extract this logic out to function/method
+
+                    // Other users may edit the data owner details, if they are a data owner for that specific establishment type
+                    var permissionsEntry = _roleToDataSetMappings
+                        .SingleOrDefault(x => x.Value == item.EstablishmentType);
+
+                    // TODO: What happens on `default`? is `permissionsEntry` populated? (concern - risk of null ref exception?)
+
+                    var establishmentTypeMatches = permissionsEntry.Value == item.EstablishmentType;
+                    var userPermittedToEditEstablishmentTypeOwnerDetails = User.InRole(permissionsEntry.Key);
+
+                    var hasSpecificPermissionToEdit = establishmentTypeMatches && userPermittedToEditEstablishmentTypeOwnerDetails;
+
+                    return hasSpecificPermissionToEdit;
+                })
                 .ToList();
 
             var data = new EditDataQualityDataOwnerViewModel
             {
-                Items = new List<DataQualityDataOwnerItem>()
+                Items = datasets
             };
 
-            foreach (var kvp in _roleToDataSetMappings)
-            {
-                if (User.InRole(kvp.Key, AuthorizedRoles.IsAdmin))
-                {
-                    var item = new DataQualityDataOwnerItem() {EstablishmentType = kvp.Value};
 
-                    if (User.IsInRole(AuthorizedRoles.IsAdmin))
-                    {
-                        item.Name = datasets.FirstOrDefault(d => d.EstablishmentType == kvp.Value)?.Name;
-                        item.Email = datasets.FirstOrDefault(d => d.EstablishmentType == kvp.Value)?.Email;
-                    }
-
-                    data.Items.Add(item);
-                }
-            }
             data.Items.Sort((x,y) => x.EstablishmentType.GetEnumMember().CompareTo(y.EstablishmentType.GetEnumMember()));
             return View(data);
         }
@@ -197,9 +208,10 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, Route("DataQuality")]
         public async Task<ActionResult> ViewStatus(bool dataUpdated = false)
         {
+            var dataQualityStatusList = await _dataQualityWriteService.GetDataQualityStatus();
             var data = new FullDataQualityStatusViewModel
             {
-                Items = (await _dataQualityWriteService.GetDataQualityStatus())
+                Items = dataQualityStatusList
                     .Select(d => new FullDataQualityStatusItem
                     {
                         EstablishmentType = d.EstablishmentType,
@@ -211,10 +223,12 @@ namespace Edubase.Web.UI.Controllers
                     .ToList(),
                 DataUpdated = dataUpdated,
 
-                // Backoffice role users do not need to be prompted (appears on logon), but should be able to update the date
+                // Backoffice role users do not need to be prompted (appears on logon and a separate config entry), but should be able to update the date
                 UserCanUpdateLastUpdated = Api.UserRolesController.UserRequiresDataQualityPrompt(User) || User.InRole(AuthorizedRoles.IsAdmin),
 
+                // Allow admins to update data owner details, and data owners may self-serve (TODO: Review)
                 UserCanUpdateDataOwnerDetails = User.InRole(AuthorizedRoles.IsAdmin)
+                    || User.InRole(_roleToDataSetMappings.Keys.ToArray())
             };
 
             return View(data);
