@@ -14,8 +14,8 @@ using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Controllers
 {
-    // TODO: Potential nuance here -- might need to be able to view, but not modify (thus need to push this down to specific methods?)
-    [EdubaseAuthorize(Roles = AuthorisationRoles)]
+    // Nuance here -- logged in users may view, but not modify, data quality status or data owner details.
+    [EdubaseAuthorize]
     public class DataQualityController : Controller
     {
         private readonly IDataQualityWriteService _dataQualityWriteService;
@@ -43,6 +43,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpGet, Route("DataQuality/Status")]
+        [EdubaseAuthorize]
         public async Task<ActionResult> Status()
         {
             var items = (await _dataQualityWriteService.GetDataQualityStatus())
@@ -78,6 +79,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpGet, Route("DataQuality/Edit")]
+        [EdubaseAuthorize(Roles = AuthorisationRoles)]
         public async Task<ActionResult> EditStatus()
         {
             var datasets = (await _dataQualityWriteService.GetDataQualityStatus()).Select(d => new DataQualityStatusItem
@@ -111,13 +113,14 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpPost, Route("DataQuality/Edit")]
+        [EdubaseAuthorize(Roles = AuthorisationRoles)]
         public async Task<ActionResult> EditStatus(EditDataQualityStatusViewModel model)
         {
             if (ModelState.IsValid)
             {
                 foreach (var item in model.Items)
                 {
-                    // Only update the item value if the user has permission to so for that specific establishment type
+                    // Only update the item value if the user has permission to so for that _specific_ establishment type
                     var entry = _roleToDataSetMappings.SingleOrDefault(x => x.Value == item.EstablishmentType);
                     if (User.InRole(entry.Key, AuthorizedRoles.IsAdmin))
                     {
@@ -136,73 +139,65 @@ namespace Edubase.Web.UI.Controllers
 
 
         [HttpGet, Route("DataQuality/EditDataOwnerDetails")]
+        [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> EditDataOwnerDetails()
         {
-            var isAdmin = User.InRole(AuthorizedRoles.IsAdmin);
-            var datasets = (await _dataQualityWriteService.GetDataQualityStatus()).Select(d => new DataQualityDataOwnerItem()
-                {
-                    EstablishmentType = d.EstablishmentType,
-                    Name = d.DataOwner,
-                    Email = d.Email,
-                })
-                .Where(item =>
-                {
-                    if (isAdmin)
-                    {
-                        // Admin (backoffice) users may update details for all data owner entries
-                        return true;
-                    }
-
-                    // TODO: Extract this logic out to function/method
-
-                    // Other users may edit the data owner details, if they are a data owner for that specific establishment type
-                    var permissionsEntry = _roleToDataSetMappings
-                        .SingleOrDefault(x => x.Value == item.EstablishmentType);
-
-                    // TODO: What happens on `default`? is `permissionsEntry` populated? (concern - risk of null ref exception?)
-
-                    var establishmentTypeMatches = permissionsEntry.Value == item.EstablishmentType;
-                    var userPermittedToEditEstablishmentTypeOwnerDetails = User.InRole(permissionsEntry.Key);
-
-                    var hasSpecificPermissionToEdit = establishmentTypeMatches && userPermittedToEditEstablishmentTypeOwnerDetails;
-
-                    return hasSpecificPermissionToEdit;
-                })
-                .ToList();
-
             var data = new EditDataQualityDataOwnerViewModel
             {
-                Items = datasets
+                Items = (await _dataQualityWriteService.GetDataQualityStatus())
+                    .Select(d =>
+                        new DataQualityDataOwnerItem()
+                        {
+                            EstablishmentType = d.EstablishmentType,
+                            Name = d.DataOwner,
+                            Email = d.Email,
+                        })
+                    // Only show items that the user has permission to edit
+                    .Where(item => UserMayEditDataQualityOwnerDetails(item.EstablishmentType))
+                    .ToList()
             };
 
-
             data.Items.Sort((x,y) => x.EstablishmentType.GetEnumMember().CompareTo(y.EstablishmentType.GetEnumMember()));
+
             return View(data);
         }
 
         [HttpPost, Route("DataQuality/EditDataOwnerDetails")]
+        [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> EditDataOwnerDetails(EditDataQualityDataOwnerViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                foreach (var item in model.Items)
-                {
-                    // Only update the item value if the user has permission to so for that specific establishment type
-                    var entry = _roleToDataSetMappings.SingleOrDefault(x => x.Value == item.EstablishmentType);
-                    if (User.InRole(entry.Key, AuthorizedRoles.IsAdmin))
-                    {
-                        await _dataQualityWriteService.UpdateDataQualityDataOwner(
-                            item.EstablishmentType,
-                            item.Name,
-                            item.Email
-                        );
-                    }
-                }
-
-                return RedirectToAction("ViewStatus", new {dataUpdated = true});
+                return View(model);
             }
 
-            return View(model);
+            var permittedEstablishmentTypes = (await _dataQualityWriteService.GetDataQualityStatus())
+                .Select(x => x.EstablishmentType)
+                .ToList();
+
+            foreach (var item in model.Items)
+            {
+                // Only allow editing of items that already exist
+                if (!permittedEstablishmentTypes.Contains(item.EstablishmentType))
+                {
+                    continue;
+                }
+
+                // Update the item value, only if the user has permission to so for that establishment type
+                if (!UserMayEditDataQualityOwnerDetails(item.EstablishmentType))
+                {
+                    continue;
+                }
+
+                await _dataQualityWriteService.UpdateDataQualityDataOwner(
+                    item.EstablishmentType,
+                    item.Name,
+                    item.Email
+                );
+            }
+
+            return RedirectToAction("ViewStatus", new {dataUpdated = true});
+
         }
 
         [HttpGet, Route("DataQuality")]
@@ -226,12 +221,32 @@ namespace Edubase.Web.UI.Controllers
                 // Backoffice role users do not need to be prompted (appears on logon and a separate config entry), but should be able to update the date
                 UserCanUpdateLastUpdated = Api.UserRolesController.UserRequiresDataQualityPrompt(User) || User.InRole(AuthorizedRoles.IsAdmin),
 
-                // Allow admins to update data owner details, and data owners may self-serve (TODO: Review)
-                UserCanUpdateDataOwnerDetails = User.InRole(AuthorizedRoles.IsAdmin)
-                    || User.InRole(_roleToDataSetMappings.Keys.ToArray())
+                // Allow only admins (backoffice users) to update data owner details - data owners may not edit their own details
+                UserCanUpdateDataOwnerDetails = User.InRole(AuthorizedRoles.IsAdmin) // || User.InRole(_roleToDataSetMappings.Keys.ToArray())
             };
 
             return View(data);
+        }
+
+
+        private bool UserMayEditDataQualityOwnerDetails(DataQualityStatus.DataQualityEstablishmentType establishmentType)
+        {
+            if(User.InRole(AuthorizedRoles.IsAdmin))
+            {
+                // Administrators (e.g., backoffice users) may edit all data owner details
+                return true;
+            }
+
+            /* NOTE: Commented out as only allow admins permitted to edit data owner details */
+            // // All other users may only edit data owner details if their user group is mapped to the given establishment type (note, might be multiple establishment types per user group
+            // var entry = _roleToDataSetMappings.SingleOrDefault(x => x.Value == establishmentType);
+            // var roleWhichMayEditThisEstablishmentType = entry.Key;
+            // if(User.InRole(roleWhichMayEditThisEstablishmentType))
+            // {
+            //     return true;
+            // }
+
+            return false;
         }
     }
 }
