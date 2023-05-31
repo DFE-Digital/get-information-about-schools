@@ -11,18 +11,19 @@
         <div class="govuk-grid-column-full">
             <div class="govuk-breadcrumbs">
                 <ol class="govuk-breadcrumbs__list">
-                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "govuk-breadcrumbs__link" })</li>
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})</li>
                     <li class="govuk-breadcrumbs__list-item">
                         @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
                     </li>
                     <li class="govuk-breadcrumbs__list-item">
-                         @Html.ActionLink("Data status", "ViewStatus", "DataQuality", new { area = "" }, new {@class = "govuk-breadcrumbs__link"})
+                        @Html.ActionLink("Data status", "ViewStatus", "DataQuality", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
                     </li>
                 </ol>
             </div>
         </div>
     </div>
 }
+
 @Html.Partial("_ValidationSummary", ViewData.ModelState)
 
 <div class="govuk-grid-row">
@@ -31,23 +32,41 @@
     </div>
 </div>
 <div class="govuk-grid-row">
-    @using (Html.BeginForm())
+    @if (Model.Items.Any())
     {
-        <div class="govuk-grid-column-one-half">
-            @for (var index = 0; index < Model.Items.Count(); index++)
-            {
-                <div class="govuk-form-group data-status-group">
-                    <h2 class="govuk-heading-s">@Model.Items[index].EstablishmentType.GetEnumMember()</h2>
-                    @Html.HiddenFor(m => m.Items[index].EstablishmentType)
-                    @Html.EditorFor(m => m.Items[index].LastUpdated, new {title = "Last updated", fieldsetClassName = "edit-date-fieldset"})
-                </div>
-            }
-        </div>
+        using (Html.BeginForm())
+        {
+            <div class="govuk-grid-column-one-half">
+                @for (var index = 0; index < Model.Items.Count(); index++)
+                {
+                    <div class="govuk-form-group data-status-group">
+                        <h2 class="govuk-heading-s">@Model.Items[index].EstablishmentType.GetEnumMember()</h2>
+                        @Html.HiddenFor(m => m.Items[index].EstablishmentType)
+                        @Html.EditorFor(m => m.Items[index].LastUpdated, new {title = "Last updated", fieldsetClassName = "edit-date-fieldset"})
+                    </div>
+                }
+            </div>
 
+            <div class="govuk-grid-column-full">
+                <div class="button-row govuk-!-padding-top-4">
+                    <button type="submit" class="govuk-button" value="Save" id="save-data-status" aria-label="Save data status last updated date">Save</button>
+                    <a href="@Url.Action("ViewStatus", "DataQuality")" class="govuk-button govuk-button--secondary">Cancel</a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
         <div class="govuk-grid-column-full">
-            <div class="button-row govuk-!-padding-top-4">
-                <button type="submit" class="govuk-button" value="Save" id="save-data-status" aria-label="Save data status last updated date">Save</button>
-                <a href="@Url.Action("ViewStatus", "DataQuality")" class="govuk-button govuk-button--secondary">Cancel</a>
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    <p class="govuk-body">No entries available to update.</p>
+                </strong>
+                <p>
+                    <a href="@Url.Action("ViewStatus", "DataQuality")" class="govuk-button govuk-button--secondary">Back</a>
+                </p>
             </div>
         </div>
     }
