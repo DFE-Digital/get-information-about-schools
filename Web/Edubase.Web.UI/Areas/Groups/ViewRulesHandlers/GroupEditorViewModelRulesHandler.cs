@@ -65,7 +65,7 @@ namespace Edubase.Web.UI.Areas.Groups.ViewRulesHandlers
             if (!viewModel.ChangesAcknowledged)
             {
                 result = viewModel.GroupTypeId.OneOfThese(eLookupGroupType.SingleacademyTrust, eLookupGroupType.MultiacademyTrust)
-                        || (viewModel.GroupType == eLookupGroupType.SecureSingleAcademyTrust && user.IsInRole(EdubaseRoles.UKRLP));
+                        || (viewModel.GroupType == eLookupGroupType.SecureSingleAcademyTrust && (user.IsInRole(EdubaseRoles.UKRLP) || user.IsInRole(EdubaseRoles.ROLE_BACKOFFICE)));
             }
             return result;
         }

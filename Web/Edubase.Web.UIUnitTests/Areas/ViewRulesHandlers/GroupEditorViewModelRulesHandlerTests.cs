@@ -220,6 +220,7 @@ namespace Edubase.Web.UIUnitTests.Areas.ViewRulesHandlers
         [InlineData((int) eLookupGroupType.SingleacademyTrust, EdubaseRoles.UKRLP)]
         [InlineData((int) eLookupGroupType.SingleacademyTrust, EdubaseRoles.YCS)]
         [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.UKRLP)]
+        [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.ROLE_BACKOFFICE)]
         public void MustShowChangesReviewScreen_True(int groupType, string role)
         {
             mockPrincipal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(false);
@@ -239,7 +240,6 @@ namespace Edubase.Web.UIUnitTests.Areas.ViewRulesHandlers
         [InlineData((int) eLookupGroupType.Federation, EdubaseRoles.ROLE_BACKOFFICE)]
         [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.EFADO)]
         [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.YCS)]
-        [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, EdubaseRoles.ROLE_BACKOFFICE)]
         public void MustShowChangesReviewScreen_False(int groupType, string role)
         {
             mockPrincipal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(false);
