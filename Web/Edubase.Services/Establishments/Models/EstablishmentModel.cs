@@ -47,6 +47,8 @@ namespace Edubase.Services.Establishments.Models
 
         public DateTime? CloseDate { get; set; }
 
+        public DateTime? AccreditationExpiryDate { get; set; }
+
         public int? EducationPhaseId { get; set; }
 
         public int? StatutoryLowAge { get; set; }
