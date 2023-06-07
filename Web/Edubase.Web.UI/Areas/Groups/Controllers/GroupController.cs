@@ -388,7 +388,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 OriginalStatusId = domainModel.StatusId,
                 UKPRN = domainModel.UKPRN.ToInteger()
             };
-            // TempData["CompaniesHouseNumber"] = domainModel.CompaniesHouseNumber;
+
             viewModel.ListOfEstablishmentsPluralName = NomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
 
             await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, id, true);
