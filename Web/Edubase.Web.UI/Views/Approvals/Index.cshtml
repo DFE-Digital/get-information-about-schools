@@ -182,7 +182,7 @@
                         <tr v-for="(entry, index) in changes" class="govuk-table__row">
                             <td class="cell-checkbox govuk-table__cell" data-label="Select item">
                                 <div class="govuk-checkboxes__item">
-                                    <input :id="'change-'+entry.id" name="pending-change" :value="entry.id" type="checkbox" class="govuk-checkboxes__input" v-on:click="selectItem" v-model="selectedItems">
+                                    <input :id="'checkbox-'+ entry.fieldName + entry.establishmentUrn" name="pending-change" :value="entry.id" type="checkbox" class="govuk-checkboxes__input" v-on:click="selectItem" v-model="selectedItems">
                                     <label class="govuk-checkboxes__label" :for="'change-'+entry.id">
                                         <span class="govuk-visually-hidden">Select this change for approval or rejection</span>
                                     </label>
