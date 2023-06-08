@@ -414,8 +414,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             result.AddToModelState(ModelState, string.Empty);
 
             await PopulateSelectLists(viewModel);
-            if (TempData.TryGetValue("companiesHouseNumber", out var value))
-                viewModel.CompaniesHouseNumber = value.ToString();
+            if (TempData.TryGetValue(GetTempDataKeyForCompaniesHouseNumberWithGroupUId
+                    (viewModel.GroupUId), out var value)) viewModel.CompaniesHouseNumber = value.ToString();
 
             if (viewModel.CanUserEditStatus)
             {
@@ -467,6 +467,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             return View("EditDetails", viewModel);
         }
+
+        public static string GetTempDataKeyForCompaniesHouseNumberWithGroupUId(int? groupUId)=> $"companiesHouseNumber_{groupUId}";
+
 
         [HttpGet, Route("Edit/{id:int}/Links"), EdubaseAuthorize]
         public async Task<ActionResult> EditLinks(int id, bool saved = false)

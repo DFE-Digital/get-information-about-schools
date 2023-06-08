@@ -1,5 +1,6 @@
 @using Edubase.Common;
 @using Edubase.Services.Security
+@using Edubase.Web.UI.Areas.Groups.Controllers
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
 @using L = Edubase.Services.Enums.eLookupGroupType;
 @using S = Edubase.Services.Enums.eLookupGroupStatus;
@@ -140,7 +141,8 @@
 
                     @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust))
                     {
-                        TempData["companiesHouseNumber"] = @Model.CompaniesHouseNumber;
+                        TempData[GroupController.GetTempDataKeyForCompaniesHouseNumberWithGroupUId
+                            (Model.GroupUId)]= @Model.CompaniesHouseNumber;
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="companiesHouseNumber">
                                 Company number<br />
