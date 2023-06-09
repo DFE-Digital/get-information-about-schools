@@ -388,6 +388,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 OriginalStatusId = domainModel.StatusId,
                 UKPRN = domainModel.UKPRN.ToInteger()
             };
+
             viewModel.ListOfEstablishmentsPluralName = NomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
 
             await PopulateEstablishmentList(viewModel.LinkedEstablishments.Establishments, id, true);
@@ -413,6 +414,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             result.AddToModelState(ModelState, string.Empty);
 
             await PopulateSelectLists(viewModel);
+            if (TempData.TryGetValue(GetTempDataKeyForCompaniesHouseNumberWithGroupUId
+                    (viewModel.GroupUId), out var value)) viewModel.CompaniesHouseNumber = value.ToString();
 
             if (viewModel.CanUserEditStatus)
             {
@@ -464,6 +467,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             return View("EditDetails", viewModel);
         }
+
+        public static string GetTempDataKeyForCompaniesHouseNumberWithGroupUId(int? groupUId)=> $"companiesHouseNumber_{groupUId}";
+
 
         [HttpGet, Route("Edit/{id:int}/Links"), EdubaseAuthorize]
         public async Task<ActionResult> EditLinks(int id, bool saved = false)
