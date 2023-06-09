@@ -119,7 +119,9 @@ namespace Edubase.Web.UI.Models
         {
             var retVal = new List<LinkAction>();
 
+            // Link is shown to all users with access to the tools page
             retVal.Add(new LinkAction { Link = htmlHelper.ActionLink("View data owner teams' data status", "ViewStatus", "DataQuality"), Description = "See when each data owner team's data was last updated.<br />Data owner teams should use this to confirm when their team's data is up to date." });
+
             if (UserCanApprove)
             {
                 retVal.Add(new LinkAction { Link = htmlHelper.RouteLink("Manage change requests", "PendingApprovals"), Description = "Review your pending change requests and approve or reject." });

@@ -6,6 +6,10 @@ namespace Edubase.Data.Entity
 {
     public class DataQualityStatus : TableEntity
     {
+        /// <summary>
+        /// Note that the enum indices are important to remain consistent:
+        ///  - Azure Table Storage - table `DataQualityStatus` column `RowKey`
+        /// </summary>
         public enum DataQualityEstablishmentType
         {
             [EnumMember(Value = "Academy openers")]
@@ -41,7 +45,7 @@ namespace Edubase.Data.Entity
             set
             {
                 RowKey = ((int)value).ToString();
-            } 
+            }
         }
 
         public DateTime LastUpdated { get; set; }
