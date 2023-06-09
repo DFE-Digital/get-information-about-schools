@@ -125,12 +125,15 @@
                         @Html.ValidationMessageFor(x => x.TypeId, null, new { @class = "govuk-error-message" })
                         @Html.DropDownListFor(x => x.TypeId, Model.GroupTypes, "", GetAttributes("govuk-select", Model.TrustExists))
                     </div>
-                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GroupId)">
-                        @Html.LabelFor(x => x.GroupId, new { @class = "govuk-label"})
-                        @Html.ValidationMessageFor(x => x.GroupId, null, new { @class = "govuk-error-message" })
-                        @Html.TextBoxFor(x => x.GroupId, GetAttributes("govuk-input", Model.TrustExists, 120))
+                    @if ((string)ViewData["academyTrustRoute"] != "secure-academy-trust")
+                    {                        
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GroupId)">
+                            @Html.LabelFor(x => x.GroupId, new { @class = "govuk-label" })
+                            @Html.ValidationMessageFor(x => x.GroupId, null, new { @class = "govuk-error-message" })
+                            @Html.TextBoxFor(x => x.GroupId, GetAttributes("govuk-input", Model.TrustExists, 120))
+                        </div>
+                    }
                     </div>
-                </div>
             </div>
         }
 
