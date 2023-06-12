@@ -69,7 +69,7 @@
             @if (Model.UserCanUpdate)
             {
                 <div class="button-row govuk-!-padding-top-4">
-                    @Html.ActionLink("Update", "EditStatus", "DataQuality", new {area = ""}, new { @class = "govuk-button govuk-button--secondary", data_module = "govuk-button" })
+                    @Html.ActionLink("Update", "EditStatus", "DataQuality", new {area = ""}, new { @class = "govuk-button govuk-button--secondary", data_module = "govuk-button", id = "update-data-owner"})
                 </div>
             }
 
