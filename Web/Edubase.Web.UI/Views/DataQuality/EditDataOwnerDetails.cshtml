@@ -1,6 +1,6 @@
-@model Edubase.Web.UI.Models.DataQuality.EditDataQualityStatusViewModel
+@model Edubase.Web.UI.Models.DataQuality.EditDataQualityDataOwnerViewModel
 @{
-    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Update data status");
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Update data owner details");
     ViewBag.bodyClasses = "create-edit";
     ViewBag.SiteSection = "tools";
 }
@@ -28,7 +28,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-xl">Update data status</h1>
+        <h1 class="govuk-heading-xl">Update data owner details</h1>
     </div>
 </div>
 <div class="govuk-grid-row">
@@ -37,12 +37,22 @@
         using (Html.BeginForm())
         {
             <div class="govuk-grid-column-one-half">
+
                 @for (var index = 0; index < Model.Items.Count(); index++)
                 {
-                    <div class="govuk-form-group data-status-group">
-                        <h2 class="govuk-heading-s">@Model.Items[index].EstablishmentType.GetEnumMember()</h2>
-                        @Html.HiddenFor(m => m.Items[index].EstablishmentType)
-                        @Html.EditorFor(m => m.Items[index].LastUpdated, new {title = "Last updated", fieldsetClassName = "edit-date-fieldset"})
+                    <h2 class="govuk-heading-s">@Model.Items[index].EstablishmentType.GetEnumMember()</h2>
+                    @Html.HiddenFor(m => m.Items[index].EstablishmentType)
+
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(m => m.Items[index].Name)">
+                        @Html.LabelFor(m => m.Items[index].Name, "Name", new {@class = "govuk-label"})
+                        @Html.ValidationMessageFor(m => m.Items[index].Name, null, new {@class = "govuk-error-message"})
+                        @Html.TextBoxFor(m => m.Items[index].Name, new {@class = "govuk-input"})
+                    </div>
+
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(m => m.Items[index].Email)">
+                        @Html.LabelFor(m => m.Items[index].Email, "Email", new {@class = "govuk-label"})
+                        @Html.ValidationMessageFor(m => m.Items[index].Email, null, new {@class = "govuk-error-message", spellcheck = "false", type = "email", autocomplete = "email",})
+                        @Html.TextBoxFor(m => m.Items[index].Email, new {@class = "govuk-input"})
                     </div>
                 }
             </div>
