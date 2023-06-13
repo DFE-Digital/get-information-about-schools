@@ -32,7 +32,7 @@ namespace Edubase.Web.UI.Controllers
             { EdubaseRoles.YCS,  DataQualityStatus.DataQualityEstablishmentType.AcademySecure16to19Openers}
         };
 
-        private const string AuthorisationRoles = AuthorizedRoles.IsAdmin + "," + EdubaseRoles.EFADO + "," + EdubaseRoles.AP_AOS + "," + EdubaseRoles.IEBT + "," + EdubaseRoles.APT + "," + EdubaseRoles.SOU + "," + EdubaseRoles.FST;
+        private const string AuthorisationRoles = AuthorizedRoles.IsAdmin + "," + EdubaseRoles.EFADO + "," + EdubaseRoles.AP_AOS + "," + EdubaseRoles.IEBT + "," + EdubaseRoles.APT + "," + EdubaseRoles.SOU + "," + EdubaseRoles.FST + "," + EdubaseRoles.YCS;
 
         public DataQualityController(IDataQualityWriteService dataQualityWriteService)
         {
