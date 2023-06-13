@@ -47,7 +47,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         [Required(ErrorMessage = "Please select the trust type"), DisplayName("Trust type")]
         public int? TypeId { get; set; }
 
-        [Required(ErrorMessage = "Please enter a group ID"), DisplayName("Group ID")]
+        //added required validation to the controller as this now depends on if the group is 16-19 secure
         public string GroupId { get; set; }
 
         public int GroupUid { get; set; }
