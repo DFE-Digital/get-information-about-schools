@@ -71,7 +71,7 @@
             <div class="button-row govuk-!-padding-top-4">
                 @if (Model.UserCanUpdateLastUpdated)
                 {
-                    @Html.ActionLink("Update last updated dates", "EditStatus", "DataQuality", new {area = ""}, new {@class = "govuk-button govuk-button--secondary", data_module = "govuk-button"})
+                    @Html.ActionLink("Update last updated dates", "EditStatus", "DataQuality", new {area = ""}, new {@class = "govuk-button govuk-button--secondary", data_module = "govuk-button", id="last-updated-date-button"})
                 }
                 @if (Model.UserCanUpdateDataOwnerDetails)
                 {
