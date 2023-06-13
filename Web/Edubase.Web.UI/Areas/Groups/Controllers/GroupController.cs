@@ -535,6 +535,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 throw new PermissionDeniedException("Current principal does not have permission to create a group of this type.");
             }
 
+            //required validation of field GroupId is now only done for groups that are not 16-19
+            if (academyTrustRoute != "secure-academy-trust" && string.IsNullOrWhiteSpace(viewModel.GroupId))
+            {
+                ModelState.AddModelError("GroupId", "Please enter a group ID");
+            }
+
             var dto = new SaveGroupDto(new GroupModel
             {
                 Address = UriHelper.DeserializeUrlToken<AddressDto>(viewModel.CompaniesHouseAddressToken),
@@ -548,12 +554,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
 
             if (ModelState.IsValid)
             {
-                //required validation of field GroupId is now only done for groups that are not 16-19
-                if (academyTrustRoute != "secure-academy-trust" && string.IsNullOrWhiteSpace(viewModel.GroupId))
-                {
-                    ModelState.AddModelError("GroupId", "Please enter a group ID");
-                }
-
                 var validationEnvelope = await _groupWriteService.ValidateAsync(dto, User);
                 if (validationEnvelope.HasErrors)
                 {
