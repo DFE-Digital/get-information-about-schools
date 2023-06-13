@@ -30,14 +30,16 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             @Html.Partial("_ValidationSummary", ViewData.ModelState)
-            <h1 id="create-academy-trust-details-heading" class="govuk-heading-xl">Create new academy trusts</h1>
+
             @if ((string)ViewData["academyTrustRoute"] == "secure-academy-trust")
             {
-            <p>Set up a secure single-academy trust record by adding the Companies House name or number in the field below and selecting search.</p>
+                <h1 id="create-academy-trust-details-heading" class="govuk-heading-xl">Create new secure single-academy trusts</h1>
+                <p>Set up a secure single-academy trust record by adding the Companies House name or number in the field below and selecting search.</p>
             }
             else
             {
-            <p>Set up an academy trust record by adding the Companies House name or number in the field below and selecting search.</p>
+                <h1 id="create-academy-trust-details-heading" class="govuk-heading-xl">Create new academy trusts</h1>
+                <p>Set up an academy trust record by adding the Companies House name or number in the field below and selecting search.</p>
             }
 
         </div>
