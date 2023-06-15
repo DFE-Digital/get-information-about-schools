@@ -148,14 +148,17 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .WithMessage(x => $"Please enter the {x.GroupTypeLabelPrefix.ToLower()} name")
                     .When(x => x.SaveGroupDetail);
 
-                RuleFor(x => x.GroupId)
-                    .Cascade(CascadeMode.StopOnFirstFailure)
-                    .NotEmpty()
-                    .WithMessage("Please enter a Group ID")
-                    .WithSummaryMessage("Please enter a Group ID")
-                    .MustAsync(async (model, groupId, ct) => !(await _groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), groupId: groupId, existingGroupUId: model.GroupUId)))
-                    .WithMessage("Group ID already exists. Enter a different group ID.")
-                    .When(x => x.GroupTypeMode.OneOfThese(eGroupTypeMode.AcademyTrust, eGroupTypeMode.Sponsor) && x.SaveGroupDetail, ApplyConditionTo.AllValidators);
+                When(x => x.GroupType != eLookupGroupType.SecureSingleAcademyTrust, () =>
+                {
+                    RuleFor(x => x.GroupId)
+                        .Cascade(CascadeMode.StopOnFirstFailure)
+                        .NotEmpty()
+                        .WithMessage("Please enter a Group ID")
+                        .WithSummaryMessage("Please enter a Group ID")
+                        .MustAsync(async (model, groupId, ct) => !(await _groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), groupId: groupId, existingGroupUId: model.GroupUId)))
+                        .WithMessage("Group ID already exists. Enter a different group ID.")
+                        .When(x => x.GroupTypeMode.OneOfThese(eGroupTypeMode.AcademyTrust, eGroupTypeMode.Sponsor) && x.SaveGroupDetail, ApplyConditionTo.AllValidators);
+                });
 
                 When(x => x.OpenDate.ToDateTime().HasValue, () =>
                 {
