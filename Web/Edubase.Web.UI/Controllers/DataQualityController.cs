@@ -28,10 +28,11 @@ namespace Edubase.Web.UI.Controllers
             { EdubaseRoles.IEBT,  DataQualityStatus.DataQualityEstablishmentType.IndependentSchools},
             { EdubaseRoles.APT,  DataQualityStatus.DataQualityEstablishmentType.PupilReferralUnits},
             { EdubaseRoles.SOU,  DataQualityStatus.DataQualityEstablishmentType.LaMaintainedSchools},
-            { EdubaseRoles.FST,  DataQualityStatus.DataQualityEstablishmentType.FreeSchoolOpeners}
+            { EdubaseRoles.FST,  DataQualityStatus.DataQualityEstablishmentType.FreeSchoolOpeners},
+            { EdubaseRoles.YCS,  DataQualityStatus.DataQualityEstablishmentType.AcademySecure16to19Openers}
         };
 
-        private const string AuthorisationRoles = AuthorizedRoles.IsAdmin + "," + EdubaseRoles.EFADO + "," + EdubaseRoles.AP_AOS + "," + EdubaseRoles.IEBT + "," + EdubaseRoles.APT + "," + EdubaseRoles.SOU + "," + EdubaseRoles.FST;
+        private const string AuthorisationRoles = AuthorizedRoles.IsAdmin + "," + EdubaseRoles.EFADO + "," + EdubaseRoles.AP_AOS + "," + EdubaseRoles.IEBT + "," + EdubaseRoles.APT + "," + EdubaseRoles.SOU + "," + EdubaseRoles.FST + "," + EdubaseRoles.YCS;
 
         public DataQualityController(IDataQualityWriteService dataQualityWriteService)
         {

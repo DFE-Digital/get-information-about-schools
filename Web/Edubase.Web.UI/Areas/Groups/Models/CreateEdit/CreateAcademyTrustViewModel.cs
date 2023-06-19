@@ -1,5 +1,6 @@
 using Edubase.Common;
 using Edubase.Services.Domain;
+using Edubase.Services.Enums;
 using Edubase.Services.IntegrationEndPoints.CompaniesHouse.Models;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,13 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 {
     public class CreateAcademyTrustViewModel
     {
+        private static readonly Dictionary<int?, string> GroupTypeName = new Dictionary<int?, string>()
+        {
+            { (int) eLookupGroupType.MultiacademyTrust, "multi-academy trust" },
+            { (int) eLookupGroupType.SingleacademyTrust, "single-academy trust" },
+            { (int) eLookupGroupType.SecureSingleAcademyTrust, "secure single-academy trust" }
+        };
+
         public CreateAcademyTrustViewModel(CompanyProfile companyProfile)
         {
             Name = companyProfile.Name;
@@ -39,7 +47,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         [Required(ErrorMessage = "Please select the trust type"), DisplayName("Trust type")]
         public int? TypeId { get; set; }
 
-        [Required(ErrorMessage = "Please enter a group ID"), DisplayName("Group ID")]
+        //added required validation to the controller as this now depends on if the group is 16-19 secure
         public string GroupId { get; set; }
 
         public int GroupUid { get; set; }
@@ -54,6 +62,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
 
         public string CompaniesHouseAddressToken { get; set; }
 
-
+        public string TypeName => TypeId != null ? GroupTypeName[TypeId] : null;
     }
 }

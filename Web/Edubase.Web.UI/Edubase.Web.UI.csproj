@@ -348,6 +348,7 @@
     <Compile Include="Areas\Establishments\Models\EditAcademyOpeningViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\ManageAcademyOpeningsViewModel.cs" />
     <Compile Include="Areas\Establishments\Models\TabEditPolicy.cs" />
+    <Compile Include="Areas\Establishments\Models\TabWarningsModel.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\BulkAssociateEstabs2GroupsViewModelValidator.cs" />
     <Compile Include="Areas\Establishments\Models\Validators\BulkCreateFreeSchoolsViewModelValidator.cs" />
     <Compile Include="Areas\Governors\Controllers\GovernanceController.cs" />
@@ -356,6 +357,7 @@
     <Compile Include="Areas\Governors\Controllers\SharedGovernorController.cs" />
     <Compile Include="Areas\Governors\Models\HistoricGovernorViewModel.cs" />
     <Compile Include="Areas\Groups\Models\ConvertSATViewModel.cs" />
+    <Compile Include="Areas\Groups\ViewRulesHandlers\GroupEditorViewModelRulesHandler.cs" />
     <Compile Include="Controllers\AmalgamateMergeController.cs" />
     <Compile Include="Controllers\Api\UtilApiController.cs" />
     <Compile Include="Controllers\FaqController.cs" />
@@ -374,13 +376,16 @@
     <Compile Include="Helpers\BrowserClientStorage.cs" />
     <Compile Include="Helpers\CannotBeEmptyAttribute.cs" />
     <Compile Include="Helpers\FormHelpers.cs" />
+    <Compile Include="Helpers\GetEstabSearchFiltersParam.cs" />
     <Compile Include="Helpers\ILayoutHelper.cs" />
     <Compile Include="Helpers\LayoutHelper.cs" />
     <Compile Include="Helpers\NonceHelper.cs" />
     <Compile Include="Helpers\QueryValidator.cs" />
     <Compile Include="Helpers\RouteDto.cs" />
+    <Compile Include="Helpers\AcademyUtility.cs" />
     <Compile Include="Helpers\StringUtils.cs" />
     <Compile Include="Mappers\BulkUpdateViewModelToDtoMapper.cs" />
+    <Compile Include="Mappers\LookupToSearchViewModelMapper.cs" />
     <Compile Include="Models\DataQuality\DataQualityDataOwnerItem.cs" />
     <Compile Include="Models\DataQuality\EditDataQualityDataOwnersViewModel.cs" />
     <Compile Include="Models\Faq\FaqGroupsViewModel.cs" />
@@ -888,6 +893,8 @@
     <Content Include="Views\News\EditArticle.cshtml" />
     <Content Include="Views\News\AuditArticles.cshtml" />
     <Content Include="Views\News\AuditArticle.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\_LegalDutySecureAcademyTrustStatement.cshtml" />
+    <Content Include="Areas\Governors\Views\Governor\_LegalDutyStatement.cshtml" />
     <None Include="packages.config" />
     <Content Include="Views\Guidance\LaNameCodes.cshtml" />
     <Content Include="Views\Guidance\SelectFormat.cshtml" />

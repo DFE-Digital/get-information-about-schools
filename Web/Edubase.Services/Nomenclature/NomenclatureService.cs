@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using Edubase.Common;
 using Edubase.Common.Text;
@@ -43,6 +43,7 @@ namespace Edubase.Services.Nomenclature
                 case GT.MultiacademyTrust:
                 case GT.SingleacademyTrust:
                 case GT.SchoolSponsor:
+                case GT.SecureSingleAcademyTrust:
                     return "academies".ToTextCase(textCase);
                 case GT.UmbrellaTrust:
                 default:

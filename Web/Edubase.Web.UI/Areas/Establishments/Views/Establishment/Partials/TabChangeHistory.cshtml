@@ -34,7 +34,7 @@
 
 }
 <div id="school-change-history" class="tab-content approval-data">
-    <h2 class="govuk-heading-s">Change History</h2>
+    <h2 id="change-history-heading" class="govuk-heading-s">Change History</h2>
     @if (User.Identity.IsAuthenticated && Model.GovernorsGridViewModel.DomainModel.HasGovernors && Model.GovernorsGridViewModel.GovernorPermissions.Add)
     {
         <div class="gias-governance-history-link-container">
@@ -81,10 +81,10 @@
             @foreach (var item in Model.ChangeHistory.Items)
             {
                 <tr class="govuk-table__row">
-                    <td data-label="Date changed" class="govuk-table__cell">@(item.ChangedDateUtc?.ToString("d MMMM yyyy"))</td>
-                    <td data-label="Effective date" class="govuk-table__cell">@(item.EffectiveDateUtc?.ToString("d MMMM yyyy"))</td>
-                    <td data-label="Updated field" class="govuk-table__cell">@item.Name</td>
-                    <td data-label="Old value" class="govuk-table__cell">
+                    <td id="date-changed" data-label="Date changed" class="govuk-table__cell">@(item.ChangedDateUtc?.ToString("d MMMM yyyy"))</td>
+                    <td id="effective-date" data-label="Effective date" class="govuk-table__cell">@(item.EffectiveDateUtc?.ToString("d MMMM yyyy"))</td>
+                    <td id="updated-field" data-label="Updated field" class="govuk-table__cell">@item.Name</td>
+                    <td id="old-value" data-label="Old value" class="govuk-table__cell">
                         @if (item.OldValue != null && RE.IsMatch(item.OldValue))
                         {
                             var parts = item.OldValue.Split('/').Select(Int32.Parse).ToList();
@@ -96,7 +96,7 @@
                             @item.OldValue
                         }
                     </td>
-                    <td data-label="New value" class="govuk-table__cell">
+                    <td id="new-value" data-label="New value" class="govuk-table__cell">
                         @if (item.NewValue != null && RE.IsMatch(item.NewValue))
                         {
                             var parts = item.NewValue.Split('/').Select(Int32.Parse).ToList();
@@ -108,7 +108,7 @@
                             @item.NewValue
                         }
                     </td>
-                    <td data-label="Date requested" class="govuk-table__cell">@(item.RequestedDateUtc?.ToString("d MMMM yyyy"))</td>
+                    <td id="date-requested" data-label="Date requested" class="govuk-table__cell">@(item.RequestedDateUtc?.ToString("d MMMM yyyy"))</td>
                     <td data-label="Suggested from" class="govuk-table__cell">@item.OriginatorUserName</td>
                     <td data-label="Approved by" class="govuk-table__cell">@(item.ApproverUserName ?? "--")</td>
                 </tr>
