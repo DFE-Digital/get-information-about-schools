@@ -145,8 +145,11 @@
 
                     @if (Model.GroupType.OneOfThese(L.MultiacademyTrust, L.SingleacademyTrust, L.SecureSingleAcademyTrust))
                     {
-                        TempData[GroupController.GetTempDataKeyForCompaniesHouseNumberWithGroupUId
-                            (Model.GroupUId)]= @Model.CompaniesHouseNumber;
+                        if (!String.IsNullOrWhiteSpace(Model.CompaniesHouseNumber))
+                        {
+                            TempData[GroupController.GetTempDataKeyForCompaniesHouseNumberWithGroupUId
+                                (Model.GroupUId)] = @Model.CompaniesHouseNumber;
+                        }
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="companiesHouseNumber">
                                 Company number<br />
