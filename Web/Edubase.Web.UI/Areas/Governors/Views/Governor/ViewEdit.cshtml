@@ -192,7 +192,8 @@ else
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            @if (Model.DomainModel.HasFullAccess)
+            @if (Model.DomainModel.HasFullAccess || (Model.GovernorPermissions.Add
+           && Model.GovernorPermissions.Update && Model.GovernorPermissions.Remove))
             {
                 // Render lists
                 foreach (var grid in Model.Grids)
