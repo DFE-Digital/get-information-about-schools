@@ -46,7 +46,7 @@ else if (Model.Results.Count > 0)
                     new {id = result.Urn, area = "Establishments", searchQueryString = Model.SearchQueryString},
                     new { @class="govuk-link"})
             </h3>
-            @if (Model.EstablishmentStatuses.FirstOrDefault(x => x.Id == result.StatusId).Name == "Closed")
+            @if (Model.EstablishmentStatuses.FirstOrDefault(x => x.Id == result.StatusId)?.Name == "Closed")
             {
                 <p class="additional-closed">Closed</p>
             }
