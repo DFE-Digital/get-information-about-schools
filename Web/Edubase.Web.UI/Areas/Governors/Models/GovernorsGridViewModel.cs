@@ -115,7 +115,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 //var pluralise = !EnumSets.eSingularGovernorRoles.Contains(role);
 
 
-                //var grid = new GovernorGridViewModel($"{_nomenclatureService.GetGovernorRoleName(role, eTextCase.SentenceCase, pluralise)}{(isHistoric ? " (in past 12 months)" : string.Empty)}")
                 var grid = new GovernorGridViewModel($"{GovernorRoleNameFactory.Create(role, eTextCase.SentenceCase, true)}{(isHistoric ? " (in past 12 months)" : string.Empty)}")
                 {
                     Tag = isHistoric ? "historic" : "current",
@@ -124,7 +123,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     GroupUid = groupUid,
                     EstablishmentUrn = establishmentUrn,
                     IsHistoricRole = isHistoric,
-                    RoleName = _nomenclatureService.GetGovernorRoleName(role)
+                    RoleName = GovernorRoleNameFactory.Create(role)
                 };
 
                 var displayPolicy = dto.RoleDisplayPolicies.Get(role);
@@ -167,7 +166,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                             AppointmentEndDate = new DateTimeViewModel(governor.AppointmentEndDate),
                             AppointmentStartDate = new DateTimeViewModel(governor.AppointmentStartDate),
                             FullName = governor.GetFullName(),
-                            //RoleName = _nomenclatureService.GetGovernorRoleName(role)
                             RoleName = GovernorRoleNameFactory.Create(role)
                         };
 

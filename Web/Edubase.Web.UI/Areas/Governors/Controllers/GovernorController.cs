@@ -364,7 +364,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             await _layoutHelper.PopulateLayoutProperties(viewModel, establishmentUrn, groupUId, User);
 
-            //viewModel.GovernorRoleName = _nomenclatureService.GetGovernorRoleName(role.Value);
             viewModel.GovernorRoleName = GovernorRoleNameFactory.Create(role.Value);
             viewModel.GovernorRole = role.Value;
             await PopulateSelectLists(viewModel);
@@ -674,8 +673,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     .ToList(),
                 NewChairType = ReplaceChairViewModel.ChairType.LocalChair,
                 Role = (eLookupGovernorRole) governor.RoleId,
-                //RoleName = _nomenclatureService.GetGovernorRoleName((eLookupGovernorRole) governor.RoleId,
-                //    eTextCase.Lowerase)
                 RoleName = GovernorRoleNameFactory.Create((eLookupGovernorRole) governor.RoleId,
                     eTextCase.Lowerase)
             };
