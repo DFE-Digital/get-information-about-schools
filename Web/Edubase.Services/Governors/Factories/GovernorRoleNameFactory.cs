@@ -1,18 +1,11 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Edubase.Common.Text;
 using Edubase.Services.Enums;
-using Humanizer;
 
 namespace Edubase.Services.Governors.Factories
 {
-    public class GovernorRoleNameFactory
+    public static class GovernorRoleNameFactory
     {
-        private readonly bool _usePluralisedName;
-
         private static readonly Dictionary<eLookupGovernorRole, string> SentenceCaseLabels = new Dictionary<eLookupGovernorRole, string>()
         {
             { eLookupGovernorRole.Governor, "Governor" },
@@ -45,17 +38,12 @@ namespace Edubase.Services.Governors.Factories
             { eLookupGovernorRole.Trustee, "Trustees" }
         };
 
-        public GovernorRoleNameFactory(bool pluralisedName)
+        public static string Create(eLookupGovernorRole role, eTextCase textCase = eTextCase.SentenceCase, bool pluraliseLabelIfApplicable = false)
         {
-            _usePluralisedName = pluralisedName;
-        }
-
-        public string Create(eLookupGovernorRole role, eTextCase textCase = eTextCase.SentenceCase)
-        {
-            var temp = _usePluralisedName ?
+            var governorlabel = pluraliseLabelIfApplicable ?
                 PluralisedLabels.ContainsKey(role) ? PluralisedLabels[role] : SentenceCaseLabels[role]
                 : SentenceCaseLabels[role];
-            return textCase == eTextCase.SentenceCase ? temp : temp.ToLower();
+            return textCase == eTextCase.SentenceCase ? governorlabel : governorlabel.ToLower();
         }
     }
 }

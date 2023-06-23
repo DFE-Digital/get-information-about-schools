@@ -26,21 +26,16 @@ namespace Edubase.ServicesUnitTests.Nomenclature
         [InlineData(eLookupGovernorRole.Group_SharedLocalGovernor, "Shared local governor")]
         [InlineData(eLookupGovernorRole.LocalGovernor, "Local governor")]
         [InlineData(eLookupGovernorRole.Member, "Member")]
-        [InlineData(eLookupGovernorRole.Member_Individual, "Member - individual")]
-        [InlineData(eLookupGovernorRole.Member_Organisation, "Member - organisation")]
         [InlineData(eLookupGovernorRole.Trustee, "Trustee")]
         [InlineData(eLookupGovernorRole.NA, "N a")]
         public void GetGovernorRoleName_SentenceCase_PluraliseFalse_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
-            var sut1 = new NomenclatureService();
-            var sut = new GovernorRoleNameFactory(false);
+            var sut = new NomenclatureService();
 
-            var result1 = sut1.GetGovernorRoleName(role, eTextCase.SentenceCase, false);
-            var result = sut.Create(role);
+            var result = sut.GetGovernorRoleName(role, eTextCase.SentenceCase, false);
 
-            Assert.Equal(expected, result1);
             Assert.Equal(expected, result);
-        }
+         }
 
         [Theory]
         [InlineData(eLookupGovernorRole.Establishment_SharedLocalGovernor, "Shared local governors")]
@@ -49,8 +44,6 @@ namespace Edubase.ServicesUnitTests.Nomenclature
         [InlineData(eLookupGovernorRole.Group_SharedLocalGovernor, "Shared local governors")]
         [InlineData(eLookupGovernorRole.LocalGovernor, "Local governors")]
         [InlineData(eLookupGovernorRole.Member, "Members")]
-        [InlineData(eLookupGovernorRole.Member_Individual, "Members - individual")]
-        [InlineData(eLookupGovernorRole.Member_Organisation, "Members - organisation")]
         [InlineData(eLookupGovernorRole.Trustee, "Trustees")]
         [InlineData(eLookupGovernorRole.NA, "N as")]
         public void GetGovernorRoleName_SentenceCase_PluraliseTrue_ReturnsExpected(eLookupGovernorRole role, string expected)
@@ -75,8 +68,6 @@ namespace Edubase.ServicesUnitTests.Nomenclature
         [InlineData(eLookupGovernorRole.Group_SharedLocalGovernor, "shared local governor")]
         [InlineData(eLookupGovernorRole.LocalGovernor, "local governor")]
         [InlineData(eLookupGovernorRole.Member, "member")]
-        [InlineData(eLookupGovernorRole.Member_Individual, "member - individual")]
-        [InlineData(eLookupGovernorRole.Member_Organisation, "member - organisation")]
         [InlineData(eLookupGovernorRole.Trustee, "trustee")]
         [InlineData(eLookupGovernorRole.NA, "n a")]
         public void GetGovernorRoleName_Lowercase_PluraliseFalse_ReturnsExpected(eLookupGovernorRole role, string expected)
@@ -101,8 +92,6 @@ namespace Edubase.ServicesUnitTests.Nomenclature
         [InlineData(eLookupGovernorRole.Group_SharedLocalGovernor, "shared local governors")]
         [InlineData(eLookupGovernorRole.LocalGovernor, "local governors")]
         [InlineData(eLookupGovernorRole.Member, "members")]
-        [InlineData(eLookupGovernorRole.Member_Individual, "members - individual")]
-        [InlineData(eLookupGovernorRole.Member_Organisation, "members - organisation")]
         [InlineData(eLookupGovernorRole.Trustee, "trustees")]
         [InlineData(eLookupGovernorRole.NA, "n as")]
         public void GetGovernorRoleName_Lowercase_PluraliseTrue_ReturnsExpected(eLookupGovernorRole role, string expected)

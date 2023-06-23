@@ -1,7 +1,6 @@
 using Edubase.Common.Text;
 using Edubase.Services.Enums;
 using Edubase.Services.Governors.Factories;
-using Edubase.Services.Nomenclature;
 using Xunit;
 
 namespace Edubase.ServicesUnitTests.Governors
@@ -27,9 +26,7 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.NA, "N a")]
         public void GetGovernorRoleName_SentenceCase_PluraliseFalse_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
-            var sut = new GovernorRoleNameFactory(false);
-
-            var result = sut.Create(role, eTextCase.SentenceCase);
+            var result = GovernorRoleNameFactory.Create(role, eTextCase.SentenceCase, false);
 
             Assert.Equal(expected, result);
         }
@@ -53,9 +50,7 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.NA, "N a")]
         public void GetGovernorRoleName_SentenceCase_PluraliseTrue_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
-            var sut = new GovernorRoleNameFactory(true);
-
-            var result = sut.Create(role, eTextCase.SentenceCase);
+            var result = GovernorRoleNameFactory.Create(role, eTextCase.SentenceCase, true);
 
             Assert.Equal(expected, result);
         }
@@ -79,9 +74,7 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.NA, "n a")]
         public void GetGovernorRoleName_Lowercase_PluraliseFalse_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
-            var sut = new GovernorRoleNameFactory(false);
-
-            var result = sut.Create(role, eTextCase.Lowerase);
+            var result = GovernorRoleNameFactory.Create(role, eTextCase.Lowerase, false);
 
             Assert.Equal(expected, result);
         }
@@ -105,9 +98,7 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.NA, "n a")]
         public void GetGovernorRoleName_Lowercase_PluraliseTrue_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
-            var sut = new GovernorRoleNameFactory(true);
-
-            var result = sut.Create(role, eTextCase.Lowerase);
+            var result = GovernorRoleNameFactory.Create(role, eTextCase.Lowerase, true);
 
             Assert.Equal(expected, result);
         }

@@ -14,6 +14,7 @@ using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Exceptions;
 using Edubase.Services.Governors;
+using Edubase.Services.Governors.Factories;
 using Edubase.Services.Governors.Models;
 using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
@@ -363,7 +364,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             await _layoutHelper.PopulateLayoutProperties(viewModel, establishmentUrn, groupUId, User);
 
-            viewModel.GovernorRoleName = _nomenclatureService.GetGovernorRoleName(role.Value);
+            //viewModel.GovernorRoleName = _nomenclatureService.GetGovernorRoleName(role.Value);
+            viewModel.GovernorRoleName = GovernorRoleNameFactory.Create(role.Value);
             viewModel.GovernorRole = role.Value;
             await PopulateSelectLists(viewModel);
             viewModel.DisplayPolicy =
@@ -672,7 +674,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     .ToList(),
                 NewChairType = ReplaceChairViewModel.ChairType.LocalChair,
                 Role = (eLookupGovernorRole) governor.RoleId,
-                RoleName = _nomenclatureService.GetGovernorRoleName((eLookupGovernorRole) governor.RoleId,
+                //RoleName = _nomenclatureService.GetGovernorRoleName((eLookupGovernorRole) governor.RoleId,
+                //    eTextCase.Lowerase)
+                RoleName = GovernorRoleNameFactory.Create((eLookupGovernorRole) governor.RoleId,
                     eTextCase.Lowerase)
             };
 
