@@ -624,7 +624,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 ModelState.AddModelError(nameof(viewModel.SearchText), "The SearchText field is required.");
             }
-            
+
             return View(viewModel);
         }
 

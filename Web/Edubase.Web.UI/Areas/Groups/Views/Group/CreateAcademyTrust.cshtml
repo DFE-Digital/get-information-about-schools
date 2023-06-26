@@ -126,7 +126,7 @@
                         @Html.DropDownListFor(x => x.TypeId, Model.GroupTypes, "", GetAttributes("govuk-select", Model.TrustExists))
                     </div>
                     @if ((string)ViewData["academyTrustRoute"] != "secure-academy-trust")
-                    {                        
+                    {
                         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GroupId)">
                             @Html.LabelFor(x => x.GroupId, new { @class = "govuk-label" })
                             @Html.ValidationMessageFor(x => x.GroupId, null, new { @class = "govuk-error-message" })
