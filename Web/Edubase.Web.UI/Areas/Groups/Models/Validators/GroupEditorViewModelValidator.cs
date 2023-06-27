@@ -5,6 +5,8 @@ using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Validation;
 using FluentValidation;
 using System.Linq;
+using System.Threading.Tasks;
+using Edubase.Services.Establishments.Models;
 
 namespace Edubase.Web.UI.Areas.Groups.Models.Validators
 {
@@ -19,6 +21,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
     {
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IGroupReadService _groupReadService;
+
+        private EstablishmentModel _matchedEstablishment;
 
         public GroupEditorViewModelValidator(IGroupReadService groupReadService, IEstablishmentReadService establishmentReadService, IPrincipal principal, ISecurityService securityService)
         {
@@ -42,10 +46,32 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .WithMessage("This establishment is already in this group. Please enter a different URN")
                     .WithSummaryMessage("This establishment is already in this group. Please enter a different URN")
 
-                    .MustAsync(async (x, ct) =>
+                    .MustAsync(async (urnSearchText, ct) =>
                     {
-                        return (await _establishmentReadService.GetAsync(x.ToInteger().Value, principal).ConfigureAwait(false)).ReturnValue != null;
-                    }).WithMessage("The establishment was not found").WithSummaryMessage("The establishment was not found");
+                        var matchedEstablishment = await GetOrFetchMatchedEstablishment(_establishmentReadService, principal, urnSearchText);
+                        var establishmentExists = matchedEstablishment != null;
+                        return establishmentExists;
+                    })
+                    .WithMessage("The establishment was not found")
+                    .WithSummaryMessage("The establishment was not found")
+
+                    .MustAsync(async (model, urnSearchText, ct) =>
+                    {
+                        var matchedEstablishment = await GetOrFetchMatchedEstablishment(_establishmentReadService, principal, urnSearchText);
+                        if (model.GroupTypeMode != eGroupTypeMode.ChildrensCentre)
+                        {
+                            // If it's not a children's centres group, this validation step is not relevant
+                            return true;
+                        }
+
+                        // Only "children's centre" and "children's centre linked site" may be added to a "children's centres group"
+                        // "Type Group" of "Children's Centres" (code `12` / id `4`) refers to children's centre establishment types
+                        // See also database tables `EstablishmentType` and `EstablishmentTypeGroup`
+                        var establishmentTypeIsPermitted = matchedEstablishment.EstablishmentTypeGroupId == 4;
+                        return establishmentTypeIsPermitted;
+                    })
+                    .WithMessage("Enter a URN for a children's centre or children's centre linked site")
+                    .WithSummaryMessage("Enter a URN for a children's centre or children's centre linked site");
             });
 
             // Having found an establishment to link, validate the joined date if supplied...
@@ -104,20 +130,35 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                         .WithMessage("Closed date is invalid. Please enter a valid date.");
                     });
 
+                When(x => x.GroupType == eLookupGroupType.SecureSingleAcademyTrust
+                    && x.OriginalStatusId != (int) eLookupGroupStatus.Closed
+                    && x.StatusId == (int) eLookupGroupStatus.Closed
+                    && x.SaveGroupDetail, () =>
+                    {
+                        RuleFor(x => x.ClosedDate)
+                        .Must(x => !x.IsEmpty())
+                        .WithMessage("Please enter a date for the closure of this secure single-academy trust")
+                        .Must(x => x.IsValid() || x.IsEmpty())
+                        .WithMessage("Closed date is invalid. Please enter a valid date.");
+                    });
+
                 RuleFor(x => x.GroupName)
                     .Cascade(CascadeMode.StopOnFirstFailure)
                     .NotEmpty()
                     .WithMessage(x => $"Please enter the {x.GroupTypeLabelPrefix.ToLower()} name")
                     .When(x => x.SaveGroupDetail);
 
-                RuleFor(x => x.GroupId)
-                    .Cascade(CascadeMode.StopOnFirstFailure)
-                    .NotEmpty()
-                    .WithMessage("Please enter a Group ID")
-                    .WithSummaryMessage("Please enter a Group ID")
-                    .MustAsync(async (model, groupId, ct) => !(await _groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), groupId: groupId, existingGroupUId: model.GroupUId)))
-                    .WithMessage("Group ID already exists. Enter a different group ID.")
-                    .When(x => x.GroupTypeMode.OneOfThese(eGroupTypeMode.AcademyTrust, eGroupTypeMode.Sponsor) && x.SaveGroupDetail, ApplyConditionTo.AllValidators);
+                When(x => x.GroupType != eLookupGroupType.SecureSingleAcademyTrust, () =>
+                {
+                    RuleFor(x => x.GroupId)
+                        .Cascade(CascadeMode.StopOnFirstFailure)
+                        .NotEmpty()
+                        .WithMessage("Please enter a Group ID")
+                        .WithSummaryMessage("Please enter a Group ID")
+                        .MustAsync(async (model, groupId, ct) => !(await _groupReadService.ExistsAsync(securityService.CreateAnonymousPrincipal(), groupId: groupId, existingGroupUId: model.GroupUId)))
+                        .WithMessage("Group ID already exists. Enter a different group ID.")
+                        .When(x => x.GroupTypeMode.OneOfThese(eGroupTypeMode.AcademyTrust, eGroupTypeMode.Sponsor) && x.SaveGroupDetail, ApplyConditionTo.AllValidators);
+                });
 
                 When(x => x.OpenDate.ToDateTime().HasValue, () =>
                 {
@@ -146,6 +187,17 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
             });
         }
 
+        private async Task<EstablishmentModel> GetOrFetchMatchedEstablishment(IEstablishmentReadService establishmentReadService, IPrincipal principal, string urnSearchText)
+        {
+            if (_matchedEstablishment == null)
+            {
+                _matchedEstablishment = (await establishmentReadService.GetAsync(urnSearchText.ToInteger().Value, principal).ConfigureAwait(false))
+                    .ReturnValue;
+            }
+
+            return _matchedEstablishment;
+        }
+
         private bool VerifyJoinedDate(DateTime? joinedDate, GroupEditorViewModel model)
         {
             return model.OpenDate.IsValid() &&
@@ -162,5 +214,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                 $"The {viewModel.GroupTypeLabelPrefix.ToLower()} opened on {viewModel.OpenDate}. " +
                 $"A valid joining date must be entered.";
         }
+
     }
 }

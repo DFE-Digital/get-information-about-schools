@@ -29,6 +29,7 @@ namespace Edubase.Web.UI.Models
         {
             [(int) eLookupGroupType.SingleacademyTrust] = "Single-academy trust",
             [(int) eLookupGroupType.MultiacademyTrust] = "Academy trust",
+            [(int) eLookupGroupType.SecureSingleAcademyTrust] = "Academy trust",
             [(int) eLookupGroupType.SchoolSponsor] = "Academy sponsor",
             [(int) eLookupGroupType.Trust] = "Trust",
             [(int) eLookupGroupType.Federation] = "Federation",
@@ -150,13 +151,24 @@ namespace Edubase.Web.UI.Models
 
         #endregion
 
+        /// <summary>
+        /// Note: Only display the county if it has been supplied.
+        /// Note: Only display the country if it has been supplied, and it is outside of the UK.
+        /// Note: These string values correlate with the `name` column of `County` and `Nationality` database tables.
+        /// </summary>
         public string GetAddress() => StringUtil.ConcatNonEmpties(", ",
             Establishment.Address_Line1,
             Establishment.Address_Locality,
             Establishment.Address_Line3,
             Establishment.Address_CityOrTown,
-            AddressCountyName?.Replace("Not recorded", string.Empty),
-            Establishment.Address_PostCode);
+            AddressCountyName?
+                .Replace("Not applicable", string.Empty)
+                .Replace("Not recorded", string.Empty),
+            Establishment.Address_PostCode,
+            AddressCountryName?
+                .Replace("N/A", string.Empty)
+                .Replace("United Kingdom", string.Empty)
+            );
 
         public IEnumerable<AdditionalAddressViewModel> AdditionalAddressList { get; set; } = Enumerable.Empty<AdditionalAddressViewModel>();
 
@@ -205,5 +217,7 @@ namespace Edubase.Web.UI.Models
                 return showFinancialBenchmarking.Value;
             }
         }
+
+        public TabWarningsModel TabWarnings { get; set; }
     }
 }

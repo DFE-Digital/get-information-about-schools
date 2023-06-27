@@ -33,6 +33,7 @@ $govuk-global-styles: true;
 @import "node_modules/govuk-frontend/govuk/components/cookie-banner/index";
 @import "node_modules/govuk-frontend/govuk/utilities/all";
 @import "node_modules/govuk-frontend/govuk/overrides/all";
+@import "node_modules/govuk-frontend/govuk/components/inset-text";
 // GIAS specifics
 @import "GiasGovukOverrides/all";
 @import "GiasHelpers/gias-display";
