@@ -21,7 +21,7 @@ namespace Edubase.Services.Governors.Factories
             { eLookupGovernorRole.Establishment_SharedLocalGovernor, "Shared local governor" },
             { eLookupGovernorRole.Member, "Member" },
             { eLookupGovernorRole.Member_Individual, "Member - individual" },
-            { eLookupGovernorRole.Member_Organisation, "Member - organisational" },
+            { eLookupGovernorRole.Member_Organisational, "Member - organisational" },
             { eLookupGovernorRole.Trustee, "Trustee" },
             {eLookupGovernorRole.NA, "N a" }
         };
@@ -34,7 +34,7 @@ namespace Edubase.Services.Governors.Factories
             { eLookupGovernorRole.Establishment_SharedLocalGovernor, "Shared local governors" },
             { eLookupGovernorRole.Member, "Members" },
             { eLookupGovernorRole.Member_Individual, "Members - individual" },
-            { eLookupGovernorRole.Member_Organisation, "Members - organisational" },
+            { eLookupGovernorRole.Member_Organisational, "Members - organisational" },
             { eLookupGovernorRole.Trustee, "Trustees" }
         };
 

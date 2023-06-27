@@ -21,7 +21,7 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.LocalGovernor, "Local governor")]
         [InlineData(eLookupGovernorRole.Member, "Member")]
         [InlineData(eLookupGovernorRole.Member_Individual, "Member - individual")]
-        [InlineData(eLookupGovernorRole.Member_Organisation, "Member - organisational")]
+        [InlineData(eLookupGovernorRole.Member_Organisational, "Member - organisational")]
         [InlineData(eLookupGovernorRole.Trustee, "Trustee")]
         [InlineData(eLookupGovernorRole.NA, "N a")]
         public void GetGovernorRoleName_SentenceCase_PluraliseFalse_ReturnsExpected(eLookupGovernorRole role, string expected)
@@ -45,7 +45,7 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.LocalGovernor, "Local governors")]
         [InlineData(eLookupGovernorRole.Member, "Members")]
         [InlineData(eLookupGovernorRole.Member_Individual, "Members - individual")]
-        [InlineData(eLookupGovernorRole.Member_Organisation, "Members - organisational")]
+        [InlineData(eLookupGovernorRole.Member_Organisational, "Members - organisational")]
         [InlineData(eLookupGovernorRole.Trustee, "Trustees")]
         [InlineData(eLookupGovernorRole.NA, "N a")]
         public void GetGovernorRoleName_SentenceCase_PluraliseTrue_ReturnsExpected(eLookupGovernorRole role, string expected)
@@ -69,7 +69,7 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.LocalGovernor, "local governor")]
         [InlineData(eLookupGovernorRole.Member, "member")]
         [InlineData(eLookupGovernorRole.Member_Individual, "member - individual")]
-        [InlineData(eLookupGovernorRole.Member_Organisation, "member - organisational")]
+        [InlineData(eLookupGovernorRole.Member_Organisational, "member - organisational")]
         [InlineData(eLookupGovernorRole.Trustee, "trustee")]
         [InlineData(eLookupGovernorRole.NA, "n a")]
         public void GetGovernorRoleName_Lowercase_PluraliseFalse_ReturnsExpected(eLookupGovernorRole role, string expected)
@@ -93,7 +93,7 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.LocalGovernor, "local governors")]
         [InlineData(eLookupGovernorRole.Member, "members")]
         [InlineData(eLookupGovernorRole.Member_Individual, "members - individual")]
-        [InlineData(eLookupGovernorRole.Member_Organisation, "members - organisational")]
+        [InlineData(eLookupGovernorRole.Member_Organisational, "members - organisational")]
         [InlineData(eLookupGovernorRole.Trustee, "trustees")]
         [InlineData(eLookupGovernorRole.NA, "n a")]
         public void GetGovernorRoleName_Lowercase_PluraliseTrue_ReturnsExpected(eLookupGovernorRole role, string expected)

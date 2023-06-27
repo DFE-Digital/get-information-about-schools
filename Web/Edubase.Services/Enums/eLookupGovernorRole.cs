@@ -18,6 +18,6 @@ namespace Edubase.Services.Enums
         Group_SharedLocalGovernor = 12,
         Establishment_SharedLocalGovernor = 13,
         Member_Individual = 21,
-        Member_Organisation = 22,
+        Member_Organisational = 22,
     }
 }
