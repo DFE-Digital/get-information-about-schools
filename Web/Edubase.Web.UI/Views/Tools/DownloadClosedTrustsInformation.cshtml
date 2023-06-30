@@ -1,6 +1,6 @@
 @{
     ViewBag.SiteSection = "tools";
-    var fileName = $"SatAndMatClosureReport_{DateTime.Now.Date.ToString("dd-MM-yyyy")}.csv";
+    var fileName = $"SsatSatAndMatClosureReport_{DateTime.Now.Date.ToString("dd-MM-yyyy")}.csv";
 }
 @section BreadCrumbs {
    <div class="govuk-grid-row">
@@ -20,18 +20,18 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-xl">Closed single-academy trusts
-            (SATs) and multi-academy trusts (MATs)</h1>
+            (SATs), secure single-academy trusts (SSATs) and multi-academy trusts (MATs)</h1>
     </div>
 </div>
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
         <p>
-            Download the following file to view a list of closed single-academy trusts and multi-academy trusts.
+            Download the following file to view a list of closed single-academy trusts, secure single-academy trusts and multi-academy trusts.
             These are currently open on GIAS but reported closed by Companies House.
         </p>
         <p>
-            @Html.RouteLink(fileName, "DownloadMatClosureReport")
+            @Html.RouteLink(fileName, "DownloadMatClosureReport", new { filename = fileName })
         </p>
     </div>
 </div>
