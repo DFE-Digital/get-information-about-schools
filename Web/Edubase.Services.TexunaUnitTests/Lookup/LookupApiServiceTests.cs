@@ -50,7 +50,8 @@ namespace Edubase.Services.Texuna.Lookup.Tests
         public async Task AsyncLookupsTest(string lookupType)
         {
             //use reflection to construct method name
-            var method = _lookupApiService.GetType().GetMethod($"{lookupType}GetAllAsync");
+            var method = _lookupApiService.GetType().GetMethod($"{lookupType}GetAllAsync",
+                Type.EmptyTypes);
             var taskResult = method.Invoke(_lookupApiService, null) as Task<IEnumerable<LookupDto>>;
             var result = await taskResult;
 

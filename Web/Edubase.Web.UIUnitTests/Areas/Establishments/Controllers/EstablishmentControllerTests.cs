@@ -31,7 +31,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
     {
         private readonly EstablishmentController controller;
         private readonly Mock<ICachedLookupService> mockCachedLookupService;
-
+        private readonly Mock<IUserDependentLookupService> mockLookupService;
         private readonly Mock<IEstablishmentReadService> mockEstablishmentReadService = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
         private readonly Mock<IGroupReadService> mockGroupReadService = new Mock<IGroupReadService>(MockBehavior.Strict);
         private readonly Mock<IMapper> mockMapper = new Mock<IMapper>(MockBehavior.Strict);
@@ -54,6 +54,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         {
             mockCachedLookupService = MockHelper.SetupCachedLookupService();
 
+            mockLookupService = MockHelper.SetupLookupService(mockPrincipal.Object);
+
             mockEstablishmentReadService.Setup(e => e.GetEstabType2EducationPhaseMap())
                .Returns(new Dictionary<eLookupEstablishmentType, eLookupEducationPhase[]>());
 
@@ -68,8 +70,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                 mockCachedLookupService.Object,
                 mockResourcesHelper.Object,
                 mockSecurityService.Object,
-                mockExternalLookupService.Object);
-
+                mockExternalLookupService.Object,
+                mockLookupService.Object);
 
             SetupController();
         }
