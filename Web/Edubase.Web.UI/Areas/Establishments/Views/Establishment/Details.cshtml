@@ -123,7 +123,15 @@
 
         @if (Model.IsClosed)
         {
-            if (Model.Establishment.CloseDate != null)
+            if (Model.Establishment.CloseDate != null && Model.Establishment.TypeId == 46)
+            {
+                <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
+                    <p>
+                        This establishment closed on @(Model.Establishment.CloseDate?.ToString("d MMMM yyyy")).
+                    </p>
+                </div>
+            }
+            else if (Model.Establishment.CloseDate != null)
             {
                 <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
                     <p>
