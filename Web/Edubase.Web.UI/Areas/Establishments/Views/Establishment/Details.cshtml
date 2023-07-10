@@ -123,35 +123,21 @@
 
         @if (Model.IsClosed)
         {
-            if (Model.Establishment.CloseDate != null)
-            {
-                if (Model.Establishment.TypeId == 46)
-                {
-                    <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
-                        <p>
-                            This establishment closed on @(Model.Establishment.CloseDate?.ToString("d MMMM yyyy")).
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
-                        <p>
-                            This establishment closed on @(Model.Establishment.CloseDate?.ToString("d MMMM yyyy")).
-                            View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
-                        </p>
-                    </div>
-                }
-            }
-            else
-            {
-                <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
-                    <p>
-                        This establishment is closed.
-                        View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
-                    </p>
-                </div>
-            }
+            <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
+                <p>
+                    @if (Model.closedMessages().IsLinked)
+                    {
+                        <span>
+                            @Model.closedMessages().establishmentStatus
+                            View details of<a href="#school-links" class="tab-manipulator"> linked establishments</a>
+                        </span>
+                    }
+                    else
+                    {
+                        @Model.closedMessages().establishmentStatus
+                    }
+                </p>
+            </div>
         }
     </div>
 </div>
