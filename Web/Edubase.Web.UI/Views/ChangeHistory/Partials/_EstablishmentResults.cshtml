@@ -60,7 +60,7 @@
         <tbody class="govuk-table__body">
             @foreach (var item in Model.Items)
             {
-            <tr class="govuk-table__row">
+            <tr id="@(item.RequestedDate?.ToString("d-MMMM-yyyy"))-@item.EstablishmentUrn-@item.FieldName" class="govuk-table__row">
                 <td data-label="Date changed" class="govuk-table__cell">@(item.DateChanged?.ToString("d MMMM yyyy"))</td>
                 <td data-label="Effective date" class="govuk-table__cell">@(item.EffectiveDate?.ToString("d MMMM yyyy"))</td>
                 @if (!Model.SingleEstablishment)
@@ -82,7 +82,7 @@
                         @item.OldValue
                     }
                 </td>
-                <td data-label="New value" class="govuk-table__cell">
+                <td id="@item.NewValue-@item.EstablishmentUrn-@(item.RequestedDate?.ToString("d-MMMM-yyyy"))" data-label="New value" class="govuk-table__cell">
                     @if (item.NewValue != null && RE.IsMatch(item.NewValue))
                     {
                         var parts = item.NewValue.Split('/').Select(Int32.Parse).ToList();
