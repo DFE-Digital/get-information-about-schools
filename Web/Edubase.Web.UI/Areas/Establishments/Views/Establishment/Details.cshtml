@@ -105,13 +105,13 @@
         <p id="establishment-type" class="establishment-type establishment-fine-detail">@Model.TypeName</p>
         <p id="establishment-data-download" class="establishment-data-download">
             @Html.RouteLink("Download establishment data", "EstabDataDownload", new
-            {
-                Model.Establishment.Urn,
-                state = UriHelper.SerializeToUrlToken(RouteDto.Create(
-                    new RouteDto("Search", new RouteValueDictionary(new { SelectedTab = SearchViewModel.Tab.Establishments.ToString() }), "Search"),
-                    Model.LegalParentGroupRouteDto,
-                    Model.EstabDetailRouteDto))
-            }, new { rel = "nofollow", id = "establishment-data-download-link" })
+       {
+           Model.Establishment.Urn,
+           state = UriHelper.SerializeToUrlToken(RouteDto.Create(
+             new RouteDto("Search", new RouteValueDictionary(new { SelectedTab = SearchViewModel.Tab.Establishments.ToString() }), "Search"),
+             Model.LegalParentGroupRouteDto,
+             Model.EstabDetailRouteDto))
+       }, new { rel = "nofollow", id = "establishment-data-download-link" })
         </p>
 
         @if (Model.LegalParentGroup != null)
@@ -125,16 +125,16 @@
         {
             <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
                 <p>
-                    @if (Model.closedMessages().IsLinked)
+                    @if (Model.TabDisplayPolicy.Links)
                     {
                         <span>
-                            @Model.closedMessages().establishmentStatus
+                            @Model.ClosedStatusMessage
                             View details of<a href="#school-links" class="tab-manipulator"> linked establishments</a>
                         </span>
                     }
                     else
                     {
-                        @Model.closedMessages().establishmentStatus
+                        @Model.ClosedStatusMessage
                     }
                 </p>
             </div>
