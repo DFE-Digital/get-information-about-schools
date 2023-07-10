@@ -223,9 +223,9 @@ namespace Edubase.Web.UI.Models
         {
             get
             {
-                var time = Establishment.CloseDate?.ToString("d MMMM yyyy");
+                var date = Establishment.CloseDate?.ToString("d MMMM yyyy");
                 var establishmentClosedStatusMessage = Establishment.CloseDate != null
-                    ? $"This establishment closed on {time}. "
+                    ? $"This establishment closed on {date}. "
                     : "This establishment is closed.";
                 return establishmentClosedStatusMessage;
             }
