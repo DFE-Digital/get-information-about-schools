@@ -60,7 +60,7 @@
         <tbody class="govuk-table__body">
             @foreach (var item in Model.Items)
             {
-            <tr id="@(item.RequestedDate?.ToString("d-MMMM-yyyy"))-@item.EstablishmentUrn" class="govuk-table__row">
+            <tr id="@(item.RequestedDate?.ToString("d-MMMM-yyyy"))-@item.EstablishmentUrn-@item.FieldName" class="govuk-table__row">
                 <td data-label="Date changed" class="govuk-table__cell">@(item.DateChanged?.ToString("d MMMM yyyy"))</td>
                 <td data-label="Effective date" class="govuk-table__cell">@(item.EffectiveDate?.ToString("d MMMM yyyy"))</td>
                 @if (!Model.SingleEstablishment)
@@ -68,7 +68,7 @@
                     <td data-label="URN" class="govuk-table__cell">@Html.RouteLink(item.EstablishmentUrn?.ToString() ?? "Unknown", "EstabDetails", new { id = item.EstablishmentUrn })</td>
                     <td data-label="Establishment" class="govuk-table__cell">@Html.RouteLink(item.EstablishmentName.IsNullOrEmpty()? "Unknown": item.EstablishmentName, "EstabDetails", new { id = item.EstablishmentUrn })</td>
                 }
-                <td id="@item.EstablishmentUrn-@item.FieldName-@(item.RequestedDate?.ToString("d-MMMM-yyyy"))" data-label="Updated field" class="govuk-table__cell">@item.FieldName</td>
+                <td data-label="Updated field" class="govuk-table__cell">@item.FieldName</td>
                 <td data-label="Old value" class="govuk-table__cell">
                     @if (item.OldValue != null && RE.IsMatch(item.OldValue))
                     {
