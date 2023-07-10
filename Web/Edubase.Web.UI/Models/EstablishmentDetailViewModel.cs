@@ -219,24 +219,16 @@ namespace Edubase.Web.UI.Models
         }
 
         public TabWarningsModel TabWarnings { get; set; }
-        public (string establishmentStatus, bool IsLinked) closedMessages()
+        public string ClosedStatusMessage
         {
-            var time = Establishment.CloseDate?.ToString("d MMMM yyyy");
-            string establishmentStatus;
-            var IsLinked = true;
-            if (Establishment.CloseDate != null)
+            get
             {
-                establishmentStatus = $"This establishment closed on {time}. ";
-                if (Establishment.TypeId == 46)
-                {
-                    IsLinked = false;
-                }
+                var time = Establishment.CloseDate?.ToString("d MMMM yyyy");
+                var establishmentClosedStatusMessage = Establishment.CloseDate != null
+                    ? $"This establishment closed on {time}. "
+                    : "This establishment is closed.";
+                return establishmentClosedStatusMessage;
             }
-            else
-            {
-                establishmentStatus = "This establishment is closed.";
-            }
-            return (establishmentStatus, IsLinked);
         }
     }
 }

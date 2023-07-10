@@ -121,26 +121,26 @@
             </div>
         }
 
+
         @if (Model.IsClosed)
         {
             <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
                 <p>
-                    @if (Model.closedMessages().IsLinked)
+                    @if (Model.TabDisplayPolicy.Links)
                     {
                         <span>
-                            @Model.closedMessages().establishmentStatus
+                            @Model.ClosedStatusMessage
                             View details of<a href="#school-links" class="tab-manipulator"> linked establishments</a>
                         </span>
                     }
                     else
                     {
-                        @Model.closedMessages().establishmentStatus
+                        @Model.ClosedStatusMessage
                     }
                 </p>
             </div>
         }
-    </div>
-</div>
+
 @{ Html.RenderPartial(@"Partials\ConfirmationNotifications"); }
 
 <div class="govuk-grid-row">
