@@ -9,5 +9,6 @@ namespace Edubase.Data.Repositories
     {
         Task<List<DataQualityStatus>> GetAllAsync();
         Task UpdateDataQualityAsync(DataQualityStatus.DataQualityEstablishmentType establishmentType, DateTime lastUpdated);
+        Task UpdateDataQualityDataOwnerDetailsAsync(DataQualityStatus.DataQualityEstablishmentType establishmentType, string dataOwnerName, string dataOwnerEmail);
     }
 }

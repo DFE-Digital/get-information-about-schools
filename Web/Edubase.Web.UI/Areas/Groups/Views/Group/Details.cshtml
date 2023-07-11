@@ -4,7 +4,6 @@
 @using Edubase.Web.UI.Models.Search
 @using Microsoft.Ajax.Utilities
 @using System.Text.RegularExpressions
-@using Edubase.Services.Security
 
 @model GroupDetailViewModel
 @{
@@ -91,8 +90,7 @@
 
         <p id="uid" class="urn establishment-fine-detail"><abbr title="Unique Identifier">UID</abbr>: <span id="uid-value">@Model.Group.GroupUId</span></p>
         <p id="establishment-group-type" class="group-type establishment-fine-detail">@Model.GroupTypeName</p>
-
-        <p class="govuk-body-s establishment-data-download">
+        <p id="establishment-group-data-download" class="govuk-body-s establishment-data-download">
             @Html.RouteLink("Download group data", "GroupDataDownload", new { uid = Model.Group.GroupUId,
             state = UriHelper.SerializeToUrlToken(RouteDto.Create(
                 new RouteDto("Search", new RouteValueDictionary(new { SelectedTab = SearchViewModel.Tab.Groups.ToString() }), "Search"),
@@ -137,7 +135,7 @@
                         <a href="#list" id="group-establishments-tab-link" class="gias-tabs__tab ">@Model.EstablishmentsPluralName (@Model.Establishments.Count)</a>
                     </li>
 
-                    @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
+                    @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust || Model.Group.GroupTypeId == (int)eLookupGroupType.SecureSingleAcademyTrust)
                     {
                         <li class="gias-tabs__list-item">
                             <a href="#governance" id="governance-tab-link" class="gias-tabs__tab ">Governance</a>
@@ -289,7 +287,7 @@
 
                         </div>
 
-                        @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
+                        @if (Model.Group.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust || Model.Group.GroupTypeId == (int)eLookupGroupType.SecureSingleAcademyTrust)
                         {
                             <div id="governance" class="tab-content">
 

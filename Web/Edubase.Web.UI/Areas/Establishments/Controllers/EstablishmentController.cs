@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,6 +15,7 @@ using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.DisplayPolicies;
+using Edubase.Services.Establishments.EditPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Exceptions;
 using Edubase.Services.ExternalLookup;
@@ -349,6 +348,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
 
             viewModel.Establishment = result.ReturnValue;
+            viewModel.TabWarnings = new TabWarningsModel(viewModel.Establishment.TypeId);
 
             await Task.WhenAll(
                 PopulateLinkedEstablishments(id, viewModel),
@@ -359,7 +359,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 PopulateLookupNames(viewModel),
                 PopulateGovernors(viewModel));
 
-            viewModel.AgeRangeToolTip = viewModel.Establishment.TypeId.OneOfThese(ET.OnlineProvider)
+          viewModel.AgeRangeToolTip = viewModel.Establishment.TypeId.OneOfThese(ET.OnlineProvider)
                 ? _resourcesHelper.GetResourceStringForEstablishment("AgeRangeOnlineProvider", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User)
                 : _resourcesHelper.GetResourceStringForEstablishment("AgeRange", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
 
@@ -1422,6 +1422,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 var validationEnvelope = await _establishmentWriteService.ValidateAsync(existingDomainModel, User);
 
                 viewModel.ShowDuplicateRecordError = validationEnvelope.Errors.Any(x => x.Code == "establishment.edit.with.same.name.la.postcode.found");
+
+                if (viewModel.AccreditationExpiryDate.Year != null)
+                {
+                    var AccreditationEnd = new DateTime((int) viewModel.AccreditationExpiryDate.Year, (int) viewModel.AccreditationExpiryDate.Month, (int) viewModel.AccreditationExpiryDate.Day);
+                    var AccreditationStart = new DateTime((int) viewModel.OpenDate.Year, (int) viewModel.OpenDate.Month, (int) viewModel.OpenDate.Day);
+
+                    if (AccreditationEnd < AccreditationStart)
+                    {
+                        ModelState.AddModelError(nameof(viewModel.AccreditationExpiryDate), "Accreditation expiry date must be before accreditation start date");
+                    }
+                }
 
                 if (viewModel.ShowDuplicateRecordError)
                 {

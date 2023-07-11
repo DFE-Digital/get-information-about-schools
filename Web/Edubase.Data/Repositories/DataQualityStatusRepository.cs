@@ -41,6 +41,21 @@ namespace Edubase.Data.Repositories
             }
         }
 
+        public async Task UpdateDataQualityDataOwnerDetailsAsync(DataQualityStatus.DataQualityEstablishmentType establishmentType, string dataOwnerName, string dataOwnerEmail)
+        {
+            var query = Table.CreateQuery<DataQualityStatus>().Where(d => d.RowKey == ((int)establishmentType).ToString()).AsTableQuery();
+            var results = await query.ExecuteSegmentedAsync(null);
+            var dataQualityRecord = results.FirstOrDefault();
+            if (dataQualityRecord != null)
+            {
+                dataQualityRecord.DataOwner = dataOwnerName;
+                dataQualityRecord.Email = dataOwnerEmail;
+
+                var operation = TableOperation.InsertOrReplace(dataQualityRecord);
+                await Table.ExecuteAsync(operation);
+            }
+        }
+
         private void SeedTable()
         {
             var seedData = new List<DataQualityStatus>

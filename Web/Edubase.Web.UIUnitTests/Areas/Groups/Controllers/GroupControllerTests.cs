@@ -21,8 +21,10 @@ using Edubase.Services.IntegrationEndPoints.CompaniesHouse;
 using Edubase.Services.Lookup;
 using Edubase.Services.Nomenclature;
 using Edubase.Services.Security;
+using Edubase.Services.Texuna;
 using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
+using Edubase.Web.UI.Areas.Groups.ViewRulesHandlers;
 using Edubase.Web.UI.Exceptions;
 using Edubase.Web.UIUnitTests;
 using Moq;
@@ -502,6 +504,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
         [InlineData(eLookupGroupType.Federation, "Federation name", "Close this federation and mark as created in error", "Group_EditDetails_DynamicLabels_Federation")]
         [InlineData(eLookupGroupType.Trust, "Foundation trust name", "", "Group_EditDetails_DynamicLabels_Trust")]
         [InlineData(eLookupGroupType.SchoolSponsor, "Academy sponsor name", "Close this academy sponsor and mark as created in error", "Group_EditDetails_DynamicLabels_SchoolSponsor")]
+        [InlineData(eLookupGroupType.SecureSingleAcademyTrust, "Secure single-academy trust name", "Close this secure single-academy trust and mark as created in error", "Group_EditDetails_DynamicLabels_SecureSingleAcademyTrust")]
         public async Task Group_EditDetails_DynamicLabels(eLookupGroupType groupType, string groupNameLabelText,
             string closeAndMarkAsCreatedInErrorLabelText, string testName)
         {
@@ -708,7 +711,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
         {
             mockGroupsWriteService.Setup(x => x.ValidateAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ValidationEnvelopeDto());
             mockGroupReadService.Setup(x => x.ExistsAsync(It.IsAny<IPrincipal>(), It.IsAny<CompaniesHouseNumber?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>())).ReturnsAsync(false);
-            mockGroupReadService.Setup(x => x.GetModelChangesAsync(It.IsAny<GroupModel>(), It.IsAny<IPrincipal>())).ReturnsAsync(new List<ChangeDescriptorDto>());
+            mockGroupReadService.Setup(x => x.GetModelChangesAsync(It.IsAny<GroupModel>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new List<ChangeDescriptorDto>()
+                {
+                    // Changes are made, exact details not important for this test
+                    new ChangeDescriptorDto(),
+                });
             mockSecurityService.Setup(x => x.CreateAnonymousPrincipal()).Returns(new GenericPrincipal(new GenericIdentity(""), new string[0]));
             mockGroupsWriteService.Setup(x => x.SaveAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ApiResponse(true));
             mockGroupReadService.Setup(x =>
@@ -722,11 +730,43 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
                 Action = ActionSave,
                 GroupTypeId = (int) eLookupGroupType.Federation
             };
+
+            // Changes made, so we should be redirected to the details page
             var result = (RedirectToRouteResult) await controller.EditDetails(viewModel);
             Assert.Equal("Details", result.RouteValues["action"]);
             Assert.Equal(123, result.RouteValues["id"]);
 
             mockGroupsWriteService.Verify(x => x.SaveAsync(It.Is<SaveGroupDto>(v => v.LinkedEstablishments == null && v.GroupUId == 123 && v.Group != null), It.IsAny<IPrincipal>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task Group_EditDetails_Post_NoChanges()
+        {
+            mockGroupsWriteService.Setup(x => x.ValidateAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ValidationEnvelopeDto());
+            mockGroupReadService.Setup(x => x.ExistsAsync(It.IsAny<IPrincipal>(), It.IsAny<CompaniesHouseNumber?>(), It.IsAny<string>(), It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<int?>())).ReturnsAsync(false);
+            mockGroupReadService.Setup(x => x.GetModelChangesAsync(It.IsAny<GroupModel>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new List<ChangeDescriptorDto>()
+                {
+                    // No changes are made
+                });
+            mockSecurityService.Setup(x => x.CreateAnonymousPrincipal()).Returns(new GenericPrincipal(new GenericIdentity(""), new string[0]));
+            mockGroupsWriteService.Setup(x => x.SaveAsync(It.IsAny<SaveGroupDto>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ApiResponse(true));
+            mockGroupReadService.Setup(x => x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), It.IsAny<bool>())).ReturnsAsync(new List<EstablishmentGroupModel>());
+
+            InjectBasicLAsAndGroupTypes();
+
+            var viewModel = new GroupEditorViewModel
+            {
+                GroupUId = 123,
+                GroupName = "This is a test",
+                Action = ActionSave,
+                GroupTypeId = (int) eLookupGroupType.Federation
+            };
+            var result = (ViewResult) await controller.EditDetails(viewModel);
+
+            // No changes made, so we should be shown the "no changes made" page
+            Assert.Equal("EditDetailsEmpty", result.ViewName);
+            Assert.Equal(viewModel, result.Model);
         }
 
         [Fact]
@@ -909,7 +949,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
                 OpenDate = DateTime.Now,
                 GroupId = "54243"
             };
-            var result = (RedirectToRouteResult) await controller.SaveNewAcademyTrust(vm);
+            var result = (RedirectToRouteResult) await controller.SaveNewAcademyTrust(vm,"academy-trust");
             Assert.Equal("Details", result.RouteValues["action"]);
             Assert.Equal(123, result.RouteValues["id"]);
         }

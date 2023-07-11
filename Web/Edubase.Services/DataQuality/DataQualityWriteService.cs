@@ -16,5 +16,10 @@ namespace Edubase.Services.DataQuality
         {
             await Repository.UpdateDataQualityAsync(establishmentType, updateTime);
         }
+
+        public async Task UpdateDataQualityDataOwner(DataQualityStatus.DataQualityEstablishmentType establishmentType, string dataOwnerName, string dataOwnerEmail)
+        {
+            await Repository.UpdateDataQualityDataOwnerDetailsAsync(establishmentType, dataOwnerName, dataOwnerEmail);
+        }
     }
 }

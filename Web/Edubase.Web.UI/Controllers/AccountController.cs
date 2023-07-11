@@ -89,8 +89,10 @@ namespace Edubase.Web.UI.Controllers
                     return RedirectToRoute("EstabDetails", new { id = urn });
                 }
             }
-            else if (principal.IsInRole(EdubaseRoles.EDUBASE_GROUP_MAT))
+            else if (principal.IsInRole(EdubaseRoles.EDUBASE_GROUP_MAT) || principal.IsInRole(EdubaseRoles.SSAT))
             {
+                //The group of SSAT works in a similar way to EDUBASE_GROUP_MAT where the landing page is the establishment group assigned to the user
+                //it was not possible to use EDUBASE_GROUP_MAT because the permissions\field visibility on fields etc are different
                 var uid = await _securityService.GetMyMATUId(principal);
                 if (uid.HasValue)
                 {

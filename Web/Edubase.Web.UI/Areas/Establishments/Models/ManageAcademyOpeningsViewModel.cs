@@ -11,6 +11,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
             Take = 50;
         }
         public PaginatedResult<EditAcademyOpeningViewModel> AcademyOpenings { get; set; }
+        public string PageTitle { get; set; } = string.Empty;
 
     }
 }

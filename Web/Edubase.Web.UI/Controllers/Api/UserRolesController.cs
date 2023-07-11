@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Security;
+using Edubase.Services.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +20,8 @@ namespace Edubase.Web.UI.Controllers.Api
                         EdubaseRoles.IEBT,      // Independent schools
                         EdubaseRoles.APT,       // Alt provision team
                         EdubaseRoles.SOU,       // SOPT
-                        EdubaseRoles.FST        // Free school openers
+                        EdubaseRoles.FST,       // Free school openers
+                        EdubaseRoles.YCS        // Youth custody service
                     );
     }
 }

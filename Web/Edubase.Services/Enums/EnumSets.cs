@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Edubase.Services.Enums
@@ -36,7 +36,8 @@ namespace Edubase.Services.Enums
             ET.FreeSchoolsAlternativeProvision,
             ET.FreeSchoolsSpecial,
             ET.StudioSchools,
-            ET.UniversityTechnicalCollege
+            ET.UniversityTechnicalCollege,
+            ET.AcademySecure16to19
         }.Cast<int>();
 
         public static IEnumerable<GR> eSingularGovernorRoles { get; } = new[]

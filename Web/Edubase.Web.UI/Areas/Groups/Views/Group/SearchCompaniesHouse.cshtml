@@ -30,8 +30,18 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             @Html.Partial("_ValidationSummary", ViewData.ModelState)
-            <h1 id="create-academy-trust-details-heading" class="govuk-heading-xl">Create new academy trusts</h1>
-            <p>Set up an academy trust record by adding the Companies House name or number in the field below and selecting search.</p>
+
+            @if ((string)ViewData["academyTrustRoute"] == "secure-academy-trust")
+            {
+                <h1 id="create-academy-trust-details-heading" class="govuk-heading-xl">Create new secure single-academy trusts</h1>
+                <p>Set up a secure single-academy trust record by adding the Companies House name or number in the field below and selecting search.</p>
+            }
+            else
+            {
+                <h1 id="create-academy-trust-details-heading" class="govuk-heading-xl">Create new academy trusts</h1>
+                <p>Set up an academy trust record by adding the Companies House name or number in the field below and selecting search.</p>
+            }
+
         </div>
     </div>
     <div class="govuk-grid-row">
@@ -84,7 +94,7 @@
                         @foreach (var result in Model.Results.Items)
                         {
                             <tr class="govuk-table__row">
-                                <td data-label="Name" class="govuk-table__cell">@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups" }, null)</td>
+                                <td data-label="Name" class="govuk-table__cell">@Html.ActionLink(result.Name, "CreateAcademyTrust", "Group", new { companiesHouseNumber = result.Number, area = "Groups", academyTrustRoute = ViewData["academyTrustRoute"] }, null)</td>
                                 <td data-label="Companies House number" class="govuk-table__cell"><a href="@System.Configuration.ConfigurationManager.AppSettings["CompaniesHouseBaseUrl"]@result.Number" target="_blank">@result.Number (opens in new tab)</a></td>
                                 <td data-label="Date incorporated" class="govuk-table__cell">@(result.IncorporationDate?.ToString("d MMMM yyyy"))</td>
                                 <td data-label="Address" class="govuk-table__cell">@(result.Address.ToString() ?? "Not recorded")</td>

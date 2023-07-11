@@ -63,15 +63,17 @@ else
                         </li>
                     }
 
-                    <li class="gias-tabs__list-item @Html.Conditional(string.Equals(Model.SelectedTab, "links"), "gias-tabs__list-item--selected")">
-                        <a href="@Url.Action("EditLinks", "Establishment", new {id = Model.Urn, area = "Establishments"})" id="links-tab-link" class="gias-tabs__tab">Links</a>
-                    </li>
-
+                    @if (Model.TabDisplayPolicy.Links)
+                    {
+                        <li class="gias-tabs__list-item @Html.Conditional(string.Equals(Model.SelectedTab, "links"), "gias-tabs__list-item--selected")">
+                            <a href="@Url.Action("EditLinks", "Establishment", new { id = Model.Urn, area = "Establishments" })" id="links-tab-link" class="gias-tabs__tab">Links</a>
+                        </li>
+                    }
 
                     @if (Model.TabDisplayPolicy.Location)
                     {
                         <li class="gias-tabs__list-item @Html.Conditional(string.Equals(Model.SelectedTab, "location"), "gias-tabs__list-item--selected")">
-                           <a href="@Url.Action("EditLocation", "Establishment", new {id = Model.Urn, area = "Establishments"})" id="location-tab-link" class="gias-tabs__tab">Location</a>
+                            <a href="@Url.Action("EditLocation", "Establishment", new {id = Model.Urn, area = "Establishments"})" id="location-tab-link" class="gias-tabs__tab">Location</a>
                         </li>
                     }
 
@@ -81,7 +83,7 @@ else
                             <a href="@Url.Action("EditHelpdesk", "Establishment", new {id = Model.Urn, area = "Establishments"})" id="helpdesk-tab-link" class="gias-tabs__tab">Helpdesk</a>
                         </li>
                     }
-                </ul>
+                    </ul>
             </div>
             <div class="tab-content-wrapper gias-tabs-content">
 @*                 @if (Model.SelectedTab == "governance") *@
