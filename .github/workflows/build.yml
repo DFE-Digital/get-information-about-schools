@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - dev
   pull_request:
     types:
       - opened
@@ -14,7 +15,6 @@ jobs:
   build:
     runs-on: windows-latest
     env:
-      AZURE_ARTIFACTS_FEED_URL: "https://agilefactory.pkgs.visualstudio.com/_packaging/DM.Common/nuget/v3/index.json"
       DOTNET_VERSION: '6.0.x'
 
     steps:
@@ -24,15 +24,12 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-          source-url: ${{ env.AZURE_ARTIFACTS_FEED_URL }}
-        env:
-          NUGET_AUTH_TOKEN: ${{ secrets.AZURE_PACKAGE_FEED_TOKEN }}
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
 
       - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.0.5
+        uses: NuGet/setup-nuget@v1.1.1
 
       - name: Setup VSTest
         uses: darenm/Setup-VSTest@v1
@@ -58,7 +55,7 @@ jobs:
 
 
       - name: Upload dotnet test results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3.1.2
         with:
           name: dotnet-results-${{ env.DOTNET_VERSION }}
           path: ./Web/TestResults
