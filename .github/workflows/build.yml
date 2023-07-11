@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - dev
   pull_request:
     types:
       - opened
@@ -23,8 +24,6 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-        env:
-          NUGET_AUTH_TOKEN: ${{ secrets.AZURE_PACKAGE_FEED_TOKEN }}
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
