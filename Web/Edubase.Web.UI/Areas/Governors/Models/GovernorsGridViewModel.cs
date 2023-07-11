@@ -112,8 +112,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             foreach (var role in roles)
             {
                 var equivalantRoles = RoleEquivalence.GetEquivalentToLocalRole(role).Cast<int>().ToList();
-                //var pluralise = !EnumSets.eSingularGovernorRoles.Contains(role);
-
 
                 var grid = new GovernorGridViewModel($"{GovernorRoleNameFactory.Create(role, eTextCase.SentenceCase, true)}{(isHistoric ? " (in past 12 months)" : string.Empty)}")
                 {
