@@ -25,6 +25,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
             Governance = !(principal.IsInRole(EdubaseRoles.ESTABLISHMENT) && model.StatusId.OneOfThese(ES.Closed));
             Location = new[]
             {
+                // these fields appear on the Locations tab
                 policy.RSCRegionId, policy.GovernmentOfficeRegionId, policy.AdministrativeDistrictId, policy.AdministrativeWardId, policy.ParliamentaryConstituencyId,
                 policy.UrbanRuralId, policy.GSSLAId, policy.Easting, policy.Northing, policy.MSOAId, policy.LSOAId
             }.Any(x => x == true);
