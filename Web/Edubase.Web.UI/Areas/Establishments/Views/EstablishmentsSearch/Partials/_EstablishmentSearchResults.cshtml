@@ -39,7 +39,7 @@ else if (Model.Results.Count > 0)
         @foreach (var result in Model.Results)
         {
         <li class="gias-result-tile">
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-1">
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-1 result-establishment-name">
                 @Html.ActionLink(result.Name.Clean() ?? "(name not recorded)",
                     "Details",
                     "Establishment",
@@ -60,16 +60,16 @@ else if (Model.Results.Count > 0)
                     @((result.TypeId != null && Model.EstablishmentTypeLookup.ContainsKey(result.TypeId.Value)) ? Model.EstablishmentTypeLookup[result.TypeId.Value] : "Not recorded")
                     @*@(Model.EstablishmentTypes.FirstOrDefault(x => x.Id == result.TypeId)?.Name ?? "Not recorded")*@
                 </dd>
-                <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
-                <dd>@result.Urn</dd>
+                <dt class="urn-label"><abbr title="Unique Reference Number">URN</abbr>:</dt>
+                <dd class="urn-value">@result.Urn</dd>
                 <dt class="inline-details">
                     <abbr title="Local authority - Establishment number">LAESTAB</abbr>:
                 </dt>
-                <dd>@Model.LAESTABs[result]</dd>
-                <dt>Status:</dt>
-                <dd>@(Model.EstablishmentStatuses.FirstOrDefault(x => x.Id == result.StatusId)?.Name ?? "Not recorded")</dd>
-                <dt>Local authority name:</dt>
-                <dd>@(Model.LocalAuthorities.FirstOrDefault(x => x.Id == result.LocalAuthorityId)?.Name ?? "Not recorded")</dd>
+                <dd class="laestab-value">@Model.LAESTABs[result]</dd>
+                <dt class="status-label">Status:</dt>
+                <dd class="status-value">@(Model.EstablishmentStatuses.FirstOrDefault(x => x.Id == result.StatusId)?.Name ?? "Not recorded")</dd>
+                <dt class="la-name-label">Local authority name:</dt>
+                <dd class="la-name-value">@(Model.LocalAuthorities.FirstOrDefault(x => x.Id == result.LocalAuthorityId)?.Name ?? "Not recorded")</dd>
                 @if (Model.SearchType == eSearchType.Location)
                 {
                     var distanceInMiles = Math.Round(Edubase.Common.Spatial.DistanceCalculator.Calculate(Model.LocationSearchCoordinate, result.Location).Miles, 2);
