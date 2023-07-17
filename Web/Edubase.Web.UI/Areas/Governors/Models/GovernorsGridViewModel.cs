@@ -89,7 +89,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             DomainModel = dto;
             EditMode = editMode;
             GroupUId = groupUId;
-            Nationalities = nationalities;
+            //Nationalities = nationalities;
             AppointingBodies = appointingBodies;
             EstablishmentUrn = establishmentUrn;
             GovernorPermissions = governorPermissions;

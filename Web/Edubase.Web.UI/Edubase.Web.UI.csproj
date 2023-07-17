@@ -337,6 +337,7 @@
     <Compile Include="App_Start\AutoMapperWebConfiguration.cs" />
     <Compile Include="App_Start\StartupSASimulator.cs" />
     <Compile Include="App_Start\StartupSecureAccess.cs" />
+    <Compile Include="Areas\GovernorsGridViewModelFactory.cs" />
     <Compile Include="Areas\Establishments\Controllers\AcademyOpeningsController.cs" />
     <Compile Include="Areas\Establishments\Controllers\BulkAssociateEstabs2GroupsController.cs" />
     <Compile Include="Areas\Establishments\Controllers\BulkCreateFreeSchoolsController.cs" />
@@ -358,6 +359,7 @@
     <Compile Include="Areas\Governors\Models\HistoricGovernorViewModel.cs" />
     <Compile Include="Areas\Groups\Models\ConvertSATViewModel.cs" />
     <Compile Include="Areas\Groups\ViewRulesHandlers\GroupEditorViewModelRulesHandler.cs" />
+    <Compile Include="Areas\IGovernorsGridViewModelFactory.cs" />
     <Compile Include="Controllers\AmalgamateMergeController.cs" />
     <Compile Include="Controllers\Api\UtilApiController.cs" />
     <Compile Include="Controllers\FaqController.cs" />
