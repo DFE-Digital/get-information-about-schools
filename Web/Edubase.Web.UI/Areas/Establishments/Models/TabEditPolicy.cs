@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Security.Principal;
 using Edubase.Common;
 using Edubase.Services.Enums;
@@ -22,6 +23,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
         public TabEditPolicy(EstablishmentModel model, EstablishmentDisplayEditPolicy policy, IPrincipal principal)
         {
             Governance = !(principal.IsInRole(EdubaseRoles.ESTABLISHMENT) && model.StatusId.OneOfThese(ES.Closed));
+            Location = new[]
+            {
+                // these fields appear on the Locations tab
+                policy.RSCRegionId, policy.GovernmentOfficeRegionId, policy.AdministrativeDistrictId, policy.AdministrativeWardId, policy.ParliamentaryConstituencyId,
+                policy.UrbanRuralId, policy.GSSLAId, policy.Easting, policy.Northing, policy.MSOAId, policy.LSOAId
+            }.Any(x => x == true);
         }
 
         public TabEditPolicy()

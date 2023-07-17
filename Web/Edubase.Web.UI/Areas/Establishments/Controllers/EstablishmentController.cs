@@ -921,7 +921,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private async Task PopulateEditPermissions(EstablishmentDetailViewModel viewModel)
         {
             viewModel.UserCanEdit = await _establishmentReadService.CanEditAsync(viewModel.Establishment.Urn.Value, User);
-            viewModel.TabEditPolicy = new TabEditPolicy(viewModel.Establishment, viewModel.DisplayPolicy, User);
+            var editPolicyEnvelope = await _establishmentReadService.GetEditPolicyAsync(viewModel.Establishment, User);
+            viewModel.TabEditPolicy = new TabEditPolicy(viewModel.Establishment, editPolicyEnvelope.EditPolicy, User);
         }
 
         private async Task PopulateEstablishmentPageViewModel(IEstablishmentPageViewModel viewModel, int urn, string selectedTabName)
