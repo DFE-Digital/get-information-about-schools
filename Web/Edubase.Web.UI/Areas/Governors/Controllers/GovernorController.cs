@@ -231,7 +231,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 // Need to use ASP.NET Core really now; that supports ViewComponents which are apparently the solution.
                 return Task.Run(async () =>
                 {
-                    //viewModel = await CreateGovernorsViewModel(groupUId, establishmentUrn, user: User);
                     viewModel = await _governorsGridViewModelFactory.CreateGovernorsViewModel(groupUId, establishmentUrn, user: User);
                     return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
                 }).Result;
