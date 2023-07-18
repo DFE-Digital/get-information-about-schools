@@ -54,7 +54,6 @@ namespace Edubase.Web.UI.Areas
                 groupUId,
                 establishmentUrn,
                 _nomenclatureService,
-                await _cachedLookupService.NationalitiesGetAllAsync(),
                 await _cachedLookupService.GovernorAppointingBodiesGetAllAsync(),
                 governorPermissions);
 

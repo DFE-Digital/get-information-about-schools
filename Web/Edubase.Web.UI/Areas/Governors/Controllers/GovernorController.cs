@@ -105,7 +105,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 groupUId,
                 establishmentUrn,
                 _nomenclatureService,
-                await _cachedLookupService.NationalitiesGetAllAsync(),
                 await _cachedLookupService.GovernorAppointingBodiesGetAllAsync(),
                 governorPermissions);
 
@@ -887,7 +886,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 groupUId,
                 establishmentUrn,
                 _nomenclatureService,
-                await _cachedLookupService.NationalitiesGetAllAsync(),
                 await _cachedLookupService.GovernorAppointingBodiesGetAllAsync(),
                 governorPermissions);
 
