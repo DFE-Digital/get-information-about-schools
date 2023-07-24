@@ -1,0 +1,99 @@
+@model Edubase.Web.UI.Models.DataQuality.EditDataQualityDataOwnerViewModel
+@{
+    ViewBag.Title = string.Concat(!ViewData.ModelState.IsValid ? "Error: " : string.Empty, "Update data owner details");
+    ViewBag.bodyClasses = "create-edit";
+    ViewBag.SiteSection = "tools";
+}
+
+@section BreadCrumbs
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-breadcrumbs">
+                <ol class="govuk-breadcrumbs__list">
+                    <li class="govuk-breadcrumbs__list-item">@Html.ActionLink("Home", "Index", "Home", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})</li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Tools", "Index", "Tools", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                    <li class="govuk-breadcrumbs__list-item">
+                        @Html.ActionLink("Data status", "ViewStatus", "DataQuality", new {area = ""}, new {@class = "govuk-breadcrumbs__link"})
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+}
+
+@Html.Partial("_ValidationSummary", ViewData.ModelState)
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Update data owner details</h1>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    @if (Model.Items.Any())
+    {
+        using (Html.BeginForm())
+        {
+            <div class="govuk-grid-column-one-half">
+
+                @for (var index = 0; index < Model.Items.Count(); index++)
+                {
+                    <h2 class="govuk-heading-s">@Model.Items[index].EstablishmentType.GetEnumMember()</h2>
+                    @Html.HiddenFor(m => m.Items[index].EstablishmentType)
+
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(m => m.Items[index].Name)">
+                        @Html.LabelFor(m => m.Items[index].Name, "Name", new {@class = "govuk-label"})
+                        @Html.ValidationMessageFor(m => m.Items[index].Name, null, new {@class = "govuk-error-message"})
+                        @Html.TextBoxFor(m => m.Items[index].Name, new {@class = "govuk-input"})
+                    </div>
+
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(m => m.Items[index].Email)">
+                        @Html.LabelFor(m => m.Items[index].Email, "Email", new {@class = "govuk-label"})
+                        @Html.ValidationMessageFor(m => m.Items[index].Email, null, new {@class = "govuk-error-message", spellcheck = "false", type = "email", autocomplete = "email",})
+                        @Html.TextBoxFor(m => m.Items[index].Email, new {@class = "govuk-input"})
+                    </div>
+                }
+            </div>
+
+            <div class="govuk-grid-column-full">
+                <div class="button-row govuk-!-padding-top-4">
+                    <button type="submit" class="govuk-button" value="Save" id="save-data-status" aria-label="Save data status last updated date">Save</button>
+                    <a href="@Url.Action("ViewStatus", "DataQuality")" class="govuk-button govuk-button--secondary">Cancel</a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="govuk-grid-column-full">
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-warning-text__assistive">Warning</span>
+                    <p class="govuk-body">No entries available to update.</p>
+                </strong>
+                <p>
+                    <a href="@Url.Action("ViewStatus", "DataQuality")" class="govuk-button govuk-button--secondary">Back</a>
+                </p>
+            </div>
+        </div>
+    }
+</div>
+
+@section ViewScripts
+{
+    <script nonce="@Html.ScriptNonce()">
+        var $fields = $('#content').find('.form-control');
+        var exitAttached = false;
+
+        $fields.on('change', function () {
+            if (!exitAttached) {
+                DfE.Util.showUnload('Are you sure you want to leave this page? Any unsaved changes will be lost');
+                exitAttached = true;
+            }
+        });
+
+    </script>
+}

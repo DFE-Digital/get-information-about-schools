@@ -32,11 +32,11 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-xl">@areaTitle.ToTitleCase()  generation completed</h1>
+        <h1 id="generation-completed-heading" class="govuk-heading-xl">@areaTitle.ToTitleCase()  generation completed</h1>
     </div>
     <div class="govuk-grid-column-full">
-        <h2 class="govuk-heading-s">Your extract is ready</h2>
-        <p>Your requested file is ready to download.</p>
+        <h2 id="extract-ready-heading" class="govuk-heading-s">Your extract is ready</h2>
+        <p id="download-ready-body">Your requested file is ready to download.</p>
 
         @{
             var uri = new Uri(Model.FileLocationUri);
@@ -58,7 +58,7 @@
                 @Html.Hidden("returnSource", isExtract ? eDownloadReturnSource.Extracts : eDownloadReturnSource.Downloads)
                 <div class="govuk-form-group">
                     <p>
-                        <input type="submit" class="govuk-button" data-module="govuk-button" value="@name" /><br />
+                        <input type="submit" id="download-button" class="govuk-button" data-module="govuk-button" value="@name" /><br />
                     </p>
                 </div>
             }

@@ -174,38 +174,16 @@ else
 
 @helper ShowLegalDuty()
 {
-    <div class="governors-section">
-        <h2 class="govuk-heading-s">Legal duty to provide governance information</h2>
-        <details class="govuk-details govuk-!-font-size-16" data-module="govuk-details">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">
-                    More details
-                </span>
-            </summary>
-            <div class="govuk-details__text">
-                <p class="govuk-!-font-size-16">
-                    All maintained school governing bodies and academy trusts have a legal duty to provide all of the governance information requested on this page in so far as it is available to them.
-                </p>
-                <p class="govuk-!-font-size-16">
-                    This will increase the transparency of governance arrangements. It will enable schools and the department to identify more quickly and accurately individuals who are involved in governance, and who govern in more than one context.
-                </p>
-                <p class="govuk-!-font-size-16">
-                    The information requested says nothing in itself about a person's suitability to govern. However, it is essential information for the department to be able to uniquely identify an individual and in a small number of cases conduct checks to confirm their suitability for this important and influential role.
-                </p>
-                <p class="govuk-!-font-size-16">
-                    You should provide all of the information requested insofar as it is available to you. A minimum set of information needs to be provided before a record can be saved.
-                </p>
-                <p class="govuk-!-font-size-16">
-                    A suggested privacy notice for schools is available for download:
-                    <a target="_blank" rel="noreferrer noopener" href="https://www.gov.uk/government/publications/data-protection-and-privacy-privacy-notices">
-                        https://www.gov.uk/government/publications/data-protection-and-privacy-privacy-notices (opens in new tab)
-                    </a>
-                </p>
-            </div>
-        </details>
-    </div>
+    if (Model.GroupTypeId == (int) eLookupGroupType.SecureSingleAcademyTrust)
+    {
+        // viewing the governance tab for a secure single-academy trust
+        Html.RenderPartial("_LegalDutySecureAcademyTrustStatement");
+    }
+    else
+    {
+        Html.RenderPartial("_LegalDutyStatement");
+    }
 }
-
 
 
 @helper DisplayGovernors()

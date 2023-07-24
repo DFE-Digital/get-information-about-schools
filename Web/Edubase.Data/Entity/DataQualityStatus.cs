@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.Serialization;
 using Microsoft.WindowsAzure.Storage.Table;
 
@@ -6,6 +6,10 @@ namespace Edubase.Data.Entity
 {
     public class DataQualityStatus : TableEntity
     {
+        /// <summary>
+        /// Note that the enum indices are important to remain consistent:
+        ///  - Azure Table Storage - table `DataQualityStatus` column `RowKey`
+        /// </summary>
         public enum DataQualityEstablishmentType
         {
             [EnumMember(Value = "Academy openers")]
@@ -24,7 +28,11 @@ namespace Edubase.Data.Entity
             IndependentSchools,
 
             [EnumMember(Value = "Pupil referral units")]
-            PupilReferralUnits
+            PupilReferralUnits,
+
+            [EnumMember(Value = "Secure academy 16-19 openers")]
+            AcademySecure16to19Openers
+
         }
 
         public DataQualityStatus()
@@ -41,7 +49,7 @@ namespace Edubase.Data.Entity
             set
             {
                 RowKey = ((int)value).ToString();
-            } 
+            }
         }
 
         public DateTime LastUpdated { get; set; }

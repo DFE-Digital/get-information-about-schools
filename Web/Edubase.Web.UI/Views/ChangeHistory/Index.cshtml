@@ -36,10 +36,10 @@
 <div class="gias-tabs-wrapper">
 <div class="tab-wrap search-tabs">
     <ul class="gias-tabs">
-        <li class="gias-tabs__list-item @Html.Conditional(Model.SelectedTab == ChangeHistoryViewModel.Tab.Establishments, "gias-tabs__list-item--selected")">
+        <li id="establishment-change-history" class="gias-tabs__list-item @Html.Conditional(Model.SelectedTab == ChangeHistoryViewModel.Tab.Establishments, "gias-tabs__list-item--selected")">
             @Html.RouteLink("Establishment change history", "ChangeHistoryCriteria", new {SelectedTab = SearchViewModel.Tab.Establishments}, new {@class = $"gias-tabs__tab estab"})
         </li>
-        <li class="gias-tabs__list-item @Html.Conditional(Model.SelectedTab == ChangeHistoryViewModel.Tab.Groups, "gias-tabs__list-item--selected")">
+        <li id="group-change-history" class="gias-tabs__list-item @Html.Conditional(Model.SelectedTab == ChangeHistoryViewModel.Tab.Groups, "gias-tabs__list-item--selected")">
             @Html.RouteLink("Group change history", "ChangeHistoryCriteria", new {SelectedTab = SearchViewModel.Tab.Groups}, new {@class = $"gias-tabs__tab group"})
         </li>
     </ul>

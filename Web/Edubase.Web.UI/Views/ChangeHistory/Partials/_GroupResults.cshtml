@@ -58,7 +58,7 @@
         <tbody class="govuk-table__body">
             @foreach (var item in Model.Items)
             {
-                <tr class="govuk-table__row">
+                <tr id="@item.GroupUId-@(item.RequestedDate?.ToString("dd-MMMM-yyyy"))" class="govuk-table__row">
                     <td data-label="Date changed" class="govuk-table__cell">@(item.RequestedDate?.ToString("d MMMM yyyy"))</td>
                     @if (!Model.SingleGroup)
                     {

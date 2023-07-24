@@ -438,8 +438,10 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             Assert.Equal(model, modelResult);
         }
 
-        [Fact()]
-        public void Gov_View_groupUIdSpecified()
+        [Theory]
+        [InlineData((int) eLookupGroupType.MultiacademyTrust, true)]
+        [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, false)]
+        public void Gov_View_groupUIdSpecified(int groupTypeId, bool expectedShowDelegationAndCorpContactInformation)
         {
             var groupUId = 10;
             var governorDetailsDto = new GovernorsDetailsDto
@@ -454,7 +456,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
                 HistoricalGovernors = new List<GovernorModel>()
             };
 
-            var groupModel = new GroupModel { DelegationInformation = "delegation info" };
+            var groupModel = new GroupModel {
+                DelegationInformation = "delegation info",
+                CorporateContact = "corporate contact info",
+                GroupTypeId = groupTypeId
+            };
 
             mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(null, groupUId, It.IsAny<IPrincipal>()))
                 .ReturnsAsync(() => governorDetailsDto);
@@ -470,9 +476,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             Assert.NotNull(viewResult);
             Assert.Equal("~/Areas/Governors/Views/Governor/ViewEdit.cshtml", viewResult.ViewName);
             Assert.NotNull(modelResult);
-            Assert.False(modelResult.ShowDelegationAndCorpContactInformation);
+            Assert.Equal(expectedShowDelegationAndCorpContactInformation, modelResult.ShowDelegationAndCorpContactInformation);
             Assert.Equal(groupModel.DelegationInformation, modelResult.DelegationInformation);
             Assert.Equal(groupUId, modelResult.GroupUId);
+            Assert.Equal(groupModel.GroupTypeId, modelResult.GroupTypeId);
+            Assert.Equal(groupModel.CorporateContact, modelResult.CorporateContact);
             Assert.Null(modelResult.EstablishmentUrn);
         }
 

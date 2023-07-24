@@ -61,11 +61,30 @@
                     <td data-label="Set name" class="govuk-table__cell">@Html.Field(item.Title)</td>
                     <td data-label="Local authorities" class="govuk-table__cell">@Html.Field(Model.GetLANames(item.Ids))</td>
                     <td nowrap="" class="govuk-table__cell">
-                        @using (Html.BeginRouteForm("DeletePredefinedLASet", new { id = item.RowKey }, FormMethod.Post))
+                        @using (Html.BeginRouteForm("DeletePredefinedLASet", new {id = item.RowKey}, FormMethod.Post))
                         {
-                            <a href="@Url.RouteUrl("IndSchSearch")?@QueryStringHelper.ToQueryString("d", item.Ids)&SelectedLocalAuthoritySetId=@item.RowKey" id="@StringUtils.ElementIdFormat(@Html.Field(item.Title))-select-link" class="action-link" aria-label="Select set">Select</a>
-                            @Html.RouteLink("Edit", "EditPredefinedLASet", new { id = item.RowKey }, new { @id = @StringUtils.ElementIdFormat(@Html.Field(item.Title)) + "-edit-link", @class = "action-link", @aria_link = "Edit set" })
-                            <button class="gias-link-button gias-link-button-s action-link" type="submit" id="@StringUtils.ElementIdFormat(@Html.Field(item.Title))-remove-link" aria-label="Remove set">Remove</button>
+                            <a
+                                href="@Url.RouteUrl("IndSchSearch")?@QueryStringHelper.ToQueryString("d", item.Ids)&SelectedLocalAuthoritySetId=@item.RowKey"
+                                id="@StringUtils.ElementIdFormat(@Html.Field(item.Title))-select-link"
+                                class="action-link"
+                                aria-label="Select set">
+                                Select
+                            </a>
+                            @Html.RouteLink("Edit",
+                                "EditPredefinedLASet",
+                                new {id = item.RowKey},
+                                new
+                                {
+                                    @id = @StringUtils.ElementIdFormat(@Html.Field(item.Title)) + "-edit-link",
+                                    @class = "action-link",
+                                    @aria_link = "Edit set"
+                                })
+                            <button
+                                class="gias-link-button gias-link-button-s action-link"
+                                type="submit" id="@StringUtils.ElementIdFormat(@Html.Field(item.Title))-remove-link"
+                                aria-label="Remove set">
+                                Remove
+                            </button>
                         }
                     </td>
                 </tr>

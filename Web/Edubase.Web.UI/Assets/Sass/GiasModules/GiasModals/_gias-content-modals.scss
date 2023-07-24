@@ -1,5 +1,6 @@
 .helptext-container {
   border-top: 1px solid $govuk-border-colour;
+
   .js-enabled & {
     display: none;
   }
@@ -103,6 +104,7 @@ html.no-scroll {
   a {
     word-break: break-all;
   }
+
   .button-row {
     padding: 5px 0 0;
     margin-bottom: 0;
@@ -140,4 +142,53 @@ html.no-scroll {
       width: 90%;
     }
   }
+}
+
+.no-js .information {
+  display: block;
+}
+
+.information {
+  display: none;
+}
+
+.no-js .gias-modal-main-container {
+  display: none;
+}
+
+.gias-modal-main-container {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.gias-modal-main-container__content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+}
+
+.gias-modal-main-container__close-container {
+  float: right;
+  font-size: 14px;
+  padding: 0;
+}
+
+.gias-modal-main-container__close-container__link {
+  float: right;
+  font-size: 14px;
+  padding: 0;
+}
+
+.gias-modal-main-container__content__button {
+  margin: 0;
 }

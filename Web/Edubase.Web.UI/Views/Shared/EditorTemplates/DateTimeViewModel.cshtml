@@ -84,7 +84,7 @@
             describedByIds = describedByIds + " " + @ViewData.ModelMetadata.PropertyName +"-errors";
         }
     }
-    <fieldset class="govuk-fieldset range-group @fieldsetClassName" aria-describedby="@describedByIds">
+    <fieldset id="date-error" class="govuk-fieldset range-group @fieldsetClassName">
         @if (ViewData["inFilters"] != null)
         {
             <span class="govuk-error-message hidden">Please check the date(s) you have entered</span>

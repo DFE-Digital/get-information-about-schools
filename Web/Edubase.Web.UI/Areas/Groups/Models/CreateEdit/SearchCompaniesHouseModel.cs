@@ -15,7 +15,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         public int StartIndex { get; set; }
         public int PageSize { get; set; } = 50;
         
-        public int Count => Results.Count;
+        public int Count => Results?.Count ?? 0;
         public int PageCount => (int)Math.Ceiling(Count / (double)PageSize);
     }
 }

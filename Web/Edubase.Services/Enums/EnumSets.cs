@@ -36,7 +36,8 @@ namespace Edubase.Services.Enums
             ET.FreeSchoolsAlternativeProvision,
             ET.FreeSchoolsSpecial,
             ET.StudioSchools,
-            ET.UniversityTechnicalCollege
+            ET.UniversityTechnicalCollege,
+            ET.AcademySecure16to19
         }.Cast<int>();
 
         // See also database table StaffRole, column isOnePersonRole

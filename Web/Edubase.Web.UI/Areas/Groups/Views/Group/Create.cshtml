@@ -1,4 +1,3 @@
-@using Edubase.Common;
 @using Edubase.Common.Text
 @using Edubase.Services.Domain
 @using VM = Edubase.Web.UI.Areas.Groups.Models.CreateEdit.GroupEditorViewModel;
@@ -39,83 +38,120 @@
     @Html.HiddenFor(x => x.SaveMode)
     @Html.HiddenFor(x => x.ProcessedWarnings)
 
-<div class="govuk-grid-row">
-    @if (Model.EntityName.ToLower() == "children's centre groups or children's centre collaborations")
-    {
-        <div class="govuk-grid-column-two-thirds">
-            <p>Set up a new children's centre group or children's centre collaboration record.</p>
-        </div>
-    }
-    @if (Model.EntityName.ToLower() == "foundation trust")
-    {
-        <div class="govuk-grid-column-two-thirds">
-            <p>Set up a new foundation trust record by completing the fields below and selecting create foundation trust.</p>
-        </div>
-    }
-    @if (Model.EntityName.ToLower() == "federation")
-    {
-        <div class="govuk-grid-column-two-thirds">
-            <p>Set up a new federation record by completing the fields below and selecting create federation.</p>
-        </div>
-    }
-    @if (Model.EntityName.ToLower() == "academy trusts")
-    {
-        <div class="govuk-grid-column-two-thirds">
-            <p>Use this tool to create a new @Model.EntityName</p>
-        </div>
-    }
-    @if (Model.EntityName.ToLower() == "academy sponsors")
-    {
-        <div class="govuk-grid-column-two-thirds">
-            <p>Set up a new academy sponsor record by completing the fields below and selecting create academy sponsor.</p>
-        </div>
-    }
-    <div class="govuk-grid-column-one-half">
+    <div class="govuk-grid-row">
+        @if (Model.EntityName.ToLower() == "children's centre groups or children's centre collaborations")
+        {
+            <div class="govuk-grid-column-two-thirds">
+                <p>Set up a new children's centre group or children's centre collaboration record.</p>
+            </div>
+        }
+        @if (Model.EntityName.ToLower() == "foundation trust")
+        {
+            <div class="govuk-grid-column-two-thirds">
+                <p>Set up a new foundation trust record by completing the fields below and selecting create foundation trust.</p>
+            </div>
+        }
         @if (Model.EntityName.ToLower() == "federation")
         {
-            <h2 class="govuk-heading-m">New @Model.EntityName.ToLower() details</h2>
+            <div class="govuk-grid-column-two-thirds">
+                <p>Set up a new federation record by completing the fields below and selecting create federation.</p>
+            </div>
         }
-        else
+        @if (Model.EntityName.ToLower() == "academy trusts")
         {
-            <h2 id="@StringUtils.ElementIdFormat(Model.EntityName)-details" class="govuk-heading-m">@Model.EntityName.ToSentenceCase() details</h2>
+            <div class="govuk-grid-column-two-thirds">
+                <p>Use this tool to create a new @Model.EntityName</p>
+            </div>
         }
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GroupName)">
-            <label for="GroupName" class="govuk-label">@Model.GroupTypeLabelPrefix name</label>
-            @Html.ValidationMessageFor(x => x.GroupName, null, new { @class = "govuk-error-message" })
-            @Html.TextBoxFor(x => x.GroupName, new { @class = "govuk-input" })
+        @if (Model.EntityName.ToLower() == "academy sponsors")
+        {
+            <div class="govuk-grid-column-two-thirds">
+                <p>Set up a new academy sponsor record by completing the fields below and selecting create academy sponsor.</p>
+            </div>
+        }
+        <div class="govuk-grid-column-one-half">
+            @if (Model.EntityName.ToLower() == "federation")
+            {
+                <h2 class="govuk-heading-m">New @Model.EntityName.ToLower() details</h2>
+            }
+            else
+            {
+                <h2 id="@StringUtils.ElementIdFormat(Model.EntityName)-details" class="govuk-heading-m">@Model.EntityName.ToSentenceCase() details</h2>
+            }
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GroupName)">
+                <label for="GroupName" class="govuk-label">@Model.GroupTypeLabelPrefix name</label>
+                @Html.ValidationMessageFor(x => x.GroupName, null, new { @class = "govuk-error-message" })
+                @Html.TextBoxFor(x => x.GroupName, new { @class = "govuk-input" })
+            </div>
+            @Html.HiddenFor(x => x.GroupTypeId)
+            @Html.EditorFor(x => x.OpenDate, new { title = Model.OpenDateLabel, fieldsetClassName = "edit-date-fieldset" })
+
+            @if (Model.GroupUId.HasValue)
+            {
+                <div class="govuk-form-group">
+                    <label class="govuk-label">
+                        <abbr title="Unique Identifier">UID</abbr>
+                    </label>
+                    <input value="@Model.GroupUId" disabled="disabled" class="govuk-input" />
+                </div>
+            }
+
+            @if (Model.GroupType.Equals(L.SchoolSponsor))
+            {
+                <div class="govuk-form-group  @Html.ValidationCssClassFor(x => x.GroupId)">
+                    <label for="GroupId" class="govuk-label">Group ID</label>
+                    @Html.ValidationMessageFor(x => x.GroupId, null, new { @class = "govuk-error-message" })
+                    @Html.TextBoxFor(x => x.GroupId, new { @class = "govuk-input", maxlength = 120 })
+                </div>
+            }
         </div>
-        @Html.HiddenFor(x => x.GroupTypeId)
-        @Html.EditorFor(x => x.OpenDate, new { title = Model.OpenDateLabel, fieldsetClassName = "edit-date-fieldset" })
-
-        @if (Model.GroupUId.HasValue)
-        {
-            <div class="govuk-form-group">
-                <label class="govuk-label">
-                    <abbr title="Unique Identifier">UID</abbr>
-                </label>
-                <input value="@Model.GroupUId" disabled="disabled" class="govuk-input" />
-            </div>
-        }
-
-        @if (Model.GroupType.Equals(L.SchoolSponsor))
-        {
-            <div class="govuk-form-group  @Html.ValidationCssClassFor(x => x.GroupId)">
-                <label for="GroupId" class="govuk-label">Group ID</label>
-                @Html.ValidationMessageFor(x => x.GroupId, null, new { @class = "govuk-error-message" })
-                @Html.TextBoxFor(x => x.GroupId, new { @class = "govuk-input", maxlength = 120 })
-            </div>
-        }
     </div>
-</div>
+
+    if (Model.GroupTypeMode == GroupEditorViewModelBase.eGroupTypeMode.Federation)
+    {
+        <div class="information govuk-inset-text">
+            <h2 id="governance-updates-modal-heading" class="govuk-heading-m">Governance updates</h2>
+            <p id="governance-updates-modal-body" class="govuk-body">
+                You are now about to create your federation. To complete the process, you need to update the governance section for each establishment
+                in the federation to reflect the new federation governing body. Each establishment should have the same governance information.
+                All term of office roles for the individual establishments before they became part of the federation should be closed
+                and new term of office roles for the federation governing body should be added.
+            </p>
+        </div>
+    }
 
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-            <div class="button-row">
-                <button type="submit" name="action" class="govuk-button" id="create-submit" value="@VM.ActionSave">Create @Model.EntityName</button>
-                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
+            <div class="govuk-grid-column-full">
+                <div class="button-row">
+                    <button type="submit" name="action" class="govuk-button" id="create-submit" value="@VM.ActionSave">Create @Model.EntityName</button>
+                    @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+                </div>
             </div>
         </div>
-    </div>
+
+
+    if (Model.GroupTypeMode== GroupEditorViewModelBase.eGroupTypeMode.Federation)
+    {
+        <div id="group-establishment-governance-updates-modal" class="gias-modal-main-container">
+            <div class="gias-modal-main-container__content">
+                <span class="gias-modal-main-container__close-container">
+                    <a id="group-establishment-governance-close-link" href="#bottom" class="gias-modal-main-container__close-container__link">Close</a>
+                </span>
+                <h2 id="governance-updates-modal-heading" class="govuk-heading-m">Governance updates</h2>
+                <p id="governance-updates-modal-body" class="govuk-body">
+                    You are now about to create your federation. To complete the process, you need to update the governance section for each establishment
+                    in the federation to reflect the new federation governing body. Each establishment should have the same governance information.
+                    All term of office roles for the individual establishments before they became part of the federation should be closed
+                    and new term of office roles for the federation governing body should be added.
+                </p>
+                @* The same 'value' i.e. @VM.ActionSave is used in the continue button as in the save button,
+             So, the backend code behaves in the same way as in the save button when the continue button is clicked *@
+                <button class="govuk-button gias-modal-main-container__content__button" id="continue-button" type="submit" name="action" value="@VM.ActionSave">
+                    Continue
+                </button>
+            </div>
+        </div>
+    }
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
@@ -126,6 +162,7 @@
 
 @section ViewScripts
 {
+
     <script nonce="@Html.ScriptNonce()">
         var $fields = $('#content').find('.form-control');
         var exitAttached = false;
@@ -166,4 +203,17 @@
             }
         </script>
     }
+      @if (Model.GroupTypeMode== GroupEditorViewModelBase.eGroupTypeMode.Federation)
+            {
+                <script nonce="@Html.ScriptNonce()" type="text/javascript">
+                 const governanceUpdatesModal = document.getElementById("group-establishment-governance-updates-modal");
+                 const saveBtn = document.getElementById("create-submit");
+                 const closeLink = document.getElementById("group-establishment-governance-close-link");
+                  saveBtn.onclick=(e) =>{
+                        governanceUpdatesModal.style.display="block";
+                        e.preventDefault();
+                  };
+                  closeLink.onclick = ()=> governanceUpdatesModal.style.display="none";
+            </script>
+            }
 }

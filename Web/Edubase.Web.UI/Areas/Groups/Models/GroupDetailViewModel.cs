@@ -31,6 +31,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
             [(int)GT.MultiacademyTrust] = "multi-academy trust",
             [(int)GT.SchoolSponsor] = "school sponsor",
             [(int)GT.SingleacademyTrust] = "single-academy trust",
+            [(int)GT.SecureSingleAcademyTrust] = "secure single-academy trust",
             [(int)GT.Trust] = "trust"
         };
 
@@ -50,8 +51,8 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public int GroupTypeId { get; set; }
         public int? UKPRN { get; set; }
 
-        public string OpenDateLabel => Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust) ? "Incorporated on (open date)" : "Open date";
-        public string EstablishmentsPluralName => Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor) ? "Academies" :
+        public string OpenDateLabel => Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SecureSingleAcademyTrust) ? "Incorporated on (open date)" : "Open date";
+        public string EstablishmentsPluralName => Group.GroupTypeId.OneOfThese(GT.MultiacademyTrust, GT.SingleacademyTrust, GT.SchoolSponsor, GT.SecureSingleAcademyTrust) ? "Academies" :
             (Group.GroupTypeId.OneOfThese(GT.ChildrensCentresCollaboration, GT.ChildrensCentresGroup) ? "Children's centres" : "Schools");
 
         public List<EstablishmentGroupViewModel> Establishments { get; private set; } = new List<EstablishmentGroupViewModel>();
@@ -65,7 +66,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public IEnumerable<LinkedGroupModel> Links { get; set; }
         public GovernorPermissions GovernorPermissions { get; set; }
 
-        public string FscpdURL => extService.FscpdURL(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor));
+        public string FscpdURL => extService.FscpdURL(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SchoolSponsor));
         private bool? showFscpd;
         public bool ShowFscpd
         {
@@ -73,7 +74,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
             {
                 if (!showFscpd.HasValue)
                 {
-                    showFscpd = extService != null && Task.Run(() => extService.FscpdCheckExists(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor))).Result;
+                    showFscpd = extService != null && Task.Run(() => extService.FscpdCheckExists(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SchoolSponsor))).Result;
                 }
                 return showFscpd.Value;
             }

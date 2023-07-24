@@ -12,7 +12,10 @@ namespace Edubase.Web.UI.Helpers
         public static string ElementIdFormat(string text)
         {
             text = text.Replace(".", string.Empty)
-                       .Replace("'", string.Empty);
+                       .Replace("'", string.Empty)
+                       .Replace(",", string.Empty)
+                       .Replace("(", string.Empty)
+                       .Replace(")", string.Empty);
 
             var pattern = @"[^a-zA-Z0-9_]";
             var replacement = "-";
