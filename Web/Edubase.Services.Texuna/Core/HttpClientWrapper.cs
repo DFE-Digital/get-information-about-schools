@@ -305,7 +305,7 @@ namespace Edubase.Services
             if (message?.Content?.Headers?.ContentType?.MediaType != "application/json")
             {
                 throw new TexunaApiSystemException(
-                    $"The API returned an invalid content type: '{message?.Content?.Headers?.ContentType?.MediaType}' (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})", GetRequestJsonBody(message?.RequestMessage));
+                    $"The API returned an invalid content type: '{message?.Content?.Headers?.ContentType?.MediaType}' (HTTP Status: {(int)message?.StatusCode} {message?.StatusCode}, Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})", GetRequestJsonBody(message?.RequestMessage));
             }
         }
 
