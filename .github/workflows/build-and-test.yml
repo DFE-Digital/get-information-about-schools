@@ -1,0 +1,62 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      DOTNET_VERSION: '6.0.x'
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET Core SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.1.1
+
+      - name: Setup VSTest
+        uses: darenm/Setup-VSTest@v1
+
+      - name: Restore Packages
+        working-directory: ./Web
+        run: nuget restore EdubaseWeb.sln
+
+      - name: Build Solution
+        working-directory: ./Web
+        run: |
+          msbuild.exe EdubaseWeb.sln  /t:Rebuild /p:platform="Any CPU" /p:configuration="Release"
+
+      ## Currently manually specifying the tests to trigger -- unclear if these can be picked up automatically?
+      - name: Run Tests
+        working-directory: ./Web
+        run: |
+          vstest.console.exe /Enablecodecoverage .\Edubase.CommonUnitTests\bin\Release\Edubase.CommonUnitTests.dll
+          vstest.console.exe /Enablecodecoverage .\Edubase.DataUnitTests\bin\Release\Edubase.DataUnitTests.dll
+          vstest.console.exe /Enablecodecoverage .\Edubase.ServicesUnitTests\bin\Release\Edubase.ServicesUnitTests.dll
+          vstest.console.exe /Enablecodecoverage .\Edubase.Web.ResourcesUnitTests\bin\Release\Edubase.Web.ResourcesUnitTests.dll
+          vstest.console.exe /Enablecodecoverage .\Edubase.Web.UIUnitTests\bin\Release\net48\Edubase.Web.UIUnitTests.dll
+
+
+      - name: Upload dotnet test results
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: dotnet-results-${{ env.DOTNET_VERSION }}
+          path: ./Web/TestResults
+        if: ${{ always() }}

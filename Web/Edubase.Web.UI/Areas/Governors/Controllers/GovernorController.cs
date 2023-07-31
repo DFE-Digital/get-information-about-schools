@@ -453,10 +453,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         private async Task<bool> RoleAllowed(eLookupGovernorRole roleId, int? groupUId, int? establishmentUrn,
             IPrincipal user)
         {
-            var existingGovernors = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, user);
-
             if (EnumSets.eSingularGovernorRoles.Contains(roleId))
             {
+                var existingGovernors = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, user);
                 if (roleId == eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody ||
                     roleId == eLookupGovernorRole.ChairOfLocalGoverningBody)
                 {
