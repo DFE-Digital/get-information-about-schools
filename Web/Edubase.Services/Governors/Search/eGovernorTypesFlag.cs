@@ -8,6 +8,7 @@
         GovsOfLAMaintained, // filtered to governors of LA maintained type establishments
         CTC, // filtered to governors of City Technology Colleges
         FreeSchools, // filtered to governors of Free Schools
-        AcadsWithSchoolSponsor // filtered to governors of Academies with a School Sponsor
+        AcadsWithSchoolSponsor, // filtered to governors of Academies with a School Sponsor
+        SecureSingleAcademyTrusts // filtered to governors associated with Secure SATs
     }
 }
