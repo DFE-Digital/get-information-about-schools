@@ -30,6 +30,7 @@ namespace Edubase.Web.UI
         public static string ApplicationIdpEntityId => AppSettings[nameof(ApplicationIdpEntityId)];
         public static Uri ExternalAuthDefaultCallbackUrl => new Uri(AppSettings[nameof(ExternalAuthDefaultCallbackUrl)]);
         public static Uri MetadataLocation => new Uri(AppSettings[nameof(MetadataLocation)]);
+        public static Uri PublicOrigin => string.IsNullOrWhiteSpace(AppSettings[nameof(PublicOrigin)]) ? null : new Uri(AppSettings[nameof(PublicOrigin)]);
 
         public void ConfigureAuth(IAppBuilder app)
         {
@@ -83,6 +84,12 @@ namespace Edubase.Web.UI
                 ReturnUrl = ExternalAuthDefaultCallbackUrl,
                 MinIncomingSigningAlgorithm = "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
             };
+
+            if (PublicOrigin != null)
+            {
+                // Only set if provided via configuration
+                spOptions.PublicOrigin = PublicOrigin;
+            }
 
             var authServicesOptions = new Saml2AuthenticationOptions(false) { SPOptions = spOptions };
 
