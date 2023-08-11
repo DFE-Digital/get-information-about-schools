@@ -309,5 +309,23 @@ namespace Edubase.Web.UI.Helpers
         {
             return new MvcHtmlString(Regex.Replace(helper.Encode(input), "\r|\n|\r\n", "<br/>"));
         }
+
+        /// <summary>
+        /// Where the input contains a raw newline character (<c>\r\n</c>, <c>\r</c>, or <c>\n</c>),
+        /// replace it with an HTML newline tag <c>&lt;br/&gt;</c>.
+        /// </summary>
+        /// <param name="helper"></param>
+        /// <param name="input">The input string to have raw newlines replaced with HTML newline tags.</param>
+        /// <returns>
+        ///     The original string as an <see cref="MvcHtmlString"/>.
+        ///     <list type="bullet">
+        ///         <item>If no newlines in the input string, it is an as-is copy.</item>
+        ///         <item>If one or more raw newlines, these will be HTML newlines.</item>
+        ///     </list>
+        /// </returns>
+        public static MvcHtmlString HtmlNewlines(this HtmlHelper helper, MvcHtmlString input)
+        {
+            return new MvcHtmlString(Regex.Replace(helper.Encode(input), "\r|\n|\r\n", "<br/>"));
+        }
     }
 }
