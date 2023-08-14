@@ -57,7 +57,7 @@
 {
     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.AppointingBodyId)">
         @Html.LabelFor(x => x.AppointingBodyId, "Appointing body (required to save record)", new { @class = "govuk-label" })
-        @Html.ValidationMessageFor(x => x.AppointingBodyId, null, new { @class = "govuk-error-message" })
+        @Html.HtmlNewlines(Html.ValidationMessageFor(x => x.AppointingBodyId, null, new { @class = "govuk-error-message" }))
         @Html.DropDownListFor(x => x.AppointingBodyId, Model.AppointingBodies, "", new { @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.AppointingBodyId)) })
     </div>
 }
