@@ -295,6 +295,9 @@ namespace Edubase.Web.UI.Helpers
         /// <summary>
         /// Where the input contains a raw newline character (<c>\r\n</c>, <c>\r</c>, or <c>\n</c>),
         /// replace it with an HTML newline tag <c>&lt;br/&gt;</c>.
+        /// <br/>
+        /// See also <see cref="HtmlNewlines(System.Web.Mvc.HtmlHelper,MvcHtmlString)"/> if wanting
+        /// to retain e.g. MVC-generated HTML during the encoding process.
         /// </summary>
         /// <param name="helper"></param>
         /// <param name="input">The input string to have raw newlines replaced with HTML newline tags.</param>
@@ -307,14 +310,19 @@ namespace Edubase.Web.UI.Helpers
         /// </returns>
         public static MvcHtmlString HtmlNewlines(this HtmlHelper helper, string input)
         {
-            var newlinePattern = "\r|\n|\r\n";
-            var htmlNewlineString = "<br/>";
-            return new MvcHtmlString(Regex.Replace(helper.Encode(input), newlinePattern, htmlNewlineString));
+            // Restrict/prevent raw HTML coming from API in error message.
+            // The string is not trusted (e.g., not generated/assembled via MVC utilities),
+            // therefore encode/escape it wholly.
+            var htmlEncodedString = helper.Encode(input);
+            return ConvertRawNewlineToHtmlBr(htmlEncodedString);
         }
 
         /// <summary>
         /// Where the input contains a raw newline character (<c>\r\n</c>, <c>\r</c>, or <c>\n</c>),
         /// replace it with an HTML newline tag <c>&lt;br/&gt;</c>.
+        /// <br/>
+        /// See also <see cref="HtmlNewlines(System.Web.Mvc.HtmlHelper,string)"/> if wanting
+        /// to treat the whole input as untrusted, therefore to be wholly encoded.
         /// </summary>
         /// <param name="helper"></param>
         /// <param name="input">The input string to have raw newlines replaced with HTML newline tags.</param>
@@ -327,7 +335,21 @@ namespace Edubase.Web.UI.Helpers
         /// </returns>
         public static MvcHtmlString HtmlNewlines(this HtmlHelper helper, MvcHtmlString input)
         {
-            return new MvcHtmlString(input.ToString());
+            // Retain context of this being an `MvcHtmlString` when doing the `helper.Encode`,
+            // to avoid double-encoding of "trusted" HTML in this (e.g., assembled within the view).
+            var htmlEncodedString = helper.Encode(input);
+            return ConvertRawNewlineToHtmlBr(htmlEncodedString);
+        }
+
+        private static MvcHtmlString ConvertRawNewlineToHtmlBr(string input)
+        {
+            var newlinePattern = "\r|\n|\r\n";
+            var htmlNewlineString = "<br/>";
+
+            var replace = Regex.Replace(input, newlinePattern, htmlNewlineString);
+            var inputWithBrNewlines = new MvcHtmlString(replace);
+
+            return inputWithBrNewlines;
         }
     }
 }
