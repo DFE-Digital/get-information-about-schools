@@ -307,7 +307,9 @@ namespace Edubase.Web.UI.Helpers
         /// </returns>
         public static MvcHtmlString HtmlNewlines(this HtmlHelper helper, string input)
         {
-            return new MvcHtmlString(Regex.Replace(helper.Encode(input), "\r|\n|\r\n", "<br/>"));
+            var newlinePattern = "\r|\n|\r\n";
+            var htmlNewlineString = "<br/>";
+            return new MvcHtmlString(Regex.Replace(helper.Encode(input), newlinePattern, htmlNewlineString));
         }
 
         /// <summary>
@@ -325,7 +327,7 @@ namespace Edubase.Web.UI.Helpers
         /// </returns>
         public static MvcHtmlString HtmlNewlines(this HtmlHelper helper, MvcHtmlString input)
         {
-            return new MvcHtmlString(Regex.Replace(helper.Encode(input), "\r|\n|\r\n", "<br/>"));
+            return new MvcHtmlString(input.ToString());
         }
     }
 }
