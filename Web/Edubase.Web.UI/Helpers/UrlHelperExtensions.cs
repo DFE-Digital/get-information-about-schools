@@ -14,15 +14,26 @@ namespace Edubase.Web.UI.Helpers
     {
         public static string CookieDomain(this UrlHelper helper)
         {
-            return string.Concat(".", GetForwardedHostAwareHost(helper));
+            return string.Concat(".", GetForwardedHeaderAwareUrl(helper).Host);
         }
 
-        public static string GetForwardedHostAwareHost(this UrlHelper helper)
+        public static Uri GetForwardedHeaderAwareUrl(this UrlHelper helper)
         {
-            // TODO: Setup allow-list of permitted x-forwarded-host values
             var request = helper.RequestContext.HttpContext.Request;
-            var host = request.Headers["X-Forwarded-Host"] ?? request.Url.Host;
-            return host;
+            var originalUrl = request.Url;
+
+            if (originalUrl is null)
+            {
+                return null;
+            }
+
+            var uriBuilder = new UriBuilder(originalUrl)
+            {
+                // TODO: Setup allow-list of permitted x-forwarded-host values
+                Host = request.Headers["X-Forwarded-Host"] ?? originalUrl.Host
+            };
+
+            return uriBuilder.Uri;
         }
 
         public static MvcHtmlString Current(this UrlHelper helper, object substitutes, string fragment = null)
