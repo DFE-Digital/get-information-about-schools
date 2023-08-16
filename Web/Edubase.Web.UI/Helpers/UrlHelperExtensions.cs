@@ -12,6 +12,19 @@ namespace Edubase.Web.UI.Helpers
 {
     public static class UrlHelperExtensions
     {
+        public static string CookieDomain(this UrlHelper helper)
+        {
+            return string.Concat(".", GetForwardedHostAwareHost(helper));
+        }
+
+        public static string GetForwardedHostAwareHost(this UrlHelper helper)
+        {
+            // TODO: Setup allow-list of permitted x-forwarded-host values
+            var request = helper.RequestContext.HttpContext.Request;
+            var host = request.Headers["X-Forwarded-Host"] ?? request.Url.Host;
+            return host;
+        }
+
         public static MvcHtmlString Current(this UrlHelper helper, object substitutes, string fragment = null)
         {
             var url = helper.RequestContext.HttpContext.Request.Url;
@@ -33,9 +46,9 @@ namespace Edubase.Web.UI.Helpers
                     }
                 }
             }
-            
+
             uriBuilder.Query = query.ToString();
-            
+
             return new MvcHtmlString(uriBuilder.Uri.MakeRelativeUri(uriBuilder.Uri).ToString() + fragment);
         }
         public static MvcHtmlString SortUrl(this UrlHelper helper, string sortKey, string fragment = null)
@@ -45,7 +58,7 @@ namespace Edubase.Web.UI.Helpers
             var modifier = (request.QueryString["sortby"] ?? "").Contains($"{sortKey}-asc") ? $"{sortKey}-desc" : $"{sortKey}-asc";
             return Current(helper, new { sortby = modifier }, fragment);
         }
-        
+
         public static MvcHtmlString CurrentQueryString(this UrlHelper helper, object substitutes = null)
         {
             var url = helper.RequestContext.HttpContext.Request.Url;

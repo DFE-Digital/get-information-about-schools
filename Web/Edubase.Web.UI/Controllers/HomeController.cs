@@ -90,8 +90,9 @@ namespace Edubase.Web.UI.Controllers
         [HttpPost, Route("~/CookieChoices")]
         public ActionResult CookieChoices(bool acceptAnalyticsCookies)
         {
+            var urlHelper = new UrlHelper(Request.RequestContext);
+            var cookieDomain = urlHelper.CookieDomain();
             var returnTo = Request.Form["OriginatingPage"];
-            var cookieDomain = string.Concat(".", Request.Url.Host);
             Response.Cookies.Set(new HttpCookie(UserPrefsCookieName, acceptAnalyticsCookies.ToString()) { Expires = DateTime.Today.AddDays(28), SameSite = SameSiteMode.Lax, Domain = cookieDomain });
             TempData["CookiesPrefsSaved"] = acceptAnalyticsCookies;
             if (returnTo != null)
@@ -104,7 +105,8 @@ namespace Edubase.Web.UI.Controllers
         [HttpPost, Route("~/CookieChoicesAjax")]
         public ActionResult CookieChoicesAjax(bool acceptAnalyticsCookies)
         {
-            var cookieDomain = string.Concat(".", Request.Url.Host);
+            var urlHelper = new UrlHelper(Request.RequestContext);
+            var cookieDomain = urlHelper.CookieDomain();
             Response.Cookies.Set(new HttpCookie(UserPrefsCookieName, acceptAnalyticsCookies.ToString()) { Expires = DateTime.Today.AddDays(28), SameSite = SameSiteMode.Lax, Domain = cookieDomain});
             return Json(new { success = true , analyticsPref = acceptAnalyticsCookies}, JsonRequestBehavior.AllowGet);
         }
