@@ -131,7 +131,7 @@ namespace Edubase.Web.UI.Controllers
 
             return BuildSitemapIndexXml(urls);
         }
-        
+
         private async Task<string> GenerateEstablishmentDocument(int estType)
         {
             var siteNodes = await GetEstablishmentNodes(estType, 0.8);
@@ -161,11 +161,10 @@ namespace Edubase.Web.UI.Controllers
 
             return true;
         }
-        
+
         private IReadOnlyCollection<SitemapNode> GetSitemapNodes()
         {
             var urlHelper = this.Url;
-            string scheme = urlHelper.RequestContext.HttpContext.Request.Url.Scheme;
             List<SitemapNode> nodes = new List<SitemapNode>();
 
             nodes.Add(BuildNode("Index", "Home", null, null, 1, SitemapFrequency.Yearly));
