@@ -19,6 +19,7 @@ namespace Edubase.Web.UI.Filters
                 var urlHelper = new UrlHelper(filterContext.RequestContext);
                 var redirectUrl = urlHelper.Action("ExternalLoginCallback", "Account", new
                 {
+                    // TODO: Check to see if we can make this call to `Request.Url` relative
                     ReturnUrl = filterContext.RequestContext.HttpContext.Request.Url.PathAndQuery
                 });
 

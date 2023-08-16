@@ -48,11 +48,14 @@ namespace Edubase.Web.UI.Filters
                 var ctx = filterContext.HttpContext;
                 var msg = Log(ctx, filterContext.Exception);
 
+                var urlHelper = new UrlHelper(filterContext.RequestContext);
+
                 if (EnableFriendlyErrorPage)
                 {
                     filterContext.Result = new ViewResult
                     {
                         ViewName = "~/Views/Shared/Error.cshtml",
+                        // TODO: Consider if this use of `Request.Url` requires editing to account for Azure Front Door proxy URL
                         ViewData = new ViewDataDictionary{ ["ErrorCode"] = msg.Id, ["IsPartialView"] = ctx.Request.Url.AbsolutePath.EndsWith("results-js") }
                     };
                 }
@@ -61,6 +64,7 @@ namespace Edubase.Web.UI.Filters
                     filterContext.Result = new ViewResult
                     {
                         ViewName = "~/Views/Shared/FullErrorDetail.cshtml",
+                        // TODO: Consider if this use of `Request.Url` requires editing to account for Azure Front Door proxy URL
                         ViewData = new ViewDataDictionary(filterContext.Exception) { ["ErrorCode"] = msg.Id, ["IsPartialView"] = ctx.Request.Url.AbsolutePath.EndsWith("results-js") }
                     };
                 }
@@ -88,13 +92,17 @@ namespace Edubase.Web.UI.Filters
             }
 
             WebLogMessage msg = new WebLogMessage {
+                // TODO: Consider if we should also log the x-forwarded-for IP address
                 ClientIpAddress = ctx?.Request?.UserHostAddress,
                 Environment = ConfigurationManager.AppSettings["Environment"],
                 Exception = exception?.ToString(),
                 HttpMethod = httpMethod,
                 Level = LogMessage.LogLevel.ERROR,
+                // TODO: Consider if this use of `Request.UrlReferrer` requires editing to account for Azure Front Door proxy URL
                 ReferrerUrl = ctx?.Request.UrlReferrer?.ToString(),
                 Message = exception?.GetBaseException().Message,
+                // TODO: Consider if this use of `Request.Url` requires editing to account for Azure Front Door proxy URL
+                // TODO: Consider if we should log both the request URL and the x-forwarded-host URL
                 Url = ctx?.Request.Url?.ToString(),
                 UserAgent = ctx?.Request.UserAgent,
                 UserId = userId,

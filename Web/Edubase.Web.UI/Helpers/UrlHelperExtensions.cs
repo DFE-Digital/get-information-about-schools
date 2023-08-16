@@ -27,6 +27,7 @@ namespace Edubase.Web.UI.Helpers
 
         public static MvcHtmlString Current(this UrlHelper helper, object substitutes, string fragment = null)
         {
+            // TODO: Make reference to `Request.Url` relative (or x-forwarded-host aware)
             var url = helper.RequestContext.HttpContext.Request.Url;
             var uriBuilder = new UriBuilder(url);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);

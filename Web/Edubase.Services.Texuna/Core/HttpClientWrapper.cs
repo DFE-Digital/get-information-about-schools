@@ -408,7 +408,7 @@ namespace Edubase.Services
                     Request = $"{requestMessage.Headers}{Environment.NewLine}{GetRequestJsonBody(requestMessage)}",
                     Response = $"{response?.Headers}{Environment.NewLine}{responseMessage}",
                     ResponseCode = response != null ? (int) response.StatusCode : 0,
-                    ClientIpAddress = context?.Request.UserHostAddress,
+                    // TODO: Consider if we should also log the x-forwarded-for IP address
                     UserId = context?.User?.Identity?.GetUserId(),
                     UserName = context?.User?.Identity?.GetUserName()
                 };

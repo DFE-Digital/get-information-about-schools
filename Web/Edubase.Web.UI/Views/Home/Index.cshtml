@@ -93,6 +93,7 @@
 
         @if (!Request.IsAuthenticated)
         {
+            // TODO: Make reference to `Request.Url` relative (or x-forwarded-host aware)
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full @groupSpacing">
                     <h2 class="govuk-heading-m">Update your establishment, group and governance information</h2>

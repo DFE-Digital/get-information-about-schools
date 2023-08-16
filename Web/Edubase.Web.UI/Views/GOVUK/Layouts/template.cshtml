@@ -125,6 +125,7 @@
                         </div>
                         @using (Html.BeginForm("CookieChoices", "Home", new {area=""}, FormMethod.Post))
                         {
+                            // TODO: Make reference to `Request.Url` relative (or x-forwarded-host aware)
                             <input type="hidden" name="OriginatingPage" value="@Request.Url.ToString()"/>
                             <div class="govuk-button-group">
                                 <button value="true" type="submit" name="acceptAnalyticsCookies" class="govuk-button" data-module="govuk-button">
@@ -225,12 +226,14 @@
                         </li>
                         @if (Request.IsAuthenticated)
                         {
+                            // TODO: Make reference to `Request.Url` relative (or x-forwarded-host aware)
                             <li class="govuk-header__navigation-item">
                                 @Html.ActionLink("Sign out", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id = "logout-link", Class = "logout-link govuk-header__link", rel = "nofollow" })
                             </li>
                         }
                         else
                         {
+                            // TODO: Make reference to `Request.Url` relative (or x-forwarded-host aware)
                             <li class="govuk-header__navigation-item">
                                 @Html.ActionLink("Sign in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id = "login-link", Class = "login-link govuk-header__link", rel = "nofollow" })
                             </li>
