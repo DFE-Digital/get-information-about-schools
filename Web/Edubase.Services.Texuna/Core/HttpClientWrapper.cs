@@ -308,7 +308,15 @@ namespace Edubase.Services
                         if (throwOnNotFound)
                             throw new TexunaApiNotFoundException($"The API returned 404 Not Found. (Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})");
                         break;
+                    case HttpStatusCode.Unauthorized:
+                        // The Java API typically returns:
+                        // - HTTP 401 Unauthorized where access to the API is denied (e.g., bad basic auth credentials in the frontend server config?).
+                        // - HTTP 403 Forbidden where the end-user (by SA User ID) is not permitted to perform an action.
+                        throw new EduSecurityException($"The web frontend does not have permission to call this API. (Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})");
                     case HttpStatusCode.Forbidden:
+                        // The Java API typically returns:
+                        // - HTTP 401 Unauthorized where access to the API is denied (e.g., bad basic auth credentials in the frontend server config?).
+                        // - HTTP 403 Forbidden where the end-user (by SA User ID) is not permitted to perform an action.
                         throw new EduSecurityException($"The current principal does not have permission to call this API. (Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})");
                     case (HttpStatusCode) 429:
                         throw new UsageQuotaExceededException();
