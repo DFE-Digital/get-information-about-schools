@@ -191,27 +191,45 @@ namespace Edubase.Services
 
         private async Task<ApiResponse<T>> ParseHttpResponseMessageAsync<T>(string requestUrl, HttpResponseMessage message, bool throwOnNotFound = true)
         {
-            AssertJsonContentOrEmpty(message);
             var response = new ApiResponse<T>(message.IsSuccessStatusCode);
-            if (message.IsSuccessStatusCode) return response.OK(await DeserializeResponseAsync<T>(message, requestUrl));
-            else return await ProcessApiErrorAsync(message, response, requestUrl, throwOnNotFound);
+            if (message.IsSuccessStatusCode)
+            {
+                AssertJsonContentOrEmpty(message);
+                return response.OK(await DeserializeResponseAsync<T>(message, requestUrl));
+            }
+            else
+            {
+                return await ProcessApiErrorAsync(message, response, requestUrl, throwOnNotFound);
+            }
         }
 
         private async Task<ApiResponse> ParseHttpResponseMessageAsync(string requestUrl, HttpResponseMessage message)
         {
-            AssertJsonContentOrEmpty(message);
             var response = new ApiResponse(message.IsSuccessStatusCode);
-            if (message.IsSuccessStatusCode) return response;
-            else return await ProcessApiErrorAsync(message, response, requestUrl);
+            if (message.IsSuccessStatusCode)
+            {
+                AssertJsonContentOrEmpty(message);
+                return response;
+            }
+            else
+            {
+                return await ProcessApiErrorAsync(message, response, requestUrl);
+            }
         }
 
         private async Task<ApiResponse<TSuccess, TValidationEnvelope>> ParseHttpResponseMessageAsync<TSuccess, TValidationEnvelope>(string requestUrl, HttpResponseMessage message)
             where TValidationEnvelope : class
         {
-            AssertJsonContentOrEmpty(message);
             var response = new ApiResponse<TSuccess, TValidationEnvelope>();
-            if (message.IsSuccessStatusCode) return response.Success(await DeserializeResponseAsync<TSuccess>(message, requestUrl));
-            else return await ProcessApiErrorAsync(message, response, requestUrl);
+            if (message.IsSuccessStatusCode)
+            {
+                AssertJsonContentOrEmpty(message);
+                return response.Success(await DeserializeResponseAsync<TSuccess>(message, requestUrl));
+            }
+            else
+            {
+                return await ProcessApiErrorAsync(message, response, requestUrl);
+            }
         }
 
         #endregion
