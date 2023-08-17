@@ -237,10 +237,10 @@ namespace Edubase.Web.UI.Models
                 retVal.Add(new LinkAction
                 {
                     Link = htmlHelper.RouteLink(
-                        "View closed Companies House single-academy trusts (SATs) and multi-academy trusts (MATs)",
+                        "View closed Companies House single-academy trusts (SATs), secure single-academy trusts (SSATs) and multi-academy trusts (MATs)",
                         "DownloadClosedTrustsInformation"),
                     Description =
-                        "View a list of closed single-academy trusts (SATs) and multi-academy trusts (MATs) currently open on GIAS but reported closed by Companies House."
+                        "View a list of closed single-academy trusts (SATs), secure single-academy trusts (SSATs) and multi-academy trusts (MATs) currently open on GIAS but reported closed by Companies House."
                 });
             }
 

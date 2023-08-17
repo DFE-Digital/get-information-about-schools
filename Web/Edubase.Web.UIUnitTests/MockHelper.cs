@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Security.Principal;
 using Edubase.Services.Domain;
 using Edubase.Services.Lookup;
 using Moq;
@@ -69,6 +70,14 @@ namespace Edubase.Web.UIUnitTests
             cls.Setup(c => c.DirectProvisionOfEarlyYearsGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
 
             return cls;
+        }
+
+        public static Mock<IUserDependentLookupService> SetupLookupService(IPrincipal user)
+        {
+            var ls = new Mock<IUserDependentLookupService>(MockBehavior.Strict);
+            ls.Setup(c => c.EstablishmentStatusesGetAllAsync(user)).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
+
+            return ls;
         }
     }
 }

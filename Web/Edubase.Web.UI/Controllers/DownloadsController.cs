@@ -279,12 +279,12 @@ namespace Edubase.Web.UI.Controllers
 
         [HttpGet, EdubaseAuthorize, MvcAuthorizeRoles(AuthorizedRoles.CanManageAcademyTrusts)]
         [Route("Download/MATClosureReport", Name = "DownloadMATClosureReport")]
-        public async Task<ActionResult> DownloadMATClosureReportAsync()
+        public async Task<ActionResult> DownloadMATClosureReportAsync(string filename)
         {
             using (var c = IocConfig.CreateHttpClient())
             {
                 var requestMessage = await _httpClientHelper.CreateHttpRequestMessageAsync(HttpMethod.Get, "downloads/matclosurereport.csv", User);
-                var response = (await c.SendAsync(requestMessage));
+                var response = await c.SendAsync(requestMessage);
 
                 if(response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
@@ -293,7 +293,7 @@ namespace Edubase.Web.UI.Controllers
                 else
                 {
                     response.EnsureSuccessStatusCode();
-                    return new FileStreamResult(await response.Content.ReadAsStreamAsync(), response.Content.Headers.ContentType.MediaType) { FileDownloadName = $"SatAndMatClosureReport_{DateTime.Now.Date.ToString("dd-MM-yyyy")}.csv" };
+                    return new FileStreamResult(await response.Content.ReadAsStreamAsync(), response.Content.Headers.ContentType.MediaType) { FileDownloadName = filename };
                 }
             }
         }

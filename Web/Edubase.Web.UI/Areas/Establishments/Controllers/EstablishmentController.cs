@@ -51,6 +51,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private readonly IMapper _mapper;
         private readonly IResourcesHelper _resourcesHelper;
         private readonly IExternalLookupService _externalLookupService;
+        private readonly IUserDependentLookupService _lookupService;
 
         private readonly ISecurityService _securityService;
         private readonly Lazy<string[]> _formKeys;
@@ -80,7 +81,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             ICachedLookupService cachedLookupService,
             IResourcesHelper resourcesHelper,
             ISecurityService securityService,
-            IExternalLookupService externalLookupService)
+            IExternalLookupService externalLookupService,
+            IUserDependentLookupService lookupService)
         {
             _cachedLookupService = cachedLookupService;
             _establishmentReadService = establishmentReadService;
@@ -90,6 +92,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _resourcesHelper = resourcesHelper;
             _securityService = securityService;
             _externalLookupService = externalLookupService;
+            _lookupService = lookupService;
 
             _formKeys = new Lazy<string[]>(
                 () => Request?.Form?.AllKeys.Select(x => x.GetPart(".")).Distinct().ToArray(),
@@ -359,14 +362,20 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 PopulateLookupNames(viewModel),
                 PopulateGovernors(viewModel));
 
-          viewModel.AgeRangeToolTip = viewModel.Establishment.TypeId.OneOfThese(ET.OnlineProvider)
+            viewModel.AgeRangeToolTip = viewModel.Establishment.TypeId.OneOfThese(ET.OnlineProvider)
                 ? _resourcesHelper.GetResourceStringForEstablishment("AgeRangeOnlineProvider", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User)
                 : _resourcesHelper.GetResourceStringForEstablishment("AgeRange", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
 
-            viewModel.AgeRangeToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("AgeRangeLink", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
-            viewModel.SchoolCapacityToolTip = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacity", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
-            viewModel.SchoolCapacityToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacityLink", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
+            viewModel.AgeRangeToolTipLink = viewModel.Establishment.TypeId.Equals((int)ET.AcademySecure16to19)
+                ? string.Empty
+                : _resourcesHelper.GetResourceStringForEstablishment("AgeRangeLink", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
 
+            viewModel.SchoolCapacityToolTip = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacity", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
+
+            viewModel.SchoolCapacityToolTipLink = viewModel.Establishment.TypeId.Equals((int)ET.AcademySecure16to19)
+                ? string.Empty
+                : _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacityLink", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
+               
             return View(viewModel);
         }
 
@@ -885,7 +894,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.GovernanceOptions = (await _cachedLookupService.CCGovernanceGetAllAsync()).ToSelectList();
             viewModel.DisadvantagedAreaOptions = (await _cachedLookupService.CCDisadvantagedAreasGetAllAsync()).ToSelectList();
             viewModel.DirectProvisionOfEarlyYearsOptions = (await _cachedLookupService.DirectProvisionOfEarlyYearsGetAllAsync()).ToSelectList();
-            viewModel.EstablishmentStatusOptions = (await _cachedLookupService.EstablishmentStatusesGetAllAsync()).ToSelectList();
+            viewModel.EstablishmentStatusOptions = (await _lookupService.EstablishmentStatusesGetAllAsync(User)).ToSelectList();
             viewModel.Address.Counties = (await _cachedLookupService.CountiesGetAllAsync()).ToSelectList();
             viewModel.Phases = (await _cachedLookupService.CCPhaseTypesGetAllAsync()).ToSelectList();
             await PopulateSelectLists(viewModel);
@@ -915,7 +924,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private async Task PopulateEditPermissions(EstablishmentDetailViewModel viewModel)
         {
             viewModel.UserCanEdit = await _establishmentReadService.CanEditAsync(viewModel.Establishment.Urn.Value, User);
-            viewModel.TabEditPolicy = new TabEditPolicy(viewModel.Establishment, viewModel.DisplayPolicy, User);
+            var editPolicyEnvelope = await _establishmentReadService.GetEditPolicyAsync(viewModel.Establishment, User);
+            viewModel.TabEditPolicy = new TabEditPolicy(viewModel.Establishment, editPolicyEnvelope.EditPolicy, User);
         }
 
         private async Task PopulateEstablishmentPageViewModel(IEstablishmentPageViewModel viewModel, int urn, string selectedTabName)
@@ -1051,7 +1061,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.LocalAuthorities = localAuthorities.ToSelectList(viewModel.LocalAuthorityId);
             viewModel.EstablishmentTypes = (await _cachedLookupService.EstablishmentTypesGetAllAsync()).ToSelectList(viewModel.TypeId);
             viewModel.HeadTitles = (await _cachedLookupService.TitlesGetAllAsync()).ToSelectList(viewModel.HeadTitleId);
-            viewModel.Statuses = (await _cachedLookupService.EstablishmentStatusesGetAllAsync()).ToSelectList(viewModel.StatusId);
+            viewModel.Statuses = (await _lookupService.EstablishmentStatusesGetAllAsync(User)).ToSelectList(viewModel.StatusId);
             viewModel.AdmissionsPolicies = (await _cachedLookupService.AdmissionsPoliciesGetAllAsync()).ToSelectList(viewModel.AdmissionsPolicyId);
             viewModel.Inspectorates = (await _cachedLookupService.InspectoratesGetAllAsync()).ToSelectList(viewModel.InspectorateId);
             viewModel.IndependentSchoolTypes = (await _cachedLookupService.IndependentSchoolTypesGetAllAsync()).ToSelectList(viewModel.IndependentSchoolTypeId);
