@@ -238,7 +238,7 @@ namespace Edubase.Services
 
         private async Task<T> ProcessApiErrorAsync<T>(HttpResponseMessage message, T response, string requestUrl, bool throwOnNotFound = true) where T : ApiResponse
         {
-            ValidateGenericHttpErrors(message, throwOnNotFound);
+            await ValidateGenericHttpErrors(message, throwOnNotFound);
             if (message.StatusCode == HttpStatusCode.BadRequest)
             {
                 var json = await message.Content.ReadAsStringAsync();
@@ -258,7 +258,7 @@ namespace Edubase.Services
         private async Task<ApiResponse<TSuccess, TValidationEnvelope>> ProcessApiErrorAsync<TSuccess, TValidationEnvelope>(HttpResponseMessage message, ApiResponse<TSuccess, TValidationEnvelope> response, string requestUrl)
             where TValidationEnvelope : class
         {
-            ValidateGenericHttpErrors(message);
+            await ValidateGenericHttpErrors(message);
 
             if (message.StatusCode == HttpStatusCode.BadRequest)
             {
@@ -293,8 +293,13 @@ namespace Edubase.Services
             return new ApiError[0];
         }
 
-        private void ValidateGenericHttpErrors(HttpResponseMessage message, bool throwOnNotFound = true)
+        private async Task ValidateGenericHttpErrors(HttpResponseMessage message, bool throwOnNotFound = true)
         {
+            //
+            // Java API returns:
+            // - HTTP 401 Unauthorized with empty body: Bad SA User ID
+            // - HTTP 401 Unauthorized with HTML body: Bad basic auth credentials in the frontend server config
+            // - HTTP 403 Forbidden (optionally with JSON body): SA User ID found, but not permitted to access
             if (!message.IsSuccessStatusCode)
             {
                 switch (message.StatusCode)
@@ -309,14 +314,21 @@ namespace Edubase.Services
                             throw new TexunaApiNotFoundException($"The API returned 404 Not Found. (Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})");
                         break;
                     case HttpStatusCode.Unauthorized:
-                        // The Java API typically returns:
-                        // - HTTP 401 Unauthorized where access to the API is denied (e.g., bad basic auth credentials in the frontend server config?).
-                        // - HTTP 403 Forbidden where the end-user (by SA User ID) is not permitted to perform an action.
-                        throw new EduSecurityException($"The web frontend does not have permission to call this API. (Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})");
+                        // Java API returns:
+                        // - HTTP 401 Unauthorized with empty body: Bad SA User ID
+                        // - HTTP 401 Unauthorized with HTML body: Bad basic auth credentials in the frontend server config
+                        var isEmptyResponse = message.Content == null || string.IsNullOrEmpty(await message.Content.ReadAsStringAsync());
+                        if (isEmptyResponse)
+                        {
+                            throw new EduSecurityException($"The current principal does not have permission to call this API. (Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})");
+                        }
+                        else
+                        {
+                            throw new EduSecurityException($"The web frontend does not have permission to call this API. (Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})");
+                        }
                     case HttpStatusCode.Forbidden:
-                        // The Java API typically returns:
-                        // - HTTP 401 Unauthorized where access to the API is denied (e.g., bad basic auth credentials in the frontend server config?).
-                        // - HTTP 403 Forbidden where the end-user (by SA User ID) is not permitted to perform an action.
+                        // Java API returns:
+                        // - HTTP 403 Forbidden (optionally with JSON body): SA User ID found, but not permitted to access specific resource (e.g., specific establishment due to its status)
                         throw new EduSecurityException($"The current principal does not have permission to call this API. (Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})");
                     case (HttpStatusCode) 429:
                         throw new UsageQuotaExceededException();
