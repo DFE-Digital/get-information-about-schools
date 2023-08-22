@@ -2,6 +2,7 @@ using Edubase.Web.UI.MvcResult;
 using System;
 using System.Net;
 using System.Web.Mvc;
+using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Filters
 {
@@ -19,8 +20,12 @@ namespace Edubase.Web.UI.Filters
                 var urlHelper = new UrlHelper(filterContext.RequestContext);
                 var redirectUrl = urlHelper.Action("ExternalLoginCallback", "Account", new
                 {
-                    // TODO: Check to see if we can make this call to `Request.Url` relative
-                    ReturnUrl = filterContext.RequestContext.HttpContext.Request.Url.PathAndQuery
+                    // Making this "forwarded-header-aware" is not strictly required, but it's good to do so anyway
+                    // for consistency and avoidance of any future doubts.
+                    // - The `returnUrl` is currently ignored by the `AccountController.ExternalLoginCallback` method.
+                    // - `PathAndQuery` is absolute, but relative to the host/domain part
+                    //   (e.g., `new Uri("http://example.com/./abc/123/../567").PathAndQuery` returns /abc/567).
+                    ReturnUrl = urlHelper.GetForwardedHeaderAwareUrl().PathAndQuery
                 });
 
                 filterContext.Result = new ChallengeResult("Saml2", redirectUrl);
