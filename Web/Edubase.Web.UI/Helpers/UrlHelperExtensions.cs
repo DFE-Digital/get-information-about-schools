@@ -126,14 +126,32 @@ namespace Edubase.Web.UI.Helpers
             return sb.ToString();
         }
 
+        // Note that this is used only by the SiteMap builder code
         public static string AbsoluteActionUrl(
             this UrlHelper urlHelper,
             string actionName,
             string controllerName,
             object routeValues = null)
         {
-            var scheme = urlHelper.RequestContext.HttpContext.Request.Url.Scheme;
-            return urlHelper.Action(actionName, controllerName, routeValues, scheme);
+            var forwardedHeaderAwareUrl = GetForwardedHeaderAwareUrl(urlHelper);
+
+            // Note: Providing the scheme pushes `.Action` to return an absolute URL. Omitting this appears to return a relative URL.
+            var scheme = forwardedHeaderAwareUrl.Scheme;
+            var absoluteActionUrl = urlHelper.Action(actionName, controllerName, routeValues, scheme);
+            if (absoluteActionUrl is null)
+            {
+                return null;
+            }
+
+            // Where the site is accessed via a reverse proxy, the `Host` property of the `UriBuilder` will be incorrect.
+            // For this reason, we replace the `Host` property with the value of the `X-Forwarded-Host` header where present.
+            var uriBuilder = new UriBuilder(absoluteActionUrl)
+            {
+                Host = forwardedHeaderAwareUrl.Host,
+            };
+
+            var newUri = uriBuilder.Uri;
+            return newUri.ToString();
         }
     }
 }
