@@ -164,7 +164,6 @@ namespace Edubase.Web.UI.Controllers
 
         private IReadOnlyCollection<SitemapNode> GetSitemapNodes()
         {
-            var urlHelper = this.Url;
             List<SitemapNode> nodes = new List<SitemapNode>();
 
             nodes.Add(BuildNode("Index", "Home", null, null, 1, SitemapFrequency.Yearly));
