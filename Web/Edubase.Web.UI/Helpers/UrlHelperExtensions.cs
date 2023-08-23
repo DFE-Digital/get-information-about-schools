@@ -71,7 +71,9 @@ namespace Edubase.Web.UI.Helpers
 
         public static MvcHtmlString CurrentQueryString(this UrlHelper helper, object substitutes = null)
         {
-            var url = helper.RequestContext.HttpContext.Request.Url;
+            // This does not appear to strictly require being forwarded header aware,
+            // but it's easier and safer to be consistent and just do it everywhere.
+            var url = GetForwardedHeaderAwareUrl(helper);
             var uriBuilder = new UriBuilder(url);
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
