@@ -8,6 +8,7 @@ using Edubase.Common;
 using Edubase.Services.Exceptions;
 using AzureTableLogger;
 using AzureTableLogger.LogMessages;
+using Edubase.Web.UI.Helpers;
 using Sustainsys.Saml2.Exceptions;
 
 namespace Edubase.Web.UI.Filters
@@ -48,26 +49,21 @@ namespace Edubase.Web.UI.Filters
                 var ctx = filterContext.HttpContext;
                 var msg = Log(ctx, filterContext.Exception);
 
+                // Making this "forwarded-header-aware" is not strictly required, but it's good to do so anyway
+                // for consistency and avoidance of any future doubts.
                 var urlHelper = new UrlHelper(filterContext.RequestContext);
+                var url = urlHelper.GetForwardedHeaderAwareUrl();
 
-                if (EnableFriendlyErrorPage)
+                filterContext.Result = new ViewResult
                 {
-                    filterContext.Result = new ViewResult
+                    // Show either the "simple" user-facing error page, or the full error page with technical detail.
+                    ViewName = EnableFriendlyErrorPage ? "~/Views/Shared/Error.cshtml" : "~/Views/Shared/FullErrorDetail.cshtml",
+                    ViewData = new ViewDataDictionary
                     {
-                        ViewName = "~/Views/Shared/Error.cshtml",
-                        // TODO: Consider if this use of `Request.Url` requires editing to account for Azure Front Door proxy URL
-                        ViewData = new ViewDataDictionary{ ["ErrorCode"] = msg.Id, ["IsPartialView"] = ctx.Request.Url.AbsolutePath.EndsWith("results-js") }
-                    };
-                }
-                else // show full technical error detail
-                {
-                    filterContext.Result = new ViewResult
-                    {
-                        ViewName = "~/Views/Shared/FullErrorDetail.cshtml",
-                        // TODO: Consider if this use of `Request.Url` requires editing to account for Azure Front Door proxy URL
-                        ViewData = new ViewDataDictionary(filterContext.Exception) { ["ErrorCode"] = msg.Id, ["IsPartialView"] = ctx.Request.Url.AbsolutePath.EndsWith("results-js") }
-                    };
-                }
+                        ["ErrorCode"] = msg.Id,
+                        ["IsPartialView"] = url.AbsolutePath.EndsWith("results-js", StringComparison.InvariantCultureIgnoreCase)
+                    }
+                };
 
                 ctx.Response.Clear();
                 ctx.Response.TrySkipIisCustomErrors = true;
