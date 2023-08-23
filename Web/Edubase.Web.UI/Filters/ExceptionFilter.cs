@@ -49,8 +49,8 @@ namespace Edubase.Web.UI.Filters
                 var ctx = filterContext.HttpContext;
                 var msg = Log(ctx, filterContext.Exception);
 
-                // Making this "forwarded-header-aware" is not strictly required, but it's good to do so anyway
-                // for consistency and avoidance of any future doubts.
+                // Making this "forwarded-header-aware" is not strictly required,
+                // but it's easier and safer to be consistent and just do it everywhere.
                 var urlHelper = new UrlHelper(filterContext.RequestContext);
                 var url = urlHelper.GetForwardedHeaderAwareUrl();
 
@@ -88,17 +88,13 @@ namespace Edubase.Web.UI.Filters
             }
 
             WebLogMessage msg = new WebLogMessage {
-                // TODO: Consider if we should also log the x-forwarded-for IP address
                 ClientIpAddress = ctx?.Request?.UserHostAddress,
                 Environment = ConfigurationManager.AppSettings["Environment"],
                 Exception = exception?.ToString(),
                 HttpMethod = httpMethod,
                 Level = LogMessage.LogLevel.ERROR,
-                // TODO: Consider if this use of `Request.UrlReferrer` requires editing to account for Azure Front Door proxy URL
                 ReferrerUrl = ctx?.Request.UrlReferrer?.ToString(),
                 Message = exception?.GetBaseException().Message,
-                // TODO: Consider if this use of `Request.Url` requires editing to account for Azure Front Door proxy URL
-                // TODO: Consider if we should log both the request URL and the x-forwarded-host URL
                 Url = ctx?.Request.Url?.ToString(),
                 UserAgent = ctx?.Request.UserAgent,
                 UserId = userId,

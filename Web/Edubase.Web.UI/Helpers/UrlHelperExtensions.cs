@@ -71,7 +71,7 @@ namespace Edubase.Web.UI.Helpers
 
         public static MvcHtmlString CurrentQueryString(this UrlHelper helper, object substitutes = null)
         {
-            // This does not appear to strictly require being forwarded header aware,
+            // Making this "forwarded-header-aware" is not strictly required,
             // but it's easier and safer to be consistent and just do it everywhere.
             var url = GetForwardedHeaderAwareUrl(helper);
             var uriBuilder = new UriBuilder(url);

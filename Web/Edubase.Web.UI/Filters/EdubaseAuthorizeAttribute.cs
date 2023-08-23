@@ -20,8 +20,8 @@ namespace Edubase.Web.UI.Filters
                 var urlHelper = new UrlHelper(filterContext.RequestContext);
                 var redirectUrl = urlHelper.Action("ExternalLoginCallback", "Account", new
                 {
-                    // Making this "forwarded-header-aware" is not strictly required, but it's good to do so anyway
-                    // for consistency and avoidance of any future doubts.
+                    // Making this "forwarded-header-aware" is not strictly required,
+                    // but it's easier and safer to be consistent and just do it everywhere.
                     // - The `returnUrl` is currently ignored by the `AccountController.ExternalLoginCallback` method.
                     // - `PathAndQuery` is absolute, but relative to the host/domain part
                     //   (e.g., `new Uri("http://example.com/./abc/123/../567").PathAndQuery` returns /abc/567).
