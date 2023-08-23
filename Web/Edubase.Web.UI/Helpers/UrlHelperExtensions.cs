@@ -65,7 +65,6 @@ namespace Edubase.Web.UI.Helpers
         public static MvcHtmlString SortUrl(this UrlHelper helper, string sortKey, string fragment = null)
         {
             var request = helper.RequestContext.HttpContext.Request;
-            var url = request.Url;
             var modifier = (request.QueryString["sortby"] ?? "").Contains($"{sortKey}-asc") ? $"{sortKey}-desc" : $"{sortKey}-asc";
             return Current(helper, new { sortby = modifier }, fragment);
         }
