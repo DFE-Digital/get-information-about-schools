@@ -6,6 +6,13 @@
     var groupSpacing = "home-grid-component";
 }
 
+@{
+    // Not all uses of the URL on this page strictly require being forwarded header aware,
+    // but it's easier and safer to be consistent and just do it everywhere.
+    var urlHelper = new UrlHelper(Request.RequestContext);
+    var currentUrl = urlHelper.GetForwardedHeaderAwareUrl();
+}
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-xl">Get Information about Schools</h1>
@@ -93,7 +100,6 @@
 
         @if (!Request.IsAuthenticated)
         {
-            // TODO: Make reference to `Request.Url` relative (or x-forwarded-host aware)
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full @groupSpacing">
                     <h2 class="govuk-heading-m">Update your establishment, group and governance information</h2>
@@ -101,7 +107,7 @@
                         This is for establishment users only and local authority and group users where applicable. Please sign into your DfE Sign-in (DSI) account to make any updates
                     </p>
                     <p>
-                        @Html.ActionLink("DfE Sign-in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { rel = "nofollow" })
+                        @Html.ActionLink("DfE Sign-in", "LogIn", "Account", new { area = "", returnUrl = currentUrl.PathAndQuery }, new { rel = "nofollow" })
                     </p>
                 </div>
             </div>
