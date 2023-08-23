@@ -416,12 +416,10 @@ namespace Edubase.Services
                     StartTime = startTime,
                     DurationMillis = (int) Math.Round((DateTime.UtcNow - startTime).TotalMilliseconds, 0),
                     Method = requestMessage.Method.Method,
-                    // TODO: Consider if we should also log the x-forwarded-for host address
                     Url = requestMessage.RequestUri.ToString(),
                     Request = $"{requestMessage.Headers}{Environment.NewLine}{GetRequestJsonBody(requestMessage)}",
                     Response = $"{response?.Headers}{Environment.NewLine}{responseMessage}",
                     ResponseCode = response != null ? (int) response.StatusCode : 0,
-                    // TODO: Consider if we should also log the x-forwarded-for IP address
                     ClientIpAddress = context?.Request.UserHostAddress,
                     UserId = context?.User?.Identity?.GetUserId(),
                     UserName = context?.User?.Identity?.GetUserName()
