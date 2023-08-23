@@ -12,8 +12,7 @@
 
         @if (isEdit)
         {
-            // TODO: Check to see if we can make this call to `Request.Url` relative
-            <a href="@Request.Url.AbsoluteUri" id="warning-exit-overlay-0" class="modal-exit js-allow-exit">Close</a>
+            <a href=@($"{Url.Action("EditDetails", "Group", new { area = "Groups", id = Model.GroupUId })}") id="warning-exit-overlay-0" class="modal-exit js-allow-exit">Close</a>
         }
         else
         {
@@ -28,8 +27,7 @@
             <button type="submit" id="proceed-button" name="action" value="save" class="govuk-button">Proceed</button>
             @if (isEdit)
             {
-                // TODO: Check to see if we can make this call to `Request.Url` relative
-                <a href="@Request.Url.AbsoluteUri" id="cancel-button" class="govuk-button govuk-button--secondary cancel" data-module="govuk-button">Cancel</a>
+                @Html.ActionLink("Cancel", "EditDetails", "Establishment", new { id = Model.GroupUId }, new { id = "edit-details-button", @class = "govuk-button govuk-button--secondary" })
             }
             else
             {
