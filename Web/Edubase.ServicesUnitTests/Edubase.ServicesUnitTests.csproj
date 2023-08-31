@@ -49,6 +49,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ExternalLookup\FBServiceTests.cs" />
+    <Compile Include="Governors\Factories\GovernorRoleNameFactoryTests.cs" />
+    <Compile Include="Nomenclature\NomenclatureServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +64,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Edubase.Common\Edubase.Common.csproj">
+      <Project>{8E4A0F2B-368F-4C22-8723-7E234A8C46F3}</Project>
+      <Name>Edubase.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Edubase.Services\Edubase.Services.csproj">
       <Project>{D605ACE4-2659-48DC-BF21-94E7B8D230DA}</Project>
       <Name>Edubase.Services</Name>

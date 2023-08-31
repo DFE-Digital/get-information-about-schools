@@ -24,7 +24,9 @@
                     foreach (var modelError in Model.Keys.SelectMany(key => this.Model[key].Errors.Select(x => Tuple.Create(key, x.ErrorMessage))))
                     {
                         <li>
-                            <a id="error-summary-@StringUtils.ElementIdFormat(@modelError.Item1)-list-item" href='#@modelError.Item1.Replace(".", "_").Replace("[", "_").Replace("]", "_")'>@modelError.Item2</a>
+                            <a id="error-summary-@StringUtils.ElementIdFormat(@modelError.Item1)-list-item" href='#@modelError.Item1.Replace(".", "_").Replace("[", "_").Replace("]", "_")'>
+                                @Html.HtmlNewlines(modelError.Item2)
+                            </a>
                         </li>
                     }
                 }
