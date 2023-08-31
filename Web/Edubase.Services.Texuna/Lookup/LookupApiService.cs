@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
@@ -99,6 +100,11 @@ namespace Edubase.Services.Texuna.Lookup
         public async Task<IEnumerable<LookupDto>> EstablishmentStatusesGetAllAsync()
         {
             return await GetData("establishment-statuses");
+        }
+
+        public async Task<IEnumerable<LookupDto>> EstablishmentStatusesGetAllAsync(IPrincipal user)
+        {
+            return await GetData("establishment-statuses", user);
         }
 
         public async Task<IEnumerable<EstablishmentLookupDto>> EstablishmentTypesGetAllAsync()
@@ -387,15 +393,27 @@ namespace Edubase.Services.Texuna.Lookup
             return await GetData("cas-wards");
         }
 
-        public async Task<IEnumerable<LookupDto>> EstablishmentStatusesGetAllAsync(IPrincipal user)
+        private async Task<IEnumerable<LookupDto>> GetData(string lookupName)
         {
-            return (await _httpClient.GetAsync<List<LookupDto>>(ApiPrefix + "establishment-statuses", user)).GetResponse();
+            // Default to getting lookup data as the anonymous / "not-logged-in" user
+            var defaultLookupUser = _securityService.CreateAnonymousPrincipal();
+            return await GetData(lookupName, defaultLookupUser);
         }
 
-        private async Task<IEnumerable<LookupDto>> GetData(string name)
+        private async Task<IEnumerable<LookupDto>> GetData(string lookupName, IPrincipal user)
         {
-            return (await _httpClient.GetAsync<List<LookupDto>>(ApiPrefix + name,
-                _securityService.CreateAnonymousPrincipal())).GetResponse();
+            if(lookupName is null) {
+                throw new ArgumentNullException(nameof(lookupName));
+            }
+
+            if (user is null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            var uri = $"{ApiPrefix}{lookupName}";
+            return (await _httpClient.GetAsync<List<LookupDto>>(uri, user))
+                .GetResponse();
         }
     }
 }
