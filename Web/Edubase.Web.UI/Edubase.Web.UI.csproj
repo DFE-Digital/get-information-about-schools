@@ -368,6 +368,7 @@
     <Compile Include="Controllers\NotificationsController.cs" />
     <Compile Include="Controllers\SitemapController.cs" />
     <Compile Include="Controllers\TermsofUseController.cs" />
+    <Compile Include="Exceptions\InvalidForwardedHostException.cs" />
     <Compile Include="Filters\ModelStateTransfer.cs" />
     <Compile Include="GlimpseSecurityPolicy.cs" />
     <Compile Include="Glimpse\AllUsersApiTraceTab.cs" />

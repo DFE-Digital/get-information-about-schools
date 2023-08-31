@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Configuration;
+using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Edubase.Common;
+using Edubase.Web.UI.Exceptions;
 using Glimpse.AspNet.Tab;
 
 namespace Edubase.Web.UI.Helpers
@@ -27,11 +30,41 @@ namespace Edubase.Web.UI.Helpers
                 return null;
             }
 
-            var uriBuilder = new UriBuilder(originalUrl)
+            var uriBuilder = new UriBuilder(originalUrl);
+
+            // When accessing the app service directly this should normally be null (not provided).
+            //  - When accessing the app service via proxy (e.g., Azure Front Door), the request header will be
+            //    that of the app service (+- hostname forwarding) and the original hostname (as seen in the browser)
+            //    will be provided within the `X-Forwarded-Host` header.
+            // - Equally, however, a user accessing the app service directly might manually inject this header
+            //   (e.g., via browser or Postman-like software) with a custom (potentially nefarious) value,
+            //   therefore we need to do some additional validation of the supplied value.
+            var requestHeaderHost = request.Headers["X-Forwarded-Host"];
+            if(requestHeaderHost != null)
             {
-                // TODO: Setup allow-list of permitted x-forwarded-host values
-                Host = request.Headers["X-Forwarded-Host"] ?? originalUrl.Host
-            };
+                // Override the request's host only if the `X-Forwarded-Host` header is present and contains an acceptable value.
+                // Notes:
+                // - Configuration Manager will return `null` if the key is not found.
+                // - `string.Empty.Split(',')` will return an array of length 1, with a single empty string element.
+                // - The host should be trimmed of leading/trailing whitespace, to account for the configuration
+                //   being "comma-plus-space-separated" instead of just "comma-separated" (plus makes it easier
+                //   to filter out empty/whitespace-only strings e.g., if a trailing comma on the list).
+                var allowedForwardedHostNames = (ConfigurationManager.AppSettings["AllowedForwardedHostNames"] ?? string.Empty)
+                    .Split(',')
+                    .Select(s => s.Trim())
+                    .Where(s => !string.IsNullOrEmpty(s));
+
+                if (allowedForwardedHostNames.Contains(requestHeaderHost))
+                {
+                    uriBuilder.Host = requestHeaderHost;
+                }
+                else
+                {
+                    // Fail loudly if the `X-Forwarded-Host` header is present but contains an invalid value.
+                    // Could signal a misconfiguration or an attempted malicious attack.
+                    throw new InvalidForwardedHostException($"The `X-Forwarded-Host` header contains an invalid value: {requestHeaderHost}");
+                }
+            }
 
             return uriBuilder.Uri;
         }
