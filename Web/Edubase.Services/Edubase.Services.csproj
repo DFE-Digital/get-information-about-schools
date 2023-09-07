@@ -163,6 +163,7 @@
     <Compile Include="Downloads\Models\ScheduledExtract.cs" />
     <Compile Include="Downloads\Models\ScheduledExtractsResult.cs" />
     <Compile Include="Enums\eDownloadReturnSource.cs" />
+    <Compile Include="Enums\eYesNoSelect.cs" />
     <Compile Include="Enums\eFileFormat.cs" />
     <Compile Include="Enums\eGovernanceMode.cs" />
     <Compile Include="Enums\eLookupEducationPhase.cs" />

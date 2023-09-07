@@ -25,6 +25,9 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         [DisplayName("Last name")]
         public string LastName { get; set; }
 
+        [DisplayName("Original signatory member")]
+        public eYesNoSelect OriginalSignatoryMember { get; set; }
+
         [DisplayName("Appointing body")]
         public int? AppointingBodyId { get; set; }
 
@@ -46,7 +49,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         [DisplayName("Telephone")]
         public string TelephoneNumber { get; set; }
 
-
         [DisplayName("Previous title")]
         public int? PreviousTitleId { get; set; }
 
@@ -61,6 +63,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public GovernorDisplayPolicy DisplayPolicy { get; internal set; }
 
+        public IEnumerable<SelectListItem> YesNoSelect { get; set; }
         public IEnumerable<SelectListItem> Titles { get; set; }
         public IEnumerable<SelectListItem> PreviousTitles { get; set; }
         public IEnumerable<SelectListItem> AppointingBodies { get; set; }
