@@ -2,6 +2,7 @@ using System;
 using System.Configuration;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
 using Edubase.Common;
@@ -51,6 +52,10 @@ namespace Edubase.Services.ExternalLookup
             var collection = GetCollection(mat);
             var key = $"fscpd-{collection}-{urn}";
             var value = MemoryCache.Default.Get(key);
+
+            var productValue = new ProductInfoHeaderValue("GIAS", "1.0.0");
+            var commentValue = new ProductInfoHeaderValue("(Chrome; Edge; Mozilla; +https://www.get-information-schools.service.gov.uk)");
+
             if (value != null)
             {
                 return (bool) value;
@@ -59,6 +64,9 @@ namespace Edubase.Services.ExternalLookup
             {
                 var cacheTime = ConfigurationManager.AppSettings["FscpdCacheHours"].ToInteger() ?? 8;
                 var request = HeadRestRequest(urn, name, collection);
+
+                request.Headers.UserAgent.Add(productValue);
+                request.Headers.UserAgent.Add(commentValue);
 
                 try
                 {
