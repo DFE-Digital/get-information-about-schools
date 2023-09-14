@@ -25,7 +25,7 @@ namespace Edubase.Services.Governors.Models
         [JsonProperty("lastName")]
         public string Person_LastName { get; set; }
 
-        public int? IsOriginalSignatoryMember { get; set; }
+        public bool? IsOriginalSignatoryMember { get; set; }
 
         [JsonProperty("previousTitleId")]
         public int? PreviousPerson_TitleId { get; set; }
