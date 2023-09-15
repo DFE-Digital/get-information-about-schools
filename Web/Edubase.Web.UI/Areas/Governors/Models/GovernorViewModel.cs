@@ -25,7 +25,9 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         [DisplayName("Last name")]
         public string LastName { get; set; }
 
-        public bool? IsOriginalSignatoryMember { get; set; }    
+        public bool? IsOriginalSignatoryMember { get; set; }
+
+        public bool? IsOriginalChairOfTrustees { get; set; }
 
         [DisplayName("Appointing body")]
         public int? AppointingBodyId { get; set; }
