@@ -31,10 +31,6 @@ $year.blur(checkAndUpdateDate);
 
 checkAndUpdateDate();
 
-if (document.getElementById('IsOriginalSignatoryMember').value === 'true') {
-  $('#AppointingBodyId').val(16);
-}
-
 if (document.getElementById('IsHistoric') && document.getElementById('IsHistoric').value === 'True') {
   $('.warning-message').addClass('hidden');
   const $endDateFields = $('#AppointmentEndDate_Day, #AppointmentEndDate_Month, #AppointmentEndDate_Year');
@@ -46,6 +42,10 @@ if (document.getElementById('IsHistoric') && document.getElementById('IsHistoric
       $endDateFields.off('change');
     }
   });
+}
+
+$('.IsOriginalSignatoryMember').on('change', function () {
+  $('#AppointingBodyId').val(16);
 }
 
 $('.choose-governor').on('change', function () {
