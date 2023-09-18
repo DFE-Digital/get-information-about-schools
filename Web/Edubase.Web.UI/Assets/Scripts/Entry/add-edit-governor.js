@@ -44,10 +44,15 @@ if (document.getElementById('IsHistoric') && document.getElementById('IsHistoric
   });
 }
 
-if (document.getElementById('IsOriginalSignatoryMember').value === 'true') {
-  $("#AppointingBodyId").val(16);
-}
-
+$("#IsOriginalSignatoryMember").on('change', function (e) {
+  if ($("#IsOriginalSignatoryMember").val() === "true") {
+    $("#AppointingBodyId").val(16);
+    $("#AppointingBodyId").prop("disabled", "disabled");
+  } else {
+    $("#AppointingBodyId").prop("disabled", "");
+  }
+});
+ 
 $('.choose-governor').on('change', function () {
   unloadHandler.setExitStatus(true);
 
