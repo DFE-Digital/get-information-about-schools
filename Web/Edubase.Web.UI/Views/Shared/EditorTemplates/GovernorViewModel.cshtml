@@ -45,6 +45,15 @@
     </div>
 }
 
+@if (Model.DisplayPolicy.IsOriginalSignatoryMember)
+{
+    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.IsOriginalSignatoryMember)">
+        @Html.LabelFor(x => x.IsOriginalSignatoryMember, "Original signatory member", new { @class = "govuk-label" })
+        @Html.ValidationMessageFor(x => x.IsOriginalSignatoryMember, null, new { @class = "govuk-error-message" })
+        @Html.DropDownListFor(x => x.IsOriginalSignatoryMember, Model.YesNoSelect, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.IsOriginalSignatoryMember)) })
+    </div>
+}
+
 @if (Model.DisplayPolicy.Id)
 {
     <div class="govuk-form-group">

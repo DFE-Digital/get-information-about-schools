@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +10,7 @@ namespace Edubase.Services.Governors.DisplayPolicies
     {
         public bool Id { get; set; }
         public bool FullName { get; set; }
+        public bool IsOriginalSignatoryMember { get; set; }
         public bool AppointmentStartDate { get; set; }
         public bool AppointmentEndDate { get; set; }
         public bool RoleId { get; set; } = true;
