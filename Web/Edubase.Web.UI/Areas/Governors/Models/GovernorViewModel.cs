@@ -65,7 +65,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public GovernorDisplayPolicy DisplayPolicy { get; internal set; }
 
-        public IEnumerable<SelectListItem> YesNoSelect { get; set; } = new[] { new SelectListItem { Value = "true", Text = "Yes" }, new SelectListItem { Value = "false", Text = "No" } };
+        public IEnumerable<SelectListItem> YesNoSelect { get; set; } = new[] { new SelectListItem { Value = "true", Text = "Yes", }, new SelectListItem { Value = "false", Text = "No", Selected = true } };
         public IEnumerable<SelectListItem> Titles { get; set; }
         public IEnumerable<SelectListItem> PreviousTitles { get; set; }
         public IEnumerable<SelectListItem> AppointingBodies { get; set; }
