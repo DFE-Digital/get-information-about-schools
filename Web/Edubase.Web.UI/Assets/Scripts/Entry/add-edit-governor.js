@@ -44,9 +44,9 @@ if (document.getElementById('IsHistoric') && document.getElementById('IsHistoric
   });
 }
 
-$("#IsOriginalSignatoryMember").on('change', function () {
+if (document.getElementById('IsOriginalSignatoryMember').value === 'true') {
   $("#AppointingBodyId").val(16);
-});
+}
 
 $('.choose-governor').on('change', function () {
   unloadHandler.setExitStatus(true);
