@@ -44,8 +44,8 @@ if (document.getElementById('IsHistoric') && document.getElementById('IsHistoric
   });
 }
 
-$("#IsOriginalSignatoryMember").on('change', function (e) {
-  if ($("#IsOriginalSignatoryMember").val() === "true") {
+$("#IsOriginalChairOfTrustees").on('change', function (e) {
+  if ($("#IsOriginalChairOfTrutees").val() === "true") {
     $("#AppointingBodyId").val(16);
     $("#AppointingBodyId").prop("disabled", "disabled");
   } else {
