@@ -11,6 +11,7 @@ namespace Edubase.Services.Governors.DisplayPolicies
         public bool Id { get; set; }
         public bool FullName { get; set; }
         public bool IsOriginalSignatoryMember { get; set; }
+        public bool IsOriginalChairOfTrustees { get; set; }
         public bool AppointmentStartDate { get; set; }
         public bool AppointmentEndDate { get; set; }
         public bool RoleId { get; set; } = true;

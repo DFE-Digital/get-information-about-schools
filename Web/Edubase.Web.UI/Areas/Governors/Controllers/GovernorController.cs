@@ -346,6 +346,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     viewModel.LastName = model.Person_LastName;
 
                     viewModel.IsOriginalSignatoryMember = model.IsOriginalSignatoryMember;
+                    viewModel.IsOriginalChairOfTrustees = model.IsOriginalChairOfTrustees;
 
                     viewModel.PreviousTitleId = model.PreviousPerson_TitleId;
                     viewModel.PreviousFirstName = model.PreviousPerson_FirstName;
@@ -500,6 +501,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 Person_MiddleName = viewModel.MiddleName,
                 Person_LastName = viewModel.LastName,
                 IsOriginalSignatoryMember = viewModel.IsOriginalSignatoryMember,
+                IsOriginalChairOfTrustees = viewModel.IsOriginalChairOfTrustees,
                 Person_TitleId = viewModel.GovernorTitleId,
                 PreviousPerson_FirstName = viewModel.PreviousFirstName,
                 PreviousPerson_MiddleName = viewModel.PreviousMiddleName,
