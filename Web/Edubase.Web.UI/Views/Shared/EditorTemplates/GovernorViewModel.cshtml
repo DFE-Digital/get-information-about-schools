@@ -54,6 +54,15 @@
     </div>
 }
 
+@if (Model.DisplayPolicy.IsOriginalChairOfTrustees)
+{
+    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.IsOriginalChairOfTrustees)">
+        @Html.LabelFor(x => x.IsOriginalChairOfTrustees, "Original chair of trustees", new { @class = "govuk-label" })
+        @Html.ValidationMessageFor(x => x.IsOriginalChairOfTrustees, null, new { @class = "govuk-error-message" })
+        @Html.DropDownListFor(x => x.IsOriginalChairOfTrustees, Model.YesNoSelect, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.IsOriginalChairOfTrustees)) })
+    </div>
+}
+
 @if (Model.DisplayPolicy.Id)
 {
     <div class="govuk-form-group">
