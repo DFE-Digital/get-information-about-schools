@@ -376,6 +376,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             if (viewModel.GroupTypeId != 11)
             {
                 viewModel.DisplayPolicy.IsOriginalChairOfTrustees = false;
+                viewModel.DisplayPolicy.IsOriginalSignatoryMember = false;
             }
 
             ModelState.Clear();
