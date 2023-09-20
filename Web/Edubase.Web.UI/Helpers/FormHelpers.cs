@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -187,7 +187,7 @@ namespace Edubase.Web.UI.Helpers
             checkbox.Attributes["type"] =  "checkbox";
             checkbox.Attributes["name"] = inputName;
             checkbox.Attributes["value"] = inputValue;
-            checkbox.Attributes["class"] = "govuk-checkboxes__input";
+            checkbox.Attributes["class"] = "govuk-checkboxes__input govuk-input";
 
             if (isChecked)
             {

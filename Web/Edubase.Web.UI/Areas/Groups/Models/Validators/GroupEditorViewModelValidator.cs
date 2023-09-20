@@ -119,14 +119,13 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
 
                 When(x => x.CloseAndMarkAsCreatedInError && x.StatusId == (int) eLookupGroupStatus.Closed, () =>
                 {
-                    RuleFor(x => x.ClosedDate)
-                        .Must(x => false)
-                        .WithMessage("Please enter either a closed date or created in error")
-                        .WithSummaryMessage("Please enter either a closed date or created in error");
-
                     RuleFor(x => x.CloseAndMarkAsCreatedInError)
                         .Must(x => false)
                         .WithMessage("Please enter either a closed date or created in error");
+
+                    RuleFor(x => x.ClosedDate)
+                         .Must(x => false)
+                         .WithMessage("Please enter either a closed date or created in error");
                 });
 
                 When(x => x.CanUserEditClosedDate
