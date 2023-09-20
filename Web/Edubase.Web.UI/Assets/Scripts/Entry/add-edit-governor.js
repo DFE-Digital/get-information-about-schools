@@ -52,6 +52,15 @@ $("#IsOriginalSignatoryMember").on('change', function (e) {
     $("#AppointingBodyId").prop("disabled", "");
   }
 });
+
+$("#IsOriginalChairOfTrustees").on('change', function (e) {
+  if ($("#IsOriginalChairOfTrustees").val() === "true") {
+    $("#AppointingBodyId").val(19);
+    $("#AppointingBodyId").prop("disabled", "disabled");
+  } else {
+    $("#AppointingBodyId").prop("disabled", "");
+  }
+});
  
 $('.choose-governor').on('change', function () {
   unloadHandler.setExitStatus(true);
