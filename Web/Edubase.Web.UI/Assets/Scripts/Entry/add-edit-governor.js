@@ -54,7 +54,7 @@ $("#IsOriginalSignatoryMember").on('change', function (e) {
 });
 
 $("#IsOriginalChairOfTrustees").on('change', function (e) {
-  if ($("#IsOriginalChairOfTrutees").val() === "true") {
+  if ($("#IsOriginalChairOfTrustees").val() === "true") {
     $("#AppointingBodyId").val(16);
     $("#AppointingBodyId").prop("disabled", "disabled");
   } else {
