@@ -373,6 +373,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             viewModel.DisplayPolicy =
                 await _governorsReadService.GetEditorDisplayPolicyAsync(role.Value, groupUId.HasValue, User);
 
+            if (viewModel.GroupTypeId != 11)
+            {
+                viewModel.DisplayPolicy.IsOriginalChairOfTrustees = false;
+                viewModel.DisplayPolicy.IsOriginalSignatoryMember = false;
+            }
+
             ModelState.Clear();
 
             if (replaceGovernorState.AppointmentEndDateDay.HasValue)
