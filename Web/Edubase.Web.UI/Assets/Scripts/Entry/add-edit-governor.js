@@ -55,10 +55,10 @@ $("#IsOriginalSignatoryMember").on('change', function (e) {
 
 $("#IsOriginalChairOfTrustees").on('change', function (e) {
   if ($("#IsOriginalChairOfTrustees").val() === "true") {
-    $("#AppointingBodyId").val(19);
-    $("#AppointingBodyId").prop("disabled", "disabled");
+    $("#AppointingBodyId").val() = document.getElementById('AppointingBodyIdDropDown').value;
+    $("#AppointingBodyIdDropDown").prop("disabled", "disabled");
   } else {
-    $("#AppointingBodyId").prop("disabled", "");
+    $("#AppointingBodyIdDropDown").prop("disabled", "");
   }
 });
  

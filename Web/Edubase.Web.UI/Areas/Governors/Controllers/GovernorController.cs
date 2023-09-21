@@ -492,7 +492,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             var governorModel = new GovernorModel
             {
-                AppointingBodyId = viewModel.AppointingBodyId,
+                AppointingBodyId = viewModel.AppointingBodyIdDropDown,
                 AppointmentEndDate = viewModel.AppointmentEndDate.ToDateTime(),
                 AppointmentStartDate =
                     viewModel.Mode == CreateEditGovernorViewModel.EditMode.Replace
