@@ -240,22 +240,22 @@
                     }
 
 
-
                     @if (Model.CanUserCloseAndMarkAsCreatedInError)
                     {
-                        // var groupTypeShortName = Model.GroupTypeId == 5 ? Model.GroupTypeName.ToLower() : "trust";
 
-                        <div class="govuk-form-group">
-                            @FormHelpers.GiasCheckbox("true",
-                                nameof(Model.CloseAndMarkAsCreatedInError),
-                                Model.CloseAndMarkAsCreatedInErrorLabel,
-                                " govuk-!-padding-top-0",
-                                new { id = "close-created-in-error" })
-                        </div>
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CloseAndMarkAsCreatedInError)">
+                    @Html.ValidationMessageFor(x => x.CloseAndMarkAsCreatedInError, null, new { @class = "govuk-error-message" })
+                    @FormHelpers.GiasCheckbox("true",
+                 nameof(Model.CloseAndMarkAsCreatedInError),
+                 Model.CloseAndMarkAsCreatedInErrorLabel,
+                 " govuk-!-padding-top-0",
+                 new { id = "CloseAndMarkAsCreatedInError" },
+                 Model.CloseAndMarkAsCreatedInError)
+                </div>
                     }
 
                 </div>
-            </div>
+                    </div>
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">

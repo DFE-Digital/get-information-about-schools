@@ -18,12 +18,15 @@ namespace Edubase.Web.UI.Areas.Groups.ViewRulesHandlers
 
         public static bool UserCanCloseAndMarkAsCreatedInError(GroupEditorViewModel viewModel, IPrincipal user)
         {
+            var checkRefreshForCreatedInError = (viewModel.CloseAndMarkAsCreatedInErrorLabel != null) == (viewModel.StatusId.OneOfThese(eLookupGroupStatus.Closed));
+
             return viewModel.GroupType.OneOfThese(eLookupGroupType.MultiacademyTrust,
                                                 eLookupGroupType.SingleacademyTrust,
                                                 eLookupGroupType.SchoolSponsor,
                                                 eLookupGroupType.Federation,
                                                 eLookupGroupType.SecureSingleAcademyTrust)
-                && !viewModel.StatusId.OneOfThese(eLookupGroupStatus.CreatedInError, eLookupGroupStatus.Closed)
+                && !viewModel.StatusId.OneOfThese(eLookupGroupStatus.CreatedInError)
+                && checkRefreshForCreatedInError
                 && user.InRole(AuthorizedRoles.IsAdmin);
         }
 

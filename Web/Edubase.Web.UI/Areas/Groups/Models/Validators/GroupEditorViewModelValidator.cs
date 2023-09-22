@@ -117,6 +117,17 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                     .Must(x => x.IsValid() || x.IsEmpty())
                     .WithMessage(x => $"{x.OpenDateLabel} is invalid. Please enter a valid date");
 
+                When(x => x.CloseAndMarkAsCreatedInError && x.StatusId == (int) eLookupGroupStatus.Closed, () =>
+                {
+                    RuleFor(x => x.CloseAndMarkAsCreatedInError)
+                        .Must(x => false)
+                        .WithMessage("Please enter either a closed date or created in error");
+
+                    RuleFor(x => x.ClosedDate)
+                         .Must(x => false)
+                         .WithMessage("Please enter either a closed date or created in error");
+                });
+
                 When(x => x.CanUserEditClosedDate
                     && x.GroupType == eLookupGroupType.MultiacademyTrust
                     && x.OriginalStatusId != (int) eLookupGroupStatus.Closed
