@@ -73,10 +73,17 @@
 
 @if (Model.DisplayPolicy.AppointingBodyId)
 {
+    //string disabled = "";
+    //if (Model.IsOriginalSignatoryMember == true || Model.IsOriginalChairOfTrustees == true)
+    //{
+    //    disabled = "disabled";
+    //}
+
     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.AppointingBodyIdDropDown)">
         @Html.LabelFor(x => x.AppointingBodyIdDropDown, "Appointing body (required to save record)", new { @class = "govuk-label" })
         @Html.HtmlNewlines(Html.ValidationMessageFor(x => x.AppointingBodyIdDropDown, null, new { @class = "govuk-error-message" }))
-        @Html.DropDownListFor(x => x.AppointingBodyIdDropDown, Model.AppointingBodies, "", new { @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.AppointingBodyIdDropDown)) })
+        @Html.DropDownListFor(x => x.AppointingBodyIdDropDown, Model.AppointingBodies, "", new { @class = string.Concat("govuk-select ",
+                   Html.TextBoxValidationClass(x => x.AppointingBodyIdDropDown))})
     </div>
 }
 
