@@ -32,6 +32,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         [DisplayName("Appointing body")]
         public int? AppointingBodyId { get; set; }
 
+        public int? AppointingBodyIdDropDown { get; set; }
+
         [DisplayName("Date of appointment")]
         public DateTimeViewModel AppointmentStartDate { get; set; } = new DateTimeViewModel();
 
