@@ -18,7 +18,8 @@ namespace Edubase.Web.UI.Areas.Groups.ViewRulesHandlers
 
         public static bool UserCanCloseAndMarkAsCreatedInError(GroupEditorViewModel viewModel, IPrincipal user)
         {
-            var checkRefreshForCreatedInError = (viewModel.CloseAndMarkAsCreatedInErrorLabel != null) == (viewModel.StatusId.OneOfThese(eLookupGroupStatus.Closed));
+            var checkRefreshForCreatedInErrorClosed = (viewModel.CloseAndMarkAsCreatedInErrorLabel != null) == (viewModel.StatusId.OneOfThese(eLookupGroupStatus.Closed));
+            var checkRefreshForCreatedInErrorOpen = (viewModel.CloseAndMarkAsCreatedInErrorLabel != null) == (viewModel.StatusId.OneOfThese(eLookupGroupStatus.Open)) || (viewModel.StatusId.OneOfThese(eLookupGroupStatus.ProposedToOpen));
 
             return viewModel.GroupType.OneOfThese(eLookupGroupType.MultiacademyTrust,
                                                 eLookupGroupType.SingleacademyTrust,
@@ -26,7 +27,7 @@ namespace Edubase.Web.UI.Areas.Groups.ViewRulesHandlers
                                                 eLookupGroupType.Federation,
                                                 eLookupGroupType.SecureSingleAcademyTrust)
                 && !viewModel.StatusId.OneOfThese(eLookupGroupStatus.CreatedInError)
-                && checkRefreshForCreatedInError
+                && checkRefreshForCreatedInErrorClosed || checkRefreshForCreatedInErrorOpen
                 && user.InRole(AuthorizedRoles.IsAdmin);
         }
 
