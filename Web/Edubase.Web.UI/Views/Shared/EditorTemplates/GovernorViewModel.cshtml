@@ -59,7 +59,7 @@
     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.IsOriginalChairOfTrustees)">
         @Html.LabelFor(x => x.IsOriginalChairOfTrustees, "Original chair of trustees", new { @class = "govuk-label" })
         @Html.ValidationMessageFor(x => x.IsOriginalChairOfTrustees, null, new { @class = "govuk-error-message" })
-        @Html.DropDownListFor(x => x.IsOriginalChairOfTrustees, Model.YesNoSelect, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.IsOriginalChairOfTrustees)) })
+        @Html.DropDownListFor(x => x.IsOriginalChairOfTrustees, Model.YesNoSelect, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.IsOriginalChairOfTrustees))})
     </div>
 }
 
@@ -73,17 +73,11 @@
 
 @if (Model.DisplayPolicy.AppointingBodyId)
 {
-    //string disabled = "";
-    //if (Model.IsOriginalSignatoryMember == true || Model.IsOriginalChairOfTrustees == true)
-    //{
-    //    disabled = "disabled";
-    //}
-
-    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.AppointingBodyIdDropDown)">
-        @Html.LabelFor(x => x.AppointingBodyIdDropDown, "Appointing body (required to save record)", new { @class = "govuk-label" })
-        @Html.HtmlNewlines(Html.ValidationMessageFor(x => x.AppointingBodyIdDropDown, null, new { @class = "govuk-error-message" }))
-        @Html.DropDownListFor(x => x.AppointingBodyIdDropDown, Model.AppointingBodies, "", new { @class = string.Concat("govuk-select ",
-                   Html.TextBoxValidationClass(x => x.AppointingBodyIdDropDown))})
+    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.AppointingBodyId)">
+        @Html.LabelFor(x => x.AppointingBodyId, "Appointing body (required to save record)", new { @class = "govuk-label" })
+        @Html.HtmlNewlines(Html.ValidationMessageFor(x => x.AppointingBodyId, null, new { @class = "govuk-error-message" }))
+        @Html.DropDownListFor(x => x.AppointingBodyId, Model.AppointingBodies, "", new { @class = string.Concat("govuk-select ",
+                   Html.TextBoxValidationClass(x => x.AppointingBodyId))})
     </div>
 }
 
