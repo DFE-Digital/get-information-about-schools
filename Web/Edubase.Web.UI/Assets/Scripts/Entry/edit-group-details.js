@@ -20,7 +20,7 @@ if (document.getElementById('close-created-in-error')) {
     $groupTypeLinks = "establishments";
   }
 
-  if ($groupTypeName == 'Secure single-academy trust') {
+  if ($groupTypeName == 'Secure single-academy trust' || 'Single-academy trust') {
     $groupTypeLinks = "academies";
   }
 
