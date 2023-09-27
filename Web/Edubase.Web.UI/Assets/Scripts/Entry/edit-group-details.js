@@ -4,7 +4,7 @@ new GiasAttachUnload({
   fields: $('#main-content').find(':input')
 })
 
-if (document.getElementById('close-created-in-error')) {
+if (document.getElementById('CloseAndMarkAsCreatedInError')) {
   let modalMessage = ' ';
   const form = $('#edit-group-details');
   const $groupTypeName = $("#GroupTypeName").val();
@@ -33,7 +33,9 @@ if (document.getElementById('close-created-in-error')) {
   }
 
   let canCloseImmediately = false;
-  const closeCheckbox = document.getElementById('close-created-in-error');
+
+// id needs to be consistent with id in EditDetails.cshtml
+  const closeCheckbox = document.getElementById('CloseAndMarkAsCreatedInError');
 
   form.on('submit', function(e) {
     if (closeCheckbox.checked && !canCloseImmediately) {
