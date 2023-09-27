@@ -29,6 +29,8 @@ if (document.getElementById('CloseAndMarkAsCreatedInError')) {
   }
 
   let canCloseImmediately = false;
+
+// id needs to be consistent with id in EditDetails.cshtml
   const closeCheckbox = document.getElementById('CloseAndMarkAsCreatedInError');
 
   form.on('submit', function(e) {
