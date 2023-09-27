@@ -18,7 +18,6 @@ namespace Edubase.Web.UI.Areas.Groups.ViewRulesHandlers
 
         public static bool UserCanCloseAndMarkAsCreatedInError(GroupEditorViewModel viewModel, IPrincipal user)
         {
-            // 1st pass
             var checkErrorLabel = viewModel.CloseAndMarkAsCreatedInErrorLabel != null;
             var CheckIfClosed = viewModel.StatusId.OneOfThese(eLookupGroupStatus.Closed);
 
