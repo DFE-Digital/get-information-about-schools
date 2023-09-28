@@ -81,16 +81,14 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public eGovernanceMode? GovernanceMode { get; set; }
 
-        public IEnumerable<LookupDto> Nationalities { get; private set; }
         public IEnumerable<LookupDto> AppointingBodies { get; private set; }
 
-        public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groupUId, int? establishmentUrn, NomenclatureService nomenclatureService, IEnumerable<LookupDto> nationalities, IEnumerable<LookupDto> appointingBodies, GovernorPermissions governorPermissions)
+        public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groupUId, int? establishmentUrn, NomenclatureService nomenclatureService, IEnumerable<LookupDto> appointingBodies, GovernorPermissions governorPermissions)
         {
             _nomenclatureService = nomenclatureService;
             DomainModel = dto;
             EditMode = editMode;
             GroupUId = groupUId;
-            Nationalities = nationalities;
             AppointingBodies = appointingBodies;
             EstablishmentUrn = establishmentUrn;
             GovernorPermissions = governorPermissions;

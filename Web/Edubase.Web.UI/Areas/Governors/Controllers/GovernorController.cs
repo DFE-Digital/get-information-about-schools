@@ -58,6 +58,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         private readonly IGroupReadService _groupReadService;
         private readonly ILayoutHelper _layoutHelper;
         private readonly NomenclatureService _nomenclatureService;
+        private readonly IGovernorsGridViewModelFactory _governorsGridViewModelFactory;
 
         public GovernorController(
             IGovernorsReadService governorsReadService,
@@ -66,7 +67,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             IGovernorsWriteService governorsWriteService,
             IGroupReadService groupReadService,
             IEstablishmentReadService establishmentReadService,
-            ILayoutHelper layoutHelper)
+            ILayoutHelper layoutHelper,
+            IGovernorsGridViewModelFactory gridViewModelFactory)
         {
             _governorsReadService = governorsReadService;
             _nomenclatureService = nomenclatureService;
@@ -75,6 +77,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             _groupReadService = groupReadService;
             _establishmentReadService = establishmentReadService;
             _layoutHelper = layoutHelper;
+            _governorsGridViewModelFactory = gridViewModelFactory;
         }
 
         /// <summary>
@@ -103,7 +106,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 groupUId,
                 establishmentUrn,
                 _nomenclatureService,
-                await _cachedLookupService.NationalitiesGetAllAsync(),
                 await _cachedLookupService.GovernorAppointingBodiesGetAllAsync(),
                 governorPermissions);
 
@@ -229,7 +231,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 // Need to use ASP.NET Core really now; that supports ViewComponents which are apparently the solution.
                 return Task.Run(async () =>
                 {
-                    viewModel = await CreateGovernorsViewModel(groupUId, establishmentUrn);
+                    viewModel = await _governorsGridViewModelFactory.CreateGovernorsViewModel(groupUId, establishmentUrn, user: User);
                     return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
                 }).Result;
             }
@@ -896,7 +898,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 groupUId,
                 establishmentUrn,
                 _nomenclatureService,
-                await _cachedLookupService.NationalitiesGetAllAsync(),
                 await _cachedLookupService.GovernorAppointingBodiesGetAllAsync(),
                 governorPermissions);
 

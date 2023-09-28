@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Edubase.Services.TexunaUnitTests\Edubase.Services.TexunaUnitTests.csproj" />
     <ProjectReference Include="..\Edubase.Web.Resources\Edubase.Web.Resources.csproj" />
   </ItemGroup>
 
