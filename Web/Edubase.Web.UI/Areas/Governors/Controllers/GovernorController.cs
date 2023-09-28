@@ -14,6 +14,7 @@ using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Exceptions;
 using Edubase.Services.Governors;
+using Edubase.Services.Governors.Factories;
 using Edubase.Services.Governors.Models;
 using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
@@ -344,6 +345,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     viewModel.MiddleName = model.Person_MiddleName;
                     viewModel.LastName = model.Person_LastName;
 
+                    viewModel.IsOriginalSignatoryMember = model.IsOriginalSignatoryMember;
+                    viewModel.IsOriginalChairOfTrustees = model.IsOriginalChairOfTrustees;
+
                     viewModel.PreviousTitleId = model.PreviousPerson_TitleId;
                     viewModel.PreviousFirstName = model.PreviousPerson_FirstName;
                     viewModel.PreviousMiddleName = model.PreviousPerson_MiddleName;
@@ -363,11 +367,17 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             await _layoutHelper.PopulateLayoutProperties(viewModel, establishmentUrn, groupUId, User);
 
-            viewModel.GovernorRoleName = _nomenclatureService.GetGovernorRoleName(role.Value);
+            viewModel.GovernorRoleName = GovernorRoleNameFactory.Create(role.Value);
             viewModel.GovernorRole = role.Value;
             await PopulateSelectLists(viewModel);
             viewModel.DisplayPolicy =
                 await _governorsReadService.GetEditorDisplayPolicyAsync(role.Value, groupUId.HasValue, User);
+
+            if (viewModel.GroupTypeId != 11)
+            {
+                viewModel.DisplayPolicy.IsOriginalChairOfTrustees = false;
+                viewModel.DisplayPolicy.IsOriginalSignatoryMember = false;
+            }
 
             ModelState.Clear();
 
@@ -496,6 +506,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 Person_FirstName = viewModel.FirstName,
                 Person_MiddleName = viewModel.MiddleName,
                 Person_LastName = viewModel.LastName,
+                IsOriginalSignatoryMember = viewModel.IsOriginalSignatoryMember,
+                IsOriginalChairOfTrustees = viewModel.IsOriginalChairOfTrustees,
                 Person_TitleId = viewModel.GovernorTitleId,
                 PreviousPerson_FirstName = viewModel.PreviousFirstName,
                 PreviousPerson_MiddleName = viewModel.PreviousMiddleName,
@@ -671,7 +683,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     .ToList(),
                 NewChairType = ReplaceChairViewModel.ChairType.LocalChair,
                 Role = (eLookupGovernorRole) governor.RoleId,
-                RoleName = _nomenclatureService.GetGovernorRoleName((eLookupGovernorRole) governor.RoleId,
+                RoleName = GovernorRoleNameFactory.Create((eLookupGovernorRole) governor.RoleId,
                     eTextCase.Lowerase)
             };
 

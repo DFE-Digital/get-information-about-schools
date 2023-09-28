@@ -205,10 +205,10 @@
     <Compile Include="Exceptions\TexunaApiNotImplementedException.cs" />
     <Compile Include="Exceptions\TexunaApiSystemException.cs" />
     <Compile Include="Exceptions\UsageQuotaExceededException.cs" />
-    <Compile Include="ExternalLookup\CSCPService.cs" />
+    <Compile Include="ExternalLookup\FSCPService.cs" />
     <Compile Include="ExternalLookup\ExternalLookupService.cs" />
     <Compile Include="ExternalLookup\FBService.cs" />
-    <Compile Include="ExternalLookup\ICSCPService.cs" />
+    <Compile Include="ExternalLookup\IFSCPService.cs" />
     <Compile Include="ExternalLookup\IExternalLookupService.cs" />
     <Compile Include="ExternalLookup\IFBService.cs" />
     <Compile Include="Geo\IPlacesLookupService.cs" />
@@ -216,6 +216,7 @@
     <Compile Include="Geo\PlacesLookupService.cs" />
     <Compile Include="Governors\DisplayPolicies\GovernorDisplayPolicy.cs" />
     <Compile Include="Governors\Downloads\GovernorSearchDownloadPayload.cs" />
+    <Compile Include="Governors\Factories\GovernorRoleNameFactory.cs" />
     <Compile Include="Governors\IGovernorsWriteService.cs" />
     <Compile Include="Governors\Models\GovernorAppointment.cs" />
     <Compile Include="Governors\Models\GovernorBulkUpdateValidationResult.cs" />

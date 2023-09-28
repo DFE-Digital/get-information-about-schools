@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -84,8 +84,8 @@ namespace Edubase.Web.UIUnitTests.Helpers
                 DateTime.Now, establishmentTypeId);
 
             Assert.IsType<EstablishmentSearchFilters>(result);
-            Assert.Equal(5, result.TypeIds.Length);
-            Assert.Equal(result.TypeIds,  new[] { 36,37,38,39,40 });
+            Assert.Equal(8, result.TypeIds.Length);
+            Assert.Equal(result.TypeIds,  new[] { 22, 28, 27, 36, 37, 38, 39, 40 });
         }
 
         [Theory]

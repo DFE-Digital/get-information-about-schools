@@ -23,6 +23,8 @@ namespace Edubase.Web.UI
 
     public class StartupSASimulator
     {
+        public static Uri PublicOrigin => string.IsNullOrWhiteSpace(AppSettings[nameof(PublicOrigin)]) ? null : new Uri(AppSettings[nameof(PublicOrigin)]);
+
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
@@ -82,6 +84,12 @@ namespace Edubase.Web.UI
 
             var stubGuid = AppSettings["SASimulatorGuid"];
             var idpUrl = AppSettings["SASimulatorUri"] + stubGuid;
+
+            if (PublicOrigin != null)
+            {
+                // Only set if provided via configuration
+                spOptions.PublicOrigin = PublicOrigin;
+            }
 
             var idp = new IdentityProvider(new EntityId(idpUrl + "/Metadata"), spOptions)
             {
@@ -146,7 +154,7 @@ namespace Edubase.Web.UI
                 new RequestedAttribute("Minimal"));
 
             spOptions.AttributeConsumingServices.Add(attributeConsumingService);
-            
+
             return spOptions;
         }
     }

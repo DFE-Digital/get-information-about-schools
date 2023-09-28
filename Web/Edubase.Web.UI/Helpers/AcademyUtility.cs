@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -86,7 +86,7 @@ namespace Edubase.Web.UI.Helpers
                 StatusIds = new[] { (int) eLookupEstablishmentStatus.ProposedToOpen },
                 //Academy alternative provision =36, Academy alternative provision =37,
                 //Academy special converter =38, Academy 16-19 converter =39, Academy 16 to 19 sponsor led
-                TypeIds = new[] { 36,37,38,39,40 }
+                TypeIds = new[] { 22, 28, 27, 36, 37, 38, 39, 40 }
             };
         }
 

@@ -117,21 +117,21 @@ namespace Edubase.Web.UI.Controllers
         private async Task<string> GetSitemapIndex()
         {
             var urlHelper = this.Url;
-            var urls = new List<string> { urlHelper.AbsoluteActionUrl("SitemapSite", "Sitemap") };
+            var urls = new List<string> { AbsoluteActionUrl(urlHelper, "SitemapSite", "Sitemap") };
 
             foreach (var est in await GetEstablishmentTypes())
             {
-                urls.Add(urlHelper.AbsoluteActionUrl("SitemapEstablishmentByType", "Sitemap", new { estType = est }));
+                urls.Add(AbsoluteActionUrl(urlHelper, "SitemapEstablishmentByType", "Sitemap", new { estType = est }));
             }
 
             foreach (var grp in await GetGroupTypes())
             {
-                urls.Add(urlHelper.AbsoluteActionUrl("SitemapGroupByType", "Sitemap", new { groupType = grp}));
+                urls.Add(AbsoluteActionUrl(urlHelper, "SitemapGroupByType", "Sitemap", new { groupType = grp}));
             }
 
             return BuildSitemapIndexXml(urls);
         }
-        
+
         private async Task<string> GenerateEstablishmentDocument(int estType)
         {
             var siteNodes = await GetEstablishmentNodes(estType, 0.8);
@@ -161,11 +161,9 @@ namespace Edubase.Web.UI.Controllers
 
             return true;
         }
-        
+
         private IReadOnlyCollection<SitemapNode> GetSitemapNodes()
         {
-            var urlHelper = this.Url;
-            string scheme = urlHelper.RequestContext.HttpContext.Request.Url.Scheme;
             List<SitemapNode> nodes = new List<SitemapNode>();
 
             nodes.Add(BuildNode("Index", "Home", null, null, 1, SitemapFrequency.Yearly));
@@ -312,7 +310,7 @@ namespace Edubase.Web.UI.Controllers
             var urlHelper = this.Url;
             var node = new SitemapNode()
             {
-                Url = urlHelper.AbsoluteActionUrl(action, controllerName, routeValues),
+                Url = AbsoluteActionUrl(urlHelper, action, controllerName, routeValues),
                 Priority = priority,
                 Frequency = frequency
             };
@@ -388,6 +386,33 @@ namespace Edubase.Web.UI.Controllers
         private bool ExcludeApiLookup()
         {
             return (ConfigurationManager.AppSettings["SitemapExcludeApi"].ToInteger() ?? 0) != 0;
+        }
+
+        private static string AbsoluteActionUrl(
+            UrlHelper urlHelper,
+            string actionName,
+            string controllerName,
+            object routeValues = null)
+        {
+            var forwardedHeaderAwareUrl = urlHelper.GetForwardedHeaderAwareUrl();
+
+            // Note: Providing the scheme pushes `.Action` to return an absolute URL. Omitting this appears to return a relative URL.
+            var scheme = forwardedHeaderAwareUrl.Scheme;
+            var absoluteActionUrl = urlHelper.Action(actionName, controllerName, routeValues, scheme);
+            if (absoluteActionUrl is null)
+            {
+                return null;
+            }
+
+            // Where the site is accessed via a reverse proxy, the `Host` property of the `UriBuilder` will be incorrect.
+            // For this reason, we replace the `Host` property with the value of the `X-Forwarded-Host` header where present.
+            var uriBuilder = new UriBuilder(absoluteActionUrl)
+            {
+                Host = forwardedHeaderAwareUrl.Host,
+            };
+
+            var newUri = uriBuilder.Uri;
+            return newUri.ToString();
         }
     }
 }

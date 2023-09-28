@@ -20,6 +20,10 @@ if (document.getElementById('close-created-in-error')) {
     $groupTypeLinks = "establishments";
   }
 
+  if ($groupTypeName == 'Secure single-academy trust') {
+    $groupTypeLinks = "academies";
+  }
+
   if($groupTypeName !== 'School sponsor') {
     modalMessage = 'All ' + $groupTypeLinks + ' will be removed on closure.'
   }
