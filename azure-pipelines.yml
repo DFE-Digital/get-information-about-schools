@@ -213,7 +213,6 @@ stages:
           
           ## Deploy to dev "dev" slot (`gias-dev.[...]`)
           - task: AzureRmWebAppDeployment@3
-            name: AzureRmWebAppDeployment9
             displayName: 'Azure App Service Deploy: gias dev - dev slot'
             inputs:
               ConnectedServiceName: a30640cd-437e-4b41-a70a-e524b34af207
@@ -228,7 +227,6 @@ stages:
           
           ## Deploy to dev "main" slot, which integrates with Azure Front Door (ADF) and Web Application Firewall (WAF)
           - task: AzureRmWebAppDeployment@3
-            name: AzureRmWebAppDeployment9
             displayName: 'Azure App Service Deploy: gias dev - main slot'
             inputs:
               ConnectedServiceName: a30640cd-437e-4b41-a70a-e524b34af207
@@ -257,7 +255,6 @@ stages:
           
           ## Deploy to test slot which integrates with DSI
           - task: AzureRmWebAppDeployment@3
-            name: AzureRmWebAppDeployment8
             displayName: 'Azure App Service Deploy: gias-test (incorrectly named stage) - main slot'
             inputs:
               ConnectedServiceName: 1a5298b0-b70f-4e44-b95f-d2150cd48b6f
@@ -296,7 +293,6 @@ stages:
       - job: Deploy
         steps:
           - task: AzureRmWebAppDeployment@3
-            name: AzureRmWebAppDeployment8
             displayName: 'Azure App Service Deploy: ea-edubase-pp - main slot'
             inputs:
               ConnectedServiceName: a8d45022-3bea-4758-b062-35803f1ab081
@@ -322,7 +318,6 @@ stages:
       - job: Deploy
         steps:
           - task: AzureRmWebAppDeployment@3
-            name: AzureRmWebAppDeployment8
             displayName: 'Azure App Service Deploy: ea-edubase-prod - LCS slot'
             inputs:
               ConnectedServiceName: b16e1c9a-3b3d-4d89-a695-d6c2f5bbe724
