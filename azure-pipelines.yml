@@ -84,33 +84,31 @@ stages:
           diagnosticsEnabled: True
 
 
-# - stage: 'DeployDevSandboxHolding'
-#   displayName: 'Deploy to Sandbox Slot Holding'
-#   # Deploy to dev, only if we're currently sandbox holding's branch
-#   condition: and(succeeded(), eq(variables.isHolding, 'true'))
-#   dependsOn:
-#     - BuildAndTest
-#   jobs:
-#     ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
-#     - deployment: devDeploymentEnvironmentCheck
-#       environment: 'gias-dev'
-#       displayName: 'ADO Environment: `gias-dev` (sandbox Holding)'
-
-#     - job: Deploy
-#       steps:
-#         #Holding
-#       - task: AzureRmWebAppDeployment@3
-#         name: AzureRmWebAppDeployment8
-#         displayName: 'Azure App Service Deploy: gias/dev-sandbox-holding'
-#         inputs:
-#           ConnectedServiceName: a30640cd-437e-4b41-a70a-e524b34af207
-#           WebAppName: gias
-#           DeployToSlotFlag: true
-#           ResourceGroupName: rg-t1dv-gias
-#           SlotName: 'dev-sandbox-holding'
-#           Package: $(build.artifactstagingdirectory)/**/Edubase.Web.UI.zip
-#           UseWebDeploy: true
-#           RemoveAdditionalFilesFlag: true
+- stage: 'DeployDevSandboxHolding'
+  displayName: 'Deploy to Sandbox Slot Holding'
+  # Deploy to dev, only if we're currently sandbox holding's branch
+  condition: and(succeeded(), eq(variables.isHolding, 'true'))
+  dependsOn:
+    - BuildAndTest
+  jobs:
+    ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
+    - deployment: devDeploymentEnvironmentCheck
+      environment: 'gias-dev'
+      displayName: 'ADO Environment: `gias-dev` (sandbox Holding)'
+    - job: Deploy
+      steps:
+        #Holding
+      - task: AzureRmWebAppDeployment@3
+        inputs:
+          azureSubscription: 'rg-t1dv-edubase'
+          appType: 'app'
+          WebAppName: 'gias'
+          DeployToSlotFlag: true
+          ResourceGroupName: 'rg-t1dv-gias'
+          SlotName: 'dev-sandbox-holding'
+          Package: '$(build.artifactstagingdirectory)/**/Edubase.Web.UI.zip'
+          UseWebDeploy: true
+          RemoveAdditionalFilesFlag: true
 
 
 # - stage: 'DeployDev'
