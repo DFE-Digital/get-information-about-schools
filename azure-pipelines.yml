@@ -84,6 +84,90 @@ stages:
               diagnosticsEnabled: True
 
 
+  - stage: 'DeployDevSandboxSandbox1'
+    displayName: 'Deploy to Sandbox Slot Sandbox1'
+    # Deploy to dev, only if we're currently sandbox sandbox1's branch
+    condition: and(succeeded(), eq(variables.isSandbox1, 'true'))
+    dependsOn:
+      - BuildAndTest
+    jobs:
+      ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
+      - deployment: devDeploymentEnvironmentCheck
+        environment: 'gias-dev'
+        displayName: 'ADO Environment: `gias-dev` - Sandbox1 slot'
+      - job: Deploy
+        steps:
+          
+          #Sandbox1
+          - task: AzureRmWebAppDeployment@3
+            inputs:
+              azureSubscription: 'rg-t1dv-edubase'
+              appType: 'app'
+              WebAppName: 'gias'
+              DeployToSlotFlag: true
+              ResourceGroupName: 'rg-t1dv-gias'
+              SlotName: 'dev-sandbox-sandbox1'
+              Package: '$(build.artifactstagingdirectory)/**/Edubase.Web.UI.zip'
+              UseWebDeploy: true
+              RemoveAdditionalFilesFlag: true
+
+
+  - stage: 'DeployDevSandboxSandbox2'
+    displayName: 'Deploy to Sandbox Slot Sandbox2'
+    # Deploy to dev, only if we're currently sandbox sandbox2's branch
+    condition: and(succeeded(), eq(variables.isSandbox2, 'true'))
+    dependsOn:
+      - BuildAndTest
+    jobs:
+      ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
+      - deployment: devDeploymentEnvironmentCheck
+        environment: 'gias-dev'
+        displayName: 'ADO Environment: `gias-dev` - Sandbox2 slot'
+      - job: Deploy
+        steps:
+          
+          #Sandbox2
+          - task: AzureRmWebAppDeployment@3
+            inputs:
+              azureSubscription: 'rg-t1dv-edubase'
+              appType: 'app'
+              WebAppName: 'gias'
+              DeployToSlotFlag: true
+              ResourceGroupName: 'rg-t1dv-gias'
+              SlotName: 'dev-sandbox-sandbox2'
+              Package: '$(build.artifactstagingdirectory)/**/Edubase.Web.UI.zip'
+              UseWebDeploy: true
+              RemoveAdditionalFilesFlag: true
+
+
+  - stage: 'DeployDevSandboxSandbox3'
+    displayName: 'Deploy to Sandbox Slot Sandbox3'
+    # Deploy to dev, only if we're currently sandbox sandbox3's branch
+    condition: and(succeeded(), eq(variables.isSandbox3, 'true'))
+    dependsOn:
+      - BuildAndTest
+    jobs:
+      ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
+      - deployment: devDeploymentEnvironmentCheck
+        environment: 'gias-dev'
+        displayName: 'ADO Environment: `gias-dev` - Sandbox3 slot'
+      - job: Deploy
+        steps:
+          
+          #Sandbox3
+          - task: AzureRmWebAppDeployment@3
+            inputs:
+              azureSubscription: 'rg-t1dv-edubase'
+              appType: 'app'
+              WebAppName: 'gias'
+              DeployToSlotFlag: true
+              ResourceGroupName: 'rg-t1dv-gias'
+              SlotName: 'dev-sandbox-sandbox3'
+              Package: '$(build.artifactstagingdirectory)/**/Edubase.Web.UI.zip'
+              UseWebDeploy: true
+              RemoveAdditionalFilesFlag: true
+
+
   - stage: 'DeployDevSandboxHolding'
     displayName: 'Deploy to Sandbox Slot Holding'
     # Deploy to dev, only if we're currently sandbox holding's branch
@@ -94,9 +178,10 @@ stages:
       ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
       - deployment: devDeploymentEnvironmentCheck
         environment: 'gias-dev'
-        displayName: 'ADO Environment: `gias-dev` (sandbox Holding)'
+        displayName: 'ADO Environment: `gias-dev` - Holding slot'
       - job: Deploy
         steps:
+          
           #Holding
           - task: AzureRmWebAppDeployment@3
             inputs:
@@ -111,28 +196,141 @@ stages:
               RemoveAdditionalFilesFlag: true
 
 
-#  - stage: 'DeployDev'
-#    displayName: 'Deploy to Dev'
-#    # Deploy to dev, only if we're currently on the branch `develop`
-#    condition: and(succeeded(), eq(variables.isDevelop, 'true'))
-#    dependsOn:
-#      - BuildAndTest
-#    jobs:
-#      ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
-#      - deployment: devDeploymentEnvironmentCheck
-#        environment: 'gias-dev'
-#        displayName: 'ADO Environment: `gias-dev`'
-#
-#      - job: Deploy
-#        steps:
-#          - task: AzureRmWebAppDeployment@3
-#            name: AzureRmWebAppDeployment9
-#            displayName: 'Azure App Service Deploy: gias dev - main slot'
-#            inputs:
-#              ConnectedServiceName: a30640cd-437e-4b41-a70a-e524b34af207
-#              WebAppKind: webApp
-#              WebAppName: gias
-#              Package: $(build.artifactstagingdirectory)/**/Edubase.Web.UI.zip
-#              UseWebDeploy: true
-#              RemoveAdditionalFilesFlag: true
+  - stage: 'DeployDev'
+    displayName: 'Deploy to Dev'
+    # Deploy to dev, only if we're currently on the dev branch `dev` or the main 'master' branch
+    condition: and(succeeded(), or(eq(variables.isMain, 'true'), eq(variables.isDevelop, 'true')))
+    dependsOn:
+      - BuildAndTest
+    jobs:
+      ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
+      - deployment: devDeploymentEnvironmentCheck
+        environment: 'gias-dev'
+        displayName: 'ADO Environment: `gias-dev`'
+
+      - job: Deploy
+        steps:
+          
+          ## Deploy to dev "dev" slot (`gias-dev.[...]`)
+          - task: AzureRmWebAppDeployment@3
+            name: AzureRmWebAppDeployment9
+            displayName: 'Azure App Service Deploy: gias dev - dev slot'
+            inputs:
+              ConnectedServiceName: a30640cd-437e-4b41-a70a-e524b34af207
+              WebAppKind: webApp
+              WebAppName: gias
+              DeployToSlotFlag: true
+              ResourceGroupName: rg-t1dv-gias
+              SlotName: dev
+              Package: $(build.artifactstagingdirectory)/**/Edubase.Web.UI.zip
+              UseWebDeploy: true
+              RemoveAdditionalFilesFlag: true
+          
+          ## Deploy to dev "main" slot, which integrates with Azure Front Door (ADF) and Web Application Firewall (WAF)
+          - task: AzureRmWebAppDeployment@3
+            name: AzureRmWebAppDeployment9
+            displayName: 'Azure App Service Deploy: gias dev - main slot'
+            inputs:
+              ConnectedServiceName: a30640cd-437e-4b41-a70a-e524b34af207
+              WebAppKind: webApp
+              WebAppName: gias
+              ResourceGroupName: rg-t1dv-gias
+              Package: $(build.artifactstagingdirectory)/**/Edubase.Web.UI.zip
+              UseWebDeploy: true
+              RemoveAdditionalFilesFlag: true
+
+
+  - stage: 'DeployTest'
+    displayName: 'Deploy to Test (stage)'
+    # Deploy to test, only if we're currently on the main branch as part of a release
+    condition: and(succeeded(), eq(variables.isMain, 'true'))
+    dependsOn:
+      - DeployDev
+    jobs:
+      ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
+      - deployment: testDeploymentEnvironmentCheck
+        environment: 'gias-test'
+        displayName: 'ADO Environment: `gias-test`'
+
+      - job: Deploy
+        steps:
+          
+          ## Deploy to test slot which integrates with DSI
+          - task: AzureRmWebAppDeployment@3
+            name: AzureRmWebAppDeployment8
+            displayName: 'Azure App Service Deploy: gias-test (incorrectly named stage) - main slot'
+            inputs:
+              ConnectedServiceName: 1a5298b0-b70f-4e44-b95f-d2150cd48b6f
+              WebAppName: gias-stage
+              ResourceGroupName: rg-t1te-gias
+              Package: $(build.artifactstagingdirectory)/**/Edubase.Web.UI.zip
+              UseWebDeploy: true
+              RemoveAdditionalFilesFlag: true
+          
+          ## Deploy to test slot which integrates with DSI Simulator (SIS)
+          - task: AzureRmWebAppDeployment@3
+            displayName: 'Azure App Service Deploy: gias-test (incorrectly named stage) - sis slot'
+            inputs:
+              ConnectedServiceName: 1a5298b0-b70f-4e44-b95f-d2150cd48b6f
+              WebAppName: gias-stage
+              DeployToSlotFlag: true
+              ResourceGroupName: rg-t1te-gias
+              SlotName: sis
+              Package: $(build.artifactstagingdirectory)/**/Edubase.Web.UI.zip
+              UseWebDeploy: true
+              RemoveAdditionalFilesFlag: true
+
+
+  - stage: 'DeployPreProduction'
+    displayName: 'Deploy to Pre-Production (Pre-Prod)'
+    # Deploy to pre-prod, only if we're currently on the main branch as part of a release
+    condition: and(succeeded(), eq(variables.isMain, 'true'))
+    dependsOn:
+      - DeployTest
+    jobs:
+      ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
+      - deployment: preProductionDeploymentEnvironmentCheck
+        environment: 'gias-pre-prod'
+        displayName: 'ADO Environment: `gias-pre-prod`'
+
+      - job: Deploy
+        steps:
+          - task: AzureRmWebAppDeployment@3
+            name: AzureRmWebAppDeployment8
+            displayName: 'Azure App Service Deploy: ea-edubase-pp - main slot'
+            inputs:
+              ConnectedServiceName: a8d45022-3bea-4758-b062-35803f1ab081
+              WebAppName: ea-edubase-pp
+              ResourceGroupName: rg-t1pp-edubase
+              Package: $(build.artifactstagingdirectory)/**/Edubase.Web.UI.zip
+              UseWebDeploy: true
+              RemoveAdditionalFilesFlag: true
+
+
+  - stage: 'DeployProductionLcs'
+    displayName: 'Deploy to Production (LCS slot only)'
+    # Deploy to production, only if we're currently on the main branch as part of a release
+    condition: and(succeeded(), eq(variables.isMain, 'true'))
+    dependsOn:
+      - DeployPreProduction
+    jobs:
+      ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
+      - deployment: productionDeploymentEnvironmentCheck
+        environment: 'gias-prod'
+        displayName: 'ADO Environment: `gias-prod`'
+
+      - job: Deploy
+        steps:
+          - task: AzureRmWebAppDeployment@3
+            name: AzureRmWebAppDeployment8
+            displayName: 'Azure App Service Deploy: ea-edubase-prod - LCS slot'
+            inputs:
+              ConnectedServiceName: b16e1c9a-3b3d-4d89-a695-d6c2f5bbe724
+              WebAppName: ea-edubase-prod
+              DeployToSlotFlag: true
+              ResourceGroupName: rg-t1pr-edubase
+              SlotName: lcs
+              Package: $(build.artifactstagingdirectory)/**/Edubase.Web.UI.zip
+              UseWebDeploy: true
+              RemoveAdditionalFilesFlag: true
 
