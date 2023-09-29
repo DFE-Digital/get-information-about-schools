@@ -89,7 +89,7 @@ stages:
   # Deploy to dev, only if we're currently sandbox holding's branch
   condition: and(succeeded(), eq(variables.isHolding, 'true'))
   dependsOn:
-    - BuildAndPackage
+    - BuildAndTest
   jobs:
     ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
     - deployment: devDeploymentEnvironmentCheck
@@ -118,7 +118,7 @@ stages:
   # Deploy to dev, only if we're currently on the branch `develop`
   condition: and(succeeded(), eq(variables.isDevelop, 'true'))
   dependsOn:
-    - BuildAndPackage
+    - BuildAndTest
   jobs:
     ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
     - deployment: devDeploymentEnvironmentCheck
