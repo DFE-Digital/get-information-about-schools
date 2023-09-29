@@ -59,7 +59,7 @@ stages:
         inputs:
           command: 'custom'
           workingDir: 'Web/Edubase.Web.UI'
-          customCommand: 'buildCi'
+          customCommand: 'run buildCi'
 
 
       - task: VSBuild@1
