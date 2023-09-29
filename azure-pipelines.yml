@@ -32,12 +32,12 @@ stages:
         clean: true
         fetchTags: true
 
-      ## This step existed in classic pipeline, so retaining for now
-      - task: PowerShell@1
-        name: PowerShell1
-        displayName: Version assemblies
-        inputs:
-          scriptName: ApplyVersionToAssemblies.ps1
+      # ## This step existed in classic pipeline, so retaining for now
+      # - task: PowerShell@1
+      #   name: PowerShell1
+      #   displayName: Version assemblies
+      #   inputs:
+      #     scriptName: ApplyVersionToAssemblies.ps1
 
       - task: NuGetToolInstaller@1
 
