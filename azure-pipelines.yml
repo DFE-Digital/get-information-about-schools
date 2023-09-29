@@ -1,0 +1,149 @@
+trigger:
+  branches:
+    include:
+      ## Include all branches for this pipeline execution trigger - this will allow build and package to run for all changes.
+      ## Note that _deployments_ have additional conditions applied:
+      ##  - dev/sandbox environments are controlled via `variables` which can conditionally run the stage based on logic such as branch name.
+      ##  - higher-than-dev must first go via dev, and then be manually approved/promoted to higher environments.
+      - '*'
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+  isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
+  isDevelop: $[eq(variables['Build.SourceBranch'], 'refs/heads/dev')]
+  isSandbox1: $[eq(variables['Build.SourceBranch'], 'refs/heads/epic/governance-professional')]
+  isSandbox2: false   # currently unused
+  isSandbox3: false   # currently unused
+  isHolding:  true    # currently unused
+
+  
+stages:
+- stage: BuildAndTest
+  jobs:
+  - job: BuildAndTestJob
+    steps:
+      - checkout: self
+        clean: true
+        fetchTags: true
+
+      ## This step existed in classic pipeline, so retaining for now
+      - task: PowerShell@1
+        name: PowerShell1
+        displayName: Version assemblies
+        inputs:
+          scriptName: ApplyVersionToAssemblies.ps1
+
+      - task: NuGetToolInstaller@1
+
+      - task: NuGetCommand@2
+        inputs:
+          restoreSolution: '$(solution)'
+
+      - task: NodeTool@0
+        inputs:
+          versionSource: 'spec'
+          versionSpec: '18.x'
+
+      - task: Npm@1
+        inputs:
+          command: 'install'
+          workingDir: 'Web/Edubase.Web.UI'
+
+      - task: Npm@1
+        inputs:
+          command: 'custom'
+          workingDir: 'Web/Edubase.Web.UI'
+          customCommand: 'buildCi'
+
+
+      - task: VSBuild@1
+        inputs:
+          solution: '$(solution)'
+          ## Auto-suggested args:
+          #msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+          ## Old/previous args:
+          msbuildArgs: /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)\\" /p:PrecompileBeforePublish=true /p:UseMerge=true /p:SingleAssemblyName=AppCode /p:RunCodeAnalysis=true
+          platform: '$(buildPlatform)'
+          configuration: '$(buildConfiguration)'
+
+      - task: VSTest@2
+        inputs:
+          platform: '$(buildPlatform)'
+          configuration: '$(buildConfiguration)'
+          testAssemblyVer2: >-
+            **\*unittest*.dll
+
+            !**\obj\**
+          codeCoverageEnabled: true
+          diagnosticsEnabled: True
+
+
+- stage: 'DeployDevSandboxHolding'
+  displayName: 'Deploy to Sandbox Slot Holding'
+  # Deploy to dev, only if we're currently sandbox holding's branch
+  condition: and(succeeded(), eq(variables.isHolding, 'true'))
+  dependsOn:
+    - BuildAndPackage
+  jobs:
+    ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
+    - deployment: devDeploymentEnvironmentCheck
+      environment: 'gias-dev'
+      displayName: 'ADO Environment: `gias-dev` (sandbox Holding)'
+
+    - job: Deploy
+      steps:
+        #Holding
+      - task: AzureRmWebAppDeployment@3
+        name: AzureRmWebAppDeployment8
+        displayName: 'Azure App Service Deploy: gias/dev-sandbox-holding'
+        inputs:
+          ConnectedServiceName: a30640cd-437e-4b41-a70a-e524b34af207
+          WebAppName: gias
+          DeployToSlotFlag: true
+          ResourceGroupName: rg-t1dv-gias
+          SlotName: 'dev-sandbox-holding'
+          Package: $(build.artifactstagingdirectory)/**/Edubase.Web.UI.zip
+          UseWebDeploy: true
+          RemoveAdditionalFilesFlag: true
+
+
+- stage: 'DeployDev'
+  displayName: 'Deploy to Dev'
+  # Deploy to dev, only if we're currently on the branch `develop`
+  condition: and(succeeded(), eq(variables.isDevelop, 'true'))
+  dependsOn:
+    - BuildAndPackage
+  jobs:
+    ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
+    - deployment: devDeploymentEnvironmentCheck
+      environment: 'gias-dev'
+      displayName: 'ADO Environment: `gias-dev`'
+
+    - job: Deploy
+      steps:
+      - task: AzureRmWebAppDeployment@3
+        name: AzureRmWebAppDeployment9
+        displayName: 'Azure App Service Deploy: gias dev - main slot'
+        inputs:
+          ConnectedServiceName: a30640cd-437e-4b41-a70a-e524b34af207
+          WebAppKind: webApp
+          WebAppName: gias
+          Package: $(build.artifactstagingdirectory)/**/Edubase.Web.UI.zip
+          UseWebDeploy: true
+          RemoveAdditionalFilesFlag: true
+
+
+
+
+
+
+
+
+
+
