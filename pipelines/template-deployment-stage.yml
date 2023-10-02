@@ -1,0 +1,126 @@
+﻿parameters:
+
+  # Runner and job/step settings
+  - name: enabled
+    default: 'true'
+  - name: vmImage
+    default: 'windows-latest'
+
+  # Naming settings
+  - name: thisJobName
+
+  # Key Vault settings
+  - name: keyVaultServiceConnectionName
+  - name: keyVaultName
+
+  # Build and deploy settings
+  - name: deploymentServiceConnectionName
+  - name: artifactReference
+    default: 'BuiltAndPackagedWebUiZip'
+  - name: destinationResourceGroupName
+  - name: destinationWebAppName
+  - name: destinationDeployToSlotFlag
+  - name: destinationSlotName
+    default: ''
+
+
+jobs:
+
+  - job: ${{ parameters.thisJobName }}
+    displayName: Deploy - ${{ parameters.thisJobName }}
+    condition: eq(${{ parameters.enabled }}, 'true')
+    variables:
+      BRANCH_NAME: $[replace(variables['Build.SourceBranch'], 'refs/heads/', '')]
+      BRANCH_NAME_NORMALISED: $[replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), '/', '_')]
+
+    steps:
+
+      ## Debugging assistance task - display all variables and parameters
+      - task: PowerShell@2
+        displayName: Display variables
+        inputs:
+          targetType: 'inline'
+          script: |
+            ## Log all variables
+            Write-Host "Variables:"
+            #Write-Host "- BRANCH_NAME: $( BRANCH_NAME )"
+            #Write-Host "- BRANCH_NAME_NORMALISED: $( BRANCH_NAME_NORMALISED )"
+
+      ## Debugging assistance task - display all variables and parameters
+      - task: PowerShell@2
+        displayName: Display parameters
+        inputs:
+          targetType: 'inline'
+          script: |
+            ## Log all parameters
+            Write-Host "Parameters:"
+            Write-Host "- enabled: ${{ parameters.enabled }}"
+            Write-Host "- vmImage: ${{ parameters.vmImage }}"
+            Write-Host "- thisJobName: ${{ parameters.thisJobName }}"
+            Write-Host "- keyVaultServiceConnectionName: ${{ parameters.keyVaultServiceConnectionName }}"
+            Write-Host "- keyVaultName: ${{ parameters.keyVaultName }}"
+            Write-Host "- deploymentServiceConnectionName: ${{ parameters.deploymentServiceConnectionName }}"
+            Write-Host "- artifactReference: ${{ parameters.artifactReference }}"
+            Write-Host "- destinationResourceGroupName: ${{ parameters.destinationResourceGroupName }}"
+            Write-Host "- destinationWebAppName: ${{ parameters.destinationWebAppName }}"
+            Write-Host "- destinationDeployToSlotFlag: ${{ parameters.destinationDeployToSlotFlag }}"
+            Write-Host "- destinationSlotName: ${{ parameters.destinationSlotName }}"
+
+
+      - checkout: self
+        submodules: recursive
+
+      - task: AzureKeyVault@2
+        displayName: 'Azure Key Vault: ${{ parameters.keyVaultName }}'
+        inputs:
+          azureSubscription: '${{ parameters.keyVaultServiceConnectionName }}'
+          KeyVaultName: '${{ parameters.keyVaultName }}'
+          SecretsFilter: '*'
+          RunAsPreJob: false
+
+      - task: CmdLine@2
+        displayName: File listing - artifact staging dir - $(Pipeline.Workspace)
+        inputs:
+          script: |
+            tree $(Pipeline.Workspace)
+            dir $(Pipeline.Workspace)
+
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: ${{ parameters.artifactReference }}
+          targetPath: '$(Pipeline.Workspace)'
+
+      - task: CmdLine@2
+        displayName: File listing - artifact staging dir - $(Pipeline.Workspace)
+        inputs:
+          script: |
+            tree $(Pipeline.Workspace)
+            dir $(Pipeline.Workspace)
+      
+      #Holding
+      - task: AzureRmWebAppDeployment@4
+        name: DeployWebAppTask
+        inputs:
+          ConnectionType: 'AzureRM'
+          ## Service connection name (to deploy to Azure) when using a service connection (AzureRM)
+          azureSubscription: ${{ parameters.deploymentServiceConnectionName }}
+          
+          ## Destination resource details
+          ResourceGroupName: ${{ parameters.destinationResourceGroupName }}
+          WebAppName: ${{ parameters.destinationWebAppName }}
+          deployToSlotOrASE: ${{ parameters.destinationDeployToSlotFlag }}
+          SlotName: ${{ parameters.destinationSlotName }}
+          
+          ## Deployment process configuration
+          Package: '$(Pipeline.Workspace)/Edubase.Web.UI.zip'
+          ### appType (alias WebAppKind) of `webApp` is specifically "Web App on Windows" (required due to use of .NET Framework)
+          appType: 'webApp'
+          ### Explicitly opt in for web deployment (as opposed to auto-detect)
+          enableCustomDeployment: true
+          DeploymentType: 'webDeploy'
+          
+          ## Additional deployment options
+          RemoveAdditionalFilesFlag: true
+          TakeAppOfflineFlag: true
+
