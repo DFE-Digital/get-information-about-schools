@@ -7,6 +7,7 @@ trigger:
       ##  - higher-than-dev must first go via dev, and then be manually approved/promoted to higher environments.
       - '*'
 
+
 pool:
   vmImage: 'windows-latest'
 
