@@ -167,7 +167,7 @@ else if (Model.WarningsToProcess.SingleOrDefault(x => x.Code == GroupEditorViewM
             <p tabindex="0" id="model-desc">@warning.Message</p>
         </div>
         <div class="button-row">
-            <button type="submit" name="action" value="save" class="govuk-button">Proceed</button>
+            <button type="submit" id = "proceed-button" name="action" value="save" class="govuk-button">Proceed</button>
             @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
         </div>
     </div>
