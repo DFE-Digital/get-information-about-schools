@@ -70,6 +70,7 @@
 
 @using (Html.BeginRouteForm(Model.Id == null ? "PostCreateBanner" : "PostEditBanner", new { Model.Id }, FormMethod.Post))
 {
+    @Html.AntiForgeryToken()
     <div class="button-row govuk-!-margin-bottom-4">
         @if (Model.Action == eNotificationBannerAction.Start)
         {

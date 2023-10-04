@@ -33,7 +33,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View(ViewName);
         }
 
-        [Route("bulk-create-free-schools", Name = "BulkCreateFreeSchoolsPost"), HttpPost]
+        [Route("bulk-create-free-schools", Name = "BulkCreateFreeSchoolsPost"), HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> ProcessBulkCreateFreeSchoolsAsync(BulkCreateFreeSchoolsViewModel viewModel)
         {
             if (ModelState.IsValid)

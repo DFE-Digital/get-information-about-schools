@@ -24,6 +24,7 @@
 
 @using (Html.BeginRouteForm("BulkCreateFreeSchoolsPost", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
+    @Html.AntiForgeryToken()
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <h1 class="govuk-heading-xl">Bulk create new free schools</h1>

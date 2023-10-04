@@ -5,6 +5,7 @@
 
 @using (Html.BeginRouteForm("AddOrReplaceEstablishmentAddressPost", new { Model.Target }, FormMethod.Post))
 {
+    @Html.AntiForgeryToken()
     @Html.HiddenFor(x => x.AddressLookupResultJsonToken)
     @Html.HiddenFor(x => x.CountiesJsonToken)
     @Html.HiddenFor(x => x.CountriesJsonToken)

@@ -83,7 +83,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
 
-        [Route("Article/New", Name = "PostCreateArticle"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Article/New", Name = "PostCreateArticle"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateArticleAsync(NewsArticleViewModel viewModel)
         {
             return await ProcessEditArticle(viewModel);
@@ -105,7 +105,7 @@ namespace Edubase.Web.UI.Controllers
             });
         }
 
-        [Route("Article/{id}/Edit", Name = "PostEditArticle"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Article/{id}/Edit", Name = "PostEditArticle"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> EditArticleAsync(NewsArticleViewModel viewModel)
         {
             var item = await _newsRepository.GetAsync(viewModel.Id);

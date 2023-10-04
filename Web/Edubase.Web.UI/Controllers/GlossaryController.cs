@@ -46,7 +46,7 @@ namespace Edubase.Web.UI.Controllers
             });
         }
 
-        [Route("Edit/{id}", Name = "PostEditGlossaryItem"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Edit/{id}", Name = "PostEditGlossaryItem"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> EditAsync(GlossaryItemViewModel viewModel)
         {
             var item = await _glossaryRepository.GetAsync(viewModel.Id);
@@ -68,7 +68,7 @@ namespace Edubase.Web.UI.Controllers
             else return View("CreateEdit", viewModel);
         }
 
-        [Route("Create", Name = "PostCreateGlossaryItem"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Create", Name = "PostCreateGlossaryItem"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateAsync(GlossaryItemViewModel viewModel)
         {
             if (ModelState.IsValid)

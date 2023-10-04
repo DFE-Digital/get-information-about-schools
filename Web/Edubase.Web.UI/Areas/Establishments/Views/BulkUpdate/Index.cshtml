@@ -112,6 +112,7 @@
 
                 using (Html.BeginRouteForm("DownloadExtract", FormMethod.Post))
                 {
+                    @Html.AntiForgeryToken()
                     @Html.Hidden("id", @Model.Result.Id)
                     @Html.Hidden("path", path)
 
@@ -137,6 +138,7 @@
 
     @using (Html.BeginRouteForm("ProcessBulkUpdate", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
+        @Html.AntiForgeryToken()
         <div class="govuk-grid-column-one-half">
             <div class="govuk-form-group  @Html.ValidationCssClassFor(x => x.BulkFile)">
                 <label for="BulkFile" class="govuk-label">Upload a file</label>

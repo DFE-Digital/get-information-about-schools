@@ -30,7 +30,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [Route(BaseUri, Name = "BulkAssociateEstabs2Groups"), HttpGet]
         public ActionResult Index() => View(ViewName);
 
-        [Route(BaseUri, Name = "BulkAssociateEstabs2GroupsPost"), HttpPost]
+        [Route(BaseUri, Name = "BulkAssociateEstabs2GroupsPost"), HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> ProcessBulkAssociateEstabs2GroupsAsync(BulkAssociateEstabs2GroupsViewModel viewModel)
         {
             if (ModelState.IsValid)
