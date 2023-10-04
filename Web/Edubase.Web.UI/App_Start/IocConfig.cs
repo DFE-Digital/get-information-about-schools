@@ -48,7 +48,6 @@ using Edubase.Services.Texuna.Lookup;
 using Edubase.Services.Texuna.Security;
 using Edubase.Services.Texuna.Serialization;
 using Edubase.Web.Resources;
-using Edubase.Web.UI.Areas;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Validation;
@@ -203,7 +202,6 @@ namespace Edubase.Web.UI
             builder.RegisterType<NotificationBannerRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NotificationTemplateRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NewsArticleRepository>().AsSelf().SingleInstance();
-            builder.RegisterType<GovernorsGridViewModelFactory>().As<IGovernorsGridViewModelFactory>();
         }
 
         public static JsonMediaTypeFormatter CreateJsonMediaTypeFormatter()
@@ -221,9 +219,21 @@ namespace Edubase.Web.UI
 
         public static HttpClient CreateHttpClient()
         {
+            var baseAddress = ConfigurationManager.AppSettings["TexunaApiBaseAddress"];
+            if(string.IsNullOrWhiteSpace(baseAddress))
+            {
+                throw new Exception("TexunaApiBaseAddress is not set in the web.config");
+            }
+
+            if (!baseAddress.EndsWith("/", StringComparison.Ordinal))
+            {
+                throw new Exception("TexunaApiBaseAddress must end with a trailing slash");
+            }
+
+
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
             {
-                BaseAddress = new Uri(ConfigurationManager.AppSettings["TexunaApiBaseAddress"]),
+                BaseAddress = new Uri(baseAddress),
                 Timeout = TimeSpan.FromSeconds(180)
             };
 
@@ -285,6 +295,16 @@ namespace Edubase.Web.UI
         public static HttpClient CreateLookupClient(string lookupApiAddress,
             string lookupApiUsername, string lookupApiPassword)
         {
+            if (string.IsNullOrWhiteSpace(lookupApiAddress))
+            {
+                throw new Exception("LookupApiBaseAddress is not set in the web.config");
+            }
+
+            if(!lookupApiAddress.EndsWith("/", StringComparison.Ordinal))
+            {
+                throw new Exception("LookupApiBaseAddress must end with a trailing slash");
+            }
+
             var lookupUri = new Uri(lookupApiAddress);
 
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
