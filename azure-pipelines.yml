@@ -537,7 +537,7 @@ stages:
 #          vmImage: 'windows-latest'
 #          thisJobName: 'DeployWebUiTestSlotSignInSimulatorJob'
 #          keyVaultServiceConnectionName: 'rg-t1te-edubase'
-#          keyVaultName: 'kv-t1te-edubase'
+#          keyVaultName: 'kv-t1te-edubase01'
 #          deploymentServiceConnectionName: 'rg-t1te-gias'
 #          artifactReference: 'BuiltAndPackagedWebUiZip'
 #          destinationResourceGroupName: 'rg-t1te-gias'
@@ -553,7 +553,7 @@ stages:
 #          thisJobName: 'smokeTestGiasWebUiTestSlotSignInSimulatorJobWebRoot'
 #          previousDeploymentJobName: 'DeployWebUiTestSlotSignInSimulatorJob'
 #          keyVaultServiceConnectionName: 'rg-t1te-edubase'
-#          keyVaultName: 'kv-t1te-edubase'
+#          keyVaultName: 'kv-t1te-edubase01'
 #          smokeTestUrl: '/'                                                     # Relative to the root of the web app
 #          smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
 #          smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
@@ -623,7 +623,7 @@ stages:
 #          destinationResourceGroupName: 'rg-t1te-gias'
 #          destinationWebAppName: 'gias'
 #          destinationDeployToSlotFlag: false
-#          #destinationSlotName: 'test'
+#          #destinationSlotName: ''
 #      
 #      ## Smoke test the base URL to prove that the code has been deployed
 #      - template: 'pipelines/template-smoke-test-deployment.yml'
@@ -660,55 +660,164 @@ stages:
 #          smokeTestMaximumDurationMinutes: 5                                        # C# Web App normally starts up very fast (should normally be available near immediately) 
 
 
+  ## Run this deploy stage only if conditions met to deploy to this environment
+  - stage: 'DeployPreProductionSlotMain'
+    displayName: 'Deploy to PreProduction (main slot)'
+    condition: and(succeeded(), eq(variables.isRelease, 'true'))
+    dependsOn:
+      - SetupVariablesStage
+      - BuildAndTestAndPackageStage
+#      - DeployTestSlotMain                                     # Disabled pending setup of service connection for test
+#      - DeployTestSlotSignInSimulator                          # Disabled pending setup of service connection for test
+      - DeployDevSlotMain                                       # TEMPORARY 
+      - DeployDevSlotDev                                        # TEMPORARY
+    variables:
+      version: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.version'] ]
+      versionNoPadding: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.versionNoPadding'] ]
+    jobs:
 
-#  - stage: 'DeployPreProduction'
-#    displayName: 'Deploy to Pre-Production (Pre-Prod)'
-#    ## Deploy to pre-prod, only if we're currently on the main branch as part of a release
-#    condition: and(succeeded(), eq(variables.isRelease, 'true'))
-#    dependsOn:
-#      - DeployTest
-#    jobs:
-#      ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
-#      - deployment: preProductionDeploymentEnvironmentCheck
-#        environment: 'gias-pre-prod'
-#        displayName: 'ADO Environment: `gias-pre-prod`'
-#
-#      - job: Deploy
-#        steps:
-#          - task: AzureRmWebAppDeployment@3
-#            displayName: 'Azure App Service Deploy: ea-edubase-pp - main slot'
-#            inputs:
-#              ConnectedServiceName: a8d45022-3bea-4758-b062-35803f1ab081
-#              WebAppName: ea-edubase-pp
-#              ResourceGroupName: rg-t1pp-edubase
-#              Package: $(build.artifactstagingdirectory)/**/Edubase.Web.UI.zip
-#              UseWebDeploy: true
-#              RemoveAdditionalFilesFlag: true
-#
-#
-#  - stage: 'DeployProductionLcs'
-#    displayName: 'Deploy to Production (LCS slot only)'
-#    ## Deploy to production, only if we're currently on the main branch as part of a release
-#    condition: and(succeeded(), eq(variables.isRelease, 'true'))
-#    dependsOn:
-#      - DeployPreProduction
-#    jobs:
-#      ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
-#      - deployment: productionDeploymentEnvironmentCheck
-#        environment: 'gias-prod'
-#        displayName: 'ADO Environment: `gias-prod`'
-#
-#      - job: Deploy
-#        steps:
-#          - task: AzureRmWebAppDeployment@3
-#            displayName: 'Azure App Service Deploy: ea-edubase-prod - LCS slot'
-#            inputs:
-#              ConnectedServiceName: b16e1c9a-3b3d-4d89-a695-d6c2f5bbe724
-#              WebAppName: ea-edubase-prod
-#              DeployToSlotFlag: true
-#              ResourceGroupName: rg-t1pr-edubase
-#              SlotName: lcs
-#              Package: $(build.artifactstagingdirectory)/**/Edubase.Web.UI.zip
-#              UseWebDeploy: true
-#              RemoveAdditionalFilesFlag: true
+      ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
+      - deployment: testDeploymentEnvironmentCheck
+        environment: 'gias-pre-prod'
+        displayName: 'ADO Environment: `gias-pre-prod`'
+
+      ## Debugging assistance job - display variables
+      - job: DisplayVariablesJob
+        steps:
+          - task: PowerShell@2
+            displayName: Display variables
+            inputs:
+              targetType: 'inline'
+              script: |
+                Write-Host "version: $(version)"
+                Write-Host "versionNoPadding: $(versionNoPadding)"
+
+      ## Deploy the packaged and tested code
+      - template: 'pipelines/template-deployment-stage.yml'
+        parameters:
+          enabled: 'true'
+          vmImage: 'windows-latest'
+          thisJobName: 'DeployWebUiPreProductionSlotMainJob'
+          keyVaultServiceConnectionName: 'rg-t1pp-edubase'
+          keyVaultName: 'kv-t1pp-edubase'
+          deploymentServiceConnectionName: 'rg-t1pp-edubase'                        ## Note change of naming convention from lower environments 
+          artifactReference: 'BuiltAndPackagedWebUiZip'
+          destinationResourceGroupName: 'rg-t1pp-gias'
+          destinationWebAppName: 'ea-edubase-pp'                                    ## Note change of naming convention from lower environments
+          destinationDeployToSlotFlag: false
+          #destinationSlotName: ''
+
+      ## Smoke test the base URL to prove that the code has been deployed
+      - template: 'pipelines/template-smoke-test-deployment.yml'
+        parameters:
+          enabled: 'true'
+          vmImage: 'ubuntu-latest'
+          thisJobName: 'smokeTestGiasWebUiPreProductionSlotMainJobWebRoot'
+          previousDeploymentJobName: 'DeployWebUiPreProductionSlotMainJob'
+          keyVaultServiceConnectionName: 'rg-t1pp-edubase'
+          keyVaultName: 'kv-t1pp-edubase'
+          smokeTestUrl: '/'                                                         # Relative to the root of the web app
+          smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'       # Note this is specifically the username key, not the username itself
+          smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'       # Note this is specifically the password key, not the password itself
+          smokeTestNeedleString: $(versionNoPadding)
+          smokeTestDurationBetweenRequestsSeconds: 5
+          smokeTestMaximumDurationMinutes: 5                                        # C# Web App normally starts up very fast (should normally be available near immediately)
+
+      ## Smoke test a URL which exercises the API and file storage connections, to prove that the code+configuration works with background services
+      - template: 'pipelines/template-smoke-test-deployment.yml'
+        parameters:
+          enabled: 'true'
+          vmImage: 'ubuntu-latest'
+          thisJobName: 'smokeTestGiasWebUiPreProductionSlotMainJobDownloadsPage'
+          previousDeploymentJobName: 'DeployWebUiPreProductionSlotMainJob'
+          keyVaultServiceConnectionName: 'rg-t1pp-edubase'
+          keyVaultName: 'kv-t1pp-edubase'
+          smokeTestUrl: '/'                                                         # Relative to the root of the web app
+          smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'       # Note this is specifically the username key, not the username itself
+          smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'       # Note this is specifically the password key, not the password itself
+          smokeTestNeedleString: $(versionNoPadding)
+          smokeTestDurationBetweenRequestsSeconds: 5
+          smokeTestMaximumDurationMinutes: 5                                        # C# Web App normally starts up very fast (should normally be available near immediately) 
+
+
+
+
+
+
+  ## Run this deploy stage only if conditions met to deploy to this environment
+  - stage: 'DeployProductionSlotLcs'
+    displayName: 'Deploy to Production ("Last Chance Saloon" ("LCS") slot)'
+    condition: and(succeeded(), eq(variables.isRelease, 'true'))
+    dependsOn:
+      - SetupVariablesStage
+      - BuildAndTestAndPackageStage
+      - DeployPreProductionSlotMain 
+    variables:
+      version: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.version'] ]
+      versionNoPadding: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.versionNoPadding'] ]
+    jobs:
+
+      ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
+      - deployment: testDeploymentEnvironmentCheck
+        environment: 'gias-prod'
+        displayName: 'ADO Environment: `gias-prod`'
+
+      ## Debugging assistance job - display variables
+      - job: DisplayVariablesJob
+        steps:
+          - task: PowerShell@2
+            displayName: Display variables
+            inputs:
+              targetType: 'inline'
+              script: |
+                Write-Host "version: $(version)"
+                Write-Host "versionNoPadding: $(versionNoPadding)"
+
+      ## Deploy the packaged and tested code
+      - template: 'pipelines/template-deployment-stage.yml'
+        parameters:
+          enabled: 'true'
+          vmImage: 'windows-latest'
+          thisJobName: 'DeployWebUiProductionSlotLcsJob'
+          keyVaultServiceConnectionName: 'rg-t1pr-edubase'
+          keyVaultName: 'kv-t1pr-edubase01'                                         ## Note change of naming convention from lower environments
+          deploymentServiceConnectionName: 'rg-t1pr-edubase'                        ## Note change of naming convention from lower environments 
+          artifactReference: 'BuiltAndPackagedWebUiZip'
+          destinationResourceGroupName: 'rg-t1pr-gias'
+          destinationWebAppName: 'ea-edubase-prod'                                  ## Note change of naming convention from lower environments
+          destinationDeployToSlotFlag: true
+          destinationSlotName: 'lcs'
+          
+      ## Smoke test the base URL to prove that the code has been deployed
+      - template: 'pipelines/template-smoke-test-deployment.yml'
+        parameters:
+          enabled: 'true'
+          vmImage: 'ubuntu-latest'
+          thisJobName: 'smokeTestGiasWebUiProductionSlotLcsJobWebRoot'
+          previousDeploymentJobName: 'DeployWebUiProductionSlotLcsJob'
+          keyVaultServiceConnectionName: 'rg-t1pr-edubase'
+          keyVaultName: 'kv-t1pr-edubase'
+          smokeTestUrl: '/'                                                         # Relative to the root of the web app
+          smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'       # Note this is specifically the username key, not the username itself
+          smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'       # Note this is specifically the password key, not the password itself
+          smokeTestNeedleString: $(versionNoPadding)
+          smokeTestDurationBetweenRequestsSeconds: 5
+          smokeTestMaximumDurationMinutes: 5                                        # C# Web App normally starts up very fast (should normally be available near immediately)
+
+      ## Smoke test a URL which exercises the API and file storage connections, to prove that the code+configuration works with background services
+      - template: 'pipelines/template-smoke-test-deployment.yml'
+        parameters:
+          enabled: 'true'
+          vmImage: 'ubuntu-latest'
+          thisJobName: 'smokeTestGiasWebUiProductionSlotLcsJobDownloadsPage'
+          previousDeploymentJobName: 'DeployWebUiProductionSlotLcsJob'
+          keyVaultServiceConnectionName: 'rg-t1pr-edubase'
+          keyVaultName: 'kv-t1pr-edubase'
+          smokeTestUrl: '/'                                                         # Relative to the root of the web app
+          smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'       # Note this is specifically the username key, not the username itself
+          smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'       # Note this is specifically the password key, not the password itself
+          smokeTestNeedleString: $(versionNoPadding)
+          smokeTestDurationBetweenRequestsSeconds: 5
+          smokeTestMaximumDurationMinutes: 5                                        # C# Web App normally starts up very fast (should normally be available near immediately) 
+
 
