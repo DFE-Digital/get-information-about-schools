@@ -17,14 +17,45 @@ jobs:
     env:
       DOTNET_VERSION: '6.0.x'
 
+    ## Include all git history (fetch depth 0) for enhanced SonarCloud analysis (default is 1 for most recent commit)
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
+      ## SonarCloud Setup
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'zulu'
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache SonarCloud scanner
+        id: cache-sonar-scanner
+        uses: actions/cache@v3
+        with:
+          path: .\.sonar\scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
+      - name: Install SonarCloud scanner
+        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+        shell: powershell
+        run: |
+          New-Item -Path .\.sonar\scanner -ItemType Directory
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+
+
+      ## C-Sharp Setup
       - name: Setup .NET Core SDK ${{ env.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-
+          
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
 
@@ -38,21 +69,29 @@ jobs:
         working-directory: ./Web
         run: nuget restore EdubaseWeb.sln
 
-      - name: Build Solution
+      - name: Restore Packages
+        working-directory: ./Web
+        run: dotnet tool install --global dotnet-coverage
+        
+      ## Clean build and test
+      ## Currently manually specifying the tests to trigger -- unclear if these can be picked up automatically?
+      - name: Build, Test, and Analyse
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         working-directory: ./Web
         run: |
+          ..\.sonar\scanner\dotnet-sonarscanner begin /k:"RogerHowellDfE_get-information-about-schools" /o:"rogerhowelldfe" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**\TestResults\**\*.xml"
+          
           msbuild.exe EdubaseWeb.sln  /t:Rebuild /p:platform="Any CPU" /p:configuration="Release"
 
-      ## Currently manually specifying the tests to trigger -- unclear if these can be picked up automatically?
-      - name: Run Tests
-        working-directory: ./Web
-        run: |
-          vstest.console.exe /Enablecodecoverage .\Edubase.CommonUnitTests\bin\Release\Edubase.CommonUnitTests.dll
-          vstest.console.exe /Enablecodecoverage .\Edubase.DataUnitTests\bin\Release\Edubase.DataUnitTests.dll
-          vstest.console.exe /Enablecodecoverage .\Edubase.ServicesUnitTests\bin\Release\Edubase.ServicesUnitTests.dll
-          vstest.console.exe /Enablecodecoverage .\Edubase.Web.ResourcesUnitTests\bin\Release\Edubase.Web.ResourcesUnitTests.dll
-          vstest.console.exe /Enablecodecoverage .\Edubase.Web.UIUnitTests\bin\Release\net48\Edubase.Web.UIUnitTests.dll
+          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.CommonUnitTests\bin\Release\Edubase.CommonUnitTests.dll
+          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.DataUnitTests\bin\Release\Edubase.DataUnitTests.dll
+          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.ServicesUnitTests\bin\Release\Edubase.ServicesUnitTests.dll
+          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.Web.ResourcesUnitTests\bin\Release\Edubase.Web.ResourcesUnitTests.dll
+          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.Web.UIUnitTests\bin\Release\net48\Edubase.Web.UIUnitTests.dll
 
+          ..\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
       - name: Upload dotnet test results
         uses: actions/upload-artifact@v3.1.2
