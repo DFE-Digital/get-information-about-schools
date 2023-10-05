@@ -55,7 +55,7 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-          
+
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
 
@@ -72,7 +72,7 @@ jobs:
       - name: Restore Packages
         working-directory: ./Web
         run: dotnet tool install --global dotnet-coverage
-        
+      
       ## Clean build and test
       ## Currently manually specifying the tests to trigger -- unclear if these can be picked up automatically?
       - name: Build, Test, and Analyse
