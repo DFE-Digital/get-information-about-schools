@@ -496,48 +496,167 @@ stages:
           smokeTestMaximumDurationMinutes: 5                                        # C# Web App normally starts up very fast (should normally be available near immediately) 
 
 
+  ## Run this deploy stage only if conditions met to deploy to this environment
+  ## Deploy to test "test" slot (`gias-test.[...]`)
+  - stage: 'DeployTestSlotSignInSimulator'
+    displayName: 'Deploy to Test (slot `stage-sis`, integrated with the sign-in-simulator)'
+    condition: and(succeeded(), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true')))
+    dependsOn:
+      - SetupVariablesStage
+      - BuildAndTestAndPackageStage
+      - DeployDevSlotMain
+      - DeployDevSlotDev
+    variables:
+      version: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.version'] ]
+      versionNoPadding: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.versionNoPadding'] ]
+    jobs:
+      
+      ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
+      - deployment: testDeploymentEnvironmentCheck
+        environment: 'gias-test'
+        displayName: 'ADO Environment: `gias-test` (known as `stage`)'
+
+      ## Debugging assistance job - display variables
+      - job: DisplayVariablesJob
+        steps:
+          - task: PowerShell@2
+            displayName: Display variables
+            inputs:
+              targetType: 'inline'
+              script: |
+                Write-Host "version: $(version)"
+                Write-Host "versionNoPadding: $(versionNoPadding)"
+
+      ## Deploy the packaged and tested code
+      - template: 'pipelines/template-deployment-stage.yml'
+        parameters:
+          enabled: 'true'
+          vmImage: 'windows-latest'
+          thisJobName: 'DeployWebUiTestSlotSignInSimulatorJob'
+          keyVaultServiceConnectionName: 'rg-t1te-edubase'
+          keyVaultName: 'kv-t1te-edubase'
+          deploymentServiceConnectionName: 'rg-t1te-gias'
+          artifactReference: 'BuiltAndPackagedWebUiZip'
+          destinationResourceGroupName: 'rg-t1te-gias'
+          destinationWebAppName: 'gias'
+          destinationDeployToSlotFlag: true
+          destinationSlotName: 'sis'
+      
+      ## Smoke test the base URL to prove that the code has been deployed
+      - template: 'pipelines/template-smoke-test-deployment.yml'
+        parameters:
+          enabled: 'true'
+          vmImage: 'ubuntu-latest'
+          thisJobName: 'smokeTestGiasWebUiTestSlotSignInSimulatorJobWebRoot'
+          previousDeploymentJobName: 'DeployWebUiTestSlotSignInSimulatorJob'
+          keyVaultServiceConnectionName: 'rg-t1te-edubase'
+          keyVaultName: 'kv-t1te-edubase'
+          smokeTestUrl: '/'                                                     # Relative to the root of the web app
+          smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
+          smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
+          smokeTestNeedleString: $(versionNoPadding)
+          smokeTestDurationBetweenRequestsSeconds: 5
+          smokeTestMaximumDurationMinutes: 5                                    # C# Web App normally starts up very fast (should normally be available near immediately)
+      
+      ## Smoke test a URL which exercises the API and file storage connections, to prove that the code+configuration works with background services
+      - template: 'pipelines/template-smoke-test-deployment.yml'
+        parameters:
+          enabled: 'true'
+          vmImage: 'ubuntu-latest'
+          thisJobName: 'smokeTestGiasWebUiTestSlotSignInSimulatorJobDownloadsPage'
+          previousDeploymentJobName: 'DeployWebUiTestSlotSignInSimulatorJob'
+          keyVaultServiceConnectionName: 'rg-t1te-edubase'
+          keyVaultName: 'kv-t1te-edubase'
+          smokeTestUrl: '/Downloads'                                            # Relative to the root of the web app
+          smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
+          smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
+          smokeTestNeedleString: $(versionNoPadding)
+          smokeTestDurationBetweenRequestsSeconds: 5
+          smokeTestMaximumDurationMinutes: 5                                    # C# Web App normally starts up very fast (should normally be available near immediately) 
 
 
-#
-#  - stage: 'DeployTest'
-#    displayName: 'Deploy to Test (stage)'
-#    ## Deploy to test, only if we're currently on the main branch as part of a release (also allow promoting dev branch to test)
-#    condition: and(succeeded(), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true')))
-#    dependsOn:
-#      - DeployDev
-#    jobs:
-#      ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
-#      - deployment: testDeploymentEnvironmentCheck
-#        environment: 'gias-test'
-#        displayName: 'ADO Environment: `gias-test`'
-#
-#      - job: Deploy
-#        steps:
-#          
-#          ## Deploy to test slot which integrates with DSI
-#          - task: AzureRmWebAppDeployment@3
-#            displayName: 'Azure App Service Deploy: gias-test (incorrectly named stage) - main slot'
-#            inputs:
-#              ConnectedServiceName: 1a5298b0-b70f-4e44-b95f-d2150cd48b6f
-#              WebAppName: gias-stage
-#              ResourceGroupName: rg-t1te-gias
-#              Package: $(build.artifactstagingdirectory)/**/Edubase.Web.UI.zip
-#              UseWebDeploy: true
-#              RemoveAdditionalFilesFlag: true
-#          
-#          ## Deploy to test slot which integrates with DSI Simulator (SIS)
-#          - task: AzureRmWebAppDeployment@3
-#            displayName: 'Azure App Service Deploy: gias-test (incorrectly named stage) - sis slot'
-#            inputs:
-#              ConnectedServiceName: 1a5298b0-b70f-4e44-b95f-d2150cd48b6f
-#              WebAppName: gias-stage
-#              DeployToSlotFlag: true
-#              ResourceGroupName: rg-t1te-gias
-#              SlotName: sis
-#              Package: $(build.artifactstagingdirectory)/**/Edubase.Web.UI.zip
-#              UseWebDeploy: true
-#              RemoveAdditionalFilesFlag: true
-#
+
+  ## Run this deploy stage only if conditions met to deploy to this environment
+  ## Deploy to test "main" slot, which integrates with Azure Front Door (ADF) and Web Application Firewall (WAF)
+  - stage: 'DeployTestSlotMain'
+    displayName: 'Deploy to Test (main slot with DSI integration, known as `stage`)'
+    condition: and(succeeded(), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true')))
+    dependsOn:
+      - SetupVariablesStage
+      - BuildAndTestAndPackageStage
+      - DeployDevSlotMain
+      - DeployDevSlotDev
+    variables:
+      version: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.version'] ]
+      versionNoPadding: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.versionNoPadding'] ]
+    jobs:
+      
+      ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
+      - deployment: testDeploymentEnvironmentCheck
+        environment: 'gias-test'
+        displayName: 'ADO Environment: `gias-test` (known as `stage`)'
+
+      ## Debugging assistance job - display variables
+      - job: DisplayVariablesJob
+        steps:
+          - task: PowerShell@2
+            displayName: Display variables
+            inputs:
+              targetType: 'inline'
+              script: |
+                Write-Host "version: $(version)"
+                Write-Host "versionNoPadding: $(versionNoPadding)"
+
+      ## Deploy the packaged and tested code
+      - template: 'pipelines/template-deployment-stage.yml'
+        parameters:
+          enabled: 'true'
+          vmImage: 'windows-latest'
+          thisJobName: 'DeployWebUiTestSlotMainJob'
+          keyVaultServiceConnectionName: 'rg-t1te-edubase'
+          keyVaultName: 'kv-t1te-edubase'
+          deploymentServiceConnectionName: 'rg-t1te-gias'
+          artifactReference: 'BuiltAndPackagedWebUiZip'
+          destinationResourceGroupName: 'rg-t1te-gias'
+          destinationWebAppName: 'gias'
+          destinationDeployToSlotFlag: false
+          #destinationSlotName: 'test'
+      
+      ## Smoke test the base URL to prove that the code has been deployed
+      - template: 'pipelines/template-smoke-test-deployment.yml'
+        parameters:
+          enabled: 'true'
+          vmImage: 'ubuntu-latest'
+          thisJobName: 'smokeTestGiasWebUiTestSlotMainJobWebRoot'
+          previousDeploymentJobName: 'DeployWebUiTestSlotMainJob'
+          keyVaultServiceConnectionName: 'rg-t1te-edubase'
+          keyVaultName: 'kv-t1te-edubase'
+          #smokeTestUrl: '/'                                                        # Relative to the root of the web app
+          smokeTestFullUrl: 'https://test.get-information-schools.service.gov.uk/'   ## Override the URL as deployment task returns the `.azurewebsites.net` URL, which is behind AFD/WAF/Custom Domain
+          smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'       # Note this is specifically the username key, not the username itself
+          smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'       # Note this is specifically the password key, not the password itself
+          smokeTestNeedleString: $(versionNoPadding)
+          smokeTestDurationBetweenRequestsSeconds: 5
+          smokeTestMaximumDurationMinutes: 5                                        # C# Web App normally starts up very fast (should normally be available near immediately)
+      
+      ## Smoke test a URL which exercises the API and file storage connections, to prove that the code+configuration works with background services
+      - template: 'pipelines/template-smoke-test-deployment.yml'
+        parameters:
+          enabled: 'true'
+          vmImage: 'ubuntu-latest'
+          thisJobName: 'smokeTestGiasWebUiTestSlotMainJobDownloadsPage'
+          previousDeploymentJobName: 'DeployWebUiTestSlotMainJob'
+          keyVaultServiceConnectionName: 'rg-t1te-edubase'
+          keyVaultName: 'kv-t1te-edubase'
+          #smokeTestUrl: '/'                                                        # Relative to the root of the web app
+          smokeTestFullUrl: 'https://test.get-information-schools.service.gov.uk/Downloads'  ## Override the URL as deployment task returns the `.azurewebsites.net` URL, which is behind AFD/WAF/Custom Domain
+          smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'       # Note this is specifically the username key, not the username itself
+          smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'       # Note this is specifically the password key, not the password itself
+          smokeTestNeedleString: $(versionNoPadding)
+          smokeTestDurationBetweenRequestsSeconds: 5
+          smokeTestMaximumDurationMinutes: 5                                        # C# Web App normally starts up very fast (should normally be available near immediately) 
+
+
 #
 #  - stage: 'DeployPreProduction'
 #    displayName: 'Deploy to Pre-Production (Pre-Prod)'
