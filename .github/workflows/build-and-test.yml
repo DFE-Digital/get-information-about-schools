@@ -81,7 +81,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         working-directory: ./Web
         run: |
-          ..\.sonar\scanner\dotnet-sonarscanner begin /k:"RogerHowellDfE_get-information-about-schools" /o:"rogerhowelldfe" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**\TestResults\**\*.xml"
+          ..\.sonar\scanner\dotnet-sonarscanner begin /k:"DFE-Digital_get-information-about-schools" /o:"dfe-digital" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**\TestResults\**\*.xml"
           
           msbuild.exe EdubaseWeb.sln  /t:Rebuild /p:platform="Any CPU" /p:configuration="Release"
 
