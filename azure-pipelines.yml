@@ -28,7 +28,7 @@ variables:
   NUGET_PACKAGES_DIR: $(Pipeline.Workspace)/.nuget/packages
 
   ## These variables distinguish between "dev" (incl. AFD/custom domain) and sandboxes
-  isDev:      true #$[eq(variables['Build.SourceBranch'], 'refs/heads/dev')]
+  isDev:      $[eq(variables['Build.SourceBranch'], 'refs/heads/dev')]
   isSandbox1: $[eq(variables['Build.SourceBranch'], 'refs/heads/epic/governance-professional')]
   isSandbox2: false   # currently unused
   isHolding:  false    # currently unused
