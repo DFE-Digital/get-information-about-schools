@@ -28,10 +28,10 @@ variables:
   NUGET_PACKAGES_DIR: $(Pipeline.Workspace)/.nuget/packages
 
   ## These variables distinguish between "dev" (incl. AFD/custom domain) and sandboxes
-  isDev: true #$[eq(variables['Build.SourceBranch'], 'refs/heads/dev')]
+  isDev:      true #$[eq(variables['Build.SourceBranch'], 'refs/heads/dev')]
   isSandbox1: $[eq(variables['Build.SourceBranch'], 'refs/heads/epic/governance-professional')]
   isSandbox2: false   # currently unused
-  isHolding: true    # currently unused
+  isHolding:  false    # currently unused
   
   ## If this is part of a release, then we can deploy to higher environments
   ## - could consider this being done by tag instead? or `release/v1.11` format branch?
@@ -542,7 +542,7 @@ stages:
           deploymentServiceConnectionName: 'rg-t1te-gias'
           artifactReference: 'BuiltAndPackagedWebUiZip'
           destinationResourceGroupName: 'rg-t1te-gias'
-          destinationWebAppName: 'gias'
+          destinationWebAppName: 'gias-stage'
           destinationDeployToSlotFlag: true
           destinationSlotName: 'sis'
 
@@ -622,7 +622,7 @@ stages:
           deploymentServiceConnectionName: 'rg-t1te-gias'
           artifactReference: 'BuiltAndPackagedWebUiZip'
           destinationResourceGroupName: 'rg-t1te-gias'
-          destinationWebAppName: 'gias'
+          destinationWebAppName: 'gias-stage'
           destinationDeployToSlotFlag: false
           #destinationSlotName: ''
 
