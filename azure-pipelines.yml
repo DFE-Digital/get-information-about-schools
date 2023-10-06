@@ -570,7 +570,7 @@ stages:
           thisJobName: 'smokeTestGiasWebUiTestSlotSignInSimulatorJobDownloadsPage'
           previousDeploymentJobName: 'DeployWebUiTestSlotSignInSimulatorJob'
           keyVaultServiceConnectionName: 'rg-t1te-edubase'
-          keyVaultName: 'kv-t1te-edubase'
+          keyVaultName: 'kv-t1te-edubase01'
           smokeTestUrl: '/Downloads'                                            # Relative to the root of the web app
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
           smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
@@ -618,7 +618,7 @@ stages:
           vmImage: 'windows-latest'
           thisJobName: 'DeployWebUiTestSlotMainJob'
           keyVaultServiceConnectionName: 'rg-t1te-edubase'
-          keyVaultName: 'kv-t1te-edubase'
+          keyVaultName: 'kv-t1te-edubase01'
           deploymentServiceConnectionName: 'rg-t1te-gias'
           artifactReference: 'BuiltAndPackagedWebUiZip'
           destinationResourceGroupName: 'rg-t1te-gias'
@@ -634,7 +634,7 @@ stages:
           thisJobName: 'smokeTestGiasWebUiTestSlotMainJobWebRoot'
           previousDeploymentJobName: 'DeployWebUiTestSlotMainJob'
           keyVaultServiceConnectionName: 'rg-t1te-edubase'
-          keyVaultName: 'kv-t1te-edubase'
+          keyVaultName: 'kv-t1te-edubase01'
           smokeTestUrl: '/'                                                         # Relative to the root of the web app
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'       # Note this is specifically the username key, not the username itself
           smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'       # Note this is specifically the password key, not the password itself
@@ -650,7 +650,7 @@ stages:
           thisJobName: 'smokeTestGiasWebUiTestSlotMainJobDownloadsPage'
           previousDeploymentJobName: 'DeployWebUiTestSlotMainJob'
           keyVaultServiceConnectionName: 'rg-t1te-edubase'
-          keyVaultName: 'kv-t1te-edubase'
+          keyVaultName: 'kv-t1te-edubase01'
           smokeTestUrl: '/'                                                         # Relative to the root of the web app
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'       # Note this is specifically the username key, not the username itself
           smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'       # Note this is specifically the password key, not the password itself
@@ -696,7 +696,7 @@ stages:
           vmImage: 'windows-latest'
           thisJobName: 'DeployWebUiPreProductionSlotMainJob'
           keyVaultServiceConnectionName: 'rg-t1pp-edubase'
-          keyVaultName: 'kv-t1pp-edubase'
+          keyVaultName: 'kv-t1pp-edubase01'
           deploymentServiceConnectionName: 'rg-t1pp-edubase'                        ## Note change of naming convention from lower environments 
           artifactReference: 'BuiltAndPackagedWebUiZip'
           destinationResourceGroupName: 'rg-t1pp-gias'
@@ -712,7 +712,7 @@ stages:
           thisJobName: 'smokeTestGiasWebUiPreProductionSlotMainJobWebRoot'
           previousDeploymentJobName: 'DeployWebUiPreProductionSlotMainJob'
           keyVaultServiceConnectionName: 'rg-t1pp-edubase'
-          keyVaultName: 'kv-t1pp-edubase'
+          keyVaultName: 'kv-t1pp-edubase01'
           smokeTestUrl: '/'                                                         # Relative to the root of the web app
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'       # Note this is specifically the username key, not the username itself
           smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'       # Note this is specifically the password key, not the password itself
@@ -728,7 +728,7 @@ stages:
           thisJobName: 'smokeTestGiasWebUiPreProductionSlotMainJobDownloadsPage'
           previousDeploymentJobName: 'DeployWebUiPreProductionSlotMainJob'
           keyVaultServiceConnectionName: 'rg-t1pp-edubase'
-          keyVaultName: 'kv-t1pp-edubase'
+          keyVaultName: 'kv-t1pp-edubase01'
           smokeTestUrl: '/'                                                         # Relative to the root of the web app
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'       # Note this is specifically the username key, not the username itself
           smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'       # Note this is specifically the password key, not the password itself
@@ -793,7 +793,7 @@ stages:
           thisJobName: 'smokeTestGiasWebUiProductionSlotLcsJobWebRoot'
           previousDeploymentJobName: 'DeployWebUiProductionSlotLcsJob'
           keyVaultServiceConnectionName: 'rg-t1pr-edubase'
-          keyVaultName: 'kv-t1pr-edubase'
+          keyVaultName: 'kv-t1pr-edubase01'
           smokeTestUrl: '/'                                                         # Relative to the root of the web app
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'       # Note this is specifically the username key, not the username itself
           smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'       # Note this is specifically the password key, not the password itself
@@ -809,7 +809,7 @@ stages:
           thisJobName: 'smokeTestGiasWebUiProductionSlotLcsJobDownloadsPage'
           previousDeploymentJobName: 'DeployWebUiProductionSlotLcsJob'
           keyVaultServiceConnectionName: 'rg-t1pr-edubase'
-          keyVaultName: 'kv-t1pr-edubase'
+          keyVaultName: 'kv-t1pr-edubase01'
           smokeTestUrl: '/'                                                         # Relative to the root of the web app
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'       # Note this is specifically the username key, not the username itself
           smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'       # Note this is specifically the password key, not the password itself
