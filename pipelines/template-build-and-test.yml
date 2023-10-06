@@ -22,7 +22,7 @@
 jobs:
 
   - job: ${{ parameters.thisJobName }}
-    displayName: Deploy - ${{ parameters.thisJobName }}
+    displayName: Build, Test, and Package - ${{ parameters.thisJobName }}
     condition: eq(${{ parameters.enabled }}, 'true')
     variables:
       BRANCH_NAME: $[replace(variables['Build.SourceBranch'], 'refs/heads/', '')]

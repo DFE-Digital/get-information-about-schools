@@ -99,7 +99,7 @@ stages:
         parameters:
           enabled: 'true'
           vmImage: 'windows-latest'   ## Uses .NET Framework, therefore must use Windows runner
-          thisJobName: 'DeployWebUiDevSandbox1Job'
+          thisJobName: 'BuildTestAndPackageJob'
           version: $(version)
           artifactReference: 'BuiltAndPackagedWebUiZip'
           nugetPackagesDirectory: '$(NUGET_PACKAGES_DIR)'
