@@ -1,4 +1,4 @@
-﻿parameters:
+parameters:
 
   # Runner and job/step settings
   - name: enabled
@@ -52,6 +52,9 @@ jobs:
             Write-Host "- enabled: ${{ parameters.enabled }}"
             Write-Host "- vmImage: ${{ parameters.vmImage }}"
             Write-Host "- thisJobName: ${{ parameters.thisJobName }}"
+            Write-Host "- version: ${{ parameters.version }}"
+            Write-Host "- artifactReference: ${{ parameters.artifactReference }}"
+            Write-Host "- nugetPackagesDirectory: ${{ parameters.nugetPackagesDirectory }}"
 
 
 
@@ -132,7 +135,7 @@ jobs:
           restoreKeys: |
             nuget | "$(Agent.OS)"
             nuget
-          path: '$(nugetPackagesDirectory)'
+          path: '${{ parameters.nugetPackagesDirectory }}'
           cacheHitVar: 'CACHE_RESTORED'
 
       - task: NuGetCommand@2
@@ -177,6 +180,6 @@ jobs:
       
       # This step gets the packaged deploy file and makes it available to future stages
       - publish: '$(build.artifactstagingdirectory)/Edubase.Web.UI.zip'
-        artifact: BuiltAndPackagedWebUiZip
+        artifact: $ {{ parameters.artifactReference }}
         displayName: Attach packaged Web UI to pipeline run
 
