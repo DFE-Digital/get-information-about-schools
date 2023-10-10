@@ -23,9 +23,6 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  
-  ## When caching the dependencies, should specify a directory path for consistency
-  NUGET_PACKAGES_DIR: $(Pipeline.Workspace)/.nuget/packages
 
   ## These variables distinguish between "dev" (incl. AFD/custom domain) and sandboxes
   isDev:      $[eq(variables['Build.SourceBranch'], 'refs/heads/dev')]
@@ -102,7 +99,6 @@ stages:
           thisJobName: 'BuildTestAndPackageJob'
           version: $(version)
           artifactReference: 'BuiltAndPackagedWebUiZip'
-          nugetPackagesDirectory: '$(NUGET_PACKAGES_DIR)'
   
   
   
