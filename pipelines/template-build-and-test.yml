@@ -13,8 +13,6 @@
   - name: version
   - name: artifactReference
     default: 'BuiltAndPackagedWebUiZip'
-  - name: nugetPackagesDirectory
-    default: '$(Pipeline.Workspace)/.nuget/packages'
 
 
 
@@ -120,20 +118,6 @@ jobs:
 
       - task: NuGetToolInstaller@1
         displayName: 'Install NuGet'
-      
-      ## https://learn.microsoft.com/en-us/azure/devops/pipelines/release/caching?view=azure-devops#netnuget
-      - task: Cache@2
-        displayName: Cache C# dependencies
-        inputs:
-          ## Should probably do this based on packages.lock.json, but this requires enabling it first
-          ## See: https://devblogs.microsoft.com/nuget/enable-repeatable-package-restores-using-a-lock-file/
-          #key: 'nuget | "$(Agent.OS)" | $(Build.SourcesDirectory)/**/packages.lock.json'
-          key: 'nuget | "$(Agent.OS)" | **/packages.config,**/*.csproj,!**/bin/**,!**/obj/**'
-          restoreKeys: |
-            nuget | "$(Agent.OS)"
-            nuget
-          path: '$(nugetPackagesDirectory)'
-          cacheHitVar: 'CACHE_RESTORED'
 
       - task: NuGetCommand@2
         displayName: Restore C# solution
