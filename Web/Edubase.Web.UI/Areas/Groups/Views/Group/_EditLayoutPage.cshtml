@@ -45,7 +45,7 @@
                     <li class="gias-tabs__list-item  @Html.Conditional(Model.SelectedTabName == "links", "gias-tabs__list-item--selected")">
                         <a href="@Url.Action("EditLinks", "Group", new { id = Model.GroupUId, area = "Groups" })" id=@StringUtils.ElementIdFormat(@Model.ListOfEstablishmentsPluralName + "-tab") class="gias-tabs__tab">@Model.ListOfEstablishmentsPluralName.ToProperCase()</a>
                     </li>
-                    @if (Model.GroupTypeId == (int)eLookupGroupType.MultiacademyTrust)
+                    @if (Model.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SecureSingleAcademyTrust))
                     {
                         <li class="gias-tabs__list-item  @Html.Conditional(Model.SelectedTabName == "governance", "gias-tabs__list-item--selected")">
                             <a href="@Url.Action("Edit", "Governor", new {groupUId = Model.GroupUId, area = "Governors"})" id="governance-tab" class="gias-tabs__tab">Governance</a>
