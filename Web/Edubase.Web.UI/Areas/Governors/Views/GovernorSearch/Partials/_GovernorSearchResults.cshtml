@@ -37,17 +37,17 @@ else if (Model.Count > 0)
                 <dl>
                     @if (result.EstablishmentUrn.HasValue)
                     {
-                        <dt><abbr title="Unique Reference Number">URN</abbr>:</dt>
-                        <dd>@Html.ActionLink(result.EstablishmentUrn.ToString(), "Details", "Establishment", new {id = result.EstablishmentUrn, area = "Establishments", searchQueryString = Model.SearchQueryString, searchSource = eLookupSearchSource.Governors}, null)</dd>
-                        <dt>Establishment:</dt>
-                        <dd>@Html.ActionLink(result.EstablishmentName ?? "--", "Details", "Establishment", new {id = result.EstablishmentUrn, area = "Establishments", searchQueryString = Model.SearchQueryString, searchSource = eLookupSearchSource.Governors}, null)</dd>
+                        <dt class="unique-id-label"><abbr title="Unique Reference Number">URN</abbr>:</dt>
+                        <dd class="unique-id-value">@Html.ActionLink(result.EstablishmentUrn.ToString(), "Details", "Establishment", new {id = result.EstablishmentUrn, area = "Establishments", searchQueryString = Model.SearchQueryString, searchSource = eLookupSearchSource.Governors}, null)</dd>
+                        <dt class="attached-entity-label">Establishment:</dt>
+                        <dd class="attached-entity-value">@Html.ActionLink(result.EstablishmentName ?? "--", "Details", "Establishment", new {id = result.EstablishmentUrn, area = "Establishments", searchQueryString = Model.SearchQueryString, searchSource = eLookupSearchSource.Governors}, null)</dd>
                     }
                     else
                     {
-                        <dt><abbr title="Unique Identifier">UID</abbr>:</dt>
-                        <dd>@Html.ActionLink(result.GroupUId.ToString(), "Details", "Group", new {id = result.GroupUId, area = "groups", searchQueryString = Model.SearchQueryString, searchSource = eLookupSearchSource.Governors}, null)</dd>
-                        <dt>Group:</dt>
-                        <dd>@Html.ActionLink(result.GroupName ?? "--", "Details", "Group", new {id = result.GroupUId, area = "groups", searchQueryString = Model.SearchQueryString, searchSource = eLookupSearchSource.Governors}, null)</dd>
+                        <dt class="unique-id-label"><abbr title="Unique Identifier">UID</abbr>:</dt>
+                        <dd class="unique-id-value">@Html.ActionLink(result.GroupUId.ToString(), "Details", "Group", new {id = result.GroupUId, area = "groups", searchQueryString = Model.SearchQueryString, searchSource = eLookupSearchSource.Governors}, null)</dd>
+                        <dt class="attached-entity-label">Group:</dt>
+                        <dd class="attached-entity-value">@Html.ActionLink(result.GroupName ?? "--", "Details", "Group", new {id = result.GroupUId, area = "groups", searchQueryString = Model.SearchQueryString, searchSource = eLookupSearchSource.Governors}, null)</dd>
                     }
 
                 </dl>
