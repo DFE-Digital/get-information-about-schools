@@ -250,11 +250,11 @@
                         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CloseAndMarkAsCreatedInError)">
                             @Html.ValidationMessageFor(x => x.CloseAndMarkAsCreatedInError, null, new { @class = "govuk-error-message" })
                             @FormHelpers.GiasCheckbox("true",
-                                 nameof(Model.CloseAndMarkAsCreatedInError),
-                                 Model.CloseAndMarkAsCreatedInErrorLabel,
-                                 " govuk-!-padding-top-0",
-                                 new { id = "CloseAndMarkAsCreatedInError" },
-                                 Model.CloseAndMarkAsCreatedInError)
+                         nameof(Model.CloseAndMarkAsCreatedInError),
+                         Model.CloseAndMarkAsCreatedInErrorLabel,
+                         " govuk-!-padding-top-0",
+                         new { id = "close-created-in-error" },
+                         Model.CloseAndMarkAsCreatedInError)
                         </div>
                     }
 
