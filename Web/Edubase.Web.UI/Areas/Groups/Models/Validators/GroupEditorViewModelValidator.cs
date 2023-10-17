@@ -121,10 +121,10 @@ namespace Edubase.Web.UI.Areas.Groups.Models.Validators
                 {
                     RuleFor(x => x.CloseAndMarkAsCreatedInError)
                         .Must(x => false)
-                        .WithMessage("Please enter either a closed date or created in error");
+                        .WithMessage("Please select 'created in error' or enter a close date, but not both");
                     RuleFor(x => x.ClosedDate)
                          .Must(x => false)
-                         .WithMessage("Please enter either a closed date or created in error");
+                         .WithMessage("Please enter a close date or select 'created in error', but not both");
                 });
 
                 When(x => x.CanUserEditClosedDate
