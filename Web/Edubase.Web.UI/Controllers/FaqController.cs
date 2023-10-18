@@ -60,7 +60,7 @@ namespace Edubase.Web.UI.Controllers
             });
         }
 
-        [Route("Edit/{id}", Name = "PostEditItem"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Edit/{id}", Name = "PostEditItem"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> EditAsync(FaqItemViewModel viewModel)
         {
             var item = await _FaqItemRepository.GetAsync(viewModel.Id);
