@@ -497,7 +497,7 @@ stages:
 
 
   ## Run this deploy stage only if conditions met to deploy to this environment
-  ## Deploy to test "test" slot (`gias-test.[...]`)
+  ## Deploy to test "test" slot (`gias-test.[...]`) -- has Azure Front Door and a custom domain
   - stage: 'DeployTestSlotSignInSimulator'
     displayName: 'Deploy to Test (slot `stage-sis`, integrated with the sign-in-simulator)'
     condition: and(succeeded(), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true')))
@@ -551,7 +551,8 @@ stages:
           previousDeploymentJobName: 'DeployWebUiTestSlotSignInSimulatorJob'
           keyVaultServiceConnectionName: 'rg-t1te-edubase'
           keyVaultName: 'kv-t1te-edubase01'
-          smokeTestUrl: '/'                                                     # Relative to the root of the web app
+          #smokeTestUrl: '/'                                                         # Relative to the root of the web app
+          smokeTestFullUrl: 'https://test.get-information-schools.service.gov.uk/'   ## Override the URL as deployment task returns the `.azurewebsites.net` URL, which is behind AFD/WAF/Custom Domain
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
           smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
           smokeTestNeedleString: $(versionNoPadding)
@@ -567,7 +568,8 @@ stages:
           previousDeploymentJobName: 'DeployWebUiTestSlotSignInSimulatorJob'
           keyVaultServiceConnectionName: 'rg-t1te-edubase'
           keyVaultName: 'kv-t1te-edubase01'
-          smokeTestUrl: '/Downloads'                                            # Relative to the root of the web app
+          #smokeTestUrl: '/Downloads'                                                         # Relative to the root of the web app
+          smokeTestFullUrl: 'https://test.get-information-schools.service.gov.uk/Downloads'   ## Override the URL as deployment task returns the `.azurewebsites.net` URL, which is behind AFD/WAF/Custom Domain
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
           smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
           smokeTestNeedleString: $(versionNoPadding)
