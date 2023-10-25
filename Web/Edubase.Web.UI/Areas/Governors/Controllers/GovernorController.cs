@@ -492,6 +492,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 await _governorsReadService.GetEditorDisplayPolicyAsync(viewModel.GovernorRole,
                     viewModel.GroupUId.HasValue, User);
 
+            if (viewModel.GroupTypeId != 11)
+            {
+                viewModel.DisplayPolicy.IsOriginalChairOfTrustees = false;
+                viewModel.DisplayPolicy.IsOriginalSignatoryMember = false;
+            }
+
             var governorModel = new GovernorModel
             {
                 AppointingBodyId = viewModel.AppointingBodyId,
