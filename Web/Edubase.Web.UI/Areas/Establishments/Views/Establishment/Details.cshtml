@@ -121,29 +121,22 @@
             </div>
         }
 
+
         @if (Model.IsClosed)
         {
-            if (Model.Establishment.CloseDate != null)
-            {
-                <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
-                    <p>
-                        This establishment closed on @(Model.Establishment.CloseDate?.ToString("d MMMM yyyy")).
-                        View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
-                    </p>
-                </div>
-            }
-            else
-            {
-                <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
-                    <p>
-                        This establishment is closed.
-                        View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
-                    </p>
-                </div>
-            }
+            <div id="gias-establishment-closed-message" class="gias-establishment-closed-message">
+                <p>
+                    @Model.ClosedStatusMessage
+                    @if (Model.TabDisplayPolicy.Links)
+                    {
+                       @:View details of <a href="#school-links" class="tab-manipulator">linked establishments</a>
+                    }
+                </p>
+            </div>
         }
+        </div>
     </div>
-</div>
+
 @{ Html.RenderPartial(@"Partials\ConfirmationNotifications"); }
 
 <div class="govuk-grid-row">

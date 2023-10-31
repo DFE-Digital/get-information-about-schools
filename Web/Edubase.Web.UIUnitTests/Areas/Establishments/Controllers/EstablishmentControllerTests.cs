@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
 using Edubase.Common;
+using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
@@ -14,16 +15,21 @@ using Edubase.Services.Establishments.EditPolicies;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Exceptions;
 using Edubase.Services.ExternalLookup;
+using Edubase.Services.Governors;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Lookup;
+using Edubase.Services.Nomenclature;
 using Edubase.Services.Security;
 using Edubase.Web.Resources;
 using Edubase.Web.UI.Areas.Establishments.Models;
+using Edubase.Web.UI.Areas.Governors.Controllers;
+using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UIUnitTests;
 using Moq;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
 {
@@ -36,7 +42,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         private readonly Mock<IGroupReadService> mockGroupReadService = new Mock<IGroupReadService>(MockBehavior.Strict);
         private readonly Mock<IMapper> mockMapper = new Mock<IMapper>(MockBehavior.Strict);
         private readonly Mock<IEstablishmentWriteService> mockEstablishmentWriteService = new Mock<IEstablishmentWriteService>(MockBehavior.Strict);
-        private readonly Mock<IResourcesHelper> mockResourcesHelper = new Mock<IResourcesHelper>(MockBehavior.Strict);
+        private readonly Mock<IResourcesHelper> mockResourcesHelper = new Mock<IResourcesHelper>(MockBehavior.Loose);
         private readonly Mock<ISecurityService> mockSecurityService = new Mock<ISecurityService>(MockBehavior.Strict);
         private readonly Mock<IExternalLookupService> mockExternalLookupService = new Mock<IExternalLookupService>(MockBehavior.Strict);
         private readonly Mock<HttpRequestBase> mockHttpRequestBase = new Mock<HttpRequestBase>(MockBehavior.Strict);
@@ -45,9 +51,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         private readonly Mock<IIdentity> mockIdentity = new Mock<IIdentity>(MockBehavior.Strict);
         private readonly Mock<ControllerContext> mockControllerContext = new Mock<ControllerContext>(MockBehavior.Strict);
         private readonly Mock<UrlHelper> mockUrlHelper = new Mock<UrlHelper>(MockBehavior.Loose);
-
         private readonly Mock<IFSCPDService> mockFscpdService = new Mock<IFSCPDService>(MockBehavior.Strict);
         private readonly Mock<IFBService> mockFbService = new Mock<IFBService>(MockBehavior.Strict);
+        private readonly Mock<IGovernorsGridViewModelFactory> mockGovernorsGridViewModelFactory = new Mock<IGovernorsGridViewModelFactory>(MockBehavior.Loose);
         private bool disposedValue;
 
         public EstablishmentControllerTests()
@@ -71,7 +77,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                 mockResourcesHelper.Object,
                 mockSecurityService.Object,
                 mockExternalLookupService.Object,
-                mockLookupService.Object);
+                mockLookupService.Object,
+                mockGovernorsGridViewModelFactory.Object);
 
             SetupController();
         }
@@ -333,6 +340,126 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             var response = await controller.SearchForEstablishment(null, null);
 
             Assert.IsType<HttpNotFoundResult>(response);
+        }
+
+        [Theory]
+        [InlineData(true, true, true, true, (int)eLookupEstablishmentType.Academy1619Converter, true)]
+        [InlineData(false, false, false, false, (int)eLookupEstablishmentType.Academy1619Converter, true)]
+        [InlineData(true, true, true, true, (int) eLookupEstablishmentType.AcademySecure16to19, false)]
+        [InlineData(false, false, false, false, (int) eLookupEstablishmentType.AcademySecure16to19, false)]
+        public async Task Estab_Details_TabDisplayPolicy(bool locationDataFieldViewable, bool expectLocationTab, bool helpDeskNotesDisplayPolicy, bool expectHelpDeskNotes, int establishmentTypeId, bool expectGovernanceTab)
+        {
+            var urn = 123456;
+            var establishmentModel = new EstablishmentModel() {
+                EstablishmentTypeGroupId = (int)eLookupGroupType.MultiacademyTrust,
+                IEBTModel = new IEBTModel(),
+                StatusId = (int) eLookupEstablishmentStatus.Open,
+                TypeId = establishmentTypeId,
+                Urn = urn
+            };
+            mockPrincipal.Setup(x => x.Identity.IsAuthenticated).Returns(true);
+            mockPrincipal.Setup(x => x.IsInRole(EdubaseRoles.ESTABLISHMENT))
+                .Returns(false);
+            mockEstablishmentReadService.Setup(x=> x.GetAsync(urn, mockPrincipal.Object))
+                .ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(establishmentModel));
+            mockEstablishmentReadService.Setup(x => x.GetLinkedEstablishmentsAsync(urn, mockPrincipal.Object))
+                .ReturnsAsync(() => new List<LinkedEstablishmentModel>());
+            mockEstablishmentReadService.Setup(x => x.GetChangeHistoryAsync(urn, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), mockPrincipal.Object))
+                .ReturnsAsync(() => new PaginatedResult<EstablishmentChangeDto>());
+            mockGroupReadService.Setup(x => x.GetAllByEstablishmentUrnAsync(urn, mockPrincipal.Object))
+                .ReturnsAsync(() => new List<GroupModel>());
+            mockEstablishmentReadService.Setup(x => x.GetDisplayPolicyAsync(establishmentModel, mockPrincipal.Object))
+                .ReturnsAsync(() => new EstablishmentDisplayEditPolicy()
+                    {
+                        IEBTDetail = new IEBTDetailDisplayEditPolicy(),
+                        HelpdeskNotes = helpDeskNotesDisplayPolicy,
+                        MSOAId = locationDataFieldViewable,
+                        LSOAId = locationDataFieldViewable,
+                        RSCRegionId = locationDataFieldViewable,
+                        GovernmentOfficeRegionId = locationDataFieldViewable,
+                        AdministrativeDistrictId = locationDataFieldViewable,
+                        AdministrativeWardId = locationDataFieldViewable,
+                        ParliamentaryConstituencyId = locationDataFieldViewable,
+                        UrbanRuralId = locationDataFieldViewable,
+                        GSSLAId = locationDataFieldViewable,
+                        Easting = locationDataFieldViewable,
+                        Northing = locationDataFieldViewable
+                });
+            mockEstablishmentReadService.Setup(x => x.CanEditAsync(urn, mockPrincipal.Object))
+                .ReturnsAsync(() => It.IsAny<bool>());
+            mockEstablishmentReadService.Setup(x => x.GetEditPolicyAsync(establishmentModel, mockPrincipal.Object))
+                .ReturnsAsync(() => new EstablishmentEditPolicyEnvelope()
+                    {
+                        EditPolicy = new EstablishmentDisplayEditPolicy() { }
+                });
+
+            var response = await controller.Details(urn);
+
+            var result = Assert.IsType<ViewResult>(response);
+            var establishmentDetailViewModelResult = Assert.IsType<EstablishmentDetailViewModel>(result.Model);
+            Assert.Equal(expectLocationTab, establishmentDetailViewModelResult.TabDisplayPolicy.Location);
+            Assert.Equal(expectHelpDeskNotes, establishmentDetailViewModelResult.TabDisplayPolicy.Helpdesk);
+            Assert.Equal(expectGovernanceTab, establishmentDetailViewModelResult.TabDisplayPolicy.Governance);
+        }
+
+        [Theory]
+        [InlineData(true, true, true, true)]
+        [InlineData(false, false, false, true)] // anomaly between the edit-policy returned by the API and the TabEditPolicy in the FE for helpdesk notes
+        public async Task Estab_Details_TabEditPolicy(bool locationDataFieldEditable, bool expectLocationEdit, bool helpDeskNotesEditPolicy, bool expectHelpDeskEdit)
+        {
+            var urn = 123456;
+            var establishmentModel = new EstablishmentModel()
+            {
+                EstablishmentTypeGroupId = (int) eLookupGroupType.MultiacademyTrust,
+                IEBTModel = new IEBTModel(),
+                StatusId = (int) eLookupEstablishmentStatus.Open,
+                TypeId = (int)It.IsAny<eLookupEstablishmentType>(),
+                Urn = urn
+            };
+            mockPrincipal.Setup(x => x.Identity.IsAuthenticated).Returns(true);
+            mockPrincipal.Setup(x => x.IsInRole(EdubaseRoles.ESTABLISHMENT))
+                .Returns(false);
+            mockEstablishmentReadService.Setup(x => x.GetAsync(urn, mockPrincipal.Object))
+                .ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(establishmentModel));
+            mockEstablishmentReadService.Setup(x => x.GetLinkedEstablishmentsAsync(urn, mockPrincipal.Object))
+                .ReturnsAsync(() => new List<LinkedEstablishmentModel>());
+            mockEstablishmentReadService.Setup(x => x.GetChangeHistoryAsync(urn, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), mockPrincipal.Object))
+                .ReturnsAsync(() => new PaginatedResult<EstablishmentChangeDto>());
+            mockGroupReadService.Setup(x => x.GetAllByEstablishmentUrnAsync(urn, mockPrincipal.Object))
+                .ReturnsAsync(() => new List<GroupModel>());
+            mockEstablishmentReadService.Setup(x => x.GetDisplayPolicyAsync(establishmentModel, mockPrincipal.Object))
+                .ReturnsAsync(() => new EstablishmentDisplayEditPolicy()
+                {
+                    IEBTDetail = new IEBTDetailDisplayEditPolicy()
+                });
+            mockEstablishmentReadService.Setup(x => x.CanEditAsync(urn, mockPrincipal.Object))
+                .ReturnsAsync(() => It.IsAny<bool>());
+            mockEstablishmentReadService.Setup(x => x.GetEditPolicyAsync(establishmentModel, mockPrincipal.Object))
+                .ReturnsAsync(() => new EstablishmentEditPolicyEnvelope()
+                {
+                    EditPolicy = new EstablishmentDisplayEditPolicy()
+                    {
+                        HelpdeskNotes = helpDeskNotesEditPolicy,
+                        MSOAId = locationDataFieldEditable,
+                        LSOAId = locationDataFieldEditable,
+                        RSCRegionId = locationDataFieldEditable,
+                        GovernmentOfficeRegionId = locationDataFieldEditable,
+                        AdministrativeDistrictId = locationDataFieldEditable,
+                        AdministrativeWardId = locationDataFieldEditable,
+                        ParliamentaryConstituencyId = locationDataFieldEditable,
+                        UrbanRuralId = locationDataFieldEditable,
+                        GSSLAId = locationDataFieldEditable,
+                        Easting = locationDataFieldEditable,
+                        Northing = locationDataFieldEditable
+                    }
+                });
+
+            var response = await controller.Details(urn);
+
+            var result = Assert.IsType<ViewResult>(response);
+            var establishmentDetailViewModelResult = Assert.IsType<EstablishmentDetailViewModel>(result.Model);
+            Assert.Equal(expectLocationEdit, establishmentDetailViewModelResult.TabEditPolicy.Location);
+            Assert.Equal(expectHelpDeskEdit, establishmentDetailViewModelResult.TabEditPolicy.Helpdesk);
         }
 
         protected virtual void Dispose(bool disposing)

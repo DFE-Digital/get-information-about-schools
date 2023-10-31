@@ -1,4 +1,4 @@
-﻿using Edubase.Common;
+using Edubase.Common;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -24,6 +24,10 @@ namespace Edubase.Services.Governors.Models
 
         [JsonProperty("lastName")]
         public string Person_LastName { get; set; }
+
+        public bool? IsOriginalSignatoryMember { get; set; }
+
+        public bool? IsOriginalChairOfTrustees { get; set; }
 
         [JsonProperty("previousTitleId")]
         public int? PreviousPerson_TitleId { get; set; }

@@ -30,6 +30,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             new LookupItemViewModel((int)eGovernorTypesFlag.CTC, "City technology colleges"),
             new LookupItemViewModel((int)eGovernorTypesFlag.FreeSchools, "Free schools"),
             new LookupItemViewModel((int)eGovernorTypesFlag.AcadsWithSchoolSponsor, "Academies with a school sponsor"),
+            new LookupItemViewModel((int)eGovernorTypesFlag.SecureSingleAcademyTrusts, "Secure single-academy trusts"),
         };
 
         public IEnumerable<LookupItemViewModel> LocalAuthorities { get; set; }

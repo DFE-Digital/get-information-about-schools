@@ -59,7 +59,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models.CreateEdit
         };
 
         public string Action { get; set; }
-        public int ActionUrn => Action.Split('-').Last().ToInteger() ?? 0;
+        public int ActionUrn => Action?.Split('-').LastOrDefault()?.ToInteger() ?? 0;
         public eSaveMode SaveMode { get; set; }
         public string GroupTypeLabelPrefix => GroupTypeId.HasValue ? _groupTypeLabelPrefixers[GroupTypeId.Value] : null;
         public string GroupNameLabel => GroupTypeId.HasValue ? $"{_groupTypeLabelPrefixers[GroupTypeId.Value]} name" : null;

@@ -16,6 +16,7 @@ namespace Edubase.Services.Governors.Search
             [eGovernorTypesFlag.CTC] = "ctc",   // filtered to governors of City Technology Colleges
             [eGovernorTypesFlag.FreeSchools] = "freeschools",   // filtered to governors of Free Schools
             [eGovernorTypesFlag.AcadsWithSchoolSponsor] = "acads_with_sch_spon",   // filtered to governors of Academies with a School Sponsor
+            [eGovernorTypesFlag.SecureSingleAcademyTrusts] = "ssats",   // filtered to governors associated with Secure SATs
         };
 
         public GovernorSearchPayload()
@@ -28,7 +29,7 @@ namespace Edubase.Services.Governors.Search
             Skip = skip;
             Take = take;
         }
-        
+
         [JsonProperty("governorId")]
         public string Gid { get; set; }
         public string FirstName { get; set; }

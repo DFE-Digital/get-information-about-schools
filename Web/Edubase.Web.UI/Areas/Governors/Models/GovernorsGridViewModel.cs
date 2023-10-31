@@ -17,6 +17,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
     using Services.Enums;
     using Edubase.Services.Domain;
     using Edubase.Services.Groups.Models;
+    using Edubase.Services.Governors.Factories;
 
     public class GovernorsGridViewModel : Groups.Models.CreateEdit.IGroupPageViewModel, IEstablishmentPageViewModel
     {
@@ -80,16 +81,14 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public eGovernanceMode? GovernanceMode { get; set; }
 
-        public IEnumerable<LookupDto> Nationalities { get; private set; }
         public IEnumerable<LookupDto> AppointingBodies { get; private set; }
 
-        public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groupUId, int? establishmentUrn, NomenclatureService nomenclatureService, IEnumerable<LookupDto> nationalities, IEnumerable<LookupDto> appointingBodies, GovernorPermissions governorPermissions)
+        public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groupUId, int? establishmentUrn, NomenclatureService nomenclatureService, IEnumerable<LookupDto> appointingBodies, GovernorPermissions governorPermissions)
         {
             _nomenclatureService = nomenclatureService;
             DomainModel = dto;
             EditMode = editMode;
             GroupUId = groupUId;
-            Nationalities = nationalities;
             AppointingBodies = appointingBodies;
             EstablishmentUrn = establishmentUrn;
             GovernorPermissions = governorPermissions;
@@ -111,10 +110,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             foreach (var role in roles)
             {
                 var equivalantRoles = RoleEquivalence.GetEquivalentToLocalRole(role).Cast<int>().ToList();
-                var pluralise = !EnumSets.eSingularGovernorRoles.Contains(role);
 
-
-                var grid = new GovernorGridViewModel($"{_nomenclatureService.GetGovernorRoleName(role, eTextCase.SentenceCase, pluralise)}{(isHistoric ? " (in past 12 months)" : string.Empty)}")
+                var grid = new GovernorGridViewModel($"{GovernorRoleNameFactory.Create(role, eTextCase.SentenceCase, true)}{(isHistoric ? " (in past 12 months)" : string.Empty)}")
                 {
                     Tag = isHistoric ? "historic" : "current",
                     Role = role,
@@ -122,7 +119,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     GroupUid = groupUid,
                     EstablishmentUrn = establishmentUrn,
                     IsHistoricRole = isHistoric,
-                    RoleName = _nomenclatureService.GetGovernorRoleName(role)
+                    RoleName = GovernorRoleNameFactory.Create(role)
                 };
 
                 var displayPolicy = dto.RoleDisplayPolicies.Get(role);
@@ -165,7 +162,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                             AppointmentEndDate = new DateTimeViewModel(governor.AppointmentEndDate),
                             AppointmentStartDate = new DateTimeViewModel(governor.AppointmentStartDate),
                             FullName = governor.GetFullName(),
-                            RoleName = _nomenclatureService.GetGovernorRoleName(role)
+                            RoleName = GovernorRoleNameFactory.Create(role)
                         };
 
                         HistoricGovernors.Add(gov);
