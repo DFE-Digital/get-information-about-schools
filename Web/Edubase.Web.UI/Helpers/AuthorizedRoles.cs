@@ -11,7 +11,7 @@ namespace Edubase.Web.UI.Helpers
         public const string CanBulkAssociateEstabs2Groups = EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.EDUBASE + "," + EdubaseRoles.EDUBASE_CMT + "," + EdubaseRoles.AP_AOS;
         public const string CanManageAcademyTrusts = EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.EDUBASE + "," + EdubaseRoles.EDUBASE_CMT + "," + EdubaseRoles.AP_AOS;
         public const string CanBulkUpdateEstablishments = EdubaseRoles.EDUBASE + "," + EdubaseRoles.EDUBASE_CMT + "," + EdubaseRoles.AP_AOS + "," + EdubaseRoles.APT + "," + EdubaseRoles.EDUBASE_CHILDRENS_CENTRE_POLICY + "," + EdubaseRoles.EFADO + "," + EdubaseRoles.EFAHNS + "," + EdubaseRoles.FST + "," + EdubaseRoles.IEBT + "," + EdubaseRoles.SOU + "," + EdubaseRoles.EDUBASE_LACCDO + "," + EdubaseRoles.LADO + "," + EdubaseRoles.LSU + "," + EdubaseRoles.UKRLP + "," + EdubaseRoles.YCS;
-        public const string CanBulkUpdateGovernors = EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.ESTABLISHMENT + "," + EdubaseRoles.EDUBASE_GROUP_MAT + "," + EdubaseRoles.EFADO;
+        public const string CanBulkUpdateGovernors = EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.ESTABLISHMENT + "," + EdubaseRoles.EDUBASE_GROUP_MAT + "," + EdubaseRoles.EFADO + "," + EdubaseRoles.YCS + "," + EdubaseRoles.SSAT;
         public const string CanBulkCreateAcademies = EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.EFADO + "," + EdubaseRoles.AP_AOS;
         public const string CanManageAcademyOpenings = EdubaseRoles.ROLE_BACKOFFICE + "," + EdubaseRoles.EFADO + "," + EdubaseRoles.AP_AOS;
         public const string CanManageSecureAcademy16To19Openings =  EdubaseRoles.YCS + "," + EdubaseRoles.ROLE_BACKOFFICE;

@@ -27,7 +27,9 @@
                             var splitName = Regex.Replace(@modelError.Item2, "([a-z])([A-Z])", "$1 $2");
                             splitName = splitName.Substring(0, 1) + splitName.Substring(1).ToLower();
                             <li>
-                                 <a id="error-summary-@StringUtils.ElementIdFormat(@modelError.Item1)-list-item" href='#@modelError.Item1.Replace(".", "_").Replace("[", "_").Replace("]", "_")'>@splitName</a>
+                                 <a id="error-summary-@StringUtils.ElementIdFormat(@modelError.Item1)-list-item" href='#@modelError.Item1.Replace(".", "_").Replace("[", "_").Replace("]", "_")'>
+                                    @Html.HtmlNewlines(@splitName)
+                                 </a>
                             </li>
                         }
                     }

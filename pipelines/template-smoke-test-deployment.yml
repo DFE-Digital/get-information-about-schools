@@ -1,0 +1,134 @@
+parameters:
+
+  # Runner and job/step settings
+  - name: enabled
+    default: 'true'
+  - name: vmImage
+    default: 'ubuntu-latest'  ## Smoke tests do not require Windows, as there is no .NET Framework involvement here
+
+  # Naming settings
+  - name: thisJobName
+  - name: previousDeploymentJobName
+
+  # Key Vault settings
+  - name: keyVaultServiceConnectionName
+  - name: keyVaultName
+
+  # Smoke test settings
+  - name: smokeTestUrl                  # Relative to the root of the web app
+    default: ''
+  - name: smokeTestFullUrl              # Full absolute URL, overrides above
+    default: ''
+  - name: smokeTestBasicAuthUsernameKey # Note this is specifically the username key, not the username itself
+  - name: smokeTestBasicAuthPasswordKey # Note this is specifically the password key, not the password itself
+  - name: smokeTestNeedleString         # The string to search for in the response body, to confirm the web app is running
+  - name: smokeTestDurationBetweenRequestsSeconds
+    type: number
+    default: 5
+  - name: smokeTestMaximumDurationMinutes
+    type: number
+    default: 10
+    
+
+
+jobs:
+
+  - job: ${{ parameters.thisJobName }}
+    displayName: Smoke Test - ${{ parameters.thisJobName }}
+    condition: and(succeeded(), eq(${{ parameters.enabled }}, 'true'))
+    dependsOn:
+      - ${{ parameters.previousDeploymentJobName }}
+    variables:
+      webAppUri: $[ dependencies.${{ parameters.previousDeploymentJobName }}.outputs['DeployWebAppTask.AppServiceApplicationUrl'] ]
+
+    steps:
+
+      ## Debugging assistance task - display all variables and parameters
+      - task: PowerShell@2
+        displayName: Display variables
+        inputs:
+          targetType: 'inline'
+          script: |
+            ## Log all variables
+            Write-Host "Variables:"
+            #Write-Host "- webAppUri: $( webAppUri )"
+            
+      ## Debugging assistance task - display all variables and parameters
+      - task: PowerShell@2
+        displayName: Display parameters
+        inputs:
+          targetType: 'inline'
+          script: |
+            ## Log all parameters
+            Write-Host "Parameters:"
+            Write-Host "- enabled: ${{ parameters.enabled }}"
+            Write-Host "- vmImage: ${{ parameters.vmImage }}"
+            Write-Host "- thisJobName: ${{ parameters.thisJobName }}"
+            Write-Host "- previousDeploymentJobName: ${{ parameters.previousDeploymentJobName }}"
+            Write-Host "- keyVaultServiceConnectionName: ${{ parameters.keyVaultServiceConnectionName }}"
+            Write-Host "- keyVaultName: ${{ parameters.keyVaultName }}"
+            Write-Host "- smokeTestUrl: ${{ parameters.smokeTestUrl }}"
+            Write-Host "- smokeTestFullUrl: ${{ parameters.smokeTestFullUrl }}"
+            Write-Host "- smokeTestBasicAuthUsernameKey: ${{ parameters.smokeTestBasicAuthUsernameKey }}"
+            Write-Host "- smokeTestBasicAuthPasswordKey: ${{ parameters.smokeTestBasicAuthPasswordKey }}"
+            Write-Host "- smokeTestNeedleString: ${{ parameters.smokeTestNeedleString }}"
+            Write-Host "- smokeTestDurationBetweenRequestsSeconds: ${{ parameters.smokeTestDurationBetweenRequestsSeconds }}"
+            Write-Host "- smokeTestMaximumDurationMinutes: ${{ parameters.smokeTestMaximumDurationMinutes }}"
+            
+
+      ## Non-production instances are protected behind HTTP Basic Auth
+      ## The relevant username/password values are stored within Key Vault
+      - task: AzureKeyVault@2
+        displayName: 'Azure Key Vault: kv-t1dv-edubase'
+        inputs:
+          azureSubscription: '${{ parameters.keyVaultServiceConnectionName }}'
+          KeyVaultName: '${{ parameters.keyVaultName }}'
+          SecretsFilter: '*'
+          RunAsPreJob: false
+
+
+      - task: PowerShell@2
+        displayName: Smoke test
+        inputs:
+          targetType: 'inline'
+          failOnStderr: false
+          ignoreLASTEXITCODE: true
+          script: |
+            ## Feed pipeline variables into PowerShell variables -- makes it easier to test locally
+            $smokeTestFullUrl = '${{ parameters.smokeTestFullUrl }}'
+            $smokeTestUrl = '${{ parameters.smokeTestUrl }}'
+            $webAppUri = '$(webAppUri)'
+            #$smokeTestFullUrl = ''
+            ##$smokeTestFullUrl = 'https://example.com/Downloads'
+            #$webAppUri = 'https://[...].gov.uk'
+            #$smokeTestUrl = '/Downloads'
+            
+            Write-Host 'smokeTestFullUrl: ' $smokeTestFullUrl
+            Write-Host 'smokeTestUrl: ' $smokeTestUrl
+            Write-Host 'webAppUri: ' $webAppUri
+            
+            ## If full URL provided, use that.
+            ## Otherwise, construct from the deploy task's base URL plus the given relative URL.
+            
+            $url = ''
+            if ($smokeTestFullUrl -ne '')
+            {
+                $url = $smokeTestFullUrl
+                Write-Host 'Using full URL: ' $url
+            }
+            else
+            {
+                $url = $webAppUri + $smokeTestUrl
+                Write-Host 'Using constructed URL (base from deployment output): ' $url
+            }
+            
+            $username = '$(${{ parameters.smokeTestBasicAuthUsernameKey }})'
+            $password = '$(${{ parameters.smokeTestBasicAuthPasswordKey }})'
+            $needleString = '${{ parameters.smokeTestNeedleString }}'
+            $durationBetweenRequestsSeconds = ${{ parameters.smokeTestDurationBetweenRequestsSeconds }}
+            $maximumDurationMinutes = ${{ parameters.smokeTestMaximumDurationMinutes }}
+            
+            Write-Host "url: $url"
+            Write-Host "needleString: $needleString"
+            
+            $(Build.SourcesDirectory)/pipelines/smokeTestWebUi.ps1 -url $url -basicAuthUsername $username -basicAuthPassword $password -needleString $needleString -durationBetweenRequestsSeconds $durationBetweenRequestsSeconds -maximumDurationMinutes $maximumDurationMinutes

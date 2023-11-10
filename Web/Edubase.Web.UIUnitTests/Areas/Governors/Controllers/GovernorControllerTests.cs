@@ -45,6 +45,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         private readonly Mock<HttpContextBase> mockHttpContextBase = new Mock<HttpContextBase>(MockBehavior.Strict);
         private readonly Mock<IPrincipal> mockPrincipal = new Mock<IPrincipal>(MockBehavior.Strict);
         private readonly Mock<IIdentity> mockIdentity = new Mock<IIdentity>(MockBehavior.Strict);
+        private readonly Mock<IGovernorsGridViewModelFactory> mockGovernorGridViewModelFactory = new Mock<IGovernorsGridViewModelFactory>(MockBehavior.Strict);
+
         private bool disposedValue;
 
         public GovernorControllerTests()
@@ -64,7 +66,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
                 mockGovernorsWriteService.Object,
                 mockGroupReadService.Object,
                 mockEstablishmentReadService.Object,
-                mockLayoutHelper.Object);
+                mockLayoutHelper.Object,
+                mockGovernorGridViewModelFactory.Object);
 
             SetupController();
         }
@@ -438,36 +441,15 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             Assert.Equal(model, modelResult);
         }
 
-        [Theory]
-        [InlineData((int) eLookupGroupType.MultiacademyTrust, true)]
-        [InlineData((int) eLookupGroupType.SecureSingleAcademyTrust, false)]
-        public void Gov_View_groupUIdSpecified(int groupTypeId, bool expectedShowDelegationAndCorpContactInformation)
+        [Fact]
+        public void Gov_View_groupUIdSpecified()
         {
             var groupUId = 10;
-            var governorDetailsDto = new GovernorsDetailsDto
-            {
-                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
-                RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
-                {
-                    { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
-                    { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
-                },
-                CurrentGovernors = new List<GovernorModel>(),
-                HistoricalGovernors = new List<GovernorModel>()
-            };
 
-            var groupModel = new GroupModel {
-                DelegationInformation = "delegation info",
-                CorporateContact = "corporate contact info",
-                GroupTypeId = groupTypeId
-            };
+            var governorsGridViewModel = new GovernorsGridViewModel();
 
-            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(null, groupUId, It.IsAny<IPrincipal>()))
-                .ReturnsAsync(() => governorDetailsDto);
-            mockGovernorsReadService.Setup(g => g.GetGovernorPermissions(null, groupUId, It.IsAny<IPrincipal>()))
-                .ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
-            mockGroupReadService.Setup(g => g.GetAsync(groupUId, It.IsAny<IPrincipal>()))
-                .ReturnsAsync(() => new ServiceResultDto<GroupModel>(groupModel));
+            mockGovernorGridViewModelFactory.Setup(x => x.CreateGovernorsViewModel(groupUId, null, null, It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => governorsGridViewModel);
 
             var result = controller.View(groupUId, null, null);
             var viewResult = result as ViewResult;
@@ -476,36 +458,17 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             Assert.NotNull(viewResult);
             Assert.Equal("~/Areas/Governors/Views/Governor/ViewEdit.cshtml", viewResult.ViewName);
             Assert.NotNull(modelResult);
-            Assert.Equal(expectedShowDelegationAndCorpContactInformation, modelResult.ShowDelegationAndCorpContactInformation);
-            Assert.Equal(groupModel.DelegationInformation, modelResult.DelegationInformation);
-            Assert.Equal(groupUId, modelResult.GroupUId);
-            Assert.Equal(groupModel.GroupTypeId, modelResult.GroupTypeId);
-            Assert.Equal(groupModel.CorporateContact, modelResult.CorporateContact);
-            Assert.Null(modelResult.EstablishmentUrn);
+            Assert.Equal(governorsGridViewModel, modelResult);
         }
 
         [Fact()]
         public void Gov_View_establishmentUrnSpecified()
         {
             var establishmentUrn = 26;
-            var governorDetailsDto = new GovernorsDetailsDto
-            {
-                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.AccountingOfficer, eLookupGovernorRole.Governor },
-                RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
-                {
-                    { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
-                    { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
-                },
-                CurrentGovernors = new List<GovernorModel>(),
-                HistoricalGovernors = new List<GovernorModel>()
-            };
 
-            var establishment = new EstablishmentModel();
-
-            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(establishmentUrn, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => governorDetailsDto);
-            mockGovernorsReadService.Setup(g => g.GetGovernorPermissions(establishmentUrn, null, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
-            mockEstablishmentReadService.Setup(e => e.GetAsync(establishmentUrn, It.IsAny<IPrincipal>())).ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(establishment));
-            mockEstablishmentReadService.Setup(e => e.GetPermissibleLocalGovernorsAsync(establishmentUrn, It.IsAny<IPrincipal>())).ReturnsAsync(() => new List<LookupDto>());
+            var governorsGridViewModel = new GovernorsGridViewModel() { EstablishmentUrn = establishmentUrn };
+            mockGovernorGridViewModelFactory.Setup(x => x.CreateGovernorsViewModel(null, establishmentUrn, null, It.IsAny<IPrincipal>()))
+                .ReturnsAsync(() => governorsGridViewModel);
 
             var result = controller.View(null, establishmentUrn, null);
             var viewResult = result as ViewResult;
@@ -514,16 +477,14 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             Assert.NotNull(viewResult);
             Assert.Equal("~/Areas/Governors/Views/Governor/ViewEdit.cshtml", viewResult.ViewName);
             Assert.NotNull(modelResult);
-            Assert.Null(modelResult.GovernanceMode);
-            Assert.Null(modelResult.GroupUId);
-            Assert.Equal(establishmentUrn, modelResult.EstablishmentUrn);
+            Assert.Equal(governorsGridViewModel, modelResult);
         }
 
         [Fact()]
-        public async Task Gov_AddEditOrReplace_NullParams()
+        public void Gov_AddEditOrReplace_NullParams()
         {
             mockControllerContext.SetupGet(c => c.RouteData).Returns(new RouteData(new Route("", new PageRouteHandler("~/")), new PageRouteHandler("~/")));
-            await Assert.ThrowsAsync<EdubaseException>(() => controller.AddEditOrReplace(null, null, null, null));
+            Assert.ThrowsAsync<EdubaseException>(() => controller.AddEditOrReplace(null, null, null, null));
         }
 
         [Fact()]

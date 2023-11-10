@@ -48,6 +48,7 @@ using Edubase.Services.Texuna.Lookup;
 using Edubase.Services.Texuna.Security;
 using Edubase.Services.Texuna.Serialization;
 using Edubase.Web.Resources;
+using Edubase.Web.UI.Areas;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Validation;
@@ -202,6 +203,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<NotificationBannerRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NotificationTemplateRepository>().AsSelf().SingleInstance();
             builder.RegisterType<NewsArticleRepository>().AsSelf().SingleInstance();
+            builder.RegisterType<GovernorsGridViewModelFactory>().As<IGovernorsGridViewModelFactory>();
         }
 
         public static JsonMediaTypeFormatter CreateJsonMediaTypeFormatter()

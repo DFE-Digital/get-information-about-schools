@@ -49,6 +49,8 @@ namespace Edubase.Services.Texuna.Lookup.Tests
         [MemberData(nameof(GetAsyncLookupTypes))]
         public async Task AsyncLookupsTest(string lookupType)
         {
+            _mockSecurityService.Setup(service => service.CreateAnonymousPrincipal()).Returns(Mock.Of<IPrincipal>);
+
             //use reflection to construct method name
             var method = _lookupApiService.GetType().GetMethod($"{lookupType}GetAllAsync",
                 Type.EmptyTypes);

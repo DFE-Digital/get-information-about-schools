@@ -14,11 +14,10 @@ using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Grid;
+using GR = Edubase.Services.Enums.eLookupGovernorRole;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {
-    using GR = eLookupGovernorRole;
-
     public class GovernorsGridViewModel : IGroupPageViewModel, IEstablishmentPageViewModel
     {
         private readonly NomenclatureService _nomenclatureService;
@@ -79,7 +78,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public eGovernanceMode? GovernanceMode { get; set; }
 
         public IEnumerable<LookupDto> Nationalities { get; }
-        public IEnumerable<LookupDto> AppointingBodies { get; }
 
         public IEnumerable<LookupDto> Titles { get; }
 
@@ -97,6 +95,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public string Layout { get; set; }
 
         public int? GroupUId { get; set; }
+        public IEnumerable<LookupDto> AppointingBodies { get; private set; }
 
         public string ListOfEstablishmentsPluralName { get; set; }
 
@@ -119,7 +118,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             {
                 var equivalantRoles = RoleEquivalence.GetEquivalentToLocalRole(role).Cast<int>().ToList();
                 var pluralise = !EnumSets.eSingularGovernorRoles.Contains(role);
-
 
                 var grid =
                     new GovernorGridViewModel(

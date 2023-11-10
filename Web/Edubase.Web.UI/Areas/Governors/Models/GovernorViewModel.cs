@@ -59,6 +59,10 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 .Select(part => part.Trim())
         );
 
+        public bool? IsOriginalSignatoryMember { get; set; }
+
+        public bool? IsOriginalChairOfTrustees { get; set; }
+
         [DisplayName("Appointing body")]
         public int? AppointingBodyId { get; set; }
 
@@ -95,6 +99,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public GovernorDisplayPolicy DisplayPolicy { get; internal set; }
 
+        public IEnumerable<SelectListItem> YesNoSelect { get; set; } = new[] { new SelectListItem { Value = "true", Text = "Yes", }, new SelectListItem { Value = "false", Text = "No", Selected = true } };
         public IEnumerable<SelectListItem> Titles { get; set; } = new List<SelectListItem>();
         public IEnumerable<SelectListItem> PreviousTitles { get; set; } = new List<SelectListItem>();
         public IEnumerable<SelectListItem> AppointingBodies { get; set; } = new List<SelectListItem>();

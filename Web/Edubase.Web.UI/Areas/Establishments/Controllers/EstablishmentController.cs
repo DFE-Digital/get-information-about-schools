@@ -52,6 +52,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         private readonly IResourcesHelper _resourcesHelper;
         private readonly IExternalLookupService _externalLookupService;
         private readonly IUserDependentLookupService _lookupService;
+        private readonly IGovernorsGridViewModelFactory _governorsGridViewModelFactory;
 
         private readonly ISecurityService _securityService;
         private readonly Lazy<string[]> _formKeys;
@@ -82,7 +83,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             IResourcesHelper resourcesHelper,
             ISecurityService securityService,
             IExternalLookupService externalLookupService,
-            IUserDependentLookupService lookupService)
+            IUserDependentLookupService lookupService,
+            IGovernorsGridViewModelFactory governorsGridViewModelFactory)
         {
             _cachedLookupService = cachedLookupService;
             _establishmentReadService = establishmentReadService;
@@ -93,6 +95,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             _securityService = securityService;
             _externalLookupService = externalLookupService;
             _lookupService = lookupService;
+            _governorsGridViewModelFactory = governorsGridViewModelFactory;
 
             _formKeys = new Lazy<string[]>(
                 () => Request?.Form?.AllKeys.Select(x => x.GetPart(".")).Distinct().ToArray(),
@@ -362,14 +365,20 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 PopulateLookupNames(viewModel),
                 PopulateGovernors(viewModel));
 
-          viewModel.AgeRangeToolTip = viewModel.Establishment.TypeId.OneOfThese(ET.OnlineProvider)
+            viewModel.AgeRangeToolTip = viewModel.Establishment.TypeId.OneOfThese(ET.OnlineProvider)
                 ? _resourcesHelper.GetResourceStringForEstablishment("AgeRangeOnlineProvider", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User)
                 : _resourcesHelper.GetResourceStringForEstablishment("AgeRange", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
 
-            viewModel.AgeRangeToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("AgeRangeLink", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
-            viewModel.SchoolCapacityToolTip = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacity", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
-            viewModel.SchoolCapacityToolTipLink = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacityLink", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
+            viewModel.AgeRangeToolTipLink = viewModel.Establishment.TypeId.Equals((int)ET.AcademySecure16to19)
+                ? string.Empty
+                : _resourcesHelper.GetResourceStringForEstablishment("AgeRangeLink", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
 
+            viewModel.SchoolCapacityToolTip = _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacity", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
+
+            viewModel.SchoolCapacityToolTipLink = viewModel.Establishment.TypeId.Equals((int)ET.AcademySecure16to19)
+                ? string.Empty
+                : _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacityLink", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
+               
             return View(viewModel);
         }
 
@@ -941,8 +950,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
         private async Task PopulateGovernors(EstablishmentDetailViewModel viewModel)
         {
-            var governorsController = DependencyResolver.Current.GetService<GovernorController>();
-            viewModel.GovernorsGridViewModel = await governorsController.CreateGovernorsViewModel(establishmentModel: viewModel.Establishment, user: User);
+            viewModel.GovernorsGridViewModel = await _governorsGridViewModelFactory.CreateGovernorsViewModel(establishmentModel: viewModel.Establishment, user: User);
         }
 
         private async Task PopulateGroups(int id, EstablishmentDetailViewModel viewModel)

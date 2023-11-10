@@ -8,6 +8,7 @@ using Edubase.Common;
 using Edubase.Services.Exceptions;
 using AzureTableLogger;
 using AzureTableLogger.LogMessages;
+using Edubase.Web.UI.Helpers;
 using Sustainsys.Saml2.Exceptions;
 
 namespace Edubase.Web.UI.Filters
@@ -48,22 +49,21 @@ namespace Edubase.Web.UI.Filters
                 var ctx = filterContext.HttpContext;
                 var msg = Log(ctx, filterContext.Exception);
 
-                if (EnableFriendlyErrorPage)
+                // Making this "forwarded-header-aware" is not strictly required,
+                // but it's easier and safer to be consistent and just do it everywhere.
+                var urlHelper = new UrlHelper(filterContext.RequestContext);
+                var url = urlHelper.GetForwardedHeaderAwareUrl();
+
+                filterContext.Result = new ViewResult
                 {
-                    filterContext.Result = new ViewResult
+                    // Show either the "simple" user-facing error page, or the full error page with technical detail.
+                    ViewName = EnableFriendlyErrorPage ? "~/Views/Shared/Error.cshtml" : "~/Views/Shared/FullErrorDetail.cshtml",
+                    ViewData = new ViewDataDictionary
                     {
-                        ViewName = "~/Views/Shared/Error.cshtml",
-                        ViewData = new ViewDataDictionary{ ["ErrorCode"] = msg.Id, ["IsPartialView"] = ctx.Request.Url.AbsolutePath.EndsWith("results-js") }
-                    };
-                }
-                else // show full technical error detail
-                {
-                    filterContext.Result = new ViewResult
-                    {
-                        ViewName = "~/Views/Shared/FullErrorDetail.cshtml",
-                        ViewData = new ViewDataDictionary(filterContext.Exception) { ["ErrorCode"] = msg.Id, ["IsPartialView"] = ctx.Request.Url.AbsolutePath.EndsWith("results-js") }
-                    };
-                }
+                        ["ErrorCode"] = msg.Id,
+                        ["IsPartialView"] = url.AbsolutePath.EndsWith("results-js", StringComparison.InvariantCultureIgnoreCase)
+                    }
+                };
 
                 ctx.Response.Clear();
                 ctx.Response.TrySkipIisCustomErrors = true;

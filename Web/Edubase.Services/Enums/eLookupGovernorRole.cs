@@ -21,6 +21,8 @@ namespace Edubase.Services.Enums
         GovernanceProfessionalToAnIndividualAcademyOrFreeSchool = 17,
         GovernanceProfessionalToAMat = 18,
         Group_SharedGovernanceProfessional = 19,
-        Establishment_SharedGovernanceProfessional = 20
+        Establishment_SharedGovernanceProfessional = 20,
+        Member_Individual = 21,
+        Member_Organisation = 22,
     }
 }

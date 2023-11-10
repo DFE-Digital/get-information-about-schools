@@ -12,7 +12,7 @@ namespace Edubase.Web.UIUnitTests
     {
         public static Mock<ICachedLookupService> SetupCachedLookupService()
         {
-            var cls = new Mock<ICachedLookupService>(MockBehavior.Strict);
+            var cls = new Mock<ICachedLookupService>(MockBehavior.Loose);
             cls.Setup(c => c.AccommodationChangedGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
             cls.Setup(c => c.FurtherEducationTypesGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });
             cls.Setup(c => c.GendersGetAllAsync()).ReturnsAsync(() => new List<LookupDto> { new LookupDto() });

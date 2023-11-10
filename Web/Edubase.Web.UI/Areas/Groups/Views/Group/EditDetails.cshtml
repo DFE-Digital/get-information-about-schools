@@ -245,12 +245,16 @@
                     {
                         // var groupTypeShortName = Model.GroupTypeId == 5 ? Model.GroupTypeName.ToLower() : "trust";
 
-                        <div class="govuk-form-group">
+                        // id needs to be consistent with id in edit-group-details.js
+
+                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CloseAndMarkAsCreatedInError)">
+                            @Html.ValidationMessageFor(x => x.CloseAndMarkAsCreatedInError, null, new { @class = "govuk-error-message" })
                             @FormHelpers.GiasCheckbox("true",
-                                nameof(Model.CloseAndMarkAsCreatedInError),
-                                Model.CloseAndMarkAsCreatedInErrorLabel,
-                                " govuk-!-padding-top-0",
-                                new { id = "close-created-in-error" })
+                                 nameof(Model.CloseAndMarkAsCreatedInError),
+                                 Model.CloseAndMarkAsCreatedInErrorLabel,
+                                 " govuk-!-padding-top-0",
+                                 new { id = "CloseAndMarkAsCreatedInError" },
+                                 Model.CloseAndMarkAsCreatedInError)
                         </div>
                     }
 

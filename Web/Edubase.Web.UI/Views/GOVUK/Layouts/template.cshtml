@@ -105,6 +105,14 @@
             break;
     }
 }
+
+@{
+    // Not all uses of the URL on this page strictly require being forwarded header aware,
+    // but it's easier and safer to be consistent and just do it everywhere.
+    var urlHelper = new UrlHelper(Request.RequestContext);
+    var currentUrl = urlHelper.GetForwardedHeaderAwareUrl();
+}
+
 <div id="app">
     @RenderSection("bodyStart", required: false)
 
@@ -125,7 +133,7 @@
                         </div>
                         @using (Html.BeginForm("CookieChoices", "Home", new {area=""}, FormMethod.Post))
                         {
-                            <input type="hidden" name="OriginatingPage" value="@Request.Url.ToString()"/>
+                            <input type="hidden" name="OriginatingPage" value="@currentUrl.ToString()"/>
                             <div class="govuk-button-group">
                                 <button value="true" type="submit" name="acceptAnalyticsCookies" class="govuk-button" data-module="govuk-button">
                                     Accept analytics cookies
@@ -226,13 +234,13 @@
                         @if (Request.IsAuthenticated)
                         {
                             <li class="govuk-header__navigation-item">
-                                @Html.ActionLink("Sign out", "LogOff", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id = "logout-link", Class = "logout-link govuk-header__link", rel = "nofollow" })
+                                @Html.ActionLink("Sign out", "LogOff", "Account", new { area = "", returnUrl = currentUrl.PathAndQuery }, new { id = "logout-link", Class = "logout-link govuk-header__link", rel = "nofollow" })
                             </li>
                         }
                         else
                         {
                             <li class="govuk-header__navigation-item">
-                                @Html.ActionLink("Sign in", "LogIn", "Account", new { area = "", returnUrl = Request.Url.PathAndQuery }, new { id = "login-link", Class = "login-link govuk-header__link", rel = "nofollow" })
+                                @Html.ActionLink("Sign in", "LogIn", "Account", new { area = "", returnUrl = currentUrl.PathAndQuery }, new { id = "login-link", Class = "login-link govuk-header__link", rel = "nofollow" })
                             </li>
                         }
                     </ul>
