@@ -142,7 +142,7 @@ else
 
 @helper IsOriginalSignatoryMember()
 {
-    @if (Model.DisplayPolicy.IsOriginalSignatoryMember)
+    if (Model.DisplayPolicy.IsOriginalSignatoryMember)
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.IsOriginalSignatoryMember)">
             @Html.LabelFor(x => x.IsOriginalSignatoryMember, "Original signatory member", new { @class = "govuk-label" })
@@ -154,7 +154,7 @@ else
 
 @helper IsOriginalChairOfTrustees()
 {
-    @if (Model.DisplayPolicy.IsOriginalChairOfTrustees)
+    if (Model.DisplayPolicy.IsOriginalChairOfTrustees)
     {
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.IsOriginalChairOfTrustees)">
             @Html.LabelFor(x => x.IsOriginalChairOfTrustees, "Original chair of trustees", new { @class = "govuk-label" })
