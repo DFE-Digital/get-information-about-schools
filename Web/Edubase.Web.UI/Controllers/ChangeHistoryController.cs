@@ -45,9 +45,9 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpGet, Route(Name = "ChangeHistoryCriteria")]
-        public async Task<ActionResult> Index(ChangeHistoryViewModel viewModel)
+        public ActionResult Index(ChangeHistoryViewModel viewModel)
         {
-            return await Task.Run(() => View("Index", viewModel));
+            return View("Index", viewModel);    
         }
 
         [HttpGet, Route("Search", Name = "ChangeHistorySearch")]
