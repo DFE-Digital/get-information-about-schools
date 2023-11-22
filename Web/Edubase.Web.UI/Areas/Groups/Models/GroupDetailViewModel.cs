@@ -66,6 +66,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public IEnumerable<LinkedGroupModel> Links { get; set; }
         public GovernorPermissions GovernorPermissions { get; set; }
 
+        public string FscpdServiceName => ConfigurationManager.AppSettings["FscpdServiceName"];
         public string FscpdURL => extService.FscpdURL(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SchoolSponsor));
         private bool? showFscpd;
         public bool ShowFscpd

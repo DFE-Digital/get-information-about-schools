@@ -1,6 +1,10 @@
+@using System.Configuration
 @{
     ViewBag.Title = "Get Information about Schools";
     ViewBag.SiteSection = "help";
+
+    var fscpdServiceName = ConfigurationManager.AppSettings["FscpdServiceName"];
+    var fscpdHomeUrl = ConfigurationManager.AppSettings["FscpdHomeUrl"];
 }
 
 @section BreadCrumbs
@@ -55,7 +59,7 @@
                     <li data-idx="2.2">
                         Key departmental services, such as
                         <a href="https://services.signin.education.gov.uk/" target="_blank" rel="noreferrer noopener">DfE Sign-in (DSI) (opens in new tab)</a>,
-                        <a href="https://www.gov.uk/school-performance-tables" target="_blank" rel="noreferrer noopener">Find school and college performance data in England (FSCP) (also known as the School Performance Tables (SPT)) (opens in new tab)</a>,
+                        <a href="@fscpdHomeUrl" target="_blank" rel="noreferrer noopener">@fscpdServiceName (also known as the School Performance Tables (SPT)) (opens in new tab)</a>,
                         Analyse School Performance (ASP) and
                         <a href="https://schools-financial-benchmarking.service.gov.uk/" target="_blank" rel="noreferrer noopener">School Financial Benchmarking (SFB) (opens in new tab)</a>
                         use the information in GIAS to directly feed their services. If GIAS information is incorrect establishments (where applicable) may not be represented correctly on these key services that are available to the public and/or individual establishments.
@@ -89,7 +93,7 @@
                     <li data-idx="2.10">
                         All governance boards are required to provide information to the Secretary of State about people involved in governance via GIAS which is also the
                         <a href="https://www.gov.uk/government/news/national-database-of-governors" target="_blank" rel="noreferrer noopener">National Database of Governors (opens in new tab)</a>.
-                        <a href="http://www.legislation.gov.uk/ukpga/1996/56/section/538" target="_blank" rel="noreferrer noopener">Section 538 of the Education Act 1996 (opens in new tab)</a> and the 
+                        <a href="http://www.legislation.gov.uk/ukpga/1996/56/section/538" target="_blank" rel="noreferrer noopener">Section 538 of the Education Act 1996 (opens in new tab)</a> and the
                         <a href="https://www.gov.uk/guidance/academies-financial-handbook" target="_blank" rel="noreferrer noopener">Academy Trust Handbook (opens in new tab)</a> provide further information about establishments responsibilities with regards to GIAS.
                     </li>
                     <li data-idx="2.11">
