@@ -23,7 +23,6 @@
 </div>
 @using (Html.BeginForm("SearchAcademyOpenings", "AcademyOpenings", new {area = ""}, FormMethod.Get))
 {
-    @Html.AntiForgeryToken()
     <div class="govuk-grid-row" id="academy-search">
         <div class="govuk-grid-column-three-quarters">
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Urn)">

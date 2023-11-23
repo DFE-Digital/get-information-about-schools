@@ -387,6 +387,7 @@ else
 
                                     @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabDeleteOrRetireGovernor" : "GroupDeleteOrRetireGovernor", FormMethod.Post, new { id = "removal-form" }))
                                     {
+                                        @Html.AntiForgeryToken()
                                         @Html.HiddenFor(x => x.RemovalGid)
                                         @Html.HiddenFor(x => x.EstablishmentUrn)
                                         @Html.HiddenFor(x => x.GroupUId)
