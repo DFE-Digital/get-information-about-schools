@@ -12,6 +12,7 @@ namespace Edubase.Web.UI.Models
         }
         public IEnumerable<NewsArticle> NewsArticles { get; set; }
         public string FinancialBenchmarkingHomepage => ConfigurationManager.AppSettings["FinancialBenchmarkingURL"];
+        public string FscpdServiceName => ConfigurationManager.AppSettings["FscpdServiceName"];
         public string FscpdHomepage => ConfigurationManager.AppSettings["FscpdHomeUrl"];
     }
 }
