@@ -305,7 +305,7 @@ namespace Edubase.Web.UI.Controllers
                 if (loopCount > 0)
                 {
                     // pause before trying the non-complete items again
-                    System.Threading.Thread.Sleep(1000);
+                    await Task.Delay(1000);
                 }
 
                 loopCount += 1;
