@@ -85,7 +85,7 @@ namespace Edubase.Web.UI.Controllers
                 }
             }
 
-            return await Index(viewModel);
+            return Index(viewModel);
         }
 
         [HttpGet, Route("Search/Establishments", Name = "ChangeHistoryEstablishments")]
