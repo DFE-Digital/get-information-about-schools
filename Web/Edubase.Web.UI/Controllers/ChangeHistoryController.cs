@@ -51,7 +51,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpGet, Route("Search", Name = "ChangeHistorySearch")]
-        public async Task<ActionResult> SearchChangeHistory(ChangeHistoryViewModel viewModel)
+        public ActionResult SearchChangeHistory(ChangeHistoryViewModel viewModel)
         {
             if (viewModel.SearchType == eSearchType.Text  && viewModel.NoResultsForName)
             {
