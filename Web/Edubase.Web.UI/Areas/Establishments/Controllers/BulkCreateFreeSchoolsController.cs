@@ -61,7 +61,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             var viewModel = new BulkCreateFreeSchoolsViewModel();
             var apiResponse = await _establishmentWriteService.BulkCreateFreeSchoolsGetProgressAsync(id, User);
-            return await Task.Run(() => ResultInternalAjaxAsync(id, viewModel, apiResponse));
+            return ResultInternalAjaxAsync(id, viewModel, apiResponse);
         }
 
         private async Task<ActionResult> ResultInternalAsync(Guid id, BulkCreateFreeSchoolsViewModel viewModel, ApiResponse<BulkCreateFreeSchoolsResult> apiResponse)
