@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Services.Core;
 using Edubase.Web.UI.Helpers;
-using System.Configuration;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Edubase.Services.ExternalLookup;
@@ -189,7 +189,6 @@ namespace Edubase.Web.UI.Models
         public bool HighPriorityEstablishmentConfirmationPending => (Establishment?.UrgentConfirmationUpToDateRequired).GetValueOrDefault();
         public bool HighPriorityGovernanceConfirmationPending => (Establishment?.UrgentConfirmationUpToDateGovernanceRequired).GetValueOrDefault();
 
-        public string FscpdServiceName => ConfigurationManager.AppSettings["FscpdServiceName"];
         public string FscpdURL => extService.FscpdURL(Establishment.Urn, Establishment.Name, Establishment.TypeId.OneOfThese(eLookupGroupType.MultiacademyTrust));
         private bool? showFscpd;
         public bool ShowFscpd
