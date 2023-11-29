@@ -190,16 +190,20 @@ namespace Edubase.Web.UI.Models
         public bool HighPriorityGovernanceConfirmationPending => (Establishment?.UrgentConfirmationUpToDateGovernanceRequired).GetValueOrDefault();
 
         public string FscpdURL => extService.FscpdURL(Establishment.Urn, Establishment.Name, Establishment.TypeId.OneOfThese(eLookupGroupType.MultiacademyTrust));
+
         private bool? showFscpd;
+
         public bool ShowFscpd
         {
-            get
+            get => showFscpd.GetValueOrDefault();
+            private set => showFscpd = value;
+        }
+
+        public async Task SetFscpdAsync()
+        {
+            if (!showFscpd.HasValue)
             {
-                if (!showFscpd.HasValue)
-                {
-                    showFscpd = extService != null && Task.Run(() => extService.FscpdCheckExists(Establishment.Urn, Establishment.Name, Establishment.TypeId.OneOfThese(eLookupGroupType.MultiacademyTrust))).Result;
-                }
-                return showFscpd.Value;
+                showFscpd = extService != null && await extService.FscpdCheckExists(Establishment.Urn, Establishment.Name, Establishment.TypeId.OneOfThese(eLookupGroupType.MultiacademyTrust));
             }
         }
 

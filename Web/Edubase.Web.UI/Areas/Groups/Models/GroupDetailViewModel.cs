@@ -67,16 +67,20 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public GovernorPermissions GovernorPermissions { get; set; }
 
         public string FscpdURL => extService.FscpdURL(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SchoolSponsor));
+
         private bool? showFscpd;
+
         public bool ShowFscpd
         {
-            get
+            get => showFscpd.GetValueOrDefault();
+            private set => showFscpd = value;
+        }
+
+        public async Task SetFscpdAsync()
+        {
+            if (!showFscpd.HasValue)
             {
-                if (!showFscpd.HasValue)
-                {
-                    showFscpd = extService != null && Task.Run(() => extService.FscpdCheckExists(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SchoolSponsor))).Result;
-                }
-                return showFscpd.Value;
+                showFscpd = extService != null && await extService.FscpdCheckExists(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SchoolSponsor));
             }
         }
 
