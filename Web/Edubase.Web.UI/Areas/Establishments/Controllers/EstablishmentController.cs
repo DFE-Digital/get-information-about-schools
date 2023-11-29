@@ -348,6 +348,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             };
 
             await viewModel.SetFscpdAsync();
+            await viewModel.SetShowFinancialBenchmarkingAsync();
 
             var result = await _establishmentReadService.GetAsync(id, User);
             if (result.ReturnValue == null)

@@ -103,20 +103,20 @@ namespace Edubase.Web.UI.Areas.Groups.Models
 
         public string FinancialBenchmarkingURL => extService.SfbURL(FinancialBenchmarkingLookups.Item1, FinancialBenchmarkingLookups.Item2);
 
-
-
         private bool? showFinancialBenchmarking;
+
         public bool ShowFinancialBenchmarking
         {
-            get
-            {
-                if (!showFinancialBenchmarking.HasValue)
-                {
-                    showFinancialBenchmarking = extService != null && Task.Run(() => extService.SfbCheckExists(FinancialBenchmarkingLookups.Item1, FinancialBenchmarkingLookups.Item2)).Result;
-                }
-                return showFinancialBenchmarking.Value;
-            }
+            get => showFinancialBenchmarking.GetValueOrDefault();
+            private set => showFinancialBenchmarking = value;
         }
 
+        public async Task SetShowFinancialBenchmarkingAsync()
+        {
+            if (!showFscpd.HasValue)
+            {
+                showFscpd = extService != null && await extService.SfbCheckExists(FinancialBenchmarkingLookups.Item1, FinancialBenchmarkingLookups.Item2);
+            }
+        }
     }
 }

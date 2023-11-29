@@ -206,19 +206,21 @@ namespace Edubase.Web.UI.Models
                 showFscpd = extService != null && await extService.FscpdCheckExists(Establishment.Urn, Establishment.Name, Establishment.TypeId.OneOfThese(eLookupGroupType.MultiacademyTrust));
             }
         }
-
         public string FinancialBenchmarkingURL => extService.SfbURL(Establishment.Urn, FbType.School);
 
         private bool? showFinancialBenchmarking;
+
         public bool ShowFinancialBenchmarking
         {
-            get
+            get => showFinancialBenchmarking.GetValueOrDefault();
+            private set => showFinancialBenchmarking = value;
+        }
+
+        public async Task SetShowFinancialBenchmarkingAsync()
+        {
+            if (!showFinancialBenchmarking.HasValue)
             {
-                if (!showFinancialBenchmarking.HasValue)
-                {
-                    showFinancialBenchmarking = extService != null && Task.Run(() => extService.SfbCheckExists(Establishment.Urn, FbType.School)).Result;
-                }
-                return showFinancialBenchmarking.Value;
+                showFinancialBenchmarking = extService != null && await extService.SfbCheckExists(Establishment.Urn, FbType.School);
             }
         }
 
