@@ -22,13 +22,14 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
             BaseAddress = new Uri("https://atlas.microsoft.com")
         };
 
-        private static readonly Policy RetryPolicy;
+        private static readonly Policy RetryPolicy = CreateRetryPolicy();
 
-        static AzureMapsService()
+        private static Policy CreateRetryPolicy()
         {
             var retryIntervalSettings = ConfigurationManager.AppSettings["AzureMapService_RetryIntervals"].Split(',');
             var retryIntervals = retryIntervalSettings.Select(int.Parse).ToArray();
-            RetryPolicy = Policy
+
+            return Policy
                 .Handle<HttpRequestException>()
                 .WaitAndRetryAsync(retryIntervals.Select(seconds => TimeSpan.FromSeconds(seconds)));
         }
