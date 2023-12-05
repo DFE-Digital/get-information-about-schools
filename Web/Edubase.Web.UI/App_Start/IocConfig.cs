@@ -221,10 +221,11 @@ namespace Edubase.Web.UI
 
         public static HttpClient CreateHttpClient()
         {
+            var timeoutSettings = int.Parse(ConfigurationManager.AppSettings["HttpClient_Timeout"]);
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
             {
                 BaseAddress = new Uri(ConfigurationManager.AppSettings["TexunaApiBaseAddress"]),
-                Timeout = TimeSpan.FromSeconds(180)
+                Timeout = TimeSpan.FromSeconds(timeoutSettings)
             };
 
             var apiUsername = ConfigurationManager.AppSettings["api:Username"];
@@ -241,10 +242,11 @@ namespace Edubase.Web.UI
 
         public static HttpClient CreateFscpdClient()
         {
+            var timeoutSettings = int.Parse(ConfigurationManager.AppSettings["FscpdClient_Timeout"]);
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
             {
                 BaseAddress = new Uri(ConfigurationManager.AppSettings["FscpdURL"]),
-                Timeout = TimeSpan.FromSeconds(10)
+                Timeout = TimeSpan.FromSeconds(timeoutSettings)
             };
 
             var apiUsername = ConfigurationManager.AppSettings["FscpdUsername"];
@@ -261,10 +263,11 @@ namespace Edubase.Web.UI
 
         public static HttpClient CreateSfbClient()
         {
+            var timeoutSettings = int.Parse(ConfigurationManager.AppSettings["SfbClient_Timeout"]);
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
             {
                 BaseAddress = new Uri(ConfigurationManager.AppSettings["FinancialBenchmarkingURL"]),
-                Timeout = TimeSpan.FromSeconds(10)
+                Timeout = TimeSpan.FromSeconds(timeoutSettings)
             };
 
             var apiUsername = ConfigurationManager.AppSettings["FinancialBenchmarkingUsername"];
@@ -286,10 +289,10 @@ namespace Edubase.Web.UI
             string lookupApiUsername, string lookupApiPassword)
         {
             var lookupUri = new Uri(lookupApiAddress);
-
+            var timeoutSettings = int.Parse(ConfigurationManager.AppSettings["LookupClient_Timeout"]);
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
             {
-                BaseAddress = lookupUri, Timeout = TimeSpan.FromSeconds(180)
+                BaseAddress = lookupUri, Timeout = TimeSpan.FromSeconds(timeoutSettings)
             };
 
             if (!string.IsNullOrEmpty(lookupApiUsername) && !string.IsNullOrEmpty(lookupApiPassword))

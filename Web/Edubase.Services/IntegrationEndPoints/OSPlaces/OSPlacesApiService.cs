@@ -20,15 +20,17 @@ namespace Edubase.Services.IntegrationEndPoints.OSPlaces
         {
             BaseAddress = new Uri("https://api.os.uk/")
         };
-        private static readonly Policy RetryPolicy = Policy
+
+        private static readonly Policy RetryPolicy;
+
+        static OSPlacesApiService()
+        {
+            var retryIntervalSettings = ConfigurationManager.AppSettings["OSPlacesApiServices_RetryIntervals"].Split(',');
+            var retryIntervals = retryIntervalSettings.Select(int.Parse).ToArray();
+            RetryPolicy = Policy
                 .Handle<HttpRequestException>()
-                .WaitAndRetryAsync(new[]
-                {
-                    TimeSpan.FromSeconds(1),
-                    TimeSpan.FromSeconds(2),
-                    TimeSpan.FromSeconds(2),
-                    TimeSpan.FromSeconds(4)
-                });
+                .WaitAndRetryAsync(retryIntervals.Select(seconds => TimeSpan.FromSeconds(seconds)));
+        }
 
         public async Task<PlaceDto[]> SearchAsync(string text)
         {
