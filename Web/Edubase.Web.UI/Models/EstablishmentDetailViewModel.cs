@@ -201,11 +201,16 @@ namespace Edubase.Web.UI.Models
 
         public async Task SetFscpdAsync()
         {
+            if (Establishment == null)
+            {
+                return;
+            }
             if (!showFscpd.HasValue)
             {
                 showFscpd = extService != null && await extService.FscpdCheckExists(Establishment.Urn, Establishment.Name, Establishment.TypeId.OneOfThese(eLookupGroupType.MultiacademyTrust));
             }
         }
+
         public string FinancialBenchmarkingURL => extService.SfbURL(Establishment.Urn, FbType.School);
 
         private bool? showFinancialBenchmarking;
@@ -218,6 +223,10 @@ namespace Edubase.Web.UI.Models
 
         public async Task SetShowFinancialBenchmarkingAsync()
         {
+            if (Establishment == null)
+            {
+                return;
+            }
             if (!showFinancialBenchmarking.HasValue)
             {
                 showFinancialBenchmarking = extService != null && await extService.SfbCheckExists(Establishment.Urn, FbType.School);

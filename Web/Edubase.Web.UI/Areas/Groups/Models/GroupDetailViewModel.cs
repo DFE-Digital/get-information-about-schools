@@ -79,6 +79,10 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         //code originally inside the property, moved here to allow it to be async
         public async Task SetFscpdAsync()
         {
+            if (Group == null)
+            {
+                return;
+            }
             if (!showFscpd.HasValue)
             {
                 showFscpd = extService != null && await extService.FscpdCheckExists(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SchoolSponsor));
@@ -115,6 +119,10 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         //code originally inside the property, moved here to allow it to be async
         public async Task SetShowFinancialBenchmarkingAsync()
         {
+            if (FinancialBenchmarkingLookups == null)
+            {
+                return;
+            }
             if (!showFscpd.HasValue)
             {
                 showFscpd = extService != null && await extService.SfbCheckExists(FinancialBenchmarkingLookups.Item1, FinancialBenchmarkingLookups.Item2);
