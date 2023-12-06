@@ -76,6 +76,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
             private set => showFscpd = value;
         }
 
+        //code originally inside the property, moved here to allow it to be async
         public async Task SetFscpdAsync()
         {
             if (!showFscpd.HasValue)
@@ -111,6 +112,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
             private set => showFinancialBenchmarking = value;
         }
 
+        //code originally inside the property, moved here to allow it to be async
         public async Task SetShowFinancialBenchmarkingAsync()
         {
             if (!showFscpd.HasValue)
