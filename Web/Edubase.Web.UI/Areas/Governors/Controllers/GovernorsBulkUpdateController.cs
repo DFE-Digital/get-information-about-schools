@@ -1,41 +1,50 @@
-using Edubase.Common.IO;
-using Edubase.Services.Governors;
-using Edubase.Web.UI.Areas.Governors.Models;
-using Edubase.Web.UI.Helpers;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Edubase.Common.IO;
+using Edubase.Services.Governors;
+using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Filters;
+using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
-    [RouteArea("Governors"), RoutePrefix("BulkUpdate"), MvcAuthorizeRoles(AuthorizedRoles.CanBulkUpdateGovernors)]
+    [RouteArea("Governors")]
+    [RoutePrefix("BulkUpdate")]
+    [MvcAuthorizeRoles(AuthorizedRoles.CanBulkUpdateGovernors)]
     public class GovernorsBulkUpdateController : Controller
     {
-        readonly IGovernorsWriteService _governorsWriteService;
-        readonly IGovernorsReadService _governorsReadService;
+        private readonly IGovernorsReadService _governorsReadService;
+        private readonly IGovernorsWriteService _governorsWriteService;
 
-        public GovernorsBulkUpdateController(IGovernorsWriteService governorsWriteService, IGovernorsReadService governorsReadService)
+        public GovernorsBulkUpdateController(IGovernorsWriteService governorsWriteService,
+            IGovernorsReadService governorsReadService)
         {
             _governorsWriteService = governorsWriteService;
             _governorsReadService = governorsReadService;
         }
 
-        [HttpGet, Route(Name = "GovernorsBulkUpdate"), ImportModelState]
+        [HttpGet]
+        [Route(Name = "GovernorsBulkUpdate")]
+        [ImportModelState]
         public async Task<ActionResult> Index()
         {
-            var vm = TempData["ProcessBulkUpdate"] as GovernorsBulkUpdateViewModel ?? new GovernorsBulkUpdateViewModel();
+            var vm = TempData["ProcessBulkUpdate"] as GovernorsBulkUpdateViewModel ??
+                     new GovernorsBulkUpdateViewModel();
             return await Task.Run(() => View("Index", vm));
         }
 
-        [HttpGet, Route("DownloadTemplate")]
+        [HttpGet]
+        [Route("DownloadTemplate")]
         public async Task<ActionResult> DownloadTemplate()
         {
             return Redirect(await _governorsReadService.GetGovernorBulkUpdateTemplateUri(User));
         }
 
-        [HttpPost, Route(Name = "GovernorsProcessBulkUpdate"), ExportModelState]
+        [HttpPost]
+        [Route(Name = "GovernorsProcessBulkUpdate")]
+        [ExportModelState]
         public async Task<ActionResult> ProcessBulkUpdate(GovernorsBulkUpdateViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -45,7 +54,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
                 if (new FileInfo(fileName).Length > 1000000)
                 {
-                    ModelState.AddModelError("BulkFile", "The file size is too large. Please use a file size smaller than 1MB");
+                    ModelState.AddModelError("BulkFile",
+                        "The file size is too large. Please use a file size smaller than 1MB");
                 }
                 else
                 {
@@ -54,7 +64,10 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     {
                         var apiResponse = await _governorsWriteService.BulkUpdateProcessRequestAsync(result.Id, User);
                         viewModel.WasSuccessful = apiResponse.Success;
-                        if (apiResponse.HasErrors) { ModelState.AddModelError("BulkFile", apiResponse.Errors[0].Message); }
+                        if (apiResponse.HasErrors)
+                        {
+                            ModelState.AddModelError("BulkFile", apiResponse.Errors[0].Message);
+                        }
                     }
                     else
                     {
@@ -64,10 +77,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         }
                         else
                         {
-                            ModelState.AddModelError("error-log", "Please download the error log to correct your data before resubmitting");
+                            ModelState.AddModelError("error-log",
+                                "Please download the error log to correct your data before resubmitting");
                             viewModel.ErrorLogDownload = result.ErrorLogFile;
                         }
                     }
+
                     System.IO.File.Delete(fileName);
                 }
             }
@@ -76,8 +91,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 viewModel.BadFileType = true;
             }
 
-            TempData["ProcessBulkUpdate"] = viewModel;
-            return RedirectToAction("Index");
+            return View("Index", viewModel);
         }
     }
 }
