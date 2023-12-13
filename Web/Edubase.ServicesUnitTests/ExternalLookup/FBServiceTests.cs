@@ -1,3 +1,4 @@
+using System.Configuration;
 using System.Net.Http;
 using Xunit;
 using Xunit.Abstractions;
@@ -11,6 +12,8 @@ namespace Edubase.Services.ExternalLookup.UnitTests
         public FBServiceTests(ITestOutputHelper output)
         {
             _output = output;
+            ConfigurationManager.AppSettings["FinancialBenchmarkingApiURL"] = @"http://test/";
+            ConfigurationManager.AppSettings["FinancialBenchmarkingURL"] = @"http://test/";
         }
 
         [Theory]
@@ -20,7 +23,7 @@ namespace Edubase.Services.ExternalLookup.UnitTests
         public void PublicURL_ReturnsCorrectUrl(int? lookupId, FbType lookupType, string expectedUrl, string testName)
         {
             _output.WriteLine(testName);
-            var subject = new FBService(new HttpClient(), "http://test/");
+            var subject = new FBService();
             var publicUrl = subject.PublicURL(lookupId, lookupType);
             Assert.Equal(expectedUrl, publicUrl);
         }
@@ -32,7 +35,7 @@ namespace Edubase.Services.ExternalLookup.UnitTests
         public void ApiUrl_ReturnsCorrectUrl(int? lookupId, FbType lookupType, string expectedUrl, string testName)
         {
             _output.WriteLine(testName);
-            var subject = new FBService(new HttpClient(), "http://test/");
+            var subject = new FBService();
             var apiUrl = subject.ApiUrl(lookupId, lookupType);
             Assert.Equal(expectedUrl, apiUrl);
         }
