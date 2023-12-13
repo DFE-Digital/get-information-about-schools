@@ -289,10 +289,15 @@ namespace Edubase.Web.UI
             string lookupApiUsername, string lookupApiPassword)
         {
             var lookupUri = new Uri(lookupApiAddress);
-            var timeoutSettings = int.Parse(ConfigurationManager.AppSettings["LookupClient_Timeout"]);
+
+            if (!int.TryParse(ConfigurationManager.AppSettings["LookupClient_Timeout"], out var timeoutsettings))
+            {
+                timeoutsettings = 10;
+            }
+
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
             {
-                BaseAddress = lookupUri, Timeout = TimeSpan.FromSeconds(timeoutSettings)
+                BaseAddress = lookupUri, Timeout = TimeSpan.FromSeconds(timeoutsettings)
             };
 
             if (!string.IsNullOrEmpty(lookupApiUsername) && !string.IsNullOrEmpty(lookupApiPassword))

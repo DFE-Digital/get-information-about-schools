@@ -23,7 +23,7 @@ namespace Edubase.Services.ExternalLookup.UnitTests
         public void PublicURL_ReturnsCorrectUrl(int? lookupId, FbType lookupType, string expectedUrl, string testName)
         {
             _output.WriteLine(testName);
-            var subject = new FBService();
+            var subject = new FBService(new HttpClient());
             var publicUrl = subject.PublicURL(lookupId, lookupType);
             Assert.Equal(expectedUrl, publicUrl);
         }
@@ -35,7 +35,7 @@ namespace Edubase.Services.ExternalLookup.UnitTests
         public void ApiUrl_ReturnsCorrectUrl(int? lookupId, FbType lookupType, string expectedUrl, string testName)
         {
             _output.WriteLine(testName);
-            var subject = new FBService();
+            var subject = new FBService(new HttpClient());
             var apiUrl = subject.ApiUrl(lookupId, lookupType);
             Assert.Equal(expectedUrl, apiUrl);
         }

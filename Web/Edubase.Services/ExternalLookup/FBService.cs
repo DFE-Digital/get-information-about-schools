@@ -29,7 +29,7 @@ namespace Edubase.Services.ExternalLookup
                 TimeSpan.FromSeconds(1)
             }));
 
-        public FBService()
+        public FBService(HttpClient httpClient)
         {
             apiBaseAddress = ConfigurationManager.AppSettings["FinancialBenchmarkingApiURL"];
             urlBaseAddress = ConfigurationManager.AppSettings["FinancialBenchmarkingURL"];
