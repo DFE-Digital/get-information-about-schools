@@ -61,7 +61,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             var viewModel = new BulkCreateFreeSchoolsViewModel();
             var apiResponse = await _establishmentWriteService.BulkCreateFreeSchoolsGetProgressAsync(id, User);
-            return await Task.Run(() => ResultInternalAjaxAsync(id, viewModel, apiResponse));
+            return ResultInternalAjax(id, viewModel, apiResponse);
         }
 
         private async Task<ActionResult> ResultInternalAsync(Guid id, BulkCreateFreeSchoolsViewModel viewModel, ApiResponse<BulkCreateFreeSchoolsResult> apiResponse)
@@ -128,7 +128,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
         }
 
-        private ActionResult ResultInternalAjaxAsync(Guid id, BulkCreateFreeSchoolsViewModel viewModel, ApiResponse<BulkCreateFreeSchoolsResult> apiResponse)
+        private ActionResult ResultInternalAjax(Guid id, BulkCreateFreeSchoolsViewModel viewModel, ApiResponse<BulkCreateFreeSchoolsResult> apiResponse)
         {
             var redirectUrl = string.Concat("/Establishments/bulk-create-free-schools/", id);
             if (apiResponse.Success)

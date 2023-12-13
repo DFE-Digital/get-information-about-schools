@@ -23,10 +23,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         }
 
         [HttpGet, Route(Name = "GovernorsBulkUpdate"), ImportModelState]
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
             var vm = TempData["ProcessBulkUpdate"] as GovernorsBulkUpdateViewModel ?? new GovernorsBulkUpdateViewModel();
-            return await Task.Run(() => View("Index", vm));
+
+            return View("Index", vm);
         }
 
         [HttpGet, Route("DownloadTemplate")]

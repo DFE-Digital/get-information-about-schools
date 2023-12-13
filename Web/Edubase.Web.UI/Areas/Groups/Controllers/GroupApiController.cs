@@ -20,15 +20,15 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         }
 
         [HttpPost, Route("CreateChildrensCentre/Validate")]
-        public async Task<IHttpActionResult> ValidateChildrensCentreGroup(ValidateChildrensCentreStep2 model)
+        public IHttpActionResult ValidateChildrensCentreGroup(ValidateChildrensCentreStep2 model)
         {
-            return await Task.Run(() =>
+            return
                 !ModelState.IsValid ? Json(ModelState.Where(m => m.Value.Errors.Any()))
-                    : (IHttpActionResult) Json(new string[] { }));
+                    : (IHttpActionResult) Json(new string[] { });
         }
 
         [HttpPost, Route("CreateChildrensCentre/Validate/OpenDate")]
-        public async Task<IHttpActionResult> ValidateGroupOpenDate(DateTimeViewModel openDate)
+        public IHttpActionResult ValidateGroupOpenDate(DateTimeViewModel openDate)
         {
             if (openDate == null || openDate.IsEmpty())
             {
@@ -37,13 +37,13 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             {
                 ModelState.AddModelError("openDate", "The date specified is not valid");
             }
-            return await Task.Run(() =>
+            return
                 !ModelState.IsValid ? Json(ModelState.Where(m => m.Value.Errors.Any()))
-                    : (IHttpActionResult) Json(new string[] { }));
+                    : (IHttpActionResult) Json(new string[] { });
         }
 
         [HttpPost, Route("CreateChildrensCentre/Validate/JoinedDate")]
-        public async Task<IHttpActionResult> ValidateEstablishmentJoinedDate(ValidateEstablishmentJoinedDateModel model)
+        public IHttpActionResult ValidateEstablishmentJoinedDate(ValidateEstablishmentJoinedDateModel model)
         {
             if (model.JoinDate == null || model.JoinDate.IsEmpty())
             {
@@ -73,9 +73,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 ModelState.AddModelError("joinDate", message);
             }
 
-            return await Task.Run(() =>
+            return
                 !ModelState.IsValid ? Json(ModelState.Where(m => m.Value.Errors.Any()))
-                    : (IHttpActionResult) Json(new string[] { }));
+                    : (IHttpActionResult) Json(new string[] { });
         }
 
         [HttpPost, Route("CreateChildrensCentre/Validate/All")]

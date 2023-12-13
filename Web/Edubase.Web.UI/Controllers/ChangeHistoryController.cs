@@ -45,13 +45,13 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpGet, Route(Name = "ChangeHistoryCriteria")]
-        public async Task<ActionResult> Index(ChangeHistoryViewModel viewModel)
+        public ActionResult Index(ChangeHistoryViewModel viewModel)
         {
-            return await Task.Run(() => View("Index", viewModel));
+            return View("Index", viewModel);    
         }
 
         [HttpGet, Route("Search", Name = "ChangeHistorySearch")]
-        public async Task<ActionResult> SearchChangeHistory(ChangeHistoryViewModel viewModel)
+        public ActionResult SearchChangeHistory(ChangeHistoryViewModel viewModel)
         {
             if (viewModel.SearchType == eSearchType.Text  && viewModel.NoResultsForName)
             {
@@ -85,7 +85,7 @@ namespace Edubase.Web.UI.Controllers
                 }
             }
 
-            return await Index(viewModel);
+            return Index(viewModel);
         }
 
         [HttpGet, Route("Search/Establishments", Name = "ChangeHistoryEstablishments")]

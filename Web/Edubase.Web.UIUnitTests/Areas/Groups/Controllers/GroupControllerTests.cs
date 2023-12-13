@@ -208,9 +208,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
 
             var grs = mockGroupReadService;
             var govrs = mockGovernorsReadService;
+            var ext = mockExternalLookupService;
             var id = mockIdentity;
             var estabList = CreateEstabList();
 
+
+            ext.Setup(x => x.FscpdCheckExists(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>())).ReturnsAsync(true);
             id.Setup(x => x.IsAuthenticated).Returns(isUserLoggedOn);
             grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(new GroupModel { GroupUId = 1, Name = "grp" }));
             grs.Setup(x => x.GetLinksAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(Enumerable.Empty<LinkedGroupModel>());
@@ -220,6 +223,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             grs.Setup(x => x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), true)).ReturnsAsync(estabList);
             govrs.Setup(x => x.GetGovernorPermissions(null, It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
             var response = (ViewResult) await controller.Details(1);
+
+            ext.Verify(x => x.FscpdCheckExists(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()), Times.AtLeastOnce);
 
             if (!isUserLoggedOn)
             {
