@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +17,7 @@ namespace Edubase.Common
         /// <param name="maxInterval">Interval in milliseconds</param>
         /// <param name="maxRetries">If zero, try forever</param>
         /// <returns></returns>
-        public static T RetryableAction<T>(Func<T> func, int minInterval = 100, int maxInterval = 500, int maxRetries = 5,
+        public static async Task<T> RetryableAction<T>(Func<T> func, int minInterval = 100, int maxInterval = 500, int maxRetries = 5,
             Action<Exception> failureAction = null, Func<T, bool> failureCondition = null)
         {
             int count = 0;
@@ -36,7 +36,7 @@ namespace Edubase.Common
                 {
                     failureAction?.Invoke(ex);
                     if (count > maxRetries && maxRetries > 0) throw;
-                    else System.Threading.Thread.Sleep(rnd.Next(minInterval, maxInterval));
+                    else await Task.Delay(rnd.Next(minInterval, maxInterval));
                 }
             }
 
