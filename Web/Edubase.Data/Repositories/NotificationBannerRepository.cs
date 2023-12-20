@@ -57,10 +57,10 @@ namespace Edubase.Data.Repositories
         {
             var cache = MemoryCache.Default;
             var result = cache[TopTwoNotificationBannersCacheKey] as IEnumerable<NotificationBanner>;
-            return result ?? RetrieveAndUpdateTopTwoNotificationBannersFromCache();
+            return result ?? GetTopTwoNotificationBannersFromTableAndUpdateCache();
         }
 
-        private IEnumerable<NotificationBanner> RetrieveAndUpdateTopTwoNotificationBannersFromCache()
+        private IEnumerable<NotificationBanner> GetTopTwoNotificationBannersFromTableAndUpdateCache()
         {
             if (!int.TryParse(ConfigurationManager.AppSettings["NotificationBannerCacheExpirationInMinutes"],
                     out var cacheExpirationInMinutes))
