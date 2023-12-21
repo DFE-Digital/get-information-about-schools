@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Runtime.Caching;
-using System.Threading;
 using System.Threading.Tasks;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories.TableStorage;
@@ -16,6 +15,7 @@ namespace Edubase.Data.Repositories
     public class NotificationBannerRepository : TableStorageBase<NotificationBanner> // INotificationBannerRepository
     {
         private const string TopTwoNotificationBannersCacheKey = "topTwoCurrentNotificationBanners";
+        private readonly MemoryCache _cache = MemoryCache.Default;
 
         public NotificationBannerRepository()
             : base("DataConnectionString")
@@ -55,35 +55,51 @@ namespace Edubase.Data.Repositories
 
         public IEnumerable<NotificationBanner> GetTopTwoCurrentNotificationBanners()
         {
-            var cache = MemoryCache.Default;
-            var result = cache[TopTwoNotificationBannersCacheKey] as IEnumerable<NotificationBanner>;
+            var result = _cache[TopTwoNotificationBannersCacheKey] as IEnumerable<NotificationBanner>;
             return result ?? GetTopTwoNotificationBannersFromTableAndUpdateCache();
         }
 
         private IEnumerable<NotificationBanner> GetTopTwoNotificationBannersFromTableAndUpdateCache()
         {
-            if (!int.TryParse(ConfigurationManager.AppSettings["NotificationBannerCacheExpirationInMinutes"],
-                    out var cacheExpirationInMinutes))
-            {
-                cacheExpirationInMinutes = 5;
-            }
-
-            var cache = MemoryCache.Default;
-
-            var query =
+            var top2CurrentQuery =
                 Table.CreateQuery<NotificationBanner>()
                     .Where(x => x.PartitionKey == eNotificationBannerPartition.Current.ToString()
                                 && x.Start <= DateTime.Now
                                 && x.End >= DateTime.Now)
                     .Take(2).AsTableQuery();
-            var notificationBanners = Table.ExecuteQuery(query).ToList();
+            var notificationBanners = Table.ExecuteQuery(top2CurrentQuery).ToList();
 
             //the cache only adds values if they don't exist - the method name doesn't make this clear.
-            cache.Add(TopTwoNotificationBannersCacheKey,
+            _cache.Add(TopTwoNotificationBannersCacheKey,
                 notificationBanners,
-                new DateTimeOffset(DateTime.Now.AddMinutes(cacheExpirationInMinutes)));
+                new DateTimeOffset(CalculateDateTimeOfCacheExpiration(notificationBanners)));
 
             return notificationBanners;
+        }
+
+        private DateTime CalculateDateTimeOfCacheExpiration(IEnumerable<NotificationBanner> currentBanners)
+        {
+            if (!int.TryParse(ConfigurationManager.AppSettings["NotificationBannerCacheExpirationInMinutes"],
+                    out var maximumCacheExpirationInMinutes))
+            {
+                maximumCacheExpirationInMinutes = 5;
+            }
+
+            var futureBannersQuery = Table.CreateQuery<NotificationBanner>()
+                .Where(x => x.PartitionKey == eNotificationBannerPartition.Current.ToString()
+                            && x.Start > DateTime.Now)
+                .AsTableQuery();
+            var futureBanners = Table.ExecuteQuery(futureBannersQuery).ToList();
+
+            var expirationTimes = (from banner in currentBanners
+                select banner.End).ToList();
+
+            expirationTimes = expirationTimes.Union((from banner in futureBanners
+                select banner.Start).ToList()).ToList();
+
+            expirationTimes.Add(DateTime.Now.AddMinutes(maximumCacheExpirationInMinutes));
+
+            return expirationTimes.Min();
         }
 
         public async Task<Page<NotificationBanner>> GetAllAsync(int take, TableContinuationToken skip = null,
