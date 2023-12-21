@@ -79,10 +79,10 @@ namespace Edubase.Data.Repositories
 
         private DateTime CalculateDateTimeOfCacheExpiration(IEnumerable<NotificationBanner> currentBanners)
         {
-            if (!int.TryParse(ConfigurationManager.AppSettings["NotificationBannerCacheExpirationInMinutes"],
-                    out var maximumCacheExpirationInMinutes))
+            if (!int.TryParse(ConfigurationManager.AppSettings["NotificationBannerCacheExpirationInSeconds"],
+                    out var maximumCacheExpirationInSeconds))
             {
-                maximumCacheExpirationInMinutes = 5;
+                maximumCacheExpirationInSeconds = 300;
             }
 
             var futureBannersQuery = Table.CreateQuery<NotificationBanner>()
@@ -97,7 +97,7 @@ namespace Edubase.Data.Repositories
             expirationTimes = expirationTimes.Union((from banner in futureBanners
                 select banner.Start).ToList()).ToList();
 
-            expirationTimes.Add(DateTime.Now.AddMinutes(maximumCacheExpirationInMinutes));
+            expirationTimes.Add(DateTime.Now.AddSeconds(maximumCacheExpirationInSeconds));
 
             return expirationTimes.Min();
         }
