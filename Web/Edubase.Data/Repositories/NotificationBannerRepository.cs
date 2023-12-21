@@ -77,7 +77,6 @@ namespace Edubase.Data.Repositories
                                 && x.End >= DateTime.Now)
                     .Take(2).AsTableQuery();
             var notificationBanners = Table.ExecuteQuery(query).ToList();
-            Console.WriteLine("current thread is background: " + Thread.CurrentThread.IsBackground);
 
             //the cache only adds values if they don't exist - the method name doesn't make this clear.
             cache.Add(TopTwoNotificationBannersCacheKey,
