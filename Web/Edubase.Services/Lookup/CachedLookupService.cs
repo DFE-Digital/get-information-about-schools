@@ -81,7 +81,7 @@ namespace Edubase.Services.Lookup
                 { "CountryId", async id => (await NationalitiesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "CountyId", async id => (await CountiesGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
                 { "OfstedRatingId", async id => (await OfstedRatingsGetAllAsync()).FirstOrDefault(x=>x.Id == id)?.Name },
-                { "IEBTModel.ProprietorTypeId", async id => (await Task.Run(() =>
+                { "IEBTModel.ProprietorTypeId", id =>
                 {
                     // a little bit overkill, but making use of the existing pattern to display enum choice
                     var pt = (eProprietorType)id;
@@ -95,10 +95,11 @@ namespace Edubase.Services.Lookup
                         displayName= ((DisplayAttribute) attributes[0]).Name;
                     }
 
-                    return displayName;
-                })) }
-            };
-        }
+                    return Task.FromResult(displayName);
+                }
+            }
+        };
+    }
 
         public async Task<IEnumerable<LookupDto>> LocalAuthorityGetAllAsync() => await AutoAsync(_lookupService.LocalAuthorityGetAllAsync);
         public async Task<IEnumerable<LookupDto>> AdmissionsPoliciesGetAllAsync() => await AutoAsync(_lookupService.AdmissionsPoliciesGetAllAsync);
