@@ -53,9 +53,9 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [Route("Manage", Name = "ManageNews"), EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
-        public async Task<ActionResult> Manage()
+        public ActionResult Manage()
         {
-            return await Task.Run(View);
+            return View();
         }
 
         [Route("Preview"), EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
@@ -77,9 +77,9 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [Route("Article/New", Name = "CreateArticle"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
-        public async Task<ActionResult> CreateArticle()
+        public ActionResult CreateArticle()
         {
-            return await Task.Run(() => View("EditArticle", new NewsArticleViewModel()));
+            return View("EditArticle", new NewsArticleViewModel());
         }
 
 
