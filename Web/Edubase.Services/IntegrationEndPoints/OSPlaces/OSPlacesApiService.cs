@@ -25,8 +25,29 @@ namespace Edubase.Services.IntegrationEndPoints.OSPlaces
 
         private static Policy CreateRetryPolicy()
         {
-            var retryIntervalSettings = ConfigurationManager.AppSettings["OSPlacesApiServices_RetryIntervals"].Split(',');
-            var retryIntervals = retryIntervalSettings.Select(int.Parse).ToArray();
+            var defaultRetriesValue = new[] { 2 };
+            var retryEnabled = ConfigurationManager.AppSettings["retry_enabled"] == "1";
+            var retryIntervalSettings = ConfigurationManager.AppSettings["OSPlacesApiServices_RetryIntervals"];
+            int[] retryIntervals;
+
+            if (retryEnabled)
+            {
+                if (string.IsNullOrEmpty(retryIntervalSettings) ||
+                    !retryIntervalSettings.Split(',').All(x => int.TryParse(x.Trim(), out _)))
+                {
+                    retryIntervals = defaultRetriesValue;
+                }
+                else
+                {
+                    retryIntervals = retryIntervalSettings.Split(',')
+                        .Select(x => int.Parse(x.Trim()))
+                        .ToArray();
+                }
+            }
+            else
+            {
+                retryIntervals = defaultRetriesValue;
+            }
 
             return Policy
                 .Handle<HttpRequestException>()
