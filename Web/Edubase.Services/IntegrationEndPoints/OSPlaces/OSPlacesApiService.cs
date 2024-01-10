@@ -25,33 +25,34 @@ namespace Edubase.Services.IntegrationEndPoints.OSPlaces
 
         private static Policy CreateRetryPolicy()
         {
-            var defaultRetriesValue = new[] { 2 };
-            var retryEnabled = ConfigurationManager.AppSettings["OSPlacesApiServices_TimeoutIntervals_Enabled"] == "1";
             var retryIntervalSettings = ConfigurationManager.AppSettings["OSPlacesApiServices_TimeoutIntervals"];
-            int[] retryIntervals;
 
-            if (retryEnabled)
+            if (string.IsNullOrEmpty(retryIntervalSettings?.Trim()))
             {
-                if (string.IsNullOrEmpty(retryIntervalSettings) ||
-                    !retryIntervalSettings.Split(',').All(x => int.TryParse(x.Trim(), out _)))
-                {
-                    retryIntervals = defaultRetriesValue;
-                }
-                else
-                {
-                    retryIntervals = retryIntervalSettings.Split(',')
-                        .Select(x => int.Parse(x.Trim()))
-                        .ToArray();
-                }
+                return Policy.NoOp();
             }
-            else
-            {
-                retryIntervals = defaultRetriesValue;
-            }
+
+            var retryIntervals = CsvSecondsToTimeSpans(retryIntervalSettings);
 
             return Policy
                 .Handle<HttpRequestException>()
-                .WaitAndRetryAsync(retryIntervals.Select(seconds => TimeSpan.FromSeconds(seconds)));
+                .WaitAndRetryAsync(retryIntervals);
+        }
+
+        private static TimeSpan[] CsvSecondsToTimeSpans(string csvSeconds)
+        {
+            var retryIntervals = csvSeconds.Split(',')
+                .Select(x => x.Trim())
+                .Where(x => int.TryParse(x, out var seconds) && seconds >= 0)
+                .Select(x => TimeSpan.FromSeconds(int.Parse(x)))
+                .ToArray();
+
+            if (retryIntervals.Length == 0)
+            {
+                return new[] { TimeSpan.FromSeconds(10) };
+            }
+
+            return retryIntervals;
         }
 
         public async Task<PlaceDto[]> SearchAsync(string text)
