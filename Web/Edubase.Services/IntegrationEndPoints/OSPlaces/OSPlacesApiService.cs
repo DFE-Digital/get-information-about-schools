@@ -25,7 +25,7 @@ namespace Edubase.Services.IntegrationEndPoints.OSPlaces
 
         private static Policy CreateRetryPolicy()
         {
-            var retryIntervalSettings = ConfigurationManager.AppSettings["OSPlacesApiServices_TimeoutIntervals"];
+            var retryIntervalSettings = ConfigurationManager.AppSettings["OSPlacesApiServices_RetryIntervals"];
 
             if (string.IsNullOrEmpty(retryIntervalSettings?.Trim()))
             {

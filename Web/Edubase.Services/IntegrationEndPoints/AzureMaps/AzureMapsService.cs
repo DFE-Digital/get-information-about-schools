@@ -26,7 +26,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
 
         private static Policy CreateRetryPolicy()
         {
-            var retryIntervalSettings = ConfigurationManager.AppSettings["AzureMapService_TimeoutIntervals"];
+            var retryIntervalSettings = ConfigurationManager.AppSettings["AzureMapService_RetryIntervals"];
 
             if (string.IsNullOrEmpty(retryIntervalSettings?.Trim()))
             {
