@@ -29,15 +29,20 @@ namespace Edubase.Services.ExternalLookup
                 TimeSpan.FromSeconds(1)
             }));
 
-        public FBService(HttpClient client, string baseAddress = "FinancialBenchmarkingApiURL", int timeOut = 10)
+        public FBService(HttpClient httpClient)
         {
-            apiBaseAddress = baseAddress == "FinancialBenchmarkingApiURL" ? ConfigurationManager.AppSettings[baseAddress] : baseAddress;
-            urlBaseAddress = baseAddress == "FinancialBenchmarkingApiURL" ? ConfigurationManager.AppSettings["FinancialBenchmarkingURL"] : baseAddress;
+            apiBaseAddress = ConfigurationManager.AppSettings["FinancialBenchmarkingApiURL"];
+            urlBaseAddress = ConfigurationManager.AppSettings["FinancialBenchmarkingURL"];
+
+            if (!int.TryParse(ConfigurationManager.AppSettings["FBService_Timeout"], out var timeoutsettings))
+            {
+                timeoutsettings = 10;
+            }
 
             _client = new HttpClient
             {
                 BaseAddress = new Uri(apiBaseAddress),
-                Timeout = TimeSpan.FromSeconds(timeOut)
+                Timeout = TimeSpan.FromSeconds(timeoutsettings)
             };
         }
 
