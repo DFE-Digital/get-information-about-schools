@@ -5,6 +5,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
     using System.IO;
     using System.Linq;
     using System.Net.Http;
+    using System.Threading;
     using System.Threading.Tasks;
     using Common;
     using Edubase.Common.Spatial;
@@ -48,15 +49,10 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
                 .Select(x => TimeSpan.FromSeconds(int.Parse(x)))
                 .ToArray();
 
-            if (retryIntervals.Length == 0)
-            {
-                return new[] { TimeSpan.FromSeconds(2) };
-            }
-
             return retryIntervals;
         }
 
-        public async Task<PlaceDto[]> SearchAsync(string text, bool isTypeahead)
+        public async Task<PlaceDto[]> SearchAsync(string text, bool isTypeahead, CancellationToken cancellationToken = default)
         {
             text = text.Clean();
 
@@ -69,7 +65,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
                 HttpMethod.Get,
                 $"/search/address/json?api-version=1.0&countrySet=GB&typeahead={(isTypeahead ? "true" : "false")}&limit=10&query={text}&subscription-key={_apiKey}");
 
-            using (var response = await RetryPolicy.ExecuteAsync(async () => await _azureMapsClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead)))
+            using (var response = await RetryPolicy.ExecuteAsync(async () => await _azureMapsClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)))
             {
                 var stream = await response.Content.ReadAsStreamAsync();
 

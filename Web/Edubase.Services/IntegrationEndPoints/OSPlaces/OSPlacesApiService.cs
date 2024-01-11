@@ -47,11 +47,6 @@ namespace Edubase.Services.IntegrationEndPoints.OSPlaces
                 .Select(x => TimeSpan.FromSeconds(int.Parse(x)))
                 .ToArray();
 
-            if (retryIntervals.Length == 0)
-            {
-                return new[] { TimeSpan.FromSeconds(10) };
-            }
-
             return retryIntervals;
         }
 
