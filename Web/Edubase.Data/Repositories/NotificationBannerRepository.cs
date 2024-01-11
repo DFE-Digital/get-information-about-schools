@@ -14,17 +14,24 @@ namespace Edubase.Data.Repositories
 {
     public class NotificationBannerRepository : TableStorageBase<NotificationBanner> // INotificationBannerRepository
     {
-        private const string TopTwoNotificationBannersCacheKey = "topTwoCurrentNotificationBanners";
+        private const string CurrentNotificationBannersCacheKey = "currentNotificationBanners";
         private readonly MemoryCache _cache = MemoryCache.Default;
+        private readonly int _notificationBannerCacheExpirationInSeconds;
 
         public NotificationBannerRepository()
             : base("DataConnectionString")
         {
+            if (!int.TryParse(ConfigurationManager.AppSettings["NotificationBannerCacheExpirationInSeconds"],
+                    out _notificationBannerCacheExpirationInSeconds))
+            {
+                _notificationBannerCacheExpirationInSeconds = 300;
+            }
         }
 
         public async Task CreateAsync(NotificationBanner entity)
         {
             await Table.ExecuteAsync(TableOperation.Insert(entity));
+            _cache.Remove(CurrentNotificationBannersCacheKey);
         }
 
         public async Task CreateAsync(params NotificationBanner[] entities)
@@ -46,6 +53,8 @@ namespace Edubase.Data.Repositories
                     await Table.ExecuteBatchAsync(batchOperation);
                 }
             }
+
+            _cache.Remove(CurrentNotificationBannersCacheKey);
         }
 
         public async Task CreateAsync(IEnumerable<NotificationBanner> entities)
@@ -53,53 +62,46 @@ namespace Edubase.Data.Repositories
             await CreateAsync(entities.ToArray());
         }
 
-        public IEnumerable<NotificationBanner> GetTopTwoCurrentNotificationBanners()
+        /// <summary>
+        ///     Synchronously get active notification banners for a given datetime and for a maximum number of banners
+        ///     Only use this method for notification banners on the template.
+        ///     Other processes should use async methods if possible
+        /// </summary>
+        /// <param name="maximumAmount">The maximum number of banners to be returned</param>
+        /// <returns>An IEnumerable of NotificationBanner</returns>
+        public IEnumerable<NotificationBanner> GetNotificationBanners(int maximumAmount)
         {
-            var result = _cache[TopTwoNotificationBannersCacheKey] as IEnumerable<NotificationBanner>;
-            return result ?? GetTopTwoNotificationBannersFromTableAndUpdateCache();
-        }
-
-        private IEnumerable<NotificationBanner> GetTopTwoNotificationBannersFromTableAndUpdateCache()
-        {
-            var top2CurrentQuery =
-                Table.CreateQuery<NotificationBanner>()
-                    .Where(x => x.PartitionKey == eNotificationBannerPartition.Current.ToString()
-                                && x.Start <= DateTime.Now
-                                && x.End >= DateTime.Now)
-                    .Take(2).AsTableQuery();
-            var notificationBanners = Table.ExecuteQuery(top2CurrentQuery).ToList();
-
-            //the cache only adds values if they don't exist - the method name doesn't make this clear.
-            _cache.Add(TopTwoNotificationBannersCacheKey,
-                notificationBanners,
-                new DateTimeOffset(CalculateDateTimeOfCacheExpiration(notificationBanners)));
-
-            return notificationBanners;
-        }
-
-        private DateTime CalculateDateTimeOfCacheExpiration(IEnumerable<NotificationBanner> currentBanners)
-        {
-            if (!int.TryParse(ConfigurationManager.AppSettings["NotificationBannerCacheExpirationInSeconds"],
-                    out var maximumCacheExpirationInSeconds))
+            var now = DateTime.Now;
+            if (!(_cache[CurrentNotificationBannersCacheKey] is IList<NotificationBanner> activeBanners))
             {
-                maximumCacheExpirationInSeconds = 300;
+                activeBanners = GetActiveBanners(now);
+                _cache.Add(CurrentNotificationBannersCacheKey,
+                    activeBanners,
+                    new DateTimeOffset(now.AddSeconds(_notificationBannerCacheExpirationInSeconds)));
             }
 
-            var futureBannersQuery = Table.CreateQuery<NotificationBanner>()
-                .Where(x => x.PartitionKey == eNotificationBannerPartition.Current.ToString()
-                            && x.Start > DateTime.Now)
-                .AsTableQuery();
-            var futureBanners = Table.ExecuteQuery(futureBannersQuery).ToList();
+            var result = (from banner in activeBanners
+                where banner.Start <= now
+                      && banner.End >= now
+                orderby banner.Start
+                select banner).Take(maximumAmount).ToList();
 
-            var expirationTimes = (from banner in currentBanners
-                select banner.End).ToList();
+            return result;
+        }
 
-            expirationTimes = expirationTimes.Union((from banner in futureBanners
-                select banner.Start).ToList()).ToList();
-
-            expirationTimes.Add(DateTime.Now.AddSeconds(maximumCacheExpirationInSeconds));
-
-            return expirationTimes.Min();
+        /// <summary>
+        ///     Gets notification banners that are active during the cache period
+        /// </summary>
+        private IList<NotificationBanner> GetActiveBanners(DateTime forDateTime)
+        {
+            var activeBannersQuery =
+                Table.CreateQuery<NotificationBanner>()
+                    .Where(x => x.PartitionKey == eNotificationBannerPartition.Current.ToString()
+                                && x.Start <= forDateTime.AddSeconds(_notificationBannerCacheExpirationInSeconds)
+                                && x.End >= forDateTime)
+                    .Take(2).AsTableQuery();
+            var notificationBanners = Table.ExecuteQuery(activeBannersQuery).ToList();
+            return notificationBanners;
         }
 
         public async Task<Page<NotificationBanner>> GetAllAsync(int take, TableContinuationToken skip = null,
@@ -133,6 +135,7 @@ namespace Edubase.Data.Repositories
 
             var item = await GetAsync(id);
             await Table.ExecuteAsync(TableOperation.Delete(item));
+            _cache.Remove(CurrentNotificationBannersCacheKey);
         }
 
         private async Task ArchiveAsync(string id, string auditUser = "")
@@ -157,6 +160,8 @@ namespace Edubase.Data.Repositories
                 item.RowKey = Guid.NewGuid().ToString("N").Substring(0, 8);
                 await CreateAsync(item);
             }
+
+            _cache.Remove(CurrentNotificationBannersCacheKey);
         }
 
         public async Task UpdateAsync(NotificationBanner item)
@@ -167,6 +172,8 @@ namespace Edubase.Data.Repositories
             // now update the record
             item.Version++;
             await Table.ExecuteAsync(TableOperation.Replace(item));
+
+            _cache.Remove(CurrentNotificationBannersCacheKey);
         }
     }
 }

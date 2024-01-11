@@ -401,7 +401,8 @@ namespace Edubase.Web.UI.Controllers
         [Route("BannersPartial")]
         public ActionResult BannersPartial()
         {
-            var notificationBanners = _BannerRepository.GetTopTwoCurrentNotificationBanners();
+            var notificationBanners =
+                _BannerRepository.GetNotificationBanners(2);
             var model = new NotificationsBannersViewModel(notificationBanners);
             return PartialView("_NotificationsBannersPartial", model);
         }
