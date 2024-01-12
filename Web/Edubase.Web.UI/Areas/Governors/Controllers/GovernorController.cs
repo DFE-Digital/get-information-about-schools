@@ -145,6 +145,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         [Route(ESTAB_EDIT_GOVERNANCE, Name = "EstabDeleteOrRetireGovernor")]
         [HttpPost]
         [EdubaseAuthorize]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteOrRetireGovernor(GovernorsGridViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -514,7 +515,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         [Route(GROUP_ADD_GOVERNOR), Route(ESTAB_ADD_GOVERNOR),
          Route(GROUP_EDIT_GOVERNOR), Route(ESTAB_EDIT_GOVERNOR),
          Route(GROUP_REPLACE_GOVERNOR), Route(ESTAB_REPLACE_GOVERNOR),
-         HttpPost, EdubaseAuthorize]
+         HttpPost, EdubaseAuthorize, ValidateAntiForgeryToken]
         public async Task<ActionResult> AddEditOrReplace(CreateEditGovernorViewModel viewModel)
         {
             await PopulateSelectLists(viewModel);
@@ -759,7 +760,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(model);
         }
 
-        [HttpPost, Route(ESTAB_REPLACE_CHAIR), EdubaseAuthorize]
+        [HttpPost, Route(ESTAB_REPLACE_CHAIR), EdubaseAuthorize, ValidateAntiForgeryToken]
         public async Task<ActionResult> ReplaceChair(ReplaceChairViewModel model)
         {
             if (ModelState.IsValid)

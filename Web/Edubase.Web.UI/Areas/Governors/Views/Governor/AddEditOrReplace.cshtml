@@ -28,6 +28,7 @@
 
         @using (Html.BeginRouteForm(Model.FormPostRouteName, FormMethod.Post, new { id = "governorEdit" }))
         {
+            @Html.AntiForgeryToken()
             <h2 class="govuk-heading-m">
                 @(Model.Mode == CreateEditGovernorViewModel.EditMode.Edit ? "Edit" : "")
                 @(Model.Mode == CreateEditGovernorViewModel.EditMode.Create ? "Add" : "")

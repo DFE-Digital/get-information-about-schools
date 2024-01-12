@@ -35,6 +35,7 @@
 
 @using (Html.BeginRouteForm(Model.Id == null ? "PostCreateTemplate" : "PostEditTemplate", new { Model.Id }, FormMethod.Post))
 {
+    @Html.AntiForgeryToken()
     <div class="button-row govuk-!-margin-bottom-4">
         @if (Model.Action == eNotificationsTemplateAction.Message)
         {

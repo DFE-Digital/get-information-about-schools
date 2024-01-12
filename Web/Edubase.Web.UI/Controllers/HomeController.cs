@@ -87,7 +87,7 @@ namespace Edubase.Web.UI.Controllers
         [Route("~/cookies")]
         public ActionResult Cookies() => View();
 
-        [HttpPost, Route("~/CookieChoices")]
+        [HttpPost, Route("~/CookieChoices"), ValidateAntiForgeryToken]
         public ActionResult CookieChoices(bool acceptAnalyticsCookies)
         {
             var urlHelper = new UrlHelper(Request.RequestContext);

@@ -1,4 +1,4 @@
-﻿@model EditSharedGovernorViewModel
+@model EditSharedGovernorViewModel
 
 @{
     ViewBag.hideLogo = true;
@@ -10,6 +10,7 @@
     <div class="govuk-grid-column-two-thirds">
         @using (Html.BeginForm("EditSharedGovernor", "SharedGovernor", FormMethod.Post))
         {
+            @Html.AntiForgeryToken()
             @Html.HiddenFor(m => m.Governor.Id)
             @Html.HiddenFor(m => m.Urn)
             <div class="button-row govuk-!-margin-bottom-3">

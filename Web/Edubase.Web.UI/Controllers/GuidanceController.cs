@@ -56,7 +56,7 @@ namespace Edubase.Web.UI.Controllers
             return View("SelectFormat", viewModel);
         }
 
-        [Route("LaNameCodes/DataTables/SelectFormat/GenerateDownload", Name = "LaNameCodesGenerateDownload")]
+        [Route("LaNameCodes/DataTables/SelectFormat/GenerateDownload", Name = "LaNameCodesGenerateDownload"), ValidateAntiForgeryToken]
         public async Task<ActionResult> LaNameCodesGenerateDownload(GuidanceLaNameCodeViewModel viewModel)
         {
             var blobName = viewModel.DownloadName + "." + viewModel.FileFormat.ToString().ToLower();

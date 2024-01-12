@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Edubase.Services.Enums;
@@ -54,7 +54,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, Route(EstabSelectSharedGovernor), EdubaseAuthorize]
+        [HttpPost, Route(EstabSelectSharedGovernor), EdubaseAuthorize, ValidateAntiForgeryToken]
         public async Task<ActionResult> SelectSharedGovernor(SelectSharedGovernorViewModel model)
         {
             if (ModelState.IsValid)
@@ -112,7 +112,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(model);
         }
 
-        [HttpPost, Route(EstabEditSharedGovernor), EdubaseAuthorize]
+        [HttpPost, Route(EstabEditSharedGovernor), EdubaseAuthorize, ValidateAntiForgeryToken]
         public async Task<ActionResult> EditSharedGovernor(EditSharedGovernorViewModel model)
         {
             if (ModelState.IsValid)

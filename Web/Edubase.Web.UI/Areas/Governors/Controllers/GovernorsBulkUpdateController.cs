@@ -36,7 +36,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return Redirect(await _governorsReadService.GetGovernorBulkUpdateTemplateUri(User));
         }
 
-        [HttpPost, Route(Name = "GovernorsProcessBulkUpdate"), ExportModelState]
+        [HttpPost, Route(Name = "GovernorsProcessBulkUpdate"), ExportModelState, ValidateAntiForgeryToken]
         public async Task<ActionResult> ProcessBulkUpdate(GovernorsBulkUpdateViewModel viewModel)
         {
             if (ModelState.IsValid)

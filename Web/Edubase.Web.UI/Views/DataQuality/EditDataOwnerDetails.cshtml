@@ -36,6 +36,7 @@
     {
         using (Html.BeginForm())
         {
+            @Html.AntiForgeryToken()
             <div class="govuk-grid-column-one-half">
 
                 @for (var index = 0; index < Model.Items.Count(); index++)

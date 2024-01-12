@@ -38,6 +38,7 @@
 
     using (Html.BeginRouteForm("DownloadExtract", FormMethod.Post))
     {
+        @Html.AntiForgeryToken()
         @Html.Hidden("id", id)
         @Html.Hidden("path", path)
         @Html.Hidden("returnSource", eDownloadReturnSource.IndependentSchoolDates)

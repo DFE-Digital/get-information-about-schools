@@ -63,6 +63,7 @@
                     <td nowrap="" class="govuk-table__cell">
                         @using (Html.BeginRouteForm("DeletePredefinedLASet", new {id = item.RowKey}, FormMethod.Post))
                         {
+                            @Html.AntiForgeryToken()
                             <a
                                 href="@Url.RouteUrl("IndSchSearch")?@QueryStringHelper.ToQueryString("d", item.Ids)&SelectedLocalAuthoritySetId=@item.RowKey"
                                 id="@StringUtils.ElementIdFormat(@Html.Field(item.Title))-select-link"

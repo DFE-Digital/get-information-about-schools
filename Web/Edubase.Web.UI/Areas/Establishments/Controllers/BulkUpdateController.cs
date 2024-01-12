@@ -26,7 +26,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         public ActionResult Index() => View(new BulkUpdateViewModel(User.IsInRole(AuthorizedRoles.IsAdmin)));
 
 
-        [HttpPost, Route(Name = "ProcessBulkUpdate")]
+        [HttpPost, Route(Name = "ProcessBulkUpdate"), ValidateAntiForgeryToken]
         public async Task<ActionResult> ProcessBulkUpdate(BulkUpdateViewModel viewModel)
         {
             viewModel.CanOverrideCRProcess = User.IsInRole(AuthorizedRoles.IsAdmin);
