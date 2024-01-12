@@ -23,34 +23,11 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
             BaseAddress = new Uri("https://atlas.microsoft.com")
         };
 
-        private static readonly Policy RetryPolicy = CreateRetryPolicy();
-
-        private static Policy CreateRetryPolicy()
-        {
-            var retryIntervalSettings = ConfigurationManager.AppSettings["AzureMapService_RetryIntervals"];
-
-            if (string.IsNullOrEmpty(retryIntervalSettings?.Trim()))
-            {
-                return Policy.NoOp();
-            }
-
-            var retryIntervals = CsvSecondsToTimeSpans(retryIntervalSettings);
-
-            return Policy
-                .Handle<HttpRequestException>()
-                .WaitAndRetryAsync(retryIntervals);
-        }
-
-        private static TimeSpan[] CsvSecondsToTimeSpans(string csvSeconds)
-        {
-            var retryIntervals = csvSeconds.Split(',')
-                .Select(x => x.Trim())
-                .Where(x => int.TryParse(x, out var seconds) && seconds >= 0)
-                .Select(x => TimeSpan.FromSeconds(int.Parse(x)))
-                .ToArray();
-
-            return retryIntervals;
-        }
+        private static readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
+            PollyUtil.CsvSecondsToTimeSpans(
+                ConfigurationManager.AppSettings["AzureMapService_RetryIntervals"]
+            )
+        );
 
         public async Task<PlaceDto[]> SearchAsync(string text, bool isTypeahead, CancellationToken cancellationToken = default)
         {
@@ -83,7 +60,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
                         .Where(result => result.type != "Cross Street"
                                          && !(result.entityType != null && result.entityType == "CountrySecondarySubdivision"))
                         .ToList();
-                    
+
                     var municipalities = results.Where(x => x.entityType == "Municipality").ToList();
                     var subMunicipalities = results.Where(x => x.entityType == "MunicipalitySubdivision").ToList();
                     // If the response contains a "MunicipalitySubdivision" with the same name as a returned Municipality (town),
