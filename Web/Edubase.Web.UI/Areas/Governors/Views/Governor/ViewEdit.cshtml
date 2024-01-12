@@ -61,6 +61,7 @@
 
                 @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabAddGovernor" : "GroupAddGovernor", new { groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, FormMethod.Get))
                 {
+                    @Html.AntiForgeryToken()
                     <div class="govuk-form-group @Html.ValidationGroupCssClass("role")">
                         <label class="govuk-label" for="roleid">Select role</label>
                         @Html.ValidationMessage("role", null, new { @class = "govuk-error-message" })
@@ -386,6 +387,7 @@ else
 
                                     @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabDeleteOrRetireGovernor" : "GroupDeleteOrRetireGovernor", FormMethod.Post, new { id = "removal-form" }))
                                     {
+                                        @Html.AntiForgeryToken()
                                         @Html.HiddenFor(x => x.RemovalGid)
                                         @Html.HiddenFor(x => x.EstablishmentUrn)
                                         @Html.HiddenFor(x => x.GroupUId)

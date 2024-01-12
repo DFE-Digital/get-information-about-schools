@@ -11,6 +11,7 @@
         <h1 class="govuk-heading-m">Governance</h1>
         @using (Html.BeginForm("GroupEditDelegation", "GovernanceDelegation", FormMethod.Post))
         {
+            @Html.AntiForgeryToken()
             @Html.HiddenFor(m => m.GroupUId)
             <h2 class="govuk-heading-s">Delegated authority of local governing body</h2>
             <div class="edit-governor">

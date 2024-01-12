@@ -91,7 +91,7 @@ namespace Edubase.Web.UI.Controllers
         } 
 
 
-        [Route("Banner/New", Name = "PostCreateBanner"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Banner/New", Name = "PostCreateBanner"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateBannerAsync(NotificationsBannerViewModel viewModel)
         {
             return await ProcessEditBanner(viewModel);
@@ -125,7 +125,7 @@ namespace Edubase.Web.UI.Controllers
             });
         }
 
-        [Route("Banner/{counter}/{id}", Name = "PostEditBanner"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Banner/{counter}/{id}", Name = "PostEditBanner"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> EditBannerAsync(NotificationsBannerViewModel viewModel)
         {
             var item = await _BannerRepository.GetAsync(viewModel.Id);
@@ -247,7 +247,7 @@ namespace Edubase.Web.UI.Controllers
         public ActionResult CreateTemplate() => View("EditTemplate", new NotificationsTemplateViewModel());
 
 
-        [Route("Template/New", Name = "PostCreateTemplate"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Template/New", Name = "PostCreateTemplate"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateTemplateAsync(NotificationsTemplateViewModel viewModel)
         {
             return await ProcessEditTemplate(viewModel);
@@ -268,7 +268,7 @@ namespace Edubase.Web.UI.Controllers
             });
         }
 
-        [Route("Template/{id}", Name = "PostEditTemplate"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Template/{id}", Name = "PostEditTemplate"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> EditTemplateAsync(NotificationsTemplateViewModel viewModel)
         {
             var item = await _TemplateRepository.GetAsync(viewModel.Id);

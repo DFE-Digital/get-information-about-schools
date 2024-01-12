@@ -20,6 +20,7 @@
 
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     @Html.HiddenFor(x => x.LegalParentGroupToken)
     <div class="tab-content">
         <div class="links-list">

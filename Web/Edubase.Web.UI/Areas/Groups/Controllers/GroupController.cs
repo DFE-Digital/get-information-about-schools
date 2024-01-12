@@ -119,7 +119,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, Route("Create/{type}"), EdubaseAuthorize]
+        [HttpPost, Route("Create/{type}"), EdubaseAuthorize, ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(GroupEditorViewModel viewModel, string type, bool? jsDisabled = false)
         {
             await PopulateSelectLists(viewModel);
@@ -419,7 +419,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View("EditDetails", viewModel);
         }
 
-        [HttpPost, Route("Edit/{id:int}/Details"), EdubaseAuthorize]
+        [HttpPost, Route("Edit/{id:int}/Details"), EdubaseAuthorize, ValidateAntiForgeryToken]
         public async Task<ActionResult> EditDetails(GroupEditorViewModel viewModel)
         {
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
@@ -510,7 +510,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, Route("Edit/{id:int}/Links"), EdubaseAuthorize]
+        [HttpPost, Route("Edit/{id:int}/Links"), EdubaseAuthorize, ValidateAntiForgeryToken]
         public async Task<ActionResult> EditLinks(GroupEditorViewModel viewModel)
         {
             if (viewModel.Action == ActionLinkedEstablishmentStartSearch)
@@ -537,7 +537,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}/{academyTrustRoute}")]
+        [HttpPost, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}/{academyTrustRoute}"), ValidateAntiForgeryToken]
         public async Task<ActionResult> SaveNewAcademyTrust(CreateAcademyTrustViewModel viewModel, string academyTrustRoute)
         {
             var permission = await _securityService.GetCreateGroupPermissionAsync(User);

@@ -49,7 +49,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return RedirectToRoute("GroupEditGovernance", new { GroupUId = groupUId });
         }
 
-        [HttpPost, EdubaseAuthorize]
+        [HttpPost, EdubaseAuthorize, ValidateAntiForgeryToken]
         [Route(GroupEditCorporateContactRoute, Name = "GroupEditCorporateContactPost")]
         public async Task<ActionResult> GroupEditCorporateContact(EditGroupCorporateContactViewModel model)
         {
