@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Xunit;
 using Edubase.Services.IntegrationEndPoints;
 using Polly.NoOp;
@@ -52,7 +52,7 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
             var csvSeconds = "100";
             var timeSpans = PollyUtil.CsvSecondsToTimeSpans(csvSeconds);
 
-            Assert.Equal(1, timeSpans.Length);
+            Assert.Single(timeSpans);
 
             Assert.Equal(TimeSpan.FromSeconds(100), timeSpans[0]);
         }
@@ -75,7 +75,7 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
             var csvSeconds = "0";
             var timeSpans = PollyUtil.CsvSecondsToTimeSpans(csvSeconds);
 
-            Assert.Equal(1, timeSpans.Length);
+            Assert.Single(timeSpans);
 
             Assert.Equal(TimeSpan.FromSeconds(0), timeSpans[0]);
         }
