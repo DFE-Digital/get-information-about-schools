@@ -248,6 +248,7 @@
     <Compile Include="IntegrationEndPoints\OSPlaces\IOSPlacesApiService.cs" />
     <Compile Include="IntegrationEndPoints\OSPlaces\Models\OSPlacesModels.cs" />
     <Compile Include="IntegrationEndPoints\OSPlaces\OSPlacesApiService.cs" />
+    <Compile Include="IntegrationEndPoints\PollyUtil.cs" />
     <Compile Include="Lookup\CachedLookupService.cs" />
     <Compile Include="Domain\ApprovalDto.cs" />
     <Compile Include="Domain\ApprovalItemDto.cs" />
