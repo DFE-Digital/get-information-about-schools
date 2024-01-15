@@ -30,7 +30,7 @@ namespace Edubase.Web.UI.Controllers
             return View("Index", vm);
         }
 
-        [HttpPost, EdubaseAuthorize, Route(Name = "PendingApprovalsPost")]
+        [HttpPost, EdubaseAuthorize, Route(Name = "PendingApprovalsPost"), ValidateAntiForgeryToken]
         public async Task<ActionResult> Index(PendingChangeRequestAction viewModel)
         {
             if (viewModel.Ids == null)

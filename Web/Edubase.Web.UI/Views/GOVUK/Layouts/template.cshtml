@@ -133,6 +133,7 @@
                         </div>
                         @using (Html.BeginForm("CookieChoices", "Home", new {area=""}, FormMethod.Post))
                         {
+                            @Html.AntiForgeryToken()
                             <input type="hidden" name="OriginatingPage" value="@currentUrl.ToString()"/>
                             <div class="govuk-button-group">
                                 <button value="true" type="submit" name="acceptAnalyticsCookies" class="govuk-button" data-module="govuk-button">

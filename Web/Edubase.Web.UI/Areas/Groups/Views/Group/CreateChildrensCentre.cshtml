@@ -79,6 +79,7 @@
 
             @using (Html.BeginForm("Create", "Group", new { area = "Groups" }, FormMethod.Post, new { @id = "create-childrens-centres" }))
             {
+                @Html.AntiForgeryToken()
                 @Html.HiddenFor(x => x.GroupUId)
                 @Html.HiddenFor(x => x.GroupTypeMode)
                 @Html.HiddenFor(x => x.SaveMode)
@@ -342,6 +343,7 @@
     <div class="govuk-grid-row">
         @using (Html.BeginForm("Create", "Group", new { area = "Groups" }, FormMethod.Post))
         {
+            @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.GroupUId)
             @Html.HiddenFor(x => x.GroupTypeMode)
             @Html.HiddenFor(x => x.GroupTypeName)

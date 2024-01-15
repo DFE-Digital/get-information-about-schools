@@ -11,6 +11,7 @@
         <h1 class="govuk-heading-m">Corporate contact</h1>
         @using (Html.BeginRouteForm("GroupEditCorporateContactPost", FormMethod.Post))
         {
+            @Html.AntiForgeryToken()
             @Html.HiddenFor(m => m.GroupUId)
             <div class="edit-governor">
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.CorporateContact)">

@@ -64,6 +64,7 @@
 
 @using (Html.BeginRouteForm("DownloadExtract", FormMethod.Post))
 {
+    @Html.AntiForgeryToken()
     @Html.Hidden("id", Model.Progress.Id)
     @Html.Hidden("path", path)
     @Html.Hidden("searchSource", Model.SearchSource)
