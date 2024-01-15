@@ -1,6 +1,8 @@
 using System;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Polly;
 
 namespace Edubase.Services.IntegrationEndPoints
@@ -17,14 +19,36 @@ namespace Edubase.Services.IntegrationEndPoints
         /// </returns>
         public static Policy CreateRetryPolicy(TimeSpan[] retryIntervals)
         {
+
             if(retryIntervals is null || retryIntervals.Length == 0)
             {
                 return Policy.NoOp();
             }
 
+            var retryPolicy = CreateRetryPolicyInternal(retryIntervals);
+            var timeoutPolicy = CreateTimeoutPolicy();
+
+            return Policy.WrapAsync(retryPolicy, timeoutPolicy);
+        }
+
+        public static Policy CreateRetryPolicyInternal(TimeSpan[] retryIntervals)
+        {
+
             return Policy
                 .Handle<HttpRequestException>()
+                .Or<TaskCanceledException>()
                 .WaitAndRetryAsync(retryIntervals);
+
+        }
+
+        private static Policy CreateTimeoutPolicy()
+        {
+            if (!int.TryParse(ConfigurationManager.AppSettings["RetryTimeoutSettings"], out var timeoutsettings))
+            {
+                timeoutsettings = 10;
+            }
+
+            return Policy.TimeoutAsync(TimeSpan.FromSeconds(timeoutsettings));
         }
 
         /// <summary>
