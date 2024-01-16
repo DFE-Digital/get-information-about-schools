@@ -46,14 +46,14 @@ namespace Edubase.Services.IntegrationEndPoints
             var timeoutSettings = 10;
             switch (settingsKey)
             {
-                case "AzureMapServiceTimeoutKey":
-                    if (!int.TryParse(ConfigurationManager.AppSettings["AzureMapServiceTimeoutKey"], out timeoutSettings))
+                case "AzureMapService_Timeout":
+                    if (!int.TryParse(ConfigurationManager.AppSettings["AzureMapService_Timeout"], out timeoutSettings))
                     {
                         timeoutSettings = 10;
                     }
                     break;
-                case "OSPlacesApiServicesTimeoutKey":
-                    if (!int.TryParse(ConfigurationManager.AppSettings["OSPlacesApiServicesTimeoutKey"], out timeoutSettings))
+                case "OSPlacesApiServices_Timeout":
+                    if (!int.TryParse(ConfigurationManager.AppSettings["OSPlacesApiServices_Timeout"], out timeoutSettings))
                     {
                         timeoutSettings = 10;
                     }

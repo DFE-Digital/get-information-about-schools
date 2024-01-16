@@ -23,7 +23,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
             BaseAddress = new Uri("https://atlas.microsoft.com")
         };
 
-        private static readonly string AzureMapServiceTimeoutKey = "AzureMapServiceTimeoutKey";
+        private static readonly string AzureMapServiceTimeoutKey = "AzureMapService_Timeout";
         private static readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
             PollyUtil.CsvSecondsToTimeSpans(
                 ConfigurationManager.AppSettings["AzureMapService_RetryIntervals"]

@@ -31,7 +31,7 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
         public void CreateRetryPolicy_ReturnsPolicyWrap_WhenIntervalsPassedIn()
         {
             var retryIntervals = new[] { TimeSpan.FromSeconds(1) };
-            var settingsKey = "AzureMapServiceTimeoutKey";
+            var settingsKey = "AzureMapService_Timeout";
 
             var policy = PollyUtil.CreateRetryPolicy(retryIntervals, settingsKey);
 
@@ -44,7 +44,7 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
         [Fact]
         public async void CreateTimeoutPolicy_ReturnsCorrectTimeoutForAzureMapService()
         {
-            var validKey = "AzureMapServiceTimeoutKey";
+            var validKey = "AzureMapService_Timeout";
             ConfigurationManager.AppSettings[validKey] = "5";
 
             var policy = PollyUtil.CreateTimeoutPolicy(validKey);
@@ -67,7 +67,7 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
         [Fact]
         public async void CreateRetryPolicy_DefaultsTo10Seconds()
         {
-            var invalidKey = "InvalidAzureMapServiceTimeoutKey";
+            var invalidKey = "InvalidAzureMapService_Timeout";
             ConfigurationManager.AppSettings[invalidKey] = "invalid";
 
             var policy = PollyUtil.CreateTimeoutPolicy(invalidKey);
