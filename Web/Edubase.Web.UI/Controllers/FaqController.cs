@@ -44,7 +44,7 @@ namespace Edubase.Web.UI.Controllers
             return await ProcessEditItem(viewModel);
         }
 
-        [Route("Edit/{id}", Name = "EditItem"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
+        [Route("Edit/{id}", Name = "EditItem"), HttpGet, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> EditAsync(string id)
         {
             var item = await _FaqItemRepository.GetAsync(id);
