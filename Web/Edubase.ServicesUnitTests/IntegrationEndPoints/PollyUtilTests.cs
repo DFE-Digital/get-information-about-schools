@@ -4,6 +4,10 @@ using Edubase.Services.IntegrationEndPoints;
 using Polly.NoOp;
 using Polly.Wrap;
 using System.Configuration;
+using Polly.Timeout;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Edubase.ServicesUnitTests.IntegrationEndPoints
 {
@@ -35,27 +39,60 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
             Assert.IsType<PolicyWrap>(policy);
         }
 
+        //Note: Polly doesn't expose the timeout settings once the policy is created
+
         [Fact]
-        public void CreateTimeoutPolicy_ReturnsCorrectTimeout()
+        public async void CreateTimeoutPolicy_ReturnsCorrectTimeoutForAzureMapService()
         {
             var validKey = "AzureMapServiceTimeoutKey";
             ConfigurationManager.AppSettings[validKey] = "5";
 
             var policy = PollyUtil.CreateTimeoutPolicy(validKey);
 
+            var sw = Stopwatch.StartNew();
+            await Assert.ThrowsAsync<TimeoutRejectedException>(async () =>
+            {
+                await policy.ExecuteAsync(async (ct) =>
+                {
+                    await Task.Delay(6000, ct);
+                }, CancellationToken.None);
+            });
+            sw.Stop();
+
             Assert.NotNull(policy);
+            Assert.True(sw.Elapsed.Seconds >= 5 && sw.Elapsed.Seconds < 6, "Timeout");
         }
 
+
         [Fact]
-        public void CreateRetryPolicy_DefaultsTo10Seconds()
+        public async void CreateRetryPolicy_DefaultsTo10Seconds()
         {
             var invalidKey = "InvalidAzureMapServiceTimeoutKey";
             ConfigurationManager.AppSettings[invalidKey] = "invalid";
 
             var policy = PollyUtil.CreateTimeoutPolicy(invalidKey);
 
+            var sw = Stopwatch.StartNew();
+            Exception thrownException = null;
+                try
+                {
+                    await policy.ExecuteAsync(async (ct) =>
+                    {
+                        await Task.Delay(11000, ct);
+                    }, CancellationToken.None);
+                }
+                catch (Exception ex)
+                {
+                    thrownException = ex;
+                }
+            
+            sw.Stop();
+
             Assert.NotNull(policy);
+            Assert.IsType<TimeoutRejectedException>(thrownException);
+            Assert.True(sw.Elapsed.Seconds >= 10 && sw.Elapsed.Seconds < 11, "Timeout");
         }
+
 
 
         [Fact]
