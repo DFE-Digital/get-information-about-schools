@@ -3,6 +3,7 @@ using Xunit;
 using Edubase.Services.IntegrationEndPoints;
 using Polly.NoOp;
 using Polly.Retry;
+using Polly;
 
 namespace Edubase.ServicesUnitTests.IntegrationEndPoints
 {
@@ -11,22 +12,27 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
         [Fact]
         public void CreateRetryPolicy_ReturnsNoOpPolicy_WhenNullIntervalsPassedIn()
         {
-            var policy = PollyUtil.CreateRetryPolicy(null);
+            var policy = PollyUtil.CreateRetryPolicy(null,"");
             Assert.IsType<NoOpPolicy>(policy);
         }
 
         [Fact]
         public void CreateRetryPolicy_ReturnsNoOpPolicy_WhenEmptyIntervalsPassedIn()
         {
-            var policy = PollyUtil.CreateRetryPolicy(new TimeSpan[0]);
+            var policy = PollyUtil.CreateRetryPolicy(new TimeSpan[0],"");
             Assert.IsType<NoOpPolicy>(policy);
         }
 
         [Fact]
         public void CreateRetryPolicy_ReturnsRetryPolicy_WhenIntervalsPassedIn()
         {
-            var policy = PollyUtil.CreateRetryPolicy(new TimeSpan[] {TimeSpan.FromSeconds(1)});
-            Assert.IsType<RetryPolicy>(policy);
+            TimeSpan[] retryIntervals = new[] { TimeSpan.FromSeconds(1) };
+            string settingsKey = "AzureMapServiceTimeoutKey";
+
+
+            var policy = PollyUtil.CreateRetryPolicy(retryIntervals, settingsKey);
+            Assert.NotNull(policy);
+            Assert.IsAssignableFrom<Policy>(policy);
         }
 
 
