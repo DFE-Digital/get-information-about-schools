@@ -3,6 +3,7 @@ using Xunit;
 using Edubase.Services.IntegrationEndPoints;
 using Polly.NoOp;
 using Polly.Wrap;
+using System.Configuration;
 
 namespace Edubase.ServicesUnitTests.IntegrationEndPoints
 {
@@ -32,6 +33,28 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
 
             Assert.NotNull(policy);
             Assert.IsType<PolicyWrap>(policy);
+        }
+
+        [Fact]
+        public void CreateTimeoutPolicy_ReturnsCorrectTimeout()
+        {
+            var validKey = "AzureMapServiceTimeoutKey";
+            ConfigurationManager.AppSettings[validKey] = "5";
+
+            var policy = PollyUtil.CreateTimeoutPolicy(validKey);
+
+            Assert.NotNull(policy);
+        }
+
+        [Fact]
+        public void CreateRetryPolicy_DefaultsTo10Seconds()
+        {
+            var invalidKey = "InvalidAzureMapServiceTimeoutKey";
+            ConfigurationManager.AppSettings[invalidKey] = "invalid";
+
+            var policy = PollyUtil.CreateTimeoutPolicy(invalidKey);
+
+            Assert.NotNull(policy);
         }
 
 

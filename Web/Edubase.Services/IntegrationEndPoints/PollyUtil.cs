@@ -41,7 +41,7 @@ namespace Edubase.Services.IntegrationEndPoints
 
         }
 
-        private static Policy CreateTimeoutPolicy(string settingsKey)
+        public static Policy CreateTimeoutPolicy(string settingsKey)
         {
             var timeoutSettings = 10;
             switch (settingsKey)
