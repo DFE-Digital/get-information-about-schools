@@ -1,6 +1,8 @@
 using System;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Polly;
 
 namespace Edubase.Services.IntegrationEndPoints
@@ -15,16 +17,50 @@ namespace Edubase.Services.IntegrationEndPoints
         ///     A retry policy that handles <see cref="HttpRequestException"/> and waits for the specified retry intervals.
         ///     If <paramref name="retryIntervals"/> is null or empty, returns a no-op policy that doesn't perform any retries.
         /// </returns>
-        public static Policy CreateRetryPolicy(TimeSpan[] retryIntervals)
+        public static Policy CreateRetryPolicy(TimeSpan[] retryIntervals, string settingsKey)
         {
+
             if(retryIntervals is null || retryIntervals.Length == 0)
             {
                 return Policy.NoOp();
             }
 
+            var retryPolicy = CreateRetryPolicyInternal(retryIntervals);
+            var timeoutPolicy = CreateTimeoutPolicy(settingsKey);
+
+            return Policy.WrapAsync(retryPolicy, timeoutPolicy);
+        }
+
+        public static Policy CreateRetryPolicyInternal(TimeSpan[] retryIntervals)
+        {
+
             return Policy
                 .Handle<HttpRequestException>()
+                .Or<TaskCanceledException>()
                 .WaitAndRetryAsync(retryIntervals);
+
+        }
+
+        public static Policy CreateTimeoutPolicy(string settingsKey)
+        {
+            var timeoutSettings = 10;
+            switch (settingsKey)
+            {
+                case "AzureMapService_Timeout":
+                    if (!int.TryParse(ConfigurationManager.AppSettings["AzureMapService_Timeout"], out timeoutSettings))
+                    {
+                        timeoutSettings = 10;
+                    }
+                    break;
+                case "OSPlacesApiServices_Timeout":
+                    if (!int.TryParse(ConfigurationManager.AppSettings["OSPlacesApiServices_Timeout"], out timeoutSettings))
+                    {
+                        timeoutSettings = 10;
+                    }
+                    break;
+            }
+
+            return Policy.TimeoutAsync(TimeSpan.FromSeconds(timeoutSettings));
         }
 
         /// <summary>

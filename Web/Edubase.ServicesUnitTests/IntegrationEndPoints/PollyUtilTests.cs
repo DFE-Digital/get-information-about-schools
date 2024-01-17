@@ -2,7 +2,12 @@ using System;
 using Xunit;
 using Edubase.Services.IntegrationEndPoints;
 using Polly.NoOp;
-using Polly.Retry;
+using Polly.Wrap;
+using System.Configuration;
+using Polly.Timeout;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Edubase.ServicesUnitTests.IntegrationEndPoints
 {
@@ -11,23 +16,83 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
         [Fact]
         public void CreateRetryPolicy_ReturnsNoOpPolicy_WhenNullIntervalsPassedIn()
         {
-            var policy = PollyUtil.CreateRetryPolicy(null);
+            var policy = PollyUtil.CreateRetryPolicy(null,"");
             Assert.IsType<NoOpPolicy>(policy);
         }
 
         [Fact]
         public void CreateRetryPolicy_ReturnsNoOpPolicy_WhenEmptyIntervalsPassedIn()
         {
-            var policy = PollyUtil.CreateRetryPolicy(new TimeSpan[0]);
+            var policy = PollyUtil.CreateRetryPolicy(new TimeSpan[0],"");
             Assert.IsType<NoOpPolicy>(policy);
         }
 
         [Fact]
-        public void CreateRetryPolicy_ReturnsRetryPolicy_WhenIntervalsPassedIn()
+        public void CreateRetryPolicy_ReturnsPolicyWrap_WhenIntervalsPassedIn()
         {
-            var policy = PollyUtil.CreateRetryPolicy(new TimeSpan[] {TimeSpan.FromSeconds(1)});
-            Assert.IsType<RetryPolicy>(policy);
+            var retryIntervals = new[] { TimeSpan.FromSeconds(1) };
+            var settingsKey = "AzureMapService_Timeout";
+
+            var policy = PollyUtil.CreateRetryPolicy(retryIntervals, settingsKey);
+
+            Assert.NotNull(policy);
+            Assert.IsType<PolicyWrap>(policy);
         }
+
+        //Note: Polly doesn't expose the timeout settings once the policy is created
+
+        [Fact]
+        public async void CreateTimeoutPolicy_ReturnsCorrectTimeoutForAzureMapService()
+        {
+            var validKey = "AzureMapService_Timeout";
+            ConfigurationManager.AppSettings[validKey] = "5";
+
+            var policy = PollyUtil.CreateTimeoutPolicy(validKey);
+
+            var sw = Stopwatch.StartNew();
+            await Assert.ThrowsAsync<TimeoutRejectedException>(async () =>
+            {
+                await policy.ExecuteAsync(async (ct) =>
+                {
+                    await Task.Delay(6000, ct);
+                }, CancellationToken.None);
+            });
+            sw.Stop();
+
+            Assert.NotNull(policy);
+            Assert.True(sw.Elapsed.Seconds >= 5 && sw.Elapsed.Seconds < 6, "Timeout");
+        }
+
+
+        [Fact]
+        public async void CreateRetryPolicy_DefaultsTo10Seconds()
+        {
+            var invalidKey = "InvalidAzureMapService_Timeout";
+            ConfigurationManager.AppSettings[invalidKey] = "invalid";
+
+            var policy = PollyUtil.CreateTimeoutPolicy(invalidKey);
+
+            var sw = Stopwatch.StartNew();
+            Exception thrownException = null;
+                try
+                {
+                    await policy.ExecuteAsync(async (ct) =>
+                    {
+                        await Task.Delay(11000, ct);
+                    }, CancellationToken.None);
+                }
+                catch (Exception ex)
+                {
+                    thrownException = ex;
+                }
+            
+            sw.Stop();
+
+            Assert.NotNull(policy);
+            Assert.IsType<TimeoutRejectedException>(thrownException);
+            Assert.True(sw.Elapsed.Seconds >= 10 && sw.Elapsed.Seconds < 11, "Timeout");
+        }
+
 
 
         [Fact]

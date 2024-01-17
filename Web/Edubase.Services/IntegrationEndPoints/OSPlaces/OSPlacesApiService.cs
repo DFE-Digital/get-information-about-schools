@@ -21,10 +21,11 @@ namespace Edubase.Services.IntegrationEndPoints.OSPlaces
             BaseAddress = new Uri("https://api.os.uk/")
         };
 
+        private static readonly string OSPlacesApiServicesTimeoutKey = "OSPlacesApiServices_Timeout";
         private static readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
             PollyUtil.CsvSecondsToTimeSpans(
                 ConfigurationManager.AppSettings["OSPlacesApiServices_RetryIntervals"]
-            )
+            ), OSPlacesApiServicesTimeoutKey
         );
 
         public async Task<PlaceDto[]> SearchAsync(string text)
