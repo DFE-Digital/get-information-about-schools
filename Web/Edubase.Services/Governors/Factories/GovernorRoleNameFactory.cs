@@ -24,7 +24,12 @@ namespace Edubase.Services.Governors.Factories
             { eLookupGovernorRole.Member_Organisation, "Member - organisation" },
             { eLookupGovernorRole.Trustee, "Trustee" },
             { eLookupGovernorRole.NA, "N a" },
-            { eLookupGovernorRole.Group_SharedGovernanceProfessional, "Shared Governance Professional" }
+            { eLookupGovernorRole.Group_SharedGovernanceProfessional, "Shared governance professional" },
+            { eLookupGovernorRole.Establishment_SharedGovernanceProfessional, "Shared governance professional" },
+            { eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool, "Governance professional to a local authority maintained school" },
+            { eLookupGovernorRole.GovernanceProfessionalToAFederation, "Governance professional to a federation" },
+            { eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professional to an individual academy or free school" },
+            { eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professional to a MAT" },
         };
 
         private static readonly Dictionary<eLookupGovernorRole, string> PluralisedLabels = new Dictionary<eLookupGovernorRole, string>()
