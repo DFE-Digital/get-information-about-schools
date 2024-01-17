@@ -38,6 +38,7 @@
     using (Html.BeginRouteForm("CollateDownloads", FormMethod.Post))
     {
         var i = 0;
+        @Html.AntiForgeryToken()
 
         @Html.HiddenFor(x => x.Skip)
         @Html.HiddenFor(x => x.SearchType)

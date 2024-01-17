@@ -30,6 +30,7 @@
 
 @using (Html.BeginRouteForm(Model.Id == null ? "PostCreateArticle" : "PostEditArticle", new { Model.Id }, FormMethod.Post))
 {
+    @Html.AntiForgeryToken()
     @Html.HiddenFor(x => x.Id)
     @Html.HiddenFor(x => x.Action)
 

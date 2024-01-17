@@ -29,6 +29,7 @@
         {
             using (Html.BeginRouteForm("EstablishmentConfirmUpToDate", new { Model.Establishment.Urn, showBanner = true }, FormMethod.Post, new { @class = "gias-action-form" }))
             {
+                @Html.AntiForgeryToken()
                 <button class="govuk-button" data-module="govuk-button" id="establishment-data-confirm-button">Confirm details</button>
             }
         }

@@ -29,7 +29,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanMergeEstablishments),
-         Route("Tools/MergersTool/SelectMergerType")]
+         Route("Tools/MergersTool/SelectMergerType"), ValidateAntiForgeryToken]
         public ActionResult SelectMergerType(string mergerType)
         {
             if (mergerType == "Merger")
@@ -61,7 +61,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanMergeEstablishments),
-         Route("Tools/MergersTool/MergeEstablishments")]
+         Route("Tools/MergersTool/MergeEstablishments"), ValidateAntiForgeryToken]
         public async Task<ActionResult> ProcessMergeEstablishmentsAsync(MergeEstablishmentsModel model)
         {
             var viewModel = new MergeEstablishmentsModel();
@@ -205,7 +205,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanMergeEstablishments),
-         Route("Tools/MergersTool/ConfirmMerger")]
+         Route("Tools/MergersTool/ConfirmMerger"), ValidateAntiForgeryToken]
         public async Task<ActionResult> ProcessMergeAsync(MergeEstablishmentsModel model)
         {
             if (model.MergeDate == null || model.MergeDate.IsEmpty() || !model.MergeDate.IsValid())
@@ -272,7 +272,8 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanMergeEstablishments),
-         Route("Tools/MergersTool/AmalgamateEstablishments")]
+         Route("Tools/MergersTool/AmalgamateEstablishments"),
+            ValidateAntiForgeryToken]
         public async Task<ActionResult> ProcessAmalgamationEstablishmentsAsync(AmalgamateEstablishmentsModel model)
         {
             var viewModel = new AmalgamateEstablishmentsModel();
@@ -409,7 +410,8 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanMergeEstablishments),
-         Route("Tools/MergersTool/ConfirmAmalgamation")]
+         Route("Tools/MergersTool/ConfirmAmalgamation"),
+            ValidateAntiForgeryToken]
         public async Task<ActionResult> ProcessAmalgamationAsync(AmalgamateEstablishmentsModel model)
         {
             if (model.MergeDate.IsEmpty() || model.MergeDate == null || !model.MergeDate.IsValid())

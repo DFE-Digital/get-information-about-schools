@@ -75,7 +75,8 @@ namespace Edubase.Web.UI.Controllers
             return Guid.Parse(query["id"]);
         }
 
-        [Route("Collate", Name = "CollateDownloads")]
+        [Route("Collate", Name = "CollateDownloads"), ValidateAntiForgeryToken]
+        //assume this is a post??
         public async Task<ActionResult> CollateDownloads(DownloadsViewModel model)
         {
             var collection = new List<FileDownloadRequest>();
@@ -254,7 +255,7 @@ namespace Edubase.Web.UI.Controllers
             }
         }
 
-        [HttpPost, Route("Download/Extract", Name = "DownloadExtract")]
+        [HttpPost, Route("Download/Extract", Name = "DownloadExtract"), ValidateAntiForgeryToken]
         public async Task<ActionResult> DownloadExtractAsync(string path, string id, string searchQueryString = null,
             eLookupSearchSource? searchSource = null, eDownloadReturnSource? returnSource = null)
         {

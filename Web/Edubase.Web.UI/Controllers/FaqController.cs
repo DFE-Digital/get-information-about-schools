@@ -38,7 +38,7 @@ namespace Edubase.Web.UI.Controllers
             return View("CreateEdit", new FaqItemViewModel(groups.Items));
         }
 
-        [Route("Create", Name = "PostCreateItem"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Create", Name = "PostCreateItem"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateAsync(FaqItemViewModel viewModel)
         {
             return await ProcessEditItem(viewModel);
@@ -60,7 +60,7 @@ namespace Edubase.Web.UI.Controllers
             });
         }
 
-        [Route("Edit/{id}", Name = "PostEditItem"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Edit/{id}", Name = "PostEditItem"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> EditAsync(FaqItemViewModel viewModel)
         {
             var item = await _FaqItemRepository.GetAsync(viewModel.Id);
@@ -179,7 +179,7 @@ namespace Edubase.Web.UI.Controllers
         public ActionResult CreateGroup() => View("EditGroup", new FaqGroupViewModel());
 
 
-        [Route("Groups/New", Name = "PostCreateGroup"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Groups/New", Name = "PostCreateGroup"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateGroupAsync(FaqGroupViewModel viewModel)
         {
             return await ProcessEditGroup(viewModel);
@@ -201,7 +201,7 @@ namespace Edubase.Web.UI.Controllers
             });
         }
 
-        [Route("Group/{id}", Name = "PostEditGroup"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
+        [Route("Group/{id}", Name = "PostEditGroup"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> EditGroupAsync(FaqGroupViewModel viewModel)
         {
             var item = await _FaqGroupRepository.GetAsync(viewModel.Id);

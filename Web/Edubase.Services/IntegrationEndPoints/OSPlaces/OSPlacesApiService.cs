@@ -21,17 +21,12 @@ namespace Edubase.Services.IntegrationEndPoints.OSPlaces
             BaseAddress = new Uri("https://api.os.uk/")
         };
 
-        private static readonly Policy RetryPolicy = CreateRetryPolicy();
-
-        private static Policy CreateRetryPolicy()
-        {
-            var retryIntervalSettings = ConfigurationManager.AppSettings["OSPlacesApiServices_RetryIntervals"].Split(',');
-            var retryIntervals = retryIntervalSettings.Select(int.Parse).ToArray();
-
-            return Policy
-                .Handle<HttpRequestException>()
-                .WaitAndRetryAsync(retryIntervals.Select(seconds => TimeSpan.FromSeconds(seconds)));
-        }
+        private static readonly string OSPlacesApiServicesTimeoutKey = "OSPlacesApiServices_Timeout";
+        private static readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
+            PollyUtil.CsvSecondsToTimeSpans(
+                ConfigurationManager.AppSettings["OSPlacesApiServices_RetryIntervals"]
+            ), OSPlacesApiServicesTimeoutKey
+        );
 
         public async Task<PlaceDto[]> SearchAsync(string text)
         {

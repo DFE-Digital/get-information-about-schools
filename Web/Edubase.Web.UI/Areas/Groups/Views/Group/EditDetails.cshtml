@@ -33,6 +33,7 @@
 
     @using (Html.BeginForm("EditDetails", "Group", new { area = "Groups" }, FormMethod.Post, new { @id = "edit-group-details" }))
     {
+        @Html.AntiForgeryToken()
         @Html.HiddenFor(x => x.GroupUId)
         @Html.HiddenFor(x => x.GroupTypeMode)
         @Html.HiddenFor(x => x.SaveMode)

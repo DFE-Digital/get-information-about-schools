@@ -33,7 +33,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             _layoutHelper = layoutHelper;
         }
 
-        [HttpPost, EdubaseAuthorize, Route("Governance/ConfirmEstabishment/{urn:int}", Name = "EstablishmentGovernanceConfirmUpToDate")]
+        [HttpPost, EdubaseAuthorize, Route("Governance/ConfirmEstabishment/{urn:int}", Name = "EstablishmentGovernanceConfirmUpToDate"), ValidateAntiForgeryToken]
         public async Task<ActionResult> EstablishmentGovernanceConfirmUpToDateAsync(int urn, bool showBanner = false)
         {
             await _establishmentWriteService.ConfirmGovernanceAsync(urn, User);
@@ -41,7 +41,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return Redirect(url);
         }
 
-        [HttpPost, EdubaseAuthorize, Route("Governance/ConfirmGroup/{uid:int}", Name = "GroupGovernanceConfirmUpToDate")]
+        [HttpPost, EdubaseAuthorize, Route("Governance/ConfirmGroup/{uid:int}", Name = "GroupGovernanceConfirmUpToDate"), ValidateAntiForgeryToken]
         public async Task<ActionResult> GroupGovernanceConfirmUpToDateAsync(int uid)
         {
             await _groupWriteService.ConfirmGovernanceAsync(uid, User);
@@ -77,7 +77,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         /// Saves the governance mode
         /// </summary>
         /// <returns></returns>
-        [Route(EstabEditGovernanceMode), HttpPost, EdubaseAuthorize]
+        [Route(EstabEditGovernanceMode), HttpPost, EdubaseAuthorize, ValidateAntiForgeryToken]
         public async Task<ActionResult> EditGovernanceMode(EditGovernanceModeViewModel viewModel)
         {
             try

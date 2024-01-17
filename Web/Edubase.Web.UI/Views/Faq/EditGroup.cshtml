@@ -35,6 +35,7 @@
 
 @using (Html.BeginRouteForm(Model.Id == null ? "PostCreateGroup" : "PostEditGroup", new { Model.Id }, FormMethod.Post))
 {
+    @Html.AntiForgeryToken()
     <div class="govuk-grid-row">
         @Html.HiddenFor(x => x.Id)
 

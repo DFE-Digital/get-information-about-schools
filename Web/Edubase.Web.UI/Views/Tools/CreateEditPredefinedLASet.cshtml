@@ -38,6 +38,7 @@
 
         @using (Html.BeginRouteForm((Model.IsNewEntity ? "CreatePredefinedLASetPost" : "EditPredefinedLASetPost"), new { Model.Id }, FormMethod.Post, new { @class = "has-typeahead" }))
         {
+            @Html.AntiForgeryToken()
             <div class="govuk-grid-column-two-thirds">
                 @Html.HiddenFor(x => x.Id)
                 @Html.HiddenFor(x=>x.Referrer)

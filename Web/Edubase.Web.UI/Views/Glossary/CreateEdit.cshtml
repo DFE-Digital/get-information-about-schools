@@ -31,6 +31,7 @@
 
         @using (Html.BeginRouteForm(Model.Id == null ? "PostCreateGlossaryItem" : "PostEditGlossaryItem", new { Model.Id } , FormMethod.Post))
         {
+            @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.Id)
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Title)">
                 @Html.LabelFor(x => x.Title, new { @class = "govuk-label" })

@@ -35,6 +35,7 @@
 
 @using (Html.BeginForm("ProcessMergeAsync", "AmalgamateMerge", FormMethod.Post))
 {
+    @Html.AntiForgeryToken()
 
 
 <div class="govuk-grid-row">

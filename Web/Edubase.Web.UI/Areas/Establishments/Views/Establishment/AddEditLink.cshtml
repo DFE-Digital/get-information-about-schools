@@ -6,6 +6,7 @@
 
 @using (Html.BeginRouteForm("SaveEstabLink", new { urn = Model.Urn, linkid = Model.ActiveRecord.Id }, FormMethod.Post))
 {
+    @Html.AntiForgeryToken()
     @Html.HiddenFor(x => x.Urn)
     @Html.HiddenFor(x => x.ActiveRecord.Id)
     @Html.HiddenFor(x => x.ActiveRecord.Urn)

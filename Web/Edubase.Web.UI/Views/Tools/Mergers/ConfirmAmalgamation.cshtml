@@ -32,6 +32,7 @@
 </div>
 @using (Html.BeginForm("ProcessAmalgamationAsync", "AmalgamateMerge", FormMethod.Post))
 {
+    @Html.AntiForgeryToken()
     @Html.HiddenFor(x=>x.Establishment0Urn)
     @Html.HiddenFor(x=>x.Establishment0Name);
     @Html.HiddenFor(x=>x.Establishment1Urn)
