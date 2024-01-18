@@ -42,7 +42,7 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
         //Note: Polly doesn't expose the timeout settings once the policy is created
 
         [Fact]
-        public async void CreateTimeoutPolicy_ReturnsCorrectTimeoutForAzureMapService()
+        public async Task CreateTimeoutPolicy_ReturnsCorrectTimeoutForAzureMapService()
         {
             var validKey = "AzureMapService_Timeout";
             ConfigurationManager.AppSettings[validKey] = "5";
@@ -65,7 +65,7 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
 
 
         [Fact]
-        public async void CreateRetryPolicy_DefaultsTo10Seconds()
+        public async Task CreateRetryPolicy_DefaultsTo10Seconds()
         {
             var invalidKey = "InvalidAzureMapService_Timeout";
             ConfigurationManager.AppSettings[invalidKey] = "invalid";
@@ -85,7 +85,7 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
                 {
                     thrownException = ex;
                 }
-            
+
             sw.Stop();
 
             Assert.NotNull(policy);
