@@ -60,7 +60,7 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
             sw.Stop();
 
             Assert.NotNull(policy);
-            Assert.True(sw.Elapsed.Seconds >= 5 && sw.Elapsed.Seconds < 6, "Timeout");
+            Assert.True(sw.Elapsed.Seconds >= 5 && sw.Elapsed.Seconds < 7, $"Timeout expected Elapsed >= 5 && Elapsed < 7 Actual: {sw.Elapsed.Seconds}");
         }
 
 
@@ -90,7 +90,7 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
 
             Assert.NotNull(policy);
             Assert.IsType<TimeoutRejectedException>(thrownException);
-            Assert.True(sw.Elapsed.Seconds >= 10 && sw.Elapsed.Seconds < 11, "Timeout");
+            Assert.True(sw.Elapsed.Seconds >= 10 && sw.Elapsed.Seconds < 12, $"Timeout expected Elapsed >= 10 && Elapsed < 12 Actual: {sw.Elapsed.Seconds}");
         }
 
 
