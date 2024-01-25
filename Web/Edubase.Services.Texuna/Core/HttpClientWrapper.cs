@@ -470,7 +470,26 @@ namespace Edubase.Services
 
             var requestMessage = new HttpRequestMessage(method, uri);
             requestMessage.Headers.Add(HEADER_SA_USER_ID, principal.GetUserId() ?? string.Empty);
-            requestMessage.Headers.Add("X-Source-IP", _clientStorage.IPAddress);
+
+            //
+            // Proxies (e.g., WAF) are recognised as their infrastructure's IP address (rather than the end-user's / client's IP address).
+            // Making GIAS take into account x-forwarded-for header was considered as part of #189483 but
+            // the effort to do this correctly (and securely) was deemed too high for the benefit.
+            //
+            // Instead, we allow a configuration option to provide a static value to represent the GIAS frontend.
+            // This allows:
+            // - default behaviour to remain in environments without a proxy in place,
+            // - where a WAF is later installed, that WAF shall provide upstream rate-limiting, and
+            // - the requirement for the backend API (single client - this GIAS frontend) rate limiting can be relaxed
+            //   such that requests containing this static value can have a higher rate-limit than other clients (or disabled).
+            //
+            // Note that the backend API has an option to validate values supplied in the x-source-ip header.
+            // This validation must be disabled if the override value is not a valid IPv4 formatted value.
+            //
+            var xSourceIpOverride = ConfigurationManager.AppSettings["xSourceIpOverride"];
+            var value = string.IsNullOrEmpty(xSourceIpOverride) ? _clientStorage.IPAddress : xSourceIpOverride;
+            requestMessage.Headers.Add("X-Source-IP", value);
+
             if (requestBodyData != null)
             {
                 requestMessage.Content = new ObjectContent<object>(requestBodyData, _formatter);
