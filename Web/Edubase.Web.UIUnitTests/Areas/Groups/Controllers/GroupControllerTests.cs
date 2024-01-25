@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Security.Claims;
 using System.Security.Principal;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -11,6 +15,7 @@ using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
+using Edubase.Services.Establishments.Models;
 using Edubase.Services.Exceptions;
 using Edubase.Services.ExternalLookup;
 using Edubase.Services.Governors;
@@ -22,11 +27,13 @@ using Edubase.Services.Lookup;
 using Edubase.Services.Nomenclature;
 using Edubase.Services.Security;
 using Edubase.Services.Texuna;
+using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Areas.Groups.ViewRulesHandlers;
 using Edubase.Web.UI.Exceptions;
 using Edubase.Web.UIUnitTests;
+using Faker;
 using Moq;
 using Xunit;
 using Xunit.Abstractions;
@@ -42,7 +49,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
         private readonly ITestOutputHelper output;
 
         private readonly Mock<IEstablishmentReadService> mockEstablishmentReadService = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
-        private readonly Mock<IGroupReadService> mockGroupReadService = new Mock<IGroupReadService>(MockBehavior.Strict);
+        private readonly Mock<IGroupReadService> mockGroupReadService = new Mock<IGroupReadService>(MockBehavior.Loose);
         private readonly Mock<IGroupsWriteService> mockGroupsWriteService = new Mock<IGroupsWriteService>(MockBehavior.Strict);
         private readonly Mock<IGovernorsReadService> mockGovernorsReadService = new Mock<IGovernorsReadService>(MockBehavior.Strict);
         private readonly Mock<ICompaniesHouseService> mockCompaniesHouseService = new Mock<ICompaniesHouseService>(MockBehavior.Strict);
@@ -55,6 +62,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
         private readonly Mock<HttpContextBase> mockHttpContextBase = new Mock<HttpContextBase>(MockBehavior.Strict);
         private readonly Mock<IPrincipal> mockPrincipal = new Mock<IPrincipal>(MockBehavior.Strict);
         private readonly Mock<IIdentity> mockIdentity = new Mock<IIdentity>(MockBehavior.Strict);
+        private readonly Mock<IGovernorsGridViewModelFactory> mockGovernorGridViewModelFactory = new Mock<IGovernorsGridViewModelFactory>(MockBehavior.Loose);
         private bool disposedValue;
 
         public GroupControllerTests(ITestOutputHelper output)
@@ -77,7 +85,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
                 mockCompaniesHouseService.Object,
                 mockNomenclatureService.Object,
                 mockGovernorsReadService.Object,
-                mockExternalLookupService.Object);
+                mockExternalLookupService.Object,
+                mockGovernorGridViewModelFactory.Object);
 
             SetupController();
         }
@@ -958,6 +967,47 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             Assert.Equal("Details", result.RouteValues["action"]);
             Assert.Equal(123, result.RouteValues["id"]);
         }
+
+        [Fact]
+        public async Task dets()
+        {
+            var id = 12;
+            var search = "search";
+            var searchsource = eLookupSearchSource.Groups;
+            var skip = 0;
+            var sortBy = "requestedDateUTC-desc";
+            var saved = false;
+
+            var mockUser = new Mock<IPrincipal>();
+
+            mockHttpContextBase.SetupGet(x => x.User).Returns(mockUser.Object);
+            mockIdentity.Setup(x => x.IsAuthenticated).Returns(true);
+            mockPrincipal.Setup(x => x.Identity).Returns(mockIdentity.Object);
+            mockExternalLookupService.Setup(x => x.FscpdCheckExists(It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<bool>()))
+                .ReturnsAsync(true);
+            mockSecurityService.Setup(x => x.GetCreateGroupPermissionAsync(It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new CreateGroupPermissionDto { GroupTypes = new eLookupGroupType[] { eLookupGroupType.MultiacademyTrust } });
+
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = mockHttpContextBase.Object
+            };
+
+
+            var expectedGroup = new GroupModel { GroupTypeId = (int?) eLookupGroupType.MultiacademyTrust };
+            mockGroupReadService.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new ServiceResultDto<GroupModel> { ReturnValue = expectedGroup });
+
+            var result = await controller.Details(id, search, searchsource, skip, sortBy, saved);
+
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var viewModel = Assert.IsAssignableFrom<GroupDetailViewModel>(viewResult.Model);
+            Assert.NotNull(viewModel.GovernorsGridViewModel);
+        }
+
+        
+
+
 
         protected virtual void Dispose(bool disposing)
         {

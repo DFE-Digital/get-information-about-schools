@@ -5,6 +5,7 @@ using Edubase.Services.Governors.Models;
 namespace Edubase.Web.UI.Areas.Groups.Models
 {
     using Common;
+    using Edubase.Web.UI.Areas.Governors.Models;
     using Services.Core;
     using Services.Domain;
     using Services.Enums;
@@ -129,5 +130,6 @@ namespace Edubase.Web.UI.Areas.Groups.Models
                 showFscpd = extService != null && await extService.SfbCheckExists(FinancialBenchmarkingLookups.Item1, FinancialBenchmarkingLookups.Item2);
             }
         }
+        public GovernorsGridViewModel GovernorsGridViewModel { get; set; }
     }
 }

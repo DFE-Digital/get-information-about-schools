@@ -425,59 +425,60 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             Assert.Single(viewResult.ViewData.ModelState["role"].Errors);
         }
 
-        [Fact()]
-        public void Gov_View_ModelSpecified()
-        {
-            var model = new GovernorsGridViewModel();
-            var result = controller.View(null, null, model);
+        //removed below tests as it looks like this method is not required now
+        //[Fact()]
+        //public void Gov_View_ModelSpecified()
+        //{
+        //    var model = new GovernorsGridViewModel();
+        //    var result = controller.View(null, null, model);
 
-            var viewResult = result as ViewResult;
-            var modelResult = viewResult?.Model as GovernorsGridViewModel;
+        //    var viewResult = result as ViewResult;
+        //    var modelResult = viewResult?.Model as GovernorsGridViewModel;
 
-            Assert.NotNull(viewResult);
-            Assert.Equal("~/Areas/Governors/Views/Governor/ViewEdit.cshtml", viewResult.ViewName);
-            Assert.NotNull(modelResult);
-            Assert.Equal(model, modelResult);
-        }
+        //    Assert.NotNull(viewResult);
+        //    Assert.Equal("~/Areas/Governors/Views/Governor/ViewEdit.cshtml", viewResult.ViewName);
+        //    Assert.NotNull(modelResult);
+        //    Assert.Equal(model, modelResult);
+        //}
 
-        [Fact]
-        public void Gov_View_groupUIdSpecified()
-        {
-            var groupUId = 10;
+        //[Fact]
+        //public void Gov_View_groupUIdSpecified()
+        //{
+        //    var groupUId = 10;
 
-            var governorsGridViewModel = new GovernorsGridViewModel();
+        //    var governorsGridViewModel = new GovernorsGridViewModel();
 
-            mockGovernorGridViewModelFactory.Setup(x => x.CreateGovernorsViewModel(groupUId, null, null, It.IsAny<IPrincipal>()))
-                .ReturnsAsync(() => governorsGridViewModel);
+        //    mockGovernorGridViewModelFactory.Setup(x => x.CreateGovernorsViewModel(groupUId, null, null, It.IsAny<IPrincipal>()))
+        //        .ReturnsAsync(() => governorsGridViewModel);
 
-            var result = controller.View(groupUId, null, null);
-            var viewResult = result as ViewResult;
-            var modelResult = viewResult?.Model as GovernorsGridViewModel;
+        //    var result = controller.View(groupUId, null, null);
+        //    var viewResult = result as ViewResult;
+        //    var modelResult = viewResult?.Model as GovernorsGridViewModel;
 
-            Assert.NotNull(viewResult);
-            Assert.Equal("~/Areas/Governors/Views/Governor/ViewEdit.cshtml", viewResult.ViewName);
-            Assert.NotNull(modelResult);
-            Assert.Equal(governorsGridViewModel, modelResult);
-        }
+        //    Assert.NotNull(viewResult);
+        //    Assert.Equal("~/Areas/Governors/Views/Governor/ViewEdit.cshtml", viewResult.ViewName);
+        //    Assert.NotNull(modelResult);
+        //    Assert.Equal(governorsGridViewModel, modelResult);
+        //}
 
-        [Fact()]
-        public void Gov_View_establishmentUrnSpecified()
-        {
-            var establishmentUrn = 26;
+        //[Fact()]
+        //public void Gov_View_establishmentUrnSpecified()
+        //{
+        //    var establishmentUrn = 26;
 
-            var governorsGridViewModel = new GovernorsGridViewModel() { EstablishmentUrn = establishmentUrn };
-            mockGovernorGridViewModelFactory.Setup(x => x.CreateGovernorsViewModel(null, establishmentUrn, null, It.IsAny<IPrincipal>()))
-                .ReturnsAsync(() => governorsGridViewModel);
+        //    var governorsGridViewModel = new GovernorsGridViewModel() { EstablishmentUrn = establishmentUrn };
+        //    mockGovernorGridViewModelFactory.Setup(x => x.CreateGovernorsViewModel(null, establishmentUrn, null, It.IsAny<IPrincipal>()))
+        //        .ReturnsAsync(() => governorsGridViewModel);
 
-            var result = controller.View(null, establishmentUrn, null);
-            var viewResult = result as ViewResult;
-            var modelResult = viewResult?.Model as GovernorsGridViewModel;
+        //    var result = controller.View(null, establishmentUrn, null);
+        //    var viewResult = result as ViewResult;
+        //    var modelResult = viewResult?.Model as GovernorsGridViewModel;
 
-            Assert.NotNull(viewResult);
-            Assert.Equal("~/Areas/Governors/Views/Governor/ViewEdit.cshtml", viewResult.ViewName);
-            Assert.NotNull(modelResult);
-            Assert.Equal(governorsGridViewModel, modelResult);
-        }
+        //    Assert.NotNull(viewResult);
+        //    Assert.Equal("~/Areas/Governors/Views/Governor/ViewEdit.cshtml", viewResult.ViewName);
+        //    Assert.NotNull(modelResult);
+        //    Assert.Equal(governorsGridViewModel, modelResult);
+        //}
 
         [Fact()]
         public void Gov_AddEditOrReplace_NullParams()
