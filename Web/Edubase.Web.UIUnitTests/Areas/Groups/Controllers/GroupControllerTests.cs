@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -32,6 +33,7 @@ using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Areas.Groups.ViewRulesHandlers;
 using Edubase.Web.UI.Exceptions;
+using Edubase.Web.UI.Models.Grid;
 using Edubase.Web.UIUnitTests;
 using Faker;
 using Moq;
@@ -968,46 +970,37 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             Assert.Equal(123, result.RouteValues["id"]);
         }
 
+
         [Fact]
-        public async Task dets()
+        public async Task Details_ReturnsorrectVM()
         {
-            var id = 12;
-            var search = "search";
-            var searchsource = eLookupSearchSource.Groups;
-            var skip = 0;
-            var sortBy = "requestedDateUTC-desc";
-            var saved = false;
-
-            var mockUser = new Mock<IPrincipal>();
-
-            mockHttpContextBase.SetupGet(x => x.User).Returns(mockUser.Object);
-            mockIdentity.Setup(x => x.IsAuthenticated).Returns(true);
-            mockPrincipal.Setup(x => x.Identity).Returns(mockIdentity.Object);
-            mockExternalLookupService.Setup(x => x.FscpdCheckExists(It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<bool>()))
-                .ReturnsAsync(true);
-            mockSecurityService.Setup(x => x.GetCreateGroupPermissionAsync(It.IsAny<IPrincipal>()))
-                .ReturnsAsync(new CreateGroupPermissionDto { GroupTypes = new eLookupGroupType[] { eLookupGroupType.MultiacademyTrust } });
-
-            controller.ControllerContext = new ControllerContext
+            var groupId = 5638;
+            var groupModel = CreateGroupModel(eLookupGroupType.MultiacademyTrust);
+            var GovernorsGridVM = new GovernorsGridViewModel
             {
-                HttpContext = mockHttpContextBase.Object
+                GroupTypeId = (int) eLookupGroupType.MultiacademyTrust
             };
 
+            mockIdentity.Setup(x => x.IsAuthenticated).Returns(true);
+            mockExternalLookupService.Setup(x => x.FscpdCheckExists(It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<bool>()))
+                    .ReturnsAsync(true);
+            mockGovernorsReadService.Setup(x => x.GetGovernorPermissions(null, 5638, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
+            mockGroupReadService.Setup(x => x.GetAsync(groupId, It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>() { ReturnValue = groupModel });
+            mockGroupReadService.Setup(x => x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), It.IsAny<bool>()))
+                    .ReturnsAsync(new List<EstablishmentGroupModel>());
+            mockGovernorGridViewModelFactory.Setup(x => x.CreateGovernorsViewModel(It.IsAny<int>(), It.IsAny<int?>(), It.IsAny<EstablishmentModel>(), It.IsAny<IPrincipal>()))
+                    .Returns(Task.FromResult(GovernorsGridVM));
 
-            var expectedGroup = new GroupModel { GroupTypeId = (int?) eLookupGroupType.MultiacademyTrust };
-            mockGroupReadService.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
-                .ReturnsAsync(new ServiceResultDto<GroupModel> { ReturnValue = expectedGroup });
+            controller.ControllerContext = new ControllerContext(mockHttpContextBase.Object, new System.Web.Routing.RouteData(), controller);
 
-            var result = await controller.Details(id, search, searchsource, skip, sortBy, saved);
-
+            var result = await controller.Details(groupId);
             var viewResult = Assert.IsType<ViewResult>(result);
             var viewModel = Assert.IsAssignableFrom<GroupDetailViewModel>(viewResult.Model);
+
             Assert.NotNull(viewModel.GovernorsGridViewModel);
+            Assert.True(viewModel.GovernorsGridViewModel.GroupTypeId.HasValue);
+            Assert.Equal(GovernorsGridVM.GroupTypeId, viewModel.GovernorsGridViewModel.GroupTypeId);
         }
-
-        
-
-
 
         protected virtual void Dispose(bool disposing)
         {
