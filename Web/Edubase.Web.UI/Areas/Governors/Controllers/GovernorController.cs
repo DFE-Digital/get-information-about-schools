@@ -219,26 +219,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return await Edit(viewModel.GroupUId, viewModel.EstablishmentUrn, viewModel.RemovalGid, null);
         }
 
-        // I think this can be removed
-        //[Route]
-        //public ActionResult View(int? groupUId, int? establishmentUrn, GovernorsGridViewModel viewModel = null)
-        //{
-        //    if (viewModel != null)
-        //    {
-        //        return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
-        //    }
-        //    else
-        //    {
-        //        // KHD Hack: Async child actions are not supported; but we have an async stack, so we have to wrap the async calls in an sync wrapper.  Hopefully won't deadlock.
-        //        // Need to use ASP.NET Core really now; that supports ViewComponents which are apparently the solution.
-        //        return Task.Run(async () =>
-        //        {
-        //            viewModel = await _governorsGridViewModelFactory.CreateGovernorsViewModel(groupUId, establishmentUrn, user: User);
-        //            return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
-        //        }).Result;
-        //    }
-        //}
-
         /// <summary>
         /// GET
         /// </summary>
