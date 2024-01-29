@@ -963,7 +963,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
 
 
         [Fact]
-        public async Task Details_ReturnsorrectVM()
+        public async Task Details_ReturnsCorrectVM()
         {
             var groupId = 5638;
             var groupModel = CreateGroupModel(eLookupGroupType.MultiacademyTrust);
