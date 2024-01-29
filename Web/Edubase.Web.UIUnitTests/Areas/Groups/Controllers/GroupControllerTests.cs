@@ -975,7 +975,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             mockIdentity.Setup(x => x.IsAuthenticated).Returns(true);
             mockExternalLookupService.Setup(x => x.FscpdCheckExists(It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<bool>()))
                     .ReturnsAsync(true);
-            mockGovernorsReadService.Setup(x => x.GetGovernorPermissions(null, 5638, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
+            mockGovernorsReadService.Setup(x => x.GetGovernorPermissions(null, groupId, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
             mockGroupReadService.Setup(x => x.GetAsync(groupId, It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>() { ReturnValue = groupModel });
             mockGroupReadService.Setup(x => x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), It.IsAny<bool>()))
                     .ReturnsAsync(new List<EstablishmentGroupModel>());
