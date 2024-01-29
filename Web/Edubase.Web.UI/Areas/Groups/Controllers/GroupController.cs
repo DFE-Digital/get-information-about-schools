@@ -15,7 +15,7 @@ using FluentValidation.Mvc;
 
 namespace Edubase.Web.UI.Areas.Groups.Controllers
 {
-    using Common;    using Edubase.Web.UI.Areas.Governors.Models;
+    using Common;
     using Edubase.Web.UI.Areas.Groups.ViewRulesHandlers;
     using Exceptions;
     using Filters;
@@ -30,7 +30,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using Services.IntegrationEndPoints.CompaniesHouse;
     using Services.Nomenclature;
     using UI.Models;
-    using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
     using static Models.CreateEdit.GroupEditorViewModel;
     using static Models.CreateEdit.GroupEditorViewModelBase;
     using GS = Services.Enums.eLookupGroupStatus;
