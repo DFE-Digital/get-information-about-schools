@@ -65,8 +65,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
                 mockGovernorsWriteService.Object,
                 mockGroupReadService.Object,
                 mockEstablishmentReadService.Object,
-                mockLayoutHelper.Object,
-                mockGovernorGridViewModelFactory.Object);
+                mockLayoutHelper.Object);
 
             SetupController();
         }

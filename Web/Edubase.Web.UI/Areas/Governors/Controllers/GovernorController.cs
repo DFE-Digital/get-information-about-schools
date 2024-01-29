@@ -58,7 +58,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         private readonly IGroupReadService _groupReadService;
         private readonly ILayoutHelper _layoutHelper;
         private readonly NomenclatureService _nomenclatureService;
-        private readonly IGovernorsGridViewModelFactory _governorsGridViewModelFactory;
 
         public GovernorController(
             IGovernorsReadService governorsReadService,
@@ -67,8 +66,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             IGovernorsWriteService governorsWriteService,
             IGroupReadService groupReadService,
             IEstablishmentReadService establishmentReadService,
-            ILayoutHelper layoutHelper,
-            IGovernorsGridViewModelFactory gridViewModelFactory)
+            ILayoutHelper layoutHelper)
         {
             _governorsReadService = governorsReadService;
             _nomenclatureService = nomenclatureService;
@@ -77,7 +75,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             _groupReadService = groupReadService;
             _establishmentReadService = establishmentReadService;
             _layoutHelper = layoutHelper;
-            _governorsGridViewModelFactory = gridViewModelFactory;
         }
 
         /// <summary>
