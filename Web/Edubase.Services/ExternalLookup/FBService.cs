@@ -23,12 +23,6 @@ namespace Edubase.Services.ExternalLookup
         private readonly string urlBaseAddress;
         private readonly string apiBaseAddress;
 
-        //private static readonly Policy RetryPolicy = Policy.TimeoutAsync(1).Wrap(Policy
-        //    .Handle<HttpRequestException>()
-        //    .WaitAndRetryAsync(new[]
-        //    {
-        //        TimeSpan.FromSeconds(1)
-        //    }));
         private static readonly string FBServiceTimeoutKey = "FBService_Timeout";
 
         private static readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
@@ -41,7 +35,6 @@ namespace Edubase.Services.ExternalLookup
         {
             _client = httpClient;
 
-            //maybe move this??
             apiBaseAddress = ConfigurationManager.AppSettings["FinancialBenchmarkingApiURL"];
             urlBaseAddress = ConfigurationManager.AppSettings["FinancialBenchmarkingURL"];
         }

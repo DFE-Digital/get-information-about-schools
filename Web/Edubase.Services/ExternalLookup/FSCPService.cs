@@ -17,12 +17,6 @@ namespace Edubase.Services.ExternalLookup
         private string _matAddress = "multi-academy-trust";
         private string _schoolAddress = "school";
 
-        //private static readonly Policy RetryPolicy = Policy.TimeoutAsync(1).Wrap(Policy
-        //    .Handle<HttpRequestException>()
-        //    .WaitAndRetryAsync(new[]
-        //    {
-        //        TimeSpan.FromSeconds(1)
-        //    }));
         private static readonly string FBServiceTimeoutKey = "FscpdClient_Timeout";
 
         private static readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
