@@ -58,6 +58,18 @@ namespace Edubase.Services.IntegrationEndPoints
                         timeoutSettings = 10;
                     }
                     break;
+                case "FBService_Timeout":
+                    if (!int.TryParse(ConfigurationManager.AppSettings["FBService_Timeout"], out timeoutSettings))
+                    {
+                        timeoutSettings = 10;
+                    }
+                    break;
+                case "FscpdClient_Timeout":
+                    if (!int.TryParse(ConfigurationManager.AppSettings["FscpdClient_Timeout"], out timeoutSettings))
+                    {
+                        timeoutSettings = 10;
+                    }
+                    break;
             }
 
             return Policy.TimeoutAsync(TimeSpan.FromSeconds(timeoutSettings));
