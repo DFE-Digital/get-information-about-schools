@@ -29,6 +29,40 @@ namespace Edubase.Web.UI
     {
         protected void Application_Start()
         {
+            /*
+             * This block is used to (optionally) whitelist a known-good self-signed certificate.
+             * While it *could* be modified to always return true, it is better practice to whitelist.
+             * The "thumbprint" of the certificate can be found using the web browser.
+             * 
+             * Credit for base code and approach: https://stackoverflow.com/a/44140506
+             */
+            {
+                System.Net.ServicePointManager.ServerCertificateValidationCallback += delegate (
+                    object sender,
+                    X509Certificate cert,
+                    X509Chain chain,
+                    SslPolicyErrors sslPolicyErrors)
+                {
+                    // If no SSL verification issues, continue.
+                    if (sslPolicyErrors == SslPolicyErrors.None)
+                    {
+                        return true;   //Is valid
+                    }
+
+                    // This thumbprint can be obtained via
+                    var knownGoodSslCertificateThumbprint = "bd8493b486d95d15fa1cda2cf654361027ed85ca".ToUpper();
+
+                    // If SSL verification problem, compare agcainst a "known-good" self-signed certificate's thumbprint.
+                    if (cert.GetCertHashString() == knownGoodSslCertificateThumbprint)
+                    {
+                        return true;
+                    }
+
+                    // Else, reject 
+                    return false;
+                };
+            }
+
 #if DEBUG
             try
             {

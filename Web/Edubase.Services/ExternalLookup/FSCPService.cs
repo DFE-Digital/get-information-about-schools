@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
 using Edubase.Common;
+using Edubase.Services.IntegrationEndPoints;
 using Polly;
 
 namespace Edubase.Services.ExternalLookup
@@ -16,12 +17,19 @@ namespace Edubase.Services.ExternalLookup
         private string _matAddress = "multi-academy-trust";
         private string _schoolAddress = "school";
 
-        private static readonly Policy RetryPolicy = Policy.TimeoutAsync(1).Wrap(Policy
-            .Handle<HttpRequestException>()
-            .WaitAndRetryAsync(new[]
-            {
-                TimeSpan.FromSeconds(1)
-            }));
+        //private static readonly Policy RetryPolicy = Policy.TimeoutAsync(1).Wrap(Policy
+        //    .Handle<HttpRequestException>()
+        //    .WaitAndRetryAsync(new[]
+        //    {
+        //        TimeSpan.FromSeconds(1)
+        //    }));
+        private static readonly string FBServiceTimeoutKey = "FscpdClient_Timeout";
+
+        private static readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
+            PollyUtil.CsvSecondsToTimeSpans(
+                ConfigurationManager.AppSettings["FscpdClient_RetryIntervals"]
+            ), FBServiceTimeoutKey
+        );
 
         public FSCPDService(HttpClient client)
         {
