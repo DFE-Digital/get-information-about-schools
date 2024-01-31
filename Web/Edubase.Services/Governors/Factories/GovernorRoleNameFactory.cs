@@ -30,6 +30,7 @@ namespace Edubase.Services.Governors.Factories
             { eLookupGovernorRole.GovernanceProfessionalToAFederation, "Governance professional to a federation" },
             { eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professional to an individual academy or free school" },
             { eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professional to a MAT" },
+            { eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professional to a secure SAT" },
         };
 
         private static readonly Dictionary<eLookupGovernorRole, string> PluralisedLabels = new Dictionary<eLookupGovernorRole, string>()
@@ -41,7 +42,14 @@ namespace Edubase.Services.Governors.Factories
             { eLookupGovernorRole.Member, "Members" },
             { eLookupGovernorRole.Member_Individual, "Members - individual" },
             { eLookupGovernorRole.Member_Organisation, "Members - organisation" },
-            { eLookupGovernorRole.Trustee, "Trustees" }
+            { eLookupGovernorRole.Trustee, "Trustees" },
+            { eLookupGovernorRole.Group_SharedGovernanceProfessional, "Shared governance professionals" },
+            { eLookupGovernorRole.Establishment_SharedGovernanceProfessional, "Shared governance professionals" },
+            { eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool, "Governance professionals to a local authority maintained school" },
+            { eLookupGovernorRole.GovernanceProfessionalToAFederation, "Governance professionals to a federation" },
+            { eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professionals to an individual academy or free school" },
+            { eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professionals to a MAT" },
+            { eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professionals to a secure SAT" },
         };
 
         public static string Create(eLookupGovernorRole role, eTextCase textCase = eTextCase.SentenceCase, bool pluraliseLabelIfApplicable = false)
