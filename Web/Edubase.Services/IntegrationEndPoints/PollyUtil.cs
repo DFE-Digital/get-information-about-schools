@@ -19,7 +19,6 @@ namespace Edubase.Services.IntegrationEndPoints
         /// </returns>
         public static Policy CreateRetryPolicy(TimeSpan[] retryIntervals, string settingsKey)
         {
-
             if(retryIntervals is null || retryIntervals.Length == 0)
             {
                 return Policy.NoOp();
@@ -33,12 +32,10 @@ namespace Edubase.Services.IntegrationEndPoints
 
         public static Policy CreateRetryPolicyInternal(TimeSpan[] retryIntervals)
         {
-
             return Policy
                 .Handle<HttpRequestException>()
                 .Or<TaskCanceledException>()
                 .WaitAndRetryAsync(retryIntervals);
-
         }
 
         public static Policy CreateTimeoutPolicy(string settingsKey)

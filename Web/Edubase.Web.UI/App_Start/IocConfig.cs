@@ -325,7 +325,7 @@ namespace Edubase.Web.UI
         {
             if (!int.TryParse(ConfigurationManager.AppSettings["OSPlacesApiServices_Timeout"], out var timeoutsettings))
             {
-                timeoutsettings = 10;//reasonable default?? probably not
+                timeoutsettings = 10;
             }
 
             var client = new HttpClient
@@ -341,7 +341,7 @@ namespace Edubase.Web.UI
         {
             if (!int.TryParse(ConfigurationManager.AppSettings["AzureMapService_Timeout"], out var timeoutsettings))
             {
-                timeoutsettings = 10;//reasonable default?? probably not
+                timeoutsettings = 10;
             }
 
             var client = new HttpClient
