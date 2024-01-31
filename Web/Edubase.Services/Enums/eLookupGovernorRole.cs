@@ -29,5 +29,6 @@ namespace Edubase.Services.Enums
         Member_Individual = 21,
         Member_Organisation = 22,
         GovernanceProfessionalToASecureSat = 23,
+        GovernanceProfessionalToASat = 24,
     }
 }
