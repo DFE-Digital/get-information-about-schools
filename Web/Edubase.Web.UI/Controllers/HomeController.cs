@@ -134,7 +134,7 @@ namespace Edubase.Web.UI.Controllers
             //}
 
             //Commented out the above and replaced this with a redirect as this is not a good way to create the HttpClient and could cause socket exhaustion
-            return Redirect("http://ea-edubase-api-prod.azurewebsites.net/edubase/service.wsdl");
+            return Redirect("https://ea-edubase-api-prod.azurewebsites.net/edubase/service.wsdl");
         }
 
         [Route("~/Contact")]
