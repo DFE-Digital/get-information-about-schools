@@ -55,7 +55,8 @@ namespace Edubase.Services.Enums
             GR.GovernanceProfessionalToAMat,
             GR.GovernanceProfessionalToASecureSat,
             GR.Group_SharedGovernanceProfessional,
-            GR.Establishment_SharedGovernanceProfessional
+            GR.Establishment_SharedGovernanceProfessional,
+            GR.GovernanceProfessionalToASat,
         };
 
         public static IEnumerable<int> SingularGovernorRoles { get; } = eSingularGovernorRoles.Cast<int>();
