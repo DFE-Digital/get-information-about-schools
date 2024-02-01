@@ -472,10 +472,19 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 return false;
             }
 
-            // Only a single governance professional may be attached
-            if (IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
+            // At MAT level you should be able to have a 'Shared governance professional - group' and a 'Governance professional to a MAT'
+            var isGroupPresent = existingGovernorRoleIds.Any(g => g == (int)eLookupGovernorRole.Group_SharedGovernanceProfessional);
+            var isMatPresent = existingGovernorRoleIds.Any(m => m == (int)eLookupGovernorRole.GovernanceProfessionalToAMat);
+            var isAddingGroup = role == eLookupGovernorRole.Group_SharedGovernanceProfessional;
+            var isAddingMat = role == eLookupGovernorRole.GovernanceProfessionalToAMat;
+
+            if (!((isAddingMat && isGroupPresent) || (isAddingGroup && isMatPresent)))
             {
-                return false;
+                // Only a single governance professional may be attached
+                if (IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
+                {
+                    return false;
+                }
             }
 
             // Where the new governor is a role which permits only a single appointee, forbid if an exact match is found
