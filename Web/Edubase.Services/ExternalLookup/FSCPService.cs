@@ -13,13 +13,15 @@ namespace Edubase.Services.ExternalLookup
 {
     public class FSCPDService : IFSCPDService
     {
-        private static HttpClient _client;
-        private string _matAddress = "multi-academy-trust";
-        private string _schoolAddress = "school";
+        private readonly HttpClient _client;
 
-        private static readonly string FBServiceTimeoutKey = "FscpdClient_Timeout";
+        private const string MatAddress = "multi-academy-trust";
 
-        private static readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
+        private const string SchoolAddress = "school";
+
+        private const string FBServiceTimeoutKey = "FscpdClient_Timeout";
+
+        private readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
             PollyUtil.CsvSecondsToTimeSpans(
                 ConfigurationManager.AppSettings["FscpdClient_RetryIntervals"]
             ), FBServiceTimeoutKey
@@ -32,7 +34,7 @@ namespace Edubase.Services.ExternalLookup
 
         private string GetCollection(bool mat)
         {
-            var collection = mat ? _matAddress : _schoolAddress;
+            var collection = mat ? MatAddress : SchoolAddress;
             return collection;
         }
 

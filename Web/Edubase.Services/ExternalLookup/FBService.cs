@@ -20,12 +20,14 @@ namespace Edubase.Services.ExternalLookup
     public class FBService : IFBService
     {
         private readonly HttpClient _client;
+
         private readonly string urlBaseAddress;
+
         private readonly string apiBaseAddress;
 
-        private static readonly string FBServiceTimeoutKey = "FBService_Timeout";
+        private const string FBServiceTimeoutKey = "FBService_Timeout";
 
-        private static readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
+        private readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
             PollyUtil.CsvSecondsToTimeSpans(
                 ConfigurationManager.AppSettings["FBService_RetryIntervals"]
             ), FBServiceTimeoutKey

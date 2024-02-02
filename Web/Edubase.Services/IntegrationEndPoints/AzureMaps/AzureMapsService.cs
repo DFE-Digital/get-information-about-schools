@@ -16,13 +16,13 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
 
     public class AzureMapsService : IAzureMapsService
     {
-        private static readonly string _apiKey = ConfigurationManager.AppSettings["AzureMapsApiKey"];
+        private readonly string _apiKey = ConfigurationManager.AppSettings["AzureMapsApiKey"];
 
         private readonly HttpClient _azureMapsClient;
 
-        private static readonly string AzureMapServiceTimeoutKey = "AzureMapService_Timeout";
+        private const string AzureMapServiceTimeoutKey = "AzureMapService_Timeout";
 
-        private static readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
+        private readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
             PollyUtil.CsvSecondsToTimeSpans(
                 ConfigurationManager.AppSettings["AzureMapService_RetryIntervals"]
             ), AzureMapServiceTimeoutKey
@@ -101,7 +101,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
             }
         }
 
-        private static string GetAddressDescription(Result locationResult, string text)
+        private string GetAddressDescription(Result locationResult, string text)
         {
             var output = "";
 

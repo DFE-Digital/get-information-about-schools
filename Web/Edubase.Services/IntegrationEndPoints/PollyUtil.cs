@@ -24,52 +24,24 @@ namespace Edubase.Services.IntegrationEndPoints
                 return Policy.NoOp();
             }
 
-            var retryPolicy = CreateRetryPolicyInternal(retryIntervals);
+            var retryPolicy = Policy
+                .Handle<HttpRequestException>()
+                .Or<TaskCanceledException>()
+                .WaitAndRetryAsync(retryIntervals);
+
             var timeoutPolicy = CreateTimeoutPolicy(settingsKey);
 
             return Policy.WrapAsync(retryPolicy, timeoutPolicy);
         }
 
-        public static Policy CreateRetryPolicyInternal(TimeSpan[] retryIntervals)
-        {
-            return Policy
-                .Handle<HttpRequestException>()
-                .Or<TaskCanceledException>()
-                .WaitAndRetryAsync(retryIntervals);
-        }
-
         public static Policy CreateTimeoutPolicy(string settingsKey)
         {
-            var timeoutSettings = 10;
-            switch (settingsKey)
+            if (!int.TryParse(ConfigurationManager.AppSettings[settingsKey], out var timeoutSettings))
             {
-                case "AzureMapService_Timeout":
-                    if (!int.TryParse(ConfigurationManager.AppSettings["AzureMapService_Timeout"], out timeoutSettings))
-                    {
-                        timeoutSettings = 10;
-                    }
-                    break;
-                case "OSPlacesApiServices_Timeout":
-                    if (!int.TryParse(ConfigurationManager.AppSettings["OSPlacesApiServices_Timeout"], out timeoutSettings))
-                    {
-                        timeoutSettings = 10;
-                    }
-                    break;
-                case "FBService_Timeout":
-                    if (!int.TryParse(ConfigurationManager.AppSettings["FBService_Timeout"], out timeoutSettings))
-                    {
-                        timeoutSettings = 10;
-                    }
-                    break;
-                case "FscpdClient_Timeout":
-                    if (!int.TryParse(ConfigurationManager.AppSettings["FscpdClient_Timeout"], out timeoutSettings))
-                    {
-                        timeoutSettings = 10;
-                    }
-                    break;
+                timeoutSettings = 10;
             }
 
-            return Policy.TimeoutAsync(TimeSpan.FromSeconds(timeoutSettings));
+            return Policy.TimeoutAsync(TimeSpan.FromSeconds(timeoutSettings));            
         }
 
         /// <summary>

@@ -15,13 +15,13 @@ namespace Edubase.Services.IntegrationEndPoints.OSPlaces
 {
     public class OSPlacesApiService : IOSPlacesApiService
     {
-        private static readonly string _apiKey = ConfigurationManager.AppSettings["OSPlacesApiKey"];
+        private readonly string _apiKey = ConfigurationManager.AppSettings["OSPlacesApiKey"];
 
         private readonly HttpClient _osApiClient;
 
-        private static readonly string OSPlacesApiServicesTimeoutKey = "OSPlacesApiServices_Timeout";
+        private const string OSPlacesApiServicesTimeoutKey = "OSPlacesApiServices_Timeout";
 
-        private static readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
+        private readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
             PollyUtil.CsvSecondsToTimeSpans(
                 ConfigurationManager.AppSettings["OSPlacesApiServices_RetryIntervals"]
             ), OSPlacesApiServicesTimeoutKey
