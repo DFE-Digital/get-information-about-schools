@@ -477,7 +477,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var isMatPresent = existingGovernorRoleIds.Any(m => m == (int)eLookupGovernorRole.GovernanceProfessionalToAMat);
             var isAddingGroup = role == eLookupGovernorRole.Group_SharedGovernanceProfessional;
             var isAddingMat = role == eLookupGovernorRole.GovernanceProfessionalToAMat;
-
             if (!((isAddingMat && isGroupPresent) || (isAddingGroup && isMatPresent)))
             {
                 // Only a single governance professional may be attached
