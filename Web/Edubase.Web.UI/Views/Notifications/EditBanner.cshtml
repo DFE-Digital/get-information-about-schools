@@ -77,11 +77,11 @@
             if (Model.Counter != 0)
             {
                 @Html.ActionLink(
-         "Back",
-         "AuditBanners",
-         "Notifications",
-         null,
-         new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
+                "Back",
+                 "AuditBanners",
+                "Notifications",
+                null,
+                new { @class = "govuk-back-link gias-back-link--button", data_module = "govuk-button" })
             }
         }
         else
@@ -233,7 +233,7 @@
                 <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Content)">
                         @Html.ValidationMessageFor(x => x.Content, null, new { @class = "govuk-error-message" })
-                        @Html.TextAreaFor(x => x.Content, new { @class = "govuk-textarea govuk-js-character-count govuk-textarea entry-content", @id = "with-hint", @name = "withHint", @rows = "5" })
+                        @Html.TextAreaFor(x => x.Content, new { @class = "govuk-textarea govuk-js-character-count govuk-textarea entry-content", @id = "with-hint", @name = "withHint", @rows = "5", maxlength = "500" })
                         <div id="with-hint-info" class="govuk-hint govuk-character-count__message">
                             You can enter up to 500 characters
                         </div>
