@@ -300,7 +300,7 @@
                                     </div>
                                 }
 
-                                @{Html.RenderAction("View", "Governor", new { groupUId = Model.Group.GroupUId, viewModel = null as Edubase.Web.UI.Areas.Governors.Models.GovernorsGridViewModel, area = "Governors" });}
+                                @Html.Partial("~/Areas/Governors/Views/Governor/ViewEdit.cshtml", Model.GovernorsGridViewModel);
 
                                 @if (Model.CanUserEditGovernance)
                                 {
