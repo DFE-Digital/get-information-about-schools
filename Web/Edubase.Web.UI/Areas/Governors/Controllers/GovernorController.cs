@@ -477,13 +477,10 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var isMatPresent = existingGovernorRoleIds.Any(m => m == (int)eLookupGovernorRole.GovernanceProfessionalToAMat);
             var isAddingGroup = role == eLookupGovernorRole.Group_SharedGovernanceProfessional;
             var isAddingMat = role == eLookupGovernorRole.GovernanceProfessionalToAMat;
-            if (!((isAddingMat && isGroupPresent) || (isAddingGroup && isMatPresent)))
+            if (!((isAddingMat && isGroupPresent) || (isAddingGroup && isMatPresent))
+                && IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
             {
-                // Only a single governance professional may be attached
-                if (IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
-                {
-                    return false;
-                }
+                return false;
             }
 
             // Where the new governor is a role which permits only a single appointee, forbid if an exact match is found
