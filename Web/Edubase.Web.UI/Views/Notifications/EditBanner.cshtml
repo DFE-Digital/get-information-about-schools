@@ -231,101 +231,88 @@
                     </div>
                 </details>
                 <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
-                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Content)">
-                            @Html.ValidationMessageFor(x => x.Content, null, new { @class = "govuk-error-message" })
-                            @Html.TextAreaFor(x => x.Content, new { @class = "govuk-textarea govuk-js-character-count govuk-textarea entry-content", @id = "with-hint", @name = "withHint", @rows = "5" })
-                            <div id="with-hint-info" class="govuk-hint govuk-character-count__message">
-                                You can enter up to 500 characters
-                            </div>
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Content)">
+                        @Html.ValidationMessageFor(x => x.Content, null, new { @class = "govuk-error-message" })
+                        @Html.TextAreaFor(x => x.Content, new { @class = "govuk-textarea govuk-js-character-count govuk-textarea entry-content", @id = "with-hint", @name = "withHint", @rows = "5" })
+                        <div id="with-hint-info" class="govuk-hint govuk-character-count__message">
+                            You can enter up to 500 characters
                         </div>
                     </div>
-                        }
-                        else
-                        {
-                        @Html.HiddenFor(x => x.Content)
-                        }
-
-                        @if (Model.Action == eNotificationBannerAction.Schedule)
-                        {
-                            <div class="govuk-grid-row">
-                                <div class="govuk-grid-column-full">
-                                    <h2 class="govuk-heading-m">Schedule notification banner visibility</h2>
-                                </div>
-                            </div>
-
-                            <p>Choose the start date and start time and the end date and end time for the notification banner to be visible on the site.</p>
-
-                            <div class="govuk-form-group">
-                                @Html.EditorFor(x => x.Start, "DateTimeViewModelExtended", new { title = "Start date and start time", fieldsetClassName = "edit-date-fieldset", dateHint = $"{DateTime.Now:dd MM yyyy} 14:30", dateHintAdditional = "The time will be UK local time, taking into account daylight savings" })
-                            </div>
-
-                            <div class="govuk-form-group">
-                                @Html.EditorFor(x => x.End, "DateTimeViewModelExtended", new { title = "End date and end time", fieldsetClassName = "edit-date-fieldset", dateHint = $"{DateTime.Now.AddDays(5):dd MM yyyy} 17:00", dateHintAdditional = "The time will be UK local time, taking into account daylight savings" })
-                            </div>
-                        }
-                        else
-                        {
-                            @Html.HiddenFor(x => x.Start.Day)
-                            @Html.HiddenFor(x => x.Start.Month)
-                            @Html.HiddenFor(x => x.Start.Year)
-                            @Html.HiddenFor(x => x.Start.Hour)
-                            @Html.HiddenFor(x => x.Start.Minute)
-                            @Html.HiddenFor(x => x.End.Day)
-                            @Html.HiddenFor(x => x.End.Month)
-                            @Html.HiddenFor(x => x.End.Year)
-                            @Html.HiddenFor(x => x.End.Hour)
-                            @Html.HiddenFor(x => x.End.Minute)
-                        }
-                    </div>
-
-
-                    @if (Model.Action == eNotificationBannerAction.Review)
-                    {
-                        var reviewBanner = Model.ToBanner();
-                        <div class="govuk-grid-column-two-thirds">
-                            <h2 class="govuk-heading-m">Check all details are correct before saving</h2>
-                        </div>
-                        <div class="govuk-grid-column-full">
-                            @{
-                                Html.RenderPartial("_NotificationBannerPartial", reviewBanner, new ViewDataDictionary(this.ViewData) { { "bannerPreview", true } });
-                            }
-                        </div>
-                        <div class="govuk-grid-column-full">
-                            <dl class="govuk-summary-list govuk-!-margin-top-4">
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">Publish status:</dt>
-                                    <dd class="govuk-summary-list__value">@(reviewBanner.Status.EnumDisplayNameFor())</dd>
-                                </div>
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">Visibility start:</dt>
-                                    <dd class="govuk-summary-list__value">@reviewBanner.Start.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower() <span class="govuk-!-margin-right-2"></span> @reviewBanner.Start.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</dd>
-                                </div>
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">Visibility end:</dt>
-                                    <dd class="govuk-summary-list__value">@reviewBanner.End.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower() <span class="govuk-!-margin-right-2"></span> @reviewBanner.End.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</dd>
-                                </div>
-                            </dl>
-                        </div>
-                    }
                 </div>
+            }
+            else
+            {
+                @Html.HiddenFor(x => x.Content)
+            }
+
+            @if (Model.Action == eNotificationBannerAction.Schedule)
+            {
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-full">
-                        <div class="button-row govuk-!-padding-top-6">
-                            <button type="submit" class="govuk-button">@(Model.Action == eNotificationBannerAction.Review ? "Accept and save" : "Continue")</button>
-                        </div>
+                        <h2 class="govuk-heading-m">Schedule notification banner visibility</h2>
                     </div>
                 </div>
-            }
-            @section ViewScripts{
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        var textBox = document.getElementById('textBox');
-                        var charCount = document.getElementById('charCount');
 
-                        textBox.addEventListener('input', function () {
-                            var textLength = this.value.length;
-                            charCount.textContent = textLength;
-                        })
-                    })
-                </script>
+                <p>Choose the start date and start time and the end date and end time for the notification banner to be visible on the site.</p>
+
+                <div class="govuk-form-group">
+                    @Html.EditorFor(x => x.Start, "DateTimeViewModelExtended", new { title = "Start date and start time", fieldsetClassName = "edit-date-fieldset", dateHint = $"{DateTime.Now:dd MM yyyy} 14:30", dateHintAdditional = "The time will be UK local time, taking into account daylight savings" })
+                </div>
+
+                <div class="govuk-form-group">
+                    @Html.EditorFor(x => x.End, "DateTimeViewModelExtended", new { title = "End date and end time", fieldsetClassName = "edit-date-fieldset", dateHint = $"{DateTime.Now.AddDays(5):dd MM yyyy} 17:00", dateHintAdditional = "The time will be UK local time, taking into account daylight savings" })
+                </div>
             }
+            else
+            {
+                @Html.HiddenFor(x => x.Start.Day)
+                @Html.HiddenFor(x => x.Start.Month)
+                @Html.HiddenFor(x => x.Start.Year)
+                @Html.HiddenFor(x => x.Start.Hour)
+                @Html.HiddenFor(x => x.Start.Minute)
+                @Html.HiddenFor(x => x.End.Day)
+                @Html.HiddenFor(x => x.End.Month)
+                @Html.HiddenFor(x => x.End.Year)
+                @Html.HiddenFor(x => x.End.Hour)
+                @Html.HiddenFor(x => x.End.Minute)
+            }
+        </div>
+
+
+        @if (Model.Action == eNotificationBannerAction.Review)
+        {
+            var reviewBanner = Model.ToBanner();
+            <div class="govuk-grid-column-two-thirds">
+                <h2 class="govuk-heading-m">Check all details are correct before saving</h2>
+            </div>
+            <div class="govuk-grid-column-full">
+                @{
+                    Html.RenderPartial("_NotificationBannerPartial", reviewBanner, new ViewDataDictionary(this.ViewData) { { "bannerPreview", true } });
+                }
+            </div>
+            <div class="govuk-grid-column-full">
+                <dl class="govuk-summary-list govuk-!-margin-top-4">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Publish status:</dt>
+                        <dd class="govuk-summary-list__value">@(reviewBanner.Status.EnumDisplayNameFor())</dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Visibility start:</dt>
+                        <dd class="govuk-summary-list__value">@reviewBanner.Start.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower() <span class="govuk-!-margin-right-2"></span> @reviewBanner.Start.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Visibility end:</dt>
+                        <dd class="govuk-summary-list__value">@reviewBanner.End.ToString("h:mmtt", CultureInfo.InvariantCulture).ToLower() <span class="govuk-!-margin-right-2"></span> @reviewBanner.End.ToString("d MMMM yyyy", CultureInfo.InvariantCulture)</dd>
+                    </div>
+                </dl>
+            </div>
+        }
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="button-row govuk-!-padding-top-6">
+                <button type="submit" class="govuk-button">@(Model.Action == eNotificationBannerAction.Review ? "Accept and save" : "Continue")</button>
+            </div>
+        </div>
+    </div>
+}
