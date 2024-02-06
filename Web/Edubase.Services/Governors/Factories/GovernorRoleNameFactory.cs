@@ -30,7 +30,7 @@ namespace Edubase.Services.Governors.Factories
             { eLookupGovernorRole.GovernanceProfessionalToAFederation, "Governance professional to a federation" },
             { eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professional to an individual academy or free school" },
             { eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professional to a MAT" },
-            { eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professional to a secure SAT" },
+            { eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professional for a secure single-academy trust (SSAT)" },
             { eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professional for a single-academy trust (SAT)" },
         };
 
@@ -50,7 +50,7 @@ namespace Edubase.Services.Governors.Factories
             { eLookupGovernorRole.GovernanceProfessionalToAFederation, "Governance professionals to a federation" },
             { eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professionals to an individual academy or free school" },
             { eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professionals to a MAT" },
-            { eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professionals to a secure SAT" },
+            { eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professionals for a secure single-academy trust (SSAT)" },
             { eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professionals for a single-academy trust (SAT)" },
         };
 
