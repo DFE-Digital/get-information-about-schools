@@ -224,11 +224,22 @@
                 </details>
                 <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
                     <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Content)">
+                        <label class="govuk-label govuk-label--s govuk-visually-hidden" for="Content">
+                            What is the notification banner message?
+                        </label>
                         @Html.ValidationMessageFor(x => x.Content, null, new { @class = "govuk-error-message" })
-                        @Html.TextAreaFor(x => x.Content, new { @class = "govuk-textarea govuk-js-character-count govuk-textarea entry-content", @id = "with-hint", @name = "withHint", @rows = "5", maxlength = "500" })
-                        <div id="with-hint-info" class="govuk-hint govuk-character-count__message">
-                            You can enter up to 500 characters
-                        </div>
+                        @Html.TextAreaFor(
+                            x => x.Content,
+                            new
+                            {
+                                @class = "govuk-textarea govuk-js-character-count entry-content",
+                                @id = "Content",
+                                @rows = "6",
+                                maxlength = "500",
+                                aria_describedby = "Content-info",
+                            }
+                        )
+                        <div id="Content-info" class="govuk-hint govuk-character-count__message">You can enter up to 500 characters</div>
                     </div>
                 </div>
             }
