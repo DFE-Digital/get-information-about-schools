@@ -120,17 +120,21 @@ namespace Edubase.Web.UI.Controllers
         [Route("~/help")]
         public ActionResult Help() => View();
 
+        //Appears that this was used to test the error handling.  It can only be accessed if you are signed in so no problem keeping it here for now.
         [Route("~/8bg594ghfdgh5t90-throwex"), Filters.EdubaseAuthorize]
         public ActionResult ThrowException() { throw new Exception("Test exception - to test exception reporting"); }
 
         [Route("~/service-wsdl"), Route("~/service.wsdl")]
-        public async Task<ActionResult> ServiceWSDL()
+        public ActionResult ServiceWSDL()
         {
-            using (var client = new HttpClient())
-            {
-                var result = (await client.GetAsync("http://ea-edubase-api-prod.azurewebsites.net/edubase/service.wsdl")).EnsureSuccessStatusCode();
-                return Content(await result.Content.ReadAsStringAsync(), "text/xml");
-            }
+            //using (var client = new HttpClient())
+            //{
+            //    var result = (await client.GetAsync("http://ea-edubase-api-prod.azurewebsites.net/edubase/service.wsdl")).EnsureSuccessStatusCode();
+            //    return Content(await result.Content.ReadAsStringAsync(), "text/xml");
+            //}
+
+            //Commented out the above and replaced this with a redirect as this is not a good way to create the HttpClient and could cause socket exhaustion
+            return Redirect("https://ea-edubase-api-prod.azurewebsites.net/edubase/service.wsdl");
         }
 
         [Route("~/Contact")]
