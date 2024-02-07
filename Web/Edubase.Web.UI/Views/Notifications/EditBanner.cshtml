@@ -204,7 +204,6 @@
                     </div>
                 </div>
 
-                <p>Keep the message clear, concise and user focused. The maximum number of characters permitted is 500. This includes spaces.</p>
                 <details class="govuk-details govuk-!-margin-bottom-4" data-module="govuk-details">
                     <summary class="govuk-details__summary">
                         <span class="govuk-details__summary-text">
@@ -223,9 +222,25 @@
                         <p>For example, "System will be back up by 11:59pm on Tuesday 14 June." can only be read one way, but "System will be back up by midnight on Tuesday 14 June." can be read two ways (the end of Monday 13, or end of Tuesday 14).</p>
                     </div>
                 </details>
-                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Content)">
-                    @Html.ValidationMessageFor(x => x.Content, null, new { @class = "govuk-error-message" })
-                    @Html.TextAreaFor(x => x.Content, new { @class = "govuk-textarea entry-content", rows = "6", cols = "40", maxlength = "500" })
+                <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="500">
+                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Content)">
+                        <label class="govuk-label govuk-label--s govuk-visually-hidden" for="Content">
+                            What is the notification banner message?
+                        </label>
+                        @Html.ValidationMessageFor(x => x.Content, null, new { @class = "govuk-error-message" })
+                        @Html.TextAreaFor(
+                            x => x.Content,
+                            new
+                            {
+                                @class = "govuk-textarea govuk-js-character-count entry-content",
+                                @id = "Content",
+                                @rows = "6",
+                                maxlength = "500",
+                                aria_describedby = "Content-info",
+                            }
+                        )
+                        <div id="Content-info" class="govuk-hint govuk-character-count__message">You can enter up to 500 characters</div>
+                    </div>
                 </div>
             }
             else
