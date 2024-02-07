@@ -15,18 +15,22 @@ namespace Edubase.Services.IntegrationEndPoints.OSPlaces
 {
     public class OSPlacesApiService : IOSPlacesApiService
     {
-        private static readonly string _apiKey = ConfigurationManager.AppSettings["OSPlacesApiKey"];
-        private static readonly HttpClient _osApiClient = new HttpClient
-        {
-            BaseAddress = new Uri("https://api.os.uk/")
-        };
+        private readonly string _apiKey = ConfigurationManager.AppSettings["OSPlacesApiKey"];
 
-        private static readonly string OSPlacesApiServicesTimeoutKey = "OSPlacesApiServices_Timeout";
-        private static readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
+        private readonly HttpClient _osApiClient;
+
+        private const string OSPlacesApiServicesTimeoutKey = "OSPlacesApiServices_Timeout";
+
+        private readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
             PollyUtil.CsvSecondsToTimeSpans(
                 ConfigurationManager.AppSettings["OSPlacesApiServices_RetryIntervals"]
             ), OSPlacesApiServicesTimeoutKey
         );
+
+        public OSPlacesApiService(HttpClient httpClient)
+        {
+            _osApiClient = httpClient;
+        }
 
         public async Task<PlaceDto[]> SearchAsync(string text)
         {

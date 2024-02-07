@@ -16,19 +16,22 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
 
     public class AzureMapsService : IAzureMapsService
     {
-        private static readonly string _apiKey = ConfigurationManager.AppSettings["AzureMapsApiKey"];
+        private readonly string _apiKey = ConfigurationManager.AppSettings["AzureMapsApiKey"];
 
-        private static readonly HttpClient _azureMapsClient = new HttpClient
-        {
-            BaseAddress = new Uri("https://atlas.microsoft.com")
-        };
+        private readonly HttpClient _azureMapsClient;
 
-        private static readonly string AzureMapServiceTimeoutKey = "AzureMapService_Timeout";
-        private static readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
+        private const string AzureMapServiceTimeoutKey = "AzureMapService_Timeout";
+
+        private readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
             PollyUtil.CsvSecondsToTimeSpans(
                 ConfigurationManager.AppSettings["AzureMapService_RetryIntervals"]
             ), AzureMapServiceTimeoutKey
         );
+
+        public AzureMapsService(HttpClient httpClient)
+        {
+            _azureMapsClient = httpClient;
+        }
 
         public async Task<PlaceDto[]> SearchAsync(string text, bool isTypeahead, CancellationToken cancellationToken = default)
         {
@@ -98,7 +101,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
             }
         }
 
-        private static string GetAddressDescription(Result locationResult, string text)
+        private string GetAddressDescription(Result locationResult, string text)
         {
             var output = "";
 
