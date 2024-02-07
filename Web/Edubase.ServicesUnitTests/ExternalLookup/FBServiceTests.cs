@@ -39,7 +39,7 @@ namespace Edubase.Services.ExternalLookup.UnitTests
             _output.WriteLine(testName);
             var subject = new FBService(new HttpClient());
             var apiUrl = subject.ApiUrl(lookupId, lookupType);
-            Assert.Equal(expectedUrl, apiUrl);
+            Assert.True(expectedUrl == apiUrl, $"Expected: {expectedUrl} Actual: {apiUrl}");
         }
     }
 }
