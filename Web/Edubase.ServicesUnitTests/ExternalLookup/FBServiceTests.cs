@@ -14,6 +14,8 @@ namespace Edubase.Services.ExternalLookup.UnitTests
             _output = output;
             ConfigurationManager.AppSettings["FinancialBenchmarkingApiURL"] = @"http://example/";
             ConfigurationManager.AppSettings["FinancialBenchmarkingURL"] = @"http://example/";
+            ConfigurationManager.AppSettings["FscpdClient_Timeout"] = "2";
+            ConfigurationManager.AppSettings["FBService_RetryIntervals"] = "1";
         }
 
         [Theory]

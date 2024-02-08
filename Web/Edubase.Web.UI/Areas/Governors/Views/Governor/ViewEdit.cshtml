@@ -178,11 +178,11 @@ else
     if (Model.GroupTypeId == (int) eLookupGroupType.SecureSingleAcademyTrust)
     {
         // viewing the governance tab for a secure single-academy trust
-        Html.RenderPartial("_LegalDutySecureAcademyTrustStatement");
+        Html.RenderPartial("~/Areas/Governors/Views/Governor/_LegalDutySecureAcademyTrustStatement.cshtml");
     }
     else
     {
-        Html.RenderPartial("_LegalDutyStatement");
+        Html.RenderPartial("~/Areas/Governors/Views/Governor/_LegalDutyStatement.cshtml");
     }
 }
 

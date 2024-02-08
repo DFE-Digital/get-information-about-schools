@@ -392,6 +392,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                     {
                         EditPolicy = new EstablishmentDisplayEditPolicy() { }
                 });
+            mockExternalLookupService.Setup(x => x.FscpdCheckExists(123456, null, false))
+                .ReturnsAsync(() => true);
+            mockExternalLookupService.Setup(x => x.SfbCheckExists(123456, FbType.School))
+                .ReturnsAsync(() => true);
 
             var response = await controller.Details(urn);
 
@@ -453,6 +457,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                         Northing = locationDataFieldEditable
                     }
                 });
+            mockExternalLookupService.Setup(x => x.FscpdCheckExists(123456, null, false))
+                .ReturnsAsync(() => true);
+            mockExternalLookupService.Setup(x => x.SfbCheckExists(123456, FbType.School))
+                            .ReturnsAsync(() => true);
 
             var response = await controller.Details(urn);
 
