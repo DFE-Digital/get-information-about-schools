@@ -6,22 +6,26 @@ using System.Net.Http.Headers;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
 using Edubase.Common;
+using Edubase.Services.IntegrationEndPoints;
 using Polly;
 
 namespace Edubase.Services.ExternalLookup
 {
     public class FSCPDService : IFSCPDService
     {
-        private static HttpClient _client;
-        private string _matAddress = "multi-academy-trust";
-        private string _schoolAddress = "school";
+        private readonly HttpClient _client;
 
-        private static readonly Policy RetryPolicy = Policy.TimeoutAsync(1).Wrap(Policy
-            .Handle<HttpRequestException>()
-            .WaitAndRetryAsync(new[]
-            {
-                TimeSpan.FromSeconds(1)
-            }));
+        private const string MatAddress = "multi-academy-trust";
+
+        private const string SchoolAddress = "school";
+
+        private const string FBServiceTimeoutKey = "FscpdClient_Timeout";
+
+        private readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
+            PollyUtil.CsvSecondsToTimeSpans(
+                ConfigurationManager.AppSettings["FscpdClient_RetryIntervals"]
+            ), FBServiceTimeoutKey
+        );
 
         public FSCPDService(HttpClient client)
         {
@@ -30,7 +34,7 @@ namespace Edubase.Services.ExternalLookup
 
         private string GetCollection(bool mat)
         {
-            var collection = mat ? _matAddress : _schoolAddress;
+            var collection = mat ? MatAddress : SchoolAddress;
             return collection;
         }
 

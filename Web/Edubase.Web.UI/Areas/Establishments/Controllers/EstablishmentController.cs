@@ -347,9 +347,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 SearchSource = searchSource
             };
 
-            await viewModel.SetFscpdAsync();
-            await viewModel.SetShowFinancialBenchmarkingAsync();
-
             var result = await _establishmentReadService.GetAsync(id, User);
             if (result.ReturnValue == null)
             {
@@ -357,6 +354,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
 
             viewModel.Establishment = result.ReturnValue;
+
+            await viewModel.SetFscpdAsync();
+            await viewModel.SetShowFinancialBenchmarkingAsync();
+
             viewModel.TabWarnings = new TabWarningsModel(viewModel.Establishment.TypeId);
 
             await Task.WhenAll(
