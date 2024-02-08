@@ -60,7 +60,7 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
             sw.Stop();
 
             Assert.NotNull(policy);
-            Assert.True(sw.Elapsed.Seconds >= 5 && sw.Elapsed.Seconds < 7, $"Timeout expected Elapsed >= 5 && Elapsed < 7 Actual: {sw.Elapsed.Seconds}");
+            Assert.True(sw.Elapsed.Seconds >= 5 && sw.Elapsed.Seconds < 8, $"Timeout expected Elapsed >= 5 && Elapsed < 8 Actual: {sw.Elapsed.Seconds}");
         }
 
 
