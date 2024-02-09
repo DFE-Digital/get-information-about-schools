@@ -11,11 +11,6 @@ namespace Edubase.Services.Nomenclature
 
     public class NomenclatureService
     {
-        protected NomenclatureService()
-        {
-            // Prevent instantiation
-        }
-
         public static string GetEstablishmentsPluralName(GT groupType, eTextCase textCase = eTextCase.TitleCase)
         {
             switch (groupType)
