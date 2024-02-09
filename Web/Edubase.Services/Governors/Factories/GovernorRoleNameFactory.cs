@@ -41,8 +41,8 @@ namespace Edubase.Services.Governors.Factories
             { eLookupGovernorRole.Group_SharedLocalGovernor, "Shared local governors - group" },
             { eLookupGovernorRole.Establishment_SharedLocalGovernor, "Shared local governors - establishment" },
             { eLookupGovernorRole.Member, "Members" },
-            { eLookupGovernorRole.Member_Individual, "Members - individual" },
-            { eLookupGovernorRole.Member_Organisation, "Members - organisation" },
+            { eLookupGovernorRole.Member_Individual, "Members - individuals" },
+            { eLookupGovernorRole.Member_Organisation, "Members - organisations" },
             { eLookupGovernorRole.Trustee, "Trustees" },
             { eLookupGovernorRole.Group_SharedGovernanceProfessional, "Shared governance professionals - group" },
             { eLookupGovernorRole.Establishment_SharedGovernanceProfessional, "Shared governance professionals - establishment" },
@@ -54,7 +54,12 @@ namespace Edubase.Services.Governors.Factories
             { eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professionals for a single-academy trust (SAT)" },
         };
 
-        public static string Create(eLookupGovernorRole role, eTextCase textCase = eTextCase.SentenceCase, bool pluraliseLabelIfApplicable = false)
+        public static string Create(
+            eLookupGovernorRole role,
+            eTextCase textCase = eTextCase.SentenceCase,
+            bool pluraliseLabelIfApplicable = false,
+            bool removeMemberPrefix = false
+        )
         {
             string governorLabel = null;
 
@@ -63,11 +68,26 @@ namespace Edubase.Services.Governors.Factories
             {
                 governorLabel = SentenceCaseLabels[role];
             }
+            else
+            {
+                // We're expecting the singular label to always be present
+                throw new KeyNotFoundException($"No label found for governor role {role}");
+            }
 
             // If we want plural and it's found, use that instead
             if(pluraliseLabelIfApplicable && PluralisedLabels.ContainsKey(role))
             {
                 governorLabel = PluralisedLabels[role];
+            }
+
+            // Some areas of the UI do not want the "Member - " prefix
+            if (removeMemberPrefix)
+            {
+                governorLabel = governorLabel.Replace("Member - ", "");
+                governorLabel = governorLabel.Replace("Members - ", "");
+
+                // Capitalise first character to restore sentence case
+                governorLabel = governorLabel.Substring(0, 1).ToUpper() + governorLabel.Substring(1);
             }
 
             // Optionally convert to lower case if we don't want sentence case

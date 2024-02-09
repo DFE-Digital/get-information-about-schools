@@ -6,6 +6,7 @@ using Edubase.Common.Text;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Governors.DisplayPolicies;
+using Edubase.Services.Governors.Factories;
 using Edubase.Services.Governors.Models;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Nomenclature;
@@ -114,14 +115,24 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                                                           (RoleEquivalence.GetLocalEquivalentToSharedRole(role) != null
                                                            && !dto.ApplicableRoles.Contains(RoleEquivalence
                                                                .GetLocalEquivalentToSharedRole(role).Value)));
+
             foreach (var role in roles)
             {
-                var equivalantRoles = RoleEquivalence.GetEquivalentToLocalRole(role).Cast<int>().ToList();
-                var pluralise = !EnumSets.eSingularGovernorRoles.Contains(role);
+                var equivalentRoles = RoleEquivalence.GetEquivalentToLocalRole(role).Cast<int>().ToList();
+                var shouldPluralise = !EnumSets.eSingularGovernorRoles.Contains(role);
 
-                var grid =
-                    new GovernorGridViewModel(
-                        $"{_nomenclatureService.GetGovernorRoleName(role, eTextCase.SentenceCase, pluralise)}{(isHistoric ? " (in past 12 months)" : string.Empty)}")
+                var governorRoleNameTitle = GovernorRoleNameFactory.Create(
+                    role,
+                    pluraliseLabelIfApplicable: shouldPluralise,
+                    removeMemberPrefix: true
+                );
+                var governorRoleNameSingular = GovernorRoleNameFactory.Create(
+                    role,
+                    pluraliseLabelIfApplicable: false,
+                    removeMemberPrefix: true
+                );
+
+                var grid = new GovernorGridViewModel($"{governorRoleNameTitle}{(isHistoric ? " (in past 12 months)" : string.Empty)}")
                     {
                         Tag = isHistoric ? "historic" : "current",
                         Role = role,
@@ -129,28 +140,29 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                         GroupUid = groupUid,
                         EstablishmentUrn = establishmentUrn,
                         IsHistoricRole = isHistoric,
-                        RoleName = _nomenclatureService.GetGovernorRoleName(role)
+                        RoleName = governorRoleNameSingular
                     };
 
                 var displayPolicy = dto.RoleDisplayPolicies.Get(role);
-                Guard.IsNotNull(displayPolicy,
-                    () => new Exception($"The display policy should not be null for the role '{role}'"));
-                var includeEndDate = (((isHistoric && role == GR.Member) || role != GR.Member) &&
-                                      displayPolicy.AppointmentEndDate) ||
-                                     (role.OneOfThese(GR.ChiefFinancialOfficer, GR.AccountingOfficer) && isHistoric);
+                Guard.IsNotNull(displayPolicy, () => new Exception($"The display policy should not be null for the role '{role}'"));
+
+                var includeEndDate = (((isHistoric && role == GR.Member) || role != GR.Member) && displayPolicy.AppointmentEndDate)
+                                     || (role.OneOfThese(GR.ChiefFinancialOfficer, GR.AccountingOfficer) && isHistoric);
 
                 SetupHeader(role, grid, displayPolicy, includeEndDate);
 
-                var list = governors.Where(x => x.RoleId.HasValue && equivalantRoles.Contains(x.RoleId.Value));
+
+                var list = governors
+                    .Where(x => x.RoleId.HasValue && equivalentRoles.Contains(x.RoleId.Value));
                 foreach (var governor in list)
                 {
-                    var isShared = governor.RoleId.HasValue &&
-                                   EnumSets.SharedGovernorRoles.Contains(governor.RoleId.Value);
-                    var establishments = string.Join(", ",
-                        governor.Appointments?.Select(a => $"{a.EstablishmentName}, URN: {a.EstablishmentUrn}") ??
-                        new string[] { });
-                    var appointment =
-                        governor.Appointments?.SingleOrDefault(a => a.EstablishmentUrn == EstablishmentUrn);
+                    var isShared = governor.RoleId.HasValue && EnumSets.SharedGovernorRoles.Contains(governor.RoleId.Value);
+                    var establishments = string.Join(
+                        ", ",
+                        (governor.Appointments?.Select(a => $"{a.EstablishmentName}, URN: {a.EstablishmentUrn}") ?? new string[] { })
+                    );
+                    var appointment = governor.Appointments?
+                        .SingleOrDefault(a => a.EstablishmentUrn == EstablishmentUrn);
                     var startDate = isShared && appointment != null
                         ? appointment.AppointmentStartDate
                         : governor.AppointmentStartDate;
@@ -195,12 +207,11 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                         var gov = new HistoricGovernorViewModel
                         {
                             AppointingBodyId = governor.AppointingBodyId,
-                            AppointingBody =
-                                AppointingBodies.FirstOrDefault(x => x.Id == governor.AppointingBodyId)?.Name,
+                            AppointingBody = AppointingBodies.FirstOrDefault(x => x.Id == governor.AppointingBodyId)?.Name,
                             AppointmentEndDate = new DateTimeViewModel(governor.AppointmentEndDate),
                             AppointmentStartDate = new DateTimeViewModel(governor.AppointmentStartDate),
                             FullName = governor.GetFullName(),
-                            RoleName = _nomenclatureService.GetGovernorRoleName(role),
+                            RoleName = governorRoleNameSingular,
                             GID = governor.Id
                         };
 
@@ -208,8 +219,13 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     }
                 }
 
-                grid.Rows = grid.Rows.OrderByDescending(x => x.SortValue).ThenBy(x => x.Model.GetFullName()).ToList();
-                HistoricGovernors = HistoricGovernors.OrderByDescending(x => x.AppointmentEndDate.ToDateTime())
+                grid.Rows = grid.Rows
+                    .OrderByDescending(x => x.SortValue)
+                    .ThenBy(x => x.Model.GetFullName())
+                    .ToList();
+
+                HistoricGovernors = HistoricGovernors
+                    .OrderByDescending(x => x.AppointmentEndDate.ToDateTime())
                     .ThenBy(x => x.FullName).ToList();
 
                 if (isHistoric)
