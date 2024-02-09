@@ -9,7 +9,6 @@ using Edubase.Services.Governors.DisplayPolicies;
 using Edubase.Services.Governors.Factories;
 using Edubase.Services.Governors.Models;
 using Edubase.Services.Groups.Models;
-using Edubase.Services.Nomenclature;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
 using Edubase.Web.UI.Helpers;
@@ -21,13 +20,10 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 {
     public class GovernorsGridViewModel : IGroupPageViewModel, IEstablishmentPageViewModel
     {
-        private readonly NomenclatureService _nomenclatureService;
-
         public GovernorsGridViewModel(GovernorsDetailsDto dto, bool editMode, int? groupUId, int? establishmentUrn,
-            NomenclatureService nomenclatureService, IEnumerable<LookupDto> nationalities,
-            IEnumerable<LookupDto> appointingBodies, IEnumerable<LookupDto> titles, GovernorPermissions governorPermissions)
+            IEnumerable<LookupDto> nationalities, IEnumerable<LookupDto> appointingBodies,
+            IEnumerable<LookupDto> titles, GovernorPermissions governorPermissions)
         {
-            _nomenclatureService = nomenclatureService;
             DomainModel = dto;
             EditMode = editMode;
             GroupUId = groupUId;

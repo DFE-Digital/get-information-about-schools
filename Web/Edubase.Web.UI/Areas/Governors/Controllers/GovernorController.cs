@@ -18,7 +18,6 @@ using Edubase.Services.Governors.Factories;
 using Edubase.Services.Governors.Models;
 using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
-using Edubase.Services.Nomenclature;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Exceptions;
 using Edubase.Web.UI.Filters;
@@ -49,11 +48,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         private readonly IGovernorsWriteService _governorsWriteService;
         private readonly IGroupReadService _groupReadService;
         private readonly ILayoutHelper _layoutHelper;
-        private readonly NomenclatureService _nomenclatureService;
 
         public GovernorController(
             IGovernorsReadService governorsReadService,
-            NomenclatureService nomenclatureService,
             ICachedLookupService cachedLookupService,
             IGovernorsWriteService governorsWriteService,
             IGroupReadService groupReadService,
@@ -61,7 +58,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             ILayoutHelper layoutHelper)
         {
             _governorsReadService = governorsReadService;
-            _nomenclatureService = nomenclatureService;
             _cachedLookupService = cachedLookupService;
             _governorsWriteService = governorsWriteService;
             _groupReadService = groupReadService;
@@ -94,7 +90,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 true,
                 groupUId,
                 establishmentUrn,
-                _nomenclatureService,
                 await _cachedLookupService.NationalitiesGetAllAsync(),
                 await _cachedLookupService.GovernorAppointingBodiesGetAllAsync(),
                 await _cachedLookupService.TitlesGetAllAsync(),
@@ -920,7 +915,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 false,
                 groupUId,
                 establishmentUrn,
-                _nomenclatureService,
                 await _cachedLookupService.NationalitiesGetAllAsync(),
                 await _cachedLookupService.GovernorAppointingBodiesGetAllAsync(),
                 await _cachedLookupService.TitlesGetAllAsync(),
