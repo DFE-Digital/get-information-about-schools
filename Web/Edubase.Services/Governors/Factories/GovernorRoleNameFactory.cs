@@ -57,7 +57,8 @@ namespace Edubase.Services.Governors.Factories
             eLookupGovernorRole role,
             bool pluraliseLabelIfApplicable = false,
             bool removeMemberPrefix = false,
-            bool isMidSentence = false
+            bool isMidSentence = false,
+            bool removeGroupEstablishmentSuffix = false
         )
         {
             string governorLabel = null;
@@ -87,6 +88,13 @@ namespace Edubase.Services.Governors.Factories
 
                 // Capitalise first character to restore sentence case
                 governorLabel = governorLabel.Substring(0, 1).ToUpper() + governorLabel.Substring(1);
+            }
+
+            // Some areas of the UI do not want the "- Group" or "- Establishment" suffix
+            if (removeGroupEstablishmentSuffix)
+            {
+                governorLabel = governorLabel.Replace(" - group", "");
+                governorLabel = governorLabel.Replace(" - establishment", "");
             }
 
             if (isMidSentence)

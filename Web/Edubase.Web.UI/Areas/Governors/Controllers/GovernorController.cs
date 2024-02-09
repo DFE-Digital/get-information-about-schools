@@ -342,8 +342,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             await _layoutHelper.PopulateLayoutProperties(viewModel, establishmentUrn, groupUId, User);
 
-            viewModel.GovernorRoleName = GovernorRoleNameFactory.Create(role.Value);
-            viewModel.GovernorRoleNameMidSentence = GovernorRoleNameFactory.Create(role.Value, isMidSentence: true);
+            viewModel.GovernorRoleName = GovernorRoleNameFactory.Create(role.Value, removeGroupEstablishmentSuffix: true);
+            viewModel.GovernorRoleNameMidSentence = GovernorRoleNameFactory.Create(role.Value, isMidSentence: true, removeGroupEstablishmentSuffix: true);
             viewModel.GovernorRole = role.Value;
             await PopulateSelectLists(viewModel);
             viewModel.DisplayPolicy =

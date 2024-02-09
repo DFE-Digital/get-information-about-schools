@@ -124,12 +124,14 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 var governorRoleNameTitle = GovernorRoleNameFactory.Create(
                     role,
                     pluraliseLabelIfApplicable: shouldPluralise,
-                    removeMemberPrefix: true
+                    removeMemberPrefix: true,
+                    removeGroupEstablishmentSuffix: true
                 );
                 var governorRoleNameSingular = GovernorRoleNameFactory.Create(
                     role,
                     pluraliseLabelIfApplicable: false,
-                    removeMemberPrefix: true
+                    removeMemberPrefix: true,
+                    removeGroupEstablishmentSuffix: true
                 );
 
                 var grid = new GovernorGridViewModel($"{governorRoleNameTitle}{(isHistoric ? " (in past 12 months)" : string.Empty)}")

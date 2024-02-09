@@ -184,7 +184,7 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professional to a multi-academy trust (MAT)")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professional for a secure single-academy trust (SSAT)")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professional for a single-academy trust (SAT)")]
-        public void GetGovernorRoleName_WHEN_SingularAND_RemoveMemberPrefix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
+        public void GetGovernorRoleName_WHEN_Singular_AND_RemoveMemberPrefix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
             var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: false, removeMemberPrefix: true);
             Assert.Equal(expected, result);
@@ -215,7 +215,7 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professionals to a multi-academy trust (MAT)")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professionals for a secure single-academy trust (SSAT)")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professionals for a single-academy trust (SAT)")]
-        public void GetGovernorRoleName_WHEN_PluralAND_RemoveMemberPrefix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
+        public void GetGovernorRoleName_WHEN_Plural_AND_RemoveMemberPrefix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
             var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: true, removeMemberPrefix: true);
             Assert.Equal(expected, result);
@@ -248,7 +248,7 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "governance professional to a multi-academy trust (MAT)")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "governance professional for a secure single-academy trust (SSAT)")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "governance professional for a single-academy trust (SAT)")]
-        public void GetGovernorRoleName_WHEN_Singular_AND_MidSentenceAND_RemoveMemberPrefix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
+        public void GetGovernorRoleName_WHEN_Singular_AND_MidSentence_AND_RemoveMemberPrefix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
             var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: false, isMidSentence: true, removeMemberPrefix: true);
             Assert.Equal(expected, result);
@@ -279,9 +279,136 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "governance professionals to a multi-academy trust (MAT)")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "governance professionals for a secure single-academy trust (SSAT)")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "governance professionals for a single-academy trust (SAT)")]
-        public void GetGovernorRoleName_WHEN_Plural_AND_MidSentenceAND_RemoveMemberPrefix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
+        public void GetGovernorRoleName_WHEN_Plural_AND_MidSentence_AND_RemoveMemberPrefix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
             var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: true, isMidSentence: true, removeMemberPrefix: true);
+            Assert.Equal(expected, result);
+        }
+
+
+        [Theory]
+        [InlineData(eLookupGovernorRole.Governor, "Governor")]
+        [InlineData(eLookupGovernorRole.LocalGovernor, "Local governor")]
+        [InlineData(eLookupGovernorRole.Group_SharedLocalGovernor, "Shared local governor")]
+        [InlineData(eLookupGovernorRole.ChairOfLocalGoverningBody, "Chair of local governing body")]
+        [InlineData(eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody, "Shared chair of local governing body")]
+        [InlineData(eLookupGovernorRole.AccountingOfficer, "Accounting officer")]
+        [InlineData(eLookupGovernorRole.ChairOfGovernors, "Chair of governors")]
+        [InlineData(eLookupGovernorRole.ChairOfTrustees, "Chair of trustees")]
+        [InlineData(eLookupGovernorRole.ChiefFinancialOfficer, "Chief financial officer")]
+        [InlineData(eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody, "Shared chair of local governing body")]
+        [InlineData(eLookupGovernorRole.Establishment_SharedLocalGovernor, "Shared local governor")]
+        [InlineData(eLookupGovernorRole.Member, "Member")]
+        [InlineData(eLookupGovernorRole.Member_Individual, "Member - individual")]
+        [InlineData(eLookupGovernorRole.Member_Organisation, "Member - organisation")]
+        [InlineData(eLookupGovernorRole.Trustee, "Trustee")]
+        [InlineData(eLookupGovernorRole.NA, "Not applicable")]
+        [InlineData(eLookupGovernorRole.Group_SharedGovernanceProfessional, "Shared governance professional")]
+        [InlineData(eLookupGovernorRole.Establishment_SharedGovernanceProfessional, "Shared governance professional")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool, "Governance professional to a local authority maintained school")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToAFederation, "Governance professional to a federation")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professional to an individual academy or free school")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professional to a multi-academy trust (MAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professional for a secure single-academy trust (SSAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professional for a single-academy trust (SAT)")]
+        public void GetGovernorRoleName_WHEN_Singular_AND_RemoveGroupEstablishmentSuffix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
+        {
+            var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: false, removeGroupEstablishmentSuffix: true);
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(eLookupGovernorRole.Governor, "Governors")]
+        [InlineData(eLookupGovernorRole.LocalGovernor, "Local governors")]
+        [InlineData(eLookupGovernorRole.Group_SharedLocalGovernor, "Shared local governors")]
+        [InlineData(eLookupGovernorRole.ChairOfLocalGoverningBody, "Chair of local governing body")]
+        [InlineData(eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody, "Shared chair of local governing body")]
+        [InlineData(eLookupGovernorRole.AccountingOfficer, "Accounting officer")]
+        [InlineData(eLookupGovernorRole.ChairOfGovernors, "Chair of governors")]
+        [InlineData(eLookupGovernorRole.ChairOfTrustees, "Chair of trustees")]
+        [InlineData(eLookupGovernorRole.ChiefFinancialOfficer, "Chief financial officer")]
+        [InlineData(eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody, "Shared chair of local governing body")]
+        [InlineData(eLookupGovernorRole.Establishment_SharedLocalGovernor, "Shared local governors")]
+        [InlineData(eLookupGovernorRole.Member, "Members")]
+        [InlineData(eLookupGovernorRole.Member_Individual, "Members - individuals")]
+        [InlineData(eLookupGovernorRole.Member_Organisation, "Members - organisations")]
+        [InlineData(eLookupGovernorRole.Trustee, "Trustees")]
+        [InlineData(eLookupGovernorRole.NA, "Not applicable")]
+        [InlineData(eLookupGovernorRole.Group_SharedGovernanceProfessional, "Shared governance professionals")]
+        [InlineData(eLookupGovernorRole.Establishment_SharedGovernanceProfessional, "Shared governance professionals")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool, "Governance professionals to a local authority maintained school")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToAFederation, "Governance professionals to a federation")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professionals to an individual academy or free school")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professionals to a multi-academy trust (MAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professionals for a secure single-academy trust (SSAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professionals for a single-academy trust (SAT)")]
+        public void GetGovernorRoleName_WHEN_Plural_AND_RemoveGroupEstablishmentSuffix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
+        {
+            var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: true, removeGroupEstablishmentSuffix: true);
+            Assert.Equal(expected, result);
+        }
+
+
+
+        [Theory]
+        [InlineData(eLookupGovernorRole.Governor, "governor")]
+        [InlineData(eLookupGovernorRole.LocalGovernor, "local governor")]
+        [InlineData(eLookupGovernorRole.Group_SharedLocalGovernor, "shared local governor")]
+        [InlineData(eLookupGovernorRole.ChairOfLocalGoverningBody, "chair of local governing body")]
+        [InlineData(eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody, "shared chair of local governing body")]
+        [InlineData(eLookupGovernorRole.AccountingOfficer, "accounting officer")]
+        [InlineData(eLookupGovernorRole.ChairOfGovernors, "chair of governors")]
+        [InlineData(eLookupGovernorRole.ChairOfTrustees, "chair of trustees")]
+        [InlineData(eLookupGovernorRole.ChiefFinancialOfficer, "chief financial officer")]
+        [InlineData(eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody, "shared chair of local governing body")]
+        [InlineData(eLookupGovernorRole.Establishment_SharedLocalGovernor, "shared local governor")]
+        [InlineData(eLookupGovernorRole.Member, "member")]
+        [InlineData(eLookupGovernorRole.Member_Individual, "member - individual")]
+        [InlineData(eLookupGovernorRole.Member_Organisation, "member - organisation")]
+        [InlineData(eLookupGovernorRole.Trustee, "trustee")]
+        [InlineData(eLookupGovernorRole.NA, "not applicable")]
+        [InlineData(eLookupGovernorRole.Group_SharedGovernanceProfessional, "shared governance professional")]
+        [InlineData(eLookupGovernorRole.Establishment_SharedGovernanceProfessional, "shared governance professional")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool, "governance professional to a local authority maintained school")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToAFederation, "governance professional to a federation")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "governance professional to an individual academy or free school")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "governance professional to a multi-academy trust (MAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "governance professional for a secure single-academy trust (SSAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "governance professional for a single-academy trust (SAT)")]
+        public void GetGovernorRoleName_WHEN_Singular_AND_MidSentence_AND_RemoveGroupEstablishmentSuffix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
+        {
+            var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: false, isMidSentence: true, removeGroupEstablishmentSuffix: true);
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(eLookupGovernorRole.Governor, "governors")]
+        [InlineData(eLookupGovernorRole.LocalGovernor, "local governors")]
+        [InlineData(eLookupGovernorRole.Group_SharedLocalGovernor, "shared local governors")]
+        [InlineData(eLookupGovernorRole.ChairOfLocalGoverningBody, "chair of local governing body")]
+        [InlineData(eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody, "shared chair of local governing body")]
+        [InlineData(eLookupGovernorRole.AccountingOfficer, "accounting officer")]
+        [InlineData(eLookupGovernorRole.ChairOfGovernors, "chair of governors")]
+        [InlineData(eLookupGovernorRole.ChairOfTrustees, "chair of trustees")]
+        [InlineData(eLookupGovernorRole.ChiefFinancialOfficer, "chief financial officer")]
+        [InlineData(eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody, "shared chair of local governing body")]
+        [InlineData(eLookupGovernorRole.Establishment_SharedLocalGovernor, "shared local governors")]
+        [InlineData(eLookupGovernorRole.Member, "members")]
+        [InlineData(eLookupGovernorRole.Member_Individual, "members - individuals")]
+        [InlineData(eLookupGovernorRole.Member_Organisation, "members - organisations")]
+        [InlineData(eLookupGovernorRole.Trustee, "trustees")]
+        [InlineData(eLookupGovernorRole.NA, "not applicable")]
+        [InlineData(eLookupGovernorRole.Group_SharedGovernanceProfessional, "shared governance professionals")]
+        [InlineData(eLookupGovernorRole.Establishment_SharedGovernanceProfessional, "shared governance professionals")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool, "governance professionals to a local authority maintained school")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToAFederation, "governance professionals to a federation")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "governance professionals to an individual academy or free school")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "governance professionals to a multi-academy trust (MAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "governance professionals for a secure single-academy trust (SSAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "governance professionals for a single-academy trust (SAT)")]
+        public void GetGovernorRoleName_WHEN_Plural_AND_MidSentence_AND_RemoveGroupEstablishmentSuffix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
+        {
+            var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: true, isMidSentence: true, removeGroupEstablishmentSuffix: true);
             Assert.Equal(expected, result);
         }
 
