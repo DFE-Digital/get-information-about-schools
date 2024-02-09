@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Edubase.Common.Text;
 using Edubase.Services.Enums;
 
 namespace Edubase.Services.Governors.Factories
@@ -56,9 +55,9 @@ namespace Edubase.Services.Governors.Factories
 
         public static string Create(
             eLookupGovernorRole role,
-            eTextCase textCase = eTextCase.SentenceCase,
             bool pluraliseLabelIfApplicable = false,
-            bool removeMemberPrefix = false
+            bool removeMemberPrefix = false,
+            bool isMidSentence = false
         )
         {
             string governorLabel = null;
@@ -90,11 +89,10 @@ namespace Edubase.Services.Governors.Factories
                 governorLabel = governorLabel.Substring(0, 1).ToUpper() + governorLabel.Substring(1);
             }
 
-            // Optionally convert to lower case if we don't want sentence case
-            if(textCase != eTextCase.SentenceCase)
+            if (isMidSentence)
             {
-                // TODO: Reconsider this implementation as it inadvertently lower-cases acronyms like SAT/SSAT/MAT/DfE
-                governorLabel = governorLabel.ToLower();
+                // lowercase first letter
+                governorLabel = governorLabel.Substring(0, 1).ToLower() + governorLabel.Substring(1);
             }
 
             return governorLabel;

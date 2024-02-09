@@ -343,6 +343,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             await _layoutHelper.PopulateLayoutProperties(viewModel, establishmentUrn, groupUId, User);
 
             viewModel.GovernorRoleName = GovernorRoleNameFactory.Create(role.Value);
+            viewModel.GovernorRoleNameMidSentence = GovernorRoleNameFactory.Create(role.Value, isMidSentence: true);
             viewModel.GovernorRole = role.Value;
             await PopulateSelectLists(viewModel);
             viewModel.DisplayPolicy =
@@ -708,8 +709,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     .ToList(),
                 NewChairType = ReplaceChairViewModel.ChairType.LocalChair,
                 Role = (eLookupGovernorRole) governor.RoleId,
-                RoleName = GovernorRoleNameFactory.Create((eLookupGovernorRole) governor.RoleId,
-                    eTextCase.Lowerase)
+                RoleName = GovernorRoleNameFactory.Create((eLookupGovernorRole) governor.RoleId, isMidSentence: true)
             };
 
             var models = await _governorsReadService.GetGovernorListAsync(establishmentUrn, principal: User);

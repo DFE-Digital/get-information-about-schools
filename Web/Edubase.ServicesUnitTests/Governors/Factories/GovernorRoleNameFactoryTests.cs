@@ -26,7 +26,7 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.NA, "N a")]
         public void GetGovernorRoleName_SentenceCase_PluraliseFalse_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
-            var result = GovernorRoleNameFactory.Create(role, eTextCase.SentenceCase, false);
+            var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: false);
 
             Assert.Equal(expected, result);
         }
@@ -50,7 +50,7 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.NA, "N a")]
         public void GetGovernorRoleName_SentenceCase_PluraliseTrue_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
-            var result = GovernorRoleNameFactory.Create(role, eTextCase.SentenceCase, true);
+            var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: true);
 
             Assert.Equal(expected, result);
         }
@@ -74,7 +74,7 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.NA, "n a")]
         public void GetGovernorRoleName_Lowercase_PluraliseFalse_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
-            var result = GovernorRoleNameFactory.Create(role, eTextCase.Lowerase, false);
+            var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: false);
 
             Assert.Equal(expected, result);
         }
@@ -98,7 +98,7 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.NA, "n a")]
         public void GetGovernorRoleName_Lowercase_PluraliseTrue_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
-            var result = GovernorRoleNameFactory.Create(role, eTextCase.Lowerase, true);
+            var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: true);
 
             Assert.Equal(expected, result);
         }
