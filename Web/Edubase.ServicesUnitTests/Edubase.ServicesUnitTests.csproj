@@ -52,7 +52,6 @@
     <Compile Include="ExternalLookup\FBServiceTests.cs" />
     <Compile Include="Governors\Factories\GovernorRoleNameFactoryTests.cs" />
     <Compile Include="IntegrationEndPoints\PollyUtilTests.cs" />
-    <Compile Include="Nomenclature\NomenclatureServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
