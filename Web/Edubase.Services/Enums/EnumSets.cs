@@ -83,6 +83,8 @@ namespace Edubase.Services.Enums
             GR.GovernanceProfessionalToAMat,
             GR.Group_SharedGovernanceProfessional,
             GR.Establishment_SharedGovernanceProfessional,
+            GR.GovernanceProfessionalToASat,
+            GR.GovernanceProfessionalToASecureSat,
         };
 
         public static IEnumerable<int> GovernanceProfessionalRoles = eGovernanceProfessionalRoles.Cast<int>();
