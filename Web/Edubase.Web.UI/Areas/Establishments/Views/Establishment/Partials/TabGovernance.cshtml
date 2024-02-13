@@ -10,7 +10,7 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
                 @Html.ActionLink("Edit governance", "Edit", "Governor", new { establishmentUrn = Model.Establishment.Urn, area = "Governors" }, new { id = "edit-governance-button", @class = "govuk-button govuk-button--secondary" })
-                
+
                 @if (!Model.MediumPriorityGovernanceConfirmationPending &&
                      !Model.HighPriorityGovernanceConfirmationPending &&
                      !Model.Establishment.TypeId.OneOfThese(
@@ -30,16 +30,17 @@
                          )
                 )
                 {
-                    using (Html.BeginRouteForm("EstablishmentGovernanceConfirmUpToDate", new {Model.Establishment.Urn, showBanner = true}, FormMethod.Post, new {@class = "gias-action-form" }))
+                    using (Html.BeginRouteForm("EstablishmentGovernanceConfirmUpToDate", new { Model.Establishment.Urn, showBanner = true }, FormMethod.Post, new { @class = "gias-action-form" }))
                     {
-                    <button class="govuk-button" data-module="govuk-button" id="governance-data-confirm-button">Confirm governance information</button>
+                        @Html.AntiForgeryToken()
+                        <button class="govuk-button" data-module="govuk-button" id="governance-data-confirm-button">Confirm governance information</button>
                     }
                 }
             </div>
         </div>
     }
 
-    @{Html.RenderAction("View", "Governor", new { viewModel = Model.GovernorsGridViewModel, area = "Governors" });}
+    @Html.Partial("~/Areas/Governors/Views/Governor/ViewEdit.cshtml", Model.GovernorsGridViewModel);
 
     @if (Model.UserCanEdit && Model.TabEditPolicy.Governance)
     {

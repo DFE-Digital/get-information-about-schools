@@ -25,6 +25,7 @@
 
 @using (Html.BeginForm("EditLinks", "Group", new { area = "Groups" }, FormMethod.Post))
 {
+    @Html.AntiForgeryToken()
     @Html.HiddenFor(x => x.GroupUId)
     @Html.HiddenFor(x => x.SaveMode)
     @Html.HiddenFor(x => x.GroupTypeId)

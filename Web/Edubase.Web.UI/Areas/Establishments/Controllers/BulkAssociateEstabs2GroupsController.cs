@@ -30,7 +30,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [Route(BaseUri, Name = "BulkAssociateEstabs2Groups"), HttpGet]
         public ActionResult Index() => View(ViewName);
 
-        [Route(BaseUri, Name = "BulkAssociateEstabs2GroupsPost"), HttpPost]
+        [Route(BaseUri, Name = "BulkAssociateEstabs2GroupsPost"), HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> ProcessBulkAssociateEstabs2GroupsAsync(BulkAssociateEstabs2GroupsViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -58,7 +58,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         {
             var viewModel = new BulkAssociateEstabs2GroupsViewModel();
             var apiResponse = await _establishmentWriteService.BulkAssociateEstabs2GroupsGetProgressAsync(id, User);
-            return await Task.Run(() => ResultInternalAjaxAsync(id, viewModel, apiResponse));
+            return ResultInternalAjax(id, viewModel, apiResponse);
         }
 
         private async Task<ActionResult> ResultInternalAsync(Guid id, BulkAssociateEstabs2GroupsViewModel viewModel, ApiResponse<BulkUpdateProgressModel> apiResponse)
@@ -125,7 +125,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
         }
 
-        private ActionResult ResultInternalAjaxAsync(Guid id, BulkAssociateEstabs2GroupsViewModel viewModel, ApiResponse<BulkUpdateProgressModel> apiResponse)
+        private ActionResult ResultInternalAjax(Guid id, BulkAssociateEstabs2GroupsViewModel viewModel, ApiResponse<BulkUpdateProgressModel> apiResponse)
         {
             if (apiResponse.Success)
             {

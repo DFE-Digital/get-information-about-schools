@@ -5,6 +5,7 @@ using Edubase.Services.Governors.Models;
 namespace Edubase.Web.UI.Areas.Groups.Models
 {
     using Common;
+    using Edubase.Web.UI.Areas.Governors.Models;
     using Services.Core;
     using Services.Domain;
     using Services.Enums;
@@ -68,16 +69,25 @@ namespace Edubase.Web.UI.Areas.Groups.Models
 
         public string FscpdServiceName => ConfigurationManager.AppSettings["FscpdServiceName"];
         public string FscpdURL => extService.FscpdURL(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SchoolSponsor));
+
         private bool? showFscpd;
+
         public bool ShowFscpd
         {
-            get
+            get => showFscpd.GetValueOrDefault();
+            private set => showFscpd = value;
+        }
+
+        //code originally inside the property, moved here to allow it to be async
+        public async Task SetFscpdAsync()
+        {
+            if (Group == null)
             {
-                if (!showFscpd.HasValue)
-                {
-                    showFscpd = extService != null && Task.Run(() => extService.FscpdCheckExists(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SchoolSponsor))).Result;
-                }
-                return showFscpd.Value;
+                return;
+            }
+            if (!showFscpd.HasValue)
+            {
+                showFscpd = extService != null && await extService.FscpdCheckExists(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SchoolSponsor));
             }
         }
 
@@ -100,20 +110,26 @@ namespace Edubase.Web.UI.Areas.Groups.Models
 
         public string FinancialBenchmarkingURL => extService.SfbURL(FinancialBenchmarkingLookups.Item1, FinancialBenchmarkingLookups.Item2);
 
-
-
         private bool? showFinancialBenchmarking;
+
         public bool ShowFinancialBenchmarking
         {
-            get
-            {
-                if (!showFinancialBenchmarking.HasValue)
-                {
-                    showFinancialBenchmarking = extService != null && Task.Run(() => extService.SfbCheckExists(FinancialBenchmarkingLookups.Item1, FinancialBenchmarkingLookups.Item2)).Result;
-                }
-                return showFinancialBenchmarking.Value;
-            }
+            get => showFinancialBenchmarking.GetValueOrDefault();
+            private set => showFinancialBenchmarking = value;
         }
 
+        //code originally inside the property, moved here to allow it to be async
+        public async Task SetShowFinancialBenchmarkingAsync()
+        {
+            if (FinancialBenchmarkingLookups == null)
+            {
+                return;
+            }
+            if (!showFscpd.HasValue)
+            {
+                showFscpd = extService != null && await extService.SfbCheckExists(FinancialBenchmarkingLookups.Item1, FinancialBenchmarkingLookups.Item2);
+            }
+        }
+        public GovernorsGridViewModel GovernorsGridViewModel { get; set; }
     }
 }

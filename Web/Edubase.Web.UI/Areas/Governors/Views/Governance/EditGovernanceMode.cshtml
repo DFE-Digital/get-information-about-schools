@@ -28,6 +28,7 @@
 
         @using (Html.BeginRouteForm("EstabEditGovernanceMode", FormMethod.Post))
         {
+            @Html.AntiForgeryToken()
             @Html.HiddenFor(x => x.Urn)
             <div class="govuk-form-group">
                 <fieldset class="govuk-fieldset">

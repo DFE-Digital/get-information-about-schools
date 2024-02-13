@@ -113,7 +113,7 @@ namespace Edubase.Web.UI.Controllers
             return View(data);
         }
 
-        [HttpPost, Route("DataQuality/Edit")]
+        [HttpPost, Route("DataQuality/Edit"), ValidateAntiForgeryToken]
         [EdubaseAuthorize(Roles = AuthorisationRoles)]
         public async Task<ActionResult> EditStatus(EditDataQualityStatusViewModel model)
         {
@@ -163,7 +163,7 @@ namespace Edubase.Web.UI.Controllers
             return View(data);
         }
 
-        [HttpPost, Route("DataQuality/EditDataOwnerDetails")]
+        [HttpPost, Route("DataQuality/EditDataOwnerDetails"), ValidateAntiForgeryToken]
         [EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin)]
         public async Task<ActionResult> EditDataOwnerDetails(EditDataQualityDataOwnerViewModel model)
         {

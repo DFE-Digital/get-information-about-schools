@@ -103,7 +103,7 @@ namespace Edubase.Web.UI.Controllers
         [HttpGet, MvcAuthorizeRoles(AuthorizedRoles.CanBulkCreateAcademies)]
         public ActionResult BulkAcademies() => View();
 
-        [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanBulkCreateAcademies)]
+        [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanBulkCreateAcademies), ValidateAntiForgeryToken]
         public async Task<ActionResult> BulkAcademies(BulkAcademiesViewModel model, int? removeUrn, int? editUrn,
             string action)
         {
@@ -305,7 +305,7 @@ namespace Edubase.Web.UI.Controllers
                 if (loopCount > 0)
                 {
                     // pause before trying the non-complete items again
-                    System.Threading.Thread.Sleep(1000);
+                    await Task.Delay(1000);
                 }
 
                 loopCount += 1;
@@ -530,7 +530,8 @@ namespace Edubase.Web.UI.Controllers
 
         [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools),
          Route("~/independent-schools/predefined-local-authority-sets/edit/{id}", Name = "EditPredefinedLASetPost"),
-         Route("~/independent-schools/predefined-local-authority-sets/create", Name = "CreatePredefinedLASetPost")]
+         Route("~/independent-schools/predefined-local-authority-sets/create", Name = "CreatePredefinedLASetPost"),
+            ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateEditPredefinedLASet(PredefinedLASetViewModel viewModel)
         {
             if (ModelState.ContainsKey(nameof(viewModel.SuppressWarning)))
@@ -576,7 +577,7 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [HttpPost, MvcAuthorizeRoles(AuthorizedRoles.CanAccessTools),
-         Route("~/independent-schools/predefined-local-authority-sets/delete/{id}", Name = "DeletePredefinedLASet")]
+         Route("~/independent-schools/predefined-local-authority-sets/delete/{id}", Name = "DeletePredefinedLASet"), ValidateAntiForgeryToken]
         public async Task<ActionResult> DeletePredefinedLASet(string id)
         {
             await _localAuthoritySetRepository.DeleteAsync(id);

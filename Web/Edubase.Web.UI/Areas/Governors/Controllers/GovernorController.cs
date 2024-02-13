@@ -58,7 +58,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         private readonly IGroupReadService _groupReadService;
         private readonly ILayoutHelper _layoutHelper;
         private readonly NomenclatureService _nomenclatureService;
-        private readonly IGovernorsGridViewModelFactory _governorsGridViewModelFactory;
 
         public GovernorController(
             IGovernorsReadService governorsReadService,
@@ -67,8 +66,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             IGovernorsWriteService governorsWriteService,
             IGroupReadService groupReadService,
             IEstablishmentReadService establishmentReadService,
-            ILayoutHelper layoutHelper,
-            IGovernorsGridViewModelFactory gridViewModelFactory)
+            ILayoutHelper layoutHelper)
         {
             _governorsReadService = governorsReadService;
             _nomenclatureService = nomenclatureService;
@@ -77,7 +75,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             _groupReadService = groupReadService;
             _establishmentReadService = establishmentReadService;
             _layoutHelper = layoutHelper;
-            _governorsGridViewModelFactory = gridViewModelFactory;
         }
 
         /// <summary>
@@ -151,6 +148,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         [Route(ESTAB_EDIT_GOVERNANCE, Name = "EstabDeleteOrRetireGovernor")]
         [HttpPost]
         [EdubaseAuthorize]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteOrRetireGovernor(GovernorsGridViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -216,25 +214,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 User);
 
             return await Edit(viewModel.GroupUId, viewModel.EstablishmentUrn, viewModel.RemovalGid, null);
-        }
-
-        [Route]
-        public ActionResult View(int? groupUId, int? establishmentUrn, GovernorsGridViewModel viewModel = null)
-        {
-            if (viewModel != null)
-            {
-                return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
-            }
-            else
-            {
-                // KHD Hack: Async child actions are not supported; but we have an async stack, so we have to wrap the async calls in an sync wrapper.  Hopefully won't deadlock.
-                // Need to use ASP.NET Core really now; that supports ViewComponents which are apparently the solution.
-                return Task.Run(async () =>
-                {
-                    viewModel = await _governorsGridViewModelFactory.CreateGovernorsViewModel(groupUId, establishmentUrn, user: User);
-                    return View(VIEW_EDIT_GOV_VIEW_NAME, viewModel);
-                }).Result;
-            }
         }
 
         /// <summary>
@@ -484,7 +463,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         [Route(GROUP_ADD_GOVERNOR), Route(ESTAB_ADD_GOVERNOR),
          Route(GROUP_EDIT_GOVERNOR), Route(ESTAB_EDIT_GOVERNOR),
          Route(GROUP_REPLACE_GOVERNOR), Route(ESTAB_REPLACE_GOVERNOR),
-         HttpPost, EdubaseAuthorize]
+         HttpPost, EdubaseAuthorize, ValidateAntiForgeryToken]
         public async Task<ActionResult> AddEditOrReplace(CreateEditGovernorViewModel viewModel)
         {
             await PopulateSelectLists(viewModel);
@@ -728,7 +707,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(model);
         }
 
-        [HttpPost, Route(ESTAB_REPLACE_CHAIR), EdubaseAuthorize]
+        [HttpPost, Route(ESTAB_REPLACE_CHAIR), EdubaseAuthorize, ValidateAntiForgeryToken]
         public async Task<ActionResult> ReplaceChair(ReplaceChairViewModel model)
         {
             if (ModelState.IsValid)

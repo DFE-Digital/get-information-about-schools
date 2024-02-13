@@ -133,7 +133,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpPost, EdubaseAuthorize, Route("Edit/{urn:int}/Link/{linkid?}", Name = "SaveEstabLink"),
-            Route("Edit/{urn:int}/Link/Create/{urnToLink:int}")]
+            Route("Edit/{urn:int}/Link/Create/{urnToLink:int}"), ValidateAntiForgeryToken]
         public async Task<ActionResult> AddEditLinkAsync(EditEstablishmentLinksViewModel deltaViewModel)
         {
             if (deltaViewModel.Act == "delete")
@@ -354,6 +354,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             }
 
             viewModel.Establishment = result.ReturnValue;
+
+            await viewModel.SetFscpdAsync();
+            await viewModel.SetShowFinancialBenchmarkingAsync();
+
             viewModel.TabWarnings = new TabWarningsModel(viewModel.Establishment.TypeId);
 
             await Task.WhenAll(
@@ -399,6 +403,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 Establishment = result.ReturnValue,
                 ChangeHistory = changes
             };
+
+            await viewModel.SetFscpdAsync();
 
             await Task.WhenAll(
                 PopulateDisplayPolicies(viewModel)
@@ -566,7 +572,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return await SaveEstablishment(targetViewModel);
         }
 
-        [HttpPost, EdubaseAuthorize, Route("Confirm/{urn:int}", Name = "EstablishmentConfirmUpToDate")]
+        [HttpPost, EdubaseAuthorize, Route("Confirm/{urn:int}", Name = "EstablishmentConfirmUpToDate"), ValidateAntiForgeryToken]
         public async Task<ActionResult> EstablishmentConfirmUpToDateAsync(int urn, bool showBanner = false)
         {
             await _establishmentWriteService.ConfirmAsync(urn, User);
@@ -582,7 +588,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             return View("AddOrReplaceAddress", viewModel);
         }
 
-        [HttpPost, EdubaseAuthorize, Route("Edit/{urn:int}/Address/{target}", Name = "AddOrReplaceEstablishmentAddressPost")]
+        [HttpPost, EdubaseAuthorize, Route("Edit/{urn:int}/Address/{target}", Name = "AddOrReplaceEstablishmentAddressPost"), ValidateAntiForgeryToken]
         public async Task<ActionResult> AddOrReplaceEstablishmentAddressPostAsync(int urn, string target, AddOrReplaceAddressViewModel viewModel)
         {
             ModelState.Clear();

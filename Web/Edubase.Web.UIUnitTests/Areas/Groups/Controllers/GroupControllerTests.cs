@@ -11,6 +11,7 @@ using Edubase.Services.Core;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
+using Edubase.Services.Establishments.Models;
 using Edubase.Services.Exceptions;
 using Edubase.Services.ExternalLookup;
 using Edubase.Services.Governors;
@@ -21,10 +22,9 @@ using Edubase.Services.IntegrationEndPoints.CompaniesHouse;
 using Edubase.Services.Lookup;
 using Edubase.Services.Nomenclature;
 using Edubase.Services.Security;
-using Edubase.Services.Texuna;
+using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Areas.Groups.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
-using Edubase.Web.UI.Areas.Groups.ViewRulesHandlers;
 using Edubase.Web.UI.Exceptions;
 using Edubase.Web.UIUnitTests;
 using Moq;
@@ -42,7 +42,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
         private readonly ITestOutputHelper output;
 
         private readonly Mock<IEstablishmentReadService> mockEstablishmentReadService = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
-        private readonly Mock<IGroupReadService> mockGroupReadService = new Mock<IGroupReadService>(MockBehavior.Strict);
+        private readonly Mock<IGroupReadService> mockGroupReadService = new Mock<IGroupReadService>(MockBehavior.Loose);
         private readonly Mock<IGroupsWriteService> mockGroupsWriteService = new Mock<IGroupsWriteService>(MockBehavior.Strict);
         private readonly Mock<IGovernorsReadService> mockGovernorsReadService = new Mock<IGovernorsReadService>(MockBehavior.Strict);
         private readonly Mock<ICompaniesHouseService> mockCompaniesHouseService = new Mock<ICompaniesHouseService>(MockBehavior.Strict);
@@ -55,6 +55,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
         private readonly Mock<HttpContextBase> mockHttpContextBase = new Mock<HttpContextBase>(MockBehavior.Strict);
         private readonly Mock<IPrincipal> mockPrincipal = new Mock<IPrincipal>(MockBehavior.Strict);
         private readonly Mock<IIdentity> mockIdentity = new Mock<IIdentity>(MockBehavior.Strict);
+        private readonly Mock<IGovernorsGridViewModelFactory> mockGovernorGridViewModelFactory = new Mock<IGovernorsGridViewModelFactory>(MockBehavior.Loose);
         private bool disposedValue;
 
         public GroupControllerTests(ITestOutputHelper output)
@@ -77,7 +78,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
                 mockCompaniesHouseService.Object,
                 mockNomenclatureService.Object,
                 mockGovernorsReadService.Object,
-                mockExternalLookupService.Object);
+                mockExternalLookupService.Object,
+                mockGovernorGridViewModelFactory.Object);
 
             SetupController();
         }
@@ -208,9 +210,12 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
 
             var grs = mockGroupReadService;
             var govrs = mockGovernorsReadService;
+            var ext = mockExternalLookupService;
             var id = mockIdentity;
             var estabList = CreateEstabList();
 
+
+            ext.Setup(x => x.FscpdCheckExists(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>())).ReturnsAsync(true);
             id.Setup(x => x.IsAuthenticated).Returns(isUserLoggedOn);
             grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(new GroupModel { GroupUId = 1, Name = "grp" }));
             grs.Setup(x => x.GetLinksAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(Enumerable.Empty<LinkedGroupModel>());
@@ -220,6 +225,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             grs.Setup(x => x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), true)).ReturnsAsync(estabList);
             govrs.Setup(x => x.GetGovernorPermissions(null, It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
             var response = (ViewResult) await controller.Details(1);
+
+            ext.Verify(x => x.FscpdCheckExists(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()), Times.AtLeastOnce);
 
             if (!isUserLoggedOn)
             {
@@ -952,6 +959,38 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             var result = (RedirectToRouteResult) await controller.SaveNewAcademyTrust(vm,"academy-trust");
             Assert.Equal("Details", result.RouteValues["action"]);
             Assert.Equal(123, result.RouteValues["id"]);
+        }
+
+
+        [Fact]
+        public async Task Details_ReturnsCorrectVM()
+        {
+            var groupId = 5638;
+            var groupModel = CreateGroupModel(eLookupGroupType.MultiacademyTrust);
+            var GovernorsGridVM = new GovernorsGridViewModel
+            {
+                GroupTypeId = (int) eLookupGroupType.MultiacademyTrust
+            };
+
+            mockIdentity.Setup(x => x.IsAuthenticated).Returns(true);
+            mockExternalLookupService.Setup(x => x.FscpdCheckExists(It.IsAny<int?>(), It.IsAny<string>(), It.IsAny<bool>()))
+                    .ReturnsAsync(true);
+            mockGovernorsReadService.Setup(x => x.GetGovernorPermissions(null, groupId, It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
+            mockGroupReadService.Setup(x => x.GetAsync(groupId, It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>() { ReturnValue = groupModel });
+            mockGroupReadService.Setup(x => x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), It.IsAny<bool>()))
+                    .ReturnsAsync(new List<EstablishmentGroupModel>());
+            mockGovernorGridViewModelFactory.Setup(x => x.CreateGovernorsViewModel(It.IsAny<int>(), It.IsAny<int?>(), It.IsAny<EstablishmentModel>(), It.IsAny<IPrincipal>()))
+                    .Returns(Task.FromResult(GovernorsGridVM));
+
+            controller.ControllerContext = new ControllerContext(mockHttpContextBase.Object, new System.Web.Routing.RouteData(), controller);
+
+            var result = await controller.Details(groupId);
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var viewModel = Assert.IsAssignableFrom<GroupDetailViewModel>(viewResult.Model);
+
+            Assert.NotNull(viewModel.GovernorsGridViewModel);
+            Assert.True(viewModel.GovernorsGridViewModel.GroupTypeId.HasValue);
+            Assert.Equal(GovernorsGridVM.GroupTypeId, viewModel.GovernorsGridViewModel.GroupTypeId);
         }
 
         protected virtual void Dispose(bool disposing)

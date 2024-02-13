@@ -33,6 +33,7 @@
 
 @using (Html.BeginForm("ProcessMergeEstablishmentsAsync", "AmalgamateMerge", FormMethod.Post))
 {
+    @Html.AntiForgeryToken()
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <p>You can propose closing one or more establishments and altering the remaining establishment.</p>

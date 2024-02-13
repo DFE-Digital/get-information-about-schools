@@ -30,7 +30,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using Services.IntegrationEndPoints.CompaniesHouse;
     using Services.Nomenclature;
     using UI.Models;
-    using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
     using static Models.CreateEdit.GroupEditorViewModel;
     using static Models.CreateEdit.GroupEditorViewModelBase;
     using GS = Services.Enums.eLookupGroupStatus;
@@ -48,6 +47,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         private readonly ISecurityService _securityService;
         private readonly IGovernorsReadService _governorsReadService;
         private readonly IExternalLookupService _externalLookupService;
+        private readonly IGovernorsGridViewModelFactory _governorsGridViewModelFactory;
 
         public GroupController(
             ICachedLookupService cachedLookupService,
@@ -58,7 +58,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             ICompaniesHouseService companiesHouseService,
             NomenclatureService nomenclatureService,
             IGovernorsReadService governorsReadApiService,
-            IExternalLookupService externalLookupService)
+             IExternalLookupService externalLookupService,
+            IGovernorsGridViewModelFactory governorsGridViewModelFactory)
         {
             _lookup = cachedLookupService;
             _securityService = securityService;
@@ -69,6 +70,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             _nomenclatureService = nomenclatureService;
             _governorsReadService = governorsReadApiService;
             _externalLookupService = externalLookupService;
+            _governorsGridViewModelFactory = governorsGridViewModelFactory;
         }
 
 
@@ -119,7 +121,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, Route("Create/{type}"), EdubaseAuthorize]
+        [HttpPost, Route("Create/{type}"), EdubaseAuthorize, ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(GroupEditorViewModel viewModel, string type, bool? jsDisabled = false)
         {
             await PopulateSelectLists(viewModel);
@@ -328,8 +330,17 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 IsClosed = model.StatusId == (int)eLookupGroupStatus.Closed || model.StatusId == (int)eLookupGroupStatus.CreatedInError,
                 IsClosedInError = model.StatusId == (int)eLookupGroupStatus.CreatedInError,
                 CloseDate = model.ClosedDate,
-                UKPRN = model.UKPRN.ToInteger(),
+                UKPRN = model.UKPRN.ToInteger()
             };
+
+            if (viewModel.Group.GroupTypeId == (int) eLookupGroupType.MultiacademyTrust || viewModel.Group.GroupTypeId == (int) eLookupGroupType.SecureSingleAcademyTrust)
+            {
+                //based on the conditions from the view it looks like this is only required if the above is true
+                //so small optimisations to not populate it if its not required
+                viewModel.GovernorsGridViewModel = await _governorsGridViewModelFactory.CreateGovernorsViewModel(id, null, user: User);
+            }
+
+            await viewModel.SetFscpdAsync();
 
             if (viewModel.IsUserLoggedOn)
             {
@@ -368,6 +379,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 CloseDate = model.ClosedDate,
                 ChangeHistory = await _groupReadService.GetGovernanceChangeHistoryAsync(id, skip, 100, sortBy, User)
             };
+
+            await viewModel.SetFscpdAsync();
+            await viewModel.SetShowFinancialBenchmarkingAsync();
 
             return View("GovernanceChangeHistory", viewModel);
         }
@@ -414,7 +428,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View("EditDetails", viewModel);
         }
 
-        [HttpPost, Route("Edit/{id:int}/Details"), EdubaseAuthorize]
+        [HttpPost, Route("Edit/{id:int}/Details"), EdubaseAuthorize, ValidateAntiForgeryToken]
         public async Task<ActionResult> EditDetails(GroupEditorViewModel viewModel)
         {
             var result = await new GroupEditorViewModelValidator(_groupReadService, _establishmentReadService, User, _securityService).ValidateAsync(viewModel);
@@ -505,7 +519,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, Route("Edit/{id:int}/Links"), EdubaseAuthorize]
+        [HttpPost, Route("Edit/{id:int}/Links"), EdubaseAuthorize, ValidateAntiForgeryToken]
         public async Task<ActionResult> EditLinks(GroupEditorViewModel viewModel)
         {
             if (viewModel.Action == ActionLinkedEstablishmentStartSearch)
@@ -532,7 +546,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             return View(viewModel);
         }
 
-        [HttpPost, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}/{academyTrustRoute}")]
+        [HttpPost, EdubaseAuthorize, Route(nameof(CreateAcademyTrust) + "/{companiesHouseNumber}/{academyTrustRoute}"), ValidateAntiForgeryToken]
         public async Task<ActionResult> SaveNewAcademyTrust(CreateAcademyTrustViewModel viewModel, string academyTrustRoute)
         {
             var permission = await _securityService.GetCreateGroupPermissionAsync(User);

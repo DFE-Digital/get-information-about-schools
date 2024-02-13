@@ -120,8 +120,13 @@ namespace Edubase.Web.UI
                 .UsingConstructor(typeof(JsonConverterCollection));
 
             builder.RegisterType<CachedLookupService>().As<ICachedLookupService>();
-            builder.RegisterType<AzureMapsService>().As<IAzureMapsService>();
-            builder.RegisterType<OSPlacesApiService>().As<IOSPlacesApiService>();
+
+            builder.RegisterInstance(CreatAzureMapsClient()).SingleInstance().Named<HttpClient>("AzureMapsClient");
+            builder.Register(c => new AzureMapsService(c.ResolveNamed<HttpClient>("AzureMapsClient"))).As<IAzureMapsService>();
+
+            builder.RegisterInstance(CreatOSPlacesClient()).SingleInstance().Named<HttpClient>("OSPlacesClient");
+            builder.Register(c => new OSPlacesApiService(c.ResolveNamed<HttpClient>("OSPlacesClient"))).As<IOSPlacesApiService>();
+
             builder.RegisterType<PlacesLookupService>().As<IPlacesLookupService>();
 
             builder.RegisterInstance(CreateFscpdClient()).SingleInstance().Named<HttpClient>("FscpdClient");
@@ -221,10 +226,12 @@ namespace Edubase.Web.UI
 
         public static HttpClient CreateHttpClient()
         {
+            var timeoutSettings = int.Parse(ConfigurationManager.AppSettings["HttpClient_Timeout"]);
+
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
             {
                 BaseAddress = new Uri(ConfigurationManager.AppSettings["TexunaApiBaseAddress"]),
-                Timeout = TimeSpan.FromSeconds(180)
+                Timeout = TimeSpan.FromSeconds(timeoutSettings)
             };
 
             var apiUsername = ConfigurationManager.AppSettings["api:Username"];
@@ -241,10 +248,12 @@ namespace Edubase.Web.UI
 
         public static HttpClient CreateFscpdClient()
         {
+            var timeoutSettings = int.Parse(ConfigurationManager.AppSettings["FscpdClient_Timeout"]);
+
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
             {
                 BaseAddress = new Uri(ConfigurationManager.AppSettings["FscpdURL"]),
-                Timeout = TimeSpan.FromSeconds(10)
+                Timeout = TimeSpan.FromSeconds(timeoutSettings)
             };
 
             var apiUsername = ConfigurationManager.AppSettings["FscpdUsername"];
@@ -261,10 +270,15 @@ namespace Edubase.Web.UI
 
         public static HttpClient CreateSfbClient()
         {
+            if (!int.TryParse(ConfigurationManager.AppSettings["FBService_Timeout"], out var timeoutsettings))
+            {
+                timeoutsettings = 10;
+            }
+
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
             {
-                BaseAddress = new Uri(ConfigurationManager.AppSettings["FinancialBenchmarkingURL"]),
-                Timeout = TimeSpan.FromSeconds(10)
+                BaseAddress = new Uri(ConfigurationManager.AppSettings["FinancialBenchmarkingApiURL"]),
+                Timeout = TimeSpan.FromSeconds(timeoutsettings)
             };
 
             var apiUsername = ConfigurationManager.AppSettings["FinancialBenchmarkingUsername"];
@@ -279,17 +293,23 @@ namespace Edubase.Web.UI
             var header = new ProductHeaderValue("GIAS", Assembly.GetExecutingAssembly().GetName().Version.ToString());
             var userAgent = new ProductInfoHeaderValue(header);
             client.DefaultRequestHeaders.UserAgent.Add(userAgent);
+
             return client;
         }
 
-        public static HttpClient CreateLookupClient(string lookupApiAddress,
-            string lookupApiUsername, string lookupApiPassword)
+        public static HttpClient CreateLookupClient(string lookupApiAddress, string lookupApiUsername, string lookupApiPassword)
         {
             var lookupUri = new Uri(lookupApiAddress);
 
+            if (!int.TryParse(ConfigurationManager.AppSettings["LookupClient_Timeout"], out var timeoutsettings))
+            {
+                timeoutsettings = 10;
+            }
+
             var client = new HttpClient(new HttpClientHandler { UseCookies = false })
             {
-                BaseAddress = lookupUri, Timeout = TimeSpan.FromSeconds(180)
+                BaseAddress = lookupUri,
+                Timeout = TimeSpan.FromSeconds(timeoutsettings)
             };
 
             if (!string.IsNullOrEmpty(lookupApiUsername) && !string.IsNullOrEmpty(lookupApiPassword))
@@ -297,6 +317,38 @@ namespace Edubase.Web.UI
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
                     new BasicAuthCredentials(lookupApiUsername, lookupApiPassword).ToString());
             }
+
+            return client;
+        }
+
+        private static HttpClient CreatOSPlacesClient()
+        {
+            if (!int.TryParse(ConfigurationManager.AppSettings["OSPlacesApiServices_Timeout"], out var timeoutsettings))
+            {
+                timeoutsettings = 10;
+            }
+
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(ConfigurationManager.AppSettings["OSPlacesUrl"]),
+                Timeout = TimeSpan.FromSeconds(timeoutsettings)
+            };
+
+            return client;
+        }
+
+        private static HttpClient CreatAzureMapsClient()
+        {
+            if (!int.TryParse(ConfigurationManager.AppSettings["AzureMapService_Timeout"], out var timeoutsettings))
+            {
+                timeoutsettings = 10;
+            }
+
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(ConfigurationManager.AppSettings["AzureMapsUrl"]),
+                Timeout = TimeSpan.FromSeconds(timeoutsettings)
+            };
 
             return client;
         }

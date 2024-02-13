@@ -36,6 +36,7 @@
 
             using (Html.BeginRouteForm("DownloadExtract", FormMethod.Post))
             {
+                @Html.AntiForgeryToken()
                 @Html.Hidden("id", @Model.Result.Id)
                 @Html.Hidden("path", path)
 
@@ -65,25 +66,26 @@
             Please use this template to list the academies.
         </p>
         <p>
-            @Html.ActionLink("Academies_bulk_upload.xls, 25KB", "Container", "Home", new { area = "", file = "academies_bulk_upload.xls" }, new {@class="download-list-item"})
+            @Html.ActionLink("Academies_bulk_upload.xls, 25KB", "Container", "Home", new { area = "", file = "academies_bulk_upload.xls" }, new { @class = "download-list-item" })
         </p>
 
     </div>
 
     @using (Html.BeginRouteForm("BulkAssociateEstabs2GroupsPost", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
+        @Html.AntiForgeryToken()
         <div class="govuk-grid-column-full">
             <h2 class="govuk-heading-m  govuk-!-padding-top-6">Submit completed template</h2>
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.BulkFile)">
                 <label for="BulkFile" class="govuk-label">Upload a file</label>
-                @Html.ValidationMessageFor(x => x.BulkFile, null, new {@class = "govuk-error-message"})
+                @Html.ValidationMessageFor(x => x.BulkFile, null, new { @class = "govuk-error-message" })
                 @Html.TextBoxFor(x => x.BulkFile, new { type = "file", @class = "govuk-file-upload" })
             </div>
         </div>
         <div class="govuk-grid-column-full">
             <div class="button-row">
                 <input type="submit" class="govuk-button" id="cancel-button" value="Submit" />
-                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new {@class="govuk-button govuk-button--secondary cancel"})
+                @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel" })
             </div>
         </div>
     }

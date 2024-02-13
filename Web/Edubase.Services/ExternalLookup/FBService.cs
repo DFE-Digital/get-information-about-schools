@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
 using Edubase.Common;
+using Edubase.Services.IntegrationEndPoints;
 using Polly;
 
 namespace Edubase.Services.ExternalLookup
@@ -18,27 +19,26 @@ namespace Edubase.Services.ExternalLookup
 
     public class FBService : IFBService
     {
-        private static HttpClient _client;
-        private static string urlBaseAddress;
-        private static string apiBaseAddress;
+        private readonly HttpClient _client;
 
-        private static readonly Policy RetryPolicy = Policy.TimeoutAsync(1).Wrap(Policy
-            .Handle<HttpRequestException>()
-            .WaitAndRetryAsync(new[]
-            {
-                TimeSpan.FromSeconds(1)
-            }));
+        private readonly string urlBaseAddress;
 
-        public FBService(HttpClient client, string baseAddress = "FinancialBenchmarkingApiURL", int timeOut = 10)
+        private readonly string apiBaseAddress;
+
+        private const string FBServiceTimeoutKey = "FBService_Timeout";
+
+        private readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
+            PollyUtil.CsvSecondsToTimeSpans(
+                ConfigurationManager.AppSettings["FBService_RetryIntervals"]
+            ), FBServiceTimeoutKey
+        );
+
+        public FBService(HttpClient httpClient)
         {
-            apiBaseAddress = baseAddress == "FinancialBenchmarkingApiURL" ? ConfigurationManager.AppSettings[baseAddress] : baseAddress;
-            urlBaseAddress = baseAddress == "FinancialBenchmarkingApiURL" ? ConfigurationManager.AppSettings["FinancialBenchmarkingURL"] : baseAddress;
+            _client = httpClient;
 
-            _client = new HttpClient
-            {
-                BaseAddress = new Uri(apiBaseAddress),
-                Timeout = TimeSpan.FromSeconds(timeOut)
-            };
+            apiBaseAddress = ConfigurationManager.AppSettings["FinancialBenchmarkingApiURL"];
+            urlBaseAddress = ConfigurationManager.AppSettings["FinancialBenchmarkingURL"];
         }
 
         public string PublicURL(int? lookupId, FbType lookupType)

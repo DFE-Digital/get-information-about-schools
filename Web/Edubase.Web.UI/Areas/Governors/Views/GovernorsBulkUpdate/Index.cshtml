@@ -33,7 +33,7 @@
                 <a class="cross" href="#"><span class="govuk-visually-hidden">Dismiss notification</span></a>
             </div>
         }
-    <h1 class="govuk-heading-xl">Bulk update governance information</h1>
+        <h1 class="govuk-heading-xl">Bulk update governance information</h1>
 
         <p>Follow these steps to bulk update governance data.</p>
     </div>
@@ -46,11 +46,11 @@
                 </span>
             </summary>
             <div class="govuk-details__text">
-            <p>
-                For a step by step guide to prepare documents for bulk update please reference the
-                @Html.ActionLink("Governance guidance", "Governance", "Guidance", new {area = ""}, null).
-            </p>
-        </div>
+                <p>
+                    For a step by step guide to prepare documents for bulk update please reference the
+                    @Html.ActionLink("Governance guidance", "Governance", "Guidance", new { area = "" }, null).
+                </p>
+            </div>
         </details>
 
         @if (Model.ErrorLogDownload != null)
@@ -63,11 +63,12 @@
             {
                 @Html.Hidden("id", id)
                 @Html.Hidden("path", path)
+                @Html.AntiForgeryToken()
 
                 <div class="govuk-form-group govuk-form-group--error" id="error-log">
                     <p class="govuk-error-message">Please download the error log to correct your data before resubmitting</p>
                     <p>
-                        <input type="submit" class="govuk-button"  value="@Model.ErrorLogDownload.Name" />
+                        <input type="submit" class="govuk-button" value="@Model.ErrorLogDownload.Name" />
                     </p>
                 </div>
             }
@@ -88,8 +89,9 @@
     </div>
 
 
-    @using (Html.BeginRouteForm("GovernorsProcessBulkUpdate", FormMethod.Post, new {enctype = "multipart/form-data"}))
+    @using (Html.BeginRouteForm("GovernorsProcessBulkUpdate", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
+        @Html.AntiForgeryToken()
         <div class="govuk-grid-column-full">
             <h2 class="govuk-heading-m govuk-!-padding-top-6">Submit completed template</h2>
             <div class="govuk-form-group   @Html.ValidationCssClassFor(x => x.BulkFile)">
@@ -118,14 +120,14 @@
                     </div>
                 </details>
 
-                @Html.ValidationMessageFor(x => x.BulkFile, null , new { @class = "govuk-error-message"})
-                @Html.TextBoxFor(x => x.BulkFile, new {type = "file" , @class = "govuk-file-upload"})
+                @Html.ValidationMessageFor(x => x.BulkFile, null, new { @class = "govuk-error-message" })
+                @Html.TextBoxFor(x => x.BulkFile, new { type = "file", @class = "govuk-file-upload" })
             </div>
         </div>
         <div class="govuk-grid-column-full">
             <div class="button-row govuk-!-padding-top-6">
                 <input type="submit" class="govuk-button" value="Submit" />
-                @Html.ActionLink("Cancel", "Index", "Tools", new {area = ""}, new { @class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button" })
+                @Html.ActionLink("Cancel", "Index", "Tools", new { area = "" }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
             </div>
         </div>
     }

@@ -24,6 +24,7 @@
         <div class="govuk-notification-banner__content">
             @using (Html.BeginRouteForm(route, new { Model.Establishment.Urn }, FormMethod.Post))
             {
+                @Html.AntiForgeryToken()
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-three-quarters">
                         <p id="@type.ToLower()-details-confirmation-heading" class="govuk-notification-banner__heading govuk-!-margin-bottom-1">

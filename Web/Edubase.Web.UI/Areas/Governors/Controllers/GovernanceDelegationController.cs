@@ -48,7 +48,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return RedirectToRoute("GroupEditGovernance", new { GroupUId = groupUId });
         }
 
-        [HttpPost, EdubaseAuthorize]
+        [HttpPost, EdubaseAuthorize, ValidateAntiForgeryToken]
         [Route(GROUP_EDIT_DELEGATION)]
         public async Task<ActionResult> GroupEditDelegation(EditGroupDelegationInformationViewModel model)
         {

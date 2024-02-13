@@ -5,6 +5,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
     using System.IO;
     using System.Linq;
     using System.Net.Http;
+    using System.Threading;
     using System.Threading.Tasks;
     using Common;
     using Edubase.Common.Spatial;
@@ -15,24 +16,24 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
 
     public class AzureMapsService : IAzureMapsService
     {
-        private static readonly string _apiKey = ConfigurationManager.AppSettings["AzureMapsApiKey"];
+        private readonly string _apiKey = ConfigurationManager.AppSettings["AzureMapsApiKey"];
 
-        private static readonly HttpClient _azureMapsClient = new HttpClient
+        private readonly HttpClient _azureMapsClient;
+
+        private const string AzureMapServiceTimeoutKey = "AzureMapService_Timeout";
+
+        private readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
+            PollyUtil.CsvSecondsToTimeSpans(
+                ConfigurationManager.AppSettings["AzureMapService_RetryIntervals"]
+            ), AzureMapServiceTimeoutKey
+        );
+
+        public AzureMapsService(HttpClient httpClient)
         {
-            BaseAddress = new Uri("https://atlas.microsoft.com")
-        };
+            _azureMapsClient = httpClient;
+        }
 
-        private static readonly Policy RetryPolicy = Policy
-                .Handle<HttpRequestException>()
-                .WaitAndRetryAsync(new[]
-                {
-                    TimeSpan.FromSeconds(1),
-                    TimeSpan.FromSeconds(2),
-                    TimeSpan.FromSeconds(2),
-                    TimeSpan.FromSeconds(4)
-                });
-
-        public async Task<PlaceDto[]> SearchAsync(string text, bool isTypeahead)
+        public async Task<PlaceDto[]> SearchAsync(string text, bool isTypeahead, CancellationToken cancellationToken = default)
         {
             text = text.Clean();
 
@@ -45,7 +46,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
                 HttpMethod.Get,
                 $"/search/address/json?api-version=1.0&countrySet=GB&typeahead={(isTypeahead ? "true" : "false")}&limit=10&query={text}&subscription-key={_apiKey}");
 
-            using (var response = await RetryPolicy.ExecuteAsync(async () => await _azureMapsClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead)))
+            using (var response = await RetryPolicy.ExecuteAsync(async () => await _azureMapsClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)))
             {
                 var stream = await response.Content.ReadAsStreamAsync();
 
@@ -63,7 +64,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
                         .Where(result => result.type != "Cross Street"
                                          && !(result.entityType != null && result.entityType == "CountrySecondarySubdivision"))
                         .ToList();
-                    
+
                     var municipalities = results.Where(x => x.entityType == "Municipality").ToList();
                     var subMunicipalities = results.Where(x => x.entityType == "MunicipalitySubdivision").ToList();
                     // If the response contains a "MunicipalitySubdivision" with the same name as a returned Municipality (town),
@@ -100,7 +101,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
             }
         }
 
-        private static string GetAddressDescription(Result locationResult, string text)
+        private string GetAddressDescription(Result locationResult, string text)
         {
             var output = "";
 

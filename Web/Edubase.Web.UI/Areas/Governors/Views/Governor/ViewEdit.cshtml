@@ -61,6 +61,7 @@
 
                 @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabAddGovernor" : "GroupAddGovernor", new { groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, FormMethod.Get))
                 {
+                    @Html.AntiForgeryToken()
                     <div class="govuk-form-group @Html.ValidationGroupCssClass("role")">
                         <label class="govuk-label" for="roleid">Select role</label>
                         @Html.ValidationMessage("role", null, new { @class = "govuk-error-message" })
@@ -179,11 +180,11 @@ else
     if (Model.GroupTypeId == (int) eLookupGroupType.SecureSingleAcademyTrust)
     {
         // viewing the governance tab for a secure single-academy trust
-        Html.RenderPartial("_LegalDutySecureAcademyTrustStatement");
+        Html.RenderPartial("~/Areas/Governors/Views/Governor/_LegalDutySecureAcademyTrustStatement.cshtml");
     }
     else
     {
-        Html.RenderPartial("_LegalDutyStatement");
+        Html.RenderPartial("~/Areas/Governors/Views/Governor/_LegalDutyStatement.cshtml");
     }
 }
 
@@ -386,6 +387,7 @@ else
 
                                     @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabDeleteOrRetireGovernor" : "GroupDeleteOrRetireGovernor", FormMethod.Post, new { id = "removal-form" }))
                                     {
+                                        @Html.AntiForgeryToken()
                                         @Html.HiddenFor(x => x.RemovalGid)
                                         @Html.HiddenFor(x => x.EstablishmentUrn)
                                         @Html.HiddenFor(x => x.GroupUId)

@@ -11,6 +11,7 @@
                     <h2>Governance record last confirmed: <span>@date</span></h2>
                     @using (Html.BeginRouteForm("GroupGovernanceConfirmUpToDate", new { uid = Model.Group.GroupUId.Value }, FormMethod.Post))
                     {
+                        @Html.AntiForgeryToken()
                         <label class="govuk-body-s">Confirm governance record is up to date</label>
                         <button class="govuk-button govuk-button--secondary" id="confirm-button">Confirm<span class="govuk-visually-hidden"> governance record is up to date</span></button>
                     }
@@ -33,8 +34,9 @@ else if (Model.Group.ConfirmationUpToDateGovernanceRequired)
                             Governance record last confirmed:
                             <span class="confirmation-date">@date</span>
                         </p>
-                        @using (Html.BeginRouteForm("GroupGovernanceConfirmUpToDate", new {uid = Model.Group.GroupUId.Value}, FormMethod.Post))
+                        @using (Html.BeginRouteForm("GroupGovernanceConfirmUpToDate", new { uid = Model.Group.GroupUId.Value }, FormMethod.Post))
                         {
+                            @Html.AntiForgeryToken()
                             <p class="confirmation-label" for="governance-data-confirm">
                                 Confirm governance record is up to date:
                             </p>
