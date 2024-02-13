@@ -115,11 +115,9 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                                                            && !dto.ApplicableRoles.Contains(RoleEquivalence
                                                                .GetLocalEquivalentToSharedRole(role).Value)));
 
-
             foreach (var role in roles)
             {
                 var roleName = role;
-
                 if (roleName == GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool)
                 {
                     foreach (var item in dto.CurrentGovernors)
@@ -134,7 +132,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                         }
                     }
                 }
-
 
                 var equivalantRoles = RoleEquivalence.GetEquivalentToLocalRole(role).Cast<int>().ToList();
                 var pluralise = !EnumSets.eSingularGovernorRoles.Contains(role);
