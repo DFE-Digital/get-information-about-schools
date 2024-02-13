@@ -711,7 +711,8 @@ stages:
           previousDeploymentJobName: 'DeployWebUiPreProductionSlotMainJob'
           keyVaultServiceConnectionName: 'rg-t1pp-edubase'
           keyVaultName: 'kv-t1pp-edubase01'
-          smokeTestUrl: '/'                                                         # Relative to the root of the web app
+#          smokeTestUrl: '/'                                                         # Relative to the root of the web app
+          smokeTestFullUrl: 'https://pp.get-information-schools.service.gov.uk/'   ## Override the URL as deployment task returns the `.azurewebsites.net` URL, which is behind AFD/WAF/Custom Domain
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'       # Note this is specifically the username key, not the username itself
           smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'       # Note this is specifically the password key, not the password itself
           smokeTestNeedleString: $(versionNoPadding)
@@ -727,7 +728,8 @@ stages:
           previousDeploymentJobName: 'DeployWebUiPreProductionSlotMainJob'
           keyVaultServiceConnectionName: 'rg-t1pp-edubase'
           keyVaultName: 'kv-t1pp-edubase01'
-          smokeTestUrl: '/'                                                         # Relative to the root of the web app
+#          smokeTestUrl: '/Downloads'                                                         # Relative to the root of the web app
+          smokeTestFullUrl: 'https://pp.get-information-schools.service.gov.uk/Downloads'   ## Override the URL as deployment task returns the `.azurewebsites.net` URL, which is behind AFD/WAF/Custom Domain
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'       # Note this is specifically the username key, not the username itself
           smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'       # Note this is specifically the password key, not the password itself
           smokeTestNeedleString: $(versionNoPadding)
@@ -778,7 +780,7 @@ stages:
           keyVaultName: 'kv-t1pr-edubase01'                                         ## Note change of naming convention from lower environments
           deploymentServiceConnectionName: 'rg-t1pr-edubase'                        ## Note change of naming convention from lower environments 
           artifactReference: 'BuiltAndPackagedWebUiZip'
-          destinationResourceGroupName: 'rg-t1pr-gias'
+          destinationResourceGroupName: 'rg-t1pr-edubase'
           destinationWebAppName: 'ea-edubase-prod'                                  ## Note change of naming convention from lower environments
           destinationDeployToSlotFlag: true
           destinationSlotName: 'lcs'
@@ -808,7 +810,7 @@ stages:
           previousDeploymentJobName: 'DeployWebUiProductionSlotLcsJob'
           keyVaultServiceConnectionName: 'rg-t1pr-edubase'
           keyVaultName: 'kv-t1pr-edubase01'
-          smokeTestUrl: '/'                                                         # Relative to the root of the web app
+          smokeTestUrl: '/Downloads'                                                # Relative to the root of the web app
           smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'       # Note this is specifically the username key, not the username itself
           smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'       # Note this is specifically the password key, not the password itself
           smokeTestNeedleString: $(versionNoPadding)
