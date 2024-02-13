@@ -114,17 +114,37 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                                                           (RoleEquivalence.GetLocalEquivalentToSharedRole(role) != null
                                                            && !dto.ApplicableRoles.Contains(RoleEquivalence
                                                                .GetLocalEquivalentToSharedRole(role).Value)));
+
+
             foreach (var role in roles)
             {
+                var roleName = role;
+
+                if (roleName == GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool)
+                {
+                    foreach (var item in dto.CurrentGovernors)
+                    {
+                        if (item.RoleId == 20)
+                        {
+                            roleName = GR.Establishment_SharedGovernanceProfessional;
+                        }
+                        if (item.RoleId == 19)
+                        {
+                            roleName = GR.Group_SharedGovernanceProfessional;
+                        }
+                    }
+                }
+
+
                 var equivalantRoles = RoleEquivalence.GetEquivalentToLocalRole(role).Cast<int>().ToList();
                 var pluralise = !EnumSets.eSingularGovernorRoles.Contains(role);
 
                 var grid =
                     new GovernorGridViewModel(
-                        $"{_nomenclatureService.GetGovernorRoleName(role, eTextCase.SentenceCase, pluralise)}{(isHistoric ? " (in past 12 months)" : string.Empty)}")
+                        $"{_nomenclatureService.GetGovernorRoleName(roleName, eTextCase.SentenceCase, pluralise)}{(isHistoric ? " (in past 12 months)" : string.Empty)}")
                     {
                         Tag = isHistoric ? "historic" : "current",
-                        Role = role,
+                        Role = roleName,
                         IsSharedRole = EnumSets.eSharedGovernorRoles.Contains(role),
                         GroupUid = groupUid,
                         EstablishmentUrn = establishmentUrn,
