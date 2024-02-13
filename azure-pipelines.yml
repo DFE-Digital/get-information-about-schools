@@ -778,7 +778,7 @@ stages:
           keyVaultName: 'kv-t1pr-edubase01'                                         ## Note change of naming convention from lower environments
           deploymentServiceConnectionName: 'rg-t1pr-edubase'                        ## Note change of naming convention from lower environments 
           artifactReference: 'BuiltAndPackagedWebUiZip'
-          destinationResourceGroupName: 'rg-t1pr-gias'
+          destinationResourceGroupName: 'rg-t1pr-edubase'
           destinationWebAppName: 'ea-edubase-prod'                                  ## Note change of naming convention from lower environments
           destinationDeployToSlotFlag: true
           destinationSlotName: 'lcs'
