@@ -573,6 +573,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         public async Task Gov_AddEditOrReplace_RoleSpecified_GovernanceProfessional_RoleAlreadyExists(eLookupGovernorRole preExistingGovernorRole, eLookupGovernorRole newGovernorRole)
         {
             var estabUrn = 4;
+
             mockGovernorsReadService
                 .Setup(g => g.GetGovernorListAsync(estabUrn, null, It.IsAny<IPrincipal>()))
                 .ReturnsAsync(() => new GovernorsDetailsDto
@@ -587,10 +588,23 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
 
             var result = await controller.AddEditOrReplace(null, estabUrn, newGovernorRole, null);
 
-            // Expecting to redirect back, rejecting the proposed add/edit
-            var redirectResult = result as RedirectToRouteResult;
-            Assert.NotNull(redirectResult);
-            Assert.Equal("EstabEditGovernance", redirectResult.RouteName);
+            if ((preExistingGovernorRole == eLookupGovernorRole.Group_SharedGovernanceProfessional && newGovernorRole == eLookupGovernorRole.GovernanceProfessionalToAMat) ||
+                (preExistingGovernorRole == eLookupGovernorRole.GovernanceProfessionalToAMat && newGovernorRole == eLookupGovernorRole.Group_SharedGovernanceProfessional))
+            {
+                // this is a new partial requirement that we will come back to at a later point (Bug: 193913)
+                // Expecting to continue, accepting the proposed add/edit
+                var redirectResult = result as RedirectToRouteResult;
+                Assert.NotNull(redirectResult);
+                Assert.Equal("SelectSharedGovernor", redirectResult.RouteName);
+            }
+            else
+            {
+                // original requirement: Only a single governance professional may be attached
+                // Expecting to redirect back, rejecting the proposed add/edit
+                var redirectResult = result as RedirectToRouteResult;
+                Assert.NotNull(redirectResult);
+                Assert.Equal("EstabEditGovernance", redirectResult.RouteName);
+            }
         }
 
         [Fact()]
