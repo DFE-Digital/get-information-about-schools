@@ -34,7 +34,7 @@
                 @(Model.Mode == CreateEditGovernorViewModel.EditMode.Create ? "Add" : "")
                 @(Model.Mode == CreateEditGovernorViewModel.EditMode.Replace ? "Replace" : "")
 
-                @Model.GovernorRoleName.ToLower()
+                @Model.GovernorRoleNameMidSentence
             </h2>
 
             @Html.HiddenFor(x => x.GovernorRole)
@@ -68,7 +68,7 @@
                 }
             }
 
-            <h2 class="govuk-heading-m govuk-!-padding-top-6">@(Model.ReplaceGovernorViewModel.GID.HasValue ? string.Concat("New ", Model.GovernorRoleName).ToSentenceCase() : Model.GovernorRoleName)</h2>
+            <h2 class="govuk-heading-m govuk-!-padding-top-6">@(Model.ReplaceGovernorViewModel.GID.HasValue ? string.Concat("New ", Model.GovernorRoleNameMidSentence) : Model.GovernorRoleName)</h2>
 
             if (Model.ExistingGovernors.Any())
             {
@@ -103,7 +103,7 @@
             <text>Add person</text>
         }
     </button>
-    
+
     @Html.ActionLink("Cancel", "Edit", "Governor", new { area = "Governors", groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, new { id = "cancel-button", @class = "govuk-button govuk-button--secondary", data_module = "govuk-button" })
 }
 

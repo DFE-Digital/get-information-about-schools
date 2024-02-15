@@ -24,15 +24,12 @@ namespace Edubase.Web.UI.Helpers
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IGroupReadService _groupReadService;
         private readonly ICachedLookupService _cls;
-        private readonly NomenclatureService _nomenclatureService;
 
         public LayoutHelper(
-            NomenclatureService nomenclatureService,
             IGroupReadService groupReadService,
             IEstablishmentReadService establishmentReadService,
             ICachedLookupService cls)
         {
-            _nomenclatureService = nomenclatureService;
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
             _cls = cls;
