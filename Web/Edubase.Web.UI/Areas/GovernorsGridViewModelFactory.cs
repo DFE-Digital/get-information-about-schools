@@ -9,7 +9,6 @@ using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments;
 using Edubase.Services.Governors;
 using Edubase.Services.Groups;
-using Edubase.Services.Nomenclature;
 using Edubase.Web.UI.Areas.Governors.Models;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 using Edubase.Services.Lookup;
@@ -19,17 +18,15 @@ namespace Edubase.Web.UI.Areas
     public class GovernorsGridViewModelFactory : IGovernorsGridViewModelFactory
     {
         private readonly IGovernorsReadService _governorsReadService;
-        private readonly NomenclatureService _nomenclatureService;
         private readonly ICachedLookupService _cachedLookupService;
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IGroupReadService _groupReadService;
 
         public GovernorsGridViewModelFactory(
-            IGovernorsReadService governorsReadService, NomenclatureService nomenclatureService, ICachedLookupService cachedLookupService,
+            IGovernorsReadService governorsReadService, ICachedLookupService cachedLookupService,
             IEstablishmentReadService establishmentReadService, IGroupReadService groupReadService)
         {
             _governorsReadService = governorsReadService;
-            _nomenclatureService = nomenclatureService;
             _cachedLookupService = cachedLookupService;
             _establishmentReadService = establishmentReadService;
             _groupReadService = groupReadService;
@@ -53,7 +50,6 @@ namespace Edubase.Web.UI.Areas
                 false,
                 groupUId,
                 establishmentUrn,
-                _nomenclatureService,
                 await _cachedLookupService.NationalitiesGetAllAsync(),
                 await _cachedLookupService.GovernorAppointingBodiesGetAllAsync(),
                 await _cachedLookupService.TitlesGetAllAsync(),

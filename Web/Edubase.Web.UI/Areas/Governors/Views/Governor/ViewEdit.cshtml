@@ -1,4 +1,5 @@
 @using Edubase.Services.Enums
+@using Edubase.Services.Governors.Factories
 @using Edubase.Web.UI.Models.Grid
 @model GovernorsGridViewModel
 @{
@@ -63,7 +64,42 @@
                     <div class="govuk-form-group @Html.ValidationGroupCssClass("role")">
                         <label class="govuk-label" for="roleid">Select role</label>
                         @Html.ValidationMessage("role", null, new { @class = "govuk-error-message", id = "add-governor-select-role-error-message"})
-                        @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem { Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = ((eLookupGovernorRole)x.Id).ToString() }), new { id = "edit-establishment-new-governor-role-id", @class = string.Concat(Html.ValidationSelectCssClass("role"), " govuk-select govuk-input--width-20 gias-role-selection") })
+
+                        @{
+                            var selectListItems = Model.GovernorRoles
+                                .Select(x =>
+                                {
+                                    var selectListItem = new SelectListItem
+                                    {
+                                        Text = x.Name,
+                                        Value = ((eLookupGovernorRole) x.Id).ToString(),
+                                    };
+
+                                    // If recognised as an enum and we have a C#-overridden name for it, use that instead
+                                    if (Enum.IsDefined(typeof(eLookupGovernorRole), (eLookupGovernorRole) x.Id))
+                                    {
+                                        var factoryName = GovernorRoleNameFactory.Create((eLookupGovernorRole) x.Id);
+                                        if (!factoryName.ToLowerInvariant().Equals(selectListItem.Text.ToLowerInvariant()))
+                                        {
+                                            Console.Error.WriteLine($"Governor role name mismatch - not just a case difference: {selectListItem.Text} -> {factoryName}");
+                                        }
+
+                                        selectListItem.Text = factoryName;
+                                    }
+
+                                    return selectListItem;
+                                });
+                        }
+
+                        @Html.DropDownList(
+                            "role",
+                            selectListItems,
+                            new
+                            {
+                                id = "edit-establishment-new-governor-role-id",
+                                @class = string.Concat(Html.ValidationSelectCssClass("role"), " govuk-select govuk-input--width-20 gias-role-selection"),
+                            }
+                        )
                         <input type="submit" value="Add person" id="edit-governance-add-person-button" class="govuk-button btn-add-person" data-module="govuk-button" />
                     </div>
                 }
@@ -358,7 +394,7 @@ else
                                         }
                                         else
                                         {
-                                            @Html.RouteLink("Edit person", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary", @id = StringUtils.ElementIdFormat(grid.Title) + "-edit-person" })                                         
+                                            @Html.RouteLink("Edit person", Model.EstablishmentUrn.HasValue ? "EstabEditGovernor" : "GroupEditGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary", @id = StringUtils.ElementIdFormat(grid.Title) + "-edit-person" })
                                         }
                                     }
 
@@ -419,7 +455,7 @@ else
                                                         <div class="govuk-form-group">
                                                             <p>Confirm you wish to remove this person</p>
                                                             <div class="button-row">
-                                                                <input type="submit" name="action" value="Remove" class="govuk-button" id="remove-button" />                                                                
+                                                                <input type="submit" name="action" value="Remove" class="govuk-button" id="remove-button" />
 
                                                                 @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary", @id = "cancel-button" })
                                                             </div>

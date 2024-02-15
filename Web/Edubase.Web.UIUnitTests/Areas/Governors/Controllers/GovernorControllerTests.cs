@@ -17,7 +17,6 @@ using Edubase.Services.Governors.Models;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Lookup;
-using Edubase.Services.Nomenclature;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Exceptions;
 using Edubase.Web.UI.Helpers;
@@ -34,7 +33,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         private readonly Mock<ICachedLookupService> mockCachedLookupService;
 
         private readonly Mock<IGovernorsReadService> mockGovernorsReadService = new Mock<IGovernorsReadService>(MockBehavior.Strict);
-        private readonly Mock<NomenclatureService> mockNomenclatureService = new Mock<NomenclatureService>(MockBehavior.Strict);
         private readonly Mock<IGovernorsWriteService> mockGovernorsWriteService = new Mock<IGovernorsWriteService>(MockBehavior.Strict);
         private readonly Mock<IGroupReadService> mockGroupReadService = new Mock<IGroupReadService>(MockBehavior.Strict);
         private readonly Mock<IEstablishmentReadService> mockEstablishmentReadService = new Mock<IEstablishmentReadService>(MockBehavior.Strict);
@@ -61,7 +59,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
 
             controller = new GovernorController(
                 mockGovernorsReadService.Object,
-                mockNomenclatureService.Object,
                 mockCachedLookupService.Object,
                 mockGovernorsWriteService.Object,
                 mockGroupReadService.Object,

@@ -15,7 +15,6 @@ using Edubase.Services.Governors.Models;
 using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.Lookup;
-using Edubase.Services.Nomenclature;
 using Edubase.Web.UI.Areas;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Moq;
@@ -29,7 +28,6 @@ namespace Edubase.Web.UIUnitTests.Areas
         private readonly GovernorsGridViewModelFactory _governorsGridViewModelFactory;
 
         private readonly Mock<IGovernorsReadService> _governorsReadService = new Mock<IGovernorsReadService>();
-        private readonly Mock<NomenclatureService> _nomenclatureService = new Mock<NomenclatureService>();
         private readonly Mock<ICachedLookupService> _cachedLookupService = new Mock<ICachedLookupService>();
         private readonly Mock<IEstablishmentReadService> _establishmentReadService = new Mock<IEstablishmentReadService>();
         private readonly Mock<IGroupReadService> _groupReadService = new Mock<IGroupReadService>();
@@ -38,7 +36,6 @@ namespace Edubase.Web.UIUnitTests.Areas
         {
             _governorsGridViewModelFactory = new GovernorsGridViewModelFactory(
                 _governorsReadService.Object,
-                _nomenclatureService.Object,
                 _cachedLookupService.Object,
                 _establishmentReadService.Object,
                 _groupReadService.Object);
@@ -89,7 +86,7 @@ namespace Edubase.Web.UIUnitTests.Areas
                 .ReturnsAsync(new ServiceResultDto<GroupModel>(groupModel));
 
             var result = await _governorsGridViewModelFactory.CreateGovernorsViewModel(groupUId, null, null, It.IsAny<IPrincipal>());
-            
+
             Assert.NotNull(result);
             Assert.Equal(expectedShowDelegationAndCorpContactInformation, result.ShowDelegationAndCorpContactInformation);
             Assert.Equal(groupUId, result.GroupUId);

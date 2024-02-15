@@ -16,6 +16,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public EditMode Mode { get; set; }
         public string GovernorRoleName { get; set; }
+        public string GovernorRoleNameMidSentence { get; set; }
         public int? EstablishmentUrn { get; set; }
         public int? GroupUId { get; set; }
         public string ParentControllerName => EstablishmentUrn.HasValue ? "Establishment" : "Group";

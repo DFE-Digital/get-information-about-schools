@@ -4,7 +4,9 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Edubase.Common;
+using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
+using Edubase.Services.Governors.Factories;
 using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Helpers;
@@ -165,8 +167,29 @@ namespace Edubase.Web.UI.Controllers
                 ModelState.AddModelError(fieldId, fieldError);
             }
 
-            viewModel.LocalAuthorities = (await _cachedLookupService.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-            viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+            viewModel.LocalAuthorities = (await _cachedLookupService.LocalAuthorityGetAllAsync())
+                .OrderBy(x => x.Name)
+                .Select(x => new LookupItemViewModel(x));
+
+            viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync())
+                .OrderBy(x => x.Name)
+                .Select(x =>
+                {
+                    var staffRole = new LookupItemViewModel(x);
+
+                    // If recognised as an enum and we have a C#-overridden name for it, use that instead
+                    if(Enum.IsDefined(typeof(eLookupGovernorRole), (eLookupGovernorRole) x.Id))
+                    {
+                        var factoryName = GovernorRoleNameFactory.Create((eLookupGovernorRole) x.Id);
+                        if(!factoryName.ToLowerInvariant().Equals(staffRole.Name.ToLowerInvariant()))
+                        {
+                            Console.Error.WriteLine($"Governor role name mismatch - not just a case difference: {staffRole.Name} -> {factoryName}");
+                        }
+
+                        staffRole.Name = factoryName;
+                    }
+                    return staffRole;
+                });
 
             return View("Index", viewModel);
         }
