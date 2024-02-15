@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -44,6 +45,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         private readonly Mock<IPrincipal> mockPrincipal = new Mock<IPrincipal>(MockBehavior.Strict);
         private readonly Mock<IIdentity> mockIdentity = new Mock<IIdentity>(MockBehavior.Strict);
         private readonly Mock<IGovernorsGridViewModelFactory> mockGovernorGridViewModelFactory = new Mock<IGovernorsGridViewModelFactory>(MockBehavior.Strict);
+
+
+
 
         private bool disposedValue;
 
@@ -565,18 +569,40 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             select new object[] { preExistingRole, newRole }
         );
 
+
+        public static IEnumerable<object[]> PairwiseGovernanceProfessionalRolesAllowedCombinations
+        {
+            get
+            {
+                var allData = new List<object[]>
+        {
+            new object[] {eLookupGovernorRole.Group_SharedGovernanceProfessional, eLookupGovernorRole.GovernanceProfessionalToAMat},
+            new object[] {eLookupGovernorRole.GovernanceProfessionalToAMat, eLookupGovernorRole.Group_SharedGovernanceProfessional},
+        };
+                return allData;
+            }
+        }
+
+        public static IEnumerable<object[]> PairwiseGovernanceProfessionalRolesExceptABC => PairwiseGovernanceProfessionalRoles
+            .Where(allPairsPair => !PairwiseGovernanceProfessionalRolesAllowedCombinations.Any(innerPair =>
+                    allPairsPair[0].Equals(innerPair[0])
+                    && allPairsPair[1].Equals(innerPair[1]))
+                );
+
+
         [Theory()]
-        [MemberData(nameof(PairwiseGovernanceProfessionalRoles))]
-        public async Task Gov_AddEditOrReplace_RoleSpecified_GovernanceProfessional_RoleAlreadyExists(eLookupGovernorRole preExistingGovernorRole, eLookupGovernorRole newGovernorRole)
+        [MemberData(nameof(PairwiseGovernanceProfessionalRolesExceptABC))]
+        public async Task Gov_AddEditOrReplace_RoleSpecified_GovernanceProfessional_RoleAlreadyExists_DisallowedThereforeReject(eLookupGovernorRole preExistingGovernorRole, eLookupGovernorRole newGovernorRole)
         {
             var estabUrn = 4;
+
             mockGovernorsReadService
                 .Setup(g => g.GetGovernorListAsync(estabUrn, null, It.IsAny<IPrincipal>()))
                 .ReturnsAsync(() => new GovernorsDetailsDto
                 {
                     CurrentGovernors = new List<GovernorModel>()
                     {
-                        new GovernorModel() {RoleId = (int) preExistingGovernorRole}
+                new GovernorModel() {RoleId = (int) preExistingGovernorRole}
                     }
                 });
             mockControllerContext.SetupGet(c => c.RouteData)
@@ -584,11 +610,19 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
 
             var result = await controller.AddEditOrReplace(null, estabUrn, newGovernorRole, null);
 
+            // original requirement: Only a single governance professional may be attached
             // Expecting to redirect back, rejecting the proposed add/edit
             var redirectResult = result as RedirectToRouteResult;
             Assert.NotNull(redirectResult);
             Assert.Equal("EstabEditGovernance", redirectResult.RouteName);
         }
+
+        // test 2 - allow, and prompt for shared governor details (redirect to "SelectSharedGovernor")
+        // TODO: Same as above, but redirec to "SelectSharedGovernor"
+
+        // test 3 - allow, and prompt for normal governor details (continue down to where we get the mock error for the layout thing)
+        // TODO: To look at mock issues
+
 
         [Fact()]
         public async Task Gov_DeleteOrRetireGovernor_NoAction()
