@@ -133,7 +133,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 var grid = new GovernorGridViewModel($"{governorRoleNameTitle}{(isHistoric ? " (in past 12 months)" : string.Empty)}")
                     {
                         Tag = isHistoric ? "historic" : "current",
-                        Role = roleName,
+                        Role = role,
                         IsSharedRole = EnumSets.eSharedGovernorRoles.Contains(role),
                         GroupUid = groupUid,
                         EstablishmentUrn = establishmentUrn,
