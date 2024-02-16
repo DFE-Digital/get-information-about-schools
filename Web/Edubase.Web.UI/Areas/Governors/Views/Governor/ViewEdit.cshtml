@@ -469,7 +469,7 @@ else
                                             <div class="remove-governor gias-panel-indent">
                                                 <p>Confirm you wish to remove this person</p>
                                                 <div class="button-row">
-                                                    <input id="confirm-remove-shared-governor-button" type="submit" name="action" value="Remove" class="govuk-button"/>
+                                                    <input id="remove-shared-governor" type="submit" name="action" value="Remove" class="govuk-button"/>
 
                                                     @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
                                                 </div>
