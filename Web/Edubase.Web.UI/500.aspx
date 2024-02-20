@@ -85,6 +85,10 @@
                             <image src="/public/govuk-frontend//images/govuk-logotype-tudor-crown.png" xlink:href=""
                                    class="govuk-header__logotype-crown-fallback-image" width="36"
                                    height="32"></image>
+                            <span class="govuk-header__logotype-text"
+                                  style="display:none;">
+                                GOV.UK
+                            </span>
                         </svg>
                     </span>
                 </a>
@@ -206,5 +210,19 @@
 
 </div>
 </body>
-
 </html>
+
+<script>
+    // detect IE 8 or lower
+    function oldIE() {
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf('MSIE ');
+        if (msie > 0) {
+            var ieVersion = parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+        }
+        return false;
+    }
+    if (oldIE()) {
+        document.querySelector('.govuk-header__logotype-text').style.display = 'inline';
+    }
+</script>
