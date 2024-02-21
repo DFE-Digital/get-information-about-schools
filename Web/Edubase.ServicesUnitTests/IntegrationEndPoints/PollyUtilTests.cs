@@ -40,28 +40,28 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
         }
 
         //Note: Polly doesn't expose the timeout settings once the policy is created
-        // TODO: commented out as problems with timing when going through pipeline - Ticket to be created to resolve
-        //[Fact]
-        //public async void CreateTimeoutPolicy_ReturnsCorrectTimeoutForAzureMapService()
-        //{
-        //    var validKey = "AzureMapService_Timeout";
-        //    ConfigurationManager.AppSettings[validKey] = "5";
 
-        //    var policy = PollyUtil.CreateTimeoutPolicy(validKey);
+        [Fact]
+        public async void CreateTimeoutPolicy_ReturnsCorrectTimeoutForAzureMapService()
+        {
+            var validKey = "AzureMapService_Timeout";
+            ConfigurationManager.AppSettings[validKey] = "5";
 
-        //    var sw = Stopwatch.StartNew();
-        //    await Assert.ThrowsAsync<TimeoutRejectedException>(async () =>
-        //    {
-        //        await policy.ExecuteAsync(async (ct) =>
-        //        {
-        //            await Task.Delay(6000, ct);
-        //        }, CancellationToken.None);
-        //    });
-        //    sw.Stop();
+            var policy = PollyUtil.CreateTimeoutPolicy(validKey);
 
-        //    Assert.NotNull(policy);
-        //    Assert.True(sw.Elapsed.Seconds >= 5 && sw.Elapsed.Seconds < 8, $"Timeout expected Elapsed >= 5 && Elapsed < 8 Actual: {sw.Elapsed.Seconds}");
-        //}
+            var sw = Stopwatch.StartNew();
+            await Assert.ThrowsAsync<TimeoutRejectedException>(async () =>
+            {
+                await policy.ExecuteAsync(async (ct) =>
+                {
+                    await Task.Delay(6000, ct);
+                }, CancellationToken.None);
+            });
+            sw.Stop();
+
+            Assert.NotNull(policy);
+            Assert.True(sw.Elapsed.Seconds >= 5 && sw.Elapsed.Seconds < 8, $"Timeout expected Elapsed >= 5 && Elapsed < 8 Actual: {sw.Elapsed.Seconds}");
+        }
 
 
         [Fact]
