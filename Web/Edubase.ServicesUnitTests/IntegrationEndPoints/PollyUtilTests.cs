@@ -40,10 +40,9 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
         }
 
         //Note: Polly doesn't expose the timeout settings once the policy is created
-        //test to be revisited.
-
+        // TODO: Ticket is being created to look at this test, commented out as causing issues in pipeline
         //[Fact]
-        //public async Task CreateTimeoutPolicy_ReturnsCorrectTimeoutForAzureMapService()
+        //public async void CreateTimeoutPolicy_ReturnsCorrectTimeoutForAzureMapService()
         //{
         //    var validKey = "AzureMapService_Timeout";
         //    ConfigurationManager.AppSettings[validKey] = "5";
@@ -61,7 +60,7 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
         //    sw.Stop();
 
         //    Assert.NotNull(policy);
-        //    Assert.True(sw.Elapsed.Seconds >= 5 && sw.Elapsed.Seconds < 9, $"Timeout expected Elapsed >= 5 && Elapsed < 9 Actual: {sw.Elapsed.Seconds}");
+        //    Assert.True(sw.Elapsed.Seconds >= 5 && sw.Elapsed.Seconds < 8, $"Timeout expected Elapsed >= 5 && Elapsed < 8 Actual: {sw.Elapsed.Seconds}");
         //}
 
 

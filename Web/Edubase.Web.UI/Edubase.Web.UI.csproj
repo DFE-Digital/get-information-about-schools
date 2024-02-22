@@ -621,6 +621,7 @@
     <Content Include="Assets\Scripts\GiasGlobal\GiasReOrderValidationSummary.js" />
     <Content Include="Assets\Scripts\GiasHelpers\QueryString.js" />
     <Content Include="Assets\Scripts\GiasHelpers\supportsHistory.js" />
+    <Content Include="Assets\Scripts\GiasHelpers\checkIE.js" />
     <Content Include="Assets\Scripts\GiasHelpers\throttle.js" />
     <Content Include="Assets\Scripts\GiasLandingPages\GiasLandingMap.js" />
     <Content Include="Assets\Scripts\GiasModules\DfeCookieManager.js" />
