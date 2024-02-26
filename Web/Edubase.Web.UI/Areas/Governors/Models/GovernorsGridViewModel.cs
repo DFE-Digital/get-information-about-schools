@@ -114,6 +114,22 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
             foreach (var role in roles)
             {
+                //var roleName = role;
+                //if (roleName == GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool)
+                //{
+                //    foreach (var item in dto.CurrentGovernors)
+                //    {
+                //        if (item.RoleId == 20)
+                //        {
+                //            roleName = GR.Establishment_SharedGovernanceProfessional;
+                //        }
+                //        else if (item.RoleId == 19)
+                //        {
+                //            roleName = GR.Group_SharedGovernanceProfessional;
+                //        }
+                //    }
+                //}
+
                 var equivalentRoles = RoleEquivalence.GetEquivalentToLocalRole(role).Cast<int>().ToList();
                 var shouldPluralise = !EnumSets.eSingularGovernorRoles.Contains(role);
 
