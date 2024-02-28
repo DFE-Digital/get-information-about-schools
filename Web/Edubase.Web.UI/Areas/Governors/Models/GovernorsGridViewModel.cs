@@ -130,6 +130,10 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     removeGroupEstablishmentSuffix: true
                 );
 
+                // In the roleQuivalence, 'GovernanceProfessionalToAnIndividualAcademyOrFreeSchool' is a title for a list
+                // inside the list is the hard coded string below, and the '...freeSchool'
+                // this code changes the on screen title to display the correct title for the roleID
+
                 if (role == GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool)
                 {
                     foreach (var item in dto.CurrentGovernors)
