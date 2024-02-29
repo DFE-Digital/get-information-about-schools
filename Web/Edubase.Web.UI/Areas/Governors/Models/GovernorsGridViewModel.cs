@@ -136,16 +136,16 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
                 if (role == GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool)
                 {
-                    foreach (var item in dto.CurrentGovernors)
+                    var selectedItem = dto.CurrentGovernors
+                        .FirstOrDefault(item => item.RoleId == (int) GR.Establishment_SharedGovernanceProfessional);
+
+                    if (selectedItem != null)
                     {
-                        if (item.RoleId == (int)GR.Establishment_SharedGovernanceProfessional)
-                        {
-                            governorRoleNameTitle = GovernorRoleNameFactory.Create(
-                             (GR) item.RoleId,
-                             pluraliseLabelIfApplicable: shouldPluralise,
-                             removeMemberPrefix: true,
-                             removeGroupEstablishmentSuffix: false);
-                        }
+                        governorRoleNameTitle = GovernorRoleNameFactory.Create(
+                         (GR)selectedItem.RoleId,
+                         pluraliseLabelIfApplicable: shouldPluralise,
+                         removeMemberPrefix: true,
+                         removeGroupEstablishmentSuffix: false);
                     }
                 }
 
