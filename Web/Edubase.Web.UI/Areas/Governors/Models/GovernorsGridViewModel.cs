@@ -130,7 +130,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     removeGroupEstablishmentSuffix: true
                 );
 
-                // In the roleQuivalence, 'GovernanceProfessionalToAnIndividualAcademyOrFreeSchool' is a title for a list
+                // In the roleEquivalence, 'GovernanceProfessionalToAnIndividualAcademyOrFreeSchool' is a title for a list
                 // inside the list is the hard coded string below, and the '...freeSchool'
                 // this code changes the on screen title to display the correct title for the roleID
 
@@ -138,9 +138,13 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 {
                     foreach (var item in dto.CurrentGovernors)
                     {
-                        if (item.RoleId == 20)
+                        if (item.RoleId == (int)GR.Establishment_SharedGovernanceProfessional)
                         {
-                            governorRoleNameTitle = "Shared governance professional establishment";
+                            governorRoleNameTitle = GovernorRoleNameFactory.Create(
+                             (GR) item.RoleId,
+                             pluraliseLabelIfApplicable: shouldPluralise,
+                             removeMemberPrefix: true,
+                             removeGroupEstablishmentSuffix: false);
                         }
                     }
                 }
