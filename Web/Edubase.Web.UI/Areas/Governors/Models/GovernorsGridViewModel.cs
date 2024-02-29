@@ -130,6 +130,25 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     removeGroupEstablishmentSuffix: true
                 );
 
+                // In the roleEquivalence, 'GovernanceProfessionalToAnIndividualAcademyOrFreeSchool' is a title for a list
+                // inside the list is the hard coded string below, and the '...freeSchool'
+                // this code changes the on screen title to display the correct title for the roleID
+
+                if (role == GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool)
+                {
+                    var selectedItem = dto.CurrentGovernors
+                        .FirstOrDefault(item => item.RoleId == (int) GR.Establishment_SharedGovernanceProfessional);
+
+                    if (selectedItem != null)
+                    {
+                        governorRoleNameTitle = GovernorRoleNameFactory.Create(
+                         (GR)selectedItem.RoleId,
+                         pluraliseLabelIfApplicable: shouldPluralise,
+                         removeMemberPrefix: true,
+                         removeGroupEstablishmentSuffix: false);
+                    }
+                }
+
                 var grid = new GovernorGridViewModel($"{governorRoleNameTitle}{(isHistoric ? " (in past 12 months)" : string.Empty)}")
                     {
                         Tag = isHistoric ? "historic" : "current",
