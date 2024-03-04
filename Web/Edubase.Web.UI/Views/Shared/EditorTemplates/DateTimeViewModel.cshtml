@@ -171,26 +171,29 @@
         }
 
         <span id="@ViewData.ModelMetadata.PropertyName-errors">
-        @{
-            var errContent = new List<MvcHtmlString>
-            {
-                Html.ValidationMessageNested(ViewData.ModelMetadata.PropertyName),
+            @{
+                var errContent = new List<MvcHtmlString>
+                {
                 Html.ValidationMessageFor(x => x, null, new {@class = "govuk-error-message"}),
                 Html.ValidationMessageFor(x => x.Day, null, new {@class = "govuk-error-message"}),
                 Html.ValidationMessageFor(x => x.Month, null, new {@class = "govuk-error-message"}),
                 Html.ValidationMessageFor(x => x.Year, null, new {@class = "govuk-error-message"})
             };
 
-            var enumerable = errContent.Select(x => x?.ToHtmlString());
-            var mvcHtmlStrings = enumerable.Distinct();
-            foreach (var mvcHtmlString in mvcHtmlStrings)
-            {
-                if (mvcHtmlString != "<span class=\"field-validation-error govuk-error-message\">AppointmentDate cannot be empty</span>")
+                if (!Html.ViewData.ModelState.ContainsKey(ViewData.ModelMetadata.PropertyName) ||
+                        !Html.ViewData.ModelState[ViewData.ModelMetadata.PropertyName].Errors.Any())
                 {
-                    @Html.Raw(mvcHtmlString)
+                    errContent.Insert(0, Html.ValidationMessageNested(ViewData.ModelMetadata.PropertyName));
                 }
-            }
-        }
+
+                var enumerable = errContent.Select(x => x?.ToHtmlString());
+                foreach (var mvcHtmlString in enumerable)
+                {
+                    if (mvcHtmlString != "<span class=\"field-validation-error govuk-error-message\">AppointmentDate cannot be empty</span>")
+                    {
+                        @Html.Raw(mvcHtmlString)
+                    }
+                } }
         </span>
 
         @if (ViewData["vueModel"] != null)
@@ -206,20 +209,20 @@
         <div class="govuk-date-input">
             <div class="govuk-date-input__item">
                 <div class="govuk-form-group">
-                    @Html.LabelFor(x => x.Day, new {@class = string.Concat(labelClassName, " govuk-label govuk-date-input__label")})
-                    @Html.TextBoxFor(x => x.Day, GetAttributes(ViewData["readonly"] as bool? ?? false, dayCssClasses, 2, ViewData["vueModel"] != null ? string.Concat((string) ViewData["vueModel"], "Day") : null))
+                    @Html.LabelFor(x => x.Day, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
+                    @Html.TextBoxFor(x => x.Day, GetAttributes(ViewData["readonly"] as bool? ?? false, dayCssClasses, 2, ViewData["vueModel"] != null ? string.Concat((string)ViewData["vueModel"], "Day") : null))
                 </div>
             </div>
             <div class="govuk-date-input__item">
                 <div class="govuk-form-group">
-                    @Html.LabelFor(x => x.Month, new {@class = string.Concat(labelClassName, " govuk-label govuk-date-input__label")})
-                    @Html.TextBoxFor(x => x.Month, GetAttributes(ViewData["readonly"] as bool? ?? false, monthCssClasses, 2, ViewData["vueModel"] != null ? string.Concat((string) ViewData["vueModel"], "Month") : null))
+                    @Html.LabelFor(x => x.Month, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
+                    @Html.TextBoxFor(x => x.Month, GetAttributes(ViewData["readonly"] as bool? ?? false, monthCssClasses, 2, ViewData["vueModel"] != null ? string.Concat((string)ViewData["vueModel"], "Month") : null))
                 </div>
             </div>
             <div class="govuk-date-input__item gias-year-input__item">
                 <div class="govuk-form-group">
-                    @Html.LabelFor(x => x.Year, new {@class = string.Concat(labelClassName, " govuk-label govuk-date-input__label")})
-                    @Html.TextBoxFor(x => x.Year, GetAttributes(ViewData["readonly"] as bool? ?? false, yearCssClasses, 4, ViewData["vueModel"] != null ? string.Concat((string) ViewData["vueModel"], "Year") : null))
+                    @Html.LabelFor(x => x.Year, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
+                    @Html.TextBoxFor(x => x.Year, GetAttributes(ViewData["readonly"] as bool? ?? false, yearCssClasses, 4, ViewData["vueModel"] != null ? string.Concat((string)ViewData["vueModel"], "Year") : null))
                 </div>
             </div>
         </div>
