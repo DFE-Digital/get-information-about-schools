@@ -41,6 +41,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         private const string ESTAB_REPLACE_GOVERNOR = "~/Establishment/Edit/{establishmentUrn:int}/Governance/Replace/{gid:int}";
         private const string ESTAB_REPLACE_CHAIR = "~/Establishment/Edit/{establishmentUrn:int}/Governance/ReplaceChair/{gid:int}";
         private const string VIEW_EDIT_GOV_VIEW_NAME = "~/Areas/Governors/Views/Governor/ViewEdit.cshtml";
+        private const string EstablishmentDetails = "EstabDetails";
 
         private readonly ICachedLookupService _cachedLookupService;
         private readonly IEstablishmentReadService _establishmentReadService;
@@ -192,7 +193,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 if (ModelState.IsValid)
                 {
                     var url = viewModel.EstablishmentUrn.HasValue
-                        ? $"{Url.RouteUrl("EstabDetails", new { id = viewModel.EstablishmentUrn, saved = true })}#school-governance"
+                        ? $"{Url.RouteUrl(EstablishmentDetails, new { id = viewModel.EstablishmentUrn, saved = true })}#school-governance"
                         : $"{Url.RouteUrl("GroupDetails", new { id = viewModel.GroupUId, saved = true })}#governance";
 
                     return Redirect(url);
@@ -596,7 +597,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     }
 
                     var url = viewModel.EstablishmentUrn.HasValue
-                        ? $"{Url.RouteUrl("EstabDetails", new { id = viewModel.EstablishmentUrn, saved = true })}#school-governance"
+                        ? $"{Url.RouteUrl(EstablishmentDetails, new { id = viewModel.EstablishmentUrn, saved = true })}#school-governance"
                         : $"{Url.RouteUrl("GroupDetails", new { id = viewModel.GroupUId, saved = true })}#governance";
 
                     return Redirect(url);
@@ -760,7 +761,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     if (!validation.HasErrors)
                     {
                         var url =
-                            $"{Url.RouteUrl("EstabDetails", new { id = model.Urn, saved = true })}#school-governance";
+                            $"{Url.RouteUrl(EstablishmentDetails, new { id = model.Urn, saved = true })}#school-governance";
                         return Redirect(url);
                     }
 
@@ -817,7 +818,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         }
 
                         var url =
-                            $"{Url.RouteUrl("EstabDetails", new { id = model.Urn, saved = true })}#school-governance";
+                            $"{Url.RouteUrl(EstablishmentDetails, new { id = model.Urn, saved = true })}#school-governance";
                         return Redirect(url);
                     }
 
