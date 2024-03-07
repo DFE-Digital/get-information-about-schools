@@ -978,6 +978,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
         private ValidationEnvelopeDto CheckEndDateNotBeforeStartDate(GovernorModel governorModel, ValidationEnvelopeDto validationResults)
         {
+
+            if (validationResults.HasErrors)
+            {
+                return validationResults;
+            }
+
             if (governorModel.AppointmentStartDate != null && governorModel.AppointmentEndDate != null &&
                 governorModel.AppointmentStartDate >= governorModel.AppointmentEndDate)
             {
