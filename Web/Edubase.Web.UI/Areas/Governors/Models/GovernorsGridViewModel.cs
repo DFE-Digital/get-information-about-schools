@@ -109,24 +109,18 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         {
             var roles = dto.ApplicableRoles.Where(role =>
             {
+                if (!EnumSets.eSharedGovernorRoles.Contains(role))
                 {
-                    if (!EnumSets.eSharedGovernorRoles.Contains(role))
-                    {
-                        return true;
-                    }
+                    return true;
                 }
 
+                var localEquivalent = RoleEquivalence.GetLocalEquivalentToSharedRole(role);
+                if (localEquivalent != null)
                 {
-                    var localEquivalent = RoleEquivalence.GetLocalEquivalentToSharedRole(role);
-                    if (localEquivalent != null)
-                    {
+                        if (!dto.ApplicableRoles.Contains(localEquivalent.Value))
                         {
-                            if (!dto.ApplicableRoles.Contains(localEquivalent.Value))
-                            {
-                                return true;
-                            }
+                            return true;
                         }
-                    }
                 }
                 return true;
             }).ToList();
