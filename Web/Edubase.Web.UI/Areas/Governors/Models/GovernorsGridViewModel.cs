@@ -113,16 +113,15 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 {
                     return true;
                 }
-
                 var localEquivalent = RoleEquivalence.GetLocalEquivalentToSharedRole(role);
                 if (localEquivalent != null)
                 {
-                        if (!dto.ApplicableRoles.Contains(localEquivalent.Value))
-                        {
-                            return true;
-                        }
+                    if (!dto.ApplicableRoles.Contains(localEquivalent.Value) || role == GR.Establishment_SharedGovernanceProfessional)
+                    {
+                        return true;
+                    }
                 }
-                return true;
+                return false;
             }).ToList();
 
 
