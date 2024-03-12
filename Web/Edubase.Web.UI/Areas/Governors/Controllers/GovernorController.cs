@@ -463,15 +463,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             {
                 return false;
             }
-            else if (isAddingGroup || isAddingMat)
+            else if ((isAddingGroup || isAddingMat) &&
+                !((isAddingMat && isGroupPresent) || (isAddingGroup && isMatPresent)) &&
+                IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
             {
-                if (!((isAddingMat && isGroupPresent) || (isAddingGroup && isMatPresent)))
-                {
-                    if (IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
-                    {
-                        return false;
-                    }
-                }
+                return false;
             }
             else
             {
