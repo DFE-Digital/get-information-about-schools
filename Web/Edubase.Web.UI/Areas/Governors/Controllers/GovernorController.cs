@@ -457,15 +457,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var isAddingFreeSchool = role == eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool;
             var isAddingSat = role == eLookupGovernorRole.GovernanceProfessionalToASat;
 
-            if (isAddingFreeSchool || isAddingSat)
+            if ((isAddingFreeSchool || isAddingSat) &&
+                !((isAddingSat && isFreeSchoolPresent) || (isAddingFreeSchool && isSatPresent)) &&
+                IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
             {
-                if (!((isAddingSat && isFreeSchoolPresent) || (isAddingFreeSchool && isSatPresent)))
-                {
-                    if (IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
-                    {
-                        return false;
-                    }
-                }
+                return false;
             }
             else if (isAddingGroup || isAddingMat)
             {
