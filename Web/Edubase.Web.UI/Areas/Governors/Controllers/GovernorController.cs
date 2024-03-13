@@ -7,7 +7,6 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Castle.Core.Internal;
 using Edubase.Common;
-using Edubase.Common.Text;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
@@ -453,9 +452,35 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var isAddingGroup = role == eLookupGovernorRole.Group_SharedGovernanceProfessional;
             var isAddingMat = role == eLookupGovernorRole.GovernanceProfessionalToAMat;
 
-            // Unless above condition met, Only a single governance professional may be attached
-            if (!((isAddingMat && isGroupPresent) || (isAddingGroup && isMatPresent)))
+            // AT SAT level you should be able to have a 'Governance professional for Single-academy trust (SAT)' and a 'Governance professional to an individual academy or free school'
+            var isFreeSchoolPresent = existingGovernorRoleIds.Any(g => g == (int) eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool);
+            var isSatPresent = existingGovernorRoleIds.Any(m => m == (int) eLookupGovernorRole.GovernanceProfessionalToASat);
+            var isAddingFreeSchool = role == eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool;
+            var isAddingSat = role == eLookupGovernorRole.GovernanceProfessionalToASat;
+
+            if (isAddingFreeSchool || isAddingSat)
             {
+                if (!((isAddingSat && isFreeSchoolPresent) || (isAddingFreeSchool && isSatPresent)))
+                {
+                    if (IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
+                    {
+                        return false;
+                    }
+                }
+            }
+            else if (isAddingGroup || isAddingMat)
+            {
+                if (!((isAddingMat && isGroupPresent) || (isAddingGroup && isMatPresent)))
+                {
+                    if (IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
+                    {
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                // Only a single governance professional may be attached
                 if (IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
                 {
                     return false;
