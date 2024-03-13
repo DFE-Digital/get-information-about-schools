@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Edubase.Common;
-using Edubase.Common.Text;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Governors.DisplayPolicies;
@@ -106,11 +105,23 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         private void CreateGrids(GovernorsDetailsDto dto, IEnumerable<GovernorModel> governors, bool isHistoric,
             int? groupUid, int? establishmentUrn)
         {
-            var roles = dto.ApplicableRoles.Where(role => !EnumSets.eSharedGovernorRoles.Contains(role)
-                                                          ||
-                                                          (RoleEquivalence.GetLocalEquivalentToSharedRole(role) != null
-                                                           && !dto.ApplicableRoles.Contains(RoleEquivalence
-                                                               .GetLocalEquivalentToSharedRole(role).Value)));
+            var roles = dto.ApplicableRoles.Where(role =>
+            {
+                if (!EnumSets.eSharedGovernorRoles.Contains(role))
+                {
+                    return true;
+                }
+                var localEquivalent = RoleEquivalence.GetLocalEquivalentToSharedRole(role);
+                if (localEquivalent != null)
+                {
+                    if (!dto.ApplicableRoles.Contains(localEquivalent.Value) || role == GR.Establishment_SharedGovernanceProfessional)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }).ToList();
+
 
             foreach (var role in roles)
             {
@@ -131,15 +142,15 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 );
 
                 var grid = new GovernorGridViewModel($"{governorRoleNameTitle}{(isHistoric ? " (in past 12 months)" : string.Empty)}")
-                    {
-                        Tag = isHistoric ? "historic" : "current",
-                        Role = role,
-                        IsSharedRole = EnumSets.eSharedGovernorRoles.Contains(role),
-                        GroupUid = groupUid,
-                        EstablishmentUrn = establishmentUrn,
-                        IsHistoricRole = isHistoric,
-                        RoleName = governorRoleNameSingular
-                    };
+                {
+                    Tag = isHistoric ? "historic" : "current",
+                    Role = role,
+                    IsSharedRole = EnumSets.eSharedGovernorRoles.Contains(role),
+                    GroupUid = groupUid,
+                    EstablishmentUrn = establishmentUrn,
+                    IsHistoricRole = isHistoric,
+                    RoleName = governorRoleNameSingular
+                };
 
                 var displayPolicy = dto.RoleDisplayPolicies.Get(role);
                 Guard.IsNotNull(displayPolicy, () => new Exception($"The display policy should not be null for the role '{role}'"));
@@ -172,15 +183,19 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
                     if (EnumSets.eGovernanceProfessionalRoles.Contains(role))
                     {
-                        grid.AddRow(governor, endDate)
-                            .AddCell(getFullnameWithTitle, displayPolicy.FullName)
-                            .AddCell(governor.Id, displayPolicy.Id)
-                            .AddCell(governor.DOB?.ToString("d MMMM yyyy"), displayPolicy.DOB)
-                            .AddCell(governor.PostCode, displayPolicy.PostCode)
-                            .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber)
-                            .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
-                            .AddCell(startDate?.ToString("d MMMM yyyy"), displayPolicy.AppointmentStartDate)
-                            .AddCell(endDate?.ToString("d MMMM yyyy"), includeEndDate);
+                        if (role == (GR) governor.RoleId)
+                        {
+                            grid.AddRow(governor, endDate)
+                                .AddCell(getFullnameWithTitle, displayPolicy.FullName)
+                                .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments, role.OneOfThese(GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool))
+                                .AddCell(governor.Id, displayPolicy.Id)
+                                .AddCell(governor.DOB?.ToString("d MMMM yyyy"), displayPolicy.DOB)
+                                .AddCell(governor.PostCode, displayPolicy.PostCode)
+                                .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber)
+                                .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
+                                .AddCell(startDate?.ToString("d MMMM yyyy"), displayPolicy.AppointmentStartDate)
+                                .AddCell(endDate?.ToString("d MMMM yyyy"), includeEndDate);
+                        }
                     }
                     else
                     {
@@ -202,6 +217,13 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
                     if (isHistoric)
                     {
+                        var governorRoleNameSingularActual = GovernorRoleNameFactory.Create(
+                            (GR) governor.RoleId,
+                            pluraliseLabelIfApplicable: false,
+                            removeMemberPrefix: true,
+                            removeGroupEstablishmentSuffix: false
+                        );
+
                         var gov = new HistoricGovernorViewModel
                         {
                             AppointingBodyId = governor.AppointingBodyId,
@@ -209,7 +231,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                             AppointmentEndDate = new DateTimeViewModel(governor.AppointmentEndDate),
                             AppointmentStartDate = new DateTimeViewModel(governor.AppointmentStartDate),
                             FullName = governor.GetFullName(),
-                            RoleName = governorRoleNameSingular,
+                            RoleName = governorRoleNameSingularActual,
                             GID = governor.Id
                         };
 
@@ -243,6 +265,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             if (EnumSets.eGovernanceProfessionalRoles.Contains(role))
             {
                 grid.AddHeaderCell("Name", displayPolicy.FullName, "name", "sortText")
+                    .AddHeaderCell("Shared with", role.OneOfThese(GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool), "shared", "sortText")
                     .AddHeaderCell("Governance role identifier (GID)", displayPolicy.Id, "gid")
                     .AddHeaderCell("Date of birth", displayPolicy.DOB)
                     .AddHeaderCell("Home postcode", displayPolicy.PostCode)
