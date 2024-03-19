@@ -361,7 +361,7 @@ else
             foreach (var row in grid.Rows)
             {
                 <div id="gov-id-@row.Model.Id" class="governor-edit-panel govuk-!-margin-bottom-9 @Html.DuplicateCssClassFor(row.Model.Id)">
-                    <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="@StringUtils.ElementIdFormat(grid.Title + "-name")">@row.Cells[0].Text.Replace("Not recorded", "").Trim()</h3>
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="@StringUtils.ElementIdFormat(grid.Title + "-name")">@row.Cells[0].Text</h3>
                     <dl class="govuk-summary-list govuk-!-margin-bottom-1">
                         @if (historic)
                         {

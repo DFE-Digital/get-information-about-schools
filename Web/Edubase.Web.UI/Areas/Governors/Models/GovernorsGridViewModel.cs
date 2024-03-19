@@ -345,11 +345,18 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             }
         }
 
-        public string FullNameWithTitle(GovernorModel governor)
+        private string FullNameWithTitle(GovernorModel governor)
         {
-            var title = Titles.FirstOrDefault(x => x.Id == governor.Person_TitleId)?.Name;
-            var full = $"{title} {governor.Person_FirstName} {governor.Person_MiddleName} {governor.Person_LastName}";
-            return full;
+            var title = Titles
+                .Where(x => !x.Name.ToLowerInvariant().Equals("n/a"))
+                .Where(x => !x.Name.ToLowerInvariant().Equals("not applicable"))
+                .Where(x => !x.Name.ToLowerInvariant().Equals("not recorded"))
+                .FirstOrDefault(x => x.Id == governor.Person_TitleId);
+
+            var titleName = title?.Name;
+            var fullNameWithTitle = StringUtil.ConcatNonEmpties(" ", titleName, governor.GetFullName());
+
+            return fullNameWithTitle;
         }
     }
 }
