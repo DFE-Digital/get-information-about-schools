@@ -94,6 +94,7 @@ namespace Edubase.Services.Enums
         {
             GR.Group_SharedChairOfLocalGoverningBody,
             GR.Establishment_SharedChairOfLocalGoverningBody,
+            GR.ChairOfLocalGoverningBody
         };
 
         public static IEnumerable<int> ChairOfLocalGoverningBodyRoles = eChairOfLocalGoverningBodyRoles.Cast<int>();
