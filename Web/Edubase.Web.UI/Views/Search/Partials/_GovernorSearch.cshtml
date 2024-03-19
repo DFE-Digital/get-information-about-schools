@@ -62,7 +62,7 @@
                                                        <text>checked="checked"</text>
                                                    }/>
                                             <label for="govrole-@governorRole.Id.ToString()" class="govuk-checkboxes__label">
-                                                @FormatHelpers.FirstCharToUpper(@governorRole.Name.ToLower())
+                                                @governorRole.Name
                                             </label>
                                         </div>
                                     }
@@ -89,55 +89,51 @@
             </div>
         }
     </li>
-    @if (User.Identity.IsAuthenticated)
-    {
-        <li class="search-type-wrapper">
-            @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
-            {
-                @Html.HiddenFor(m => m.SelectedTab, new {id = "gov-selected-tab1"})
-                <fieldset class="govuk-fieldset search-toggle-panel">
-                    <div class="govuk-form-group">
-                        <div class="govuk-radio" data-module="govuk-radio">
-                            <div class="govuk-radios__item">
-                                @Html.RadioButtonFor(m => m.SearchType, eSearchType.GovernorReference, new {id = "searchtype-gov-refno", name = "gsearch", value = "gid", data_toggle_panel = "#searchtype-gov-refno-ref", autocomplete = "off", @class = "govuk-radios__input"})
-                                <label for="searchtype-gov-refno" class="govuk-label govuk-radios__label">
-                                    Reference number
-                                </label>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="panel panel-border-narrow @Html.ValidationCssClassFor(x => x.GovernorSearchModel.Gid)" id="searchtype-gov-refno-ref">
-                        @* This alert gets dynamically populated *@
-                        <span class="govuk-error-message hidden"></span>
-                        @Html.ValidationMessageFor(x => x.GovernorSearchModel.Gid, null, new { @class = "govuk-error-message"})
-                        <div class="govuk-form-group">
-                            <label for="GovernorSearchModel_Gid" class="govuk-label">
-                                Enter governor ID number (GID number)
+    <li class="search-type-wrapper">
+        @using (Html.BeginRouteForm("SearchResults", FormMethod.Get))
+        {
+            @Html.HiddenFor(m => m.SelectedTab, new {id = "gov-selected-tab1"})
+            <fieldset class="govuk-fieldset search-toggle-panel">
+                <div class="govuk-form-group">
+                    <div class="govuk-radio" data-module="govuk-radio">
+                        <div class="govuk-radios__item">
+                            @Html.RadioButtonFor(m => m.SearchType, eSearchType.GovernorReference, new {id = "searchtype-gov-refno", name = "gsearch", value = "gid", data_toggle_panel = "#searchtype-gov-refno-ref", autocomplete = "off", @class = "govuk-radios__input"})
+                            <label for="searchtype-gov-refno" class="govuk-label govuk-radios__label">
+                                Reference number
                             </label>
-
-                            @Html.TextBoxFor(x => x.GovernorSearchModel.Gid, new {maxlength = 10, @class = "govuk-input govuk-input--width-20"})
                         </div>
-                        <div class="govuk-form-group">
-                            <div class="govuk-checkboxes">
-                                <div class="govuk-checkboxes__item">
-                                    @* @Html.CheckBoxFor(x => x.GovernorSearchModel.IncludeHistoric, new {id = "IncludeHistoricRole1", @class = "govuk-checkboxes__input"}) *@
-                                    <input class="govuk-checkboxes__input" id="IncludeHistoricRole1" name="GovernorSearchModel.IncludeHistoric" type="checkbox" value="true">
-                                    <label for="IncludeHistoricRole1" class="govuk-checkboxes__label">Include historic records (governors who stepped down in the last 12 months)</label>
-                                </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-border-narrow @Html.ValidationCssClassFor(x => x.GovernorSearchModel.Gid)" id="searchtype-gov-refno-ref">
+                    @* This alert gets dynamically populated *@
+                    <span class="govuk-error-message hidden"></span>
+                    @Html.ValidationMessageFor(x => x.GovernorSearchModel.Gid, null, new { @class = "govuk-error-message"})
+                    <div class="govuk-form-group">
+                        <label for="GovernorSearchModel_Gid" class="govuk-label">
+                            Enter governor ID number (GID number)
+                        </label>
+
+                    @Html.TextBoxFor(x => x.GovernorSearchModel.Gid, new {maxlength = 10, @class = "govuk-input govuk-input--width-20"})
+                    </div>
+                    <div class="govuk-form-group">
+                        <div class="govuk-checkboxes">
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="IncludeHistoricRole1" name="GovernorSearchModel.IncludeHistoric" type="checkbox" value="true">
+                                <label for="IncludeHistoricRole1" class="govuk-checkboxes__label">Include historic records (governors who stepped down in the last 12 months)</label>
                             </div>
                         </div>
-
-                        <div class="govuk-form-group">
-                            <button type="submit" id="governor-search-submit-1" class="govuk-button" name="searchtype" value="@eSearchType.GovernorReference">Search</button>
-                        </div>
-
                     </div>
-                </fieldset>
-            }
-        </li>
-    }
 
+                    <div class="govuk-form-group">
+                        <button type="submit" id="governor-search-submit-1" class="govuk-button" name="searchtype" value="@eSearchType.GovernorReference">Search</button>
+                    </div>
+
+                </div>
+            </fieldset>
+        }
+    </li>
 
     <li aria-hidden="true">
         <p>or</p>

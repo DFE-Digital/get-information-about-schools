@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Text;
 using System.Web.Mvc;
 using Edubase.Services.Enums;
 using Edubase.Services.Governors.DisplayPolicies;
@@ -9,12 +12,18 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 {
     public class GovernorViewModel
     {
+        [DisplayName("Governance role identifier (GID)")]
         public int? GID { get; set; }
 
         public eLookupGovernorRole GovernorRole { get; set; }
 
         [DisplayName("Title")]
         public int? GovernorTitleId { get; set; }
+
+        private string GovernorTitle => Titles
+            .Where(x => x.Value == GovernorTitleId.ToString())
+            .Select(x => x.Text)
+            .FirstOrDefault() ?? "";
 
         [DisplayName("First name")]
         public string FirstName { get; set; }
@@ -24,6 +33,31 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         [DisplayName("Last name")]
         public string LastName { get; set; }
+
+        /// <summary>
+        /// See also the browser-side JavaScript implementation for full name,
+        /// whose implementation should be kept synchronised with the server-side C# implementation:
+        ///   - Web/Edubase.Web.UI/Assets/Scripts/Entry/add-edit-governor.js
+        ///
+        /// Notes:
+        /// - Do not include the title in the "full name", if the title is not provided
+        /// - Join the name parts with only a single space between each name part
+        /// </summary>
+        [DisplayName("Name")]
+        public string FullName => string.Join(
+            " ",
+            new[]
+                {
+                    GovernorTitle
+                        .Replace("Not-applicable", string.Empty)
+                        .Replace("Not recorded", string.Empty),
+                    FirstName,
+                    MiddleName,
+                    LastName,
+                }
+                .Where(part => !string.IsNullOrWhiteSpace(part))
+                .Select(part => part.Trim())
+        );
 
         public bool? IsOriginalSignatoryMember { get; set; }
 
@@ -35,7 +69,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         [DisplayName("Date of appointment")]
         public DateTimeViewModel AppointmentStartDate { get; set; } = new DateTimeViewModel();
 
-        [DisplayName("Date term ends")]
+        [DisplayName("Date appointment ended")]
         public DateTimeViewModel AppointmentEndDate { get; set; } = new DateTimeViewModel();
 
         [DisplayName("Email address")]
@@ -47,7 +81,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         [DisplayName("Home postcode")]
         public string PostCode { get; set; }
 
-        [DisplayName("Telephone")]
+        [DisplayName("Telephone number")]
         public string TelephoneNumber { get; set; }
 
 
@@ -66,8 +100,8 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public GovernorDisplayPolicy DisplayPolicy { get; internal set; }
 
         public IEnumerable<SelectListItem> YesNoSelect { get; set; } = new[] { new SelectListItem { Value = "true", Text = "Yes", }, new SelectListItem { Value = "false", Text = "No", Selected = true } };
-        public IEnumerable<SelectListItem> Titles { get; set; }
-        public IEnumerable<SelectListItem> PreviousTitles { get; set; }
-        public IEnumerable<SelectListItem> AppointingBodies { get; set; }
+        public IEnumerable<SelectListItem> Titles { get; set; } = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> PreviousTitles { get; set; } = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> AppointingBodies { get; set; } = new List<SelectListItem>();
     }
 }

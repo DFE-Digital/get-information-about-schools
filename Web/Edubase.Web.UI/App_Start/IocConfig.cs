@@ -138,7 +138,6 @@ namespace Edubase.Web.UI
             builder.RegisterType<ExternalLookupService>().As<IExternalLookupService>().SingleInstance().AutoActivate();
 
             builder.RegisterInstance(AutoMapperWebConfiguration.CreateMapper()).As<IMapper>();
-            builder.RegisterInstance(new NomenclatureService()).AsSelf();
 
             builder.RegisterType<EstablishmentReadApiService>().As<IEstablishmentReadService>();
             builder.RegisterType<EstablishmentDownloadApiService>().As<IEstablishmentDownloadService>();

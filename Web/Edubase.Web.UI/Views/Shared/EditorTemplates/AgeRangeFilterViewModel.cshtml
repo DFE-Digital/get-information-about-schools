@@ -14,12 +14,12 @@
                 <fieldset class="govuk-fieldset range-group">
                     <span class="govuk-error-message hidden">Please check the age(s) you have entered</span>
                     <div class="gias-range-input__item">
-                        @Html.LabelFor(m => m.From, new {@class = "govuk-label"})
-                        @Html.TextBoxFor(m => m.From, new {@class = "govuk-input govuk-input--width-5", maxlength = "2"})
+                        @Html.LabelFor(m => m.From, new { @class = "govuk-label" })
+                        @Html.TextBoxFor(m => m.From, new { @class = "govuk-input govuk-input--width-5", maxlength = "2" })
                     </div>
                     <div class="gias-range-input__item">
-                        @Html.LabelFor(m => m.To, new {@class = "govuk-label"})
-                        @Html.TextBoxFor(m => m.To, new {@class = "govuk-input  govuk-input--width-5", maxlength = "2"})
+                        @Html.LabelFor(m => m.To, new { @class = "govuk-label" })
+                        @Html.TextBoxFor(m => m.To, new { @class = "govuk-input  govuk-input--width-5", maxlength = "2" })
                     </div>
                 </fieldset>
             </div>

@@ -2,11 +2,12 @@
 
 <div class="govuk-error-summary" role="alert" data-module="govuk-error-summary">
     <h2 class="govuk-error-summary__title" id="error-summary-title">Duplicate record found</h2>
-        <div class="govuk-error-summary__body">
-            <p>A record for this person already exists</p>
-            <ul class="govuk-list govuk-error-summary__list">
-                <li class="error-message"><a href="#@Model.Id">@Model.GetFullName()</a></li>
-            </ul>
+    <div class="govuk-error-summary__body">
+        <p>A record for this person already exists</p>
+        <ul class="govuk-list govuk-error-summary__list">
+            <li class="error-message">
+                <a href="#@Model.Id">@Model.GetFullName()</a>
+            </li>
+        </ul>
     </div>
 </div>
-

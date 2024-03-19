@@ -43,7 +43,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         private readonly IGroupReadService _groupReadService;
         private readonly IGroupsWriteService _groupWriteService;
         private readonly ICachedLookupService _lookup;
-        private readonly NomenclatureService _nomenclatureService;
         private readonly ISecurityService _securityService;
         private readonly IGovernorsReadService _governorsReadService;
         private readonly IExternalLookupService _externalLookupService;
@@ -56,7 +55,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             IEstablishmentReadService establishmentReadService,
             IGroupsWriteService groupWriteService,
             ICompaniesHouseService companiesHouseService,
-            NomenclatureService nomenclatureService,
             IGovernorsReadService governorsReadApiService,
              IExternalLookupService externalLookupService,
             IGovernorsGridViewModelFactory governorsGridViewModelFactory)
@@ -67,7 +65,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             _establishmentReadService = establishmentReadService;
             _groupWriteService = groupWriteService;
             _companiesHouseService = companiesHouseService;
-            _nomenclatureService = nomenclatureService;
             _governorsReadService = governorsReadApiService;
             _externalLookupService = externalLookupService;
             _governorsGridViewModelFactory = governorsGridViewModelFactory;

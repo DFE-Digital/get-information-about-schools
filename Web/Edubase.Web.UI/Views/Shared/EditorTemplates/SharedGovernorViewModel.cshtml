@@ -1,8 +1,6 @@
-@using System.Runtime.ExceptionServices
 @model Edubase.Web.UI.Areas.Governors.Models.SharedGovernorViewModel
 @{
-    bool disableStartDate;
-    if (!bool.TryParse(ViewData["disableStartDate"]?.ToString(), out disableStartDate))
+    if (!bool.TryParse(ViewData["disableStartDate"]?.ToString(), out var disableStartDate))
     {
         disableStartDate = false;
     }
@@ -12,7 +10,7 @@
 @if (Model.MultiSelect)
 {
     <div class="govuk-checkboxes__item">
-        @Html.CheckBoxFor(x => x.Selected, GetCheckboxAttributes(Model.PreExisting, "govuk-checkboxes__input gias-checkboxes__conditional--input", @Html.NameFor(x => x.Selected), "expand-" + Model.Id))
+        @Html.CheckBoxFor(x => x.Selected, GetCheckboxAttributes(Model.PreExisting, "govuk-checkboxes__input gias-checkboxes__conditional--input", Html.NameFor(x => x.Selected), "expand-" + Model.Id))
         <label class="govuk-checkboxes__label" for="@Html.NameFor(x => x.Selected)">@Model.FullName</label>
     </div>
 }
@@ -21,7 +19,7 @@ else
     <div class="govuk-form-group ">
         <div class="govuk-radios">
             <div class="govuk-radios__item">
-                @Html.RadioButton(Model.Id.ToString(), Model.Id, Model.Selected, new {Name = "SelectedGovernorId", @class = "govuk-radios__input gias-nested-radio-toggle", @id = "gov-" + Model.Id, data_toggle_panel = "#expand-" + Model.Id})
+                @Html.RadioButton(Model.Id.ToString(), Model.Id, Model.Selected, new { Name = "SelectedGovernorId", @class = "govuk-radios__input gias-nested-radio-toggle", id = "gov-" + Model.Id, data_toggle_panel = "#expand-" + Model.Id })
                 <label class="govuk-radios__label" for="gov-@Model.Id">@Model.FullName</label>
             </div>
         </div>
@@ -88,8 +86,8 @@ else
                         @Html.ViewData.ModelState["StartDate,endDate"].Errors.First().ErrorMessage
                     </span>
                 }
-                @Html.EditorFor(x => x.AppointmentStartDate, new {@readonly = Model.PreExisting || disableStartDate, ClassPrefix = "start-date", fieldsetClassName = "edit-date-fieldset"})
-                @Html.EditorFor(x => x.AppointmentEndDate, new {@readonly = Model.PreExisting, fieldsetClassName = "edit-date-fieldset"})
+                @Html.EditorFor(x => x.AppointmentStartDate, new { @readonly = Model.PreExisting || disableStartDate, ClassPrefix = "start-date", fieldsetClassName = "edit-date-fieldset" })
+                @Html.EditorFor(x => x.AppointmentEndDate, new { @readonly = Model.PreExisting, fieldsetClassName = "edit-date-fieldset" })
             </div>
         </div>
     }
@@ -109,8 +107,8 @@ else
     object GetCheckboxAttributes(bool readOnly, string cssClasses, HtmlString elemId, string toggleTarget = "")
     {
         if (readOnly)
-            return new {@class = cssClasses, @disabled = "disabled", @id = elemId, data_aria_controls = toggleTarget};
+            return new { @class = cssClasses, disabled = "disabled", id = elemId, data_aria_controls = toggleTarget };
 
-        return new {@class = cssClasses, @id = elemId, data_aria_controls = toggleTarget};
+        return new { @class = cssClasses, id = elemId, data_aria_controls = toggleTarget };
     }
 }

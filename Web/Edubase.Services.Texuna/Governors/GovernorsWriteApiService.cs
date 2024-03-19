@@ -1,4 +1,4 @@
-﻿using Edubase.Services.Governors;
+using Edubase.Services.Governors;
 using System;
 using System.Threading.Tasks;
 using Edubase.Services.Governors.Models;
@@ -61,7 +61,7 @@ namespace Edubase.Services.Texuna.Governors
         }
 
         public async Task<ValidationEnvelopeDto> ValidateAsync(GovernorModel model, IPrincipal principal)
-        {
+         {
             return (await _httpClient.PostAsync<ValidationEnvelopeDto>("governor/validate", model, principal)).GetResponse();
         }
 

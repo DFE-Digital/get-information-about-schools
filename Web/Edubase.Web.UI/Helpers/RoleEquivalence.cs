@@ -9,7 +9,9 @@ namespace Edubase.Web.UI.Helpers
         private static readonly Dictionary<eLookupGovernorRole, List<eLookupGovernorRole>> equivalentRoles = new Dictionary<eLookupGovernorRole, List<eLookupGovernorRole>>
         {
             { eLookupGovernorRole.LocalGovernor, new List<eLookupGovernorRole> { eLookupGovernorRole.LocalGovernor, eLookupGovernorRole.Group_SharedLocalGovernor, eLookupGovernorRole.Establishment_SharedLocalGovernor }},
-            { eLookupGovernorRole.ChairOfLocalGoverningBody, new List<eLookupGovernorRole> { eLookupGovernorRole.ChairOfLocalGoverningBody, eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody, eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody }}
+            { eLookupGovernorRole.ChairOfLocalGoverningBody, new List<eLookupGovernorRole> { eLookupGovernorRole.ChairOfLocalGoverningBody, eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody, eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody }},
+            { eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, new List<eLookupGovernorRole> { eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool,
+                eLookupGovernorRole.Group_SharedGovernanceProfessional, eLookupGovernorRole.Establishment_SharedGovernanceProfessional }}
         };
 
         public static List<eLookupGovernorRole> GetEquivalentToLocalRole(eLookupGovernorRole role)
@@ -24,17 +26,20 @@ namespace Edubase.Web.UI.Helpers
 
         public static List<eLookupGovernorRole> GetEquivalentRole(eLookupGovernorRole role)
         {
-            if (role == eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody ||
-                role == eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody)
-            {
-                return new List<eLookupGovernorRole>
+            return role == eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody ||
+                role == eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody
+                ? new List<eLookupGovernorRole>
                 {
                     eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody,
                     eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody
-                };
-            }
-
-            return role == eLookupGovernorRole.Establishment_SharedLocalGovernor ||
+                }
+                : role == eLookupGovernorRole.Establishment_SharedGovernanceProfessional || role == eLookupGovernorRole.Group_SharedGovernanceProfessional
+                ? new List<eLookupGovernorRole>
+                {
+                    eLookupGovernorRole.Group_SharedGovernanceProfessional,
+                    eLookupGovernorRole.Establishment_SharedGovernanceProfessional
+                }
+                : role == eLookupGovernorRole.Establishment_SharedLocalGovernor ||
                 role == eLookupGovernorRole.Group_SharedLocalGovernor
                 ? new List<eLookupGovernorRole>
                 {

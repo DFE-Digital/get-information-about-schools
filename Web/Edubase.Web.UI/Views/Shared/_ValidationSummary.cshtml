@@ -1,4 +1,5 @@
 @model ModelStateDictionary
+@using System.Text.RegularExpressions
 
 @if (!Model.IsValid)
 {
@@ -6,31 +7,33 @@
         <h2 id="error-summary-title" class="govuk-error-summary__title">Incorrect or missing details</h2>
         <div class="govuk-error-summary__body">
             <ul class=" govuk-list govuk-error-summary__list">
-            @{
-                var validationResult = (FluentValidation.Results.ValidationResult) ViewBag.FVErrors;
-                if (validationResult != null)
-                {
-                    // fluentValidation errors
-                    foreach (var modelError in validationResult.Errors)
+                @{
+                    var validationResult = (FluentValidation.Results.ValidationResult)ViewBag.FVErrors;
+                    if (validationResult != null)
                     {
-                        <li>
-                            <a id="error-summary-@StringUtils.ElementIdFormat(@modelError.PropertyName)-list-item" href="#@modelError.PropertyName">@(modelError.CustomState?.ToString() ?? modelError.ErrorMessage)</a>
-                        </li>
+                        // fluentValidation errors
+                        foreach (var modelError in validationResult.Errors)
+                        {
+                            <li>
+                                <a id="error-summary-@StringUtils.ElementIdFormat(@modelError.PropertyName)-list-item" href="#@modelError.PropertyName">@(modelError.CustomState?.ToString() ?? modelError.ErrorMessage)</a>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        // traditional model validation
+                        foreach (var modelError in Model.Keys.SelectMany(key => this.Model[key].Errors.Select(x => Tuple.Create(key, x.ErrorMessage))))
+                        {
+                            var splitName = Regex.Replace(@modelError.Item2, "([a-z])([A-Z])", "$1 $2");
+                            splitName = splitName.Substring(0, 1) + splitName.Substring(1).ToLower();
+                            <li>
+                                 <a id="error-summary-@StringUtils.ElementIdFormat(@modelError.Item1)-list-item" href='#@modelError.Item1.Replace(".", "_").Replace("[", "_").Replace("]", "_")'>
+                                    @Html.HtmlNewlines(@splitName)
+                                 </a>
+                            </li>
+                        }
                     }
                 }
-                else
-                {
-                    // traditional model validation
-                    foreach (var modelError in Model.Keys.SelectMany(key => this.Model[key].Errors.Select(x => Tuple.Create(key, x.ErrorMessage))))
-                    {
-                        <li>
-                            <a id="error-summary-@StringUtils.ElementIdFormat(@modelError.Item1)-list-item" href='#@modelError.Item1.Replace(".", "_").Replace("[", "_").Replace("]", "_")'>
-                                @Html.HtmlNewlines(modelError.Item2)
-                            </a>
-                        </li>
-                    }
-                }
-            }
             </ul>
         </div>
     </div>

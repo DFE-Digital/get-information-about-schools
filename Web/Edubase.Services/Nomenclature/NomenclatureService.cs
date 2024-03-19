@@ -1,35 +1,13 @@
-using System;
 using System.ComponentModel;
-using Edubase.Common;
 using Edubase.Common.Text;
 using Edubase.Services.Enums;
-using Humanizer;
 
 namespace Edubase.Services.Nomenclature
 {
     using GT = eLookupGroupType;
 
-    public class NomenclatureService
+    public static class NomenclatureService
     {
-        public string GetGovernorRoleName(eLookupGovernorRole role, eTextCase textCase = eTextCase.SentenceCase,
-            bool pluralise = false)
-        {
-            var roleName = role.ToString();
-            if (roleName.Contains("_"))
-            {
-                var index = roleName.IndexOf("_", StringComparison.Ordinal);
-                roleName = roleName.Substring(index + 1);
-            }
-
-            var name = roleName.ToProperCase().ToTextCase(textCase);
-            if (pluralise)
-            {
-                name = name.Pluralize();
-            }
-
-            return name;
-        }
-
         public static string GetEstablishmentsPluralName(GT groupType, eTextCase textCase = eTextCase.TitleCase)
         {
             switch (groupType)
