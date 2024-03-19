@@ -361,7 +361,7 @@ else
             foreach (var row in grid.Rows)
             {
                 <div id="gov-id-@row.Model.Id" class="governor-edit-panel govuk-!-margin-bottom-9 @Html.DuplicateCssClassFor(row.Model.Id)">
-                    <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="@StringUtils.ElementIdFormat(grid.Title + "-name")">@row.Cells[0].Text</h3>
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="@StringUtils.ElementIdFormat(grid.Title + "-name")">@row.Cells[0].Text.Replace("Not recorded", "").Trim()</h3>
                     <dl class="govuk-summary-list govuk-!-margin-bottom-1">
                         @if (historic)
                         {
@@ -390,7 +390,7 @@ else
                                     {
                                         if (Model.EstablishmentUrn.HasValue && row.Model.RoleId.HasValue && EnumSets.SharedGovernorRoles.Contains(row.Model.RoleId.Value))
                                         {
-                                            @Html.RouteLink("Edit person", "EditSharedGovernor", new { establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary" , @id= StringUtils.ElementIdFormat(grid.Title) + "-edit-person" })
+                                            @Html.RouteLink("Edit person", "EditSharedGovernor", new { establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary", @id = StringUtils.ElementIdFormat(grid.Title) + "-edit-person" })
                                         }
                                         else
                                         {
@@ -410,7 +410,7 @@ else
                                             }
                                             else
                                             {
-                                                @Html.RouteLink("Replace person", Model.EstablishmentUrn.HasValue ? "EstabReplaceGovernor" : "GroupReplaceGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary", @id= StringUtils.ElementIdFormat(grid.Title) + "-replace-person" })
+                                                @Html.RouteLink("Replace person", Model.EstablishmentUrn.HasValue ? "EstabReplaceGovernor" : "GroupReplaceGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary", @id = StringUtils.ElementIdFormat(grid.Title) + "-replace-person" })
                                             }
                                         }
                                         else
@@ -469,7 +469,7 @@ else
                                             <div class="remove-governor gias-panel-indent">
                                                 <p>Confirm you wish to remove this person</p>
                                                 <div class="button-row">
-                                                    <input id="remove-shared-governor" type="submit" name="action" value="Remove" class="govuk-button"/>
+                                                    <input id="remove-shared-governor" type="submit" name="action" value="Remove" class="govuk-button" />
 
                                                     @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
                                                 </div>
