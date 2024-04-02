@@ -284,7 +284,4 @@ Please check the 'Establishment open date'</value>
   <data name="error.wrongValue.stepdownDate.validate.field.edit.governor_appointmentEndDate" xml:space="preserve">
     <value>Date appointment ended must not be before the date of appointment</value>
   </data>
-    <data name="error.wrongValue.stepdownDate.validate.field.edit.governor" xml:space="preserve">
-    <value>Date of appointment for this governance professional role must be after the previous governance professional role date appointment ended</value>
-  </data>
 </root>
