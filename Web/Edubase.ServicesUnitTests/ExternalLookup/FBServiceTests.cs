@@ -36,8 +36,9 @@ namespace Edubase.Services.ExternalLookup.UnitTests
         [InlineData(1, FbType.Trust, "https://example.com/api/truststatus/1", "ApiUrl_ReturnsCorrectUrl_Trust")]
         public void ApiUrl_ReturnsCorrectUrl(int? lookupId, FbType lookupType, string expectedUrl, string testName)
         {
-            _output.WriteLine(testName);
-            var subject = new FBService(new HttpClient());
+            ConfigurationManager.AppSettings["FinancialBenchmarkingApiURL"] = "https://example.com/";
+            var client = new HttpClient();
+            var subject = new FBService(client);
             var apiUrl = subject.ApiUrl(lookupId, lookupType);
             Assert.Equal(expectedUrl, apiUrl);
         }
