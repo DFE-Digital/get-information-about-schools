@@ -40,28 +40,23 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
         }
 
         //Note: Polly doesn't expose the timeout settings once the policy is created
-        // TODO: Ticket is being created to look at this test, commented out as causing issues in pipeline
-        //[Fact]
-        //public async void CreateTimeoutPolicy_ReturnsCorrectTimeoutForAzureMapService()
-        //{
-        //    var validKey = "AzureMapService_Timeout";
-        //    ConfigurationManager.AppSettings[validKey] = "5";
+        //Note: Due to pipeline issues we are not measuring with precise timing, but asserting on the occurence of 'TimeoutRejectedException'
+        [Fact]
+        public async Task CreateTimeoutPolicy_ShouldTriggerTimeout()
+        {
+            var validKey = "AzureMapService_Timeout";
+            ConfigurationManager.AppSettings[validKey] = "5";
 
-        //    var policy = PollyUtil.CreateTimeoutPolicy(validKey);
+            var policy = PollyUtil.CreateTimeoutPolicy(validKey);
 
-        //    var sw = Stopwatch.StartNew();
-        //    await Assert.ThrowsAsync<TimeoutRejectedException>(async () =>
-        //    {
-        //        await policy.ExecuteAsync(async (ct) =>
-        //        {
-        //            await Task.Delay(6000, ct);
-        //        }, CancellationToken.None);
-        //    });
-        //    sw.Stop();
+            Func<CancellationToken, Task> operation = async (ct) =>
+            {
+                await Task.Delay(6000, ct);
+            };
 
-        //    Assert.NotNull(policy);
-        //    Assert.True(sw.Elapsed.Seconds >= 5 && sw.Elapsed.Seconds < 8, $"Timeout expected Elapsed >= 5 && Elapsed < 8 Actual: {sw.Elapsed.Seconds}");
-        //}
+            await Assert.ThrowsAsync<TimeoutRejectedException>(() => policy.ExecuteAsync(operation, CancellationToken.None));
+            Assert.NotNull(policy);
+        }
 
 
         [Fact]
