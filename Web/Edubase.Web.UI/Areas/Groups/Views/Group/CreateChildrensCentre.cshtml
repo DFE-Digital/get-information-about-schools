@@ -515,7 +515,7 @@
                             @Html.ValidationMessageFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, null, new { @class = "govuk-error-message" })
                             @Html.ValidationMessageFor(x => x.LinkedEstablishments.Establishments, null, new { @class = "govuk-error-message", @id="LinkedEstablishments_Establishments" })
                             @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "govuk-input govuk-!-width-two-thirds", v_model = "searchUrn" })
-                            <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" class="govuk-button btn-add-person">Search URN</button>
+                            <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" id="search-urn-button" class="govuk-button btn-add-person">Search URN</button>
                         </div>
                     </div>
 

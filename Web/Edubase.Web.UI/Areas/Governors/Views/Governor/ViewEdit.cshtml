@@ -66,7 +66,7 @@
                         <label class="govuk-label" for="roleid">Select role</label>
                         @Html.ValidationMessage("role", null, new { @class = "govuk-error-message" })
                         @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem { Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = ((eLookupGovernorRole)x.Id).ToString() }), new { id = "roleid", @class = string.Concat(Html.ValidationSelectCssClass("role"), " govuk-select govuk-input--width-20 gias-role-selection") })
-                        <input type="submit" value="Add person" class="govuk-button btn-add-person" data-module="govuk-button" />
+                        <input type="submit" value="Add person" id="add-person-button" class="govuk-button btn-add-person" data-module="govuk-button" />
                     </div>
                 }
             </div>
