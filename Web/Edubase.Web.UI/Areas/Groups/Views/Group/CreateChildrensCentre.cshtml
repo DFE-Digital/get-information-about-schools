@@ -218,7 +218,7 @@
                                 <span class="govuk-error-message" v-show="urnError || urnApiErrors.length > 0 || duplicateUrnError">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
                                 <span class="govuk-error-message" v-show="tooFewCentresError">Add more centres to the {{groupTypeName}}</span>
                                 @Html.TextBoxFor(x => x.LinkedEstablishments.LinkedEstablishmentSearch.Urn, new { @class = "govuk-input govuk-!-width-two-thirds", v_model = "searchUrn" })
-                                <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" id="add-childrens-centre-search-urn-button" class="govuk-button btn-add-person" v-on:click.prevent="lookupUrn">Search URN</button>
+                                <button type="submit" name="action" value="@GroupEditorViewModel.ActionLinkedEstablishmentSearch" id="add-childrens-centre-search-urn-button" class="childrens-centre-govuk-button btn-add-person" v-on:click.prevent="lookupUrn">Search URN</button>
                             </div>
                         </div>
                         <div class="govuk-grid-column-full">
