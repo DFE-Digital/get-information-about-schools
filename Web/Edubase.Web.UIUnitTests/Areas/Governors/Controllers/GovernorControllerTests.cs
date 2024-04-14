@@ -594,11 +594,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
                     && (eLookupGovernorRole) allPairsPair[1] != eLookupGovernorRole.GovernanceProfessionalToASat
                 );
 
-
-        // this has been commented out to allow a push to sandbox1 for java devs to look at code
-        // ticket: 191487
-        // TODO: Modify tests depending on outcome
-
         [Theory()]
         [MemberData(nameof(PairwiseGovernanceProfessionalRolesExceptABC))]
         public async Task Gov_AddEditOrReplace_RoleSpecified_GovernanceProfessional_RoleAlreadyExists_DisallowedThereforeReject(eLookupGovernorRole preExistingGovernorRole, eLookupGovernorRole newGovernorRole)
@@ -630,7 +625,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         [Theory()]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool)]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat)]
-        public async Task Gov_AddEditOrReplace_RoleSpecified_GovernanceProfessional_RoleAlreadyExists_DisallowedThereforeReject_ExcludedGovernance(eLookupGovernorRole newGovernorRole)
+        public async Task Gov_AddEditOrReplace_RoleSpecified_GovernanceProfessional_RoleAlreadyExists_DisallowedThereforeReject_ExcludedGovernorRoles(eLookupGovernorRole newGovernorRole)
         {
             var estabUrn = 4;
 
