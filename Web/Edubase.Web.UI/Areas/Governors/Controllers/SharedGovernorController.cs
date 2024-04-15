@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Edubase.Services.Enums;
+using Edubase.Services.Exceptions;
 using Edubase.Services.Governors;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Governors.Models;
@@ -24,7 +25,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
         public SharedGovernorController(
             ICachedLookupService cachedLookupService,
-            IGovernorsReadService governorsReadService, 
+            IGovernorsReadService governorsReadService,
             IGovernorsWriteService governorsWriteService,
             LayoutHelper layoutHelper)
         {
@@ -46,7 +47,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             {
                 Governors = (await Task.WhenAll(sharedGovernors)).ToList(),
                 GovernorType = roleName.ToLowerInvariant(),
-                
+
             };
 
             await _layoutHelper.PopulateLayoutProperties(viewModel, establishmentUrn, null, User);
@@ -117,10 +118,26 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _governorsWriteService.UpdateDatesAsync(model.Governor.Id, model.Governor.AppointmentStartDate.ToDateTime().Value, model.Governor.AppointmentEndDate.ToDateTime().Value, User);
-                var url = $"{Url.RouteUrl("EstabDetails", new { id = model.Urn, saved = true })}#school-governance";
+                var result = await _governorsWriteService.UpdateDatesAsync(
+                    model.Governor.Id,
+                    model.Governor.AppointmentStartDate.ToDateTime().Value,
+                    model.Governor.AppointmentEndDate.ToDateTime().Value,
+                    User
+                );
+                if (result.Success)
+                {
+                    var changeSuccessUrl = $"{Url.RouteUrl("EstabDetails", new { id = model.Urn, saved = true })}#school-governance";
+                    return Redirect(changeSuccessUrl);
+                }
 
-                return Redirect(url);
+                if (result.Errors is null || result.Errors.Length == 0)
+                {
+                    throw new TexunaApiSystemException($"The API denied the update (but gave no details!)...");
+                }
+
+                // Update the view model with errors from the API response, then fall-through to re-rendering the view,
+                // showing the edit form with these errors displayed.
+                result.ApplyToModelState(ControllerContext);
             }
 
             var governor = await _governorsReadService.GetGovernorAsync(model.Governor.Id, User);
