@@ -104,6 +104,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         private const string SortText = "sortText";
         private const string SortDate = "sortDate";
+        private const string DateFormat = "d MMMM yyyy";
 
         private void CreateGrids(GovernorsDetailsDto dto, IEnumerable<GovernorModel> governors, bool isHistoric,
             int? groupUid, int? establishmentUrn)
@@ -192,12 +193,12 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                                 .AddCell(getFullnameWithTitle, displayPolicy.FullName)
                                 .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments, role.OneOfThese(GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool))
                                 .AddCell(governor.Id, displayPolicy.Id)
-                                .AddCell(governor.DOB?.ToString("d MMMM yyyy"), displayPolicy.DOB)
+                                .AddCell(governor.DOB?.ToString(DateFormat), displayPolicy.DOB)
                                 .AddCell(governor.PostCode, displayPolicy.PostCode)
                                 .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber)
                                 .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
-                                .AddCell(startDate?.ToString("d MMMM yyyy"), displayPolicy.AppointmentStartDate)
-                                .AddCell(endDate?.ToString("d MMMM yyyy"), includeEndDate);
+                                .AddCell(startDate?.ToString(DateFormat), displayPolicy.AppointmentStartDate)
+                                .AddCell(endDate?.ToString(DateFormat), includeEndDate);
                         }
                     }
                     else
@@ -209,10 +210,10 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                             .AddCell(governor.Id, displayPolicy.Id)
                             .AddCell(AppointingBodies.FirstOrDefault(x => x.Id == governor.AppointingBodyId)?.Name,
                                 displayPolicy.AppointingBodyId)
-                            .AddCell(startDate?.ToString("d MMMM yyyy"), displayPolicy.AppointmentStartDate)
-                            .AddCell(endDate?.ToString("d MMMM yyyy"), includeEndDate)
+                            .AddCell(startDate?.ToString(DateFormat), displayPolicy.AppointmentStartDate)
+                            .AddCell(endDate?.ToString(DateFormat), includeEndDate)
                             .AddCell(governor.PostCode, displayPolicy.PostCode)
-                            .AddCell(governor.DOB?.ToString("d MMMM yyyy"), displayPolicy.DOB)
+                            .AddCell(governor.DOB?.ToString(DateFormat), displayPolicy.DOB)
                             .AddCell(governor.GetPreviousFullName(), displayPolicy.PreviousFullName)
                             .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
                             .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber);
