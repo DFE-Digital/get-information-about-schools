@@ -102,6 +102,9 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public string SelectedTabName { get; set; }
         public string GroupTypeName { get; set; }
 
+        private const string SortText = "sortText";
+        private const string SortDate = "sortDate";
+
         private void CreateGrids(GovernorsDetailsDto dto, IEnumerable<GovernorModel> governors, bool isHistoric,
             int? groupUid, int? establishmentUrn)
         {
@@ -264,25 +267,25 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         {
             if (EnumSets.eGovernanceProfessionalRoles.Contains(role))
             {
-                grid.AddHeaderCell("Name", displayPolicy.FullName, "name", "sortText")
-                    .AddHeaderCell("Shared with", role.OneOfThese(GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool), "shared", "sortText")
+                grid.AddHeaderCell("Name", displayPolicy.FullName, "name", SortText)
+                    .AddHeaderCell("Shared with", role.OneOfThese(GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool), "shared", SortText)
                     .AddHeaderCell("Governance role identifier (GID)", displayPolicy.Id, "gid")
                     .AddHeaderCell("Date of birth", displayPolicy.DOB)
                     .AddHeaderCell("Home postcode", displayPolicy.PostCode)
                     .AddHeaderCell("Telephone number", displayPolicy.TelephoneNumber)
                     .AddHeaderCell("Email address", displayPolicy.EmailAddress)
-                    .AddHeaderCell("Date of appointment", displayPolicy.AppointmentStartDate, "fromDate", "sortDate")
-                    .AddHeaderCell("Date appointment ended", includeEndDate, "toDate", "sortDate");
+                    .AddHeaderCell("Date of appointment", displayPolicy.AppointmentStartDate, "fromDate", SortDate)
+                    .AddHeaderCell("Date appointment ended", includeEndDate, "toDate", SortDate);
             }
             else
             {
-                grid.AddHeaderCell("Name", displayPolicy.FullName, "name", "sortText")
+                grid.AddHeaderCell("Name", displayPolicy.FullName, "name", SortText)
                     .AddHeaderCell("Shared with", role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody),
-                        "shared", "sortText")
+                        "shared", SortText)
                     .AddHeaderCell("Governance role identifier (GID)", displayPolicy.Id, "gid")
-                    .AddHeaderCell("Appointed by", displayPolicy.AppointingBodyId, "appointed", "sortText")
-                    .AddHeaderCell("From", displayPolicy.AppointmentStartDate, "fromDate", "sortDate")
-                    .AddHeaderCell(role == GR.Member ? "Date stepped down" : "To", includeEndDate, "toDate", "sortDate")
+                    .AddHeaderCell("Appointed by", displayPolicy.AppointingBodyId, "appointed", SortText)
+                    .AddHeaderCell("From", displayPolicy.AppointmentStartDate, "fromDate", SortDate)
+                    .AddHeaderCell(role == GR.Member ? "Date stepped down" : "To", includeEndDate, "toDate", SortDate)
                     .AddHeaderCell("Postcode", displayPolicy.PostCode)
                     .AddHeaderCell("Date of birth", displayPolicy.DOB)
                     .AddHeaderCell("Previous name", displayPolicy.PreviousFullName)
@@ -322,21 +325,21 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     if (index == null)
                     {
                         grid.HeaderCells.Add(
-                            new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = "sortText" });
+                            new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = SortText });
                         foreach (var row in grid.Rows)
                         {
                             row.Cells.Add(
-                                new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = "sortText" });
+                                new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = SortText });
                         }
                     }
                     else
                     {
                         grid.HeaderCells.Insert(index.Value,
-                            new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = "sortText" });
+                            new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = SortText });
                         foreach (var row in grid.Rows)
                         {
                             row.Cells.Insert(index.Value,
-                                new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = "sortText" });
+                                new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = SortText });
                         }
                     }
 
