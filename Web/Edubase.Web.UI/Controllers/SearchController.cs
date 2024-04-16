@@ -27,6 +27,8 @@ namespace Edubase.Web.UI.Controllers
         private readonly IGroupReadService _groupReadService;
         private readonly IPlacesLookupService _placesService;
 
+        private const string ConstIndex = "Index";
+
         public SearchController(IEstablishmentReadService establishmentReadService,
             ICachedLookupService cachedLookupService,
             IGroupReadService groupReadService,
@@ -191,7 +193,7 @@ namespace Edubase.Web.UI.Controllers
                     return staffRole;
                 });
 
-            return View("Index", viewModel);
+            return View(ConstIndex, viewModel);
         }
 
         [HttpGet, Route("Results", Name = "SearchResults")]
@@ -235,7 +237,7 @@ namespace Edubase.Web.UI.Controllers
 
                         if (viewModel.SearchType.OneOfThese(eSearchType.ByLocalAuthority, eSearchType.Location, eSearchType.Text, eSearchType.EstablishmentAll))
                         {
-                            var url = Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" });
+                            var url = Url.Action(ConstIndex, "EstablishmentsSearch", new { area = "Establishments" });
                             url = viewModel.OpenOnly
                                 ? $"{url}?{Request.QueryString.AddIfNonExistent(SearchViewModel.BIND_ALIAS_STATUSIDS, (int)eStatus.Open, (int)eStatus.OpenButProposedToClose)}"
                                 : $"{url}?{Request.QueryString.AddIfNonExistent("OpenOnly", "false")}";
@@ -245,13 +247,13 @@ namespace Edubase.Web.UI.Controllers
 
                         if (viewModel.SearchType.OneOfThese(eSearchType.Group, eSearchType.GroupAll))
                         {
-                            return Redirect(Url.Action("Index", "GroupSearch", new { area = "Groups" }) + "?" + Request.QueryString);
+                            return Redirect(Url.Action(ConstIndex, "GroupSearch", new { area = "Groups" }) + "?" + Request.QueryString);
                         }
 
                         if (viewModel.SearchType.OneOfThese(eSearchType.Governor, eSearchType.GovernorReference, eSearchType.GovernorAll))
                         {
                             return Redirect(
-                                $"{Url.Action("Index", "GovernorSearch", new { area = "Governors" })}?{Request.QueryString}&{string.Join("&", viewModel.GovernorSearchModel.RoleId.Select(r => $"&{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}={r}"))}");
+                                $"{Url.Action(ConstIndex, "GovernorSearch", new { area = "Governors" })}?{Request.QueryString}&{string.Join("&", viewModel.GovernorSearchModel.RoleId.Select(r => $"&{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}={r}"))}");
                         }
 
                         throw new NotSupportedException($"The search type '{viewModel.SearchType}' is not recognised.");

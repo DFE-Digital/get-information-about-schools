@@ -50,8 +50,6 @@ namespace Edubase.Web.UI.Helpers
             return state == null ? MvcHtmlString.Empty : state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-select--error");
         }
 
-
-
         public static MvcHtmlString TextBoxValidationClass<TModel, TProperty>(
             this HtmlHelper<TModel> htmlHelper,
             Expression<Func<TModel, TProperty>> expression)
@@ -84,10 +82,20 @@ namespace Edubase.Web.UI.Helpers
             return htmlHelper.ValidationMessage(modelName, (string) null, new { @class = "govuk-error-message"});
         }
 
+        /// <summary>
+        /// Splits the combined words in an error message where an uppercase letter follows a lowercase
+        /// then capitalises the first letter of the string, and converts the rest to lower
+        /// </summary>
+        /// <param name="error">Error message (ModelError)</param>
+        /// <returns>String with first letter capitalized and the subsequent letters in lowercase</returns>
         private static string SplitNameAndCapitaliseFirstLetter(ModelError error)
         {
-            var splitName = Regex.Replace(error.ErrorMessage, "([a-z])([A-Z])", "$1 $2");
-            splitName = splitName.Substring(0, 1) + splitName.Substring(1).ToLower();
+            var matchTimeout = TimeSpan.FromMilliseconds(100);
+
+            var regex = new Regex("([a-z])([A-Z])", RegexOptions.Compiled, matchTimeout);
+            var splitName = regex.Replace(error.ErrorMessage, "$1 $2");
+            splitName = char.ToUpper(splitName[0]) + splitName.Substring(1).ToLower();
+
             return splitName;
         }
 

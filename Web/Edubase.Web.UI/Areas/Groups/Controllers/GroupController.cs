@@ -35,7 +35,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
     using GS = Services.Enums.eLookupGroupStatus;
     using GT = Services.Enums.eLookupGroupType;
 
-    [RouteArea("Groups"), RoutePrefix("Group")]
+    [RouteArea("Groups"), RoutePrefix(Group)]
     public class GroupController : Controller
     {
         private readonly ICompaniesHouseService _companiesHouseService;
@@ -47,6 +47,9 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
         private readonly IGovernorsReadService _governorsReadService;
         private readonly IExternalLookupService _externalLookupService;
         private readonly IGovernorsGridViewModelFactory _governorsGridViewModelFactory;
+
+        private const string LinkedEstablishments = "LinkedEstablishments";
+        private const string Group = "Group";
 
         public GroupController(
             ICachedLookupService cachedLookupService,
@@ -156,27 +159,27 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                         viewModel.ActionName = eChildrensCentreActions.Step4;
                         break;
                     case ActionLinkedEstablishmentAdd:
-                        foreach (var msKey in ModelState.Keys.Where(x => x.StartsWith("LinkedEstablishments")).ToList())
+                        foreach (var msKey in ModelState.Keys.Where(x => x.StartsWith(LinkedEstablishments)).ToList())
                         {
                             ModelState.Remove(msKey);
                         }
                         viewModel.ActionName = eChildrensCentreActions.Step3;
                         break;
                     case ActionLinkedEstablishmentRemove:
-                        foreach (var msKey in ModelState.Keys.Where(x => x.StartsWith("LinkedEstablishments")).ToList())
+                        foreach (var msKey in ModelState.Keys.Where(x => x.StartsWith(LinkedEstablishments)).ToList())
                         {
                             ModelState.Remove(msKey);
                         }
                         break;
                     case ActionLinkedEstablishmentEdit:
-                        foreach (var msKey in ModelState.Keys.Where(x => x.StartsWith("LinkedEstablishments")).ToList())
+                        foreach (var msKey in ModelState.Keys.Where(x => x.StartsWith(LinkedEstablishments)).ToList())
                         {
                             ModelState.Remove(msKey);
                         }
                         viewModel.ActionName = eChildrensCentreActions.Step4;
                         break;
                     case ActionLinkedEstablishmentCancelEdit:
-                        foreach (var msKey in ModelState.Keys.Where(x => x.StartsWith("LinkedEstablishments")).ToList())
+                        foreach (var msKey in ModelState.Keys.Where(x => x.StartsWith(LinkedEstablishments)).ToList())
                         {
                             ModelState.Remove(msKey);
                         }
@@ -320,7 +323,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 Group = model,
                 GroupTypeName = model.GroupTypeId.HasValue ? await _lookup.GetNameAsync(() => model.GroupTypeId) : null,
                 LocalAuthorityName = model.LocalAuthorityId.HasValue ? await _lookup.GetNameAsync(() => model.LocalAuthorityId) : null,
-                GroupStatusName = model.StatusId.HasValue ? await _lookup.GetNameAsync(() => model.StatusId, "Group") : null,
+                GroupStatusName = model.StatusId.HasValue ? await _lookup.GetNameAsync(() => model.StatusId, Group) : null,
                 Address = model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup, GT.SecureSingleAcademyTrust) ? model.Address.ToString() : null,
                 IsUserLoggedOn = User.Identity.IsAuthenticated,
                 GroupTypeId = model.GroupTypeId ?? -1,
@@ -367,7 +370,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 Group = model,
                 GroupTypeName = model.GroupTypeId.HasValue ? await _lookup.GetNameAsync(() => model.GroupTypeId) : null,
                 LocalAuthorityName = await _lookup.GetNameAsync(() => model.LocalAuthorityId),
-                GroupStatusName =  await _lookup.GetNameAsync(() => model.StatusId, "Group"),
+                GroupStatusName =  await _lookup.GetNameAsync(() => model.StatusId, Group),
                 Address = model.GroupTypeId.OneOfThese(GT.SingleacademyTrust, GT.MultiacademyTrust, GT.ChildrensCentresGroup, GT.SecureSingleAcademyTrust) ? model.Address.ToString() : null,
                 IsUserLoggedOn = User.Identity.IsAuthenticated,
                 GroupTypeId = model.GroupTypeId ?? -1,
@@ -404,7 +407,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 StatusId = domainModel.StatusId,
                 OriginalStatusId = domainModel.StatusId,
                 UKPRN = domainModel.UKPRN.ToInteger(),
-                GroupStatusName = domainModel.StatusId.HasValue ? await _lookup.GetNameAsync(() => domainModel.StatusId, "Group") : null
+                GroupStatusName = domainModel.StatusId.HasValue ? await _lookup.GetNameAsync(() => domainModel.StatusId, Group) : null
             };
 
             viewModel.ListOfEstablishmentsPluralName = NomenclatureService.GetEstablishmentsPluralName((GT)viewModel.GroupTypeId.Value);
@@ -627,7 +630,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 }
                 else if (viewModel.Results.Count == 1)
                 {
-                    return RedirectToAction("CreateAcademyTrust", "Group", new { companiesHouseNumber = viewModel.Results.Items.First().Number, area = "Groups", academyTrustRoute = academyTrustRoute });
+                    return RedirectToAction("CreateAcademyTrust", Group, new { companiesHouseNumber = viewModel.Results.Items.First().Number, area = "Groups", academyTrustRoute = academyTrustRoute });
                 }
             }
 

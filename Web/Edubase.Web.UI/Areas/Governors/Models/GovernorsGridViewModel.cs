@@ -102,6 +102,10 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         public string SelectedTabName { get; set; }
         public string GroupTypeName { get; set; }
 
+        private const string SortText = "sortText";
+        private const string SortDate = "sortDate";
+        private const string DateFormat = "d MMMM yyyy";
+
         private void CreateGrids(GovernorsDetailsDto dto, IEnumerable<GovernorModel> governors, bool isHistoric,
             int? groupUid, int? establishmentUrn)
         {
@@ -189,12 +193,12 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                                 .AddCell(getFullnameWithTitle, displayPolicy.FullName)
                                 .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments, role.OneOfThese(GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool))
                                 .AddCell(governor.Id, displayPolicy.Id)
-                                .AddCell(governor.DOB?.ToString("d MMMM yyyy"), displayPolicy.DOB)
+                                .AddCell(governor.DOB?.ToString(DateFormat), displayPolicy.DOB)
                                 .AddCell(governor.PostCode, displayPolicy.PostCode)
                                 .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber)
                                 .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
-                                .AddCell(startDate?.ToString("d MMMM yyyy"), displayPolicy.AppointmentStartDate)
-                                .AddCell(endDate?.ToString("d MMMM yyyy"), includeEndDate);
+                                .AddCell(startDate?.ToString(DateFormat), displayPolicy.AppointmentStartDate)
+                                .AddCell(endDate?.ToString(DateFormat), includeEndDate);
                         }
                     }
                     else
@@ -206,10 +210,10 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                             .AddCell(governor.Id, displayPolicy.Id)
                             .AddCell(AppointingBodies.FirstOrDefault(x => x.Id == governor.AppointingBodyId)?.Name,
                                 displayPolicy.AppointingBodyId)
-                            .AddCell(startDate?.ToString("d MMMM yyyy"), displayPolicy.AppointmentStartDate)
-                            .AddCell(endDate?.ToString("d MMMM yyyy"), includeEndDate)
+                            .AddCell(startDate?.ToString(DateFormat), displayPolicy.AppointmentStartDate)
+                            .AddCell(endDate?.ToString(DateFormat), includeEndDate)
                             .AddCell(governor.PostCode, displayPolicy.PostCode)
-                            .AddCell(governor.DOB?.ToString("d MMMM yyyy"), displayPolicy.DOB)
+                            .AddCell(governor.DOB?.ToString(DateFormat), displayPolicy.DOB)
                             .AddCell(governor.GetPreviousFullName(), displayPolicy.PreviousFullName)
                             .AddCell(governor.EmailAddress, displayPolicy.EmailAddress)
                             .AddCell(governor.TelephoneNumber, displayPolicy.TelephoneNumber);
@@ -264,25 +268,25 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         {
             if (EnumSets.eGovernanceProfessionalRoles.Contains(role))
             {
-                grid.AddHeaderCell("Name", displayPolicy.FullName, "name", "sortText")
-                    .AddHeaderCell("Shared with", role.OneOfThese(GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool), "shared", "sortText")
+                grid.AddHeaderCell("Name", displayPolicy.FullName, "name", SortText)
+                    .AddHeaderCell("Shared with", role.OneOfThese(GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool), "shared", SortText)
                     .AddHeaderCell("Governance role identifier (GID)", displayPolicy.Id, "gid")
                     .AddHeaderCell("Date of birth", displayPolicy.DOB)
                     .AddHeaderCell("Home postcode", displayPolicy.PostCode)
                     .AddHeaderCell("Telephone number", displayPolicy.TelephoneNumber)
                     .AddHeaderCell("Email address", displayPolicy.EmailAddress)
-                    .AddHeaderCell("Date of appointment", displayPolicy.AppointmentStartDate, "fromDate", "sortDate")
-                    .AddHeaderCell("Date appointment ended", includeEndDate, "toDate", "sortDate");
+                    .AddHeaderCell("Date of appointment", displayPolicy.AppointmentStartDate, "fromDate", SortDate)
+                    .AddHeaderCell("Date appointment ended", includeEndDate, "toDate", SortDate);
             }
             else
             {
-                grid.AddHeaderCell("Name", displayPolicy.FullName, "name", "sortText")
+                grid.AddHeaderCell("Name", displayPolicy.FullName, "name", SortText)
                     .AddHeaderCell("Shared with", role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody),
-                        "shared", "sortText")
+                        "shared", SortText)
                     .AddHeaderCell("Governance role identifier (GID)", displayPolicy.Id, "gid")
-                    .AddHeaderCell("Appointed by", displayPolicy.AppointingBodyId, "appointed", "sortText")
-                    .AddHeaderCell("From", displayPolicy.AppointmentStartDate, "fromDate", "sortDate")
-                    .AddHeaderCell(role == GR.Member ? "Date stepped down" : "To", includeEndDate, "toDate", "sortDate")
+                    .AddHeaderCell("Appointed by", displayPolicy.AppointingBodyId, "appointed", SortText)
+                    .AddHeaderCell("From", displayPolicy.AppointmentStartDate, "fromDate", SortDate)
+                    .AddHeaderCell(role == GR.Member ? "Date stepped down" : "To", includeEndDate, "toDate", SortDate)
                     .AddHeaderCell("Postcode", displayPolicy.PostCode)
                     .AddHeaderCell("Date of birth", displayPolicy.DOB)
                     .AddHeaderCell("Previous name", displayPolicy.PreviousFullName)
@@ -322,21 +326,21 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     if (index == null)
                     {
                         grid.HeaderCells.Add(
-                            new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = "sortText" });
+                            new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = SortText });
                         foreach (var row in grid.Rows)
                         {
                             row.Cells.Add(
-                                new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = "sortText" });
+                                new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = SortText });
                         }
                     }
                     else
                     {
                         grid.HeaderCells.Insert(index.Value,
-                            new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = "sortText" });
+                            new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = SortText });
                         foreach (var row in grid.Rows)
                         {
                             row.Cells.Insert(index.Value,
-                                new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = "sortText" });
+                                new GridCellViewModel(string.Empty) { SortKey = sortKey, SortType = SortText });
                         }
                     }
 
