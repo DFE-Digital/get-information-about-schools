@@ -575,27 +575,31 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             get
             {
                 var allData = new List<object[]>
-        {
-            new object[] {eLookupGovernorRole.Group_SharedGovernanceProfessional, eLookupGovernorRole.GovernanceProfessionalToAMat},
-            new object[] {eLookupGovernorRole.GovernanceProfessionalToAMat, eLookupGovernorRole.Group_SharedGovernanceProfessional},
-        };
+                {
+                    // - #198772 / #193913 : MAT can have "one-each" of "Shared governance professional - group" and "Governance professional to a multi-academy trust (MAT)"
+                    new object[] {eLookupGovernorRole.Group_SharedGovernanceProfessional, eLookupGovernorRole.GovernanceProfessionalToAMat},
+                    new object[] {eLookupGovernorRole.GovernanceProfessionalToAMat, eLookupGovernorRole.Group_SharedGovernanceProfessional},
+
+                    // - #198772 / #197361 : Establishment within a SAT can have "one-each" of "Governance professional to an individual academy or free school" and "Governance professional for single-academy trust (SAT)"
+                    new object[] {eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, eLookupGovernorRole.GovernanceProfessionalToASat},
+                    new object[] {eLookupGovernorRole.GovernanceProfessionalToASat, eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool},
+
+                    // - #198239: System should allow adding a Governance professional to a federation if a record for Governance professional to a local authority maintained is already recorded.
+                    new object[] {eLookupGovernorRole.GovernanceProfessionalToAFederation, eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool},
+                    new object[] {eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool, eLookupGovernorRole.GovernanceProfessionalToAFederation},
+                };
                 return allData;
             }
         }
 
-        public static IEnumerable<object[]> PairwiseGovernanceProfessionalRolesExceptABC => PairwiseGovernanceProfessionalRoles
-            .Where(allPairsPair =>
-                !PairwiseGovernanceProfessionalRolesAllowedCombinations.Any(innerPair =>
-                    allPairsPair[0].Equals(innerPair[0])
-                    && allPairsPair[1].Equals(innerPair[1]))
-                    && (eLookupGovernorRole) allPairsPair[0] != eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool
-                    && (eLookupGovernorRole) allPairsPair[1] != eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool
-                    && (eLookupGovernorRole) allPairsPair[0] != eLookupGovernorRole.GovernanceProfessionalToASat
-                    && (eLookupGovernorRole) allPairsPair[1] != eLookupGovernorRole.GovernanceProfessionalToASat
-                );
+        public static IEnumerable<object[]> ForbiddenCombinationsofGovernanceProfessionalRoles => PairwiseGovernanceProfessionalRoles
+            .Where(allPairsPair => !PairwiseGovernanceProfessionalRolesAllowedCombinations.Any(innerPair =>
+                allPairsPair[0].Equals(innerPair[0])
+                && allPairsPair[1].Equals(innerPair[1])));
+
 
         [Theory()]
-        [MemberData(nameof(PairwiseGovernanceProfessionalRolesExceptABC))]
+        [MemberData(nameof(ForbiddenCombinationsofGovernanceProfessionalRoles))]
         public async Task Gov_AddEditOrReplace_RoleSpecified_GovernanceProfessional_RoleAlreadyExists_DisallowedThereforeReject(eLookupGovernorRole preExistingGovernorRole, eLookupGovernorRole newGovernorRole)
         {
             var estabUrn = 4;
@@ -621,45 +625,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             Assert.NotNull(redirectResult);
             Assert.Equal("EstabEditGovernance", redirectResult.RouteName);
         }
-
-        [Theory()]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool)]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat)]
-        public async Task Gov_AddEditOrReplace_RoleSpecified_GovernanceProfessional_RoleAlreadyExists_DisallowedThereforeReject_ExcludedGovernorRoles(eLookupGovernorRole newGovernorRole)
-        {
-            var estabUrn = 4;
-
-            var existingRole = eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool;
-            if (newGovernorRole == eLookupGovernorRole.GovernanceProfessionalToASat)
-            {
-                existingRole = eLookupGovernorRole.GovernanceProfessionalToASat;
-            }
-
-            mockGovernorsReadService
-                .Setup(g => g.GetGovernorListAsync(estabUrn, null, It.IsAny<IPrincipal>()))
-                .ReturnsAsync(() => new GovernorsDetailsDto
-                {
-                    CurrentGovernors = new List<GovernorModel>()
-                    {
-                new GovernorModel() {RoleId = (int) existingRole}
-                    }
-                });
-            mockControllerContext.SetupGet(c => c.RouteData)
-                .Returns(new RouteData(new Route("", new PageRouteHandler("~/")), new PageRouteHandler("~/")));
-
-            var result = await controller.AddEditOrReplace(null, estabUrn, newGovernorRole, null);
-
-            var redirectResult = result as RedirectToRouteResult;
-
-            Assert.NotNull(redirectResult);
-            Assert.Equal("EstabEditGovernance", redirectResult.RouteName);
-        }
-
-        // test 2 - allow, and prompt for shared governor details (redirect to "SelectSharedGovernor")
-        // TODO: Same as above, but redirec to "SelectSharedGovernor"
-
-        // test 3 - allow, and prompt for normal governor details (continue down to where we get the mock error for the layout thing)
-        // TODO: To look at mock issues
 
 
         [Fact()]
