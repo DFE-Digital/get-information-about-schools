@@ -299,7 +299,15 @@ namespace Edubase.Web.UI.Helpers
 
             foreach (var item in selectListItem)
             {
-                options = options.Append("<option value='" + item.Value + "'id='" + expressionText + "-option-" + item.Text + "'>" + item.Text + "</option>");
+                options = options.Append(
+                    "<option " +
+                    " value='" + item.Value + "'" +
+                    " id='" + expressionText + "-option-" + item.Text + "'" +
+                    (item.Selected ? " selected='selected'" : "") +
+                    ">" +
+                    item.Text +
+                    "</option>"
+                );
             }
 
             dropdown.InnerHtml = options.ToString();
