@@ -430,7 +430,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             viewModel.SelectedPreviousExistingNonChairId = model.Id;
         }
 
-        private async Task<bool> RoleAllowed(eLookupGovernorRole role, int? groupUId, int? establishmentUrn,
+        public async Task<bool> RoleAllowed(eLookupGovernorRole role, int? groupUId, int? establishmentUrn,
             IPrincipal user)
         {
             var existingGovernors = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, user);
@@ -446,45 +446,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 return false;
             }
 
-            // At MAT level you should be able to have a 'Shared governance professional - group' and a 'Governance professional to a MAT'
-            var isGroupPresent = existingGovernorRoleIds.Any(g => g == (int)eLookupGovernorRole.Group_SharedGovernanceProfessional);
-            var isMatPresent = existingGovernorRoleIds.Any(m => m == (int)eLookupGovernorRole.GovernanceProfessionalToAMat);
-            var isAddingGroup = role == eLookupGovernorRole.Group_SharedGovernanceProfessional;
-            var isAddingMat = role == eLookupGovernorRole.GovernanceProfessionalToAMat;
+            var checkRolePresenceInMatAndSat = CheckMatAndSatLevels(role, existingGovernorRoleIds);
 
-            // AT SAT level you should be able to have a 'Governance professional for Single-academy trust (SAT)' and a 'Governance professional to an individual academy or free school'
-            var isFreeSchoolPresent = existingGovernorRoleIds.Any(g => g == (int) eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool);
-            var isSatPresent = existingGovernorRoleIds.Any(m => m == (int) eLookupGovernorRole.GovernanceProfessionalToASat);
-            var isAddingFreeSchool = role == eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool;
-            var isAddingSat = role == eLookupGovernorRole.GovernanceProfessionalToASat;
-
-            if (isAddingFreeSchool || isAddingSat)
+            if (checkRolePresenceInMatAndSat && IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
             {
-                if (!((isAddingSat && isFreeSchoolPresent) || (isAddingFreeSchool && isSatPresent)))
-                {
-                    if (IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
-                    {
-                        return false;
-                    }
-                }
-            }
-            else if (isAddingGroup || isAddingMat)
-            {
-                if (!((isAddingMat && isGroupPresent) || (isAddingGroup && isMatPresent)))
-                {
-                    if (IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
-                    {
-                        return false;
-                    }
-                }
-            }
-            else
-            {
-                // Only a single governance professional may be attached
-                if (IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
-                {
-                    return false;
-                }
+                return false;
             }
 
             // Where the new governor is a role which permits only a single appointee, forbid if an exact match is found
@@ -497,6 +463,43 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             // Allow, if no rule met to forbid creating a new governor of this type
             return true;
+        }
+
+        private static bool CheckMatAndSatLevels(eLookupGovernorRole role, HashSet<int> existingGovernorRoleIds)
+        {
+            // At MAT level you should be able to have a 'Shared governance professional - group' and a 'Governance professional to a MAT'
+            var isGroupPresent = existingGovernorRoleIds.Any(g => g == (int) eLookupGovernorRole.Group_SharedGovernanceProfessional);
+            var isMatPresent = existingGovernorRoleIds.Any(m => m == (int) eLookupGovernorRole.GovernanceProfessionalToAMat);
+            var isAddingGroup = role == eLookupGovernorRole.Group_SharedGovernanceProfessional;
+            var isAddingMat = role == eLookupGovernorRole.GovernanceProfessionalToAMat;
+
+            // AT SAT level you should be able to have a 'Governance professional for Single-academy trust (SAT)' and a 'Governance professional to an individual academy or free school'
+            var isFreeSchoolPresent = existingGovernorRoleIds.Any(g => g == (int) eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool);
+            var isSatPresent = existingGovernorRoleIds.Any(m => m == (int) eLookupGovernorRole.GovernanceProfessionalToASat);
+            var isAddingFreeSchool = role == eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool;
+            var isAddingSat = role == eLookupGovernorRole.GovernanceProfessionalToASat;
+
+            var checkRolePresence = false;
+            if (isAddingFreeSchool || isAddingSat)
+            {
+                if (!((isAddingSat && isFreeSchoolPresent) || (isAddingFreeSchool && isSatPresent)))
+                {
+                    checkRolePresence = true;
+                }
+            }
+            else if (isAddingGroup || isAddingMat)
+            {
+                if (!((isAddingMat && isGroupPresent) || (isAddingGroup && isMatPresent)))
+                {
+                    checkRolePresence = true;
+                }
+            }
+            else
+            {
+                checkRolePresence = true;
+            }
+
+            return checkRolePresence;
         }
 
         /// <param name="governorRole">The role under consideration</param>

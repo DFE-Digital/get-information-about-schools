@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -1207,6 +1206,160 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
+        }
+
+        // Only a single chair of a local governing body may be attached (either directly, or via shared role)
+
+        [Fact]
+        public async Task RoleAllowed_ShouldReturnTrue_WhenChairOfLocalGoverningBodyIsAdded()
+        {
+            var currentGovernors = new List<GovernorModel>
+            {
+                new GovernorModel { RoleId = (int)eLookupGovernorRole.ChairOfLocalGoverningBody }
+            };
+
+            var governorsDetails = new GovernorsDetailsDto
+            {
+                CurrentGovernors = new List<GovernorModel>(),
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.ChairOfLocalGoverningBody },
+                HistoricalGovernors = new List<GovernorModel>(),
+                HasFullAccess = true
+            };
+
+            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(governorsDetails);
+
+            var result = await controller.RoleAllowed(eLookupGovernorRole.ChairOfLocalGoverningBody, null, null, null);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task RoleAllowed_ShouldReturnFalse_WhenChairOfLocalGoverningBodyIsAddedWithSameExsistingGovernor()
+        {
+            var currentGovernors = new List<GovernorModel>
+            {
+                new GovernorModel { RoleId = (int)eLookupGovernorRole.ChairOfLocalGoverningBody }
+            };
+
+            var governorsDetails = new GovernorsDetailsDto
+            {
+                CurrentGovernors = currentGovernors,
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.ChairOfLocalGoverningBody },
+                HistoricalGovernors = new List<GovernorModel>(),
+                HasFullAccess = true
+            };
+
+            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(governorsDetails);    
+
+            var result = await controller.RoleAllowed(eLookupGovernorRole.ChairOfLocalGoverningBody, null, null, null);
+
+            Assert.False(result);
+        }
+   
+
+        [Fact]
+        public async Task RoleAllowed_ShouldReturnFalse_WhenChairOfLocalGoverningBodyIsAddedWith_DifferentChair()
+        {
+            var currentGovernors = new List<GovernorModel>
+            {
+                new GovernorModel { RoleId = (int)eLookupGovernorRole.ChairOfLocalGoverningBody }
+            };
+
+            var governorsDetails = new GovernorsDetailsDto
+            {
+                CurrentGovernors = currentGovernors,
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody },
+                HistoricalGovernors = new List<GovernorModel>(),
+                HasFullAccess = true
+            };
+
+            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(governorsDetails);
+
+            var result = await controller.RoleAllowed(eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody, null, null, null);
+
+            Assert.False(result);
+        }
+
+
+        [Theory]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, eLookupGovernorRole.Group_SharedGovernanceProfessional)]
+        [InlineData(eLookupGovernorRole.Group_SharedGovernanceProfessional, eLookupGovernorRole.GovernanceProfessionalToAMat)]
+        public async Task RoleAllowed_ShouldReturnTrue_WhenEither_SharedGovernanceProfessionalGroup_or_MAT_added_AndOtherExists(eLookupGovernorRole firstGovernanceProfessional, eLookupGovernorRole secondGovernanceProfessional)
+        {
+            var currentGovernors = new List<GovernorModel>
+            {
+                new GovernorModel { RoleId = (int)firstGovernanceProfessional }
+            };
+
+            var governorsDetails = new GovernorsDetailsDto
+            {
+                CurrentGovernors = currentGovernors,
+                ApplicableRoles = new List<eLookupGovernorRole> { secondGovernanceProfessional },
+                HistoricalGovernors = new List<GovernorModel>(),
+                HasFullAccess = true
+            };
+
+            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(governorsDetails);
+
+            var result = await controller.RoleAllowed(secondGovernanceProfessional, null, null, null);
+
+            Assert.True(result);
+        }
+
+        [Theory]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool)]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, eLookupGovernorRole.GovernanceProfessionalToASat)]
+        public async Task RoleAllowed_ShouldReturnTrue_WhenEither_SharedGovernanceProfessionalSAT_or_FreeSchool_added_AndOtherExists(eLookupGovernorRole firstGovernanceProfessional, eLookupGovernorRole secondGovernanceProfessional)
+        {
+            var currentGovernors = new List<GovernorModel>
+            {
+                new GovernorModel { RoleId = (int)firstGovernanceProfessional }
+            };
+
+            var governorsDetails = new GovernorsDetailsDto
+            {
+                CurrentGovernors = currentGovernors,
+                ApplicableRoles = new List<eLookupGovernorRole> { secondGovernanceProfessional },
+                HistoricalGovernors = new List<GovernorModel>(),
+                HasFullAccess = true
+            };
+
+            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(governorsDetails);
+
+            var result = await controller.RoleAllowed(secondGovernanceProfessional, null, null, null);
+
+            Assert.True(result);
+        }
+
+        [Theory]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, eLookupGovernorRole.GovernanceProfessionalToAMat)]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, eLookupGovernorRole.GovernanceProfessionalToASat)]
+        public async Task RoleAllowed_ShouldReturnFalse_When_MAT_AddedAndOtherExists(eLookupGovernorRole firstGovernanceProfessional, eLookupGovernorRole secondGovernanceProfessional)
+        {
+            var currentGovernors = new List<GovernorModel>
+            {
+                new GovernorModel { RoleId = (int)firstGovernanceProfessional }
+            };
+
+            var governorsDetails = new GovernorsDetailsDto
+            {
+                CurrentGovernors = currentGovernors,
+                ApplicableRoles = new List<eLookupGovernorRole> { secondGovernanceProfessional },
+                HistoricalGovernors = new List<GovernorModel>(),
+                HasFullAccess = true
+            };
+
+            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(governorsDetails);
+
+            var result = await controller.RoleAllowed(secondGovernanceProfessional, null, null, null);
+
+            Assert.False(result);
         }
     }
 }
