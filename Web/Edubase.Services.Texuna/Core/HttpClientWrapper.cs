@@ -342,7 +342,7 @@ namespace Edubase.Services
         {
             if (message == null)
             {
-                throw new TexunaApiSystemException("The HttpResponseMessage or its RequestMessage is null");
+                throw new TexunaApiSystemException("The HttpResponseMessage is null");
             }
 
             if (message.Content?.Headers?.ContentType?.MediaType != "application/json")
