@@ -446,9 +446,30 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 return false;
             }
 
+            var checkRolePresence = ChecksAtMatAndSatLevels(role, existingGovernorRoleIds);
+
+            if (checkRolePresence && IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
+            {
+                return false;
+            }
+
+            // Where the new governor is a role which permits only a single appointee, forbid if an exact match is found
+            var isRoleWhichPermitsOnlySingleAppointee = EnumSets.eSingularGovernorRoles.Contains(role);
+            var exactCurrentGovernorTypeMatchFound = existingGovernorRoleIds.Contains((int) role);
+            if (isRoleWhichPermitsOnlySingleAppointee && exactCurrentGovernorTypeMatchFound)
+            {
+                return false;
+            }
+
+            // Allow, if no rule met to forbid creating a new governor of this type
+            return true;
+        }
+
+        private static bool ChecksAtMatAndSatLevels(eLookupGovernorRole role, HashSet<int> existingGovernorRoleIds)
+        {
             // At MAT level you should be able to have a 'Shared governance professional - group' and a 'Governance professional to a MAT'
-            var isGroupPresent = existingGovernorRoleIds.Any(g => g == (int)eLookupGovernorRole.Group_SharedGovernanceProfessional);
-            var isMatPresent = existingGovernorRoleIds.Any(m => m == (int)eLookupGovernorRole.GovernanceProfessionalToAMat);
+            var isGroupPresent = existingGovernorRoleIds.Any(g => g == (int) eLookupGovernorRole.Group_SharedGovernanceProfessional);
+            var isMatPresent = existingGovernorRoleIds.Any(m => m == (int) eLookupGovernorRole.GovernanceProfessionalToAMat);
             var isAddingGroup = role == eLookupGovernorRole.Group_SharedGovernanceProfessional;
             var isAddingMat = role == eLookupGovernorRole.GovernanceProfessionalToAMat;
 
@@ -477,21 +498,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             {
                 checkRolePresence = true;
             }
-            if (checkRolePresence && IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
-            {
-                return false;
-            }
 
-            // Where the new governor is a role which permits only a single appointee, forbid if an exact match is found
-            var isRoleWhichPermitsOnlySingleAppointee = EnumSets.eSingularGovernorRoles.Contains(role);
-            var exactCurrentGovernorTypeMatchFound = existingGovernorRoleIds.Contains((int) role);
-            if (isRoleWhichPermitsOnlySingleAppointee && exactCurrentGovernorTypeMatchFound)
-            {
-                return false;
-            }
-
-            // Allow, if no rule met to forbid creating a new governor of this type
-            return true;
+            return checkRolePresence;
         }
 
         /// <param name="governorRole">The role under consideration</param>
