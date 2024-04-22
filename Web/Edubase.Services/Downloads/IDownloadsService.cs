@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Edubase.Services.Domain;
 using Edubase.Services.Core;
+using System.Net.Http;
 
 namespace Edubase.Services.Downloads
 {
@@ -18,5 +19,9 @@ namespace Edubase.Services.Downloads
         Task<string> GenerateExtractAsync(string id, IPrincipal principal);
         Task<ProgressDto> GetProgressOfGeneratedExtractAsync(Guid id, IPrincipal principal);
         Task<bool> IsDownloadAvailable(string path, string id, IPrincipal principal);
+
+        Task<HttpResponseMessage> DownloadFile(FileDownload file, IPrincipal user);
+
+        Task<HttpResponseMessage> DownloadMATClosureReport(IPrincipal user);
     }
 }

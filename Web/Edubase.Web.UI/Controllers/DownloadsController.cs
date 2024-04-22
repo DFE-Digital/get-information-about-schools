@@ -28,14 +28,12 @@ namespace Edubase.Web.UI.Controllers
         private readonly IDownloadsService _downloadsService;
         private readonly IEstablishmentReadService _establishmentReadService;
         private readonly IGroupDownloadService _groupDownloadService;
-        private readonly HttpClientWrapper _httpClientHelper;
 
-        public DownloadsController(IDownloadsService downloadsService, IEstablishmentReadService establishmentReadService, IGroupDownloadService groupDownloadService, HttpClientWrapper httpClientHelper)
+        public DownloadsController(IDownloadsService downloadsService, IEstablishmentReadService establishmentReadService, IGroupDownloadService groupDownloadService)
         {
             _downloadsService = downloadsService;
             _establishmentReadService = establishmentReadService;
             _groupDownloadService = groupDownloadService;
-            _httpClientHelper = httpClientHelper;
         }
 
         public async Task<ActionResult> Index(int? skip, DateTimeViewModel filterDate, eDownloadFilter searchType = eDownloadFilter.Latest)
@@ -239,15 +237,12 @@ namespace Edubase.Web.UI.Controllers
             var file = (await _downloadsService.GetListAsync(filterDate ?? DateTime.Today, User)).FirstOrDefault(x => x.Tag == id);
             if (file != null)
             {
-                using (var c = IocConfig.CreateHttpClient())
+                var response = await _downloadsService.DownloadFile(file, User);
+
+                return new FileStreamResult(await response.Content.ReadAsStreamAsync(), response.Content.Headers.ContentType.MediaType)
                 {
-                    var requestMessage = await _httpClientHelper.CreateHttpRequestMessageAsync(HttpMethod.Get, file.Url, User);
-                    var response = (await c.SendAsync(requestMessage)).EnsureSuccessStatusCode();
-                    return new FileStreamResult(await response.Content.ReadAsStreamAsync(), response.Content.Headers.ContentType.MediaType)
-                    {
-                        FileDownloadName = response.Content.Headers.ContentDisposition.FileName.RemoveSubstring("\"")
-                    };
-                }
+                    FileDownloadName = response.Content.Headers.ContentDisposition.FileName.RemoveSubstring("\"")
+                };
             }
             else
             {
@@ -282,20 +277,16 @@ namespace Edubase.Web.UI.Controllers
         [Route("Download/MATClosureReport", Name = "DownloadMATClosureReport")]
         public async Task<ActionResult> DownloadMATClosureReportAsync(string filename)
         {
-            using (var c = IocConfig.CreateHttpClient())
-            {
-                var requestMessage = await _httpClientHelper.CreateHttpRequestMessageAsync(HttpMethod.Get, "downloads/matclosurereport.csv", User);
-                var response = await c.SendAsync(requestMessage);
+            var response = await _downloadsService.DownloadMATClosureReport(User);
 
-                if(response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    return HttpNotFound();
-                }
-                else
-                {
-                    response.EnsureSuccessStatusCode();
-                    return new FileStreamResult(await response.Content.ReadAsStreamAsync(), response.Content.Headers.ContentType.MediaType) { FileDownloadName = filename };
-                }
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return HttpNotFound();
+            }
+            else
+            {
+                response.EnsureSuccessStatusCode();
+                return new FileStreamResult(await response.Content.ReadAsStreamAsync(), response.Content.Headers.ContentType.MediaType) { FileDownloadName = filename };
             }
         }
 
