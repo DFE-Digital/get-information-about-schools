@@ -88,12 +88,18 @@ namespace Edubase.Web.UI.Helpers
         /// </summary>
         /// <param name="error">Error message (ModelError)</param>
         /// <returns>String with first letter capitalized and the subsequent letters in lowercase</returns>
-        private static string SplitNameAndCapitaliseFirstLetter(ModelError error)
+        public static string SplitNameAndCapitaliseFirstLetter(ModelError error)
         {
-            var matchTimeout = TimeSpan.FromMilliseconds(100);
+            if (string.IsNullOrEmpty(error.ErrorMessage))
+                return string.Empty;
 
+            var matchTimeout = TimeSpan.FromMilliseconds(100);
             var regex = new Regex("([a-z])([A-Z])", RegexOptions.Compiled, matchTimeout);
             var splitName = regex.Replace(error.ErrorMessage, "$1 $2");
+
+            if (string.IsNullOrEmpty(splitName))
+                return string.Empty;
+
             splitName = char.ToUpper(splitName[0]) + splitName.Substring(1).ToLower();
 
             return splitName;
