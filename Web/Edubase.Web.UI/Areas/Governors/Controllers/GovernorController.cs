@@ -458,33 +458,28 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var isAddingFreeSchool = role == eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool;
             var isAddingSat = role == eLookupGovernorRole.GovernanceProfessionalToASat;
 
+            var checkRolePresence = false;
             if (isAddingFreeSchool || isAddingSat)
             {
                 if (!((isAddingSat && isFreeSchoolPresent) || (isAddingFreeSchool && isSatPresent)))
                 {
-                    if (IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
-                    {
-                        return false;
-                    }
+                    checkRolePresence = true;
                 }
             }
             else if (isAddingGroup || isAddingMat)
             {
                 if (!((isAddingMat && isGroupPresent) || (isAddingGroup && isMatPresent)))
                 {
-                    if (IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
-                    {
-                        return false;
-                    }
+                    checkRolePresence = true;
                 }
             }
             else
             {
-                // Only a single governance professional may be attached
-                if (IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
-                {
-                    return false;
-                }
+                checkRolePresence = true;
+            }
+            if (checkRolePresence && IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
+            {
+                return false;
             }
 
             // Where the new governor is a role which permits only a single appointee, forbid if an exact match is found
