@@ -340,7 +340,7 @@ namespace Edubase.Services
 
         private void AssertJsonContent(HttpResponseMessage message)
         {
-            if (message == null || message.RequestMessage == null)
+            if (message == null)
             {
                 throw new TexunaApiSystemException("The HttpResponseMessage or its RequestMessage is null");
             }
