@@ -381,7 +381,7 @@ namespace Edubase.Services
             catch { return null; }
         }
 
-        private async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessage)
+        public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage requestMessage)
         {
             var startTime = DateTime.UtcNow;
             HttpResponseMessage response = null;
