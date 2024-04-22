@@ -446,9 +446,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 return false;
             }
 
-            var checkRolePresence = ChecksAtMatAndSatLevels(role, existingGovernorRoleIds);
+            var checkRolePresenceInMatAndSat = CheckMatAndSatLevels(role, existingGovernorRoleIds);
 
-            if (checkRolePresence && IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
+            if (checkRolePresenceInMatAndSat && IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
             {
                 return false;
             }
@@ -465,7 +465,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return true;
         }
 
-        private static bool ChecksAtMatAndSatLevels(eLookupGovernorRole role, HashSet<int> existingGovernorRoleIds)
+        private static bool CheckMatAndSatLevels(eLookupGovernorRole role, HashSet<int> existingGovernorRoleIds)
         {
             // At MAT level you should be able to have a 'Shared governance professional - group' and a 'Governance professional to a MAT'
             var isGroupPresent = existingGovernorRoleIds.Any(g => g == (int) eLookupGovernorRole.Group_SharedGovernanceProfessional);
