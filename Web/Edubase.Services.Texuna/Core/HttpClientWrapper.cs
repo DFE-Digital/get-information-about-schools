@@ -340,10 +340,15 @@ namespace Edubase.Services
 
         private void AssertJsonContent(HttpResponseMessage message)
         {
+            if (message == null || message.RequestMessage == null)
+            {
+                throw new TexunaApiSystemException("The HttpResponseMessage or its RequestMessage is null");
+            }
+
             if (message?.Content?.Headers?.ContentType?.MediaType != "application/json")
             {
                 throw new TexunaApiSystemException(
-                    $"The API returned an invalid content type: '{message?.Content?.Headers?.ContentType?.MediaType}' (HTTP Status: {(int)(message?.StatusCode ?? default)} {message?.StatusCode ?? default}, Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})", GetRequestJsonBody(message?.RequestMessage));
+                    $"The API returned an invalid content type: '{message.Content?.Headers?.ContentType?.MediaType}' (HTTP Status: {(int) message.StatusCode} {message.StatusCode}, Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})", GetRequestJsonBody(message.RequestMessage));
             }
         }
 
