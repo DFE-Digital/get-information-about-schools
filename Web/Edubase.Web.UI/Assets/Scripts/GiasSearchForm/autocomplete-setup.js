@@ -5,35 +5,46 @@ const autocompleteSetup = (function (){
   let intervalId;
   let nameSuggestions;
 
+  function debounce(func, wait) {
+    let timeout;
+    return function executed(...args) {
+      const context = this;
+      const later = () => {
+        clearTimeout(intervalId);
+        func.apply(context, args);
+      };
+      clearTimeout(intervalId);
+      intervalId = setTimeout(later, wait);
+    };
+  }
+
   function getNameSuggestions(searchString, autocomplete, isMatSearch) {
     const url =  isMatSearch ? `/search/suggestgroup?text=${searchString}`: `/search/suggest?text=${searchString}`;
 
-    intervalId = setTimeout(function() {
     const openOnly = document.getElementById('include-open-establishments-name');
       $.ajax({
         url: url,
         dataType: 'json',
         success: function(response) {
           const suggestions = response.map((school) => {
-            const obj = {};
-            obj.text = school.text;
-            obj.urn  = school.urn;
-            obj.closed = school.closed;
-            return obj;
+            return {
+              text: school.text,
+              urn: school.urn,
+              closed: school.closed
+            }
           });
 
           nameSuggestions = suggestions;
 
           autocomplete.list = suggestions.filter((school) => {
-            if (openOnly && openOnly.checked) {
+            return openOnly && openOnly.checked ? !school.closed : true;
               return !school.closed;
-            }
-            return true;
           });
         }
       });
-    }, 200);
   }
+
+  const debouncedGetNameSuggestions = debounce(getNameSuggestions, 500);
 
   function getLocationSuggestions(searchString, autocomplete) {
     intervalId = setTimeout(function() {
@@ -88,13 +99,11 @@ const autocompleteSetup = (function (){
       schoolNameInput.addEventListener('keyup', function (e) {
         const code = (e.keyCode || e.which);
         let shouldGetResults = true;
-        clearInterval(intervalId);
         if (code === 37 || code === 38 || code === 39 || code === 40 || code === 27 || code === 13) {
           shouldGetResults = false;
         }
-
-        if (this.value.length > 2 && shouldGetResults) {
-          getNameSuggestions(this.value, schoolNameAutoSuggest, false);
+        if (this.value.length > MINCHARS && shouldGetResults) {
+          debouncedGetNameSuggestions(this.value, schoolNameAutoSuggest, false);
         }
       });
 
@@ -108,8 +117,8 @@ const autocompleteSetup = (function (){
 
       schoolNameInput.addEventListener('paste', function (event) {
         const pastedValue = (event.clipboardData || window.clipboardData).getData('text');
-        if (pastedValue.length > 2) {
-          getNameSuggestions(pastedValue, schoolNameAutoSuggest, false);
+        if (pastedValue.length > MINCHARS) {
+          debouncedGetNameSuggestions(pastedValue, schoolNameAutoSuggest, false);
         }
       });
 
@@ -161,8 +170,8 @@ const autocompleteSetup = (function (){
           shouldGetResults = false;
         }
 
-        if (this.value.length > 2 && shouldGetResults) {
-          getNameSuggestions(this.value, matNameAutoSuggest, true);
+        if (this.value.length > MINCHARS && shouldGetResults) {
+          debouncedGetNameSuggestions(this.value, matNameAutoSuggest, true);
         }
       });
 
@@ -176,8 +185,8 @@ const autocompleteSetup = (function (){
 
       matNameInput.addEventListener('paste', function (event) {
         const pastedValue = (event.clipboardData || window.clipboardData).getData('text');
-        if (pastedValue.length > 2) {
-          getNameSuggestions(pastedValue, matNameAutoSuggest, true);
+        if (pastedValue.length > MINCHARS) {
+          debouncedGetNameSuggestions(pastedValue, matNameAutoSuggest, true);
         }
       });
     }
@@ -212,7 +221,7 @@ const autocompleteSetup = (function (){
           shouldGetResults = false;
         }
 
-        if (this.value.length >= 2 && shouldGetResults) {
+        if (this.value.length >= MINCHARS && shouldGetResults) {
           getLocationSuggestions(this.value, schoolLocationAutoSuggest);
         }
       });
@@ -227,7 +236,7 @@ const autocompleteSetup = (function (){
 
       schoolLocationInput.addEventListener('paste', function(event) {
         const pastedValue = (event.clipboardData || window.clipboardData).getData('text');
-        if (pastedValue.length > 2) {
+        if (pastedValue.length > MINCHARS) {
           getLocationSuggestions(pastedValue, schoolLocationAutoSuggest);
         }
       });
