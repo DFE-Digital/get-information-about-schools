@@ -21,7 +21,6 @@ const autocompleteSetup = (function (){
     const url =  isMatSearch ? `/search/suggestgroup?text=${searchString}`: `/search/suggest?text=${searchString}`;
 
     clearTimeout(intervalId);
-    intervalId = setTimeout(function () {
       const openOnly = document.getElementById('include-open-establishments-name');
       $.ajax({
         url: url,
@@ -42,7 +41,6 @@ const autocompleteSetup = (function (){
           });
         }
       });
-    }, 200);
   }
 
   const debouncedGetNameSuggestions = debounce(getNameSuggestions, 500);
