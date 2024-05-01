@@ -6,7 +6,6 @@ const autocompleteSetup = (function (){
   let nameSuggestions;
 
   function debounce(func, wait) {
-    let timeout;
     return function executed(...args) {
       const context = this;
       const later = () => {
@@ -21,11 +20,13 @@ const autocompleteSetup = (function (){
   function getNameSuggestions(searchString, autocomplete, isMatSearch) {
     const url =  isMatSearch ? `/search/suggestgroup?text=${searchString}`: `/search/suggest?text=${searchString}`;
 
-    const openOnly = document.getElementById('include-open-establishments-name');
+    clearTimeout(intervalId);
+    intervalId = setTimeout(function () {
+      const openOnly = document.getElementById('include-open-establishments-name');
       $.ajax({
         url: url,
         dataType: 'json',
-        success: function(response) {
+        success: function (response) {
           const suggestions = response.map((school) => {
             return {
               text: school.text,
@@ -37,31 +38,29 @@ const autocompleteSetup = (function (){
           nameSuggestions = suggestions;
 
           autocomplete.list = suggestions.filter((school) => {
-            return openOnly && openOnly.checked ? !school.closed : true;
-              return !school.closed;
-          });
-        }
-      });
-  }
-
-  const debouncedGetNameSuggestions = debounce(getNameSuggestions, 500);
-
-  function getLocationSuggestions(searchString, autocomplete) {
-    intervalId = setTimeout(function() {
-      $.ajax({
-        url: `/search/suggestplace?text=${searchString}`,
-        dataType: 'json',
-        success: function(response) {
-          autocomplete.list = response.map((location) => {
-            let obj = {};
-            obj.text = location.name.replace('Saint', 'St ');
-            obj.location = `${location.coords.latitude}, ${location.coords.longitude}`;
-
-            return obj;
+            return !openOnly?.checked || !school.closed;
           });
         }
       });
     }, 200);
+  }
+
+  const debouncedGetNameSuggestions = debounce(getNameSuggestions, 500);
+  const debouncedGetLocationSuggestions = debounce(getLocationSuggestions, 500);
+
+  function getLocationSuggestions(searchString, autocomplete) {
+      $.ajax({
+        url: `/search/suggestplace?text=${searchString}`,
+        dataType: 'json',
+        success: function (response) {
+          autocomplete.list = response.map((location) => {
+            return {
+              text: location.name.replace('Saint', 'St '),
+              location: `${location.coords.latitude}, ${location.coords.longitude}`
+            };
+          });
+        }
+      });
   }
 
   function openSuggestionsOnFocus(autocomplete) {
@@ -222,7 +221,7 @@ const autocompleteSetup = (function (){
         }
 
         if (this.value.length >= MINCHARS && shouldGetResults) {
-          getLocationSuggestions(this.value, schoolLocationAutoSuggest);
+          debouncedGetLocationSuggestions(this.value, schoolLocationAutoSuggest);
         }
       });
 
@@ -237,7 +236,7 @@ const autocompleteSetup = (function (){
       schoolLocationInput.addEventListener('paste', function(event) {
         const pastedValue = (event.clipboardData || window.clipboardData).getData('text');
         if (pastedValue.length > MINCHARS) {
-          getLocationSuggestions(pastedValue, schoolLocationAutoSuggest);
+          debouncedGetLocationSuggestions(pastedValue, schoolLocationAutoSuggest);
         }
       });
     }
