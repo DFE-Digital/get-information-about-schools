@@ -5,52 +5,60 @@ const autocompleteSetup = (function (){
   let intervalId;
   let nameSuggestions;
 
+  function debounce(func, wait) {
+    return function executed(...args) {
+      const context = this;
+      const later = () => {
+        clearTimeout(intervalId);
+        func.apply(context, args);
+      };
+      clearTimeout(intervalId);
+      intervalId = setTimeout(later, wait);
+    };
+  }
+
   function getNameSuggestions(searchString, autocomplete, isMatSearch) {
     const url =  isMatSearch ? `/search/suggestgroup?text=${searchString}`: `/search/suggest?text=${searchString}`;
 
-    intervalId = setTimeout(function() {
-    const openOnly = document.getElementById('include-open-establishments-name');
+    clearTimeout(intervalId);
+      const openOnly = document.getElementById('include-open-establishments-name');
       $.ajax({
         url: url,
         dataType: 'json',
-        success: function(response) {
+        success: function (response) {
           const suggestions = response.map((school) => {
-            const obj = {};
-            obj.text = school.text;
-            obj.urn  = school.urn;
-            obj.closed = school.closed;
-            return obj;
+            return {
+              text: school.text,
+              urn: school.urn,
+              closed: school.closed
+            }
           });
 
           nameSuggestions = suggestions;
 
           autocomplete.list = suggestions.filter((school) => {
-            if (openOnly && openOnly.checked) {
-              return !school.closed;
-            }
-            return true;
+            return !openOnly?.checked || !school.closed;
           });
         }
       });
-    }, 200);
   }
 
+  const debouncedGetNameSuggestions = debounce(getNameSuggestions, 500);
+  const debouncedGetLocationSuggestions = debounce(getLocationSuggestions, 500);
+
   function getLocationSuggestions(searchString, autocomplete) {
-    intervalId = setTimeout(function() {
       $.ajax({
         url: `/search/suggestplace?text=${searchString}`,
         dataType: 'json',
-        success: function(response) {
+        success: function (response) {
           autocomplete.list = response.map((location) => {
-            let obj = {};
-            obj.text = location.name.replace('Saint', 'St ');
-            obj.location = `${location.coords.latitude}, ${location.coords.longitude}`;
-
-            return obj;
+            return {
+              text: location.name.replace('Saint', 'St '),
+              location: `${location.coords.latitude}, ${location.coords.longitude}`
+            };
           });
         }
       });
-    }, 200);
   }
 
   function openSuggestionsOnFocus(autocomplete) {
@@ -88,13 +96,11 @@ const autocompleteSetup = (function (){
       schoolNameInput.addEventListener('keyup', function (e) {
         const code = (e.keyCode || e.which);
         let shouldGetResults = true;
-        clearInterval(intervalId);
         if (code === 37 || code === 38 || code === 39 || code === 40 || code === 27 || code === 13) {
           shouldGetResults = false;
         }
-
-        if (this.value.length > 2 && shouldGetResults) {
-          getNameSuggestions(this.value, schoolNameAutoSuggest, false);
+        if (this.value.length > MINCHARS && shouldGetResults) {
+          debouncedGetNameSuggestions(this.value, schoolNameAutoSuggest, false);
         }
       });
 
@@ -108,8 +114,8 @@ const autocompleteSetup = (function (){
 
       schoolNameInput.addEventListener('paste', function (event) {
         const pastedValue = (event.clipboardData || window.clipboardData).getData('text');
-        if (pastedValue.length > 2) {
-          getNameSuggestions(pastedValue, schoolNameAutoSuggest, false);
+        if (pastedValue.length > MINCHARS) {
+          debouncedGetNameSuggestions(pastedValue, schoolNameAutoSuggest, false);
         }
       });
 
@@ -161,8 +167,8 @@ const autocompleteSetup = (function (){
           shouldGetResults = false;
         }
 
-        if (this.value.length > 2 && shouldGetResults) {
-          getNameSuggestions(this.value, matNameAutoSuggest, true);
+        if (this.value.length > MINCHARS && shouldGetResults) {
+          debouncedGetNameSuggestions(this.value, matNameAutoSuggest, true);
         }
       });
 
@@ -176,8 +182,8 @@ const autocompleteSetup = (function (){
 
       matNameInput.addEventListener('paste', function (event) {
         const pastedValue = (event.clipboardData || window.clipboardData).getData('text');
-        if (pastedValue.length > 2) {
-          getNameSuggestions(pastedValue, matNameAutoSuggest, true);
+        if (pastedValue.length > MINCHARS) {
+          debouncedGetNameSuggestions(pastedValue, matNameAutoSuggest, true);
         }
       });
     }
@@ -212,8 +218,8 @@ const autocompleteSetup = (function (){
           shouldGetResults = false;
         }
 
-        if (this.value.length >= 2 && shouldGetResults) {
-          getLocationSuggestions(this.value, schoolLocationAutoSuggest);
+        if (this.value.length >= MINCHARS && shouldGetResults) {
+          debouncedGetLocationSuggestions(this.value, schoolLocationAutoSuggest);
         }
       });
 
@@ -227,8 +233,8 @@ const autocompleteSetup = (function (){
 
       schoolLocationInput.addEventListener('paste', function(event) {
         const pastedValue = (event.clipboardData || window.clipboardData).getData('text');
-        if (pastedValue.length > 2) {
-          getLocationSuggestions(pastedValue, schoolLocationAutoSuggest);
+        if (pastedValue.length > MINCHARS) {
+          debouncedGetLocationSuggestions(pastedValue, schoolLocationAutoSuggest);
         }
       });
     }
