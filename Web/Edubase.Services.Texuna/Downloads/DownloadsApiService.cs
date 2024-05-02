@@ -8,6 +8,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Edubase.Services.Texuna.Models;
+using System.Net.Http;
 
 namespace Edubase.Services.Texuna.Downloads
 {
@@ -55,5 +56,21 @@ namespace Edubase.Services.Texuna.Downloads
 
         public async Task<bool> IsDownloadAvailable(string path, string id, IPrincipal principal)
             => (await _httpClient.GetAsync<BoolResult>($"download/available?resource={path}&id={id}", principal)).GetResponse().Value;
+
+        public async Task<HttpResponseMessage> DownloadFile(FileDownload file, IPrincipal user)
+        {
+            var requestMessage = await _httpClient.CreateHttpRequestMessageAsync(HttpMethod.Get, file.Url, user);
+            var response = (await _httpClient.SendAsync(requestMessage)).EnsureSuccessStatusCode();
+
+            return response;
+        }
+
+        public async Task<HttpResponseMessage> DownloadMATClosureReport(IPrincipal user)
+        {
+            var requestMessage = await _httpClient.CreateHttpRequestMessageAsync(HttpMethod.Get, "downloads/matclosurereport.csv", user);
+            var response = await _httpClient.SendAsync(requestMessage);
+
+            return response;
+        }
     }
 }
