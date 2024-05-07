@@ -1313,7 +1313,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         [Theory]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool)]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, eLookupGovernorRole.GovernanceProfessionalToASat)]
-        public async Task RoleAllowed_ShouldReturnTrue_WhenEither_SharedGovernanceProfessionalSAT_or_FreeSchool_added_AndOtherExists(eLookupGovernorRole firstGovernanceProfessional, eLookupGovernorRole secondGovernanceProfessional)
+        public async Task RoleAllowed_ShouldReturnFalse_WhenEither_SharedGovernanceProfessionalSAT_or_FreeSchool_added_AndOtherExists(eLookupGovernorRole firstGovernanceProfessional, eLookupGovernorRole secondGovernanceProfessional)
         {
             var currentGovernors = new List<GovernorModel>
             {
@@ -1333,7 +1333,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
 
             var result = await controller.RoleAllowed(secondGovernanceProfessional, null, null, null);
 
-            Assert.True(result);
+            Assert.False(result);
         }
 
         [Theory]
