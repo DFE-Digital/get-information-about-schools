@@ -446,9 +446,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 return false;
             }
 
-            var checkRolePresenceInMatAndSat = CheckMatAndSatLevels(role, existingGovernorRoleIds);
+            var checkRolePresenceInMat = CheckMatLevel(role, existingGovernorRoleIds);
 
-            if (checkRolePresenceInMatAndSat && IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
+            if (checkRolePresenceInMat && IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
             {
                 return false;
             }
@@ -465,7 +465,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return true;
         }
 
-        private static bool CheckMatAndSatLevels(eLookupGovernorRole role, HashSet<int> existingGovernorRoleIds)
+        private static bool CheckMatLevel(eLookupGovernorRole role, HashSet<int> existingGovernorRoleIds)
         {
             // At MAT level you should be able to have a 'Shared governance professional - group' and a 'Governance professional to a MAT'
             var isGroupPresent = existingGovernorRoleIds.Any(g => g == (int) eLookupGovernorRole.Group_SharedGovernanceProfessional);
@@ -473,21 +473,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var isAddingGroup = role == eLookupGovernorRole.Group_SharedGovernanceProfessional;
             var isAddingMat = role == eLookupGovernorRole.GovernanceProfessionalToAMat;
 
-            // AT SAT level you should be able to have a 'Governance professional for Single-academy trust (SAT)' and a 'Governance professional to an individual academy or free school'
-            var isFreeSchoolPresent = existingGovernorRoleIds.Any(g => g == (int) eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool);
-            var isSatPresent = existingGovernorRoleIds.Any(m => m == (int) eLookupGovernorRole.GovernanceProfessionalToASat);
-            var isAddingFreeSchool = role == eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool;
-            var isAddingSat = role == eLookupGovernorRole.GovernanceProfessionalToASat;
-
             var checkRolePresence = false;
-            if (isAddingFreeSchool || isAddingSat)
-            {
-                if (!((isAddingSat && isFreeSchoolPresent) || (isAddingFreeSchool && isSatPresent)))
-                {
-                    checkRolePresence = true;
-                }
-            }
-            else if (isAddingGroup || isAddingMat)
+
+            if (isAddingGroup || isAddingMat)
             {
                 if (!((isAddingMat && isGroupPresent) || (isAddingGroup && isMatPresent)))
                 {
