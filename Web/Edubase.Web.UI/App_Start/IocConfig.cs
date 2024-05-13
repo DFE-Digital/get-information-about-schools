@@ -225,7 +225,7 @@ namespace Edubase.Web.UI
             };
         }
 
-        public static HttpClient CreateHttpClient()
+        private static HttpClient CreateHttpClient()
         {
             var timeoutSettings = int.Parse(ConfigurationManager.AppSettings["HttpClient_Timeout"]);
 
@@ -269,7 +269,7 @@ namespace Edubase.Web.UI
             return client;
         }
 
-        public static HttpClient CreateSfbClient()
+        private static HttpClient CreateSfbClient()
         {
             if (!int.TryParse(ConfigurationManager.AppSettings["FBService_Timeout"], out var timeoutsettings))
             {
