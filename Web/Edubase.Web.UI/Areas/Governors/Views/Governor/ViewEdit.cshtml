@@ -89,6 +89,16 @@
                                         selectListItem.Text = factoryName;
                                     }
 
+                                    // If we have been bounced back to this form (e.g., due to an error), pre-select whichever role the user previously attempted to submit.
+                                    // Came up in the context of "The role already contains an appointee" error, where the first item would be pre-selected and would be
+                                    // misleading to the user (as it would look like the first entry already has an appointee, rather than whatever the user submitted).
+                                    // See also WCAG 2.2 requirements to not clear any form fields when validating users' input.
+                                    // https://design-system.service.gov.uk/patterns/validation/#wcag-edit-to-correct-errors
+                                    if(ViewData.ContainsKey("SelectedRole") && ViewData["SelectedRole"] == x)
+                                    {
+                                        selectListItem.Selected = true;
+                                    }
+
                                     return selectListItem;
                                 });
                         }
