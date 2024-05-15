@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
@@ -16,22 +17,18 @@ namespace Edubase.Web.UI.Controllers.Api
             _approvalService = approvalService;
         }
 
-        [Route("api/approvals/change-requests"), HttpGet]
+        [System.Web.Http.Route("api/approvals/change-requests"), System.Web.Http.HttpGet]
         public async Task<PendingApprovalsResult> GetAsync(int skip, int take, string sortBy)
             => await _approvalService.GetAsync(skip, take, sortBy, User);
 
-        [Route("api/approvals/change-request"), HttpPost]
+        [System.Web.Http.Route("api/approvals/change-request"), System.Web.Http.HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IHttpActionResult> ActionAsync(PendingChangeRequestAction model)
         {
             var result = await _approvalService.ActionAsync(model, User);
-            if (result.Success)
-            {
-                return ResponseMessage(Request.CreateResponse(HttpStatusCode.NoContent));
-            }
-            else
-            {
-                return Content(HttpStatusCode.BadRequest, result.Errors);
-            }
+            return result.Success
+                ? ResponseMessage(Request.CreateResponse(HttpStatusCode.NoContent))
+                : (IHttpActionResult) Content(HttpStatusCode.BadRequest, result.Errors);
         }
     }
 }
