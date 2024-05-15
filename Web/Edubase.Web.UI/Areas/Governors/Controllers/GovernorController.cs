@@ -76,7 +76,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
          Route(ESTAB_EDIT_GOVERNANCE, Name = "EstabEditGovernance"),
          HttpGet, EdubaseAuthorize]
         public async Task<ActionResult> Edit(int? groupUId, int? establishmentUrn, int? removalGid,
-            int? duplicateGovernorId, bool roleAlreadyExists = false)
+            int? duplicateGovernorId, bool roleAlreadyExists = false, eLookupGovernorRole? selectedRole = null)
         {
             Guard.IsTrue(groupUId.HasValue || establishmentUrn.HasValue,
                 () => new InvalidParameterException(
@@ -118,6 +118,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     viewModel.GovernorShared = true;
                 }
             }
+
+            // Set the selected selectedRole (used to pre-fill the drop-down where there is an error)
+            ViewData.Add("SelectedGovernorRole", selectedRole);
 
             if (duplicateGovernorId.HasValue)
             {
@@ -244,7 +247,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 if (!await RoleAllowed(role.Value, groupUId, establishmentUrn, User))
                 {
                     return RedirectToRoute(establishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance",
-                        new { establishmentUrn, groupUId, roleAlreadyExists = true });
+                        new { establishmentUrn, groupUId, roleAlreadyExists = true, selectedRole = role });
                 }
 
                 if (establishmentUrn.HasValue && EnumSets.eSharedGovernorRoles.Contains(role.Value))
