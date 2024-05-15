@@ -121,6 +121,8 @@ class GiasFiltering {
         $('#filter-set-custom').prop('checked', true);
       }
 
+      var token = $('input[name="__RequestVerificationToken"').val();
+
       $.ajax({
         url: '/api/save-search-token',
         contentType: 'application/json; charset=utf-8',
@@ -129,6 +131,9 @@ class GiasFiltering {
         data: JSON.stringify({
           token: null
         }),
+        headers: {
+          'RequestVerificationToken': token
+        },
         success: function (data) {
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -453,6 +458,8 @@ class GiasFiltering {
       messagePanel.addClass('hidden');
     }, 5000);
 
+    var token = $('input[name="__RequestVerificationToken"').val();
+
     $.ajax({
       url: "/api/save-search-token",
       contentType: 'application/json; charset=utf-8',
@@ -461,6 +468,9 @@ class GiasFiltering {
       data: JSON.stringify({
         token: token
       }),
+      headers: {
+        'RequestVerificationToken': token
+      },
       success: function (data) {
       },
       error: function (jqXHR, textStatus, errorThrown) {
