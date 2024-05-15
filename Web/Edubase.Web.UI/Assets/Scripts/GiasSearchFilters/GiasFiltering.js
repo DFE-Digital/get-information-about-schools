@@ -410,11 +410,17 @@ class GiasFiltering {
       requestResults(token);
 
     } else {
+
+      var token = $('input[name="__RequestVerificationToken"').val();
+
       $.ajax({
         type: "POST",
         url: '/api/tokenize',
 
         data: self.searchParams,
+        headers: {
+          'RequestVerificationToken': token
+        },
         success: function (data, status, xhr) {
           token = data.token;
           if (supportsHistory()) {
