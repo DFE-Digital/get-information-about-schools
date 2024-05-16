@@ -411,7 +411,7 @@ class GiasFiltering {
 
     } else {
 
-      var token = $('input[name="__RequestVerificationToken"').val();
+      var verifyToken = $('input[name="__RequestVerificationToken"').val();
 
       $.ajax({
         type: "POST",
@@ -419,7 +419,7 @@ class GiasFiltering {
 
         data: self.searchParams,
         headers: {
-          'RequestVerificationToken': token
+          'RequestVerificationToken': verifyToken
         },
         success: function (data, status, xhr) {
           token = data.token;
@@ -464,8 +464,6 @@ class GiasFiltering {
       messagePanel.addClass('hidden');
     }, 5000);
 
-    var token = $('input[name="__RequestVerificationToken"').val();
-
     $.ajax({
       url: "/api/save-search-token",
       contentType: 'application/json; charset=utf-8',
@@ -475,7 +473,7 @@ class GiasFiltering {
         token: token
       }),
       headers: {
-        'RequestVerificationToken': token
+        'RequestVerificationToken': verifyToken
       },
       success: function (data) {
       },
