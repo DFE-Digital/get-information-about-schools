@@ -513,6 +513,8 @@ const mergersApp = new Vue({
       this.mergeDateError = this.validateMergerDate();
       this.errorFocus();
 
+      const token = document.querySelector('input[name="__RequestVerificationToken"]')
+
       if (!this.mergeDateError) {
         this.validLinkDate = true;
         this.isProcessing = true;
@@ -521,6 +523,9 @@ const mergersApp = new Vue({
           method: 'post',
           contentType: 'application/json; charset=utf-8',
           dataType: 'json',
+          headers: {
+            'RequestVerificationToken': token
+          },
           data: JSON.stringify(postData),
           success: function (data) {
             if (data.hasOwnProperty('successful') && data.successful) {
