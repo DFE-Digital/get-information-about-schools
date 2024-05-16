@@ -57,12 +57,12 @@
 
 <div class="govuk-grid-row" id="search-results">
     <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-xl gias-search-results--heading">Search results for establishments</h1>
+        <h1 class="govuk-heading-xl gias-search-results--heading" id="search-results-establishments">Search results for establishments</h1>
 
         @if (Model.Count > 0)
         {
             <div class="search-results-download-link-container">
-                <a class="search-results-download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()" rel="nofollow">Download these search results</a>
+                <a id="establishment-search-results-download-link" class="search-results-download-link" href="@Url.Action("PrepareDownload", "EstablishmentsSearch", new {area = "Establishments"})?@Url.CurrentQueryString()" rel="nofollow">Download these search results</a>
             </div>
         }
         <div class="gias-filter-toggle--container">
