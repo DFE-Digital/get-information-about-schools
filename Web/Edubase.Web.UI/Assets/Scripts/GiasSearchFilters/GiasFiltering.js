@@ -411,7 +411,13 @@ class GiasFiltering {
 
     } else {
 
-      var verifyToken = $('input[name="__RequestVerificationToken"').val();
+      function getCookie(name) {
+        const value = '; ${document.cookie}';
+        const parts = value.split('; ${name}=');
+        if (parts.length === 2) return parts.pop().split(';').shift();
+      }
+
+      var verifyToken = getCookie('__RequestVerificationToken');
 
       $.ajax({
         type: "POST",
@@ -472,9 +478,6 @@ class GiasFiltering {
       data: JSON.stringify({
         token: token
       }),
-      headers: {
-        'RequestVerificationToken': verifyToken
-      },
       success: function (data) {
       },
       error: function (jqXHR, textStatus, errorThrown) {
