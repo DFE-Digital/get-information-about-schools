@@ -470,6 +470,14 @@ class GiasFiltering {
       messagePanel.addClass('hidden');
     }, 5000);
 
+    function getCookie(name) {
+      const value = '; ${document.cookie}';
+      const parts = value.split('; ${name}=');
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    var verifyToken = getCookie('__RequestVerificationToken');
+
     $.ajax({
       url: "/api/save-search-token",
       contentType: 'application/json; charset=utf-8',
@@ -478,6 +486,9 @@ class GiasFiltering {
       data: JSON.stringify({
         token: token
       }),
+      headers: {
+        'RequestVerificationToken': verifyToken
+      },
       success: function (data) {
       },
       error: function (jqXHR, textStatus, errorThrown) {
