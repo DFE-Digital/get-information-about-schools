@@ -411,13 +411,11 @@ class GiasFiltering {
 
     } else {
 
-      function getCookie(name) {
-        const value = '; ${document.cookie}';
-        const parts = value.split('; ${name}=');
-        if (parts.length === 2) return parts.pop().split(';').shift();
+      function getAntiForgeryToken() {
+        return $('meta[name="csrf-token"]').attr('content');
       }
 
-      var verifyToken = getCookie('__RequestVerificationToken');
+      var csrfToken = getAntiForgeryToken();
 
       $.ajax({
         type: "POST",
@@ -425,7 +423,7 @@ class GiasFiltering {
 
         data: self.searchParams,
         headers: {
-          'RequestVerificationToken': verifyToken
+          'RequestVerificationToken': csrfToken
         },
         success: function (data, status, xhr) {
           token = data.token;
