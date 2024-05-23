@@ -1,4 +1,5 @@
-@using Edubase.Services.Enums;
+@using Edubase.Services.Enums
+@using Edubase.Services.Governors.Factories
 @using Edubase.Web.UI.Models.Grid
 @using Edubase.Web.UI.Helpers
 
@@ -25,8 +26,8 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
             @(Model.GroupUId.HasValue
-                ? Html.ActionLink("Back", "Details", "Group", null, null, "governance", new {area = "Groups", id = Model.GroupUId}, new { id = "edit-back-button", @class = "govuk-back-link gias-back-link--button"})
-                : Html.ActionLink("Back", "Details", "Establishment", null, null, "school-governance", new {area = "Establishments", id = Model.EstablishmentUrn}, new { id = "edit-back-button", @class = "govuk-back-link gias-back-link--button cancel"}))
+                ? Html.ActionLink("Back", "Details", "Group", null, null, "governance", new { area = "Groups", id = Model.GroupUId }, new { id = "edit-back-button", @class = "govuk-back-link gias-back-link--button" })
+                : Html.ActionLink("Back", "Details", "Establishment", null, null, "school-governance", new { area = "Establishments", id = Model.EstablishmentUrn }, new { id = "edit-back-button", @class = "govuk-back-link gias-back-link--button cancel" }))
         </div>
     </div>
     <div class="govuk-grid-row">
@@ -64,9 +65,44 @@
                     @Html.AntiForgeryToken()
                     <div class="govuk-form-group @Html.ValidationGroupCssClass("role")">
                         <label class="govuk-label" for="roleid">Select role</label>
-                        @Html.ValidationMessage("role", null, new { @class = "govuk-error-message" })
-                        @Html.DropDownList("role", Model.GovernorRoles.Select(x => new SelectListItem { Text = FormatHelpers.FirstCharToUpper(x.Name.ToLower()), Value = ((eLookupGovernorRole)x.Id).ToString() }), new { id = "roleid", @class = string.Concat(Html.ValidationSelectCssClass("role"), " govuk-select govuk-input--width-20 gias-role-selection") })
-                        <input type="submit" value="Add person" id="add-person-button" class="govuk-button btn-add-person" data-module="govuk-button" />
+                        @Html.ValidationMessage("role", null, new { @class = "govuk-error-message", id = "add-governor-select-role-error-message"})
+
+                        @{
+                            var selectListItems = Model.GovernorRoles
+                                .Select(x =>
+                                {
+                                    var selectListItem = new SelectListItem
+                                    {
+                                        Text = x.Name,
+                                        Value = ((eLookupGovernorRole) x.Id).ToString(),
+                                    };
+
+                                    // If recognised as an enum and we have a C#-overridden name for it, use that instead
+                                    if (Enum.IsDefined(typeof(eLookupGovernorRole), (eLookupGovernorRole) x.Id))
+                                    {
+                                        var factoryName = GovernorRoleNameFactory.Create((eLookupGovernorRole) x.Id);
+                                        if (!factoryName.ToLowerInvariant().Equals(selectListItem.Text.ToLowerInvariant()))
+                                        {
+                                            Console.Error.WriteLine($"Governor role name mismatch - not just a case difference: {selectListItem.Text} -> {factoryName}");
+                                        }
+
+                                        selectListItem.Text = factoryName;
+                                    }
+
+                                    return selectListItem;
+                                });
+                        }
+
+                        @Html.DropDownList(
+                            "role",
+                            selectListItems,
+                            new
+                            {
+                                id = "edit-establishment-new-governor-role-id",
+                                @class = string.Concat(Html.ValidationSelectCssClass("role"), " govuk-select govuk-input--width-20 gias-role-selection"),
+                            }
+                        )
+                        <input type="submit" value="Add person" id="edit-governance-add-person-button" class="govuk-button btn-add-person" data-module="govuk-button" />
                     </div>
                 }
             </div>
@@ -147,7 +183,7 @@ else
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-full">
-                @Html.RouteLink("Edit delegated authority", "GroupEditDelegation", new { GroupUId = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
+                @Html.RouteLink("Edit delegated authority", "GroupEditDelegation", new { Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
             </div>
         </div>
     }
@@ -171,7 +207,7 @@ else
     <p class="govuk-body-s">@(Model.CorporateContact ?? "Not recorded")</p>
     if (Model.EditMode)
     {
-        @Html.RouteLink("Edit corporate contact", "GroupEditCorporateContact", new { GroupUId = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
+        @Html.RouteLink("Edit corporate contact", "GroupEditCorporateContact", new { Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
     }
 }
 
@@ -198,18 +234,21 @@ else
                 // Render lists
                 foreach (var grid in Model.Grids)
                 {
-                    <text>
-                        @ShowGovernorEditor(grid)
-                    </text>
+                    if (grid.Rows.Any())
+                    {
+                        <text>
+                            @ShowGovernorEditor(grid)
+                        </text>
+                    }
                 }
                 if (Model.HistoricGrids.Any(h => h.Rows.Any()))
                 {
-                    <h2 class="govuk-heading-m">Historic (left within last 12 months)</h2>
+                    <h2 class="govuk-heading-m" id="historic-governor-heading">Historic (left within last 12 months)</h2>
                     <details class="govuk-details  govuk-!-font-size-16 gias-details--noborder" data-module="govuk-details">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
-                                <span class="gias-details-closed-text">More details</span>
-                                <span class="gias-details-open-text">Less details</span>
+                                <span class="gias-details-closed-text" id="historic-expand-details">More details</span>
+                                <span class="gias-details-open-text" id="historic-collapse-details">Less details</span>
                             </span>
                         </summary>
                         <div class="govuk-details__text">
@@ -277,10 +316,10 @@ else
                                                 <a href="#" class="js-sort-header" data-sort-key="name" data-sort-type="sortText">Name</a>
                                             </th>
                                             <th scope="col" class="govuk-table__header">
-                                                <a href="#" class="js-sort-header" data-sort-key="role" data-sort-type="sortText">Role</a>
+                                                <a href="#" class="js-sort-header" data-sort-key="gid" data-sort-type="sortText" id="gid-header">Governance role identifier (GID)</a>
                                             </th>
                                             <th scope="col" class="govuk-table__header">
-                                                <a href="#" class="js-sort-header" data-sort-key="appointed" data-sort-type="sortText">Appointed by</a>
+                                                <a href="#" class="js-sort-header" data-sort-key="role" data-sort-type="sortText">Role</a>
                                             </th>
                                             <th scope="col" class="govuk-table__header">
                                                 <a href="#" class="js-sort-header" data-sort-key="from" data-sort-type="sortDate">From</a>
@@ -295,8 +334,8 @@ else
                                         {
                                             <tr class="govuk-table__row">
                                                 <td data-label="Name" class="govuk-table__cell">@governor.FullName</td>
-                                                <td data-label="Role" class="govuk-table__cell">@governor.RoleName</td>
-                                                <td data-label="Appointed by" class="govuk-table__cell">@governor.AppointingBody</td>
+                                                <td data-label="GID" class="govuk-table__cell">@governor.GID</td>
+                                                <td data-label="Appointed by" class="govuk-table__cell">@governor.RoleName</td>
                                                 <td data-label="From" class="govuk-table__cell">@(governor.AppointmentStartDate.ToDateTime()?.ToString("d MMMM yyyy"))</td>
                                                 <td data-label="To" class="govuk-table__cell">@(governor.AppointmentEndDate.ToDateTime()?.ToString("d MMMM yyyy"))</td>
                                             </tr>
@@ -317,27 +356,27 @@ else
     <div class="governor-list">
         @if (!historic)
         {
-            <h2 class="govuk-heading-m" id="@StringUtils.ElementIdFormat(grid.Title+"-heading")">@grid.Title</h2>
+            <h2 class="govuk-heading-m" id="@StringUtils.ElementIdFormat(grid.Title + "-heading")">@grid.Title</h2>
         }
         @if (grid.Rows.Any())
         {
             foreach (var row in grid.Rows)
             {
                 <div id="gov-id-@row.Model.Id" class="governor-edit-panel govuk-!-margin-bottom-9 @Html.DuplicateCssClassFor(row.Model.Id)">
-                    <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="@StringUtils.ElementIdFormat(grid.Title+"-name")">@row.Cells[0].Text</h3>
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-1" id="@StringUtils.ElementIdFormat(grid.Title + "-name")">@row.Cells[0].Text</h3>
                     <dl class="govuk-summary-list govuk-!-margin-bottom-1">
                         @if (historic)
                         {
                             <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key" id="@StringUtils.ElementIdFormat(@grid.Title+"-key")">Role</dt>
-                                <dd class="govuk-summary-list__value" id="@StringUtils.ElementIdFormat(@grid.Title+"-value")">@grid.RoleName</dd>
+                                <dt class="govuk-summary-list__key" id="@StringUtils.ElementIdFormat(grid.Title + "-key")">Role</dt>
+                                <dd class="govuk-summary-list__value" id="@StringUtils.ElementIdFormat(grid.Title + "-value")">@grid.RoleName</dd>
                             </div>
                         }
                         @foreach (var cell in row.Cells.Skip(1))
                         {
                             <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key" id="@StringUtils.ElementIdFormat(@grid.Title+"-"+@cell.Parent.Text+"-key")">@cell.Parent.Text</dt>
-                                <dd class="govuk-summary-list__value" id="@StringUtils.ElementIdFormat(@grid.Title+"-"+@cell.Parent.Text+"-value")">@(cell.Text ?? "Not recorded")</dd>
+                                <dt class="govuk-summary-list__key" id="@StringUtils.ElementIdFormat(grid.Title + "-" + cell.Parent.Text + "-key")">@cell.Parent.Text</dt>
+                                <dd class="govuk-summary-list__value" id="@StringUtils.ElementIdFormat(grid.Title + "-" + cell.Parent.Text + "-value")">@(cell.Text ?? "Not recorded")</dd>
                             </div>
                         }
                     </dl>
@@ -353,7 +392,7 @@ else
                                     {
                                         if (Model.EstablishmentUrn.HasValue && row.Model.RoleId.HasValue && EnumSets.SharedGovernorRoles.Contains(row.Model.RoleId.Value))
                                         {
-                                            @Html.RouteLink("Edit person", "EditSharedGovernor", new { establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary" , @id= StringUtils.ElementIdFormat(grid.Title) + "-edit-person" })
+                                            @Html.RouteLink("Edit person", "EditSharedGovernor", new { establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary", @id = StringUtils.ElementIdFormat(grid.Title) + "-edit-person" })
                                         }
                                         else
                                         {
@@ -363,7 +402,9 @@ else
 
                                     @if (Model.GovernorPermissions.Remove)
                                     {
-                                        if (EnumSets.SingularGovernorRoles.Contains(row.Model.RoleId.Value))
+                                        if (row.Model.RoleId != null
+                                            && EnumSets.SingularGovernorRoles.Contains(row.Model.RoleId.Value)
+                                            && !EnumSets.GovernanceProfessionalRoles.Contains(row.Model.RoleId.Value))
                                         {
                                             if (Model.EstablishmentUrn.HasValue && (row.Model.RoleId.Value == (int)eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody || row.Model.RoleId.Value == (int)eLookupGovernorRole.ChairOfLocalGoverningBody))
                                             {
@@ -371,7 +412,7 @@ else
                                             }
                                             else
                                             {
-                                                @Html.RouteLink("Replace person", Model.EstablishmentUrn.HasValue ? "EstabReplaceGovernor" : "GroupReplaceGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary", @id= StringUtils.ElementIdFormat(grid.Title) + "-replace-person" })
+                                                @Html.RouteLink("Replace person", Model.EstablishmentUrn.HasValue ? "EstabReplaceGovernor" : "GroupReplaceGovernor", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId, gid = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary", @id = StringUtils.ElementIdFormat(grid.Title) + "-replace-person" })
                                             }
                                         }
                                         else
@@ -399,24 +440,24 @@ else
                                                 <legend class="govuk-visually-hidden" Do you wish to retire or remove this person?></legend>
 
                                                 <div class="govuk-radios--conditional" data-module="govuk-radios">
-                                                    @FormHelpers.GiasRadio("1", "removal-mode", "This person has completed their term", null, new { data_aria_controls = "retire-governor", @checked = "checked" })
-                                                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="retire-governor">
+                                                    @FormHelpers.GiasRadio("1", "removal-mode", "This person has completed their term", null, new { data_aria_controls = "retire-governor-content", @checked = "checked", id = "retire-governor-radio" })
+                                                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="retire-governor-content">
                                                         <div class="govuk-form-group">
                                                             <p>Provide a date term ends to retire this person</p>
                                                             @Html.EditorFor(x => x.RemovalAppointmentEndDate, new { title = "Date term ends", fieldsetClassName = "edit-date-fieldset" })
                                                             <div class="button-row">
-                                                                <button id="retire-governor" type="submit" name="action" value="Save" class="govuk-button">Save date and retire person</button>
+                                                                <button id="confirm-retire-governor-button" type="submit" name="action" value="Save" class="govuk-button">Save date and retire person</button>
 
                                                                 @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary" })
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    @FormHelpers.GiasRadio("2", "removal-mode", "Remove person", null, new { data_aria_controls = "remove-governor" })
-                                                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="remove-governor">
+                                                    @FormHelpers.GiasRadio("2", "removal-mode", "Remove person", null, new { data_aria_controls = "remove-governor-content", id = "remove-governor-radio" })
+                                                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="remove-governor-content">
                                                         <div class="govuk-form-group">
                                                             <p>Confirm you wish to remove this person</p>
                                                             <div class="button-row">
-                                                                <input id="remove-button" type="submit" name="action" value="Remove" class="govuk-button" />
+                                                                <input type="submit" name="action" value="Remove" class="govuk-button" id="remove-button" />
 
                                                                 @Html.RouteLink("Cancel", Model.EstablishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance", new { establishmentUrn = Model.EstablishmentUrn, groupUId = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary", @id = "cancel-button" })
                                                             </div>

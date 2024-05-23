@@ -340,10 +340,15 @@ namespace Edubase.Services
 
         private void AssertJsonContent(HttpResponseMessage message)
         {
-            if (message?.Content?.Headers?.ContentType?.MediaType != "application/json")
+            if (message == null)
+            {
+                throw new TexunaApiSystemException("The HttpResponseMessage is null");
+            }
+
+            if (message.Content?.Headers?.ContentType?.MediaType != "application/json")
             {
                 throw new TexunaApiSystemException(
-                    $"The API returned an invalid content type: '{message?.Content?.Headers?.ContentType?.MediaType}' (Request URI: {message?.RequestMessage?.RequestUri?.PathAndQuery})", GetRequestJsonBody(message?.RequestMessage));
+                    $"The API returned an invalid content type: '{message.Content?.Headers?.ContentType?.MediaType}' (HTTP Status: {(int) message.StatusCode} {message.StatusCode}, Request URI: {message.RequestMessage?.RequestUri?.PathAndQuery})", GetRequestJsonBody(message.RequestMessage));
             }
         }
 
@@ -392,11 +397,20 @@ namespace Edubase.Services
                 response = await _httpClient.SendAsync(requestMessage);
                 return response;
             }
-            catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested
-            ) // timeout, apparently: ref; https://stackoverflow.com/questions/29179848/httpclient-a-task-was-cancelled
+            catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested) // timeout, apparently: ref; https://stackoverflow.com/questions/29179848/httpclient-a-task-was-cancelled
             {
                 throw new TexunaApiSystemException(
                     $"The API did not respond in a timely manner (Request URI: {requestMessage.RequestUri.PathAndQuery})",
+                    GetRequestJsonBody(requestMessage));
+            }
+            catch (TaskCanceledException ex)
+            {
+                // Following changes to the timeout, we notice that not all timeouts are caught by the above catch block
+                // and the development/"full error detail" error page does not have the exception details.
+                // For this reason we introduce this new catch block to catch all TaskCanceledExceptions that
+                // aren't caught by the above (pre-existing) catch block.
+                throw new TexunaApiSystemException(
+                    $"Task/request cancelled before completion, possibly due to a slow API response (Request URI: {requestMessage.RequestUri.PathAndQuery})",
                     GetRequestJsonBody(requestMessage));
             }
             finally

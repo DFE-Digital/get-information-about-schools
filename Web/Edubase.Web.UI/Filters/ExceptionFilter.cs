@@ -61,7 +61,19 @@ namespace Edubase.Web.UI.Filters
                     ViewData = new ViewDataDictionary
                     {
                         ["ErrorCode"] = msg.Id,
-                        ["IsPartialView"] = url.AbsolutePath.EndsWith("results-js", StringComparison.InvariantCultureIgnoreCase)
+                        ["IsPartialView"] = url.AbsolutePath.EndsWith("results-js", StringComparison.InvariantCultureIgnoreCase),
+                        ["Message"] = msg.Message,
+                        ["Url"] = url,
+                        ["Environment"] = ConfigurationManager.AppSettings["Environment"],
+                        ["ShowTechnicalDetail"] = !EnableFriendlyErrorPage,
+                        ["Exception"] = msg.Exception,
+                        ["UserId"] = msg.UserId,
+                        ["UserName"] = msg.UserName,
+                        ["UserAgent"] = msg.UserAgent,
+                        ["ClientIpAddress"] = msg.ClientIpAddress,
+                        ["ReferrerUrl"] = msg.ReferrerUrl,
+                        ["HttpMethod"] = msg.HttpMethod,
+                        ["RequestJsonBody"] = msg.RequestJsonBody
                     }
                 };
 
