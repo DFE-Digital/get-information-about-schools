@@ -121,7 +121,7 @@ class GiasFiltering {
         $('#filter-set-custom').prop('checked', true);
       }
 
-      var token = $('input[name="__RequestVerificationToken"').val();
+      const token = $('input[name="__RequestVerificationToken"').val();
 
       $.ajax({
         url: '/api/save-search-token',
@@ -415,7 +415,7 @@ class GiasFiltering {
         return $('meta[name="csrf-token"]').attr('content');
       }
 
-      var csrfToken = getAntiForgeryToken();
+      const csrfToken = getAntiForgeryToken();
 
       $.ajax({
         type: "POST",
@@ -474,7 +474,7 @@ class GiasFiltering {
       if (parts.length === 2) return parts.pop().split(';').shift();
     }
 
-    var verifyToken = getCookie('__RequestVerificationToken');
+    const verifyToken = getCookie('__RequestVerificationToken');
 
     $.ajax({
       url: "/api/save-search-token",
