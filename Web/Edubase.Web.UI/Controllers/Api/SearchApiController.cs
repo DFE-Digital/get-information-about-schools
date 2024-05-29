@@ -1,8 +1,8 @@
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
-using Edubase.Services.Establishments;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
@@ -15,7 +15,8 @@ namespace Edubase.Web.UI.Controllers.Api
             _tokenRepository = tokenRepository;
         }
 
-        [Route("api/tokenize"), HttpPost]
+        [System.Web.Http.Route("api/tokenize"), System.Web.Http.HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<dynamic> Tokenize()
         {
             var formstate = await Request.Content.ReadAsStringAsync();
