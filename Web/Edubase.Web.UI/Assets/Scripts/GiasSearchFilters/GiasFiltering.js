@@ -340,6 +340,20 @@ class GiasFiltering {
     }).serialize());
   }
 
+  showLoadSpinner(container) {
+    container.html('<div class="gias-wait-mask gias-wait-mask--inline"><div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div><span class="govuk-visually-hidden">Please wait</span></div>');
+  }
+
+  showError(container, errorMessage) {
+    container.html(`<div class="govuk-warning-text">
+  <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+  <strong class="govuk-warning-text__text">
+    <span class="govuk-visually-hidden">Warning</span>
+    ${errorMessage}
+  </strong>
+</div>`);
+  }
+
 
   getResults(_token) {
     const $resultsContainer = $('#results-container');
@@ -350,11 +364,15 @@ class GiasFiltering {
     let token = _token;
 
     function requestResults(token){
+      console.debug(`requesting results based on search filter token: ${token}`);
+
       $.ajax({
         url: 'Search/results-js',
         data: "tok=" + token,
         dataType: 'html',
         success: function (results, status, xhr) {
+          console.log('results received based on search filter token: ' + token);
+
           let count;
           if (xhr.getResponseHeader("x-count")) {
             count = xhr.getResponseHeader("x-count");
@@ -390,10 +408,16 @@ class GiasFiltering {
           $('.js-save-set').removeClass('hidden');
           self.enableFilters();
           window.gMap.refreshMap();
+        },
+        error: function (xhr) {
+          console.warn(`error loading results for search token (${token}), re-enabling filters UI and showing error message`);
+          self.enableFilters();
+          self.showError($resultsContainer, 'Sorry, there was a technical problem fetching your search results. If it took a long time for this error to appear, please try again later and/or select fewer filters.');
         }
       });
     }
-    $resultsContainer.html('<div class="gias-wait-mask gias-wait-mask--inline"><div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div><span class="govuk-visually-hidden">Please wait</span></div>');
+
+    this.showLoadSpinner($resultsContainer);
 
     this.disableFilters();
     $('#gias-mobile-filter-submit').find('.mobile-count').remove();
@@ -402,24 +426,30 @@ class GiasFiltering {
     $('.date-filter-warning').addClass('hidden');
 
     if (token) {
+      console.debug(`search filter token found (${token}), requesting search results based on that search filter token's filters`);
       requestResults(token);
 
     } else {
+      console.debug('no search filter token found, requesting new search filter token based on current filters on page');
       $.ajax({
         type: "POST",
         url: '/api/tokenize',
 
         data: self.searchParams,
         success: function (data, status, xhr) {
+          console.debug(data)
           token = data.token;
           if (supportsHistory()) {
             history.pushState({}, null, window.location.href.split('?')[0] + '?tok=' + token);
           }
 
+          console.debug(`new search filter token generated (${token}) based on current filters on page, now requesting search results based on that newly-generated search filter token`);
           requestResults(token);
         },
         error: function (xhr) {
+          console.warn('error generating search filter token, unable to request results, re-enabling filters UI');
           self.enableFilters();
+          self.showError($resultsContainer, 'Sorry, there was a technical problem fetching your search token. If it took a long time for this error to appear, please try again later and/or select fewer filters.');
         }
       });
     }
@@ -464,7 +494,7 @@ class GiasFiltering {
       success: function (data) {
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        console.log(errorThrown);
+        console.warn(errorThrown);
       }
     });
   }
