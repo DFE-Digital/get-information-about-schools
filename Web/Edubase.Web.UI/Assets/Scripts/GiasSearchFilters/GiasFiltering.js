@@ -354,6 +354,10 @@ class GiasFiltering {
 </div>`);
   }
 
+  showWaitingMessage(container) {
+    container.append('<div class="waiting-message"><span class="govuk-warning-text__text">This is taking longer than expected. Please wait for the page to load.</div>');
+  }
+
 
   getResults(_token) {
     const $resultsContainer = $('#results-container');
@@ -366,11 +370,19 @@ class GiasFiltering {
     function requestResults(token){
       console.debug(`requesting results based on search filter token: ${token}`);
 
+      self.showLoadSpinner($resultsContainer);
+      const waitingTimeout = setTimeout(function() {
+        self.showWaitingMessage($resultsContainer);
+      }, 5000);
+
       $.ajax({
         url: 'Search/results-js',
         data: "tok=" + token,
         dataType: 'html',
         success: function (results, status, xhr) {
+
+          clearTimeout(waitingTimeout);
+
           console.log('results received based on search filter token: ' + token);
 
           let count;
@@ -410,6 +422,9 @@ class GiasFiltering {
           window.gMap.refreshMap();
         },
         error: function (xhr) {
+
+          clearTimeout(waitingTimeout);
+
           console.warn(`error loading results for search token (${token}), re-enabling filters UI and showing error message`);
           self.enableFilters();
           self.showError($resultsContainer, 'Sorry, there was a technical problem fetching your search results. If it took a long time for this error to appear, please try again later and/or select fewer filters.');
