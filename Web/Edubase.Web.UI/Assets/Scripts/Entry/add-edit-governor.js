@@ -3,8 +3,6 @@ import GiasAttachUnload from '../GiasModules/GiasModals/GiasAttachUnload';
 const $main = $('#main-content');
 
 $(document).ready(function () {
-  console.log("doc ready");
-
   if ($("#IsOriginalSignatoryMember").val() === 'true' || $("#IsOriginalChairOfTrustees").val() === 'true')
     $("#governorAppointingBodyInput").prop("disabled", "disabled");
 });
