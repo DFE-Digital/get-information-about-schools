@@ -325,13 +325,14 @@ new Vue({
           'ids': this.selectedItems
         };
 
-        const headers = {
-          'Content-Type': 'application/json; charset=utf-8',
-          'Data-Type': 'json',
-        };
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
         axios.post(self.confirmUrl, params, {
-          headers: headers
+          headers: {
+            'RequestVerificationToken': token,
+            'Content-Type': 'application/json; charset=utf-8',
+            'Data-Type': 'json'
+          }
         })
         .then(response => {
           self.getChangesData(0, self.approveSuccessCallback);
