@@ -121,6 +121,8 @@ class GiasFiltering {
         $('#filter-set-custom').prop('checked', true);
       }
 
+      const token = $('input[name="__RequestVerificationToken"').val();
+
       $.ajax({
         url: '/api/save-search-token',
         contentType: 'application/json; charset=utf-8',
@@ -129,6 +131,9 @@ class GiasFiltering {
         data: JSON.stringify({
           token: null
         }),
+        headers: {
+          'RequestVerificationToken': token
+        },
         success: function (data) {
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -446,11 +451,21 @@ class GiasFiltering {
 
     } else {
       console.debug('no search filter token found, requesting new search filter token based on current filters on page');
+
+      function getAntiForgeryToken() {
+        return $('meta[name="csrf-token"]').attr('content');
+      }
+
+      const csrfToken = getAntiForgeryToken();
+
       $.ajax({
         type: "POST",
         url: '/api/tokenize',
 
         data: self.searchParams,
+        headers: {
+          'RequestVerificationToken': csrfToken
+        },
         success: function (data, status, xhr) {
           console.debug(data)
           token = data.token;
@@ -498,6 +513,14 @@ class GiasFiltering {
       messagePanel.addClass('hidden');
     }, 5000);
 
+    function getCookie(name) {
+      const value = '; ${document.cookie}';
+      const parts = value.split('; ${name}=');
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    const verifyToken = getCookie('__RequestVerificationToken');
+
     $.ajax({
       url: "/api/save-search-token",
       contentType: 'application/json; charset=utf-8',
@@ -506,6 +529,9 @@ class GiasFiltering {
       data: JSON.stringify({
         token: token
       }),
+      headers: {
+        'RequestVerificationToken': verifyToken
+      },
       success: function (data) {
       },
       error: function (jqXHR, textStatus, errorThrown) {
