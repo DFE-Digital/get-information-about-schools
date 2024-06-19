@@ -23,10 +23,13 @@
                 <dt id="gor-key" class="govuk-summary-list__key">Government office region (GOR)</dt>
                 <dd id="gor-value" class="govuk-summary-list__value">@Model.GovernmentOfficeRegionName</dd>
             </div>
-            <div class="govuk-summary-list__row">
-                <dt id="rsc-region-key" class="govuk-summary-list__key">Regional schools commissioner (RSC) region</dt>
-                <dd id="rsc-region-value" class="govuk-summary-list__value">@Model.RSCRegionName</dd>
-            </div>
+            @if(Model.DisplayPolicy.RSCRegionId)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt id="rsc-region-key" class="govuk-summary-list__key">Regional schools commissioner (RSC) region</dt>
+                    <dd id="rsc-region-value" class="govuk-summary-list__value">@Model.RSCRegionName</dd>
+                </div>
+            }
             <div class="govuk-summary-list__row">
                 <dt id="district-key" class="govuk-summary-list__key">District</dt>
                 <dd id="district-value" class="govuk-summary-list__value">@Model.AdministrativeDistrictName</dd>
