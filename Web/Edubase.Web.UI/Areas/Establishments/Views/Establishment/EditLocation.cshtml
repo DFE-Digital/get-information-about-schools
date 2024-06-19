@@ -56,16 +56,6 @@
                 </div>
             </div>
             <div class="govuk-grid-column-one-half">
-                @if (Model.EditPolicy.RSCRegionId)
-                {
-                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.RSCRegionId)">
-                        <label for="RSCRegionId" class="govuk-label" title="Regional School Comissioner">
-                            Regional schools commissioner (RSC) region
-                        </label>
-                        @Html.ValidationMessageFor(x => x.RSCRegionId, null, new { @class = "govuk-error-message" })
-                        @Html.DropDownListFor(x => x.RSCRegionId, Model.RSCRegions, "", new { id = "rsc-region-dropdown", @class = "govuk-select" })
-                    </div>
-                }
 
                 @if (Model.EditPolicy.GovernmentOfficeRegionId)
                 {
