@@ -28,9 +28,9 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-xl gias-search-results--heading">Search results for establishment groups</h1>
+        <h1 id="search-results-establishment-groups" class="govuk-heading-xl gias-search-results--heading">Search results for establishment groups</h1>
         <div class="search-results-download-link-container">
-            <a rel="nofollow" class="search-results-download-link" href="@Url.Action("PrepareDownload", "GroupSearch")?@Url.CurrentQueryString()">Download these search results</a>
+            <a rel="nofollow" id="establishment-group-search-results-downloadlink" class="search-results-download-link" href="@Url.Action("PrepareDownload", "GroupSearch")?@Url.CurrentQueryString()">Download these search results</a>
         </div>
     </div>
     @if (!Model.GroupSearchModel.Text.IsNullOrEmpty())
