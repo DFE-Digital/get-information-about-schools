@@ -30,9 +30,9 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full results-heading">
-        <h1 class="govuk-heading-xl gias-search-results--heading">Search results for governors</h1>
+        <h1 class="govuk-heading-xl gias-search-results--heading" id="search-results-governors">Search results for governors</h1>
         <div class="search-results-download-link-container">
-            <a class="search-results-download-link @(Model.Count > 5000 ? "prevent-download" : "")" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()" rel="nofollow">Download these search results</a>
+            <a id="governor-search-results-download-link" class="search-results-download-link @(Model.Count > 5000 ? "prevent-download" : "")" href="@Url.Action("PrepareDownload", "GovernorSearch", new {area = "Governors"})?@Url.CurrentQueryString()" rel="nofollow">Download these search results</a>
         </div>
         <div class="gias-filter-toggle--container">
             <span class="gias-filter-toggle--icon">
