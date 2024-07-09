@@ -426,10 +426,10 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         }
 
         [Fact()]
-        public void Gov_AddEditOrReplace_NullParams()
+        public async Task Gov_AddEditOrReplace_NullParams()
         {
             mockControllerContext.SetupGet(c => c.RouteData).Returns(new RouteData(new Route("", new PageRouteHandler("~/")), new PageRouteHandler("~/")));
-            Assert.ThrowsAsync<EdubaseException>(() => controller.AddEditOrReplace(null, null, null, null));
+            await Assert.ThrowsAsync<EdubaseException>(() => controller.AddEditOrReplace(null, null, null, null));
         }
 
         [Fact()]
@@ -1251,13 +1251,13 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             };
 
             mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
-                .ReturnsAsync(governorsDetails);    
+                .ReturnsAsync(governorsDetails);
 
             var result = await controller.RoleAllowed(eLookupGovernorRole.ChairOfLocalGoverningBody, null, null, null);
 
             Assert.False(result);
         }
-   
+
 
         [Fact]
         public async Task RoleAllowed_ShouldReturnFalse_WhenChairOfLocalGoverningBodyIsAddedWith_DifferentChair()
