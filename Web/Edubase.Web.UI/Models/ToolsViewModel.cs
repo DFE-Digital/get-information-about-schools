@@ -272,5 +272,23 @@ namespace Edubase.Web.UI.Models
 
             return retVal;
         }
+
+        public List<LinkAction> GetSupportActions(HtmlHelper htmlHelper)
+        {
+            var retVal = new List<LinkAction>();
+
+            retVal.Add(new LinkAction
+            {
+                Link = htmlHelper.ActionLink("View error code details", "ViewErrorLogs", "Admin"),
+                Description = "View error code details."
+            });
+            retVal.Add(new LinkAction
+            {
+                Link = htmlHelper.ActionLink("Clear cache", "ClearCache", "Admin"),
+                Description = "Clear the Redis cache and C# memory cache."
+            });
+
+            return retVal;
+        }
     }
 }

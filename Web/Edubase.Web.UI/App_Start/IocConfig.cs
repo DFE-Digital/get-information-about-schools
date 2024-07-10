@@ -203,6 +203,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<BrowserClientStorage>().As<IClientStorage>().InstancePerRequest();
 
             builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
+            builder.RegisterType<ErrorWebLogItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
             builder.RegisterType<FaqItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<FaqGroupRepository>().AsSelf().SingleInstance();

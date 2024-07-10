@@ -726,6 +726,7 @@
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
     <Content Include="robots.txt" />
     <Content Include="App_offline_x.htm" />
+    <Content Include="Views\Admin\ViewErrorLogs.cshtml" />
     <Content Include="Views\Approvals\ExplainRejections.cshtml" />
     <Content Include="Views\Approvals\Partials\_ApprovalsTable.cshtml" />
     <Content Include="Views\DataQuality\EditDataOwnerDetails.cshtml" />
