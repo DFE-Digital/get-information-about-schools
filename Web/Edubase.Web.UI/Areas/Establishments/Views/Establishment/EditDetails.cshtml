@@ -150,7 +150,7 @@
             @if (Model.EditPolicy.HeadTitleId)
             {
                 <div class="govuk-form-group">
-                    <label class="govuk-label" for="HeadTitleId">
+                    <label id="head-title-id" class="govuk-label" for="HeadTitleId">
                         @Html.Raw(Model.EditPolicy.HeadteacherLabel) title
                     </label>
                     @Html.DropDownListFor(x => x.HeadTitleId, Model.HeadTitles, "", new { @class = "govuk-select" })
@@ -160,7 +160,7 @@
             @if (Model.EditPolicy.HeadFirstName)
             {
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HeadFirstName)">
-                    <label class="govuk-label" for="HeadFirstName">
+                    <label id="head-first-name-title" class="govuk-label" for="HeadFirstName">
                         @Html.Raw(Model.EditPolicy.HeadteacherLabel) first name
                     </label>
                     @Html.ValidationMessageFor(x => x.HeadFirstName, null, new { @class = "govuk-error-message" })
@@ -172,7 +172,7 @@
             @if (Model.EditPolicy.HeadLastName)
             {
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.HeadLastName)">
-                    <label class="govuk-label" for="HeadLastName">
+                    <label id="head-last-name-title" class="govuk-label" for="HeadLastName">
                         @Html.Raw(Model.EditPolicy.HeadteacherLabel) last name
                     </label>
                     @Html.ValidationMessageFor(x => x.HeadLastName, null, new { @class = "govuk-error-message" })
@@ -339,8 +339,8 @@
 
             @if (Model.EditPolicy.Contact_WebsiteAddress)
             {
-                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Contact_WebsiteAddress)">
-                    <label for="Contact_WebsiteAddress" class="govuk-label">Website</label>
+                <div id="website-address" class="govuk-form-group @Html.ValidationCssClassFor(x => x.Contact_WebsiteAddress)">
+                    <label id="website-value" for="Contact_WebsiteAddress" class="govuk-label">Website</label>
                     @Html.ValidationMessageFor(x => x.Contact_WebsiteAddress, null, new { @class = "govuk-error-message" })
                     @Html.TextBoxFor(x => x.Contact_WebsiteAddress, new { @class = "govuk-input" })
                 </div>
@@ -348,8 +348,8 @@
 
             @if (Model.EditPolicy.Contact_TelephoneNumber)
             {
-                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Contact_TelephoneNumber)">
-                    <label for="Contact_TelephoneNumber" class="govuk-label">Telephone</label>
+                <div id="telephone-number" class="govuk-form-group @Html.ValidationCssClassFor(x => x.Contact_TelephoneNumber)">
+                    <label id="telephone-number-value" for="Contact_TelephoneNumber" class="govuk-label">Telephone</label>
                     @Html.ValidationMessageFor(x => x.Contact_TelephoneNumber, null, new { @class = "govuk-error-message" })
                     @Html.TextBoxFor(x => x.Contact_TelephoneNumber, new { @class = "govuk-input" })
                 </div>
