@@ -1035,6 +1035,7 @@
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.5.1\build\EntityFramework.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets'))" />
+    <Error Condition="!Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets'))" />
   </Target>
   <Import Project="..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.22.0\build\Microsoft.ApplicationInsights.DependencyCollector.targets" Condition="Exists('..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.22.0\build\Microsoft.ApplicationInsights.DependencyCollector.targets')" />
   <Import Project="..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.22.0\build\Microsoft.ApplicationInsights.PerfCounterCollector.targets" Condition="Exists('..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.22.0\build\Microsoft.ApplicationInsights.PerfCounterCollector.targets')" />
@@ -1043,4 +1044,5 @@
   <Import Project="..\packages\Microsoft.ApplicationInsights.Web.2.22.0\build\Microsoft.ApplicationInsights.Web.targets" Condition="Exists('..\packages\Microsoft.ApplicationInsights.Web.2.22.0\build\Microsoft.ApplicationInsights.Web.targets')" />
   <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.targets')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" />
+  <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
 </Project>
