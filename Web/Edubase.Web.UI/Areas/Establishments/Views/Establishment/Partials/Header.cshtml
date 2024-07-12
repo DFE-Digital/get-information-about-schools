@@ -21,8 +21,8 @@
     </dd>
 </div>
 <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadteacherLabel)</dt>
-    <dd class="govuk-summary-list__value">
+    <dt id="head-teacher-label-key" class="govuk-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadteacherLabel)</dt>
+    <dd id="head-teacher-value" class="govuk-summary-list__value">
         @if (Model.DisplayPolicy.HeadTitleId)
         {
             <text>@Model.HeadTitleName.Replace("Not recorded", string.Empty)</text>
@@ -165,8 +165,8 @@
 @if (Model.DisplayPolicy.Contact_WebsiteAddress)
 {
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Website</dt>
-        <dd class="govuk-summary-list__value">
+        <dt id="website-key" class="govuk-summary-list__key">Website</dt>
+        <dd id="website-value" class="govuk-summary-list__value">
             @if (Model.Establishment.Contact_WebsiteAddress == null)
             {
                 <text>Not recorded</text>
