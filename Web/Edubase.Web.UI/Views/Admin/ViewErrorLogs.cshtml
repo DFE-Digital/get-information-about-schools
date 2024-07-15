@@ -7,6 +7,7 @@
     var messages = ViewBag.Messages as List<AZTLoggerMessages> ?? throw new Exception("Expected AZTLoggerMessages list in ViewBag.Messages");
     messages = messages.OrderByDescending(m => m.Timestamp).ToList();
 
+    var query = ViewBag.Query;
     var referenceDate = ViewBag.ReferenceDate;
     var days = ViewBag.Days;
     var includePurgeZeroLogsMessage = ViewBag.IncludePurgeZeroLogsMessage;
@@ -46,6 +47,7 @@
 </p>
 
 <ul>
+    <li>Query: @query</li>
     <li>Reference date: @referenceDate</li>
     <li>Days: @days</li>
     <li>Include empty puge logs: @includePurgeZeroLogsMessage</li>
@@ -213,13 +215,13 @@
                     <td class="govuk-table__cell" style="overflow: auto;">@message.Timestamp</td>
                     <td class="govuk-table__cell" style="max-width: 7.5em; overflow: auto;">
                         <div class="govuk-inset-text">
-                        Reference: <strong class="govuk-tag govuk-tag--grey">@message.Id</strong>
-                        <br/>
-                        <a href="@message.Url">@message.Url</a>
+                            Reference: <strong class="govuk-tag govuk-tag--grey">@message.Id</strong>
+                            <br/>
+                            <a href="@message.Url">@message.Url</a>
                         </div>
                         @* <br/> *@
                         @* <br/> *@
-                            @message.Message
+                        @message.Message
                         <br/>
                         <br/>
                         <details class="govuk-details">

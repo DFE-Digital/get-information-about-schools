@@ -14,32 +14,28 @@ namespace Edubase.Data.Repositories
         {
         }
 
-        public async Task<List<AZTLoggerMessages>> Get(DateTime dateTime, int days = 28, bool includePurgeZeroLogsMessage = false)
+        public async Task<List<AZTLoggerMessages>> GetWithinDateRange(DateTime startDateTime, DateTime endDateTime)
         {
             var items = new List<AZTLoggerMessages>();
 
-            // loop over the items in the table, and combine paginated results
             TableContinuationToken currentToken = null;
             do
             {
                 var query = new TableQuery<AZTLoggerMessages>().Where(
-                    TableQuery.GenerateFilterConditionForDate(
-                        "DateUtc",
-                        QueryComparisons.GreaterThanOrEqual,
-                        dateTime.AddDays(days * -1)
+                    TableQuery.CombineFilters(
+                        TableQuery.GenerateFilterConditionForDate(
+                            "DateUtc",
+                            QueryComparisons.GreaterThanOrEqual,
+                            startDateTime
+                        ),
+                        TableOperators.And,
+                        TableQuery.GenerateFilterConditionForDate(
+                            "DateUtc",
+                            QueryComparisons.LessThanOrEqual,
+                            endDateTime
+                        )
                     )
                 );
-
-                if (!includePurgeZeroLogsMessage)
-                {
-                    query = query.Where(
-                        TableQuery.GenerateFilterCondition(
-                            "Message",
-                            QueryComparisons.NotEqual,
-                            "LOG PURGE REPORT: There were 0 logs purged from storage."
-                        )
-                    );
-                }
 
                 var segment = await Table.ExecuteQuerySegmentedAsync(query, currentToken);
                 items.AddRange(segment.Results);
