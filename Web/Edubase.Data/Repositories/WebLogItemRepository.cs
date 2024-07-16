@@ -61,85 +61,35 @@ namespace Edubase.Data.Repositories
             return webLogMessages;
         }
 
-        public static List<AZTLoggerMessages> FilterByAllTextColumns(List<AZTLoggerMessages> webLogMessages,
-            string queryString)
+        private static bool ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(string value, string query)
+        {
+            return !string.IsNullOrWhiteSpace(value) && value.ToLowerInvariant().Contains(query.ToLowerInvariant());
+        }
+
+        public static List<AZTLoggerMessages> FilterByAllTextColumns(
+            List<AZTLoggerMessages> webLogMessages,
+            string queryString
+        )
         {
             if (string.IsNullOrWhiteSpace(queryString))
             {
                 return webLogMessages;
             }
 
-            var lowerQueryString = queryString.ToLowerInvariant();
-
             webLogMessages = webLogMessages.Where(m =>
-                {
-                    if (!string.IsNullOrWhiteSpace(m.Id) && m.Id.ToLowerInvariant().Contains(lowerQueryString))
-                    {
-                        return true;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(m.Level) && m.Level.ToLowerInvariant().Contains(lowerQueryString))
-                    {
-                        return true;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(m.Environment) && m.Environment.ToLowerInvariant().Contains(lowerQueryString))
-                    {
-                        return true;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(m.Message) && m.Message.ToLowerInvariant().Contains(lowerQueryString))
-                    {
-                        return true;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(m.Exception) && m.Exception.ToLowerInvariant().Contains(lowerQueryString))
-                    {
-                        return true;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(m.Url) && m.Url.ToLowerInvariant().Contains(lowerQueryString))
-                    {
-                        return true;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(m.UserAgent) && m.UserAgent.ToLowerInvariant().Contains(lowerQueryString))
-                    {
-                        return true;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(m.ClientIpAddress) && m.ClientIpAddress.ToLowerInvariant().Contains(lowerQueryString))
-                    {
-                        return true;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(m.ReferrerUrl) && m.ReferrerUrl.ToLowerInvariant().Contains(lowerQueryString))
-                    {
-                        return true;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(m.HttpMethod) && m.HttpMethod.ToLowerInvariant().Contains(lowerQueryString))
-                    {
-                        return true;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(m.RequestJsonBody) && m.RequestJsonBody.ToLowerInvariant().Contains(lowerQueryString))
-                    {
-                        return true;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(m.UserId) && m.UserId.ToLowerInvariant().Contains(lowerQueryString))
-                    {
-                        return true;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(m.UserName) && m.UserName.ToLowerInvariant().Contains(lowerQueryString))
-                    {
-                        return true;
-                    }
-
-                    return false;
-                }
+                ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.Id, queryString)
+                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.ClientIpAddress, queryString)
+                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.Environment, queryString)
+                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.Exception, queryString)
+                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.HttpMethod, queryString)
+                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.Level, queryString)
+                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.Message, queryString)
+                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.ReferrerUrl, queryString)
+                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.RequestJsonBody, queryString)
+                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.Url, queryString)
+                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.UserAgent, queryString)
+                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.UserId, queryString)
+                || ValueIsNotNullAndNotWhitespaceAndContainsCaseInsensitive(m.UserName, queryString)
             ).ToList();
 
             return webLogMessages;
