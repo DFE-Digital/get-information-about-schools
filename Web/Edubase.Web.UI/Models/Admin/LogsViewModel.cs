@@ -4,7 +4,7 @@ using Edubase.Data.Entity;
 
 namespace Edubase.Web.UI.Models.Admin
 {
-    public class ErrorLogsViewModel
+    public class LogsViewModel
     {
         public List<AZTLoggerMessages> Messages { get; set; }
 

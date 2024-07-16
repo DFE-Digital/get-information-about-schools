@@ -149,7 +149,7 @@
     <Compile Include="Entity\UserPreference.cs"/>
     <Compile Include="Properties\AssemblyInfo.cs"/>
     <Compile Include="Repositories\DataQualityStatusRepository.cs"/>
-    <Compile Include="Repositories\ErrorWebLogItemRepository.cs" />
+    <Compile Include="Repositories\WebLogItemRepository.cs" />
     <Compile Include="Repositories\FaqGroupRepository.cs"/>
     <Compile Include="Repositories\FaqItemRepository.cs"/>
     <Compile Include="Repositories\ILocalAuthoritySetRepository.cs"/>

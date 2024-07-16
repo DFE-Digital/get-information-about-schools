@@ -275,18 +275,19 @@ namespace Edubase.Web.UI.Models
 
         public List<LinkAction> GetSupportActions(HtmlHelper htmlHelper)
         {
-            var retVal = new List<LinkAction>();
-
-            retVal.Add(new LinkAction
+            var retVal = new List<LinkAction>
             {
-                Link = htmlHelper.ActionLink("View error code details", "ViewErrorLogs", "Admin"),
-                Description = "View error code details."
-            });
-            retVal.Add(new LinkAction
-            {
-                Link = htmlHelper.ActionLink("Clear cache", "ClearCache", "Admin"),
-                Description = "Clear the Redis cache and C# memory cache."
-            });
+                new LinkAction
+                {
+                    Link = htmlHelper.ActionLink("View logs", "ViewLogs", "Admin"),
+                    Description = "View logs, including those linked to an error code."
+                },
+                new LinkAction
+                {
+                    Link = htmlHelper.ActionLink("Clear cache", "ClearCache", "Admin"),
+                    Description = "Clear the Redis cache and C# memory cache."
+                }
+            };
 
             return retVal;
         }

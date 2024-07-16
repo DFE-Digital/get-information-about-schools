@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Edubase.Data.Repositories
 {
-    public class ErrorWebLogItemRepository : TableStorageBase<AZTLoggerMessages>
+    public class WebLogItemRepository : TableStorageBase<AZTLoggerMessages>
     {
-        public ErrorWebLogItemRepository()
+        public WebLogItemRepository()
             : base("DataConnectionString")
         {
         }

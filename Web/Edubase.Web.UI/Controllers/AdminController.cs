@@ -16,14 +16,14 @@ namespace Edubase.Web.UI.Controllers
     [RoutePrefix("Admin"), Route("{action=Logs}"), MvcAuthorizeRoles(AuthorizedRoles.IsAdmin)]
     public class AdminController : EduBaseController
     {
-        private readonly ErrorWebLogItemRepository _errorWebLogItemRepository;
+        private readonly WebLogItemRepository _webLogItemRepository;
 
         private readonly ILoggingService _loggingService;
 
-        public AdminController(ILoggingService loggingService, ErrorWebLogItemRepository errorWebLogItemRepository)
+        public AdminController(ILoggingService loggingService, WebLogItemRepository webLogItemRepository)
         {
             _loggingService = loggingService;
-            _errorWebLogItemRepository = errorWebLogItemRepository;
+            _webLogItemRepository = webLogItemRepository;
         }
 
         [HttpGet, Route("GetPendingErrors")]
@@ -47,7 +47,7 @@ namespace Edubase.Web.UI.Controllers
 
         public async Task FlushErrors() => await _loggingService.FlushAsync();
 
-        public async Task<ActionResult> ViewErrorLogs(ErrorLogsViewModel model)
+        public async Task<ActionResult> ViewLogs(LogsViewModel model)
         {
             var queryString = model.Query ?? "";
             var includePurgeZeroLogsMessage = model.IncludePurgeZeroLogsMessage;
@@ -72,12 +72,12 @@ namespace Edubase.Web.UI.Controllers
 
             endDate = endDate.Value.AddDays(1); // Add a day to the end date to include the end date within the search
 
-            var webLogMessages = await _errorWebLogItemRepository.GetWithinDateRange(startDate.Value, endDate.Value);
+            var webLogMessages = await _webLogItemRepository.GetWithinDateRange(startDate.Value, endDate.Value);
 
             webLogMessages = FilterByAllTextColumns(webLogMessages, queryString);
             webLogMessages = FilterPurgeZeroLogsMessage(webLogMessages, includePurgeZeroLogsMessage);
 
-            var viewModel = new ErrorLogsViewModel
+            var viewModel = new LogsViewModel
             {
                 Messages = webLogMessages,
                 Query = queryString,
