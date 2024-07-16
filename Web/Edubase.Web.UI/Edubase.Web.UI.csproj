@@ -389,6 +389,7 @@
     <Compile Include="Helpers\StringUtils.cs" />
     <Compile Include="Mappers\BulkUpdateViewModelToDtoMapper.cs" />
     <Compile Include="Mappers\LookupToSearchViewModelMapper.cs" />
+    <Compile Include="Models\Admin\ErrorLogsViewModel.cs" />
     <Compile Include="Models\DataQuality\DataQualityDataOwnerItem.cs" />
     <Compile Include="Models\DataQuality\EditDataQualityDataOwnersViewModel.cs" />
     <Compile Include="Models\Faq\FaqGroupsViewModel.cs" />

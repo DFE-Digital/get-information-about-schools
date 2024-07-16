@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using AzureTableLogger.Services;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
+using Edubase.Web.UI.Models.Admin;
 
 namespace Edubase.Web.UI.Controllers
 {
@@ -46,35 +47,55 @@ namespace Edubase.Web.UI.Controllers
 
         public async Task FlushErrors() => await _loggingService.FlushAsync();
 
-
-        public async Task<ActionResult> ViewErrorLogs()
+        public async Task<ActionResult> ViewErrorLogs(ErrorLogsViewModel model)
         {
-            var queryString = "";
-            var includePurgeZeroLogsMessage = false;
+            var queryString = model.Query ?? "";
+            var includePurgeZeroLogsMessage = model.IncludePurgeZeroLogsMessage;
 
-            var referenceDate = DateTime.Today;
-            var days = 28;
-            var startDate = referenceDate.AddDays(-1 * days);
-            var endDate = referenceDate.AddDays(1);
+            DateTime? startDate = DateTime.Today.AddDays(-28); // Default to 28 days ago
+            DateTime? endDate = DateTime.Today;
 
-            var webLogMessages = await _errorWebLogItemRepository.GetWithinDateRange(
-                startDate,
-                endDate
-            );
+            // Check if the separate date fields are filled in to construct the StartDate and EndDate
+            // Additionally, check whether the date is valid
+            if (model.StartDateDay.HasValue && model.StartDateMonth.HasValue && model.StartDateYear.HasValue &&
+                DateIsValid(model.StartDateYear.Value, model.StartDateMonth.Value, model.StartDateDay.Value))
+            {
+                startDate = new DateTime(model.StartDateYear.Value, model.StartDateMonth.Value,
+                    model.StartDateDay.Value);
+            }
 
-            // do client-side filtering on results (easier than doing it server-side)
-            // data size and access frequency is small enough that this is acceptable
+            if (model.EndDateDay.HasValue && model.EndDateMonth.HasValue && model.EndDateYear.HasValue &&
+                DateIsValid(model.EndDateYear.Value, model.EndDateMonth.Value, model.EndDateDay.Value))
+            {
+                endDate = new DateTime(model.EndDateYear.Value, model.EndDateMonth.Value, model.EndDateDay.Value);
+            }
+
+            endDate = endDate.Value.AddDays(1); // Add a day to the end date to include the end date within the search
+
+            var webLogMessages = await _errorWebLogItemRepository.GetWithinDateRange(startDate.Value, endDate.Value);
+
             webLogMessages = FilterByAllTextColumns(webLogMessages, queryString);
-            webLogMessages = FilterPurgeZeroLogsMessage(webLogMessages, false);
+            webLogMessages = FilterPurgeZeroLogsMessage(webLogMessages, includePurgeZeroLogsMessage);
 
-            ViewBag.Messages = webLogMessages;
+            var viewModel = new ErrorLogsViewModel
+            {
+                Messages = webLogMessages,
+                Query = queryString,
+                StartDateDay = startDate.Value.Day,
+                StartDateMonth = startDate.Value.Month,
+                StartDateYear = startDate.Value.Year,
+                EndDateDay = endDate.Value.Day,
+                EndDateMonth = endDate.Value.Month,
+                EndDateYear = endDate.Value.Year,
+                IncludePurgeZeroLogsMessage = includePurgeZeroLogsMessage
+            };
 
-            ViewBag.Query = queryString;
-            ViewBag.ReferenceDate = referenceDate;
-            ViewBag.Days = days;
-            ViewBag.IncludePurgeZeroLogsMessage = includePurgeZeroLogsMessage;
+            return View(viewModel);
+        }
 
-            return View();
+        private bool DateIsValid(int year, int month, int day)
+        {
+            return DateTime.TryParse($"{year}-{month}-{day}", out _);
         }
 
         private List<AZTLoggerMessages> FilterPurgeZeroLogsMessage(List<AZTLoggerMessages> webLogMessages, bool includePurgeZeroLogsMessage)
@@ -99,68 +120,74 @@ namespace Edubase.Web.UI.Controllers
                 return webLogMessages;
             }
 
+            var lowerQueryString = queryString.ToLowerInvariant();
+
             webLogMessages = webLogMessages.Where(m =>
                 {
-                    if (!string.IsNullOrWhiteSpace(m.Level) && m.Level.Contains(queryString))
+                    if (!string.IsNullOrWhiteSpace(m.Id) && m.Id.ToLowerInvariant().Contains(lowerQueryString))
                     {
                         return true;
                     }
 
-                    if (!string.IsNullOrWhiteSpace(m.Environment) && m.Environment.Contains(queryString))
+                    if (!string.IsNullOrWhiteSpace(m.Level) && m.Level.ToLowerInvariant().Contains(lowerQueryString))
                     {
                         return true;
                     }
 
-                    if (!string.IsNullOrWhiteSpace(m.Message) && m.Message.Contains(queryString))
+                    if (!string.IsNullOrWhiteSpace(m.Environment) && m.Environment.ToLowerInvariant().Contains(lowerQueryString))
                     {
                         return true;
                     }
 
-                    if (!string.IsNullOrWhiteSpace(m.Exception) && m.Exception.Contains(queryString))
+                    if (!string.IsNullOrWhiteSpace(m.Message) && m.Message.ToLowerInvariant().Contains(lowerQueryString))
                     {
                         return true;
                     }
 
-                    if (!string.IsNullOrWhiteSpace(m.Url) && m.Url.Contains(queryString))
+                    if (!string.IsNullOrWhiteSpace(m.Exception) && m.Exception.ToLowerInvariant().Contains(lowerQueryString))
                     {
                         return true;
                     }
 
-                    if (!string.IsNullOrWhiteSpace(m.UserAgent) && m.UserAgent.Contains(queryString))
+                    if (!string.IsNullOrWhiteSpace(m.Url) && m.Url.ToLowerInvariant().Contains(lowerQueryString))
                     {
                         return true;
                     }
 
-                    if (!string.IsNullOrWhiteSpace(m.ClientIpAddress) && m.ClientIpAddress.Contains(queryString))
+                    if (!string.IsNullOrWhiteSpace(m.UserAgent) && m.UserAgent.ToLowerInvariant().Contains(lowerQueryString))
                     {
                         return true;
                     }
 
-                    if (!string.IsNullOrWhiteSpace(m.ReferrerUrl) && m.ReferrerUrl.Contains(queryString))
+                    if (!string.IsNullOrWhiteSpace(m.ClientIpAddress) && m.ClientIpAddress.ToLowerInvariant().Contains(lowerQueryString))
                     {
                         return true;
                     }
 
-                    if (!string.IsNullOrWhiteSpace(m.HttpMethod) && m.HttpMethod.Contains(queryString))
+                    if (!string.IsNullOrWhiteSpace(m.ReferrerUrl) && m.ReferrerUrl.ToLowerInvariant().Contains(lowerQueryString))
                     {
                         return true;
                     }
 
-                    if (!string.IsNullOrWhiteSpace(m.RequestJsonBody) && m.RequestJsonBody.Contains(queryString))
+                    if (!string.IsNullOrWhiteSpace(m.HttpMethod) && m.HttpMethod.ToLowerInvariant().Contains(lowerQueryString))
                     {
                         return true;
                     }
 
-                    if (!string.IsNullOrWhiteSpace(m.UserId) && m.UserId.Contains(queryString))
+                    if (!string.IsNullOrWhiteSpace(m.RequestJsonBody) && m.RequestJsonBody.ToLowerInvariant().Contains(lowerQueryString))
                     {
                         return true;
                     }
 
-                    if (!string.IsNullOrWhiteSpace(m.UserName) && m.UserName.Contains(queryString))
+                    if (!string.IsNullOrWhiteSpace(m.UserId) && m.UserId.ToLowerInvariant().Contains(lowerQueryString))
                     {
                         return true;
                     }
 
+                    if (!string.IsNullOrWhiteSpace(m.UserName) && m.UserName.ToLowerInvariant().Contains(lowerQueryString))
+                    {
+                        return true;
+                    }
 
                     return false;
                 }
