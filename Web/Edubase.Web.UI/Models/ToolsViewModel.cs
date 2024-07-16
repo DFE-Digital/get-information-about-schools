@@ -280,7 +280,7 @@ namespace Edubase.Web.UI.Models
                 new LinkAction
                 {
                     Link = htmlHelper.ActionLink("View logs", "ViewLogs", "Admin"),
-                    Description = "View logs, including those linked to an error code."
+                    Description = "View logs, including those linked to a user-facing error code."
                 },
                 new LinkAction
                 {
