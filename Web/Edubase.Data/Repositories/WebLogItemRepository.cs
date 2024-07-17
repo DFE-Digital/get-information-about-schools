@@ -15,6 +15,42 @@ namespace Edubase.Data.Repositories
         {
         }
 
+        public async Task<List<AZTLoggerMessages>> GetById(string value)
+        {
+            var items = new List<AZTLoggerMessages>();
+
+            // ID format is {rowKey}{partitionKey}, where the partition key is eight digits YYYYMMDD
+            // we need to split the value into the row key and partition key
+            if (value.Length < 8)
+            {
+                // If the query is far too short, it's not a valid ID and we can exit early
+                return items;
+            }
+
+            // Additional validation _could_ be done here, but for our purposes it is not necessary
+            var rowKey = value.Substring(0, value.Length - 8);
+            var partitionKey = value.Substring(value.Length - 8);
+
+            TableContinuationToken currentToken = null;
+            do
+            {
+                var query = new TableQuery<AZTLoggerMessages>().Where(
+                    TableQuery.CombineFilters(
+                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, rowKey),
+                        TableOperators.And,
+                        TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey)
+                    )
+                );
+
+                var segment = await Table.ExecuteQuerySegmentedAsync(query, currentToken);
+                items.AddRange(segment.Results);
+                currentToken = segment.ContinuationToken;
+            } while (currentToken != null);
+
+            return items;
+        }
+
+
         public async Task<List<AZTLoggerMessages>> GetWithinDateRange(DateTime startDateTime, DateTime endDateTime)
         {
             var items = new List<AZTLoggerMessages>();

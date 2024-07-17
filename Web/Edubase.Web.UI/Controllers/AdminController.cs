@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Autofac;
 using Edubase.Common.Cache;
 using Edubase.Web.UI.Helpers;
@@ -8,6 +9,7 @@ using System.Web.Mvc;
 using AzureTableLogger.Services;
 using Edubase.Data.Entity;
 using Edubase.Data.Repositories;
+using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Admin;
 
 namespace Edubase.Web.UI.Controllers
@@ -53,14 +55,28 @@ namespace Edubase.Web.UI.Controllers
 
             var webLogMessages = new List<AZTLoggerMessages>();
 
-            var startDate = model.StartDate.ToDateTime();
-            var endDate = model.EndDate.ToDateTime();
-            if (model.StartDate.IsValid() && model.EndDate.IsValid() && startDate.HasValue && endDate.HasValue)
+            // First check if our query matches the ID of a specific log message
+            if (!string.IsNullOrWhiteSpace(model.Query))
             {
-                // Note: Add one day to the end date to include the end date in the search results
-                webLogMessages = await _webLogItemRepository.GetWithinDateRange(startDate.Value, endDate.Value.AddDays(1));
-                webLogMessages = WebLogItemRepository.FilterByAllTextColumns(webLogMessages, queryString);
-                webLogMessages = WebLogItemRepository.FilterPurgeZeroLogsMessage(webLogMessages, includePurgeZeroLogsMessage);
+                var searchByIdResults = await _webLogItemRepository.GetById(model.Query.ToLowerInvariant());
+                if (searchByIdResults.Count == 1)
+                {
+                    webLogMessages = searchByIdResults;
+                }
+            }
+
+            // Only if the previous check(s) didn't return any exact matches, do the broader search
+            if (!webLogMessages.Any())
+            {
+                var startDate = model.StartDate.ToDateTime();
+                var endDate = model.EndDate.ToDateTime();
+                if (model.StartDate.IsValid() && model.EndDate.IsValid() && startDate.HasValue && endDate.HasValue)
+                {
+                    // Note: Add one day to the end date to include the end date in the search results
+                    webLogMessages = await _webLogItemRepository.GetWithinDateRange(startDate.Value, endDate.Value.AddDays(1));
+                    webLogMessages = WebLogItemRepository.FilterByAllTextColumns(webLogMessages, queryString);
+                    webLogMessages = WebLogItemRepository.FilterPurgeZeroLogsMessage(webLogMessages, includePurgeZeroLogsMessage);
+                }
             }
 
             var viewModel = new LogsViewModel

@@ -72,6 +72,7 @@
             <div class="govuk-form-group">
                 @Html.LabelFor(x => x.Query, new { @class = "govuk-label govuk-label--s", id = "query-label" })
                 @Html.ValidationMessageFor(x => x.Query, null, new { @class = "govuk-error-message" })
+                <p class="govuk-hint govuk-body-s">If searching for an error ID with an exact match found, the date filters will be disregarded.</p>
                 @Html.TextBoxFor(x => x.Query, new { @class = "govuk-input", id = "query-input" })
             </div>
 
