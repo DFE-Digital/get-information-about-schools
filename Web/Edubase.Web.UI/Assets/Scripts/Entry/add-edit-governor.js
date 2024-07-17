@@ -60,7 +60,7 @@ $("#IsOriginalSignatoryMember").on('change', function (e) {
 
 $("#IsOriginalChairOfTrustees").on('change', function (e) {
   if ($("#IsOriginalChairOfTrustees").val() === "true") {
-    $("#governorAppointingBodyInput").val(24);
+    $("#governorAppointingBodyInput").val(19);
     $("#governorAppointingBodyInput").prop("disabled", "disabled");
   } else {
     $("#governorAppointingBodyInput").prop("disabled", "");
