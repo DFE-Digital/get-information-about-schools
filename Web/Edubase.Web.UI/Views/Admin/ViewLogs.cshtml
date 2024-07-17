@@ -55,45 +55,9 @@
         @using (Html.BeginForm("ViewLogs", "Admin", FormMethod.Get))
         {
             <h3 class="govuk-heading-m">Search filters</h3>
-            <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset" role="group" aria-describedby="start-date-hint">
-                    <legend class="govuk-fieldset__legend">
-                        Start Date (UTC)
-                    </legend>
-                    @Html.ValidationMessageFor(x => x.StartDate, null, new { @class = "govuk-error-message" })
-                    <div class="govuk-date-input" id="start-date">
-                        <div class="govuk-date-input__item">
-                            @Html.TextBoxFor(x => x.StartDateDay, new { id = "start-date-day", type = "text", @class = "govuk-input govuk-date-input__input govuk-input--width-2", inputmode = "numeric" })
-                        </div>
-                        <div class="govuk-date-input__item">
-                            @Html.TextBoxFor(x => x.StartDateMonth, new { id = "start-date-month", type = "text", @class = "govuk-input govuk-date-input__input govuk-input--width-2", inputmode = "numeric" })
-                        </div>
-                        <div class="govuk-date-input__item">
-                            @Html.TextBoxFor(x => x.StartDateYear, new { id = "start-date-year", type = "text", @class = "govuk-input govuk-date-input__input govuk-input--width-4", inputmode = "numeric" })
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
 
-            <div class="govuk-form-group">
-                <fieldset class="govuk-fieldset" role="group" aria-describedby="end-date-hint">
-                    <legend class="govuk-fieldset__legend">
-                        End Date (UTC)
-                    </legend>
-                    @Html.ValidationMessageFor(x => x.EndDate, null, new { @class = "govuk-error-message" })
-                    <div class="govuk-date-input" id="end-date">
-                        <div class="govuk-date-input__item">
-                            @Html.TextBoxFor(x => x.EndDateDay, new { id = "end-date-day", type = "text", @class = "govuk-input govuk-date-input__input govuk-input--width-2", inputmode = "numeric" })
-                        </div>
-                        <div class="govuk-date-input__item">
-                            @Html.TextBoxFor(x => x.EndDateMonth, new { id = "end-date-month", type = "text", @class = "govuk-input govuk-date-input__input govuk-input--width-2", inputmode = "numeric" })
-                        </div>
-                        <div class="govuk-date-input__item">
-                            @Html.TextBoxFor(x => x.EndDateYear, new { id = "end-date-year", type = "text", @class = "govuk-input govuk-date-input__input govuk-input--width-4", inputmode = "numeric" })
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
+            @Html.EditorFor(x => x.StartDate, new { disableHint = true, title = "Start Date (UTC)", fieldsetClassName = "edit-date-fieldset", })
+            @Html.EditorFor(x => x.EndDate, new { disableHint = true, title = "End Date (UTC)", fieldsetClassName = "edit-date-fieldset", })
 
             <div class="govuk-form-group">
                 <div class="govuk-checkboxes" data-module="govuk-checkboxes">
@@ -106,7 +70,7 @@
             </div>
 
             <div class="govuk-form-group">
-                @Html.LabelFor(x => x.Query, new { @class = "govuk-label", id = "query-label" })
+                @Html.LabelFor(x => x.Query, new { @class = "govuk-label govuk-label--s", id = "query-label" })
                 @Html.ValidationMessageFor(x => x.Query, null, new { @class = "govuk-error-message" })
                 @Html.TextBoxFor(x => x.Query, new { @class = "govuk-input", id = "query-input" })
             </div>

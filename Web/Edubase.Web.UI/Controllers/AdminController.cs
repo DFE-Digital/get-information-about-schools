@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Autofac;
 using Edubase.Common.Cache;
 using Edubase.Web.UI.Helpers;
@@ -52,41 +51,24 @@ namespace Edubase.Web.UI.Controllers
             var queryString = model.Query ?? "";
             var includePurgeZeroLogsMessage = model.IncludePurgeZeroLogsMessage;
 
-            DateTime? startDate = DateTime.Today.AddDays(-28); // Default to 28 days ago
-            DateTime? endDate = DateTime.Today;
+            var webLogMessages = new List<AZTLoggerMessages>();
 
-            // Check if the separate date fields are filled in to construct the StartDate and EndDate
-            // Additionally, check whether the date is valid
-            if (model.StartDateDay.HasValue && model.StartDateMonth.HasValue && model.StartDateYear.HasValue &&
-                DateIsValid(model.StartDateYear.Value, model.StartDateMonth.Value, model.StartDateDay.Value))
+            var startDate = model.StartDate.ToDateTime();
+            var endDate = model.EndDate.ToDateTime();
+            if (model.StartDate.IsValid() && model.EndDate.IsValid() && startDate.HasValue && endDate.HasValue)
             {
-                startDate = new DateTime(model.StartDateYear.Value, model.StartDateMonth.Value,
-                    model.StartDateDay.Value);
+                // Note: Add one day to the end date to include the end date in the search results
+                webLogMessages = await _webLogItemRepository.GetWithinDateRange(startDate.Value, endDate.Value.AddDays(1));
+                webLogMessages = WebLogItemRepository.FilterByAllTextColumns(webLogMessages, queryString);
+                webLogMessages = WebLogItemRepository.FilterPurgeZeroLogsMessage(webLogMessages, includePurgeZeroLogsMessage);
             }
-
-            if (model.EndDateDay.HasValue && model.EndDateMonth.HasValue && model.EndDateYear.HasValue &&
-                DateIsValid(model.EndDateYear.Value, model.EndDateMonth.Value, model.EndDateDay.Value))
-            {
-                endDate = new DateTime(model.EndDateYear.Value, model.EndDateMonth.Value, model.EndDateDay.Value);
-            }
-
-            endDate = endDate.Value.AddDays(1); // Add a day to the end date to include the end date within the search
-
-            var webLogMessages = await _webLogItemRepository.GetWithinDateRange(startDate.Value, endDate.Value);
-
-            webLogMessages = WebLogItemRepository.FilterByAllTextColumns(webLogMessages, queryString);
-            webLogMessages = WebLogItemRepository.FilterPurgeZeroLogsMessage(webLogMessages, includePurgeZeroLogsMessage);
 
             var viewModel = new LogsViewModel
             {
                 Messages = webLogMessages,
                 Query = queryString,
-                StartDateDay = startDate.Value.Day,
-                StartDateMonth = startDate.Value.Month,
-                StartDateYear = startDate.Value.Year,
-                EndDateDay = endDate.Value.Day,
-                EndDateMonth = endDate.Value.Month,
-                EndDateYear = endDate.Value.Year,
+                StartDate = model.StartDate,
+                EndDate = model.EndDate,
                 IncludePurgeZeroLogsMessage = includePurgeZeroLogsMessage
             };
 
