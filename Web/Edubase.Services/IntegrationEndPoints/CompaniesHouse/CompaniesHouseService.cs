@@ -34,7 +34,7 @@ namespace Edubase.Services.IntegrationEndPoints.CompaniesHouse
 
         public async Task<PagedDto<CompanyProfile>> SearchByName(string text, int skip = 0, int take = 50)
         {
-            var result = await GetCompaniesHouseClient().SearchCompanyAsync(new SearchRequest
+            var result = await GetCompaniesHouseClient().SearchCompanyAsync(new SearchCompanyRequest()
             {
                 Query = text,
                 ItemsPerPage = take,
@@ -61,6 +61,6 @@ namespace Edubase.Services.IntegrationEndPoints.CompaniesHouse
             var client = new CompaniesHouseClient(settings);
             return client;
         }
-        
+
     }
 }
