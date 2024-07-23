@@ -33,6 +33,8 @@ namespace Edubase.Web.UI.Models
         public bool UserCanDownloadMATClosureReport { get; internal set; }
         public bool UserCanManageNotifications { get; internal set; }
         public bool UserCanManageNews { get; internal set; }
+        public bool UserCanViewLogs { get; internal set; }
+        public bool UserCanResetCaches { get; internal set; }
 
         public List<LinkAction> GetCreateActions(HtmlHelper htmlHelper)
         {
@@ -275,19 +277,25 @@ namespace Edubase.Web.UI.Models
 
         public List<LinkAction> GetSupportActions(HtmlHelper htmlHelper)
         {
-            var retVal = new List<LinkAction>
+            var retVal = new List<LinkAction>();
+
+            if (UserCanViewLogs)
             {
-                new LinkAction
+                retVal.Add(new LinkAction
                 {
                     Link = htmlHelper.ActionLink("View logs", "ViewLogs", "Admin"),
                     Description = "View logs, including those linked to a user-facing error code."
-                },
-                new LinkAction
+                });
+            }
+
+            if (UserCanResetCaches)
+            {
+                retVal.Add(new LinkAction
                 {
                     Link = htmlHelper.ActionLink("Clear cache", "ClearCache", "Admin"),
                     Description = "Clear the Redis cache and C# memory cache."
-                }
-            };
+                });
+            }
 
             return retVal;
         }
