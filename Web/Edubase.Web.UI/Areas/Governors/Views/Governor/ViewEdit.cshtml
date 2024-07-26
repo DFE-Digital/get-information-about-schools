@@ -94,7 +94,9 @@
                                     // misleading to the user (as it would look like the first entry already has an appointee, rather than whatever the user submitted).
                                     // See also WCAG 2.2 requirements to not clear any form fields when validating users' input.
                                     // https://design-system.service.gov.uk/patterns/validation/#wcag-edit-to-correct-errors
-                                    if(ViewData.ContainsKey("SelectedRole") && ViewData["SelectedRole"] == x)
+                                    var currentValue = selectListItem.Value;
+                                    var submittedValue = (ViewData["SelectedGovernorRole"] as eLookupGovernorRole?).ToString();
+                                    if(currentValue.Equals(submittedValue, StringComparison.OrdinalIgnoreCase))
                                     {
                                         selectListItem.Selected = true;
                                     }
