@@ -360,7 +360,7 @@ class GiasFiltering {
   }
 
   showWaitingMessage(container) {
-    container.append('<div class="waiting-message"><span class="govuk-warning-text__text">Continue to wait while we load the search results.</div>');
+    container.append('<div class="waiting-message"><span class="govuk-warning-text__text">Continue to wait while the search results load.</div>');
   }
 
 
