@@ -5,6 +5,8 @@
     ViewBag.SiteSection = "tools";
     var creationActions = Model.GetCreateActions(Html);
     var updateActions = Model.GetUpdateActions(Html);
+    var adminActions = Model.GetAdminActions(Html);
+    var supportActions = Model.GetSupportActions(Html);
 }
 
 @section BreadCrumbs {
@@ -29,7 +31,8 @@
 
 @RenderLinks("Create", creationActions)
 @RenderLinks("Update", updateActions, creationActions.Any())
-@RenderLinks("Administration", Model.GetAdminActions(Html), creationActions.Any() || updateActions.Any())
+@RenderLinks("Administration", adminActions, creationActions.Any() || updateActions.Any())
+@RenderLinks("Support", supportActions, creationActions.Any() || updateActions.Any() || adminActions.Any())
 
 @helper RenderLinks(string label, List<ToolsViewModel.LinkAction> list, bool sectionBreak = false)
 {
@@ -52,7 +55,7 @@
             <div class="@gridClass">
                 <ul class="govuk-list @Html.Conditional(list.Count > 1, "gias-columns-2")">
                     @for (int itemCounter = 0; itemCounter < list.Count; itemCounter++)
-                    { 
+                    {
                         <li>
                             <h3 class="govuk-heading-s">
                                 <span id="tool-link-@label.ToLower()-@itemCounter">

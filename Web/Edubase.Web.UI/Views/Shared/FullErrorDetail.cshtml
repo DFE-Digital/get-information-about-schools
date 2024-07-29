@@ -39,13 +39,13 @@
         <table>
             <tr>
                 <td class="govuk-!-font-weight-bold" style="width:100px;">Message</td>
-                <td>@Model.Message</td>
+                <td>@ViewBag.Message</td>
             </tr>
             <tr>
                 <td class="govuk-!-font-weight-bold">Stack trace</td>
             </tr>
             <tr>
-                <td colspan="2" class="plain">@FormatHelpers.HtmlizeNewLines(Model.ToString())</td>
+                <td colspan="2" class="plain">@FormatHelpers.HtmlizeNewLines(ViewBag.Exception.ToString())</td>
             </tr>
         </table>
     </div>

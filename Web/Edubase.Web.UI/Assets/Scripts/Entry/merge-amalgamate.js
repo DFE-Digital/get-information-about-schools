@@ -19,7 +19,7 @@ const mergersApp = new Vue({
     commitErrors: false,
     apiError: {},
     isProcessing: false,
-
+    csrfToken: '',
     mergerType: '',
     mergerTypeConfirmed: false,
     mergerTypeError: false,
@@ -93,6 +93,9 @@ const mergersApp = new Vue({
     this.populateSelect('LocalAuthorityId', this.localAuthorities);
     this.blockExits();
   },
+  mounted: function () {
+    this.csrfToken = this.getAntiForgeryToken();
+  },
   watch: {
     mergerTypeConfirmed: function() {
       // breadcrumbs out side of vue app, but need to be kept in sync
@@ -100,6 +103,9 @@ const mergersApp = new Vue({
     }
   },
   methods: {
+    getAntiForgeryToken() {
+      return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    },
     populateSelect: function (control, data) {
       let frag = document.createDocumentFragment();
 
@@ -449,10 +455,14 @@ const mergersApp = new Vue({
         postData.NewEstablishmentTypeId = this.typeId;
         postData.NewEstablishmentLocalAuthorityId = this.laId;
 
+        const my = this;
 
         $.ajax({
-          url: self.commitApi,
+          url: my.commitApi,
           method: 'post',
+          headers: {
+            'RequestVerificationToken': my.csrfToken
+          },
           contentType: 'application/json; charset=utf-8',
           dataType: 'json',
           data: JSON.stringify(postData),
@@ -513,12 +523,17 @@ const mergersApp = new Vue({
       this.mergeDateError = this.validateMergerDate();
       this.errorFocus();
 
+      const my = this;
+
       if (!this.mergeDateError) {
         this.validLinkDate = true;
         this.isProcessing = true;
         $.ajax({
-          url: self.commitApi,
+          url: my.commitApi,
           method: 'post',
+          headers: {
+            'RequestVerificationToken': my.csrfToken
+          },
           contentType: 'application/json; charset=utf-8',
           dataType: 'json',
           data: JSON.stringify(postData),
