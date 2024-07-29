@@ -13,7 +13,7 @@
 }
 <!doctype html>
 <html lang="en" class="govuk-template">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="blue">
@@ -22,7 +22,7 @@
     <link href="/public/assets/stylesheets/main.css?v=@version" rel="stylesheet" type="text/css">
 
     <!-- Google Tag Manager -->
-    @if(acceptsAnalytics == "True")
+    @if (acceptsAnalytics == "True")
     {
         <script nonce="@Html.ScriptNonce()">
         (function (w, d, s, l, i) {
@@ -33,7 +33,7 @@
                 j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
                     'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', '@gtmKey'); //
-    </script>
+        </script>
     }
     <!-- End Google Tag Manager -->
 
@@ -64,6 +64,16 @@
 
 
     @RenderSection("Head", required: false)
+
+    @functions {
+        public static IHtmlString GetCsrfTokenMeta()
+        {
+            string cookieToken, formToken;
+            System.Web.Helpers.AntiForgery.GetTokens(null, out cookieToken, out formToken);
+            return new HtmlString($"<meta name=\"csrf-token\" content=\"{formToken}\" />");
+        }}
+    @Html.AntiForgeryToken()
+    @GetCsrfTokenMeta()
 
 </head>
   <body class="govuk-template__body @(ViewBag.bodyClasses) no-js" id="top">

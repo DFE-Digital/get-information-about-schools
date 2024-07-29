@@ -50,8 +50,6 @@ namespace Edubase.Web.UI.Helpers
             return state == null ? MvcHtmlString.Empty : state.Errors.Count == 0 ? MvcHtmlString.Empty : new MvcHtmlString("govuk-select--error");
         }
 
-
-
         public static MvcHtmlString TextBoxValidationClass<TModel, TProperty>(
             this HtmlHelper<TModel> htmlHelper,
             Expression<Func<TModel, TProperty>> expression)
@@ -74,13 +72,37 @@ namespace Edubase.Web.UI.Helpers
                     {
                         foreach (var error in htmlHelper.ViewData.ModelState[modelName].Errors)
                         {
-                            htmlHelper.ViewData.ModelState.AddModelError(fullFieldName, error.ErrorMessage);
+                            var splitName = SplitNameAndCapitaliseFirstLetter(error);
+                            htmlHelper.ViewData.ModelState.AddModelError(fullFieldName, splitName);
                         }
                     }
                 }
             }
 
             return htmlHelper.ValidationMessage(modelName, (string) null, new { @class = "govuk-error-message"});
+        }
+
+        /// <summary>
+        /// Splits the combined words in an error message where an uppercase letter follows a lowercase
+        /// then capitalises the first letter of the string, and converts the rest to lower
+        /// </summary>
+        /// <param name="error">Error message (ModelError)</param>
+        /// <returns>String with first letter capitalized and the subsequent letters in lowercase</returns>
+        public static string SplitNameAndCapitaliseFirstLetter(ModelError error)
+        {
+            if (string.IsNullOrEmpty(error.ErrorMessage))
+                return string.Empty;
+
+            var matchTimeout = TimeSpan.FromMilliseconds(100);
+            var regex = new Regex("([a-z])([A-Z])", RegexOptions.Compiled, matchTimeout);
+            var splitName = regex.Replace(error.ErrorMessage, "$1 $2");
+
+            if (string.IsNullOrEmpty(splitName))
+                return string.Empty;
+
+            splitName = char.ToUpper(splitName[0]) + splitName.Substring(1).ToLower();
+
+            return splitName;
         }
 
         public static MvcHtmlString DuplicateCssClassFor(this HtmlHelper htmlHelper, int? governorId)

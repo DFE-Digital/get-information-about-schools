@@ -4,7 +4,9 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Edubase.Common;
+using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
+using Edubase.Services.Governors.Factories;
 using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Helpers;
@@ -24,6 +26,8 @@ namespace Edubase.Web.UI.Controllers
         private readonly ICachedLookupService _cachedLookupService;
         private readonly IGroupReadService _groupReadService;
         private readonly IPlacesLookupService _placesService;
+
+        private const string ConstIndex = "Index";
 
         public SearchController(IEstablishmentReadService establishmentReadService,
             ICachedLookupService cachedLookupService,
@@ -165,10 +169,31 @@ namespace Edubase.Web.UI.Controllers
                 ModelState.AddModelError(fieldId, fieldError);
             }
 
-            viewModel.LocalAuthorities = (await _cachedLookupService.LocalAuthorityGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
-            viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync()).OrderBy(x => x.Name).Select(x => new LookupItemViewModel(x));
+            viewModel.LocalAuthorities = (await _cachedLookupService.LocalAuthorityGetAllAsync())
+                .OrderBy(x => x.Name)
+                .Select(x => new LookupItemViewModel(x));
 
-            return View("Index", viewModel);
+            viewModel.GovernorRoles = (await _cachedLookupService.GovernorRolesGetAllAsync())
+                .OrderBy(x => x.Name)
+                .Select(x =>
+                {
+                    var staffRole = new LookupItemViewModel(x);
+
+                    // If recognised as an enum and we have a C#-overridden name for it, use that instead
+                    if(Enum.IsDefined(typeof(eLookupGovernorRole), (eLookupGovernorRole) x.Id))
+                    {
+                        var factoryName = GovernorRoleNameFactory.Create((eLookupGovernorRole) x.Id);
+                        if(!factoryName.ToLowerInvariant().Equals(staffRole.Name.ToLowerInvariant()))
+                        {
+                            Console.Error.WriteLine($"Governor role name mismatch - not just a case difference: {staffRole.Name} -> {factoryName}");
+                        }
+
+                        staffRole.Name = factoryName;
+                    }
+                    return staffRole;
+                });
+
+            return View(ConstIndex, viewModel);
         }
 
         [HttpGet, Route("Results", Name = "SearchResults")]
@@ -212,7 +237,7 @@ namespace Edubase.Web.UI.Controllers
 
                         if (viewModel.SearchType.OneOfThese(eSearchType.ByLocalAuthority, eSearchType.Location, eSearchType.Text, eSearchType.EstablishmentAll))
                         {
-                            var url = Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" });
+                            var url = Url.Action(ConstIndex, "EstablishmentsSearch", new { area = "Establishments" });
                             url = viewModel.OpenOnly
                                 ? $"{url}?{Request.QueryString.AddIfNonExistent(SearchViewModel.BIND_ALIAS_STATUSIDS, (int)eStatus.Open, (int)eStatus.OpenButProposedToClose)}"
                                 : $"{url}?{Request.QueryString.AddIfNonExistent("OpenOnly", "false")}";
@@ -222,13 +247,13 @@ namespace Edubase.Web.UI.Controllers
 
                         if (viewModel.SearchType.OneOfThese(eSearchType.Group, eSearchType.GroupAll))
                         {
-                            return Redirect(Url.Action("Index", "GroupSearch", new { area = "Groups" }) + "?" + Request.QueryString);
+                            return Redirect(Url.Action(ConstIndex, "GroupSearch", new { area = "Groups" }) + "?" + Request.QueryString);
                         }
 
                         if (viewModel.SearchType.OneOfThese(eSearchType.Governor, eSearchType.GovernorReference, eSearchType.GovernorAll))
                         {
                             return Redirect(
-                                $"{Url.Action("Index", "GovernorSearch", new { area = "Governors" })}?{Request.QueryString}&{string.Join("&", viewModel.GovernorSearchModel.RoleId.Select(r => $"&{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}={r}"))}");
+                                $"{Url.Action(ConstIndex, "GovernorSearch", new { area = "Governors" })}?{Request.QueryString}&{string.Join("&", viewModel.GovernorSearchModel.RoleId.Select(r => $"&{Areas.Governors.Models.GovernorSearchViewModel.BIND_ALIAS_ROLE_ID}={r}"))}");
                         }
 
                         throw new NotSupportedException($"The search type '{viewModel.SearchType}' is not recognised.");

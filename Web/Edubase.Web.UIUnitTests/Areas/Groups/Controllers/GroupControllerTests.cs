@@ -20,7 +20,6 @@ using Edubase.Services.Groups;
 using Edubase.Services.Groups.Models;
 using Edubase.Services.IntegrationEndPoints.CompaniesHouse;
 using Edubase.Services.Lookup;
-using Edubase.Services.Nomenclature;
 using Edubase.Services.Security;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Areas.Groups.Models;
@@ -48,7 +47,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
         private readonly Mock<ICompaniesHouseService> mockCompaniesHouseService = new Mock<ICompaniesHouseService>(MockBehavior.Strict);
         private readonly Mock<ISecurityService> mockSecurityService = new Mock<ISecurityService>(MockBehavior.Strict);
         private readonly Mock<IExternalLookupService> mockExternalLookupService = new Mock<IExternalLookupService>(MockBehavior.Strict);
-        private readonly Mock<NomenclatureService> mockNomenclatureService = new Mock<NomenclatureService>(MockBehavior.Strict);
         private readonly Mock<UrlHelper> mockUrlHelper = new Mock<UrlHelper>(MockBehavior.Loose);
         private readonly Mock<ControllerContext> mockControllerContext = new Mock<ControllerContext>(MockBehavior.Strict);
         private readonly Mock<HttpRequestBase> mockHttpRequestBase = new Mock<HttpRequestBase>(MockBehavior.Strict);
@@ -76,7 +74,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
                 mockEstablishmentReadService.Object,
                 mockGroupsWriteService.Object,
                 mockCompaniesHouseService.Object,
-                mockNomenclatureService.Object,
                 mockGovernorsReadService.Object,
                 mockExternalLookupService.Object,
                 mockGovernorGridViewModelFactory.Object);

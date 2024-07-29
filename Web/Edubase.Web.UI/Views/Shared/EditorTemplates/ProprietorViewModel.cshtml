@@ -12,7 +12,7 @@
     // horrible way of doing it, but the viewstate is wiped when we call the RenderPartial
     // we cant just create the new viewDataDictionary from the model either because that messes up the repeated sections.
     var ms = (ModelStateDictionary)ViewBag.ModelState;
-    if (@Html.ViewData.ModelState.IsValid && !ms.IsValid)
+    if (Html.ViewData.ModelState.IsValid && !ms.IsValid)
     {
         foreach (var msKey in ms.Keys)
         {
@@ -105,7 +105,8 @@
 }
 
 @functions {
-    public string ProprietorsValidationCssClass(string validationId)
+
+    private string ProprietorsValidationCssClass(string validationId)
     {
         var state = Html.ViewData.ModelState[validationId];
         if (state != null && state.Errors.Count > 0)
@@ -114,4 +115,5 @@
         }
         return "";
     }
+
 }
