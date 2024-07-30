@@ -90,7 +90,9 @@ namespace Edubase.Web.UI.Controllers
                 UserCanBulkAssociateEstabs2Groups = User.InRole(AuthorizedRoles.CanBulkAssociateEstabs2Groups),
                 UserCanDownloadMATClosureReport = User.InRole(AuthorizedRoles.CanManageAcademyTrusts),
                 UserCanManageNotifications = User.InRole(AuthorizedRoles.IsAdmin),
-                UserCanManageNews = User.InRole(AuthorizedRoles.IsAdmin)
+                UserCanManageNews = User.InRole(AuthorizedRoles.IsAdmin),
+                UserCanViewLogs = User.InRole(AuthorizedRoles.IsAdmin),
+                UserCanResetCaches = User.InRole(AuthorizedRoles.IsAdmin),
             };
 
             return View(viewModel);

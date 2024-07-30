@@ -392,6 +392,7 @@
     <Compile Include="Helpers\StringUtils.cs" />
     <Compile Include="Mappers\BulkUpdateViewModelToDtoMapper.cs" />
     <Compile Include="Mappers\LookupToSearchViewModelMapper.cs" />
+    <Compile Include="Models\Admin\LogsViewModel.cs" />
     <Compile Include="Models\DataQuality\DataQualityDataOwnerItem.cs" />
     <Compile Include="Models\DataQuality\EditDataQualityDataOwnersViewModel.cs" />
     <Compile Include="Models\Faq\FaqGroupsViewModel.cs" />
@@ -729,6 +730,7 @@
     <Content Include="public\downloads\GovernorsBulkUpdateTemplate.xlsx" />
     <Content Include="robots.txt" />
     <Content Include="App_offline_x.htm" />
+    <Content Include="Views\Admin\ViewLogs.cshtml" />
     <Content Include="Views\Approvals\ExplainRejections.cshtml" />
     <Content Include="Views\Approvals\Partials\_ApprovalsTable.cshtml" />
     <Content Include="Views\DataQuality\EditDataOwnerDetails.cshtml" />
