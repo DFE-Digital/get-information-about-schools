@@ -321,6 +321,20 @@ namespace Edubase.Web.UI
 
         public static HttpClient CreateLookupClient(string lookupApiAddress, string lookupApiUsername, string lookupApiPassword)
         {
+            // If the given values are empty, default to using the generic/standard API address and credentials
+            if (string.IsNullOrEmpty(lookupApiAddress))
+            {
+                lookupApiAddress = ConfigurationManager.AppSettings["TexunaApiBaseAddress"];
+            }
+            if (string.IsNullOrEmpty(lookupApiUsername))
+            {
+                lookupApiUsername = ConfigurationManager.AppSettings["api:Username"];
+            }
+            if (string.IsNullOrEmpty(lookupApiPassword))
+            {
+                lookupApiPassword = ConfigurationManager.AppSettings["api:Password"];
+            }
+
             var lookupUri = new Uri(lookupApiAddress);
 
             if (!int.TryParse(ConfigurationManager.AppSettings["LookupClient_Timeout"], out var timeoutsettings))
@@ -361,6 +375,20 @@ namespace Edubase.Web.UI
 
         public static HttpClient CreateGovernorSearchClient(string governorSearchApiAddress, string governorSearchApiUsername, string governorSearchApiPassword)
         {
+            // If the given values are empty, default to using the generic/standard API address and credentials
+            if (string.IsNullOrEmpty(governorSearchApiAddress))
+            {
+                governorSearchApiAddress = ConfigurationManager.AppSettings["TexunaApiBaseAddress"];
+            }
+            if (string.IsNullOrEmpty(governorSearchApiUsername))
+            {
+                governorSearchApiUsername = ConfigurationManager.AppSettings["api:Username"];
+            }
+            if (string.IsNullOrEmpty(governorSearchApiPassword))
+            {
+                governorSearchApiPassword = ConfigurationManager.AppSettings["api:Password"];
+            }
+
             var governorSearchUri = new Uri(governorSearchApiAddress);
 
             if (!int.TryParse(ConfigurationManager.AppSettings["GovernorSearchClient_Timeout"], out var timeoutsettings))
