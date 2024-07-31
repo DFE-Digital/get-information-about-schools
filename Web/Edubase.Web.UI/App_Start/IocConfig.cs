@@ -357,22 +357,6 @@ namespace Edubase.Web.UI
             return client;
         }
 
-        private static HttpClient CreatOSPlacesClient()
-        {
-            if (!int.TryParse(ConfigurationManager.AppSettings["OSPlacesApiServices_Timeout"], out var timeoutsettings))
-            {
-                timeoutsettings = 10;
-            }
-
-            var client = new HttpClient
-            {
-                BaseAddress = new Uri(ConfigurationManager.AppSettings["OSPlacesUrl"]),
-                Timeout = TimeSpan.FromSeconds(timeoutsettings)
-            };
-
-            return client;
-        }
-
         public static HttpClient CreateGovernorSearchClient(string governorSearchApiAddress, string governorSearchApiUsername, string governorSearchApiPassword)
         {
             // If the given values are empty, default to using the generic/standard API address and credentials
@@ -407,6 +391,22 @@ namespace Edubase.Web.UI
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Basic,
                     new BasicAuthCredentials(governorSearchApiUsername, governorSearchApiPassword).ToString());
             }
+
+            return client;
+        }
+
+        private static HttpClient CreatOSPlacesClient()
+        {
+            if (!int.TryParse(ConfigurationManager.AppSettings["OSPlacesApiServices_Timeout"], out var timeoutsettings))
+            {
+                timeoutsettings = 10;
+            }
+
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(ConfigurationManager.AppSettings["OSPlacesUrl"]),
+                Timeout = TimeSpan.FromSeconds(timeoutsettings)
+            };
 
             return client;
         }
