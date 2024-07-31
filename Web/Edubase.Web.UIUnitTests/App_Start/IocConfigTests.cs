@@ -12,6 +12,15 @@ namespace Edubase.Web.UIUnitTests
         [InlineData("", null, null)]
         [InlineData(" ", null, null)]
         [InlineData("     ", null, null)]
+        public void CreateLookupClient_ThrowsArgumentNullExceptionForEmptyAddresses(string lookupApiAddress,
+            string lookupApiUsername, string lookupApiPassword)
+        {
+            Assert.Throws<ArgumentNullException>(() => IocConfig.CreateLookupClient(
+                lookupApiAddress,
+                lookupApiUsername,
+                lookupApiPassword));
+        }
+        [Theory]
         [InlineData("test", null, null)]
         public void CreateLookupClient_ThrowsUriFormatExceptionForInvalidAddresses(string lookupApiAddress,
             string lookupApiUsername, string lookupApiPassword)
