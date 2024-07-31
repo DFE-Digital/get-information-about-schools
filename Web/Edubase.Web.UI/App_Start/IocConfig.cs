@@ -322,7 +322,7 @@ namespace Edubase.Web.UI
         public static HttpClient CreateLookupClient(string lookupApiAddress, string lookupApiUsername, string lookupApiPassword)
         {
             // If the given values are empty, default to using the generic/standard API address and credentials
-            if (string.IsNullOrEmpty(lookupApiAddress))
+            if (string.IsNullOrWhiteSpace(lookupApiAddress))
             {
                 lookupApiAddress = ConfigurationManager.AppSettings["TexunaApiBaseAddress"];
             }
@@ -360,7 +360,7 @@ namespace Edubase.Web.UI
         public static HttpClient CreateGovernorSearchClient(string governorSearchApiAddress, string governorSearchApiUsername, string governorSearchApiPassword)
         {
             // If the given values are empty, default to using the generic/standard API address and credentials
-            if (string.IsNullOrEmpty(governorSearchApiAddress))
+            if (string.IsNullOrWhiteSpace(governorSearchApiAddress))
             {
                 governorSearchApiAddress = ConfigurationManager.AppSettings["TexunaApiBaseAddress"];
             }
