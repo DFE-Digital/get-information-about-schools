@@ -174,8 +174,28 @@ namespace Edubase.Web.UI
                 .As<ILookupService>()
                 .As<IUserDependentLookupService>();
 
+            // named HttpClient and HttpClientWrapper used specifically for searching Governors
+            builder.RegisterInstance(CreateGovernorSearchClient(
+                ConfigurationManager.AppSettings["GovernorSearchApiBaseAddress"],
+                ConfigurationManager.AppSettings["GovernorSearchApiUsername"],
+                ConfigurationManager.AppSettings["GovernorSearchApiPassword"]
+            )).SingleInstance().Named<HttpClient>("GovernorSearchApiClient");
+
+            builder.Register(c => new HttpClientWrapper(
+                    c.ResolveNamed<HttpClient>("GovernorSearchApiClient"),
+                    c.Resolve<JsonMediaTypeFormatter>(),
+                    c.Resolve<IClientStorage>(),
+                    c.Resolve<ApiRecorderSessionItemRepository>()
+                ))
+                .Named<HttpClientWrapper>("GovernorSearchHttpClientWrapper");
+
+            builder.Register(c => new GovernorsReadApiService(
+                    c.Resolve<HttpClientWrapper>(),
+                    c.ResolveNamed<HttpClientWrapper>("GovernorSearchHttpClientWrapper"),
+                    c.Resolve<IEstablishmentReadService>()))
+                .As<IGovernorsReadService>();
+
             builder.RegisterType<GovernorDownloadApiService>().As<IGovernorDownloadService>();
-            builder.RegisterType<GovernorsReadApiService>().As<IGovernorsReadService>();
             builder.RegisterType<EstablishmentWriteApiService>().As<IEstablishmentWriteService>();
             builder.RegisterType<GovernorsWriteApiService>().As<IGovernorsWriteService>();
             builder.RegisterType<SecurityApiService>().As<ISecurityService>();
@@ -335,6 +355,30 @@ namespace Edubase.Web.UI
                 BaseAddress = new Uri(ConfigurationManager.AppSettings["OSPlacesUrl"]),
                 Timeout = TimeSpan.FromSeconds(timeoutsettings)
             };
+
+            return client;
+        }
+
+        public static HttpClient CreateGovernorSearchClient(string governorSearchApiAddress, string governorSearchApiUsername, string governorSearchApiPassword)
+        {
+            var governorSearchUri = new Uri(governorSearchApiAddress);
+
+            if (!int.TryParse(ConfigurationManager.AppSettings["GovernorSearchClient_Timeout"], out var timeoutsettings))
+            {
+                timeoutsettings = 30;
+            }
+
+            var client = new HttpClient(new HttpClientHandler { UseCookies = false })
+            {
+                BaseAddress = governorSearchUri,
+                Timeout = TimeSpan.FromSeconds(timeoutsettings)
+            };
+
+            if (!string.IsNullOrEmpty(governorSearchApiUsername) && !string.IsNullOrEmpty(governorSearchApiPassword))
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Basic,
+                    new BasicAuthCredentials(governorSearchApiUsername, governorSearchApiPassword).ToString());
+            }
 
             return client;
         }
