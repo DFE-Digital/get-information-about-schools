@@ -14,11 +14,13 @@ namespace Edubase.Services.Texuna.Governors
     public class GovernorsReadApiService : IGovernorsReadService
     {
         private readonly HttpClientWrapper _httpClient;
+        private readonly HttpClientWrapper _governorSearchHttpClient;
         private readonly IEstablishmentReadService _establishmentReadService;
 
-        public GovernorsReadApiService(HttpClientWrapper httpClient, IEstablishmentReadService establishmentReadService)
+        public GovernorsReadApiService(HttpClientWrapper httpClient, HttpClientWrapper governorSearchHttpClient, IEstablishmentReadService establishmentReadService)
         {
             _httpClient = httpClient;
+            _governorSearchHttpClient = governorSearchHttpClient;
             _establishmentReadService = establishmentReadService;
         }
 
@@ -30,18 +32,18 @@ namespace Edubase.Services.Texuna.Governors
             var retVal = (await _httpClient.GetAsync<GovernorModel>($"governor/{gid}", principal)).GetResponse();
             return retVal;
         }
-        
+
         public async Task<GovernorsDetailsDto> GetGovernorListAsync(int? urn = default(int?), int? groupUId = default(int?), IPrincipal principal = null)
         {
             var retVal = (await _httpClient.GetAsync<GovernorsDetailsTexunaDto>($"governors?{(groupUId.HasValue ? "uid" : "urn")}={(urn.HasValue ? urn : groupUId)}", principal)).GetResponse();
             return retVal;
         }
 
-        public async Task<GovernorPermissions> GetGovernorPermissions(int? urn = default(int?), int? groupUId = default(int?), IPrincipal principal = null) 
+        public async Task<GovernorPermissions> GetGovernorPermissions(int? urn = default(int?), int? groupUId = default(int?), IPrincipal principal = null)
             => (await _httpClient.GetAsync<GovernorPermissions>($"governors/permissions?{(groupUId.HasValue ? "uid" : "urn")}={(urn.HasValue ? urn : groupUId)}", principal)).GetResponse();
 
-        public async Task<ApiPagedResult<SearchGovernorModel>> SearchAsync(GovernorSearchPayload payload, IPrincipal principal) 
-            => (await _httpClient.PostAsync<ApiPagedResult<SearchGovernorModel>>("governor/search", payload, principal)).GetResponse();
+        public async Task<ApiPagedResult<SearchGovernorModel>> SearchAsync(GovernorSearchPayload payload, IPrincipal principal)
+            => (await _governorSearchHttpClient.PostAsync<ApiPagedResult<SearchGovernorModel>>("governor/search", payload, principal)).GetResponse();
 
         public async Task<IEnumerable<GovernorModel>> GetSharedGovernorsAsync(int establishmentUrn, IPrincipal principal)
         {
