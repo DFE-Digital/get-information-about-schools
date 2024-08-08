@@ -14,111 +14,122 @@ const TerserPlugin = require("terser-webpack-plugin");
 const base64 = require('postcss-base64');
 
 const config = {
-    entry: () => {
-      const jsFiles = glob
-        .sync(entryFiles)
-        .reduce((acc, filePath) => {
-          const file = path.parse(filePath);
-          acc[file.name] = path.resolve(process.cwd(), filePath);
-          return acc;
-        }, {});
+  entry: () => {
+    const jsFiles = glob
+      .sync(entryFiles)
+      .reduce((acc, filePath) => {
+        const file = path.parse(filePath);
+        acc[file.name] = path.resolve(process.cwd(), filePath);
+        return acc;
+      }, {});
 
-      const cssFiles = glob
-        .sync(path.join(scssEntryPath, '/*.scss'))
-        .reduce((acc, filePath) => {
-          const file = path.parse(filePath);
-          acc[file.name] = path.resolve(process.cwd(), filePath);
-          return acc;
-        }, {});
+    const cssFiles = glob
+      .sync(path.join(scssEntryPath, '/*.scss'))
+      .reduce((acc, filePath) => {
+        const file = path.parse(filePath);
+        acc[file.name] = path.resolve(process.cwd(), filePath);
+        return acc;
+      }, {});
 
-      return Object.assign(jsFiles, cssFiles);
-    },
-    optimization: {
-      minimize: true,
-      minimizer: [new TerserPlugin({
-        extractComments: false,
-        terserOptions: {
-          format: {
-            comments: false,
-          },
+    return Object.assign(jsFiles, cssFiles);
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin({
+      extractComments: false,
+      terserOptions: {
+        format: {
+          comments: false,
         },
-
-      })],
-    },
-    output: {
-      filename: '[name].[contenthash].js',
-      path: buildDir + '/assets/scripts/build/'
-    },
-    resolve: {
-      alias: {
-        'vue$': 'vue/dist/vue.esm.js'
       },
-      extensions: ['*', '.js', '.vue', '.json']
+
+    })],
+  },
+  output: {
+    filename: '[name].[contenthash].js',
+    path: buildDir + '/assets/scripts/build/'
+  },
+  resolve: {
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js'
     },
-    module: {
-      rules: [
-       {
-          test: /\.js$/,
-          exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              presets: [
-                ['@babel/preset-env', {
-                  useBuiltIns: 'usage',
-                  corejs: 3
-                }]
-              ]
-            }},
+    extensions: ['*', '.js', '.vue', '.json']
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              ['@babel/preset-env', {
+                useBuiltIns: 'usage',
+                corejs: 3
+              }]
+            ]
+          }
         },
-        {
-          test: /\.(scss|css)$/,
-          use: [
-            {
-              loader: MiniCssExtractPlugin.loader,
-              options: {
-                publicPath: '../../',
+      },
+      {
+        test: /\.(scss|css)$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: '../../',
+            },
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              url: false,
+              importLoaders: 2,
+              modules: {
+                auto: true,
+                localIdentName: '[name]__[local]___[hash:base64:5]',
               },
             },
-            { loader: 'css-loader?url=false' },
-            {
-              loader: 'postcss-loader',
-              options: {
-                postcssOptions: {
-                  plugins: [
-                    base64({
-                      excludeAtFontFace: false,
-                      replaceValues: true,
-                      extensions: ['.woff2', '.woff']
-                    }),
-                  ]
-                }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: [
+                  base64({
+                    excludeAtFontFace: false,
+                    replaceValues: true,
+                    extensions: ['.woff2', '.woff']
+                  }),
+                ]
               }
-            },
-            { loader: 'sass-loader' }
-          ],
-        },
-        {
-          test: /\.vue$/,
-          loader: 'vue-loader'
-        }
-      ]
-    },
-    plugins: [
-      new MiniCssExtractPlugin({
-        filename: '../../stylesheets/[name].css',
-      }),
-
-      new VueLoaderPlugin(),
-
-      new CleanWebpackPlugin(),
-
-      new webpack.ProvidePlugin({
-        $: "jquery",
-        jQuery: "jquery"
-      }),
-
+            }
+          },
+          { loader: 'sass-loader' }
+        ],
+      },
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader'
+      }
     ]
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '../../stylesheets/[name].css',
+    }),
+
+    new VueLoaderPlugin(),
+
+    new CleanWebpackPlugin(),
+
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      jQuery: "jquery"
+    }),
+
+  ]
 
 };
 
