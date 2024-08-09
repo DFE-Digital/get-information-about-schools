@@ -30,7 +30,7 @@ namespace Edubase.Services.Governors.Factories
             { eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professional to an individual academy or free school" },
             { eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professional to a multi-academy trust (MAT)" },
             { eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professional for a secure single-academy trust (SSAT)" },
-            { eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professional for a single-academy trust (SAT)" },
+            { eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professional to a single-academy trust (SAT)" },
         };
 
         private static readonly Dictionary<eLookupGovernorRole, string> PluralisedLabels = new Dictionary<eLookupGovernorRole, string>()
@@ -50,7 +50,7 @@ namespace Edubase.Services.Governors.Factories
             { eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professionals to an individual academy or free school" },
             { eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professionals to a multi-academy trust (MAT)" },
             { eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professionals for a secure single-academy trust (SSAT)" },
-            { eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professionals for a single-academy trust (SAT)" },
+            { eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professionals to a single-academy trust (SAT)" },
         };
 
         public static string Create(
