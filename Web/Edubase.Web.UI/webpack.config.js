@@ -71,43 +71,63 @@ const config = {
               ]
             }},
         },
-        {
-          test: /\.(scss|css)$/,
-          use: [
-            {
-              loader: MiniCssExtractPlugin.loader,
-              options: {
-                publicPath: '../../',
+      },
+      {
+        test: /\.(scss|css)$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: '../../',
+            },
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              url: false,
+              importLoaders: 2,
+              modules: {
+                auto: true,
+                localIdentName: '[name]__[local]___[hash:base64:5]',
               },
             },
-            { loader: 'css-loader?url=false' },
-            {
-              loader: 'postcss-loader',
-              options: {
-                postcssOptions: {
-                  plugins: [
-                    base64({
-                      excludeAtFontFace: false,
-                      replaceValues: true,
-                      extensions: ['.woff2', '.woff']
-                    }),
-                  ]
-                }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: [
+                  base64({
+                    excludeAtFontFace: false,
+                    replaceValues: true,
+                    extensions: ['.woff2', '.woff']
+                  }),
+                ]
               }
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sassOptions: {
+                includePaths: [
+                  path.resolve(__dirname, 'node_modules')
+                ],
+              },
             },
-            { loader: 'sass-loader' }
-          ],
-        },
-        {
-          test: /\.vue$/,
-          loader: 'vue-loader'
-        }
-      ]
-    },
-    plugins: [
-      new MiniCssExtractPlugin({
-        filename: '../../stylesheets/[name].css',
-      }),
+          },
+        ],
+      },
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader'
+      }
+    ]
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '../../stylesheets/[name].css',
+    }),
 
       new VueLoaderPlugin(),
 
