@@ -13,7 +13,7 @@ on:
       - reopened
 
 jobs:
-  build:
+  build_and_test:
     runs-on: windows-latest
     env:
       DOTNET_VERSION: '6.0.x'
@@ -82,17 +82,37 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         working-directory: ./Web
         run: |
+          $env:EXIT_CODE=0
+          
           ..\.sonar\scanner\dotnet-sonarscanner begin /k:"DFE-Digital_get-information-about-schools" /o:"dfe-digital" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**\TestResults\**\*.xml"
           
           msbuild.exe EdubaseWeb.sln  /t:Rebuild /p:platform="Any CPU" /p:configuration="Release"
+          if ($LASTEXITCODE -ne 0) { $env:EXIT_CODE=$LASTEXITCODE }
 
-          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.CommonUnitTests\bin\Release\Edubase.CommonUnitTests.dll
-          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.DataUnitTests\bin\Release\Edubase.DataUnitTests.dll
-          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.ServicesUnitTests\bin\Release\Edubase.ServicesUnitTests.dll
+          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.CommonUnitTests\bin\Release\Edubase.CommonUnitTests.dll              
+          if ($LASTEXITCODE -ne 0) { $env:EXIT_CODE=$LASTEXITCODE }
+          
+          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.DataUnitTests\bin\Release\Edubase.DataUnitTests.dll                  
+          if ($LASTEXITCODE -ne 0) { $env:EXIT_CODE=$LASTEXITCODE }
+          
+          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.ServicesUnitTests\bin\Release\Edubase.ServicesUnitTests.dll          
+          if ($LASTEXITCODE -ne 0) { $env:EXIT_CODE=$LASTEXITCODE }
+          
           vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.Web.ResourcesUnitTests\bin\Release\Edubase.Web.ResourcesUnitTests.dll
-          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.Web.UIUnitTests\bin\Release\net48\Edubase.Web.UIUnitTests.dll
-
+          if ($LASTEXITCODE -ne 0) { $env:EXIT_CODE=$LASTEXITCODE }
+          
+          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.Web.UIUnitTests\bin\Release\net48\Edubase.Web.UIUnitTests.dll        
+          if ($LASTEXITCODE -ne 0) { $env:EXIT_CODE=$LASTEXITCODE }
+          
           ..\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          
+          ## If any test errors, exit the job step and fail the build
+          ## Note each individual command doesn't seem to cause the job step to return with a non-zero exit code
+          ## Also note that if there are multiple errors returned from multiple test commands, only the last one will be stored in EXIT_CODE
+          if ($env:EXIT_CODE -ne 0) {
+            Write-Host "Test failures detected. Exiting with code $env:EXIT_CODE"
+            exit $env:EXIT_CODE
+          }
 
       - name: Upload dotnet test results
         uses: actions/upload-artifact@v3.1.2
