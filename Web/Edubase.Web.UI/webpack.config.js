@@ -69,7 +69,7 @@ const config = {
                   corejs: 3
                 }]
               ]
-            }},
+            }
         },
       },
       {
