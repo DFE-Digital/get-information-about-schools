@@ -107,7 +107,7 @@ jobs:
             $env:EXIT_CODE=$LASTEXITCODE 
           }
           
-          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.Web.ResourcesUnitTests\bin\Release\Edubase.Web.ResourcesUnitTests.dll
+          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.Web.ResourcesUnitTests\bin\Release\net48\Edubase.Web.ResourcesUnitTests.dll
           if ($LASTEXITCODE -ne 0) {
             Write-Host "Web.ResourcesUnitTests failed with exit code $LASTEXITCODE"
             $env:EXIT_CODE=$LASTEXITCODE 
