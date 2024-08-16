@@ -90,19 +90,34 @@ jobs:
           if ($LASTEXITCODE -ne 0) { $env:EXIT_CODE=$LASTEXITCODE }
 
           vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.CommonUnitTests\bin\Release\Edubase.CommonUnitTests.dll              
-          if ($LASTEXITCODE -ne 0) { $env:EXIT_CODE=$LASTEXITCODE }
+          if ($LASTEXITCODE -ne 0) { 
+            Write-Host "CommonUnitTests failed with exit code $LASTEXITCODE"
+            $env:EXIT_CODE=$LASTEXITCODE 
+          }
           
           vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.DataUnitTests\bin\Release\Edubase.DataUnitTests.dll                  
-          if ($LASTEXITCODE -ne 0) { $env:EXIT_CODE=$LASTEXITCODE }
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "DataUnitTests failed with exit code $LASTEXITCODE"
+            $env:EXIT_CODE=$LASTEXITCODE 
+          }
           
           vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.ServicesUnitTests\bin\Release\Edubase.ServicesUnitTests.dll          
-          if ($LASTEXITCODE -ne 0) { $env:EXIT_CODE=$LASTEXITCODE }
+          if ($LASTEXITCODE -ne 0) { 
+            Write-Host "ServicesUnitTests failed with exit code $LASTEXITCODE"
+            $env:EXIT_CODE=$LASTEXITCODE 
+          }
           
-          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.Web.ResourcesUnitTests\bin\Release\Edubase.Web.ResourcesUnitTests.dll
-          if ($LASTEXITCODE -ne 0) { $env:EXIT_CODE=$LASTEXITCODE }
+          vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.Web.ResourcesUnitTests\bin\Release\net48\Edubase.Web.ResourcesUnitTests.dll
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "Web.ResourcesUnitTests failed with exit code $LASTEXITCODE"
+            $env:EXIT_CODE=$LASTEXITCODE 
+          }
           
           vstest.console.exe /Enablecodecoverage /Collect:"Code Coverage;Format=Xml" /ResultsDirectory:".\TestResults" .\Edubase.Web.UIUnitTests\bin\Release\net48\Edubase.Web.UIUnitTests.dll        
-          if ($LASTEXITCODE -ne 0) { $env:EXIT_CODE=$LASTEXITCODE }
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "Web.UIUnitTests failed with exit code $LASTEXITCODE"
+            $env:EXIT_CODE=$LASTEXITCODE 
+          }
           
           ..\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
           
