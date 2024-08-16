@@ -58,64 +58,71 @@
     {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                <h2 id="role" class="govuk-heading-s">Add person</h2>
-
-                @using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabAddGovernor" : "GroupAddGovernor", new { groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, FormMethod.Get))
+                @if(Model.GovernorRoles.Any())
                 {
-                    @Html.AntiForgeryToken()
-                    <div class="govuk-form-group @Html.ValidationGroupCssClass("role")">
-                        <label class="govuk-label" for="roleid">Select role</label>
-                        @Html.ValidationMessage("role", null, new { @class = "govuk-error-message", id = "add-governor-select-role-error-message"})
+                    <h2 id="role" class="govuk-heading-s">Add person</h2>
 
-                        @{
-                            var selectListItems = Model.GovernorRoles
-                                .Select(x =>
-                                {
-                                    var selectListItem = new SelectListItem
-                                    {
-                                        Text = x.Name,
-                                        Value = ((eLookupGovernorRole) x.Id).ToString(),
-                                    };
+                    using (Html.BeginRouteForm(Model.EstablishmentUrn.HasValue ? "EstabAddGovernor" : "GroupAddGovernor", new { groupUId = Model.GroupUId, establishmentUrn = Model.EstablishmentUrn }, FormMethod.Get))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="govuk-form-group @Html.ValidationGroupCssClass("role")">
+                            <label class="govuk-label" for="roleid">Select role</label>
+                            @Html.ValidationMessage("role", null, new { @class = "govuk-error-message", id = "add-governor-select-role-error-message" })
 
-                                    // If recognised as an enum and we have a C#-overridden name for it, use that instead
-                                    if (Enum.IsDefined(typeof(eLookupGovernorRole), (eLookupGovernorRole) x.Id))
+                            @{
+                                var selectListItems = Model.GovernorRoles
+                                    .Select(x =>
                                     {
-                                        var factoryName = GovernorRoleNameFactory.Create((eLookupGovernorRole) x.Id);
-                                        if (!factoryName.ToLowerInvariant().Equals(selectListItem.Text.ToLowerInvariant()))
+                                        var selectListItem = new SelectListItem
                                         {
-                                            Console.Error.WriteLine($"Governor role name mismatch - not just a case difference: {selectListItem.Text} -> {factoryName}");
+                                            Text = x.Name,
+                                            Value = ((eLookupGovernorRole)x.Id).ToString(),
+                                        };
+
+                                        // If recognised as an enum and we have a C#-overridden name for it, use that instead
+                                        if (Enum.IsDefined(typeof(eLookupGovernorRole), (eLookupGovernorRole)x.Id))
+                                        {
+                                            var factoryName = GovernorRoleNameFactory.Create((eLookupGovernorRole)x.Id);
+                                            if (!factoryName.ToLowerInvariant().Equals(selectListItem.Text.ToLowerInvariant()))
+                                            {
+                                                Console.Error.WriteLine($"Governor role name mismatch - not just a case difference: {selectListItem.Text} -> {factoryName}");
+                                            }
+
+                                            selectListItem.Text = factoryName;
                                         }
 
-                                        selectListItem.Text = factoryName;
-                                    }
+                                        // If we have been bounced back to this form (e.g., due to an error), pre-select whichever role the user previously attempted to submit.
+                                        // Came up in the context of "The role already contains an appointee" error, where the first item would be pre-selected and would be
+                                        // misleading to the user (as it would look like the first entry already has an appointee, rather than whatever the user submitted).
+                                        // See also WCAG 2.2 requirements to not clear any form fields when validating users' input.
+                                        // https://design-system.service.gov.uk/patterns/validation/#wcag-edit-to-correct-errors
+                                        var currentValue = selectListItem.Value;
+                                        var submittedValue = (ViewData["SelectedGovernorRole"] as eLookupGovernorRole?).ToString();
+                                        if (currentValue.Equals(submittedValue, StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            selectListItem.Selected = true;
+                                        }
 
-                                    // If we have been bounced back to this form (e.g., due to an error), pre-select whichever role the user previously attempted to submit.
-                                    // Came up in the context of "The role already contains an appointee" error, where the first item would be pre-selected and would be
-                                    // misleading to the user (as it would look like the first entry already has an appointee, rather than whatever the user submitted).
-                                    // See also WCAG 2.2 requirements to not clear any form fields when validating users' input.
-                                    // https://design-system.service.gov.uk/patterns/validation/#wcag-edit-to-correct-errors
-                                    var currentValue = selectListItem.Value;
-                                    var submittedValue = (ViewData["SelectedGovernorRole"] as eLookupGovernorRole?).ToString();
-                                    if(currentValue.Equals(submittedValue, StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        selectListItem.Selected = true;
-                                    }
-
-                                    return selectListItem;
-                                });
-                        }
-
-                        @Html.DropDownList(
-                            "role",
-                            selectListItems,
-                            new
-                            {
-                                id = "edit-establishment-new-governor-role-id",
-                                @class = string.Concat(Html.ValidationSelectCssClass("role"), " govuk-select govuk-input--width-20 gias-role-selection"),
+                                        return selectListItem;
+                                    });
                             }
-                        )
-                        <input type="submit" value="Add person" id="edit-governance-add-person-button" class="govuk-button btn-add-person" data-module="govuk-button" />
-                    </div>
+
+                            @Html.DropDownList(
+                                "role",
+                                selectListItems,
+                                new
+                                {
+                                    id = "edit-establishment-new-governor-role-id",
+                                    @class = string.Concat(Html.ValidationSelectCssClass("role"), " govuk-select govuk-input--width-20 gias-role-selection"),
+                                }
+                            )
+                            <input type="submit" value="Add person" id="edit-governance-add-person-button" class="govuk-button btn-add-person" data-module="govuk-button"/>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="govuk-body govuk-!-margin-bottom-9">No governance roles may be added to this @Model.ParentEntityName.</p>
                 }
             </div>
         </div>
