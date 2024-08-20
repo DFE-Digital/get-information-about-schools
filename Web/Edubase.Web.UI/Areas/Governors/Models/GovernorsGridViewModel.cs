@@ -109,9 +109,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         private void CreateGrids(GovernorsDetailsDto dto, IEnumerable<GovernorModel> governors, bool isHistoric,
             int? groupUid, int? establishmentUrn)
         {
-            var currentRoles = dto.CurrentGovernors.Select(g => (GR) g.RoleId).Distinct();
-            var historicRoles = dto.HistoricalGovernors.Select(g => (GR) g.RoleId).Distinct();
-            var allRoles = currentRoles.Union(historicRoles);
+            var allRoles = governors.Select(g => (GR) g.RoleId).Distinct();
 
             var roles = allRoles.Where(role =>
             {
