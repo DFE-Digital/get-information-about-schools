@@ -6,7 +6,7 @@ const buildDir = path.resolve('./public/');
 const entryDirPath = path.resolve('./Assets/Scripts/Entry/');
 const scssEntryPath = path.resolve('./Assets/Sass/');
 const entryFiles = path.join(entryDirPath, '**/*.js');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const { VueLoaderPlugin } = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
@@ -51,9 +51,9 @@ const config = {
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
+      'vue$': 'vue/dist/vue.esm-bundler.js'
     },
-    extensions: ['*', '.js', '.vue', '.json']
+    extensions: ['.js', '.vue', '.json']
   },
   module: {
     rules: [

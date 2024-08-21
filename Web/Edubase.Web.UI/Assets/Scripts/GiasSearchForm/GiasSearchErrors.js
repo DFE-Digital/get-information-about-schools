@@ -1,7 +1,6 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 import errorSummary from '../GiasVueComponents/errorSummary';
-const clientErrorSummary = new Vue({
-  el: '#js-error-summary',
+const clientErrorSummary = createApp({
   components: {
     errorSummary,
   },
@@ -192,5 +191,6 @@ class GiasSearchErrors {
   }
 }
 
+clientErrorSummary.mount('#js-error-summary');
 
 export default GiasSearchErrors;

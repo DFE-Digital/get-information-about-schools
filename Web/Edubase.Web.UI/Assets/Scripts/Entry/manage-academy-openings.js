@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 import errorSummary from '../GiasVueComponents/errorSummary';
 import GiasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
 
@@ -7,8 +7,7 @@ import GiasTabs from '../GiasModules/GiasTabs';
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 let raw = [];
 
-const academyOpenings = new Vue({
-  el: '#academy-opening-app',
+const academyOpenings = createApp({
   data: {
     openingAcademies: [],
     selectedDate: '0',
@@ -512,4 +511,6 @@ function blockExits() {
     }
   });
 }
+
+academyOpenings.mount('#academy-opening-app');
 

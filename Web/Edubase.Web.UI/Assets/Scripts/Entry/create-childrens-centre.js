@@ -1,12 +1,11 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 import errorSummary from '../GiasVueComponents/errorSummary';
 import giasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
 import giasRadio from '../GiasVueComponents/GiasRadio';
 import giasApiError from '../GiasVueComponents/GiasApiError';
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-const  ccApp = new Vue({
-  el: '#create-childrens-centre',
+const  ccApp = new createApp({
   components: {
     giasWaitSpinner,
     giasApiError
@@ -550,4 +549,6 @@ const  ccApp = new Vue({
     }
   }
 });
+
+ccApp.mount('#create-childrens-centre');
 

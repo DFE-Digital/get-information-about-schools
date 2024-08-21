@@ -1,14 +1,13 @@
 import supportsHistory from '../GiasHelpers/supportsHistory';
 import GiasFilterValidation from './GiasFilterValidation'
-import Vue from 'vue';
+import { createApp } from 'vue';
 import errorSummary from '../GiasVueComponents/errorSummary';
 import { initAll } from 'govuk-frontend';
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 // 'little' Vue app to manage the error summary
-const clientErrorSummary = new Vue({
-  el: '#js-error-summary',
+const clientErrorSummary = createApp({
   components: {
     errorSummary,
   },
@@ -204,5 +203,7 @@ const GiasDownloadFilters = {
 	GiasDownloadResults.init();
   }
 }
+
+clientErrorSummary.mount('#js-error-summary');
 
 export default GiasDownloadFilters;

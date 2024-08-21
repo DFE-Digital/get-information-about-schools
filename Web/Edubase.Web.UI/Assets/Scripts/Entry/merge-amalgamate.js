@@ -1,10 +1,9 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 import errorSummary from '../GiasVueComponents/errorSummary';
 import GiasRadio from '../GiasVueComponents/GiasRadio';
 import GiasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
 
-const mergersApp = new Vue({
-  el: '#mergers-app',
+const mergersApp = createApp({
   components: {
     errorSummary,
     GiasRadio,
@@ -717,3 +716,5 @@ const mergersApp = new Vue({
   }
 
 })
+
+mergersApp.mount('#mergers-app');

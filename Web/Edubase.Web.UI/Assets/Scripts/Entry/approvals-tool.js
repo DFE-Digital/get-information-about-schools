@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 import axios from "axios";
 import errorSummary from '../GiasVueComponents/errorSummary';
 import GiasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
@@ -7,8 +7,7 @@ import GiasTextCounter from '../GiasModules/GiasTextCounter';
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-new Vue({
-  el: '#change-approvals',
+const app = createApp({
   components: {
     errorSummary,
     GiasWaitSpinner
@@ -399,3 +398,5 @@ new Vue({
   }
 
 });
+
+app.mount('#change-approvals');

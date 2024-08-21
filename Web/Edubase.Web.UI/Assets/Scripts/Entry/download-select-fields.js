@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 import errorSummary from '../GiasVueComponents/errorSummary';
 import checkbox from '../GiasVueComponents/checkbox';
 import checkboxRemoteSelection from '../GiasVueComponents/Download/checkboxRemoteSelection';
@@ -6,8 +6,7 @@ import downloadCategorisedFields from '../GiasVueComponents/DownloadCategorisedF
 import viewSwitcher from "../GiasVueComponents/Download/viewSwitcher";
 import searchByFieldName from '../GiasVueComponents/Download/searchByFieldName';
 
-const app = new Vue({
-  el: '#field-select-app',
+const app = new createApp({
   components: {
     errorSummary,
     checkbox,
@@ -91,5 +90,6 @@ const app = new Vue({
 
 });
 
+app.mount('#field-select-app');
 
 export default app;
