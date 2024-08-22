@@ -432,7 +432,7 @@ class GiasFiltering {
 
           console.warn(`error loading results for search token (${token}), re-enabling filters UI and showing error message`);
           self.enableFilters();
-          self.showError($resultsContainer, 'Sorry, there was a technical problem fetching your search results. If it took a long time for this error to appear, please try again later and/or select fewer filters.');
+          self.showError($resultsContainer, 'An error has occurred due to the service timing out.  Please try again.');
         }
       });
     }
