@@ -11,8 +11,10 @@ const clientErrorSummary = createApp({
   components: {
     errorSummary,
   },
-  data: {
-    errors: []
+  data() {
+    return {
+      errors: []
+    };
   },
   methods: {
     updateErrors: function (errObj) {
@@ -40,7 +42,7 @@ const GiasDownloadResults = {
 			var anyChecked = false;
 			$('input:checkbox').each(function(){
 			  if (this.checked) {
-				anyChecked = true;	
+				anyChecked = true;
 			  }
 			});
 
@@ -63,7 +65,7 @@ const GiasDownloadResults = {
 		  $('input:checkbox').prop('checked',source);
 		}
 	},
-	
+
 	reload: function() {
 		const $updatedSection = document.getElementById('results-container');
 		initAll({scope: $updatedSection });
@@ -199,7 +201,7 @@ const GiasDownloadFilters = {
         });
       }
     });
-	
+
 	GiasDownloadResults.init();
   }
 }

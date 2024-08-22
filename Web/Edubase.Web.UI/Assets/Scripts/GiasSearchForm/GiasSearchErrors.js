@@ -4,8 +4,10 @@ const clientErrorSummary = createApp({
   components: {
     errorSummary,
   },
-  data: {
-    errors: []
+  data() {
+    return {
+      errors: []
+    };
   },
   methods: {
     updateErrors: function(errObj){

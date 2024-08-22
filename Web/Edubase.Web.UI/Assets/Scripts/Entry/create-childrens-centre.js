@@ -11,54 +11,55 @@ const  ccApp = new createApp({
     giasApiError
 
   },
-  data: {
-    groupType: '8',
-    groupName: '',
-    groupNameError: false,
-    groupNameWarningMessage: '',
-    groupNameApiError: '',
+  data() {
+    return {
+      groupType: '8',
+      groupName: '',
+      groupNameError: false,
+      groupNameWarningMessage: '',
+      groupNameApiError: '',
 
-    groupStatus: 'Open',
-    groupLead: '',
+      groupStatus: 'Open',
+      groupLead: '',
 
-    openDateDay: '',
-    openDateMonth: '',
-    openDateYear: '',
+      openDateDay: '',
+      openDateMonth: '',
+      openDateYear: '',
 
-    la: '',
-    laError: false,
-    searchUrn: '',
-    centresInGroup: [],
-    pendingEstab: {},
+      la: '',
+      laError: false,
+      searchUrn: '',
+      centresInGroup: [],
+      pendingEstab: {},
 
 
-    step0Complete: false,
-    step1Complete: false,
+      step0Complete: false,
+      step1Complete: false,
 
-    joinDateValidateUrl: '/Groups/Group/CreateChildrensCentre/Validate/JoinedDate',
-    openDateValidateUrl: '/Groups/Group/CreateChildrensCentre/Validate/OpenDate',
-    openDateError: false,
-    openDateErrorMessage: '',
+      joinDateValidateUrl: '/Groups/Group/CreateChildrensCentre/Validate/JoinedDate',
+      openDateValidateUrl: '/Groups/Group/CreateChildrensCentre/Validate/OpenDate',
+      openDateError: false,
+      openDateErrorMessage: '',
 
-    joinDateDay: '',
-    joinDateMonth: '',
-    joinDateYear: '',
-    joinDateError: '',
-    joinDateErrorMessage: '',
+      joinDateDay: '',
+      joinDateMonth: '',
+      joinDateYear: '',
+      joinDateError: '',
+      joinDateErrorMessage: '',
 
-    urnLookupUrl: '/api/establishment/{0}',
-    validateUrl: '/Groups/Group/CreateChildrensCentre/Validate/All',
-    apiErrors: [],
-    urnApiErrors: [],
-    urnError: false,
-    duplicateUrnError: false,
-    tooFewCentresError: false,
-    appState: 'initial', // initial || groupDetail || addCentre || detail
-    pendingEdit: false,
-    detailEdit: false,
-    isProcessing: false,
-    apiError: {},
-
+      urnLookupUrl: '/api/establishment/{0}',
+      validateUrl: '/Groups/Group/CreateChildrensCentre/Validate/All',
+      apiErrors: [],
+      urnApiErrors: [],
+      urnError: false,
+      duplicateUrnError: false,
+      tooFewCentresError: false,
+      appState: 'initial', // initial || groupDetail || addCentre || detail
+      pendingEdit: false,
+      detailEdit: false,
+      isProcessing: false,
+      apiError: {},
+    };
   },
   computed: {
     groupTypeName: function() {
@@ -337,7 +338,7 @@ const  ccApp = new createApp({
               let o = {};
               // ensure that only URN errors are included
               // and ignore the message about the number of establishments in the group - this validation of a single URN
-			  if (/\d/.test(error.Fields) && error.Code !== "error.validation.link.cc.one.linked.school") {				  
+			  if (/\d/.test(error.Fields) && error.Code !== "error.validation.link.cc.one.linked.school") {
                 const est = self.pendingEstab;
                 o.field = est.name + ' (' + est.urn + ')';
                 o.message = error.Message;

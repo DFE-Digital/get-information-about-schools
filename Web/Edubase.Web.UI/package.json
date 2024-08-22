@@ -42,9 +42,10 @@
     "stylelint-config-standard": "^20.0.0",
     "stylelint-scss": "^3.18.0",
     "stylelint-webpack-plugin": "^2.1.1",
+    "terser-webpack-plugin": "^5.3.10",
     "vue": "^3.4.37",
     "vue-loader": "^17.4.2",
-    "webpack": "^5.75.0",
+    "webpack": "^5.93.0",
     "webpack-cli": "^5.0.2"
   },
   "dependencies": {

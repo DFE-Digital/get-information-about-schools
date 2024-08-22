@@ -132,7 +132,7 @@
                     beta
                 </strong>
                 <span class="govuk-phase-banner__text">
-                    How could we improve this service? Your 
+                    How could we improve this service? Your
                     <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=yXfS-grGoU2187O4s0qC-ZYZAR7wa5FMmFGoqFTjsw5UREJBVlAxSTBKWFdOMEcwTTU1M0gyVVJKRCQlQCN0PWcu">
                         feedback
                     </a>
@@ -209,7 +209,6 @@
     <script src="/public/assets/scripts/build/bundle.js?v=1.0.0.0"></script>
 
 </div>
-        <script src="Assets/Scripts/GiasHelpers/checkIE.js"></script>
 </body>
 </html>
 

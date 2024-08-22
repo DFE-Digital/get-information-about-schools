@@ -21,16 +21,17 @@ const app = new createApp({
     noJsElem.parentNode.removeChild(noJsElem);
   },
 
-  data: {
-    categoryList: window.fieldListByCat,
-    fields: window.fieldList,
-    viewAsList: false,
-    selectedFields: [],
-    searchMatches: [],
-    errorMessages: [],
-    radioError: false,
-    isFilteringFields: false,
-
+  data() {
+    return {
+      categoryList: window.fieldListByCat,
+      fields: window.fieldList,
+      viewAsList: false,
+      selectedFields: [],
+      searchMatches: [],
+      errorMessages: [],
+      radioError: false,
+      isFilteringFields: false,
+    };
   },
 
   methods: {
@@ -46,7 +47,7 @@ const app = new createApp({
     changeViewMode: function () {
       this.viewAsList = !this.viewAsList;
     },
-    filterFilters: function (searchText) {;
+    filterFilters: function (searchText) {
       this.searchMatches = this.fields.filter((fld) => {
         return fld.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
       });
@@ -91,5 +92,3 @@ const app = new createApp({
 });
 
 app.mount('#field-select-app');
-
-export default app;
