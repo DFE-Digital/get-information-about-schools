@@ -7,7 +7,7 @@ import { initAll } from 'govuk-frontend';
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 // 'little' Vue app to manage the error summary
-const clientErrorSummary = createApp({
+const clientErrorSummaryApp = createApp({
   components: {
     errorSummary,
   },
@@ -25,6 +25,8 @@ const clientErrorSummary = createApp({
     }
   }
 });
+
+const clientErrorSummary = clientErrorSummaryApp.mount('#js-error-summary');
 
 const GiasDownloadResults = {
 	init: function () {
@@ -205,7 +207,5 @@ const GiasDownloadFilters = {
 	GiasDownloadResults.init();
   }
 }
-
-clientErrorSummary.mount('#js-error-summary');
 
 export default GiasDownloadFilters;
