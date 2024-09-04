@@ -55,8 +55,8 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAFederation, "Governance professional to a federation")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professional to an individual academy or free school")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professional to a multi-academy trust (MAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professional for a secure single-academy trust (SSAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professional for a single-academy trust (SAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professional to a secure single-academy trust (SSAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professional to a single-academy trust (SAT)")]
         public void GetGovernorRoleName_WHEN_Singular_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
             var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: false);
@@ -86,8 +86,8 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAFederation, "Governance professionals to a federation")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professionals to an individual academy or free school")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professionals to a multi-academy trust (MAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professionals for a secure single-academy trust (SSAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professionals for a single-academy trust (SAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professionals to a secure single-academy trust (SSAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professionals to a single-academy trust (SAT)")]
         public void GetGovernorRoleName_WHEN_Plural_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
             var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: true);
@@ -119,8 +119,8 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAFederation, "governance professional to a federation")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "governance professional to an individual academy or free school")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "governance professional to a multi-academy trust (MAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "governance professional for a secure single-academy trust (SSAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "governance professional for a single-academy trust (SAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "governance professional to a secure single-academy trust (SSAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "governance professional to a single-academy trust (SAT)")]
         public void GetGovernorRoleName_WHEN_Singular_AND_MidSentence_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
             var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: false, isMidSentence: true);
@@ -150,8 +150,8 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAFederation, "governance professionals to a federation")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "governance professionals to an individual academy or free school")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "governance professionals to a multi-academy trust (MAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "governance professionals for a secure single-academy trust (SSAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "governance professionals for a single-academy trust (SAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "governance professionals to a secure single-academy trust (SSAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "governance professionals to a single-academy trust (SAT)")]
         public void GetGovernorRoleName_WHEN_Plural_AND_MidSentence_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
             var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: true, isMidSentence: true);
@@ -182,8 +182,8 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAFederation, "Governance professional to a federation")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professional to an individual academy or free school")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professional to a multi-academy trust (MAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professional for a secure single-academy trust (SSAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professional for a single-academy trust (SAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professional to a secure single-academy trust (SSAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professional to a single-academy trust (SAT)")]
         public void GetGovernorRoleName_WHEN_Singular_AND_RemoveMemberPrefix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
             var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: false, removeMemberPrefix: true);
@@ -213,8 +213,8 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAFederation, "Governance professionals to a federation")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professionals to an individual academy or free school")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professionals to a multi-academy trust (MAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professionals for a secure single-academy trust (SSAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professionals for a single-academy trust (SAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professionals to a secure single-academy trust (SSAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professionals to a single-academy trust (SAT)")]
         public void GetGovernorRoleName_WHEN_Plural_AND_RemoveMemberPrefix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
             var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: true, removeMemberPrefix: true);
@@ -246,8 +246,8 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAFederation, "governance professional to a federation")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "governance professional to an individual academy or free school")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "governance professional to a multi-academy trust (MAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "governance professional for a secure single-academy trust (SSAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "governance professional for a single-academy trust (SAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "governance professional to a secure single-academy trust (SSAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "governance professional to a single-academy trust (SAT)")]
         public void GetGovernorRoleName_WHEN_Singular_AND_MidSentence_AND_RemoveMemberPrefix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
             var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: false, isMidSentence: true, removeMemberPrefix: true);
@@ -277,8 +277,8 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAFederation, "governance professionals to a federation")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "governance professionals to an individual academy or free school")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "governance professionals to a multi-academy trust (MAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "governance professionals for a secure single-academy trust (SSAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "governance professionals for a single-academy trust (SAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "governance professionals to a secure single-academy trust (SSAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "governance professionals to a single-academy trust (SAT)")]
         public void GetGovernorRoleName_WHEN_Plural_AND_MidSentence_AND_RemoveMemberPrefix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
             var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: true, isMidSentence: true, removeMemberPrefix: true);
@@ -309,8 +309,8 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAFederation, "Governance professional to a federation")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professional to an individual academy or free school")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professional to a multi-academy trust (MAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professional for a secure single-academy trust (SSAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professional for a single-academy trust (SAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professional to a secure single-academy trust (SSAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professional to a single-academy trust (SAT)")]
         public void GetGovernorRoleName_WHEN_Singular_AND_RemoveGroupEstablishmentSuffix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
             var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: false, removeGroupEstablishmentSuffix: true);
@@ -340,8 +340,8 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAFederation, "Governance professionals to a federation")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professionals to an individual academy or free school")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professionals to a multi-academy trust (MAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professionals for a secure single-academy trust (SSAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professionals for a single-academy trust (SAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professionals to a secure single-academy trust (SSAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professionals to a single-academy trust (SAT)")]
         public void GetGovernorRoleName_WHEN_Plural_AND_RemoveGroupEstablishmentSuffix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
             var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: true, removeGroupEstablishmentSuffix: true);
@@ -373,8 +373,8 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAFederation, "governance professional to a federation")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "governance professional to an individual academy or free school")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "governance professional to a multi-academy trust (MAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "governance professional for a secure single-academy trust (SSAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "governance professional for a single-academy trust (SAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "governance professional to a secure single-academy trust (SSAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "governance professional to a single-academy trust (SAT)")]
         public void GetGovernorRoleName_WHEN_Singular_AND_MidSentence_AND_RemoveGroupEstablishmentSuffix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
             var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: false, isMidSentence: true, removeGroupEstablishmentSuffix: true);
@@ -404,8 +404,8 @@ namespace Edubase.ServicesUnitTests.Governors
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAFederation, "governance professionals to a federation")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "governance professionals to an individual academy or free school")]
         [InlineData(eLookupGovernorRole.GovernanceProfessionalToAMat, "governance professionals to a multi-academy trust (MAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "governance professionals for a secure single-academy trust (SSAT)")]
-        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "governance professionals for a single-academy trust (SAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASecureSat, "governance professionals to a secure single-academy trust (SSAT)")]
+        [InlineData(eLookupGovernorRole.GovernanceProfessionalToASat, "governance professionals to a single-academy trust (SAT)")]
         public void GetGovernorRoleName_WHEN_Plural_AND_MidSentence_AND_RemoveGroupEstablishmentSuffix_THEN_ReturnsExpected(eLookupGovernorRole role, string expected)
         {
             var result = GovernorRoleNameFactory.Create(role, pluraliseLabelIfApplicable: true, isMidSentence: true, removeGroupEstablishmentSuffix: true);

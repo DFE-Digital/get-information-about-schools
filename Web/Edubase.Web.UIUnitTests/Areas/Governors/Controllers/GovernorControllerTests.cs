@@ -222,14 +222,15 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
                 RoleDisplayPolicies = new Dictionary<eLookupGovernorRole, GovernorDisplayPolicy>
                 {
                     { eLookupGovernorRole.AccountingOfficer, new GovernorDisplayPolicy() },
-                    { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() }
+                    { eLookupGovernorRole.Governor, new GovernorDisplayPolicy() },
+                    { eLookupGovernorRole.Establishment_SharedLocalGovernor, new GovernorDisplayPolicy() }
                 },
                 CurrentGovernors = new List<GovernorModel>
                 {
                     new GovernorModel
                     {
                         Id = 43,
-                        RoleId = (int)eLookupGovernorRole.Establishment_SharedLocalGovernor
+                        RoleId = (int)eLookupGovernorRole.Establishment_SharedLocalGovernor                        
                     }
                 },
                 HistoricalGovernors = new List<GovernorModel>()
@@ -250,6 +251,13 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             {
                 new LookupDto { Id = (int)eLookupGovernorRole.AccountingOfficer, Name = "Accounting Officer"},
                 new LookupDto { Id = (int)eLookupGovernorRole.Governor, Name = "Governor"}
+            });
+
+            mockCachedLookupService.Setup(c => c.TitlesGetAllAsync()).ReturnsAsync(() => new List<LookupDto>
+            {
+                new LookupDto { Code = "04", Id = 5, Name = "Dr" },
+                new LookupDto { Code = "05", Id = 6, Name = "Prof" },
+                new LookupDto { Code = "14", Id = 15, Name = "Captain" }
             });
 
             var result = await controller.Edit(5, null, 43, null);
