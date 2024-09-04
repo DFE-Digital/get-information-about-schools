@@ -156,7 +156,7 @@ module.exports = (env, argv) => {
         filename: '[file].map[query]',
         columns: false,
         exclude: /node_modules/,
-        test: /\.css?|\.js?$/,
+        test: /\.(css|js)$/,
       }),
 
     );

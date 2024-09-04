@@ -11,6 +11,7 @@ const mergersApp = createApp({
   },
   data() {
     return {
+      school: '',
       localAuthorities: window.localAuthorities,
       types: window.types,
       phases: window.phases,
@@ -89,13 +90,13 @@ const mergersApp = createApp({
       this.mergerEstab2,
       this.mergerEstab3
     ];
+  },
+  mounted: function () {
+    this.csrfToken = this.getAntiForgeryToken();
 
     this.populateSelect('new-establishment-type', this.types);
     this.populateSelect('LocalAuthorityId', this.localAuthorities);
     this.blockExits();
-  },
-  mounted: function () {
-    this.csrfToken = this.getAntiForgeryToken();
   },
   watch: {
     mergerTypeConfirmed: function() {
@@ -448,9 +449,9 @@ const mergersApp = createApp({
         this.isProcessing = true;
         postData.operationType = 'amalgamate';
         postData.MergeOrAmalgamationDate = [this.mergeDateYear, this.mergeDateMonth, this.mergeDateDay].join('-');
-        postData.UrnsToMerge = this.amalgamationEstabs.map(function (estab) {
-          return estab.urn;
-        });
+        postData.UrnsToMerge = this.amalgamationEstabs
+          .filter(estab => estab && estab.urn)
+          .map(estab => estab.urn);
         postData.NewEstablishmentName = this.newName;
         postData.NewEstablishmentPhaseId = this.phaseId;
         postData.NewEstablishmentTypeId = this.typeId;
