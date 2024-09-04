@@ -13,6 +13,8 @@ const StyleLintPlugin = require('stylelint-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
 const base64 = require('postcss-base64');
 
+const { ProvidePlugin, DefinePlugin, SourceMapDevToolPlugin } = webpack;
+
 const config = {
   entry: () => {
     const jsFiles = glob
@@ -106,7 +108,7 @@ const config = {
               }
             }
           },
-          { loader: 'sass-loader' }
+          {loader: 'sass-loader'}
         ],
       },
       {
@@ -124,13 +126,17 @@ const config = {
 
     new CleanWebpackPlugin(),
 
-    new webpack.ProvidePlugin({
+    new ProvidePlugin({
       $: "jquery",
       jQuery: "jquery"
     }),
 
+    new DefinePlugin({
+      __VUE_OPTIONS_API__: JSON.stringify(true),
+      __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
+    }),
   ]
-
 };
 
 module.exports = (env, argv) => {
@@ -152,7 +158,7 @@ module.exports = (env, argv) => {
 
       new CleanWebpackPlugin(),
 
-      new webpack.SourceMapDevToolPlugin({
+      new SourceMapDevToolPlugin({
         filename: '[file].map[query]',
         columns: false,
         exclude: /node_modules/,
