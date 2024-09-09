@@ -5,7 +5,7 @@ import giasRadio from '../GiasVueComponents/GiasRadio';
 import giasApiError from '../GiasVueComponents/GiasApiError';
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-const  ccApp = new createApp({
+const  ccApp = createApp({
   components: {
     giasWaitSpinner,
     giasApiError
@@ -90,12 +90,19 @@ const  ccApp = new createApp({
       return '';
     },
     laName: function () {
-      if (document.getElementById('LocalAuthorityId') && document.getElementById('LocalAuthorityId').tagName.toLowerCase() ==='select') {
+      const localAuthorityElement = document.getElementById('LocalAuthorityId');
+      if (localAuthorityElement && localAuthorityElement.tagName.toLowerCase() ==='select') {
         return $('#LocalAuthorityId').find('option[value="' + this.la + '"]').text();
       }
+
       // no dropdown for LA users - LA is uneditable for them
-      this.la = document.getElementById('la-code').value;
-      return document.getElementById('uneditable-la-name').value;
+      const laCodeElement = document.getElementById('la-code');
+      const uneditableLaNameElement = document.getElementById('uneditable-la-name');
+
+      if (laCodeElement) {
+        this.la = laCodeElement.value;
+      }
+      return uneditableLaNameElement ? uneditableLaNameElement.value : '';
     },
     tableCount: function () {
       return '1 - ' + this.centresInGroup.length + ' of ' + this.centresInGroup.length;

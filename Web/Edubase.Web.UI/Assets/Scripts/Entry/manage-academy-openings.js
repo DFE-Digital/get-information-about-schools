@@ -494,25 +494,24 @@ const academyOpenings = createApp({
 
 });
 
+const academyOpeningsComponent = academyOpenings.mount('#academy-opening-app');
+
 
 $(window).on('tabChange', function () {
-  academyOpenings.clearErrors();
+  academyOpeningsComponent.clearErrors();
 });
 $('#main-content').find('.gias-tabs-wrapper').giasTabs();
 $('#main-content').find('.gias-tabs__tab').eq(0).click();
 
 function blockExits() {
   $('a').on('click', function (e) {
-    if (academyOpenings.isUserEditing()) {
+    if (academyOpeningsComponent.isUserEditing()) {
       e.preventDefault();
-      academyOpenings.presentExitWarning = true;
-      academyOpenings.anchorTarget = $(this).attr('href');
+      academyOpeningsComponent.presentExitWarning = true;
+      academyOpeningsComponent.anchorTarget = $(this).attr('href');
       window.setTimeout(function () {
         $('#button-ok').focus();
       }, 0);
     }
   });
 }
-
-academyOpenings.mount('#academy-opening-app');
-

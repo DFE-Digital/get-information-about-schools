@@ -450,8 +450,13 @@ const mergersApp = createApp({
         postData.operationType = 'amalgamate';
         postData.MergeOrAmalgamationDate = [this.mergeDateYear, this.mergeDateMonth, this.mergeDateDay].join('-');
         postData.UrnsToMerge = this.amalgamationEstabs
-          .filter(estab => estab && estab.urn)
-          .map(estab => estab.urn);
+          .filter(estab => {
+            if (!estab.urn) {
+              console.warn('Invalid Urn in establishment: ', estab);
+              return false;
+            }
+            return true;
+          }).map(estab => estab.urn);
         postData.NewEstablishmentName = this.newName;
         postData.NewEstablishmentPhaseId = this.phaseId;
         postData.NewEstablishmentTypeId = this.typeId;
