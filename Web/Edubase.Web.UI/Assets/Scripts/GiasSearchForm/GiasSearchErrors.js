@@ -1,12 +1,16 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 import errorSummary from '../GiasVueComponents/errorSummary';
-const clientErrorSummary = new Vue({
-  el: '#js-error-summary',
+
+let clientErrorSummaryComponent;
+
+const clientErrorSummary = createApp({
   components: {
     errorSummary,
   },
-  data: {
-    errors: []
+  data() {
+    return {
+      errors: []
+    };
   },
   methods: {
     updateErrors: function(errObj){
@@ -17,6 +21,8 @@ const clientErrorSummary = new Vue({
     }
   }
 });
+
+clientErrorSummaryComponent = clientErrorSummary.mount('#js-error-summary')
 
 class GiasSearchErrors {
   constructor() {
@@ -30,14 +36,17 @@ class GiasSearchErrors {
 
       $panel.find('.govuk-error-message').eq(0).removeClass('hidden').html(message);
       $panel.addClass('govuk-form-group--error');
-
     };
 
     const hideErrorSummary = function() {
       $main.find('.server-error-summary').addClass('hidden');
       $main.find('.panel').removeClass('govuk-form-group--error');
-      clientErrorSummary.updateErrors();
-    }
+
+      if (clientErrorSummaryComponent && typeof clientErrorSummaryComponent.updateErrors === 'function')
+      {
+        clientErrorSummaryComponent.updateErrors();
+      }
+    };
 
     // Name or reference number search
     $('#name-search-submit').on('click', function (e) {
@@ -50,7 +59,7 @@ class GiasSearchErrors {
         showInlineError($('#searchby-name-ref'),
           'Please enter an establishment name, URN, LAESTAB or UKPRN to start a search');
 
-        clientErrorSummary.updateErrors({
+        clientErrorSummaryComponent.updateErrors({
           href: '#TextSearchModel_Text',
           message: 'Please enter an establishment name, URN, LAESTAB or UKPRN to start a search'
         });
@@ -60,7 +69,7 @@ class GiasSearchErrors {
         e.preventDefault();
         showInlineError($('#searchby-name-ref'),
           'We could not find any establishments matching your search criteria');
-        clientErrorSummary.updateErrors({
+        clientErrorSummaryComponent.updateErrors({
           href: '#TextSearchModel_Text',
           message: 'We could not find any establishments matching your search criteria'
         });
@@ -92,7 +101,7 @@ class GiasSearchErrors {
         e.preventDefault();
 
         if ($.trim($('#LocalAuthorityToAdd').val()) === '') {
-          clientErrorSummary.updateErrors({
+          clientErrorSummaryComponent.updateErrors({
             href: '#LocalAuthorityToAdd',
             message: 'Please enter a local authority to start a search'
           });
@@ -102,7 +111,7 @@ class GiasSearchErrors {
 
         } else if (suggestionCount === 0) {
 
-          clientErrorSummary.updateErrors({
+          clientErrorSummaryComponent.updateErrors({
             href: '#LocalAuthorityToAdd',
             message: 'We could not find any local authorities matching your search criteria'
           });
@@ -135,7 +144,7 @@ class GiasSearchErrors {
 
       if ($.trim($('#GroupSearchModel_Text').val()) === '') {
         e.preventDefault();
-        clientErrorSummary.updateErrors({
+        clientErrorSummaryComponent.updateErrors({
           href: '#GroupSearchModel_Text',
           message: 'Please enter an establishment group to start a search.'
         });
@@ -145,7 +154,7 @@ class GiasSearchErrors {
 
       } else if (suggestionCount === 0 && !numericValue) {
         e.preventDefault();
-        clientErrorSummary.updateErrors({
+        clientErrorSummaryComponent.updateErrors({
           href: '#GroupSearchModel_Text',
           message: 'We couldn’t find any establishment groups matching your search criteria'
         });
@@ -164,7 +173,7 @@ class GiasSearchErrors {
 
       if (fName === '' && sName === '' && roles.length === 0) {
         e.preventDefault();
-        clientErrorSummary.updateErrors({
+        clientErrorSummaryComponent.updateErrors({
           href: '#GovernorSearchModel_Forename',
           message: 'Please enter a governor to start a search'
         });
@@ -180,7 +189,7 @@ class GiasSearchErrors {
       const gId = $.trim($('#GovernorSearchModel_Gid').val());
       if (gId === '' || isNaN(gId)) {
         e.preventDefault();
-        clientErrorSummary.updateErrors({
+        clientErrorSummaryComponent.updateErrors({
           href: '#GovernorSearchModel_Gid',
           message: 'Please enter a governor ID to start a search'
         });
@@ -191,6 +200,4 @@ class GiasSearchErrors {
 
   }
 }
-
-
 export default GiasSearchErrors;

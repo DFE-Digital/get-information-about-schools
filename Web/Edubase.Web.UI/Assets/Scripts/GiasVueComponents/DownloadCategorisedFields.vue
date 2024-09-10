@@ -9,8 +9,11 @@
           <checkbox :input-id="chx.id"
                     :label="chx.name"
                     :value="chx.id"
-                    v-model="selectedFields"
-                    v-for="(chx, j) in panel.customFields" :key="i+'_'+j"></checkbox>
+                    :checked="selectedFields.includes(chx.id)"
+                    @update:checked="updateSelectedFields(chx.id, $event)"
+                    v-for="(chx, j) in panel.customFields"
+                    :key="i + '_' + j"
+                    ></checkbox>
         </div>
       </div>
     </div>
@@ -28,7 +31,20 @@ export default {
     hasError: Boolean,
   },
   components: {
-    checkbox
+    checkbox,
   },
-}
+  methods: {
+    updateSelectedFields(id, isChecked) {
+     if (isChecked) {
+       this.selectedFields.push(id);
+    } else {
+      const index = this.selectedFields.indexOf(id);
+      if (index > -1) {
+        this.selectedFields.splice(index, 1);
+	}
+      }
+	this.$emit('update:selectedFields', this.selectedFields);
+    },
+  },
+};
 </script>

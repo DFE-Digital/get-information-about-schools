@@ -1,78 +1,80 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 import errorSummary from '../GiasVueComponents/errorSummary';
 import GiasRadio from '../GiasVueComponents/GiasRadio';
 import GiasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
 
-const mergersApp = new Vue({
-  el: '#mergers-app',
+const mergersApp = createApp({
   components: {
     errorSummary,
     GiasRadio,
     GiasWaitSpinner,
   },
-  data: {
-    localAuthorities: window.localAuthorities,
-    types: window.types,
-    phases: window.phases,
-    errorTitle: 'Incorrect or missing details',
-    errors: [],
-    commitErrors: false,
-    apiError: {},
-    isProcessing: false,
-    csrfToken: '',
-    mergerType: '',
-    mergerTypeConfirmed: false,
-    mergerTypeError: false,
-    mergerComplete: false,
-    amalgamationComplete: false,
+  data() {
+    return {
+      school: '',
+      localAuthorities: window.localAuthorities,
+      types: window.types,
+      phases: window.phases,
+      errorTitle: 'Incorrect or missing details',
+      errors: [],
+      commitErrors: false,
+      apiError: {},
+      isProcessing: false,
+      csrfToken: '',
+      mergerType: '',
+      mergerTypeConfirmed: false,
+      mergerTypeError: false,
+      mergerComplete: false,
+      amalgamationComplete: false,
 
-    estabLookup: '/api/establishment/{0}',
-    commitApi: '/api/amalgamate-merge',
+      estabLookup: '/api/establishment/{0}',
+      commitApi: '/api/amalgamate-merge',
 
-    amalgamatedEstab1: '',
-    amalgamatedEstab2: '',
-    amalgamatedEstab3: '',
-    amalgamatedEstab4: '',
+      amalgamatedEstab1: '',
+      amalgamatedEstab2: '',
+      amalgamatedEstab3: '',
+      amalgamatedEstab4: '',
 
-    amalgamatedUrn1Error: '',
-    amalgamatedUrn2Error: '',
-    amalgamatedUrn3Error: '',
-    amalgamatedUrn4Error: '',
+      amalgamatedUrn1Error: '',
+      amalgamatedUrn2Error: '',
+      amalgamatedUrn3Error: '',
+      amalgamatedUrn4Error: '',
 
 
-    mergerEstab0: '',
-    mergerEstab1: '',
-    mergerEstab2: '',
-    mergerEstab3: '',
+      mergerEstab0: '',
+      mergerEstab1: '',
+      mergerEstab2: '',
+      mergerEstab3: '',
 
-    mergerUrn0Error: '',
-    mergerUrn1Error: '',
-    mergerUrn2Error: '',
-    mergerUrn3Error: '',
+      mergerUrn0Error: '',
+      mergerUrn1Error: '',
+      mergerUrn2Error: '',
+      mergerUrn3Error: '',
 
-    amalgamationEstabs: [],
-    mergerEstabs: [],
-    validMergeUrns: false,
+      amalgamationEstabs: [],
+      mergerEstabs: [],
+      validMergeUrns: false,
 
-    newName: '',
-    typeId: '',
-    phaseId: '',
-    laId: '',
-    mergeDateDay: '',
-    mergeDateMonth: '',
-    mergeDateYear: '',
+      newName: '',
+      typeId: '',
+      phaseId: '',
+      laId: '',
+      mergeDateDay: '',
+      mergeDateMonth: '',
+      mergeDateYear: '',
 
-    nameError: false,
-    typeError: false,
-    laError: false,
-    mergeDateError: false,
-    phaseError: false,
+      nameError: false,
+      typeError: false,
+      laError: false,
+      mergeDateError: false,
+      phaseError: false,
 
-    completeAmalgamation: false,
-    amalgUrn: '',
-    exitUrl: '',
-    presentExitWarning: false,
+      completeAmalgamation: false,
+      amalgUrn: '',
+      exitUrl: '',
+      presentExitWarning: false,
 
+    };
   },
   created: function() {
     this.amalgamationFields = [
@@ -88,13 +90,13 @@ const mergersApp = new Vue({
       this.mergerEstab2,
       this.mergerEstab3
     ];
+  },
+  mounted: function () {
+    this.csrfToken = this.getAntiForgeryToken();
 
     this.populateSelect('new-establishment-type', this.types);
     this.populateSelect('LocalAuthorityId', this.localAuthorities);
     this.blockExits();
-  },
-  mounted: function () {
-    this.csrfToken = this.getAntiForgeryToken();
   },
   watch: {
     mergerTypeConfirmed: function() {
@@ -447,9 +449,14 @@ const mergersApp = new Vue({
         this.isProcessing = true;
         postData.operationType = 'amalgamate';
         postData.MergeOrAmalgamationDate = [this.mergeDateYear, this.mergeDateMonth, this.mergeDateDay].join('-');
-        postData.UrnsToMerge = this.amalgamationEstabs.map(function (estab) {
-          return estab.urn;
-        });
+        postData.UrnsToMerge = this.amalgamationEstabs
+          .filter(estab => {
+            if (!estab.urn) {
+              console.warn('Invalid Urn in establishment: ', estab);
+              return false;
+            }
+            return true;
+          }).map(estab => estab.urn);
         postData.NewEstablishmentName = this.newName;
         postData.NewEstablishmentPhaseId = this.phaseId;
         postData.NewEstablishmentTypeId = this.typeId;
@@ -717,3 +724,5 @@ const mergersApp = new Vue({
   }
 
 })
+
+mergersApp.mount('#mergers-app');
