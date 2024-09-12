@@ -1,287 +1,296 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!--
-    Microsoft ResX Schema
+    <!--
+      Microsoft ResX Schema
 
-    Version 2.0
+      Version 2.0
 
-    The primary goals of this format is to allow a simple XML format
-    that is mostly human readable. The generation and parsing of the
-    various data types are done through the TypeConverter classes
-    associated with the data types.
+      The primary goals of this format is to allow a simple XML format
+      that is mostly human readable. The generation and parsing of the
+      various data types are done through the TypeConverter classes
+      associated with the data types.
 
-    Example:
+      Example:
 
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
+      ... ado.net/XML headers & schema ...
+      <resheader name="resmimetype">text/microsoft-resx</resheader>
+      <resheader name="version">2.0</resheader>
+      <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+      <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+      <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+      <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+      <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+          <value>[base64 mime encoded serialized .NET Framework object]</value>
+      </data>
+      <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+          <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+          <comment>This is a comment</comment>
+      </data>
 
-    There are any number of "resheader" rows that contain simple
-    name/value pairs.
+      There are any number of "resheader" rows that contain simple
+      name/value pairs.
 
-    Each data row contains a name, and value. The row also contains a
-    type or mimetype. Type corresponds to a .NET class that support
-    text/value conversion through the TypeConverter architecture.
-    Classes that don't support this are serialized and stored with the
-    mimetype set.
+      Each data row contains a name, and value. The row also contains a
+      type or mimetype. Type corresponds to a .NET class that support
+      text/value conversion through the TypeConverter architecture.
+      Classes that don't support this are serialized and stored with the
+      mimetype set.
 
-    The mimetype is used for serialized objects, and tells the
-    ResXResourceReader how to depersist the object. This is currently not
-    extensible. For a given mimetype the value must be set accordingly:
+      The mimetype is used for serialized objects, and tells the
+      ResXResourceReader how to depersist the object. This is currently not
+      extensible. For a given mimetype the value must be set accordingly:
 
-    Note - application/x-microsoft.net.object.binary.base64 is the format
-    that the ResXResourceWriter will generate, however the reader can
-    read any of the formats listed below.
+      Note - application/x-microsoft.net.object.binary.base64 is the format
+      that the ResXResourceWriter will generate, however the reader can
+      read any of the formats listed below.
 
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
+      mimetype: application/x-microsoft.net.object.binary.base64
+      value   : The object must be serialized with
+              : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+              : and then encoded with base64 encoding.
 
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
+      mimetype: application/x-microsoft.net.object.soap.base64
+      value   : The object must be serialized with
+              : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+              : and then encoded with base64 encoding.
 
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
+      mimetype: application/x-microsoft.net.object.bytearray.base64
+      value   : The object must be serialized into a byte array
+              : using a System.ComponentModel.TypeConverter
+              : and then encoded with base64 encoding.
+      -->
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+                id="root"
+                xmlns="">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+        <xsd:element name="root" msdata:IsDataSet="true">
             <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="metadata">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" use="required" type="xsd:string"/>
+                            <xsd:attribute name="type" type="xsd:string"/>
+                            <xsd:attribute name="mimetype" type="xsd:string"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="assembly">
+                        <xsd:complexType>
+                            <xsd:attribute name="alias" type="xsd:string"/>
+                            <xsd:attribute name="name" type="xsd:string"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
             </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="error.code.required_statusId" xml:space="preserve">
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="error.code.required_statusId" xml:space="preserve">
     <value>Please select an establishment status</value>
   </data>
-  <data name="error.code.required_typeId" xml:space="preserve">
+    <data name="error.code.required_typeId" xml:space="preserve">
     <value>Please select an establishment type</value>
   </data>
-  <data name="error.establishment.group.link.cannot.have.trusts" xml:space="preserve">
+    <data name="error.establishment.group.link.cannot.have.trusts" xml:space="preserve">
     <value>Establishment is not LA maintained, please select another one.</value>
   </data>
-  <data name="field.validation.headFirstName.can.not.be.empty" xml:space="preserve">
+    <data name="field.validation.headFirstName.can.not.be.empty" xml:space="preserve">
     <value>Please enter a headteacher/principal/manager first name</value>
   </data>
-  <data name="field.validation.headLastName.can.not.be.empty" xml:space="preserve">
+    <data name="field.validation.headLastName.can.not.be.empty" xml:space="preserve">
     <value>Please enter a headteacher/principal/manager last name</value>
   </data>
-  <data name="field.validation.ReligiousCharacter" xml:space="preserve">
+    <data name="field.validation.ReligiousCharacter" xml:space="preserve">
     <value>Please select 'Does not apply' for Religious Character</value>
   </data>
-  <data name="error.establishmentNumber.length" xml:space="preserve">
+    <data name="error.establishmentNumber.length" xml:space="preserve">
     <value>Please enter a valid establishment number between 1 and 9999</value>
   </data>
-  <data name="error.duplicate.establishmentNumber" xml:space="preserve">
+    <data name="error.duplicate.establishmentNumber" xml:space="preserve">
     <value>The establishment number you have entered already exists. Please enter a different establishment number</value>
   </data>
-  <data name="error.invalid.email" xml:space="preserve">
+    <data name="error.invalid.email" xml:space="preserve">
     <value>Please enter a valid email address</value>
   </data>
-  <data name="error.PropsLastName.tooLong" xml:space="preserve">
+    <data name="error.PropsLastName.tooLong" xml:space="preserve">
     <value>Please reduce the proprietor's name to fewer than 70 characters</value>
   </data>
-  <data name="error.validation.type.of.establishment.can.not.become.cc" xml:space="preserve">
+    <data name="error.validation.type.of.establishment.can.not.become.cc" xml:space="preserve">
     <value>This type of establishment cannot be changed to a children's centre. Please revert the type of establishment to its original type</value>
   </data>
-  <data name="error.validation.type.of.establishment.can.not.have.links.cc" xml:space="preserve">
+    <data name="error.validation.type.of.establishment.can.not.have.links.cc" xml:space="preserve">
     <value>You have to remove the link(s) before changing this type of establishment. Please remove the link(s)</value>
   </data>
-  <data name="field.validation.CloseDate" xml:space="preserve">
+    <data name="field.validation.CloseDate" xml:space="preserve">
     <value>Please change the close date, so it's later than the open date.</value>
   </data>
-  <data name="field.validation.Diocese" xml:space="preserve">
+    <data name="field.validation.Diocese" xml:space="preserve">
     <value>Only Church of England or Roman Catholic church schools can have a diocese. Please remove the diocese</value>
   </data>
-  <data name="field.validation.EstablishmentStatus.future.close.date" xml:space="preserve">
+    <data name="field.validation.EstablishmentStatus.future.close.date" xml:space="preserve">
     <value>You can't close an establishment with a future close date. Please enter a different close date</value>
   </data>
-  <data name="field.validation.EstablishmentStatus.future.open.date" xml:space="preserve">
+    <data name="field.validation.EstablishmentStatus.future.open.date" xml:space="preserve">
     <value>You cannot open an establishment with a future open date. Please enter a different open date</value>
   </data>
-  <data name="field.validation.EstablishmentType.please.remove.links.first" xml:space="preserve">
+    <data name="field.validation.EstablishmentType.please.remove.links.first" xml:space="preserve">
     <value>This type of establishment cannot belong to a federation/trust/school sponsor. Please remove the link</value>
   </data>
-  <data name="field.validation.InspectorateReport" xml:space="preserve">
+    <data name="field.validation.InspectorateReport" xml:space="preserve">
     <value>Please enter a valid report link</value>
   </data>
-  <data name="field.validation.nuersery.provision.only.has.nursery.classes" xml:space="preserve">
+    <data name="field.validation.nuersery.provision.only.has.nursery.classes" xml:space="preserve">
     <value>Please select 'Has nursery classes'</value>
   </data>
-  <data name="field.validation.official.sixth.form.only.has" xml:space="preserve">
+    <data name="field.validation.official.sixth.form.only.has" xml:space="preserve">
     <value>Please select 'Has a sixth form'</value>
   </data>
-  <data name="field.validation.OfstedLastInsp" xml:space="preserve">
+    <data name="field.validation.OfstedLastInsp" xml:space="preserve">
     <value>Please change the last inspection date. It cannot be later than today's date.</value>
   </data>
-  <data name="field.validation.only.not.applicable.allowed" xml:space="preserve">
+    <data name="field.validation.only.not.applicable.allowed" xml:space="preserve">
     <value>Please select 'Does not apply'</value>
   </data>
-  <data name="field.validation.PhaseOfEducation" xml:space="preserve">
+    <data name="field.validation.PhaseOfEducation" xml:space="preserve">
     <value>This phase of education isn't valid for this establishment type. Please select a different phase of education</value>
   </data>
-  <data name="field.validation.Postcode" xml:space="preserve">
+    <data name="field.validation.Postcode" xml:space="preserve">
     <value>Please enter a valid postcode</value>
   </data>
-  <data name="field.validation.ReasonEstablishmentClosed.CloseDate" xml:space="preserve">
+    <data name="field.validation.ReasonEstablishmentClosed.CloseDate" xml:space="preserve">
     <value>Please check the 'Reason establishment closed'.
 Please check the 'Establishment close date'</value>
   </data>
-  <data name="field.validation.ReasonEstablishmentOpened.OpenDate" xml:space="preserve">
+    <data name="field.validation.ReasonEstablishmentOpened.OpenDate" xml:space="preserve">
     <value>Please check the 'Reason establishment opened'
 Please check the 'Establishment open date'</value>
   </data>
-  <data name="field.validation.SchoolCapacity" xml:space="preserve">
+    <data name="field.validation.SchoolCapacity" xml:space="preserve">
     <value>Please leave the capacity field blank</value>
   </data>
-  <data name="field.validation.sen.field.must.be.empty" xml:space="preserve">
+    <data name="field.validation.sen.field.must.be.empty" xml:space="preserve">
     <value>This field cannot have a value if the type of resourced provision is set to this. Please change the type of resourced provision</value>
   </data>
-  <data name="field.validation.sen.priority.must.be.filled" xml:space="preserve">
+    <data name="field.validation.sen.priority.must.be.filled" xml:space="preserve">
     <value>At least one of the SEN priority fields must be selected with this type of resourced provision. Please select a SEN priority field</value>
   </data>
-  <data name="field.validation.should.not.be.empty" xml:space="preserve">
+    <data name="field.validation.should.not.be.empty" xml:space="preserve">
     <value>Please fill in this field</value>
   </data>
-  <data name="field.validation.StatutoryHighAge" xml:space="preserve">
+    <data name="field.validation.StatutoryHighAge" xml:space="preserve">
     <value>Please change the statutory high age so that it's higher than the statutory low age</value>
   </data>
-  <data name="field.validation.StatutoryLowAge" xml:space="preserve">
+    <data name="field.validation.StatutoryLowAge" xml:space="preserve">
     <value>Please change the statutory low age so that it's lower than the statutory high age</value>
   </data>
-  <data name="field.validation.Telephone" xml:space="preserve">
+    <data name="field.validation.Telephone" xml:space="preserve">
     <value>Please amend the telephone/fax number. It should only contain digits and should not be longer than 40 digits.</value>
   </data>
-  <data name="field.validation.WebsiteAddress" xml:space="preserve">
+    <data name="field.validation.WebsiteAddress" xml:space="preserve">
     <value>Please enter a valid website address</value>
   </data>
-  <data name="error.code.required_administrativeDistrictId" xml:space="preserve">
+    <data name="error.code.required_administrativeDistrictId" xml:space="preserve">
     <value>Please select a district</value>
   </data>
-  <data name="error.code.required_administrativeWardId" xml:space="preserve">
+    <data name="error.code.required_administrativeWardId" xml:space="preserve">
     <value>Please select a ward</value>
   </data>
-  <data name="error.code.required_casWardId" xml:space="preserve">
+    <data name="error.code.required_casWardId" xml:space="preserve">
     <value>Please select a census ward</value>
   </data>
-  <data name="error.code.required_governmentOfficeRegionId" xml:space="preserve">
+    <data name="error.code.required_governmentOfficeRegionId" xml:space="preserve">
     <value>Please select a government office region</value>
   </data>
-  <data name="error.code.required_GSSLAId" xml:space="preserve">
+    <data name="error.code.required_GSSLAId" xml:space="preserve">
     <value>Please select a GSS LA code</value>
   </data>
-  <data name="error.code.required_LSOAId" xml:space="preserve">
+    <data name="error.code.required_LSOAId" xml:space="preserve">
     <value>Please enter a valid LSOA code</value>
   </data>
-  <data name="error.code.required_MSOAId" xml:space="preserve">
+    <data name="error.code.required_MSOAId" xml:space="preserve">
     <value>Please enter a valid MSOA code</value>
   </data>
-  <data name="error.code.required_parliamentaryConstituencyId" xml:space="preserve">
+    <data name="error.code.required_parliamentaryConstituencyId" xml:space="preserve">
     <value>Please select a parliamentary constituency</value>
   </data>
-  <data name="error.code.required_rscRegionId" xml:space="preserve">
+    <data name="error.code.required_rscRegionId" xml:space="preserve">
     <value>Please select an RSC region</value>
   </data>
-  <data name="error.code.required_urbanRuralId" xml:space="preserve">
+    <data name="error.code.required_urbanRuralId" xml:space="preserve">
     <value>Please select an urban/rural description</value>
   </data>
-  <data name="error.isEmpty.validate.field.edit.governor_appointmentEndDate" xml:space="preserve">
+    <data name="error.isEmpty.validate.field.edit.governor_appointmentEndDate" xml:space="preserve">
     <value>Please enter the date term ends</value>
   </data>
-  <data name="error.isEmpty.validate.field.edit.governor_appointmentStartDate" xml:space="preserve">
+    <data name="error.isEmpty.validate.field.edit.governor_appointmentStartDate" xml:space="preserve">
     <value>Please enter the date of appointment</value>
   </data>
-  <data name="error.isEmpty.validate.field.edit.governor_emailAddress" xml:space="preserve">
+    <data name="error.isEmpty.validate.field.edit.governor_emailAddress" xml:space="preserve">
     <value>Please enter the email address</value>
   </data>
-  <data name="error.isEmpty.validate.field.edit.governor_firstName" xml:space="preserve">
+    <data name="error.isEmpty.validate.field.edit.governor_firstName" xml:space="preserve">
     <value>Please enter the first name</value>
   </data>
-  <data name="error.isEmpty.validate.field.edit.governor_lastName" xml:space="preserve">
+    <data name="error.isEmpty.validate.field.edit.governor_lastName" xml:space="preserve">
     <value>Please enter the last name</value>
   </data>
-  <data name="error.isEmpty.validate.field.edit.governor_telephoneNumber" xml:space="preserve">
+    <data name="error.isEmpty.validate.field.edit.governor_telephoneNumber" xml:space="preserve">
     <value>Please enter the telephone number</value>
   </data>
-  <data name="error.validation.link.cc.wrong.establishment.type" xml:space="preserve">
+    <data name="error.validation.link.cc.wrong.establishment.type" xml:space="preserve">
     <value>This URN is not a children's centre URN. Please enter a valid URN</value>
   </data>
-  <data name="wrong.value_headFirstName" xml:space="preserve">
+    <data name="wrong.value_headFirstName" xml:space="preserve">
     <value>Please enter a valid first name</value>
   </data>
-  <data name="wrong.value_headLastName" xml:space="preserve">
+    <data name="wrong.value_headLastName" xml:space="preserve">
     <value>Please enter a valid last name</value>
   </data>
-  <data name="error.wrongValue.futureDate.validate.field.edit.governor_appointmentStartDate" xml:space="preserve">
+    <data name="error.wrongValue.futureDate.validate.field.edit.governor_appointmentStartDate" xml:space="preserve">
     <value>Date of appointment must not be in the future</value>
   </data>
-  <data name="error.wrongValue.stepdownDate.validate.field.edit.governor_appointmentEndDate" xml:space="preserve">
+    <data name="error.wrongValue.stepdownDate.validate.field.edit.governor_appointmentEndDate" xml:space="preserve">
     <value>Date appointment ended must not be before the date of appointment</value>
+  </data>
+    <data name="field.validation.date.overlap.with.existing.governorProfessional.startDate" xml:space="preserve">
+    <value>Date of appointment must not be before the end date of another appointment</value>
   </data>
 </root>
