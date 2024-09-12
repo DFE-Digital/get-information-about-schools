@@ -22,7 +22,7 @@ namespace Edubase.Services.IntegrationEndPoints.AzureMaps
 
         private const string AzureMapServiceTimeoutKey = "AzureMapService_Timeout";
 
-        private readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
+        private readonly IAsyncPolicy<HttpResponseMessage> RetryPolicy = PollyUtil.CreateRetryPolicy(
             PollyUtil.CsvSecondsToTimeSpans(
                 ConfigurationManager.AppSettings["AzureMapService_RetryIntervals"]
             ), AzureMapServiceTimeoutKey
