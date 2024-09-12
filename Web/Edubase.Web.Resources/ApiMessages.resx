@@ -291,6 +291,13 @@ Please check the 'Establishment open date'</value>
     <value>Date appointment ended must not be before the date of appointment</value>
   </data>
     <data name="field.validation.date.overlap.with.existing.governorProfessional.startDate" xml:space="preserve">
-    <value>Date of appointment must not be before the end date of another appointment</value>
+    <value>Edit the governor's appointment start date to avoid overlap with an existing governance professional record.</value>
+  </data>
+    <data name="field.validation.date.overlap.with.existing.governorProfessional.endDate" xml:space="preserve">
+    <value>Edit the governor's appointment end date to avoid overlap with an existing governance professional record.</value>
+  </data>
+    <data name="field.validation.governance.professional.appointment.date.must.be.today.or.in.past"
+          xml:space="preserve">
+    <value>Date of appointment for governance professionals must be today or in the past.</value>
   </data>
 </root>
