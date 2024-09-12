@@ -1,12 +1,7 @@
 using System;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Web.Mvc;
 using Edubase.Services.Domain;
-using Edubase.Common;
-using Edubase.Common.Text;
-using Glimpse.Core.Tab.Assist;
-using MoreLinq;
 
 namespace Edubase.Web.UI.Validation
 {
@@ -18,21 +13,27 @@ namespace Edubase.Web.UI.Validation
             var fieldName = errorFields;
             if (fieldName.Length > 0)
             {
-                fieldName = string.Concat(errorFields.Substring(0, 1).ToUpper(), errorFields.Substring(1, errorFields.Length - 1));
+                fieldName = string.Concat(errorFields.Substring(0, 1).ToUpper(),
+                    errorFields.Substring(1, errorFields.Length - 1));
             }
 
             // as we're adding this - we want to use the same casing as the other properties follow. Because of that - look to see if there are any others which extend the original name
-            if (controllerContext.Controller.ViewData.ModelState.Keys.Any(x => x.StartsWith(fieldName, StringComparison.InvariantCultureIgnoreCase)))
+            if (controllerContext.Controller.ViewData.ModelState.Keys.Any(x =>
+                    x.StartsWith(fieldName, StringComparison.InvariantCultureIgnoreCase)))
             {
-                fieldName = controllerContext.Controller.ViewData.ModelState.ContainsKey(fieldName) ?
-                    controllerContext.Controller.ViewData.ModelState.Keys.First(x => x.Equals(fieldName, StringComparison.InvariantCultureIgnoreCase)) :
-                    controllerContext.Controller.ViewData.ModelState.Keys.First(x => x.StartsWith(fieldName, StringComparison.InvariantCultureIgnoreCase)).Substring(0, fieldName.Length);
+                fieldName = controllerContext.Controller.ViewData.ModelState.ContainsKey(fieldName)
+                    ? controllerContext.Controller.ViewData.ModelState.Keys.First(x =>
+                        x.Equals(fieldName, StringComparison.InvariantCultureIgnoreCase))
+                    : controllerContext.Controller.ViewData.ModelState.Keys
+                        .First(x => x.StartsWith(fieldName, StringComparison.InvariantCultureIgnoreCase))
+                        .Substring(0, fieldName.Length);
             }
 
             return fieldName;
         }
 
-        public static void ApplyToModelState(this ValidationEnvelopeDto validationEnvelope, ControllerContext controllerContext, bool avoidDuplicates = false)
+        public static void ApplyToModelState(this ValidationEnvelopeDto validationEnvelope,
+            ControllerContext controllerContext, bool avoidDuplicates = false)
         {
             foreach (var error in validationEnvelope.Errors)
             {
@@ -46,7 +47,8 @@ namespace Edubase.Web.UI.Validation
             }
         }
 
-        public static void ApplyToModelState(this ValidationEnvelopeDto validationEnvelope, ControllerContext controllerContext, string baseProperty, bool avoidDuplicates = false)
+        public static void ApplyToModelState(this ValidationEnvelopeDto validationEnvelope,
+            ControllerContext controllerContext, string baseProperty, bool avoidDuplicates = false)
         {
             foreach (var error in validationEnvelope.Errors)
             {
@@ -68,7 +70,9 @@ namespace Edubase.Web.UI.Validation
                 foreach (var error in apiResponse.Errors)
                 {
                     var fieldName = BuildFieldName(error.Fields, controllerContext);
-                    controllerContext.Controller.ViewData.ModelState.AddModelError(fieldName, error.GetMessage());
+                    controllerContext.Controller.ViewData.ModelState.AddModelError(fieldName,
+                        error.GetMessage() ??
+                        "Error processing data"); //Generic message provided to prevent system crashing on no error message
                 }
             }
         }
