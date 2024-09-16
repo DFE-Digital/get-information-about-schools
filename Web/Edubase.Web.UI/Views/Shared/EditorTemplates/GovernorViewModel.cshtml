@@ -345,7 +345,7 @@ else
                 @Html.ValidationMessageFor(x => x.AppointingBodyId, null, new { @class = "govuk-error-message" })
             </span>
             @Html.DropDownListFor(x => x.AppointingBodyId, Model.AppointingBodies, "",
-                new { id = "governorAppointingBodyInput", @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.AppointingBodyId)), aria_describedBy = errorsWrapperId, })
+                new { id = "AppointingBodyId", @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.AppointingBodyId)), aria_describedBy = errorsWrapperId, })
         </div>
     }
 }
