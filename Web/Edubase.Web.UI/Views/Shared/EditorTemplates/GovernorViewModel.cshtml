@@ -147,7 +147,7 @@ else
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.IsOriginalSignatoryMember)">
             @Html.LabelFor(x => x.IsOriginalSignatoryMember, "Original signatory member", new { @class = "govuk-label" })
             @Html.ValidationMessageFor(x => x.IsOriginalSignatoryMember, null, new { @class = "govuk-error-message" })
-            @Html.DropDownListFor(x => x.IsOriginalSignatoryMember, Model.YesNoSelect, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.IsOriginalSignatoryMember)) })
+            @Html.DropDownListFor(x => x.IsOriginalSignatoryMember, Model.YesNoSelect, new { @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.IsOriginalSignatoryMember)) })
         </div>
     }
 }
@@ -159,7 +159,7 @@ else
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.IsOriginalChairOfTrustees)">
             @Html.LabelFor(x => x.IsOriginalChairOfTrustees, "Original chair of trustees", new { @class = "govuk-label" })
             @Html.ValidationMessageFor(x => x.IsOriginalChairOfTrustees, null, new { @class = "govuk-error-message" })
-            @Html.DropDownListFor(x => x.IsOriginalChairOfTrustees, Model.YesNoSelect, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.IsOriginalChairOfTrustees))})
+            @Html.DropDownListFor(x => x.IsOriginalChairOfTrustees, Model.YesNoSelect, new { @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.IsOriginalChairOfTrustees))})
         </div>
     }
 }
