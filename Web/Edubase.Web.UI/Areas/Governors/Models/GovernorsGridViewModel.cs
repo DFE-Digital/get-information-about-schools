@@ -109,7 +109,11 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         private void CreateGrids(GovernorsDetailsDto dto, IEnumerable<GovernorModel> governors, bool isHistoric,
             int? groupUid, int? establishmentUrn)
         {
-            var roles = dto.ApplicableRoles.Where(role =>
+            //add the roles from the api to the applicable roles
+            //this allows roles that are not valid but exist to be displayed
+            var allRoles = dto.ApplicableRoles.Union(governors.Select(g => (GR) g.RoleId).Distinct());
+
+            var roles = allRoles.Where(role =>
             {
                 if (!EnumSets.eSharedGovernorRoles.Contains(role))
                 {
@@ -125,7 +129,6 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                 }
                 return false;
             }).ToList();
-
 
             foreach (var role in roles)
             {

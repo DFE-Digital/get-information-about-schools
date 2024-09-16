@@ -81,6 +81,19 @@ class GiasRadioToggles {
       });
     }
   }
+
+  applyFilters() {
+    const $el = $(this.el);
+    const selectedRadios = $el.find(':radio:checked');
+    const selectedCheckboxes = $el.find(':checkbox:checked');
+
+    if (selectedRadios.length === 0 && selectedCheckboxes.length === 0)
+    {
+      alert('Please select at least one field.');
+    }
+  }
+
+
 }
 $.fn.giasRadioToggles = function (opts) {
   return this.each(function () {
@@ -89,5 +102,14 @@ $.fn.giasRadioToggles = function (opts) {
     }
   });
 };
+
+$(document).ready(function() {
+  const radioToggleInstance = $('#results-container').giasRadioToggles();
+
+  $('#filter-apply').on('click', function(e) {
+    e.preventDefault();
+    radioToggleInstance.data('giasRadioToggles').applyFilters();
+  });
+});
 
 export default GiasRadioToggles;

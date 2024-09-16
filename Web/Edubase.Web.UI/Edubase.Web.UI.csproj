@@ -218,11 +218,11 @@
     <Reference Include="RouteDebugger, Version=2.1.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\routedebugger.2.1.5\lib\net40\RouteDebugger.dll</HintPath>
     </Reference>
-    <Reference Include="Sustainsys.Saml2, Version=2.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sustainsys.Saml2.2.9.0\lib\net47\Sustainsys.Saml2.dll</HintPath>
+    <Reference Include="Sustainsys.Saml2, Version=2.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sustainsys.Saml2.2.10.0\lib\net47\Sustainsys.Saml2.dll</HintPath>
     </Reference>
-    <Reference Include="Sustainsys.Saml2.Owin, Version=2.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sustainsys.Saml2.Owin.2.9.0\lib\net461\Sustainsys.Saml2.Owin.dll</HintPath>
+    <Reference Include="Sustainsys.Saml2.Owin, Version=2.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sustainsys.Saml2.Owin.2.10.0\lib\net461\Sustainsys.Saml2.Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -634,7 +634,6 @@
     <Content Include="Assets\Scripts\GiasGlobal\GiasReOrderValidationSummary.js" />
     <Content Include="Assets\Scripts\GiasHelpers\QueryString.js" />
     <Content Include="Assets\Scripts\GiasHelpers\supportsHistory.js" />
-    <Content Include="Assets\Scripts\GiasHelpers\checkIE.js" />
     <Content Include="Assets\Scripts\GiasHelpers\throttle.js" />
     <Content Include="Assets\Scripts\GiasLandingPages\GiasLandingMap.js" />
     <Content Include="Assets\Scripts\GiasModules\DfeCookieManager.js" />

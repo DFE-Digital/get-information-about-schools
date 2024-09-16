@@ -4,7 +4,7 @@ const $main = $('#main-content');
 
 $(document).ready(function () {
   if ($("#IsOriginalSignatoryMember").val() === 'true' || $("#IsOriginalChairOfTrustees").val() === 'true')
-    $("#governorAppointingBodyInput").prop("disabled", "disabled");
+    $("#AppointingBodyId").prop("disabled", "disabled");
 });
 
 const unloadHandler = new GiasAttachUnload({
@@ -51,26 +51,26 @@ if (document.getElementById('IsHistoric') && document.getElementById('IsHistoric
 
 $("#IsOriginalSignatoryMember").on('change', function (e) {
   if ($("#IsOriginalSignatoryMember").val() === "true") {
-    $("#governorAppointingBodyInput").val(16);
-    $("#governorAppointingBodyInput").prop("disabled", "disabled");
+    $("#AppointingBodyId").val(16);
+    $("#AppointingBodyId").prop("disabled", "disabled");
   } else {
-    $("#governorAppointingBodyInput").prop("disabled", "");
+    $("#AppointingBodyId").prop("disabled", "");
   }
 });
 
 $("#IsOriginalChairOfTrustees").on('change', function (e) {
   if ($("#IsOriginalChairOfTrustees").val() === "true") {
-    $("#governorAppointingBodyInput").val(19);
-    $("#governorAppointingBodyInput").prop("disabled", "disabled");
+    $("#AppointingBodyId").val(19);
+    $("#AppointingBodyId").prop("disabled", "disabled");
   } else {
-    $("#governorAppointingBodyInput").prop("disabled", "");
+    $("#AppointingBodyId").prop("disabled", "");
   }
 });
 
 $("#governorEdit").submit(function () {
-  $("#governorAppointingBodyInput").prop("disabled", "");
+  $("#AppointingBodyId").prop("disabled", "");
 });
- 
+
 $('.choose-governor').on('change', function () {
   unloadHandler.setExitStatus(true);
 

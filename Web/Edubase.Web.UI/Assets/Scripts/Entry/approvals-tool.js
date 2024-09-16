@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 import axios from "axios";
 import errorSummary from '../GiasVueComponents/errorSummary';
 import GiasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
@@ -7,55 +7,55 @@ import GiasTextCounter from '../GiasModules/GiasTextCounter';
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-new Vue({
-  el: '#change-approvals',
+const app = createApp({
   components: {
     errorSummary,
     GiasWaitSpinner
   },
-  data: {
-    changes: [],
-    selectedItems: [],
-    apiUrl: '/api/approvals/change-requests',
-    confirmUrl: '/api/approvals/change-request',
-    reason: '',
-    currentPage: 0,
-    slicePage: 0,
-    pages: [],
-    initialCount: 0,
-    currentCount: 0,
-    startIndex: 0,
-    pageSize: 100,
-    invalidReason: false,
-    reasonLength: false,
-    pendingRejection: false,
-    itemsConfirmedRemoved: false,
-    itemsConfirmedRejected: false,
-    approvalMessage: '',
-    rejectionMessage: '',
-    isProcessing: true,
-    apiError: '',
-    apiBork: {},
-    sortAscending: true,
-    sortType: 'effectiveDateUtc',
-    cannedRejections: window.GIASRejections || [],
-    showRejections: false,
-    noReasonSelectedError: false,
-    reasonIds: [],
-    noItemsSelected: true,
-    tableColumns: {
-      establishmentUrn: 'URN',
-      establishmentLAESTAB: 'DfE Number',
-      establishmentName: 'Establishment',
-      fieldName: 'Updated field',
-      oldValue: 'Old value',
-      newValue: 'New value',
-      effectiveDateUtc: 'Effective date',
-      requestedDateUtc: 'Date requested',
-      originatorFullName: 'Suggested by',
-    },
-
-    errors: [],
+  data() {
+    return {
+      changes: [],
+      selectedItems: [],
+      apiUrl: '/api/approvals/change-requests',
+      confirmUrl: '/api/approvals/change-request',
+      reason: '',
+      currentPage: 0,
+      slicePage: 0,
+      pages: [],
+      initialCount: 0,
+      currentCount: 0,
+      startIndex: 0,
+      pageSize: 100,
+      invalidReason: false,
+      reasonLength: false,
+      pendingRejection: false,
+      itemsConfirmedRemoved: false,
+      itemsConfirmedRejected: false,
+      approvalMessage: '',
+      rejectionMessage: '',
+      isProcessing: true,
+      apiError: '',
+      apiBork: {},
+      sortAscending: true,
+      sortType: 'effectiveDateUtc',
+      cannedRejections: window.GIASRejections || [],
+      showRejections: false,
+      noReasonSelectedError: false,
+      reasonIds: [],
+      noItemsSelected: true,
+      tableColumns: {
+        establishmentUrn: 'URN',
+        establishmentLAESTAB: 'DfE Number',
+        establishmentName: 'Establishment',
+        fieldName: 'Updated field',
+        oldValue: 'Old value',
+        newValue: 'New value',
+        effectiveDateUtc: 'Effective date',
+        requestedDateUtc: 'Date requested',
+        originatorFullName: 'Suggested by',
+      },
+      errors: [],
+    };
   },
   created: function () {
     this.getChangesData();
@@ -295,7 +295,7 @@ new Vue({
 
             self.apiBork = error.response.data;
             self.isProcessing = false;
-          }         
+          }
         });
       }
     },
@@ -350,7 +350,7 @@ new Vue({
 
             self.apiBork = error.response.data;
             self.isProcessing = false;
-          }         
+          }
         });
       }
     },
@@ -399,3 +399,5 @@ new Vue({
   }
 
 });
+
+app.mount('#change-approvals');
