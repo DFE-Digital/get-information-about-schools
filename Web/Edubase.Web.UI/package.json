@@ -53,7 +53,7 @@
     "awesomplete": "^1.1.5",
     "axios": "^1.4.0",
     "extend": "^3.0.2",
-    "glob": "^7.1.6",
+    "glob": "^11.0.0",
     "govuk-frontend": "^3.12.0",
     "jquery": "^3.6.0",
     "moment": "^2.29.1"
