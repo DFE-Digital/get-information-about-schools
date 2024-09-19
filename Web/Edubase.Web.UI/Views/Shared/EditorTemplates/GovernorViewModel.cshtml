@@ -2,165 +2,408 @@
 @using Edubase.Services.Enums
 @model Edubase.Web.UI.Areas.Governors.Models.GovernorViewModel
 
-@{
-    bool disableStartDate;
-    if (!bool.TryParse(ViewData["disableStartDate"]?.ToString(), out disableStartDate))
+@if (EnumSets.eGovernanceProfessionalRoles.Contains(Model.GovernorRole))
+{
+    @DisplayGid()
+    @DisplayName()
+    @DisplayDateOfBirth()
+    @DisplayPostcode()
+    @DisplayTelephoneNumber()
+    @DisplayEmail()
+    @DisplayAppointmentDates()
+}
+else
+{
+    @DisplayName()
+    @IsOriginalSignatoryMember()
+    @IsOriginalChairOfTrustees()
+    @DisplayGid()
+    @DisplayAppointingBody()
+    @DisplayAppointmentDates()
+    @DisplayEmail()
+    @DisplayPostcode()
+    @DisplayDateOfBirth()
+    @DisplayPreviousName()
+    @DisplayTelephoneNumber()
+}
+
+@helper DisplayGid()
+{
+    if (Model.DisplayPolicy.Id)
+    {
+        <div class="govuk-form-group">
+            <label class="govuk-label" for="governorGidInput">
+                Governance role identifier (GID)
+                <a id="GidTooltipLink" href="#help-text-gid" class="help-icon modal-link">
+                    <span class="govuk-visually-hidden">Help with the governance role identifier field</span>
+                    @helpers.DialogHiddenPrompt()
+                </a>
+            </label>
+            <div class="govuk-grid-column-full helptext-container">
+                <div id="help-text-gid">
+                    <h3 class="govuk-heading-s make-modal-header">Governance role identifier (GID)</h3>
+                    <p class="govuk-body">
+                        This field is generated internally by GIAS, and is not editable by users.
+                    </p>
+                </div>
+            </div>
+
+            <input id="governorGidInput" class="govuk-input" value="@Model.GID" readonly="readonly" disabled="disabled" placeholder="This value is generated internally by GIAS" />
+        </div>
+    }
+}
+
+@helper DisplayName()
+{
+    if (Model.DisplayPolicy.FullName)
+    {
+        // Note that JavaScript interacts with these HTML elements
+        // Updates to the IDs will need to be reflected in both the <label> and within Edubase.Web.UI/Assets/Scripts/Entry/add-edit-governor.js
+        <div class="govuk-form-group" id="governorFullNameDiv" style="display:none">
+            <label class="govuk-label" for="governorFullNameInput">
+                Name
+                <a id="FullNameTooltipLink" href="#help-text-full-name" class="help-icon modal-link">
+                    <span class="govuk-visually-hidden">Help with the name field</span>
+                    @helpers.DialogHiddenPrompt()
+                </a>
+            </label>
+            <div class="govuk-grid-column-full helptext-container">
+                <div id="help-text-full-name">
+                    <h3 class="govuk-heading-s make-modal-header">Name</h3>
+                    <p class="govuk-body">
+                        <span class="govuk-visually-hidden">Help Text:</span>
+                        The full name input is not editable, because it is auto-populated by joining together name parts.
+                    </p>
+                </div>
+            </div>
+            <input id="governorFullNameInput" class="govuk-input" readonly="readonly" disabled="disabled" value="@Model.FullName" />
+        </div>
+
+        {
+            // Note that JavaScript interacts with these HTML elements
+            // Updates to the IDs will need to be reflected in both the <label> and within Edubase.Web.UI/Assets/Scripts/Entry/add-edit-governor.js
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernorTitleId)">
+                @Html.LabelFor(x => x.GovernorTitleId, new {@class = "govuk-label",})
+                @Html.ValidationMessageFor(x => x.GovernorTitleId, null, new {@class = "govuk-error-message"})
+                @Html.DropDownListFor(x => x.GovernorTitleId, Model.Titles, "", new {@class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.GovernorTitleId)),})
+            </div>
+        }
+
+        var additionalInfo = "";
+        if (!EnumSets.eGovernanceProfessionalRoles.Contains(Model.GovernorRole))
+        {
+            additionalInfo = " (required to save record)";
+        }
+
+        {
+            // Note that JavaScript interacts with these HTML elements
+            // Updates to the IDs will need to be reflected in both the <label> and within Edubase.Web.UI/Assets/Scripts/Entry/add-edit-governor.js
+            var inputId = @Html.IdFor(x => x.FirstName);
+            var errorsWrapperId = $"{inputId}-errors";
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FirstName)">
+                @Html.LabelFor(x => x.FirstName, $"First name{additionalInfo}", new { @class = "govuk-label",})
+                <span id="@errorsWrapperId">
+                    @Html.ValidationMessageFor(x => x.FirstName, "First name cannot be empty", new { @class = "govuk-error-message" })
+                </span>
+                @Html.TextBoxFor(x => x.FirstName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.FirstName)), aria_describedBy = errorsWrapperId, })
+            </div>
+        }
+
+        {
+            // Note that JavaScript interacts with these HTML elements
+            // Updates to the IDs will need to be reflected in both the <label> and within Edubase.Web.UI/Assets/Scripts/Entry/add-edit-governor.js
+            var inputId = @Html.IdFor(x => x.MiddleName);
+            var errorsWrapperId = $"{inputId}-errors";
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.MiddleName)">
+                @Html.LabelFor(x => x.MiddleName, new { @class = "govuk-label", })
+                <span id="@errorsWrapperId">
+                    @Html.ValidationMessageFor(x => x.MiddleName, null, new { @class = "govuk-error-message" })
+                </span>
+                @Html.TextBoxFor(x => x.MiddleName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.MiddleName)), aria_describedBy = errorsWrapperId, })
+            </div>
+        }
+
+
+        {
+            // Note that JavaScript interacts with these HTML elements
+            // Updates to the IDs will need to be reflected in both the <label> and within Edubase.Web.UI/Assets/Scripts/Entry/add-edit-governor.js
+            var inputId = @Html.IdFor(x => x.LastName);
+            var errorsWrapperId = $"{inputId}-errors";
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LastName)">
+                @Html.LabelFor(x => x.LastName, $"Last name{additionalInfo}", new { @class = "govuk-label", })
+                <span id="@errorsWrapperId">
+                    @Html.ValidationMessageFor(x => x.LastName, "Last name cannot be empty", new { @class = "govuk-error-message" })
+                </span>
+                @Html.TextBoxFor(x => x.LastName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.LastName)), aria_describedBy = errorsWrapperId, })
+            </div>
+        }
+    }
+}
+
+@helper IsOriginalSignatoryMember()
+{
+    if (Model.DisplayPolicy.IsOriginalSignatoryMember)
+    {
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.IsOriginalSignatoryMember)">
+            @Html.LabelFor(x => x.IsOriginalSignatoryMember, "Original signatory member", new { @class = "govuk-label" })
+            @Html.ValidationMessageFor(x => x.IsOriginalSignatoryMember, null, new { @class = "govuk-error-message" })
+            @Html.DropDownListFor(x => x.IsOriginalSignatoryMember, Model.YesNoSelect, new { @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.IsOriginalSignatoryMember)) })
+        </div>
+    }
+}
+
+@helper IsOriginalChairOfTrustees()
+{
+    if (Model.DisplayPolicy.IsOriginalChairOfTrustees)
+    {
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.IsOriginalChairOfTrustees)">
+            @Html.LabelFor(x => x.IsOriginalChairOfTrustees, "Original chair of trustees", new { @class = "govuk-label" })
+            @Html.ValidationMessageFor(x => x.IsOriginalChairOfTrustees, null, new { @class = "govuk-error-message" })
+            @Html.DropDownListFor(x => x.IsOriginalChairOfTrustees, Model.YesNoSelect, new { @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.IsOriginalChairOfTrustees))})
+        </div>
+    }
+}
+
+@helper DisplayDateOfBirth()
+{
+    if (Model.DisplayPolicy.DOB)
+    {
+        @Html.EditorFor(x => x.DOB,
+            new
+            {
+                tooltipText = "This information will not be made public and will only be shared within the Department for Education, across government and with organisations where the department are legally required to do so for business-critical work and safeguarding actions."
+            })
+    }
+}
+
+@helper DisplayPostcode()
+{
+    if (Model.DisplayPolicy.PostCode)
+    {
+        var inputId = "governor-postcode-textbox";
+        var errorsWrapperId = $"{inputId}-errors";
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PostCode)">
+            <label class="govuk-label" for="@inputId">
+                Home postcode
+                <a id="PostcodeTooltipLink" href="#help-text-postcode" class="help-icon modal-link">
+                    <span class="govuk-visually-hidden">Help with the postcode field</span>
+                    @helpers.DialogHiddenPrompt()
+                </a>
+            </label>
+            <span id="@errorsWrapperId">
+                @Html.ValidationMessageFor(x => x.PostCode, null, new { @class = "govuk-error-message" })
+            </span>
+            <div class="govuk-grid-column-full helptext-container">
+                <div id="help-text-postcode">
+                    <h3 class="govuk-heading-s make-modal-header">Home postcode</h3>
+                    <p class="govuk-body">
+                        This information will not be made public and will only be shared within the Department for Education, across government and with organisations where the department are legally required to do so for business-critical work and safeguarding actions.
+                    </p>
+                </div>
+            </div>
+            @Html.TextBoxFor(x => x.PostCode, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PostCode)), id = inputId, aria_describedBy = errorsWrapperId, })
+        </div>
+    }
+}
+
+@helper DisplayTelephoneNumber()
+{
+    if (Model.DisplayPolicy.TelephoneNumber)
+    {
+        var inputId = "governor-telephone-number-textbox";
+        var errorsWrapperId = $"{inputId}-errors";
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.TelephoneNumber)">
+            <label class="govuk-label" for="@inputId">
+                Telephone number
+                <a id="TelephoneNumberTooltipLink" href="#help-text-telephonenumber" class="help-icon modal-link">
+                    <span class="govuk-visually-hidden">Help with the telephone number field</span>
+                    @helpers.DialogHiddenPrompt()
+                </a>
+            </label>
+            <span id="@errorsWrapperId">
+                @Html.ValidationMessageFor(x => x.TelephoneNumber, null, new { @class = "govuk-error-message" })
+            </span>
+            <div class="govuk-grid-column-full helptext-container">
+                <div id="help-text-telephonenumber">
+                    <h3 class="govuk-heading-s make-modal-header">Telephone number</h3>
+                    <p class="govuk-body">
+                        This information will not be made public and will only be shared within the Department for Education, across government and with organisations where the department are legally required to do so for business-critical work and safeguarding actions.
+                    </p>
+                </div>
+            </div>
+            @Html.TextBoxFor(x => x.TelephoneNumber, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.TelephoneNumber)), id = inputId, aria_describedBy = errorsWrapperId, })
+        </div>
+    }
+}
+
+@helper DisplayEmail()
+{
+    if (Model.DisplayPolicy.EmailAddress)
+    {
+        var labelText = "Email address";
+        if (Model.GovernorRole.OneOfThese(
+            eLookupGovernorRole.ChairOfGovernors,
+            eLookupGovernorRole.ChairOfTrustees,
+            eLookupGovernorRole.AccountingOfficer,
+            eLookupGovernorRole.ChiefFinancialOfficer,
+            eLookupGovernorRole.ChairOfLocalGoverningBody
+            ))
+        {
+            labelText += " (required to save record)";
+        }
+
+        var inputId = "governor-email-textbox";
+        var errorsWrapperId = $"{inputId}-errors";
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EmailAddress)">
+
+            @Html.LabelFor(x => x.EmailAddress, labelText, new { @class = "govuk-label", @for = inputId })
+            <details class="govuk-details govuk-!-margin-bottom-2" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        How this email address information is used
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p>
+                        The governance professional personal establishment email address must be added here.
+                        If the governance professional does not have an establishment email address, then their work/business email address should be entered here.
+                        If this is also their personal email address, it should be made clear to them how the email address will be used.
+                        The email address must be an up-to-date, valid, and actively monitored email address.
+                        This information is not publicly displayed on the website's interface and is classed as personal data, therefore,
+                        it cannot be shared publicly, for example, through a Freedom of Information (FOI) request.
+                        Under the conditions of Article 6(1)(e) of the UK-GDPR this information can be shared with other government departments,
+                        non-departmental public bodies, arm's length bodies and partners for official functions and tasks within the public interest to be performed.
+                    </p>
+                    <p>
+                        This information is very important as it allows the Department for Education to share important information and messages with the governance professional.
+                    </p>
+                </div>
+            </details>
+            <span id="@errorsWrapperId">
+                @Html.ValidationMessageFor(x => x.EmailAddress, null, new { @class = "govuk-error-message" })
+            </span>
+            @Html.TextBoxFor(x => x.EmailAddress, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.EmailAddress)), aria_describedBy = errorsWrapperId, })
+        </div>
+    }
+}
+
+@helper DisplayAppointmentDates()
+{
+    var isGovernorRole = false;
+    string dateAppointmentEndsTooltipMessage = null;
+    if (EnumSets.eGovernanceProfessionalRoles.Contains(Model.GovernorRole))
+    {
+        dateAppointmentEndsTooltipMessage = "A governance professional may have a fixed appointment. If this applies, enter the date their fixed appointment is due to end. If there is not a fixed appointment, leave this field blank until their appointment ends and then add the date their appointment ended date.";
+        isGovernorRole = true;
+    }
+    if (!bool.TryParse(ViewData["disableStartDate"]?.ToString(), out var disableStartDate))
     {
         disableStartDate = false;
     }
-
-    bool showReactivationWarning;
-    if (!bool.TryParse(ViewData["reactivationWarning"]?.ToString(), out showReactivationWarning))
+    if (!bool.TryParse(ViewData["reactivationWarning"]?.ToString(), out var showReactivationWarning))
     {
         showReactivationWarning = false;
     }
+    var editorPrefix = ViewData["editorPrefix"]?.ToString();
 
-    string editorPrefix = ViewData["editorPrefix"]?.ToString();
-}
-
-@if (Model.DisplayPolicy.FullName)
-{
-    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.GovernorTitleId)">
-        @Html.LabelFor(x => x.GovernorTitleId, new { @class = "govuk-label" })
-        @Html.ValidationMessageFor(x => x.GovernorTitleId, null, new { @class = "govuk-error-message" })
-        @Html.DropDownListFor(x => x.GovernorTitleId, Model.Titles, "", new { @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.GovernorTitleId)) })
-    </div>
-
-    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FirstName)">
-        @Html.LabelFor(x => x.FirstName, "First name (required to save record)", new { @class = "govuk-label" })
-        @Html.ValidationMessageFor(x => x.FirstName, null, new { @class = "govuk-error-message" })
-        @Html.TextBoxFor(x => x.FirstName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.FirstName)) })
-    </div>
-
-    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.MiddleName)">
-        @Html.LabelFor(x => x.MiddleName, new { @class = "govuk-label" })
-        @Html.ValidationMessageFor(x => x.MiddleName, null, new { @class = "govuk-error-message" })
-        @Html.TextBoxFor(x => x.MiddleName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.MiddleName)) })
-    </div>
-
-    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LastName)">
-        @Html.LabelFor(x => x.LastName, "Last name (required to save record)", new { @class = "govuk-label" })
-        @Html.ValidationMessageFor(x => x.LastName, null, new { @class = "govuk-error-message" })
-        @Html.TextBoxFor(x => x.LastName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.LastName)) })
-    </div>
-}
-
-@if (Model.DisplayPolicy.IsOriginalSignatoryMember)
-{
-    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.IsOriginalSignatoryMember)">
-        @Html.LabelFor(x => x.IsOriginalSignatoryMember, "Original signatory member", new { @class = "govuk-label" })
-        @Html.ValidationMessageFor(x => x.IsOriginalSignatoryMember, null, new { @class = "govuk-error-message" })
-        @Html.DropDownListFor(x => x.IsOriginalSignatoryMember, Model.YesNoSelect, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.IsOriginalSignatoryMember)) })
-    </div>
-}
-
-@if (Model.DisplayPolicy.IsOriginalChairOfTrustees)
-{
-    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.IsOriginalChairOfTrustees)">
-        @Html.LabelFor(x => x.IsOriginalChairOfTrustees, "Original chair of trustees", new { @class = "govuk-label" })
-        @Html.ValidationMessageFor(x => x.IsOriginalChairOfTrustees, null, new { @class = "govuk-error-message" })
-        @Html.DropDownListFor(x => x.IsOriginalChairOfTrustees, Model.YesNoSelect, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.IsOriginalChairOfTrustees))})
-    </div>
-}
-
-@if (Model.DisplayPolicy.Id)
-{
-    <div class="govuk-form-group">
-        @Html.LabelFor(x => x.GID, new { @class = "govuk-label" })
-        <input class="govuk-input" value="@Model.GID" readonly="readonly" disabled="disabled" />
-    </div>
-}
-
-@if (Model.DisplayPolicy.AppointingBodyId)
-{
-    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.AppointingBodyId)">
-        @Html.LabelFor(x => x.AppointingBodyId, "Appointing body (required to save record)", new { @class = "govuk-label" })
-        @Html.HtmlNewlines(Html.ValidationMessageFor(x => x.AppointingBodyId, null, new { @class = "govuk-error-message" }))
-        @Html.DropDownListFor(x => x.AppointingBodyId, Model.AppointingBodies, "", new { @class = string.Concat("govuk-select ",
-                   Html.TextBoxValidationClass(x => x.AppointingBodyId))})
-    </div>
-}
-
-@if (Model.DisplayPolicy.AppointmentStartDate)
-{
-    var detail = disableStartDate ? @"based on current governor's end date" : @"required to save record";
-    var title = $"Date of appointment ({detail})";
-
-    @Html.EditorFor(x => x.AppointmentStartDate, new { title, @readonly = disableStartDate, ClassPrefix = "start-date", editorPrefix })
-}
-
-@if (Model.DisplayPolicy.AppointmentEndDate)
-{
-    @Html.EditorFor(x => x.AppointmentEndDate, new { title = Model.GovernorRole == eLookupGovernorRole.Member ? "Date stepped down" : "Date term ends", showReactivationWarning })
-}
-
-@if (Model.DisplayPolicy.EmailAddress)
-{
-    var labelText = "Email address";
-    if (Model.GovernorRole.OneOfThese(
-        eLookupGovernorRole.ChairOfGovernors,
-        eLookupGovernorRole.ChairOfTrustees,
-        eLookupGovernorRole.AccountingOfficer,
-        eLookupGovernorRole.ChiefFinancialOfficer,
-        eLookupGovernorRole.ChairOfLocalGoverningBody
-        ))
+    if (Model.DisplayPolicy.AppointmentStartDate)
     {
-        labelText += " (required to save record)";
+        var startDateSaveRecord = isGovernorRole ? "(required to save record)" : "";
+        var detail = disableStartDate ? @"(based on current governor's end date)" : $@"{startDateSaveRecord}";
+        var title = $"Date of appointment {detail}";
+        @Html.EditorFor(x => x.AppointmentStartDate,
+            new { title, @readonly = disableStartDate, ClassPrefix = "start-date", editorPrefix })
     }
 
-    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EmailAddress)">
-        @Html.LabelFor(x => x.EmailAddress, labelText, new { @class = "govuk-label" })
-        @Html.ValidationMessageFor(x => x.EmailAddress, null, new { @class = "govuk-error-message" })
-        @Html.TextBoxFor(x => x.EmailAddress, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.EmailAddress)) })
-    </div>
+    if (Model.DisplayPolicy.AppointmentEndDate)
+    {
+        var titleText = Model.GovernorRole == eLookupGovernorRole.Member
+            ? "Date stepped down"
+            : isGovernorRole
+                ? "Date appointment ended"
+                : "Date term ends";
+
+        @Html.EditorFor(x => x.AppointmentEndDate,
+            new
+            {
+                title = titleText,
+                tooltipText = dateAppointmentEndsTooltipMessage,
+                showReactivationWarning,
+            })
+    }
 }
 
-@if (Model.DisplayPolicy.PostCode)
+@helper DisplayAppointingBody()
 {
-    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PostCode)">
-        @Html.LabelFor(x => x.PostCode, new { @class = "govuk-label" })
-        @Html.ValidationMessageFor(x => x.PostCode, null, new { @class = "govuk-error-message" })
-        @Html.TextBoxFor(x => x.PostCode, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PostCode)) })
-    </div>
+    if (Model.DisplayPolicy.AppointingBodyId)
+    {
+        var inputId = "appointing-body-id-textbox";
+        var errorsWrapperId = $"{inputId}-errors";
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.AppointingBodyId)">
+            @Html.LabelFor(x => x.AppointingBodyId, "Appointing body (required to save record)", new { @class = "govuk-label" })
+            <span id="@errorsWrapperId">
+                @Html.ValidationMessageFor(x => x.AppointingBodyId, null, new { @class = "govuk-error-message" })
+            </span>
+            @Html.DropDownListFor(x => x.AppointingBodyId, Model.AppointingBodies, "",
+                new { id = "AppointingBodyId", @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.AppointingBodyId)), aria_describedBy = errorsWrapperId, })
+        </div>
+    }
 }
 
-@if (Model.DisplayPolicy.DOB)
+@helper DisplayPreviousName()
 {
-    @Html.EditorFor(x => x.DOB)
-}
+    if (Model.DisplayPolicy.PreviousFullName)
+    {
+        {
+            var inputId = "previous-name-title-select";
+            var errorsWrapperId = $"{inputId}-errors";
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PreviousTitleId)">
+                @Html.LabelFor(x => x.PreviousTitleId, new { @class = "govuk-label" })
+                <span id="@errorsWrapperId">
+                    @Html.ValidationMessageFor(x => x.PreviousTitleId, null, new { @class = "govuk-error-message" })
+                </span>
+                @Html.DropDownListFor(x => x.PreviousTitleId, Model.PreviousTitles, "",
+                    new { id = "GovernorPreviousNameTitleInput", @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.PreviousTitleId)), aria_describedBy = errorsWrapperId, })
+            </div>
+        }
 
-@if (Model.DisplayPolicy.PreviousFullName)
-{
-    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PreviousTitleId)">
-        @Html.LabelFor(x => x.PreviousTitleId, new { @class = "govuk-label" })
-        @Html.ValidationMessageFor(x => x.PreviousTitleId, null, new { @class = "govuk-error-message" })
-        @Html.DropDownListFor(x => x.PreviousTitleId, Model.PreviousTitles, "", new { @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.PreviousTitleId)) })
-    </div>
+        {
+            var inputId = "previous-first-name-textbox";
+            var errorsWrapperId = $"{inputId}-errors";
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PreviousFirstName)">
+                @Html.LabelFor(x => x.PreviousFirstName, new { @class = "govuk-label" })
+                <span id="@errorsWrapperId">
+                    @Html.ValidationMessageFor(x => x.PreviousFirstName, null, new { @class = "govuk-error-message" })
+                </span>
+                @Html.TextBoxFor(x => x.PreviousFirstName,
+                    new { id = "GovernorPreviousNameFirstNameInput", @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PreviousFirstName)), aria_describedBy = errorsWrapperId, })
+            </div>
+        }
 
-    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PreviousFirstName)">
-        @Html.LabelFor(x => x.PreviousFirstName, new { @class = "govuk-label" })
-        @Html.ValidationMessageFor(x => x.PreviousFirstName, null, new { @class = "govuk-error-message" })
-        @Html.TextBoxFor(x => x.PreviousFirstName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PreviousFirstName)) })
-    </div>
+        {
+            var inputId = "previous-middle-name-textbox";
+            var errorsWrapperId = $"{inputId}-errors";
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PreviousMiddleName)">
+                @Html.LabelFor(x => x.PreviousMiddleName, new { @class = "govuk-label" })
+                <span id="@errorsWrapperId">
+                    @Html.ValidationMessageFor(x => x.PreviousMiddleName, null, new { @class = "govuk-error-message" })
+                </span>
+                @Html.TextBoxFor(x => x.PreviousMiddleName,
+                    new { id = "GovernorPreviousNameMiddleNameInput", @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PreviousMiddleName)), aria_describedBy = errorsWrapperId, })
+            </div>
+        }
 
-    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PreviousMiddleName)">
-        @Html.LabelFor(x => x.PreviousMiddleName, new { @class = "govuk-label" })
-        @Html.ValidationMessageFor(x => x.PreviousMiddleName, null, new { @class = "govuk-error-message" })
-        @Html.TextBoxFor(x => x.PreviousMiddleName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PreviousMiddleName)) })
-    </div>
-
-    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PreviousLastName)">
-        @Html.LabelFor(x => x.PreviousLastName, new { @class = "govuk-label" })
-        @Html.ValidationMessageFor(x => x.PreviousLastName, null, new { @class = "govuk-error-message" })
-        @Html.TextBoxFor(x => x.PreviousLastName, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PreviousLastName)) })
-    </div>
-}
-
-@if (Model.DisplayPolicy.TelephoneNumber)
-{
-    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.TelephoneNumber)">
-        @Html.LabelFor(x => x.TelephoneNumber, "Telephone (required to save record)", new { @class = "govuk-label" })
-        @Html.ValidationMessageFor(x => x.TelephoneNumber, null, new { @class = "govuk-error-message" })
-        @Html.TextBoxFor(x => x.TelephoneNumber, new { @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.TelephoneNumber)) })
-    </div>
+        {
+            var inputId = "previous-last-name-textbox";
+            var errorsWrapperId = $"{inputId}-errors";
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PreviousLastName)">
+                @Html.LabelFor(x => x.PreviousLastName, new { @class = "govuk-label" })
+                <span id="@errorsWrapperId">
+                    @Html.ValidationMessageFor(x => x.PreviousLastName, null, new { @class = "govuk-error-message" })
+                </span>
+                @Html.TextBoxFor(x => x.PreviousLastName,
+                    new { id = "GovernorPreviousNameLastNameInput", @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PreviousLastName)), aria_describedBy = errorsWrapperId, })
+            </div>
+        }
+    }
 }

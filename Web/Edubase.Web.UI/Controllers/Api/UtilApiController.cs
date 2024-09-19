@@ -1,7 +1,8 @@
-﻿using Edubase.Data.Repositories;
+using Edubase.Data.Repositories;
 using Edubase.Services.Texuna;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Mvc;
 
 namespace Edubase.Web.UI.Controllers.Api
 {
@@ -14,7 +15,8 @@ namespace Edubase.Web.UI.Controllers.Api
             _userPreferenceRepository = userPreferenceRepository;
         }
 
-        [Route("api/save-search-token"), HttpPost]
+        [System.Web.Http.Route("api/save-search-token"), System.Web.Http.HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IHttpActionResult> SaveSearchTokenAsync(dynamic payload)
         {
             if (User.Identity.IsAuthenticated)
@@ -24,7 +26,10 @@ namespace Edubase.Web.UI.Controllers.Api
                 await _userPreferenceRepository.UpsertAsync(prefs);
                 return StatusCode(System.Net.HttpStatusCode.NoContent);
             }
-            else return BadRequest("User not authenticated");
+            else
+            {
+                return BadRequest("User not authenticated");
+            }
         }
     }
 }

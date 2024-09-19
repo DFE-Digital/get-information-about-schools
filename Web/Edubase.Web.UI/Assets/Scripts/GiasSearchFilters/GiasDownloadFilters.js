@@ -1,19 +1,20 @@
 import supportsHistory from '../GiasHelpers/supportsHistory';
 import GiasFilterValidation from './GiasFilterValidation'
-import Vue from 'vue';
+import { createApp } from 'vue';
 import errorSummary from '../GiasVueComponents/errorSummary';
 import { initAll } from 'govuk-frontend';
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 // 'little' Vue app to manage the error summary
-const clientErrorSummary = new Vue({
-  el: '#js-error-summary',
+const clientErrorSummaryApp = createApp({
   components: {
     errorSummary,
   },
-  data: {
-    errors: []
+  data() {
+    return {
+      errors: []
+    };
   },
   methods: {
     updateErrors: function (errObj) {
@@ -24,6 +25,8 @@ const clientErrorSummary = new Vue({
     }
   }
 });
+
+const clientErrorSummary = clientErrorSummaryApp.mount('#js-error-summary');
 
 const GiasDownloadResults = {
 	init: function () {
@@ -41,7 +44,7 @@ const GiasDownloadResults = {
 			var anyChecked = false;
 			$('input:checkbox').each(function(){
 			  if (this.checked) {
-				anyChecked = true;	
+				anyChecked = true;
 			  }
 			});
 
@@ -64,7 +67,7 @@ const GiasDownloadResults = {
 		  $('input:checkbox').prop('checked',source);
 		}
 	},
-	
+
 	reload: function() {
 		const $updatedSection = document.getElementById('results-container');
 		initAll({scope: $updatedSection });
@@ -200,7 +203,7 @@ const GiasDownloadFilters = {
         });
       }
     });
-	
+
 	GiasDownloadResults.init();
   }
 }

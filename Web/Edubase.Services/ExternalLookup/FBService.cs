@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.Caching;
+using System.Threading;
 using System.Threading.Tasks;
 using Edubase.Common;
 using Edubase.Services.IntegrationEndPoints;
@@ -27,7 +28,7 @@ namespace Edubase.Services.ExternalLookup
 
         private const string FBServiceTimeoutKey = "FBService_Timeout";
 
-        private readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
+        private readonly IAsyncPolicy<HttpResponseMessage> RetryPolicy = PollyUtil.CreateRetryPolicy(
             PollyUtil.CsvSecondsToTimeSpans(
                 ConfigurationManager.AppSettings["FBService_RetryIntervals"]
             ), FBServiceTimeoutKey
@@ -103,7 +104,11 @@ namespace Edubase.Services.ExternalLookup
 
                 try
                 {
-                    using (var response = await RetryPolicy.ExecuteAsync(async () => await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead)))
+                    using (var response = await RetryPolicy.ExecuteAsync(async (context, cancellationToken) =>
+                           {
+                               return await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead,
+                                   cancellationToken);
+                           }, new Context(), CancellationToken.None))
                     {
                         var isOk = response.StatusCode == HttpStatusCode.OK;
                         MemoryCache.Default.Set(new CacheItem(key, isOk), new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.Now.AddHours(cacheTime) });

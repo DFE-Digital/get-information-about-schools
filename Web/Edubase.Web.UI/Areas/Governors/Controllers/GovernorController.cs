@@ -7,7 +7,6 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Castle.Core.Internal;
 using Edubase.Common;
-using Edubase.Common.Text;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments;
@@ -18,7 +17,6 @@ using Edubase.Services.Governors.Factories;
 using Edubase.Services.Governors.Models;
 using Edubase.Services.Groups;
 using Edubase.Services.Lookup;
-using Edubase.Services.Nomenclature;
 using Edubase.Web.UI.Areas.Governors.Models;
 using Edubase.Web.UI.Exceptions;
 using Edubase.Web.UI.Filters;
@@ -37,19 +35,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         private const string GROUP_ADD_GOVERNOR = "~/Groups/Group/Edit/{groupUId:int}/Governance/Add";
         private const string ESTAB_ADD_GOVERNOR = "~/Establishment/Edit/{establishmentUrn:int}/Governance/Add";
         private const string GROUP_EDIT_GOVERNOR = "~/Groups/Group/Edit/{groupUId:int}/Governance/Edit/{gid:int}";
-
-        private const string ESTAB_EDIT_GOVERNOR =
-            "~/Establishment/Edit/{establishmentUrn:int}/Governance/Edit/{gid:int}";
-
+        private const string ESTAB_EDIT_GOVERNOR = "~/Establishment/Edit/{establishmentUrn:int}/Governance/Edit/{gid:int}";
         private const string GROUP_REPLACE_GOVERNOR = "~/Groups/Group/Edit/{groupUId:int}/Governance/Replace/{gid:int}";
-
-        private const string ESTAB_REPLACE_GOVERNOR =
-            "~/Establishment/Edit/{establishmentUrn:int}/Governance/Replace/{gid:int}";
-
-        private const string ESTAB_REPLACE_CHAIR =
-            "~/Establishment/Edit/{establishmentUrn:int}/Governance/ReplaceChair/{gid:int}";
-
+        private const string ESTAB_REPLACE_GOVERNOR = "~/Establishment/Edit/{establishmentUrn:int}/Governance/Replace/{gid:int}";
+        private const string ESTAB_REPLACE_CHAIR = "~/Establishment/Edit/{establishmentUrn:int}/Governance/ReplaceChair/{gid:int}";
         private const string VIEW_EDIT_GOV_VIEW_NAME = "~/Areas/Governors/Views/Governor/ViewEdit.cshtml";
+        private const string EstablishmentDetails = "EstabDetails";
 
         private readonly ICachedLookupService _cachedLookupService;
         private readonly IEstablishmentReadService _establishmentReadService;
@@ -57,11 +48,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         private readonly IGovernorsWriteService _governorsWriteService;
         private readonly IGroupReadService _groupReadService;
         private readonly ILayoutHelper _layoutHelper;
-        private readonly NomenclatureService _nomenclatureService;
 
         public GovernorController(
             IGovernorsReadService governorsReadService,
-            NomenclatureService nomenclatureService,
             ICachedLookupService cachedLookupService,
             IGovernorsWriteService governorsWriteService,
             IGroupReadService groupReadService,
@@ -69,7 +58,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             ILayoutHelper layoutHelper)
         {
             _governorsReadService = governorsReadService;
-            _nomenclatureService = nomenclatureService;
             _cachedLookupService = cachedLookupService;
             _governorsWriteService = governorsWriteService;
             _groupReadService = groupReadService;
@@ -88,7 +76,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
          Route(ESTAB_EDIT_GOVERNANCE, Name = "EstabEditGovernance"),
          HttpGet, EdubaseAuthorize]
         public async Task<ActionResult> Edit(int? groupUId, int? establishmentUrn, int? removalGid,
-            int? duplicateGovernorId, bool roleAlreadyExists = false)
+            int? duplicateGovernorId, bool roleAlreadyExists = false, eLookupGovernorRole? selectedRole = null)
         {
             Guard.IsTrue(groupUId.HasValue || establishmentUrn.HasValue,
                 () => new InvalidParameterException(
@@ -102,8 +90,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 true,
                 groupUId,
                 establishmentUrn,
-                _nomenclatureService,
+                await _cachedLookupService.NationalitiesGetAllAsync(),
                 await _cachedLookupService.GovernorAppointingBodiesGetAllAsync(),
+                await _cachedLookupService.TitlesGetAllAsync(),
                 governorPermissions);
 
             var applicableRoles = domainModel.ApplicableRoles.Cast<int>();
@@ -129,6 +118,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     viewModel.GovernorShared = true;
                 }
             }
+
+            // Set the selected selectedRole (used to pre-fill the drop-down where there is an error)
+            ViewData.Add("SelectedGovernorRole", selectedRole);
 
             if (duplicateGovernorId.HasValue)
             {
@@ -203,7 +195,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 if (ModelState.IsValid)
                 {
                     var url = viewModel.EstablishmentUrn.HasValue
-                        ? $"{Url.RouteUrl("EstabDetails", new { id = viewModel.EstablishmentUrn, saved = true })}#school-governance"
+                        ? $"{Url.RouteUrl(EstablishmentDetails, new { id = viewModel.EstablishmentUrn, saved = true })}#school-governance"
                         : $"{Url.RouteUrl("GroupDetails", new { id = viewModel.GroupUId, saved = true })}#governance";
 
                     return Redirect(url);
@@ -255,7 +247,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 if (!await RoleAllowed(role.Value, groupUId, establishmentUrn, User))
                 {
                     return RedirectToRoute(establishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance",
-                        new { establishmentUrn, groupUId, roleAlreadyExists = true });
+                        new { establishmentUrn, groupUId, roleAlreadyExists = true, selectedRole = role });
                 }
 
                 if (establishmentUrn.HasValue && EnumSets.eSharedGovernorRoles.Contains(role.Value))
@@ -348,7 +340,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             await _layoutHelper.PopulateLayoutProperties(viewModel, establishmentUrn, groupUId, User);
 
-            viewModel.GovernorRoleName = GovernorRoleNameFactory.Create(role.Value);
+            viewModel.GovernorRoleName = GovernorRoleNameFactory.Create(role.Value, removeGroupEstablishmentSuffix: true);
+            viewModel.GovernorRoleNameMidSentence = GovernorRoleNameFactory.Create(role.Value, isMidSentence: true, removeGroupEstablishmentSuffix: true);
             viewModel.GovernorRole = role.Value;
             await PopulateSelectLists(viewModel);
             viewModel.DisplayPolicy =
@@ -440,24 +433,86 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             viewModel.SelectedPreviousExistingNonChairId = model.Id;
         }
 
-        private async Task<bool> RoleAllowed(eLookupGovernorRole roleId, int? groupUId, int? establishmentUrn,
+        public async Task<bool> RoleAllowed(eLookupGovernorRole role, int? groupUId, int? establishmentUrn,
             IPrincipal user)
         {
-            if (EnumSets.eSingularGovernorRoles.Contains(roleId))
-            {
-                var existingGovernors = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, user);
-                if (roleId == eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody ||
-                    roleId == eLookupGovernorRole.ChairOfLocalGoverningBody)
-                {
-                    return !existingGovernors.CurrentGovernors.Any(
-                        g => g.RoleId == (int) eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody ||
-                             g.RoleId == (int) eLookupGovernorRole.ChairOfLocalGoverningBody);
-                }
+            var existingGovernors = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, user);
+            var existingGovernorRoleIds = existingGovernors
+                .CurrentGovernors
+                .Select(g => g.RoleId)
+                .OfType<int>()
+                .ToHashSet();
 
-                return existingGovernors.CurrentGovernors.All(g => g.RoleId != (int) roleId);
+            // Only a single chair of a local governing body may be attached (either directly, or via shared role)
+            if (IsEquivalentRoleAlreadyPresent(role, EnumSets.eChairOfLocalGoverningBodyRoles, existingGovernorRoleIds))
+            {
+                return false;
             }
 
+            var checkRolePresenceInMat = CheckMatLevel(role, existingGovernorRoleIds);
+
+            if (checkRolePresenceInMat && IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
+            {
+                return false;
+            }
+
+            // Where the new governor is a role which permits only a single appointee, forbid if an exact match is found
+            var isRoleWhichPermitsOnlySingleAppointee = EnumSets.eSingularGovernorRoles.Contains(role);
+            var exactCurrentGovernorTypeMatchFound = existingGovernorRoleIds.Contains((int) role);
+            if (isRoleWhichPermitsOnlySingleAppointee && exactCurrentGovernorTypeMatchFound)
+            {
+                return false;
+            }
+
+            // Allow, if no rule met to forbid creating a new governor of this type
             return true;
+        }
+
+        private static bool CheckMatLevel(eLookupGovernorRole role, HashSet<int> existingGovernorRoleIds)
+        {
+            // At MAT level you should be able to have a 'Shared governance professional - group' and a 'Governance professional to a MAT'
+            var isGroupPresent = existingGovernorRoleIds.Any(g => g == (int) eLookupGovernorRole.Group_SharedGovernanceProfessional);
+            var isMatPresent = existingGovernorRoleIds.Any(m => m == (int) eLookupGovernorRole.GovernanceProfessionalToAMat);
+            var isAddingGroup = role == eLookupGovernorRole.Group_SharedGovernanceProfessional;
+            var isAddingMat = role == eLookupGovernorRole.GovernanceProfessionalToAMat;
+
+            var checkRolePresence = false;
+
+            if (isAddingGroup || isAddingMat)
+            {
+                if (!((isAddingMat && isGroupPresent) || (isAddingGroup && isMatPresent)))
+                {
+                    checkRolePresence = true;
+                }
+            }
+            else
+            {
+                checkRolePresence = true;
+            }
+
+            return checkRolePresence;
+        }
+
+        /// <param name="governorRole">The role under consideration</param>
+        /// <param name="rolesToConsiderEquivalent">Roles which must not co-exist for the purposes of this check - for example, we must not (simultaneously) have a chairperson and a "shared" chairperson.</param>
+        /// <param name="existingRoleIds">The collection of governors to search for equivalent</param>
+        /// <returns><c>true</c>, where the role ID is match exactly or with an existing role which it may not co-exist with, else <c>false</c>.</returns>
+        private static bool IsEquivalentRoleAlreadyPresent(
+            eLookupGovernorRole governorRole,
+            IEnumerable<eLookupGovernorRole> rolesToConsiderEquivalent,
+            IEnumerable<int> existingRoleIds
+        )
+        {
+            var equivalentRoleIds = rolesToConsiderEquivalent
+                .Select(role => (int) role)
+                .ToHashSet();
+
+            var isRoleUnderConsideration = equivalentRoleIds.Contains((int) governorRole);
+            var existingMatchFound = existingRoleIds
+                .Any(existingRoleId => equivalentRoleIds.Contains(existingRoleId));
+
+            var isGovernanceProfessionalDuplicate = isRoleUnderConsideration && existingMatchFound;
+            return isGovernanceProfessionalDuplicate;
         }
 
         [Route(GROUP_ADD_GOVERNOR), Route(ESTAB_ADD_GOVERNOR),
@@ -506,6 +561,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             };
 
             var validationResults = await _governorsWriteService.ValidateAsync(governorModel, User);
+            validationResults = CheckEndDateNotBeforeStartDate(governorModel, validationResults);
             validationResults.ApplyToModelState(ControllerContext, true);
 
             if (ModelState.IsValid)
@@ -560,7 +616,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     }
 
                     var url = viewModel.EstablishmentUrn.HasValue
-                        ? $"{Url.RouteUrl("EstabDetails", new { id = viewModel.EstablishmentUrn, saved = true })}#school-governance"
+                        ? $"{Url.RouteUrl(EstablishmentDetails, new { id = viewModel.EstablishmentUrn, saved = true })}#school-governance"
                         : $"{Url.RouteUrl("GroupDetails", new { id = viewModel.GroupUId, saved = true })}#governance";
 
                     return Redirect(url);
@@ -670,8 +726,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     .ToList(),
                 NewChairType = ReplaceChairViewModel.ChairType.LocalChair,
                 Role = (eLookupGovernorRole) governor.RoleId,
-                RoleName = GovernorRoleNameFactory.Create((eLookupGovernorRole) governor.RoleId,
-                    eTextCase.Lowerase)
+                RoleName = GovernorRoleNameFactory.Create((eLookupGovernorRole) governor.RoleId, isMidSentence: true)
             };
 
             var models = await _governorsReadService.GetGovernorListAsync(establishmentUrn, principal: User);
@@ -725,7 +780,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     if (!validation.HasErrors)
                     {
                         var url =
-                            $"{Url.RouteUrl("EstabDetails", new { id = model.Urn, saved = true })}#school-governance";
+                            $"{Url.RouteUrl(EstablishmentDetails, new { id = model.Urn, saved = true })}#school-governance";
                         return Redirect(url);
                     }
 
@@ -782,7 +837,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         }
 
                         var url =
-                            $"{Url.RouteUrl("EstabDetails", new { id = model.Urn, saved = true })}#school-governance";
+                            $"{Url.RouteUrl(EstablishmentDetails, new { id = model.Urn, saved = true })}#school-governance";
                         return Redirect(url);
                     }
 
@@ -882,9 +937,10 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 false,
                 groupUId,
                 establishmentUrn,
-                _nomenclatureService,
+                await _cachedLookupService.NationalitiesGetAllAsync(),
                 await _cachedLookupService.GovernorAppointingBodiesGetAllAsync(),
-                governorPermissions);
+                await _cachedLookupService.TitlesGetAllAsync(),
+                    governorPermissions);
 
             if (establishmentUrn.HasValue || establishmentModel != null) // governance view for an establishment
             {
@@ -938,6 +994,34 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     }
                 }
             }
+        }
+
+        private ValidationEnvelopeDto CheckEndDateNotBeforeStartDate(GovernorModel governorModel, ValidationEnvelopeDto validationResults)
+        {
+
+            if (validationResults.HasErrors)
+            {
+                return validationResults;
+            }
+
+            if (governorModel.AppointmentStartDate != null && governorModel.AppointmentEndDate != null &&
+                governorModel.AppointmentStartDate >= governorModel.AppointmentEndDate)
+            {
+                validationResults = new ValidationEnvelopeDto
+                {
+                    Errors = new List<ApiError>
+                    {
+                        new ApiError
+                        {
+                            Code = "error.wrongValue.stepdownDate.validate.field.edit.governor_appointmentEndDate",
+                            Fields = "appointmentEndDate",
+                            Message = "Date appointment ended must not be before the date of appointment"
+                        }
+                    }
+                };
+            }
+
+            return validationResults;
         }
     }
 }

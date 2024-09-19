@@ -61,6 +61,8 @@ namespace Edubase.Web.UI
     {
         public static AutofacDependencyResolver AutofacDependencyResolver { get; private set; }
 
+        private const string Basic = "Basic";
+
         public static void Register(HttpConfiguration config)
         {
             var builder = new ContainerBuilder();
@@ -138,7 +140,6 @@ namespace Edubase.Web.UI
             builder.RegisterType<ExternalLookupService>().As<IExternalLookupService>().SingleInstance().AutoActivate();
 
             builder.RegisterInstance(AutoMapperWebConfiguration.CreateMapper()).As<IMapper>();
-            builder.RegisterInstance(new NomenclatureService()).AsSelf();
 
             builder.RegisterType<EstablishmentReadApiService>().As<IEstablishmentReadService>();
             builder.RegisterType<EstablishmentDownloadApiService>().As<IEstablishmentDownloadService>();
@@ -173,8 +174,28 @@ namespace Edubase.Web.UI
                 .As<ILookupService>()
                 .As<IUserDependentLookupService>();
 
+            // named HttpClient and HttpClientWrapper used specifically for searching Governors
+            builder.RegisterInstance(CreateGovernorSearchClient(
+                ConfigurationManager.AppSettings["GovernorSearchApiBaseAddress"],
+                ConfigurationManager.AppSettings["GovernorSearchApiUsername"],
+                ConfigurationManager.AppSettings["GovernorSearchApiPassword"]
+            )).SingleInstance().Named<HttpClient>("GovernorSearchApiClient");
+
+            builder.Register(c => new HttpClientWrapper(
+                    c.ResolveNamed<HttpClient>("GovernorSearchApiClient"),
+                    c.Resolve<JsonMediaTypeFormatter>(),
+                    c.Resolve<IClientStorage>(),
+                    c.Resolve<ApiRecorderSessionItemRepository>()
+                ))
+                .Named<HttpClientWrapper>("GovernorSearchHttpClientWrapper");
+
+            builder.Register(c => new GovernorsReadApiService(
+                    c.Resolve<HttpClientWrapper>(),
+                    c.ResolveNamed<HttpClientWrapper>("GovernorSearchHttpClientWrapper"),
+                    c.Resolve<IEstablishmentReadService>()))
+                .As<IGovernorsReadService>();
+
             builder.RegisterType<GovernorDownloadApiService>().As<IGovernorDownloadService>();
-            builder.RegisterType<GovernorsReadApiService>().As<IGovernorsReadService>();
             builder.RegisterType<EstablishmentWriteApiService>().As<IEstablishmentWriteService>();
             builder.RegisterType<GovernorsWriteApiService>().As<IGovernorsWriteService>();
             builder.RegisterType<SecurityApiService>().As<ISecurityService>();
@@ -202,6 +223,7 @@ namespace Edubase.Web.UI
             builder.RegisterType<BrowserClientStorage>().As<IClientStorage>().InstancePerRequest();
 
             builder.RegisterType<ApiRecorderSessionItemRepository>().AsSelf().SingleInstance();
+            builder.RegisterType<WebLogItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<GlossaryRepository>().AsSelf().SingleInstance();
             builder.RegisterType<FaqItemRepository>().AsSelf().SingleInstance();
             builder.RegisterType<FaqGroupRepository>().AsSelf().SingleInstance();
@@ -239,7 +261,7 @@ namespace Edubase.Web.UI
 
             if (apiUsername != null && apiPassword != null)
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Basic,
                     new BasicAuthCredentials(apiUsername, apiPassword).ToString());
             }
 
@@ -261,7 +283,7 @@ namespace Edubase.Web.UI
 
             if (!apiUsername.IsNullOrEmpty() && !apiPassword.IsNullOrEmpty())
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Basic,
                     new BasicAuthCredentials(apiUsername, apiPassword).ToString());
             }
 
@@ -286,7 +308,7 @@ namespace Edubase.Web.UI
 
             if (!apiUsername.IsNullOrEmpty() && !apiPassword.IsNullOrEmpty())
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Basic,
                     new BasicAuthCredentials(apiUsername, apiPassword).ToString());
             }
 
@@ -299,6 +321,20 @@ namespace Edubase.Web.UI
 
         public static HttpClient CreateLookupClient(string lookupApiAddress, string lookupApiUsername, string lookupApiPassword)
         {
+            // If the given values are empty, default to using the generic/standard API address and credentials
+            if (string.IsNullOrWhiteSpace(lookupApiAddress))
+            {
+                lookupApiAddress = ConfigurationManager.AppSettings["TexunaApiBaseAddress"];
+            }
+            if (string.IsNullOrEmpty(lookupApiUsername))
+            {
+                lookupApiUsername = ConfigurationManager.AppSettings["api:Username"];
+            }
+            if (string.IsNullOrEmpty(lookupApiPassword))
+            {
+                lookupApiPassword = ConfigurationManager.AppSettings["api:Password"];
+            }
+
             var lookupUri = new Uri(lookupApiAddress);
 
             if (!int.TryParse(ConfigurationManager.AppSettings["LookupClient_Timeout"], out var timeoutsettings))
@@ -314,8 +350,46 @@ namespace Edubase.Web.UI
 
             if (!string.IsNullOrEmpty(lookupApiUsername) && !string.IsNullOrEmpty(lookupApiPassword))
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Basic,
                     new BasicAuthCredentials(lookupApiUsername, lookupApiPassword).ToString());
+            }
+
+            return client;
+        }
+
+        public static HttpClient CreateGovernorSearchClient(string governorSearchApiAddress, string governorSearchApiUsername, string governorSearchApiPassword)
+        {
+            // If the given values are empty, default to using the generic/standard API address and credentials
+            if (string.IsNullOrWhiteSpace(governorSearchApiAddress))
+            {
+                governorSearchApiAddress = ConfigurationManager.AppSettings["TexunaApiBaseAddress"];
+            }
+            if (string.IsNullOrEmpty(governorSearchApiUsername))
+            {
+                governorSearchApiUsername = ConfigurationManager.AppSettings["api:Username"];
+            }
+            if (string.IsNullOrEmpty(governorSearchApiPassword))
+            {
+                governorSearchApiPassword = ConfigurationManager.AppSettings["api:Password"];
+            }
+
+            var governorSearchUri = new Uri(governorSearchApiAddress);
+
+            if (!int.TryParse(ConfigurationManager.AppSettings["GovernorSearchClient_Timeout"], out var timeoutsettings))
+            {
+                timeoutsettings = 30;
+            }
+
+            var client = new HttpClient(new HttpClientHandler { UseCookies = false })
+            {
+                BaseAddress = governorSearchUri,
+                Timeout = TimeSpan.FromSeconds(timeoutsettings)
+            };
+
+            if (!string.IsNullOrEmpty(governorSearchApiUsername) && !string.IsNullOrEmpty(governorSearchApiPassword))
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Basic,
+                    new BasicAuthCredentials(governorSearchApiUsername, governorSearchApiPassword).ToString());
             }
 
             return client;
