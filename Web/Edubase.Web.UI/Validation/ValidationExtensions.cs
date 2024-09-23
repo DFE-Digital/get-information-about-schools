@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Edubase.Services.Domain;
@@ -9,26 +8,8 @@ namespace Edubase.Web.UI.Validation
 {
     public static class ValidationExtensions
     {
-        /// <summary>
-        ///     This was created to handle values from the API that do not map to elements on the UI
-        ///     Ideally this would not be needed and there should be no expectation of items in the UI
-        ///     matching the API. Without time to fully redesign the architecture of this service
-        ///     this has been introduced as another bit tech debt to resolve an immediate issue.
-        ///     2024-09-12 Scott Dawson
-        /// </summary>
-        private static readonly Dictionary<string, string> AlternateValues = new Dictionary<string, string>
-        {
-            { "appointmentDate", "AppointmentStartDate" }, { "stepdownDate", "AppointmentEndDate" }
-        };
-
         private static string BuildFieldName(string errorFields, ControllerContext controllerContext)
         {
-            //check if an alternate field name is recorded in the AlternateValues dictionary
-            if (AlternateValues.TryGetValue(errorFields, out var result))
-            {
-                return result;
-            }
-
             // correct the naming convention by upper casing the first letter
             var fieldName = errorFields;
             if (fieldName.Length > 0)

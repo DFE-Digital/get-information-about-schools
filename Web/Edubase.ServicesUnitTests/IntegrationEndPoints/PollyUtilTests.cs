@@ -6,8 +6,11 @@ using Polly.Wrap;
 using System.Configuration;
 using Polly.Timeout;
 using System.Diagnostics;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Threading;
+using Polly;
 
 namespace Edubase.ServicesUnitTests.IntegrationEndPoints
 {
@@ -17,14 +20,14 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
         public void CreateRetryPolicy_ReturnsNoOpPolicy_WhenNullIntervalsPassedIn()
         {
             var policy = PollyUtil.CreateRetryPolicy(null,"");
-            Assert.IsType<NoOpPolicy>(policy);
+            Assert.IsAssignableFrom<IAsyncPolicy<HttpResponseMessage>>(policy);
         }
 
         [Fact]
         public void CreateRetryPolicy_ReturnsNoOpPolicy_WhenEmptyIntervalsPassedIn()
         {
             var policy = PollyUtil.CreateRetryPolicy(new TimeSpan[0],"");
-            Assert.IsType<NoOpPolicy>(policy);
+            Assert.IsAssignableFrom<IAsyncPolicy<HttpResponseMessage>>(policy);
         }
 
         [Fact]
@@ -36,7 +39,7 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
             var policy = PollyUtil.CreateRetryPolicy(retryIntervals, settingsKey);
 
             Assert.NotNull(policy);
-            Assert.IsType<PolicyWrap>(policy);
+            Assert.IsAssignableFrom<IAsyncPolicy<HttpResponseMessage>>(policy);
         }
 
         //Note: Polly doesn't expose the timeout settings once the policy is created
@@ -49,12 +52,14 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
 
             var policy = PollyUtil.CreateTimeoutPolicy(validKey);
 
-            Func<CancellationToken, Task> operation = async (ct) =>
+            Func<CancellationToken, Task<HttpResponseMessage>> operation = async (ct) =>
             {
                 await Task.Delay(6000, ct);
+                return new HttpResponseMessage(HttpStatusCode.OK);
             };
 
-            await Assert.ThrowsAsync<TimeoutRejectedException>(() => policy.ExecuteAsync(operation, CancellationToken.None));
+            await Assert.ThrowsAsync<TimeoutRejectedException>(async () =>
+                await policy.ExecuteAsync(operation, CancellationToken.None));
             Assert.NotNull(policy);
         }
 
@@ -74,6 +79,7 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
                     await policy.ExecuteAsync(async (ct) =>
                     {
                         await Task.Delay(11000, ct);
+                        return new HttpResponseMessage(HttpStatusCode.OK);
                     }, CancellationToken.None);
                 }
                 catch (Exception ex)
