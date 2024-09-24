@@ -56,7 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Polly">
-      <Version>6.1.2</Version>
+      <Version>8.4.1</Version>
     </PackageReference>
     <PackageReference Include="xunit">
       <Version>2.9.0</Version>
