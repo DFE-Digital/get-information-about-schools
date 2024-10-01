@@ -11,7 +11,7 @@ namespace Edubase.Data.Repositories.TableStorage
     using System;
     using Microsoft.WindowsAzure.Storage.RetryPolicies;
 
-    public class TableStorageBase<T> where T : class, ITableEntity, new()
+    public class TableStorageBase<T> where T : class, ITableEntity
     {
         public TableStorageBase(string connectionStringName, string tableName = "")
         {
