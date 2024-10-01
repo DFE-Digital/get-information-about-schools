@@ -19,7 +19,6 @@ namespace Edubase.Data.Entity
 
         public string Id => this.RowKey + this.PartitionKey;
 
-
         public string ClientIpAddress { get; set; }
 
         public string HttpMethod { get; set; }
@@ -35,5 +34,7 @@ namespace Edubase.Data.Entity
         public string UserId { get; set; }
 
         public string UserName { get; set; }
+
+        public string Severity { get; set; }
     }
 }

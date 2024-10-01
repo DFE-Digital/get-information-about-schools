@@ -130,5 +130,32 @@ namespace Edubase.Data.Repositories
 
             return webLogMessages;
         }
+
+        public async Task SaveLogsAsync(List<AZTLoggerMessages> logMessagesList)
+        {
+            if (logMessagesList == null || logMessagesList.Count == 0)
+            {
+                return;
+            }
+
+            var batch = new TableBatchOperation();
+
+            foreach (var logMessage in logMessagesList)
+            {
+                batch.InsertOrReplace(logMessage);
+
+                // azure table storage has a limit of 100 operations per batch
+                if (batch.Count >= 100)
+                {
+                    await Table.ExecuteBatchAsync(batch);
+                    batch.Clear();
+                }
+            }
+
+            if (batch.Count > 0)
+            {
+                await Table.ExecuteBatchAsync(batch);
+            }
+        }
     }
 }

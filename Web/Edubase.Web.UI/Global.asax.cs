@@ -4,18 +4,23 @@ using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Validation;
 using FluentValidation.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Net.Security;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Http;
 using System.Xml;
 using AzureTableLogger;
+using AzureTableLogger.LogMessages;
+using Edubase.Data.Entity;
+using Edubase.Data.Repositories;
 using Edubase.Services.ExternalLookup;
 using Newtonsoft.Json.Serialization;
 using Edubase.Web.UI.Helpers.ModelBinding;
@@ -211,7 +216,7 @@ namespace Edubase.Web.UI
             };
         }
 
-        protected void Application_Error(object sender, EventArgs e)
+        protected async void Application_Error(object sender, EventArgs e)
         {
             if (bool.Parse(System.Configuration.ConfigurationManager.AppSettings["EnableErrorReporting"]))
             {
@@ -222,11 +227,45 @@ namespace Edubase.Web.UI
                     Response.Redirect("/Unauthorized/LoginFailed");
                 }
 
-                if (ctx != null && ex != null)
+                var webLogAzt = new List<AZTLoggerMessages>();
+
+                if (ex is TaskCanceledException || ex is ArgumentException || ex is InvalidOperationException)
                 {
+                    webLogAzt.Add(new AZTLoggerMessages
+                    {
+                        Message = ex.Message,
+                        Exception = ex.GetType().Name,
+                        Severity = "Information",
+                        Timestamp = DateTimeOffset.Now
+                    });
+                }
+                else if (ex is HttpAntiForgeryException)
+                {
+                    webLogAzt.Add(new AZTLoggerMessages
+                    {
+                        Message = ex.Message,
+                        Exception = ex.GetType().Name,
+                        Severity = "Warning",
+                        Timestamp = DateTimeOffset.Now
+                    });
+                }
+                else if (ctx != null && ex != null)
+                {
+                    webLogAzt.Add(new AZTLoggerMessages
+                    {
+                        Message = ex.Message,
+                        Exception = ex.GetType().Name,
+                        Severity = "Warning",
+                        Timestamp = DateTimeOffset.Now
+                    });
+
                     var msg = IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ExceptionHandler>().Log(new HttpContextWrapper(ctx), ex);
                     ctx.Items["edubase_error_code"] = msg.Id;
                 }
+
+                var webLogRepository = new WebLogItemRepository();
+                await webLogRepository.SaveLogsAsync(webLogAzt);
+                Server.ClearError();
             }
         }
 
@@ -250,7 +289,6 @@ namespace Edubase.Web.UI
                     }
                 });
             }
-
         }
 
         private static XmlReaderSettings GetSecureXmlReaderSettings()
