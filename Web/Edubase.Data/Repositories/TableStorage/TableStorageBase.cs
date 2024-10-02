@@ -40,17 +40,6 @@ namespace Edubase.Data.Repositories.TableStorage
             Table.CreateIfNotExists();
         }
 
-        public async Task InsertOrUpdateAsync(T entity)
-        {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
-
-            var insertOrReplace = TableOperation.InsertOrReplace(entity);
-            await Table.ExecuteAsync(insertOrReplace);
-        }
-
         public CloudTable Table { get; }
     }
 }
