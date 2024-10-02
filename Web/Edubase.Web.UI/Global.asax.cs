@@ -216,7 +216,7 @@ namespace Edubase.Web.UI
             };
         }
 
-        protected async void Application_Error(object sender, EventArgs e)
+        protected void Application_Error(object sender, EventArgs e)
         {
             if (bool.Parse(System.Configuration.ConfigurationManager.AppSettings["EnableErrorReporting"]))
             {
@@ -227,45 +227,11 @@ namespace Edubase.Web.UI
                     Response.Redirect("/Unauthorized/LoginFailed");
                 }
 
-                var webLogAzt = new List<AZTLoggerMessages>();
-
-                if (ex is TaskCanceledException || ex is ArgumentException || ex is InvalidOperationException)
+                if (ctx != null && ex != null)
                 {
-                    webLogAzt.Add(new AZTLoggerMessages
-                    {
-                        Message = ex.Message,
-                        Exception = ex.GetType().Name,
-                        Severity = "Information",
-                        Timestamp = DateTimeOffset.Now
-                    });
-                }
-                else if (ex is HttpAntiForgeryException)
-                {
-                    webLogAzt.Add(new AZTLoggerMessages
-                    {
-                        Message = ex.Message,
-                        Exception = ex.GetType().Name,
-                        Severity = "Warning",
-                        Timestamp = DateTimeOffset.Now
-                    });
-                }
-                else if (ctx != null && ex != null)
-                {
-                    webLogAzt.Add(new AZTLoggerMessages
-                    {
-                        Message = ex.Message,
-                        Exception = ex.GetType().Name,
-                        Severity = "Warning",
-                        Timestamp = DateTimeOffset.Now
-                    });
-
                     var msg = IocConfig.AutofacDependencyResolver.ApplicationContainer.Resolve<ExceptionHandler>().Log(new HttpContextWrapper(ctx), ex);
-                    ctx.Items["edubase_error_code"] = msg.Id;
+                ctx.Items["edubase_error_code"] = msg.Id;
                 }
-
-                var webLogRepository = new WebLogItemRepository();
-                await webLogRepository.SaveLogsAsync(webLogAzt);
-                Server.ClearError();
             }
         }
 

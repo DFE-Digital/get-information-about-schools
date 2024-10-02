@@ -1,6 +1,7 @@
 using System;
 using System.Configuration;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
@@ -99,7 +100,9 @@ namespace Edubase.Web.UI.Filters
                 // ignored
             }
 
-            WebLogMessage msg = new WebLogMessage {
+            var severity = GetSeverityFromException(exception);
+
+            var msg = new WebLogMessage {
                 ClientIpAddress = ctx?.Request?.UserHostAddress,
                 Environment = ConfigurationManager.AppSettings["Environment"],
                 Exception = exception?.ToString(),
@@ -121,6 +124,22 @@ namespace Edubase.Web.UI.Filters
             }
 
             return msg;
+        }
+
+        private string GetSeverityFromException(Exception ex)
+        {
+            if (ex is TaskCanceledException || ex is ArgumentException || ex is InvalidOperationException)
+            {
+                return "Information";
+            }
+            else if (ex is HttpAntiForgeryException)
+            {
+                return "Warning";
+            }
+            else
+            {
+                return "Error";
+            }
         }
     }
 }
