@@ -21,7 +21,7 @@ namespace Edubase.Services.IntegrationEndPoints.OSPlaces
 
         private const string OSPlacesApiServicesTimeoutKey = "OSPlacesApiServices_Timeout";
 
-        private readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
+        private readonly IAsyncPolicy<HttpResponseMessage> RetryPolicy = PollyUtil.CreateRetryPolicy(
             PollyUtil.CsvSecondsToTimeSpans(
                 ConfigurationManager.AppSettings["OSPlacesApiServices_RetryIntervals"]
             ), OSPlacesApiServicesTimeoutKey

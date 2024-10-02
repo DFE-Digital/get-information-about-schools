@@ -17,31 +17,31 @@ namespace Edubase.Services.IntegrationEndPoints
         ///     A retry policy that handles <see cref="HttpRequestException"/> and waits for the specified retry intervals.
         ///     If <paramref name="retryIntervals"/> is null or empty, returns a no-op policy that doesn't perform any retries.
         /// </returns>
-        public static Policy CreateRetryPolicy(TimeSpan[] retryIntervals, string settingsKey)
+        public static IAsyncPolicy<HttpResponseMessage> CreateRetryPolicy(TimeSpan[] retryIntervals, string settingsKey)
         {
             if(retryIntervals is null || retryIntervals.Length == 0)
             {
-                return Policy.NoOp();
+                return Policy.NoOpAsync<HttpResponseMessage>();
             }
 
-            var retryPolicy = Policy
+            var retryPolicy = Policy<HttpResponseMessage>
                 .Handle<HttpRequestException>()
                 .Or<TaskCanceledException>()
                 .WaitAndRetryAsync(retryIntervals);
 
             var timeoutPolicy = CreateTimeoutPolicy(settingsKey);
 
-            return Policy.WrapAsync(retryPolicy, timeoutPolicy);
+            return Policy.WrapAsync<HttpResponseMessage>(retryPolicy, timeoutPolicy);
         }
 
-        public static Policy CreateTimeoutPolicy(string settingsKey)
+        public static IAsyncPolicy<HttpResponseMessage> CreateTimeoutPolicy(string settingsKey)
         {
             if (!int.TryParse(ConfigurationManager.AppSettings[settingsKey], out var timeoutSettings))
             {
                 timeoutSettings = 10;
             }
 
-            return Policy.TimeoutAsync(TimeSpan.FromSeconds(timeoutSettings));            
+            return Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(timeoutSettings));
         }
 
         /// <summary>
