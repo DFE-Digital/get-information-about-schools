@@ -102,6 +102,8 @@ namespace Edubase.Web.UI.Filters
 
             var severity = GetSeverityFromException(exception);
 
+            var detailedMessage = $"[{severity} {exception?.GetBaseException().Message}]";
+
             var msg = new WebLogMessage {
                 ClientIpAddress = ctx?.Request?.UserHostAddress,
                 Environment = ConfigurationManager.AppSettings["Environment"],
@@ -109,7 +111,7 @@ namespace Edubase.Web.UI.Filters
                 HttpMethod = httpMethod,
                 Level = LogMessage.LogLevel.ERROR,
                 ReferrerUrl = ctx?.Request.UrlReferrer?.ToString(),
-                Message = exception?.GetBaseException().Message,
+                Message = detailedMessage,
                 Url = ctx?.Request.Url?.ToString(),
                 UserAgent = ctx?.Request.UserAgent,
                 UserId = userId,
