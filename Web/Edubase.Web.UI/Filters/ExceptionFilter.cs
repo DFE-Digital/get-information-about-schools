@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 using Microsoft.AspNet.Identity;
 using Edubase.Common;
 using Edubase.Services.Exceptions;
@@ -29,6 +30,15 @@ namespace Edubase.Web.UI.Filters
                 throw new ArgumentNullException(nameof(filterContext));
             }
 
+            var ctx = filterContext.HttpContext;
+            var exception = filterContext.Exception;
+
+            if (!ShouldLogException(exception, ctx))
+            {
+                filterContext.ExceptionHandled = true;
+                return;
+            }
+
             if (filterContext.Exception is EdubaseException) // domain / purposeful exception - not logged
             {
                 var domainException = filterContext.Exception as EdubaseException;
@@ -47,7 +57,7 @@ namespace Edubase.Web.UI.Filters
             }
             else // unhandled/unexpected exception; log it and tell the user.
             {
-                var ctx = filterContext.HttpContext;
+
                 var msg = Log(ctx, filterContext.Exception);
 
                 // Making this "forwarded-header-aware" is not strictly required,
@@ -87,6 +97,11 @@ namespace Edubase.Web.UI.Filters
 
         public WebLogMessage Log(HttpContextBase ctx, Exception exception)
         {
+            if (!ShouldLogException(exception, ctx))
+            {
+                return null;
+            }
+
             string userId = null, userName = null;
             string httpMethod = ctx?.Request?.HttpMethod ?? string.Empty;
 
@@ -126,6 +141,23 @@ namespace Edubase.Web.UI.Filters
             }
 
             return msg;
+        }
+
+        private bool ShouldLogException(Exception ex, HttpContextBase context)
+        {
+            if (ex is HttpAntiForgeryException)
+            {
+                // can split, so in this case: if new session it returns false as likely a timeout or use inactivity
+                // - if not then might be a bigger issue and should be logged
+                return context?.Session != null && context.Session.IsNewSession;
+            }
+
+            if (ex is TaskCanceledException)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private string GetSeverityFromException(Exception ex)
