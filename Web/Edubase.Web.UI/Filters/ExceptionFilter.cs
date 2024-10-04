@@ -162,7 +162,7 @@ namespace Edubase.Web.UI.Filters
 
         private string GetSeverityFromException(Exception ex)
         {
-            if (ex is TaskCanceledException || ex is ArgumentException || ex is InvalidOperationException)
+            if (ex is ArgumentException || ex is InvalidOperationException)
             {
                 return "Information";
             }
