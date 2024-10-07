@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Edubase.Services.Enums;
 using Edubase.Web.UI.Validation;
 using FluentValidation;
@@ -23,7 +22,18 @@ namespace Edubase.Web.UI.Areas.Governors.Models.Validators
                     .WithSummaryMessage("An appointment start date is required");
 
                 RuleFor(x => x)
-                    .Must(x => x.SelectedGovernorId != null && x.Governors.Single(g => g.Id == int.Parse(x.SelectedGovernorId)).AppointmentEndDate.IsValid())
+                    .Must(x =>
+                    {
+                        if(x.Role == eLookupGovernorRole.Establishment_SharedGovernanceProfessional)
+                        {
+                            // End date is mandatory for shared governors at the establishment level,
+                            // But is optional for shared governance professional - establishment (per #230911).
+                            return true;
+                        }
+
+                        return x.SelectedGovernorId != null
+                               && x.Governors.Single(g => g.Id == int.Parse(x.SelectedGovernorId)).AppointmentEndDate.IsValid();
+                    })
                     .WithMessage("Required")
                     .WithSummaryMessage("An appointment end date is required");
             });
@@ -41,7 +51,18 @@ namespace Edubase.Web.UI.Areas.Governors.Models.Validators
                     .WithSummaryMessage("An appointment start date is required");
 
                 RuleFor(x => x)
-                    .Must(x => x.Governors.Where(g => g.Selected).All(g => g.AppointmentEndDate.IsValid()))
+                    .Must(x =>
+                    {
+                        if(x.Role == eLookupGovernorRole.Establishment_SharedGovernanceProfessional)
+                        {
+                            // End date is mandatory for shared governors at the establishment level,
+                            // But is optional for shared governance professional - establishment (per #230911).
+                            return true;
+                        }
+
+                        return x.SelectedGovernorId != null
+                               && x.Governors.Single(g => g.Id == int.Parse(x.SelectedGovernorId)).AppointmentEndDate.IsValid();
+                    })
                     .WithMessage("Required")
                     .WithSummaryMessage("An appointment end date is required");
             });
