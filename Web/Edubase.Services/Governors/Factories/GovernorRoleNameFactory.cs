@@ -25,12 +25,12 @@ namespace Edubase.Services.Governors.Factories
             { eLookupGovernorRole.NA, "Not applicable" },
             { eLookupGovernorRole.Group_SharedGovernanceProfessional, "Shared governance professional - group" },
             { eLookupGovernorRole.Establishment_SharedGovernanceProfessional, "Shared governance professional - establishment" },
-            { eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool, "Governance professional to a local authority maintained school" },
-            { eLookupGovernorRole.GovernanceProfessionalToAFederation, "Governance professional to a federation" },
-            { eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professional to an individual academy or free school" },
-            { eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professional to a multi-academy trust (MAT)" },
-            { eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professional to a secure single-academy trust (SSAT)" },
-            { eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professional to a single-academy trust (SAT)" },
+            { eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool, "Governance professional - local authority maintained school" },
+            { eLookupGovernorRole.GovernanceProfessionalToAFederation, "Governance professional - federation" },
+            { eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professional - individual academy or free school" },
+            { eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professional - multi-academy trust (MAT)" },
+            { eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professional - secure single-academy trust (SSAT)" },
+            { eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professional - single-academy trust (SAT)" },
         };
 
         private static readonly Dictionary<eLookupGovernorRole, string> PluralisedLabels = new Dictionary<eLookupGovernorRole, string>()
@@ -45,12 +45,12 @@ namespace Edubase.Services.Governors.Factories
             { eLookupGovernorRole.Trustee, "Trustees" },
             { eLookupGovernorRole.Group_SharedGovernanceProfessional, "Shared governance professionals - group" },
             { eLookupGovernorRole.Establishment_SharedGovernanceProfessional, "Shared governance professionals - establishment" },
-            { eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool, "Governance professionals to a local authority maintained school" },
-            { eLookupGovernorRole.GovernanceProfessionalToAFederation, "Governance professionals to a federation" },
-            { eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professionals to an individual academy or free school" },
-            { eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professionals to a multi-academy trust (MAT)" },
-            { eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professionals to a secure single-academy trust (SSAT)" },
-            { eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professionals to a single-academy trust (SAT)" },
+            { eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool, "Governance professionals - local authority maintained school" },
+            { eLookupGovernorRole.GovernanceProfessionalToAFederation, "Governance professionals - federation" },
+            { eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professionals - individual academy or free school" },
+            { eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professionals - multi-academy trust (MAT)" },
+            { eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professionals - secure single-academy trust (SSAT)" },
+            { eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professionals - single-academy trust (SAT)" },
         };
 
         public static string Create(
