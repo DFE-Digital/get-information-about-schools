@@ -89,6 +89,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 {
                     newGovernor.Selected = previousGovernor.Selected;
                 }
+
+                // Retain the user-submitted selection (even if it is invalid):
+                if(newGovernor.Id.ToString() == model.SelectedGovernorId)
+                {
+                    newGovernor.Selected = true;
+                }
             }
 
             model.Governors = governors;

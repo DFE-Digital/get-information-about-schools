@@ -13,26 +13,43 @@ namespace Edubase.Web.UI.Areas.Governors.Models.Validators
             {
                 // Ensure the governor ID is selected and valid
                 RuleFor(x => x.SelectedGovernorId)
-                    .NotNull()
+                    .Must(IsSelectedGovernorIdFound)
                     .WithMessage("Required")
-                    .WithSummaryMessage("You must select a governor")
-                    .Must(IsValidGovernorSelected)
-                    .WithMessage("Required")
-                    .WithSummaryMessage("You must select a governor");
+                    .WithSummaryMessage("Select a governor");
 
                 // Validate appointment start date
                 RuleFor(x => x.SelectedGovernorId)
                     .Must(IsAppointmentStartDateValid)
                     .When(x => x.SelectedGovernorId != null)
                     .WithMessage("Required")
-                    .WithSummaryMessage("An appointment start date is required");
+                    .WithMessage(y =>
+                    {
+
+                        int.TryParse(y.SelectedGovernorId, out int governorId);
+
+                        var selectedGovernorRecord = y
+                            .Governors
+                            .SingleOrDefault(g => g.Id == governorId);
+
+                        return "Enter a valid appointment end date for " + (selectedGovernorRecord?.FullName ?? "unknown governor") + " (" + y.SelectedGovernorId + ")";
+                    });
 
                 // Validate appointment end date
                 RuleFor(x => x.SelectedGovernorId)
                     .Must(IsAppointmentEndDateValid)
-                    .When(x => x.SelectedGovernorId != null &&
-                               x.Role != eLookupGovernorRole.Establishment_SharedGovernanceProfessional)
-                    .WithMessage("An appointment end date is required");
+                    .When(x => x.SelectedGovernorId != null && x.Role != eLookupGovernorRole.Establishment_SharedGovernanceProfessional)
+                    .WithMessage("Required")
+                    .WithMessage(y =>
+                    {
+
+                        int.TryParse(y.SelectedGovernorId, out int governorId);
+
+                        var selectedGovernorRecord = y
+                            .Governors
+                            .SingleOrDefault(g => g.Id == governorId);
+
+                        return "Enter a valid appointment end date for " + (selectedGovernorRecord?.FullName ?? "unknown governor") + " (" + y.SelectedGovernorId + ")";
+                    });
             });
 
 
@@ -44,7 +61,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models.Validators
                 RuleFor(x => x.Governors)
                     .Must(x => x.Any(g => g.Selected))
                     .WithMessage("Required")
-                    .WithSummaryMessage("At least one governor must be selected");
+                    .WithSummaryMessage("Select at least one governor");
 
                 RuleForEach(z => z.Governors)
                     .ChildRules(x => x
@@ -52,20 +69,20 @@ namespace Edubase.Web.UI.Areas.Governors.Models.Validators
                         .Must(y => y.IsValid())
                         .When(y => y.Selected)
                         .WithMessage("Required")
-                        .WithSummaryMessage("An appointment start date is required")
+                        .WithSummaryMessage(y => "Enter a valid appointment start date for " + y.FullName + " (" + y.Id + ")")
+
                     )
-                    // TODO: This rule is not required for the Establishment_SharedGovernanceProfessional role
                     .ChildRules(x => x
                         .RuleFor(y => y.AppointmentEndDate)
                         .Must(y => y.IsValid())
                         .When(y => y.Selected)
                         .WithMessage("Required")
-                        .WithSummaryMessage("An appointment end date is required")
+                        .WithSummaryMessage(y => "Enter a valid appointment end date for " + y.FullName + " (" + y.Id + ")")
                     );
             });
         }
 
-        private static bool IsValidGovernorSelected(SelectSharedGovernorViewModel model, string selectedId)
+        private static bool IsSelectedGovernorIdFound(SelectSharedGovernorViewModel model, string selectedId)
         {
             if (!int.TryParse(selectedId, out int governorId))
             {
