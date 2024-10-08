@@ -21,10 +21,8 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
         private readonly DateTimeViewModel _arbitraryInvalidStartDate = new DateTimeViewModel { Day = 50, Month = 20, Year = null };
         private readonly DateTimeViewModel _arbitraryInvalidEndDate = new DateTimeViewModel { Day = 50, Month = 20, Year = null };
 
-
-
         [Fact]
-        public void SinglePersonRole__SelectedGovernorId__WhenNull__And__GovernorsList_Empty__Then__GovernorId_ValidationError()
+        public void SinglePersonRole_SelectedGovernorId_WhenNull_ThenError()
         {
             // Arrange
             var model = new SelectSharedGovernorViewModel
@@ -43,7 +41,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
         }
 
         [Fact]
-        public void SinglePersonRole__SelectedGovernorId__WhenNull__And__GovernorsList_NoneSelected__Then__GovernorId_ValidationError()
+        public void SinglePersonRole_SelectedGovernorId_WhenNoGovernorSelected_ThenError()
         {
             // Arrange
             var model = new SelectSharedGovernorViewModel
@@ -72,7 +70,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
         }
 
         [Fact]
-        public void ShouldHaveValidationErrorWhenNoSelectedGovernorForMultiRole()
+        public void MultiPersonRole_Governors_WhenNoGovernorSelected_ThenError()
         {
             // Arrange
             var model = new SelectSharedGovernorViewModel
@@ -88,20 +86,20 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
                         AppointmentEndDate = new DateTimeViewModel()
                     }
                 },
-                Role = ArbitrarySinglePersonRole,
+                Role = ArbitraryMultiPersonRole,
             };
 
             // Act
             var result = _validator.TestValidate(model);
 
             // Assert
-            result.ShouldHaveValidationErrorFor(x => x.SelectedGovernorId)
+            result.ShouldHaveValidationErrorFor(x => x.Governors)
                 .WithErrorMessage("Required")
-                .WithCustomState("You must select a governor");
+                .WithCustomState("At least one governor must be selected");
         }
 
         [Fact]
-        public void ShouldNotHaveValidationErrorWhenRequiredFieldsAreValidForSingularRole()
+        public void SinglePersonRole_SelectedGovernorId_WhenValid_NoError()
         {
             // Arrange
             var model = new SelectSharedGovernorViewModel
@@ -128,7 +126,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
         }
 
         [Fact]
-        public void ShouldNotHaveValidationErrorWhenRequiredFieldsAreValidForMultiRole()
+        public void MultiPersonRole_Governors_WhenValid_NoError()
         {
             // Arrange
             var model = new SelectSharedGovernorViewModel
@@ -143,6 +141,148 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
                         AppointmentStartDate = new DateTimeViewModel { Day = 1, Month = 1, Year = 2020 },
                         AppointmentEndDate = new DateTimeViewModel { Day = 1, Month = 1, Year = 2025 }
                     }
+                },
+                Role = ArbitraryMultiPersonRole,
+            };
+
+            // Act
+            var result = _validator.TestValidate(model);
+
+            // Assert
+            result.ShouldNotHaveValidationErrorFor(x => x.Governors);
+        }
+
+        [Fact]
+        public void MultiPersonRole_Governors_WhenInvalid_ThenError()
+        {
+            // Arrange
+            var model = new SelectSharedGovernorViewModel
+            {
+                SelectedGovernorId = null, // Not applicable for multi roles
+                Governors = new List<SharedGovernorViewModel>
+                {
+                    new SharedGovernorViewModel
+                    {
+                        Id = 1,
+                        Selected = false,
+                        AppointmentStartDate = _arbitraryInvalidStartDate // Invalid entry
+                    }
+                },
+                Role = ArbitraryMultiPersonRole,
+            };
+
+            // Act
+            var result = _validator.TestValidate(model);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(x => x.Governors)
+                .WithErrorMessage("Required")
+                .WithCustomState("At least one governor must be selected");
+        }
+
+        [Fact]
+        public void SinglePersonRole_SelectedGovernorId_WhenMultipleGovernorsButNoneSelected_ThenError()
+        {
+            // Arrange
+            var model = new SelectSharedGovernorViewModel
+            {
+                SelectedGovernorId = null,
+                Governors = new List<SharedGovernorViewModel>
+                {
+                    new SharedGovernorViewModel { Id = 1, Selected = false },
+                    new SharedGovernorViewModel { Id = 2, Selected = false },
+                },
+                Role = ArbitrarySinglePersonRole,
+            };
+
+            // Act
+            var result = _validator.TestValidate(model);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(x => x.SelectedGovernorId)
+                .WithErrorMessage("Required")
+                .WithCustomState("You must select a governor");
+        }
+
+        [Fact]
+        public void MultiPersonRole_Governors_WhenMultipleGovernorsButNoneSelected_ThenError()
+        {
+            // Arrange
+            var model = new SelectSharedGovernorViewModel
+            {
+                SelectedGovernorId = null,
+                Governors = new List<SharedGovernorViewModel>
+                {
+                    new SharedGovernorViewModel { Id = 1, Selected = false },
+                    new SharedGovernorViewModel { Id = 2, Selected = false },
+                },
+                Role = ArbitraryMultiPersonRole,
+            };
+
+            // Act
+            var result = _validator.TestValidate(model);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(x => x.Governors)
+                .WithErrorMessage("Required")
+                .WithCustomState("At least one governor must be selected");
+        }
+
+        [Fact]
+        public void SinglePersonRole_SelectedGovernorId_WhenMultipleGovernorsAndOneSelected_NoError()
+        {
+            // Arrange
+            var model = new SelectSharedGovernorViewModel
+            {
+                SelectedGovernorId = "2",
+                Governors = new List<SharedGovernorViewModel>
+                {
+                    new SharedGovernorViewModel { Id = 1, Selected = false, AppointmentStartDate = _arbitraryValidStartDate, AppointmentEndDate = _arbitraryValidEndDate },
+                    new SharedGovernorViewModel { Id = 2, Selected = true, AppointmentStartDate = _arbitraryValidStartDate, AppointmentEndDate = _arbitraryValidEndDate },
+                },
+                Role = ArbitrarySinglePersonRole,
+            };
+
+            // Act
+            var result = _validator.TestValidate(model);
+
+            // Assert
+            result.ShouldNotHaveValidationErrorFor(x => x.SelectedGovernorId);
+        }
+
+        [Fact]
+        public void MultiPersonRole_Governors_WhenMultipleGovernorsAndOneSelected_NoError()
+        {
+            // Arrange
+            var model = new SelectSharedGovernorViewModel
+            {
+                SelectedGovernorId = null,
+                Governors = new List<SharedGovernorViewModel>
+                {
+                    new SharedGovernorViewModel { Id = 1, Selected = true, AppointmentStartDate = _arbitraryValidStartDate, AppointmentEndDate = _arbitraryValidEndDate },
+                    new SharedGovernorViewModel { Id = 2, Selected = false, AppointmentStartDate = _arbitraryValidStartDate, AppointmentEndDate = _arbitraryValidEndDate },
+                },
+                Role = ArbitraryMultiPersonRole,
+            };
+
+            // Act
+            var result = _validator.TestValidate(model);
+
+            // Assert
+            result.ShouldNotHaveValidationErrorFor(x => x.Governors);
+        }
+
+        [Fact]
+        public void MultiPersonRole_Governors_WhenMultipleGovernorsAndMultipleSelected_NoError()
+        {
+            // Arrange
+            var model = new SelectSharedGovernorViewModel
+            {
+                SelectedGovernorId = null,
+                Governors = new List<SharedGovernorViewModel>
+                {
+                    new SharedGovernorViewModel { Id = 1, Selected = true, AppointmentStartDate = _arbitraryValidStartDate, AppointmentEndDate = _arbitraryValidEndDate },
+                    new SharedGovernorViewModel { Id = 2, Selected = true, AppointmentStartDate = _arbitraryValidStartDate, AppointmentEndDate = _arbitraryValidEndDate },
                 },
                 Role = ArbitraryMultiPersonRole,
             };
