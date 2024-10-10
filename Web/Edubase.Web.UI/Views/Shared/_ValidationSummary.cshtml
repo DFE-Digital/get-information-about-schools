@@ -24,11 +24,9 @@
                         // traditional model validation
                         foreach (var modelError in Model.Keys.SelectMany(key => this.Model[key].Errors.Select(x => Tuple.Create(key, x.ErrorMessage))))
                         {
-                            var splitName = Regex.Replace(@modelError.Item2, "([a-z])([A-Z])", "$1 $2");
-                            splitName = splitName.Substring(0, 1) + splitName.Substring(1).ToLower();
                             <li>
                                  <a id="error-summary-@StringUtils.ElementIdFormat(@modelError.Item1)-list-item" href='#@modelError.Item1.Replace(".", "_").Replace("[", "_").Replace("]", "_")'>
-                                    @Html.HtmlNewlines(@splitName)
+                                    @Html.HtmlNewlines(@modelError.Item2)
                                  </a>
                             </li>
                         }
