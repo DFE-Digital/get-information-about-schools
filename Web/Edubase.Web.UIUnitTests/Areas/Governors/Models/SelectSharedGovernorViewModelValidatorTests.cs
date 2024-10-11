@@ -66,7 +66,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
             // Assert
             result.ShouldHaveValidationErrorFor(x => x.SelectedGovernorId)
                 .WithErrorMessage("Required")
-                .WithCustomState("You must select a governor");
+                .WithCustomState("Select a governor");
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
             // Assert
             result.ShouldHaveValidationErrorFor(x => x.Governors)
                 .WithErrorMessage("Required")
-                .WithCustomState("At least one governor must be selected");
+                .WithCustomState("Select at least one governor");
         }
 
         [Fact]
@@ -177,7 +177,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
             // Assert
             result.ShouldHaveValidationErrorFor(x => x.Governors)
                 .WithErrorMessage("Required")
-                .WithCustomState("At least one governor must be selected");
+                .WithCustomState("Select at least one governor");
         }
 
         [Fact]
@@ -201,7 +201,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
             // Assert
             result.ShouldHaveValidationErrorFor(x => x.SelectedGovernorId)
                 .WithErrorMessage("Required")
-                .WithCustomState("You must select a governor");
+                .WithCustomState("Select a governor");
         }
 
         [Fact]
@@ -225,7 +225,7 @@ namespace Edubase.Web.UIUnitTests.Areas.Governors.Models
             // Assert
             result.ShouldHaveValidationErrorFor(x => x.Governors)
                 .WithErrorMessage("Required")
-                .WithCustomState("At least one governor must be selected");
+                .WithCustomState("Select at least one governor");
         }
 
         [Fact]
