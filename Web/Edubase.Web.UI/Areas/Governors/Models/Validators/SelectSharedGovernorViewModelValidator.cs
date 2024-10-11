@@ -19,38 +19,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models.Validators
                     .Must(IsSelectedGovernorIdFound)
                     .WithMessage("Required")
                     .WithSummaryMessage("Select a governor");
-
-                // Validate appointment start date (only if/where the governor is selected)
-                RuleFor(x => x.SelectedGovernorId)
-                    .Must(IsAppointmentStartDateValid)
-                    .When(x => x.SelectedGovernorId != null)
-                    .WithMessage("Required")
-                    .WithMessage(y =>
-                    {
-                        int.TryParse(y.SelectedGovernorId, out var governorId);
-                        var selectedGovernorRecord = y
-                            .Governors
-                            .SingleOrDefault(g => g.Id == governorId);
-
-                        return $"Enter a valid appointment end date for {selectedGovernorRecord?.FullName ?? "unknown governor"} ({y.SelectedGovernorId})";
-                    });
-
-                // Validate appointment end date (only if/where the governor is selected, and the role is not a `Shared Governance Professional - Establishment`)
-                RuleFor(x => x.SelectedGovernorId)
-                    .Must(IsAppointmentEndDateValid)
-                    .When(x => x.SelectedGovernorId != null && x.Role != eLookupGovernorRole.Establishment_SharedGovernanceProfessional)
-                    .WithMessage("Required")
-                    .WithMessage(y =>
-                    {
-                        int.TryParse(y.SelectedGovernorId, out var governorId);
-                        var selectedGovernorRecord = y
-                            .Governors
-                            .SingleOrDefault(g => g.Id == governorId);
-
-                        return $"Enter a valid appointment end date for {(selectedGovernorRecord?.FullName ?? "unknown governor")} ({y.SelectedGovernorId})";
-                    });
             });
-
 
             // This section for roles that can have multiple appointees.
             // On the web UI, these are displayed as checkboxes and the `Selected` value for each governor
@@ -63,62 +32,57 @@ namespace Edubase.Web.UI.Areas.Governors.Models.Validators
                     .Must(x => x.Any(g => g.Selected))
                     .WithMessage("Required")
                     .WithSummaryMessage("Select at least one governor");
-
-                // Validate appointment start date and end date for each selected governor (only if/where the governor is marked as selected)
-                RuleForEach(z => z.Governors)
-                    .ChildRules(x => x
-                        .RuleFor(y => y.AppointmentStartDate)
-                        .Must(y => y.IsValid())
-                        .When(y => y.Selected)
-                        .WithMessage("Required")
-                        .WithSummaryMessage(y => $"Enter a valid appointment start date for {y.FullName} ({y.Id})")
-                    )
-                    .ChildRules(x => x
-                        .RuleFor(y => y.AppointmentEndDate)
-                        .Must(y => y.IsValid())
-                        .When(y => y.Selected)
-                        .WithMessage("Required")
-                        .WithSummaryMessage(y => $"Enter a valid appointment end date for {y.FullName} ({y.Id})")
-                    );
             });
+
+
+            // Custom validation for appointment end date.
+            // Using a custom rule is needed due to the hijinks/headaches with the `model.SelectedGovernorId`
+            // property versus `governor.Selected` property, and how the rules do not seem to share
+            // between the parent property in `RuleForEach` and the child property (governor) in `model.Governors`.
+            RuleFor(x => x)
+                .Custom((model, context) =>
+                {
+                    // Due to the use of `SelectedGovernorId`, hijinks are required
+                    // to attach validations to the selected governor with positional index,
+                    // and have the error messages display next to the correct governor.
+                    for (var index = 0; index < model.Governors.Count; index++)
+                    {
+                        // Note two ways to detect if current governor is selected:
+                        // 1. "Singular" governor roles use `model.SelectedGovernorId` to track the selected governor.
+                        // 2. "Multiple"/non-singular governor roles use `governor.Selected` to track the selected governor.
+                        var currentGovernor = model.Governors[index];
+                        if (!currentGovernor.Selected && currentGovernor.Id.ToString() != model.SelectedGovernorId)
+                        {
+                            // Skip governors that are not selected
+                            continue;
+                        }
+
+                        if (!currentGovernor.AppointmentStartDate.IsValid())
+                        {
+                            context.AddFailure(
+                                $"Governors[{index}].{nameof(currentGovernor.AppointmentStartDate)}",
+                                $"Enter a valid appointment start date for {currentGovernor.FullName} ({currentGovernor.Id})"
+                            );
+                        }
+
+                        // Note that the end date is optional for `shared governance professional - establishment` per #230911
+                        if (!currentGovernor.AppointmentEndDate.IsValid() && model.Role != eLookupGovernorRole.Establishment_SharedGovernanceProfessional)
+                        {
+                            context.AddFailure(
+                                $"Governors[{index}].{nameof(currentGovernor.AppointmentEndDate)}",
+                                $"Enter a valid appointment end date for {currentGovernor.FullName} ({currentGovernor.Id})"
+                            );
+                        }
+                    }
+                });
+
+
         }
 
         private static bool IsSelectedGovernorIdFound(SelectSharedGovernorViewModel model, string selectedId)
         {
-            if (!int.TryParse(selectedId, out int governorId))
-            {
-                return false;
-            }
-
-            var selectedGovernorRecord = model
-                .Governors
-                .SingleOrDefault(g => g.Id == governorId);
-
-            return selectedGovernorRecord != null;
-        }
-
-        private static bool IsAppointmentStartDateValid(SelectSharedGovernorViewModel model, string selectedId)
-        {
-            if (!int.TryParse(selectedId, out int governorId))
-            {
-                return false;
-            }
-
-            var selectedGovernorRecord = model
-                .Governors
-                .SingleOrDefault(g => g.Id == governorId);
-
-            return selectedGovernorRecord?.AppointmentStartDate.IsValid() ?? false;
-        }
-
-        private static bool IsAppointmentEndDateValid(SelectSharedGovernorViewModel model, string selectedId)
-        {
-            if (int.TryParse(selectedId, out int governorId))
-            {
-                return model.Governors.SingleOrDefault(g => g.Id == governorId)?.AppointmentEndDate.IsValid() ?? false;
-            }
-
-            return false;
+            return int.TryParse(selectedId, out var governorId)
+                   && model.Governors.SingleOrDefault(g => g.Id == governorId) != null;
         }
     }
 }
