@@ -47,16 +47,14 @@ namespace Edubase.Web.UI.Areas.Governors.Models.Validators
                     // and have the error messages display next to the correct governor.
                     for (var index = 0; index < model.Governors.Count; index++)
                     {
-                        // Note two ways to detect if current governor is selected:
-                        // 1. "Singular" governor roles use `model.SelectedGovernorId` to track the selected governor.
-                        // 2. "Multiple"/non-singular governor roles use `governor.Selected` to track the selected governor.
                         var currentGovernor = model.Governors[index];
-                        if (!currentGovernor.Selected && currentGovernor.Id.ToString() != model.SelectedGovernorId)
+                        if (!IsGovernorSelected(currentGovernor, model.SelectedGovernorId))
                         {
                             // Skip governors that are not selected
                             continue;
                         }
 
+                        // Validate appointment start date for all _shared_ establishment-side roles.
                         if (!currentGovernor.AppointmentStartDate.IsValid())
                         {
                             context.AddFailure(
@@ -65,8 +63,12 @@ namespace Edubase.Web.UI.Areas.Governors.Models.Validators
                             );
                         }
 
-                        // Note that the end date is optional for `shared governance professional - establishment` per #230911
-                        if (!currentGovernor.AppointmentEndDate.IsValid() && model.Role != eLookupGovernorRole.Establishment_SharedGovernanceProfessional)
+                        // Validate appointment end date roles, for all _shared_ establishment-side roles except `shared governance professional - establishment`.
+                        // Note that end date is optional for this role, per #230911.
+                        if (
+                            model.Role != eLookupGovernorRole.Establishment_SharedGovernanceProfessional
+                            && !currentGovernor.AppointmentEndDate.IsValid()
+                        )
                         {
                             context.AddFailure(
                                 $"Governors[{index}].{nameof(currentGovernor.AppointmentEndDate)}",
@@ -77,6 +79,17 @@ namespace Edubase.Web.UI.Areas.Governors.Models.Validators
                 });
 
 
+        }
+
+        private static bool IsGovernorSelected(SharedGovernorViewModel currentGovernor, string modelSelectedGovernorId)
+        {
+            // Note two ways to detect if current governor is selected:
+            // 1. "Singular" governor roles use `model.SelectedGovernorId` to track the selected governor.
+            // 2. "Multiple"/non-singular governor roles use `governor.Selected` to track the selected governor.
+
+            // Consider making this more robust by checking if the governor is selected based on the governor role
+            // (e.g., if the governor role is singular, then the governor is selected if the governor ID matches the selected governor ID).
+            return currentGovernor.Selected || currentGovernor.Id.ToString() == modelSelectedGovernorId;
         }
 
         private static bool IsSelectedGovernorIdFound(SelectSharedGovernorViewModel model, string selectedId)
