@@ -4,7 +4,7 @@ const GiasReOrderValidationSummary = function () {
   const errorSummaryList = $errorSummary.find('ul');
   const summaryMessageItems = $errorSummary.find('li');
   const inPageErrorFields = $('#main-content').find('.govuk-form-group--error');
-  
+
   if (inPageErrorFields.length < 2 || window.blockReOrder) {
     return;
   }
