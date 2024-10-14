@@ -63,6 +63,43 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
             Assert.NotNull(policy);
         }
 
+        [Fact]
+        public async Task CreateTimeoutPolicy_ShouldTriggerTimeoutAfter10Attempts()
+        {
+            var validKey = "AzureMapService_Timeout";
+            ConfigurationManager.AppSettings[validKey] = "5";
+
+            var policy = PollyUtil.CreateTimeoutPolicy(validKey);
+
+            Func<CancellationToken, Task<HttpResponseMessage>> operation = async (ct) =>
+            {
+                await Task.Delay(6000, ct);
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            };
+
+            for (var i = 0; i < 9; i++)
+            {
+                try
+                {
+                    await policy.ExecuteAsync(operation, CancellationToken.None);
+                }
+                catch (Polly.Timeout.TimeoutRejectedException ex)
+                {
+
+                }
+            }
+
+            // Polly's timeout can throw taskCanceledException due to cancellation triggering
+            // TimeoutRejectedException may also occur, but we expect TaskCanceled here
+            // because Polly's timeout uses cancellationToken to cancel the delayed task
+            var exception = await Assert.ThrowsAsync<TaskCanceledException>(async () =>
+            {
+                await policy.ExecuteAsync(operation, CancellationToken.None);
+            });
+
+            Assert.Contains("Operation canceled for repeated timeouts - Polly", exception.Message);
+        }
+
 
         [Fact]
         public async Task CreateRetryPolicy_DefaultsTo10Seconds()

@@ -50,9 +50,13 @@ namespace Edubase.Services.IntegrationEndPoints
                 {
                     Console.WriteLine($"timed out after {timeout.TotalSeconds} seconds - Exception {exception.Message}");
 
-                    if (exception is Polly.Timeout.TimeoutRejectedException)
+                    var currentCount = TimeoutTracker.IncrementTimeoutCount();
+
+                    if (currentCount >= 10)
                     {
-                        Console.WriteLine("Polly.Timeout.Exception detected");
+                        var modifiedException = new TaskCanceledException("Operation canceled for repeated timeouts - Polly", exception);
+                        //escalate error after 10 timeouts reached
+                        throw modifiedException;
                     }
                     await Task.CompletedTask;
                 });
