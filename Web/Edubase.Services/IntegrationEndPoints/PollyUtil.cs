@@ -27,11 +27,14 @@ namespace Edubase.Services.IntegrationEndPoints
             var retryPolicy = Policy<HttpResponseMessage>
                 .Handle<HttpRequestException>()
                 .Or<TaskCanceledException>()
-                .WaitAndRetryAsync(retryIntervals);
+                .WaitAndRetryAsync(retryIntervals, onRetry: (outcome, TimeSpan, retryAttempt, context) =>
+                {
+                    Console.WriteLine($"retry attempt {retryAttempt} due to: {outcome.Exception?.Message}");
+                });
 
             var timeoutPolicy = CreateTimeoutPolicy(settingsKey);
 
-            return Policy.WrapAsync<HttpResponseMessage>(retryPolicy, timeoutPolicy);
+            return Policy.WrapAsync(retryPolicy, timeoutPolicy);
         }
 
         public static IAsyncPolicy<HttpResponseMessage> CreateTimeoutPolicy(string settingsKey)
@@ -41,7 +44,18 @@ namespace Edubase.Services.IntegrationEndPoints
                 timeoutSettings = 10;
             }
 
-            return Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(timeoutSettings));
+            return Policy.TimeoutAsync<HttpResponseMessage>(
+                TimeSpan.FromSeconds(timeoutSettings),
+                onTimeoutAsync: async (context, timeout, task, exception) =>
+                {
+                    Console.WriteLine($"timed out after {timeout.TotalSeconds} seconds - Exception {exception.Message}");
+
+                    if (exception is Polly.Timeout.TimeoutRejectedException)
+                    {
+                        Console.WriteLine("Polly.Timeout.Exception detected");
+                    }
+                    await Task.CompletedTask;
+                });
         }
 
         /// <summary>
