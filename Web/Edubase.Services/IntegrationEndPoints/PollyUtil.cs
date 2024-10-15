@@ -2,8 +2,10 @@ using System;
 using System.Configuration;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Polly;
+using Polly.Timeout;
 
 namespace Edubase.Services.IntegrationEndPoints
 {
@@ -44,22 +46,41 @@ namespace Edubase.Services.IntegrationEndPoints
                 timeoutSettings = 10;
             }
 
-            return Policy.TimeoutAsync<HttpResponseMessage>(
+            var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(
                 TimeSpan.FromSeconds(timeoutSettings),
+                TimeoutStrategy.Pessimistic,
                 onTimeoutAsync: async (context, timeout, task, exception) =>
                 {
                     Console.WriteLine($"timed out after {timeout.TotalSeconds} seconds - Exception {exception.Message}");
-
-                    var currentCount = TimeoutTracker.IncrementTimeoutCount();
-
-                    if (currentCount >= 10)
-                    {
-                        var modifiedException = new TaskCanceledException("Operation canceled for repeated timeouts - Polly", exception);
-                        //escalate error after 10 timeouts reached
-                        throw modifiedException;
-                    }
                     await Task.CompletedTask;
                 });
+
+            var fallbackPolicy = Policy<HttpResponseMessage>
+                .Handle<TimeoutRejectedException>()
+                .FallbackAsync(
+                    fallbackAction: (context, cancellationToken) =>
+                    {
+                        var currentCount = TimeoutTracker.IncrementTimeoutCount();
+
+                        if (currentCount >= 10)
+                        {
+                            return Task.FromException<HttpResponseMessage>(
+                            new TaskCanceledException("Operation canceled for repeated timeouts - Polly"));
+                        }
+                        else
+                        {
+                            return Task.FromException<HttpResponseMessage>(
+                                new TimeoutRejectedException());
+                        }
+                    },
+                    async (exception, context) =>
+                    {
+                        await Task.CompletedTask;
+                    });
+
+            var policyWrap = Policy.WrapAsync(fallbackPolicy, timeoutPolicy);
+
+            return policyWrap;
         }
 
         /// <summary>

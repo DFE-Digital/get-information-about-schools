@@ -66,6 +66,7 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
         [Fact]
         public async Task CreateTimeoutPolicy_ShouldTriggerTimeoutAfter10Attempts()
         {
+            TimeoutTracker.ResetTimeoutCount();
             var validKey = "AzureMapService_Timeout";
             ConfigurationManager.AppSettings[validKey] = "5";
 
@@ -79,19 +80,13 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
 
             for (var i = 0; i < 9; i++)
             {
-                try
+                var ex = await Assert.ThrowsAsync<TimeoutRejectedException>(async () =>
                 {
                     await policy.ExecuteAsync(operation, CancellationToken.None);
-                }
-                catch (Polly.Timeout.TimeoutRejectedException ex)
-                {
-
-                }
+                });
             }
 
-            // Polly's timeout can throw taskCanceledException due to cancellation triggering
-            // TimeoutRejectedException may also occur, but we expect TaskCanceled here
-            // because Polly's timeout uses cancellationToken to cancel the delayed task
+            // 10th itteration
             var exception = await Assert.ThrowsAsync<TaskCanceledException>(async () =>
             {
                 await policy.ExecuteAsync(operation, CancellationToken.None);
