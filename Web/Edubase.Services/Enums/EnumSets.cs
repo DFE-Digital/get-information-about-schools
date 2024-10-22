@@ -54,7 +54,6 @@ namespace Edubase.Services.Enums
             GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool,
             GR.GovernanceProfessionalToAMat,
             GR.GovernanceProfessionalToASecureSat,
-            GR.Group_SharedGovernanceProfessional,
             GR.Establishment_SharedGovernanceProfessional,
             GR.GovernanceProfessionalToASat,
         };
