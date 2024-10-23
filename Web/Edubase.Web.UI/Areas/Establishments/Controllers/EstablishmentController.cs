@@ -33,7 +33,6 @@ using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
-using FluentValidation.Mvc;
 using MoreLinq;
 using ET = Edubase.Services.Enums.eLookupEstablishmentType;
 using CreateSteps = Edubase.Web.UI.Areas.Establishments.Models.CreateEstablishmentViewModel.eEstabCreateSteps;
@@ -382,7 +381,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.SchoolCapacityToolTipLink = viewModel.Establishment.TypeId.Equals((int)ET.AcademySecure16to19)
                 ? string.Empty
                 : _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacityLink", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
-               
+
             return View(viewModel);
         }
 
