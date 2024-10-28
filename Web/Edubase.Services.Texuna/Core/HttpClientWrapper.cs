@@ -399,12 +399,23 @@ namespace Edubase.Services
             }
             catch (TaskCanceledException ex) when (!ex.CancellationToken.IsCancellationRequested) // timeout, apparently: ref; https://stackoverflow.com/questions/29179848/httpclient-a-task-was-cancelled
             {
+
+
+                var checkingHere = ($"api timed out - (request uri: {requestMessage.RequestUri.PathAndQuery})", ex);
+
+
+
+
+
                 throw new TexunaApiSystemException(
                     $"The API did not respond in a timely manner (Request URI: {requestMessage.RequestUri.PathAndQuery})",
                     GetRequestJsonBody(requestMessage));
             }
             catch (TaskCanceledException ex)
             {
+
+                var checkingHere = ($"api timed out - (request uri: {requestMessage.RequestUri.PathAndQuery})", ex);
+
                 // Following changes to the timeout, we notice that not all timeouts are caught by the above catch block
                 // and the development/"full error detail" error page does not have the exception details.
                 // For this reason we introduce this new catch block to catch all TaskCanceledExceptions that

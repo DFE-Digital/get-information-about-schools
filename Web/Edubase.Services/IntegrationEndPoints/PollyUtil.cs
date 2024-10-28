@@ -21,22 +21,58 @@ namespace Edubase.Services.IntegrationEndPoints
         /// </returns>
         public static IAsyncPolicy<HttpResponseMessage> CreateRetryPolicy(TimeSpan[] retryIntervals, string settingsKey)
         {
-            if(retryIntervals is null || retryIntervals.Length == 0)
+            if (retryIntervals is null || retryIntervals.Length == 0)
             {
                 return Policy.NoOpAsync<HttpResponseMessage>();
             }
 
+            Exception lastException = null;
+
             var retryPolicy = Policy<HttpResponseMessage>
                 .Handle<HttpRequestException>()
                 .Or<TaskCanceledException>()
-                .WaitAndRetryAsync(retryIntervals, onRetry: (outcome, TimeSpan, retryAttempt, context) =>
-                {
-                    Console.WriteLine($"retry attempt {retryAttempt} due to: {outcome.Exception?.Message}");
-                });
+                .WaitAndRetryAsync(
+                    retryIntervals,
+                    onRetry: (outcome, timeSpan, retryCount, context) =>
+                    {
+                        if (outcome.Exception != null)
+                        {
+                            lastException = outcome.Exception;
+                        }
+                    });
 
             var timeoutPolicy = CreateTimeoutPolicy(settingsKey);
 
-            return Policy.WrapAsync(retryPolicy, timeoutPolicy);
+            return Policy.WrapAsync<HttpResponseMessage>(retryPolicy, timeoutPolicy)
+                .WithPolicyKey("CreateRetryPolicy")
+                .WrapAsync(
+                    Policy<HttpResponseMessage>
+                        .Handle<Exception>()
+                        .FallbackAsync<HttpResponseMessage>(
+                            async (cancellationToken) =>
+                            {
+                                string errorSource;
+
+                                switch (lastException)
+                                {
+                                    case TaskCanceledException _:
+                                        errorSource = "task cancellation";
+                                        break;
+                                    case HttpRequestException _:
+                                        errorSource = "HTTP request failure";
+                                        break;
+                                    default:
+                                        errorSource = "unknown error";
+                                        break;
+                                }
+
+                                await Task.Yield();
+                                throw new Exception(
+                                    $"Retries exceeded in CreateRetryPolicy due to {errorSource}.",
+                                    lastException);
+                            }
+                        )
+                );
         }
 
         public static IAsyncPolicy<HttpResponseMessage> CreateTimeoutPolicy(string settingsKey)
