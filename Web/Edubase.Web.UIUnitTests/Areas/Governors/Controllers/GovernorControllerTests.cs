@@ -584,6 +584,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
                 var allData = new List<object[]>
                 {
                     // - #198772 / #193913 : MAT can have "one-each" of "Shared governance professional - group" and "Governance professional to a multi-academy trust (MAT)"
+                    // - #231733: Can now also have many "Shared governance professional - group" roles, not just "one of each"
                     new object[] {eLookupGovernorRole.Group_SharedGovernanceProfessional, eLookupGovernorRole.GovernanceProfessionalToAMat},
                     new object[] {eLookupGovernorRole.GovernanceProfessionalToAMat, eLookupGovernorRole.Group_SharedGovernanceProfessional},
 
@@ -599,14 +600,14 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             }
         }
 
-        public static IEnumerable<object[]> ForbiddenCombinationsofGovernanceProfessionalRoles => PairwiseGovernanceProfessionalRoles
+        public static IEnumerable<object[]> ForbiddenCombinationsOfGovernanceProfessionalRoles => PairwiseGovernanceProfessionalRoles
             .Where(allPairsPair => !PairwiseGovernanceProfessionalRolesAllowedCombinations.Any(innerPair =>
                 allPairsPair[0].Equals(innerPair[0])
                 && allPairsPair[1].Equals(innerPair[1])));
 
 
         [Theory()]
-        [MemberData(nameof(ForbiddenCombinationsofGovernanceProfessionalRoles))]
+        [MemberData(nameof(ForbiddenCombinationsOfGovernanceProfessionalRoles))]
         public async Task Gov_AddEditOrReplace_RoleSpecified_GovernanceProfessional_RoleAlreadyExists_DisallowedThereforeReject(eLookupGovernorRole preExistingGovernorRole, eLookupGovernorRole newGovernorRole)
         {
             var estabUrn = 4;
