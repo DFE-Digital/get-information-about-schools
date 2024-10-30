@@ -230,7 +230,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
                     new GovernorModel
                     {
                         Id = 43,
-                        RoleId = (int)eLookupGovernorRole.Establishment_SharedLocalGovernor                        
+                        RoleId = (int)eLookupGovernorRole.Establishment_SharedLocalGovernor
                     }
                 },
                 HistoricalGovernors = new List<GovernorModel>()
@@ -1217,18 +1217,13 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         }
 
         // Only a single chair of a local governing body may be attached (either directly, or via shared role)
-
         [Fact]
-        public async Task RoleAllowed_ShouldReturnTrue_WhenChairOfLocalGoverningBodyIsAdded()
+        public async Task RoleAllowed_NewLocalChair_Permitted_WhenNoLocalOrSharedChair()
         {
-            var currentGovernors = new List<GovernorModel>
-            {
-                new GovernorModel { RoleId = (int)eLookupGovernorRole.ChairOfLocalGoverningBody }
-            };
-
+            var currentGovernors = new List<GovernorModel> { };
             var governorsDetails = new GovernorsDetailsDto
             {
-                CurrentGovernors = new List<GovernorModel>(),
+                CurrentGovernors = currentGovernors,
                 ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.ChairOfLocalGoverningBody },
                 HistoricalGovernors = new List<GovernorModel>(),
                 HasFullAccess = true
@@ -1242,14 +1237,11 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             Assert.True(result);
         }
 
+        // Only a single chair of a local governing body may be attached (either directly, or via shared role)
         [Fact]
-        public async Task RoleAllowed_ShouldReturnFalse_WhenChairOfLocalGoverningBodyIsAddedWithSameExsistingGovernor()
+        public async Task RoleAllowed_NewLocalChair_Forbidden_WhenPreexistingLocalChair()
         {
-            var currentGovernors = new List<GovernorModel>
-            {
-                new GovernorModel { RoleId = (int)eLookupGovernorRole.ChairOfLocalGoverningBody }
-            };
-
+            var currentGovernors = new List<GovernorModel> { new GovernorModel { RoleId = (int)eLookupGovernorRole.ChairOfLocalGoverningBody }, };
             var governorsDetails = new GovernorsDetailsDto
             {
                 CurrentGovernors = currentGovernors,
@@ -1266,19 +1258,36 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             Assert.False(result);
         }
 
-
+        // Only a single chair of a local governing body may be attached (either directly, or via shared role)
         [Fact]
-        public async Task RoleAllowed_ShouldReturnFalse_WhenChairOfLocalGoverningBodyIsAddedWith_DifferentChair()
+        public async Task RoleAllowed_NewSharedChair_Forbidden_WhenPreexistingLocalChair()
         {
-            var currentGovernors = new List<GovernorModel>
-            {
-                new GovernorModel { RoleId = (int)eLookupGovernorRole.ChairOfLocalGoverningBody }
-            };
-
+            var currentGovernors = new List<GovernorModel> { new GovernorModel { RoleId = (int)eLookupGovernorRole.ChairOfLocalGoverningBody }, };
             var governorsDetails = new GovernorsDetailsDto
             {
                 CurrentGovernors = currentGovernors,
                 ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody },
+                HistoricalGovernors = new List<GovernorModel>(),
+                HasFullAccess = true
+            };
+
+            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(governorsDetails);
+
+            var result = await controller.RoleAllowed(eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody, null, null, null);
+
+            Assert.False(result);
+        }
+
+        // Only a single chair of a local governing body may be attached (either directly, or via shared role)
+        [Fact]
+        public async Task RoleAllowed_NewLocalChair_Forbidden_WhenPreexistingSharedChair()
+        {
+            var currentGovernors = new List<GovernorModel> { new GovernorModel { RoleId = (int)eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody }, };
+            var governorsDetails = new GovernorsDetailsDto
+            {
+                CurrentGovernors = currentGovernors,
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.ChairOfLocalGoverningBody },
                 HistoricalGovernors = new List<GovernorModel>(),
                 HasFullAccess = true
             };
