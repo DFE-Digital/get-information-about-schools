@@ -21,7 +21,7 @@ namespace Edubase.Common.Formatting.Json
             {
                 return JsonConvert.DeserializeObject<T>(value.ToString());
             }
-            catch (JsonReaderException ex)
+            catch (JsonReaderException)
             {
                 return default(T);
             }
@@ -33,7 +33,7 @@ namespace Edubase.Common.Formatting.Json
             {
                 return JsonConvert.SerializeObject(value);
             }
-            catch (JsonReaderException ex)
+            catch (JsonReaderException)
             {
                 return string.Empty;
             }
@@ -60,7 +60,7 @@ namespace Edubase.Common.Formatting.Json
             {
                 return JsonConvert.DeserializeObject<T>(source);
             }
-            catch (JsonReaderException ex)
+            catch (JsonReaderException)
             {
                 return default(T);
             }
