@@ -610,28 +610,26 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         [MemberData(nameof(ForbiddenCombinationsOfGovernanceProfessionalRoles))]
         public async Task Gov_AddEditOrReplace_RoleSpecified_GovernanceProfessional_RoleAlreadyExists_DisallowedThereforeReject(eLookupGovernorRole preExistingGovernorRole, eLookupGovernorRole newGovernorRole)
         {
-            var estabUrn = 4;
 
-            mockGovernorsReadService
-                .Setup(g => g.GetGovernorListAsync(estabUrn, null, It.IsAny<IPrincipal>()))
-                .ReturnsAsync(() => new GovernorsDetailsDto
-                {
-                    CurrentGovernors = new List<GovernorModel>()
-                    {
-                new GovernorModel() {RoleId = (int) preExistingGovernorRole}
-                    }
-                });
-            mockControllerContext.SetupGet(c => c.RouteData)
-                .Returns(new RouteData(new Route("", new PageRouteHandler("~/")), new PageRouteHandler("~/")));
+            var currentGovernors = new List<GovernorModel>
+            {
+                new GovernorModel { RoleId = (int)preExistingGovernorRole }
+            };
 
-            var result = await controller.AddEditOrReplace(null, estabUrn, newGovernorRole, null);
+            var governorsDetails = new GovernorsDetailsDto
+            {
+                CurrentGovernors = currentGovernors,
+                ApplicableRoles = new List<eLookupGovernorRole> { newGovernorRole },
+                HistoricalGovernors = new List<GovernorModel>(),
+                HasFullAccess = true
+            };
 
-            // original requirement: Only a single governance professional may be attached
-            // Expecting to redirect back, rejecting the proposed add/edit
-            var redirectResult = result as RedirectToRouteResult;
+            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(governorsDetails);
 
-            Assert.NotNull(redirectResult);
-            Assert.Equal("EstabEditGovernance", redirectResult.RouteName);
+            var result = await controller.RoleAllowed(newGovernorRole, null, null, null);
+
+            Assert.False(result);
         }
 
 
@@ -1240,6 +1238,27 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
 
         // Only a single chair of a local governing body may be attached (either directly, or via shared role)
         [Fact]
+        public async Task RoleAllowed_NewSharedChairGroup_Permitted_WhenNoLocalOrSharedChairGroup()
+        {
+            var currentGovernors = new List<GovernorModel> { };
+            var governorsDetails = new GovernorsDetailsDto
+            {
+                CurrentGovernors = currentGovernors,
+                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody },
+                HistoricalGovernors = new List<GovernorModel>(),
+                HasFullAccess = true
+            };
+
+            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(governorsDetails);
+
+            var result = await controller.RoleAllowed(eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody, null, null, null);
+
+            Assert.True(result);
+        }
+
+        // Only a single chair of a local governing body may be attached (either directly, or via shared role)
+        [Fact]
         public async Task RoleAllowed_NewLocalChair_Forbidden_WhenPreexistingLocalChair()
         {
             var currentGovernors = new List<GovernorModel> { new GovernorModel { RoleId = (int)eLookupGovernorRole.ChairOfLocalGoverningBody }, };
@@ -1261,7 +1280,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
 
         // Only a single chair of a local governing body may be attached (either directly, or via shared role)
         [Fact]
-        public async Task RoleAllowed_NewSharedChair_Forbidden_WhenPreexistingLocalChair()
+        public async Task RoleAllowed_NewSharedChairGroup_Forbidden_WhenPreexistingLocalChair()
         {
             var currentGovernors = new List<GovernorModel> { new GovernorModel { RoleId = (int)eLookupGovernorRole.ChairOfLocalGoverningBody }, };
             var governorsDetails = new GovernorsDetailsDto
@@ -1282,7 +1301,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
 
         // Only a single chair of a local governing body may be attached (either directly, or via shared role)
         [Fact]
-        public async Task RoleAllowed_NewLocalChair_Forbidden_WhenPreexistingSharedChair()
+        public async Task RoleAllowed_NewLocalChair_Forbidden_WhenPreexistingSharedChairGroup()
         {
             var currentGovernors = new List<GovernorModel> { new GovernorModel { RoleId = (int)eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody }, };
             var governorsDetails = new GovernorsDetailsDto
