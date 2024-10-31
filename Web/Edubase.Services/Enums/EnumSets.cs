@@ -86,7 +86,7 @@ namespace Edubase.Services.Enums
             GR.GovernanceProfessionalToASecureSat,
         };
 
-        public static IEnumerable<int> GovernanceProfessionalRoles = eGovernanceProfessionalRoles.Cast<int>();
+        public static IEnumerable<int> GovernanceProfessionalRoles { get; } = eGovernanceProfessionalRoles.Cast<int>();
 
 
 
@@ -138,6 +138,6 @@ namespace Edubase.Services.Enums
             GR.ChairOfLocalGoverningBody
         };
 
-        public static IEnumerable<int> ChairOfLocalGoverningBodyRoles = eChairOfLocalGoverningBodyRoles.Cast<int>();
+        public static IEnumerable<int> ChairOfLocalGoverningBodyRoles { get; } = eChairOfLocalGoverningBodyRoles.Cast<int>();
     }
 }
