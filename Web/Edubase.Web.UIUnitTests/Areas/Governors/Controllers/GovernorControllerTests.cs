@@ -600,6 +600,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             }
         }
 
+        /// All combinations of governance professional roles are forbidden, minus those which are explicitly permitted in PairwiseGovernanceProfessionalRolesAllowedCombinations
         public static IEnumerable<object[]> ForbiddenCombinationsOfGovernanceProfessionalRoles => PairwiseGovernanceProfessionalRoles
             .Where(allPairsPair => !PairwiseGovernanceProfessionalRolesAllowedCombinations.Any(innerPair =>
                 allPairsPair[0].Equals(innerPair[0])
