@@ -1224,20 +1224,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         public async Task RoleAllowed_NewLocalChair_Permitted_WhenNoLocalOrSharedChair()
         {
             var currentGovernors = new List<GovernorModel> { };
-            var governorsDetails = new GovernorsDetailsDto
-            {
-                CurrentGovernors = currentGovernors,
-                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.ChairOfLocalGoverningBody },
-                HistoricalGovernors = new List<GovernorModel>(),
-                HasFullAccess = true
-            };
+            var newGovernorRole = eLookupGovernorRole.ChairOfLocalGoverningBody;
 
-            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
-                .ReturnsAsync(governorsDetails);
-
-            var result = await controller.RoleAllowed(eLookupGovernorRole.ChairOfLocalGoverningBody, null, null, null);
-
-            Assert.True(result);
+            await AssertAddingNewRoleIsPermitted(currentGovernors, newGovernorRole);
         }
 
         // #231733: Adding multiple `Shared governance professional - group` is now permitted.
@@ -1245,20 +1234,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         public async Task RoleAllowed_NewSharedGovProGroup_Permitted_WhenPreExistingSharedGovProGroup()
         {
             var currentGovernors = new List<GovernorModel> { new GovernorModel { RoleId = (int)eLookupGovernorRole.Group_SharedGovernanceProfessional }, };
-            var governorsDetails = new GovernorsDetailsDto
-            {
-                CurrentGovernors = currentGovernors,
-                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.Group_SharedGovernanceProfessional },
-                HistoricalGovernors = new List<GovernorModel>(),
-                HasFullAccess = true
-            };
+            var newGovernorRole = eLookupGovernorRole.Group_SharedGovernanceProfessional;
 
-            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
-                .ReturnsAsync(governorsDetails);
-
-            var result = await controller.RoleAllowed(eLookupGovernorRole.Group_SharedGovernanceProfessional, null, null, null);
-
-            Assert.True(result);
+            await AssertAddingNewRoleIsPermitted(currentGovernors, newGovernorRole);
         }
 
         // Only a single chair of a local governing body may be attached (either directly, or via shared role)
@@ -1266,20 +1244,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         public async Task RoleAllowed_NewSharedChairGroup_Permitted_WhenNoLocalOrSharedChairGroup()
         {
             var currentGovernors = new List<GovernorModel> { };
-            var governorsDetails = new GovernorsDetailsDto
-            {
-                CurrentGovernors = currentGovernors,
-                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody },
-                HistoricalGovernors = new List<GovernorModel>(),
-                HasFullAccess = true
-            };
+            var newGovernorRole = eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody;
 
-            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
-                .ReturnsAsync(governorsDetails);
-
-            var result = await controller.RoleAllowed(eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody, null, null, null);
-
-            Assert.True(result);
+            await AssertAddingNewRoleIsPermitted(currentGovernors, newGovernorRole);
         }
 
         // Only a single chair of a local governing body may be attached (either directly, or via shared role)
@@ -1287,62 +1254,33 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         public async Task RoleAllowed_NewLocalChair_Forbidden_WhenPreexistingLocalChair()
         {
             var currentGovernors = new List<GovernorModel> { new GovernorModel { RoleId = (int)eLookupGovernorRole.ChairOfLocalGoverningBody }, };
-            var governorsDetails = new GovernorsDetailsDto
-            {
-                CurrentGovernors = currentGovernors,
-                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.ChairOfLocalGoverningBody },
-                HistoricalGovernors = new List<GovernorModel>(),
-                HasFullAccess = true
-            };
+            var newGovernorRole = eLookupGovernorRole.ChairOfLocalGoverningBody;
 
-            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
-                .ReturnsAsync(governorsDetails);
-
-            var result = await controller.RoleAllowed(eLookupGovernorRole.ChairOfLocalGoverningBody, null, null, null);
-
-            Assert.False(result);
+            await AssertAddingNewRoleIsForbidden(currentGovernors, newGovernorRole);
         }
 
         // Only a single chair of a local governing body may be attached (either directly, or via shared role)
         [Fact]
         public async Task RoleAllowed_NewSharedChairGroup_Forbidden_WhenPreexistingLocalChair()
         {
-            var currentGovernors = new List<GovernorModel> { new GovernorModel { RoleId = (int)eLookupGovernorRole.ChairOfLocalGoverningBody }, };
-            var governorsDetails = new GovernorsDetailsDto
+            var currentGovernors = new List<GovernorModel>
             {
-                CurrentGovernors = currentGovernors,
-                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody },
-                HistoricalGovernors = new List<GovernorModel>(),
-                HasFullAccess = true
+                new GovernorModel { RoleId = (int)eLookupGovernorRole.ChairOfLocalGoverningBody },
             };
+            var newGovernorRole = eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody;
 
-            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
-                .ReturnsAsync(governorsDetails);
-
-            var result = await controller.RoleAllowed(eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody, null, null, null);
-
-            Assert.False(result);
+            await AssertAddingNewRoleIsForbidden(currentGovernors, newGovernorRole);
         }
+
 
         // Only a single chair of a local governing body may be attached (either directly, or via shared role)
         [Fact]
         public async Task RoleAllowed_NewLocalChair_Forbidden_WhenPreexistingSharedChairGroup()
         {
             var currentGovernors = new List<GovernorModel> { new GovernorModel { RoleId = (int)eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody }, };
-            var governorsDetails = new GovernorsDetailsDto
-            {
-                CurrentGovernors = currentGovernors,
-                ApplicableRoles = new List<eLookupGovernorRole> { eLookupGovernorRole.ChairOfLocalGoverningBody },
-                HistoricalGovernors = new List<GovernorModel>(),
-                HasFullAccess = true
-            };
+            var newGovernorRole = eLookupGovernorRole.ChairOfLocalGoverningBody;
 
-            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
-                .ReturnsAsync(governorsDetails);
-
-            var result = await controller.RoleAllowed(eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody, null, null, null);
-
-            Assert.False(result);
+            await AssertAddingNewRoleIsForbidden(currentGovernors, newGovernorRole);
         }
 
 
@@ -1355,21 +1293,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             {
                 new GovernorModel { RoleId = (int)firstGovernanceProfessional }
             };
+            var newGovernorRole = secondGovernanceProfessional;
 
-            var governorsDetails = new GovernorsDetailsDto
-            {
-                CurrentGovernors = currentGovernors,
-                ApplicableRoles = new List<eLookupGovernorRole> { secondGovernanceProfessional },
-                HistoricalGovernors = new List<GovernorModel>(),
-                HasFullAccess = true
-            };
-
-            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
-                .ReturnsAsync(governorsDetails);
-
-            var result = await controller.RoleAllowed(secondGovernanceProfessional, null, null, null);
-
-            Assert.True(result);
+            await AssertAddingNewRoleIsPermitted(currentGovernors, newGovernorRole);
         }
 
         [Theory]
@@ -1381,21 +1307,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             {
                 new GovernorModel { RoleId = (int)firstGovernanceProfessional }
             };
+            var newGovernorRole = secondGovernanceProfessional;
 
-            var governorsDetails = new GovernorsDetailsDto
-            {
-                CurrentGovernors = currentGovernors,
-                ApplicableRoles = new List<eLookupGovernorRole> { secondGovernanceProfessional },
-                HistoricalGovernors = new List<GovernorModel>(),
-                HasFullAccess = true
-            };
-
-            mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
-                .ReturnsAsync(governorsDetails);
-
-            var result = await controller.RoleAllowed(secondGovernanceProfessional, null, null, null);
-
-            Assert.False(result);
+            await AssertAddingNewRoleIsPermitted(currentGovernors, newGovernorRole);
         }
 
         [Theory]
@@ -1407,11 +1321,34 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             {
                 new GovernorModel { RoleId = (int)firstGovernanceProfessional }
             };
+            var newGovernorRole = secondGovernanceProfessional;
+
+            await AssertAddingNewRoleIsForbidden(currentGovernors, newGovernorRole);
+        }
+
+
+        private async Task AssertAddingNewRoleIsForbidden(List<GovernorModel> currentGovernors,
+            eLookupGovernorRole newGovernorRole)
+        {
+            await AssertAddingNewRoleAcceptedOrForbidden(currentGovernors, newGovernorRole, false);
+        }
+
+        private async Task AssertAddingNewRoleIsPermitted(List<GovernorModel> currentGovernors,
+            eLookupGovernorRole newGovernorRole)
+        {
+            await AssertAddingNewRoleAcceptedOrForbidden(currentGovernors, newGovernorRole, true);
+        }
+
+        private async Task AssertAddingNewRoleAcceptedOrForbidden(List<GovernorModel> currentGovernors, eLookupGovernorRole newGovernorRole,
+            bool expectedResult)
+        {
+            var applicableRoles = new List<eLookupGovernorRole> { newGovernorRole };
+            applicableRoles.AddRange(currentGovernors.Select(g => (eLookupGovernorRole)g.RoleId));
 
             var governorsDetails = new GovernorsDetailsDto
             {
                 CurrentGovernors = currentGovernors,
-                ApplicableRoles = new List<eLookupGovernorRole> { secondGovernanceProfessional },
+                ApplicableRoles = applicableRoles,
                 HistoricalGovernors = new List<GovernorModel>(),
                 HasFullAccess = true
             };
@@ -1419,9 +1356,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(governorsDetails);
 
-            var result = await controller.RoleAllowed(secondGovernanceProfessional, null, null, null);
+            var actualResult = await controller.RoleAllowed(newGovernorRole, null, null, null);
 
-            Assert.False(result);
+            Assert.Equal(expectedResult, actualResult);
         }
     }
 }
