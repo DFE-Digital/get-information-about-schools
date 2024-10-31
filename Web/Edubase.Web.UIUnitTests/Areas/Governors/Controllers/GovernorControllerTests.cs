@@ -567,9 +567,18 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
 
 
         // Delegate to EnumSets
-        public static IEnumerable<object[]> ForbiddenCombinationsOfGovernanceProfessionalRoles => EnumSets
-            .ForbiddenCombinationsOfGovernanceProfessionalRoles
-            .Select(a => new object[] { a[0], a[1] });
+        public static TheoryData<eLookupGovernorRole, eLookupGovernorRole> ForbiddenCombinationsOfGovernanceProfessionalRoles
+        {
+            get
+            {
+                var theoryData = new TheoryData<eLookupGovernorRole, eLookupGovernorRole>();
+                foreach (var combination in EnumSets.ForbiddenCombinationsOfGovernanceProfessionalRoles)
+                {
+                    theoryData.Add((eLookupGovernorRole)combination[0], (eLookupGovernorRole)combination[1]);
+                }
+                return theoryData;
+            }
+        }
 
         [Theory()]
         [MemberData(nameof(ForbiddenCombinationsOfGovernanceProfessionalRoles))]
