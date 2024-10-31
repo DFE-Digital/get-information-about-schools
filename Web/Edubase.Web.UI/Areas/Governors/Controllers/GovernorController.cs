@@ -488,12 +488,24 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             // }
 
 
+            var isForbiddenGovernanceProfessionalCombination = EnumSets
+                .ForbiddenCombinationsOfGovernanceProfessionalRoles
+                .Any(combination =>
+                    (combination[0] == newRole && existingGovernorRoleIds.Contains((int) combination[1]))
+                    // ||
+                    // (combination[1] == newRole && existingGovernorRoleIds.Contains((int) combination[0]))
+                );
 
-            var checkRolePresenceInMat = CheckMatLevel(newRole, existingGovernorRoleIds);
-            if (checkRolePresenceInMat && IsEquivalentRoleAlreadyPresent(newRole, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
+            if (isForbiddenGovernanceProfessionalCombination)
             {
                 return false;
             }
+
+            // var checkRolePresenceInMat = CheckMatLevel(newRole, existingGovernorRoleIds);
+            // if (checkRolePresenceInMat && IsEquivalentRoleAlreadyPresent(newRole, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
+            // {
+            //     return false;
+            // }
 
 
 
@@ -501,49 +513,49 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return true;
         }
 
-        private static bool CheckMatLevel(eLookupGovernorRole role, HashSet<int> existingGovernorRoleIds)
-        {
-            // At MAT level you should be able to have a 'Shared governance professional - group' and a 'Governance professional to a MAT'
-            var isSharedGovProGroupPreExisting = existingGovernorRoleIds.Any(g => g == (int) eLookupGovernorRole.Group_SharedGovernanceProfessional);
-            var isGovProMatPreExisting = existingGovernorRoleIds.Any(m => m == (int) eLookupGovernorRole.GovernanceProfessionalToAMat);
-            var isNewSharedGovProGroupBeingAdded = role == eLookupGovernorRole.Group_SharedGovernanceProfessional;
-            var isNewGovProMatBeingAdded = role == eLookupGovernorRole.GovernanceProfessionalToAMat;
-
-            var preExistingSharedGovProGroup_And_NewGovProMat = isSharedGovProGroupPreExisting && isNewGovProMatBeingAdded;
-            if (preExistingSharedGovProGroup_And_NewGovProMat)
-            {
-                // Forbidden to add a gov pro to MAT if gov pro to group already exists
-                return false;
-            }
-
-            var preExistingGovProMat_And_NewSharedGovProGroup = isGovProMatPreExisting && isNewSharedGovProGroupBeingAdded;
-            if (preExistingGovProMat_And_NewSharedGovProGroup)
-            {
-                // Forbidden to add a shared gov pro - group if gov pro to MAT already exists
-                return false;
-            }
-
-            // Above checks not "failed" / "triggered", therefore this validation check has "passed" / "not failed"
-            return true;
-
-            // var checkRolePresence = false;
-            //
-            // if (!isNewSharedGovProGroupBeingAdded && !isNewGovProMatBeingAdded)
-            // {
-            //     // We're not attempting to add either shared gov pro - group, or gov pro to mat, therefore this validation check doesn't apply -- return true to say it has "passed" / "not failed"?
-            //     checkRolePresence = true;
-            // }
-            // else
-            // {
-            //     if (!preExistingSharedGovProGroup_And_NewGovProMat && !preExistingGovProMat_And_NewSharedGovProGroup)
-            //     {
-            //         // Neither of the forbidden scenarios present, therefore this validation check succeeded -- return true to say it has "passed" / "not failed"?
-            //         checkRolePresence = true;
-            //     }
-            // }
-            //
-            // return checkRolePresence;
-        }
+        // private static bool CheckMatLevel(eLookupGovernorRole role, HashSet<int> existingGovernorRoleIds)
+        // {
+        //     // At MAT level you should be able to have a 'Shared governance professional - group' and a 'Governance professional to a MAT'
+        //     var isSharedGovProGroupPreExisting = existingGovernorRoleIds.Any(g => g == (int) eLookupGovernorRole.Group_SharedGovernanceProfessional);
+        //     var isGovProMatPreExisting = existingGovernorRoleIds.Any(m => m == (int) eLookupGovernorRole.GovernanceProfessionalToAMat);
+        //     var isNewSharedGovProGroupBeingAdded = role == eLookupGovernorRole.Group_SharedGovernanceProfessional;
+        //     var isNewGovProMatBeingAdded = role == eLookupGovernorRole.GovernanceProfessionalToAMat;
+        //
+        //     var preExistingSharedGovProGroup_And_NewGovProMat = isSharedGovProGroupPreExisting && isNewGovProMatBeingAdded;
+        //     if (preExistingSharedGovProGroup_And_NewGovProMat)
+        //     {
+        //         // Forbidden to add a gov pro to MAT if gov pro to group already exists
+        //         return false;
+        //     }
+        //
+        //     var preExistingGovProMat_And_NewSharedGovProGroup = isGovProMatPreExisting && isNewSharedGovProGroupBeingAdded;
+        //     if (preExistingGovProMat_And_NewSharedGovProGroup)
+        //     {
+        //         // Forbidden to add a shared gov pro - group if gov pro to MAT already exists
+        //         return false;
+        //     }
+        //
+        //     // Above checks not "failed" / "triggered", therefore this validation check has "passed" / "not failed"
+        //     return true;
+        //
+        //     // var checkRolePresence = false;
+        //     //
+        //     // if (!isNewSharedGovProGroupBeingAdded && !isNewGovProMatBeingAdded)
+        //     // {
+        //     //     // We're not attempting to add either shared gov pro - group, or gov pro to mat, therefore this validation check doesn't apply -- return true to say it has "passed" / "not failed"?
+        //     //     checkRolePresence = true;
+        //     // }
+        //     // else
+        //     // {
+        //     //     if (!preExistingSharedGovProGroup_And_NewGovProMat && !preExistingGovProMat_And_NewSharedGovProGroup)
+        //     //     {
+        //     //         // Neither of the forbidden scenarios present, therefore this validation check succeeded -- return true to say it has "passed" / "not failed"?
+        //     //         checkRolePresence = true;
+        //     //     }
+        //     // }
+        //     //
+        //     // return checkRolePresence;
+        // }
 
         /// <param name="governorRole">The role under consideration</param>
         /// <param name="rolesToConsiderEquivalent">Roles which must not co-exist for the purposes of this check - for example, we must not (simultaneously) have a chairperson and a "shared" chairperson.</param>

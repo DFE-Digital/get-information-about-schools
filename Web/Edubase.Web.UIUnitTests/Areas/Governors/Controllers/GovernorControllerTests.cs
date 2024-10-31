@@ -577,7 +577,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         );
 
 
-        public static IEnumerable<object[]> PairwiseGovernanceProfessionalRolesAllowedCombinations
+        public static IEnumerable<object[]> PermittedGovernanceProfessionalCombinations
         {
             get
             {
@@ -595,14 +595,17 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
                     // - #198239: System should allow adding a Governance professional to a federation if a record for Governance professional to a local authority maintained is already recorded.
                     new object[] {eLookupGovernorRole.GovernanceProfessionalToAFederation, eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool},
                     new object[] {eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool, eLookupGovernorRole.GovernanceProfessionalToAFederation},
+
+                    // - #231733: Can now have many "Shared governance professional - group" roles, not just "one of each"
+                    new object[] {eLookupGovernorRole.Group_SharedGovernanceProfessional, eLookupGovernorRole.Group_SharedGovernanceProfessional},
                 };
                 return allData;
             }
         }
 
-        /// All combinations of governance professional roles are forbidden, minus those which are explicitly permitted in PairwiseGovernanceProfessionalRolesAllowedCombinations
+        /// All combinations of governance professional roles are forbidden, minus those which are explicitly permitted in PermittedGovernanceProfessionalCombinations
         public static IEnumerable<object[]> ForbiddenCombinationsOfGovernanceProfessionalRoles => PairwiseGovernanceProfessionalRoles
-            .Where(allPairsPair => !PairwiseGovernanceProfessionalRolesAllowedCombinations.Any(innerPair =>
+            .Where(allPairsPair => !PermittedGovernanceProfessionalCombinations.Any(innerPair =>
                 allPairsPair[0].Equals(innerPair[0])
                 && allPairsPair[1].Equals(innerPair[1])));
 
