@@ -124,6 +124,7 @@ namespace Edubase.Services.Enums
         };
 
         /// All combinations of governance professional roles are forbidden, minus those which are explicitly permitted in PermittedGovernanceProfessionalCombinations
+        /// First entry is the pre-existing role, and second entry is the proposed new role.
         public static IEnumerable<GR[]> ForbiddenCombinationsOfGovernanceProfessionalRoles => PairwiseGovernanceProfessionalRoles
             .Where(allPairsPair => !PermittedGovernanceProfessionalCombinations.Any(innerPair =>
                 allPairsPair[0].Equals(innerPair[0])

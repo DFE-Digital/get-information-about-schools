@@ -566,49 +566,10 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
         }
 
 
-        /// <summary>
-        /// Every governance professional role, combined with every type of governance professional.
-        /// </summary>
-        public static IEnumerable<object[]> PairwiseGovernanceProfessionalRoles =>
-        (
-            from preExistingRole in EnumSets.eGovernanceProfessionalRoles
-            from newRole in EnumSets.eGovernanceProfessionalRoles
-            select new object[] { preExistingRole, newRole }
-        );
-
-
-        public static IEnumerable<object[]> PermittedGovernanceProfessionalCombinations
-        {
-            get
-            {
-                var allData = new List<object[]>
-                {
-                    // - #198772 / #193913 : MAT can have "one-each" of "Shared governance professional - group" and "Governance professional to a multi-academy trust (MAT)"
-                    // - #231733: Can now also have many "Shared governance professional - group" roles, not just "one of each"
-                    new object[] {eLookupGovernorRole.Group_SharedGovernanceProfessional, eLookupGovernorRole.GovernanceProfessionalToAMat},
-                    new object[] {eLookupGovernorRole.GovernanceProfessionalToAMat, eLookupGovernorRole.Group_SharedGovernanceProfessional},
-
-                    // - #198772 / #197361 : Establishment within a SAT can have "one-each" of "Governance professional to an individual academy or free school" and "Governance professional for single-academy trust (SAT)"
-                    new object[] {eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, eLookupGovernorRole.GovernanceProfessionalToASat},
-                    new object[] {eLookupGovernorRole.GovernanceProfessionalToASat, eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool},
-
-                    // - #198239: System should allow adding a Governance professional to a federation if a record for Governance professional to a local authority maintained is already recorded.
-                    new object[] {eLookupGovernorRole.GovernanceProfessionalToAFederation, eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool},
-                    new object[] {eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool, eLookupGovernorRole.GovernanceProfessionalToAFederation},
-
-                    // - #231733: Can now have many "Shared governance professional - group" roles, not just "one of each"
-                    new object[] {eLookupGovernorRole.Group_SharedGovernanceProfessional, eLookupGovernorRole.Group_SharedGovernanceProfessional},
-                };
-                return allData;
-            }
-        }
-
-        /// All combinations of governance professional roles are forbidden, minus those which are explicitly permitted in PermittedGovernanceProfessionalCombinations
-        public static IEnumerable<object[]> ForbiddenCombinationsOfGovernanceProfessionalRoles => PairwiseGovernanceProfessionalRoles
-            .Where(allPairsPair => !PermittedGovernanceProfessionalCombinations.Any(innerPair =>
-                allPairsPair[0].Equals(innerPair[0])
-                && allPairsPair[1].Equals(innerPair[1])));
-
+        // Delegate to EnumSets
+        public static IEnumerable<object[]> ForbiddenCombinationsOfGovernanceProfessionalRoles => EnumSets
+            .ForbiddenCombinationsOfGovernanceProfessionalRoles
+            .Select(a => new object[] { a[0], a[1] });
 
         [Theory()]
         [MemberData(nameof(ForbiddenCombinationsOfGovernanceProfessionalRoles))]
