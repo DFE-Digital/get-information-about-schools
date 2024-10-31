@@ -433,7 +433,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             viewModel.SelectedPreviousExistingNonChairId = model.Id;
         }
 
-        public async Task<bool> RoleAllowed(eLookupGovernorRole role, int? groupUId, int? establishmentUrn,
+        public async Task<bool> RoleAllowed(eLookupGovernorRole newRole, int? groupUId, int? establishmentUrn,
             IPrincipal user)
         {
             var existingGovernors = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, user);
@@ -444,24 +444,58 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 .ToHashSet();
 
             // Only a single chair of a local governing body may be attached (either directly, or via shared role)
-            if (IsEquivalentRoleAlreadyPresent(role, EnumSets.eChairOfLocalGoverningBodyRoles, existingGovernorRoleIds))
-            {
-                return false;
-            }
-
-            var checkRolePresenceInMat = CheckMatLevel(role, existingGovernorRoleIds);
-            if (checkRolePresenceInMat && IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
+            if (IsEquivalentRoleAlreadyPresent(newRole, EnumSets.eChairOfLocalGoverningBodyRoles, existingGovernorRoleIds))
             {
                 return false;
             }
 
             // Where the new governor is a role which permits only a single appointee, forbid if an exact match is found
-            var isRoleWhichPermitsOnlySingleAppointee = EnumSets.eSingularGovernorRoles.Contains(role);
-            var exactCurrentGovernorTypeMatchFound = existingGovernorRoleIds.Contains((int) role);
+            var isRoleWhichPermitsOnlySingleAppointee = EnumSets.eSingularGovernorRoles.Contains(newRole);
+            var exactCurrentGovernorTypeMatchFound = existingGovernorRoleIds.Contains((int) newRole);
             if (isRoleWhichPermitsOnlySingleAppointee && exactCurrentGovernorTypeMatchFound)
             {
                 return false;
             }
+
+
+            // As a general rule, only one governance professional role may be attached (either directly, or via shared role)
+            // Some exceptions exist.
+            /*
+             *  var allData = new List<object[]>
+                {
+                    // - #198772 / #193913 : MAT can have "one-each" of "Shared governance professional - group" and "Governance professional to a multi-academy trust (MAT)"
+                    // - #231733: Can now also have many "Shared governance professional - group" roles, not just "one of each"
+                    new object[] {eLookupGovernorRole.Group_SharedGovernanceProfessional, eLookupGovernorRole.GovernanceProfessionalToAMat},
+                    new object[] {eLookupGovernorRole.GovernanceProfessionalToAMat, eLookupGovernorRole.Group_SharedGovernanceProfessional},
+
+                    // - #198772 / #197361 : Establishment within a SAT can have "one-each" of "Governance professional to an individual academy or free school" and "Governance professional for single-academy trust (SAT)"
+                    new object[] {eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, eLookupGovernorRole.GovernanceProfessionalToASat},
+                    new object[] {eLookupGovernorRole.GovernanceProfessionalToASat, eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool},
+
+                    // - #198239: System should allow adding a Governance professional to a federation if a record for Governance professional to a local authority maintained is already recorded.
+                    new object[] {eLookupGovernorRole.GovernanceProfessionalToAFederation, eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool},
+                    new object[] {eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool, eLookupGovernorRole.GovernanceProfessionalToAFederation},
+                };
+             */
+
+
+            // if (IsEquivalentRoleAlreadyPresent(newRole, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
+            // {
+            //
+            //
+            //     // No exceptions found, therefore this role is not allowed
+            //     return false;
+            // }
+
+
+
+            var checkRolePresenceInMat = CheckMatLevel(newRole, existingGovernorRoleIds);
+            if (checkRolePresenceInMat && IsEquivalentRoleAlreadyPresent(newRole, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
+            {
+                return false;
+            }
+
+
 
             // Allow, if no rule met to forbid creating a new governor of this type
             return true;
