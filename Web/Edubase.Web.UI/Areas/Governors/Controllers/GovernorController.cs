@@ -112,6 +112,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             viewModel.GovernorShared = false;
             if (removalGid.HasValue)
             {
+                if (domainModel.CurrentGovernors.Count(g => g.Id == removalGid.Value) > 1)
+                {
+                    throw new InvalidOperationException(
+                        "domainModel.CurrentGovernors contains more than one governor with the same Id (governorController)");
+                }
+
                 var govToBeRemoved = domainModel.CurrentGovernors.SingleOrDefault(g => g.Id == removalGid.Value);
                 if (govToBeRemoved != null && EnumSets.SharedGovernorRoles.Contains(govToBeRemoved.RoleId.Value))
                 {
