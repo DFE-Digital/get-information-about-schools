@@ -357,6 +357,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             await viewModel.SetFscpdAsync();
             await viewModel.SetShowFinancialBenchmarkingAsync();
+            await viewModel.SetShowOfstedReportLinkAsync();
 
             viewModel.TabWarnings = new TabWarningsModel(viewModel.Establishment.TypeId);
 
@@ -382,7 +383,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.SchoolCapacityToolTipLink = viewModel.Establishment.TypeId.Equals((int)ET.AcademySecure16to19)
                 ? string.Empty
                 : _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacityLink", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
-               
+
             return View(viewModel);
         }
 
@@ -405,6 +406,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             };
 
             await viewModel.SetFscpdAsync();
+            await viewModel.SetShowFinancialBenchmarkingAsync();
+            await viewModel.SetShowOfstedReportLinkAsync();
 
             await Task.WhenAll(
                 PopulateDisplayPolicies(viewModel)
