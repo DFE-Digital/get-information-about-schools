@@ -231,6 +231,8 @@ namespace Edubase.Web.UI.Models
             }
         }
 
+        public bool ShowOfstedRatings { get; set; } = true;
+
         public string OfstedReportUrl => extService.OfstedReportUrl(Establishment.Urn);
 
         private bool? _showOfstedReportLink;

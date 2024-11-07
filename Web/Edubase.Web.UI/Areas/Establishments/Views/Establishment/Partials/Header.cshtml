@@ -207,22 +207,31 @@
                 var newlineRequired = false;
             }
 
-            @if (Model.DisplayPolicy.OfstedRatingId)
+            @if (Model.ShowOfstedRatings)
             {
-                if (Model.Establishment.OfstedRatingId.HasValue)
+                if (Model.DisplayPolicy.OfstedRatingId)
                 {
-                    newlineRequired = true;
-                    <span class="highlighted-ofsted-rating">@Model.OfstedRatingName</span>
-                    if (Model.Establishment.OfstedInspectionDate.HasValue)
+                    if (Model.Establishment.OfstedRatingId.HasValue)
                     {
-                        <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("d MMMM yyyy")))</span>
+                        newlineRequired = true;
+                        <span class="highlighted-ofsted-rating">@Model.OfstedRatingName</span>
+                        if (Model.Establishment.OfstedInspectionDate.HasValue)
+                        {
+                            <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("d MMMM yyyy")))</span>
+                        }
+                    }
+                    else
+                    {
+                        newlineRequired = true;
+                        <span>Latest inspection results not recorded on GIAS</span>
                     }
                 }
-                else
-                {
-                    newlineRequired = true;
-                    <span>Latest inspection results not recorded on GIAS</span>
-                }
+            }
+            else
+            {
+                // TODO: Update this once the content is agreed in #232329.
+                newlineRequired = true;
+                <span>GIAS no longer displays Ofsted inspection ratings</span>
             }
 
             @if (newlineRequired)
