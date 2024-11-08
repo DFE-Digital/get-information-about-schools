@@ -6,7 +6,7 @@ import downloadCategorisedFields from '../GiasVueComponents/DownloadCategorisedF
 import viewSwitcher from "../GiasVueComponents/Download/viewSwitcher";
 import searchByFieldName from '../GiasVueComponents/Download/searchByFieldName';
 
-const app = new createApp({
+const app = createApp({
   components: {
     errorSummary,
     checkbox,
