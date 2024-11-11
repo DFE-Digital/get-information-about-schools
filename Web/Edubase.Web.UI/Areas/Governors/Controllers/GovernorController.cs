@@ -439,7 +439,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             viewModel.SelectedPreviousExistingNonChairId = model.Id;
         }
 
-        public async Task<bool> RoleAllowed(eLookupGovernorRole role, int? groupUId, int? establishmentUrn,
+        public async Task<bool> RoleAllowed(eLookupGovernorRole newRole, int? groupUId, int? establishmentUrn,
             IPrincipal user)
         {
             var existingGovernors = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, user);
@@ -450,53 +450,38 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 .ToHashSet();
 
             // Only a single chair of a local governing body may be attached (either directly, or via shared role)
-            if (IsEquivalentRoleAlreadyPresent(role, EnumSets.eChairOfLocalGoverningBodyRoles, existingGovernorRoleIds))
-            {
-                return false;
-            }
-
-            var checkRolePresenceInMat = CheckMatLevel(role, existingGovernorRoleIds);
-
-            if (checkRolePresenceInMat && IsEquivalentRoleAlreadyPresent(role, EnumSets.eGovernanceProfessionalRoles, existingGovernorRoleIds))
+            if (IsEquivalentRoleAlreadyPresent(newRole, EnumSets.eChairOfLocalGoverningBodyRoles, existingGovernorRoleIds))
             {
                 return false;
             }
 
             // Where the new governor is a role which permits only a single appointee, forbid if an exact match is found
-            var isRoleWhichPermitsOnlySingleAppointee = EnumSets.eSingularGovernorRoles.Contains(role);
-            var exactCurrentGovernorTypeMatchFound = existingGovernorRoleIds.Contains((int) role);
+            var isRoleWhichPermitsOnlySingleAppointee = EnumSets.eSingularGovernorRoles.Contains(newRole);
+            var exactCurrentGovernorTypeMatchFound = existingGovernorRoleIds.Contains((int) newRole);
             if (isRoleWhichPermitsOnlySingleAppointee && exactCurrentGovernorTypeMatchFound)
+            {
+                return false;
+            }
+
+            // As a general rule, in addition to the also subject to the "single person only" rules above,
+            // only one governance professional "type" is permitted per establishment/group.
+            // There are some exceptions to this, which are defined in EnumSets.PermittedGovernanceProfessionalCombinations.
+            var isForbiddenGovernanceProfessionalCombination = EnumSets
+                .ForbiddenCombinationsOfGovernanceProfessionalRoles
+                .Any(combination =>
+                {
+                    var preExistingRole = combination[0];
+                    var proposedNewRole = combination[1];
+                    return proposedNewRole == newRole && existingGovernorRoleIds.Contains((int) preExistingRole);
+                });
+
+            if (isForbiddenGovernanceProfessionalCombination)
             {
                 return false;
             }
 
             // Allow, if no rule met to forbid creating a new governor of this type
             return true;
-        }
-
-        private static bool CheckMatLevel(eLookupGovernorRole role, HashSet<int> existingGovernorRoleIds)
-        {
-            // At MAT level you should be able to have a 'Shared governance professional - group' and a 'Governance professional to a MAT'
-            var isGroupPresent = existingGovernorRoleIds.Any(g => g == (int) eLookupGovernorRole.Group_SharedGovernanceProfessional);
-            var isMatPresent = existingGovernorRoleIds.Any(m => m == (int) eLookupGovernorRole.GovernanceProfessionalToAMat);
-            var isAddingGroup = role == eLookupGovernorRole.Group_SharedGovernanceProfessional;
-            var isAddingMat = role == eLookupGovernorRole.GovernanceProfessionalToAMat;
-
-            var checkRolePresence = false;
-
-            if (isAddingGroup || isAddingMat)
-            {
-                if (!((isAddingMat && isGroupPresent) || (isAddingGroup && isMatPresent)))
-                {
-                    checkRolePresence = true;
-                }
-            }
-            else
-            {
-                checkRolePresence = true;
-            }
-
-            return checkRolePresence;
         }
 
         /// <param name="governorRole">The role under consideration</param>
