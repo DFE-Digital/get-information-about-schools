@@ -506,7 +506,7 @@ else
                             if (Model.GovernorPermissions.Update)
                             {
                                 <div class="button-wrapper">
-                                    @if (Model.EstablishmentUrn.HasValue && ((eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Group_SharedLocalGovernor || (eLookupGovernorRole)row.Model.RoleId == eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody))
+                                    @if (Model.EstablishmentUrn.HasValue && row.Model.RoleId.HasValue && EnumSets.SharedGovernorRoles.Contains(row.Model.RoleId.Value))
                                     {
                                         @Html.RouteLink("Edit person", "EditSharedGovernor", new { establishmentUrn = Model.EstablishmentUrn, governorId = row.Model.Id }, new { @class = "govuk-button govuk-button--secondary" })
                                     }
