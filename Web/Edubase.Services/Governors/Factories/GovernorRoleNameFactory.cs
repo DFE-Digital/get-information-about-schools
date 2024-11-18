@@ -5,53 +5,39 @@ namespace Edubase.Services.Governors.Factories
 {
     public static class GovernorRoleNameFactory
     {
-        private static readonly Dictionary<eLookupGovernorRole, string> SentenceCaseLabels = new Dictionary<eLookupGovernorRole, string>()
+        private static Dictionary<eLookupGovernorRole, string> CreateLabelsDictionary(bool isPlural)
         {
-            { eLookupGovernorRole.Governor, "Governor" },
-            { eLookupGovernorRole.LocalGovernor, "Local governor" },
-            { eLookupGovernorRole.Group_SharedLocalGovernor, "Shared local governor - group" },
-            { eLookupGovernorRole.ChairOfLocalGoverningBody, "Chair of local governing body" },
-            { eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody, "Shared chair of local governing body - group" },
-            { eLookupGovernorRole.AccountingOfficer, "Accounting officer" },
-            { eLookupGovernorRole.ChairOfGovernors, "Chair of governors" },
-            { eLookupGovernorRole.ChairOfTrustees, "Chair of trustees" },
-            { eLookupGovernorRole.ChiefFinancialOfficer, "Chief financial officer" },
-            { eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody, "Shared chair of local governing body - establishment" },
-            { eLookupGovernorRole.Establishment_SharedLocalGovernor, "Shared local governor - establishment" },
-            { eLookupGovernorRole.Member, "Member" },
-            { eLookupGovernorRole.Member_Individual, "Member - individual" },
-            { eLookupGovernorRole.Member_Organisation, "Member - organisation" },
-            { eLookupGovernorRole.Trustee, "Trustee" },
-            { eLookupGovernorRole.NA, "Not applicable" },
-            { eLookupGovernorRole.Group_SharedGovernanceProfessional, "Shared governance professional - group" },
-            { eLookupGovernorRole.Establishment_SharedGovernanceProfessional, "Shared governance professional - establishment" },
-            { eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool, "Governance professional - local authority maintained school" },
-            { eLookupGovernorRole.GovernanceProfessionalToAFederation, "Governance professional - federation" },
-            { eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professional - individual academy or free school" },
-            { eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professional - multi-academy trust (MAT)" },
-            { eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professional - secure single-academy trust (SSAT)" },
-            { eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professional - single-academy trust (SAT)" },
-        };
+            return new Dictionary<eLookupGovernorRole, string>
+            {
+                /*  1 */ { eLookupGovernorRole.ChairOfGovernors,                                         isPlural ? "Chairs of governors"                                                 : "Chair of governors" },
+                /*  2 */ { eLookupGovernorRole.Governor,                                                 isPlural ? "Governors"                                                           : "Governor" },
+                /*  3 */ { eLookupGovernorRole.ChairOfTrustees,                                          isPlural ? "Chairs of trustees"                                                  : "Chair of trustees" },
+                /*  4 */ { eLookupGovernorRole.Trustee,                                                  isPlural ? "Trustees"                                                            : "Trustee" },
+                /*  5 */ { eLookupGovernorRole.Member,                                                   isPlural ? "Members"                                                             : "Member" },
+                /*  6 */ { eLookupGovernorRole.AccountingOfficer,                                        isPlural ? "Accounting officers"                                                 : "Accounting officer" },
+                /*  7 */ { eLookupGovernorRole.ChiefFinancialOfficer,                                    isPlural ? "Chief financial officers"                                            : "Chief financial officer" },
+                /*  8 */ { eLookupGovernorRole.ChairOfLocalGoverningBody,                                isPlural ? "Chairs of local governing body"                                      : "Chair of local governing body" },
+                /*  9 */ { eLookupGovernorRole.LocalGovernor,                                            isPlural ? "Local governors"                                                     : "Local governor" },
+                /* 10 */ { eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody,                    isPlural ? "Shared chairs of local governing body - group"                       : "Shared chair of local governing body - group" },
+                /* 11 */ { eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody,            isPlural ? "Shared chairs of local governing body - establishment"               : "Shared chair of local governing body - establishment" },
+                /* 12 */ { eLookupGovernorRole.Group_SharedLocalGovernor,                                isPlural ? "Shared local governors - group"                                      : "Shared local governor - group" },
+                /* 13 */ { eLookupGovernorRole.Establishment_SharedLocalGovernor,                        isPlural ? "Shared local governors - establishment"                              : "Shared local governor - establishment" },
+                /* 14 */ { eLookupGovernorRole.NA,                                                       isPlural ? "Not applicable"                                                      : "Not applicable" },
+                /* 15 */ { eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool,  isPlural ? "Governance professionals - local authority maintained school"        : "Governance professional - local authority maintained school" },
+                /* 16 */ { eLookupGovernorRole.GovernanceProfessionalToAFederation,                      isPlural ? "Governance professionals - federation"                               : "Governance professional - federation" },
+                /* 17 */ { eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool,  isPlural ? "Local governance professionals - individual academy or free school"  : "Local governance professional - individual academy or free school" },
+                /* 18 */ { eLookupGovernorRole.GovernanceProfessionalToAMat,                             isPlural ? "Governance professionals - multi-academy trust (MAT)"                : "Governance professional - multi-academy trust (MAT)" },
+                /* 19 */ { eLookupGovernorRole.Group_SharedGovernanceProfessional,                       isPlural ? "Shared governance professionals - group"                             : "Shared governance professional - group" },
+                /* 20 */ { eLookupGovernorRole.Establishment_SharedGovernanceProfessional,               isPlural ? "Shared governance professionals - establishment"                     : "Shared governance professional - establishment" },
+                /* 21 */ { eLookupGovernorRole.Member_Individual,                                        isPlural ? "Members - individuals"                                               : "Member - individual" },
+                /* 22 */ { eLookupGovernorRole.Member_Organisation,                                      isPlural ? "Members - organisations"                                             : "Member - organisation" },
+                /* 23 */ { eLookupGovernorRole.GovernanceProfessionalToASecureSat,                       isPlural ? "Governance professionals - secure single-academy trust (SSAT)"       : "Governance professional - secure single-academy trust (SSAT)" },
+                /* 24 */ { eLookupGovernorRole.GovernanceProfessionalToASat,                             isPlural ? "Governance professionals - single-academy trust (SAT)"               : "Governance professional - single-academy trust (SAT)" },
+            };
+        }
 
-        private static readonly Dictionary<eLookupGovernorRole, string> PluralisedLabels = new Dictionary<eLookupGovernorRole, string>()
-        {
-            { eLookupGovernorRole.Governor, "Governors" },
-            { eLookupGovernorRole.LocalGovernor, "Local governors" },
-            { eLookupGovernorRole.Group_SharedLocalGovernor, "Shared local governors - group" },
-            { eLookupGovernorRole.Establishment_SharedLocalGovernor, "Shared local governors - establishment" },
-            { eLookupGovernorRole.Member, "Members" },
-            { eLookupGovernorRole.Member_Individual, "Members - individuals" },
-            { eLookupGovernorRole.Member_Organisation, "Members - organisations" },
-            { eLookupGovernorRole.Trustee, "Trustees" },
-            { eLookupGovernorRole.Group_SharedGovernanceProfessional, "Shared governance professionals - group" },
-            { eLookupGovernorRole.Establishment_SharedGovernanceProfessional, "Shared governance professionals - establishment" },
-            { eLookupGovernorRole.GovernanceProfessionalToALocalAuthorityMaintainedSchool, "Governance professionals - local authority maintained school" },
-            { eLookupGovernorRole.GovernanceProfessionalToAFederation, "Governance professionals - federation" },
-            { eLookupGovernorRole.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool, "Governance professionals - individual academy or free school" },
-            { eLookupGovernorRole.GovernanceProfessionalToAMat, "Governance professionals - multi-academy trust (MAT)" },
-            { eLookupGovernorRole.GovernanceProfessionalToASecureSat, "Governance professionals - secure single-academy trust (SSAT)" },
-            { eLookupGovernorRole.GovernanceProfessionalToASat, "Governance professionals - single-academy trust (SAT)" },
-        };
+        private static readonly Dictionary<eLookupGovernorRole, string> SentenceCaseLabels = CreateLabelsDictionary(isPlural: false);
+        private static readonly Dictionary<eLookupGovernorRole, string> PluralisedLabels = CreateLabelsDictionary(isPlural: true);
 
         public static string Create(
             eLookupGovernorRole role,
