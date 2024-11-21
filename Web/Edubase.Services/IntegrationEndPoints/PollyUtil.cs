@@ -34,7 +34,7 @@ namespace Edubase.Services.IntegrationEndPoints
 
             var timeoutPolicy = CreateTimeoutPolicy(settingsKey);
 
-            return Policy.WrapAsync<HttpResponseMessage>(retryPolicy, timeoutPolicy);
+            return Policy.WrapAsync(retryPolicy, timeoutPolicy);
         }
 
         public static IAsyncPolicy<HttpResponseMessage> CreateTimeoutPolicy(string settingsKey)
