@@ -30,7 +30,7 @@ namespace Edubase.Common
             }
             catch (FormatException ex)
             {
-                throw new FormatException($"Invalid token format: {token}, ex");
+                throw new FormatException($"Invalid token format: {token}", ex);
             }
         }
 
