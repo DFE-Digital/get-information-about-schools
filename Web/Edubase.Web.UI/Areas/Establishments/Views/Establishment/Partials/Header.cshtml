@@ -227,20 +227,32 @@
                     }
                 }
             }
-            else
-            {
-                // TODO: Update this once the content is agreed in #232329.
-                newlineRequired = true;
-                <span>GIAS no longer displays Ofsted inspection ratings</span>
-            }
 
             @if (newlineRequired)
             {
                 <br/>
             }
-            <a href="@Model.OfstedReportUrl" target="_blank" rel="noreferrer noopener">
-                Ofsted report (opens in new tab)
-            </a>
+
+            <div class="govuk-!-margin-bottom-3">
+                <a href="@Model.OfstedReportUrl" target="_blank" rel="noreferrer noopener">
+                    Ofsted report (opens in new tab)
+                </a>
+            </div>
+
+            @if (!Model.ShowOfstedRatings)
+            {
+                <div>GIAS no longer displays Ofsted inspection ratings</div>
+                <details class="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                            Why the rating is not displayed
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        From September 2024, Ofsted no longer makes an overall effectiveness judgement in inspections of state-funded schools.
+                    </div>
+                </details>
+            }
         </dd>
     </div>
 }
