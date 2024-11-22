@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Web.Mvc;
 using Edubase.Services.Domain;
+using FluentValidation.Results;
 
 namespace Edubase.Web.UI.Validation
 {
@@ -75,6 +76,15 @@ namespace Edubase.Web.UI.Validation
                         error.GetMessage() ??
                         "Error processing data"); //Generic message provided to prevent system crashing on no error message
                 }
+            }
+        }
+
+        public static void AddToModelState(this ValidationResult result, ModelStateDictionary modelState, string prefix)
+        {
+            foreach (var error in result.Errors)
+            {
+                var key = string.IsNullOrEmpty(prefix) ? error.PropertyName : $"{prefix}.{error.PropertyName}";
+                modelState.AddModelError(key, error.ErrorMessage);
             }
         }
     }
