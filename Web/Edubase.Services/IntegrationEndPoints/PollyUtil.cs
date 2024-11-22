@@ -2,8 +2,10 @@ using System;
 using System.Configuration;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Polly;
+using Polly.Timeout;
 
 namespace Edubase.Services.IntegrationEndPoints
 {
@@ -19,19 +21,58 @@ namespace Edubase.Services.IntegrationEndPoints
         /// </returns>
         public static IAsyncPolicy<HttpResponseMessage> CreateRetryPolicy(TimeSpan[] retryIntervals, string settingsKey)
         {
-            if(retryIntervals is null || retryIntervals.Length == 0)
+            if (retryIntervals is null || retryIntervals.Length == 0)
             {
                 return Policy.NoOpAsync<HttpResponseMessage>();
             }
 
+            Exception lastException = null;
+
             var retryPolicy = Policy<HttpResponseMessage>
                 .Handle<HttpRequestException>()
                 .Or<TaskCanceledException>()
-                .WaitAndRetryAsync(retryIntervals);
+                .WaitAndRetryAsync(
+                    retryIntervals,
+                    onRetry: (outcome, timeSpan, retryCount, context) =>
+                    {
+                        if (outcome.Exception != null)
+                        {
+                            lastException = outcome.Exception;
+                        }
+                    });
 
             var timeoutPolicy = CreateTimeoutPolicy(settingsKey);
 
-            return Policy.WrapAsync<HttpResponseMessage>(retryPolicy, timeoutPolicy);
+            return Policy.WrapAsync<HttpResponseMessage>(retryPolicy, timeoutPolicy)
+                .WithPolicyKey("CreateRetryPolicy")
+                .WrapAsync(
+                    Policy<HttpResponseMessage>
+                        .Handle<Exception>()
+                        .FallbackAsync<HttpResponseMessage>(
+                            async (cancellationToken) =>
+                            {
+                                string errorSource;
+
+                                switch (lastException)
+                                {
+                                    case TaskCanceledException _:
+                                        errorSource = "task cancellation";
+                                        break;
+                                    case HttpRequestException _:
+                                        errorSource = "HTTP request failure";
+                                        break;
+                                    default:
+                                        errorSource = "unknown error";
+                                        break;
+                                }
+
+                                await Task.Yield();
+                                throw new Exception(
+                                    $"Retries exceeded in CreateRetryPolicy due to {errorSource}.",
+                                    lastException);
+                            }
+                        )
+                );
         }
 
         public static IAsyncPolicy<HttpResponseMessage> CreateTimeoutPolicy(string settingsKey)
@@ -41,7 +82,41 @@ namespace Edubase.Services.IntegrationEndPoints
                 timeoutSettings = 10;
             }
 
-            return Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(timeoutSettings));
+            var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(
+                TimeSpan.FromSeconds(timeoutSettings),
+                TimeoutStrategy.Pessimistic,
+                onTimeoutAsync: async (context, timeout, task, exception) =>
+                {
+                    Console.WriteLine($"timed out after {timeout.TotalSeconds} seconds - Exception {exception.Message}");
+                    await Task.CompletedTask;
+                });
+
+            var fallbackPolicy = Policy<HttpResponseMessage>
+                .Handle<TimeoutRejectedException>()
+                .FallbackAsync(
+                    fallbackAction: (context, cancellationToken) =>
+                    {
+                        var currentCount = TimeoutTracker.IncrementTimeoutCount();
+
+                        if (currentCount >= 10)
+                        {
+                            return Task.FromException<HttpResponseMessage>(
+                            new TaskCanceledException("Operation canceled for repeated timeouts - Polly"));
+                        }
+                        else
+                        {
+                            return Task.FromException<HttpResponseMessage>(
+                                new TimeoutRejectedException());
+                        }
+                    },
+                    async (exception, context) =>
+                    {
+                        await Task.CompletedTask;
+                    });
+
+            var policyWrap = Policy.WrapAsync(fallbackPolicy, timeoutPolicy);
+
+            return policyWrap;
         }
 
         /// <summary>
