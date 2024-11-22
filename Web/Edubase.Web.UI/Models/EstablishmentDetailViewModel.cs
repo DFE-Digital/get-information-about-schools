@@ -82,9 +82,6 @@ namespace Edubase.Web.UI.Models
 
         public eLookupSearchSource? SearchSource { get; set; }
 
-        public string OfstedRatingReportUrl => (Establishment.OfstedRatingId.HasValue
-            ? new OfstedRatingUrl(Establishment.Urn).ToString() : null as string);
-
         public string GetGroupFieldLabel(GroupModel model) => _groupType2FieldLabelMappings[model.GroupTypeId.Value];
 
         public string AgeRangeToolTip { get; set; }
@@ -231,6 +228,30 @@ namespace Edubase.Web.UI.Models
             if (!showFinancialBenchmarking.HasValue)
             {
                 showFinancialBenchmarking = extService != null && await extService.SfbCheckExists(Establishment.Urn, FbType.School);
+            }
+        }
+
+        public bool ShowOfstedRatings { get; set; } = true;
+
+        public string OfstedReportUrl => extService.OfstedReportUrl(Establishment.Urn);
+
+        private bool? _showOfstedReportLink;
+
+        public bool ShowOfstedReportLink
+        {
+            get => _showOfstedReportLink.GetValueOrDefault();
+            private set => _showOfstedReportLink = value;
+        }
+
+        public async Task SetShowOfstedReportLinkAsync()
+        {
+            if (Establishment == null)
+            {
+                return;
+            }
+            if (!_showOfstedReportLink.HasValue)
+            {
+                _showOfstedReportLink = extService != null && await extService.OfstedReportPageCheckExists(Establishment.Urn);
             }
         }
 
