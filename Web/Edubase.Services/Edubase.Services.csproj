@@ -245,6 +245,8 @@
     <Compile Include="ExternalLookup\IFSCPService.cs" />
     <Compile Include="ExternalLookup\IExternalLookupService.cs" />
     <Compile Include="ExternalLookup\IFBService.cs" />
+    <Compile Include="ExternalLookup\IOfstedService.cs" />
+    <Compile Include="ExternalLookup\OfstedService.cs" />
     <Compile Include="Geo\IPlacesLookupService.cs" />
     <Compile Include="Geo\PlaceDto.cs" />
     <Compile Include="Geo\PlacesLookupService.cs" />
@@ -258,7 +260,6 @@
     <Compile Include="Governors\Models\GovernorsDetailsDto.cs" />
     <Compile Include="Enums\eSortBy.cs" />
     <Compile Include="Domain\CompaniesHouseNumber.cs" />
-    <Compile Include="Domain\OfstedRatingUrl.cs" />
     <Compile Include="Establishments\Models\AggregratedEstablishmentFieldList.cs" />
     <Compile Include="Governors\Downloads\IGovernorDownloadService.cs" />
     <Compile Include="Governors\IGovernorsReadService.cs" />

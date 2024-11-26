@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -357,6 +358,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             await viewModel.SetFscpdAsync();
             await viewModel.SetShowFinancialBenchmarkingAsync();
+            await viewModel.SetShowOfstedReportLinkAsync();
+
+            viewModel.ShowOfstedRatings = "true".Equals(ConfigurationManager.AppSettings["Feature_Ofsted_ShowRatings"]);
 
             viewModel.TabWarnings = new TabWarningsModel(viewModel.Establishment.TypeId);
 
@@ -382,7 +386,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.SchoolCapacityToolTipLink = viewModel.Establishment.TypeId.Equals((int)ET.AcademySecure16to19)
                 ? string.Empty
                 : _resourcesHelper.GetResourceStringForEstablishment("SchoolCapacityLink", (eLookupEstablishmentTypeGroup?) viewModel.Establishment.EstablishmentTypeGroupId, User);
-               
+
             return View(viewModel);
         }
 
@@ -405,6 +409,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             };
 
             await viewModel.SetFscpdAsync();
+            await viewModel.SetShowFinancialBenchmarkingAsync();
+            await viewModel.SetShowOfstedReportLinkAsync();
 
             await Task.WhenAll(
                 PopulateDisplayPolicies(viewModel)
