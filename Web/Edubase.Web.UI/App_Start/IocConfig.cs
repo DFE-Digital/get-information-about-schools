@@ -137,6 +137,9 @@ namespace Edubase.Web.UI
             builder.RegisterInstance(CreateSfbClient()).SingleInstance().Named<HttpClient>("SfbClient");
             builder.Register(c => new FBService(c.ResolveNamed<HttpClient>("SfbClient"))).As<IFBService>();
 
+            builder.RegisterInstance(CreateOfstedClient()).SingleInstance().Named<HttpClient>("OfstedClient");
+            builder.Register(c => new OfstedService(c.ResolveNamed<HttpClient>("OfstedClient"))).As<IOfstedService>();
+
             builder.RegisterType<ExternalLookupService>().As<IExternalLookupService>().SingleInstance().AutoActivate();
 
             builder.RegisterInstance(AutoMapperWebConfiguration.CreateMapper()).As<IMapper>();
@@ -315,6 +318,37 @@ namespace Edubase.Web.UI
             var header = new ProductHeaderValue("GIAS", Assembly.GetExecutingAssembly().GetName().Version.ToString());
             var userAgent = new ProductInfoHeaderValue(header);
             client.DefaultRequestHeaders.UserAgent.Add(userAgent);
+
+            return client;
+        }
+
+        private static HttpClient CreateOfstedClient()
+        {
+            if (!int.TryParse(ConfigurationManager.AppSettings["OfstedService_TimeoutSeconds"], out var timeoutsettings))
+            {
+                timeoutsettings = 10;
+            }
+
+            var client = new HttpClient(new HttpClientHandler { UseCookies = false })
+            {
+                BaseAddress = new Uri(ConfigurationManager.AppSettings["OfstedService_BaseAddress"]),
+                Timeout = TimeSpan.FromSeconds(timeoutsettings)
+            };
+
+            var apiUsername = ConfigurationManager.AppSettings["OfstedService_Username"];
+            var apiPassword = ConfigurationManager.AppSettings["OfstedService_Password"];
+
+            if (!apiUsername.IsNullOrEmpty() && !apiPassword.IsNullOrEmpty())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(Basic,
+                    new BasicAuthCredentials(apiUsername, apiPassword).ToString());
+            }
+
+            var productValue = new ProductInfoHeaderValue("GIAS", Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            var commentValue = new ProductInfoHeaderValue("(Chrome; Edge; Mozilla; +https://www.get-information-schools.service.gov.uk)");
+
+            client.DefaultRequestHeaders.UserAgent.Add(productValue);
+            client.DefaultRequestHeaders.UserAgent.Add(commentValue);
 
             return client;
         }

@@ -108,7 +108,16 @@ const config = {
               }
             }
           },
-          {loader: 'sass-loader'}
+          {
+            loader: 'sass-loader',
+            options: {
+              sassOptions: {
+                includePaths: [
+                  path.resolve(__dirname, 'node_modules')
+                ],
+              },
+            },
+          },
         ],
       },
       {
