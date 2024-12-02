@@ -192,9 +192,10 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     {
                         if (role == (GR) governor.RoleId)
                         {
+                            var shouldDisplaySharedWith = role.OneOfThese(GR.Establishment_SharedGovernanceProfessional, GR.Group_SharedGovernanceProfessional);
                             grid.AddRow(governor, endDate)
                                 .AddCell(getFullnameWithTitle, displayPolicy.FullName)
-                                .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments, role.OneOfThese(GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool))
+                                .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments, shouldDisplaySharedWith)
                                 .AddCell(governor.Id, displayPolicy.Id)
                                 .AddCell(governor.DOB?.ToString(DateFormat), displayPolicy.DOB)
                                 .AddCell(governor.PostCode, displayPolicy.PostCode)
@@ -271,8 +272,9 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         {
             if (EnumSets.eGovernanceProfessionalRoles.Contains(role))
             {
+                var shouldDisplaySharedWith = role.OneOfThese(GR.Establishment_SharedGovernanceProfessional, GR.Group_SharedGovernanceProfessional);
                 grid.AddHeaderCell("Name", displayPolicy.FullName, "name", SortText)
-                    .AddHeaderCell("Shared with", role.OneOfThese(GR.GovernanceProfessionalToAnIndividualAcademyOrFreeSchool), "shared", SortText)
+                    .AddHeaderCell("Shared with", shouldDisplaySharedWith, "shared", SortText)
                     .AddHeaderCell("Governance role identifier (GID)", displayPolicy.Id, "gid")
                     .AddHeaderCell("Date of birth", displayPolicy.DOB)
                     .AddHeaderCell("Home postcode", displayPolicy.PostCode)
@@ -284,8 +286,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
             else
             {
                 grid.AddHeaderCell("Name", displayPolicy.FullName, "name", SortText)
-                    .AddHeaderCell("Shared with", role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody),
-                        "shared", SortText)
+                    .AddHeaderCell("Shared with", role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody), "shared", SortText)
                     .AddHeaderCell("Governance role identifier (GID)", displayPolicy.Id, "gid")
                     .AddHeaderCell("Appointed by", displayPolicy.AppointingBodyId, "appointed", SortText)
                     .AddHeaderCell("From", displayPolicy.AppointmentStartDate, "fromDate", SortDate)
