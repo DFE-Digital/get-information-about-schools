@@ -10,6 +10,7 @@ using AzureTableLogger;
 using AzureTableLogger.LogMessages;
 using Edubase.Web.UI.Helpers;
 using Sustainsys.Saml2.Exceptions;
+using HttpStatusCodeResult = System.Web.Mvc.HttpStatusCodeResult;
 
 namespace Edubase.Web.UI.Filters
 {
@@ -42,6 +43,11 @@ namespace Edubase.Web.UI.Filters
             else if (filterContext.Exception is UnsuccessfulSamlOperationException)
             {
                 filterContext.Result = new RedirectResult("/Unauthorized/LoginFailed");
+                filterContext.ExceptionHandled = true;
+            }
+            else if (IsSuspiciousRequest(filterContext.HttpContext.Request))
+            {
+                filterContext.Result = new HttpStatusCodeResult(400, "Invalid Request");
                 filterContext.ExceptionHandled = true;
             }
             else // unhandled/unexpected exception; log it and tell the user.
@@ -82,6 +88,22 @@ namespace Edubase.Web.UI.Filters
                 ctx.Response.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
                 filterContext.ExceptionHandled = true;
             }
+        }
+
+        private bool IsSuspiciousRequest(HttpRequestBase request)
+        {
+            if (request.Url == null)
+            {
+                return false;
+            }
+            var path = request.Url.AbsolutePath.ToLowerInvariant();
+            var query = request.Url.Query;
+
+            var pathContentsInvalid = path.Contains("..") || path.Contains("%00");
+            var queryContentsInvalid = query.Contains("DROP");
+            var pathTooLong = path.Length > 2000;
+
+            return pathContentsInvalid || queryContentsInvalid || pathTooLong;
         }
 
         public WebLogMessage Log(HttpContextBase ctx, Exception exception)
