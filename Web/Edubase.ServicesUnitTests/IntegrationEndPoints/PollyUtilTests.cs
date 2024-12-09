@@ -1,8 +1,6 @@
 using System;
 using Xunit;
 using Edubase.Services.IntegrationEndPoints;
-using Polly.NoOp;
-using Polly.Wrap;
 using System.Configuration;
 using Polly.Timeout;
 using System.Diagnostics;
@@ -61,6 +59,38 @@ namespace Edubase.ServicesUnitTests.IntegrationEndPoints
             await Assert.ThrowsAsync<TimeoutRejectedException>(async () =>
                 await policy.ExecuteAsync(operation, CancellationToken.None));
             Assert.NotNull(policy);
+        }
+
+        [Fact]
+        public async Task CreateTimeoutPolicy_ShouldTriggerTimeoutAfter10Attempts()
+        {
+            TimeoutTracker.ResetTimeoutCount();
+            var validKey = "AzureMapService_Timeout";
+            ConfigurationManager.AppSettings[validKey] = "5";
+
+            var policy = PollyUtil.CreateTimeoutPolicy(validKey);
+
+            Func<CancellationToken, Task<HttpResponseMessage>> operation = async (ct) =>
+            {
+                await Task.Delay(6000, ct);
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            };
+
+            for (var i = 0; i < 9; i++)
+            {
+                var ex = await Assert.ThrowsAsync<TimeoutRejectedException>(async () =>
+                {
+                    await policy.ExecuteAsync(operation, CancellationToken.None);
+                });
+            }
+
+            // 10th itteration
+            var exception = await Assert.ThrowsAsync<TaskCanceledException>(async () =>
+            {
+                await policy.ExecuteAsync(operation, CancellationToken.None);
+            });
+
+            Assert.Contains("Operation canceled for repeated timeouts - Polly", exception.Message);
         }
 
 
