@@ -16,7 +16,7 @@
         }
         else
         {
-            @Html.ActionLink("Close", "CreateNewGroup", "Group", new {area = "Groups", type = Model.GroupType.ToString().Replace("School", String.Empty)}, new {@class = "modal-exit js-allow-exit"})
+            @Html.ActionLink("Close", "CreateNewGroup", "Group", new { area = "Groups", type = Model.GroupType.ToString().Replace("School", String.Empty) }, new { @class = "modal-exit js-allow-exit" })
         }
 
         <div class="modal-inner">
@@ -31,7 +31,7 @@
             }
             else
             {
-                @Html.ActionLink("Cancel", "CreateNewGroup", "Group", new {area = "Groups", type = Model.GroupType.ToString().Replace("School", String.Empty)}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
+                @Html.ActionLink("Cancel", "CreateNewGroup", "Group", new { area = "Groups", type = Model.GroupType.ToString().Replace("School", String.Empty) }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
             }
         </div>
     </div>
@@ -44,7 +44,7 @@
     <div class="modal-overlay" id="warning-modal-overlay-1"></div>
     <div class="modal-content" id="warning-modal-content-1" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
         @* <a href="#" id="warning-exit-overlay-1" class="modal-exit">Close</a> *@
-         @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "modal-exit js-allow-exit"})
+        @Html.ActionLink("Close", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "modal-exit js-allow-exit" })
         <div class="modal-inner">
             <h3 class="govuk-heading-m" tabindex="0" id="modal-label">Confirmation</h3>
             <p tabindex="0" id="model-desc">I confirm that:</p>
@@ -55,7 +55,7 @@
         </div>
         <div class="button-row">
             <button type="submit" name="action" value="save" class="govuk-button">Proceed</button>
-            @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
+            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
         </div>
 
     </div>
@@ -67,14 +67,14 @@
     <div class="modal-overlay" id="warning-modal-overlay-2"></div>
     <div class="modal-content" id="warning-modal-content-2" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
         @* <a href="#" id="warning-exit-overlay-2" class="modal-exit">Close</a> *@
-         @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "modal-exit js-allow-exit"})
+        @Html.ActionLink("Close", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "modal-exit js-allow-exit" })
         <div class="modal-inner">
             <h3 class="govuk-heading-m" tabindex="0" id="modal-label">Establishment removal</h3>
             <p tabindex="0" id="model-desc">All establishments will be removed from this federation.</p>
         </div>
         <div class="button-row">
             <button type="submit" name="action" value="save" class="govuk-button">Proceed</button>
-            @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
+            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
         </div>
     </div>
 }
@@ -85,7 +85,7 @@
     <div class="modal-overlay" id="warning-modal-overlay-3"></div>
     <div class="modal-content" id="warning-modal-content-3" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
         @* <a href="#" id="warning-exit-overlay-3" class="modal-exit">Close</a> *@
-         @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "modal-exit js-allow-exit"})
+        @Html.ActionLink("Close", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "modal-exit js-allow-exit" })
         <div class="modal-inner">
             <h3 class="govuk-heading-m" tabindex="0" id="modal-label">Federation closure</h3>
             <p tabindex="0" id="model-desc">This federation has no linked establishments, so it will be set as closed once you save the record.</p>
@@ -94,7 +94,7 @@
             <a href="#" class="govuk-button" id="overlay-proceed-3">Proceed</a>
             <a href="#" class="govuk-button govuk-button-secondary" id="overlay-cancel-3">Cancel</a>
             <button type="submit" name="action" value="save" class="govuk-button">Proceed</button>
-            @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
+            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
         </div>
     </div>
 }
@@ -106,15 +106,15 @@
     var warning = Model.WarningsToProcess.First(x => x.Code == ApiWarningCodes.GROUP_OPEN_DATE_ALIGNMENT);
     <div class="modal-overlay" id="warning-modal-overlay-4"></div>
     <div class="modal-content" id="warning-modal-content-4" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
-    @* <a href="#" id="warning-exit-overlay-4" class="modal-exit">Close</a> *@
-     @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "modal-exit js-allow-exit"})
+        @* <a href="#" id="warning-exit-overlay-4" class="modal-exit">Close</a> *@
+        @Html.ActionLink("Close", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "modal-exit js-allow-exit" })
         <div class="modal-inner">
             <h3 class="govuk-heading-m" tabindex="0" id="modal-label">Are you sure you want to change the open date?</h3>
             <p tabindex="0" id="model-desc">This open date is later than some of the @Model.ListOfEstablishmentsPluralName.ToLower()’ joined dates. These joined dates will be automatically aligned to the new open date.</p>
         </div>
         <div class="button-row">
             <button type="submit" name="action" value="save" class="govuk-button">Proceed</button>
-            @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
+            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
         </div>
     </div>
 }
@@ -127,14 +127,14 @@
     <div class="modal-overlay" id="warning-modal-overlay-5"></div>
     <div class="modal-content" id="warning-modal-content-5" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
         @* <a href="#" id="warning-exit-overlay-5" class="modal-exit">Close</a> *@
-         @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "modal-exit js-allow-exit"})
+        @Html.ActionLink("Close", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "modal-exit js-allow-exit" })
         <div class="modal-inner">
             <h3 class="govuk-heading-m" tabindex="0" id="modal-label">Are you sure you wish to continue?</h3>
             <p tabindex="0" id="model-desc">@warning.Message</p>
         </div>
         <div class="button-row">
             <button type="submit" name="action" value="save" class="govuk-button">Proceed</button>
-            @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
+            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
         </div>
     </div>
 }
@@ -144,33 +144,40 @@ else if (Model.WarningsToProcess.Any(x => x.Code == ApiWarningCodes.CONFIRMATION
     <div class="modal-overlay" id="warning-modal-overlay-5"></div>
     <div class="modal-content" id="warning-modal-content-5" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
         @* <a href="#" id="warning-exit-overlay-5" class="modal-exit">Close</a> *@
-         @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "modal-exit js-allow-exit"})
+        @Html.ActionLink("Close", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "modal-exit js-allow-exit" })
         <div class="modal-inner">
             <h3 class="govuk-heading-m" tabindex="0" id="modal-label">Are you sure you wish to continue?</h3>
             <p tabindex="0" id="model-desc">@warning.Message</p>
         </div>
         <div class="button-row">
             <button type="submit" name="action" value="save" class="govuk-button">Proceed</button>
-            @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
+            @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
         </div>
     </div>
 }
 else if (Model.WarningsToProcess.SingleOrDefault(x => x.Code == GroupEditorViewModel.UIWarningCodeMatClosureAreYouSure) != null)
 {
-    var warning = Model.WarningsToProcess.Single(x => x.Code == GroupEditorViewModel.UIWarningCodeMatClosureAreYouSure);
-    <div class="modal-overlay" id="warning-modal-overlay-6"></div>
-    <div class="modal-content" id="warning-modal-content-6" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
-        @* <a href="#" id="warning-exit-overlay-6" class="modal-exit">Close</a> *@
-         @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "modal-exit js-allow-exit"})
-        <div class="modal-inner">
-            <h3 class="govuk-heading-m" tabindex="0" id="modal-label">Are you sure you wish to continue?</h3>
-            <p tabindex="0" id="model-desc">@warning.Message</p>
+    try
+    {
+        var warning = Model.WarningsToProcess.Single(x => x.Code == GroupEditorViewModel.UIWarningCodeMatClosureAreYouSure);
+        <div class="modal-overlay" id="warning-modal-overlay-6"></div>
+        <div class="modal-content" id="warning-modal-content-6" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
+            @* <a href="#" id="warning-exit-overlay-6" class="modal-exit">Close</a> *@
+            @Html.ActionLink("Close", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "modal-exit js-allow-exit" })
+            <div class="modal-inner">
+                <h3 class="govuk-heading-m" tabindex="0" id="modal-label">Are you sure you wish to continue?</h3>
+                <p tabindex="0" id="model-desc">@warning.Message</p>
+            </div>
+            <div class="button-row">
+                <button type="submit" id="proceed-button" name="action" value="save" class="govuk-button">Proceed</button>
+                @Html.ActionLink("Cancel", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary cancel", data_module = "govuk-button" })
+            </div>
         </div>
-        <div class="button-row">
-            <button type="submit" id = "proceed-button" name="action" value="save" class="govuk-button">Proceed</button>
-            @Html.ActionLink("Cancel", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary cancel", data_module="govuk-button"})
-        </div>
-    </div>
+    }
+    catch (InvalidOperationException ex)
+    {
+        throw new InvalidOperationException("Model.WarningsToProcess contains more than one warning. (warnings.cshtml) ", ex);
+    }
 }
 else if (Model.WarningsToProcess.SingleOrDefault(x => x.Code == GroupEditorViewModel.UIWarningCodeSatClosureAreYouSure) != null)
 {
@@ -178,14 +185,14 @@ else if (Model.WarningsToProcess.SingleOrDefault(x => x.Code == GroupEditorViewM
     <div class="modal-overlay" id="warning-modal-overlay-6"></div>
     <div class="modal-content" id="warning-modal-content-6" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc">
         @* <a href="#" id="warning-exit-overlay-6" class="modal-exit">Close</a> *@
-         @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "modal-exit js-allow-exit"})
+        @Html.ActionLink("Close", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "modal-exit js-allow-exit" })
         <div class="modal-inner">
             <h3 class="govuk-heading-m" tabindex="0" id="modal-label">Are you sure you wish to continue?</h3>
             <p tabindex="0" id="model-desc">@warning.Message</p>
         </div>
         <div class="button-row">
             <button type="submit" name="action" value="save" class="govuk-button" id="overlay-proceed-6">Proceed</button>
-            @Html.ActionLink("Close", "Details", "Group", new {area = "Groups", id = Model.GroupUId}, new {@class = "govuk-button govuk-button--secondary js-allow-exit"})
+            @Html.ActionLink("Close", "Details", "Group", new { area = "Groups", id = Model.GroupUId }, new { @class = "govuk-button govuk-button--secondary js-allow-exit" })
         </div>
     </div>
 }
