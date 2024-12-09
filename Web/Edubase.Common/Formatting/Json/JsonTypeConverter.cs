@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
@@ -15,10 +15,30 @@ namespace Edubase.Common.Formatting.Json
             => destinationType == typeof(string);
 
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
-            => JsonConvert.DeserializeObject<T>(value?.ToString());
+        {
+            if (value == null) return default(T);
+
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(value.ToString());
+            }
+            catch (JsonReaderException)
+            {
+                return default(T);
+            }
+        }
 
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
-            => JsonConvert.SerializeObject(value);
+        {
+            try
+            {
+                return JsonConvert.SerializeObject(value);
+            }
+            catch (JsonReaderException)
+            {
+                return string.Empty;
+            }
+        }
     }
 
     public class ToJsonTypeConverter<T> : ITypeConverter<T, string>
@@ -30,14 +50,20 @@ namespace Edubase.Common.Formatting.Json
         }
     }
 
-
     public class FromJsonTypeConverter<T> : ITypeConverter<string, T>
     {
         T ITypeConverter<string, T>.Convert(string source, T destination, ResolutionContext context)
         {
-            if (source.Clean() == null) return default(T);
-            else return JsonConvert.DeserializeObject<T>(source);
+            if (string.IsNullOrWhiteSpace(source)) return default(T);
+
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(source);
+            }
+            catch (JsonReaderException)
+            {
+                return default(T);
+            }
         }
     }
-
 }
