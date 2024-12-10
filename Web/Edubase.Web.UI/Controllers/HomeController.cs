@@ -95,7 +95,7 @@ namespace Edubase.Web.UI.Controllers
             var returnTo = Request.Form["OriginatingPage"];
             Response.Cookies.Set(new HttpCookie(UserPrefsCookieName, acceptAnalyticsCookies.ToString()) { Expires = DateTime.Today.AddDays(28), SameSite = SameSiteMode.Lax, Domain = cookieDomain });
             TempData["CookiesPrefsSaved"] = acceptAnalyticsCookies;
-            if (returnTo != null)
+            if (!string.IsNullOrEmpty(returnTo) && urlHelper.IsLocalUrl(returnTo))
             {
                 return Redirect(returnTo);
             }
