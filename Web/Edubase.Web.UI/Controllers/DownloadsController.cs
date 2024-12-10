@@ -137,6 +137,17 @@ namespace Edubase.Web.UI.Controllers
         public async Task<ActionResult> DownloadGenerated(Guid id, bool isExtract = false)
         {
             var model = new ProgressDto();
+
+            if (id == Guid.Empty)
+            {
+                model.Error = "The download could not be started because the provided link is invalid";
+                return View("Downloads/DownloadError", new DownloadErrorViewModel
+                {
+                    ReturnSource = isExtract ? eDownloadReturnSource.Extracts : eDownloadReturnSource.Downloads,
+                    NeedsRegenerating = false
+                });
+            }
+
             try
             {
                 model = isExtract
