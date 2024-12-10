@@ -10,6 +10,8 @@
     var envHeader = System.Configuration.ConfigurationManager.AppSettings["Environment"] ?? string.Empty;
     var version = typeof(HomeController).Assembly.GetName().Version;
     var acceptsAnalytics = HttpContext.Current.Request.Cookies["analytics_preferences"]?.Value.ToString();
+
+    var clarityKey = System.Configuration.ConfigurationManager.AppSettings[$"ClarityKey_{envHeader}"] ?? string.Empty;
 }
 <!doctype html>
 <html lang="en" class="govuk-template">
@@ -21,10 +23,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link href="/public/assets/stylesheets/main.css?v=@version" rel="stylesheet" type="text/css">
 
-    <!-- Google Tag Manager -->
+    <!-- Clarity -->
     @if (acceptsAnalytics == "True")
     {
-        <script nonce="@Html.ScriptNonce()">
+        <script type="text/javascript">
+            (function (c, l, a, r, i, t, y) {
+                c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+                t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+                y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+            })(window, document, "clarity", "script", "@clarityKey");
+        </script>
+    }
+        <!-- End Clarity -->
+
+        <!-- Google Tag Manager -->
+        @if (acceptsAnalytics == "True")
+        {
+            <script nonce="@Html.ScriptNonce()">
         (function (w, d, s, l, i) {
             w[l] = w[l] || []; w[l].push({
                 'gtm.start':
@@ -33,49 +48,49 @@
                 j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
                     'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', '@gtmKey'); //
+            </script>
+        }
+        <!-- End Google Tag Manager -->
+
+
+        <meta name="google-site-verification" content="uRt7CAkfClOB8Jig6Pw2-DELUWuuyG2kYKip0UThxhg" />
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta property="og:image" content="@(ViewBag.assetsPath)/images/opengraph-image.png?0.12.0">
+        <meta name="description" content="@(ViewBag.pageDescription)">
+        <meta name="keywords" content="Get Information about Schools" />
+
+        <script nonce="@Html.ScriptNonce()">
+            (function () {
+                if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+                    var d = document, c = "appendChild", a = d.createElement("style");
+                    a[c](d.createTextNode("@@-ms-viewport{width:auto!important}"));
+                    d.getElementsByTagName("head")[0][c](a);
+                }
+            })();
         </script>
-    }
-    <!-- End Google Tag Manager -->
+
+        <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="@ViewBag.assetsPath/images/favicon.ico" type="image/x-icon">
+        <link rel="mask-icon" href="@ViewBag.assetsPath/images/govuk-mask-icon.svg" color="blue">
+        <link rel="apple-touch-icon" sizes="180x180" href="@ViewBag.assetsPath/images/govuk-apple-touch-icon-180x180.png">
+        <link rel="apple-touch-icon" sizes="167x167" href="@ViewBag.assetsPath/images/govuk-apple-touch-icon-167x167.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="@ViewBag.assetsPath/images/govuk-apple-touch-icon-152x152.png">
+        <link rel="apple-touch-icon" href="@ViewBag.assetsPath/images/govuk-apple-touch-icon.png">
 
 
-    <meta name="google-site-verification" content="uRt7CAkfClOB8Jig6Pw2-DELUWuuyG2kYKip0UThxhg" />
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:image" content="@(ViewBag.assetsPath)/images/opengraph-image.png?0.12.0">
-    <meta name="description" content="@(ViewBag.pageDescription)">
-    <meta name="keywords" content="Get Information about Schools" />
+        @RenderSection("Head", required: false)
 
-    <script nonce="@Html.ScriptNonce()">
-        (function () {
-            if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
-                var d = document, c = "appendChild", a = d.createElement("style");
-                a[c](d.createTextNode("@@-ms-viewport{width:auto!important}"));
-                d.getElementsByTagName("head")[0][c](a);
-            }
-        })();
-    </script>
+        @functions {
+            public static IHtmlString GetCsrfTokenMeta()
+            {
+                string cookieToken, formToken;
+                System.Web.Helpers.AntiForgery.GetTokens(null, out cookieToken, out formToken);
+                return new HtmlString($"<meta name=\"csrf-token\" content=\"{formToken}\" />");
+            }}
+        @Html.AntiForgeryToken()
+        @GetCsrfTokenMeta()
 
-    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="@ViewBag.assetsPath/images/favicon.ico" type="image/x-icon">
-    <link rel="mask-icon" href="@ViewBag.assetsPath/images/govuk-mask-icon.svg" color="blue">
-    <link rel="apple-touch-icon" sizes="180x180" href="@ViewBag.assetsPath/images/govuk-apple-touch-icon-180x180.png">
-    <link rel="apple-touch-icon" sizes="167x167" href="@ViewBag.assetsPath/images/govuk-apple-touch-icon-167x167.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="@ViewBag.assetsPath/images/govuk-apple-touch-icon-152x152.png">
-    <link rel="apple-touch-icon" href="@ViewBag.assetsPath/images/govuk-apple-touch-icon.png">
-
-
-    @RenderSection("Head", required: false)
-
-    @functions {
-        public static IHtmlString GetCsrfTokenMeta()
-        {
-            string cookieToken, formToken;
-            System.Web.Helpers.AntiForgery.GetTokens(null, out cookieToken, out formToken);
-            return new HtmlString($"<meta name=\"csrf-token\" content=\"{formToken}\" />");
-        }}
-    @Html.AntiForgeryToken()
-    @GetCsrfTokenMeta()
-
-</head>
+    </head>
   <body class="govuk-template__body @(ViewBag.bodyClasses) no-js" id="top">
       <!-- Google Tag Manager (noscript) -->
       @if (acceptsAnalytics == "True")
