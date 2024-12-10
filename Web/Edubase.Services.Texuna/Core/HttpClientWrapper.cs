@@ -194,13 +194,18 @@ namespace Edubase.Services
             var response = new ApiResponse<T>(message.IsSuccessStatusCode);
             if (message.IsSuccessStatusCode)
             {
-                AssertJsonContentOrEmpty(message);
-                return response.OK(await DeserializeResponseAsync<T>(message, requestUrl));
+                try
+                {
+                    AssertJsonContentOrEmpty(message);
+                    return response.OK(await DeserializeResponseAsync<T>(message, requestUrl));
+                }
+                catch (Exception ex) when (ex is TaskCanceledException || ex is JsonException || ex is InvalidOperationException)
+                {
+                    throw new TexunaApiSystemException(
+                        "An error occured during deserialization. The response is not valid Json", ex);
+                }
             }
-            else
-            {
-                return await ProcessApiErrorAsync(message, response, requestUrl, throwOnNotFound);
-            }
+            return await ProcessApiErrorAsync(message, response, requestUrl, throwOnNotFound);
         }
 
         private async Task<ApiResponse> ParseHttpResponseMessageAsync(string requestUrl, HttpResponseMessage message)
