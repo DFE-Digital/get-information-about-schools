@@ -11,7 +11,7 @@
     var version = typeof(HomeController).Assembly.GetName().Version;
     var acceptsAnalytics = HttpContext.Current.Request.Cookies["analytics_preferences"]?.Value.ToString();
 
-    var clarityKey = System.Configuration.ConfigurationManager.AppSettings[$"ClarityKey_{envHeader}"] ?? string.Empty;
+    var clarityKey = Environment.GetEnvironmentVariable("ClarityKey");
 }
 <!doctype html>
 <html lang="en" class="govuk-template">
@@ -24,7 +24,7 @@
     <link href="/public/assets/stylesheets/main.css?v=@version" rel="stylesheet" type="text/css">
 
     <!-- Clarity -->
-    @if (acceptsAnalytics == "True")
+    @if (!string.IsNullOrEmpty(clarityKey) && acceptsAnalytics == "True")
     {
         <script type="text/javascript">
             (function (c, l, a, r, i, t, y) {
