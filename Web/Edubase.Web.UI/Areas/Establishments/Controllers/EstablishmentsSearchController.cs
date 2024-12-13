@@ -1,6 +1,7 @@
 using Edubase.Common;
 using Edubase.Web.UI.Models;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -110,6 +111,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var counties = (await _lookupService.CountiesGetAllAsync()).Where(c => c.Id != 63); //remove "not recorded"
             HttpContext.Response.Headers.Add("x-count", model.Count.ToString());
 
+            if (model.Results == null)
+            {
+                return Json(new { Message = "No results available" });
+            }
+
             var filtered = model.Results
                 .Select(result => new
                 {
@@ -197,9 +203,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route("Download")]
-        public async Task<ActionResult> Download(Guid id, eFileFormat fileFormat, string searchQueryString = null,
+        public async Task<ActionResult> Download(Guid id, eFileFormat? fileFormat, string searchQueryString = null,
             eLookupSearchSource? searchSource = null)
         {
+            if (!fileFormat.HasValue)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "File format is required");
+            }
+
             var model = new ProgressDto();
             try
             {
@@ -220,7 +231,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             var viewModel = new EstablishmentSearchDownloadGenerationProgressViewModel(model)
             {
-                FileFormat = fileFormat,
+                FileFormat = fileFormat.Value,
                 SearchSource = searchSource,
                 SearchQueryString = searchQueryString
             };
