@@ -121,7 +121,7 @@ class GiasFiltering {
         $('#filter-set-custom').prop('checked', true);
       }
 
-      const token = $('input[name="__RequestVerificationToken"').val();
+      const token = $('input[name="__RequestVerificationToken"]').val();
 
       $.ajax({
         url: '/api/save-search-token',
