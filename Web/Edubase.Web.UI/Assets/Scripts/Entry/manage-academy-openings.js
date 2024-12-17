@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 import errorSummary from '../GiasVueComponents/errorSummary';
 import GiasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
 
@@ -7,48 +7,49 @@ import GiasTabs from '../GiasModules/GiasTabs';
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 let raw = [];
 
-const academyOpenings = new Vue({
-  el: '#academy-opening-app',
-  data: {
-    openingAcademies: [],
-    selectedDate: '0',
-    initialRecordCount: 0,
-    currentPage: 0,
-    slicePage: 0,
-    pageSize: 50,
-    pages: [],
-    currentCount: 0,
-    searchError: false,
-    searchUrn: '',
-    editRecord: false,
-    openDateError: false,
-    updateName: '',
-    updateNameError: false,
-    updateDateDay: '',
-    updateDateMonth: '',
-    updateDateYear: '',
-    selectedOpeningDetails: {},
-    presentDetail: false,
-    isProcessing: true,
-    userHasEdited: false,
-    presentExitWarning: false,
-    loadDataError: false,
-    apiError: {},
-    sortKey: 'openingDate',
-    sortAscending: true,
-    recordUpdateErrors: [],
-    anchorTarget: '',
-    tableColumns: {
-      openingDate: 'Opening date',
-      urn: 'URN',
-      name: 'Establishment name',
-      establishmentType: 'Establishment type',
-      predecessorUrn: 'Predecessor URN',
-      predecessorName: 'Predecessor name'
-    },
-    uniqueDates: [],
-    raw: [],
-    errors: []
+const academyOpenings = createApp({
+  data() {
+    return {
+      openingAcademies: [],
+      selectedDate: '0',
+      initialRecordCount: 0,
+      currentPage: 0,
+      slicePage: 0,
+      pageSize: 50,
+      pages: [],
+      currentCount: 0,
+      searchError: false,
+      searchUrn: '',
+      editRecord: false,
+      openDateError: false,
+      updateName: '',
+      updateNameError: false,
+      updateDateDay: '',
+      updateDateMonth: '',
+      updateDateYear: '',
+      selectedOpeningDetails: {},
+      presentDetail: false,
+      isProcessing: true,
+      userHasEdited: false,
+      presentExitWarning: false,
+      loadDataError: false,
+      apiError: {},
+      sortKey: 'openingDate',
+      sortAscending: true,
+      recordUpdateErrors: [],
+      anchorTarget: '',
+      tableColumns: {
+        openingDate: 'Opening date',
+        urn: 'URN',
+        name: 'Establishment name',
+        establishmentType: 'Establishment type',
+        predecessorUrn: 'Predecessor URN',
+        predecessorName: 'Predecessor name'
+      },
+      uniqueDates: [],
+      raw: [],
+      errors: []
+    };
   },
   components: {
     GiasWaitSpinner,
@@ -493,23 +494,24 @@ const academyOpenings = new Vue({
 
 });
 
+const academyOpeningsComponent = academyOpenings.mount('#academy-opening-app');
+
 
 $(window).on('tabChange', function () {
-  academyOpenings.clearErrors();
+  academyOpeningsComponent.clearErrors();
 });
 $('#main-content').find('.gias-tabs-wrapper').giasTabs();
 $('#main-content').find('.gias-tabs__tab').eq(0).click();
 
 function blockExits() {
   $('a').on('click', function (e) {
-    if (academyOpenings.isUserEditing()) {
+    if (academyOpeningsComponent.isUserEditing()) {
       e.preventDefault();
-      academyOpenings.presentExitWarning = true;
-      academyOpenings.anchorTarget = $(this).attr('href');
+      academyOpeningsComponent.presentExitWarning = true;
+      academyOpeningsComponent.anchorTarget = $(this).attr('href');
       window.setTimeout(function () {
         $('#button-ok').focus();
       }, 0);
     }
   });
 }
-

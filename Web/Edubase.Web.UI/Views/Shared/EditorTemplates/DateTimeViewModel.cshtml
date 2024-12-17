@@ -15,6 +15,16 @@
     string tooltipUnderscoredTitle = null;
     var describedByIds = "";
 
+    // Full field ID is required where there are multiple date fields on the same page.
+    // Previously, variations of `@legendPrefix + @ViewData.ModelMetadata.PropertyName`
+    // were used, but if there are multiple `StartDate` properties on the page then the
+    // IDs would clash. This is a more robust solution.
+    var fullFieldId = ViewData.TemplateInfo.GetFullHtmlFieldName(Model?.Label)
+        .Replace(".", "_")
+        .Replace("[", "_")
+        .Replace("]", "_");
+
+
     if (ViewData["dateHint"] != null)
     {
         dateHint = ViewData["dateHint"].ToString();
@@ -48,7 +58,8 @@
     else
     {
         classBinding = "class=\"govuk-form-group create-edit-form-group date-group "
-                       + Html.ValidationGroupCssClass(ViewData.ModelMetadata.PropertyName) + " "
+                       // + Html.ValidationGroupCssClass(ViewData.ModelMetadata.PropertyName) + " "
+                       + Html.ValidationGroupCssClass(fullFieldId) + " "
                        + Html.ValidationCssClassFor(x => x) + " "
                        + Html.ValidationCssClassFor(x => x.Day) + " "
                        + Html.ValidationCssClassFor(x => x.Month) + " "
@@ -72,19 +83,21 @@
     tooltipText = ViewData["tooltipText"]?.ToString();
     //}
 
+    var legendId = string.Concat(legendPrefix, fullFieldId);
+
 }
 <div @Html.Raw(classBinding)>
 
     @{
-        describedByIds = describedByIds + " " + @legendPrefix + @ViewData.ModelMetadata.PropertyName + "-hint";
+        describedByIds = describedByIds + " " + legendId + "-hint";
     }
     @{
         if (!disableHint)
         {
-            describedByIds = describedByIds + " " + @ViewData.ModelMetadata.PropertyName + "-errors";
+            describedByIds = describedByIds + " " + @fullFieldId + "-errors";
         }
     }
-    <fieldset id="date-error" class="govuk-fieldset range-group @fieldsetClassName">
+    <fieldset id="@fullFieldId-date-error" class="govuk-fieldset range-group @fieldsetClassName">
         @if (ViewData["inFilters"] != null)
         {
             <span class="govuk-error-message hidden">Please check the date(s) you have entered</span>
@@ -101,7 +114,7 @@
             </div>
         }
 
-        <legend class="govuk-fieldset__legend @Html.Conditional(hideLegend, "hidden")" id="@legendPrefix@ViewData.ModelMetadata.PropertyName">
+        <legend class="govuk-fieldset__legend @Html.Conditional(hideLegend, "hidden")" id="@fullFieldId">
             @(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])
             @if (!string.IsNullOrWhiteSpace(tooltipText))
             {
@@ -113,12 +126,7 @@
         </legend>
 
         @{
-            var fullFieldId = ViewData.TemplateInfo.GetFullHtmlFieldName(Model?.Label)
-                .Replace(".", "_")
-                .Replace("[", "_")
-                .Replace("]", "_");
-
-            if (fullFieldId != string.Empty && !string.Concat(legendPrefix, ViewData.ModelMetadata.PropertyName).Equals(fullFieldId))
+            if (fullFieldId != string.Empty && !legendId.Equals(fullFieldId))
             {
                 <div id="@fullFieldId"></div>
             }
@@ -143,8 +151,8 @@
                     linkStateKey = linkStateKey.Replace(".Year", "_Year");
                 }
 
-                if (testStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCultureIgnoreCase) &&
-                    !testStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCulture))
+                if (testStateKey.Equals(fullFieldId, StringComparison.InvariantCultureIgnoreCase) &&
+                    !testStateKey.Equals(fullFieldId, StringComparison.InvariantCulture))
                 {
                     <div id="@linkStateKey"></div>
                 }
@@ -155,11 +163,11 @@
         {
             if (dateHint != string.Empty)
             {
-                <p class="govuk-hint" id="@legendPrefix@ViewData.ModelMetadata.PropertyName-hint">For example, @dateHint</p>
+                <p class="govuk-hint" id="@legendId-hint">For example, @dateHint</p>
             }
             else
             {
-                <p class="govuk-hint" id="@legendPrefix@ViewData.ModelMetadata.PropertyName-hint">For example, 20 03 2003</p>
+                <p class="govuk-hint" id="@legendId-hint">For example, 20 03 2003</p>
             }
         }
 
@@ -170,7 +178,7 @@
             </div>
         }
 
-        <span id="@ViewData.ModelMetadata.PropertyName-errors">
+        <span id="@legendId-errors">
             @{
                 var errContent = new List<MvcHtmlString>
                     {
@@ -180,10 +188,10 @@
                 Html.ValidationMessageFor(x => x.Year, null, new {@class = "govuk-error-message"})
             };
 
-                if (!Html.ViewData.ModelState.ContainsKey(ViewData.ModelMetadata.PropertyName) ||
-                        !Html.ViewData.ModelState[ViewData.ModelMetadata.PropertyName].Errors.Any())
+                if (!Html.ViewData.ModelState.ContainsKey(fullFieldId) ||
+                        !Html.ViewData.ModelState[fullFieldId].Errors.Any())
                 {
-                    errContent.Insert(0, Html.ValidationMessageNested(ViewData.ModelMetadata.PropertyName));
+                    errContent.Insert(0, Html.ValidationMessageNested(fullFieldId));
                 }
 
                 var enumerable = errContent.Select(x => x?.ToHtmlString());

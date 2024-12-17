@@ -1,65 +1,65 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 import errorSummary from '../GiasVueComponents/errorSummary';
 import giasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
 import giasRadio from '../GiasVueComponents/GiasRadio';
 import giasApiError from '../GiasVueComponents/GiasApiError';
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-const  ccApp = new Vue({
-  el: '#create-childrens-centre',
+const  ccApp = createApp({
   components: {
     giasWaitSpinner,
     giasApiError
 
   },
-  data: {
-    groupType: '8',
-    groupName: '',
-    groupNameError: false,
-    groupNameWarningMessage: '',
-    groupNameApiError: '',
+  data() {
+    return {
+      groupType: '8',
+      groupName: '',
+      groupNameError: false,
+      groupNameWarningMessage: '',
+      groupNameApiError: '',
 
-    groupStatus: 'Open',
-    groupLead: '',
+      groupStatus: 'Open',
+      groupLead: '',
 
-    openDateDay: '',
-    openDateMonth: '',
-    openDateYear: '',
+      openDateDay: '',
+      openDateMonth: '',
+      openDateYear: '',
 
-    la: '',
-    laError: false,
-    searchUrn: '',
-    centresInGroup: [],
-    pendingEstab: {},
+      la: '',
+      laError: false,
+      searchUrn: '',
+      centresInGroup: [],
+      pendingEstab: {},
 
 
-    step0Complete: false,
-    step1Complete: false,
+      step0Complete: false,
+      step1Complete: false,
 
-    joinDateValidateUrl: '/Groups/Group/CreateChildrensCentre/Validate/JoinedDate',
-    openDateValidateUrl: '/Groups/Group/CreateChildrensCentre/Validate/OpenDate',
-    openDateError: false,
-    openDateErrorMessage: '',
+      joinDateValidateUrl: '/Groups/Group/CreateChildrensCentre/Validate/JoinedDate',
+      openDateValidateUrl: '/Groups/Group/CreateChildrensCentre/Validate/OpenDate',
+      openDateError: false,
+      openDateErrorMessage: '',
 
-    joinDateDay: '',
-    joinDateMonth: '',
-    joinDateYear: '',
-    joinDateError: '',
-    joinDateErrorMessage: '',
+      joinDateDay: '',
+      joinDateMonth: '',
+      joinDateYear: '',
+      joinDateError: '',
+      joinDateErrorMessage: '',
 
-    urnLookupUrl: '/api/establishment/{0}',
-    validateUrl: '/Groups/Group/CreateChildrensCentre/Validate/All',
-    apiErrors: [],
-    urnApiErrors: [],
-    urnError: false,
-    duplicateUrnError: false,
-    tooFewCentresError: false,
-    appState: 'initial', // initial || groupDetail || addCentre || detail
-    pendingEdit: false,
-    detailEdit: false,
-    isProcessing: false,
-    apiError: {},
-
+      urnLookupUrl: '/api/establishment/{0}',
+      validateUrl: '/Groups/Group/CreateChildrensCentre/Validate/All',
+      apiErrors: [],
+      urnApiErrors: [],
+      urnError: false,
+      duplicateUrnError: false,
+      tooFewCentresError: false,
+      appState: 'initial', // initial || groupDetail || addCentre || detail
+      pendingEdit: false,
+      detailEdit: false,
+      isProcessing: false,
+      apiError: {},
+    };
   },
   computed: {
     groupTypeName: function() {
@@ -90,12 +90,19 @@ const  ccApp = new Vue({
       return '';
     },
     laName: function () {
-      if (document.getElementById('LocalAuthorityId') && document.getElementById('LocalAuthorityId').tagName.toLowerCase() ==='select') {
+      const localAuthorityElement = document.getElementById('LocalAuthorityId');
+      if (localAuthorityElement && localAuthorityElement.tagName.toLowerCase() ==='select') {
         return $('#LocalAuthorityId').find('option[value="' + this.la + '"]').text();
       }
+
       // no dropdown for LA users - LA is uneditable for them
-      this.la = document.getElementById('la-code').value;
-      return document.getElementById('uneditable-la-name').value;
+      const laCodeElement = document.getElementById('la-code');
+      const uneditableLaNameElement = document.getElementById('uneditable-la-name');
+
+      if (laCodeElement) {
+        this.la = laCodeElement.value;
+      }
+      return uneditableLaNameElement ? uneditableLaNameElement.value : '';
     },
     tableCount: function () {
       return '1 - ' + this.centresInGroup.length + ' of ' + this.centresInGroup.length;
@@ -338,7 +345,7 @@ const  ccApp = new Vue({
               let o = {};
               // ensure that only URN errors are included
               // and ignore the message about the number of establishments in the group - this validation of a single URN
-			  if (/\d/.test(error.Fields) && error.Code !== "error.validation.link.cc.one.linked.school") {				  
+			  if (/\d/.test(error.Fields) && error.Code !== "error.validation.link.cc.one.linked.school") {
                 const est = self.pendingEstab;
                 o.field = est.name + ' (' + est.urn + ')';
                 o.message = error.Message;
@@ -550,4 +557,6 @@ const  ccApp = new Vue({
     }
   }
 });
+
+ccApp.mount('#create-childrens-centre');
 

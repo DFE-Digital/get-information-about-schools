@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 import errorSummary from '../GiasVueComponents/errorSummary';
 import checkbox from '../GiasVueComponents/checkbox';
 import checkboxRemoteSelection from '../GiasVueComponents/Download/checkboxRemoteSelection';
@@ -6,8 +6,7 @@ import downloadCategorisedFields from '../GiasVueComponents/DownloadCategorisedF
 import viewSwitcher from "../GiasVueComponents/Download/viewSwitcher";
 import searchByFieldName from '../GiasVueComponents/Download/searchByFieldName';
 
-const app = new Vue({
-  el: '#field-select-app',
+const app = createApp({
   components: {
     errorSummary,
     checkbox,
@@ -22,16 +21,17 @@ const app = new Vue({
     noJsElem.parentNode.removeChild(noJsElem);
   },
 
-  data: {
-    categoryList: window.fieldListByCat,
-    fields: window.fieldList,
-    viewAsList: false,
-    selectedFields: [],
-    searchMatches: [],
-    errorMessages: [],
-    radioError: false,
-    isFilteringFields: false,
-
+  data() {
+    return {
+      categoryList: window.fieldListByCat,
+      fields: window.fieldList,
+      viewAsList: false,
+      selectedFields: [],
+      searchMatches: [],
+      errorMessages: [],
+      radioError: false,
+      isFilteringFields: false,
+    };
   },
 
   methods: {
@@ -47,7 +47,7 @@ const app = new Vue({
     changeViewMode: function () {
       this.viewAsList = !this.viewAsList;
     },
-    filterFilters: function (searchText) {;
+    filterFilters: function (searchText) {
       this.searchMatches = this.fields.filter((fld) => {
         return fld.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
       });
@@ -91,5 +91,4 @@ const app = new Vue({
 
 });
 
-
-export default app;
+app.mount('#field-select-app');

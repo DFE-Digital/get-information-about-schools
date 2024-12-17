@@ -70,7 +70,7 @@ $("#IsOriginalChairOfTrustees").on('change', function (e) {
 $("#governorEdit").submit(function () {
   $("#AppointingBodyId").prop("disabled", "");
 });
- 
+
 $('.choose-governor').on('change', function () {
   unloadHandler.setExitStatus(true);
 

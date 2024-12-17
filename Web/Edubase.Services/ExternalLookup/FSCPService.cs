@@ -21,7 +21,7 @@ namespace Edubase.Services.ExternalLookup
 
         private const string FBServiceTimeoutKey = "FscpdClient_Timeout";
 
-        private readonly Policy RetryPolicy = PollyUtil.CreateRetryPolicy(
+        private readonly IAsyncPolicy<HttpResponseMessage> RetryPolicy = PollyUtil.CreateRetryPolicy(
             PollyUtil.CsvSecondsToTimeSpans(
                 ConfigurationManager.AppSettings["FscpdClient_RetryIntervals"]
             ), FBServiceTimeoutKey

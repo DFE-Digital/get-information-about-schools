@@ -21,8 +21,8 @@
     </dd>
 </div>
 <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadteacherLabel)</dt>
-    <dd class="govuk-summary-list__value">
+    <dt id="head-teacher-label-key" class="govuk-summary-list__key">@Html.Raw(Model.DisplayPolicy.HeadteacherLabel)</dt>
+    <dd id="head-teacher-value" class="govuk-summary-list__value">
         @if (Model.DisplayPolicy.HeadTitleId)
         {
             <text>@Model.HeadTitleName.Replace("Not recorded", string.Empty)</text>
@@ -165,8 +165,8 @@
 @if (Model.DisplayPolicy.Contact_WebsiteAddress)
 {
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Website</dt>
-        <dd class="govuk-summary-list__value">
+        <dt id="website-key" class="govuk-summary-list__key">Website</dt>
+        <dd id="website-value" class="govuk-summary-list__value">
             @if (Model.Establishment.Contact_WebsiteAddress == null)
             {
                 <text>Not recorded</text>
@@ -194,30 +194,63 @@
     @OtherServicesLinks()
 }
 
-@if (Model.DisplayPolicy.OfstedRatingId)
+@*
+ * #232199: If there is a valid Ofsted report page on the Ofsted website for this establishment's URN, always link to it.
+ * Where we _also_ hold a cached copy of the latest Ofsted rating and inspection date, follow the usual display-policy rules.
+ *@
+@if (Model.ShowOfstedReportLink)
 {
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Ofsted rating</dt>
+        <dt class="govuk-summary-list__key">Ofsted rating and reports</dt>
         <dd class="govuk-summary-list__value">
-            @if (Model.Establishment.OfstedRatingId.HasValue)
-            {
-                <span class="highlighted-ofsted-rating">@Model.OfstedRatingName</span>
-            }
-            else
-            {
-                <span>Not recorded</span>
+            @{
+                var newlineRequired = false;
             }
 
-            @if (Model.Establishment.OfstedInspectionDate.HasValue)
+            @if (Model.ShowOfstedRatings)
             {
-                <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("d MMMM yyyy")))</span>
+                if (Model.DisplayPolicy.OfstedRatingId)
+                {
+                    if (Model.Establishment.OfstedRatingId.HasValue)
+                    {
+                        newlineRequired = true;
+                        <span class="highlighted-ofsted-rating">@Model.OfstedRatingName</span>
+                        if (Model.Establishment.OfstedInspectionDate.HasValue)
+                        {
+                            <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("d MMMM yyyy")))</span>
+                        }
+                    }
+                    else
+                    {
+                        newlineRequired = true;
+                        <span>Latest inspection results not recorded on GIAS</span>
+                    }
+                }
             }
-            @if (Model.OfstedRatingReportUrl != null)
+
+            @if (newlineRequired)
             {
-                <br />
-                <a href="@Model.OfstedRatingReportUrl" target="_blank" rel="noreferrer noopener">
+                <br/>
+            }
+
+            <div class="govuk-!-margin-bottom-3">
+                <a href="@Model.OfstedReportUrl" target="_blank" rel="noreferrer noopener">
                     Ofsted report (opens in new tab)
                 </a>
+            </div>
+
+            @if (!Model.ShowOfstedRatings)
+            {
+                <details class="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                            Why the rating is not displayed
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        From September 2024, Ofsted no longer makes an overall effectiveness judgement in inspections of state-funded schools.
+                    </div>
+                </details>
             }
         </dd>
     </div>
