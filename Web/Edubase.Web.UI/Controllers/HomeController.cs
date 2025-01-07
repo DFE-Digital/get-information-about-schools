@@ -102,7 +102,7 @@ namespace Edubase.Web.UI.Controllers
             return RedirectToAction("cookies");
         }
 
-        [HttpPost, Route("~/CookieChoicesAjax")]
+        [HttpPost, Route("~/CookieChoicesAjax"), ValidateAntiForgeryToken]
         public ActionResult CookieChoicesAjax(bool acceptAnalyticsCookies = false)
         {
             var urlHelper = new UrlHelper(Request.RequestContext);
