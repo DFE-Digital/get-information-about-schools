@@ -32,6 +32,14 @@ namespace Edubase.Common
             {
                 throw new FormatException($"Invalid token format: {token}", ex);
             }
+            catch (JsonException ex)
+            {
+                throw new InvalidOperationException($"Token deserialization failed {token}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unexpected error occured while processing the token: {token}", ex);
+            }
         }
 
         public static string SerializeToUrlToken<T>(T obj) where T : class
