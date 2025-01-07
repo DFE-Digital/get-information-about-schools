@@ -1,3 +1,4 @@
+@using System.Configuration
 @{
     ViewBag.Title = "Get Information about Schools";
     ViewBag.imageMQ = "(max-width: 768px)";
@@ -277,18 +278,22 @@
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">TelephoneNum</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Telephone</td>
             </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">OfstedRating</td>
-                <td class="govuk-table__cell" data-label="Equivalent field name in app">Ofsted rating</td>
-            </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">OfstedLastInspection</td>
-                <td class="govuk-table__cell" data-label="Equivalent field name in app">Ofsted last inspection</td>
-            </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Osted report link</td>
-                <td class="govuk-table__cell" data-label="Equivalent field name in app">Ofsted report link</td>
-            </tr>
+
+            @if("true".Equals(ConfigurationManager.AppSettings["Feature_Ofsted_ShowBulkUpdateGuidance"], StringComparison.OrdinalIgnoreCase)) {
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">OfstedRating</td>
+                    <td class="govuk-table__cell" data-label="Equivalent field name in app">Ofsted rating</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">OfstedLastInspection</td>
+                    <td class="govuk-table__cell" data-label="Equivalent field name in app">Ofsted last inspection</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Osted report link</td>
+                    <td class="govuk-table__cell" data-label="Equivalent field name in app">Ofsted report link</td>
+                </tr>
+            }
+
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">Inspectorate</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Inspectorate</td>
@@ -550,10 +555,15 @@
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">DateofLastFullBridgeInspection</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Date of the Last Bridge Visit</td>
             </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">DateofLastFullOfstedInspection</td>
-                <td class="govuk-table__cell" data-label="Equivalent field name in app">Date of the Last Ofsted Visit</td>
-            </tr>
+
+            @if("true".Equals(ConfigurationManager.AppSettings["Feature_Ofsted_ShowBulkUpdateGuidance"], StringComparison.OrdinalIgnoreCase))
+            {
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">DateofLastFullOfstedInspection</td>
+                    <td class="govuk-table__cell" data-label="Equivalent field name in app">Date of the Last Ofsted Visit</td>
+                </tr>
+            }
+
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell" data-label="Database name (use this for your upload file)">DateofLastFullISIInspection</td>
                 <td class="govuk-table__cell" data-label="Equivalent field name in app">Date of the Last ISI Visit</td>
