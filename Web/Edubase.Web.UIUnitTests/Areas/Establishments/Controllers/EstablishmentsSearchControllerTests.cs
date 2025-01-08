@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
@@ -13,11 +14,16 @@ using Edubase.Services.Establishments;
 using Edubase.Services.Establishments.Downloads;
 using Edubase.Services.Establishments.Models;
 using Edubase.Services.Establishments.Search;
+using Edubase.Services.Governors.DisplayPolicies;
+using Edubase.Services.Governors.Models;
 using Edubase.Services.Lookup;
 using Edubase.Web.UI.Areas.Establishments.Models.Search;
+using Edubase.Web.UI.Areas.Governors.Models;
+using Edubase.Web.UI.Models.Grid;
 using Moq;
 using Xunit;
 using static Edubase.Web.UI.Areas.Establishments.Models.Search.EstablishmentSearchViewModel;
+using GR = Edubase.Services.Enums.eLookupGovernorRole;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
 {
@@ -438,5 +444,72 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             Assert.Equal("Download", result.RouteValues["action"]);
             Assert.Equal(guid, result.RouteValues["id"]);
         }
+
+        [Fact]
+        public void ExceptionShouldBeThrown_WhenMultipleAppointmentsMatchEstabUrn()
+        {
+            var dto = new Edubase.Services.Governors.Models.GovernorsDetailsDto
+            {
+                ApplicableRoles = new List<GR> { GR.Member },
+                RoleDisplayPolicies =
+                    new Dictionary<GR, GovernorDisplayPolicy>
+                    {
+                        { GR.Member, new GovernorDisplayPolicy { FullName = true, AppointmentEndDate = true } }
+                    },
+                CurrentGovernors = new List<GovernorModel>
+                {
+                    new GovernorModel
+                    {
+                        Id = 1,
+                        RoleId = (int) GR.Member,
+                        Appointments = new List<GovernorAppointment>
+                        {
+                            new GovernorAppointment
+                            {
+                                EstablishmentUrn = 123,
+                                AppointmentStartDate = DateTime.Now.AddYears(-2),
+                                AppointmentEndDate = DateTime.Now
+                            },
+                            new GovernorAppointment
+                            {
+                                EstablishmentUrn = 123,
+                                AppointmentStartDate = DateTime.Now.AddYears(-1),
+                                AppointmentEndDate = DateTime.Now.AddMonths(-6)
+                            },
+                        }
+                    }
+                }
+            };
+
+            var titles = new List<LookupDto>
+            {
+                new LookupDto { Id = 1, Name = "Mr" }, new LookupDto { Id = 2, Name = "Mrs" }
+            };
+
+            var nationalities = new List<LookupDto>
+            {
+                new LookupDto { Id = 1, Name = "British" }, new LookupDto { Id = 2, Name = "American" }
+            };
+
+            var appointingBodies = new List<LookupDto>
+            {
+                new LookupDto { Id = 1, Name = "Local Authority" }
+            };
+
+            var governorPermissions = new GovernorPermissions { Add = true };
+
+            var exception = Assert.Throws<InvalidOperationException>(() =>
+            {
+                var viewModel = new GovernorsGridViewModel(
+                    dto, true, null, 123,
+                    nationalities, appointingBodies,
+                    titles, governorPermissions
+                );
+            });
+            Assert.Equal("Multiple appointments found for governor with ID 1 and EstablishmentUrn 123 (governorsGridViewModel)", exception.Message);
+        }
     }
 }
+
+
+// giovernorsgridviewmodel
