@@ -53,6 +53,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         private readonly Mock<UrlHelper> mockUrlHelper = new Mock<UrlHelper>(MockBehavior.Loose);
         private readonly Mock<IFSCPDService> mockFscpdService = new Mock<IFSCPDService>(MockBehavior.Strict);
         private readonly Mock<IFBService> mockFbService = new Mock<IFBService>(MockBehavior.Strict);
+        private readonly Mock<IOfstedService> mockOfstedService = new Mock<IOfstedService>(MockBehavior.Strict);
         private readonly Mock<IGovernorsGridViewModelFactory> mockGovernorsGridViewModelFactory = new Mock<IGovernorsGridViewModelFactory>(MockBehavior.Loose);
         private bool disposedValue;
 
@@ -396,6 +397,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                 .ReturnsAsync(() => true);
             mockExternalLookupService.Setup(x => x.SfbCheckExists(123456, FbType.School))
                 .ReturnsAsync(() => true);
+            mockExternalLookupService.Setup(x => x.OfstedReportPageCheckExists(123456))
+                .ReturnsAsync(() => true);
+
 
             var response = await controller.Details(urn);
 
@@ -461,6 +465,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                 .ReturnsAsync(() => true);
             mockExternalLookupService.Setup(x => x.SfbCheckExists(123456, FbType.School))
                             .ReturnsAsync(() => true);
+            mockExternalLookupService.Setup(x => x.OfstedReportPageCheckExists(123456))
+                .ReturnsAsync(() => true);
 
             var response = await controller.Details(urn);
 
