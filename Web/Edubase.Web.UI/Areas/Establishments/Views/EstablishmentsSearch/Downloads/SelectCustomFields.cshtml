@@ -1,3 +1,4 @@
+@using System.Data.Entity.Infrastructure.Design
 @using Edubase.Services.Enums
 @using Microsoft.Ajax.Utilities
 @using Edubase.Web.UI.Areas.Establishments.Models.Search
@@ -65,9 +66,7 @@
             <h2 class="govuk-heading-m">Select the data you are interested in</h2>
         </div>
     </div>
-    @using (Html.BeginForm("PrepareDownload", "EstablishmentsSearch", FormMethod.Get,
-        new Dictionary<string, object> { ["@submit"] = "handleSubmit", ["id"] = "field-selection" }))
-    {
+    <form id="field-selection" v-on:submit.prevent="handleSubmit">
         <div id="js-field-selection" class="js-show-block">
 
             <div class="govuk-grid-row">
@@ -91,7 +90,9 @@
                     <download-categorised-fields accordion-id="categorised-fields"
                                                  :panel-data="categoryList"
                                                  :selected-fields="selectedFields"
-                                                 :has-error="radioError"/>
+                                                 v-on:selected-fields-updated="handleSelectedFieldsUpdate"
+                                                 :has-error="radioError"></download-categorised-fields>
+
                 </div>
             </div>
 
@@ -104,8 +105,10 @@
                                       id-prefix="alpha"
                                       :label="chx.name"
                                       :value="chx.id"
-                                      v-model="selectedFields"
-                                      v-for="(chx, i) in fields" :key="i+'_'">
+                                      :checked="selectedFields && selectedFields.includes(chx.id)"
+                                      v-on:checkbox-toggled="updateSelectedFields(chx.id, $event)"
+                                      v-for="(chx, i) in fields"
+                                      :key="chx.id">
                             </checkbox>
                         </div>
                     </div>
@@ -116,8 +119,9 @@
                                       id-prefix="alpha"
                                       :label="chx.name"
                                       :value="chx.id"
-                                      v-model="selectedFields"
-                                      v-for="(chx, i) in searchMatches" :key="i+'_'">
+                                      v-on:checkbox-toggled="handleCheckboxToggle"
+                                      v-for="(chx, i) in searchMatches"
+                                      :key="chx.id">
                             </checkbox>
                         </div>
                     </div>
@@ -174,8 +178,10 @@
             </div>
         </div>
         @Html.HiddenFieldsFromQueryString(new[] { EstablishmentSearchDownloadViewModel.SelectedCustomFieldsBindAlias })
-    }
+        }
+    </form>
 </div>
+
 
 
 @section ViewScripts

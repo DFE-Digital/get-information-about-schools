@@ -40,6 +40,7 @@ export default {
       this.$root.isFilteringFields = true
       this.$root.errorMessages = [];
       if (!this.isResetting && this.filterSearchText.length === 0) {
+        console.log('[searchByFieldName] selectedfields: ', selectedFields)
         this.filterSearchError = true;
         this.$root.errorMessages = [{href: '#field-text-search', message: 'Enter a field name to search'}];
 

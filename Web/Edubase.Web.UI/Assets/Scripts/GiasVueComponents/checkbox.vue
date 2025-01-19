@@ -3,9 +3,9 @@
         <input type="checkbox"
                class="govuk-checkboxes__input"
                :id="idPrefix+'-'+inputId"
-               :value="label"
+               :value="value"
                :checked="checkboxState"
-               v-on:click="toggle" />
+               @change="toggle" />
         <label class="govuk-label govuk-checkboxes__label" :for="idPrefix+'-'+inputId">
             {{label}}
         </label>
@@ -14,76 +14,55 @@
 
 <script>
     export default {
-        name: 'checkbox',
-        model: {
-            prop: 'model',
-            event: 'change'
+      name: 'checkbox',
+      props: {
+        inputId: {
+          type: String,
+          default: undefined
         },
-        props: {
-            inputId: {
-                type: String,
-                default: undefined
-            },
-            label: {
-                type: String,
-                default: undefined
-            },
-            idPrefix: {
-                type: String,
-                default: ''
-            },
-            model: {
-                type: [Boolean, Array],
-                default: undefined
-            },
-            checked: Boolean,
-            value: {
-                type: [String, Boolean, Number, Object, Array, Function],
-                default: undefined
-            },
-            name: String,
-
+        label: {
+          type: String,
+          default: undefined
         },
-        data() {
-            return {
-                lv: this.model
-            }
+        idPrefix: {
+          type: String,
+          default: ''
         },
-        computed: {
-            checkboxState() {
-                if (Array.isArray(this.model)) return this.model.indexOf(this.value) !== -1
-                return this.model || Boolean(this.lv)
-            },
+        modelValue: {
+          type: [Boolean, Array],
+          default: () => []
         },
-        methods: {
-            toggle() {
-                let v = this.model || this.lv
-                if (Array.isArray(v)) {
-                    const i = v.indexOf(this.value)
-                    if (i === -1) v.push(this.value)
-                    else v.splice(i, 1)
-                }
-                else {
-                    v = !v
-                }
-                this.lv = v
-                this.$emit('change', v, this.value)
-            },
-
+        value: {
+          type: [String, Boolean, Number, Object],
+          required: true
         },
-        watch: {
-            checked(v) {
-                if (v !== this.checkboxState) this.toggle()
-            },
-            model(v) {
-                this.lv = v
-            }
-        },
-        mounted() {
-            if (this.checked && !this.checkboxState) {
-                this.toggle()
-            }
+        name: String
+      },
+      computed: {
+        checkboxState() {
+          if (Array.isArray(this.modelValue)) {
+            return this.modelValue.includes(this.value);
+          }
+          return Boolean(this.modelValue);
         }
-    }
-</script>
+      },
+      methods: {
+        toggle(event) {
+          event.preventDefault();
+          event.stopPropagation();
 
+          console.log('checkbox toggled:', this.value);
+
+          this.$emit('checkbox-toggled', {
+            value: this.value,
+            checked: event.target.checked
+          });
+
+          console.log('emitted checkbox-toggled with:', {
+            value: this.value,
+            checked: event.target.checked
+          })
+        }
+      }
+    };
+</script>

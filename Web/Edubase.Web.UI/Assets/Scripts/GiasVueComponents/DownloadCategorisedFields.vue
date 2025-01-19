@@ -10,7 +10,7 @@
                     :label="chx.name"
                     :value="chx.id"
                     :checked="selectedFields.includes(chx.id)"
-                    @update:checked="updateSelectedFields(chx.id, $event)"
+                    @click="updateSelectedFields(chx.id, !$event.target.checked)"
                     v-for="(chx, j) in panel.customFields"
                     :key="i + '_' + j"
                     ></checkbox>
@@ -27,23 +27,31 @@ export default {
   props: {
     accordionId: String,
     panelData: Array,
-    selectedFields: Array,
-    hasError: Boolean,
+    selectedFields: {
+      type: Array,
+      required: true,
+    },
+    hasError: Boolean
   },
+  emits: ['selected-fields-updated'],
   components: {
     checkbox,
   },
   methods: {
     updateSelectedFields(id, isChecked) {
-     if (isChecked) {
-       this.selectedFields.push(id);
-    } else {
-      const index = this.selectedFields.indexOf(id);
-      if (index > -1) {
-        this.selectedFields.splice(index, 1);
-	}
+      console.log('[downloadCatFields] updateselectedFields called with ${id}, ischecked: ${isChecked}');
+      let updatedFields = [...this.selectedFields];
+
+     if (isChecked && !updatedFields.includes(id)) {
+       updatedFields.push(id);
       }
-	this.$emit('update:selectedFields', this.selectedFields);
+     else if (!isChecked && updatedFields.includes(id))
+      {
+        updatedFields = updatedFields.filter(fileId => fileId !== id);
+      }
+      console.log('[downloadCatFields] emitted selectedFields', updatedFields);
+	    this.$emit ('selected-fields-updated', updatedFields)
+
     },
   },
 };

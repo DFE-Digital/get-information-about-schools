@@ -16,7 +16,8 @@
                         <checkbox :input-id="chx.id"
                                   :label="chx.name"
                                   :value="chx.id"
-                                  v-model="selectedFields"
+                                  :checked="modelValue.includes(chx.id)"
+                                  @update:checked="updateSelectedFields(chx.id, $event)"
                                   v-for="(chx, j) in panel.customFields" :key="i+'_'+j"></checkbox>
                     </div>
             </div>
@@ -39,7 +40,8 @@
         },
         mounted: function() {
             const elem = document.getElementById('js-field-selection');
-            initAll({ scope: elem });
+          initAll({ scope: elem });
+            console.log('[vueaccordian] mounted with selectedFields: ', this.selectedFields)
         }
     }
 </script>
