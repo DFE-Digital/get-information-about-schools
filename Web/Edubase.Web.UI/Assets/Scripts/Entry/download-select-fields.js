@@ -1,4 +1,4 @@
-import { createApp } from '@vue/compat';
+import { createApp } from 'vue';
 import errorSummary from '../GiasVueComponents/errorSummary';
 import checkbox from '../GiasVueComponents/checkbox';
 import checkboxRemoteSelection from '../GiasVueComponents/Download/checkboxRemoteSelection';
@@ -76,14 +76,12 @@ const app = createApp({
       console.log('form submitted');
       console.log('selectedFields', this.selectedFields);
 
-      if (this.selectedFields.length > 0) {
-        this.radioError = false;
-        console.log('form is valid. proceeding');
-      } else {
+      if (this.selectedFields.length === 0) {
         this.radioError = true;
-        console.log('no fields selected');
-        this.errorMessages = [{href: '#js-field-selection', message: 'Select at least one field'}];
-        window.scrollTo(0, 0);
+        console.log('error - no fields selected');
+      } else {
+        this.radioError = false;
+        console.log('proceeding');
       }
     },
     handleCheckboxToggle(payload) {

@@ -33,16 +33,13 @@
           required: true
         },
         modelValue: {
-          type: [Boolean, Array],
+          type: [Array],
           default: () => []
         },
-        emits: ['update:modelValue'],
+        emits: ['update:modelValue', 'checkbox-toggled'],
         computed: {
           checkboxState() {
-            if (Array.isArray(this.modelValue)) {
-              return this.modelValue.includes(this.value);
-            }
-            return false;
+            return Array.isArray(this.modelValue) && this.modelValue.includes(this.value);
           }
         },
         methods: {
@@ -59,6 +56,7 @@
             }
             console.log('[downloadCatFields] emitted selectedFields', updatedFields);
             this.$emit('update:modelValue', updatedModelValue)
+            this.$emit('checkbox-toggled', { value: this.value, checked: isChecked });
           }
         }
       }
