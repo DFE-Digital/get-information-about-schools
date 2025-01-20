@@ -9,8 +9,7 @@
           <checkbox :input-id="chx.id"
                     :label="chx.name"
                     :value="chx.id"
-                    :checked="selectedFields.includes(chx.id)"
-                    @click="updateSelectedFields(chx.id, !$event.target.checked)"
+                    v-model:modelValue="selectedFields"
                     v-for="(chx, j) in panel.customFields"
                     :key="i + '_' + j"
                     ></checkbox>
@@ -27,20 +26,20 @@ export default {
   props: {
     accordionId: String,
     panelData: Array,
-    selectedFields: {
+    modelValue: {
       type: Array,
-      required: true,
+      required: true
     },
     hasError: Boolean
   },
-  emits: ['selected-fields-updated'],
+  emits: ['update:modelValue'],
   components: {
     checkbox,
   },
   methods: {
     updateSelectedFields(id, isChecked) {
       console.log('[downloadCatFields] updateselectedFields called with ${id}, ischecked: ${isChecked}');
-      let updatedFields = [...this.selectedFields];
+      let updatedFields = [...this.modelValue];
 
      if (isChecked && !updatedFields.includes(id)) {
        updatedFields.push(id);
@@ -50,7 +49,7 @@ export default {
         updatedFields = updatedFields.filter(fileId => fileId !== id);
       }
       console.log('[downloadCatFields] emitted selectedFields', updatedFields);
-	    this.$emit ('selected-fields-updated', updatedFields)
+	    this.$emit ('update:modelValue', updatedFields)
 
     },
   },

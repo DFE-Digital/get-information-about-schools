@@ -28,40 +28,38 @@
           type: String,
           default: ''
         },
-        modelValue: {
-          type: [Boolean, Array],
-          default: () => []
-        },
         value: {
           type: [String, Boolean, Number, Object],
           required: true
         },
-        name: String
-      },
-      computed: {
-        checkboxState() {
-          if (Array.isArray(this.modelValue)) {
-            return this.modelValue.includes(this.value);
+        modelValue: {
+          type: [Boolean, Array],
+          default: () => []
+        },
+        emits: ['update:modelValue'],
+        computed: {
+          checkboxState() {
+            if (Array.isArray(this.modelValue)) {
+              return this.modelValue.includes(this.value);
+            }
+            return false;
           }
-          return Boolean(this.modelValue);
-        }
-      },
-      methods: {
-        toggle(event) {
-          event.preventDefault();
-          event.stopPropagation();
+        },
+        methods: {
+          toggle(event) {
 
-          console.log('checkbox toggled:', this.value);
+            const isChecked = event.target.checked;
+            const updatedModelValue = [...this.modelValue];
 
-          this.$emit('checkbox-toggled', {
-            value: this.value,
-            checked: event.target.checked
-          });
-
-          console.log('emitted checkbox-toggled with:', {
-            value: this.value,
-            checked: event.target.checked
-          })
+            if (isChecked && !updatedModelValue.includes(this.value)) {
+              updatedModelValue.push(this.value);
+            } else if (!isChecked && updatedModelValue.includes(this.value)) {
+              const index = updatedModelValue.indexOf(this.value);
+              updatedModelValue.splice(index, 1);
+            }
+            console.log('[downloadCatFields] emitted selectedFields', updatedFields);
+            this.$emit('update:modelValue', updatedModelValue)
+          }
         }
       }
     };

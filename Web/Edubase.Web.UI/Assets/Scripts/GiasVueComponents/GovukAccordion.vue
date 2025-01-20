@@ -33,7 +33,7 @@
         props: {
             accordionId: String,
             panelData: Array,
-            selectedFields: Array
+            modelValue: Array
         },
         components: {
             checkbox

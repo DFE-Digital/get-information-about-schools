@@ -89,8 +89,7 @@
                 <div class="govuk-grid-column-full">
                     <download-categorised-fields accordion-id="categorised-fields"
                                                  :panel-data="categoryList"
-                                                 :selected-fields="selectedFields"
-                                                 v-on:selected-fields-updated="handleSelectedFieldsUpdate"
+                                                 v-model="selectedFields"
                                                  :has-error="radioError"></download-categorised-fields>
 
                 </div>
@@ -105,8 +104,9 @@
                                       id-prefix="alpha"
                                       :label="chx.name"
                                       :value="chx.id"
-                                      :checked="selectedFields && selectedFields.includes(chx.id)"
-                                      v-on:checkbox-toggled="updateSelectedFields(chx.id, $event)"
+                                      :checked="Array.isArray(selectedFields) && selectedFields.includes(chx.id)"
+                                      v-model:modelValue="selectedFields"
+                                      v-on:checkbox-toggled="handleCheckboxToggle"
                                       v-for="(chx, i) in fields"
                                       :key="chx.id">
                             </checkbox>
@@ -119,8 +119,10 @@
                                       id-prefix="alpha"
                                       :label="chx.name"
                                       :value="chx.id"
+                                      :checked="Array.isArray(selectedFields) && selectedFields.includes(chx.id)"
+                                      v-model:modelValue="selectedFields"
                                       v-on:checkbox-toggled="handleCheckboxToggle"
-                                      v-for="(chx, i) in searchMatches"
+                                      v-for="(chx, i) in fields"
                                       :key="chx.id">
                             </checkbox>
                         </div>

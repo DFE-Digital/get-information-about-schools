@@ -1,4 +1,4 @@
-import { createApp } from 'vue';
+import { createApp } from '@vue/compat';
 import errorSummary from '../GiasVueComponents/errorSummary';
 import checkbox from '../GiasVueComponents/checkbox';
 import checkboxRemoteSelection from '../GiasVueComponents/Download/checkboxRemoteSelection';
@@ -15,11 +15,6 @@ const app = createApp({
     viewSwitcher,
     searchByFieldName
   },
-  watch: {
-    selectedFields(newVal, oldVal) {
-      console.log('changed ', oldVal, '-', newVal);
-      console.trace('selectedFields reset source');
-    }},
 
   mounted: function () {
     console.log('[parent] sintial selected: ', this.selectedFields)
