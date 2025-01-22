@@ -88,7 +88,7 @@ namespace Edubase.Web.UI.Controllers
         public ActionResult Cookies() => View();
 
         [HttpPost, Route("~/CookieChoices"), ValidateAntiForgeryToken]
-        public ActionResult CookieChoices(bool acceptAnalyticsCookies)
+        public ActionResult CookieChoices(bool acceptAnalyticsCookies = false)
         {
             var urlHelper = new UrlHelper(Request.RequestContext);
             var cookieDomain = urlHelper.CookieDomain();
@@ -111,8 +111,8 @@ namespace Edubase.Web.UI.Controllers
             return RedirectToAction("cookies");
         }
 
-        [HttpPost, Route("~/CookieChoicesAjax")]
-        public ActionResult CookieChoicesAjax(bool acceptAnalyticsCookies)
+        [HttpPost, Route("~/CookieChoicesAjax"), ValidateAntiForgeryToken]
+        public ActionResult CookieChoicesAjax(bool acceptAnalyticsCookies = false)
         {
             var urlHelper = new UrlHelper(Request.RequestContext);
             var cookieDomain = urlHelper.CookieDomain();
