@@ -67,8 +67,11 @@ namespace Edubase.Web.UI.Helpers
             {
                 if (htmlHelper.ViewData.ModelState.ContainsKey(htmlHelper.ViewData.ModelMetadata.PropertyName))
                 {
+                    var modelState = htmlHelper.ViewData.ModelState[modelName];
+
                     // add the errors from the modelName to the parent FullHtmlFieldName
-                    if (htmlHelper.ViewData.ModelState[modelName].Errors.Any())
+                    // added a check for a null modelstate as this was causing a null reference
+                    if (modelState != null && modelState.Errors.Any())
                     {
                         foreach (var error in htmlHelper.ViewData.ModelState[modelName].Errors)
                         {
