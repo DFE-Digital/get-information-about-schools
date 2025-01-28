@@ -14,7 +14,7 @@
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-xl">Search results for establishments</h1>
 
-        <p class="govuk-body"><strong>@Model.MatchingLocations.Count</strong> &nbsp;location@(Model.MatchingLocations.Count == 1 ? "" : "s") matching '<strong>@Model.SearchText</strong>'</p>
+        <p class="govuk-body"><strong>@Model.MatchingLocations.Count</strong> location@(Model.MatchingLocations.Count == 1 ? "" : "s") matching '<strong>@Model.SearchText</strong>'</p>
 
         @if (Model.MatchingLocations.Count > 1)
         {
