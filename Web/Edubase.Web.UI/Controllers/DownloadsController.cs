@@ -14,6 +14,7 @@ using Edubase.Common;
 using Edubase.Web.UI.Helpers;
 using System.Linq;
 using System.Net.Http;
+using System.Web.Http.Results;
 using System.Web.Routing;
 using Edubase.Services;
 using Edubase.Services.Downloads.Models;
@@ -134,14 +135,23 @@ namespace Edubase.Web.UI.Controllers
         }
 
         [Route("Generated/{id}", Name = "DownloadGenerated")]
-        public async Task<ActionResult> DownloadGenerated(Guid id, bool isExtract = false)
+        public async Task<ActionResult> DownloadGenerated(string id, bool isExtract = false)
         {
+            if (!Guid.TryParse(id, out Guid parsedId))
+            {
+                return View("Downloads/DownloadError", new DownloadErrorViewModel
+                {
+                    NeedsRegenerating = false,
+                    ReturnSource = isExtract ? eDownloadReturnSource.Extracts : eDownloadReturnSource.Downloads,
+                });
+            }
+
             var model = new ProgressDto();
             try
             {
                 model = isExtract
-                    ? await _downloadsService.GetProgressOfScheduledExtractGenerationAsync(id, User)
-                    : await _downloadsService.GetProgressOfGeneratedExtractAsync(id, User);
+                    ? await _downloadsService.GetProgressOfScheduledExtractGenerationAsync(parsedId, User)
+                    : await _downloadsService.GetProgressOfGeneratedExtractAsync(parsedId, User);
             }
             catch (Exception ex)
             {
