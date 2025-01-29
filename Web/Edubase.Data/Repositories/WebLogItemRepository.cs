@@ -38,9 +38,10 @@ namespace Edubase.Data.Repositories
                     TableQuery.CombineFilters(
                         TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, rowKey),
                         TableOperators.And,
-                        TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey)
+                        TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey)                        
                     )
                 );
+                query.TakeCount = 1000;//limit to 1000 rows to avoid performance problems
 
                 var segment = await Table.ExecuteQuerySegmentedAsync(query, currentToken);
                 items.AddRange(segment.Results);
@@ -73,6 +74,7 @@ namespace Edubase.Data.Repositories
                         )
                     )
                 );
+                query.TakeCount = 1000;//limit to 1000 rows to avoid performance problems
 
                 var segment = await Table.ExecuteQuerySegmentedAsync(query, currentToken);
                 items.AddRange(segment.Results);
