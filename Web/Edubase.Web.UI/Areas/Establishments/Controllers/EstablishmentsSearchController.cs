@@ -145,6 +145,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpGet, Route("PrepareDownload")]
         public async Task<ActionResult> PrepareDownload(EstablishmentSearchDownloadViewModel viewModel)
         {
+
             viewModel.SearchSource = eLookupSearchSource.Establishments;
             viewModel.AllowIncludeEmailAddresses = User.InRole(R.EDUBASE, R.EDUBASE_CMT, R.APT, R.AP_AOS, R.EFADO,
                 R.FST, R.IEBT, R.ISI, R.OFSTED, R.SOU, R.EDUBASE_CHILDRENS_CENTRE_POLICY, R.EDUBASE_LACCDO, R.EFAHNS,
@@ -192,6 +193,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     IncludeLinks = viewModel.IncludeLinks,
                     SelectedFields = viewModel.SelectedCustomFields.ToArray()
                 }, User);
+
+            System.Diagnostics.Debug.WriteLine("selectedFields1: " + string.Join(", ", viewModel.SelectedCustomFields));
 
             return RedirectToAction(nameof(Download), new { id = progressId, fileFormat = viewModel.FileFormat.Value, viewModel.SearchQueryString, viewModel.SearchSource });
         }
