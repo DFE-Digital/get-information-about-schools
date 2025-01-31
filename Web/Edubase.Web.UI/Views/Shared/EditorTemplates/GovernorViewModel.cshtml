@@ -87,19 +87,15 @@ else
                 @Html.ValidationMessageFor(x => x.GovernorTitleId, null, new {@class = "govuk-error-message"})
                 @Html.DropDownListFor(x => x.GovernorTitleId, Model.Titles, "", new {@class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.GovernorTitleId)),})
             </div>
-        }
+    }
 
-        var additionalInfo = "";
-        if (!EnumSets.eGovernanceProfessionalRoles.Contains(Model.GovernorRole))
-        {
-            additionalInfo = " (required to save record)";
-        }
+    var additionalInfo = " (required to save record)";
 
-        {
-            // Note that JavaScript interacts with these HTML elements
-            // Updates to the IDs will need to be reflected in both the <label> and within Edubase.Web.UI/Assets/Scripts/Entry/add-edit-governor.js
-            var inputId = @Html.IdFor(x => x.FirstName);
-            var errorsWrapperId = $"{inputId}-errors";
+    {
+        // Note that JavaScript interacts with these HTML elements
+        // Updates to the IDs will need to be reflected in both the <label> and within Edubase.Web.UI/Assets/Scripts/Entry/add-edit-governor.js
+        var inputId = @Html.IdFor(x => x.FirstName);
+        var errorsWrapperId = $"{inputId}-errors";
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FirstName)">
                 @Html.LabelFor(x => x.FirstName, $"First name{additionalInfo}", new { @class = "govuk-label",})
                 <span id="@errorsWrapperId">
@@ -247,7 +243,8 @@ else
             eLookupGovernorRole.AccountingOfficer,
             eLookupGovernorRole.ChiefFinancialOfficer,
             eLookupGovernorRole.ChairOfLocalGoverningBody
-            ))
+            )
+            || EnumSets.eGovernanceProfessionalRoles.Contains(Model.GovernorRole))
         {
             labelText += " (required to save record)";
         }
