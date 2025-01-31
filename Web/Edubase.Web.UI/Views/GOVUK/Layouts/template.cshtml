@@ -11,13 +11,13 @@
     var version = typeof(HomeController).Assembly.GetName().Version;
     var acceptsAnalytics = HttpContext.Current.Request.Cookies["analytics_preferences"]?.Value.ToString();
 
-    var clarityKey = Environment.GetEnvironmentVariable("ClarityKey");
+    var clarityKey = System.Configuration.ConfigurationManager.AppSettings["ClarityKey"];
 }
 <!doctype html>
 <html lang="en" class="govuk-template">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"> 
     <meta name="theme-color" content="blue">
     <title>@documentTitle</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,7 +26,7 @@
     <!-- Clarity -->
     @if (!string.IsNullOrEmpty(clarityKey) && acceptsAnalytics == "True")
     {
-        <script type="text/javascript">
+        <script type="text/javascript" nonce="@Html.ScriptNonce()">
             (function (c, l, a, r, i, t, y) {
                 c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
                 t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
