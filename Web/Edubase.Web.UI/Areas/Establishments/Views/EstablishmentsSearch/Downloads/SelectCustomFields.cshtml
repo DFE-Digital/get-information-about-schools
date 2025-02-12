@@ -79,9 +79,6 @@
 
     <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
         <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--1">
-                <h2 class="govuk-heading-m">\select fields to include in the download</h2>
-            </legend>
 
             @foreach (var category in Model.CustomFieldsByCategory)
             {
