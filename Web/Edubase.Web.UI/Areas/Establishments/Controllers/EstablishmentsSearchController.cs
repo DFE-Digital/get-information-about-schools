@@ -145,25 +145,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpGet, Route("PrepareDownload")]
         public async Task<ActionResult> PrepareDownload(EstablishmentSearchDownloadViewModel viewModel)
         {
-            var searchPayload = await GetEstablishmentSearchPayload(viewModel);
-
-            var test1 = viewModel.SelectedCustomFields;
-            var test2 = viewModel.Dataset;
-            var test3 = viewModel.FileFormat;
-            var test4 = viewModel.SearchType;
-            var test5 = viewModel.TextSearchModel.Text;
-            var test6 = viewModel.SelectedLocalAuthorityIds;
-            var test7 = viewModel.SelectedEstablishmentStatusIds;
-            var test8 = viewModel.SelectedEstablishmentTypeIds;
-            var test9 = viewModel.CustomFields;
-
-            if (!searchPayload.Success)
-            {
-                var test = searchPayload.ErrorMessage;
-            }
-
-
-
             viewModel.SearchSource = eLookupSearchSource.Establishments;
             viewModel.AllowIncludeEmailAddresses = User.InRole(R.EDUBASE, R.EDUBASE_CMT, R.APT, R.AP_AOS, R.EFADO,
                 R.FST, R.IEBT, R.ISI, R.OFSTED, R.SOU, R.EDUBASE_CHILDRENS_CENTRE_POLICY, R.EDUBASE_LACCDO, R.EFAHNS,
@@ -173,8 +154,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             viewModel.AllowIncludeChildrensCentreFields = User.InRole(R.EDUBASE, R.EDUBASE_CMT,
                 R.EDUBASE_CHILDRENS_CENTRE_POLICY, R.EDUBASE_LACCDO);
 
-
-
             if (!viewModel.Dataset.HasValue)
             {
                 viewModel.Dataset = eDataSet.Custom;
@@ -182,15 +161,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 return View("Downloads/SelectDataset", viewModel);
             }
 
-         //   if (viewModel.SearchType == eSearchType.Text && string.IsNullOrEmpty(viewModel.TextSearchModel.Text))
-         //   {
-        //        viewModel.SearchType = eSearchType.ByLocalAuthority;
-       //     }
-
-       if (viewModel.CustomFields == null)
-       {
-           viewModel.CustomFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User)).ToList();
-       }
+            if (viewModel.CustomFields == null)
+            {
+                viewModel.CustomFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User)).ToList();
+            }
 
             if (viewModel.Dataset == eDataSet.Custom && !viewModel.SelectedCustomFields.Any())
             {
