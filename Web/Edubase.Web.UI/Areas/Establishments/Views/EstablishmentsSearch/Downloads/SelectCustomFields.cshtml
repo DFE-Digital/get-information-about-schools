@@ -80,6 +80,34 @@
     <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
         <fieldset class="govuk-fieldset">
 
+            <div>
+                <label for="field-search" class="govuk-label">Search by field name</label>
+                <div class="govuk-input__wrapper" style="display: flex; gap:  0.5rem;">
+                    <input type="text"
+                           class="govuk-input"
+                           id="field-search"
+                           style="width: 35ch;"/>
+
+                    <button class="govuk-button" id="search-btn">Search</button>
+
+                    <a href="#" class="govuk-link" id="clear-search" role="button" style="display:none;">
+                        Clear Search
+                    </a>
+                    <a href="#" class="govuk-link govuk-!-font-size-19" id="switch-view" role="button" style="margin-left: auto;">
+                        View in alphabetical order
+                    </a>
+                </div>
+            </div>
+
+            <div class="govuk-grid-row" style="margin-bottom: 1rem;">
+                <div class="govuk-grid-column-full" style="text-align: right;">
+                    <a href="#" class="govuk-link govuk-!-font-size-19" id="select-all" role="button">Select all</a>
+                    <span> | </span>
+                    <a href="#" class="govuk-link govuk-!-font-size-19" id="clear-all" role="button">Clear all</a>
+                </div>
+            </div>
+            <button type="submit" class="govuk-button">Next</button>
+
             @foreach (var category in Model.CustomFieldsByCategory)
             {
                 <div class="govuk-form-group">
@@ -92,13 +120,13 @@
                             @foreach (var field in category.CustomFields)
                             {
                                 <div class="govuk-checkboxes__item">
-                                    <input class="govuk-checkbox__input"
+                                    <input class="govuk-checkboxes__input"
                                            type="checkbox"
                                            id="@field.Id"
                                            name="selectedCustomFields"
                                            value="@field.Id"
                                            @(Model.SelectedCustomFields.Contains(field.Id) ? "checked" : "")>
-                                    <label class="govuk-label govuk-checkbox__label" for="@field.Id">
+                                    <label class="govuk-label govuk-checkboxes__label" for="@field.Id">
                                         @field.Name
                                     </label>
                                 </div>
