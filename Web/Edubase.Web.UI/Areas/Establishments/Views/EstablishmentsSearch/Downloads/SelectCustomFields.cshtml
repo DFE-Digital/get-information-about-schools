@@ -1,6 +1,4 @@
-@using Edubase.Services.Enums
 @using Microsoft.Ajax.Utilities
-@using Edubase.Web.UI.Areas.Establishments.Models.Search
 @model EstablishmentSearchDownloadViewModel
 @using Edubase.Web.UI.Models.Search
 @using Edubase.Web.UI.Helpers
@@ -74,6 +72,7 @@
 
 @using (Html.BeginForm("PrepareDownload", "EstablishmentsSearch", FormMethod.Get, new { id = "field-selection" }))
 {
+    <div id="search-error" style="color: red; margin-bottom:  0.5rem; display:  none;"></div>
     <input type="hidden" name="Dataset" value="Custom">
     <input type="hidden" name="SearchType" value="@((int)Model.SearchType)">
 
@@ -107,34 +106,35 @@
                 </div>
             </div>
             <button type="submit" class="govuk-button">Next</button>
+            <div id="checkbox-container">
+                @foreach (var category in Model.CustomFieldsByCategory)
+                {
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                @category.Category
+                            </legend>
 
-            @foreach (var category in Model.CustomFieldsByCategory)
-            {
-                <div class="govuk-form-group">
-                    <fieldset class="govuk-fieldset">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                            @category.Category
-                        </legend>
-
-                        <div class="govuk-checkboxes">
-                            @foreach (var field in category.CustomFields)
-                            {
-                                <div class="govuk-checkboxes__item">
-                                    <input class="govuk-checkboxes__input"
-                                           type="checkbox"
-                                           id="@field.Id"
-                                           name="selectedCustomFields"
-                                           value="@field.Id"
-                                           @(Model.SelectedCustomFields.Contains(field.Id) ? "checked" : "")>
-                                    <label class="govuk-label govuk-checkboxes__label" for="@field.Id">
-                                        @field.Name
-                                    </label>
-                                </div>
-                            }
-                        </div>
-                    </fieldset>
-                </div>
-            }
+                            <div class="govuk-checkboxes">
+                                @foreach (var field in category.CustomFields)
+                                {
+                                    <div class="govuk-checkboxes__item">
+                                        <input class="govuk-checkboxes__input"
+                                               type="checkbox"
+                                               id="@field.Id"
+                                               name="selectedCustomFields"
+                                               value="@field.Id"
+                                               @(Model.SelectedCustomFields.Contains(field.Id) ? "checked" : "")>
+                                        <label class="govuk-label govuk-checkboxes__label" for="@field.Id">
+                                            @field.Name
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </fieldset>
+                    </div>
+                }
+            </div>
         </fieldset>
     </div>
     <button type="submit" class="govuk-button">Next</button>
@@ -144,9 +144,5 @@
 
 @section ViewScripts
 {
-    <script nonce="@Html.ScriptNonce()">
-        var fieldListByCat = @Html.Json(Model.CustomFieldsByCategory);
-        var fieldList = @Html.Json(Model.CustomFields);
-    </script>
-    <script src="@Html.Raw(Html.GetWebpackScriptUrl("download-select-fields.*.js"))"></script>
+    <script src="~/Assets/Scripts/Entry/Download-specific-field.js"></script>
 }
