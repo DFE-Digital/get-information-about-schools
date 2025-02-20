@@ -73,7 +73,16 @@ document.addEventListener('DOMContentLoaded', function () {
     e.preventDefault();
 
     const query = searchInput.value.trim().toLowerCase();
-    if (!query) return;
+    const errorSummary = document.getElementById('search-error-summary');
+    errorSummary.style.display = 'none';
+
+    if (!query) {
+
+      errorSummary.style.display = 'block';
+      errorSummary.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      return;
+    }
 
     const selectedBefore = getSelections();
     searchError.style.display = 'none';

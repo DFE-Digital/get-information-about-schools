@@ -13,6 +13,13 @@
     <meta name="robots" content="noindex,nofollow" />
 }
 
+<div id="search-error-summary" class="govuk-error-summary" role="alert" style="display: none;">
+    <h2 class="govuk-error-summary__title">There was a problem</h2>
+    <ul class="govuk-list govuk-error-summary__list">
+        <li><a href="#field-search">Enter a field name to search.</a></li>
+    </ul>
+</div>
+
 @section BreadCrumbs
 {
     @if (Model.SearchQueryString.IsNullOrWhiteSpace() || Model.SearchSource == null)
