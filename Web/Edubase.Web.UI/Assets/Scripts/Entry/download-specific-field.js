@@ -7,8 +7,9 @@ document.addEventListener('DOMContentLoaded', function () {
   const clearSearchLink = document.getElementById('clear-search');
   const searchError = document.getElementById('search-error');
   const responseError = document.getElementById('response-error');
-
+  const searchInlineError = document.getElementById('search-inline-error');
   const checkboxContainer = document.getElementById('checkbox-container');
+  const searchFormGroup = document.getElementById('search-form-group');
   const originalHTML = checkboxContainer.innerHTML;
   const nextButtons = document.querySelectorAll('#next-button');
 
@@ -77,13 +78,16 @@ document.addEventListener('DOMContentLoaded', function () {
     errorSummary.style.display = 'none';
 
     if (!query) {
-
       errorSummary.style.display = 'block';
       errorSummary.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
+      searchInlineError.style.display = 'block';
+      searchFormGroup?.classList.add('govuk-form-group--error');
       return;
     }
 
+    searchFormGroup?.classList.remove('govuk-form-group--error');
+
+    searchInlineError.style.display = 'none';
     const selectedBefore = getSelections();
     searchError.style.display = 'none';
     searchError.textContent = '';

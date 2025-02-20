@@ -11,7 +11,16 @@
 @section Head
 {
     <meta name="robots" content="noindex,nofollow" />
+    <style>
+        .govuk-form-group-search.govuk-form-group--error {
+            border-left: 4px solid #d4351c;
+            padding-left: 0.5rem;
+            margin-left: 0;
+        }
+    </style>
 }
+<style>
+</style>
 
 <div id="search-error-summary" class="govuk-error-summary" role="alert" style="display: none;">
     <h2 class="govuk-error-summary__title">There was a problem</h2>
@@ -79,78 +88,89 @@
 
 @using (Html.BeginForm("PrepareDownload", "EstablishmentsSearch", FormMethod.Get, new { id = "field-selection" }))
 {
-    <div id="search-error" style="display: none; margin-top: 1rem; font-size: 19px"></div>
-    <input type="hidden" name="Dataset" value="Custom">
-    <input type="hidden" name="SearchType" value="@((int)Model.SearchType)">
+    <!-- Top error summary (already works) -->
+    <div id="search-error-summary" class="govuk-error-summary" role="alert" style="display: none;">
+        <h2 class="govuk-error-summary__title">There was a problem</h2>
+        <ul class="govuk-list govuk-error-summary__list">
+            <li><a href="#field-search">Enter a field name to search.</a></li>
+        </ul>
+    </div>
 
-    <div class="govuk-form-group @(ViewData.ModelState.IsValid ? "" : "govuk-form-group--error")">
-        <fieldset class="govuk-fieldset">
+    <div id="search-error" style="display: none; margin-top: 1rem; font-size: 19px;"></div>
+    <input type="hidden" name="Dataset" value="Custom"/>
+    <input type="hidden" name="SearchType" value="@((int)Model.SearchType)"/>
 
-            <div>
-                <label for="field-search" class="govuk-label">Search by field name</label>
-                <div class="govuk-input__wrapper" style="display: flex; gap:  0.5rem;">
-                    <input type="text"
-                           class="govuk-input"
-                           id="field-search"
-                           style="width: 35ch;"/>
+    <div class="govuk-form-group-search" id="search-form-group" style="margin-bottom: 1rem;">
+        <p id="search-inline-error" class="govuk-error-message" style="display: none;">
+            Enter a field name to search.
+        </p>
+        <label for="field-search" class="govuk-label">Search by field name</label>
 
-                    <button class="govuk-button" id="search-btn">Search</button>
+        <p id="search-inline-error" class="govuk-error-message" style="display: none;">
+            Enter a field name to search.
+        </p>
 
-                    <a href="#" class="govuk-link" id="clear-search" role="button" style="display:none;">
-                        Clear Search
-                    </a>
-                    <a href="#" class="govuk-link govuk-!-font-size-19" id="switch-view" role="button" style="margin-left: auto;">
-                        View in alphabetical order
-                    </a>
-                </div>
-            </div>
+        <div class="govuk-input__wrapper" style="display: flex; gap: 0.5rem;">
+            <input type="text"
+                   class="govuk-input"
+                   id="field-search"
+                   style="width: 35ch;"/>
 
-            <div class="govuk-grid-row" style="margin-bottom: 1rem;">
-                <div class="govuk-grid-column-full" style="text-align: right;">
-                    <a href="#" class="govuk-link govuk-!-font-size-19" id="select-all" role="button">Select all</a>
-                    <span>   </span>
-                    <a href="#" class="govuk-link govuk-!-font-size-19" id="clear-all" role="button">Clear all</a>
-                </div>
-            </div>
-            <div id="response-error" style="display: none; margin-top: 10px; font-size: 19px">
-                There are no results for your search. Please <a href="#" id="inline-clear">clear your search</a> and try again.
-            </div>
-            <button type="submit" id="next-button" class="govuk-button">Next</button>
-            <div id="checkbox-container">
-                @foreach (var category in Model.CustomFieldsByCategory)
-                {
-                    <div class="govuk-form-group">
-                        <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                                @category.Category
-                            </legend>
+            <button class="govuk-button" id="search-btn">Search</button>
 
-                            <div class="govuk-checkboxes">
-                                @foreach (var field in category.CustomFields)
-                                {
-                                    <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input"
-                                               type="checkbox"
-                                               id="@field.Id"
-                                               name="selectedCustomFields"
-                                               value="@field.Id"
-                                               @(Model.SelectedCustomFields.Contains(field.Id) ? "checked" : "")>
-                                        <label class="govuk-label govuk-checkboxes__label" for="@field.Id">
-                                            @field.Name
-                                        </label>
-                                    </div>
-                                }
+            <a href="#" class="govuk-link" id="clear-search" role="button" style="display:none;">
+                Clear Search
+            </a>
+            <a href="#" class="govuk-link govuk-!-font-size-19" id="switch-view" role="button" style="margin-left: auto;">
+                View in alphabetical order
+            </a>
+        </div>
+    </div>
+
+    <div class="govuk-grid-row" style="margin-bottom: 1rem;">
+        <div class="govuk-grid-column-full" style="text-align: right;">
+            <a href="#" class="govuk-link govuk-!-font-size-19" id="select-all" role="button">Select all</a>
+            <span></span>
+            <a href="#" class="govuk-link govuk-!-font-size-19" id="clear-all" role="button">Clear all</a>
+        </div>
+    </div>
+    <div id="response-error" style="display: none; margin-top: 10px; font-size: 19px;">
+        There are no results for your search.
+        Please <a href="#" id="inline-clear">clear your search</a> and try again.
+    </div>
+
+    <button type="submit" id="next-button" class="govuk-button">Next</button>
+
+    <div id="checkbox-container">
+        @foreach (var category in Model.CustomFieldsByCategory)
+        {
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        @category.Category
+                    </legend>
+                    <div class="govuk-checkboxes">
+                        @foreach (var field in category.CustomFields)
+                        {
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input"
+                                       type="checkbox"
+                                       id="@field.Id"
+                                       name="selectedCustomFields"
+                                       value="@field.Id"
+                                       @(Model.SelectedCustomFields.Contains(field.Id) ? "checked" : "")/>
+                                <label class="govuk-label govuk-checkboxes__label" for="@field.Id">
+                                    @field.Name
+                                </label>
                             </div>
-                        </fieldset>
+                        }
                     </div>
-                }
+                </fieldset>
             </div>
-        </fieldset>
+        }
     </div>
     <button type="submit" id="next-button" class="govuk-button">Next</button>
 }
-
-
 
 @section ViewScripts
 {
