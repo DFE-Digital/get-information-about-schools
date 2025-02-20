@@ -28,15 +28,6 @@ document.addEventListener('DOMContentLoaded', function () {
       .map(checkbox => checkbox.value);
   }
 
- // function removeEmptyGroups() {
- //   groups.forEach(group => {
- //     const checkboxes = group.querySelectorAll('.govuk-checkboxes__item');
- //     const visibleCheckboxes = Array.from(checkboxes).some(cb => cb.style.display !== 'none');
-//
- //     group.style.display = visibleCheckboxes ? 'block' : 'none';
- //   });
- // }
-
   function restoreSelections(selectedValues) {
     getAllCheckboxes().forEach(cb => {
       if (selectedValues.includes(cb.value)) {
@@ -106,6 +97,18 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
 
+    const allGroups = checkboxContainer.querySelectorAll('.govuk-form-group');
+    allGroups.forEach(group => {
+      const itemsInGroup = group.querySelectorAll('.govuk-checkboxes__item');
+      const allHidden = Array.from(itemsInGroup).every(item => item.style.display === 'none');
+      if (allHidden) {
+        group.style.display = 'none';
+      }
+      else {
+        group.style.display = 'block';
+      }
+    });
+
     restoreSelections(selectedBefore);
 
     if (!foundAny) {
@@ -130,7 +133,6 @@ document.addEventListener('DOMContentLoaded', function () {
       nextButtons.forEach(btn => btn.style.display = 'inline-block');
       responseError.style.display = 'none';
     }
- //   removeEmptyGroups();
   });
 
   clearSearchLink?.addEventListener('click', function (e) {
