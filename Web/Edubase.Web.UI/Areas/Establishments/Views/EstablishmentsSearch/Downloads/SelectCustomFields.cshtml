@@ -72,7 +72,7 @@
 
 @using (Html.BeginForm("PrepareDownload", "EstablishmentsSearch", FormMethod.Get, new { id = "field-selection" }))
 {
-    <div id="search-error" style="color: red; margin-bottom:  0.5rem; display:  none;"></div>
+    <div id="search-error" style="display: none; margin-top: 1rem; font-size: 19px"></div>
     <input type="hidden" name="Dataset" value="Custom">
     <input type="hidden" name="SearchType" value="@((int)Model.SearchType)">
 
@@ -101,11 +101,14 @@
             <div class="govuk-grid-row" style="margin-bottom: 1rem;">
                 <div class="govuk-grid-column-full" style="text-align: right;">
                     <a href="#" class="govuk-link govuk-!-font-size-19" id="select-all" role="button">Select all</a>
-                    <span> | </span>
+                    <span>   </span>
                     <a href="#" class="govuk-link govuk-!-font-size-19" id="clear-all" role="button">Clear all</a>
                 </div>
             </div>
-            <button type="submit" class="govuk-button">Next</button>
+            <div id="response-error" style="display: none; margin-top: 10px; font-size: 19px">
+                There are no results for your search. Please <a href="#" id="inline-clear">clear your search</a> and try again.
+            </div>
+            <button type="submit" id="next-button" class="govuk-button">Next</button>
             <div id="checkbox-container">
                 @foreach (var category in Model.CustomFieldsByCategory)
                 {
@@ -137,7 +140,7 @@
             </div>
         </fieldset>
     </div>
-    <button type="submit" class="govuk-button">Next</button>
+    <button type="submit" id="next-button" class="govuk-button">Next</button>
 }
 
 
