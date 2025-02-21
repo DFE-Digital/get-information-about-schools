@@ -1,16 +1,15 @@
 @using Microsoft.Ajax.Utilities
 @model EstablishmentSearchDownloadViewModel
 @using Edubase.Web.UI.Models.Search
-@using Edubase.Web.UI.Helpers
 @{
-    ViewBag.Title = string.Format("Download establishment search results");
+    ViewBag.Title = "Download establishment search results";
     ViewBag.bodyClasses = " search-page custom-fields-download";
     ViewBag.hideLogo = true;
 }
 
 @section Head
 {
-    <meta name="robots" content="noindex,nofollow" />
+    <meta name="robots" content="noindex,nofollow"/>
     <style>
         .govuk-form-group-search.govuk-form-group--error {
             border-left: 4px solid #d4351c;
@@ -18,7 +17,20 @@
             margin-left: 0;
         }
     </style>
+    <style>
+        .js-only {
+            display: none;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll('.js-only').forEach(el => {
+                el.style.display = 'block';
+            })
+        })
+    </script>
 }
+
 <style>
 </style>
 
@@ -52,7 +64,9 @@
                                 new { @class = "govuk-breadcrumbs__link" })
                         </li>
                         <li class="govuk-breadcrumbs__list-item">
-                            <a class="govuk-breadcrumbs__link" href=@($"{Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" })}?{Model.SearchQueryString}")>Search results</a>
+                            <a class="govuk-breadcrumbs__link"
+                               href=@($"{Url.Action("Index", "EstablishmentsSearch", new { area = "Establishments" })}?{Model.SearchQueryString}")>Search
+                                results</a>
                         </li>
                     </ol>
                 </div>
@@ -100,38 +114,41 @@
     <input type="hidden" name="Dataset" value="Custom"/>
     <input type="hidden" name="SearchType" value="@((int)Model.SearchType)"/>
 
-    <div class="govuk-form-group-search" id="search-form-group" style="margin-bottom: 1rem;">
-        <p id="search-inline-error" class="govuk-error-message" style="display: none;">
-            Enter a field name to search.
-        </p>
-        <label for="field-search" class="govuk-label">Search by field name</label>
+    <div class="js-only">
+        <div class="govuk-form-group-search" id="search-form-group" style="margin-bottom: 1rem;">
+            <p id="search-inline-error" class="govuk-error-message" style="display: none;">
+                Enter a field name to search.
+            </p>
+            <label for="field-search" class="govuk-label">Search by field name</label>
 
-        <p id="search-inline-error" class="govuk-error-message" style="display: none;">
-            Enter a field name to search.
-        </p>
+            <p id="search-inline-error" class="govuk-error-message" style="display: none;">
+                Enter a field name to search.
+            </p>
 
-        <div class="govuk-input__wrapper" style="display: flex; gap: 0.5rem;">
-            <input type="text"
-                   class="govuk-input"
-                   id="field-search"
-                   style="width: 35ch;"/>
+            <div class="govuk-input__wrapper" style="display: flex; gap: 0.5rem;">
+                <input type="text"
+                       class="govuk-input"
+                       id="field-search"
+                       style="width: 35ch;"/>
 
-            <button class="govuk-button" id="search-btn">Search</button>
+                <button class="govuk-button" id="search-btn">Search</button>
 
-            <a href="#" class="govuk-link" id="clear-search" role="button" style="display:none;">
-                Clear Search
-            </a>
-            <a href="#" class="govuk-link govuk-!-font-size-19" id="switch-view" role="button" style="margin-left: auto;">
-                View in alphabetical order
-            </a>
+                <a href="#" class="govuk-link" id="clear-search" role="button" style="display:none;">
+                    Clear Search
+                </a>
+                <a href="#" class="govuk-link govuk-!-font-size-19" id="switch-view" role="button"
+                   style="margin-left: auto;">
+                    View in alphabetical order
+                </a>
+            </div>
         </div>
-    </div>
 
-    <div class="govuk-grid-row" style="margin-bottom: 1rem;">
-        <div class="govuk-grid-column-full" style="text-align: right;">
-            <a href="#" class="govuk-link govuk-!-font-size-19" id="select-all" role="button">Select all</a>
-            <span></span>
-            <a href="#" class="govuk-link govuk-!-font-size-19" id="clear-all" role="button">Clear all</a>
+        <div class="govuk-grid-row" style="margin-bottom: 1rem;">
+            <div class="govuk-grid-column-full" style="text-align: right;">
+                <a href="#" class="govuk-link govuk-!-font-size-19" id="select-all" role="button">Select all</a>
+                <span></span>
+                <a href="#" class="govuk-link govuk-!-font-size-19" id="clear-all" role="button">Clear all</a>
+            </div>
         </div>
     </div>
     <div id="response-error" style="display: none; margin-top: 10px; font-size: 19px;">
