@@ -1,3 +1,11 @@
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("unhiding .js elements")
+  document.querySelectorAll('.js-only').forEach(el => {
+    el.style.display = 'block';
+  })
+})
+
+
 document.addEventListener('DOMContentLoaded', function () {
   const selectAllLink = document.getElementById('select-all');
   const clearAllLink = document.getElementById('clear-all');
@@ -12,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const searchFormGroup = document.getElementById('search-form-group');
   const originalHTML = checkboxContainer.innerHTML;
   const nextButtons = document.querySelectorAll('#next-button');
+
 
   let isAlphabetical = false;
 
@@ -79,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!query) {
       errorSummary.style.display = 'block';
-      errorSummary.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      errorSummary.scrollIntoView({behavior: 'smooth', block: 'start'});
       searchInlineError.style.display = 'block';
       searchFormGroup?.classList.add('govuk-form-group--error');
       return;
@@ -116,8 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const allHidden = Array.from(itemsInGroup).every(item => item.style.display === 'none');
       if (allHidden) {
         group.style.display = 'none';
-      }
-      else {
+      } else {
         group.style.display = 'block';
       }
     });
