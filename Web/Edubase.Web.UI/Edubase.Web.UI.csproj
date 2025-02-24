@@ -608,6 +608,7 @@
     <Content Include="Assets\Scripts\Entry\create-establishment.js" />
     <Content Include="Assets\Scripts\Entry\delegated-authority.js" />
     <Content Include="Assets\Scripts\Entry\download-select-fields.js" />
+    <Content Include="Assets\Scripts\Entry\Download-specific-field.js" />
     <Content Include="Assets\Scripts\Entry\downloads.js" />
     <Content Include="Assets\Scripts\Entry\edit-details.js" />
     <Content Include="Assets\Scripts\Entry\edit-establishment-links.js" />
