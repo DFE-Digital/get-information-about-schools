@@ -107,13 +107,12 @@
                             <span id="article-date-error-message" class="govuk-error-message hidden">
                                 The article field is required.
                             </span>
-
-
                             @Html.EditorFor(x => x.ArticleDate, "DateTimeViewModelExtended", new {
-                                    title = "Article display date and time",
-                                    fieldsetClassName = "edit-date-fieldset",
-                                    dateHint = $"{DateTime.Now:dd MM yyyy} 18:00",
-                                    dateHintAdditional = "The time will be UK local time, taking into account daylight savings" })
+                                title = "Article display date and time",
+                                fieldsetClassName = "edit-date-fieldset",
+                                dateHint = $"{DateTime.Now:dd MM yyyy} 18:00",
+                                dateHintAdditional = "The time will be UK local time, taking into account daylight savings" })
+
                         </div>
                     </div>
                 </div>
@@ -191,5 +190,4 @@
     </div>
 }
 
-<script src="~/Assets/Scripts/GiasSearchFilters/GiasFilterValidation.js"></script>
 <script src="~/Assets/Scripts/Entry/article-date-validation.js"></script>

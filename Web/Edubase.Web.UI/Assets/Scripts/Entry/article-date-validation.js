@@ -1,50 +1,90 @@
 document.addEventListener("DOMContentLoaded", function () {
+
+  function isValidDate(dayStr, monthStr, yearStr) {
+    const day = parseInt(dayStr, 10);
+    const month = parseInt(monthStr, 10);
+    const year = parseInt(yearStr, 10);
+    if (Number.isNaN(day) || Number.isNaN(month) || Number.isNaN(year)) {
+      return false;
+    }
+    const testDate = new Date(year, month - 1, day);
+    return (
+      testDate.getFullYear() === year &&
+      testDate.getMonth() === (month - 1) &&
+      testDate.getDate() === day
+    );
+  }
+
+  function isValidTime(hourStr, minuteStr) {
+    const hour = parseInt(hourStr, 10);
+    const minute = parseInt(minuteStr, 10);
+    if (Number.isNaN(hour) || Number.isNaN(minute)) {
+      return false;
+    }
+    return hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59;
+  }
+
   function validateArticleDate() {
-    let day = document.getElementById("ArticleDate_Day")?.value.trim();
-    let month = document.getElementById("ArticleDate_Month")?.value.trim();
-    let year = document.getElementById("ArticleDate_Year")?.value.trim();
-    let hour = document.getElementById("ArticleDate_Hour")?.value.trim();
-    let minute = document.getElementById("ArticleDate_Minute")?.value.trim();
+    const day = document.getElementById("ArticleDate_Day")?.value.trim();
+    const month = document.getElementById("ArticleDate_Month")?.value.trim();
+    const year = document.getElementById("ArticleDate_Year")?.value.trim();
+    const hour = document.getElementById("ArticleDate_Hour")?.value.trim();
+    const minute = document.getElementById("ArticleDate_Minute")?.value.trim();
 
-    let isBlank = !day || !month || !year || !hour || !minute;
-    let dateObj = { day, month, year };
-    let isValidDate = !isBlank && typeof GiasFilterValidation !== "undefined" && !GiasFilterValidation.validateDate(dateObj);
-    let isValidHour = !isNaN(hour) && hour !== "" && +hour >= 0 && +hour <= 23;
-    let isValidMinute = !isNaN(minute) && minute !== "" && +minute >= 0 && +minute <= 59;
-    let isValidTime = !isBlank && isValidHour && isValidMinute;
-    let isValid = isValidDate && isValidTime && !isBlank;
+    const isBlank = !day || !month || !year || !hour || !minute;
+    const validDate = !isBlank && isValidDate(day, month, year);
+    const validTime = !isBlank && isValidTime(hour, minute);
+    const isValid = (!isBlank && validDate && validTime);
 
-    let dateFormGroup = document.querySelector(".govuk-form-group:has(#ArticleDate_Day)");
-    let errorMessage = document.getElementById("article-date-error-message");
-    let inputFields = document.querySelectorAll("#ArticleDate_Day, #ArticleDate_Month, #ArticleDate_Year, #ArticleDate_Hour, #ArticleDate_Minute");
+    const dateFormGroup = document.querySelector(".govuk-form-group:has(#ArticleDate_Day)");
+    const errorMessage = document.getElementById("article-date-error-message");
+    const inputFields = document.querySelectorAll("#ArticleDate_Day, #ArticleDate_Month, #ArticleDate_Year, #ArticleDate_Hour, #ArticleDate_Minute");
 
-    let validationSummary = document.querySelector(".govuk-error-summary");
-    let summaryList = validationSummary?.querySelector("ul");
-    let summaryMessage = "The date specified is not valid";
+    const validationSummary = document.querySelector(".govuk-error-summary");
+    const summaryList = validationSummary?.querySelector("ul");
 
-    summaryList?.querySelectorAll("li").forEach(li => {
-      if (li.textContent.trim() === summaryMessage) {
-        li.remove();
-      }
-    });
+    let summaryMessage = "";
+    if (isBlank) {
+      summaryMessage = "All date/time fields are required.";
+    } else if (!validDate) {
+      summaryMessage = "The date specified is not valid.";
+    } else if (!validTime) {
+      summaryMessage = "The time specified is not valid.";
+    }
+
+    if (summaryList) {
+      const dateErrors = summaryList.querySelectorAll("li[data-error='article-date']");
+      dateErrors.forEach(li => li.remove());
+    }
 
     if (!isValid) {
       dateFormGroup?.classList.add("govuk-form-group--error");
-      errorMessage?.classList.remove("hidden");
-      inputFields.forEach(input => input.classList.add("govuk-input--error"));
+      inputFields.forEach(i => i.classList.add("govuk-input--error"));
 
-      if (summaryList && !summaryList.innerHTML.includes(summaryMessage)) {
-        let errorItem = document.createElement("li");
-        errorItem.textContent = summaryMessage;
-        summaryList.appendChild(errorItem);
-        validationSummary?.classList.remove("hidden");
+      if (errorMessage) {
+        errorMessage.classList.remove("hidden");
+        errorMessage.textContent = summaryMessage;
       }
+
+      if (summaryList && summaryMessage) {
+        const li = document.createElement("li");
+        li.setAttribute("data-error", "article-date"); // 🚀 Identify date errors
+        const a = document.createElement("a");
+        a.href = "#ArticleDate_Day";
+        a.id = "error-summary-ArticleDate_Day-list-item";
+        a.classList.add("govuk-error-message"); // 🚀 Makes text red
+        a.appendChild(document.createTextNode(summaryMessage));
+        li.appendChild(a);
+        summaryList.appendChild(li);
+        validationSummary.classList.remove("hidden");
+      }
+
     } else {
       dateFormGroup?.classList.remove("govuk-form-group--error");
+      inputFields.forEach(i => i.classList.remove("govuk-input--error"));
       errorMessage?.classList.add("hidden");
-      inputFields.forEach(input => input.classList.remove("govuk-input--error"));
 
-      if (summaryList && summaryList.children.length === 0) {
+      if (summaryList && summaryList.querySelectorAll("li").length === 0) {
         validationSummary?.classList.add("hidden");
       }
     }
@@ -53,11 +93,14 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   document.querySelectorAll("#ArticleDate_Day, #ArticleDate_Month, #ArticleDate_Year, #ArticleDate_Hour, #ArticleDate_Minute")
-    .forEach(input => input.addEventListener("change", validateArticleDate));
+    .forEach(input => {
+      input.addEventListener("change", validateArticleDate);
+      input.addEventListener("blur", validateArticleDate);
+    });
 
   document.querySelector("form")?.addEventListener("submit", function (e) {
     if (!validateArticleDate()) {
-      e.preventDefault(); // Stop form submission
+      e.preventDefault();
       document.querySelector(".govuk-error-summary")?.scrollIntoView({ behavior: "smooth" });
     }
   });
