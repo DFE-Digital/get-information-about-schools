@@ -600,6 +600,7 @@
     <Content Include="Assets\Sass\govuk-core.scss" />
     <Content Include="Assets\Scripts\Entry\add-edit-governor.js" />
     <Content Include="Assets\Scripts\Entry\approvals-tool.js" />
+    <Content Include="Assets\Scripts\Entry\article-date-validation.js" />
     <Content Include="Assets\Scripts\Entry\bulk-academies.js" />
     <Content Include="Assets\Scripts\Entry\bundle.js" />
     <Content Include="Assets\Scripts\Entry\change-history-results.js" />

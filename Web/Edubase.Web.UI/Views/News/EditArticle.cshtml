@@ -104,11 +104,19 @@
 
                     <div class="govuk-grid-column-full">
                         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ArticleDate)">
-                            @Html.EditorFor(x => x.ArticleDate, "DateTimeViewModelExtended", new { title = "Article display date and time", fieldsetClassName = "edit-date-fieldset", dateHint = $"{DateTime.Now:dd MM yyyy} 18:00", dateHintAdditional = "The time will be UK local time, taking into account daylight savings" })
+                            <span id="article-date-error-message" class="govuk-error-message hidden">
+                                The article field is required.
+                            </span>
+
+
+                            @Html.EditorFor(x => x.ArticleDate, "DateTimeViewModelExtended", new {
+                                    title = "Article display date and time",
+                                    fieldsetClassName = "edit-date-fieldset",
+                                    dateHint = $"{DateTime.Now:dd MM yyyy} 18:00",
+                                    dateHintAdditional = "The time will be UK local time, taking into account daylight savings" })
                         </div>
                     </div>
                 </div>
-
 
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-full">
@@ -171,8 +179,6 @@
                 </div>
             }
 
-
-
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
                     <div class="button-row govuk-!-padding-top-6">
@@ -184,3 +190,6 @@
         </div>
     </div>
 }
+
+<script src="~/Assets/Scripts/GiasSearchFilters/GiasFilterValidation.js"></script>
+<script src="~/Assets/Scripts/Entry/article-date-validation.js"></script>
