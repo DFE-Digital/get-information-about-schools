@@ -82,7 +82,6 @@ namespace Edubase.Web.UI.Controllers
             return View("EditArticle", new NewsArticleViewModel());
         }
 
-
         [Route("Article/New", Name = "PostCreateArticle"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateArticleAsync(NewsArticleViewModel viewModel)
         {
@@ -100,8 +99,13 @@ namespace Edubase.Web.UI.Controllers
                 Id = id,
                 Title = item.Title,
                 Content = item.Content,
-                ArticleDate = new DateTimeViewModel(item.ArticleDate, item.ArticleDate),
-                ShowDate = item.ShowDate
+                ShowDate = item.ShowDate,
+
+                ArticleDate_Day = item.ArticleDate.Day,
+                ArticleDate_Month = item.ArticleDate.Month,
+                ArticleDate_Year = item.ArticleDate.Year,
+                ArticleDate_Hour = item.ArticleDate.Hour,
+                ArticleDate_Minute = item.ArticleDate.Minute
             });
         }
 

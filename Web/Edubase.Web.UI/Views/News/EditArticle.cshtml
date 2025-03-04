@@ -103,8 +103,60 @@
                     </div>
 
                     <div class="govuk-grid-column-full">
-                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ArticleDate)">
-                            @Html.EditorFor(x => x.ArticleDate, "DateTimeViewModelExtended", new { title = "Article display date and time", fieldsetClassName = "edit-date-fieldset", dateHint = $"{DateTime.Now:dd MM yyyy} 18:00", dateHintAdditional = "The time will be UK local time, taking into account daylight savings" })
+                        <div class="govuk-form-group">
+                            <fieldset class="govuk-fieldset">
+                                <legend class="govuk-fieldset__legend">Article display date and time</legend>
+
+                                <div class="govuk-date-input">
+
+                                    <div class="govuk-date-input__item">
+                                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ArticleDate_Day)">
+                                            @Html.LabelFor(x => x.ArticleDate_Day, "Day", new { @class = "govuk-label govuk-date-input__label" })
+                                            @Html.TextBoxFor(x => x.ArticleDate_Day, new { @class = "govuk-input govuk-date-input__input govuk-input--width-2" })
+                                            @Html.ValidationMessageFor(x => x.ArticleDate_Day, null, new { @class = "govuk-error-message" })
+                                        </div>
+                                    </div>
+
+                                    <div class="govuk-date-input__item">
+                                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ArticleDate_Month)">
+                                            @Html.LabelFor(x => x.ArticleDate_Month, "Month", new { @class = "govuk-label govuk-date-input__label" })
+                                            @Html.TextBoxFor(x => x.ArticleDate_Month, new { @class = "govuk-input govuk-date-input__input govuk-input--width-2" })
+                                            @Html.ValidationMessageFor(x => x.ArticleDate_Month, null, new { @class = "govuk-error-message" })
+                                        </div>
+                                    </div>
+
+                                    <div class="govuk-date-input__item">
+                                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ArticleDate_Year)">
+                                            @Html.LabelFor(x => x.ArticleDate_Year, "Year", new { @class = "govuk-label govuk-date-input__label" })
+                                            @Html.TextBoxFor(x => x.ArticleDate_Year, new { @class = "govuk-input govuk-date-input__input govuk-input--width-4" })
+                                            @Html.ValidationMessageFor(x => x.ArticleDate_Year, null, new { @class = "govuk-error-message" })
+                                        </div>
+                                    </div>
+
+                                    <div class="govuk-date-input__item">
+                                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ArticleDate_Hour)">
+                                            @Html.LabelFor(x => x.ArticleDate_Hour, "Hour", new { @class = "govuk-label govuk-date-input__label" })
+                                            @Html.TextBoxFor(x => x.ArticleDate_Hour, new { @class = "govuk-input govuk-date-input__input govuk-input--width-2" })
+                                            @Html.ValidationMessageFor(x => x.ArticleDate_Hour, null, new { @class = "govuk-error-message" })
+                                        </div>
+                                    </div>
+
+                                    <div class="govuk-date-input__item govuk-time-separator">
+                                        <div class="govuk-form-group">
+                                            <span class="govuk-label govuk-time-separator" style="font-weight: bold;">:</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="govuk-date-input__item">
+                                        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.ArticleDate_Minute)">
+                                            @Html.LabelFor(x => x.ArticleDate_Minute, "Minute", new { @class = "govuk-label govuk-date-input__label" })
+                                            @Html.TextBoxFor(x => x.ArticleDate_Minute, new { @class = "govuk-input govuk-date-input__input govuk-input--width-2" })
+                                            @Html.ValidationMessageFor(x => x.ArticleDate_Minute, null, new { @class = "govuk-error-message" })
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </fieldset>
                         </div>
                     </div>
                 </div>
@@ -137,11 +189,11 @@
                 @Html.HiddenFor(x => x.Title)
                 @Html.HiddenFor(x => x.Content)
                 @Html.HiddenFor(x => x.ShowDate)
-                @Html.HiddenFor(x => x.ArticleDate.Day)
-                @Html.HiddenFor(x => x.ArticleDate.Month)
-                @Html.HiddenFor(x => x.ArticleDate.Year)
-                @Html.HiddenFor(x => x.ArticleDate.Hour)
-                @Html.HiddenFor(x => x.ArticleDate.Minute)
+                @Html.HiddenFor(x => x.ArticleDate_Day)
+                @Html.HiddenFor(x => x.ArticleDate_Month)
+                @Html.HiddenFor(x => x.ArticleDate_Year)
+                @Html.HiddenFor(x => x.ArticleDate_Hour)
+                @Html.HiddenFor(x => x.ArticleDate_Minute)
             }
 
             @if (Model.Action == eNewsArticleAction.Review)
@@ -170,7 +222,6 @@
                     </div>
                 </div>
             }
-
 
 
             <div class="govuk-grid-row">

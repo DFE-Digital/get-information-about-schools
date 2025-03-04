@@ -1,33 +1,41 @@
 @model ModelStateDictionary
 @using System.Text.RegularExpressions
+@using FluentValidation.Results
 
 @if (!Model.IsValid)
 {
     <div class="govuk-error-summary server-error-summary" aria-labelledby="error-summary-title" data-module="govuk-error-summary" tabindex="-1">
         <h2 id="error-summary-title" class="govuk-error-summary__title">Incorrect or missing details</h2>
         <div class="govuk-error-summary__body">
-            <ul class=" govuk-list govuk-error-summary__list">
+            <ul class="govuk-list govuk-error-summary__list">
                 @{
-                    var validationResult = (FluentValidation.Results.ValidationResult)ViewBag.FVErrors;
+                    var validationResult = ViewBag.FVErrors as ValidationResult;
+
                     if (validationResult != null)
                     {
-                        // fluentValidation errors
+                        // FluentValidation errors
                         foreach (var modelError in validationResult.Errors)
                         {
                             <li>
-                                <a id="error-summary-@StringUtils.ElementIdFormat(@modelError.PropertyName)-list-item" href="#@modelError.PropertyName">@(modelError.CustomState?.ToString() ?? modelError.ErrorMessage)</a>
+                                <a id="error-summary-@StringUtils.ElementIdFormat(modelError.PropertyName)-list-item"
+                                   href="#@modelError.PropertyName">
+                                    @modelError.ErrorMessage
+                                </a>
                             </li>
                         }
                     }
                     else
                     {
-                        // traditional model validation
-                        foreach (var modelError in Model.Keys.SelectMany(key => this.Model[key].Errors.Select(x => Tuple.Create(key, x.ErrorMessage))))
+                        // Traditional model validation
+                        foreach (var modelError in Model.Keys
+                            .SelectMany(key => Model[key].Errors
+                            .Select(x => new { Key = key, x.ErrorMessage })))
                         {
                             <li>
-                                 <a id="error-summary-@StringUtils.ElementIdFormat(@modelError.Item1)-list-item" href='#@modelError.Item1.Replace(".", "_").Replace("[", "_").Replace("]", "_")'>
-                                    @Html.HtmlNewlines(@modelError.Item2)
-                                 </a>
+                                <a id="error-summary-@StringUtils.ElementIdFormat(modelError.Key)-list-item"
+                                   href='#@modelError.Key.Replace(".", "_").Replace("[", "_").Replace("]", "_")'>
+                                    @Html.HtmlNewlines(modelError.ErrorMessage)
+                                </a>
                             </li>
                         }
                     }
