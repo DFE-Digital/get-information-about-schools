@@ -19,7 +19,8 @@ namespace Edubase.Web.UI.Models.News
 
         [Required]
         public string Title { get; set; }
-        public DateTimeViewModel ArticleDate { get; set; } = new DateTimeViewModel();
+
+        public RequiredDateTimeViewModel ArticleDate { get; set; } = new RequiredDateTimeViewModel();
         public bool ShowDate { get; set; } = true;
 
         [Required, AllowHtml]
@@ -44,7 +45,14 @@ namespace Edubase.Web.UI.Models.News
             Id = article.RowKey;
             Title = article.Title;
             Content = article.Content;
-            ArticleDate = new DateTimeViewModel(article.ArticleDate, article.ArticleDate);
+            ArticleDate = new RequiredDateTimeViewModel
+            {
+                Day = article.ArticleDate.Day,
+                Month = article.ArticleDate.Month,
+                Year = article.ArticleDate.Year,
+                Hour = article.ArticleDate.Hour,
+                Minute = article.ArticleDate.Minute
+            };
             ShowDate = article.ShowDate;
 
             return this;
