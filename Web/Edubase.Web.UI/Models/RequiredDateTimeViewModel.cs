@@ -32,7 +32,7 @@ namespace Edubase.Web.UI.Models
             {
                 throw new InvalidOperationException("attempted to convert a required date.");
             }
-            return new DateTime(Year.Value, Month.Value, Day.Value, Hour.Value, Minute.Value, 0);
+            return new DateTime(Year.Value, Month.Value, Day.Value, Hour.Value, Minute.Value, 0, DateTimeKind.Utc);
         }
     }
 }
