@@ -34,7 +34,7 @@ namespace Edubase.Web.UI.Models.News
 
             newArticle.Title = Title;
             newArticle.Content = Content;
-            newArticle.ArticleDate = DateTime.SpecifyKind(ArticleDate.ToDateTime().GetValueOrDefault(), DateTimeKind.Local);
+            newArticle.ArticleDate = DateTime.SpecifyKind(ArticleDate.ToDateTime(), DateTimeKind.Local);
             newArticle.ShowDate = ShowDate;
 
             return newArticle;

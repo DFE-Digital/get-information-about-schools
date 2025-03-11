@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
@@ -24,5 +25,14 @@ namespace Edubase.Web.UI.Models
         [Required(ErrorMessage = "The minute is required.")]
         [DisplayName("Minute"), Range(0, 59), DisplayFormat(DataFormatString = "{0:D2}", ApplyFormatInEditMode = true)]
         public int? Minute { get; set; }
+
+        public DateTime ToDateTime()
+        {
+            if (!Day.HasValue || !Month.HasValue || !Year.HasValue || !Hour.HasValue || !Minute.HasValue)
+            {
+                throw new InvalidOperationException("attempted to convert a required date.");
+            }
+            return new DateTime(Year.Value, Month.Value, Day.Value, Hour.Value, Minute.Value, 0);
+        }
     }
 }
