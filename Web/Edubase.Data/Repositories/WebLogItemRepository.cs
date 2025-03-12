@@ -46,6 +46,11 @@ namespace Edubase.Data.Repositories
                 var segment = await Table.ExecuteQuerySegmentedAsync(query, currentToken);
                 items.AddRange(segment.Results);
                 currentToken = segment.ContinuationToken;
+
+                if (items.Count >= 1000)
+                {
+                    break;
+                }
             } while (currentToken != null);
 
             return items;
@@ -79,6 +84,11 @@ namespace Edubase.Data.Repositories
                 var segment = await Table.ExecuteQuerySegmentedAsync(query, currentToken);
                 items.AddRange(segment.Results);
                 currentToken = segment.ContinuationToken;
+
+                if (items.Count >= 1000)
+                {
+                    break;
+                }
             } while (currentToken != null);
 
             return items;
