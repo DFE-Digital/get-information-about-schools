@@ -179,15 +179,68 @@ namespace Edubase.Web.UI.Controllers
         [Route("RequestScheduledExtract/{eid}", Name = "RequestScheduledExtract")]
         public async Task<ActionResult> RequestScheduledExtract(int eid)
         {
-            var response = await _downloadsService.GenerateScheduledExtractAsync(eid, User);
+            string response = null;
+            try
+            {
+                throw new NullReferenceException($"This would normally show a stacktrace, however, as we are manually causing this error this is the reason why it is faulting");
+                response = await _downloadsService.GenerateScheduledExtractAsync(eid, User);
 
-            if (response.Contains("fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
-            {
-                return RedirectToAction(nameof(DownloadGenerated), new { id = getIdFromFileLocationUri(JsonConvert.DeserializeObject<ProgressDto>(response)), isExtract = true });
+                if (response.Contains(
+                        "fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
+                {
+                    return RedirectToAction(nameof(DownloadGenerated),
+                        new
+                        {
+                            id = getIdFromFileLocationUri(JsonConvert.DeserializeObject<ProgressDto>(response)),
+                            isExtract = true
+                        });
+                }
+                else
+                {
+                    return RedirectToAction(nameof(DownloadGenerated),
+                        new { id = JsonConvert.DeserializeObject<ApiResultDto<Guid>>(response).Value });
+                }
             }
-            else
+            catch (NullReferenceException ex)
             {
-                return RedirectToAction(nameof(DownloadGenerated), new { id = JsonConvert.DeserializeObject<ApiResultDto<Guid>>(response).Value });
+                var userErrorMessage = "We couldn't generate your download due to a system issue.";
+                var nextSteps = "Please try again later. Contact support if this keeps happening.";
+
+                if (_downloadsService == null)
+                {
+                     userErrorMessage = "The download service is unavailable.";
+                     nextSteps = "Please try again later.";
+                }
+                else if (response == null)
+                {
+                     userErrorMessage = "We could not retrieve your download details, a response was not received from the API.";
+                     nextSteps = "Please try again.";
+                }
+                var errorVm = new DownloadErrorViewModel
+                {
+                    NeedsRegenerating = false,
+                    FriendlyMessage = true,
+                    ReturnSource = eDownloadReturnSource.Extracts,
+                    ErrorMessage = userErrorMessage,
+                    ErrorType = "NullReferenceException",
+                    ApiDetails = ex.ToString(),
+                    NextSteps = nextSteps
+                };
+                return View("Downloads/DownloadError", errorVm);
+            }
+            catch (Exception ex)
+            {
+                var errorVm = new DownloadErrorViewModel
+                {
+                    NeedsRegenerating = false,
+                    FriendlyMessage = true,
+                    ReturnSource = eDownloadReturnSource.Extracts,
+                    ErrorMessage = "We could not generate your download due to a system issue",
+                    ErrorType = "UnknownException",
+                    ApiDetails = ex.ToString(),
+                    NextSteps = "Please try again shortly or contact support."
+                };
+                return View("Downloads/DownloadError", errorVm);
             }
         }
 

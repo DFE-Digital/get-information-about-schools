@@ -111,7 +111,25 @@
     }
 }
 
-@if (Model.NeedsRegenerating)
+@if (Model.FriendlyMessage)
+{
+    <h1 class="govuk-heading-xl">Download Error</h1>
+    <div class="govuk-body">
+        <h3>@Model.ErrorType</h3>
+        <p>@Model.ErrorMessage</p>
+        <p>@Model.NextSteps</p>
+
+        <details class="error-details">
+            <summary>
+                Technical details
+            </summary>
+            <textarea readonly rows="8" cols="88" style="width: 100%; height: 200px; white-space: pre-wrap;">
+                @Model.ApiDetails
+            </textarea>
+        </details>
+    </div>
+}
+else if (Model.NeedsRegenerating)
 {
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
