@@ -420,6 +420,7 @@
     <Compile Include="Models\Notifications\NotificationsTemplatesViewModel.cs" />
     <Compile Include="Models\Notifications\Validators\NotificationsBannerValidator.cs" />
     <Compile Include="Models\ProprietorViewModel.cs" />
+    <Compile Include="Models\RequiredDateTimeViewModel.cs" />
     <Compile Include="Models\SiteMapNode.cs" />
     <Compile Include="Helpers\ValueProviders\TokenValueProviderFactory.cs" />
     <Compile Include="Models\AgeRangeFilterViewModel.cs" />
@@ -608,6 +609,7 @@
     <Content Include="Assets\Scripts\Entry\create-establishment.js" />
     <Content Include="Assets\Scripts\Entry\delegated-authority.js" />
     <Content Include="Assets\Scripts\Entry\download-select-fields.js" />
+    <Content Include="Assets\Scripts\Entry\Download-specific-field.js" />
     <Content Include="Assets\Scripts\Entry\downloads.js" />
     <Content Include="Assets\Scripts\Entry\edit-details.js" />
     <Content Include="Assets\Scripts\Entry\edit-establishment-links.js" />

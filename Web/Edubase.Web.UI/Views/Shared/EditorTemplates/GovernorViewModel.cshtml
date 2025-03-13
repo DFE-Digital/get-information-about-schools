@@ -48,7 +48,7 @@ else
                 </div>
             </div>
 
-            <input id="governorGidInput" class="govuk-input" value="@Model.GID" readonly="readonly" disabled="disabled" placeholder="This value is generated internally by GIAS" />
+            <input id="@Html.IdFor(x => x.GID)" class="govuk-input" value="@Model.GID" readonly="readonly" disabled="disabled" placeholder="This value is generated internally by GIAS" />
         </div>
     }
 }
@@ -60,7 +60,7 @@ else
         // Note that JavaScript interacts with these HTML elements
         // Updates to the IDs will need to be reflected in both the <label> and within Edubase.Web.UI/Assets/Scripts/Entry/add-edit-governor.js
         <div class="govuk-form-group" id="governorFullNameDiv" style="display:none">
-            <label class="govuk-label" for="governorFullNameInput">
+            <label class="govuk-label" for="@Html.IdFor(x => x.FullName)">
                 Name
                 <a id="FullNameTooltipLink" href="#help-text-full-name" class="help-icon modal-link">
                     <span class="govuk-visually-hidden">Help with the name field</span>
@@ -76,7 +76,7 @@ else
                     </p>
                 </div>
             </div>
-            <input id="governorFullNameInput" class="govuk-input" readonly="readonly" disabled="disabled" value="@Model.FullName" />
+            <input id="@Html.IdFor(x => x.FullName)" class="govuk-input" readonly="readonly" disabled="disabled" value="@Model.FullName" />
         </div>
 
         {
@@ -87,19 +87,15 @@ else
                 @Html.ValidationMessageFor(x => x.GovernorTitleId, null, new {@class = "govuk-error-message"})
                 @Html.DropDownListFor(x => x.GovernorTitleId, Model.Titles, "", new {@class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.GovernorTitleId)),})
             </div>
-        }
+    }
 
-        var additionalInfo = "";
-        if (!EnumSets.eGovernanceProfessionalRoles.Contains(Model.GovernorRole))
-        {
-            additionalInfo = " (required to save record)";
-        }
+    var additionalInfo = " (required to save record)";
 
-        {
-            // Note that JavaScript interacts with these HTML elements
-            // Updates to the IDs will need to be reflected in both the <label> and within Edubase.Web.UI/Assets/Scripts/Entry/add-edit-governor.js
-            var inputId = @Html.IdFor(x => x.FirstName);
-            var errorsWrapperId = $"{inputId}-errors";
+    {
+        // Note that JavaScript interacts with these HTML elements
+        // Updates to the IDs will need to be reflected in both the <label> and within Edubase.Web.UI/Assets/Scripts/Entry/add-edit-governor.js
+        var inputId = @Html.IdFor(x => x.FirstName);
+        var errorsWrapperId = $"{inputId}-errors";
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.FirstName)">
                 @Html.LabelFor(x => x.FirstName, $"First name{additionalInfo}", new { @class = "govuk-label",})
                 <span id="@errorsWrapperId">
@@ -180,7 +176,7 @@ else
 {
     if (Model.DisplayPolicy.PostCode)
     {
-        var inputId = "governor-postcode-textbox";
+        var inputId = @Html.IdFor(x => x.PostCode);
         var errorsWrapperId = $"{inputId}-errors";
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PostCode)">
             <label class="govuk-label" for="@inputId">
@@ -210,7 +206,7 @@ else
 {
     if (Model.DisplayPolicy.TelephoneNumber)
     {
-        var inputId = "governor-telephone-number-textbox";
+        var inputId = @Html.IdFor(x => x.TelephoneNumber);
         var errorsWrapperId = $"{inputId}-errors";
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.TelephoneNumber)">
             <label class="govuk-label" for="@inputId">
@@ -247,12 +243,13 @@ else
             eLookupGovernorRole.AccountingOfficer,
             eLookupGovernorRole.ChiefFinancialOfficer,
             eLookupGovernorRole.ChairOfLocalGoverningBody
-            ))
+            )
+            || EnumSets.eGovernanceProfessionalRoles.Contains(Model.GovernorRole))
         {
             labelText += " (required to save record)";
         }
 
-        var inputId = "governor-email-textbox";
+        var inputId = @Html.IdFor(x => x.EmailAddress);
         var errorsWrapperId = $"{inputId}-errors";
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EmailAddress)">
 
@@ -337,7 +334,7 @@ else
 {
     if (Model.DisplayPolicy.AppointingBodyId)
     {
-        var inputId = "appointing-body-id-textbox";
+        var inputId = @Html.IdFor(x => x.AppointingBodyId);
         var errorsWrapperId = $"{inputId}-errors";
         <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.AppointingBodyId)">
             @Html.LabelFor(x => x.AppointingBodyId, "Appointing body (required to save record)", new { @class = "govuk-label" })
@@ -345,7 +342,7 @@ else
                 @Html.ValidationMessageFor(x => x.AppointingBodyId, null, new { @class = "govuk-error-message" })
             </span>
             @Html.DropDownListFor(x => x.AppointingBodyId, Model.AppointingBodies, "",
-                new { id = "AppointingBodyId", @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.AppointingBodyId)), aria_describedBy = errorsWrapperId, })
+                new { id = inputId, @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.AppointingBodyId)), aria_describedBy = errorsWrapperId, })
         </div>
     }
 }
@@ -355,7 +352,7 @@ else
     if (Model.DisplayPolicy.PreviousFullName)
     {
         {
-            var inputId = "previous-name-title-select";
+            var inputId = @Html.IdFor(x => x.PreviousTitleId);
             var errorsWrapperId = $"{inputId}-errors";
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PreviousTitleId)">
                 @Html.LabelFor(x => x.PreviousTitleId, new { @class = "govuk-label" })
@@ -363,12 +360,12 @@ else
                     @Html.ValidationMessageFor(x => x.PreviousTitleId, null, new { @class = "govuk-error-message" })
                 </span>
                 @Html.DropDownListFor(x => x.PreviousTitleId, Model.PreviousTitles, "",
-                    new { id = "GovernorPreviousNameTitleInput", @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.PreviousTitleId)), aria_describedBy = errorsWrapperId, })
+                    new { id = inputId, @class = string.Concat("govuk-select ", Html.TextBoxValidationClass(x => x.PreviousTitleId)), aria_describedBy = errorsWrapperId, })
             </div>
         }
 
         {
-            var inputId = "previous-first-name-textbox";
+            var inputId = @Html.IdFor(x => x.PreviousFirstName);
             var errorsWrapperId = $"{inputId}-errors";
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PreviousFirstName)">
                 @Html.LabelFor(x => x.PreviousFirstName, new { @class = "govuk-label" })
@@ -376,12 +373,12 @@ else
                     @Html.ValidationMessageFor(x => x.PreviousFirstName, null, new { @class = "govuk-error-message" })
                 </span>
                 @Html.TextBoxFor(x => x.PreviousFirstName,
-                    new { id = "GovernorPreviousNameFirstNameInput", @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PreviousFirstName)), aria_describedBy = errorsWrapperId, })
+                    new { id = inputId, @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PreviousFirstName)), aria_describedBy = errorsWrapperId, })
             </div>
         }
 
         {
-            var inputId = "previous-middle-name-textbox";
+            var inputId = @Html.IdFor(x => x.PreviousMiddleName);
             var errorsWrapperId = $"{inputId}-errors";
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PreviousMiddleName)">
                 @Html.LabelFor(x => x.PreviousMiddleName, new { @class = "govuk-label" })
@@ -389,12 +386,12 @@ else
                     @Html.ValidationMessageFor(x => x.PreviousMiddleName, null, new { @class = "govuk-error-message" })
                 </span>
                 @Html.TextBoxFor(x => x.PreviousMiddleName,
-                    new { id = "GovernorPreviousNameMiddleNameInput", @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PreviousMiddleName)), aria_describedBy = errorsWrapperId, })
+                    new { id = inputId, @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PreviousMiddleName)), aria_describedBy = errorsWrapperId, })
             </div>
         }
 
         {
-            var inputId = "previous-last-name-textbox";
+            var inputId = @Html.IdFor(x => x.PreviousLastName);
             var errorsWrapperId = $"{inputId}-errors";
             <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.PreviousLastName)">
                 @Html.LabelFor(x => x.PreviousLastName, new { @class = "govuk-label" })
@@ -402,7 +399,7 @@ else
                     @Html.ValidationMessageFor(x => x.PreviousLastName, null, new { @class = "govuk-error-message" })
                 </span>
                 @Html.TextBoxFor(x => x.PreviousLastName,
-                    new { id = "GovernorPreviousNameLastNameInput", @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PreviousLastName)), aria_describedBy = errorsWrapperId, })
+                    new { id = inputId, @class = string.Concat("govuk-input ", Html.TextBoxValidationClass(x => x.PreviousLastName)), aria_describedBy = errorsWrapperId, })
             </div>
         }
     }
