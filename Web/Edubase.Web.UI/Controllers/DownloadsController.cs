@@ -266,6 +266,9 @@ namespace Edubase.Web.UI.Controllers
 
         private ActionResult HandleDownloadError(Exception ex, string errorType, string userMessage, string nextSteps)
         {
+            var isDevelopment = System.Configuration.ConfigurationManager.AppSettings["Environment"] == "localdev"
+                || System.Configuration.ConfigurationManager.AppSettings["Environment"] == "stage";
+
             var errorVm = new DownloadErrorViewModel
             {
                 NeedsRegenerating = false,
@@ -273,7 +276,7 @@ namespace Edubase.Web.UI.Controllers
                 ReturnSource = eDownloadReturnSource.Extracts,
                 ErrorMessage = userMessage,
                 ErrorType = errorType,
-                ApiDetails = ex.ToString(),
+                ApiDetails = isDevelopment ? ex.ToString() : userMessage,
                 NextSteps = nextSteps
             };
             return View("Downloads/DownloadError", errorVm);
