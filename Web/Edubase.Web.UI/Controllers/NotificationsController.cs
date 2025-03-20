@@ -125,19 +125,19 @@ namespace Edubase.Web.UI.Controllers
                 TempData.Remove("ShowSaved");
             }
 
-            return View("EditBanner",
-                new NotificationsBannerViewModel
-                {
-                    Id = id,
-                    Counter = counter,
-                    Start = new DateTimeViewModel(item.Start, item.Start),
-                    StartOriginal = item.Start,
-                    End = new DateTimeViewModel(item.End, item.End),
-                    Importance = (eNotificationBannerImportance) item.Importance,
-                    Content = item.Content,
-                    TotalBanners = banners.Items.Count(),
-                    TotalLiveBanners = banners.Items.Count(x => x.Visible)
-                });
+            var model = new NotificationsBannerViewModel().Set(item);
+
+            model.Id = id;
+            model.Counter = counter;
+            model.Start = new DateTimeViewModel(item.Start, item.Start);
+            model.StartOriginal = item.Start;
+            model.End = new DateTimeViewModel(item.End, item.End);
+            model.Importance = (eNotificationBannerImportance) item.Importance;
+            model.Content = item.Content;
+            model.TotalBanners = banners.Items.Count();
+            model.TotalLiveBanners = banners.Items.Count(x => x.Visible);
+
+            return View("EditBanner", model);
         }
 
         [Route("Banner/{counter}/{id}", Name = "PostEditBanner"), HttpPost, EdubaseAuthorize(Roles = AuthorizedRoles.IsAdmin), ValidateAntiForgeryToken]
@@ -189,21 +189,21 @@ namespace Edubase.Web.UI.Controllers
 
                 if (viewModel.Action == eNotificationBannerAction.Review)
                 {
+                    var updatedBanner = viewModel.ToBanner(originalBanner);
+
+                    updatedBanner.AuditTimestamp = DateTime.Now;
+                    updatedBanner.AuditUser = User.GetUserId();
+                    updatedBanner.AuditEvent = string.IsNullOrEmpty(viewModel.Id)
+                        ? eNotificationBannerEvent.Create.ToString()
+                            : eNotificationBannerEvent.Update.ToString();
+
                     if (string.IsNullOrEmpty(viewModel.Id))
                     {
-                        var item = viewModel.ToBanner();
-                        item.AuditTimestamp = DateTime.Now;
-                        item.AuditUser = User.GetUserId();
-                        item.AuditEvent = eNotificationBannerEvent.Create.ToString();
-                        await _BannerRepository.CreateAsync(item);
+                        await _BannerRepository.CreateAsync(updatedBanner);
                     }
                     else
                     {
-                        var item = viewModel.ToBanner(originalBanner);
-                        item.AuditTimestamp = DateTime.Now;
-                        item.AuditUser = User.GetUserId();
-                        item.AuditEvent = eNotificationBannerEvent.Update.ToString();
-                        await _BannerRepository.UpdateAsync(item);
+                        await _BannerRepository.UpdateAsync(updatedBanner);
                     }
 
                     TempData["ShowSaved"] = true;
