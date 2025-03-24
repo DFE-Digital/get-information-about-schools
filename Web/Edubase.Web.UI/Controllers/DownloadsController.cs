@@ -184,75 +184,29 @@ namespace Edubase.Web.UI.Controllers
             {
                 response = await _downloadsService.GenerateScheduledExtractAsync(eid, User);
 
+                if (response.Contains("\"code\"") && response.Contains("\"message\""))
+                {
+                    var apiError = JsonConvert.DeserializeObject<ApiWarning>(response);
+                    throw new InvalidOperationException($"{apiError.Message} (Code: {apiError.Code})");
+                }
+
                 if (response.Contains(
                         "fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
                 {
-                    return RedirectToAction(nameof(DownloadGenerated),
-                        new
-                        {
-                            id = getIdFromFileLocationUri(JsonConvert.DeserializeObject<ProgressDto>(response)),
-                            isExtract = true
-                        });
+                    var progressDto = JsonConvert.DeserializeObject<ProgressDto>(response);
+                    return RedirectToAction(nameof(DownloadGenerated), new { id = getIdFromFileLocationUri(progressDto), isExtract = true });
                 }
-                else
-                {
-                    return RedirectToAction(nameof(DownloadGenerated),
-                        new { id = JsonConvert.DeserializeObject<ApiResultDto<Guid>>(response).Value });
-                }
-            }
-            catch (NullReferenceException ex)
-            {
-                var userErrorMessage = "We couldn't generate your download due to a system issue.";
-                var nextSteps = "Please try again later. If the problem persists contact support.";
 
-                if (_downloadsService == null)
-                {
-                    userErrorMessage = "The download service is unavailable.";
-                    nextSteps = "Please try again later.";
-                }
-                else if (response == null)
-                {
-                    userErrorMessage =
-                        "We could not retrieve your download details, a response was not received from the API.";
-                    nextSteps = "Please try again.";
-                }
-                return HandleDownloadError(
-                    ex,
-                    "NullReferenceException",
-                    userErrorMessage,
-                    nextSteps);
+                var apiResult = JsonConvert.DeserializeObject<ApiResultDto<Guid>>(response);
+                return RedirectToAction(nameof(DownloadGenerated), new { id = apiResult.Value });
             }
-            catch (HttpRequestException ex)
+            catch (InvalidOperationException ex)
             {
                 return HandleDownloadError(
                     ex,
-                    "Network error",
-                    "There was a problem connecting to the server.",
-                    "Please check your internet connection and try again. If the problem persists contact support.");
-            }
-            catch (JsonSerializationException ex)
-            {
-                return HandleDownloadError(
-                    ex,
-                    "Data Error (JsonSerialization)",
-                    "The system encountered an issue while processing your response.",
-                    "Please report this issue to support.");
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return HandleDownloadError(
-                    ex,
-                    "Access denied",
-                    "You do not have permission to access this resource.",
-                    "If you believe this is incorrect, please contact support.");
-            }
-            catch (ArgumentException ex)
-            {
-                return HandleDownloadError(
-                    ex,
-                    "Invalid Request",
-                    "The download request was not valid.",
-                    "Please try again later. If the problem persists contact support.");
+                    "Request Error",
+                    "An extract is already being generated for this request.",
+                    "Please wait a few minutes for the extract to complete. If nothing happens after that time, please try again.");
             }
             catch (Exception ex)
             {
@@ -266,9 +220,6 @@ namespace Edubase.Web.UI.Controllers
 
         private ActionResult HandleDownloadError(Exception ex, string errorType, string userMessage, string nextSteps)
         {
-            var isDevelopment = System.Configuration.ConfigurationManager.AppSettings["Environment"] == "localdev"
-                || System.Configuration.ConfigurationManager.AppSettings["Environment"] == "stage";
-
             var errorVm = new DownloadErrorViewModel
             {
                 NeedsRegenerating = false,
@@ -276,7 +227,6 @@ namespace Edubase.Web.UI.Controllers
                 ReturnSource = eDownloadReturnSource.Extracts,
                 ErrorMessage = userMessage,
                 ErrorType = errorType,
-                ApiDetails = isDevelopment ? ex.ToString() : userMessage,
                 NextSteps = nextSteps
             };
             return View("Downloads/DownloadError", errorVm);
