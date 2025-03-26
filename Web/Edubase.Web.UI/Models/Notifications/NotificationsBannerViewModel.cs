@@ -34,10 +34,12 @@ namespace Edubase.Web.UI.Models.Notifications
         public bool GoBack { get; set; }
 
         [Display(Name = "First link")]
+        [Url(ErrorMessage = "The URL entered is invalid")]
         public string LinkUrl1 { get; set; }
         [Display(Name = "Textbox for link 1")]
         public string LinkText1 { get; set; }
         [Display(Name = "Second link")]
+        [Url(ErrorMessage = "The URL entered is invalid")]
         public string LinkUrl2 { get; set; }
         [Display(Name = "Textbox for link 2")]
         public string LinkText2 { get; set; }
@@ -95,9 +97,27 @@ namespace Edubase.Web.UI.Models.Notifications
         {
             Id = banner.RowKey;
             Importance = (eNotificationBannerImportance)banner.Importance;
-            Content = banner.Content;
             Start = new DateTimeViewModel(banner.Start, banner.Start);
             End = new DateTimeViewModel(banner.End, banner.End);
+
+            var rawContent = banner.Content ?? "";
+
+            var matches = Regex.Matches(rawContent, @"<a\s+href=""(.*?)"".*?>(.*?)</a>", RegexOptions.IgnoreCase);
+
+            if (matches.Count >= 1)
+            {
+                LinkUrl1 = matches[0].Groups[1].Value;
+                LinkText1 = matches[0].Groups[2].Value;
+            }
+
+            if (matches.Count >= 2)
+            {
+                LinkUrl2 = matches[1].Groups[1].Value;
+                LinkText2 = matches[1].Groups[2].Value;
+            }
+
+            var contentOnly = Regex.Replace(rawContent, @"<a\s+href=""[^""]*""[^>]*>.*?</a>", "", RegexOptions.IgnoreCase);
+            Content = System.Net.WebUtility.HtmlDecode(contentOnly.Trim());
 
             return this;
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -133,7 +134,9 @@ namespace Edubase.Web.UI.Controllers
             model.StartOriginal = item.Start;
             model.End = new DateTimeViewModel(item.End, item.End);
             model.Importance = (eNotificationBannerImportance) item.Importance;
-            model.Content = item.Content;
+
+            // Content is already set in set() - Do not change or the user will see raw HTML
+            //   model.Content = item.Content;
             model.TotalBanners = banners.Items.Count();
             model.TotalLiveBanners = banners.Items.Count(x => x.Visible);
 
@@ -218,6 +221,14 @@ namespace Edubase.Web.UI.Controllers
                 {
                     viewModel.Action = (eNotificationBannerAction) ((int) viewModel.Action + 1);
                 }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                ModelState.SetModelValue(nameof(viewModel.LinkUrl1), new ValueProviderResult(viewModel.LinkUrl1, viewModel.LinkUrl1, CultureInfo.CurrentCulture));
+                ModelState.SetModelValue(nameof(viewModel.LinkText1), new ValueProviderResult(viewModel.LinkText1, viewModel.LinkText1, CultureInfo.CurrentCulture));
+                ModelState.SetModelValue(nameof(viewModel.LinkUrl2), new ValueProviderResult(viewModel.LinkUrl2, viewModel.LinkUrl2, CultureInfo.CurrentCulture));
+                ModelState.SetModelValue(nameof(viewModel.LinkText2), new ValueProviderResult(viewModel.LinkText2, viewModel.LinkText2, CultureInfo.CurrentCulture));
             }
 
             return View("EditBanner", viewModel);
