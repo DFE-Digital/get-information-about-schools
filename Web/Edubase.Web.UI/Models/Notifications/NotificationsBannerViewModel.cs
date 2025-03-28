@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using Edubase.Common;
 using Edubase.Data.Entity;
+using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Models.Notifications
 {
@@ -35,11 +36,13 @@ namespace Edubase.Web.UI.Models.Notifications
 
         [Display(Name = "First link")]
         [Url(ErrorMessage = "The URL entered is invalid")]
+        [RequireUrlNotification("LinkText1", ErrorMessage = "The URL link must be entered when the message is populated.")]
         public string LinkUrl1 { get; set; }
         [Display(Name = "Textbox for link 1")]
         public string LinkText1 { get; set; }
         [Display(Name = "Second link")]
         [Url(ErrorMessage = "The URL entered is invalid")]
+        [RequireUrlNotification("LinkText2", ErrorMessage = "The URL link must be entered when the message is populated.")]
         public string LinkUrl2 { get; set; }
         [Display(Name = "Textbox for link 2")]
         public string LinkText2 { get; set; }
@@ -76,13 +79,29 @@ namespace Edubase.Web.UI.Models.Notifications
 
      List<string> formatted = new List<string> { content };
 
-     if (!string.IsNullOrWhiteSpace(url1) && !string.IsNullOrWhiteSpace(text1))
+     if (!string.IsNullOrWhiteSpace(url1))
      {
-         formatted.Add($"<a href=\"{sanitizedUrl(url1)}\" target=\"_blank\" rel=\"noopener noreferrer\">{sanitizedText(text1)}</a>");
+         if (!string.IsNullOrWhiteSpace(text1))
+         {
+             formatted.Add($"<br /><a href=\"{sanitizedUrl(url1)}\" target=\"_blank\" rel=\"noopener noreferrer\">{sanitizedText(text1)}</a>");
+         }
+         else
+         {
+             formatted.Add($"<br />{sanitizedUrl(url1)}");
+         }
+
      }
-     if (!string.IsNullOrWhiteSpace(url2) && !string.IsNullOrWhiteSpace(text2))
+     if (!string.IsNullOrWhiteSpace(url2))
      {
-         formatted.Add($"<a href=\"{sanitizedUrl(url2)}\" target=\"_blank\" rel=\"noopener noreferrer\">{sanitizedText(text2)}</a>");
+         if (!string.IsNullOrWhiteSpace(text2))
+         {
+             formatted.Add($"<br /><a href=\"{sanitizedUrl(url2)}\" target=\"_blank\" rel=\"noopener noreferrer\">{sanitizedText(text2)}</a>");
+         }
+         else
+         {
+             formatted.Add($"<br />{sanitizedUrl(url2)}");
+         }
+
      }
      return string.Join(" ", formatted);
  }
