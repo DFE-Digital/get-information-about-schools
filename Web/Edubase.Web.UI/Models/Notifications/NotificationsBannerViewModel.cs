@@ -56,7 +56,7 @@ namespace Edubase.Web.UI.Models.Notifications
      newBanner.Start = DateTime.SpecifyKind(Start.ToDateTime().GetValueOrDefault(), DateTimeKind.Local);
      newBanner.End = DateTime.SpecifyKind(End.ToDateTime().GetValueOrDefault(), DateTimeKind.Local);
 
-     var sanitizedMessage = Regex.Replace(Content ?? "", "<a .*?</a>", "").Trim();
+     var sanitizedMessage = Regex.Replace(Content ?? "", "<a .*?</a>", "", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
 
      newBanner.Content = sanitizedContentWithLinks(sanitizedMessage, LinkUrl1, LinkText1, LinkUrl2, LinkText2);
 
