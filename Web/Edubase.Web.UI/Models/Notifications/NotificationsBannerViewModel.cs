@@ -56,9 +56,10 @@ namespace Edubase.Web.UI.Models.Notifications
      newBanner.Start = DateTime.SpecifyKind(Start.ToDateTime().GetValueOrDefault(), DateTimeKind.Local);
      newBanner.End = DateTime.SpecifyKind(End.ToDateTime().GetValueOrDefault(), DateTimeKind.Local);
 
-     var sanitizedMessage = Regex.Replace(Content ?? "", "<a .*?</a>", "", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+     var cleaned = Regex.Replace(Content ?? "", "<a .*?</a>", "", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+     cleaned = Regex.Replace(cleaned, @"<br\s*/?>", "", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
 
-     newBanner.Content = sanitizedContentWithLinks(sanitizedMessage, LinkUrl1, LinkText1, LinkUrl2, LinkText2);
+     newBanner.Content = sanitizedContentWithLinks(cleaned.Trim(), LinkUrl1, LinkText1, LinkUrl2, LinkText2);
 
      return newBanner;
  }
@@ -73,7 +74,7 @@ namespace Edubase.Web.UI.Models.Notifications
      return string.IsNullOrWhiteSpace(text) ? "" : text.Replace("<", "&lt;").Replace(">", "&gt;");
  }
 
- private string sanitizedContentWithLinks(string content, string url1, string text1, string url2, string text2)
+ public string sanitizedContentWithLinks(string content, string url1, string text1, string url2, string text2)
  {
      content = sanitizedText(content);
 
@@ -121,7 +122,7 @@ namespace Edubase.Web.UI.Models.Notifications
 
             var rawContent = banner.Content ?? "";
 
-            var matches = Regex.Matches(rawContent, @"<a\s+href=""(.*?)"".*?>(.*?)</a>", RegexOptions.IgnoreCase);
+            var matches = Regex.Matches(rawContent, @"<a\s+href=""(.*?)"".*?>(.*?)</a>", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
 
             if (matches.Count >= 1)
             {
@@ -135,8 +136,10 @@ namespace Edubase.Web.UI.Models.Notifications
                 LinkText2 = matches[1].Groups[2].Value;
             }
 
-            var contentOnly = Regex.Replace(rawContent, @"<a\s+href=""[^""]*""[^>]*>.*?</a>", "", RegexOptions.IgnoreCase);
-            Content = System.Net.WebUtility.HtmlDecode(contentOnly.Trim());
+            var contentWithoutLinks = Regex.Replace(rawContent, @"<a\s+href=""[^""]*""[^>]*>.*?</a>", "", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+            var contentWithoutBreaks = Regex.Replace(contentWithoutLinks, @"<br\s*/?>", "", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+
+            Content = System.Net.WebUtility.HtmlDecode(contentWithoutBreaks.Trim());
 
             return this;
         }
