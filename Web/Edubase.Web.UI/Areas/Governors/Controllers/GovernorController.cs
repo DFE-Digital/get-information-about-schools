@@ -24,6 +24,7 @@ using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
 using Newtonsoft.Json;
+using GR = Edubase.Services.Enums.eLookupGovernorRole;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -443,12 +444,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 .OfType<int>()
                 .ToHashSet();
 
-            // Only a single chair of a local governing body may be attached (either directly, or via shared role)
-            if (IsEquivalentRoleAlreadyPresent(newRole, EnumSets.eChairOfLocalGoverningBodyRoles, existingGovernorRoleIds))
+            // Allow an exception
+            if (newRole != GR.Group_SharedChairOfLocalGoverningBody && IsEquivalentRoleAlreadyPresent
+                (newRole, EnumSets.eChairOfLocalGoverningBodyRoles, existingGovernorRoleIds))
             {
                 return false;
             }
-
             // Where the new governor is a role which permits only a single appointee, forbid if an exact match is found
             var isRoleWhichPermitsOnlySingleAppointee = EnumSets.eSingularGovernorRoles.Contains(newRole);
             var exactCurrentGovernorTypeMatchFound = existingGovernorRoleIds.Contains((int) newRole);
