@@ -83,7 +83,7 @@
                     {
                         if (!Model.TextSearchModel.Text.IsEmpty())
                         {
-                            <text>Establishments matching &ldquo;<span class="govuk-!-font-weight-bold">@Model.TextSearchModel.Text</span>&rdquo;</text>
+                            <text>Establishments matching &lsquo;<span class="govuk-!-font-weight-bold">@Model.TextSearchModel.Text</span>&rsquo;</text>
                         }
                     }
                     else if (Model.TextSearchType == M.eTextSearchType.LAESTAB)
@@ -92,11 +92,11 @@
                     }
                     else if (Model.TextSearchType == M.eTextSearchType.UKPRN)
                     {
-                        <text>Establishments matching the <abbr title="UK Provider Reference Number">UKPRN</abbr> &ldquo;@Model.TextSearchModel.Text&rdquo;.</text>
+                        <text>Establishments matching the <abbr title="UK Provider Reference Number">UKPRN</abbr> &lsquo;@Model.TextSearchModel.Text&rsquo;.</text>
                     }
                     else if (Model.TextSearchType == M.eTextSearchType.URN)
                     {
-                        <text>Establishments matching the <abbr title="Unique Reference Number">URN</abbr> &ldquo;@Model.TextSearchModel.Text&rdquo;.</text>
+                        <text>Establishments matching the <abbr title="Unique Reference Number">URN</abbr> &lsquo;@Model.TextSearchModel.Text&rsquo;.</text>
                     }
                 }
                 else if (Model.SearchType == eSearchType.ByLocalAuthority)
@@ -111,7 +111,7 @@
                     {
                         displayLocation = displayLocation.Substring(0, lastIndex);
                     }
-                    <text>Establishments matching &ldquo;</text><span class="govuk-!-font-weight-bold">@displayLocation</span><text>&rdquo;</text>
+                    <text>Establishments matching &lsquo;</text><span class="govuk-!-font-weight-bold">@displayLocation</span><text>&rsquo;</text>
                 }
             </p>
         </div>
