@@ -24,6 +24,7 @@ using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
 using Newtonsoft.Json;
+using GR = Edubase.Services.Enums.eLookupGovernorRole;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -245,7 +246,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             }
 
             if (replaceMode && role == eLookupGovernorRole.ChairOfGovernors
-                && establishmentUrn.HasValue && gid.HasValue)
+                            && establishmentUrn.HasValue && gid.HasValue)
             {
                 return RedirectToRoute("EstabReplaceChair",
                     new
@@ -258,7 +259,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         ri = "true"
                     });
             }
-
 
             if (role == null && gid == null)
             {
@@ -467,8 +467,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 .OfType<int>()
                 .ToHashSet();
 
-            // Only a single chair of a local governing body may be attached (either directly, or via shared role)
-            if (IsEquivalentRoleAlreadyPresent(newRole, EnumSets.eChairOfLocalGoverningBodyRoles, existingGovernorRoleIds))
+            // Allow an exception
+            if (newRole != GR.Group_SharedChairOfLocalGoverningBody && IsEquivalentRoleAlreadyPresent
+                    (newRole, EnumSets.eChairOfLocalGoverningBodyRoles, existingGovernorRoleIds))
             {
                 return false;
             }
@@ -839,10 +840,13 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
                         if (model.Reinstate) // re-instate the old chair to be the non-chair equivalent role.
                         {
-                            await ReInstateChairAsNonChairAsync(model.ExistingGovernorId,
-                                newGovernor.AppointmentStartDate.GetValueOrDefault(),
-                                (oldGovernorModel?.AppointmentEndDate).GetValueOrDefault(),
-                                (eLookupGovernorRole) oldGovernorModel.RoleId.Value);
+                            if (oldGovernorModel?.RoleId.HasValue == true)
+                            {
+                                await ReInstateChairAsNonChairAsync(model.ExistingGovernorId,
+                                    newGovernor.AppointmentStartDate.GetValueOrDefault(),
+                                    (oldGovernorModel?.AppointmentEndDate).GetValueOrDefault(),
+                                    (eLookupGovernorRole) oldGovernorModel.RoleId.Value);
+                            }
                         }
 
                         var url =
