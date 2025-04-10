@@ -179,16 +179,57 @@ namespace Edubase.Web.UI.Controllers
         [Route("RequestScheduledExtract/{eid}", Name = "RequestScheduledExtract")]
         public async Task<ActionResult> RequestScheduledExtract(int eid)
         {
-            var response = await _downloadsService.GenerateScheduledExtractAsync(eid, User);
+            string response = null;
+            try
+            {
+                response = await _downloadsService.GenerateScheduledExtractAsync(eid, User);
 
-            if (response.Contains("fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
-            {
-                return RedirectToAction(nameof(DownloadGenerated), new { id = getIdFromFileLocationUri(JsonConvert.DeserializeObject<ProgressDto>(response)), isExtract = true });
+                if (response.Contains("\"code\"") && response.Contains("\"message\""))
+                {
+                    var apiError = JsonConvert.DeserializeObject<ApiWarning>(response);
+                    throw new InvalidOperationException($"{apiError.Message} (Code: {apiError.Code})");
+                }
+
+                if (response.Contains(
+                        "fileLocationUri")) // Hack because the API sometimes returns ApiResultDto and sometimes ProgressDto!
+                {
+                    var progressDto = JsonConvert.DeserializeObject<ProgressDto>(response);
+                    return RedirectToAction(nameof(DownloadGenerated), new { id = getIdFromFileLocationUri(progressDto), isExtract = true });
+                }
+
+                var apiResult = JsonConvert.DeserializeObject<ApiResultDto<Guid>>(response);
+                return RedirectToAction(nameof(DownloadGenerated), new { id = apiResult.Value });
             }
-            else
+            catch (InvalidOperationException ex)
             {
-                return RedirectToAction(nameof(DownloadGenerated), new { id = JsonConvert.DeserializeObject<ApiResultDto<Guid>>(response).Value });
+                return HandleDownloadError(
+                    ex,
+                    "Request Error",
+                    "An extract is already being generated for this request.",
+                    "Please wait a few minutes for the extract to complete. If nothing happens after that time, please try again.");
             }
+            catch (Exception ex)
+            {
+                return HandleDownloadError(
+                    ex,
+                    "Unknown Error",
+                    "We could not generate your download due to a system issue",
+                    "Please try again shortly or contact support.");
+            }
+        }
+
+        private ActionResult HandleDownloadError(Exception ex, string errorType, string userMessage, string nextSteps)
+        {
+            var errorVm = new DownloadErrorViewModel
+            {
+                NeedsRegenerating = false,
+                FriendlyMessage = true,
+                ReturnSource = eDownloadReturnSource.Extracts,
+                ErrorMessage = userMessage,
+                ErrorType = errorType,
+                NextSteps = nextSteps
+            };
+            return View("Downloads/DownloadError", errorVm);
         }
 
         [HttpGet, Route("Download/Establishment/{urn}", Name = "EstabDataDownload")]

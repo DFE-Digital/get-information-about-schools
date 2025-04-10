@@ -79,5 +79,14 @@ namespace Edubase.Data.Entity
                 return eNotificationBannerStatus.Expired;
             }
         }
+
+        [Display(Name = "First link")]
+        public string LinkUrl1 { get; set; }
+        [Display(Name = "Textbox for link 1")]
+        public string LinkText1 { get; set; }
+        [Display(Name = "Second link")]
+        public string LinkUrl2 { get; set; }
+        [Display(Name = "Textbox for link 2")]
+        public string LinkText2 { get; set; }
     }
 }

@@ -242,6 +242,42 @@
                         <div id="Content-info" class="govuk-hint govuk-character-count__message">You can enter up to 500 characters</div>
                     </div>
                 </div>
+
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LinkUrl1)">
+                    @Html.LabelFor(x => x.LinkUrl1, new { @class = "govuk-label"})
+                    @Html.ValidationMessageFor(x => x.LinkUrl1, null, new { @class = "govuk-error-message"})
+                    @Html.TextAreaFor(
+                        x => x.LinkUrl1,
+                        new { @class = "govuk-input"})
+                    <span class="govuk-hint">Enter the full URL, for example: https://www.example.com</span>
+                </div>
+
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LinkText1)">
+                    @Html.LabelFor(x => x.LinkText1, new { @class = "govuk-label"})
+                    @Html.ValidationMessageFor(x => x.LinkText1, null, new { @class = "govuk-error-message"})
+                    @Html.TextAreaFor(
+                        x => x.LinkText1,
+                        new { @class = "govuk-input"})
+                    <span class="govuk-hint">Enter the text the user will see as a clickable link</span>
+                </div>
+
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LinkUrl2)">
+                    @Html.LabelFor(x => x.LinkUrl2, new { @class = "govuk-label"})
+                    @Html.ValidationMessageFor(x => x.LinkUrl2, null, new { @class = "govuk-error-message"})
+                    @Html.TextAreaFor(
+                        x => x.LinkUrl2,
+                        new { @class = "govuk-input"})
+                    <span class="govuk-hint">Enter the full URL for the second link</span>
+                </div>
+
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.LinkText2)">
+                    @Html.LabelFor(x => x.LinkText2, new { @class = "govuk-label"})
+                    @Html.ValidationMessageFor(x => x.LinkText2, null, new { @class = "govuk-error-message"})
+                    @Html.TextAreaFor(
+                        x => x.LinkText2,
+                        new { @class = "govuk-input"})
+                    <span class="govuk-hint">Enter the text for the second link</span>
+                </div>
             }
             else
             {
@@ -310,6 +346,10 @@
                 </dl>
             </div>
         }
+        @Html.HiddenFor(x => x.LinkUrl1)
+        @Html.HiddenFor(x => x.LinkText1)
+        @Html.HiddenFor(x => x.LinkUrl2)
+        @Html.HiddenFor(x => x.LinkText2)
     </div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
