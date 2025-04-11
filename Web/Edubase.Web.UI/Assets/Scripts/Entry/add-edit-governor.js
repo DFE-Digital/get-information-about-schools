@@ -122,7 +122,7 @@ const firstNameInput = document.getElementById('FirstName');
 const middleNameInput = document.getElementById('MiddleName');
 const lastNameInput = document.getElementById('LastName');
 const fullNameDiv = document.getElementById('governorFullNameDiv');
-const governorFullNameInput = document.getElementById('governorFullNameInput');
+const governorFullNameInput = document.getElementById('FullName');
 
 if (titleInput != null) {
   titleInput.addEventListener('input', UpdateFullName);
