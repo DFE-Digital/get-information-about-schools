@@ -1,4 +1,4 @@
-import { createApp } from 'vue';
+import Vue from 'vue';
 import axios from "axios";
 import errorSummary from '../GiasVueComponents/errorSummary';
 import GiasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
@@ -7,13 +7,13 @@ import GiasTextCounter from '../GiasModules/GiasTextCounter';
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-const app = createApp({
+new Vue({
+  el: '#change-approvals',
   components: {
     errorSummary,
     GiasWaitSpinner
   },
-  data() {
-    return {
+  data: {
       changes: [],
       selectedItems: [],
       apiUrl: '/api/approvals/change-requests',
@@ -55,7 +55,6 @@ const app = createApp({
         originatorFullName: 'Suggested by',
       },
       errors: [],
-    };
   },
   created: function () {
     this.getChangesData();
@@ -397,7 +396,5 @@ const app = createApp({
       this.reasonLength = false;
     }
   }
-
 });
 
-app.mount('#change-approvals');

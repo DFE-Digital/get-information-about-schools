@@ -13,9 +13,33 @@
             @importanceEnum.EnumDisplayNameFor()
         </h2>
     </div>
+
+    @if (!string.IsNullOrWhiteSpace(Model.LinkUrl1) && !string.IsNullOrWhiteSpace(Model.LinkText1))
+    {
+        <p>
+            <a href="@Model.LinkUrl1"
+               class="govuk-link"
+               target="_blank"
+               rel="noopener noreferrer">
+                @Model.LinkText1
+            </a>
+        </p>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.LinkUrl2) && !string.IsNullOrWhiteSpace(Model.LinkText2))
+    {
+        <p>
+            <a href="@Model.LinkUrl2"
+               class="govuk-link"
+               target="_blank"
+               rel="noopener noreferrer">
+                @Model.LinkText2
+            </a>
+        </p>
+    }
+
     <div class="govuk-notification-banner__content">
         <p class="govuk-notification-banner__heading govuk-!-margin-bottom-1">
-            @Model.Content
+            @Html.Raw(Model.Content)
         </p>
     </div>
 </div>
