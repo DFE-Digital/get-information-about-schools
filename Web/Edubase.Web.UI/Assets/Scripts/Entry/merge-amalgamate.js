@@ -1,17 +1,16 @@
-import { createApp } from 'vue';
+import Vue from 'vue';
 import errorSummary from '../GiasVueComponents/errorSummary';
 import GiasRadio from '../GiasVueComponents/GiasRadio';
 import GiasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
 
-const mergersApp = createApp({
+const mergersApp = new Vue({
+  el: '#mergers-app',
   components: {
     errorSummary,
     GiasRadio,
     GiasWaitSpinner,
   },
-  data() {
-    return {
-      school: '',
+  data: {
       localAuthorities: window.localAuthorities,
       types: window.types,
       phases: window.phases,
@@ -74,7 +73,6 @@ const mergersApp = createApp({
       exitUrl: '',
       presentExitWarning: false,
 
-    };
   },
   created: function() {
     this.amalgamationFields = [
@@ -90,13 +88,13 @@ const mergersApp = createApp({
       this.mergerEstab2,
       this.mergerEstab3
     ];
-  },
-  mounted: function () {
-    this.csrfToken = this.getAntiForgeryToken();
 
     this.populateSelect('new-establishment-type', this.types);
     this.populateSelect('LocalAuthorityId', this.localAuthorities);
     this.blockExits();
+  },
+  mounted: function () {
+    this.csrfToken = this.getAntiForgeryToken();
   },
   watch: {
     mergerTypeConfirmed: function() {
@@ -449,14 +447,9 @@ const mergersApp = createApp({
         this.isProcessing = true;
         postData.operationType = 'amalgamate';
         postData.MergeOrAmalgamationDate = [this.mergeDateYear, this.mergeDateMonth, this.mergeDateDay].join('-');
-        postData.UrnsToMerge = this.amalgamationEstabs
-          .filter(estab => {
-            if (!estab.urn) {
-              console.warn('Invalid Urn in establishment: ', estab);
-              return false;
-            }
-            return true;
-          }).map(estab => estab.urn);
+        postData.UrnsToMerge = this.amalgamationEstabs.map(function (estab) {
+          return estab.urn;
+        });
         postData.NewEstablishmentName = this.newName;
         postData.NewEstablishmentPhaseId = this.phaseId;
         postData.NewEstablishmentTypeId = this.typeId;
@@ -722,7 +715,4 @@ const mergersApp = createApp({
       return '/Establishments/Establishment/Details/' + this.amalgUrn;
     },
   }
-
 })
-
-mergersApp.mount('#mergers-app');
