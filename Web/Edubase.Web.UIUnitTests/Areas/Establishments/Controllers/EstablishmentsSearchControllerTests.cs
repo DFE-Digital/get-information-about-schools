@@ -393,6 +393,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             var mockUrlHelper = new Mock<UrlHelper>();
             var principal = new Mock<IPrincipal>();
 
+            eds.Setup(x => x.GetSearchDownloadCustomFields(It.IsAny<IPrincipal>()))
+                .Returns(Task.FromResult<IEnumerable<EstablishmentSearchDownloadCustomField>>(new List<EstablishmentSearchDownloadCustomField>()));
+
             mockUrlHelper.Setup(x => x.RouteUrl(It.IsAny<RouteValueDictionary>())).Returns<RouteValueDictionary>(n => n.Select(s => string.Format("{0}={1}", s.Key, s.Value)).Aggregate((c, nx) => string.Format("{0}|{1}", c, nx)));
             request.SetupGet(x => x.QueryString).Returns(HttpUtility.ParseQueryString(string.Empty));
             context.SetupGet(x => x.Request).Returns(request.Object);
@@ -425,6 +428,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
             var context = new Mock<HttpContextBase>(MockBehavior.Strict);
             var mockUrlHelper = new Mock<UrlHelper>();
             var principal = new Mock<IPrincipal>();
+
+            eds.Setup(x => x.GetSearchDownloadCustomFields(It.IsAny<IPrincipal>()))
+                .Returns(Task.FromResult<IEnumerable<EstablishmentSearchDownloadCustomField>>(new List<EstablishmentSearchDownloadCustomField>()));
 
             var guid = Guid.NewGuid();
             mockUrlHelper.Setup(x => x.RouteUrl(It.IsAny<RouteValueDictionary>())).Returns<RouteValueDictionary>(n => n.Select(s => string.Format("{0}={1}", s.Key, s.Value)).Aggregate((c, nx) => string.Format("{0}|{1}", c, nx)));

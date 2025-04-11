@@ -83,7 +83,7 @@
                     {
                         if (!Model.TextSearchModel.Text.IsEmpty())
                         {
-                            <text>Establishments matching &ldquo;<span class="govuk-!-font-weight-bold">@Model.TextSearchModel.Text</span>&rdquo;</text>
+                            <text>Establishments matching &lsquo;<span class="govuk-!-font-weight-bold">@Model.TextSearchModel.Text</span>&rsquo;</text>
                         }
                     }
                     else if (Model.TextSearchType == M.eTextSearchType.LAESTAB)
@@ -92,11 +92,11 @@
                     }
                     else if (Model.TextSearchType == M.eTextSearchType.UKPRN)
                     {
-                        <text>Establishments matching the <abbr title="UK Provider Reference Number">UKPRN</abbr> &ldquo;@Model.TextSearchModel.Text&rdquo;.</text>
+                        <text>Establishments matching the <abbr title="UK Provider Reference Number">UKPRN</abbr> &lsquo;@Model.TextSearchModel.Text&rsquo;.</text>
                     }
                     else if (Model.TextSearchType == M.eTextSearchType.URN)
                     {
-                        <text>Establishments matching the <abbr title="Unique Reference Number">URN</abbr> &ldquo;@Model.TextSearchModel.Text&rdquo;.</text>
+                        <text>Establishments matching the <abbr title="Unique Reference Number">URN</abbr> &lsquo;@Model.TextSearchModel.Text&rsquo;.</text>
                     }
                 }
                 else if (Model.SearchType == eSearchType.ByLocalAuthority)
@@ -111,7 +111,7 @@
                     {
                         displayLocation = displayLocation.Substring(0, lastIndex);
                     }
-                    <text>Establishments matching &ldquo;</text><span class="govuk-!-font-weight-bold">@displayLocation</span><text>&rdquo;</text>
+                    <text>Establishments matching &lsquo;</text><span class="govuk-!-font-weight-bold">@displayLocation</span><text>&rsquo;</text>
                 }
             </p>
         </div>
@@ -188,7 +188,6 @@
 
                         @Selector("Boarding provision", M.BIND_ALIAS_BOARDPOL, Model.BoardingProvisions.OrderBy(x => x.Name), Model.SelectedBoardingProvisionIds, "additional-search-critera hidden", true)
 
-
                         @Selector("Diocese", M.BIND_ALIAS_DIOCESE, Model.Dioceses.OrderBy(x => x.Name), Model.SelectedDioceseIds, "additional-search-critera hidden", true, true)
 
                         @Selector("District", M.BIND_ALIAS_DISTRICT, Model.Districts.OrderBy(x => x.Name), Model.SelectedDistrictIds, "additional-search-critera hidden", true, true)
@@ -199,10 +198,7 @@
 
                         @Selector("Government Office Region", M.BIND_ALIAS_GOR, Model.GORs.OrderBy(x => x.Name), Model.SelectedGORIds, "additional-search-critera hidden", true)
 
-
                         @Selector("Nursery provision", M.BIND_ALIAS_NURSERY, Model.NurseryProvisions.OrderBy(x => x.Name), Model.SelectedNurseryProvisionIds, "additional-search-critera hidden", true)
-
-                        @Selector("Ofsted rating", M.BIND_ALIAS_OFSTEDRATINGS, Model.OfstedRatings.OrderBy(x => x.Name), Model.SelectedOfstedRatingIds, "additional-search-critera hidden", true)
 
                         @Selector("Parliamentary constituency", M.BIND_ALIAS_PARLCONST, Model.ParliamentaryConstituencies.OrderBy(x => x.Name), Model.SelectedParliamentaryConstituencyIds, "additional-search-critera hidden", true, true)
 

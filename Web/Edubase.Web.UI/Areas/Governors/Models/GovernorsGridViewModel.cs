@@ -221,7 +221,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     else
                     {
                         grid.AddRow(governor, endDate)
-                            .AddCell(governor.GetFullName(), displayPolicy.FullName)
+                            .AddCell(getFullnameWithTitle, displayPolicy.FullName)
                             .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments,
                                 role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody))
                             .AddCell(governor.Id, displayPolicy.Id)

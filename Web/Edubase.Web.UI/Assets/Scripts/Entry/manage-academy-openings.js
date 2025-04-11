@@ -1,4 +1,4 @@
-import { createApp } from 'vue';
+import Vue from 'vue';
 import errorSummary from '../GiasVueComponents/errorSummary';
 import GiasWaitSpinner from '../GiasVueComponents/GiasWaitSpinner';
 
@@ -7,9 +7,9 @@ import GiasTabs from '../GiasModules/GiasTabs';
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 let raw = [];
 
-const academyOpenings = createApp({
-  data() {
-    return {
+const academyOpenings = new Vue({
+    el: '#academy-opening-app',
+    data: {
       openingAcademies: [],
       selectedDate: '0',
       initialRecordCount: 0,
@@ -49,7 +49,6 @@ const academyOpenings = createApp({
       uniqueDates: [],
       raw: [],
       errors: []
-    };
   },
   components: {
     GiasWaitSpinner,
@@ -494,21 +493,19 @@ const academyOpenings = createApp({
 
 });
 
-const academyOpeningsComponent = academyOpenings.mount('#academy-opening-app');
-
 
 $(window).on('tabChange', function () {
-  academyOpeningsComponent.clearErrors();
+  academyOpenings.clearErrors();
 });
 $('#main-content').find('.gias-tabs-wrapper').giasTabs();
 $('#main-content').find('.gias-tabs__tab').eq(0).click();
 
 function blockExits() {
   $('a').on('click', function (e) {
-    if (academyOpeningsComponent.isUserEditing()) {
+    if (academyOpenings.isUserEditing()) {
       e.preventDefault();
-      academyOpeningsComponent.presentExitWarning = true;
-      academyOpeningsComponent.anchorTarget = $(this).attr('href');
+      academyOpenings.presentExitWarning = true;
+      academyOpenings.anchorTarget = $(this).attr('href');
       window.setTimeout(function () {
         $('#button-ok').focus();
       }, 0);

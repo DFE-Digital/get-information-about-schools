@@ -1,6 +1,7 @@
 using Edubase.Common;
 using Edubase.Web.UI.Models;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -110,6 +111,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             var counties = (await _lookupService.CountiesGetAllAsync()).Where(c => c.Id != 63); //remove "not recorded"
             HttpContext.Response.Headers.Add("x-count", model.Count.ToString());
 
+            if (model.Results == null)
+            {
+                return Json(new { Message = "No results available" });
+            }
+
             var filtered = model.Results
                 .Select(result => new
                 {
@@ -156,8 +162,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             if (!viewModel.Dataset.HasValue)
             {
+                viewModel.Dataset = eDataSet.Custom;
                 viewModel.SearchQueryString = Request.QueryString.ToString();
                 return View("Downloads/SelectDataset", viewModel);
+            }
+
+            if (viewModel.CustomFields == null)
+            {
+                viewModel.CustomFields = (await _establishmentDownloadService.GetSearchDownloadCustomFields(User)).ToList();
             }
 
             if (viewModel.Dataset == eDataSet.Custom && !viewModel.SelectedCustomFields.Any())
