@@ -420,6 +420,7 @@
     <Compile Include="Models\Notifications\NotificationsTemplateViewModel.cs" />
     <Compile Include="Models\Notifications\NotificationsTemplatesViewModel.cs" />
     <Compile Include="Models\Notifications\Validators\NotificationsBannerValidator.cs" />
+    <Compile Include="Models\Notifications\Validators\ValidateUrl.cs" />
     <Compile Include="Models\ProprietorViewModel.cs" />
     <Compile Include="Models\RequiredDateTimeViewModel.cs" />
     <Compile Include="Models\SiteMapNode.cs" />
