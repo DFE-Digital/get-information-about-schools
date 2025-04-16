@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Edubase.Common;
 using Edubase.Data.Entity;
 using Edubase.Web.UI.Helpers;
+using Edubase.Web.UI.Helpers.ValueProviders;
 
 namespace Edubase.Web.UI.Models.Notifications
 {
@@ -35,13 +36,13 @@ namespace Edubase.Web.UI.Models.Notifications
         public bool GoBack { get; set; }
 
         [Display(Name = "First link")]
-        [Url(ErrorMessage = "The URL entered is invalid")]
+        [ValidateUrl(ErrorMessage = "The URL entered is invalid")]
         [RequireUrlNotification("LinkText1", ErrorMessage = "The URL link must be entered when the message is populated.")]
         public string LinkUrl1 { get; set; }
         [Display(Name = "Textbox for link 1")]
         public string LinkText1 { get; set; }
         [Display(Name = "Second link")]
-        [Url(ErrorMessage = "The URL entered is invalid")]
+        [ValidateUrl(ErrorMessage = "The URL entered is invalid")]
         [RequireUrlNotification("LinkText2", ErrorMessage = "The URL link must be entered when the message is populated.")]
         public string LinkUrl2 { get; set; }
         [Display(Name = "Textbox for link 2")]
