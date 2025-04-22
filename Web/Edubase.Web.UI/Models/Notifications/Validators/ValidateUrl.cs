@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Edubase.Web.UI.Helpers.ValueProviders
@@ -16,10 +17,12 @@ namespace Edubase.Web.UI.Helpers.ValueProviders
             if (Uri.TryCreate(strValue, UriKind.Absolute, out var uriResult))
             {
                 var isHttp =  uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps;
+                var hostParts = uriResult.Host.Split('.');
+                var hasTld = hostParts.Length >= 2 && hostParts[hostParts.Length - 1].Length >= 2;
                 var hasDotsOnly = Regex.IsMatch(uriResult.AbsolutePath ?? "", @"\.+$", RegexOptions.None,
                     TimeSpan.FromMilliseconds(300));
 
-                return isHttp && !hasDotsOnly;
+                return isHttp && hasTld && !hasDotsOnly;
             }
             return false;
         }
