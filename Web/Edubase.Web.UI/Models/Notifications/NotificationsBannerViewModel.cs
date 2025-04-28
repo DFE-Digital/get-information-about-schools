@@ -30,9 +30,9 @@ namespace Edubase.Web.UI.Models.Notifications
 
         [MaxLength(500, ErrorMessage = "The Content field cannot have more than 500 characters"), AllowHtml]
         public string Content { get; set; }
-        public DateTimeViewModel Start { get; set; }
+        public RequiredDateTimeViewModel Start { get; set; } = new RequiredDateTimeViewModel();
         public DateTime? StartOriginal { get; set; }
-        public DateTimeViewModel End { get; set; }
+        public RequiredDateTimeViewModel End { get; set; } = new RequiredDateTimeViewModel();
         public bool GoBack { get; set; }
 
         [Display(Name = "First link")]
@@ -54,8 +54,8 @@ namespace Edubase.Web.UI.Models.Notifications
 
      newBanner.Importance = (int)Importance;
 
-     newBanner.Start = DateTime.SpecifyKind(Start.ToDateTime().GetValueOrDefault(), DateTimeKind.Local);
-     newBanner.End = DateTime.SpecifyKind(End.ToDateTime().GetValueOrDefault(), DateTimeKind.Local);
+     newBanner.Start = DateTime.SpecifyKind(Start.ToDateTime(), DateTimeKind.Local);
+     newBanner.End = DateTime.SpecifyKind(End.ToDateTime(), DateTimeKind.Local);
 
      var cleaned = Regex.Replace(Content ?? "", "<a .*?</a>", "", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
      cleaned = Regex.Replace(cleaned, @"<br\s*/?>", "", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
@@ -118,8 +118,22 @@ namespace Edubase.Web.UI.Models.Notifications
         {
             Id = banner.RowKey;
             Importance = (eNotificationBannerImportance)banner.Importance;
-            Start = new DateTimeViewModel(banner.Start, banner.Start);
-            End = new DateTimeViewModel(banner.End, banner.End);
+            Start = new RequiredDateTimeViewModel
+            {
+                Day = banner.Start.Day,
+                Month = banner.Start.Month,
+                Year = banner.Start.Year,
+                Hour = banner.Start.Hour,
+                Minute = banner.Start.Minute,
+            };
+            End = new RequiredDateTimeViewModel
+            {
+                Day = banner.Start.Day,
+                Month = banner.Start.Month,
+                Year = banner.Start.Year,
+                Hour = banner.Start.Hour,
+                Minute = banner.Start.Minute,
+            };
 
             var rawContent = banner.Content ?? "";
 

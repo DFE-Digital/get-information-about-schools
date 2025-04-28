@@ -86,6 +86,20 @@
         }
         <legend class="govuk-fieldset__legend @Html.Conditional(hideLegend, "hidden")" id="@legendPrefix@ViewData.ModelMetadata.PropertyName">@(string.IsNullOrWhiteSpace(ViewData["title"] as string) ? ViewData.ModelMetadata.DisplayName : ViewData["title"])</legend>
 
+        @if (!ViewData.ModelState.IsValid)
+        {
+            foreach (var field in new[] { "", "Day", "Month", "Year", "Hour", "Minute"})
+            {
+                if (ViewData.ModelState.ContainsKey(ViewData.TemplateInfo.GetFullHtmlFieldName(field)))
+                {
+                    foreach (var error in ViewData.ModelState[ViewData.TemplateInfo.GetFullHtmlFieldName(field)].Errors)
+                    {
+                        <span class="govuk-error-message">@error.ErrorMessage</span>
+                    }
+                }
+            }
+        }
+
         @{
             var fullFieldId = ViewData.TemplateInfo.GetFullHtmlFieldName(Model?.Label)
                 .Replace(".", "_")
@@ -97,42 +111,42 @@
                 <div id="@fullFieldId"></div>
             }
 
-            foreach (var modelStateKey in ViewData.ModelState.Keys)
-            {
-                var testStateKey = modelStateKey;
-                var linkStateKey = testStateKey;
-                if (testStateKey.EndsWith(".Day"))
-                {
-                    testStateKey = testStateKey.Replace(".Day", "");
-                    linkStateKey = linkStateKey.Replace(".Day", "_Day");
-                }
-                if (testStateKey.EndsWith(".Month"))
-                {
-                    testStateKey = testStateKey.Replace(".Month", "");
-                    linkStateKey = linkStateKey.Replace(".Month", "_Month");
-                }
-                if (testStateKey.EndsWith(".Year"))
-                {
-                    testStateKey = testStateKey.Replace(".Year", "");
-                    linkStateKey = linkStateKey.Replace(".Year", "_Year");
-                }
-                if (testStateKey.EndsWith(".Hour"))
-                {
-                    testStateKey = testStateKey.Replace(".Hour", "");
-                    linkStateKey = linkStateKey.Replace(".Hour", "_Hour");
-                }
-                if (testStateKey.EndsWith(".Minute"))
-                {
-                    testStateKey = testStateKey.Replace(".Minute", "");
-                    linkStateKey = linkStateKey.Replace(".Minute", "_Minute");
-                }
+        foreach (var modelStateKey in ViewData.ModelState.Keys)
+        {
+        var testStateKey = modelStateKey;
+        var linkStateKey = testStateKey;
+        if (testStateKey.EndsWith(".Day"))
+        {
+        testStateKey = testStateKey.Replace(".Day", "");
+        linkStateKey = linkStateKey.Replace(".Day", "_Day");
+        }
+        if (testStateKey.EndsWith(".Month"))
+        {
+        testStateKey = testStateKey.Replace(".Month", "");
+        linkStateKey = linkStateKey.Replace(".Month", "_Month");
+        }
+        if (testStateKey.EndsWith(".Year"))
+        {
+        testStateKey = testStateKey.Replace(".Year", "");
+        linkStateKey = linkStateKey.Replace(".Year", "_Year");
+        }
+        if (testStateKey.EndsWith(".Hour"))
+        {
+        testStateKey = testStateKey.Replace(".Hour", "");
+        linkStateKey = linkStateKey.Replace(".Hour", "_Hour");
+        }
+        if (testStateKey.EndsWith(".Minute"))
+        {
+        testStateKey = testStateKey.Replace(".Minute", "");
+        linkStateKey = linkStateKey.Replace(".Minute", "_Minute");
+        }
 
-                if (testStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCultureIgnoreCase) &&
-                    !testStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCulture))
-                {
-                    <div id="@linkStateKey"></div>
-                }
-            }
+        if (testStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCultureIgnoreCase) &&
+        !testStateKey.Equals(ViewData.ModelMetadata.PropertyName, StringComparison.InvariantCulture))
+        {
+        <div id="@linkStateKey"></div>
+        }
+        }
         }
 
         @if (!disableHint)
@@ -158,83 +172,62 @@
                 <p>Changing this date may reactivate the record</p>
             </div>
         }
-
-        @{
-            var errContent = new List<MvcHtmlString>
-            {
-                Html.ValidationMessageNested(ViewData.ModelMetadata.PropertyName),
-                Html.ValidationMessageFor(x => x, null, new { @class = "govuk-error-message" }),
-                Html.ValidationMessageFor(x => x.Day, null, new { @class = "govuk-error-message" }),
-                Html.ValidationMessageFor(x => x.Month, null, new { @class = "govuk-error-message" }),
-                Html.ValidationMessageFor(x => x.Year, null, new { @class = "govuk-error-message" }),
-                Html.ValidationMessageFor(x => x.Hour, null, new { @class = "govuk-error-message" }),
-                Html.ValidationMessageFor(x => x.Minute, null, new { @class = "govuk-error-message" })
-            };
-
-            foreach (var mvcHtmlString in errContent.Select(x => x?.ToHtmlString()).Distinct())
-            {
-                @Html.Raw(mvcHtmlString)
-            }
-        }
-
         @if (ViewData["vueModel"] != null)
         {
             <span class="govuk-error-message" v-show="@showBinding" v-html="@messageBinding"></span>
         }
+
         @{
             var dayCssClasses = string.Concat(Html.TextBoxValidationClass(x => x.Day), " govuk-input ", $"{cssClassPrefix}-day");
             var monthCssClasses = string.Concat(Html.TextBoxValidationClass(x => x.Month), " govuk-input ", $"{cssClassPrefix}-month");
             var yearCssClasses = string.Concat(Html.TextBoxValidationClass(x => x.Year), " govuk-input ", $"{cssClassPrefix}-year");
-            var hourCssClasses = string.Concat(Html.TextBoxValidationClass(x => x.Year), " govuk-input ", $"{cssClassPrefix}-hour");
-            var minuteCssClasses = string.Concat(Html.TextBoxValidationClass(x => x.Year), " govuk-input ", $"{cssClassPrefix}-minute");
+            var hourCssClasses = string.Concat(Html.TextBoxValidationClass(x => x.Hour), " govuk-input ", $"{cssClassPrefix}-hour");
+            var minuteCssClasses = string.Concat(Html.TextBoxValidationClass(x => x.Minute), " govuk-input ", $"{cssClassPrefix}-minute");
         }
+
         <div class="govuk-date-input">
-            <div class="govuk-date-input__item">
-                <div class="govuk-form-group">
 
-
-                    @Html.LabelFor(x => x.Day, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
-                    @Html.TextBoxFor(x => x.Day, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, dayCssClasses, 2, ViewData["vueModel"] != null ? string.Concat((string)ViewData["vueModel"], "Day") : null))
-                </div>
-            </div>
-            <div class="govuk-date-input__item">
-                <div class="govuk-form-group">
-                    @Html.LabelFor(x => x.Month, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
-                    @Html.TextBoxFor(x => x.Month, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, monthCssClasses, 2, ViewData["vueModel"] != null ? string.Concat((string)ViewData["vueModel"], "Month") : null))
-                </div>
-            </div>
-            <div class="govuk-date-input__item gias-year-input__item">
-                <div class="govuk-form-group">
-                    @Html.LabelFor(x => x.Year, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
-                    @Html.TextBoxFor(x => x.Year, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, yearCssClasses, 4, ViewData["vueModel"] != null ? string.Concat((string)ViewData["vueModel"], "Year") : null))
-                </div>
-            </div>
-            <div class="govuk-date-input__item gias-hour-input__item">
-                <div class="govuk-form-group">
-                    @Html.LabelFor(x => x.Hour, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
-                    @{
-                        var hourAttribute = new Dictionary<string, object> { { "Value", $"{Model.Hour:D2}" } };
-                    }
-
-                    @Html.TextBoxFor(m => m.Hour, Html.GetHtmlAttributes(GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, hourCssClasses, 4, ViewData["vueModel"] != null ? string.Concat((string)ViewData["vueModel"], "Hour") : null), hourAttribute))
-                </div>
-            </div>
-            <div class="govuk-date-input__item gias-time-spacer__item">
-                <div class="govuk-form-group">
-                    <p class="govuk-heading-m">:</p>
-                </div>
-            </div>
-            <div class="govuk-date-input__item gias-minute-input__item">
-                <div class="govuk-form-group">
-                    @Html.LabelFor(x => x.Minute, new { @class = string.Concat(labelClassName, " govuk-label govuk-date-input__label") })
-                    @{
-                        var minuteAttribute = new Dictionary<string, object> { { "Value", $"{Model.Minute:D2}" } };
-                    }
-
-                    @Html.TextBoxFor(m => m.Minute, Html.GetHtmlAttributes(GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, minuteCssClasses, 4, ViewData["vueModel"] != null ? string.Concat((string)ViewData["vueModel"], "Minute") : null), minuteAttribute))
-                </div>
-            </div>
+    <div class="govuk-date-input__item">
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Day)">
+            @Html.LabelFor(x => x.Day, new { @class = "govuk-label govuk-date-input__label" })
+            @Html.TextBoxFor(x => x.Day, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, dayCssClasses, 2, ViewData["vueModel"] != null ? $"{ViewData["vueModel"]}Day" : null))
         </div>
+    </div>
+
+    <div class="govuk-date-input__item">
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Month)">
+            @Html.LabelFor(x => x.Month, new { @class = "govuk-label govuk-date-input__label" })
+            @Html.TextBoxFor(x => x.Month, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, monthCssClasses, 2, ViewData["vueModel"] != null ? $"{ViewData["vueModel"]}Month" : null))
+        </div>
+    </div>
+
+    <div class="govuk-date-input__item gias-year-input__item">
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Year)">
+            @Html.LabelFor(x => x.Year, new { @class = "govuk-label govuk-date-input__label" })
+            @Html.TextBoxFor(x => x.Year, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, yearCssClasses, 4, ViewData["vueModel"] != null ? $"{ViewData["vueModel"]}Year" : null))
+        </div>
+    </div>
+
+    <div class="govuk-date-input__item gias-hour-input__item">
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Hour)">
+            @Html.LabelFor(x => x.Hour, new { @class = "govuk-label govuk-date-input__label" })
+            @Html.TextBoxFor(x => x.Hour, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, hourCssClasses, 2, ViewData["vueModel"] != null ? $"{ViewData["vueModel"]}Hour" : null))
+        </div>
+    </div>
+
+    <div class="govuk-date-input__item gias-time-spacer__item">
+        <div class="govuk-form-group">
+            <p class="govuk-heading-m">:</p>
+        </div>
+    </div>
+
+    <div class="govuk-date-input__item gias-minute-input__item">
+        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.Minute)">
+            @Html.LabelFor(x => x.Minute, new { @class = "govuk-label govuk-date-input__label" })
+            @Html.TextBoxFor(x => x.Minute, GetCheckboxAttributes(ViewData["readonly"] as bool? ?? false, minuteCssClasses, 2, ViewData["vueModel"] != null ? $"{ViewData["vueModel"]}Minute" : null))
+        </div>
+    </div>
+</div>
         @if (ViewData["readonly"] as bool? ?? false)
         {
             @Html.HiddenFor(x => x.Day)

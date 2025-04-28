@@ -9,7 +9,6 @@ using Edubase.Data.Repositories;
 using Edubase.Services.Texuna;
 using Edubase.Web.UI.Filters;
 using Edubase.Web.UI.Helpers;
-using Edubase.Web.UI.Helpers.ValueProviders;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Models.Notifications;
 
@@ -131,9 +130,23 @@ namespace Edubase.Web.UI.Controllers
 
             model.Id = id;
             model.Counter = counter;
-            model.Start = new DateTimeViewModel(item.Start, item.Start);
+            model.Start = new RequiredDateTimeViewModel
+            {
+                Day = item.Start.Day,
+                Month = item.Start.Month,
+                Year = item.Start.Year,
+                Hour = item.Start.Hour,
+                Minute = item.Start.Minute,
+            };
             model.StartOriginal = item.Start;
-            model.End = new DateTimeViewModel(item.End, item.End);
+            model.End = new RequiredDateTimeViewModel
+            {
+                Day = item.Start.Day,
+                Month = item.Start.Month,
+                Year = item.Start.Year,
+                Hour = item.Start.Hour,
+                Minute = item.Start.Minute,
+            };
             model.Importance = (eNotificationBannerImportance) item.Importance;
 
             // Content is already set in set() - Do not change or the user will see raw HTML
@@ -167,6 +180,18 @@ namespace Edubase.Web.UI.Controllers
                 foreach (var modelValue in ModelState.Values)
                 {
                     modelValue.Errors.Clear();
+                }
+            }
+
+            if (viewModel.Action != eNotificationBannerAction.Schedule)
+            {
+                var keysToRemove = ModelState.Keys
+                    .Where(k => k.StartsWith("Start.") || k.StartsWith("End."))
+                    .ToList();
+
+                foreach (var key in keysToRemove)
+                {
+                    ModelState[key].Errors.Clear();
                 }
             }
 
