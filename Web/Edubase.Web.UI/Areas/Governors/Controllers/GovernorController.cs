@@ -273,7 +273,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             if (role.HasValue)
             {
-                if (!await RoleAllowed(role.Value, groupUId, establishmentUrn, User))
+                if (!await RoleAllowed(role.Value, groupUId, establishmentUrn, User, replaceMode))
                 {
                     return RedirectToRoute(establishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance",
                         new { establishmentUrn, groupUId, roleAlreadyExists = true, selectedRole = role });
@@ -464,7 +464,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         }
 
         public async Task<bool> RoleAllowed(eLookupGovernorRole newRole, int? groupUId, int? establishmentUrn,
-            IPrincipal user)
+            IPrincipal user, bool replaceMode)
         {
             var existingGovernors = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, user);
             var existingGovernorRoleIds = existingGovernors
@@ -483,7 +483,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             // Where the new governor is a role which permits only a single appointee, forbid if an exact match is found
             var isRoleWhichPermitsOnlySingleAppointee = EnumSets.eSingularGovernorRoles.Contains(newRole);
             var exactCurrentGovernorTypeMatchFound = existingGovernorRoleIds.Contains((int) newRole);
-            if (isRoleWhichPermitsOnlySingleAppointee && exactCurrentGovernorTypeMatchFound)
+            if (!replaceMode && isRoleWhichPermitsOnlySingleAppointee && exactCurrentGovernorTypeMatchFound)
             {
                 return false;
             }
