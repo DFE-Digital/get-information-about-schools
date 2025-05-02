@@ -141,11 +141,11 @@ namespace Edubase.Web.UI.Controllers
             model.StartOriginal = item.Start;
             model.End = new RequiredDateTimeViewModel
             {
-                Day = item.Start.Day,
-                Month = item.Start.Month,
-                Year = item.Start.Year,
-                Hour = item.Start.Hour,
-                Minute = item.Start.Minute,
+                Day = item.End.Day,
+                Month = item.End.Month,
+                Year = item.End.Year,
+                Hour = item.End.Hour,
+                Minute = item.End.Minute,
             };
             model.Importance = (eNotificationBannerImportance) item.Importance;
 
