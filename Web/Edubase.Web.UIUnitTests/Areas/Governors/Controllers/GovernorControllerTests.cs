@@ -611,7 +611,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(governorsDetails);
 
-            var result = await controller.RoleAllowed(newGovernorRole, null, null, null);
+            var result = await controller.RoleAllowed(newGovernorRole, null, null, null, false);
 
             Assert.False(result);
         }
@@ -1336,7 +1336,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(governorsDetails);
 
-            var actualResult = await controller.RoleAllowed(newGovernorRole, null, null, null);
+            var actualResult = await controller.RoleAllowed(newGovernorRole, null, null, null, false);
 
             Assert.Equal(expectedResult, actualResult);
         }
