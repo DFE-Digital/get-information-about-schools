@@ -7,6 +7,7 @@ using Edubase.Services.Governors.Models;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Models;
 using Edubase.Services.Groups.Models;
+using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {
@@ -51,7 +52,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
         GroupModel IEstablishmentPageViewModel.LegalParentGroup { get; set; }
         string IEstablishmentPageViewModel.LegalParentGroupToken { get; set; }
 
-        public bool AllowReinstatement => Urn.HasValue;
+        public bool AllowReinstatement => Urn.HasValue && !Role.IsSharedChairOfLocalGoverningBody();
         public bool Reinstate { get; set; }
         public IEnumerable<SelectListItem> ExistingNonChairs { get; set; } = Enumerable.Empty<SelectListItem>();
         public int? SelectedPreviousExistingNonChairId { get; set; }
