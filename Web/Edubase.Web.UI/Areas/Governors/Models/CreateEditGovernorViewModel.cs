@@ -7,6 +7,7 @@ using Edubase.Services.Governors.Models;
 using Edubase.Services.Groups.Models;
 using Edubase.Web.UI.Areas.Establishments.Models;
 using Edubase.Web.UI.Areas.Groups.Models.CreateEdit;
+using Edubase.Web.UI.Helpers;
 
 namespace Edubase.Web.UI.Areas.Governors.Models
 {
@@ -53,7 +54,10 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public IEnumerable<SelectListItem> ExistingGovernors { get; set; } = Enumerable.Empty<SelectListItem>();
 
-        public bool AllowReinstateAsGovernor => EstablishmentUrn.HasValue && GovernorRole.OneOfThese(eLookupGovernorRole.ChairOfTrustees, eLookupGovernorRole.ChairOfGovernors);
+        public bool AllowReinstateAsGovernor => EstablishmentUrn.HasValue &&
+                                                GovernorRole.OneOfThese(eLookupGovernorRole.ChairOfTrustees,
+                                                    eLookupGovernorRole.ChairOfGovernors) &&
+                                                !GovernorRole.IsSharedChairOfLocalGoverningBody();
 
         public GovernorModel SelectedGovernor { get; set; }
 
