@@ -1,5 +1,25 @@
 @model Edubase.Web.UI.Models.Grid.GovernorGridViewModel
 
+@functions {
+
+    private static readonly string[] BannedTitles =
+    {
+        "Not applicable", "Not-applicable", "Not recorded"
+    };
+
+    private string CleanName(string fullName)
+    {
+        if (string.IsNullOrWhiteSpace(fullName)) return fullName;
+
+        var match = BannedTitles.FirstOrDefault(x =>
+            fullName.StartsWith(x, StringComparison.OrdinalIgnoreCase));
+
+        return match == null
+            ? fullName
+            : fullName.Substring(match.Length).TrimStart();
+    }
+}
+
 <div class="governor-grid">
     @if (!Model.IsHistoricRole)
     {
@@ -52,7 +72,9 @@
                         <tr class="govuk-table__row">
                             @foreach (var cell in row.Cells)
                             {
-                                <td data-label="@Model.HeaderCells[cellCount].Text" class="govuk-table__cell" id="@StringUtils.ElementIdFormat(Model.Title + "-" + cell.Parent.Text + "-Value")">@(cell.Text ?? "Not recorded")</td>
+                                <td data-label="@Model.HeaderCells[cellCount].Text" class="govuk-table__cell" id="@StringUtils.ElementIdFormat(Model.Title + "-" + cell.Parent.Text + "-Value")">
+                                    @((cellCount == 0) ? CleanName(cell.Text) : (cell.Text ?? "Not recorded"))
+                                </td>
                                 cellCount++;
                             }
                         </tr>
