@@ -33,7 +33,7 @@ variables:
   ## If this is part of a release, then we can deploy to higher environments
   ## - could consider this being done by tag instead? or `release/v1.11` format branch?
   ## - need condition to allow promotion of dev branch into test? but no higher?
-  isRelease: $[eq(variables['Build.SourceBranch'], 'refs/heads/release')]
+  isRelease: $[startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')]
 
 
 stages:
