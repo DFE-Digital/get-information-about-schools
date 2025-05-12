@@ -26,7 +26,7 @@ variables:
 
   ## These variables distinguish between "dev" (incl. AFD/custom domain) and sandboxes
   isDev:      $[eq(variables['Build.SourceBranch'], 'refs/heads/dev')]
-  isSandbox1: $[eq(variables['Build.SourceBranch'], 'refs/heads/release')]
+  isSandbox1: $[startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')]
   isSandbox2: false   # currently unused
   isHolding:  false    # currently unused
   
