@@ -29,26 +29,29 @@
     @Html.HiddenFor(m => m.Urn)
     @Html.HiddenFor(m => m.Name)
     @Html.HiddenFor(m => m.Role)
+
     <div id="select-shared-governor" class="govuk-grid-row">
-        <div class="govuk-grid-column-one-half">
-            <div class="button-row govuk-!-margin-bottom-4">
-                <input type="submit" value="Save" class="govuk-button"/>
-                <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" id="cancel-button" class="govuk-button govuk-button--secondary">Cancel</a>
+    <div class="govuk-grid-column-one-half">
+    <div class="button-row govuk-!-margin-bottom-4">
+        <input type="submit" value="Save" class="govuk-button"/>
+        <a href="@Url.RouteUrl("EstabEditGovernance", new { establishmentUrn = Model.Urn.Value })" id="cancel-button" class="govuk-button govuk-button--secondary">Cancel</a>
+    </div>
+    <h2 class="govuk-heading-m">Replace @Model.RoleName</h2>
+    <h3 class="govuk-heading-s">@Model.GovernorFullName</h3>
+
+    @Html.EditorFor(m => m.DateTermEnds, new { fieldsetClassName = "edit-date-fieldset" })
+
+        <div class="govuk-form-group">
+            <div class="govuk-checkboxes">
+                @FormHelpers.GiasCheckbox("true", "Reinstate", "Re-instate as local governor", null, new
+                    {
+                        id = "Reinstate", disabled = !Model.AllowReinstatement ? "disabled" : null
+                    },
+                    Model.Reinstate
+                )
+
             </div>
-            <h2 class="govuk-heading-m">Replace @Model.RoleName</h2>
-            <h3 class="govuk-heading-s">@Model.GovernorFullName</h3>
-
-            @Html.EditorFor(m => m.DateTermEnds, new { fieldsetClassName = "edit-date-fieldset" })
-
-
-            @if (Model.AllowReinstatement)
-            {
-                <div class="govuk-form-group">
-                    <div class="govuk-checkboxes">
-                        @FormHelpers.GiasCheckbox("true", "Reinstate", "Re-instate as local governor", null, new { id = "Reinstate" }, Model.Reinstate)
-                    </div>
-                </div>
-            }
+        </div>
 
             <div class="govuk-form-group">
                 <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
