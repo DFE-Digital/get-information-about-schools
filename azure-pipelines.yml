@@ -26,14 +26,14 @@ variables:
 
   ## These variables distinguish between "dev" (incl. AFD/custom domain) and sandboxes
   isDev:      $[eq(variables['Build.SourceBranch'], 'refs/heads/dev')]
-  isSandbox1: $[eq(variables['Build.SourceBranch'], 'refs/heads/epic/governance-professional')]
+  isSandbox1: $[eq(variables['Build.SourceBranch'], 'refs/heads/release')]
   isSandbox2: false   # currently unused
   isHolding:  false    # currently unused
   
   ## If this is part of a release, then we can deploy to higher environments
   ## - could consider this being done by tag instead? or `release/v1.11` format branch?
   ## - need condition to allow promotion of dev branch into test? but no higher?
-  isRelease: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
+  isRelease: $[eq(variables['Build.SourceBranch'], 'refs/heads/release')]
 
 
 stages:
