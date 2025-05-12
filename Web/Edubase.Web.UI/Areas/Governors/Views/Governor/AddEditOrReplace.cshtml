@@ -60,12 +60,9 @@
                     @Html.EditorFor(x => x.ReplaceGovernorViewModel.AppointmentEndDate, new { title = "Date term ends (required to save record)", fieldSetClassName = "edit-date-fieldset" })
                 </div>
 
-                if (Model.AllowReinstateAsGovernor)
-                {
-                    <div class="govuk-checkboxes">
-                        @FormHelpers.GiasCheckbox("true", "ReinstateAsGovernor", Model.ReinstateAsGovernorCheckboxLabel, null, new { id = nameof(Model.ReinstateAsGovernor) })
-                    </div>
-                }
+               <div class="govuk-checkboxes">
+                   @FormHelpers.GiasCheckbox("true", "ReinstateAsGovernor", Model.ReinstateAsGovernorCheckboxLabel, null, new { id = nameof(Model.ReinstateAsGovernor), disabled = !Model.AllowReinstateAsGovernor ? "disabled" : null })
+               </div>
             }
 
             <h2 class="govuk-heading-m govuk-!-padding-top-6">@(Model.ReplaceGovernorViewModel.GID.HasValue ? string.Concat("New ", Model.GovernorRoleNameMidSentence) : Model.GovernorRoleName)</h2>
