@@ -56,7 +56,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
 
         public bool AllowReinstateAsGovernor => EstablishmentUrn.HasValue &&
                                                 GovernorRole.OneOfThese(eLookupGovernorRole.ChairOfTrustees,
-                                                    eLookupGovernorRole.ChairOfGovernors) &&
+                                                    eLookupGovernorRole.ChairOfGovernors, eLookupGovernorRole.ChairOfLocalGoverningBody) &&
                                                 !GovernorRole.IsSharedChairOfLocalGoverningBody();
 
         public GovernorModel SelectedGovernor { get; set; }

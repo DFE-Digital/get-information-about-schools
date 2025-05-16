@@ -41,70 +41,84 @@
 
     @Html.EditorFor(m => m.DateTermEnds, new { fieldsetClassName = "edit-date-fieldset" })
 
+    @if (Model.AllowReinstatement)
+    {
         <div class="govuk-form-group">
             <div class="govuk-checkboxes">
-                @FormHelpers.GiasCheckbox("true", "Reinstate", "Re-instate as local governor", null, new
-                    {
-                        id = "Reinstate", disabled = !Model.AllowReinstatement ? "disabled" : null
-                    },
+                @FormHelpers.GiasCheckbox("true", "Reinstate", "Re-instate as local governor",
+                    "",
+                    new { id = "Reinstate" },
                     Model.Reinstate
                 )
-
             </div>
         </div>
+    }
+    else
+    {
+        <div class="govuk-form-group">
+            <div class="govuk-checkboxes">
+                <div class="govuk-checkboxes__item">
+                    <input class="govuk-checkboxes__input" id="Reinstate" name="Reinstate" type="checkbox" value="true" disabled />
+                    <label class="govuk-label govuk-checkboxes__label" for="Reinstate">
+                        Re-instate as local governor
+                    </label>
+                </div>
+            </div>
+        </div>
+    }
 
-            <div class="govuk-form-group">
-                <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
-                    <div class="govuk-radios__item">
-                        @Html.GiasRadioFor(m => m.NewChairType, ReplaceChairViewModel.ChairType.LocalChair, "New Chair", null, new { id = "newChair", @class = "govuk-radios__input panel-trigger", data_aria_controls = "replacement-chair-details" })
-                    </div>
-                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="replacement-chair-details" data-module="govuk-radios">
-                        <div class="replacement-chair-option">
-                            @if (Model.ExistingNonChairs.Any())
-                            {
-                                <div class="govuk-form-group js-when-on">
-                                    @Html.LabelFor(x => x.SelectedPreviousExistingNonChairId, "Choose replacement", new { @class = "govuk-label" })
-                                    @Html.DropDownListFor(x => x.SelectedPreviousExistingNonChairId, Model.ExistingNonChairs, "New", new { @class = "govuk-select choose-replacement" })
-                                </div>
-                            }
-
-                            @Html.EditorFor(m => m.NewLocalGovernor, new { disableStartDate = true, editorPrefix = nameof(Model.NewLocalGovernor), fieldsetClassName = "edit-date-fieldset" })
+                <div class="govuk-form-group">
+                    <div class="govuk-radios govuk-radios--conditional" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            @Html.GiasRadioFor(m => m.NewChairType, ReplaceChairViewModel.ChairType.LocalChair, "New Chair", null, new { id = "newChair", @class = "govuk-radios__input panel-trigger", data_aria_controls = "replacement-chair-details" })
                         </div>
-                    </div>
-                    <div class="govuk-radios__item">
-                        @Html.GiasRadioFor(m => m.NewChairType, ReplaceChairViewModel.ChairType.SharedChair, "Shared Chair", null, new { id = "sharedChair", @class = "govuk-radios__input panel-trigger", data_aria_controls = "SharedGovernors" })
-                    </div>
-                    <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="SharedGovernors">
-                        <div class="replacement-chair-option">
-                            <div class="shared-governor-list">
-                                @if (Model.SharedGovernors.Any())
+                        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="replacement-chair-details" data-module="govuk-radios">
+                            <div class="replacement-chair-option">
+                                @if (Model.ExistingNonChairs.Any())
                                 {
-                                    <ul class="govuk-list">
-                                        @for (var index = 0; index < Model.SharedGovernors.Count; index++)
-                                        {
-                                            @Html.EditorFor(x => x.SharedGovernors[index], new { disableStartDate = true, fieldsetClassName = "edit-date-fieldset" })
-                                        }
-                                    </ul>
-                                }
-                                else
-                                {
-                                    <div class="govuk-form-group @Html.ValidationCssClass("SharedGovernors")">
-                                        @if (Html.ValidationCssClass("SharedGovernors").ToString() == "error")
-                                        {
-                                            @Html.ValidationMessage("SharedGovernors")
-                                        }
-                                        else
-                                        {
-                                            <p class="govuk-body-s">There are no shared governors available for this establishment</p>
-                                        }
+                                    <div class="govuk-form-group js-when-on">
+                                        @Html.LabelFor(x => x.SelectedPreviousExistingNonChairId, "Choose replacement", new { @class = "govuk-label" })
+                                        @Html.DropDownListFor(x => x.SelectedPreviousExistingNonChairId, Model.ExistingNonChairs, "New", new { @class = "govuk-select choose-replacement" })
                                     </div>
                                 }
+
+                                @Html.EditorFor(m => m.NewLocalGovernor, new { disableStartDate = true, editorPrefix = nameof(Model.NewLocalGovernor), fieldsetClassName = "edit-date-fieldset" })
+                            </div>
+                        </div>
+                        <div class="govuk-radios__item">
+                            @Html.GiasRadioFor(m => m.NewChairType, ReplaceChairViewModel.ChairType.SharedChair, "Shared Chair", null, new { id = "sharedChair", @class = "govuk-radios__input panel-trigger", data_aria_controls = "SharedGovernors" })
+                        </div>
+                        <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="SharedGovernors">
+                            <div class="replacement-chair-option">
+                                <div class="shared-governor-list">
+                                    @if (Model.SharedGovernors.Any())
+                                    {
+                                        <ul class="govuk-list">
+                                            @for (var index = 0; index < Model.SharedGovernors.Count; index++)
+                                            {
+                                                @Html.EditorFor(x => x.SharedGovernors[index], new { disableStartDate = true, fieldsetClassName = "edit-date-fieldset" })
+                                            }
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <div class="govuk-form-group @Html.ValidationCssClass("SharedGovernors")">
+                                            @if (Html.ValidationCssClass("SharedGovernors").ToString() == "error")
+                                            {
+                                                @Html.ValidationMessage("SharedGovernors")
+                                            }
+                                            else
+                                            {
+                                                <p class="govuk-body-s">There are no shared governors available for this establishment</p>
+                                            }
+                                        </div>
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
     </div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
