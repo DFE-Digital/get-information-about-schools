@@ -177,8 +177,21 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                         ", ",
                         (governor.Appointments?.Select(a => $"{a.EstablishmentName}, URN: {a.EstablishmentUrn}") ?? new string[] { })
                     );
-                    var appointment = governor.Appointments?
-                        .SingleOrDefault(a => a.EstablishmentUrn == EstablishmentUrn);
+
+                    GovernorAppointment appointment;
+
+                    try
+                    {
+                        appointment = governor.Appointments?
+                            .SingleOrDefault(a => a.EstablishmentUrn == EstablishmentUrn);
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        throw new InvalidOperationException(
+                            $"Multiple appointments found for governor with ID {governor.Id} and EstablishmentUrn {EstablishmentUrn} (governorsGridViewModel)",
+                            ex);
+                    }
+
                     var startDate = isShared && appointment != null
                         ? appointment.AppointmentStartDate
                         : governor.AppointmentStartDate;
@@ -208,7 +221,7 @@ namespace Edubase.Web.UI.Areas.Governors.Models
                     else
                     {
                         grid.AddRow(governor, endDate)
-                            .AddCell(governor.GetFullName(), displayPolicy.FullName)
+                            .AddCell(getFullnameWithTitle, displayPolicy.FullName)
                             .AddCell(string.IsNullOrWhiteSpace(establishments) ? null : establishments,
                                 role.OneOfThese(GR.LocalGovernor, GR.ChairOfLocalGoverningBody))
                             .AddCell(governor.Id, displayPolicy.Id)

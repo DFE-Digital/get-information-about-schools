@@ -559,10 +559,20 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
 
             var result = await controller.AddEditOrReplace(null, estabUrn, newGovernorRole, null);
 
-            // Expecting to redirect back, rejecting the proposed add/edit
-            var redirectResult = result as RedirectToRouteResult;
-            Assert.NotNull(redirectResult);
-            Assert.Equal("EstabEditGovernance", redirectResult.RouteName);
+            var redirectResult = Assert.IsType<RedirectToRouteResult>(result);
+
+            string expectedRoute;
+
+            if (newGovernorRole == eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody)
+            {
+                expectedRoute = "SelectSharedGovernor";
+            }
+            else
+            {
+                expectedRoute = "EstabEditGovernance";
+            }
+
+            Assert.Equal(expectedRoute, redirectResult.RouteName);
         }
 
 
@@ -601,7 +611,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(governorsDetails);
 
-            var result = await controller.RoleAllowed(newGovernorRole, null, null, null);
+            var result = await controller.RoleAllowed(newGovernorRole, null, null, null, false);
 
             Assert.False(result);
         }
@@ -1229,9 +1239,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             await AssertAddingNewRoleIsForbidden(currentGovernors, newGovernorRole);
         }
 
-        // Only a single chair of a local governing body may be attached (either directly, or via shared role)
+        // Additional single chair of a local governing body may be attached (either directly, or via shared role)
         [Fact]
-        public async Task RoleAllowed_NewSharedChairGroup_Forbidden_WhenPreexistingLocalChair()
+        public async Task RoleAllowed_NewSharedChairGroup_Allowed_WhenPreexistingLocalChair()
         {
             var currentGovernors = new List<GovernorModel>
             {
@@ -1239,7 +1249,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             };
             var newGovernorRole = eLookupGovernorRole.Group_SharedChairOfLocalGoverningBody;
 
-            await AssertAddingNewRoleIsForbidden(currentGovernors, newGovernorRole);
+            await AssertAddingNewRoleIsPermitted(currentGovernors, newGovernorRole);
         }
 
 
@@ -1326,7 +1336,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             mockGovernorsReadService.Setup(g => g.GetGovernorListAsync(It.IsAny<int?>(), It.IsAny<int?>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(governorsDetails);
 
-            var actualResult = await controller.RoleAllowed(newGovernorRole, null, null, null);
+            var actualResult = await controller.RoleAllowed(newGovernorRole, null, null, null, false);
 
             Assert.Equal(expectedResult, actualResult);
         }

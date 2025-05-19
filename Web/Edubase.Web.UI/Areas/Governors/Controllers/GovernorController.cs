@@ -24,6 +24,7 @@ using Edubase.Web.UI.Helpers;
 using Edubase.Web.UI.Models;
 using Edubase.Web.UI.Validation;
 using Newtonsoft.Json;
+using GR = Edubase.Services.Enums.eLookupGovernorRole;
 
 namespace Edubase.Web.UI.Areas.Governors.Controllers
 {
@@ -112,6 +113,12 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             viewModel.GovernorShared = false;
             if (removalGid.HasValue)
             {
+                if (domainModel.CurrentGovernors.Count(g => g.Id == removalGid.Value) > 1)
+                {
+                    throw new InvalidOperationException(
+                        "domainModel.CurrentGovernors contains more than one governor with the same Id (governorController)");
+                }
+
                 var govToBeRemoved = domainModel.CurrentGovernors.SingleOrDefault(g => g.Id == removalGid.Value);
                 if (govToBeRemoved != null && EnumSets.SharedGovernorRoles.Contains(govToBeRemoved.RoleId.Value))
                 {
@@ -237,6 +244,28 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             var replaceMode =
                 ((Route) ControllerContext.RouteData.Route).Url.IndexOf("/Replace/",
                     StringComparison.OrdinalIgnoreCase) > -1;
+
+            if (replaceMode && !role.HasValue && gid.HasValue)
+            {
+                var previousGov = await _governorsReadService.GetGovernorAsync(gid.Value, User);
+                role = (eLookupGovernorRole) previousGov.RoleId.Value;
+            }
+
+            if (replaceMode && role == eLookupGovernorRole.ChairOfGovernors
+                            && establishmentUrn.HasValue && gid.HasValue)
+            {
+                return RedirectToRoute("EstabReplaceChair",
+                    new
+                    {
+                        establishmentUrn = establishmentUrn.Value,
+                        gid = gid.Value,
+                        d = Request.QueryString["d"],
+                        m = Request.QueryString["m"],
+                        y = Request.QueryString["y"],
+                        ri = "true"
+                    });
+            }
+
             if (role == null && gid == null)
             {
                 throw new EdubaseException("Role was not supplied and no Governor ID was supplied");
@@ -244,7 +273,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
             if (role.HasValue)
             {
-                if (!await RoleAllowed(role.Value, groupUId, establishmentUrn, User))
+                if (!await RoleAllowed(role.Value, groupUId, establishmentUrn, User, replaceMode))
                 {
                     return RedirectToRoute(establishmentUrn.HasValue ? "EstabEditGovernance" : "GroupEditGovernance",
                         new { establishmentUrn, groupUId, roleAlreadyExists = true, selectedRole = role });
@@ -272,6 +301,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 if (replaceMode)
                 {
                     viewModel.Mode = CreateEditGovernorViewModel.EditMode.Replace;
+
                     viewModel.ReplaceGovernorViewModel.AppointmentEndDate =
                         new DateTimeViewModel(model.AppointmentEndDate);
                     viewModel.ReplaceGovernorViewModel.GID = gid;
@@ -434,7 +464,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         }
 
         public async Task<bool> RoleAllowed(eLookupGovernorRole newRole, int? groupUId, int? establishmentUrn,
-            IPrincipal user)
+            IPrincipal user, bool replaceMode)
         {
             var existingGovernors = await _governorsReadService.GetGovernorListAsync(establishmentUrn, groupUId, user);
             var existingGovernorRoleIds = existingGovernors
@@ -443,8 +473,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 .OfType<int>()
                 .ToHashSet();
 
-            // Only a single chair of a local governing body may be attached (either directly, or via shared role)
-            if (IsEquivalentRoleAlreadyPresent(newRole, EnumSets.eChairOfLocalGoverningBodyRoles, existingGovernorRoleIds))
+            // Allow an exception
+            if (newRole != GR.Group_SharedChairOfLocalGoverningBody && IsEquivalentRoleAlreadyPresent
+                    (newRole, EnumSets.eChairOfLocalGoverningBodyRoles, existingGovernorRoleIds))
             {
                 return false;
             }
@@ -452,7 +483,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             // Where the new governor is a role which permits only a single appointee, forbid if an exact match is found
             var isRoleWhichPermitsOnlySingleAppointee = EnumSets.eSingularGovernorRoles.Contains(newRole);
             var exactCurrentGovernorTypeMatchFound = existingGovernorRoleIds.Contains((int) newRole);
-            if (isRoleWhichPermitsOnlySingleAppointee && exactCurrentGovernorTypeMatchFound)
+            if (!replaceMode && isRoleWhichPermitsOnlySingleAppointee && exactCurrentGovernorTypeMatchFound)
             {
                 return false;
             }
@@ -815,10 +846,13 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
                         if (model.Reinstate) // re-instate the old chair to be the non-chair equivalent role.
                         {
-                            await ReInstateChairAsNonChairAsync(model.ExistingGovernorId,
-                                newGovernor.AppointmentStartDate.GetValueOrDefault(),
-                                (oldGovernorModel?.AppointmentEndDate).GetValueOrDefault(),
-                                eLookupGovernorRole.ChairOfLocalGoverningBody);
+                            if (oldGovernorModel?.RoleId.HasValue == true)
+                            {
+                                await ReInstateChairAsNonChairAsync(model.ExistingGovernorId,
+                                    newGovernor.AppointmentStartDate.GetValueOrDefault(),
+                                    (oldGovernorModel?.AppointmentEndDate).GetValueOrDefault(),
+                                    (eLookupGovernorRole) oldGovernorModel.RoleId.Value);
+                            }
                         }
 
                         var url =

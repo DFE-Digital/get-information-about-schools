@@ -104,7 +104,7 @@ namespace Edubase.Web.UI.Controllers
             returnTo = Uri.UnescapeDataString(returnTo);
 
             if (Uri.IsWellFormedUriString(returnTo, UriKind.RelativeOrAbsolute) && !returnTo.Contains("\n") &&
-                !returnTo.Contains("\r"))
+                !returnTo.Contains("\r") && urlHelper.IsLocalUrl(returnTo))
             {
                 return Redirect(returnTo);
             }
