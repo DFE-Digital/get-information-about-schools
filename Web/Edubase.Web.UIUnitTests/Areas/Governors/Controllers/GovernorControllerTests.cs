@@ -1075,6 +1075,26 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
 
             mockGovernorsWriteService.Setup(g => g.AddSharedGovernorAppointmentAsync(newGovId, estabUrn, It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiResponse(true));
 
+            mockGovernorsReadService.Setup(g => g.GetGovernorAsync(newGovId, It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new GovernorModel
+                {
+                    Id = newGovId,
+                    RoleId = (int) eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody,
+                    AppointmentEndDate = DateTime.Now.AddYears(1)
+                });
+
+            mockGovernorsReadService.Setup(g => g.GetGovernorAsync(govId, It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new GovernorModel
+                {
+                    Id = govId,
+                    RoleId = (int) eLookupGovernorRole.ChairOfLocalGoverningBody,
+                    AppointmentEndDate = DateTime.Now
+                });
+
+            mockGovernorsWriteService
+                .Setup(g => g.UpdateDatesAsync(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new ApiResponse(true));
+
             var result = await controller.ReplaceChair(model);
             var redirectResult = result as RedirectResult;
             Assert.NotNull(redirectResult);
