@@ -818,13 +818,22 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                                 var newRole = RoleEquivalence.GetEquivalentToLocalRole(oldRole)
                                     .FirstOrDefault(r => r == eLookupGovernorRole.LocalGovernor);
 
+                                if ((newRole == default) &&
+                                    (oldGovernorModel.RoleId == (int) eLookupGovernorRole.ChairOfLocalGoverningBody ||
+                                     oldGovernorModel.RoleId == (int) eLookupGovernorRole.ChairOfGovernors))
+                                {
+                                    newRole = eLookupGovernorRole.LocalGovernor;
+                                }
+
                                 if (newRole != default)
                                 {
-                                    await ReInstateChairAsNonChairAsync(
+                                    await ReInstateAsGovernorAsync(
                                         model.ExistingGovernorId,
+                                        model.Urn.Value,
                                         model.DateTermEnds.ToDateTime().Value.AddDays(1),
-                                        oldGovernorModel.AppointmentEndDate.GetValueOrDefault(),
-                                        newRole);
+                                        null,
+                                        newRole,
+                                        User);
                                 }
                                 else
                                 {
@@ -991,6 +1000,48 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
             return View(model);
         }
 
+        public async Task ReInstateAsGovernorAsync(
+            int gid,
+            int urn,
+            DateTime appointmentStartDate,
+            DateTime? appointmentEndDate,
+            eLookupGovernorRole role,
+            IPrincipal user)
+        {
+            var oldGovernor = await _governorsReadService.GetGovernorAsync(gid, user);
+
+            var newGovernor = new GovernorModel
+            {
+                EstablishmentUrn = urn,
+                AppointingBodyId = 2,
+                Person_TitleId = oldGovernor.Person_TitleId ?? 1,
+                Person_FirstName = oldGovernor.Person_FirstName,
+                Person_MiddleName = oldGovernor.Person_MiddleName,
+                Person_LastName = oldGovernor.Person_LastName,
+                PreviousPerson_TitleId = oldGovernor.PreviousPerson_TitleId,
+                PreviousPerson_FirstName = oldGovernor.PreviousPerson_FirstName,
+                PreviousPerson_MiddleName = oldGovernor.PreviousPerson_MiddleName,
+                PreviousPerson_LastName = oldGovernor.PreviousPerson_LastName,
+                AppointmentStartDate = appointmentStartDate,
+                AppointmentEndDate = appointmentStartDate.AddYears(1),
+                RoleId = 9,
+                DOB = oldGovernor.DOB ?? new DateTime(1970, 1, 1),
+                PostCode = oldGovernor.PostCode,
+                EmailAddress = null,
+                TelephoneNumber = null,
+                GroupUId = null
+            };
+
+            await _governorsWriteService.SaveAsync(newGovernor, user);
+
+            var result = await _governorsReadService.GetGovernorListAsync(urn);
+            var match = result.CurrentGovernors.FirstOrDefault(g =>
+                g.RoleId == (int)role &&
+                g.Person_FirstName.Equals(newGovernor.Person_FirstName, StringComparison.OrdinalIgnoreCase) &&
+                g.Person_LastName.Equals(newGovernor.Person_LastName, StringComparison.OrdinalIgnoreCase)
+            );
+        }
+
         internal async Task<GovernorsGridViewModel> CreateGovernorsViewModel(int? groupUId = null,
             int? establishmentUrn = null, EstablishmentModel establishmentModel = null, IPrincipal user = null)
         {
@@ -1035,7 +1086,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 viewModel.CorporateContact = groupModel.CorporateContact;
                 viewModel.GroupTypeId = groupModel.GroupTypeId;
             }
-
             return viewModel;
         }
 
