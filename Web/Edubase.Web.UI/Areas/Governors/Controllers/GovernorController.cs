@@ -795,8 +795,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                         return View(model);
                     }
 
-                    await RetireGovernorAsync(model.ExistingGovernorId, model.DateTermEnds.ToDateTime().Value);
-
                     var validation = await _governorsWriteService.AddSharedGovernorAppointmentAsync(
                         model.SelectedGovernorId,
                         model.Urn.Value,
@@ -805,6 +803,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
                     if (!validation.HasErrors)
                     {
+                        await RetireGovernorAsync(model.ExistingGovernorId, model.DateTermEnds.ToDateTime().Value);
+
                         if (model.Reinstate)
                         {
                             var oldGovernorModel = await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User);
