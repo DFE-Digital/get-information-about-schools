@@ -781,6 +781,9 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
         [HttpPost, Route(ESTAB_REPLACE_CHAIR), EdubaseAuthorize, ValidateAntiForgeryToken]
         public async Task<ActionResult> ReplaceChair(ReplaceChairViewModel model)
         {
+            var preRetirementModel = await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User);
+            var originalChairEndDate = preRetirementModel?.AppointmentEndDate;
+
             if (ModelState.IsValid)
             {
                 if (model.NewChairType == ReplaceChairViewModel.ChairType.SharedChair)
@@ -807,20 +810,18 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     {
                         if (model.Reinstate)
                         {
-                            var oldGovernorModel = await _governorsReadService.GetGovernorAsync(model.ExistingGovernorId, User);
-
-                            if (oldGovernorModel?.RoleId.HasValue == true &&
-                                Enum.IsDefined(typeof(eLookupGovernorRole), oldGovernorModel.RoleId.Value) &&
-                                oldGovernorModel.RoleId.Value != 0)
+                            if (preRetirementModel?.RoleId.HasValue == true &&
+                                Enum.IsDefined(typeof(eLookupGovernorRole), preRetirementModel.RoleId.Value) &&
+                                preRetirementModel.RoleId.Value != 0)
                             {
-                                var oldRole = (eLookupGovernorRole)oldGovernorModel.RoleId.Value;
+                                var oldRole = (eLookupGovernorRole)preRetirementModel.RoleId.Value;
 
                                 var newRole = RoleEquivalence.GetEquivalentToLocalRole(oldRole)
                                     .FirstOrDefault(r => r == eLookupGovernorRole.LocalGovernor);
 
                                 if ((newRole == default) &&
-                                    (oldGovernorModel.RoleId == (int) eLookupGovernorRole.ChairOfLocalGoverningBody ||
-                                     oldGovernorModel.RoleId == (int) eLookupGovernorRole.ChairOfGovernors))
+                                    (preRetirementModel.RoleId == (int) eLookupGovernorRole.ChairOfLocalGoverningBody ||
+                                     preRetirementModel.RoleId == (int) eLookupGovernorRole.ChairOfGovernors))
                                 {
                                     newRole = eLookupGovernorRole.LocalGovernor;
                                 }
@@ -831,7 +832,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                                         model.ExistingGovernorId,
                                         model.Urn.Value,
                                         model.DateTermEnds.ToDateTime().Value.AddDays(1),
-                                        null,
+                                        originalChairEndDate,
                                         newRole,
                                         User);
                                 }
@@ -1023,8 +1024,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                 PreviousPerson_MiddleName = oldGovernor.PreviousPerson_MiddleName,
                 PreviousPerson_LastName = oldGovernor.PreviousPerson_LastName,
                 AppointmentStartDate = appointmentStartDate,
-                AppointmentEndDate = appointmentStartDate.AddYears(1),
-                RoleId = 9,
+                AppointmentEndDate = appointmentEndDate,
+                RoleId = (int)role,
                 DOB = oldGovernor.DOB ?? new DateTime(1970, 1, 1),
                 PostCode = oldGovernor.PostCode,
                 EmailAddress = null,
