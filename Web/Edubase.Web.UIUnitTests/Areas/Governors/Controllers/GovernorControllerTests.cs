@@ -1110,7 +1110,6 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             var estabUrn = 16802;
 
             var termEnds = DateTime.Today.AddDays(10);
-            var expectedStartDate = termEnds.AddDays(1);
 
             var model = new ReplaceChairViewModel
             {
