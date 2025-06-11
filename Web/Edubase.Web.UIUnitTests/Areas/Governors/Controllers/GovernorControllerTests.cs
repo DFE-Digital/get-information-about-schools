@@ -1075,6 +1075,26 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
 
             mockGovernorsWriteService.Setup(g => g.AddSharedGovernorAppointmentAsync(newGovId, estabUrn, It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiResponse(true));
 
+            mockGovernorsReadService.Setup(g => g.GetGovernorAsync(newGovId, It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new GovernorModel
+                {
+                    Id = newGovId,
+                    RoleId = (int) eLookupGovernorRole.Establishment_SharedChairOfLocalGoverningBody,
+                    AppointmentEndDate = DateTime.Now.AddYears(1)
+                });
+
+            mockGovernorsReadService.Setup(g => g.GetGovernorAsync(govId, It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new GovernorModel
+                {
+                    Id = govId,
+                    RoleId = (int) eLookupGovernorRole.ChairOfLocalGoverningBody,
+                    AppointmentEndDate = DateTime.Now
+                });
+
+            mockGovernorsWriteService
+                .Setup(g => g.UpdateDatesAsync(It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new ApiResponse(true));
+
             var result = await controller.ReplaceChair(model);
             var redirectResult = result as RedirectResult;
             Assert.NotNull(redirectResult);
@@ -1089,6 +1109,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
             var govId = 465134;
             var estabUrn = 16802;
 
+            var termEnds = DateTime.Today.AddDays(10);
+
             var model = new ReplaceChairViewModel
             {
                 ExistingGovernorId = govId,
@@ -1096,17 +1118,34 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers.UnitTests
                 NewChairType = ReplaceChairViewModel.ChairType.LocalChair,
                 NewLocalGovernor = new CreateEditGovernorViewModel
                 {
-                    AppointmentEndDate = new DateTimeViewModel(DateTime.Today.AddYears(1)),
+                    AppointmentEndDate = new DateTimeViewModel(termEnds.AddYears(1)),
                     DOB = new DateTimeViewModel(),
                 },
-                DateTermEnds = new DateTimeViewModel(DateTime.Today),
+                DateTermEnds = new DateTimeViewModel(termEnds),
             };
 
             mockGovernorsWriteService.Setup(g => g.ValidateAsync(It.IsAny<GovernorModel>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ValidationEnvelopeDto { Errors = new List<ApiError>() });
-            mockGovernorsWriteService.Setup(g => g.SaveAsync(It.IsAny<GovernorModel>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new ApiResponse<int>(true));
+
+            mockGovernorsWriteService.Setup(g => g.SaveAsync(It.IsAny<GovernorModel>(),
+                It.IsAny<IPrincipal>())).ReturnsAsync(new ApiResponse<int>(true));
+
+            mockGovernorsWriteService.Setup(a =>
+                    a.SaveAsync(It.Is<GovernorModel>(g => g.RoleId == (int) eLookupGovernorRole.LocalGovernor),
+                        It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new ApiResponse<int>(true));
+
+            mockGovernorsReadService.Setup(g => g.GetGovernorAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
+                .ReturnsAsync(new GovernorModel
+                {
+                    Person_FirstName = "Tom",
+                    Person_LastName = "Smith",
+                    RoleId = (int) eLookupGovernorRole.ChairOfLocalGoverningBody,
+                    AppointmentEndDate = DateTime.Today.AddMonths(6),
+                    DOB = DateTime.Today.AddYears(-47)
+                });
 
             var result = await controller.ReplaceChair(model);
-            var redirectResult = result as RedirectResult;
+            var redirectResult = Assert.IsType<RedirectResult>(result);
             Assert.NotNull(redirectResult);
             Assert.Contains("#school-governance", redirectResult.Url);
         }
