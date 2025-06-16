@@ -138,6 +138,9 @@ namespace Edubase.Services.Establishments.DisplayPolicies
         [JsonProperty("totalPTTeachersTutors")]
         public T TotalPTTeachersTutors { get; set; }
 
+        [JsonProperty("registrationSuspended")]
+        public T RegistrationSuspended { get; set; }
+
         #endregion
     }
 }
