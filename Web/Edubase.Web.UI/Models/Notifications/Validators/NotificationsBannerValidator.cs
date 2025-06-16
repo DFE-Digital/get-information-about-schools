@@ -23,7 +23,11 @@ namespace Edubase.Web.UI.Models.Notifications.Validators
                        x.Start != null &&
                        x.Start.IsValid() &&
                        x.Start.Hour.HasValue &&
-                       x.Start.Minute.HasValue);
+                       x.Start.Minute.HasValue &&
+                       (
+                           !x.StartOriginal.HasValue ||
+                           x.Start.ToDateTime().Value != x.StartOriginal.Value
+                       ));
 
         RuleFor(x => x.End)
             .Must(e => e.IsValid()).WithMessage("Set a valid end date")
