@@ -156,8 +156,8 @@
 @if (Model.DisplayPolicy.IEBTDetail.RegistrationSuspended)
 {
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Registration suspended</dt>
-        <dd class="govuk-summary-list__value">
+        <dt id="registration-suspended-key" class="govuk-summary-list__key">Registration suspended</dt>
+        <dd id="registration-suspended-value" class="govuk-summary-list__value">
             @Model.Establishment.IEBTModel.RegistrationSuspended
         </dd>
     </div>
