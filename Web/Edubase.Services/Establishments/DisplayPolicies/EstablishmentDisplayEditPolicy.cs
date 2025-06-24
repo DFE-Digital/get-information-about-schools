@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Edubase.Common;
 using Edubase.Services.Enums;
 using Edubase.Services.Establishments.Models;
 using Newtonsoft.Json;
@@ -33,6 +34,13 @@ namespace Edubase.Services.Establishments.DisplayPolicies
                 HeadEmailAddressLabel = "Headteacher/Manager email address";
                 EstablishmentTypeLabel = "Establishment type";
             }
+
+            IEBTDetail = new IEBTDetailDisplayEditPolicy
+            {
+                RegistrationSuspended = establishment.TypeId.OneOfThese(
+                    eLookupEstablishmentType.OtherIndependentSchool,
+                    eLookupEstablishmentType.OtherIndependentSpecialSchool)
+            };
 
             return this;
         }
