@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using Edubase.Services.ExternalLookup;
 using Edubase.Services.Governors.Models;
@@ -36,6 +37,34 @@ namespace Edubase.Web.UI.Areas.Groups.Models
             [(int)GT.Trust] = "trust"
         };
 
+        private static readonly int[] FscpdGroupTypes =
+        {
+            (int) eLookupEstablishmentType.Academy1619SponsorLed,
+            (int) eLookupEstablishmentType.Academy1619Converter,
+            (int) eLookupEstablishmentType.AcademyConverter,
+            (int) eLookupEstablishmentType.AcademySpecialConverter,
+            (int) eLookupEstablishmentType.AcademySpecialSponsorLed,
+            (int) eLookupEstablishmentType.AcademySponsorLed,
+            (int) eLookupEstablishmentType.CityTechnologyCollege,
+            (int) eLookupEstablishmentType.CommunitySchool,
+            (int) eLookupEstablishmentType.CommunitySpecialSchool,
+            (int) eLookupEstablishmentType.FoundationSchool,
+            (int) eLookupEstablishmentType.FoundationSpecialSchool,
+            (int) eLookupEstablishmentType.FreeSchools,
+            (int) eLookupEstablishmentType.FreeSchools1619,
+            (int) eLookupEstablishmentType.FreeSchoolsSpecial,
+            (int) eLookupEstablishmentType.FurtherEducation,
+            (int) eLookupEstablishmentType.NonmaintainedSpecialSchool,
+            (int) eLookupEstablishmentType.OtherIndependentSchool,
+            (int) eLookupEstablishmentType.OtherIndependentSpecialSchool,
+            (int) eLookupEstablishmentType.ServiceChildrensEducation,
+            (int) eLookupEstablishmentType.SixthFormCentres,
+            (int) eLookupEstablishmentType.StudioSchools,
+            (int) eLookupEstablishmentType.UniversityTechnicalCollege,
+            (int) eLookupEstablishmentType.VoluntaryAidedSchool,
+            (int) eLookupEstablishmentType.VoluntaryControlledSchool
+        };
+
         public bool CanUserEdit { get; set; }
         public bool CanUserEditGovernance { get; set; }
         public bool IsUserLoggedOn { get; set; }
@@ -70,26 +99,9 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public string FscpdServiceName => ConfigurationManager.AppSettings["FscpdServiceName"];
         public string FscpdURL => extService.FscpdURL(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SchoolSponsor));
 
-        private bool? showFscpd;
-
-        public bool ShowFscpd
-        {
-            get => showFscpd.GetValueOrDefault();
-            private set => showFscpd = value;
-        }
-
-        //code originally inside the property, moved here to allow it to be async
-        public async Task SetFscpdAsync()
-        {
-            if (Group == null)
-            {
-                return;
-            }
-            if (!showFscpd.HasValue)
-            {
-                showFscpd = extService != null && await extService.FscpdCheckExists(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SchoolSponsor));
-            }
-        }
+        public bool ShowFscpd =>
+            Group?.GroupTypeId.HasValue == true &&
+            FscpdGroupTypes.Contains(Group.GroupTypeId.Value);
 
         private Tuple<int?, FbType> FinancialBenchmarkingLookups
         {
@@ -125,9 +137,9 @@ namespace Edubase.Web.UI.Areas.Groups.Models
             {
                 return;
             }
-            if (!showFscpd.HasValue)
+            if (!showFinancialBenchmarking.HasValue)
             {
-                showFscpd = extService != null && await extService.SfbCheckExists(FinancialBenchmarkingLookups.Item1, FinancialBenchmarkingLookups.Item2);
+                showFinancialBenchmarking = extService != null && await extService.SfbCheckExists(FinancialBenchmarkingLookups.Item1, FinancialBenchmarkingLookups.Item2);
             }
         }
         public GovernorsGridViewModel GovernorsGridViewModel { get; set; }
