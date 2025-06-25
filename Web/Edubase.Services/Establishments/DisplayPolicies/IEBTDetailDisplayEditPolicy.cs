@@ -16,7 +16,7 @@ namespace Edubase.Services.Establishments.DisplayPolicies
             || ProprietorTypeId || AnyProprietors || AnyChairOfProprietors
             || AccommodationChangedId || PTBoysAged3 || PTBoysAged4B || PTGirlsAged4C || PTBoysAged4A || PTGirlsAged4B || PTGirlsAged4A || PTGirlsAged3 || PTBoysAged4C
             || PTBoysAged2AndUnder || PTGirlsAged2AndUnder || BoardingEstablishmentId
-            || TotalFTTeachersTutors || TotalPTTeachersTutors;
+            || TotalFTTeachersTutors || TotalPTTeachersTutors || RegistrationSuspended;
 
         public bool AnyProprietors => Proprietors.Name || Proprietors.Street || Proprietors.Locality || Proprietors.Address3 ||
                                       Proprietors.Town || Proprietors.CountyId || Proprietors.Postcode || Proprietors.TelephoneNumber || Proprietors.Email;

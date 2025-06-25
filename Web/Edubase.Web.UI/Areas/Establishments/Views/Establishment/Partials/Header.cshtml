@@ -152,6 +152,17 @@
         }
     </dd>
 </div>
+
+@if (Model.DisplayPolicy.IEBTDetail.RegistrationSuspended)
+{
+    <div class="govuk-summary-list__row">
+        <dt id="registration-suspended-key" class="govuk-summary-list__key">Registration suspended</dt>
+        <dd id="registration-suspended-value" class="govuk-summary-list__value">
+            @Model.Establishment.IEBTModel.RegistrationSuspended
+        </dd>
+    </div>
+}
+
 @if (Model.DisplayPolicy.AdmissionsPolicyId)
 {
     <div class="govuk-summary-list__row">
