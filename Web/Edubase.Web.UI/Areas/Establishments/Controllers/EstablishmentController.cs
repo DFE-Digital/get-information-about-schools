@@ -404,6 +404,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 ChangeHistory = changes
             };
 
+            await viewModel.SetFscpdAsync();
+            await viewModel.SetShowFinancialBenchmarkingAsync();
+            await viewModel.SetShowOfstedReportLinkAsync();
+
             await Task.WhenAll(
                 PopulateDisplayPolicies(viewModel)
             );

@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Edubase.Services.ExternalLookup;
 using Edubase.Services.Governors.Models;
+using System.Linq;
 
 namespace Edubase.Web.UI.Areas.Groups.Models
 {
@@ -74,15 +75,18 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public GovernorPermissions GovernorPermissions { get; set; }
 
         public string FscpdServiceName => ConfigurationManager.AppSettings["FscpdServiceName"];
+        public string FscpdURL => extService.FscpdURL(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SchoolSponsor));
 
         public string FscpdURL => extService.FscpdURL(
-            Group.GroupUId,
+            GroupTypeId,
             Group.Name,
             FscpdGroupTypes.Contains(GroupTypeId));
 
-        private bool? showFscpd;
-
-        public bool ShowFscpd => FscpdGroupTypes.Contains(GroupTypeId);
+        public bool ShowFscpd
+        {
+            get => showFscpd.GetValueOrDefault();
+            private set => showFscpd = value;
+        }
 
         //code originally inside the property, moved here to allow it to be async
         public async Task SetFscpdAsync()
@@ -131,9 +135,9 @@ namespace Edubase.Web.UI.Areas.Groups.Models
             {
                 return;
             }
-            if (!showFscpd.HasValue)
+            if (!showFinancialBenchmarking.HasValue)
             {
-                showFscpd = extService != null && await extService.SfbCheckExists(FinancialBenchmarkingLookups.Item1, FinancialBenchmarkingLookups.Item2);
+                showFinancialBenchmarking = extService != null && await extService.SfbCheckExists(FinancialBenchmarkingLookups.Item1, FinancialBenchmarkingLookups.Item2);
             }
         }
         public GovernorsGridViewModel GovernorsGridViewModel { get; set; }
