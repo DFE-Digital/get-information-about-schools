@@ -78,6 +78,17 @@ namespace Edubase.Web.UI.Models
 
         public bool IsClosed => Establishment.StatusId == (int) eLookupEstablishmentStatus.Closed;
 
+        public bool IsSuspended
+        {
+            get
+            {
+                var value = Establishment?.IEBTModel?.RegistrationSuspended?.Trim();
+                return value == "Establishment suspended" || value == "Education and boarding suspended";
+            }
+        }
+
+        public string SuspendedStatusMessage => "This establishment is suspended";
+
         public string SearchQueryString { get; set; }
 
         public eLookupSearchSource? SearchSource { get; set; }
