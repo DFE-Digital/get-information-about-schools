@@ -39,70 +39,6 @@ namespace Edubase.Web.UI.Models
             [(int) eLookupGroupType.ChildrensCentresGroup] = "Childrens' centre group"
         };
 
-        private static readonly int[] OfstedLinkEstablishmentTypes =
-        {
-            (int) eLookupEstablishmentType.Academy1619SponsorLed,
-            (int) eLookupEstablishmentType.Academy1619Converter,
-            (int) eLookupEstablishmentType.AcademyAlternativeProvisionConverter,
-            (int) eLookupEstablishmentType.AcademyAlternativeProvisionSponsorLed,
-            (int) eLookupEstablishmentType.AcademyConverter,
-            (int) eLookupEstablishmentType.AcademySpecialConverter,
-            (int) eLookupEstablishmentType.AcademySpecialSponsorLed,
-            (int) eLookupEstablishmentType.AcademySponsorLed,
-            (int) eLookupEstablishmentType.ChildrensCentre,
-            (int) eLookupEstablishmentType.ChildrensCentreLinkedSite,
-            (int) eLookupEstablishmentType.CityTechnologyCollege,
-            (int) eLookupEstablishmentType.CommunitySchool,
-            (int) eLookupEstablishmentType.CommunitySpecialSchool,
-            (int) eLookupEstablishmentType.FoundationSchool,
-            (int) eLookupEstablishmentType.FoundationSpecialSchool,
-            (int) eLookupEstablishmentType.FreeSchools,
-            (int) eLookupEstablishmentType.FreeSchools1619,
-            (int) eLookupEstablishmentType.FreeSchoolsAlternativeProvision,
-            (int) eLookupEstablishmentType.FreeSchoolsSpecial,
-            (int) eLookupEstablishmentType.FurtherEducation,
-            (int) eLookupEstablishmentType.HigherEducationInstitutions,
-            (int) eLookupEstablishmentType.LANurserySchool,
-            (int) eLookupEstablishmentType.NonmaintainedSpecialSchool,
-            (int) eLookupEstablishmentType.OtherIndependentSchool,
-            (int) eLookupEstablishmentType.OtherIndependentSpecialSchool,
-            (int) eLookupEstablishmentType.PupilReferralUnit,
-            (int) eLookupEstablishmentType.ServiceChildrensEducation,
-            (int) eLookupEstablishmentType.SpecialPost16Institution,
-            (int) eLookupEstablishmentType.StudioSchools,
-            (int) eLookupEstablishmentType.UniversityTechnicalCollege,
-            (int) eLookupEstablishmentType.VoluntaryAidedSchool,
-            (int) eLookupEstablishmentType.VoluntaryControlledSchool
-        };
-
-        private static readonly int[] FscpdLinkEstablishmentTypes =
-        {
-            (int) eLookupEstablishmentType.Academy1619SponsorLed,
-            (int) eLookupEstablishmentType.Academy1619Converter,
-            (int) eLookupEstablishmentType.AcademyConverter,
-            (int) eLookupEstablishmentType.AcademySpecialConverter,
-            (int) eLookupEstablishmentType.AcademySpecialSponsorLed,
-            (int) eLookupEstablishmentType.AcademySponsorLed,
-            (int) eLookupEstablishmentType.CityTechnologyCollege,
-            (int) eLookupEstablishmentType.CommunitySchool,
-            (int) eLookupEstablishmentType.CommunitySpecialSchool,
-            (int) eLookupEstablishmentType.FoundationSchool,
-            (int) eLookupEstablishmentType.FoundationSpecialSchool,
-            (int) eLookupEstablishmentType.FreeSchools,
-            (int) eLookupEstablishmentType.FreeSchools1619,
-            (int) eLookupEstablishmentType.FreeSchoolsSpecial,
-            (int) eLookupEstablishmentType.FurtherEducation,
-            (int) eLookupEstablishmentType.NonmaintainedSpecialSchool,
-            (int) eLookupEstablishmentType.OtherIndependentSchool,
-            (int) eLookupEstablishmentType.OtherIndependentSpecialSchool,
-            (int) eLookupEstablishmentType.ServiceChildrensEducation,
-            (int) eLookupEstablishmentType.SixthFormCentres,
-            (int) eLookupEstablishmentType.StudioSchools,
-            (int) eLookupEstablishmentType.UniversityTechnicalCollege,
-            (int) eLookupEstablishmentType.VoluntaryAidedSchool,
-            (int) eLookupEstablishmentType.VoluntaryControlledSchool
-        };
-
         public EstablishmentDisplayEditPolicy DisplayPolicy { get; set; }
 
         public TabDisplayPolicy TabDisplayPolicy { get; set; }
@@ -264,9 +200,25 @@ namespace Edubase.Web.UI.Models
         public string FscpdServiceName => ConfigurationManager.AppSettings["FscpdServiceName"];
         public string FscpdURL => extService.FscpdURL(Establishment.Urn, Establishment.Name, Establishment.TypeId.OneOfThese(eLookupGroupType.MultiacademyTrust));
 
-        public bool ShowFscpd =>
-            Establishment != null && Establishment.TypeId.HasValue &&
-            FscpdLinkEstablishmentTypes.Contains(Establishment.TypeId.Value);
+        private bool? showFscpd;
+
+        public bool ShowFscpd
+        {
+            get => showFscpd.GetValueOrDefault();
+            private set => showFscpd = value;
+        }
+
+        public async Task SetFscpdAsync()
+        {
+            if (Establishment == null)
+            {
+                return;
+            }
+            if (!showFscpd.HasValue)
+            {
+                showFscpd = extService != null && await extService.FscpdCheckExists(Establishment.Urn, Establishment.Name, Establishment.TypeId.OneOfThese(eLookupGroupType.MultiacademyTrust));
+            }
+        }
 
         public string FinancialBenchmarkingURL => extService.SfbURL(Establishment.Urn, FbType.School);
 
@@ -294,9 +246,25 @@ namespace Edubase.Web.UI.Models
 
         public string OfstedReportUrl => extService.OfstedReportUrl(Establishment.Urn);
 
-        public bool ShowOfstedReportLink =>
-            Establishment != null && Establishment.TypeId.HasValue &&
-            OfstedLinkEstablishmentTypes.Contains(Establishment.TypeId.Value);
+        private bool? _showOfstedReportLink;
+
+        public bool ShowOfstedReportLink
+        {
+            get => _showOfstedReportLink.GetValueOrDefault();
+            private set => _showOfstedReportLink = value;
+        }
+
+        public async Task SetShowOfstedReportLinkAsync()
+        {
+            if (Establishment == null)
+            {
+                return;
+            }
+            if (!_showOfstedReportLink.HasValue)
+            {
+                _showOfstedReportLink = extService != null && await extService.OfstedReportPageCheckExists(Establishment.Urn);
+            }
+        }
 
         public TabWarningsModel TabWarnings { get; set; }
         public string ClosedStatusMessage
