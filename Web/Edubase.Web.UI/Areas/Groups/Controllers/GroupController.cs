@@ -340,6 +340,8 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 viewModel.GovernorsGridViewModel = await _governorsGridViewModelFactory.CreateGovernorsViewModel(id, null, user: User);
             }
 
+            await viewModel.SetFscpdAsync();
+
             if (viewModel.IsUserLoggedOn)
             {
                 viewModel.GovernorPermissions = await _governorsReadService.GetGovernorPermissions(null, id, User);
@@ -377,7 +379,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 CloseDate = model.ClosedDate,
                 ChangeHistory = await _groupReadService.GetGovernanceChangeHistoryAsync(id, skip, 100, sortBy, User)
             };
-
+            await viewModel.SetFscpdAsync();
             await viewModel.SetShowFinancialBenchmarkingAsync();
 
             return View("GovernanceChangeHistory", viewModel);
