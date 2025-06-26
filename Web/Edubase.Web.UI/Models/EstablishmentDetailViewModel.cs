@@ -253,15 +253,27 @@ namespace Edubase.Web.UI.Models
 
         public string FscpdServiceName => ConfigurationManager.AppSettings["FscpdServiceName"];
 
-        public string FscpdURL => extService.FscpdURL(
-            Establishment.Urn,
-            Establishment.Name,
-            FscpdLinkEstablishmentTypes.Contains(Establishment.TypeId.GetValueOrDefault())
-        );
+        public string FscpdURL => extService.FscpdURL(Establishment.Urn, Establishment.Name, false);
 
-        public bool ShowFscpd =>
-            Establishment != null && Establishment.TypeId.HasValue &&
-            FscpdLinkEstablishmentTypes.Contains(Establishment.TypeId.Value);
+        private bool? showFscpd;
+
+        public bool ShowFscpd
+        {
+            get => showFscpd.GetValueOrDefault();
+            private set => showFscpd = value;
+        }
+
+        public async Task SetFscpdAsync()
+        {
+            if (Establishment == null)
+            {
+                return;
+            }
+            if (!showFscpd.HasValue)
+            {
+                showFscpd = extService != null && await extService.FscpdCheckExists(Establishment.Urn, Establishment.Name, Establishment.TypeId.OneOfThese(eLookupGroupType.MultiacademyTrust));
+            }
+        }
 
         public string FinancialBenchmarkingURL => extService.SfbURL(Establishment.Urn, FbType.School);
 
