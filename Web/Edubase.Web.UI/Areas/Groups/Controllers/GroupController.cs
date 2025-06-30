@@ -379,7 +379,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 CloseDate = model.ClosedDate,
                 ChangeHistory = await _groupReadService.GetGovernanceChangeHistoryAsync(id, skip, 100, sortBy, User)
             };
-
             await viewModel.SetFscpdAsync();
             await viewModel.SetShowFinancialBenchmarkingAsync();
 
