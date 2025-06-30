@@ -35,12 +35,14 @@ namespace Edubase.Services.Establishments.DisplayPolicies
                 EstablishmentTypeLabel = "Establishment type";
             }
 
-            IEBTDetail = new IEBTDetailDisplayEditPolicy
+            if (IEBTDetail == null)
             {
-                RegistrationSuspended = establishment.TypeId.OneOfThese(
+                IEBTDetail = new IEBTDetailDisplayEditPolicy();
+            }
+
+            IEBTDetail.RegistrationSuspended = establishment.TypeId.OneOfThese(
                     eLookupEstablishmentType.OtherIndependentSchool,
-                    eLookupEstablishmentType.OtherIndependentSpecialSchool)
-            };
+                    eLookupEstablishmentType.OtherIndependentSpecialSchool);
 
             return this;
         }
