@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Edubase.Services.ExternalLookup;
 using Edubase.Services.Governors.Models;
+using System.Linq;
 
 namespace Edubase.Web.UI.Areas.Groups.Models
 {
@@ -36,6 +37,11 @@ namespace Edubase.Web.UI.Areas.Groups.Models
             [(int)GT.Trust] = "trust"
         };
 
+        private static readonly int[] FscpdGroupTypes =
+        {
+            (int) eLookupGroupType.MultiacademyTrust, (int) eLookupGroupType.SchoolSponsor
+        };
+
         public bool CanUserEdit { get; set; }
         public bool CanUserEditGovernance { get; set; }
         public bool IsUserLoggedOn { get; set; }
@@ -68,7 +74,11 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public GovernorPermissions GovernorPermissions { get; set; }
 
         public string FscpdServiceName => ConfigurationManager.AppSettings["FscpdServiceName"];
-        public string FscpdURL => extService.FscpdURL(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SchoolSponsor));
+
+        public string FscpdURL => extService.FscpdURL(
+            GroupTypeId,
+            Group.Name,
+            FscpdGroupTypes.Contains(GroupTypeId));
 
         private bool? showFscpd;
 
@@ -125,9 +135,9 @@ namespace Edubase.Web.UI.Areas.Groups.Models
             {
                 return;
             }
-            if (!showFscpd.HasValue)
+            if (!showFinancialBenchmarking.HasValue)
             {
-                showFscpd = extService != null && await extService.SfbCheckExists(FinancialBenchmarkingLookups.Item1, FinancialBenchmarkingLookups.Item2);
+                showFinancialBenchmarking = extService != null && await extService.SfbCheckExists(FinancialBenchmarkingLookups.Item1, FinancialBenchmarkingLookups.Item2);
             }
         }
         public GovernorsGridViewModel GovernorsGridViewModel { get; set; }
