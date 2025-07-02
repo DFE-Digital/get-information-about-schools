@@ -214,12 +214,14 @@
     <Compile Include="Enums\EnumSets.cs" />
     <Compile Include="Enums\GroupChangeLinkType.cs" />
     <Compile Include="Enums\GroupChangeRequestType.cs" />
+    <Compile Include="Enums\RegistrationSuspendedStatus.cs" />
     <Compile Include="Establishments\DisplayPolicies\IEBTDetailDisplayEditPolicy.cs" />
     <Compile Include="Establishments\DisplayPolicies\IEBTFieldList.cs" />
     <Compile Include="Establishments\DisplayPolicies\ProprietorFieldList.cs" />
     <Compile Include="Establishments\Downloads\eDataSet.cs" />
     <Compile Include="Establishments\Downloads\EstablishmentSearchDownloadPayload.cs" />
     <Compile Include="Establishments\EditPolicies\EstablishmentEditPolicyEnvelope.cs" />
+    <Compile Include="Establishments\EnumExtensions.cs" />
     <Compile Include="Establishments\Models\AdditionalAddressModel.cs" />
     <Compile Include="Establishments\Models\AmalgamateMergeRequest.cs" />
     <Compile Include="Establishments\Models\BulkCreateAcademiesProgress.cs" />
