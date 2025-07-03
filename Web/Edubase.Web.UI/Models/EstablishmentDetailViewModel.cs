@@ -1,3 +1,4 @@
+using System;
 using Edubase.Common;
 using Edubase.Services.Domain;
 using Edubase.Services.Enums;
@@ -325,6 +326,20 @@ namespace Edubase.Web.UI.Models
                     ? $"This establishment closed on {date}. "
                     : "This establishment is closed.";
                 return establishmentClosedStatusMessage;
+            }
+        }
+
+        public string RegistrationSuspendedDisplay
+        {
+            get
+            {
+                var value = Establishment?.IEBTModel?.RegistrationSuspended;
+                if (int.TryParse(value, out int regId) && Enum.IsDefined(typeof(RegistrationSuspendedStatus), regId))
+                {
+                    return ((RegistrationSuspendedStatus) regId).EnumDisplayNameFor();
+                }
+
+                return value;
             }
         }
     }

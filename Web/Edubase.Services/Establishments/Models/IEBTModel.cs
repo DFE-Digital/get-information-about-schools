@@ -96,20 +96,5 @@ namespace Edubase.Services.Establishments.Models
         public int? TotalFTTeachersTutors { get; set; }
         public int? TotalPTTeachersTutors { get; set; }
         public string RegistrationSuspended { get; set; }
-
-        public string RegistrationSuspendedDisplay
-        {
-            get
-            {
-                if (int.TryParse(RegistrationSuspended, out var code) &&
-                    Enum.IsDefined(typeof(RegistrationSuspendedStatus), code))
-                {
-                    var status = (RegistrationSuspendedStatus)code;
-                    return status.EnumDisplayNameFor();
-                }
-
-                return RegistrationSuspended;
-            }
-        }
     }
 }
