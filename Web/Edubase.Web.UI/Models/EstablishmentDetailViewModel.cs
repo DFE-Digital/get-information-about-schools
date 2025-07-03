@@ -339,7 +339,7 @@ namespace Edubase.Web.UI.Models
                     return ((RegistrationSuspendedStatus) regId).EnumDisplayNameFor();
                 }
 
-                return null;
+                return value;
             }
         }
     }
