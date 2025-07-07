@@ -267,15 +267,7 @@
     </div>
 }
 
-@if (Model.Establishment.TypeId.OneOfThese(ET.Academy1619SponsorLed,
-    ET.Academy1619Converter, ET.AcademyAlternativeProvisionConverter,
-    ET.AcademyConverter, ET.AcademySpecialConverter,
-    ET.AcademySpecialSponsorLed, ET.AcademySponsorLed,
-    ET.FreeSchools, ET.FreeSchools1619, ET.FreeSchoolsSpecial,
-    ET.StudioSchools, ET.UniversityTechnicalCollege,
-    ET.CityTechnologyCollege, ET.CommunitySchool,
-    ET.FoundationSchool, ET.VoluntaryAidedSchool, ET.VoluntaryControlledSchool,
-    ET.CommunitySpecialSchool, ET.FoundationSpecialSchool))
+@if (Model.ShowFscpd || Model.ShowFinancialBenchmarking)
 {
     @OtherServicesLinks()
 }
@@ -288,15 +280,6 @@
             @Model.InspectorateName
         </dd>
     </div>
-}
-
-@if (Model.Establishment.TypeId.OneOfThese(
-    ET.OtherIndependentSchool,
-    ET.NonmaintainedSpecialSchool,
-    ET.OtherIndependentSpecialSchool,
-    ET.OnlineProvider))
-{
-    @OtherServicesLinks()
 }
 
 @if (Model.DisplayPolicy.ProprietorBodyName)
