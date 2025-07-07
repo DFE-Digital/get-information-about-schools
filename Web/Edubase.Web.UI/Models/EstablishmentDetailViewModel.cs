@@ -270,8 +270,15 @@ namespace Edubase.Web.UI.Models
 
         public bool ShowFscpd
         {
-            get => showFscpd.GetValueOrDefault();
-            private set => showFscpd = value;
+            get
+            {
+                if (Establishment?.TypeId == null)
+                {
+                    return false;
+                }
+
+                return FscpdLinkEstablishmentTypes.Contains(Establishment.TypeId.Value);
+            }
         }
 
         public async Task SetFscpdAsync()
