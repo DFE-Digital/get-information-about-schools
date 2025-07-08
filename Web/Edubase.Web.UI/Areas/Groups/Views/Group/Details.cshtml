@@ -459,7 +459,7 @@
                             <dt class="govuk-summary-list__key">Data from other services</dt>
                             <dd class="govuk-summary-list__value">
                                 <ul class="govuk-list">
-                                    @if (!Model.ShowFscpd && !Model.ShowFinancialBenchmarking)
+                                    @if (!Model.ShowFscpd)
                                     {
                                         <li>
                                             Not applicable
@@ -473,21 +473,13 @@
                                             </a>
                                         </li>
                                     }
-                                    @if (Model.ShowFinancialBenchmarking)
-                                    {
-                                        <li>
-                                            <a href="@Model.FinancialBenchmarkingURL" rel="noreferrer noopener" target="_blank">
-                                                Schools financial benchmarking (opens in new tab)
-                                            </a>
-                                        </li>
-                                    }
                                 </ul>
                             </dd>
                         </div>
                     }
 
                     @section ViewScripts
-{
+                    {
                         <script nonce="@Html.ScriptNonce()">var mapMode = 'group';</script>
                         <script src="@Html.Raw(Html.GetWebpackScriptUrl("landing-page-bundle.*.js"))"></script>
                     }
