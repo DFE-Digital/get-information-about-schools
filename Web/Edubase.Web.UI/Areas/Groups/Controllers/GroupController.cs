@@ -381,7 +381,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
             };
 
             await viewModel.SetFscpdAsync();
-            await viewModel.SetShowFinancialBenchmarkingAsync();
 
             return View("GovernanceChangeHistory", viewModel);
         }
