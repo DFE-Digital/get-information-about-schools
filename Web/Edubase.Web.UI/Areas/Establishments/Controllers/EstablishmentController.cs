@@ -1360,17 +1360,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
                     if (changes.Any())
                     {
-                        foreach (var change1 in changes)
-                        {
-                            var test = ($"change: {change1.Name}, old {change1.OldValue}, new {change1.NewValue}");
-                        }
-
-                        foreach (var change1 in changes)
-                        {
-                            var test2 = ($"change: {change1.Id}");
-                        }
-
-
                         foreach (var change in changes)
                         {
                             if (string.Equals(change.Id, "IEBTModel.RegistrationSuspendedId",
