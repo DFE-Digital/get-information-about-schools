@@ -38,6 +38,7 @@ using FluentValidation.Mvc;
 using MoreLinq;
 using ET = Edubase.Services.Enums.eLookupEstablishmentType;
 using CreateSteps = Edubase.Web.UI.Areas.Establishments.Models.CreateEstablishmentViewModel.eEstabCreateSteps;
+using EnumExtensions = Edubase.Services.Establishments.EnumExtensions;
 using ViewModel = Edubase.Web.UI.Models.EditEstablishmentModel;
 
 namespace Edubase.Web.UI.Areas.Establishments.Controllers
@@ -822,6 +823,23 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 viewModel.LSOAName = $"{LSOA?.Name} [{LSOA?.Code}]";
                 viewModel.LSOAId = domainModel.LSOAId;
             }
+
+            viewModel.RegistrationSuspendedList = Enum
+                .GetValues(typeof(RegistrationSuspendedStatus))
+                .Cast<RegistrationSuspendedStatus>()
+                .Select(x => new SelectListItem { Text = EnumExtensions.EnumDisplayNameFor((Enum)x), Value = ((int) x).ToString() });
+
+            if (int.TryParse(domainModel.IEBTModel?.RegistrationSuspendedId, out int regId) &&
+                Enum.IsDefined(typeof(RegistrationSuspendedStatus), regId))
+            {
+                viewModel.RegistrationSuspended = (RegistrationSuspendedStatus)regId;
+            }
+
+            ViewBag.RegistrationSuspendedOptions = Enum.GetValues(typeof(RegistrationSuspendedStatus))
+                .Cast<RegistrationSuspendedStatus>()
+                .Select(x => new SelectListItem { Value = ((int)x).ToString(), Text = EnumExtensions.EnumDisplayNameFor(x) })
+                .ToList();
+
             return viewModel;
         }
 
@@ -897,6 +915,15 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             {
                 var value = ReflectionHelper.GetPropertyValue(mappedModel, item);
                 ReflectionHelper.SetProperty(domainModel.IEBTModel, item, value);
+            }
+
+            if (viewModel.RegistrationSuspended.HasValue)
+            {
+                domainModel.IEBTModel.RegistrationSuspendedId = ((int)viewModel.RegistrationSuspended).ToString();
+            }
+            else if (_formKeys.Value.Contains(nameof(viewModel.RegistrationSuspended)))
+            {
+                domainModel.IEBTModel.RegistrationSuspendedId = null;
             }
         }
 
@@ -1255,6 +1282,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 }
             }
 
+            ViewBag.RegistrationSuspendedOptions = Enum.GetValues(typeof(RegistrationSuspendedStatus))
+                .Cast<RegistrationSuspendedStatus>()
+                .Select(x => new SelectListItem { Value = ((int)x).ToString(), Text = EnumExtensions.EnumDisplayNameFor(x) })
+                .ToList();
+
             if (viewModel.ActionSpecifierCommand == ViewModel.ASEmailBack)
             {
                 viewModel.IsUpdatingEmailFields = false;
@@ -1328,6 +1360,39 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
                     if (changes.Any())
                     {
+                        foreach (var change1 in changes)
+                        {
+                            var test = ($"change: {change1.Name}, old {change1.OldValue}, new {change1.NewValue}");
+                        }
+
+                        foreach (var change1 in changes)
+                        {
+                            var test2 = ($"change: {change1.Id}");
+                        }
+
+
+                        foreach (var change in changes)
+                        {
+                            if (string.Equals(change.Id, "IEBTModel.RegistrationSuspendedId",
+                                    StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (int.TryParse(change.OldValue, out var oldCode)
+                                    && Enum.IsDefined(typeof(RegistrationSuspendedStatus), oldCode))
+                                {
+                                    change.OldValue =
+                                        EnumExtensions.EnumDisplayNameFor(
+                                            (RegistrationSuspendedStatus)oldCode);
+                                }
+                                if (int.TryParse(change.NewValue, out var newCode)
+                                    && Enum.IsDefined(typeof(RegistrationSuspendedStatus), newCode))
+                                {
+                                    change.NewValue =
+                                        EnumExtensions.EnumDisplayNameFor(
+                                            (RegistrationSuspendedStatus)newCode);
+                                }
+                            }
+                        }
+
                         viewModel.ChangesSummary = changes;
                         viewModel.ChangesRequireApprovalCount = changes.Count(x => x.RequiresApproval);
                         viewModel.ChangesInstantCount = changes.Count(x => !x.RequiresApproval);
