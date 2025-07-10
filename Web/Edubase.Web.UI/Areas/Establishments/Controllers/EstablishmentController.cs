@@ -356,8 +356,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             viewModel.Establishment = result.ReturnValue;
 
-            await viewModel.SetFscpdAsync();
-
             viewModel.ShowOfstedRatings = "true".Equals(ConfigurationManager.AppSettings["Feature_Ofsted_ShowRatings"]);
 
             viewModel.TabWarnings = new TabWarningsModel(viewModel.Establishment.TypeId);
@@ -405,8 +403,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 Establishment = result.ReturnValue,
                 ChangeHistory = changes
             };
-
-            await viewModel.SetFscpdAsync();
 
             await Task.WhenAll(
                 PopulateDisplayPolicies(viewModel)

@@ -36,6 +36,11 @@ namespace Edubase.Web.UI.Areas.Groups.Models
             [(int)GT.Trust] = "trust"
         };
 
+        private static readonly int[] FscpdGroupTypes =
+        {
+            (int) eLookupGroupType.MultiacademyTrust, (int) eLookupGroupType.SingleacademyTrust
+        };
+
         public bool CanUserEdit { get; set; }
         public bool CanUserEditGovernance { get; set; }
         public bool IsUserLoggedOn { get; set; }
@@ -68,15 +73,15 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public GovernorPermissions GovernorPermissions { get; set; }
 
         public string FscpdServiceName => ConfigurationManager.AppSettings["FscpdServiceName"];
-        public string FscpdURL => extService.FscpdURL(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SchoolSponsor));
+
+        public string FscpdURL => extService.FscpdURL(
+            Group.GroupUId,
+            Group.Name,
+            FscpdGroupTypes.Contains(GroupTypeId));
 
         private bool? showFscpd;
 
-        public bool ShowFscpd
-        {
-            get => showFscpd.GetValueOrDefault();
-            private set => showFscpd = value;
-        }
+        public bool ShowFscpd => FscpdGroupTypes.Contains(GroupTypeId);
 
         //code originally inside the property, moved here to allow it to be async
         public async Task SetFscpdAsync()
