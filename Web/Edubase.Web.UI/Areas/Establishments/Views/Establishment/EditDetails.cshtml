@@ -329,6 +329,18 @@
                 </div>
             }
 
+            @if (Model.EditPolicy.IEBTDetail.RegistrationSuspended)
+            {
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.RegistrationSuspended)">
+                    @Html.LabelFor(x => x.RegistrationSuspended, new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.RegistrationSuspended, null, new { @class = "govuk-error-message" })
+                    @Html.DropDownListFor(x => x.RegistrationSuspended, new SelectList(ViewBag.RegistrationSuspendedOptions as IEnumerable<SelectListItem>,
+                            "Value", "Text"), "",
+                        new { @class = "govuk-select"}
+                    )
+                </div>
+            }
+
             @if (Model.EditPolicy.AdmissionsPolicyId)
             {
                 <div class="govuk-form-group">
