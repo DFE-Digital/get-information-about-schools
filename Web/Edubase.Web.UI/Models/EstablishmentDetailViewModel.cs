@@ -147,7 +147,7 @@ namespace Edubase.Web.UI.Models
         {
             get
             {
-                var value = Establishment?.IEBTModel?.RegistrationSuspended?.Trim();
+                var value = Establishment?.IEBTModel?.RegistrationSuspendedId?.Trim();
                 return value == "Establishment suspended" || value == "Education and boarding suspended";
             }
         }
@@ -340,7 +340,7 @@ namespace Edubase.Web.UI.Models
         {
             get
             {
-                var value = Establishment?.IEBTModel?.RegistrationSuspended;
+                var value = Establishment?.IEBTModel?.RegistrationSuspendedId;
                 if (int.TryParse(value, out int regId) && Enum.IsDefined(typeof(RegistrationSuspendedStatus), regId))
                 {
                     return ((RegistrationSuspendedStatus) regId).EnumDisplayNameFor();

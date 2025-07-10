@@ -95,6 +95,6 @@ namespace Edubase.Services.Establishments.Models
         public int? BoardingEstablishmentId { get; set; }
         public int? TotalFTTeachersTutors { get; set; }
         public int? TotalPTTeachersTutors { get; set; }
-        public string RegistrationSuspended { get; set; }
+        public string RegistrationSuspendedId { get; set; }
     }
 }
