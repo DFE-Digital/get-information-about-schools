@@ -399,6 +399,7 @@
     <Compile Include="Helpers\RequireUrlNotification.cs" />
     <Compile Include="Helpers\RouteDto.cs" />
     <Compile Include="Helpers\AcademyUtility.cs" />
+    <Compile Include="Helpers\ServiceNavigationItem.cs" />
     <Compile Include="Helpers\StringUtils.cs" />
     <Compile Include="Mappers\BulkUpdateViewModelToDtoMapper.cs" />
     <Compile Include="Mappers\LookupToSearchViewModelMapper.cs" />
