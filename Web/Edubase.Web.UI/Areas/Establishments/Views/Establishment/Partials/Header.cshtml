@@ -200,11 +200,6 @@
     </div>
 }
 
-@if (Model.Establishment.TypeId.OneOfThese(ET.SixthFormCentres, ET.FurtherEducation, ET.InstitutionFundedByOtherGovernmentDepartment))
-{
-    @OtherServicesLinks()
-}
-
 @*
  * #232199: If there is a valid Ofsted report page on the Ofsted website for this establishment's URN, always link to it.
  * Where we _also_ hold a cached copy of the latest Ofsted rating and inspection date, follow the usual display-policy rules.
@@ -212,8 +207,8 @@
 @if (Model.ShowOfstedReportLink)
 {
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Ofsted rating and reports</dt>
-        <dd class="govuk-summary-list__value">
+        <dt class="govuk-summary-list__key" id="ofsted-rating-and-reports-key">Ofsted rating and reports</dt>
+        <dd class="govuk-summary-list__value" id="ofsted-rating-and-reports-value">
             @{
                 var newlineRequired = false;
             }
@@ -294,8 +289,8 @@
 @helper OtherServicesLinks()
 {
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Data from other services</dt>
-        <dd class="govuk-summary-list__value">
+        <dt class="govuk-summary-list__key" id="data-from-other-services-key">Data from other services</dt>
+        <dd class="govuk-summary-list__value" id="data-from-other-services-value">
             <ul class="govuk-list">
                 @if (!Model.ShowFscpd)
                 {
