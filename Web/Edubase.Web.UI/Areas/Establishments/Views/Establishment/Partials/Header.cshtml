@@ -206,7 +206,7 @@
  *@
 @if (Model.ShowOfstedReportLink)
 {
-    <div class="govuk-summary-list__row">
+    <dl class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key" id="ofsted-rating-and-reports-key">Ofsted rating and reports</dt>
         <dd class="govuk-summary-list__value" id="ofsted-rating-and-reports-value">
             @{
@@ -259,7 +259,7 @@
                 </details>
             }
         </dd>
-    </div>
+    </dl>
 }
 
 @if (Model.ShowFscpd || Model.ShowFinancialBenchmarking)
@@ -288,7 +288,7 @@
 
 @helper OtherServicesLinks()
 {
-    <div class="govuk-summary-list__row">
+    <dl class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key" id="data-from-other-services-key">Data from other services</dt>
         <dd class="govuk-summary-list__value" id="data-from-other-services-value">
             <ul class="govuk-list">
@@ -308,5 +308,5 @@
                 }
             </ul>
         </dd>
-    </div>
+    </dl>
 }
