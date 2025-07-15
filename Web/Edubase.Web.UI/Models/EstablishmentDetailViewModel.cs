@@ -147,8 +147,15 @@ namespace Edubase.Web.UI.Models
         {
             get
             {
-                var value = Establishment?.IEBTModel?.RegistrationSuspendedId?.Trim();
-                return value == "Establishment suspended" || value == "Education and boarding suspended";
+                if (int.TryParse(Establishment?.IEBTModel?.RegistrationSuspendedId, out var rsId) &&
+                    Enum.IsDefined(typeof(GovRole), rsId))
+                {
+                    var status = (RegistrationSuspendedStatus) rsId;
+                    return status == RegistrationSuspendedStatus.EducationSuspended
+                           || status == RegistrationSuspendedStatus.EducationAndBoardingSuspended;
+                }
+
+                return false;
             }
         }
 
