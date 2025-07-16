@@ -747,6 +747,7 @@
     <Content Include="Views\Approvals\Partials\_ApprovalsTable.cshtml" />
     <Content Include="Views\DataQuality\EditDataOwnerDetails.cshtml" />
     <Content Include="Views\Home\Accessibility.cshtml" />
+    <Content Include="Views\Shared\OtherServicesLinks.cshtml" />
     <Content Include="Views\Tools\DownloadClosedTrustsInformation.cshtml" />
     <Content Include="Views\Tools\Mergers\AmalgamateEstablishments.cshtml" />
     <Content Include="Views\Tools\Mergers\AmalgamationComplete.cshtml" />
