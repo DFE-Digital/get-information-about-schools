@@ -266,7 +266,7 @@
     ET.FoundationSchool, ET.VoluntaryAidedSchool, ET.VoluntaryControlledSchool,
     ET.CommunitySpecialSchool, ET.FoundationSpecialSchool))
 {
-    @OtherServicesLinks()
+    @Html.Partial("OtherServicesLinks", Model)
 }
 
 @if (Model.DisplayPolicy.InspectorateId)
@@ -295,29 +295,4 @@
         <dd class="govuk-summary-list__value">@Model.Establishment.ProprietorBodyName</dd>
     </div>
 
-}
-
-@helper OtherServicesLinks()
-{
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Data from other services</dt>
-        <dd class="govuk-summary-list__value">
-            <ul class="govuk-list">
-                @if (!Model.ShowFscpd)
-                {
-                    <li>
-                        Not applicable
-                    </li>
-                }
-                @if (Model.ShowFscpd)
-                {
-                    <li>
-                        <a href="@Model.FscpdURL" rel="noreferrer noopener" target="_blank">
-                            @Model.FscpdServiceName (opens in new tab)
-                        </a>
-                    </li>
-                }
-            </ul>
-        </dd>
-    </div>
 }

@@ -38,7 +38,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
 
         private static readonly int[] FscpdGroupTypes =
         {
-            (int) eLookupGroupType.MultiacademyTrust, (int) eLookupGroupType.SingleacademyTrust
+            (int) eLookupGroupType.MultiacademyTrust
         };
 
         public bool CanUserEdit { get; set; }
