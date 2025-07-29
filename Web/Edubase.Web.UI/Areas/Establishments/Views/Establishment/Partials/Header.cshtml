@@ -200,20 +200,15 @@
     </div>
 }
 
-@if (Model.Establishment.TypeId.OneOfThese(ET.SixthFormCentres, ET.FurtherEducation, ET.InstitutionFundedByOtherGovernmentDepartment))
-{
-    @OtherServicesLinks()
-}
-
 @*
  * #232199: If there is a valid Ofsted report page on the Ofsted website for this establishment's URN, always link to it.
  * Where we _also_ hold a cached copy of the latest Ofsted rating and inspection date, follow the usual display-policy rules.
  *@
 @if (Model.ShowOfstedReportLink)
 {
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Ofsted rating and reports</dt>
-        <dd class="govuk-summary-list__value">
+    <dl class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key" id="ofsted-rating-and-reports-key">Ofsted rating and reports</dt>
+        <dd class="govuk-summary-list__value" id="ofsted-rating-and-reports-value">
             @{
                 var newlineRequired = false;
             }
@@ -264,12 +259,12 @@
                 </details>
             }
         </dd>
-    </div>
+    </dl>
 }
 
 @if (Model.ShowFscpd || Model.ShowFinancialBenchmarking)
 {
-    @OtherServicesLinks()
+    @Html.Partial("OtherServicesLinks", Model)
 }
 
 @if (Model.DisplayPolicy.InspectorateId)
@@ -289,29 +284,4 @@
         <dd class="govuk-summary-list__value">@Model.Establishment.ProprietorBodyName</dd>
     </div>
 
-}
-
-@helper OtherServicesLinks()
-{
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Data from other services</dt>
-        <dd class="govuk-summary-list__value">
-            <ul class="govuk-list">
-                @if (!Model.ShowFscpd)
-                {
-                    <li>
-                        Not applicable
-                    </li>
-                }
-                @if (Model.ShowFscpd)
-                {
-                    <li>
-                        <a href="@Model.FscpdURL" rel="noreferrer noopener" target="_blank">
-                            @Model.FscpdServiceName (opens in new tab)
-                        </a>
-                    </li>
-                }
-            </ul>
-        </dd>
-    </div>
 }

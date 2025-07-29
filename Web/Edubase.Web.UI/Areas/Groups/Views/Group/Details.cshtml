@@ -171,9 +171,8 @@
                             }
                             @if (Model.GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SingleacademyTrust, eLookupGroupType.SchoolSponsor, eLookupGroupType.Federation))
                             {
-                                @OtherServicesLinks()
+                                @Html.Partial("OtherServicesLinks", Model)
                             }
-
 
                         </dl>
                         </div>
@@ -451,32 +450,6 @@
                     </div>
                     </div>
                     </div>
-
-
-                    @helper OtherServicesLinks()
-                    {
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">Data from other services</dt>
-                            <dd class="govuk-summary-list__value">
-                                <ul class="govuk-list">
-                                    @if (!Model.ShowFscpd)
-                                    {
-                                        <li>
-                                            Not applicable
-                                        </li>
-                                    }
-                                    @if (Model.ShowFscpd)
-                                    {
-                                        <li>
-                                            <a href="@Model.FscpdURL" rel="noreferrer noopener" target="_blank">
-                                                @Model.FscpdServiceName (opens in new tab)
-                                            </a>
-                                        </li>
-                                    }
-                                </ul>
-                            </dd>
-                        </div>
-                    }
 
                     @section ViewScripts
                     {

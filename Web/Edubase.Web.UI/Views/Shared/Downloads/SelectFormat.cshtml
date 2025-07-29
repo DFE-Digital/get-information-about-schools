@@ -130,6 +130,20 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             @Html.HiddenFieldsFromQueryString()
+
+            @{
+                var laIdValues = Request.QueryString.GetValues("SelectedLocalAuthorityIds") ?? new string[0];
+                foreach (var id in laIdValues)
+                {
+                    <input type="hidden" name="SelectedLocalAuthorityIds" value="@id"/>
+                }
+
+                var statusId = Request.QueryString.GetValues("SelectedEstablishmentStatusIds") ?? new string[0];
+                foreach (var status in statusId)
+                {
+                    @Html.Raw($"<input type=\"hidden\" name=\"SelectedEstablishmentStatusIds\" value=\"{HttpUtility.HtmlEncode(status)}\" />")
+                }
+            }
             <input class="govuk-button" data-module="govuk-button" type="submit" value="Select and continue">
         </div>
     </div>
