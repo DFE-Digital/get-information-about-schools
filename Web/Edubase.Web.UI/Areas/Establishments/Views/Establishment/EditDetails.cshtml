@@ -712,7 +712,7 @@
                                 <div class="govuk-checkboxes__item">
                                     <input id="@nameof(Model.SENProvisions)_@item.Id" type="checkbox" name="@nameof(Model.SENIds)" class="govuk-checkboxes__input"
                                            value="@item.Id" @Html.Conditional(Model.SENIds != null && Model.SENIds.Contains(item.Id), "checked") />
-                                    <label for="@nameof(Model.SENProvisions)_@item.Id" class="govuk-checkboxes__label">@item.Name</label>
+                                    <label for="@nameof(Model.SENProvisions)_@item.Id" class="govuk-checkboxes__label govuk-body">@item.Name</label>
                                 </div>
                             }
                         </div>

@@ -36,7 +36,7 @@ namespace Edubase.Web.UI.Helpers
             s.Append("\">");
 
             var uh = new UrlHelper(helper.ViewContext.RequestContext, helper.RouteCollection);
-            var url = uh.Action(action, controller);
+            var url = uh.Action(action, controller, new { area = "" });
 
             s.Append($"<a class=\"govuk-service-navigation__link\" href=\"{url}\" id=\"{id}\">");
 

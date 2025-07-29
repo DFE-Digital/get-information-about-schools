@@ -81,7 +81,7 @@
         <p>Please try again later.</p>
         <p>A report of the error has been sent to our technical team.</p>
 
-        @* These properties are not available on the Ajax error response so will never display. 
+        @* These properties are not available on the Ajax error response so will never display.
         Can tweak them to display the Axios errors but need a discussion on whether we want to display this level of detail. *@
         @* <p class="api-error-code" v-show="apiBork.hasOwnProperty('errorCode')">Error code: {{apiBork.errorCode}}</p>
         <div v-show="apiBork.hasOwnProperty('technicalDetails')">
@@ -184,7 +184,7 @@
                             <td class="cell-checkbox govuk-table__cell" data-label="Select item">
                                 <div class="govuk-checkboxes__item">
                                     <input :id="'checkbox-'+ entry.fieldName + entry.establishmentUrn" name="pending-change" :value="entry.id" type="checkbox" class="govuk-checkboxes__input" v-on:click="selectItem" v-model="selectedItems">
-                                    <label class="govuk-checkboxes__label" :for="'change-'+entry.id">
+                                    <label class="govuk-checkboxes__label govuk-body" :for="'change-'+entry.id">
                                         <span class="govuk-visually-hidden">Select this change for approval or rejection</span>
                                     </label>
                                 </div>
