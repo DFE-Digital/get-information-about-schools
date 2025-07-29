@@ -17,7 +17,7 @@
 <html lang="en" class="govuk-template govuk-template--rebranded">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="blue">
     <title>@documentTitle</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -272,13 +272,13 @@
 
                         @if (Request.IsAuthenticated)
                         {
-                            <li class="govuk-service-navigation__item">
+                            <li class="govuk-service-navigation__item" style="margin-left: auto;">
                                 @Html.ActionLink("Sign out", "LogOff", "Account", new { area = "", returnUrl = currentUrl.PathAndQuery }, new { id = "logout-link", Class = "govuk-service-navigation__link", rel = "nofollow" })
                             </li>
                         }
                         else
                         {
-                            <li>
+                            <li class="govuk-service-navigation__item" style="margin-left: auto;">
                                 @Html.ActionLink("Sign in", "LogIn", "Account", new { area = "", returnUrl = currentUrl.PathAndQuery }, new { id = "login-link", Class = "govuk-service-navigation__link", rel = "nofollow" })
                             </li>
                         }

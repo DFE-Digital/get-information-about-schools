@@ -397,7 +397,7 @@
                                     {
                                         <div class="govuk-checkboxes__item">
                                             <input name="@name" value="@child.Id" id="@(name)_@(item.Id)_@child.Id" class="govuk-checkboxes__input js-filter-input trigger-result-update" type="checkbox" @Html.Conditional(selectedItems.Contains(child.Id), "checked") />
-                                            <label for="@(name)_@(item.Id)_@child.Id" class="govuk-checkboxes__label govuk-label">
+                                            <label for="@(name)_@(item.Id)_@child.Id" class="govuk-checkboxes__label govuk-body govuk-label">
                                                 @child
                                             </label>
                                         </div>
