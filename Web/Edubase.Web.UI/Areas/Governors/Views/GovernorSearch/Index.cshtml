@@ -137,7 +137,7 @@
                                         <div class="govuk-checkboxes gias-filter-checkboxes">
                                             <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
                                                 <input id="govrole_all" class="select-all govuk-checkboxes__input" type="checkbox" />
-                                                <label for="govrole_all" class="govuk-checkboxes__label">
+                                                <label for="govrole_all" class="govuk-checkboxes__label govuk-body">
                                                     All
                                                 </label>
                                             </div>
@@ -147,7 +147,7 @@
                                             {
                                                 <div class="govuk-checkboxes__item">
                                                     <input name="@GovernorSearchViewModel.BIND_ALIAS_ROLE_ID" class="govuk-checkboxes__input trigger-result-update" value="@item.Id" id="role_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedRoleIds.Contains(item.Id), "checked") />
-                                                    <label for="role_@item.Id" class="govuk-checkboxes__label">
+                                                    <label for="role_@item.Id" class="govuk-checkboxes__label govuk-body">
                                                         @item
                                                     </label>
                                                 </div>
@@ -173,7 +173,7 @@
                                         <div class="govuk-checkboxes gias-filter-checkboxes">
                                             <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
                                                 <input id="grouptype_all" class="govuk-checkboxes__input select-all" type="checkbox" />
-                                                <label for="grouptype_all" class="govuk-checkboxes__label">
+                                                <label for="grouptype_all" class="govuk-checkboxes__label govuk-body">
                                                     All
                                                 </label>
                                             </div>
@@ -183,7 +183,7 @@
                                             {
                                                 <div class="govuk-checkboxes__item">
                                                     <input name="g" class="govuk-checkboxes__input trigger-result-update" value="@item.Id" id="group-type_@item.Id" type="checkbox" @Html.Conditional(Model.SelectedGovernorTypeFlagIds.Contains(item.Id), "checked") />
-                                                    <label for="group-type_@item.Id" class="govuk-checkboxes__label">
+                                                    <label for="group-type_@item.Id" class="govuk-checkboxes__label govuk-body">
                                                         @item
                                                     </label>
                                                 </div>
@@ -270,7 +270,7 @@
                     <div class="govuk-checkboxes gias-filter-checkboxes">
                         <div class="govuk-checkboxes__item gias-filter-checkboxes__all">
                             <input id="@(name)_all" class="govuk-checkboxes__input select-all js-filter-input" type="checkbox" />
-                            <label for="@(name)_all" class="govuk-checkboxes__label js-filter-label">
+                            <label for="@(name)_all" class="govuk-checkboxes__label govuk-body js-filter-label">
                                 All
                             </label>
                         </div>
@@ -280,7 +280,7 @@
                         {
                             <div class="govuk-checkboxes__item">
                                 <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="govuk-checkboxes__input trigger-result-update js-filter-input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
-                                <label for="@(name)_@item.Id" class="govuk-checkboxes__label js-filter-label">
+                                <label for="@(name)_@item.Id" class="govuk-checkboxes__label govuk-body js-filter-label">
                                     @item
                                 </label>
                             </div>
