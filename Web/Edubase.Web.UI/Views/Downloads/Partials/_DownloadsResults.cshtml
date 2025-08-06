@@ -67,7 +67,7 @@
                                 @Html.Hidden($"{itemPrefix}{nameof(file.Item2.FileGeneratedDate)}", file.Item2.FileGeneratedDate)
                                 <input id="@StringUtils.ElementIdFormat(file.Item1.ToString())-checkbox" type="checkbox" name="@checkboxName" class="govuk-checkboxes__input" value="true"
                                        data-trackinglabel="@string.Concat(file.Item2.Tag,"|", file.Item2.FileGeneratedDate, "|", file.Item2.FileGeneratedDate < DateTime.Today)" />
-                                <label id="@StringUtils.ElementIdFormat(file.Item1.ToString())-checkbox-label" for="@checkboxName" class="govuk-checkboxes__label">@checkboxLabel</label>
+                                <label id="@StringUtils.ElementIdFormat(file.Item1.ToString())-checkbox-label" for="@checkboxName" class="govuk-checkboxes__label govuk-body">@checkboxLabel</label>
                             </div>
 
                             i += 1;
