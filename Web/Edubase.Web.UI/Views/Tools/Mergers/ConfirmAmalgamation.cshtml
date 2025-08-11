@@ -66,7 +66,7 @@
             </ol>
 
             <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend--s">New establishment details</legend>
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">New establishment details</legend>
                 <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.NewEstablishmentName)">
                     @Html.LabelFor(x => x.NewEstablishmentName, "Establishment name", new {@class = "govuk-label"})
                     @Html.ValidationMessageFor(x => x.NewEstablishmentName, null, new {@class = "govuk-error-message"})
