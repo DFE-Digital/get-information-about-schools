@@ -310,6 +310,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             vm.ParliamentaryConstituencies = (await _lookupService.ParliamentaryConstituenciesGetAllAsync())
                 .OrderBy(x => x.Name)
                 .Select(x => new LookupItemViewModel(x));
+            vm.RegistrationStatuses = Enum.GetValues(typeof(RegistrationSuspendedStatus))
+                .Cast<RegistrationSuspendedStatus>()
+                .Select(x => new LookupItemViewModel((int) x, Helpers.EnumExtensions.EnumDisplayNameFor(x)))
+                .OrderBy(x => x.Name);
             vm.ReligiousEthoses = (await _lookupService.ReligiousEthosGetAllAsync()).OrderBy(x => x.Name)
                 .Select(x => new LookupItemViewModel(x));
             vm.RSCRegions = (await _lookupService.RscRegionsGetAllAsync()).OrderBy(x => x.Name)
@@ -400,6 +404,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             filters.GovernmentOfficeRegionIds = model.SelectedGORIds.ToArray();
             filters.ProvisionNurseryIds = model.SelectedNurseryProvisionIds.ToArray();
             filters.ParliamentaryConstituencyIds = model.SelectedParliamentaryConstituencyIds.ToArray();
+            filters.RegistrationSuspendedIds = model.SelectedRegistrationStatusIds.ToArray();
             filters.ReligiousEthosIds = model.SelectedReligiousEthosIds.ToArray();
             filters.RSCRegionIds = model.SelectedRSCRegionIds.ToArray();
             filters.Section41ApprovedIds = model.SelectedSection41Ids.ToArray();
