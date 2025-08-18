@@ -68,3 +68,39 @@ $govuk-global-styles: true;
   line-height: 1.3;
   white-space: normal;
 }
+#download-radios .gias-radio__item--bordered-filter {
+  display: block;
+  width: 100%;
+  max-width: none;
+  float: none;
+  box-sizing: border-box;
+}
+#download-radios .gias-radios__label {
+  display: inline-block;
+  vertical-align: middle;
+  padding-left: 36px;
+  margin: 0;
+  box-sizing: border-box;
+}
+#download-radios .govuk-radios.govuk-radios--small .govuk-radios__item {
+  min-height: 0;
+  margin: 0;
+  padding: 4px 0;
+}
+#download-radios .govuk-radios.govuk-radios--small .govuk-radios__label {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  line-height: 1.35;
+}
+#download-radios .govuk-radios__item {
+  position: relative;
+}
+#download-radios .govuk-radios__input {
+  position: absolute;
+  left: 0;
+  top: 0.34em;
+  margin: 0;
+}
+#download-radios .govuk-radios__label {
+  padding-left: 42px;
+}
