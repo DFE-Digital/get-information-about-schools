@@ -41,13 +41,12 @@
                 <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                 <p class="govuk-warning-text__text govuk-!-font-weight-regular">
                     <span class="govuk-warning-text__assistive">Warning</span>
-                    All establishment records should hold an up-to-date, valid and actively monitored main
-                    establishment email address, @Html.Raw(Model.EditPolicy.HeadteacherLabel.ToLower()) personal establishment
-                    email address and a main establishment alternative email address (if one exists).
+                    All establishment records should hold an up-to-date, valid and actively monitored
+                    @Html.Raw(Model.EditPolicy.HeadteacherLabel.ToLower()) personal establishment email address,
+                    a main establishment email address and an alternative establishment email address (if one exists).
                 </p>
                 <p class="govuk-warning-text__text govuk-!-font-weight-regular">
-                    This information is very important as it allows the Department for Education to share important
-                    information and messages with establishments, especially during the Coronavirus pandemic.
+                    This information is extremely important as it allows the Department for Education to share important information and messages with headteachers/principals/managers and establishments.
                 </p>
                 <details class="govuk-details govuk-!-margin-bottom-0" data-module="govuk-details">
                     <summary class="govuk-details__summary">
@@ -58,21 +57,27 @@
                     <div class="govuk-details__text">
                         <p>
                             The @Html.Raw(Model.EditPolicy.HeadteacherLabel.ToLower()) personal establishment email
-                            address must be completed. This information is not publicly displayed on the website's interface and is
-                            classed as personal data, therefore it cannot be shared publicly, for example, through a Freedom of
-                            Information (FOI) request.
-                            Under the conditions of Article 6(1)(e) of the UK-GDPR this information can be shared with other
-                            government departments, non-departmental public bodies, arm's length bodies and partners for official
-                            functions and tasks within the public interest to be performed.
+                            address must be entered. This must be an up-to-date, valid, and actively monitored email address.
+                            This information is not publicly displayed on the website's user interface (UI) or in any extracts of data;
+                            it is classed as personal data, therefore it cannot be shared publicly, for example,
+                            through a Freedom of Information (FOI) request. Under the conditions of Article 6(1)(e) of the UK-GDPR this
+                            information can be shared with other government departments, non-departmental public bodies, arm's length bodies,
+                            local authorities, and partners, for official functions and tasks within the public interest to be performed.
+                            This can include for use in criminal investigations and safeguarding.
                         </p>
                         <p>
-                            No personal email addresses or personal establishment email addresses should be added to the main
-                            establishment email address field or the alternative establishment email address field. Although these
-                            fields are not publicly displayed on the website's interface they are not classed as personal data,
-                            therefore under certain circumstances GIAS must share this information, for example, if the department
-                            is requested to do so under a Freedom of Information (FOI) request. This data can be used by the DfE
-                            and other government departments, non-departmental public bodies, arm's length bodies and partners for
-                            official functions and tasks within the public interest.
+                            The main establishment email address and the alternative establishment email address
+                            (if one exists for your establishment) must be entered. These must be up-to-date, valid, and actively monitored email
+                            addresses. No personal email addresses or personal establishment email addresses should be added to these fields.
+                            Although these fields are not publicly displayed on the website's user interface (UI) they are not classed as personal data,
+                            therefore under certain circumstances GIAS must share this information, for example, if the department is requested to do so
+                            under a Freedom of Information (FOI) request. This data can be used by the DfE and other government departments,
+                            non-departmental public bodies, arm's length bodies, local authorities, and partners, for official functions and tasks
+                            within the public interest to be performed. This can include for use in criminal investigations and safeguarding.
+                        </p>
+                        <p>
+                            This information is extremely important as it allows the Department for Education to share important information and
+                            messages with headteachers/principals/managers and establishments.
                         </p>
                     </div>
                 </details>
@@ -167,9 +172,7 @@ else
                             partners for official functions and tasks within the public interest to be performed.
                         </p>
                         <p>
-                            This information is very important as it allows the Department for Education to share important
-                            information and messages with headteachers/principals/managers, especially during
-                            the Coronavirus pandemic.
+                            This information is extremely important as it allows the Department for Education to share important information and messages with headteachers/principals/managers.
                         </p>
                     </div>
                 </details>
@@ -191,19 +194,18 @@ else
                     </summary>
                     <div class="govuk-details__text">
                         <p>
-                            The main establishment email address and the alternative establishment email address (if one exists for
-                            your establishment) should be added here respectively. These must be up-to-date, valid and actively
-                            monitored email addresses. No personal email addresses or personal establishment email addresses should
-                            be added to these fields. Although these fields are not publicly displayed on the website&apos;s
-                            interface they are not classed as personal data, therefore under certain circumstances GIAS must
-                            share this information, for example, if the department is requested to do so under a Freedom of
-                            Information (FOI) request. This data can be used by the DfE and other government departments,
-                            non-departmental public bodies, arm&apos;s length bodies and partners for official functions and tasks within
-                            the public interest.
+                            The main establishment email address and the alternative establishment email address (if one exists for your establishment)
+                            should be added here respectively. These must be up-to-date, valid, and actively monitored email addresses.
+                            No personal email addresses or personal establishment email addresses should be added to these fields.
+                            Although these fields are not publicly displayed on the website's user interface (UI) they are not classed as
+                            personal data, therefore under certain circumstances GIAS must share this information, for example, if the
+                            department is requested to do so under a Freedom of Information (FOI) request. This data can be used by the
+                            DfE and other government departments, non-departmental public bodies, arm's length bodies, local authorities,
+                            and partners, for official functions and tasks within the public interest to be performed.
+                            This can include for use in criminal investigations and safeguarding.
                         </p>
                         <p>
-                            This information is very important as it allows the Department for Education to share important
-                            information and messages with establishments, especially during the Coronavirus pandemic.
+                            This information is extremely important as it allows the Department for Education to share important information and messages with establishments.
                         </p>
                     </div>
                 </details>
