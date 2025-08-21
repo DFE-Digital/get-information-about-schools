@@ -104,3 +104,50 @@ $govuk-global-styles: true;
 #download-radios .govuk-radios__label {
   padding-left: 42px;
 }
+#accordion-default .govuk-accordion__section-heading {
+  margin: 8px;
+}
+#accordion-default .govuk-accordion__section-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  line-height: 1.2;
+}
+#accordion-default .govuk-accordion__icon {
+  margin-left: auto;
+  position: static;
+  transform: none;
+}
+#accordion-default .govuk-accordion__section-toggle-text {
+  display: inline;
+  white-space: nowrap;
+}
+#accordion-default + .govuk-accordion__controls {
+  text-align: right;
+}
+#accordion-default + .govuk-accordion__controls .gias-scroll-to-top {
+  float: left;
+}
+#accordion-default > .govuk-accordion__controls {
+  text-align: right;
+}
+.faq-page .govuk-accordion__section-heading {
+  margin: 0;
+}
+.faq-page .govuk-accordion__section-header-buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  border-top: 1px solid #b1b4b6;
+  padding-top: 8px;
+  margin-top: 8px;
+  margin-left: -8px;
+  padding-bottom: 8px;
+}
+.faq-page .govuk-grid-column-one-third.gias-align-right {
+  margin-top: 0;
+}
