@@ -23,120 +23,124 @@
     </div>
 }
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-xl">Frequently asked questions (FAQs)</h1>
-        <p>Answers to commonly asked questions about Get Information about Schools.</p>
-    </div>
-</div>
-
-@{
-    var columnSize = "govuk-grid-column-full";
-    if (Model.UserCanEdit)
-    {
-        columnSize = "govuk-grid-column-two-thirds";
-
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full">
-                @Html.RouteLink("Add group", "CreateGroup", null, new {@id = "add-group-button",  @class = "govuk-button"})
-                @Html.RouteLink("Add entry", "CreateItem", null, new {@id = "add-entry-button", @class = "govuk-button"})
-            </div>
+<div class="faq-page">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-xl">Frequently asked questions (FAQs)</h1>
+            <p>Answers to commonly asked questions about Get Information about Schools.</p>
         </div>
+    </div>
+
+
+    @{
+        var columnSize = "govuk-grid-column-full";
+        if (Model.UserCanEdit)
+        {
+            columnSize = "govuk-grid-column-two-thirds";
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    @Html.RouteLink("Add group", "CreateGroup", null, new {@id = "add-group-button",  @class = "govuk-button"})
+                    @Html.RouteLink("Add entry", "CreateItem", null, new {@id = "add-entry-button", @class = "govuk-button"})
+                </div>
+            </div>
+        }
     }
-}
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-        <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
-            @foreach (var group in Model.Groups.OrderBy(x => x.DisplayOrder))
-            {
-                <div class="govuk-accordion__section ">
-                    <div class="govuk-grid-row">
-                        <div class="@columnSize @Html.Conditional(Model.UserCanEdit, "govuk-!-padding-right-0")">
-                            <div class="govuk-accordion__section-header">
-                                <h2 class="govuk-accordion__section-heading">
-                                    <span class="govuk-accordion__section-button" id="@StringUtils.ElementIdFormat(@group.GroupName + "-title-text")">
-                                        @group.GroupName
-                                    </span>
-                                </h2>
-                            </div>
-                        </div>
-
-                        @if (Model.UserCanEdit)
-                        {
-                            <div class="govuk-grid-column-one-third gias-align-right govuk-!-padding-left-0">
-                                <div class="govuk-accordion__section-header-buttons govuk-!-padding-right-0">
-                                    @Html.RouteLink("Edit group", "EditGroup", new { id = group.RowKey }, new { @id = @StringUtils.ElementIdFormat(group.GroupName + "-edit-group-button"), @class = "govuk-button govuk-button--secondary Faq-edit-button govuk-accordion__buttons", aria_label = "Edit FAQ group" })
-
-                                    @if (group.DisplayOrder < Model.Groups.Last().DisplayOrder)
-                                    {
-                                        @Html.RouteLink("Down", "EditGroupOrder", new { id = group.RowKey, order = "down" }, new { @id = @StringUtils.ElementIdFormat(group.GroupName + "-group-down-button"), @class = "govuk-button govuk-button--secondary govuk-accordion__buttons", title = "move group down", alt = "move group down", aria_label = "Move group down" })
-                                    }
-                                    else
-                                    {
-                                        <button id=@StringUtils.ElementIdFormat(group.GroupName + "-group-down-button") class="govuk-button govuk-button--secondary govuk-accordion__buttons" aria_label="Move group down" disabled>Down</button>
-                                    }
-
-                                    @if (group.DisplayOrder > Model.Groups.First().DisplayOrder)
-                                    {
-                                        @Html.RouteLink("Up", "EditGroupOrder", new { id = group.RowKey, order = "up" }, new { @id = @StringUtils.ElementIdFormat(group.GroupName + "-group-up-button"), @class = "govuk-button govuk-button--secondary govuk-accordion__buttons", title = "move group up", alt = "move group up", aria_label="Move group up" })
-                                    }
-                                    else
-                                    {
-                                        <button id=@StringUtils.ElementIdFormat(group.GroupName + "-group-up-button") class="govuk-button govuk-button--secondary govuk-accordion__buttons" aria_label="Move group up" disabled>Up</button>
-                                    }
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+                @foreach (var group in Model.Groups.OrderBy(x => x.DisplayOrder))
+                {
+                    <div class="govuk-accordion__section ">
+                        <div class="govuk-grid-row">
+                            <div class="@columnSize @Html.Conditional(Model.UserCanEdit, "govuk-!-padding-right-0")">
+                                <div class="govuk-accordion__section-header">
+                                    <h2 class="govuk-accordion__section-heading">
+                                        <span class="govuk-accordion__section-button" id="@StringUtils.ElementIdFormat(@group.GroupName + "-title-text")">
+                                            @group.GroupName
+                                        </span>
+                                    </h2>
                                 </div>
                             </div>
-                        }
-                    </div>
 
-                    <div id="target-@group.GroupName.Replace(" ", "-")" class="govuk-accordion__section-content" aria-labelledby="ctrl-@group.GroupName.Replace(" ", "-")">
-                        @{
-                            var groupItems = Model.Items.Where(x => x.GroupId == group.RowKey).OrderBy(x => x.DisplayOrder);
-                            foreach (var item in groupItems)
+                            @if (Model.UserCanEdit)
                             {
-                                <div class="govuk-grid-row">
-                                    <div class="govuk-grid-column-two-thirds govuk-!-padding-bottom-2">
-                                        <h2 id=@StringUtils.ElementIdFormat(@item.Title + "-title-text") class="govuk-heading-s">@item.Title</h2>
-                                        <div class="gias-user-content">
-                                            <p id=@StringUtils.ElementIdFormat(@item.Title + "-content-text")>@Html.Raw(item.Content.Replace("\n", "<br/>"))</p>
-                                        </div>
+                                <div class="govuk-grid-column-one-third gias-align-right govuk-!-padding-left-0">
+                                    <div class="govuk-accordion__section-header-buttons govuk-!-padding-right-0">
+                                        @Html.RouteLink("Edit group", "EditGroup", new { id = group.RowKey }, new { @id = @StringUtils.ElementIdFormat(group.GroupName + "-edit-group-button"), @class = "govuk-button govuk-button--secondary Faq-edit-button govuk-accordion__buttons", aria_label = "Edit FAQ group" })
+
+                                        @if (group.DisplayOrder < Model.Groups.Last().DisplayOrder)
+                                        {
+                                            @Html.RouteLink("Down", "EditGroupOrder", new { id = group.RowKey, order = "down" }, new { @id = @StringUtils.ElementIdFormat(group.GroupName + "-group-down-button"), @class = "govuk-button govuk-button--secondary govuk-accordion__buttons", title = "move group down", alt = "move group down", aria_label = "Move group down" })
+                                        }
+                                        else
+                                        {
+                                            <button id=@StringUtils.ElementIdFormat(group.GroupName + "-group-down-button") class="govuk-button govuk-button--secondary govuk-accordion__buttons" aria_label="Move group down" disabled>Down</button>
+                                        }
+
+                                        @if (group.DisplayOrder > Model.Groups.First().DisplayOrder)
+                                        {
+                                            @Html.RouteLink("Up", "EditGroupOrder", new { id = group.RowKey, order = "up" }, new { @id = @StringUtils.ElementIdFormat(group.GroupName + "-group-up-button"), @class = "govuk-button govuk-button--secondary govuk-accordion__buttons", title = "move group up", alt = "move group up", aria_label="Move group up" })
+                                        }
+                                        else
+                                        {
+                                            <button id=@StringUtils.ElementIdFormat(group.GroupName + "-group-up-button") class="govuk-button govuk-button--secondary govuk-accordion__buttons" aria_label="Move group up" disabled>Up</button>
+                                        }
                                     </div>
-
-                                    @if (Model.UserCanEdit)
-                                    {
-                                        <div class="govuk-grid-column-one-third govuk-accordion-user-content gias-align-right">
-                                            @Html.RouteLink("Edit entry", "EditItem", new { id = item.RowKey }, new { @id= @StringUtils.ElementIdFormat(item.Title + "-edit-entry-button"), @class = "govuk-button govuk-button--secondary Faq-edit-button govuk-accordion__buttons", aria_label = "Edit FAQ entry" })
-
-                                            @if (item.DisplayOrder < groupItems.Last().DisplayOrder)
-                                            {
-                                                @Html.RouteLink("Down", "EditItemOrder", new { id = item.RowKey, order = "down" }, new { @id = @StringUtils.ElementIdFormat(item.Title + "-entry-down-button"), @class = "govuk-button govuk-button--secondary govuk-accordion__buttons", title = "move entry down", alt = "move entry down", aria_label = "Move entry down" })
-                                            }
-                                            else
-                                            {
-                                                <button id=@StringUtils.ElementIdFormat(item.Title + "-entry-down-button") class="govuk-button govuk-button--secondary govuk-accordion__buttons" aria_label="Move entry down" disabled>Down</button>
-                                            }
-
-                                            @if (item.DisplayOrder > groupItems.First().DisplayOrder)
-                                            {
-                                                @Html.RouteLink("Up", "EditItemOrder", new { id = item.RowKey, order = "up" }, new { @id = @StringUtils.ElementIdFormat(item.Title + "-entry-up-button"), @class = "govuk-button govuk-button--secondary govuk-accordion__buttons", title = "move entry up", alt = "move entry up", aria_label = "Move entry up" })
-                                            }
-                                            else
-                                            {
-                                                <button id=@StringUtils.ElementIdFormat(item.Title + "-entry-up-button") class="govuk-button govuk-button--secondary govuk-accordion__buttons" aria_label="Move entry up" disabled>Up</button>
-                                            }
-                                        </div>
-                                    }
-
                                 </div>
                             }
-                        }
+                        </div>
+
+                        <div id="target-@group.GroupName.Replace(" ", "-")" class="govuk-accordion__section-content" aria-labelledby="ctrl-@group.GroupName.Replace(" ", "-")">
+                            @{
+                                var groupItems = Model.Items.Where(x => x.GroupId == group.RowKey).OrderBy(x => x.DisplayOrder);
+                                foreach (var item in groupItems)
+                                {
+                                    <div class="govuk-grid-row">
+                                        <div class="govuk-grid-column-two-thirds govuk-!-padding-bottom-2">
+                                            <h2 id=@StringUtils.ElementIdFormat(@item.Title + "-title-text") class="govuk-heading-s">@item.Title</h2>
+                                            <div class="gias-user-content">
+                                                <p id=@StringUtils.ElementIdFormat(@item.Title + "-content-text")>@Html.Raw(item.Content.Replace("\n", "<br/>"))</p>
+                                            </div>
+                                        </div>
+
+                                        @if (Model.UserCanEdit)
+                                        {
+                                            <div class="govuk-grid-column-one-third govuk-accordion-user-content gias-align-right">
+                                                @Html.RouteLink("Edit entry", "EditItem", new { id = item.RowKey }, new { @id= @StringUtils.ElementIdFormat(item.Title + "-edit-entry-button"), @class = "govuk-button govuk-button--secondary Faq-edit-button govuk-accordion__buttons", aria_label = "Edit FAQ entry" })
+
+                                                @if (item.DisplayOrder < groupItems.Last().DisplayOrder)
+                                                {
+                                                    @Html.RouteLink("Down", "EditItemOrder", new { id = item.RowKey, order = "down" }, new { @id = @StringUtils.ElementIdFormat(item.Title + "-entry-down-button"), @class = "govuk-button govuk-button--secondary govuk-accordion__buttons", title = "move entry down", alt = "move entry down", aria_label = "Move entry down" })
+                                                }
+                                                else
+                                                {
+                                                    <button id=@StringUtils.ElementIdFormat(item.Title + "-entry-down-button") class="govuk-button govuk-button--secondary govuk-accordion__buttons" aria_label="Move entry down" disabled>Down</button>
+                                                }
+
+                                                @if (item.DisplayOrder > groupItems.First().DisplayOrder)
+                                                {
+                                                    @Html.RouteLink("Up", "EditItemOrder", new { id = item.RowKey, order = "up" }, new { @id = @StringUtils.ElementIdFormat(item.Title + "-entry-up-button"), @class = "govuk-button govuk-button--secondary govuk-accordion__buttons", title = "move entry up", alt = "move entry up", aria_label = "Move entry up" })
+                                                }
+                                                else
+                                                {
+                                                    <button id=@StringUtils.ElementIdFormat(item.Title + "-entry-up-button") class="govuk-button govuk-button--secondary govuk-accordion__buttons" aria_label="Move entry up" disabled>Up</button>
+                                                }
+                                            </div>
+                                        }
+
+                                    </div>
+                                }
+                            }
+                        </div>
                     </div>
-                </div>
-            }
+                }
+            </div>
         </div>
     </div>
 </div>
+
 
 
 <p class="no-js-show-block">@helpers.BackToTopLink()</p>
