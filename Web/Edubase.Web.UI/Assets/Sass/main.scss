@@ -104,3 +104,12 @@ $govuk-global-styles: true;
 #download-radios .govuk-radios__label {
   padding-left: 42px;
 }
+.news-page .no-js-show-block .govuk-button {
+  margin-left: 12px !important;
+}
+
+@media (max-width: 640px) {
+  .news-page .no-js-show-block .govuk-button {
+    margin-left: 0 !important;
+  }
+}
