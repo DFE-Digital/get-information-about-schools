@@ -13,6 +13,7 @@ namespace Edubase.Web.UI.Areas.Groups.Models
     using System;
     using System.Collections.Generic;
     using System.Configuration;
+    using System.Linq;
     using GT = Services.Enums.eLookupGroupType;
 
     public class GroupDetailViewModel
