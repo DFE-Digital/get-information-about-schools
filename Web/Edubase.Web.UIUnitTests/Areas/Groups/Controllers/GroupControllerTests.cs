@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -204,37 +205,40 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
         public async Task Group_Details_WithValidRecord(bool isUserLoggedOn, bool canUserEdit, string testName)
         {
             output.WriteLine(testName);
-
             var grs = mockGroupReadService;
             var govrs = mockGovernorsReadService;
             var ext = mockExternalLookupService;
             var id = mockIdentity;
             var estabList = CreateEstabList();
 
-
-            ext.Setup(x => x.FscpdCheckExists(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>())).ReturnsAsync(true);
             id.Setup(x => x.IsAuthenticated).Returns(isUserLoggedOn);
-            grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(new GroupModel { GroupUId = 1, Name = "grp" }));
+
+            var groupModel = new GroupModel
+            {
+                GroupUId = 1,
+                Name = "grp",
+                GroupTypeId = (int) eLookupGroupType.MultiacademyTrust,
+                StatusId = (int) eLookupGroupStatus.Open,
+                Address = new AddressDto { PostCode = "AA1 1AA", Line1 = "Street" },
+                UKPRN = "12345"
+            };
+
+            grs.Setup(x => x.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(new ServiceResultDto<GroupModel>(groupModel));
             grs.Setup(x => x.GetLinksAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(Enumerable.Empty<LinkedGroupModel>());
             grs.Setup(x => x.CanEditAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(canUserEdit);
             grs.Setup(x => x.CanEditGovernanceAsync(It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(canUserEdit);
             grs.Setup(x => x.GetChangeHistoryAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<IPrincipal>())).ReturnsAsync(new PaginatedResult<GroupChangeDto>());
             grs.Setup(x => x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), true)).ReturnsAsync(estabList);
             govrs.Setup(x => x.GetGovernorPermissions(null, It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
-            var response = (ViewResult) await controller.Details(1);
 
-            ext.Verify(x => x.FscpdCheckExists(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()), Times.AtLeastOnce);
+            ext.Setup(x => x.FscpdCheckExists(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
+                .ReturnsAsync(true);
 
-            if (!isUserLoggedOn)
-            {
-                grs.Verify(x => x.GetChangeHistoryAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<IPrincipal>()), Times.Never());
-            }
-            else
-            {
-                grs.Verify(x => x.GetChangeHistoryAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<IPrincipal>()), Times.Once());
-            }
+            var result = await controller.Details(1);
 
-            var viewModel = (GroupDetailViewModel) response.Model;
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var viewModel = Assert.IsType<GroupDetailViewModel>(viewResult.Model);
+
             Assert.Equal(canUserEdit, viewModel.CanUserEdit);
             Assert.Equal(estabList.Count, viewModel.Establishments.Count);
 
@@ -255,6 +259,15 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
                 Assert.Equal(estabList[i].StatusName, viewModel.Establishments[i].StatusName);
                 Assert.Equal(estabList[i].TypeName, viewModel.Establishments[i].TypeName);
                 Assert.Equal(estabList[i].Urn, viewModel.Establishments[i].Urn);
+            }
+
+            if (!isUserLoggedOn)
+            {
+                grs.Verify(x => x.GetChangeHistoryAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<IPrincipal>()), Times.Never());
+            }
+            else
+            {
+                grs.Verify(x => x.GetChangeHistoryAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<IPrincipal>()), Times.Once());
             }
         }
 
@@ -953,7 +966,7 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
                 OpenDate = DateTime.Now,
                 GroupId = "54243"
             };
-            var result = (RedirectToRouteResult) await controller.SaveNewAcademyTrust(vm,"academy-trust");
+            var result = (RedirectToRouteResult) await controller.SaveNewAcademyTrust(vm, "academy-trust");
             Assert.Equal("Details", result.RouteValues["action"]);
             Assert.Equal(123, result.RouteValues["id"]);
         }
