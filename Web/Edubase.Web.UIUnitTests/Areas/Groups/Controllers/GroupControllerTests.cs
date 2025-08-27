@@ -230,9 +230,11 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
             grs.Setup(x => x.GetChangeHistoryAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<IPrincipal>())).ReturnsAsync(new PaginatedResult<GroupChangeDto>());
             grs.Setup(x => x.GetEstablishmentGroupsAsync(It.IsAny<int>(), It.IsAny<IPrincipal>(), true)).ReturnsAsync(estabList);
             govrs.Setup(x => x.GetGovernorPermissions(null, It.IsAny<int>(), It.IsAny<IPrincipal>())).ReturnsAsync(() => new GovernorPermissions { Add = true, Update = true, Remove = true });
-            var response = (ViewResult) await controller.Details(1);
 
-            ext.Verify(x => x.FscpdCheckExists(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()), Times.AtLeastOnce);
+            ext.Setup(x => x.FscpdCheckExists(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
+                .ReturnsAsync(true);
+
+            var result = await controller.Details(1);
 
             var viewResult = Assert.IsType<ViewResult>(result);
             var viewModel = Assert.IsType<GroupDetailViewModel>(viewResult.Model);
@@ -257,6 +259,15 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers.UnitTests
                 Assert.Equal(estabList[i].StatusName, viewModel.Establishments[i].StatusName);
                 Assert.Equal(estabList[i].TypeName, viewModel.Establishments[i].TypeName);
                 Assert.Equal(estabList[i].Urn, viewModel.Establishments[i].Urn);
+            }
+
+            if (!isUserLoggedOn)
+            {
+                grs.Verify(x => x.GetChangeHistoryAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<IPrincipal>()), Times.Never());
+            }
+            else
+            {
+                grs.Verify(x => x.GetChangeHistoryAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<IPrincipal>()), Times.Once());
             }
         }
 

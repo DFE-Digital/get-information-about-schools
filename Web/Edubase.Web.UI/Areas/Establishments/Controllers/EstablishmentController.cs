@@ -404,14 +404,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 ChangeHistory = changes
             };
 
-            await viewModel.SetFscpdAsync();
-            await viewModel.SetShowFinancialBenchmarkingAsync();
-            await viewModel.SetShowOfstedReportLinkAsync();
-
             await Task.WhenAll(
                 PopulateDisplayPolicies(viewModel)
             );
-
 
             viewModel.LegalParentGroup = GetLegalParent(viewModel.Establishment.Urn.Value,
                 await _groupReadService.GetAllByEstablishmentUrnAsync(viewModel.Establishment.Urn.Value, User), User);

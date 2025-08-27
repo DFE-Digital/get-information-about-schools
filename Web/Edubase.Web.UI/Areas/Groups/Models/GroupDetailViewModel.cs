@@ -75,31 +75,12 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public GovernorPermissions GovernorPermissions { get; set; }
 
         public string FscpdServiceName => ConfigurationManager.AppSettings["FscpdServiceName"];
-        public string FscpdURL => extService.FscpdURL(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SchoolSponsor));
 
         public string FscpdURL => extService.FscpdURL(
             GroupTypeId,
             Group.Name,
             FscpdGroupTypes.Contains(GroupTypeId));
 
-        public bool ShowFscpd
-        {
-            get => showFscpd.GetValueOrDefault();
-            private set => showFscpd = value;
-        }
-
-        //code originally inside the property, moved here to allow it to be async
-        public async Task SetFscpdAsync()
-        {
-            if (Group == null)
-            {
-                return;
-            }
-            if (!showFscpd.HasValue)
-            {
-                showFscpd = extService != null && await extService.FscpdCheckExists(Group.GroupUId, Group.Name, GroupTypeId.OneOfThese(eLookupGroupType.MultiacademyTrust, eLookupGroupType.SchoolSponsor));
-            }
-        }
         private bool? showFscpd;
 
         public bool ShowFscpd
