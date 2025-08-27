@@ -160,3 +160,21 @@ $govuk-global-styles: true;
 .faq-page .govuk-grid-column-one-third.gias-align-right {
   margin-top: 0;
 }
+.faq-page #accordion-default .govuk-accordion__section-button {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  margin: 0 !important;
+}
+.faq-page #accordion-default .govuk-accordion__section-heading {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.news-page .no-js-show-block .govuk-button {
+  margin-left: 12px !important;
+}
+
+@media (max-width: 640px) {
+  .news-page .no-js-show-block .govuk-button {
+    margin-left: 0 !important;
+  }
+}
