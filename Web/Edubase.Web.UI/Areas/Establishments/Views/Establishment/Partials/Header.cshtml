@@ -108,7 +108,7 @@
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">@(Model.GetGroupFieldLabel(group))</dt>
         <dd class="govuk-summary-list__value">
-            @Html.ActionLink(group.Name, "Details", "Group", new {id = group.GroupUId, area = "Groups"}, null)
+            @Html.ActionLink(group.Name, "Details", "Group", new { id = group.GroupUId, area = "Groups" }, null)
         </dd>
     </div>
 }
@@ -129,7 +129,7 @@
         <abbr title="Unique Reference Number">URN</abbr>: @Model.Establishment.Urn,
         @if (Model.DisplayPolicy.EstablishmentNumber)
         {
-            <text>DfE number: @Model.Establishment.GetLAESTAB(Model.LocalAuthorityCode)<br/></text>
+            <text>DfE number: @Model.Establishment.GetLAESTAB(Model.LocalAuthorityCode)<br /></text>
         }
         @if (Model.DisplayPolicy.UKPRN && Model.Establishment.UKPRN.HasValue)
         {
@@ -173,9 +173,9 @@
             }
             else
             {
-            <a href="@WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)" target="_blank" rel="noreferrer noopener">
-                @WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress) (opens in new tab)
-            </a>
+                <a href="@WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress)" target="_blank" rel="noreferrer noopener">
+                    @WeblinkConverter.Convert(Model.Establishment.Contact_WebsiteAddress) (opens in new tab)
+                </a>
             }
         </dd>
     </div>
@@ -195,9 +195,9 @@
 }
 
 @*
- * #232199: If there is a valid Ofsted report page on the Ofsted website for this establishment's URN, always link to it.
- * Where we _also_ hold a cached copy of the latest Ofsted rating and inspection date, follow the usual display-policy rules.
- *@
+    * #232199: If there is a valid Ofsted report page on the Ofsted website for this establishment's URN, always link to it.
+    * Where we _also_ hold a cached copy of the latest Ofsted rating and inspection date, follow the usual display-policy rules.
+*@
 @if (Model.ShowOfstedReportLink)
 {
     <div class="govuk-summary-list__row">
@@ -230,7 +230,7 @@
 
             @if (newlineRequired)
             {
-                <br/>
+                <br />
             }
 
             <div class="govuk-!-margin-bottom-3">
@@ -256,15 +256,7 @@
     </div>
 }
 
-@if (Model.Establishment.TypeId.OneOfThese(ET.Academy1619SponsorLed,
-    ET.Academy1619Converter, ET.AcademyAlternativeProvisionConverter,
-    ET.AcademyConverter, ET.AcademySpecialConverter,
-    ET.AcademySpecialSponsorLed, ET.AcademySponsorLed,
-    ET.FreeSchools, ET.FreeSchools1619, ET.FreeSchoolsSpecial,
-    ET.StudioSchools, ET.UniversityTechnicalCollege,
-    ET.CityTechnologyCollege, ET.CommunitySchool,
-    ET.FoundationSchool, ET.VoluntaryAidedSchool, ET.VoluntaryControlledSchool,
-    ET.CommunitySpecialSchool, ET.FoundationSpecialSchool))
+@if (Model.ShowFscpd || Model.ShowFinancialBenchmarking)
 {
     @Html.Partial("OtherServicesLinks", Model)
 }

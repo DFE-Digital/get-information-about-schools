@@ -204,6 +204,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
 
             var address = UriHelper.SerializeToUrlToken(replacementAddress);
 
+            mockIdentity.Setup(x => x.IsAuthenticated).Returns(true);
+            mockPrincipal.Setup(x => x.Identity).Returns(mockIdentity.Object);
+            mockPrincipal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(false);
+            mockPrincipal.Setup(x => x.IsInRole(EdubaseRoles.ROLE_BACKOFFICE)).Returns(true);
+
             mockGroupReadService.Setup(x => x.GetAllByEstablishmentUrnAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(new[] { new GroupModel { Name = "Group 1", GroupUId = 1000 } });
             mockEstablishmentReadService.Setup(e => e.GetAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
@@ -306,6 +311,11 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                 Name = "test"
             };
 
+            mockIdentity.Setup(x => x.IsAuthenticated).Returns(true);
+            mockPrincipal.Setup(x => x.Identity).Returns(mockIdentity.Object);
+            mockPrincipal.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(false);
+            mockPrincipal.Setup(x => x.IsInRole(EdubaseRoles.ROLE_BACKOFFICE)).Returns(true);
+
             mockGroupReadService.Setup(x => x.GetAllByEstablishmentUrnAsync(It.IsAny<int>(), It.IsAny<IPrincipal>()))
                 .ReturnsAsync(new[] { new GroupModel { Name = "Group 1", GroupUId = 1000 } });
             mockCachedLookupService.Setup(c => c.NationalitiesGetAllAsync())
@@ -344,75 +354,81 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
         }
 
         [Theory]
-        [InlineData(true, true, true, true, (int)eLookupEstablishmentType.Academy1619Converter, true)]
-        [InlineData(false, false, false, false, (int)eLookupEstablishmentType.Academy1619Converter, true)]
+        [InlineData(true, true, true, true, (int) eLookupEstablishmentType.Academy1619Converter, true)]
+        [InlineData(false, false, false, false, (int) eLookupEstablishmentType.Academy1619Converter, true)]
         [InlineData(true, true, true, true, (int) eLookupEstablishmentType.AcademySecure16to19, false)]
         [InlineData(false, false, false, false, (int) eLookupEstablishmentType.AcademySecure16to19, false)]
         public async Task Estab_Details_TabDisplayPolicy(bool locationDataFieldViewable, bool expectLocationTab, bool helpDeskNotesDisplayPolicy, bool expectHelpDeskNotes, int establishmentTypeId, bool expectGovernanceTab)
         {
             var urn = 123456;
-            var establishmentModel = new EstablishmentModel() {
-                EstablishmentTypeGroupId = (int)eLookupGroupType.MultiacademyTrust,
+            var establishmentModel = new EstablishmentModel()
+            {
+                EstablishmentTypeGroupId = (int) eLookupGroupType.MultiacademyTrust,
                 IEBTModel = new IEBTModel(),
                 StatusId = (int) eLookupEstablishmentStatus.Open,
                 TypeId = establishmentTypeId,
                 Urn = urn
             };
-            mockPrincipal.Setup(x => x.Identity.IsAuthenticated).Returns(true);
-            mockPrincipal.Setup(x => x.IsInRole(EdubaseRoles.ESTABLISHMENT))
-                .Returns(false);
-            mockEstablishmentReadService.Setup(x=> x.GetAsync(urn, mockPrincipal.Object))
-                .ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(establishmentModel));
-            mockEstablishmentReadService.Setup(x => x.GetLinkedEstablishmentsAsync(urn, mockPrincipal.Object))
-                .ReturnsAsync(() => new List<LinkedEstablishmentModel>());
-            mockEstablishmentReadService.Setup(x => x.GetChangeHistoryAsync(urn, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), mockPrincipal.Object))
-                .ReturnsAsync(() => new PaginatedResult<EstablishmentChangeDto>());
-            mockGroupReadService.Setup(x => x.GetAllByEstablishmentUrnAsync(urn, mockPrincipal.Object))
-                .ReturnsAsync(() => new List<GroupModel>());
-            mockEstablishmentReadService.Setup(x => x.GetDisplayPolicyAsync(establishmentModel, mockPrincipal.Object))
-                .ReturnsAsync(() => new EstablishmentDisplayEditPolicy()
-                    {
-                        IEBTDetail = new IEBTDetailDisplayEditPolicy(),
-                        HelpdeskNotes = helpDeskNotesDisplayPolicy,
-                        MSOAId = locationDataFieldViewable,
-                        LSOAId = locationDataFieldViewable,
-                        RSCRegionId = locationDataFieldViewable,
-                        GovernmentOfficeRegionId = locationDataFieldViewable,
-                        AdministrativeDistrictId = locationDataFieldViewable,
-                        AdministrativeWardId = locationDataFieldViewable,
-                        ParliamentaryConstituencyId = locationDataFieldViewable,
-                        UrbanRuralId = locationDataFieldViewable,
-                        GSSLAId = locationDataFieldViewable,
-                        Easting = locationDataFieldViewable,
-                        Northing = locationDataFieldViewable
-                });
-            mockEstablishmentReadService.Setup(x => x.CanEditAsync(urn, mockPrincipal.Object))
-                .ReturnsAsync(() => It.IsAny<bool>());
-            mockEstablishmentReadService.Setup(x => x.GetEditPolicyAsync(establishmentModel, mockPrincipal.Object))
-                .ReturnsAsync(() => new EstablishmentEditPolicyEnvelope()
-                    {
-                        EditPolicy = new EstablishmentDisplayEditPolicy() { }
-                });
-            mockExternalLookupService.Setup(x => x.FscpdCheckExists(123456, null, false))
-                .ReturnsAsync(() => true);
-            mockExternalLookupService.Setup(x => x.SfbCheckExists(123456, FbType.School))
-                .ReturnsAsync(() => true);
-            mockExternalLookupService.Setup(x => x.OfstedReportPageCheckExists(123456))
-                .ReturnsAsync(() => true);
 
+            mockPrincipal.Setup(x => x.IsInRole(EdubaseRoles.ROLE_BACKOFFICE)).Returns(true);
+            mockPrincipal.Setup(x => x.Identity.IsAuthenticated).Returns(true);
+            mockPrincipal.Setup(x => x.IsInRole(EdubaseRoles.ESTABLISHMENT)).Returns(false);
+
+            mockEstablishmentReadService.Setup(x => x.GetAsync(urn, mockPrincipal.Object))
+                .ReturnsAsync(new ServiceResultDto<EstablishmentModel>(establishmentModel));
+
+            mockEstablishmentReadService.Setup(x => x.GetLinkedEstablishmentsAsync(urn, mockPrincipal.Object))
+                .ReturnsAsync(new List<LinkedEstablishmentModel>());
+
+            mockEstablishmentReadService.Setup(x => x.GetChangeHistoryAsync(urn, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), mockPrincipal.Object))
+                .ReturnsAsync(new PaginatedResult<EstablishmentChangeDto>());
+
+            mockGroupReadService.Setup(x => x.GetAllByEstablishmentUrnAsync(urn, mockPrincipal.Object))
+                .ReturnsAsync(new List<GroupModel>());
+
+            mockEstablishmentReadService.Setup(x => x.GetDisplayPolicyAsync(establishmentModel, mockPrincipal.Object))
+                .ReturnsAsync(new EstablishmentDisplayEditPolicy()
+                {
+                    IEBTDetail = new IEBTDetailDisplayEditPolicy(),
+                    HelpdeskNotes = helpDeskNotesDisplayPolicy,
+                    MSOAId = locationDataFieldViewable,
+                    LSOAId = locationDataFieldViewable,
+                    RSCRegionId = locationDataFieldViewable,
+                    GovernmentOfficeRegionId = locationDataFieldViewable,
+                    AdministrativeDistrictId = locationDataFieldViewable,
+                    AdministrativeWardId = locationDataFieldViewable,
+                    ParliamentaryConstituencyId = locationDataFieldViewable,
+                    UrbanRuralId = locationDataFieldViewable,
+                    GSSLAId = locationDataFieldViewable,
+                    Easting = locationDataFieldViewable,
+                    Northing = locationDataFieldViewable
+                });
+
+            mockEstablishmentReadService.Setup(x => x.CanEditAsync(urn, mockPrincipal.Object))
+                .ReturnsAsync(true);
+
+            mockEstablishmentReadService.Setup(x => x.GetEditPolicyAsync(establishmentModel, mockPrincipal.Object))
+                .ReturnsAsync(new EstablishmentEditPolicyEnvelope()
+                {
+                    EditPolicy = new EstablishmentDisplayEditPolicy()
+                });
+
+            mockExternalLookupService.Setup(x => x.FscpdCheckExists(urn, null, false)).ReturnsAsync(true);
+            mockExternalLookupService.Setup(x => x.SfbCheckExists(urn, FbType.School)).ReturnsAsync(true);
+            mockExternalLookupService.Setup(x => x.OfstedReportPageCheckExists(urn)).ReturnsAsync(true);
 
             var response = await controller.Details(urn);
 
             var result = Assert.IsType<ViewResult>(response);
-            var establishmentDetailViewModelResult = Assert.IsType<EstablishmentDetailViewModel>(result.Model);
-            Assert.Equal(expectLocationTab, establishmentDetailViewModelResult.TabDisplayPolicy.Location);
-            Assert.Equal(expectHelpDeskNotes, establishmentDetailViewModelResult.TabDisplayPolicy.Helpdesk);
-            Assert.Equal(expectGovernanceTab, establishmentDetailViewModelResult.TabDisplayPolicy.Governance);
+            var model = Assert.IsType<EstablishmentDetailViewModel>(result.Model);
+            Assert.Equal(expectLocationTab, model.TabDisplayPolicy.Location);
+            Assert.Equal(expectHelpDeskNotes, model.TabDisplayPolicy.Helpdesk);
+            Assert.Equal(expectGovernanceTab, model.TabDisplayPolicy.Governance);
         }
 
         [Theory]
         [InlineData(true, true, true, true)]
-        [InlineData(false, false, false, true)] // anomaly between the edit-policy returned by the API and the TabEditPolicy in the FE for helpdesk notes
+        [InlineData(false, false, false, true)]
         public async Task Estab_Details_TabEditPolicy(bool locationDataFieldEditable, bool expectLocationEdit, bool helpDeskNotesEditPolicy, bool expectHelpDeskEdit)
         {
             var urn = 123456;
@@ -421,29 +437,35 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                 EstablishmentTypeGroupId = (int) eLookupGroupType.MultiacademyTrust,
                 IEBTModel = new IEBTModel(),
                 StatusId = (int) eLookupEstablishmentStatus.Open,
-                TypeId = (int)It.IsAny<eLookupEstablishmentType>(),
+                TypeId = (int) eLookupEstablishmentType.Academy1619Converter,
                 Urn = urn
             };
+            mockPrincipal.Setup(x => x.IsInRole(EdubaseRoles.ROLE_BACKOFFICE)).Returns(true);
             mockPrincipal.Setup(x => x.Identity.IsAuthenticated).Returns(true);
-            mockPrincipal.Setup(x => x.IsInRole(EdubaseRoles.ESTABLISHMENT))
-                .Returns(false);
+            mockPrincipal.Setup(x => x.IsInRole(EdubaseRoles.ESTABLISHMENT)).Returns(false);
+
             mockEstablishmentReadService.Setup(x => x.GetAsync(urn, mockPrincipal.Object))
-                .ReturnsAsync(() => new ServiceResultDto<EstablishmentModel>(establishmentModel));
+                .ReturnsAsync(new ServiceResultDto<EstablishmentModel>(establishmentModel));
+
             mockEstablishmentReadService.Setup(x => x.GetLinkedEstablishmentsAsync(urn, mockPrincipal.Object))
-                .ReturnsAsync(() => new List<LinkedEstablishmentModel>());
+                .ReturnsAsync(new List<LinkedEstablishmentModel>());
+
             mockEstablishmentReadService.Setup(x => x.GetChangeHistoryAsync(urn, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), mockPrincipal.Object))
-                .ReturnsAsync(() => new PaginatedResult<EstablishmentChangeDto>());
+                .ReturnsAsync(new PaginatedResult<EstablishmentChangeDto>());
+
             mockGroupReadService.Setup(x => x.GetAllByEstablishmentUrnAsync(urn, mockPrincipal.Object))
-                .ReturnsAsync(() => new List<GroupModel>());
+                .ReturnsAsync(new List<GroupModel>());
+
             mockEstablishmentReadService.Setup(x => x.GetDisplayPolicyAsync(establishmentModel, mockPrincipal.Object))
-                .ReturnsAsync(() => new EstablishmentDisplayEditPolicy()
+                .ReturnsAsync(new EstablishmentDisplayEditPolicy()
                 {
                     IEBTDetail = new IEBTDetailDisplayEditPolicy()
                 });
-            mockEstablishmentReadService.Setup(x => x.CanEditAsync(urn, mockPrincipal.Object))
-                .ReturnsAsync(() => It.IsAny<bool>());
+
+            mockEstablishmentReadService.Setup(x => x.CanEditAsync(urn, mockPrincipal.Object)).ReturnsAsync(true);
+
             mockEstablishmentReadService.Setup(x => x.GetEditPolicyAsync(establishmentModel, mockPrincipal.Object))
-                .ReturnsAsync(() => new EstablishmentEditPolicyEnvelope()
+                .ReturnsAsync(new EstablishmentEditPolicyEnvelope()
                 {
                     EditPolicy = new EstablishmentDisplayEditPolicy()
                     {
@@ -461,19 +483,17 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers.UnitTests
                         Northing = locationDataFieldEditable
                     }
                 });
-            mockExternalLookupService.Setup(x => x.FscpdCheckExists(123456, null, false))
-                .ReturnsAsync(() => true);
-            mockExternalLookupService.Setup(x => x.SfbCheckExists(123456, FbType.School))
-                            .ReturnsAsync(() => true);
-            mockExternalLookupService.Setup(x => x.OfstedReportPageCheckExists(123456))
-                .ReturnsAsync(() => true);
+
+            mockExternalLookupService.Setup(x => x.FscpdCheckExists(urn, null, false)).ReturnsAsync(true);
+            mockExternalLookupService.Setup(x => x.SfbCheckExists(urn, FbType.School)).ReturnsAsync(true);
+            mockExternalLookupService.Setup(x => x.OfstedReportPageCheckExists(urn)).ReturnsAsync(true);
 
             var response = await controller.Details(urn);
 
             var result = Assert.IsType<ViewResult>(response);
-            var establishmentDetailViewModelResult = Assert.IsType<EstablishmentDetailViewModel>(result.Model);
-            Assert.Equal(expectLocationEdit, establishmentDetailViewModelResult.TabEditPolicy.Location);
-            Assert.Equal(expectHelpDeskEdit, establishmentDetailViewModelResult.TabEditPolicy.Helpdesk);
+            var model = Assert.IsType<EstablishmentDetailViewModel>(result.Model);
+            Assert.Equal(expectLocationEdit, model.TabEditPolicy.Location);
+            Assert.Equal(expectHelpDeskEdit, model.TabEditPolicy.Helpdesk);
         }
 
         protected virtual void Dispose(bool disposing)

@@ -340,8 +340,6 @@ namespace Edubase.Web.UI.Areas.Groups.Controllers
                 viewModel.GovernorsGridViewModel = await _governorsGridViewModelFactory.CreateGovernorsViewModel(id, null, user: User);
             }
 
-            await viewModel.SetFscpdAsync();
-
             if (viewModel.IsUserLoggedOn)
             {
                 viewModel.GovernorPermissions = await _governorsReadService.GetGovernorPermissions(null, id, User);

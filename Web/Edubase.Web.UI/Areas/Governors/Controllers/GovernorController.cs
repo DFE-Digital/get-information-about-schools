@@ -796,9 +796,7 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
                     {
                         ModelState.AddModelError("", "The selected shared governor has an invalid or missing role.");
                         return View(model);
-                    }
-
-                    await RetireGovernorAsync(model.ExistingGovernorId, model.DateTermEnds.ToDateTime().Value);
+                    }                  
 
                     var validation = await _governorsWriteService.AddSharedGovernorAppointmentAsync(
                         model.SelectedGovernorId,
@@ -808,6 +806,8 @@ namespace Edubase.Web.UI.Areas.Governors.Controllers
 
                     if (!validation.HasErrors)
                     {
+                        await RetireGovernorAsync(model.ExistingGovernorId, model.DateTermEnds.ToDateTime().Value);
+
                         if (model.Reinstate)
                         {
                             if (preRetirementModel?.RoleId.HasValue == true &&

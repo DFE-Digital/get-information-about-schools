@@ -77,17 +77,13 @@ namespace Edubase.Web.UI.Areas.Groups.Models
         public string FscpdServiceName => ConfigurationManager.AppSettings["FscpdServiceName"];
 
         public string FscpdURL => extService.FscpdURL(
-            GroupTypeId,
+            Group.GroupUId,
             Group.Name,
             FscpdGroupTypes.Contains(GroupTypeId));
 
         private bool? showFscpd;
 
-        public bool ShowFscpd
-        {
-            get => showFscpd.GetValueOrDefault();
-            private set => showFscpd = value;
-        }
+        public bool ShowFscpd => FscpdGroupTypes.Contains(GroupTypeId);
 
         //code originally inside the property, moved here to allow it to be async
         public async Task SetFscpdAsync()
