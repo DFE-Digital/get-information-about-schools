@@ -189,11 +189,6 @@
     </div>
 }
 
-@if (Model.Establishment.TypeId.OneOfThese(ET.SixthFormCentres, ET.FurtherEducation, ET.InstitutionFundedByOtherGovernmentDepartment))
-{
-    @OtherServicesLinks()
-}
-
 @*
     * #232199: If there is a valid Ofsted report page on the Ofsted website for this establishment's URN, always link to it.
     * Where we _also_ hold a cached copy of the latest Ofsted rating and inspection date, follow the usual display-policy rules.
@@ -269,15 +264,6 @@
             @Model.InspectorateName
         </dd>
     </div>
-}
-
-@if (Model.Establishment.TypeId.OneOfThese(
-    ET.OtherIndependentSchool,
-    ET.NonmaintainedSpecialSchool,
-    ET.OtherIndependentSpecialSchool,
-    ET.OnlineProvider))
-{
-    @OtherServicesLinks()
 }
 
 @if (Model.DisplayPolicy.ProprietorBodyName)
