@@ -196,8 +196,8 @@
 @if (Model.ShowOfstedReportLink)
 {
     <div class="govuk-summary-list__row" id="ofsted-rating-and-reports-key">
-        <dt class="govuk-summary-list__key" id="ofsted-rating-and-reports-value">Ofsted rating and reports</dt>
-        <dd class="govuk-summary-list__value">
+        <dt class="govuk-summary-list__key" id="ofsted-rating-and-reports-key">Ofsted rating and reports</dt>
+        <dd class="govuk-summary-list__value" id="ofsted-rating-and-reports-value">
             @{
                 var newlineRequired = false;
             }
@@ -209,23 +209,23 @@
                     if (Model.Establishment.OfstedRatingId.HasValue)
                     {
                         newlineRequired = true;
-                        <span class="highlighted-ofsted-rating">@Model.OfstedRatingName</span>
+            <span class="highlighted-ofsted-rating">@Model.OfstedRatingName</span>
                         if (Model.Establishment.OfstedInspectionDate.HasValue)
                         {
-                            <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("d MMMM yyyy")))</span>
+            <span>(Last inspection: @(Model.Establishment.OfstedInspectionDate?.ToString("d MMMM yyyy")))</span>
                         }
                     }
                     else
                     {
                         newlineRequired = true;
-                        <span>Latest inspection results not recorded on GIAS</span>
+            <span>Latest inspection results not recorded on GIAS</span>
                     }
                 }
             }
 
             @if (newlineRequired)
             {
-                <br />
+            <br />
             }
 
             <div class="govuk-!-margin-bottom-3">
@@ -236,16 +236,16 @@
 
             @if (!Model.ShowOfstedRatings)
             {
-                <details class="govuk-details">
-                    <summary class="govuk-details__summary">
-                        <span class="govuk-details__summary-text">
-                            Why the rating is not displayed
-                        </span>
-                    </summary>
-                    <div class="govuk-details__text">
-                        From September 2024, Ofsted no longer makes an overall effectiveness judgement in inspections of state-funded schools.
-                    </div>
-                </details>
+            <details class="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        Why the rating is not displayed
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    From September 2024, Ofsted no longer makes an overall effectiveness judgement in inspections of state-funded schools.
+                </div>
+            </details>
             }
         </dd>
     </div>
