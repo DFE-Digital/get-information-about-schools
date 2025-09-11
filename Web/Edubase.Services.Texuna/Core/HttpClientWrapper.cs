@@ -30,6 +30,7 @@ namespace Edubase.Services
         private readonly HttpClient _httpClient;
         private readonly JsonMediaTypeFormatter _formatter;
         private readonly ApiRecorderSessionItemRepository _apiRecorderSessionItemRepository;
+        private readonly bool _enableApiLogging;
         private const string HEADER_SA_USER_ID = "sa_user_id";
         private const string REQ_BODY_JSON_PAYLOAD = "EdubaseRequestBodyJsonPayload";
         private readonly IClientStorage _clientStorage;
@@ -40,6 +41,8 @@ namespace Edubase.Services
             _clientStorage = clientStorage;
             _formatter = formatter;
             _apiRecorderSessionItemRepository = apiRecorderSessionItemRepository;
+
+            bool.TryParse(ConfigurationManager.AppSettings["EnableApiLogging"], out _enableApiLogging);
         }
 
         public HttpClientWrapper(HttpClient httpClient) : this(httpClient, null, null, null)
@@ -450,17 +453,19 @@ namespace Edubase.Services
         {
             try
             {
-                bool.TryParse(ConfigurationManager.AppSettings["EnableApiLogging"], out bool enableApiLogging);
-                if (!enableApiLogging || _apiRecorderSessionItemRepository == null) return;
-
-                var apiSessionId = string.IsNullOrWhiteSpace(userId) ? "global" : userId.Clean();
+                if (!_enableApiLogging || _apiRecorderSessionItemRepository == null)
+                {
+                    return;
+                }
 
                 if (responseMessage == null && response?.Content != null)
                 {
-                    responseMessage = await response.Content?.ReadAsStringAsync();
+                    responseMessage = await response.Content.ReadAsStringAsync();
                 }
-                await _apiRecorderSessionItemRepository.CreateAsync(
-                    new Data.Entity.ApiRecorderSessionItem(apiSessionId, requestMessage.RequestUri.AbsolutePath)
+
+                var apiSessionId = string.IsNullOrWhiteSpace(userId) ? "global" : userId.Clean();
+
+                await _apiRecorderSessionItemRepository.CreateAsync(new Data.Entity.ApiRecorderSessionItem(apiSessionId, requestMessage.RequestUri.AbsolutePath)
                 {
                     HttpMethod = requestMessage.Method.ToString(),
                     RawRequestBody = GetRequestJsonBody(requestMessage),
