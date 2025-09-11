@@ -42,7 +42,10 @@ namespace Edubase.Services
             _formatter = formatter;
             _apiRecorderSessionItemRepository = apiRecorderSessionItemRepository;
 
-            bool.TryParse(ConfigurationManager.AppSettings["EnableApiLogging"], out _enableApiLogging);
+            if (bool.TryParse(ConfigurationManager.AppSettings["EnableApiLogging"], out _enableApiLogging))
+            {
+                _enableApiLogging = false;
+            }
         }
 
         public HttpClientWrapper(HttpClient httpClient) : this(httpClient, null, null, null)
@@ -451,13 +454,13 @@ namespace Edubase.Services
 
         private async Task LogApiInteraction(HttpRequestMessage requestMessage, HttpResponseMessage response, string responseMessage, TimeSpan elapsed, string userId)
         {
+            if (!_enableApiLogging || _apiRecorderSessionItemRepository == null)
+            {
+                return;
+            }
+
             try
             {
-                if (!_enableApiLogging || _apiRecorderSessionItemRepository == null)
-                {
-                    return;
-                }
-
                 if (responseMessage == null && response?.Content != null)
                 {
                     responseMessage = await response.Content.ReadAsStringAsync();
