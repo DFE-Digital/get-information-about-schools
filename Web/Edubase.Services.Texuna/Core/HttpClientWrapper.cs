@@ -30,6 +30,7 @@ namespace Edubase.Services
         private readonly HttpClient _httpClient;
         private readonly JsonMediaTypeFormatter _formatter;
         private readonly ApiRecorderSessionItemRepository _apiRecorderSessionItemRepository;
+        private readonly bool _enableApiLogging;
         private const string HEADER_SA_USER_ID = "sa_user_id";
         private const string REQ_BODY_JSON_PAYLOAD = "EdubaseRequestBodyJsonPayload";
         private readonly IClientStorage _clientStorage;
@@ -40,6 +41,11 @@ namespace Edubase.Services
             _clientStorage = clientStorage;
             _formatter = formatter;
             _apiRecorderSessionItemRepository = apiRecorderSessionItemRepository;
+
+            if (!bool.TryParse(ConfigurationManager.AppSettings["EnableApiLogging"], out _enableApiLogging))
+            {
+                _enableApiLogging = false;
+            }
         }
 
         public HttpClientWrapper(HttpClient httpClient) : this(httpClient, null, null, null)
@@ -448,29 +454,30 @@ namespace Edubase.Services
 
         private async Task LogApiInteraction(HttpRequestMessage requestMessage, HttpResponseMessage response, string responseMessage, TimeSpan elapsed, string userId)
         {
+            if (!_enableApiLogging || _apiRecorderSessionItemRepository == null)
+            {
+                return;
+            }
+
             try
             {
-                bool.TryParse(ConfigurationManager.AppSettings["EnableApiLogging"], out bool enableApiLogging);
-                var apiSessionId = _clientStorage?.Get("ApiSessionId") ?? (enableApiLogging ? userId.Clean() : null);
-
-                if (apiSessionId != null && _apiRecorderSessionItemRepository != null)
+                if (responseMessage == null && response?.Content != null)
                 {
-                    if (responseMessage == null && response?.Content != null)
-                    {
-                        responseMessage = await response.Content?.ReadAsStringAsync();
-                    }
-
-                    await _apiRecorderSessionItemRepository.CreateAsync(new Data.Entity.ApiRecorderSessionItem(apiSessionId, requestMessage.RequestUri.AbsolutePath)
-                    {
-                        HttpMethod = requestMessage.Method.ToString(),
-                        RawRequestBody = GetRequestJsonBody(requestMessage),
-                        RawResponseBody = responseMessage.Ellipsis(32000),
-                        RequestHeaders = ToJsonIndented(requestMessage.Headers),
-                        ResponseHeaders = ToJsonIndented(response.Headers),
-                        ElapsedTimeSpan = elapsed.ToString(),
-                        ElapsedMS = elapsed.TotalMilliseconds
-                    });
+                    responseMessage = await response.Content.ReadAsStringAsync();
                 }
+
+                var apiSessionId = string.IsNullOrWhiteSpace(userId) ? "global" : userId.Clean();
+
+                await _apiRecorderSessionItemRepository.CreateAsync(new Data.Entity.ApiRecorderSessionItem(apiSessionId, requestMessage.RequestUri.AbsolutePath)
+                {
+                    HttpMethod = requestMessage.Method.ToString(),
+                    RawRequestBody = GetRequestJsonBody(requestMessage),
+                    RawResponseBody = responseMessage.Ellipsis(32000),
+                    RequestHeaders = ToJsonIndented(requestMessage.Headers),
+                    ResponseHeaders = ToJsonIndented(response.Headers),
+                    ElapsedTimeSpan = elapsed.ToString(),
+                    ElapsedMS = elapsed.TotalMilliseconds
+                });
             }
             catch (Exception)
             {
