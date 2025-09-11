@@ -42,7 +42,7 @@ namespace Edubase.Services
             _formatter = formatter;
             _apiRecorderSessionItemRepository = apiRecorderSessionItemRepository;
 
-            if (bool.TryParse(ConfigurationManager.AppSettings["EnableApiLogging"], out _enableApiLogging))
+            if (!bool.TryParse(ConfigurationManager.AppSettings["EnableApiLogging"], out _enableApiLogging))
             {
                 _enableApiLogging = false;
             }
