@@ -451,26 +451,25 @@ namespace Edubase.Services
             try
             {
                 bool.TryParse(ConfigurationManager.AppSettings["EnableApiLogging"], out bool enableApiLogging);
-                var apiSessionId = _clientStorage?.Get("ApiSessionId") ?? (enableApiLogging ? userId.Clean() : null);
+                if (!enableApiLogging || _apiRecorderSessionItemRepository == null) return;
 
-                if (apiSessionId != null && _apiRecorderSessionItemRepository != null)
+                var apiSessionId = string.IsNullOrWhiteSpace(userId) ? "global" : userId.Clean();
+
+                if (responseMessage == null && response?.Content != null)
                 {
-                    if (responseMessage == null && response?.Content != null)
-                    {
-                        responseMessage = await response.Content?.ReadAsStringAsync();
-                    }
-
-                    await _apiRecorderSessionItemRepository.CreateAsync(new Data.Entity.ApiRecorderSessionItem(apiSessionId, requestMessage.RequestUri.AbsolutePath)
-                    {
-                        HttpMethod = requestMessage.Method.ToString(),
-                        RawRequestBody = GetRequestJsonBody(requestMessage),
-                        RawResponseBody = responseMessage.Ellipsis(32000),
-                        RequestHeaders = ToJsonIndented(requestMessage.Headers),
-                        ResponseHeaders = ToJsonIndented(response.Headers),
-                        ElapsedTimeSpan = elapsed.ToString(),
-                        ElapsedMS = elapsed.TotalMilliseconds
-                    });
+                    responseMessage = await response.Content?.ReadAsStringAsync();
                 }
+                await _apiRecorderSessionItemRepository.CreateAsync(
+                    new Data.Entity.ApiRecorderSessionItem(apiSessionId, requestMessage.RequestUri.AbsolutePath)
+                {
+                    HttpMethod = requestMessage.Method.ToString(),
+                    RawRequestBody = GetRequestJsonBody(requestMessage),
+                    RawResponseBody = responseMessage.Ellipsis(32000),
+                    RequestHeaders = ToJsonIndented(requestMessage.Headers),
+                    ResponseHeaders = ToJsonIndented(response.Headers),
+                    ElapsedTimeSpan = elapsed.ToString(),
+                    ElapsedMS = elapsed.TotalMilliseconds
+                });
             }
             catch (Exception)
             {
