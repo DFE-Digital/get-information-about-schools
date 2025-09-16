@@ -2,9 +2,69 @@ import GiasAttachUnload from '../GiasModules/GiasModals/GiasAttachUnload';
 
 const $main = $('#main-content');
 
+function getAppointingBodyAutoInput() {
+  const $byId = $("#governorAppointingBodyInput");
+  if ($byId.length) return $byId;
+  return $("#AppointingBodyId")
+    .closest(".govuk-form-group, form, body")
+    .find(".autocomplete__wrapper input.autocomplete__input, .autocomplete__wrapper input[type='text']")
+    .first();
+}
+
+function resolveOptionValueByTexts(texts) {
+  const $opts = $("#AppointingBodyId").find("option");
+  for (const t of texts) {
+    const $m = $opts.filter(function () {
+      return $(this).text().trim().toLowerCase() === String(t).trim().toLowerCase();
+    }).first();
+    if ($m.length) return $m.val();
+  }
+  for (const t of texts) {
+    const lt = String(t).trim().toLowerCase();
+    const $m = $opts.filter(function () {
+      return $(this).text().trim().toLowerCase().startsWith(lt);
+    }).first();
+    if ($m.length) return $m.val();
+  }
+  return null;
+}
+
+function selectAppointingBodyByTexts(texts, disableAfter = true) {
+  const $select = $("#AppointingBodyId");
+  const wasDisabled = $select.prop("disabled");
+  if (wasDisabled) $select.prop("disabled", false);
+
+  const val = resolveOptionValueByTexts(texts);
+  if (val != null) {
+    $select.val(String(val)).trigger("change");
+    const $auto = getAppointingBodyAutoInput();
+    if ($auto.length) {
+      const txt = $select.find(`option[value="${val}"]`).text().trim();
+      $auto.val(txt).trigger("input").trigger("change");
+      try {
+        $auto[0].dispatchEvent(new CustomEvent("autocomplete:confirm", { detail: txt, bubbles: true }));
+        $auto[0].dispatchEvent(new CustomEvent("autocomplete:confirm", { detail: { selection: txt }, bubbles: true }));
+      } catch (e) {
+        $auto.trigger("autocomplete:confirm", txt);
+        $auto.trigger("autocomplete:confirm", { selection: txt });
+      }
+      if (disableAfter) $auto.prop("disabled", true);
+    }
+  }
+
+  if (disableAfter) {
+    $select.prop("disabled", true);
+  } else if (wasDisabled) {
+    $select.prop("disabled", wasDisabled);
+  }
+}
+
 $(document).ready(function () {
-  if ($("#IsOriginalSignatoryMember").val() === 'true' || $("#IsOriginalChairOfTrustees").val() === 'true')
-    $("#AppointingBodyId").prop("disabled", "disabled");
+  if ($("#IsOriginalChairOfTrustees").val() === 'true') {
+    selectAppointingBodyByTexts(["Appointed by SSAT original signatory member(s)"], true);
+  } else if ($("#IsOriginalSignatoryMember").val() === 'true') {
+    selectAppointingBodyByTexts(["N/A"], true);
+  }
 });
 
 const unloadHandler = new GiasAttachUnload({
@@ -51,19 +111,21 @@ if (document.getElementById('IsHistoric') && document.getElementById('IsHistoric
 
 $("#IsOriginalSignatoryMember").on('change', function (e) {
   if ($("#IsOriginalSignatoryMember").val() === "true") {
-    $("#AppointingBodyId").val(16);
-    $("#AppointingBodyId").prop("disabled", "disabled");
+    selectAppointingBodyByTexts(["N/A"], true);
   } else {
-    $("#AppointingBodyId").prop("disabled", "");
+    $("#AppointingBodyId").prop("disabled", false);
+    const $auto = getAppointingBodyAutoInput();
+    if ($auto.length) $auto.prop("disabled", false);
   }
 });
 
 $("#IsOriginalChairOfTrustees").on('change', function (e) {
   if ($("#IsOriginalChairOfTrustees").val() === "true") {
-    $("#AppointingBodyId").val(19);
-    $("#AppointingBodyId").prop("disabled", "disabled");
+    selectAppointingBodyByTexts(["Appointed by SSAT original signatory member(s)"], true);
   } else {
-    $("#AppointingBodyId").prop("disabled", "");
+    $("#AppointingBodyId").prop("disabled", false);
+    const $auto = getAppointingBodyAutoInput();
+    if ($auto.length) $auto.prop("disabled", false);
   }
 });
 
