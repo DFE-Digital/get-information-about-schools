@@ -61,16 +61,9 @@ function selectAppointingBodyByTexts(texts, disableAfter = true) {
 
 $(document).ready(function () {
   if ($("#IsOriginalChairOfTrustees").val() === 'true') {
-    selectAppointingBodyByTexts([
-      "Appointed by SSAT original signatory member(s)",
-      "Appointed by SSAT Original signatory member(s)"
-    ], true);
+    selectAppointingBodyByTexts(["Appointed by SSAT original signatory member(s)"], true);
   } else if ($("#IsOriginalSignatoryMember").val() === 'true') {
-    selectAppointingBodyByTexts([
-      "N/A",
-      "Not applicable",
-      "Not-applicable"
-    ], true);
+    selectAppointingBodyByTexts(["N/A"], true);
   }
 });
 
@@ -118,11 +111,7 @@ if (document.getElementById('IsHistoric') && document.getElementById('IsHistoric
 
 $("#IsOriginalSignatoryMember").on('change', function (e) {
   if ($("#IsOriginalSignatoryMember").val() === "true") {
-    selectAppointingBodyByTexts([
-      "N/A",
-      "Not applicable",
-      "Not-applicable"
-    ], true);
+    selectAppointingBodyByTexts(["N/A"], true);
   } else {
     $("#AppointingBodyId").prop("disabled", false);
     const $auto = getAppointingBodyAutoInput();
@@ -132,10 +121,7 @@ $("#IsOriginalSignatoryMember").on('change', function (e) {
 
 $("#IsOriginalChairOfTrustees").on('change', function (e) {
   if ($("#IsOriginalChairOfTrustees").val() === "true") {
-    selectAppointingBodyByTexts([
-      "Appointed by SSAT original signatory member(s)",
-      "Appointed by SSAT Original signatory member(s)"
-    ], true);
+    selectAppointingBodyByTexts(["Appointed by SSAT original signatory member(s)"], true);
   } else {
     $("#AppointingBodyId").prop("disabled", false);
     const $auto = getAppointingBodyAutoInput();
