@@ -105,79 +105,79 @@ stages:
   
   ## Run this deploy stage only if conditions met to deploy to this environment
   ## Deploy to dev "dev" slot (`gias-dev.[...]`)
-  - stage: 'DeployDevSlotDev'
-    displayName: 'Deploy to Dev (slot dev)'
-    condition: and(succeeded(), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true')))
-    dependsOn:
-      - SetupVariablesStage
-      - BuildAndTestAndPackageStage
-    variables:
-      version: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.version'] ]
-      versionNoPadding: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.versionNoPadding'] ]
-    jobs:
+  # - stage: 'DeployDevSlotDev'
+    # displayName: 'Deploy to Dev (slot dev)'
+    # condition: and(succeeded(), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true')))
+    # dependsOn:
+      # - SetupVariablesStage
+      # - BuildAndTestAndPackageStage
+    # variables:
+      # version: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.version'] ]
+      # versionNoPadding: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.versionNoPadding'] ]
+    # jobs:
       
-      ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
-      - deployment: devDeploymentEnvironmentCheck
-        environment: 'gias-dev'
-        displayName: 'ADO Environment: `gias-dev` and main slot'
+      # ## Deployment job - special job type which allows applying environment protection rules (e.g., approvals) prior to continuing on remaining jobs
+      # - deployment: devDeploymentEnvironmentCheck
+        # environment: 'gias-dev'
+        # displayName: 'ADO Environment: `gias-dev` and main slot'
 
-      ## Debugging assistance job - display variables
-      - job: DisplayVariablesJob
-        steps:
-          - task: PowerShell@2
-            displayName: Display variables
-            inputs:
-              targetType: 'inline'
-              script: |
-                Write-Host "version: $(version)"
-                Write-Host "versionNoPadding: $(versionNoPadding)"
+      # ## Debugging assistance job - display variables
+      # - job: DisplayVariablesJob
+        # steps:
+          # - task: PowerShell@2
+            # displayName: Display variables
+            # inputs:
+              # targetType: 'inline'
+              # script: |
+                # Write-Host "version: $(version)"
+                # Write-Host "versionNoPadding: $(versionNoPadding)"
 
-      ## Deploy the packaged and tested code
-      - template: 'pipelines/template-deployment-stage.yml'
-        parameters:
-          enabled: 'true'
-          vmImage: 'windows-latest'
-          thisJobName: 'DeployWebUiDevSlotDevJob'
-          keyVaultServiceConnectionName: 'rg-t1dv-edubase'
-          keyVaultName: 'kv-t1dv-edubase'
-          deploymentServiceConnectionName: 'rg-t1dv-gias'
-          artifactReference: 'BuiltAndPackagedWebUiZip'
-          destinationResourceGroupName: 'rg-t1dv-gias'
-          destinationWebAppName: 'gias'
-          destinationDeployToSlotFlag: true
-          destinationSlotName: 'dev'
+      # ## Deploy the packaged and tested code
+      # - template: 'pipelines/template-deployment-stage.yml'
+        # parameters:
+          # enabled: 'true'
+          # vmImage: 'windows-latest'
+          # thisJobName: 'DeployWebUiDevSlotDevJob'
+          # keyVaultServiceConnectionName: 'rg-t1dv-edubase'
+          # keyVaultName: 'kv-t1dv-edubase'
+          # deploymentServiceConnectionName: 'rg-t1dv-gias'
+          # artifactReference: 'BuiltAndPackagedWebUiZip'
+          # destinationResourceGroupName: 'rg-t1dv-gias'
+          # destinationWebAppName: 'gias'
+          # destinationDeployToSlotFlag: true
+          # destinationSlotName: 'dev'
       
-      ## Smoke test the base URL to prove that the code has been deployed
-      - template: 'pipelines/template-smoke-test-deployment.yml'
-        parameters:
-          enabled: 'true'
-          vmImage: 'ubuntu-latest'
-          thisJobName: 'smokeTestGiasWebUiDevSlotDevJobWebRoot'
-          previousDeploymentJobName: 'DeployWebUiDevSlotDevJob'
-          keyVaultServiceConnectionName: 'rg-t1dv-edubase'
-          keyVaultName: 'kv-t1dv-edubase'
-          smokeTestUrl: '/'                                                     # Relative to the root of the web app
-          smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
-          smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
-          smokeTestNeedleString: $(versionNoPadding)
-          smokeTestDurationBetweenRequestsSeconds: 5
-          smokeTestMaximumDurationMinutes: 5                                    # C# Web App normally starts up very fast (should normally be available near immediately)
+      # ## Smoke test the base URL to prove that the code has been deployed
+      # - template: 'pipelines/template-smoke-test-deployment.yml'
+        # parameters:
+          # enabled: 'true'
+          # vmImage: 'ubuntu-latest'
+          # thisJobName: 'smokeTestGiasWebUiDevSlotDevJobWebRoot'
+          # previousDeploymentJobName: 'DeployWebUiDevSlotDevJob'
+          # keyVaultServiceConnectionName: 'rg-t1dv-edubase'
+          # keyVaultName: 'kv-t1dv-edubase'
+          # smokeTestUrl: '/'                                                     # Relative to the root of the web app
+          # smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
+          # smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
+          # smokeTestNeedleString: $(versionNoPadding)
+          # smokeTestDurationBetweenRequestsSeconds: 5
+          # smokeTestMaximumDurationMinutes: 5                                    # C# Web App normally starts up very fast (should normally be available near immediately)
       
-      ## Smoke test a URL which exercises the API and file storage connections, to prove that the code+configuration works with background services
-      - template: 'pipelines/template-smoke-test-deployment.yml'
-        parameters:
-          enabled: 'true'
-          vmImage: 'ubuntu-latest'
-          thisJobName: 'smokeTestGiasWebUiDevSlotDevJobDownloadsPage'
-          previousDeploymentJobName: 'DeployWebUiDevSlotDevJob'
-          keyVaultServiceConnectionName: 'rg-t1dv-edubase'
-          keyVaultName: 'kv-t1dv-edubase'
-          smokeTestUrl: '/Downloads'                                            # Relative to the root of the web app
-          smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
-          smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
-          smokeTestNeedleString: $(versionNoPadding)
-          smokeTestDurationBetweenRequestsSeconds: 5
-          smokeTestMaximumDurationMinutes: 5                                    # C# Web App normally starts up very fast (should normally be available near immediately) 
+      # ## Smoke test a URL which exercises the API and file storage connections, to prove that the code+configuration works with background services
+      # - template: 'pipelines/template-smoke-test-deployment.yml'
+        # parameters:
+          # enabled: 'true'
+          # vmImage: 'ubuntu-latest'
+          # thisJobName: 'smokeTestGiasWebUiDevSlotDevJobDownloadsPage'
+          # previousDeploymentJobName: 'DeployWebUiDevSlotDevJob'
+          # keyVaultServiceConnectionName: 'rg-t1dv-edubase'
+          # keyVaultName: 'kv-t1dv-edubase'
+          # smokeTestUrl: '/Downloads'                                            # Relative to the root of the web app
+          # smokeTestBasicAuthUsernameKey: 'gias-smoke-test-http-auth-username'   # Note this is specifically the username key, not the username itself
+          # smokeTestBasicAuthPasswordKey: 'gias-smoke-test-http-auth-password'   # Note this is specifically the password key, not the password itself
+          # smokeTestNeedleString: $(versionNoPadding)
+          # smokeTestDurationBetweenRequestsSeconds: 5
+          # smokeTestMaximumDurationMinutes: 5                                    # C# Web App normally starts up very fast (should normally be available near immediately) 
 
 
 
