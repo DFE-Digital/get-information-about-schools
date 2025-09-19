@@ -584,7 +584,7 @@ stages:
     dependsOn:
       - SetupVariablesStage
       - BuildAndTestAndPackageStage
-      #- DeployDevSlotMain
+      - DeployDevSlotMain
       #- DeployDevSlotDev
     variables:
       version: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.version'] ]
