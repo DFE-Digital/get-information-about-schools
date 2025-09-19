@@ -505,7 +505,7 @@ stages:
       - SetupVariablesStage
       - BuildAndTestAndPackageStage
       - DeployDevSlotMain
-      - DeployDevSlotDev
+      #- DeployDevSlotDev
     variables:
       version: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.version'] ]
       versionNoPadding: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.versionNoPadding'] ]
