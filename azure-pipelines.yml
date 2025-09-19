@@ -660,7 +660,7 @@ stages:
   ## Run this deploy stage only if conditions met to deploy to this environment
   - stage: 'DeployPreProductionSlotMain'
     displayName: 'Deploy to PreProduction (main slot)'
-    condition: and(succeeded(), eq(variables.isRelease, 'true'))
+    condition: and(or(succeeded('DeployTestSlotMain'), succeeded('DeployTestSlotSignInSimulator'), succeeded('DeployDevSandbox1')), eq(variables.isRelease, 'true'))
     dependsOn:
       - SetupVariablesStage
       - BuildAndTestAndPackageStage
