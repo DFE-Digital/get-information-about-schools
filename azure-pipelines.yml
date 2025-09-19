@@ -500,7 +500,7 @@ stages:
   ## Deploy to test "sis" slot (`gias-stage-sis.[...]`)
   - stage: 'DeployTestSlotSignInSimulator'
     displayName: 'Deploy to Test (slot `stage-sis`, integrated with the sign-in-simulator)'
-    condition: and(succeeded('DeployDevSlotMain'), not(succeeded('DeployDevSandbox1'), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true')))
+    condition: and(succeeded('DeployDevSlotMain'), not(succeeded('DeployDevSandbox1')), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true')))
     dependsOn:
       - SetupVariablesStage
       - BuildAndTestAndPackageStage
@@ -580,7 +580,7 @@ stages:
   ## Deploy to test "main" slot (`gias-stage.[..]`), which integrates with Azure Front Door (ADF) and Web Application Firewall (WAF)
   - stage: 'DeployTestSlotMain'
     displayName: 'Deploy to Test (main slot with DSI integration, known as `stage`)'
-    condition: and(succeeded('DeployDevSlotMain'), not(succeeded('DeployDevSandbox1'), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true')))
+    condition: and(succeeded('DeployDevSlotMain'), not(succeeded('DeployDevSandbox1')), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true')))
     dependsOn:
       - SetupVariablesStage
       - BuildAndTestAndPackageStage
