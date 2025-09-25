@@ -8,12 +8,33 @@
     var establishmentTypeId = Request.QueryString["establishmentTypeId"];
     var sortBy = Request.QueryString["sortBy"] ?? "OpenDate-desc";
     var month = Request.QueryString["month"] ?? Model.SelectedMonth;
-    Func<string, string> sortLink = column =>
+    var sortParts = (sortBy ?? "OpenDate-desc").Split('-');
+    var sortField = sortParts.Length > 0 && !string.IsNullOrWhiteSpace(sortParts[0]) ? sortParts[0] : "OpenDate";
+    var sortDir = sortParts.Length > 1 ? sortParts[1].ToLowerInvariant() : "desc";
+
+    var tableColumns = new List<Tuple<string, string>>
     {
-        var dir = "asc";
-        if (sortBy.StartsWith(column + "-") && sortBy.EndsWith("asc")) dir = "desc";
-        return Url.RouteUrl("ManageAcademyOpenings", new { sortBy = column + "-" + dir, skip = 0, establishmentTypeId, month });
+        Tuple.Create("OpenDate", "Opening date"),
+        Tuple.Create("Urn", "URN"),
+        Tuple.Create("EstablishmentName", "Establishment name"),
+        Tuple.Create("EstablishmentType", "Establishment type"),
+        Tuple.Create("PredecessorUrn", "Predecessor URN"),
+        Tuple.Create("PredecessorName", "Predecessor name"),
     };
+    var baseUrl = Request?.Url?.AbsolutePath ?? Url.RouteUrl("ManageAcademyOpenings");
+    var detailUrlTemplate = Url.Action("Details", "Establishment", new { area = "Establishments", id = "__urn__" });
+    var editUrlTemplate = Url.RouteUrl("EditAcademyOpening", new { area = "Establishments", urn = "__urn__" });
+    var allOpeningsPayload = (Model.AllAcademyOpenings ?? Enumerable.Empty<EditAcademyOpeningViewModel>()).Select(x => new
+    {
+        urn = x.Urn,
+        establishmentName = x.EstablishmentName,
+        establishmentType = x.EstablishmentType,
+        predecessorUrn = x.PredecessorUrn,
+        predecessorName = x.PredecessorName,
+        openDate = x.OpenDate.ToString("O"),
+        openDateDisplay = x.OpenDate.ToString("d MMMM yyyy")
+    });
+    var allOpeningsJson = Json.Encode(allOpeningsPayload);
 }
 
 @section BreadCrumbs
@@ -57,97 +78,133 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <div id="calendar" class="tab-content">
-            <form method="get" class="govuk-form-group month-selector">
-                <input type="hidden" name="sortBy" value="@sortBy" />
-                <input type="hidden" name="establishmentTypeId" value="@establishmentTypeId" />
-                <label class="govuk-label" for="opening-date-filter">Opening date</label>
-                <select id="opening-date-filter" name="month" class="govuk-select" onchange="this.form.submit()">
-                    <option value="">All months</option>
-                    @foreach (var m in Model.MonthOptions)
-                    {
-                        <option value="@m.Value" @(m.Selected ? "selected" : "")>@m.Text</option>
-                    }
-                </select>
-                <noscript><button type="submit" class="govuk-button">Filter</button></noscript>
-            </form>
-            <table class="govuk-table gias-table academy-openings sortable-table" id="academy-openings-table">
-                <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header cell-openingdate">
-                        <a href="@sortLink("OpenDate")" class="govuk-link">Opening date</a>
-                    </th>
-                    <th scope="col" class="govuk-table__header cell-urn">
-                        <a href="@sortLink("Urn")" class="govuk-link">URN</a>
-                    </th>
-                    <th scope="col" class="govuk-table__header cell-establishmentname">
-                        <a href="@sortLink("EstablishmentName")" class="govuk-link">Establishment name</a>
-                    </th>
-                    <th scope="col" class="govuk-table__header cell-establishmenttype">
-                        <a href="@sortLink("EstablishmentType")" class="govuk-link">Establishment type</a>
-                    </th>
-                    <th scope="col" class="govuk-table__header cell-predecessorurn">
-                        <a href="@sortLink("PredecessorUrn")" class="govuk-link">Predecessor URN</a>
-                    </th>
-                    <th scope="col" class="govuk-table__header cell-predecessorname">
-                        <a href="@sortLink("PredecessorName")" class="govuk-link">Predecessor name</a>
-                    </th>
-                </tr>
-                </thead>
-                <tbody class="govuk-table__body">
-                @foreach (var entry in Model.AcademyOpenings.Items)
-                {
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell cell-openingdate">@entry.OpenDate.ToString("d MMMM yyyy")</td>
-                        <td class="govuk-table__cell cell-urn">
-                            @Html.ActionLink(entry.Urn.ToString(),
-                                "Details", "Establishment",
-                                new { id = entry.Urn, area = "Establishments" }, new { @class = "govuk-link" })
-                        </td>
-                        <td class="govuk-table__cell cell-establishmentname">@entry.EstablishmentName</td>
-                        <td class="govuk-table__cell cell-establishmenttype">@entry.EstablishmentType</td>
-                        <td class="govuk-table__cell cell-predecessorurn">
-                            @if (!string.IsNullOrWhiteSpace(entry.PredecessorUrn))
+            <div id="academy-openings-content"
+                 data-sort-field="@sortField"
+                 data-sort-dir="@sortDir"
+                 data-skip="@Model.Skip"
+                 data-take="@Model.AcademyOpenings.Take"
+                 data-month="@month"
+                 data-base-url="@baseUrl"
+                 data-establishment-type-id="@establishmentTypeId"
+                 data-detail-url-template="@detailUrlTemplate"
+                 data-edit-url-template="@editUrlTemplate">
+                <form method="get" class="govuk-form-group month-selector">
+                    <input type="hidden" name="sortBy" value="@sortBy" />
+                    <input type="hidden" name="establishmentTypeId" value="@establishmentTypeId" />
+                    <label class="govuk-label" for="opening-date-filter">Opening date</label>
+                    <select id="opening-date-filter" name="month" class="govuk-select">
+                        <option value="">All months</option>
+                        @foreach (var m in Model.MonthOptions)
+                        {
+                            <option value="@m.Value" @(m.Selected ? "selected" : "")>@m.Text</option>
+                        }
+                    </select>
+                    <noscript><button type="submit" class="govuk-button">Filter</button></noscript>
+                </form>
+                <div class="upper-pagination push--bottom">
+                    <nav role="navigation" aria-label="Pagination" class="pagination">
+                        <p class="pagination-info">
+                            Showing @Model.AcademyOpenings.FirstResultIndex
+                            - @Model.AcademyOpenings.LastResultIndex of @Model.AcademyOpenings.Count
+                        </p>
+                        <ul class="pagination-links">
+                            @if (Model.Skip > 0)
                             {
-                                @Html.ActionLink(entry.PredecessorUrn, "Details", "Establishment", new { id = entry.PredecessorUrn, area = "Establishments" }, new { @class = "govuk-link" })
+                                <li>
+                                    @Html.RouteLink("<< Previous", "ManageAcademyOpenings", new { skip = Model.Skip - Model.Take, sortBy = sortBy, establishmentTypeId, month }, new { @class = "pagination-prev" })
+                                </li>
                             }
-                        </td>
-                        <td class="govuk-table__cell cell-predecessorname">@entry.PredecessorName</td>
-                        <td class="govuk-table__cell cell-edit">
-                            @Html.ActionLink("Edit", "EditAcademyOpening", "AcademyOpenings",
-                                new { urn = entry.Urn, area = "Establishments" }, new { @class = "govuk-link" })
-                        </td>
+                            @if (Model.Skip + Model.Take < Model.Count)
+                            {
+                                <li>
+                                    @Html.RouteLink("Next >>", "ManageAcademyOpenings", new { skip = Model.Skip + Model.Take, sortBy = sortBy, establishmentTypeId, month }, new { @class = "pagination-next" })
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+                <table class="govuk-table gias-table academy-openings sortable-table" id="academy-openings-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        @foreach (var column in tableColumns)
+                        {
+                            var columnName = column.Item1;
+                            var columnText = column.Item2;
+                            var isSorted = string.Equals(sortField, columnName, StringComparison.OrdinalIgnoreCase);
+                            var nextDir = isSorted && sortDir == "asc" ? "desc" : "asc";
+                            var ariaLabel = columnText;
+                            <th scope="col" class="govuk-table__header cell-@columnName.ToLowerInvariant()" @if (isSorted)
+                                                                                                            {
+                                                                                                                <text> aria-sort="@(sortDir == "asc" ? "ascending" : "descending")"</text>;
+                                                                                                            }>
+                                <a href="@Url.RouteUrl("ManageAcademyOpenings", new { sortBy = columnName + "-" + nextDir, skip = 0, establishmentTypeId, month })"
+                                   class="@($"govuk-link{Html.Conditional(isSorted, " selected-sort")}{@Html.Conditional(isSorted && sortDir == "asc", " sorted-asc")}{Html.Conditional(isSorted && sortDir == "desc", " sorted-desc")}")"
+                                   aria-label="@ariaLabel"
+                                   data-sort-column="@columnName">
+                                    @columnText
+                                </a>
+                            </th>
+                        }
                     </tr>
-                }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    @foreach (var entry in Model.AcademyOpenings.Items)
+                    {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell cell-openingdate">@entry.OpenDate.ToString("d MMMM yyyy")</td>
+                            <td class="govuk-table__cell cell-urn">
+                                @Html.ActionLink(entry.Urn.ToString(),
+                                    "Details", "Establishment",
+                                    new { id = entry.Urn, area = "Establishments" }, new { @class = "govuk-link" })
+                            </td>
+                            <td class="govuk-table__cell cell-establishmentname">@entry.EstablishmentName</td>
+                            <td class="govuk-table__cell cell-establishmenttype">@entry.EstablishmentType</td>
+                            <td class="govuk-table__cell cell-predecessorurn">
+                                @if (!string.IsNullOrWhiteSpace(entry.PredecessorUrn))
+                                {
+                                    @Html.ActionLink(entry.PredecessorUrn, "Details", "Establishment", new { id = entry.PredecessorUrn, area = "Establishments" }, new { @class = "govuk-link" })
+                                }
+                            </td>
+                            <td class="govuk-table__cell cell-predecessorname">@entry.PredecessorName</td>
+                            <td class="govuk-table__cell cell-edit">
+                                @Html.ActionLink("Edit", "EditAcademyOpening", "AcademyOpenings",
+                                    new { urn = entry.Urn, area = "Establishments" }, new { @class = "govuk-link" })
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
 
-            <div class="lower-pagination push--bottom">
-                <nav role="navigation" aria-label="Pagination" class="pagination">
-                    <p class="pagination-info">
-                        Showing @Model.AcademyOpenings.FirstResultIndex
-                        to @Model.AcademyOpenings.LastResultIndex of @Model.AcademyOpenings.Count
-                    </p>
-                    <ul class="pagination-links">
-                        @if (Model.Skip > 0)
-                        {
-                            <li>
-                                @Html.RouteLink("<< Previous", "ManageAcademyOpenings", new { skip = Model.Skip - Model.Take, sortBy = sortBy, establishmentTypeId, month }, new { @class = "pagination-prev" })
-                            </li>
-                        }
-                        @if (Model.Skip + Model.Take < Model.Count)
-                        {
-                            <li>
-                                @Html.RouteLink("Next >>", "ManageAcademyOpenings", new { skip = Model.Skip + Model.Take, sortBy = sortBy, establishmentTypeId, month }, new { @class = "pagination-next"})
-                            </li>
-                        }
-                    </ul>
-                </nav>
+                <div class="lower-pagination push--bottom">
+                    <nav role="navigation" aria-label="Pagination" class="pagination">
+                        <p class="pagination-info">
+                            Showing @Model.AcademyOpenings.FirstResultIndex
+                            - @Model.AcademyOpenings.LastResultIndex of @Model.AcademyOpenings.Count
+                        </p>
+                        <ul class="pagination-links">
+                            @if (Model.Skip > 0)
+                            {
+                                <li>
+                                    @Html.RouteLink("<< Previous", "ManageAcademyOpenings", new { skip = Model.Skip - Model.Take, sortBy = sortBy, establishmentTypeId, month }, new { @class = "pagination-prev" })
+                                </li>
+                            }
+                            @if (Model.Skip + Model.Take < Model.Count)
+                            {
+                                <li>
+                                    @Html.RouteLink("Next >>", "ManageAcademyOpenings", new { skip = Model.Skip + Model.Take, sortBy = sortBy, establishmentTypeId, month }, new { @class = "pagination-next" })
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+                <script id="academy-openings-data" type="application/json">
+                    @Html.Raw(allOpeningsJson)
+                </script>
+                @helpers.BackToTopLink()
             </div>
-            @helpers.BackToTopLink()
         </div>
     </div>
 </div>
-
 
 @section ViewScripts
 {

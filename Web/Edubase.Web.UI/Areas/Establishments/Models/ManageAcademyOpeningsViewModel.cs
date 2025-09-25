@@ -12,6 +12,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
             Take = 50;
         }
         public PaginatedResult<EditAcademyOpeningViewModel> AcademyOpenings { get; set; }
+        public IEnumerable<EditAcademyOpeningViewModel> AllAcademyOpenings { get; set; } = new List<EditAcademyOpeningViewModel>();
         public string PageTitle { get; set; } = string.Empty;
         public IEnumerable<SelectListItem> MonthOptions { get; set; } = new List<SelectListItem>();
         public string SelectedMonth { get; set; }
