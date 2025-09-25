@@ -346,6 +346,8 @@ stages:
     dependsOn:
       - SetupVariablesStage
       - BuildAndTestAndPackageStage
+      - DeployTestSlotSignInSimulator
+      - DeployTestSlotMain
     variables:
       version: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.version'] ]
       versionNoPadding: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.versionNoPadding'] ]
@@ -659,6 +661,7 @@ stages:
       - BuildAndTestAndPackageStage
       - DeployTestSlotMain
       - DeployTestSlotSignInSimulator
+      - DeployDevSandbox1
     variables:
       version: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.version'] ]
       versionNoPadding: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.versionNoPadding'] ]
