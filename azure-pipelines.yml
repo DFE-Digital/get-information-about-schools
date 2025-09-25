@@ -185,10 +185,11 @@ stages:
   ## Deploy to dev "main" slot, which integrates with Azure Front Door (ADF) and Web Application Firewall (WAF)
   - stage: 'DeployDevSlotMain'
     displayName: 'Deploy to Dev (main slot with AFD/WAF)'
-    condition: and(succeeded('BuildAndTestAndPackageStage'), not(succeeded('DeployDevSandbox1')), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true')))
+    condition: and(succeeded(), not(succeeded('DeployDevSandbox1')), or(eq(variables.isRelease, 'true'), eq(variables.isDev, 'true')))
     dependsOn:
       - SetupVariablesStage
       - BuildAndTestAndPackageStage
+      - DeployDevSandbox1
     variables:
       version: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.version'] ]
       versionNoPadding: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.versionNoPadding'] ]
@@ -664,7 +665,6 @@ stages:
       - BuildAndTestAndPackageStage
       - DeployTestSlotMain
       - DeployTestSlotSignInSimulator
-      - DeployDevSandbox1
     variables:
       version: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.version'] ]
       versionNoPadding: $[ stageDependencies.SetupVariablesStage.SetupVariablesJob.outputs['versionNumberOutputStep.versionNoPadding'] ]
