@@ -46,7 +46,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
         [HttpGet, Route("academy-openings", Name = "ManageAcademyOpenings")]
         public async Task<ActionResult> ManageAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc",
-            string establishmentTypeId = null)
+            string establishmentTypeId = null, string month = null)
         {
             var take = 50;
             var now = DateTime.Now;
@@ -55,8 +55,6 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             var to = from.AddYears(30);
 
-            var property = typeof(EditAcademyOpeningViewModel).GetProperty(sortBy);
-
             if (!AcademyUtility.DoesHaveAccessAuthorization(User, establishmentTypeId))
                 throw AcademyUtility.GetPermissionDeniedException();
 
@@ -64,42 +62,68 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
             estabTypes =
                 AcademyUtility.FilterEstablishmentsIfSecureAcademy16To19(estabTypes, establishmentTypeId);
 
-            var result = await _establishmentReadService.SearchAsync(
-                new EstablishmentSearchPayload
+            var payLoad = new EstablishmentSearchPayload
+            {
+                Skip = 0,
+                Take = 1,
+                SortBy = eSortBy.NameAlphabeticalAZ,
+                Filters = AcademyUtility.GetEstablishmentSearchFilters(from, to, establishmentTypeId),
+                Select = new List<string>
                 {
-                    Skip = skip,
-                    Take = take,
-                    SortBy = eSortBy.NameAlphabeticalAZ,
-                    Filters = AcademyUtility.GetEstablishmentSearchFilters(from, to, establishmentTypeId),
-                    Select = new List<string>
-                    {
-                        nameof(M.Name),
-                        nameof(M.Urn),
-                        nameof(M.TypeId),
-                        nameof(M.OpenDate),
-                        nameof(M.PredecessorName),
-                        nameof(M.PredecessorUrn)
-                    }
-                }, User);
+                    nameof(M.Name),
+                    nameof(M.Urn),
+                    nameof(M.TypeId),
+                    nameof(M.OpenDate),
+                    nameof(M.PredecessorName),
+                    nameof(M.PredecessorUrn)
+                }
+            };
 
+            var countResult = await _establishmentReadService.SearchAsync(payLoad, User);
+            payLoad.Take = countResult.Count;
+            var result = await _establishmentReadService.SearchAsync(payLoad, User);
 
-            var academyOpenings = new List<EditAcademyOpeningViewModel>();
+            var academyOpeningsAll = new List<EditAcademyOpeningViewModel>();
             foreach (var x in result.Items)
             {
                 int preUrn = 0;
                 int.TryParse(x.PredecessorUrn, out preUrn);
 
-                academyOpenings.Add(new EditAcademyOpeningViewModel()
+                academyOpeningsAll.Add(new EditAcademyOpeningViewModel()
                 {
-                    Urn = (int) x.Urn,
+                    Urn = (int)x.Urn,
                     EstablishmentName = x.Name,
                     EstablishmentType =
                         x.TypeId.HasValue ? estabTypes.FirstOrDefault(t => t.Id == x.TypeId)?.Name : null,
                     OpeningDate = new UI.Models.DateTimeViewModel(x.OpenDate),
                     OpenDate = x.OpenDate.GetValueOrDefault(),
                     PredecessorName = x.PredecessorName,
-                    PredecessorUrn = preUrn.ToString()
+                    PredecessorUrn = preUrn > 0 ? preUrn.ToString() : null
                 });
+            }
+
+            var monthOptions = academyOpeningsAll
+                .Select(x => new { x.OpenDate.Year, x.OpenDate.Month })
+                .Distinct()
+                .OrderBy(x => new DateTime(x.Year, x.Month, 1))
+                .Select(x => new SelectListItem
+                {
+                    Value = $"{x.Month}.{x.Year}",
+                    Text = new DateTime(x.Year, x.Month, 1).ToString("MMMM yyyy"),
+                    Selected = $"{x.Month}.{x.Year}" == month
+                })
+                .ToList();
+
+            var academyOpenings = academyOpeningsAll;
+            if (!string.IsNullOrWhiteSpace(month))
+            {
+                var parts = month.Split('.');
+                if (parts.Length == 2 && int.TryParse(parts[0], out var m) && int.TryParse(parts[1], out var y))
+                {
+                    academyOpenings = academyOpeningsAll
+                        .Where(x => x.OpenDate.Month == m && x.OpenDate.Year == y)
+                        .ToList();
+                }
             }
 
             switch (sortBy)
@@ -130,10 +154,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     academyOpenings.Sort((x, y) => y.EstablishmentType.CompareTo(x.EstablishmentType));
                     break;
                 case "PredecessorUrn-asc":
-                    academyOpenings.Sort((x, y) => x.PredecessorUrn.CompareTo(y.PredecessorUrn));
+                    academyOpenings.Sort((x, y) => string.Compare(x.PredecessorUrn, y.PredecessorUrn, StringComparison.Ordinal));
                     break;
                 case "PredecessorUrn-desc":
-                    academyOpenings.Sort((x, y) => y.PredecessorUrn.CompareTo(x.PredecessorUrn));
+                    academyOpenings.Sort((x, y) => string.Compare(y.PredecessorUrn, x.PredecessorUrn, StringComparison.Ordinal));
                     break;
                 case "PredecessorName-asc":
                     academyOpenings.Sort(delegate(EditAcademyOpeningViewModel x, EditAcademyOpeningViewModel y)
@@ -161,15 +185,18 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     break;
             }
 
+            var paged = academyOpenings.Skip(skip).Take(take).ToList();
 
-            var vm = new ManageAcademyOpeningsViewModel()
+            var vm = new ManageAcademyOpeningsViewModel
             {
                 AcademyOpenings =
-                    new PaginatedResult<EditAcademyOpeningViewModel>(skip, take, result.Count, academyOpenings),
-                Items = academyOpenings,
-                PageTitle = AcademyUtility.GetAcademyOpeningPageTitle(establishmentTypeId)
+                    new PaginatedResult<EditAcademyOpeningViewModel>(skip, take, academyOpenings.Count, paged),
+                Items = paged,
+                PageTitle = AcademyUtility.GetAcademyOpeningPageTitle(establishmentTypeId),
+                MonthOptions = monthOptions,
+                SelectedMonth = month
             };
-            vm.Count = result.Count;
+            vm.Count = academyOpenings.Count;
             vm.Skip = skip;
             return View("Index", vm);
         }
@@ -261,8 +288,12 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route("search-academies", Name = "SearchAcademyOpenings")]
-        public async Task<ActionResult> SearchAcademyOpenings(int? urn, bool? isSearching)
+        public async Task<ActionResult> SearchAcademyOpenings(int? urn, bool? isSearching, string establishmentTypeId = null)
         {
+            if (!AcademyUtility.DoesHaveAccessAuthorization(User, establishmentTypeId))
+                throw AcademyUtility.GetPermissionDeniedException();
+
+            ViewBag.Title = AcademyUtility.GetAcademyOpeningPageTitle(establishmentTypeId);
             if (urn.HasValue)
             {
                 var result = await _establishmentReadService.GetAsync((int) urn, User);
