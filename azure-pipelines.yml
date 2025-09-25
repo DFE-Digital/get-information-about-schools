@@ -35,6 +35,8 @@ variables:
   ## - need condition to allow promotion of dev branch into test? but no higher?
   isRelease: $[startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')]
 
+  ## used to determine if this should be deployed to sandbox
+  isHotfix: $[or(endsWith(variables['Build.SourceBranch'], '-hotfix'), endsWith(variables['Build.SourceBranch'], '-minor')]
 
 stages:
   
@@ -103,7 +105,7 @@ stages:
     ## Run this deploy stage only if conditions met to deploy to this environment
   - stage: 'DeployDevSandbox1'
     displayName: 'Deploy to Slot Sandbox1'
-    condition: and(succeeded(), eq(variables.isSandbox1, 'true'))
+    condition: and(succeeded(), eq(variables.isSandbox1, 'true'), eq(variables.isHotfix, 'true'))
     dependsOn:
       - SetupVariablesStage
       - BuildAndTestAndPackageStage
