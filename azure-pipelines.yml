@@ -36,7 +36,7 @@ variables:
   isRelease: $[startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')]
 
   ## used to determine if this should be deployed to sandbox
-  isHotfix: $[or(endsWith(variables['Build.SourceBranch'], '-hotfix'), endsWith(variables['Build.SourceBranch'], '-minor')]
+  isHotfix: $[or(endsWith(variables['Build.SourceBranch'], '-hotfix'), endsWith(variables['Build.SourceBranch'], '-minor'))]
 
 stages:
   
