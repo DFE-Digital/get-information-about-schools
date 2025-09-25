@@ -209,9 +209,9 @@
             <span class="govuk-error-message" v-show="@showBinding" v-html="@messageBinding"></span>
         }
         @{
-            var dayCssClasses = string.Concat(Html.TextBoxValidationClass(x => x.Day), " govuk-input ", $"{cssClassPrefix}-day");
-            var monthCssClasses = string.Concat(Html.TextBoxValidationClass(x => x.Month), " govuk-input ", $"{cssClassPrefix}-month");
-            var yearCssClasses = string.Concat(Html.TextBoxValidationClass(x => x.Year), " govuk-input ", $"{cssClassPrefix}-year");
+            var dayCssClasses = string.Concat(Html.TextBoxValidationClass(x => x.Day), " govuk-input govuk-date-input__input govuk-input--width-2 ", $"{cssClassPrefix}-day");
+            var monthCssClasses = string.Concat(Html.TextBoxValidationClass(x => x.Month), " govuk-input govuk-date-input__input govuk-input--width-2 changedMonth", $"{cssClassPrefix}-month");
+            var yearCssClasses = string.Concat(Html.TextBoxValidationClass(x => x.Year), " govuk-input govuk-date-input__input govuk-input--width-4", $"{cssClassPrefix}-year");
         }
 
         <div class="govuk-date-input">

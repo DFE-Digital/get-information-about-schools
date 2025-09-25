@@ -40,8 +40,6 @@ $(function () {
 
   state.currentPage = state.take > 0 ? Math.floor(state.skip / state.take) : 0;
 
-  var UNSORTED_DESCRIPTION = '. Click to sort data by this column.';
-
   function parseDate(value) {
     if (!value) {
       return 0;
@@ -52,13 +50,26 @@ $(function () {
     return isNaN(timestamp) ? 0 : timestamp;
   }
 
+  function getDateValue(item) {
+    if (item) {
+      return 0;
+    }
+    var year = parseInt(item.openDateYear, 10);
+    var month = parseInt(item.openDateMonth, 10);
+    var day = parseInt(item.openDateDay, 10);
+
+    if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+      return (year * 10000) + (month * 100) + day;
+    }
+    return parseDate(item.openDate);
+  }
+
   function compareStrings(left, right) {
     var a = left || '';
     var b = right || '';
     if (a === b) {
       return 0;
     }
-
     return a.localeCompare(b);
   }
 
@@ -77,7 +88,6 @@ $(function () {
     if (!right) {
       return -1;
     }
-
     return left.localeCompare(right);
   }
 
@@ -93,12 +103,12 @@ $(function () {
     switch (sortKey) {
       case 'OpenDate-asc':
         sorted.sort(function (a, b) {
-          return parseDate(b.openDate) - parseDate(a.openDate);
+          return getDateValue(a) - getDateValue(b);
         });
         break;
       case 'OpenDate-desc':
         sorted.sort(function (a, b) {
-          return parseDate(a.openDate) - parseDate(b.openDate);
+          return getDateValue(b) - getDateValue(a);
         });
         break;
       case 'Urn-asc':
@@ -172,11 +182,17 @@ $(function () {
     }
 
     return state.allItems.filter(function (item) {
-      var timestamp = parseDate(item.openDate);
+      var itemMonth = parseInt(item.openDateMonth, 10);
+      var itemYear = parseInt(item.openDateYear, 10);
+
+      if (!isNaN(itemMonth) && !isNaN(itemYear)) {
+        return itemMonth === selectedMonth && itemYear === selectedYear;
+      }
+
+      var timestamp = parseInt(item.openDate);
       if (!timestamp) {
         return false;
       }
-
       var date = new Date(timestamp);
       return date.getMonth() + 1 === selectedMonth && date.getFullYear() === selectedYear;
     });
@@ -215,7 +231,6 @@ $(function () {
         if (key === 'skip' && parseInt(params[key], 10) === 0) {
           return false;
         }
-
         return true;
       })
       .map(function (key) {
@@ -228,10 +243,9 @@ $(function () {
 
   function formatPaginationInfo(startIndex, endIndex, total) {
     if (!total) {
-      return 'Showing 0 to 0 of 0';
+      return 'Showing 0 - 0 of 0';
     }
-
-    return 'Showing ' + (startIndex + 1) + ' to ' + endIndex + ' of ' + total;
+    return 'Showing ' + (startIndex + 1) + ' - ' + endIndex + ' of ' + total;
   }
 
   function renderTable(items) {
@@ -289,10 +303,6 @@ $(function () {
     });
   }
 
-  function getSortedDescription(direction) {
-    return ' is sorted in ' + (direction === 'asc' ? 'an ascending order' : 'a descending order') + '. Click to change order. All other columns are sortable.';
-  }
-
   function updateSortLinks() {
     var sortDescription = getSortedDescription(state.sortDir);
 
@@ -308,10 +318,15 @@ $(function () {
       var isSortedColumn = column === state.sortField;
       var nextDir = isSortedColumn && state.sortDir === 'asc' ? 'desc' : 'asc';
       var linkText = $.trim($link.text());
+      var ariaLabel = linkText;
+
+      if (isSortedColumn) {
+        ariaLabel += state.sortDir === 'asc' ? 'sorted ascending' : 'sorted descending';
+      }
 
       $link
         .attr('href', buildUrl({ sortBy: column + '-' + nextDir, skip: 0 }))
-        .attr('aria-label', linkText + (isSortedColumn ? sortDescription : UNSORTED_DESCRIPTION))
+        .attr('aria-label', ariaLabel)
         .toggleClass('selected-sort', isSortedColumn)
         .toggleClass('sorted-asc', isSortedColumn && state.sortDir === 'asc')
         .toggleClass('sorted-desc', isSortedColumn && state.sortDir === 'desc');
@@ -353,7 +368,6 @@ $(function () {
         state.sortField = column;
         state.sortDir = 'asc';
       }
-
       state.currentPage = 0;
       render();
     });
@@ -371,7 +385,6 @@ $(function () {
       } else {
         return;
       }
-
       render();
     });
   }

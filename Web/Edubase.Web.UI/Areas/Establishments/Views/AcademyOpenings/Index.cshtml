@@ -6,9 +6,9 @@
     ViewBag.SiteSection = "tools";
 
     var establishmentTypeId = Request.QueryString["establishmentTypeId"];
-    var sortBy = Request.QueryString["sortBy"] ?? "OpenDate-desc";
+    var sortBy = Request.QueryString["sortBy"] ?? "OpenDate-asc";
     var month = Request.QueryString["month"] ?? Model.SelectedMonth;
-    var sortParts = (sortBy ?? "OpenDate-desc").Split('-');
+    var sortParts = (sortBy ?? "OpenDate-asc").Split('-');
     var sortField = sortParts.Length > 0 && !string.IsNullOrWhiteSpace(sortParts[0]) ? sortParts[0] : "OpenDate";
     var sortDir = sortParts.Length > 1 ? sortParts[1].ToLowerInvariant() : "desc";
 
@@ -32,7 +32,10 @@
         predecessorUrn = x.PredecessorUrn,
         predecessorName = x.PredecessorName,
         openDate = x.OpenDate.ToString("O"),
-        openDateDisplay = x.OpenDate.ToString("d MMMM yyyy")
+        openDateDisplay = x.OpenDate.ToString("d MMMM yyyy"),
+        openDateYear = x.OpenDate.Year,
+        openDateMonth = x.OpenDate.Month,
+        openDateDay = x.OpenDate.Day
     });
     var allOpeningsJson = Json.Encode(allOpeningsPayload);
 }
@@ -133,10 +136,11 @@
                             var isSorted = string.Equals(sortField, columnName, StringComparison.OrdinalIgnoreCase);
                             var nextDir = isSorted && sortDir == "asc" ? "desc" : "asc";
                             var ariaLabel = columnText;
-                            <th scope="col" class="govuk-table__header cell-@columnName.ToLowerInvariant()" @if (isSorted)
-                                                                                                            {
-                                                                                                                <text> aria-sort="@(sortDir == "asc" ? "ascending" : "descending")"</text>;
-                                                                                                            }>
+                            <th scope="col" class="govuk-table__header cell-@columnName.ToLowerInvariant()"
+                                @if (isSorted)
+                                {
+                                    <text> aria-sort="@(sortDir == "asc" ? "ascending" : "descending")"</text>;
+                                }>
                                 <a href="@Url.RouteUrl("ManageAcademyOpenings", new { sortBy = columnName + "-" + nextDir, skip = 0, establishmentTypeId, month })"
                                    class="@($"govuk-link{Html.Conditional(isSorted, " selected-sort")}{@Html.Conditional(isSorted && sortDir == "asc", " sorted-asc")}{Html.Conditional(isSorted && sortDir == "desc", " sorted-desc")}")"
                                    aria-label="@ariaLabel"
@@ -145,6 +149,7 @@
                                 </a>
                             </th>
                         }
+                        <th scope="col" class="govuk-table__header cell-edit"></th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">

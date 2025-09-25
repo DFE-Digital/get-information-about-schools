@@ -37,7 +37,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route("16-19-secure-academy-openings", Name = "ManageSecureAcademy16To19Openings")]
-        public Task<ActionResult> ManageSecureAcademy16To19Openings(int skip = 0, string sortBy = "OpenDate-desc")
+        public Task<ActionResult> ManageSecureAcademy16To19Openings(int skip = 0, string sortBy = "OpenDate-asc")
         {
             //secure 16-19 academy establishment type Id is 46
             return Task.FromResult<ActionResult>(RedirectToAction(nameof(ManageAcademyOpenings),
@@ -45,7 +45,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route("academy-openings", Name = "ManageAcademyOpenings")]
-        public async Task<ActionResult> ManageAcademyOpenings(int skip = 0, string sortBy = "OpenDate-desc",
+        public async Task<ActionResult> ManageAcademyOpenings(int skip = 0, string sortBy = "OpenDate-asc",
             string establishmentTypeId = null, string month = null)
         {
             var take = 50;
@@ -128,10 +128,10 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
 
             switch (sortBy)
             {
-                case "OpenDate-desc":
+                case "OpenDate-asc":
                     academyOpenings.Sort((x, y) => x.OpenDate.CompareTo(y.OpenDate));
                     break;
-                case "OpenDate-asc":
+                case "OpenDate-desc":
                     academyOpenings.Sort((x, y) => y.OpenDate.CompareTo(x.OpenDate));
                     break;
                 case "Urn-asc":
@@ -194,7 +194,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 Items = paged,
                 PageTitle = AcademyUtility.GetAcademyOpeningPageTitle(establishmentTypeId),
                 MonthOptions = monthOptions,
-                SelectedMonth = month
+                SelectedMonth = month,
+                AllAcademyOpenings = academyOpeningsAll
             };
             vm.Count = academyOpenings.Count;
             vm.Skip = skip;
