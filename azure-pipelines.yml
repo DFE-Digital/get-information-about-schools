@@ -1,3 +1,4 @@
+
 ## Note that C# assembly version parts are limited to a maximum value of 65534 (UInt16.MaxValue - 1)
 ## The C# assembly version is inferred from this build name/version, therefore yyyyMMdd cannot be used as a version part.
 ## Here we are using workaround of yyDDD (e.g., 23001) for year and day of year.
@@ -342,7 +343,7 @@ stages:
     ## Run this deploy stage only if conditions met to deploy to this environment
   - stage: 'DeployDevSandbox1'
     displayName: 'Deploy to Slot Sandbox1'
-    condition: and(succeeded(), eq(variables.isSandbox1, 'true'), eq(variables.isHotfix, 'true'))
+    condition: and(succeeded('BuildAndTestAndPackageStage'), eq(variables.isSandbox1, 'true'), eq(variables.isHotfix, 'true'))
     dependsOn:
       - SetupVariablesStage
       - BuildAndTestAndPackageStage
