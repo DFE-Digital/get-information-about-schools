@@ -342,7 +342,7 @@ stages:
     ## Run this deploy stage only if conditions met to deploy to this environment
   - stage: 'DeployDevSandbox1'
     displayName: 'Deploy to Slot Sandbox1'
-    condition: and(succeeded(), eq(variables.isSandbox1, 'true'), eq(variables.isHotfix, 'true'))
+    condition: and(succeeded('BuildAndTestAndPackageStage'), eq(variables.isSandbox1, 'true'), eq(variables.isHotfix, 'true'))
     dependsOn:
       - SetupVariablesStage
       - BuildAndTestAndPackageStage
