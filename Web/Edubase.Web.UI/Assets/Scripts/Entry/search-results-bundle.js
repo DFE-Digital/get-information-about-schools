@@ -42,6 +42,7 @@ $(document).on('click', '#clear-filters-additional', function (e) {
     this.checked = false;
     $(this).trigger('change');
   });
+  $('.js-selected-counter-text').text('');
 });
 
 window.addEventListener('resize',
