@@ -194,14 +194,18 @@
                     errContent.Insert(0, Html.ValidationMessageNested(fullFieldId));
                 }
 
-                var enumerable = errContent.Select(x => x?.ToHtmlString());
-                foreach (var mvcHtmlString in enumerable)
+                var enumerable = errContent.Select(x => x?.ToHtmlString()).Where(s => !string.IsNullOrWhiteSpace(s));
+                foreach (var html in enumerable)
                 {
-                    if (mvcHtmlString != "<span class=\"field-validation-error govuk-error-message\">AppointmentDate cannot be empty</span>")
-                    {
-                        @Html.Raw(mvcHtmlString)
-                    }
-                } }
+                    var withBreaks = System.Text.RegularExpressions.Regex.Replace(
+                        html,
+                        "&lt;br\\s*/?&gt;",
+                        "<br />",
+                        System.Text.RegularExpressions.RegexOptions.IgnoreCase
+                    );
+                    @Html.Raw(withBreaks)
+                }
+            }
         </span>
 
         @if (ViewData["vueModel"] != null)
