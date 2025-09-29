@@ -257,22 +257,35 @@ $(function () {
     var detailTemplate = state.detailUrlTemplate;
     var editTemplate = state.editUrlTemplate;
 
+    function escapeAttribute(value) {
+      return ('' + value)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
     var rows = items
       .map(function (item) {
-        var urnLink = detailTemplate ? detailTemplate.replace('__urn__', item.urn) : '#';
+        var urnEscaped = escapeAttribute(item.urn);
+        var predecessorUrnEscaped = escapeAttribute(item.predecessorUrn);
+        var detailUrlEscaped = detailTemplate ? escapeAttribute(detailTemplate.replace('__urn__', item.urn)) : '#';
+        var predecessorUrlEscaped = item.predecessorUrn ? escapeAttribute(detailTemplate.replace('__urn__', item.predecessorUrn)) : '';
+        var editUrlEscaped = editTemplate ? escapeAttribute(editTemplate.replace('__urn__', item.urn)) : '#';
+
         var predecessorLink = item.predecessorUrn
-          ? '<a class="govuk-link" href="' + detailTemplate.replace('__urn__', item.predecessorUrn) + '">' + escapeHtml(item.predecessorUrn) + '</a>'
+          ? '<a class="govuk-link" href="' + predecessorUrlEscaped + '">' + escapeHtml(item.predecessorUrn) + '</a>'
           : '';
-        var editLink = editTemplate ? editTemplate.replace('__urn__', item.urn) : '#';
 
         return '<tr class="govuk-table__row">' +
           '<td class="govuk-table__cell cell-openingdate">' + escapeHtml(item.openDateDisplay) + '</td>' +
-          '<td class="govuk-table__cell cell-urn"><a class="govuk-link" href="' + urnLink + '">' + escapeHtml(item.urn) + '</a></td>' +
+          '<td class="govuk-table__cell cell-urn"><a class="govuk-link" href="' + detailUrlEscaped + '">' + escapeHtml(item.urn) + '</a></td>' +
           '<td class="govuk-table__cell cell-establishmentname">' + escapeHtml(item.establishmentName) + '</td>' +
           '<td class="govuk-table__cell cell-establishmenttype">' + escapeHtml(item.establishmentType) + '</td>' +
           '<td class="govuk-table__cell cell-predecessorurn">' + predecessorLink + '</td>' +
           '<td class="govuk-table__cell cell-predecessorname">' + escapeHtml(item.predecessorName) + '</td>' +
-          '<td class="govuk-table__cell cell-edit"><a class="govuk-link" href="' + editLink + '">Edit</a></td>' +
+          '<td class="govuk-table__cell cell-edit"><a class="govuk-link" href="' + editUrlEscaped + '">Edit</a></td>' +
           '</tr>';
       })
       .join('');
@@ -304,9 +317,7 @@ $(function () {
   }
 
   function updateSortLinks() {
-    var sortDescription = getSortedDescription(state.sortDir);
-
-    $table.find('thead th').each(function () {
+      $table.find('thead th').each(function () {
       var $th = $(this);
       var $link = $th.find('a[data-sort-column]');
       if (!$link.length) {
