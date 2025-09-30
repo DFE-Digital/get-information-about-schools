@@ -325,11 +325,14 @@
                     <div class="govuk-checkboxes gias-filter-checkboxes">
                         @foreach (var item in items)
                         {
-
                             <div class="govuk-checkboxes__item">
                                 <input name="@name" value="@item.Id" id="@(name)_@item.Id" class="js-filter-input trigger-result-update govuk-checkboxes__input" type="checkbox" @Html.Conditional(selectedItems.Contains(item.Id), "checked") />
                                 <label for="@(name)_@item.Id" class="js-filter-label govuk-label govuk-checkboxes__label">
-                                    @item
+                                    @item.Name
+                                    @if (item.Name.Equals("Primary", StringComparison.OrdinalIgnoreCase) || item.Name.Equals("Secondary", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <span class="govuk-!-font-weight-regular">(all through included)</span>
+                                    }
                                 </label>
                             </div>
                         }
