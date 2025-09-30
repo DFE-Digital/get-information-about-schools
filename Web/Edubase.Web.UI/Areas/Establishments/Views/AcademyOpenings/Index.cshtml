@@ -1,24 +1,16 @@
+@using System.Net.Configuration
 @model ManageAcademyOpeningsViewModel
 @{
-    ViewBag.Title = "Manage academy openings";
+    ViewBag.Title = Model.PageTitle;
     ViewBag.bodyClasses = "manage-academy-openings";
     ViewBag.SiteSection = "tools";
-    ViewBag.AdditionalDevWarning = "THIS PAGE HAS DIFFERENT BEHAVIOUR WITH JS DISABLED";
 
-    var request = HttpContext.Current.Request;
-    var sortDir = "desc";
-    var sortDirText = "a descending order";
-    var sortField = "OpenDate";
-
-    if (request.QueryString["sortby"] != null)
-    {
-        sortField = request.QueryString["sortby"].Substring(0, request.QueryString["sortby"].IndexOf("-"));
-        sortDir = (request.QueryString["sortby"] ?? "").Contains("asc") ? "asc" : "desc";
-        sortDirText = (request.QueryString["sortby"] ?? "").Contains("asc") ? "an ascending order" : "a descending order";
-    }
-
-    var sortedDescription = " is sorted in " + sortDirText + ". Click to change order. All other columns are sortable.";
-    var unsortedDescription = ". Click to sort data by this column.";
+    var establishmentTypeId = Request.QueryString["establishmentTypeId"];
+    var sortBy = Request.QueryString["sortBy"] ?? "OpenDate-asc";
+    var month = Request.QueryString["month"] ?? Model.SelectedMonth;
+    var sortParts = (sortBy ?? "OpenDate-asc").Split('-');
+    var sortField = sortParts.Length > 0 && !string.IsNullOrWhiteSpace(sortParts[0]) ? sortParts[0] : "OpenDate";
+    var sortDir = sortParts.Length > 1 ? sortParts[1].ToLowerInvariant() : "desc";
 
     var tableColumns = new List<Tuple<string, string>>
     {
@@ -29,6 +21,23 @@
         Tuple.Create("PredecessorUrn", "Predecessor URN"),
         Tuple.Create("PredecessorName", "Predecessor name"),
     };
+    var baseUrl = Request?.Url?.AbsolutePath ?? Url.RouteUrl("ManageAcademyOpenings");
+    var detailUrlTemplate = Url.Action("Details", "Establishment", new { area = "Establishments", id = "__urn__" });
+    var editUrlTemplate = Url.RouteUrl("EditAcademyOpening", new { area = "Establishments", urn = "__urn__" });
+    var allOpeningsPayload = (Model.AllAcademyOpenings ?? Enumerable.Empty<EditAcademyOpeningViewModel>()).Select(x => new
+    {
+        urn = x.Urn,
+        establishmentName = x.EstablishmentName,
+        establishmentType = x.EstablishmentType,
+        predecessorUrn = x.PredecessorUrn,
+        predecessorName = x.PredecessorName,
+        openDate = x.OpenDate.ToString("O"),
+        openDateDisplay = x.OpenDate.ToString("d MMMM yyyy"),
+        openDateYear = x.OpenDate.Year,
+        openDateMonth = x.OpenDate.Month,
+        openDateDay = x.OpenDate.Day
+    });
+    var allOpeningsJson = Json.Encode(allOpeningsPayload);
 }
 
 @section BreadCrumbs
@@ -50,375 +59,159 @@
 }
 
 
-
-<div id="academy-opening-app" v-cloak>
 <div class="govuk-grid-row">
-<div class="govuk-grid-column-full">
-    <!-- Error summary -->
-    <div v-show="Object.keys(apiError).length === 0">
-        <error-summary :errors="errors" error-title="Incorrect or missing details"/>
-    </div>
-
-    <!-- Error message -->
-    <div v-show="Object.keys(apiError).length > 0">
-        <h1 class="govuk-heading-xl">Sorry, there is a problem with the service</h1>
-        <p>Try again later.</p>
-
-        <p class="api-error-code" v-show="apiError.hasOwnProperty('errorCode')">Error code: {{apiError.errorCode}}</p>
-        <div v-show="apiError.hasOwnProperty('technicalDetails')">
-            <code>
-                {{apiError.technicalDetails}}
-            </code>
-        </div>
-    </div>
-
-</div>
-</div>
-<!-- Show when no API errors -->
-<div v-show="Object.keys(apiError).length === 0">
-<!-- When not editing record -->
-<div class="govuk-grid-row" v-show="!editRecord">
-    <!-- Error message -->
     <div class="govuk-grid-column-full">
-        <div v-show="loadDataError" class="error-summary">
-            <h2 class="error-summary-heading heading-medium">Something went wrong</h2>
-            <p class="error-message">Please reload the page to try again.</p>
-        </div>
         <h1 class="govuk-heading-xl">@Model.PageTitle</h1>
-        <div>
-            <gias-wait-spinner :is-processing="isProcessing"/>
-        </div>
-    </div>
-
-    <div class="govuk-grid-column-full" v-show="!isProcessing">
         <div class="gias-tabs-wrapper">
-            <!-- Tabs -->
             <div class="tab-wrap" id="calendar-tab-wrap">
                 <ul class="gias-tabs">
-                    <li class="gias-tabs__list-item"><a href="#calendar" class="gias-tabs__tab">Opening calendar</a></li>
-                    <li class="gias-tabs__list-item"><a href="#academy-search" class="gias-tabs__tab">Academy search</a></li>
+                    <li class="gias-tabs__list-item gias-tabs__list-item--selected">
+                        <a href="#" class="gias-tabs__tab">Opening calendar</a>
+                    </li>
+                    <li class="gias-tabs__list-item">
+                        @Html.ActionLink("Academy search", "SearchAcademyOpenings", "AcademyOpenings",
+                            new { area = "Establishments", establishmentTypeId }, new { @class = "gias-tabs__tab" })
+                    </li>
                 </ul>
             </div>
+        </div>
+    </div>
+</div>
 
-            <!-- Tabs content -->
-            <div class="tab-content-wrapper gias-tabs-content" v-cloak>
-                <!-- Opening calendar -->
-                <div id="calendar" class="tab-content">
-
-                    <div class="govuk-form-group month-selector">
-                        <label class="govuk-label" for="opening-date-filter">
-                            Opening date
-                        </label>
-                        <select class="govuk-select" v-model="selectedDate" v-on:change="buildDatePages" id="opening-date-filter"></select>
-                    </div>
-
-                    <div class="top-pagination">
-                        <nav role="navigation" aria-label="Pagination" class="pagination">
-                            <p class="pagination-info">
-                                Showing
-                                <span class="pagination-range">
-                                    {{ paginationDescription }}
-                                </span>
-                                of {{currentCount}}
-                            </p>
-                            <ul class="pagination-links">
-                                <li v-if="currentPage > 0"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)" aria-label="Previous page"><< Previous</a></li>
-                                <li v-if="pages.length > 1" v-for="(page, index) in pages.slice(slicePage, slicePage + 5)">
-                                    <a v-show="(index + slicePage) < currentPage" href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index + slicePage)" :aria-label="'Page ' + (index + slicePage + 1)">{{ index + slicePage + 1 }}</a>
-                                    <span v-show="(index + slicePage) === currentPage" class="numeric-pagination go-nowhere" aria-current="true" :aria-label="'Page ' + (index + slicePage + 1) + ', current page'">{{ index + slicePage + 1 }}</span>
-                                    <a v-show="(index + slicePage) > currentPage" href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index + slicePage)" :aria-label="'Page ' + (index + slicePage + 1)">{{ index + slicePage + 1 }}</a>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <div id="calendar" class="tab-content">
+            <div id="academy-openings-content"
+                 data-sort-field="@sortField"
+                 data-sort-dir="@sortDir"
+                 data-skip="@Model.Skip"
+                 data-take="@Model.AcademyOpenings.Take"
+                 data-month="@month"
+                 data-base-url="@baseUrl"
+                 data-establishment-type-id="@establishmentTypeId"
+                 data-detail-url-template="@detailUrlTemplate"
+                 data-edit-url-template="@editUrlTemplate">
+                <form method="get" class="govuk-form-group month-selector">
+                    <input type="hidden" name="sortBy" value="@sortBy" />
+                    <input type="hidden" name="establishmentTypeId" value="@establishmentTypeId" />
+                    <label class="govuk-label" for="opening-date-filter">Opening date</label>
+                    <select id="opening-date-filter" name="month" class="govuk-select">
+                        <option value="">All months</option>
+                        @foreach (var m in Model.MonthOptions)
+                        {
+                            <option value="@m.Value" @(m.Selected ? "selected" : "")>@m.Text</option>
+                        }
+                    </select>
+                    <noscript><button type="submit" class="govuk-button">Filter</button></noscript>
+                </form>
+                <div class="upper-pagination push--bottom">
+                    <nav role="navigation" aria-label="Pagination" class="pagination">
+                        <p class="pagination-info">
+                            Showing @Model.AcademyOpenings.FirstResultIndex
+                            - @Model.AcademyOpenings.LastResultIndex of @Model.AcademyOpenings.Count
+                        </p>
+                        <ul class="pagination-links">
+                            @if (Model.Skip > 0)
+                            {
+                                <li>
+                                    @Html.RouteLink("<< Previous", "ManageAcademyOpenings", new { skip = Model.Skip - Model.Take, sortBy = sortBy, establishmentTypeId, month }, new { @class = "pagination-prev" })
                                 </li>
-                                <li v-if="currentPage < pages.length -1"><a href="javascript:" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)" aria-label="Next page">Next >></a></li>
-                                <li v-if="pages.length > 1"><a href="javascript:" class="show-all"  v-on:click.prevent="showAll()" aria-label="Show all pages">Show all</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-
-
-                    <table class="govuk-table gias-table academy-openings sortable-table" id="academy-openings-table">
-                        <caption class="govuk-visually-hidden">Academy openings</caption>
-                        <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th v-for="(value, key) in tableColumns" :class="'cell-' + key.toLowerCase()" class="govuk-table__header">
-                                <a
-                                    href="#"
-                                    v-on:click.prevent="sortOpenings(key)"
-                                    v-bind:class="[ sortKey===key && sortAscending ? 'selected-sort sorted-asc' : '', sortKey===key && !sortAscending ? 'selected-sort sorted-desc' : '']"
-                                    :aria-label="[ sortKey===key && sortAscending ? value + ' is sorted in an ascending order. Click to change order. All other columns are sortable.' : '', sortKey===key && !sortAscending ? value + ' is sorted in a descending order. Click to change order. All other columns are sortable.' : '', sortKey===key ? '' : value + '. Click to sort data by this column.' ]">{{ value }}</a>
+                            }
+                            @if (Model.Skip + Model.Take < Model.Count)
+                            {
+                                <li>
+                                    @Html.RouteLink("Next >>", "ManageAcademyOpenings", new { skip = Model.Skip + Model.Take, sortBy = sortBy, establishmentTypeId, month }, new { @class = "pagination-next" })
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+                <table class="govuk-table gias-table academy-openings sortable-table" id="academy-openings-table">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        @foreach (var column in tableColumns)
+                        {
+                            var columnName = column.Item1;
+                            var columnText = column.Item2;
+                            var isSorted = string.Equals(sortField, columnName, StringComparison.OrdinalIgnoreCase);
+                            var nextDir = isSorted && sortDir == "asc" ? "desc" : "asc";
+                            var ariaLabel = columnText;
+                            <th scope="col" class="govuk-table__header cell-@columnName.ToLowerInvariant()"
+                                @if (isSorted)
+                                {
+                                    <text> aria-sort="@(sortDir == "asc" ? "ascending" : "descending")"</text>;
+                                }>
+                                <a href="@Url.RouteUrl("ManageAcademyOpenings", new { sortBy = columnName + "-" + nextDir, skip = 0, establishmentTypeId, month })"
+                                   class="@($"govuk-link{Html.Conditional(isSorted, " selected-sort")}{@Html.Conditional(isSorted && sortDir == "asc", " sorted-asc")}{Html.Conditional(isSorted && sortDir == "desc", " sorted-desc")}")"
+                                   aria-label="@ariaLabel"
+                                   data-sort-column="@columnName">
+                                    @columnText
+                                </a>
                             </th>
-                            <th scope="col" class="govuk-table__header cell-edit"><span class="govuk-visually-hidden">Action links</span></th>
-                        </tr>
-                        </thead>
-                        <tbody v-if="pages.length > 0" class="govuk-table__body">
-                        <tr v-for="(entry, index) in page" class="govuk-table__row" v-bind:id="`table-row-${index}`">
-                            <td data-label="Opening date" v-bind:id="`opening-date-${entry.urn}`" class="govuk-table__cell cell-openingdate"> {{entry.displayDate}} </td>
-                            <td data-label="URN" class="govuk-table__cell"><a v-bind:href="detailUrl(entry.urn)" v-bind:id="`urn-${entry.urn}-link`">{{entry.urn}}</a></td>
-                            <td data-label="Establishment name" v-bind:id="`establishment-name-${entry.urn}`" class="govuk-table__cell">{{entry.name}}</td>
-                            <td data-label="Establishment type" v-bind:id="`establishment-type-${entry.urn}`" class="govuk-table__cell">{{entry.establishmentType}}</td>
-                            <td data-label="Predecessor URN" class="govuk-table__cell"><a v-bind:href="detailUrl(entry.predecessorUrn)" v-bind:id="`predecessor-urn-${entry.predecessorUrn}-link`" v-if="entry.predecessorUrn">{{entry.predecessorUrn}}</a></td>
-                            <td data-label="Predecessor name" v-bind:id="`predecessor-name-${entry.predecessorUrn}`" class="govuk-table__cell">{{entry.predecessorName}}</td>
-                            <td class="cell-edit govuk-table__cell"><a href="#" v-bind:id="`edit-${entry.urn}-link`" v-on:click.prevent="editEstab(entry.urn)" aria-label="Edit opening details">Edit</a></td>
-                        </tr>
-                        </tbody>
-                        <tbody v-else class="govuk-table__body">
+                        }
+                        <th scope="col" class="govuk-table__header cell-edit"></th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    @foreach (var entry in Model.AcademyOpenings.Items)
+                    {
                         <tr class="govuk-table__row">
-                            <td colspan="7" class="govuk-table__cell">
-                                <p> [ NO RESULTS MESSAGE ] </p>
+                            <td class="govuk-table__cell cell-openingdate">@entry.OpenDate.ToString("d MMMM yyyy")</td>
+                            <td class="govuk-table__cell cell-urn">
+                                @Html.ActionLink(entry.Urn.ToString(),
+                                    "Details", "Establishment",
+                                    new { id = entry.Urn, area = "Establishments" }, new { @class = "govuk-link" })
+                            </td>
+                            <td class="govuk-table__cell cell-establishmentname">@entry.EstablishmentName</td>
+                            <td class="govuk-table__cell cell-establishmenttype">@entry.EstablishmentType</td>
+                            <td class="govuk-table__cell cell-predecessorurn">
+                                @if (!string.IsNullOrWhiteSpace(entry.PredecessorUrn))
+                                {
+                                    @Html.ActionLink(entry.PredecessorUrn, "Details", "Establishment", new { id = entry.PredecessorUrn, area = "Establishments" }, new { @class = "govuk-link" })
+                                }
+                            </td>
+                            <td class="govuk-table__cell cell-predecessorname">@entry.PredecessorName</td>
+                            <td class="govuk-table__cell cell-edit">
+                                @Html.ActionLink("Edit", "EditAcademyOpening", "AcademyOpenings",
+                                    new { urn = entry.Urn, area = "Establishments" }, new { @class = "govuk-link" })
                             </td>
                         </tr>
-                        </tbody>
-                    </table>
+                    }
+                    </tbody>
+                </table>
 
-                    <div class="lower-pagination push--bottom">
-                        <nav role="navigation" aria-label="Pagination" class="pagination">
-                            <p class="pagination-info">
-                                Showing
-                                <span class="pagination-range">
-                                    {{ paginationDescription }}
-                                </span>
-                                of {{currentCount}}
-                            </p>
-                            <ul class="pagination-links">
-                                <li v-if="currentPage > 0"><a href="#" class="pagination-prev" v-on:click.prevent="setCurrentPage(currentPage -1)" aria-label="Previous page"><< Previous</a></li>
-                                <li v-if="pages.length > 1" v-for="(page, index) in pages.slice(slicePage, slicePage + 5)">
-                                    <a v-show="(index + slicePage) < currentPage" href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index + slicePage)" :aria-label="'Page ' + (index + slicePage + 1)">{{ index + slicePage + 1 }}</a>
-                                    <span v-show="(index + slicePage) === currentPage" class="numeric-pagination go-nowhere" aria-current="true" :aria-label="'Page ' + (index + slicePage + 1) + ', current page'">{{ index + slicePage + 1 }}</span>
-                                    <a v-show="(index + slicePage) > currentPage" href="#" class="numeric-pagination" v-on:click.prevent="setCurrentPage(index + slicePage)" :aria-label="'Page ' + (index + slicePage + 1)">{{ index + slicePage + 1 }}</a>
+                <div class="lower-pagination push--bottom">
+                    <nav role="navigation" aria-label="Pagination" class="pagination">
+                        <p class="pagination-info">
+                            Showing @Model.AcademyOpenings.FirstResultIndex
+                            - @Model.AcademyOpenings.LastResultIndex of @Model.AcademyOpenings.Count
+                        </p>
+                        <ul class="pagination-links">
+                            @if (Model.Skip > 0)
+                            {
+                                <li>
+                                    @Html.RouteLink("<< Previous", "ManageAcademyOpenings", new { skip = Model.Skip - Model.Take, sortBy = sortBy, establishmentTypeId, month }, new { @class = "pagination-prev" })
                                 </li>
-                                <li v-if="currentPage < pages.length -1"><a href="javascript:" class="pagination-next" v-on:click.prevent="setCurrentPage(currentPage +1)" aria-label="Next page">Next >></a></li>
-                                <li v-if="pages.length > 1"><a href="javascript:" class="show-all"  v-on:click.prevent="showAll()" aria-label="Show all pages">Show all</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                    @helpers.BackToTopLink()
+                            }
+                            @if (Model.Skip + Model.Take < Model.Count)
+                            {
+                                <li>
+                                    @Html.RouteLink("Next >>", "ManageAcademyOpenings", new { skip = Model.Skip + Model.Take, sortBy = sortBy, establishmentTypeId, month }, new { @class = "pagination-next" })
+                                </li>
+                            }
+                        </ul>
+                    </nav>
                 </div>
-
-                <!-- Academy search -->
-                <div id="academy-search" class="tab-content">
-                    <!-- search app -->
-                    <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-two-thirds-from-desktop">
-                            <div id="academy-search-app">
-                                <form>
-                                    <div v-bind:class="['govuk-form-group', searchError? 'govuk-form-group--error' : '']">
-                                        <label class="govuk-label" for="academy-search-field">
-                                            Enter establishment <abbr title="Unique Reference Number">URN</abbr>
-                                        </label>
-                                        <span class="govuk-error-message" v-show="searchError">Please enter a valid <abbr title="Unique Reference Number">URN</abbr></span>
-                                        <input type="text" class="govuk-input govuk-input--width-20" id="academy-search-field" v-model.trim="searchUrn"/>
-
-                                        <input type="submit" class="govuk-button inline-button" value="Search URN" v-on:click.prevent="validateUrn"/>
-                                    </div>
-                                </form>
-
-                                <!-- Search results -->
-                                <div v-show="presentDetail" v-if="selectedOpeningDetails.urn" class="openings-single-result">
-                                    <h2 class="govuk-heading-s">Establishment found</h2>
-                                    <div class="urn-result">
-                                        <h4 class="govuk-heading-s">Opening date: {{selectedOpeningDetails.displayDate }}</h4>
-                                        <dl class="govuk-summary-list">
-                                            <div class="govuk-summary-list__row">
-                                                <dt class="govuk-summary-list__key">
-                                                    <abbr title="Unique Reference Number">URN</abbr>
-                                                </dt>
-                                                <dd class="govuk-summary-list__value">
-                                                    <a v-bind:href="detailUrl(selectedOpeningDetails.urn )">{{ selectedOpeningDetails.urn }}</a>
-                                                </dd>
-                                            </div>
-                                            <div class="govuk-summary-list__row">
-                                                <dt class="govuk-summary-list__key">Establishment name</dt>
-                                                <dd class="govuk-summary-list__value">{{updateName}}</dd>
-                                            </div>
-                                            <div class="govuk-summary-list__row">
-                                                <dt class="govuk-summary-list__key">Establishment type</dt>
-                                                <dd class="govuk-summary-list__value">{{ selectedOpeningDetails.establishmentType }}</dd>
-                                            </div>
-                                            <div class="govuk-summary-list__row">
-                                                <dt class="govuk-summary-list__key">Predecessor <abbr title="Unique Reference Number">URN</abbr></dt>
-                                                <dd class="govuk-summary-list__value">
-                                                    <a v-bind:href="detailUrl(selectedOpeningDetails.predecessorUrn )" v-if="selectedOpeningDetails.predecessorUrn">{{ selectedOpeningDetails.predecessorUrn }}</a>
-                                                </dd>
-                                            </div>
-                                            <div class="govuk-summary-list__row">
-                                                <dt class="govuk-summary-list__key">Predecessor name</dt>
-                                                <dd class="govuk-summary-list__value">{{ selectedOpeningDetails.predecessorName }}</dd>
-                                            </div>
-                                        </dl>
-                                        <a href="#" class="govuk-button" v-on:click.prevent="editEstab(selectedOpeningDetails.urn)">Edit opening details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <script id="academy-openings-data" type="application/json">
+                    @Html.Raw(allOpeningsJson)
+                </script>
+                @helpers.BackToTopLink()
             </div>
         </div>
     </div>
 </div>
 
-<!-- Record editing -->
-<div class="govuk-grid-row" v-show="editRecord" v-cloak>
-    <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-l">Edit opening details</h1>
-    </div>
-    <div class="govuk-grid-column-one-half">
-        <div class="govuk-form-group">
-            <label class="govuk-label" for="est-urn">Unique Reference Number (URN)</label>
-            <input class="govuk-input" type="text" :value="selectedOpeningDetails.urn" disabled="disabled" id="est-urn"/>
-        </div>
-
-        <div v-bind:class="['govuk-form-group',  updateNameError ? 'govuk-form-group--error' : '' ]">
-            <label class="govuk-label" for="est-name">Establishment name </label>
-            <span class="govuk-error-message" v-if="updateNameError">Please enter the establishment name</span>
-            <input class="govuk-input" type="text" v-model="updateName" v-on:change="attachUnload" id="est-name"/>
-        </div>
-
-        <div class="govuk-form-group">
-            <label class="govuk-label" for="est-type">Establishment type</label>
-            <input class="govuk-input" type="text" :value="selectedOpeningDetails.establishmentType" disabled="disabled" id="est-type"/>
-        </div>
-
-        <div v-bind:class="['govuk-form-group range-group', openDateError ? 'govuk-form-group--error' : '' ]">
-            <fieldset id="opening-date" class="govuk-fieldset edit-date-fieldset">
-                <span v-bind:class="['govuk-error-message']" v-if="openDateError">Please enter the establishment opening date</span>
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">Opening date</legend>
-                <div class="govuk-hint">For example, 20 03 2003</div>
-                <div class="govuk-date-input">
-                    <div class="govuk-date-input__item">
-                        <div class="govuk-form-group">
-                            <label for="opendate-day" class="govuk-label govuk-date-input__label">Day</label>
-                            <input class="govuk-input date-text-day govuk-date-input__input govuk-input--width-2" id="opendate-day" name="OpenDate.Day" type="text" v-model="updateDateDay" v-on:change="attachUnload">
-
-                        </div>
-                    </div>
-                    <div class="govuk-date-input__item">
-                        <div class="govuk-form-group">
-                            <label for="opendate-month" class="govuk-label govuk-date-input__label">Month</label>
-                            <input class="govuk-input date-text-month govuk-date-input__input govuk-input--width-2" id="opendate-month" name="OpenDate.Month" type="text" v-model="updateDateMonth" v-on:change="attachUnload">
-
-                        </div>
-                    </div>
-                    <div class="govuk-date-input__item">
-                        <div class="govuk-form-group">
-                            <label for="opendate-year" class="govuk-label govuk-date-input__label">Year</label>
-                            <input class="govuk-input date-text-year govuk-date-input__input govuk-input--width-4" id="opendate-year" name="OpenDate.Year" type="text" v-model="updateDateYear" v-on:change="attachUnload">
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
-        </div>
-
-        <div class="govuk-form-group">
-            <label class="govuk-label" for="est-pred-urn">Predecessor <abbr title="Unique Reference Number">URN</abbr></label>
-            <input type="text" class="govuk-input" disabled="disabled" v-model="selectedOpeningDetails.predecessorUrn" id="est-pred-urn"/>
-        </div>
-
-        <div class="govuk-form-group">
-            <label class="govuk-label" for="est-pred-name">Predecessor name</label>
-            <input type="text" class="govuk-input" disabled="disabled" v-model="selectedOpeningDetails.predecessorName" id="est-pred-name"/>
-        </div>
-
-        <div class="button-row">
-            <input type="submit" id="save-button" class="govuk-button opening-save" value="Save" v-on:click.prevent="updateRecord"/>
-            <a href="#" id="cancel-button" class="govuk-button govuk-button--secondary" v-on:click="cancelEditClick" data-module="govuk-button">Cancel</a>
-        </div>
-    </div>
-</div>
-
-<div id="modal-overlay" class="modal-overlay" v-show="presentExitWarning"></div>
-<div id="modal-content" class="modal-content" role="dialog" aria-labelledby="modal-label" aria-describedby="modal-desc" v-show="presentExitWarning">
-    <a href="#" id="exit-overlay" class="modal-exit" v-on:click.prevent="presentExitWarning = false, anchorTarget=''">Close</a>
-    <div id="modal-inner">
-        <h3 class="govuk-heading-l" id="modal-label" tabindex="0">Are you sure you want to leave this page?</h3>
-        <p id="modal-desc" tabindex="0">Any unsaved changes will be lost.</p>
-    </div>
-    <div class="button-row">
-        <a href="#" class="govuk-button" id="button-ok" v-on:click.prevent="exitWarningOkClick">OK</a>
-        <a href="#" class="govuk-button govuk-button--secondary" id="button-cancel" v-on:click.prevent="presentExitWarning = false, anchorTarget=''">Cancel</a>
-    </div>
-</div>
-</div>
-</div>
-
-@* no js *@
-<div class="govuk-grid-row js-hidden">
-    <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-xl">Manage academy openings</h1>
-    </div>
-    <div class="govuk-grid-column-full">
-        <div class="tab-wrap" id="opening-calendar-tab-wrap">
-            <ul class="gias-tabs">
-                <li class="gias-tabs__list-item gias-tabs__list-item--selected">
-                    <a href="#calendar" id="opening-calendar-tab" class="gias-tabs__tab">Opening calendar</a>
-                </li>
-                <li class="gias-tabs__list-item">
-                    @Html.ActionLink("Academy search",
-                        "SearchAcademyOpenings",
-                        "AcademyOpenings",
-                        new {area = "Establishments"},
-                        new {@class = "gias-tabs__tab"})
-                </li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="govuk-grid-column-full">
-        <div class="top-pagination">
-            @Html.Partial("_GenericPaginationV2", Model)
-        </div>
-        <table class="govuk-table gias-table academy-openings sortable-table" id="gias-academy-openings-table">
-            <caption class="govuk-visually-hidden">Academy openings</caption>
-            <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                @foreach (var tableColumn in tableColumns)
-                {
-                    <th scope="col" class="govuk-table__header">
-                        <a href="@Url.SortUrl(tableColumn.Item1)"
-                           class="@Html.Conditional(sortField == tableColumn.Item1, "selected-sort") @Html.Conditional(sortDir.Contains("asc"), "sorted-asc") @Html.Conditional(sortDir.Contains("desc"), "sorted-desc")"
-                           aria-label="@string.Concat(tableColumn.Item2, (sortField == tableColumn.Item1 ? sortedDescription : unsortedDescription))">
-                            @tableColumn.Item2
-                        </a>
-                    </th>
-                }
-                <th scope="col" class="govuk-table__header cell-edit">
-                    <span class="govuk-visually-hidden">Action links</span>
-                </th>
-            </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-            @{
-                var i = 0;
-            }
-            @foreach (var record in Model.Items)
-            {
-                <tr class="govuk-table__row row-@i">
-                    <td data-label="Opening date" class="govuk-table__cell cell-openingdate">
-                        @record.OpenDate.ToString("d MMMM yyyy")
-                    </td>
-                    <td data-label="URN" class="govuk-table__cell">
-                        @Html.ActionLink(record.Urn.ToString(), "Details", "Establishment", new {id = record.Urn}, new {@class = "govuk-link"})
-                    </td>
-                    <td data-label="Establishment name" class="govuk-table__cell">@record.EstablishmentName</td>
-                    <td data-label="Establishment type" class="govuk-table__cell">@record.EstablishmentType</td>
-                    <td data-label="Predecessor URN" class="govuk-table__cell">
-                        @if (record.PredecessorUrn.Length > 2)
-                        {
-                           @Html.ActionLink(record.PredecessorUrn.ToString(), "Details", "Establishment", new {id = record.PredecessorUrn}, new {@class = "govuk-link"})
-                        }
-
-                    </td>
-                    <td data-label="Predecessor name" class="govuk-table__cell">@record.PredecessorName</td>
-                    <td class="cell-edit govuk-table__cell">@Html.ActionLink("Edit", "EditAcademyOpening", "AcademyOpenings", new {area = "Establishments", urn = record.Urn}, new {@class = "govuk-link"})</td>
-
-                </tr>
-                i++;
-            }
-            </tbody>
-        </table>
-    </div>
-</div>
-
-
-@section ViewScripts {
+@section ViewScripts
+{
     <script src="@Html.Raw(Html.GetWebpackScriptUrl("manage-academy-openings.*.js"))"></script>
 }
