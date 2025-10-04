@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Governance\Application\" />
-    <Folder Include="Governance\Infrastructure\" />
+    <Folder Include="Governors\Application\" />
+    <Folder Include="Governors\Infrastructure\" />
   </ItemGroup>
 
 </Project>
