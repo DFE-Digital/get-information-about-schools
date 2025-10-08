@@ -5,7 +5,7 @@
     ViewBag.bodyClasses = "manage-academy-openings";
     ViewBag.SiteSection = "tools";
 
-    var establishmentTypeId = Request.QueryString["establishmentTypeId"];
+    var establishmentTypeId = Model.EstablishmentTypeId;
     var sortBy = Request.QueryString["sortBy"] ?? "OpenDate-asc";
     var month = Request.QueryString["month"] ?? Model.SelectedMonth;
     var sortParts = (sortBy ?? "OpenDate-asc").Split('-');
@@ -21,7 +21,9 @@
         Tuple.Create("PredecessorUrn", "Predecessor URN"),
         Tuple.Create("PredecessorName", "Predecessor name"),
     };
-    var baseUrl = Request?.Url?.AbsolutePath ?? Url.RouteUrl("ManageAcademyOpenings");
+
+    var currentRouteName = !string.IsNullOrWhiteSpace(Model.CurrentRouteName) ? Model.CurrentRouteName : "ManageAcademyOpenings";
+    var baseUrl = Request?.Url?.AbsolutePath ?? Url.RouteUrl(currentRouteName);
     var detailUrlTemplate = Url.Action("Details", "Establishment", new { area = "Establishments", id = "__urn__" });
     var editUrlTemplate = Url.RouteUrl("EditAcademyOpening", new { area = "Establishments", urn = "__urn__" });
     var allOpeningsPayload = (Model.AllAcademyOpenings ?? Enumerable.Empty<EditAcademyOpeningViewModel>()).Select(x => new

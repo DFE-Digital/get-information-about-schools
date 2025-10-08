@@ -16,5 +16,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Models
         public string PageTitle { get; set; } = string.Empty;
         public IEnumerable<SelectListItem> MonthOptions { get; set; } = new List<SelectListItem>();
         public string SelectedMonth { get; set; }
+        public string EstablishmentTypeId { get; set; }
+        public string CurrentRouteName { get; set; }
     }
 }

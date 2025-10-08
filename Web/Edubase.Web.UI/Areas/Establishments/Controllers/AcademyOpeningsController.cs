@@ -37,18 +37,26 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route("16-19-secure-academy-openings", Name = "ManageSecureAcademy16To19Openings")]
-        public Task<ActionResult> ManageSecureAcademy16To19Openings(int skip = 0, string sortBy = "OpenDate-asc")
+        public async Task<ActionResult> ManageSecureAcademy16To19Openings(int skip = 0, string sortBy = "OpenDate-asc", string month = null)
         {
             //secure 16-19 academy establishment type Id is 46
-            return Task.FromResult<ActionResult>(RedirectToAction(nameof(ManageAcademyOpenings),
-                new { skip, sortBy, establishmentTypeId = "46" }));
+            const string secureEstablishmentTypeId = "46";
+            var viewModel = await BuildManageAcademyOpeningsViewModel(skip, sortBy, secureEstablishmentTypeId, month, "ManageSecureAcademy16To19Openings");
+            return View("Index", viewModel);
         }
 
         [HttpGet, Route("academy-openings", Name = "ManageAcademyOpenings")]
         public async Task<ActionResult> ManageAcademyOpenings(int skip = 0, string sortBy = "OpenDate-asc",
             string establishmentTypeId = null, string month = null)
         {
-            var take = 50;
+            var viewModel = await BuildManageAcademyOpeningsViewModel(skip, sortBy, establishmentTypeId, month, "ManageAcademyOpenings");
+            return View("Index", viewModel);
+        }
+
+        private async Task<ManageAcademyOpeningsViewModel> BuildManageAcademyOpeningsViewModel(int skip, string sortBy, string establishmentTypeId, string month, string currentRouteName)
+        {
+
+            const int take = 50;
             var now = DateTime.Now;
 
             var from = new DateTime(now.Year, now.Month, 1);
@@ -59,8 +67,8 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 throw AcademyUtility.GetPermissionDeniedException();
 
             var estabTypes = await _lookupService.EstablishmentTypesGetAllAsync();
-            estabTypes =
-                AcademyUtility.FilterEstablishmentsIfSecureAcademy16To19(estabTypes, establishmentTypeId);
+
+            estabTypes = AcademyUtility.FilterEstablishmentsIfSecureAcademy16To19(estabTypes, establishmentTypeId);
 
             var payLoad = new EstablishmentSearchPayload
             {
@@ -195,11 +203,14 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 PageTitle = AcademyUtility.GetAcademyOpeningPageTitle(establishmentTypeId),
                 MonthOptions = monthOptions,
                 SelectedMonth = month,
-                AllAcademyOpenings = academyOpeningsAll
+                AllAcademyOpenings = academyOpeningsAll,
+                EstablishmentTypeId = establishmentTypeId ?? string.Empty,
+                CurrentRouteName = currentRouteName
             };
             vm.Count = academyOpenings.Count;
             vm.Skip = skip;
-            return View("Index", vm);
+            vm.Take = take;
+            return vm;
         }
 
         [HttpGet, Route("edit-academy-opening/{urn}", Name = "EditAcademyOpening")]
@@ -291,10 +302,21 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         [HttpGet, Route("search-academies", Name = "SearchAcademyOpenings")]
         public async Task<ActionResult> SearchAcademyOpenings(int? urn, bool? isSearching, string establishmentTypeId = null)
         {
+            establishmentTypeId = (establishmentTypeId ?? string.Empty).Trim();
+
+            establishmentTypeId = (establishmentTypeId ?? string.Empty).Trim();
+
+            var isSecureRoute = establishmentTypeId.Equals("46", StringComparison.OrdinalIgnoreCase);
+            ViewBag.ManageRouteName = isSecureRoute
+                ? "ManageSecureAcademy16To19Openings"
+                : "ManageAcademyOpenings";
+            ViewBag.EstablishmentTypeId = establishmentTypeId;
+
             if (!AcademyUtility.DoesHaveAccessAuthorization(User, establishmentTypeId))
                 throw AcademyUtility.GetPermissionDeniedException();
 
             ViewBag.Title = AcademyUtility.GetAcademyOpeningPageTitle(establishmentTypeId);
+
             if (urn.HasValue)
             {
                 var result = await _establishmentReadService.GetAsync((int) urn, User);
