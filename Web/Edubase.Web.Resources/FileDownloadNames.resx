@@ -144,7 +144,7 @@
   <data name="all_open_state_funded_school_links" xml:space="preserve">
     <value>State-funded school links CSV</value>
   </data>
-  <data name="all_edubase_additional_addresses" xml:space="preserve">
+  <data name="all_establishment_additional_addresses" xml:space="preserve">
     <value>Establishment additional addresses CSV</value>
   </data>
 </root>
