@@ -40,9 +40,9 @@
             <div class="govuk-warning-text">
                 <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                 <p class="govuk-warning-text__text govuk-!-font-weight-regular">
-                    <span class="govuk-warning-text__assistive">Warning</span>
-                    All establishment records should hold an up-to-date, valid and actively monitored
-                    @Html.Raw(Model.EditPolicy.HeadteacherLabel.ToLower()) personal establishment email address,
+                    <span class="govuk-visually-hidden">Warning</span>
+                    All establishment records should hold an up-to-date, valid, and actively monitored
+                    headteacher/principal/manager personal establishment email address,
                     a main establishment email address and an alternative establishment email address (if one exists).
                 </p>
                 <p class="govuk-warning-text__text govuk-!-font-weight-regular">
@@ -56,7 +56,7 @@
                     </summary>
                     <div class="govuk-details__text">
                         <p>
-                            The @Html.Raw(Model.EditPolicy.HeadteacherLabel.ToLower()) personal establishment email
+                            The headteacher/principal/manager personal establishment email
                             address must be entered. This must be an up-to-date, valid, and actively monitored email address.
                             This information is not publicly displayed on the website's user interface (UI) or in any extracts of data;
                             it is classed as personal data, therefore it cannot be shared publicly, for example,
@@ -163,13 +163,16 @@ else
                     </summary>
                     <div class="govuk-details__text">
                         <p>
-                            The @Html.Raw(Model.EditPolicy.HeadteacherLabel.ToLower()) personal establishment email
-                            address must be added here. This must be an up-to-date, valid and actively monitored email address.
-                            This information is not publicly displayed on the website&apos;s interface and is classed as personal data,
-                            therefore it cannot be shared publicly, for example, through a Freedom of Information (FOI)
-                            request. Under the conditions of Article 6(1)(e) of the UK-GDPR this information can be shared with
-                            other government departments, non-departmental public bodies, arm&apos;s length bodies and
-                            partners for official functions and tasks within the public interest to be performed.
+                            The headteacher/principal/manager personal establishment email address must be
+                            added here. This must be an up-to-date, valid, and actively monitored email address.
+                            This information is not publicly displayed on the website's user interface (UI) or in
+                            any extracts of data; it is classed as personal data, therefore it cannot be shared
+                            publicly, for example, through a Freedom of Information (FOI) request. Under the
+                            conditions of Article 6(1)(e) of the UK-GDPR this information can be shared with
+                            other government departments, non-departmental public bodies, arm's length
+                            bodies, local authorities, and partners, for official functions and tasks within the
+                            public interest to be performed. This can include for use in criminal investigations
+                            and safeguarding.
                         </p>
                         <p>
                             This information is extremely important as it allows the Department for Education to share important information and messages with headteachers/principals/managers.

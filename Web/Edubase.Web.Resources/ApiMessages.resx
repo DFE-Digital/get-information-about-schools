@@ -196,7 +196,7 @@
         <value>Please enter a valid postcode</value>
     </data>
     <data name="field.validation.ReasonEstablishmentClosed.CloseDate" xml:space="preserve">
-        <value>Please check the 'Reason establishment closed'. Please check the 'Establishment close date'</value>
+        <value>Please check the 'Reason establishment closed'.&lt;br /&gt;Please check the 'Establishment close date'</value>
     </data>
     <data name="field.validation.ReasonEstablishmentOpened.OpenDate" xml:space="preserve">
         <value>Please check the 'Reason establishment opened'Please check the 'Establishment open date'</value>

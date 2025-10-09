@@ -17,19 +17,19 @@ const giasAccordionExtensions = function(){
       '            <path fill="currentColor" d="M6.5 0L0 6.5 1.4 8l4-4v12.7h2V4l4.3 4L13 6.4z"></path>\n' +
       '        </svg> Back to top</a>');
 
-    $(footerControls).find('.govuk-accordion__open-all').on('click', function(e) {
+    $(footerControls).find('.govuk-accordion__show-all').on('click', function(e) {
       e.preventDefault();
-      accordionControls.eq(0).find('.govuk-accordion__open-all').trigger('click');
-      $(this).html(accordionControls.eq(0).find('.govuk-accordion__open-all').html());
+      accordionControls.eq(0).find('.govuk-accordion__show-all').trigger('click');
+      $(this).html(accordionControls.eq(0).find('.govuk-accordion__show-all').html());
     });
 
-    $(accordionControls).find('.govuk-accordion__open-all').on('click', function() {
-      $(footerControls).find('.govuk-accordion__open-all').html($(this).html());
+    $(accordionControls).find('.govuk-accordion__show-all').on('click', function() {
+      $(footerControls).find('.govuk-accordion__show-all').html($(this).html());
     });
 
     $(accordion).find('.govuk-accordion__icon').on('click', function() {
       window.setTimeout(function() {
-        $(footerControls).find('.govuk-accordion__open-all').html(accordionControls.eq(0).find('.govuk-accordion__open-all').html());
+        $(footerControls).find('.govuk-accordion__show-all').html(accordionControls.eq(0).find('.govuk-accordion__show-all').html());
       }, 0);
     });
 
