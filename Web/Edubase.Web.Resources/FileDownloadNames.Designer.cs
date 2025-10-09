@@ -69,15 +69,6 @@ namespace Edubase.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Establishment additional addresses CSV.
-        /// </summary>
-        public static string all_edubase_additional_addresses {
-            get {
-                return ResourceManager.GetString("all_edubase_additional_addresses", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Establishment fields CSV.
         /// </summary>
         public static string all_edubase_data {
@@ -92,6 +83,15 @@ namespace Edubase.Web.Resources {
         public static string all_edubase_data_links {
             get {
                 return ResourceManager.GetString("all_edubase_data_links", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Establishment additional addresses CSV.
+        /// </summary>
+        public static string all_establishment_additional_addresses {
+            get {
+                return ResourceManager.GetString("all_establishment_additional_addresses", resourceCulture);
             }
         }
         

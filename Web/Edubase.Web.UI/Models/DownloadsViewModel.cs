@@ -176,7 +176,7 @@ namespace Edubase.Web.UI.Models
              --
              tag=all.edubase.data
              tag=all.edubase.data.links
-             tag=all.edubase.additional.addresses
+             tag=all.establishment.additional.addresses
              tag=all.open.state-funded.schools
              tag=all.open.state-funded.school.links
              tag=all.open.academies.and.free.schools
