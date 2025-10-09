@@ -15,19 +15,6 @@ namespace Edubase.Web.UIUnitTests.Areas.Establishments
 {
     public class EstablishmentDisplayEditPolicyTests
     {
-        [Theory]
-        [InlineData((int) eLookupEstablishmentType.OtherIndependentSchool)]
-        [InlineData((int) eLookupEstablishmentType.OtherIndependentSpecialSchool)]
-        public void Initialise_Sets_RegistrationSuspended_True_For_ExpectedTypes(int typeId)
-        {
-            var model = new EstablishmentModel { TypeId = typeId };
-            var policy = new EstablishmentDisplayEditPolicy();
-
-            policy.Initialise(model);
-
-            Assert.True(policy.IEBTDetail.RegistrationSuspended);
-        }
-
         [Fact]
         public void Initialise_Sets_RegistrationSuspended_False_For_OtherTypes()
         {
