@@ -330,20 +330,28 @@
 
             @if (Model.EditPolicy.IEBTDetail.RegistrationSuspended)
             {
-                var suspendedError = ViewData.ModelState["RegistrationSuspended"]?.Errors.FirstOrDefault()?.ErrorMessage;
-                var statusError = ViewData.ModelState["StatusId"]?.Errors.FirstOrDefault()?.ErrorMessage;
+                <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.RegistrationSuspended)">
+                    @Html.LabelFor(x => x.RegistrationSuspended, new { @class = "govuk-label" })
+                    @Html.ValidationMessageFor(x => x.RegistrationSuspended, null, new { @class = "govuk-error-message" })
 
-                if (suspendedError == null || suspendedError != statusError)
-                {
-                    <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.RegistrationSuspended)">
-                        @Html.LabelFor(x => x.RegistrationSuspended, new { @class = "govuk-label" })
-                        @Html.ValidationMessageFor(x => x.RegistrationSuspended, null, new { @class = "govuk-error-message" })
-                        @Html.DropDownListFor(x => x.RegistrationSuspended, new SelectList(ViewBag.RegistrationSuspendedOptions as IEnumerable<SelectListItem>,
-                                "Value", "Text"), "",
-                            new { @class = "govuk-select" }
-                        )
-                    </div>
-                }
+                    @Html.DropDownListFor(
+                        x => x.RegistrationSuspended,
+                        new SelectList(
+                            Enum.GetValues(typeof(Edubase.Services.Enums.RegistrationSuspendedStatus))
+                                .Cast<Edubase.Services.Enums.RegistrationSuspendedStatus>()
+                                .Select(e => new SelectListItem
+                                {
+                                    Value = ((int)e).ToString(),
+                                    Text = e.EnumDisplayNameFor(),
+                                    Selected = (Model.RegistrationSuspended.HasValue && (int)Model.RegistrationSuspended == (int)e)
+                                }),
+                            "Value",
+                            "Text",
+                            Model.RegistrationSuspended.HasValue ? ((int)Model.RegistrationSuspended).ToString() : null
+                        ),
+                        new { @class = "govuk-select" }
+                    )
+                </div>
             }
 
             @if (Model.EditPolicy.AdmissionsPolicyId)
