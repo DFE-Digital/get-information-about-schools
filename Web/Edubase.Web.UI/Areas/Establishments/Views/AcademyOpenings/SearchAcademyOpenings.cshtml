@@ -115,7 +115,7 @@
                     @Html.ActionLink("Edit opening details",
                         "EditAcademyOpening",
                         "AcademyOpenings",
-                        new {urn = Model.Urn, area = "Establishments"},
+                        new {urn = Model.Urn, area = "Establishments", establishmentTypeId = establishmentTypeId, returnTo = manageRouteName},
                         new {@class = "govuk-button"})
                 </div>
             </div>

@@ -214,7 +214,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
         }
 
         [HttpGet, Route("edit-academy-opening/{urn}", Name = "EditAcademyOpening")]
-        public async Task<ActionResult> EditAcademyOpening(int? urn)
+        public async Task<ActionResult> EditAcademyOpening(int? urn, string establishmentTypeId = null, string returnTo = null)
         {
             if (!urn.HasValue)
             {
@@ -241,7 +241,9 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                         : null,
                 PredecessorUrn = link?.Urn.GetValueOrDefault().ToString(),
                 PredecessorName = link?.EstablishmentName,
-                OpeningDate = new UI.Models.DateTimeViewModel(establishment.OpenDate)
+                OpeningDate = new UI.Models.DateTimeViewModel(establishment.OpenDate),
+                EstablishmentTypeId = (establishmentTypeId ?? string.Empty).Trim(),
+                ReturnTo = string.IsNullOrWhiteSpace(returnTo) ? null : returnTo.Trim()
             };
 
             return View(viewModel);
@@ -279,6 +281,7 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                     {
                         ModelState.AddModelError(e.Fields ?? string.Empty, e.GetMessage());
                     }
+                    return View("EditAcademyOpening", viewModel);
                 }
             }
 
@@ -294,9 +297,21 @@ namespace Edubase.Web.UI.Areas.Establishments.Controllers
                 {
                     ModelState.AddModelError(e.Fields ?? string.Empty, e.GetMessage());
                 }
+                return View("EditAcademyOpening", viewModel);
             }
 
-            return RedirectToAction("ManageAcademyOpenings");
+            if (!string.IsNullOrWhiteSpace(viewModel.ReturnTo))
+            {
+                return RedirectToRoute(viewModel.ReturnTo, new { establishmentTypeId = viewModel.EstablishmentTypeId });
+            }
+
+            if (string.Equals(viewModel.EstablishmentTypeId, "46", StringComparison.OrdinalIgnoreCase))
+            {
+                return RedirectToRoute("ManageSecureAcademy16To19Openings", new { establishmentTypeId = "46" });
+            }
+
+            return RedirectToRoute("ManageAcademyOpenings",
+                new { establishmentTypeId = viewModel.EstablishmentTypeId });
         }
 
         [HttpGet, Route("search-academies", Name = "SearchAcademyOpenings")]

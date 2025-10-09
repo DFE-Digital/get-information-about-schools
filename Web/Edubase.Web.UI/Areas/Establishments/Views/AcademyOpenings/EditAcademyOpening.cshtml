@@ -2,6 +2,11 @@
 @{
     ViewBag.bodyClasses = "manage-academy-openings";
     ViewBag.SiteSection = "tools";
+
+    var isSecure = string.Equals(Model.EstablishmentTypeId, "46", StringComparison.OrdinalIgnoreCase);
+    var defaultReturnRoute = isSecure ? "ManageSecureAcademy16To19Openings" : "ManageAcademyOpenings";
+    var returnRoute = string.IsNullOrWhiteSpace(Model.ReturnTo) ? defaultReturnRoute : Model.ReturnTo;
+    var cancelHref = Url.RouteUrl(returnRoute, new { establishmentTypeId = Model.EstablishmentTypeId });
 }
 
 @section BreadCrumbs
@@ -25,57 +30,53 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         @Html.Partial("_ValidationSummary", ViewData.ModelState)
-        <h1 class="govuk-heading-l">
-            Edit opening details
-        </h1>
+        <h1 class="govuk-heading-l">Edit opening details</h1>
     </div>
 </div>
 
-@using (Html.BeginForm("SaveAcademyOpening", "AcademyOpenings", new {area = ""}, FormMethod.Post))
+@using (Html.BeginForm("SaveAcademyOpening", "AcademyOpenings", new { area = "Establishments" }, FormMethod.Post))
 {
-@Html.AntiForgeryToken()
-@Html.HiddenFor(x=>x.PredecessorUrn)
-@Html.HiddenFor(x=>x.PredecessorName)
-@Html.HiddenFor(x => x.EstablishmentType)
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.PredecessorUrn)
+    @Html.HiddenFor(x => x.PredecessorName)
+    @Html.HiddenFor(x => x.EstablishmentType)
+    @Html.HiddenFor(x => x.EstablishmentTypeId)
+    @Html.HiddenFor(x => x.ReturnTo)
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-half">
-        <div class="govuk-form-group">
-            @Html.LabelFor(x=>x.Urn, "Unique Reference Number (URN)", new { @class = "govuk-label" })
-            @Html.TextBoxFor(x => x.Urn, new {@class= "govuk-input", disabled="disabled"})
-        </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <div class="govuk-form-group">
+                @Html.LabelFor(x => x.Urn, "Unique Reference Number (URN)", new { @class = "govuk-label" })
+                @Html.TextBoxFor(x => x.Urn, new { @class = "govuk-input", disabled = "disabled" })
+            </div>
 
-        <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentName)">
-            @Html.LabelFor(x => x.EstablishmentName, "Establishment name ",new { @class = "govuk-label"})
-            @Html.ValidationMessageFor(x =>x.EstablishmentName, null, new { @class="govuk-error-message" })
-            @Html.TextBoxFor(x => x.EstablishmentName, new { @class = "govuk-input"})
-        </div>
+            <div class="govuk-form-group @Html.ValidationCssClassFor(x => x.EstablishmentName)">
+                @Html.LabelFor(x => x.EstablishmentName, "Establishment name", new { @class = "govuk-label" })
+                @Html.ValidationMessageFor(x => x.EstablishmentName, null, new { @class = "govuk-error-message" })
+                @Html.TextBoxFor(x => x.EstablishmentName, new { @class = "govuk-input" })
+            </div>
 
-        <div class="govuk-form-group">
-            @Html.LabelFor(x =>x.EstablishmentType, "Establishment type", new { @class = "govuk-label" })
-            @Html.TextBoxFor(x => x.EstablishmentType, new { @class = "govuk-input", disabled="disabled" , id="estab-type-disabled"})
-        </div>
+            <div class="govuk-form-group">
+                @Html.LabelFor(x => x.EstablishmentType, "Establishment type", new { @class = "govuk-label" })
+                @Html.TextBoxFor(x => x.EstablishmentType, new { @class = "govuk-input", disabled = "disabled", id = "estab-type-disabled" })
+            </div>
 
-        @Html.EditorFor(x => x.OpeningDate, new {title = "Opening date", fieldsetClassName = "edit-date-fieldset"})
+            @Html.EditorFor(x => x.OpeningDate, new { title = "Opening date", fieldsetClassName = "edit-date-fieldset" })
 
-        <div class="govuk-form-group">
-            @Html.LabelFor(x => x.PredecessorUrn, "Predecessor URN", new { @class = "govuk-label"})
-            @Html.TextBoxFor(x => x.PredecessorUrn, new { @class = "govuk-input", disabled = "disabled", id="pre-urn-disabled" })
-        </div>
+            <div class="govuk-form-group">
+                @Html.LabelFor(x => x.PredecessorUrn, "Predecessor URN", new { @class = "govuk-label" })
+                @Html.TextBoxFor(x => x.PredecessorUrn, new { @class = "govuk-input", disabled = "disabled", id = "pre-urn-disabled" })
+            </div>
 
-        <div class="govuk-form-group">
-            @Html.LabelFor(x => x.PredecessorName, "Predecessor name", new { @class = "govuk-label"})
-            @Html.TextBoxFor(x =>x.PredecessorName, new { @class = "govuk-input", disabled="disabled" , id="pre-name-disabled"})
-        </div>
+            <div class="govuk-form-group">
+                @Html.LabelFor(x => x.PredecessorName, "Predecessor name", new { @class = "govuk-label" })
+                @Html.TextBoxFor(x => x.PredecessorName, new { @class = "govuk-input", disabled = "disabled", id = "pre-name-disabled" })
+            </div>
 
-        <div class="button-row">
-            <input type="submit" class="govuk-button" data-module="govuk-button" value="Save">
-            @Html.ActionLink("Cancel",
-                "ManageAcademyOpenings",
-                "AcademyOpenings",
-                new { area = "Establishments"},
-                new {@class = "govuk-button govuk-button--secondary", data_module = "govuk-button"})
+            <div class="button-row">
+                <input type="submit" class="govuk-button" data-module="govuk-button" value="Save">
+                <a href="@cancelHref" class="govuk-button govuk-button--secondary" data-module="govuk-button">Cancel</a>
+            </div>
         </div>
     </div>
-</div>
 }

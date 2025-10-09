@@ -25,7 +25,7 @@
     var currentRouteName = !string.IsNullOrWhiteSpace(Model.CurrentRouteName) ? Model.CurrentRouteName : "ManageAcademyOpenings";
     var baseUrl = Request?.Url?.AbsolutePath ?? Url.RouteUrl(currentRouteName);
     var detailUrlTemplate = Url.Action("Details", "Establishment", new { area = "Establishments", id = "__urn__" });
-    var editUrlTemplate = Url.RouteUrl("EditAcademyOpening", new { area = "Establishments", urn = "__urn__" });
+    var editUrlTemplate = Url.RouteUrl("EditAcademyOpening", new { area = "Establishments", urn = "__urn__", establishmentTypeId = establishmentTypeId, returnTo = currentRouteName });
     var allOpeningsPayload = (Model.AllAcademyOpenings ?? Enumerable.Empty<EditAcademyOpeningViewModel>()).Select(x => new
     {
         urn = x.Urn,
@@ -116,13 +116,13 @@
                             @if (Model.Skip > 0)
                             {
                                 <li>
-                                    @Html.RouteLink("<< Previous", "ManageAcademyOpenings", new { skip = Model.Skip - Model.Take, sortBy = sortBy, establishmentTypeId, month }, new { @class = "pagination-prev" })
+                                    @Html.RouteLink("<< Previous", currentRouteName, new { skip = Model.Skip - Model.Take, sortBy = sortBy, establishmentTypeId, month }, new { @class = "pagination-prev" })
                                 </li>
                             }
                             @if (Model.Skip + Model.Take < Model.Count)
                             {
                                 <li>
-                                    @Html.RouteLink("Next >>", "ManageAcademyOpenings", new { skip = Model.Skip + Model.Take, sortBy = sortBy, establishmentTypeId, month }, new { @class = "pagination-next" })
+                                    @Html.RouteLink("Next >>", currentRouteName, new { skip = Model.Skip + Model.Take, sortBy = sortBy, establishmentTypeId, month }, new { @class = "pagination-next" })
                                 </li>
                             }
                         </ul>
@@ -143,7 +143,7 @@
                                 {
                                     <text> aria-sort="@(sortDir == "asc" ? "ascending" : "descending")"</text>;
                                 }>
-                                <a href="@Url.RouteUrl("ManageAcademyOpenings", new { sortBy = columnName + "-" + nextDir, skip = 0, establishmentTypeId, month })"
+                                <a href="@Url.RouteUrl(currentRouteName, new { sortBy = columnName + "-" + nextDir, skip = 0, establishmentTypeId, month })"
                                    class="@($"govuk-link{Html.Conditional(isSorted, " selected-sort")}{@Html.Conditional(isSorted && sortDir == "asc", " sorted-asc")}{Html.Conditional(isSorted && sortDir == "desc", " sorted-desc")}")"
                                    aria-label="@ariaLabel"
                                    data-sort-column="@columnName">
@@ -175,7 +175,7 @@
                             <td class="govuk-table__cell cell-predecessorname">@entry.PredecessorName</td>
                             <td class="govuk-table__cell cell-edit">
                                 @Html.ActionLink("Edit", "EditAcademyOpening", "AcademyOpenings",
-                                    new { urn = entry.Urn, area = "Establishments" }, new { @class = "govuk-link" })
+                                    new { urn = entry.Urn, area = "Establishments", establishmentTypeId = establishmentTypeId, returnTo = currentRouteName }, new { @class = "govuk-link" })
                             </td>
                         </tr>
                     }
@@ -192,13 +192,13 @@
                             @if (Model.Skip > 0)
                             {
                                 <li>
-                                    @Html.RouteLink("<< Previous", "ManageAcademyOpenings", new { skip = Model.Skip - Model.Take, sortBy = sortBy, establishmentTypeId, month }, new { @class = "pagination-prev" })
+                                    @Html.RouteLink("<< Previous", currentRouteName, new { skip = Model.Skip - Model.Take, sortBy = sortBy, establishmentTypeId, month }, new { @class = "pagination-prev" })
                                 </li>
                             }
                             @if (Model.Skip + Model.Take < Model.Count)
                             {
                                 <li>
-                                    @Html.RouteLink("Next >>", "ManageAcademyOpenings", new { skip = Model.Skip + Model.Take, sortBy = sortBy, establishmentTypeId, month }, new { @class = "pagination-next" })
+                                    @Html.RouteLink("Next >>", currentRouteName, new { skip = Model.Skip + Model.Take, sortBy = sortBy, establishmentTypeId, month }, new { @class = "pagination-next" })
                                 </li>
                             }
                         </ul>
